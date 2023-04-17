@@ -52,7 +52,36 @@ const basicContentFields: FieldDefs = {
       "The primary image of the content (also used in the SEO metadata)",
     required: false,
   },
+
+  isExternal: {
+    type: "boolean",
+    description: "Is this content just a link to external content?",
+    default: false,
+  },
+  href: {
+    type: "string",
+    description: "Absolute URL for external content",
+  },
 };
+
+/**
+ * Content record schema for Developer Resources
+ */
+export const DeveloperResource = defineDocumentType(() => ({
+  name: "DeveloperResource",
+  filePathPattern: `developers/resources/**/*.md`,
+  fields: {
+    // use the standard content fields
+    ...basicContentFields,
+
+    // define custom fields for this specific content...
+    repoUrl: {
+      type: "string",
+      description: "Repository URL for the developer resources",
+      required: false,
+    },
+  },
+}));
 
 /**
  * Content record schema for Developer Guides
@@ -91,6 +120,11 @@ export const CourseMetadata = defineDocumentType(() => ({
       of: { type: "json" },
       description: "",
       required: false,
+    },
+
+    lessons: {
+      type: "number",
+      description: "Number of lessons contained within this course",
     },
   },
 }));
@@ -147,6 +181,7 @@ export default makeSource({
 
     // developer specific content
     DeveloperGuide,
+    DeveloperResource,
 
     // course specific content record types
     CourseMetadata,
