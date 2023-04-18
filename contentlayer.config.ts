@@ -62,6 +62,18 @@ const basicContentFields: FieldDefs = {
     type: "string",
     description: "Absolute URL for external content",
   },
+
+  tags: {
+    type: "list",
+    of: { type: "string" },
+    description: "List of filterable tags for content",
+    required: false,
+  },
+  featured: {
+    type: "boolean",
+    description: "Should this content featured?",
+    default: false,
+  },
 };
 
 /**
