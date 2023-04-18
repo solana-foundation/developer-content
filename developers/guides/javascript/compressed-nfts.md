@@ -1,4 +1,5 @@
 ---
+featured: true
 title: Creating Compressed NFTs with JavaScript
 description:
   "Compressed NFTs use the Bubblegum program from Metaplex to cheaply and
