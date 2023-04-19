@@ -5,9 +5,11 @@ description:
   "Compressed NFTs use the Bubblegum program from Metaplex to cheaply and
   securely store NFT metadata using State Compression on Solana."
 keywords:
-  - compression
   - merkle tree
-  - read api
+  - ReadApi
+difficulty: intermediate
+tags:
+  - compression
   - metaplex
 ---
 
