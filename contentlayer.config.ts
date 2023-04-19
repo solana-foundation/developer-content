@@ -74,6 +74,12 @@ const basicContentFields: FieldDefs = {
     description: "Should this content featured?",
     default: false,
   },
+
+  difficulty: {
+    type: "enum",
+    description: "Difficulty level of the content",
+    options: ["Intro", "Beginner", "Intermediate", "Expert"],
+  },
 };
 
 /**
