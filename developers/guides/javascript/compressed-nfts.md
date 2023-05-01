@@ -171,7 +171,8 @@ actually create them following the same process of creating an
 
 Since NFT Collections having nothing special to do with
 [State Compression](https://edge.docs.solana.com/learn/state-compression) or
-[compressed NFTs](.), we will not cover creating one in this guide.
+[compressed NFTs](./compressed-nfts.md), we will not cover creating one in this
+guide.
 
 ### Collection addresses
 
