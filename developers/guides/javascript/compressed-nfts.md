@@ -413,7 +413,7 @@ In this demo, the key pieces of our NFT's metadata to note are:
 ### Derive the Bubblegum signer
 
 When minting new compressed NFTs, the Bubblegum program needs a PDA to perform a
-[cross-program invocation](../programming-model/calling-between-programs#cross-program-invocations)
+[cross-program invocation](https://docs.solana.com/developing/programming-model/calling-between-programs#cross-program-invocations)
 (`cpi`) to the SPL compression program.
 
 :::caution
