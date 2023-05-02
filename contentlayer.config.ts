@@ -98,6 +98,12 @@ export const DeveloperResource = defineDocumentType(() => ({
       description: "Repository URL for the developer resources",
       required: false,
     },
+    category: {
+      required: true,
+      type: "enum",
+      description: "General type of the resource (e.g. its broad category)",
+      options: ["documentation", "framework", "sdk"],
+    },
   },
 }));
 

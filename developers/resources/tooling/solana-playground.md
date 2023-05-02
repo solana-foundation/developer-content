@@ -1,5 +1,6 @@
 ---
 featured: true
+category: tool
 title: Solana Playground
 description:
   "Easily build, deploy and test Solana programs and smart contracts from a

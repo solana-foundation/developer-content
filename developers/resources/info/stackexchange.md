@@ -1,4 +1,5 @@
 ---
+category: documentation
 featured: true
 title: Solana Stack Exchange
 description:

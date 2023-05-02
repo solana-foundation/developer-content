@@ -1,5 +1,6 @@
 ---
 featured: true
+category: framework
 title: Anchor Framework
 description:
   "Anchor is a framework for Solana's Sealevel runtime providing several

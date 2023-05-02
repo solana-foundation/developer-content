@@ -1,4 +1,5 @@
 ---
+category: documentation
 title: Core Documentation
 description:
   "The official Solana documentation on developing, validators, SPL tokens,
