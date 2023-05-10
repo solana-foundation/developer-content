@@ -25,6 +25,16 @@ const basicContentFields: FieldDefs = {
     description: "List of keywords for the content",
     required: false,
   },
+  date: {
+    type: "date",
+    description: "The date this content was published",
+    required: false,
+  },
+  updatedDate: {
+    type: "date",
+    description: "The date this content was last updated",
+    required: false,
+  },
 
   canonical: {
     type: "string",
