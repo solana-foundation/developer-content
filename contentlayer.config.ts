@@ -84,6 +84,11 @@ const basicContentFields: FieldDefs = {
     description: "Should this content featured?",
     default: false,
   },
+  featuredPriority: {
+    type: "number",
+    description: "Sort priority for featured content displays",
+    default: 999,
+  },
 
   difficulty: {
     type: "enum",
