@@ -1,6 +1,8 @@
 ---
 date: Jan 18, 2023
 difficulty: intro
+featured: true
+featuredPriority: 0
 title: "Intro to Solana development (using only your browser)"
 description:
   "Solana developer quickstart guide to learn how to setup, build, and deploy
