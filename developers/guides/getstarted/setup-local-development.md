@@ -1,4 +1,5 @@
 ---
+featured: true
 date: Apr 6, 2023
 difficulty: intro
 title: "Install the Solana CLI for local development (Linux and Mac)"
