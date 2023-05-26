@@ -52,7 +52,8 @@ especially on Windows.
 ### Import our example project
 
 In a new tab in your browser, open our example "_Hello World_" project on Solana
-Playground: https://beta.solpg.io/6314a69688a7fca897ad7d1d
+Playground:
+[https://beta.solpg.io/6314a69688a7fca897ad7d1d](https://beta.solpg.io/6314a69688a7fca897ad7d1d)
 
 Next, import the project into your local workspace by clicking the "**Import**"
 icon and naming your project `hello_world`.
@@ -70,10 +71,10 @@ to create a file system wallet for use with the Solana CLI. But with the Solana
 Playground, you only need to click a few buttons to create a browser based
 wallet.
 
-:::caution Your _Playground Wallet_ will be saved in your browser's local
-storage. Clearing your browser cache will remove your saved wallet. When
-creating a new wallet, you will have the option to save a local copy of your
-wallet's keypair file. :::
+> Your _Playground Wallet_ will be saved in your browser's local storage.
+> Clearing your browser cache will remove your saved wallet. When creating a new
+> wallet, you will have the option to save a local copy of your wallet's keypair
+> file.
 
 Click on the red status indicator button at the bottom left of the screen,
 (optionally) save your wallet's keypair file to your computer for backup, then
@@ -149,10 +150,10 @@ begin to compile. Once complete, you will see a success message.
 
 <!-- ![Viewing a successful build of your Rust based program](/img/quickstarts/solana-get-started-successful-build.png) -->
 
-:::caution You may receive _warning_ when your program is compiled due to unused
-variables. Don't worry, these warning will not affect your build. They are due
-to our very simple program not using all the variables we declared in the
-`process_instruction` function. :::
+> You may receive _warning_ when your program is compiled due to unused
+> variables. Don't worry, these warning will not affect your build. They are due
+> to our very simple program not using all the variables we declared in the
+> `process_instruction` function.
 
 ### Deploy your program
 
@@ -199,9 +200,9 @@ chain program using JavaScript. Specifically, will use the open source
 [NPM package](https://www.npmjs.com/package/@solana/web3.js) `@solana/web3.js`
 to aid in our client application.
 
-:::info This web3.js package is an abstraction layer on top of the
-[JSON RPC API](/api) that reduced the need for rewriting common boilerplate,
-helping to simplify your client side application code. :::
+> This web3.js package is an abstraction layer on top of the
+> [JSON RPC API](/api) that reduced the need for rewriting common boilerplate,
+> helping to simplify your client side application code.
 
 ### Initialize client
 
@@ -222,8 +223,8 @@ use without installing or setting up anything. Most important ones for our
 `hello world` program are `web3` for `@solana/web3.js` and `pg` for Solana
 Playground utilities.
 
-:::info You can go over all of the available globals by pressing `CTRL+SPACE`
-(or `CMD+SPACE` on macOS) inside the editor. :::
+> You can go over all of the available globals by pressing `CTRL+SPACE` (or
+> `CMD+SPACE` on macOS) inside the editor.
 
 ### Call the program
 
@@ -264,8 +265,8 @@ const txHash = await web3.sendAndConfirmTransaction(
 console.log("Transaction sent with hash:", txHash);
 ```
 
-:::info The first signer in the signers array is the transaction fee payer by
-default. We are signing with our keypair `pg.wallet.keypair`. :::
+> The first signer in the signers array is the transaction fee payer by default.
+> We are signing with our keypair `pg.wallet.keypair`.
 
 ### Run the application
 

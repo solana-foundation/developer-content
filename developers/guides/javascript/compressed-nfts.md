@@ -63,19 +63,15 @@ additional, NFT oriented methods, are loaded with all the information about
 particular NFTs. Including support for **BOTH** compressed NFTs **AND**
 uncompressed NFTs.
 
-:::caution Metadata is secured by the ledger and cached by indexers
+#### Metadata is secured by the ledger and cached by indexers
 
 Since validators do not keep a very long history of the recent ledger data,
 these indexers effectively "cache" the compressed NFT metadata passed through
 the Solana ledger. Quickly serving it back on request to improve speed and user
-experience of applications.
-
-However, since the metadata was already secured by the ledger when minting the
-compressed NFT, anyone could re-index the metadata directly from the secure
-ledger. Allowing for independent verification of the data, should the need or
-desire arise.
-
-:::
+experience of applications. However, since the metadata was already secured by
+the ledger when minting the compressed NFT, anyone could re-index the metadata
+directly from the secure ledger. Allowing for independent verification of the
+data, should the need or desire arise.
 
 These indexing services are already available from some of the common RPC
 providers, with more rolling out support in the near future. To name a few of
@@ -193,7 +189,7 @@ One of the most important decisions to make when creating compressed NFTs is
 Especially since the values used to size your tree will determine the overall
 cost of creation, and **CANNOT** be changed after creation.
 
-:::caution
+### Tree vs Collection
 
 A tree is **NOT** the same thing as a collection. A single collection can use
 _any_ number of trees. In fact, this is usually recommended for larger
@@ -201,8 +197,6 @@ collections due to smaller trees having greater composability.
 
 Conversely, even though a tree **could** be used in multiple collections, it is
 generally considered an anti-pattern and is not recommended.
-
-:::
 
 Using the helper functions provided by the
 [`@solana/spl-account-compression`](https://www.npmjs.com/package/@solana/spl-account-compression)
@@ -222,15 +216,11 @@ Your tree size is set by 3 values, each serving a very specific purpose:
 3. `canopyDepth` - used to store a portion of the proof on chain, and as such is
    a large of cost and composability of your compressed NFT collection
 
-:::info
-
-Read more about the details about
-[State Compression](https://edge.docs.solana.com/learn/state-compression),
-including
-[how to size a tree](https://edge.docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree)
-and potential composability concerns.
-
-:::
+> Read more about the details about
+> [State Compression](https://edge.docs.solana.com/learn/state-compression),
+> including
+> [how to size a tree](https://edge.docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree)
+> and potential composability concerns.
 
 Let's assume we are going to create a compressed NFT collection with 10k NFTs in
 it. And since our collection is relatively small, we only need a single smaller
@@ -371,13 +361,9 @@ the Solana ledger.
 Allowing us to cryptographically verify that our original metadata has not
 changed (unless we want it to).
 
-:::info
-
-Learn more about how State Compression uses
-[concurrent merkle trees](https://edge.docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
-to cryptographically secure off-chain data using the Solana ledger.
-
-:::
+> Learn more about how State Compression uses
+> [concurrent merkle trees](https://edge.docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
+> to cryptographically secure off-chain data using the Solana ledger.
 
 ### Define our NFT's metadata
 
@@ -417,13 +403,9 @@ When minting new compressed NFTs, the Bubblegum program needs a PDA to perform a
 [cross-program invocation](https://docs.solana.com/developing/programming-model/calling-between-programs#cross-program-invocations)
 (`cpi`) to the SPL compression program.
 
-:::caution
-
-This `bubblegumSigner` PDA is derived using a hard coded seed string of
-`collection_cpi` and owned by the Bubblegum program. If this hard coded value is
-not provided correctly, your compressed NFT minting will fail.
-
-:::
+> This `bubblegumSigner` PDA is derived using a hard coded seed string of
+> `collection_cpi` and owned by the Bubblegum program. If this hard coded value
+> is not provided correctly, your compressed NFT minting will fail.
 
 Below, we derive this PDA using the **required** hard coded seed string of
 `collection_cpi`:
@@ -526,13 +508,9 @@ const txSignature = await sendAndConfirmTransaction(connection, tx, [payer], {
 With the help of a supporting RPC provider, developers can use the Digital Asset
 Standard Read API (or "Read API" for short) to fetch the metadata of NFTs.
 
-:::info
-
-The Read API supports both compressed NFTs and traditional/uncompressed NFTs.
-You can use the same RPC endpoints to retrieve all the assorted information for
-both types of NFTs, including auto-fetching the NFTs' JSON URI.
-
-:::
+> The Read API supports both compressed NFTs and traditional/uncompressed NFTs.
+> You can use the same RPC endpoints to retrieve all the assorted information
+> for both types of NFTs, including auto-fetching the NFTs' JSON URI.
 
 ### Using the Read API
 
@@ -540,7 +518,7 @@ When working with the Read API and a supporting RPC provider, developers can
 make `POST` requests to the RPC endpoint using your preferred method of making
 such requests (e.g. `curl`, JavaScript `fetch()`, etc).
 
-:::warning Asset ID
+#### A note about the Asset ID
 
 Within the Read API, digital assets (i.e. NFTs) are indexed by their `id`. This
 asset `id` value differs slightly between traditional NFTs and compressed NFTs:
@@ -550,8 +528,6 @@ asset `id` value differs slightly between traditional NFTs and compressed NFTs:
 - for compressed NFTs: this is the `id` of the compressed NFT within the tree
   and is **NOT** an actual on-chain Account address. While a compressed NFT's
   `assetId` resembles a traditional Solana Account address, it is not.
-
-:::
 
 ### Common Read API Methods
 
@@ -564,14 +540,12 @@ methods are:
 - `getAssetsByOwner` - get the assets owned by a specific address
 - `getAssetsByGroup` - get the assets by a specific grouping (i.e. a collection)
 
-:::info Read API Methods, Schema, and Specification
+#### Read API Methods, Schema, and Specification
 
 Explore all the additional RPC methods added by Digital Asset Standard Read API
 on [Metaplex's RPC Playground](https://metaplex-read-api.surge.sh/). Here you
 will also find the expected inputs and response schema for each supported RPC
 method.
-
-:::
 
 ### Example Read API Request
 
@@ -631,12 +605,8 @@ The response fields to pay special attention to are:
   For compressed NFTs, this will also give you the tree address that is storing
   the compressed NFT on chain.
 
-:::caution
-
-Some of the returned values may be empty if the NFT is **not** a compressed NFT,
-such as many of the `compression` fields. This is expected.
-
-:::
+> Some of the returned values may be empty if the NFT is **not** a compressed
+> NFT, such as many of the `compression` fields. This is expected.
 
 ## Transfer compressed NFTs
 
@@ -644,7 +614,7 @@ Transferring compressed NFTs is different from transferring uncompressed NFTs.
 Aside from using a different on-chain program, compressed NFTs require the use
 of a asset's "merkle proof" (or `proof` for short) to actually change ownership.
 
-:::info What is a merkle proof?
+### What is a merkle proof?
 
 An asset's "merkle proof" is a listing of all the "adjacent hashes" within the
 tree that are required to validate a specific leaf within said tree.
@@ -653,11 +623,9 @@ These proof hashes themselves, and the specific asset's leaf data, are hashed
 together in a deterministic way to compute the "root hash". Therefore, allowing
 for cryptographic validation of an asset within the merkle tree.
 
-**NOTE:** While each of these hash values resemble a Solana Account's
-[address/public key](https://docs.solana.com/terminology#public-key-pubkey),
-they are not addresses.
-
-:::
+> **NOTE:** While each of these hash values resemble a Solana Account's
+> [address/public key](https://docs.solana.com/terminology#public-key-pubkey),
+> they are not addresses.
 
 Transferring ownership of a compressed NFT happens in 5 broad steps:
 
@@ -714,14 +682,12 @@ information:
   this below)
 - `tree_id` - the on-chain address of the compressed NFTs tree
 
-:::info Full proof is returned
+#### Full proof is returned
 
 The `getAssetProof` RPC method returns the complete listing of "proof hashes"
 that are used to perform the compressed NFT transfer. Since this "full proof" is
 returned from the RPC, we will need to remove the portion of the "full proof"
 that is stored on-chain via the tree's `canopy`.
-
-:::
 
 #### Example response from the `getAssetProof` method
 
@@ -854,13 +820,9 @@ With our transfer instructions built, we can add it into a transaction and send
 it to the blockchain similar to before. Making sure either the current
 `leafOwner` or the `leafDelegate` signs the transaction.
 
-:::note
-
-After each successful transfer of a compressed NFT, the `leafDelegate` should
-reset to an empty value. Meaning the specific asset will not have delegated
-authority to an address other than its owner.
-
-:::
+> After each successful transfer of a compressed NFT, the `leafDelegate` should
+> reset to an empty value. Meaning the specific asset will not have delegated
+> authority to an address other than its owner.
 
 And once confirmed by the cluster, we will have successfully transferred a
 compressed NFT.
@@ -868,4 +830,5 @@ compressed NFT.
 ## Example code repository
 
 You can find an example code repository for this developer guide on the Solana
-Developers GitHub: https://github.com/solana-developers/compressed-nfts
+Developers GitHub:
+[https://github.com/solana-developers/compressed-nfts](https://github.com/solana-developers/compressed-nfts)
