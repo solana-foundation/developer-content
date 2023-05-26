@@ -57,7 +57,7 @@ Playground: https://beta.solpg.io/6314a69688a7fca897ad7d1d
 Next, import the project into your local workspace by clicking the "**Import**"
 icon and naming your project `hello_world`.
 
-![Import the get started Solana program on Solana Playground](/img/quickstarts/solana-get-started-import-on-playground.png)
+<!-- ![Import the get started Solana program on Solana Playground](/img/quickstarts/solana-get-started-import-on-playground.png) -->
 
 > If you do **not** import the program into **your** Solana Playground, then you
 > will **not** be able to make changes to the code. But you **will** still be
@@ -147,7 +147,7 @@ On the left sidebar, select the "**Build & Deploy**" tab. Next, click the
 If you look at the Playground's terminal, you should see your Solana program
 begin to compile. Once complete, you will see a success message.
 
-![Viewing a successful build of your Rust based program](/img/quickstarts/solana-get-started-successful-build.png)
+<!-- ![Viewing a successful build of your Rust based program](/img/quickstarts/solana-get-started-successful-build.png) -->
 
 :::caution You may receive _warning_ when your program is compiled due to unused
 variables. Don't worry, these warning will not affect your build. They are due
@@ -170,7 +170,7 @@ behalf to ensure your wallet has enough SOL to cover the cost of deployment.
 solana airdrop 2
 ```
 
-![Build and deploy your Solana program to the blockchain](/img/quickstarts/solana-get-started-build-and-deploy.png)
+<!-- ![Build and deploy your Solana program to the blockchain](/img/quickstarts/solana-get-started-build-and-deploy.png) -->
 
 ### Find your program id
 
