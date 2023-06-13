@@ -17,7 +17,7 @@ tags:
 Compressed NFTs on Solana use the
 [Bubblegum](https://docs.metaplex.com/programs/compression/) program from
 Metaplex to cheaply and securely store NFT metadata using
-[State Compression](https://edge.docs.solana.com/learn/state-compression).
+[State Compression](https://docs.solana.com/learn/state-compression).
 
 This developer guide will use JavaScript/TypeScript to demonstrate:
 
@@ -30,8 +30,8 @@ This developer guide will use JavaScript/TypeScript to demonstrate:
 ## Intro to Compressed NFTs
 
 Compressed NFTs use
-[State Compression](https://edge.docs.solana.com/learn/state-compression) and
-[merkle trees](https://edge.docs.solana.com/learn/state-compression#what-is-a-merkle-tree)
+[State Compression](https://docs.solana.com/learn/state-compression) and
+[merkle trees](https://docs.solana.com/learn/state-compression#what-is-a-merkle-tree)
 to drastically reduce the storage cost for NFTs. Instead of storing an NFT's
 metadata in a typical Solana account, compressed NFTs store the metadata within
 the ledger. This allows compressed NFTs to still inherit the security and speed
@@ -89,7 +89,7 @@ happen in 3 primary steps:
 
 - create an NFT collection (or use an existing one)
 - create a
-  [concurrent merkle tree](https://edge.docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
+  [concurrent merkle tree](https://docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
   (using the `@solana/spl-account-compression` SDK)
 - mint compressed NFTs into your tree (to any owner's address you want)
 
@@ -167,7 +167,7 @@ actually create them following the same process of creating an
 - store the collection's metadata in an Account on-chain
 
 Since NFT Collections having nothing special to do with
-[State Compression](https://edge.docs.solana.com/learn/state-compression) or
+[State Compression](https://docs.solana.com/learn/state-compression) or
 [compressed NFTs](./compressed-nfts.md), we will not cover creating one in this
 guide.
 
@@ -185,7 +185,7 @@ various addresses for your Collection, including:
 ## Create a tree
 
 One of the most important decisions to make when creating compressed NFTs is
-[how to setup your tree](https://edge.docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree).
+[how to setup your tree](https://docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree).
 Especially since the values used to size your tree will determine the overall
 cost of creation, and **CANNOT** be changed after creation.
 
@@ -217,9 +217,9 @@ Your tree size is set by 3 values, each serving a very specific purpose:
    a large of cost and composability of your compressed NFT collection
 
 > Read more about the details about
-> [State Compression](https://edge.docs.solana.com/learn/state-compression),
+> [State Compression](https://docs.solana.com/learn/state-compression),
 > including
-> [how to size a tree](https://edge.docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree)
+> [how to size a tree](https://docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree)
 > and potential composability concerns.
 
 Let's assume we are going to create a compressed NFT collection with 10k NFTs in
@@ -362,7 +362,7 @@ Allowing us to cryptographically verify that our original metadata has not
 changed (unless we want it to).
 
 > Learn more about how State Compression uses
-> [concurrent merkle trees](https://edge.docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
+> [concurrent merkle trees](https://docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
 > to cryptographically secure off-chain data using the Solana ledger.
 
 ### Define our NFT's metadata
@@ -743,7 +743,7 @@ Since we will use the `createTransferInstruction` helper function from the
 Bubblegum SDK to actually build our transfer instruction, we need to:
 
 - remove the proof values that are already stored on-chain in the
-  [tree's canopy](https://edge.docs.solana.com/learn/state-compression#canopy-depth),
+  [tree's canopy](https://docs.solana.com/learn/state-compression#canopy-depth),
   and
 - convert the remaining proof values into the valid `AccountMeta` structure that
   the instruction builder function accepts
