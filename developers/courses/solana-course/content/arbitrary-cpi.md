@@ -1,9 +1,9 @@
 ---
 title: Arbitrary CPI
 objectives:
-- Explain the security risks associated with invoking a CPI to an unknown program
-- Showcase how Anchor’s CPI module prevents this from happening when making a CPI from one Anchor program to another
-- Safely and securely make a CPI from an Anchor program to an arbitrary non-anchor program
+  - Explain the security risks associated with invoking a CPI to an unknown program
+  - Showcase how Anchor’s CPI module prevents this from happening when making a CPI from one Anchor program to another
+  - Safely and securely make a CPI from an Anchor program to an arbitrary non-anchor program
 ---
 
 # TL;DR
@@ -186,55 +186,55 @@ There is already a test in the `tests` directory for this. It's long, but take a
 
 ```ts
 it("Insecure instructions allow attacker to win every time", async () => {
-    // Initialize player one with real metadata program
-    await gameplayProgram.methods
-      .createCharacterInsecure()
-      .accounts({
-        metadataProgram: metadataProgram.programId,
-        authority: playerOne.publicKey,
-      })
-      .signers([playerOne])
-      .rpc()
+  // Initialize player one with real metadata program
+  await gameplayProgram.methods
+    .createCharacterInsecure()
+    .accounts({
+      metadataProgram: metadataProgram.programId,
+      authority: playerOne.publicKey,
+    })
+    .signers([playerOne])
+    .rpc();
 
-    // Initialize attacker with fake metadata program
-    await gameplayProgram.methods
-      .createCharacterInsecure()
-      .accounts({
-        metadataProgram: fakeMetadataProgram.programId,
-        authority: attacker.publicKey,
-      })
-      .signers([attacker])
-      .rpc()
+  // Initialize attacker with fake metadata program
+  await gameplayProgram.methods
+    .createCharacterInsecure()
+    .accounts({
+      metadataProgram: fakeMetadataProgram.programId,
+      authority: attacker.publicKey,
+    })
+    .signers([attacker])
+    .rpc();
 
-    // Fetch both player's metadata accounts
-    const [playerOneMetadataKey] = getMetadataKey(
-      playerOne.publicKey,
-      gameplayProgram.programId,
-      metadataProgram.programId
-    )
+  // Fetch both player's metadata accounts
+  const [playerOneMetadataKey] = getMetadataKey(
+    playerOne.publicKey,
+    gameplayProgram.programId,
+    metadataProgram.programId,
+  );
 
-    const [attackerMetadataKey] = getMetadataKey(
-      attacker.publicKey,
-      gameplayProgram.programId,
-      fakeMetadataProgram.programId
-    )
+  const [attackerMetadataKey] = getMetadataKey(
+    attacker.publicKey,
+    gameplayProgram.programId,
+    fakeMetadataProgram.programId,
+  );
 
-    const playerOneMetadata = await metadataProgram.account.metadata.fetch(
-      playerOneMetadataKey
-    )
+  const playerOneMetadata = await metadataProgram.account.metadata.fetch(
+    playerOneMetadataKey,
+  );
 
-    const attackerMetadata = await fakeMetadataProgram.account.metadata.fetch(
-      attackerMetadataKey
-    )
+  const attackerMetadata = await fakeMetadataProgram.account.metadata.fetch(
+    attackerMetadataKey,
+  );
 
-    // The regular player should have health and power between 0 and 20
-    expect(playerOneMetadata.health).to.be.lessThan(20)
-    expect(playerOneMetadata.power).to.be.lessThan(20)
+  // The regular player should have health and power between 0 and 20
+  expect(playerOneMetadata.health).to.be.lessThan(20);
+  expect(playerOneMetadata.power).to.be.lessThan(20);
 
-    // The attacker will have health and power of 255
-    expect(attackerMetadata.health).to.equal(255)
-    expect(attackerMetadata.power).to.equal(255)
-})
+  // The attacker will have health and power of 255
+  expect(attackerMetadata.health).to.equal(255);
+  expect(attackerMetadata.power).to.equal(255);
+});
 ```
 
 This test effectively walks through the scenario where a regular player and an attacker both create their characters. Only the attacker passes in the program ID of the fake metadata program rather than the actual metadata program. And since the `create_character_insecure` instruction has no program checks, it still executes.
@@ -318,20 +318,20 @@ Now that we have a secure way of initializing a new character, let's create a ne
 
 ```ts
 it("Secure character creation doesn't allow fake program", async () => {
-    try {
-      await gameplayProgram.methods
-        .createCharacterSecure()
-        .accounts({
-          metadataProgram: fakeMetadataProgram.programId,
-          authority: attacker.publicKey,
-        })
-        .signers([attacker])
-        .rpc()
-    } catch (error) {
-      expect(error)
-      console.log(error)
-    }
-})
+  try {
+    await gameplayProgram.methods
+      .createCharacterSecure()
+      .accounts({
+        metadataProgram: fakeMetadataProgram.programId,
+        authority: attacker.publicKey,
+      })
+      .signers([attacker])
+      .rpc();
+  } catch (error) {
+    expect(error);
+    console.log(error);
+  }
+});
 ```
 
 Run `anchor test` if you haven't already. Notice that an error was thrown as expected, detailing that the program ID passed into the instruction is not the expected program ID:

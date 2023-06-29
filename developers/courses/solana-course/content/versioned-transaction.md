@@ -1,16 +1,16 @@
 ---
 title: Versioned Transactions and Lookup Tables
 objectives:
-- Create versioned transactions
-- Create lookup tables
-- Extend lookup tables
-- Use lookup tables with versioned transactions
+  - Create versioned transactions
+  - Create lookup tables
+  - Extend lookup tables
+  - Use lookup tables with versioned transactions
 ---
 
 # TL;DR
 
--   **Versioned Transactions** refers to a way to support both legacy versions and newer versions of transaction formats. The original transaction format is "legacy" and new transaction versions start at version 0. Versioned transactions were implemented in order to support the use of Address Lookup Tables (also called lookup tables or LUTs).
--   **Address Lookup Tables** are accounts used to store addresses of other accounts, which can then be referenced in versioned transactions using a 1 byte index instead of the full 32 bytes per address. This enables the creation of more complex transactions than what was possible prior to the introduction of LUTs.
+- **Versioned Transactions** refers to a way to support both legacy versions and newer versions of transaction formats. The original transaction format is "legacy" and new transaction versions start at version 0. Versioned transactions were implemented in order to support the use of Address Lookup Tables (also called lookup tables or LUTs).
+- **Address Lookup Tables** are accounts used to store addresses of other accounts, which can then be referenced in versioned transactions using a 1 byte index instead of the full 32 bytes per address. This enables the creation of more complex transactions than what was possible prior to the introduction of LUTs.
 
 # Overview
 
@@ -23,9 +23,9 @@ To help get around the transaction size limitation, Solana released a new transa
 
 Versioned transactions don't require any modifications to existing Solana programs, but any client-side code created prior to the release of versioned transactions should be updated. In this lesson, we'll cover the basics of versioned transactions and how to use them, including:
 
--   Creating versioned transactions
--   Creating and managing lookup tables
--   Using lookup tables in versioned transactions
+- Creating versioned transactions
+- Creating and managing lookup tables
+- Using lookup tables in versioned transactions
 
 ## Versioned Transactions
 
@@ -39,9 +39,9 @@ Even if you don't need to use lookup tables, you'll need to know how to support 
 
 To create a versioned transaction, you simply create a `TransactionMessage` with the following parameters:
 
--   `payerKey` - the public key of the account that will pay for the transaction
--   `recentBlockhash` - a recent blockhash from the network
--   `instructions` - the instructions to include in the transaction
+- `payerKey` - the public key of the account that will pay for the transaction
+- `recentBlockhash` - a recent blockhash from the network
+- `instructions` - the instructions to include in the transaction
 
 You then transform this message object into a version `0` transaction using the `compileToV0Message()` method.
 
@@ -50,11 +50,11 @@ import * as web3 from "@solana/web3.js";
 
 // Example transfer instruction
 const transferInstruction = [
-    web3.SystemProgram.transfer({
-        fromPubkey: payer.publicKey, // Public key of account that will send the funds
-        toPubkey: toAccount.publicKey, // Public key of the account that will receive the funds
-        lamports: 1 * LAMPORTS_PER_SOL, // Amount of lamports to be transferred
-    }),
+  web3.SystemProgram.transfer({
+    fromPubkey: payer.publicKey, // Public key of account that will send the funds
+    toPubkey: toAccount.publicKey, // Public key of the account that will receive the funds
+    lamports: 1 * LAMPORTS_PER_SOL, // Amount of lamports to be transferred
+  }),
 ];
 
 // Get the latest blockhash
@@ -62,9 +62,9 @@ let { blockhash } = await connection.getLatestBlockhash();
 
 // Create the transaction message
 const message = new web3.TransactionMessage({
-    payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
-    recentBlockhash: blockhash, // Latest blockhash
-    instructions: transferInstruction, // Instructions included in transaction
+  payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
+  recentBlockhash: blockhash, // Latest blockhash
+  instructions: transferInstruction, // Instructions included in transaction
 }).compileToV0Message();
 ```
 
@@ -89,19 +89,19 @@ Versioned transactions can include the address of an LUT account and then refere
 
 To simplify the process of working with LUTs, the `@solana/web3.js` library includes an `AddressLookupTableProgram` class which provides a set of methods to create instructions for managing LUTs. These methods include:
 
--   `createLookupTable` - creates a new LUT account
--   `freezeLookupTable` - makes an existing LUT immutable
--   `extendLookupTable` - adds addresses to an existing LUT
--   `deactivateLookupTable` - puts an LUT in a “deactivation” period before it can be closed
--   `closeLookupTable` - permanently closes an LUT account
+- `createLookupTable` - creates a new LUT account
+- `freezeLookupTable` - makes an existing LUT immutable
+- `extendLookupTable` - adds addresses to an existing LUT
+- `deactivateLookupTable` - puts an LUT in a “deactivation” period before it can be closed
+- `closeLookupTable` - permanently closes an LUT account
 
 ### Create a lookup table
 
 You use the `createLookupTable` method to construct the instruction that creates a lookup table. The function requires the following parameters:
 
--   `authority` - the account that will have permission to modify the lookup table
--   `payer` - the account that will pay for the account creation
--   `recentSlot` - a recent slot to derive the lookup table's address
+- `authority` - the account that will have permission to modify the lookup table
+- `payer` - the account that will pay for the account creation
+- `recentSlot` - a recent slot to derive the lookup table's address
 
 The function returns both the instruction to create the lookup table and the address of the lookup table.
 
@@ -112,19 +112,19 @@ const slot = await connection.getSlot();
 // Create an instruction for creating a lookup table
 // and retrieve the address of the new lookup table
 const [lookupTableInst, lookupTableAddress] =
-    web3.AddressLookupTableProgram.createLookupTable({
-        authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-        payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-        recentSlot: slot - 1, // The recent slot to derive lookup table's address
-    });
+  web3.AddressLookupTableProgram.createLookupTable({
+    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+    payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+    recentSlot: slot - 1, // The recent slot to derive lookup table's address
+  });
 ```
 
 Under the hood, the lookup table address is simply a PDA derived using the `authority` and `recentSlot` as seeds.
 
 ```ts
 const [lookupTableAddress, bumpSeed] = PublicKey.findProgramAddressSync(
-    [params.authority.toBuffer(), toBufferLE(BigInt(params.recentSlot), 8)],
-    this.programId,
+  [params.authority.toBuffer(), toBufferLE(BigInt(params.recentSlot), 8)],
+  this.programId,
 );
 ```
 
@@ -140,26 +140,26 @@ Note that using the most recent slot sometimes results in an error after sending
 
 You use the `extendLookupTable` method to create an instruction that adds addresses to an existing lookup table. It takes the following parameters:
 
--   `payer` - the account that will pay for the transaction fees and any increased rent
--   `authority` - the account that has permission to change the lookup table
--   `lookupTable` - the address of the lookup table to extend
--   `addresses` - the addresses to add to the lookup table
+- `payer` - the account that will pay for the transaction fees and any increased rent
+- `authority` - the account that has permission to change the lookup table
+- `lookupTable` - the address of the lookup table to extend
+- `addresses` - the addresses to add to the lookup table
 
 The function returns an instruction to extend the lookup table.
 
 ```ts
 const addresses = [
-    new web3.PublicKey("31Jy3nFeb5hKVdB4GS4Y7MhU7zhNMFxwF7RGVhPc1TzR"),
-    new web3.PublicKey("HKSeapcvwJ7ri6mf3HwBtspLFTDKqaJrMsozdfXfg5y2"),
-    // add more addresses
+  new web3.PublicKey("31Jy3nFeb5hKVdB4GS4Y7MhU7zhNMFxwF7RGVhPc1TzR"),
+  new web3.PublicKey("HKSeapcvwJ7ri6mf3HwBtspLFTDKqaJrMsozdfXfg5y2"),
+  // add more addresses
 ];
 
 // Create an instruction to extend a lookup table with the provided addresses
 const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
-    payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-    lookupTable: lookupTableAddress, // The address of the lookup table to extend
-    addresses: addresses, // The addresses to add to the lookup table
+  payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+  authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+  lookupTable: lookupTableAddress, // The address of the lookup table to extend
+  addresses: addresses, // The addresses to add to the lookup table
 });
 ```
 
@@ -175,9 +175,9 @@ let { blockhash } = await connection.getLatestBlockhash();
 
 // Create the transaction message
 const message = new web3.TransactionMessage({
-    payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
-    recentBlockhash: blockhash, // Latest blockhash
-    instructions: [lookupTableInst, extendInstruction], // Instructions included in transaction
+  payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
+  recentBlockhash: blockhash, // Latest blockhash
+  instructions: [lookupTableInst, extendInstruction], // Instructions included in transaction
 }).compileToV0Message();
 
 // Create the versioned transaction using the message
@@ -204,30 +204,30 @@ When an lookup table is no longer needed, you can deactivate and close it to rec
 
 To deactivate an LUT, use the `deactivateLookupTable` method and pass in the following parameters:
 
--   `lookupTable` - the address of the LUT to be deactivated
--   `authority` - the account with permission to deactivate the LUT
+- `lookupTable` - the address of the LUT to be deactivated
+- `authority` - the account with permission to deactivate the LUT
 
 ```ts
 const deactivateInstruction =
-    web3.AddressLookupTableProgram.deactivateLookupTable({
-        lookupTable: lookupTableAddress, // The address of the lookup table to deactivate
-        authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-    });
+  web3.AddressLookupTableProgram.deactivateLookupTable({
+    lookupTable: lookupTableAddress, // The address of the lookup table to deactivate
+    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+  });
 ```
 
 ### Close a lookup table
 
 To close a lookup table after its deactivation period, use the `closeLookupTable` method. This method creates an instruction to close a deactivated lookup table and reclaim its rent balance. It takes the following parameters:
 
--   `lookupTable` - the address of the LUT to be closed
--   `authority` - the account with permission to close the LUT
--   `recipient` - the account that will receive the reclaimed rent balance
+- `lookupTable` - the address of the LUT to be closed
+- `authority` - the account with permission to close the LUT
+- `recipient` - the account that will receive the reclaimed rent balance
 
 ```ts
 const closeInstruction = web3.AddressLookupTableProgram.closeLookupTable({
-    lookupTable: lookupTableAddress, // The address of the lookup table to close
-    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-    recipient: user.publicKey, // The recipient of closed account lamports
+  lookupTable: lookupTableAddress, // The address of the lookup table to close
+  authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+  recipient: user.publicKey, // The recipient of closed account lamports
 });
 ```
 
@@ -245,13 +245,13 @@ In addition to standard CRUD operations, you can "freeze" a lookup table. This m
 
 You freeze a lookup table with the `freezeLookupTable` method. It takes the following parameters:
 
--   `lookupTable` - the address of the LUT to be frozen
--   `authority` - the account with permission to freeze the LUT
+- `lookupTable` - the address of the LUT to be frozen
+- `authority` - the account with permission to freeze the LUT
 
 ```ts
 const freezeInstruction = web3.AddressLookupTableProgram.freezeLookupTable({
-    lookupTable: lookupTableAddress, // The address of the lookup table to freeze
-    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+  lookupTable: lookupTableAddress, // The address of the lookup table to freeze
+  authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
 });
 ```
 
@@ -269,7 +269,7 @@ To use a lookup table in a versioned transaction, you need to retrieve the looku
 
 ```ts
 const lookupTableAccount = (
-    await connection.getAddressLookupTable(lookupTableAddress)
+  await connection.getAddressLookupTable(lookupTableAddress)
 ).value;
 ```
 
@@ -277,9 +277,9 @@ You can then create a list of instructions to include in a transaction as usual.
 
 ```ts
 const message = new web3.TransactionMessage({
-    payerKey: payer.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-    recentBlockhash: blockhash, // The blockhash of the most recent block
-    instructions: instructions, // The instructions to include in the transaction
+  payerKey: payer.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+  recentBlockhash: blockhash, // The blockhash of the most recent block
+  instructions: instructions, // The instructions to include in the transaction
 }).compileToV0Message([lookupTableAccount]); // Include lookup table accounts
 
 // Create the versioned transaction using the message
@@ -313,52 +313,52 @@ import { initializeKeypair } from "./initializeKeypair";
 import * as web3 from "@solana/web3.js";
 
 async function main() {
-    // Connect to the devnet cluster
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+  // Connect to the devnet cluster
+  const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 
-    // Initialize the user's keypair
-    const user = await initializeKeypair(connection);
-    console.log("PublicKey:", user.publicKey.toBase58());
+  // Initialize the user's keypair
+  const user = await initializeKeypair(connection);
+  console.log("PublicKey:", user.publicKey.toBase58());
 
-    // Generate 22 addresses
-    const recipients = [];
-    for (let i = 0; i < 22; i++) {
-        recipients.push(web3.Keypair.generate().publicKey);
-    }
+  // Generate 22 addresses
+  const recipients = [];
+  for (let i = 0; i < 22; i++) {
+    recipients.push(web3.Keypair.generate().publicKey);
+  }
 
-    // Create an array of transfer instructions
-    const transferInstructions = [];
+  // Create an array of transfer instructions
+  const transferInstructions = [];
 
-    // Add a transfer instruction for each address
-    for (const address of recipients) {
-        transferInstructions.push(
-            web3.SystemProgram.transfer({
-                fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-                toPubkey: address, // The destination account for the transfer
-                lamports: web3.LAMPORTS_PER_SOL * 0.01, // The amount of lamports to transfer
-            }),
-        );
-    }
+  // Add a transfer instruction for each address
+  for (const address of recipients) {
+    transferInstructions.push(
+      web3.SystemProgram.transfer({
+        fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+        toPubkey: address, // The destination account for the transfer
+        lamports: web3.LAMPORTS_PER_SOL * 0.01, // The amount of lamports to transfer
+      }),
+    );
+  }
 
-    // Create a transaction and add the transfer instructions
-    const transaction = new web3.Transaction().add(...transferInstructions);
+  // Create a transaction and add the transfer instructions
+  const transaction = new web3.Transaction().add(...transferInstructions);
 
-    // Send the transaction to the cluster (this will fail in this example if addresses > 21)
-    const txid = await connection.sendTransaction(transaction, [user]);
+  // Send the transaction to the cluster (this will fail in this example if addresses > 21)
+  const txid = await connection.sendTransaction(transaction, [user]);
 
-    // Get the latest blockhash and last valid block height
-    const { lastValidBlockHeight, blockhash } =
-        await connection.getLatestBlockhash();
+  // Get the latest blockhash and last valid block height
+  const { lastValidBlockHeight, blockhash } =
+    await connection.getLatestBlockhash();
 
-    // Confirm the transaction
-    await connection.confirmTransaction({
-        blockhash: blockhash,
-        lastValidBlockHeight: lastValidBlockHeight,
-        signature: txid,
-    });
+  // Confirm the transaction
+  await connection.confirmTransaction({
+    blockhash: blockhash,
+    lastValidBlockHeight: lastValidBlockHeight,
+    signature: txid,
+  });
 
-    // Log the transaction URL on the Solana Explorer
-    console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
+  // Log the transaction URL on the Solana Explorer
+  console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
 }
 ```
 
@@ -379,18 +379,18 @@ Before we start, go ahead and delete the content of the `main` function to leave
 
 ```ts
 async function main() {
-    // Connect to the devnet cluster
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+  // Connect to the devnet cluster
+  const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 
-    // Initialize the user's keypair
-    const user = await initializeKeypair(connection);
-    console.log("PublicKey:", user.publicKey.toBase58());
+  // Initialize the user's keypair
+  const user = await initializeKeypair(connection);
+  console.log("PublicKey:", user.publicKey.toBase58());
 
-    // Generate 22 addresses
-    const addresses = [];
-    for (let i = 0; i < 22; i++) {
-        addresses.push(web3.Keypair.generate().publicKey);
-    }
+  // Generate 22 addresses
+  const addresses = [];
+  for (let i = 0; i < 22; i++) {
+    addresses.push(web3.Keypair.generate().publicKey);
+  }
 }
 ```
 
@@ -402,54 +402,52 @@ This function should take parameters for a connection, a user's keypair, an arra
 
 The function then performs the following tasks:
 
--   Retrieves the latest blockhash and last valid block height from the Solana network
--   Creates a new transaction message using the provided instructions
--   Signs the transaction using the user's keypair
--   Sends the transaction to the Solana network
--   Confirms the transaction
--   Logs the transaction URL on the Solana Explorer
+- Retrieves the latest blockhash and last valid block height from the Solana network
+- Creates a new transaction message using the provided instructions
+- Signs the transaction using the user's keypair
+- Sends the transaction to the Solana network
+- Confirms the transaction
+- Logs the transaction URL on the Solana Explorer
 
 ```ts
 async function sendV0Transaction(
-    connection: web3.Connection,
-    user: web3.Keypair,
-    instructions: web3.TransactionInstruction[],
-    lookupTableAccounts?: web3.AddressLookupTableAccount[],
+  connection: web3.Connection,
+  user: web3.Keypair,
+  instructions: web3.TransactionInstruction[],
+  lookupTableAccounts?: web3.AddressLookupTableAccount[],
 ) {
-    // Get the latest blockhash and last valid block height
-    const { lastValidBlockHeight, blockhash } =
-        await connection.getLatestBlockhash();
+  // Get the latest blockhash and last valid block height
+  const { lastValidBlockHeight, blockhash } =
+    await connection.getLatestBlockhash();
 
-    // Create a new transaction message with the provided instructions
-    const messageV0 = new web3.TransactionMessage({
-        payerKey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-        recentBlockhash: blockhash, // The blockhash of the most recent block
-        instructions, // The instructions to include in the transaction
-    }).compileToV0Message(
-        lookupTableAccounts ? lookupTableAccounts : undefined,
-    );
+  // Create a new transaction message with the provided instructions
+  const messageV0 = new web3.TransactionMessage({
+    payerKey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+    recentBlockhash: blockhash, // The blockhash of the most recent block
+    instructions, // The instructions to include in the transaction
+  }).compileToV0Message(lookupTableAccounts ? lookupTableAccounts : undefined);
 
-    // Create a new transaction object with the message
-    const transaction = new web3.VersionedTransaction(messageV0);
+  // Create a new transaction object with the message
+  const transaction = new web3.VersionedTransaction(messageV0);
 
-    // Sign the transaction with the user's keypair
-    transaction.sign([user]);
+  // Sign the transaction with the user's keypair
+  transaction.sign([user]);
 
-    // Send the transaction to the cluster
-    const txid = await connection.sendTransaction(transaction);
+  // Send the transaction to the cluster
+  const txid = await connection.sendTransaction(transaction);
 
-    // Confirm the transaction
-    await connection.confirmTransaction(
-        {
-            blockhash: blockhash,
-            lastValidBlockHeight: lastValidBlockHeight,
-            signature: txid,
-        },
-        "finalized",
-    );
+  // Confirm the transaction
+  await connection.confirmTransaction(
+    {
+      blockhash: blockhash,
+      lastValidBlockHeight: lastValidBlockHeight,
+      signature: txid,
+    },
+    "finalized",
+  );
 
-    // Log the transaction URL on the Solana Explorer
-    console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
+  // Log the transaction URL on the Solana Explorer
+  console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
 }
 ```
 
@@ -461,26 +459,26 @@ This function will have parameters for a connection and a target block height. I
 
 ```ts
 function waitForNewBlock(connection: web3.Connection, targetHeight: number) {
-    console.log(`Waiting for ${targetHeight} new blocks`);
-    return new Promise(async (resolve: any) => {
-        // Get the last valid block height of the blockchain
-        const { lastValidBlockHeight } = await connection.getLatestBlockhash();
+  console.log(`Waiting for ${targetHeight} new blocks`);
+  return new Promise(async (resolve: any) => {
+    // Get the last valid block height of the blockchain
+    const { lastValidBlockHeight } = await connection.getLatestBlockhash();
 
-        // Set an interval to check for new blocks every 1000ms
-        const intervalId = setInterval(async () => {
-            // Get the new valid block height
-            const { lastValidBlockHeight: newValidBlockHeight } =
-                await connection.getLatestBlockhash();
-            // console.log(newValidBlockHeight)
+    // Set an interval to check for new blocks every 1000ms
+    const intervalId = setInterval(async () => {
+      // Get the new valid block height
+      const { lastValidBlockHeight: newValidBlockHeight } =
+        await connection.getLatestBlockhash();
+      // console.log(newValidBlockHeight)
 
-            // Check if the new valid block height is greater than the target block height
-            if (newValidBlockHeight > lastValidBlockHeight + targetHeight) {
-                // If the target block height is reached, clear the interval and resolve the promise
-                clearInterval(intervalId);
-                resolve();
-            }
-        }, 1000);
-    });
+      // Check if the new valid block height is greater than the target block height
+      if (newValidBlockHeight > lastValidBlockHeight + targetHeight) {
+        // If the target block height is reached, clear the interval and resolve the promise
+        clearInterval(intervalId);
+        resolve();
+      }
+    }, 1000);
+  });
 }
 ```
 
@@ -496,37 +494,37 @@ Now that we have some helper functions ready to go, declare a function named `in
 
 ```ts
 async function initializeLookupTable(
-    user: web3.Keypair,
-    connection: web3.Connection,
-    addresses: web3.PublicKey[],
+  user: web3.Keypair,
+  connection: web3.Connection,
+  addresses: web3.PublicKey[],
 ): Promise<web3.PublicKey> {
-    // Get the current slot
-    const slot = await connection.getSlot();
+  // Get the current slot
+  const slot = await connection.getSlot();
 
-    // Create an instruction for creating a lookup table
-    // and retrieve the address of the new lookup table
-    const [lookupTableInst, lookupTableAddress] =
-        web3.AddressLookupTableProgram.createLookupTable({
-            authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-            payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-            recentSlot: slot - 1, // The recent slot to derive lookup table's address
-        });
-    console.log("lookup table address:", lookupTableAddress.toBase58());
-
-    // Create an instruction to extend a lookup table with the provided addresses
-    const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
-        payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-        authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-        lookupTable: lookupTableAddress, // The address of the lookup table to extend
-        addresses: addresses.slice(0, 30), // The addresses to add to the lookup table
+  // Create an instruction for creating a lookup table
+  // and retrieve the address of the new lookup table
+  const [lookupTableInst, lookupTableAddress] =
+    web3.AddressLookupTableProgram.createLookupTable({
+      authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+      payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+      recentSlot: slot - 1, // The recent slot to derive lookup table's address
     });
+  console.log("lookup table address:", lookupTableAddress.toBase58());
 
-    await sendV0Transaction(connection, user, [
-        lookupTableInst,
-        extendInstruction,
-    ]);
+  // Create an instruction to extend a lookup table with the provided addresses
+  const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+    payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+    lookupTable: lookupTableAddress, // The address of the lookup table to extend
+    addresses: addresses.slice(0, 30), // The addresses to add to the lookup table
+  });
 
-    return lookupTableAddress;
+  await sendV0Transaction(connection, user, [
+    lookupTableInst,
+    extendInstruction,
+  ]);
+
+  return lookupTableAddress;
 }
 ```
 
@@ -542,46 +540,46 @@ Now that we can initialize a lookup table with all of the recipients' addresses,
 
 ```ts
 async function main() {
-    // Connect to the devnet cluster
-    const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+  // Connect to the devnet cluster
+  const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 
-    // Initialize the user's keypair
-    const user = await initializeKeypair(connection);
-    console.log("PublicKey:", user.publicKey.toBase58());
+  // Initialize the user's keypair
+  const user = await initializeKeypair(connection);
+  console.log("PublicKey:", user.publicKey.toBase58());
 
-    // Generate 22 addresses
-    const recipients = [];
-    for (let i = 0; i < 22; i++) {
-        recipients.push(web3.Keypair.generate().publicKey);
-    }
+  // Generate 22 addresses
+  const recipients = [];
+  for (let i = 0; i < 22; i++) {
+    recipients.push(web3.Keypair.generate().publicKey);
+  }
 
-    const lookupTableAddress = await initializeLookupTable(
-        user,
-        connection,
-        recipients,
-    );
+  const lookupTableAddress = await initializeLookupTable(
+    user,
+    connection,
+    recipients,
+  );
 
-    await waitForNewBlock(connection, 1);
+  await waitForNewBlock(connection, 1);
 
-    const lookupTableAccount = (
-        await connection.getAddressLookupTable(lookupTableAddress)
-    ).value;
+  const lookupTableAccount = (
+    await connection.getAddressLookupTable(lookupTableAddress)
+  ).value;
 
-    if (!lookupTableAccount) {
-        throw new Error("Lookup table not found");
-    }
+  if (!lookupTableAccount) {
+    throw new Error("Lookup table not found");
+  }
 
-    const transferInstructions = recipients.map((recipient) => {
-        return web3.SystemProgram.transfer({
-            fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-            toPubkey: recipient, // The destination account for the transfer
-            lamports: web3.LAMPORTS_PER_SOL * 0.01, // The amount of lamports to transfer
-        });
+  const transferInstructions = recipients.map(recipient => {
+    return web3.SystemProgram.transfer({
+      fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+      toPubkey: recipient, // The destination account for the transfer
+      lamports: web3.LAMPORTS_PER_SOL * 0.01, // The amount of lamports to transfer
     });
+  });
 
-    await sendV0Transaction(connection, user, transferInstructions, [
-        lookupTableAccount,
-    ]);
+  await sendV0Transaction(connection, user, transferInstructions, [
+    lookupTableAccount,
+  ]);
 }
 ```
 
@@ -614,53 +612,52 @@ All we need to do is go into `initializeLookupTable` and do two things:
 
 ```ts
 async function initializeLookupTable(
-    user: web3.Keypair,
-    connection: web3.Connection,
-    addresses: web3.PublicKey[],
+  user: web3.Keypair,
+  connection: web3.Connection,
+  addresses: web3.PublicKey[],
 ): Promise<web3.PublicKey> {
-    // Get the current slot
-    const slot = await connection.getSlot();
+  // Get the current slot
+  const slot = await connection.getSlot();
 
-    // Create an instruction for creating a lookup table
-    // and retrieve the address of the new lookup table
-    const [lookupTableInst, lookupTableAddress] =
-        web3.AddressLookupTableProgram.createLookupTable({
-            authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-            payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-            recentSlot: slot - 1, // The recent slot to derive lookup table's address
-        });
-    console.log("lookup table address:", lookupTableAddress.toBase58());
+  // Create an instruction for creating a lookup table
+  // and retrieve the address of the new lookup table
+  const [lookupTableInst, lookupTableAddress] =
+    web3.AddressLookupTableProgram.createLookupTable({
+      authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+      payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+      recentSlot: slot - 1, // The recent slot to derive lookup table's address
+    });
+  console.log("lookup table address:", lookupTableAddress.toBase58());
 
-    // Create an instruction to extend a lookup table with the provided addresses
+  // Create an instruction to extend a lookup table with the provided addresses
+  const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+    payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+    lookupTable: lookupTableAddress, // The address of the lookup table to extend
+    addresses: addresses.slice(0, 30), // The addresses to add to the lookup table
+  });
+
+  await sendV0Transaction(connection, user, [
+    lookupTableInst,
+    extendInstruction,
+  ]);
+
+  var remaining = addresses.slice(30);
+
+  while (remaining.length > 0) {
+    const toAdd = remaining.slice(0, 30);
+    remaining = remaining.slice(30);
     const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
-        payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-        authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-        lookupTable: lookupTableAddress, // The address of the lookup table to extend
-        addresses: addresses.slice(0, 30), // The addresses to add to the lookup table
+      payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+      authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+      lookupTable: lookupTableAddress, // The address of the lookup table to extend
+      addresses: toAdd, // The addresses to add to the lookup table
     });
 
-    await sendV0Transaction(connection, user, [
-        lookupTableInst,
-        extendInstruction,
-    ]);
+    await sendV0Transaction(connection, user, [extendInstruction]);
+  }
 
-    var remaining = addresses.slice(30);
-
-    while (remaining.length > 0) {
-        const toAdd = remaining.slice(0, 30);
-        remaining = remaining.slice(30);
-        const extendInstruction =
-            web3.AddressLookupTableProgram.extendLookupTable({
-                payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-                authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
-                lookupTable: lookupTableAddress, // The address of the lookup table to extend
-                addresses: toAdd, // The addresses to add to the lookup table
-            });
-
-        await sendV0Transaction(connection, user, [extendInstruction]);
-    }
-
-    return lookupTableAddress;
+  return lookupTableAddress;
 }
 ```
 

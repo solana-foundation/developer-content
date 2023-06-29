@@ -1,16 +1,16 @@
 ---
 title: Create Solana NFTs With Metaplex
 objectives:
-- Explain NFTs and how they're represented on the Solana network
-- Explain the role of Metaplex in the Solana NFT ecosystem
-- Create and update NFTs using the Metaplex SDK
-- Explain the basic functionality of the Token Metadata program, Candy Machine program, and Sugar CLI as tools that assist in creating and distributing NFTs on Solana
+  - Explain NFTs and how they're represented on the Solana network
+  - Explain the role of Metaplex in the Solana NFT ecosystem
+  - Create and update NFTs using the Metaplex SDK
+  - Explain the basic functionality of the Token Metadata program, Candy Machine program, and Sugar CLI as tools that assist in creating and distributing NFTs on Solana
 ---
 
 # TL;DR
 
 - **Non-Fungible Tokens (NFTs)** are represented on Solana as SPL Tokens with an associated metadata account, 0 decimals, and a maximum supply of 1
--   **Metaplex** offers a collection of tools that simplify the creation and distribution of NFTs on the Solana blockchain
+- **Metaplex** offers a collection of tools that simplify the creation and distribution of NFTs on the Solana blockchain
 - The **Token Metadata** program standardizes the process of attaching metadata to SPL Tokens
 - The **Metaplex SDK** is a tool that offers user-friendly APIs to assist developers in utilizing the on-chain tools provided by Metaplex
 - The **Candy Machine** program is an NFT distribution tool used to create and mint NFTs from a collection
@@ -24,7 +24,7 @@ In this lesson, we'll cover the basics of how NFTs are represented on Solana, ho
 
 ## NFTs on Solana
 
-A Solana NFT is a non-divisible token with associated metadata. Further, the token's mint has a maximum supply of 1. 
+A Solana NFT is a non-divisible token with associated metadata. Further, the token's mint has a maximum supply of 1.
 
 In other words, an NFT is a standard token from the Token Program but differs from what you might think of as "standard tokens" in that it:
 
@@ -61,9 +61,9 @@ Below is an example of how you can set up the `Metaplex` instance for devnet.
 
 ```tsx
 import {
-    Metaplex,
-    keypairIdentity,
-    bundlrStorage,
+  Metaplex,
+  keypairIdentity,
+  bundlrStorage,
 } from "@metaplex-foundation/js";
 import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
 
@@ -71,14 +71,14 @@ const connection = new Connection(clusterApiUrl("devnet"));
 const wallet = Keypair.generate();
 
 const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(wallet))
-    .use(
-        bundlrStorage({
-            address: "https://devnet.bundlr.network",
-            providerUrl: "https://api.devnet.solana.com",
-            timeout: 60000,
-        }),
-    );
+  .use(keypairIdentity(wallet))
+  .use(
+    bundlrStorage({
+      address: "https://devnet.bundlr.network",
+      providerUrl: "https://api.devnet.solana.com",
+      timeout: 60000,
+    }),
+  );
 ```
 
 ### Upload assets
@@ -106,9 +106,9 @@ To create the metadata, use the `uploadMetadata` method provided by the SDK. Thi
 
 ```tsx
 const { uri } = await metaplex.nfts().uploadMetadata({
-    name: "My NFT",
-    description: "My description",
-    image: imageUri,
+  name: "My NFT",
+  description: "My description",
+  image: imageUri,
 });
 ```
 
@@ -118,12 +118,12 @@ After uploading the NFT's metadata, you can finally create the NFT on the networ
 
 ```tsx
 const { nft } = await metaplex.nfts().create(
-    {
-        uri: uri,
-        name: "My NFT",
-        sellerFeeBasisPoints: 0,
-    },
-    { commitment: "finalized" },
+  {
+    uri: uri,
+    name: "My NFT",
+    sellerFeeBasisPoints: 0,
+  },
+  { commitment: "finalized" },
 );
 ```
 
@@ -137,13 +137,13 @@ If you've left `isMutable` as true, you may end up having a reason to update you
 const nft = await metaplex.nfts().findByMint({ mintAddress });
 
 const { response } = await metaplex.nfts().update(
-    {
-        nftOrSft: nft,
-        name: "Updated Name",
-        uri: uri,
-        sellerFeeBasisPoints: 100,
-    },
-    { commitment: "finalized" },
+  {
+    nftOrSft: nft,
+    name: "Updated Name",
+    uri: uri,
+    sellerFeeBasisPoints: 100,
+  },
+  { commitment: "finalized" },
 );
 ```
 
@@ -157,13 +157,13 @@ In order to add an NFT to a collection, first the Collection NFT has to be creat
 
 ```tsx
 const { collectionNft } = await metaplex.nfts().create(
-    {
-        uri: uri,
-        name: "My NFT Collection",
-        sellerFeeBasisPoints: 0,
-        isCollection: true
-    },
-    { commitment: "finalized" },
+  {
+    uri: uri,
+    name: "My NFT Collection",
+    sellerFeeBasisPoints: 0,
+    isCollection: true,
+  },
+  { commitment: "finalized" },
 );
 ```
 
@@ -171,13 +171,13 @@ You then list the collection's Mint Address as the reference for the `collection
 
 ```tsx
 const { nft } = await metaplex.nfts().create(
-    {
-        uri: uri,
-        name: "My NFT",
-        sellerFeeBasisPoints: 0,
-        collection: collectionNft.mintAddress
-    },
-    { commitment: "finalized" },
+  {
+    uri: uri,
+    name: "My NFT",
+    sellerFeeBasisPoints: 0,
+    collection: collectionNft.mintAddress,
+  },
+  { commitment: "finalized" },
 );
 ```
 
@@ -194,13 +194,13 @@ The last thing you need to do is verify the NFT. This effectively just flips the
 
 ```tsx
 await metaplex.nfts().verifyCollection({
-    mintAddress: nft.address,
-    collectionMintAddress: collectionNft.address,
-    isSizedCollection: true,
-})
+  mintAddress: nft.address,
+  collectionMintAddress: collectionNft.address,
+  isSizedCollection: true,
+});
 ```
 
-### Candy Machine 
+### Candy Machine
 
 When creating and distributing a bulk supply of NFT's, Metaplex makes it easy with their [Candy Machine](https://docs.metaplex.com/programs/candy-machine/overview) program and [Sugar CLI](https://docs.metaplex.com/developer-tools/sugar/).
 
@@ -208,8 +208,7 @@ Candy Machine is effectively a minting and distribution program to help launch N
 
 We won't cover these tools in-depth, but definitely check out how they work together [here](https://docs.metaplex.com/developer-tools/sugar/overview/introduction).
 
-To explore the full range of tools offered by Metaplex, you can view the [Metaplex repository](https://github.com/metaplex-foundation/metaplex) on GitHub. 
-
+To explore the full range of tools offered by Metaplex, you can view the [Metaplex repository](https://github.com/metaplex-foundation/metaplex) on GitHub.
 
 # Demo
 
@@ -225,49 +224,49 @@ Additionally, in the `index.ts` file, you will find the following code snippet w
 
 ```tsx
 interface NftData {
-    name: string;
-    symbol: string;
-    description: string;
-    sellerFeeBasisPoints: number;
-    imageFile: string;
+  name: string;
+  symbol: string;
+  description: string;
+  sellerFeeBasisPoints: number;
+  imageFile: string;
 }
 
 interface CollectionNftData {
-    name: string
-    symbol: string
-    description: string
-    sellerFeeBasisPoints: number
-    imageFile: string
-    isCollection: boolean
-    collectionAuthority: Signer
+  name: string;
+  symbol: string;
+  description: string;
+  sellerFeeBasisPoints: number;
+  imageFile: string;
+  isCollection: boolean;
+  collectionAuthority: Signer;
 }
 
 // example data for a new NFT
 const nftData = {
-    name: "Name",
-    symbol: "SYMBOL",
-    description: "Description",
-    sellerFeeBasisPoints: 0,
-    imageFile: "solana.png",
-}
+  name: "Name",
+  symbol: "SYMBOL",
+  description: "Description",
+  sellerFeeBasisPoints: 0,
+  imageFile: "solana.png",
+};
 
 // example data for updating an existing NFT
 const updateNftData = {
-    name: "Update",
-    symbol: "UPDATE",
-    description: "Update Description",
-    sellerFeeBasisPoints: 100,
-    imageFile: "success.png",
-}
+  name: "Update",
+  symbol: "UPDATE",
+  description: "Update Description",
+  sellerFeeBasisPoints: 100,
+  imageFile: "success.png",
+};
 
 async function main() {
-    // create a new connection to the cluster's API
-    const connection = new Connection(clusterApiUrl("devnet"));
+  // create a new connection to the cluster's API
+  const connection = new Connection(clusterApiUrl("devnet"));
 
-    // initialize a keypair for the user
-    const user = await initializeKeypair(connection);
+  // initialize a keypair for the user
+  const user = await initializeKeypair(connection);
 
-    console.log("PublicKey:", user.publicKey.toBase58());
+  console.log("PublicKey:", user.publicKey.toBase58());
 }
 ```
 
@@ -289,24 +288,24 @@ Before we start creating and updating NFTs, we need to set up the Metaplex insta
 
 ```tsx
 async function main() {
-    // create a new connection to the cluster's API
-    const connection = new Connection(clusterApiUrl("devnet"));
+  // create a new connection to the cluster's API
+  const connection = new Connection(clusterApiUrl("devnet"));
 
-    // initialize a keypair for the user
-    const user = await initializeKeypair(connection);
+  // initialize a keypair for the user
+  const user = await initializeKeypair(connection);
 
-    console.log("PublicKey:", user.publicKey.toBase58());
+  console.log("PublicKey:", user.publicKey.toBase58());
 
-    // metaplex set up
-    const metaplex = Metaplex.make(connection)
-        .use(keypairIdentity(user))
-        .use(
-            bundlrStorage({
-                address: "https://devnet.bundlr.network",
-                providerUrl: "https://api.devnet.solana.com",
-                timeout: 60000,
-            }),
-        );
+  // metaplex set up
+  const metaplex = Metaplex.make(connection)
+    .use(keypairIdentity(user))
+    .use(
+      bundlrStorage({
+        address: "https://devnet.bundlr.network",
+        providerUrl: "https://api.devnet.solana.com",
+        timeout: 60000,
+      }),
+    );
 }
 ```
 
@@ -317,29 +316,29 @@ Next, lets create a helper function to handle the process of uploading an image 
 ```tsx
 // helper function to upload image and metadata
 async function uploadMetadata(
-    metaplex: Metaplex,
-    nftData: NftData,
+  metaplex: Metaplex,
+  nftData: NftData,
 ): Promise<string> {
-    // file to buffer
-    const buffer = fs.readFileSync("src/" + nftData.imageFile);
+  // file to buffer
+  const buffer = fs.readFileSync("src/" + nftData.imageFile);
 
-    // buffer to metaplex file
-    const file = toMetaplexFile(buffer, nftData.imageFile);
+  // buffer to metaplex file
+  const file = toMetaplexFile(buffer, nftData.imageFile);
 
-    // upload image and get image uri
-    const imageUri = await metaplex.storage().upload(file);
-    console.log("image uri:", imageUri);
+  // upload image and get image uri
+  const imageUri = await metaplex.storage().upload(file);
+  console.log("image uri:", imageUri);
 
-    // upload metadata and get metadata uri (off chain metadata)
-    const { uri } = await metaplex.nfts().uploadMetadata({
-        name: nftData.name,
-        symbol: nftData.symbol,
-        description: nftData.description,
-        image: imageUri,
-    });
+  // upload metadata and get metadata uri (off chain metadata)
+  const { uri } = await metaplex.nfts().uploadMetadata({
+    name: nftData.name,
+    symbol: nftData.symbol,
+    description: nftData.description,
+    image: imageUri,
+  });
 
-    console.log("metadata uri:", uri);
-    return uri;
+  console.log("metadata uri:", uri);
+  return uri;
 }
 ```
 
@@ -352,25 +351,25 @@ Next, let's create a helper function to handle creating the NFT. This function t
 ```tsx
 // helper function create NFT
 async function createNft(
-    metaplex: Metaplex,
-    uri: string,
-    nftData: NftData,
+  metaplex: Metaplex,
+  uri: string,
+  nftData: NftData,
 ): Promise<NftWithToken> {
-    const { nft } = await metaplex.nfts().create(
-        {
-            uri: uri, // metadata URI
-            name: nftData.name,
-            sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
-            symbol: nftData.symbol,
-        },
-        { commitment: "finalized" },
-    );
+  const { nft } = await metaplex.nfts().create(
+    {
+      uri: uri, // metadata URI
+      name: nftData.name,
+      sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
+      symbol: nftData.symbol,
+    },
+    { commitment: "finalized" },
+  );
 
-    console.log(
-        `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
-    );
+  console.log(
+    `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
+  );
 
-    return nft;
+  return nft;
 }
 ```
 
@@ -412,29 +411,29 @@ Next, let's create a helper function to handle updating an existing NFT's URI. T
 ```tsx
 // helper function update NFT
 async function updateNftUri(
-    metaplex: Metaplex,
-    uri: string,
-    mintAddress: PublicKey,
+  metaplex: Metaplex,
+  uri: string,
+  mintAddress: PublicKey,
 ) {
-    // fetch NFT data using mint address
-    const nft = await metaplex.nfts().findByMint({ mintAddress });
+  // fetch NFT data using mint address
+  const nft = await metaplex.nfts().findByMint({ mintAddress });
 
-    // update the NFT metadata
-    const { response } = await metaplex.nfts().update(
-        {
-            nftOrSft: nft,
-            uri: uri,
-        },
-        { commitment: "finalized" },
-    );
+  // update the NFT metadata
+  const { response } = await metaplex.nfts().update(
+    {
+      nftOrSft: nft,
+      uri: uri,
+    },
+    { commitment: "finalized" },
+  );
 
-    console.log(
-        `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
-    );
+  console.log(
+    `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
+  );
 
-    console.log(
-        `Transaction: https://explorer.solana.com/tx/${response.signature}?cluster=devnet`,
-    );
+  console.log(
+    `Transaction: https://explorer.solana.com/tx/${response.signature}?cluster=devnet`,
+  );
 }
 ```
 
@@ -473,44 +472,44 @@ First, let's create a helper function called `createCollectionNft`. Note that it
 
 ```tsx
 async function createCollectionNft(
-    metaplex: Metaplex,
-    uri: string,
-    data: CollectionNftData
+  metaplex: Metaplex,
+  uri: string,
+  data: CollectionNftData,
 ): Promise<NftWithToken> {
-    const { nft } = await metaplex.nfts().create(
-        {
-            uri: uri,
-            name: data.name,
-            sellerFeeBasisPoints: data.sellerFeeBasisPoints,
-            symbol: data.symbol,
-            isCollection: true,
-        },
-        { commitment: "finalized" }
-    )
+  const { nft } = await metaplex.nfts().create(
+    {
+      uri: uri,
+      name: data.name,
+      sellerFeeBasisPoints: data.sellerFeeBasisPoints,
+      symbol: data.symbol,
+      isCollection: true,
+    },
+    { commitment: "finalized" },
+  );
 
-    console.log(
-        `Collection Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`
-    )
+  console.log(
+    `Collection Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
+  );
 
-    return nft
+  return nft;
 }
 ```
 
-Next, we need to create the off-chain data for the collection. In `main` *before* the existing calls to `createNft`, add the following `collectionNftData`:
+Next, we need to create the off-chain data for the collection. In `main` _before_ the existing calls to `createNft`, add the following `collectionNftData`:
 
 ```tsx
 const collectionNftData = {
-    name: "TestCollectionNFT",
-    symbol: "TEST",
-    description: "Test Description Collection",
-    sellerFeeBasisPoints: 100,
-    imageFile: "success.png",
-    isCollection: true,
-    collectionAuthority: user,
-}
+  name: "TestCollectionNFT",
+  symbol: "TEST",
+  description: "Test Description Collection",
+  sellerFeeBasisPoints: 100,
+  imageFile: "success.png",
+  isCollection: true,
+  collectionAuthority: user,
+};
 ```
 
-Now, let's call `uploadMetadata` with the `collectionNftData` and then call `createCollectionNft`. Again, do this *before* the code that creates an NFT. 
+Now, let's call `uploadMetadata` with the `collectionNftData` and then call `createCollectionNft`. Again, do this _before_ the code that creates an NFT.
 
 ```tsx
 async function main() {
@@ -538,30 +537,30 @@ Now that we have a collection, let's change our existing code so that newly crea
 async function createNft(
   metaplex: Metaplex,
   uri: string,
-  nftData: NftData
+  nftData: NftData,
 ): Promise<NftWithToken> {
-    const { nft } = await metaplex.nfts().create(
-        {
-            uri: uri, // metadata URI
-            name: nftData.name,
-            sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
-            symbol: nftData.symbol,
-        },
-        { commitment: "finalized" }
-    )
+  const { nft } = await metaplex.nfts().create(
+    {
+      uri: uri, // metadata URI
+      name: nftData.name,
+      sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
+      symbol: nftData.symbol,
+    },
+    { commitment: "finalized" },
+  );
 
-    console.log(
-        `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}? cluster=devnet`
-    )
+  console.log(
+    `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}? cluster=devnet`,
+  );
 
-    //this is what verifies our collection as a Certified Collection
-    await metaplex.nfts().verifyCollection({    
-        mintAddress: nft.mint.address,
-        collectionMintAddress: collectionMint,
-        isSizedCollection: true,
-    })
+  //this is what verifies our collection as a Certified Collection
+  await metaplex.nfts().verifyCollection({
+    mintAddress: nft.mint.address,
+    collectionMintAddress: collectionMint,
+    isSizedCollection: true,
+  });
 
-    return nft
+  return nft;
 }
 ```
 

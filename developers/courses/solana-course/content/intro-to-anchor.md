@@ -1,9 +1,9 @@
 ---
 title: Intro to Anchor development
 objectives:
-- Use the Anchor framework to build a basic program
-- Describe the basic structure of an Anchor program
-- Explain how to implement basic account validation and security checks with Anchor
+  - Use the Anchor framework to build a basic program
+  - Describe the basic structure of an Anchor program
+  - Explain how to implement basic account validation and security checks with Anchor
 ---
 
 # TL;DR
@@ -83,7 +83,6 @@ pub struct Context<'a, 'b, 'c, 'info, T> {
 - The program ID (`ctx.program_id`) of the executing program
 - The remaining accounts (`ctx.remaining_accounts`). The `remaining_accounts` is a vector that contains all accounts that were passed into the instruction but are not declared in the `Accounts` struct.
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
-
 
 ## Define instruction accounts
 
@@ -199,7 +198,7 @@ account_info.executable == true
 
 The `#[account(..)]` attribute macro is used to apply constraints to accounts. We'll go over a few constraint examples in this and future lessons, but at some point be sure to look at the full [list of possible constraints](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html).
 
-Recall again the `account_name` field from the `InstructionAccounts` example. 
+Recall again the `account_name` field from the `InstructionAccounts` example.
 
 ```rust
 #[account(init, payer = user, space = 8 + 8)]
@@ -507,24 +506,24 @@ Run `anchor build` to build the program.
 Anchor tests are typically Typescript integration tests that use the mocha test framework. We'll learn more about testing later, but for now navigate to `anchor-counter.ts` and replace the default test code with the following:
 
 ```ts
-import * as anchor from "@project-serum/anchor"
-import { Program } from "@project-serum/anchor"
-import { expect } from "chai"
-import { AnchorCounter } from "../target/types/anchor_counter"
+import * as anchor from "@project-serum/anchor";
+import { Program } from "@project-serum/anchor";
+import { expect } from "chai";
+import { AnchorCounter } from "../target/types/anchor_counter";
 
 describe("anchor-counter", () => {
   // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
 
-  const program = anchor.workspace.AnchorCounter as Program<AnchorCounter>
+  const program = anchor.workspace.AnchorCounter as Program<AnchorCounter>;
 
-  const counter = anchor.web3.Keypair.generate()
+  const counter = anchor.web3.Keypair.generate();
 
-  it("Is initialized!", async () => {})
+  it("Is initialized!", async () => {});
 
-  it("Incremented the count", async () => {})
-})
+  it("Incremented the count", async () => {});
+});
 ```
 
 The above code generates a new keypair for the `counter` account we'll be initializing and creates placeholders for a test of each instruction.
@@ -538,11 +537,11 @@ it("Is initialized!", async () => {
     .initialize()
     .accounts({ counter: counter.publicKey })
     .signers([counter])
-    .rpc()
+    .rpc();
 
-  const account = await program.account.counter.fetch(counter.publicKey)
-  expect(account.count.toNumber() === 0)
-})
+  const account = await program.account.counter.fetch(counter.publicKey);
+  expect(account.count.toNumber() === 0);
+});
 ```
 
 Next, create the second test for the `increment` instruction:
@@ -552,11 +551,11 @@ it("Incremented the count", async () => {
   const tx = await program.methods
     .increment()
     .accounts({ counter: counter.publicKey, user: provider.wallet.publicKey })
-    .rpc()
+    .rpc();
 
-  const account = await program.account.counter.fetch(counter.publicKey)
-  expect(account.count.toNumber() === 1)
-})
+  const account = await program.account.counter.fetch(counter.publicKey);
+  expect(account.count.toNumber() === 1);
+});
 ```
 
 Lastly, run `anchor test` and you should see the following output:

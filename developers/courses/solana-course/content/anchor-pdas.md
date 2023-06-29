@@ -1,10 +1,10 @@
 ---
 title: Anchor PDAs and Accounts
 objectives:
-- Use the `seeds` and `bump` constraints to work with PDA accounts in Anchor
-- Enable and use the `init_if_needed` constraint
-- Use the `realloc` constraint to reallocate space on an existing account
-- Use the `close` constraint to close an existing account
+  - Use the `seeds` and `bump` constraints to work with PDA accounts in Anchor
+  - Enable and use the `init_if_needed` constraint
+  - Use the `realloc` constraint to reallocate space on an existing account
+  - Use the `close` constraint to close an existing account
 ---
 
 # TL;DR
@@ -93,7 +93,7 @@ pub struct AccountType {
 
 When using `init` for non-PDA accounts, Anchor defaults to setting the owner of the initialized account to be the program currently executing the instruction.
 
-However, when using `init` in combination with `seeds` and `bump`, the owner *must* be the executing program. This is because initializing an account for the PDA requires a signature that only the executing program can provide. In other words, the signature verification for the initialization of the PDA account would fail if the program ID used to derive the PDA did not match the program ID of the executing program.
+However, when using `init` in combination with `seeds` and `bump`, the owner _must_ be the executing program. This is because initializing an account for the PDA requires a signature that only the executing program can provide. In other words, the signature verification for the initialization of the PDA account would fail if the program ID used to derive the PDA did not match the program ID of the executing program.
 
 When determining the value of `space` for an account initialized and owned by the executing Anchor program, remember that the first 8 bytes are reserved for the account discriminator. This is an 8-byte value that Anchor calculates and uses to identify the program account types. You can use this [reference](https://www.anchor-lang.com/docs/space) to calculate how much space you should allocate for an account.
 
@@ -234,6 +234,7 @@ pub struct AccountType {
 ```
 
 Notice that `realloc` is set to `8 + 4 + instruction_data.len()`. This breaks down as follows:
+
 - `8` is for the account discriminator
 - `4` is for the 4 bytes of space that BORSH uses to store the length of the string
 - `instruction_data.len()` is the length of the string itself
@@ -541,36 +542,36 @@ Here we:
 - Create placeholders for tests
 
 ```ts
-import * as anchor from "@project-serum/anchor"
-import { Program } from "@project-serum/anchor"
-import { assert, expect } from "chai"
-import { AnchorMovieReviewProgram } from "../target/types/anchor_movie_review_program"
+import * as anchor from "@project-serum/anchor";
+import { Program } from "@project-serum/anchor";
+import { assert, expect } from "chai";
+import { AnchorMovieReviewProgram } from "../target/types/anchor_movie_review_program";
 
 describe("anchor-movie-review-program", () => {
   // Configure the client to use the local cluster.
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
 
   const program = anchor.workspace
-    .AnchorMovieReviewProgram as Program<AnchorMovieReviewProgram>
+    .AnchorMovieReviewProgram as Program<AnchorMovieReviewProgram>;
 
   const movie = {
     title: "Just a test movie",
     description: "Wow what a good movie it was real great",
     rating: 5,
-  }
+  };
 
   const [moviePda] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from(movie.title), provider.wallet.publicKey.toBuffer()],
-    program.programId
-  )
+    program.programId,
+  );
 
-  it("Movie review is added`", async () => {})
+  it("Movie review is added`", async () => {});
 
-  it("Movie review is updated`", async () => {})
+  it("Movie review is updated`", async () => {});
 
-  it("Deletes a movie review", async () => {})
-})
+  it("Deletes a movie review", async () => {});
+});
 ```
 
 Next, let's create the first test for the `addMovieReview` instruction. Note that we don't explicitly add `.accounts`. This is because the `Wallet` from `AnchorProvider` is automatically included as a signer, Anchor can infer certain accounts like `SystemProgram`, and Anchor can also infer the `movieReview` PDA from the `title` instruction argument and the signer's public key.
@@ -582,43 +583,41 @@ it("Movie review is added`", async () => {
   // Add your test here.
   const tx = await program.methods
     .addMovieReview(movie.title, movie.description, movie.rating)
-    .rpc()
+    .rpc();
 
-  const account = await program.account.movieAccountState.fetch(moviePda)
-  expect(movie.title === account.title)
-  expect(movie.rating === account.rating)
-  expect(movie.description === account.description)
-  expect(account.reviewer === provider.wallet.publicKey)
-})
+  const account = await program.account.movieAccountState.fetch(moviePda);
+  expect(movie.title === account.title);
+  expect(movie.rating === account.rating);
+  expect(movie.description === account.description);
+  expect(account.reviewer === provider.wallet.publicKey);
+});
 ```
 
 Next, let's create the test for the `updateMovieReview` instruction following the same process as before.
 
 ```ts
 it("Movie review is updated`", async () => {
-  const newDescription = "Wow this is new"
-  const newRating = 4
+  const newDescription = "Wow this is new";
+  const newRating = 4;
 
   const tx = await program.methods
     .updateMovieReview(movie.title, newDescription, newRating)
-    .rpc()
+    .rpc();
 
-  const account = await program.account.movieAccountState.fetch(moviePda)
-  expect(movie.title === account.title)
-  expect(newRating === account.rating)
-  expect(newDescription === account.description)
-  expect(account.reviewer === provider.wallet.publicKey)
-})
+  const account = await program.account.movieAccountState.fetch(moviePda);
+  expect(movie.title === account.title);
+  expect(newRating === account.rating);
+  expect(newDescription === account.description);
+  expect(account.reviewer === provider.wallet.publicKey);
+});
 ```
 
 Next, create the test for the `deleteMovieReview` instruction
 
 ```ts
 it("Deletes a movie review", async () => {
-  const tx = await program.methods
-    .deleteMovieReview(movie.title)
-    .rpc()
-})
+  const tx = await program.methods.deleteMovieReview(movie.title).rpc();
+});
 ```
 
 Lastly, run `anchor test` and you should see the following output in the console.

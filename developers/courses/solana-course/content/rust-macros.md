@@ -1,19 +1,19 @@
 ---
 title: Rust Procedural Macros
 objectives:
-- Create and use **Procedural Macros** in Rust
-- Explain and work with a Rust Abstract Syntax Tree (AST)
-- Describe how procedural macros are used in the Anchor framework
+  - Create and use **Procedural Macros** in Rust
+  - Explain and work with a Rust Abstract Syntax Tree (AST)
+  - Describe how procedural macros are used in the Anchor framework
 ---
 
 # TL;DR
 
--   **Procedural macros** are a special kind of Rust macro that allow the programmer to generate code at compile time based on custom input.
--   In the Anchor framework, procedural macros are used to generate code that reduces the amount of boilerplate required when writing Solana programs.
--   An **Abstract Syntax Tree (AST)** is a representation of the syntax and structure of the input code that is passed to a procedural macro. When creating a macro, you use elements of the AST like tokens and items to generate the appropriate code.
--   A **Token** is the smallest unit of source code that can be parsed by the compiler in Rust.
--   An **Item** is a declaration that defines something that can be used in a Rust program, such as a struct, an enum, a trait, a function, or a method.
--   A **TokenStream** is a sequence of tokens that represents a piece of source code, and can be passed to a procedural macro to allow it to access and manipulate the individual tokens in the code.
+- **Procedural macros** are a special kind of Rust macro that allow the programmer to generate code at compile time based on custom input.
+- In the Anchor framework, procedural macros are used to generate code that reduces the amount of boilerplate required when writing Solana programs.
+- An **Abstract Syntax Tree (AST)** is a representation of the syntax and structure of the input code that is passed to a procedural macro. When creating a macro, you use elements of the AST like tokens and items to generate the appropriate code.
+- A **Token** is the smallest unit of source code that can be parsed by the compiler in Rust.
+- An **Item** is a declaration that defines something that can be used in a Rust program, such as a struct, an enum, a trait, a function, or a method.
+- A **TokenStream** is a sequence of tokens that represents a piece of source code, and can be passed to a procedural macro to allow it to access and manipulate the individual tokens in the code.
 
 # Overview
 
@@ -21,8 +21,8 @@ In Rust, a macro is a piece of code that you can write once and then "expand" to
 
 There are two different types of macros: declarative macros and procedural macros.
 
--   Declarative macros are defined using the `macro_rules!` macro, which allows you to match against patterns of code and generate code based on the matching pattern.
--   Procedural macros in Rust are defined using Rust code and operate on the abstract syntax tree (AST) of the input TokenStream, which allows them to manipulate and generate code at a finer level of detail.
+- Declarative macros are defined using the `macro_rules!` macro, which allows you to match against patterns of code and generate code based on the matching pattern.
+- Procedural macros in Rust are defined using Rust code and operate on the abstract syntax tree (AST) of the input TokenStream, which allows them to manipulate and generate code at a finer level of detail.
 
 In this lesson, we'll focus on procedural macros, which are commonly used in the Anchor framework.
 
@@ -36,10 +36,10 @@ In the context of Rust programming, a [token](https://doc.rust-lang.org/referenc
 
 Examples of Rust tokens include:
 
--   [Keywords](https://doc.rust-lang.org/reference/keywords.html), such as `fn`, `let`, and `match`, are reserved words in the Rust language that have special meanings.
--   [Identifiers](https://doc.rust-lang.org/reference/identifiers.html), such as variable and function names, are used to refer to values and functions.
--   [Punctuation](https://doc.rust-lang.org/reference/tokens.html#punctuation) marks, such as `{`, `}`, and `;`, are used to structure and delimit blocks of code.
--   [Literals](https://doc.rust-lang.org/reference/tokens.html#literals), such as numbers and strings, represent constant values in a Rust program.
+- [Keywords](https://doc.rust-lang.org/reference/keywords.html), such as `fn`, `let`, and `match`, are reserved words in the Rust language that have special meanings.
+- [Identifiers](https://doc.rust-lang.org/reference/identifiers.html), such as variable and function names, are used to refer to values and functions.
+- [Punctuation](https://doc.rust-lang.org/reference/tokens.html#punctuation) marks, such as `{`, `}`, and `;`, are used to structure and delimit blocks of code.
+- [Literals](https://doc.rust-lang.org/reference/tokens.html#literals), such as numbers and strings, represent constant values in a Rust program.
 
 You can read more about Rust tokens [here](https://doc.rust-lang.org/reference/tokens.html).
 
@@ -49,12 +49,12 @@ Items are named, self-contained pieces of code in Rust. They provide a way to gr
 
 There are several different kinds of items, such as:
 
--   Functions
--   Structs
--   Enums
--   Traits
--   Modules
--   Macros
+- Functions
+- Structs
+- Enums
+- Traits
+- Modules
+- Macros
 
 You can read more about Rust items [here](https://doc.rust-lang.org/reference/items.html).
 
@@ -156,9 +156,9 @@ This allows you to create procedural macros that perform powerful code generatio
 
 Procedural macros in Rust are a powerful way to extend the language and create custom syntax. These macros are written in Rust and are compiled along with the rest of the code. There are three types of procedural macros:
 
--   Function-like macros - `custom!(...)`
--   Derive macros - `#[derive(CustomDerive)]`
--   Attribute macros - `#[CustomAttribute]`
+- Function-like macros - `custom!(...)`
+- Derive macros - `#[derive(CustomDerive)]`
+- Attribute macros - `#[CustomAttribute]`
 
 This section will discuss the three types of procedural macros and provide an example implementation of one. The process of writing a procedural macro is consistent across all three types, so the example provided can be adapted to the other types.
 
