@@ -1,12 +1,12 @@
 ---
 title: Create a Basic Program, Part 3 - Basic Security and Validation
 objectives:
-- Explain the importance of "thinking like an attacker"
-- Understand basic security practices
-- Perform owner checks
-- Perform signer checks
-- Validate accounts passed into the program
-- Perform basic data validation
+  - Explain the importance of "thinking like an attacker"
+  - Understand basic security practices
+  - Perform owner checks
+  - Perform signer checks
+  - Validate accounts passed into the program
+  - Perform basic data validation
 ---
 
 # TL;DR
@@ -29,9 +29,9 @@ Remember, **you have no control over the transactions that will be sent to your 
 
 [Neodyme](https://workshop.neodyme.io/) gave a presentation at Breakpoint 2021 entitled "Think Like An Attacker: Bringing Smart Contracts to Their Break(ing) Point." If there's one thing you take away from this lesson, it's that you should think like an attacker.
 
-In this lesson, of course, we cannot cover everything that could possibly go wrong with your programs. Ultimately, every program will have different security risks associated with it. While understanding common pitfalls is *essential* to engineering good programs, it is *insufficient* for deploying secure ones. In order to have the broadest security coverage possible, you have to approach your code with the right mindset.
+In this lesson, of course, we cannot cover everything that could possibly go wrong with your programs. Ultimately, every program will have different security risks associated with it. While understanding common pitfalls is _essential_ to engineering good programs, it is _insufficient_ for deploying secure ones. In order to have the broadest security coverage possible, you have to approach your code with the right mindset.
 
-As Neodyme mentioned in their presentation, the right mindset requires moving from the question "Is this broken?" to "How do I break this?" This is the first and most essential step in understanding what your code *actually does* as opposed to what you wrote it to do.
+As Neodyme mentioned in their presentation, the right mindset requires moving from the question "Is this broken?" to "How do I break this?" This is the first and most essential step in understanding what your code _actually does_ as opposed to what you wrote it to do.
 
 ### All programs can be broken
 
@@ -170,13 +170,13 @@ This is always important to keep in mind, but especially so when dealing with an
 
 To avoid integer overflow and underflow, either:
 
-1. Have logic in place that ensures overflow or underflow *cannot* happen or
+1. Have logic in place that ensures overflow or underflow _cannot_ happen or
 2. Use checked math like `checked_add` instead of `+`
-    ```rust
-    let first_int: u8 = 5;
-    let second_int: u8 = 255;
-    let sum = first_int.checked_add(second_int);
-    ```
+   ```rust
+   let first_int: u8 = 5;
+   let second_int: u8 = 255;
+   let sum = first_int.checked_add(second_int);
+   ```
 
 # Demo
 
@@ -190,7 +190,7 @@ Just as before, we'll be using [Solana Playground](https://beta.solpg.io/) to w
 
 To begin, you can find the starter code [here](https://beta.solpg.io/62b552f3f6273245aca4f5c9). If you've been following along with the Movie Review demos, you'll notice that we've refactored our program.
 
-The refactored starter code is almost the same as what it was before. Since `lib.rs` was getting rather large and unwieldy, we've separated its code into 3 files: `lib.rs`, `entrypoint.rs`, and `processor.rs`. `lib.rs` now *only* registers the code's modules, `entrypoint.rs` *only* defines and sets the program's entrypoint, and `processor.rs` handles the program logic for processing instructions. We've also added an `error.rs` file where we'll be defining custom errors. The complete file structure is as follows:
+The refactored starter code is almost the same as what it was before. Since `lib.rs` was getting rather large and unwieldy, we've separated its code into 3 files: `lib.rs`, `entrypoint.rs`, and `processor.rs`. `lib.rs` now _only_ registers the code's modules, `entrypoint.rs` _only_ defines and sets the program's entrypoint, and `processor.rs` handles the program logic for processing instructions. We've also added an `error.rs` file where we'll be defining custom errors. The complete file structure is as follows:
 
 - **lib.rs** - register modules
 - **entrypoint.rs -** entry point to the program
@@ -204,11 +204,13 @@ In addition to some changes to file structure, we've updated a small amount of c
 Since we'll be allowing updates to movie reviews, we also changed `account_len` in the `add_movie_review` function (now in `processor.rs`). Instead of calculating the size of the review and setting the account length to only as large as it needs to be, we're simply going to allocate 1000 bytes to each review account. This way, we don’t have to worry about reallocating size or re-calculating rent when a user updates their movie review.
 
 We went from this:
+
 ```rust
 let account_len: usize = 1 + 1 + (4 + title.len()) + (4 + description.len());
 ```
 
 To this:
+
 ```rust
 let account_len: usize = 1000;
 ```
@@ -705,7 +707,7 @@ pub fn update_movie_review(
 
 ## 7. Build and upgrade
 
-We're ready to build and upgrade our program! You can test your program by submitting a transaction with the right instruction data. For that, feel free to use this [frontend](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-update-reviews).  Remember, to make sure you're testing the right program you'll need to replace `MOVIE_REVIEW_PROGRAM_ID` with your program ID in `Form.tsx` and `MovieCoordinator.ts`.
+We're ready to build and upgrade our program! You can test your program by submitting a transaction with the right instruction data. For that, feel free to use this [frontend](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-update-reviews). Remember, to make sure you're testing the right program you'll need to replace `MOVIE_REVIEW_PROGRAM_ID` with your program ID in `Form.tsx` and `MovieCoordinator.ts`.
 
 If you need more time with this project to feel comfortable with these concepts, have a look at the [solution code](https://beta.solpg.io/62c8c6dbf6273245aca4f5e7) before continuing.
 

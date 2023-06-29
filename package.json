@@ -9,7 +9,8 @@
   },
   "scripts": {
     "contentlayer:build": "npx contentlayer build --clearCache",
-    "test": "yarn contentlayer:build"
+    "test": "yarn contentlayer:build",
+    "prettier": "npx prettier -w developers"
   },
   "devDependencies": {
     "contentlayer": "0.3.0",

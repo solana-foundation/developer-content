@@ -1,16 +1,16 @@
 ---
 title: Solana Pay
 objectives:
-- Use the Solana Pay specification to build payment requests and initiate transactions using URLs encoded as QR codes
-- Use the `@solana/pay` library to help with the creation of Solana Pay transaction requests
-- Partially sign transactions and implement transaction gating based on certain conditions
+  - Use the Solana Pay specification to build payment requests and initiate transactions using URLs encoded as QR codes
+  - Use the `@solana/pay` library to help with the creation of Solana Pay transaction requests
+  - Partially sign transactions and implement transaction gating based on certain conditions
 ---
 
 # TL;DR
 
--   **Solana Pay** is a specification for encoding Solana transaction requests within URLs, enabling standardized transaction requests across different Solana apps and wallets
--   **Partial signing** of transactions allows for the creation of transactions that require multiple signatures before they are submitted to the network
--   **Transaction gating** involves implementing rules that determine whether certain transactions are allowed to be processed or not, based on certain conditions or the presence of specific data in the transaction
+- **Solana Pay** is a specification for encoding Solana transaction requests within URLs, enabling standardized transaction requests across different Solana apps and wallets
+- **Partial signing** of transactions allows for the creation of transactions that require multiple signatures before they are submitted to the network
+- **Transaction gating** involves implementing rules that determine whether certain transactions are allowed to be processed or not, based on certain conditions or the presence of specific data in the transaction
 
 # Overview
 
@@ -84,13 +84,13 @@ The main thing you, the developer, need to do to make the transaction request fl
 In Next.js, you do this by adding a file to the `pages/api` folder and exporting a function that handles the request and response.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse,
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    // Handle the request
+  // Handle the request
 }
 ```
 
@@ -104,24 +104,24 @@ The wallet consuming your transaction request URL will first issue a GET request
 Building on the empty endpoint from before, that may look like this:
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse,
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    if (req.method === "GET") {
-        return get(res)
-    } else {
-        return res.status(405).json({ error: "Method not allowed" })
-    }
+  if (req.method === "GET") {
+    return get(res);
+  } else {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 }
 
 function get(res: NextApiResponse) {
-    res.status(200).json({
-        label: "Store Name",
-        icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-    });
+  res.status(200).json({
+    label: "Store Name",
+    icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
+  });
 }
 ```
 
@@ -139,67 +139,64 @@ With this information and any additional parameters provided, you can build the 
 4. Serializing the transaction and returning it in a `PostResponse` object along with a message for the user.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse,
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    if (req.method === "GET") {
-        return get(res)
-    } else if (req.method === "POST") {
-        return post(req, res)
-    } else {
-        return res.status(405).json({ error: "Method not allowed" })
-    }
+  if (req.method === "GET") {
+    return get(res);
+  } else if (req.method === "POST") {
+    return post(req, res);
+  } else {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 }
 
 function get(res: NextApiResponse) {
-    res.status(200).json({
-        label: "Store Name",
-        icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-    });
+  res.status(200).json({
+    label: "Store Name",
+    icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
+  });
 }
-async function post(
-    req: PublicKey,
-    res: PublicKey,
-) {
-    const { account, reference } = req.body
+async function post(req: PublicKey, res: PublicKey) {
+  const { account, reference } = req.body;
 
-    const connection = new Connection(clusterApiUrl("devnet"));
+  const connection = new Connection(clusterApiUrl("devnet"));
 
-    const { blockhash } = await connection.getLatestBlockhash();
+  const { blockhash } = await connection.getLatestBlockhash();
 
-    const transaction = new Transaction({
-        recentBlockhash: blockhash,
-        feePayer: account,
-    });
+  const transaction = new Transaction({
+    recentBlockhash: blockhash,
+    feePayer: account,
+  });
 
-    const instruction = SystemProgram.transfer({
-        fromPubkey: account,
-        toPubkey: Keypair.generate().publicKey,
-        lamports: 0.001 * LAMPORTS_PER_SOL,
-    });
+  const instruction = SystemProgram.transfer({
+    fromPubkey: account,
+    toPubkey: Keypair.generate().publicKey,
+    lamports: 0.001 * LAMPORTS_PER_SOL,
+  });
 
-    transaction.add(instruction);
+  transaction.add(instruction);
 
-    transaction.keys.push({
-        pubkey: reference,
-        isSigner: false,
-        isWritable: false,
-    })
+  transaction.keys.push({
+    pubkey: reference,
+    isSigner: false,
+    isWritable: false,
+  });
 
-    const serializedTransaction = transaction.serialize({
-        requireAllSignatures: false,
-    });
-    const base64 = serializedTransaction.toString("base64");
+  const serializedTransaction = transaction.serialize({
+    requireAllSignatures: false,
+  });
+  const base64 = serializedTransaction.toString("base64");
 
-    const message = "Simple transfer of 0.001 SOL";
+  const message = "Simple transfer of 0.001 SOL";
 
-    res.send(200).json({
-        transaction: base64,
-        message,
-    })
+  res.send(200).json({
+    transaction: base64,
+    message,
+  });
 }
 ```
 
@@ -207,7 +204,7 @@ There is nothing too out of the ordinary here. It's the same transaction constru
 
 ### Confirm transaction
 
-You may have noticed that the previous example assumed a `reference` was provided as a query parameter. While this is *not* a value provided by the requesting wallet, it *is* useful to set up your initial transaction request URL to contain this query parameter.
+You may have noticed that the previous example assumed a `reference` was provided as a query parameter. While this is _not_ a value provided by the requesting wallet, it _is_ useful to set up your initial transaction request URL to contain this query parameter.
 
 Since your application isn't the one submitting a transaction to the network, your code won't have access to a transaction signature. This would typically be how your app can locate a transaction on the network and see its status.
 
@@ -227,12 +224,12 @@ const nfts = await metaplex.nfts().findAllByOwner({ owner: account }).run();
 
 // iterate over the nfts array
 for (let i = 0; i < nfts.length; i++) {
-    // check if the current nft has a collection field with the desired value
-    if (nfts[i].collection?.address.toString() == collection.toString()) {
-        // build transaction
-    } else {
-        // return an error
-    }
+  // check if the current nft has a collection field with the desired value
+  if (nfts[i].collection?.address.toString() == collection.toString()) {
+    // build transaction
+  } else {
+    // return an error
+  }
 }
 ```
 
@@ -246,8 +243,8 @@ Fortunately, Solana enables signature composability with partial signing.
 
 Partially signing a multi-signature transaction allows signers to add their signature before the transaction is broadcast on the network. This can be useful in a number of situations, including:
 
--   Approving transactions that require the signature of multiple parties, such as a merchant and a buyer who need to confirm the details of a payment.
--   Invoking custom programs that require the signatures of both a user and an administrator. This can help to limit access to the program instructions and ensure that only authorized parties can execute them.
+- Approving transactions that require the signature of multiple parties, such as a merchant and a buyer who need to confirm the details of a payment.
+- Invoking custom programs that require the signatures of both a user and an administrator. This can help to limit access to the program instructions and ensure that only authorized parties can execute them.
 
 ```typescript
 const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash()
@@ -279,7 +276,7 @@ The `@solana/pay` library simplifies this with the provided `createQR` helper fu
 - `color` (optional) - the foreground color. Defaults to black.
 
 ```typescript
-const qr = createQR(url, 400, 'transparent')
+const qr = createQR(url, 400, "transparent");
 ```
 
 # Demo
@@ -288,7 +285,7 @@ Now that you've got a conceptual grasp on Solana Pay, let's put it into practice
 
 ### 1. Starter
 
-To get started, download the starter code on the `starter` branch of this [repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter). The starter code is a Next.js app that displays a Solana Pay QR code. Notice that the menu bar lets you switch between different QR codes. The default option is a simple SOL transfer for illustrative purposes. Throughout  We'll be adding functionality to the location options in the menu bar.
+To get started, download the starter code on the `starter` branch of this [repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter). The starter code is a Next.js app that displays a Solana Pay QR code. Notice that the menu bar lets you switch between different QR codes. The default option is a simple SOL transfer for illustrative purposes. Throughout We'll be adding functionality to the location options in the menu bar.
 
 ![Screenshot of scavenger hunt app](../assets/scavenger-hunt-screenshot.png)
 
@@ -333,26 +330,26 @@ If you were able to successfully execute the transaction using the QR code, you'
 
 Now that you're up and running, it's time to create an endpoint that supports transaction requests for location check-in using the Scavenger Hunt program.
 
-Start by opening the file at `pages/api/checkIn.ts`. Notice that it has a helper function for initializing `eventOrganizer` from a private key environment variable.  The first thing we'll do in this file is the following:
+Start by opening the file at `pages/api/checkIn.ts`. Notice that it has a helper function for initializing `eventOrganizer` from a private key environment variable. The first thing we'll do in this file is the following:
 
 1. Export a `handler` function to handle an arbitrary HTTP request
 2. Add `get` and `post` functions for handling those HTTP methods
 3. Add logic to the body of the `handler` function to either call `get`, `post`, or return a 405 error based on the HTTP request method
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
+import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
+  req: NextApiRequest,
+  res: NextApiResponse,
 ) {
-    if (req.method === "GET") {
-        return get(res)
-    } else if (req.method === "POST") {
-        return await post(req, res)
-    } else {
-        return res.status(405).json({ error: "Method not allowed" })
-    }
+  if (req.method === "GET") {
+    return get(res);
+  } else if (req.method === "POST") {
+    return await post(req, res);
+  } else {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 }
 
 function get(res: NextApiResponse) {}
@@ -366,10 +363,10 @@ Remember, the first request from a wallet will be a GET request expecting the en
 
 ```jsx
 function get(res: NextApiResponse) {
-    res.status(200).json({
-        label: "Scavenger Hunt!",
-        icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-    });
+  res.status(200).json({
+    label: "Scavenger Hunt!",
+    icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
+  });
 }
 ```
 
@@ -453,89 +450,93 @@ While each of these steps is straightforward, it's a lot of steps. To simplify t
 We'll also add the following imports:
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
-import { PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js"
-import { locationAtIndex, Location, locations } from "../../utils/locations"
-import { connection, gameId, program } from "../../utils/programSetup"
+import { NextApiRequest, NextApiResponse } from "next";
+import {
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { locationAtIndex, Location, locations } from "../../utils/locations";
+import { connection, gameId, program } from "../../utils/programSetup";
 ```
 
 Using the empty helper functions and the new imports, we can fill in the `buildTransaction` function:
 
 ```typescript
 async function buildTransaction(
-    account: PublicKey,
-    reference: PublicKey,
-    id: string
+  account: PublicKey,
+  reference: PublicKey,
+  id: string,
 ): Promise<string> {
-    const userState = await fetchUserState(account)
+  const userState = await fetchUserState(account);
 
-    const currentLocation = locationAtIndex(new Number(id).valueOf())
+  const currentLocation = locationAtIndex(new Number(id).valueOf());
 
-    if (!currentLocation) {
-        throw { message: "Invalid location id" }
-    }
+  if (!currentLocation) {
+    throw { message: "Invalid location id" };
+  }
 
-    if (!verifyCorrectLocation(userState, currentLocation)) {
-        throw { message: "You must visit each location in order!" }
-    }
+  if (!verifyCorrectLocation(userState, currentLocation)) {
+    throw { message: "You must visit each location in order!" };
+  }
 
-    const { blockhash, lastValidBlockHeight } =
-        await connection.getLatestBlockhash()
+  const { blockhash, lastValidBlockHeight } =
+    await connection.getLatestBlockhash();
 
-    const transaction = new Transaction({
-        feePayer: account,
-        blockhash,
-        lastValidBlockHeight,
-    })
+  const transaction = new Transaction({
+    feePayer: account,
+    blockhash,
+    lastValidBlockHeight,
+  });
 
-    if (!userState) {
-        transaction.add(await createInitUserInstruction(account))
-    }
+  if (!userState) {
+    transaction.add(await createInitUserInstruction(account));
+  }
 
-    transaction.add(
-        await createCheckInInstruction(account, reference, currentLocation)
-    )
+  transaction.add(
+    await createCheckInInstruction(account, reference, currentLocation),
+  );
 
-    transaction.partialSign(eventOrganizer)
+  transaction.partialSign(eventOrganizer);
 
-    const serializedTransaction = transaction.serialize({
-        requireAllSignatures: false,
-    })
+  const serializedTransaction = transaction.serialize({
+    requireAllSignatures: false,
+  });
 
-    const base64 = serializedTransaction.toString("base64")
+  const base64 = serializedTransaction.toString("base64");
 
-    return base64
+  return base64;
 }
 
 interface UserState {
-    user: PublicKey
-    gameId: PublicKey
-    lastLocation: PublicKey
+  user: PublicKey;
+  gameId: PublicKey;
+  lastLocation: PublicKey;
 }
 
 async function fetchUserState(account: PublicKey): Promise<UserState | null> {
-    return null
+  return null;
 }
 
 function verifyCorrectLocation(
-    userState: UserState | null,
-    currentLocation: Location
+  userState: UserState | null,
+  currentLocation: Location,
 ): boolean {
-    return false
+  return false;
 }
 
 async function createInitUserInstruction(
-    account: PublicKey
+  account: PublicKey,
 ): Promise<TransactionInstruction> {
-    throw ""
+  throw "";
 }
 
 async function createCheckInInstruction(
-    account: PublicKey,
-    reference: PublicKey,
-    location: Location
+  account: PublicKey,
+  reference: PublicKey,
+  location: Location,
 ): Promise<TransactionInstruction> {
-    throw ""
+  throw "";
 }
 ```
 
@@ -545,16 +546,16 @@ With the `buildTransaction` function finished, we can start implementing the emp
 
 ```typescript
 async function fetchUserState(account: PublicKey): Promise<UserState | null> {
-    const userStatePDA = PublicKey.findProgramAddressSync(
-        [gameId.toBuffer(), account.toBuffer()],
-        program.programId
-    )[0]
+  const userStatePDA = PublicKey.findProgramAddressSync(
+    [gameId.toBuffer(), account.toBuffer()],
+    program.programId,
+  )[0];
 
-    try {
-        return await program.account.userState.fetch(userStatePDA)
-    } catch {
-        return null
-    }
+  try {
+    return await program.account.userState.fetch(userStatePDA);
+  } catch {
+    return null;
+  }
 }
 ```
 
@@ -568,22 +569,22 @@ If these conditions are satisfied, the function will return true. Otherwise, it'
 
 ```typescript
 function verifyCorrectLocation(
-    userState: UserState | null,
-    currentLocation: Location
+  userState: UserState | null,
+  currentLocation: Location,
 ): boolean {
-    if (!userState) {
-        return currentLocation.index === 1
-    }
+  if (!userState) {
+    return currentLocation.index === 1;
+  }
 
-    const lastLocation = locations.find(
-        (location) => location.key.toString() === userState.lastLocation.toString()
-    )
+  const lastLocation = locations.find(
+    location => location.key.toString() === userState.lastLocation.toString(),
+  );
 
-    if (!lastLocation || currentLocation.index !== lastLocation.index + 1) {
-        return false
-    } else {
-        return true
-    }
+  if (!lastLocation || currentLocation.index !== lastLocation.index + 1) {
+    return false;
+  } else {
+    return true;
+  }
 }
 ```
 
@@ -593,36 +594,36 @@ Lastly, let's implement `createInitUserInstruction` and `createCheckInInstructio
 
 ```typescript
 async function createInitUserInstruction(
-    account: PublicKey
+  account: PublicKey,
 ): Promise<TransactionInstruction> {
-    const initializeInstruction = await program.methods
-        .initialize(gameId)
-        .accounts({ user: account })
-        .instruction()
+  const initializeInstruction = await program.methods
+    .initialize(gameId)
+    .accounts({ user: account })
+    .instruction();
 
-    return initializeInstruction
+  return initializeInstruction;
 }
 
 async function createCheckInInstruction(
-    account: PublicKey,
-    reference: PublicKey,
-    location: Location
+  account: PublicKey,
+  reference: PublicKey,
+  location: Location,
 ): Promise<TransactionInstruction> {
-    const checkInInstruction = await program.methods
-        .checkIn(gameId, location.key)
-        .accounts({
-            user: account,
-            eventOrganizer: eventOrganizer.publicKey,
-        })
-        .instruction()
-
-    checkInInstruction.keys.push({
-        pubkey: reference,
-        isSigner: false,
-        isWritable: false,
+  const checkInInstruction = await program.methods
+    .checkIn(gameId, location.key)
+    .accounts({
+      user: account,
+      eventOrganizer: eventOrganizer.publicKey,
     })
+    .instruction();
 
-    return checkInInstruction
+  checkInInstruction.keys.push({
+    pubkey: reference,
+    isSigner: false,
+    isWritable: false,
+  });
+
+  return checkInInstruction;
 }
 ```
 

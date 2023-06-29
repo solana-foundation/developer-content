@@ -1,11 +1,11 @@
 ---
 title: Create a Basic Program, Part 2 - State Management
 objectives:
-- Describe the process of creating a new account using a Program Derived Address (PDA)
-- Use seeds to derive a PDA
-- Use the space required by an account to calculate the amount of rent (in lamports) a user must allocate
-- Use a Cross Program Invocation (CPI) to initialize an account with a PDA as the address of the new account
-- Explain how to update the data stored on a new account
+  - Describe the process of creating a new account using a Program Derived Address (PDA)
+  - Use seeds to derive a PDA
+  - Use the space required by an account to calculate the amount of rent (in lamports) a user must allocate
+  - Use a Cross Program Invocation (CPI) to initialize an account with a PDA as the address of the new account
+  - Explain how to update the data stored on a new account
 ---
 
 # TL;DR
@@ -96,7 +96,7 @@ let rent_lamports = rent.minimum_balance(account_len);
 
 ### Program Derived Addresses (PDA)
 
-Before creating an account, we also need to have an address to assign the account. For program owned accounts, this will be a program derived address (PDA) found using the `find_program_address` function. 
+Before creating an account, we also need to have an address to assign the account. For program owned accounts, this will be a program derived address (PDA) found using the `find_program_address` function.
 
 As the name implies, PDAs are derived using the program ID (address of the program creating the account) and an optional list of “seeds”. Optional seeds are additional inputs used in the `find_program_address` function to derive the PDA. The function used to derive PDAs will return the same address every time when given the same inputs. This gives us the ability to create any number of PDA accounts and a deterministic way to find each account.
 
@@ -263,7 +263,7 @@ pub struct MovieAccountState {
     pub is_initialized: bool,
     pub rating: u8,
     pub title: String,
-    pub description: String  
+    pub description: String
 }
 ```
 
@@ -399,7 +399,6 @@ Using what you've learned in this lesson, build out this program. In addition to
 1. Create a separate account for each student
 2. Store `is_initialized` as a boolean, `name` as a string, and `msg` as a string in each account
 
-You can test your program by building the [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend) we created in the [Page, Order, and Filter Custom Account Data lesson](./paging-ordering-filtering-data.md). Remember to replace the program ID in the frontend code with the one you've deployed. 
+You can test your program by building the [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend) we created in the [Page, Order, and Filter Custom Account Data lesson](./paging-ordering-filtering-data.md). Remember to replace the program ID in the frontend code with the one you've deployed.
 
 Try to do this independently if you can! But if you get stuck, feel free to reference the [solution code](https://beta.solpg.io/62b11ce4f6273245aca4f5b2).
-

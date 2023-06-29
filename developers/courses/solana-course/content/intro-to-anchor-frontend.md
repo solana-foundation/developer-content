@@ -1,12 +1,12 @@
 ---
 title: Intro to client-side Anchor development
 objectives:
-- Use an IDL to interact with a Solana program from the client
-- Explain an Anchor `Provider` object
-- Explain an Anchor `Program` object
-- Use the Anchor `MethodsBuilder` to build instructions and transactions
-- Use Anchor to fetch accounts
-- Set up a frontend to invoke instructions using Anchor and an IDL
+  - Use an IDL to interact with a Solana program from the client
+  - Explain an Anchor `Provider` object
+  - Explain an Anchor `Program` object
+  - Use the Anchor `MethodsBuilder` to build instructions and transactions
+  - Use Anchor to fetch accounts
+  - Set up a frontend to invoke instructions using Anchor and an IDL
 ---
 
 # TL;DR
@@ -27,7 +27,7 @@ await program.methods
   .instructionName(instructionDataInputs)
   .accounts({})
   .signers([])
-  .rpc()
+  .rpc();
 ```
 
 This works from any Typescript client, whether it's a frontend or integration tests. In this lesson we'll go over how to use `@project-serum/anchor` to simplify your client-side program interaction.
@@ -52,7 +52,7 @@ The above image shows how each of these pieces are combined to create a `Program
 
 When you build an Anchor program, Anchor generates both a JSON and Typescript file representing your program's IDL. The IDL represents the structure of the program and can be used by a client to infer how to interact with a specific program.
 
-While it isn't automatic, you can also generate an IDL from a native Solana program using tools like [shank](https://github.com/metaplex-foundation/shank) by Metaplex. 
+While it isn't automatic, you can also generate an IDL from a native Solana program using tools like [shank](https://github.com/metaplex-foundation/shank) by Metaplex.
 
 To get an idea of the information an IDL provides, here is the IDL for the counter program you built previously:
 
@@ -110,10 +110,10 @@ Looking further down at the `accounts` section, you can see that the program con
 
 Although the IDL does not provide the implementation details for each instruction, we can get a basic idea of how the on-chain program expects instructions to be constructed and see the structure of the program accounts.
 
-Regardless of how you get it, you *need* an IDL file to interact with a program using the `@project-serum/anchor` package. To use the IDL, you'll need to include the IDL file in your project and then import the file.
+Regardless of how you get it, you _need_ an IDL file to interact with a program using the `@project-serum/anchor` package. To use the IDL, you'll need to include the IDL file in your project and then import the file.
 
 ```tsx
-import idl from "./idl.json"
+import idl from "./idl.json";
 ```
 
 ### Provider
@@ -130,10 +130,10 @@ The `Provider` is then able to send transactions to the Solana blockchain on beh
 Setting up the `Wallet` and `Connection` would look something like this:
 
 ```tsx
-import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react"
+import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 
-const { connection } = useConnection()
-const wallet = useAnchorWallet()
+const { connection } = useConnection();
+const wallet = useAnchorWallet();
 ```
 
 To set up the connection, you can use the `useConnection` hook from `@solana/wallet-adapter-react` to get the `Connection` to a Solana cluster.
@@ -144,9 +144,9 @@ For comparison, here is the `AnchorWallet` from `useAnchorWallet`:
 
 ```tsx
 export interface AnchorWallet {
-  publicKey: PublicKey
-  signTransaction(transaction: Transaction): Promise<Transaction>
-  signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>
+  publicKey: PublicKey;
+  signTransaction(transaction: Transaction): Promise<Transaction>;
+  signAllTransactions(transactions: Transaction[]): Promise<Transaction[]>;
 }
 ```
 
@@ -154,26 +154,26 @@ And the `WalletContextState` from `useWallet`:
 
 ```tsx
 export interface WalletContextState {
-  autoConnect: boolean
-  wallets: Wallet[]
-  wallet: Wallet | null
-  publicKey: PublicKey | null
-  connecting: boolean
-  connected: boolean
-  disconnecting: boolean
-  select(walletName: WalletName): void
-  connect(): Promise<void>
-  disconnect(): Promise<void>
+  autoConnect: boolean;
+  wallets: Wallet[];
+  wallet: Wallet | null;
+  publicKey: PublicKey | null;
+  connecting: boolean;
+  connected: boolean;
+  disconnecting: boolean;
+  select(walletName: WalletName): void;
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
   sendTransaction(
     transaction: Transaction,
     connection: Connection,
-    options?: SendTransactionOptions
-  ): Promise<TransactionSignature>
-  signTransaction: SignerWalletAdapterProps["signTransaction"] | undefined
+    options?: SendTransactionOptions,
+  ): Promise<TransactionSignature>;
+  signTransaction: SignerWalletAdapterProps["signTransaction"] | undefined;
   signAllTransactions:
     | SignerWalletAdapterProps["signAllTransactions"]
-    | undefined
-  signMessage: MessageSignerWalletAdapterProps["signMessage"] | undefined
+    | undefined;
+  signMessage: MessageSignerWalletAdapterProps["signMessage"] | undefined;
 }
 ```
 
@@ -190,13 +190,13 @@ The `AnchorProvider` constructor takes three parameters:
 Once you’ve create the `Provider` object, you then set it as the default provider using `setProvider`.
 
 ```tsx
-import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react"
-import { AnchorProvider, setProvider } from "@project-serum/anchor"
+import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
+import { AnchorProvider, setProvider } from "@project-serum/anchor";
 
-const { connection } = useConnection()
-const wallet = useAnchorWallet()
-const provider = new AnchorProvider(connection, wallet, {})
-setProvider(provider)
+const { connection } = useConnection();
+const wallet = useAnchorWallet();
+const provider = new AnchorProvider(connection, wallet, {});
+setProvider(provider);
 ```
 
 ### Program
@@ -216,23 +216,23 @@ Next, specify the `programId` of the program. We have to explicitly state the `p
 All together, the final setup looks something like this:
 
 ```tsx
-import idl from "./idl.json"
-import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react"
+import idl from "./idl.json";
+import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import {
   Program,
   Idl,
   AnchorProvider,
   setProvider,
-} from "@project-serum/anchor"
+} from "@project-serum/anchor";
 
-const { connection } = useConnection()
-const wallet = useAnchorWallet()
+const { connection } = useConnection();
+const wallet = useAnchorWallet();
 
-const provider = new AnchorProvider(connection, wallet, {})
-setProvider(provider)
+const provider = new AnchorProvider(connection, wallet, {});
+setProvider(provider);
 
-const programId = new PublicKey("JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n")
-const program = new Program(idl as Idl, programId)
+const programId = new PublicKey("JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n");
+const program = new Program(idl as Idl, programId);
 ```
 
 ## Anchor `MethodsBuilder`
@@ -249,7 +249,7 @@ await program.methods
   .instructionName(instructionDataInputs)
   .accounts({})
   .signers([])
-  .rpc()
+  .rpc();
 ```
 
 Going step by step, you:
@@ -269,9 +269,9 @@ You can also build the transaction directly by changing `.rpc()` to `.transactio
 const transaction = await program.methods
   .instructionName(instructionDataInputs)
   .accounts({})
-  .transaction()
+  .transaction();
 
-await sendTransaction(transaction, connection)
+await sendTransaction(transaction, connection);
 ```
 
 Similarly, you can use the same format to build an instruction using `.instruction()` and then manually add the instructions to a new transaction. This builds a `TransactionInstruction` object using the instruction specified.
@@ -281,19 +281,19 @@ Similarly, you can use the same format to build an instruction using `.instructi
 const instructionOne = await program.methods
   .instructionOneName(instructionOneDataInputs)
   .accounts({})
-  .instruction()
+  .instruction();
 
 // creates second instruction
 const instructionTwo = await program.methods
   .instructionTwoName(instructionTwoDataInputs)
   .accounts({})
-  .instruction()
+  .instruction();
 
 // add both instruction to one transaction
-const transaction = new Transaction().add(instructionOne, instructionTwo)
+const transaction = new Transaction().add(instructionOne, instructionTwo);
 
 // send transaction
-await sendTransaction(transaction, connection)
+await sendTransaction(transaction, connection);
 ```
 
 In summary, the Anchor `MethodsBuilder` provides a simplified and more flexible way to interact with on-chain programs. You can build an instruction, a transaction, or build and send a transaction using basically the same format without having to manually serialize or deserialize the accounts or instruction data.
@@ -305,34 +305,37 @@ The `Program` object also allows you to easily fetch and filter program accounts
 The example below shows how you can fetch all existing `counter` accounts for the Counter program.
 
 ```tsx
-const accounts = await program.account.counter.all()
+const accounts = await program.account.counter.all();
 ```
 
-You can also apply a filter by using `memcmp` and then specifying an `offset` and the `bytes` to filter for. 
+You can also apply a filter by using `memcmp` and then specifying an `offset` and the `bytes` to filter for.
 
 The example below fetches all `counter` accounts with a `count` of 0. Note that the `offset` of 8 is for the 8 byte discriminator Anchor uses to identify account types. The 9th byte is where the `count` field begins. You can refer to the IDL to see that the next byte stores the `count` field of type `u64`. Anchor then filters for and returns all accounts with matching bytes in the same position.
 
 ```tsx
 const accounts = await program.account.counter.all([
-    {
-        memcmp: {
-            offset: 8,
-            bytes: bs58.encode((new BN(0, 'le')).toArray()),
-        },
+  {
+    memcmp: {
+      offset: 8,
+      bytes: bs58.encode(new BN(0, "le").toArray()),
     },
-])
+  },
+]);
 ```
 
-Alternatively, you can also get the deserialized account data for a specific account using `fetch` if you know the address of the account you're looking for. 
+Alternatively, you can also get the deserialized account data for a specific account using `fetch` if you know the address of the account you're looking for.
 
 ```tsx
-const account = await program.account.counter.fetch(ACCOUNT_ADDRESS)
+const account = await program.account.counter.fetch(ACCOUNT_ADDRESS);
 ```
 
 Similarly, you can fetch for multiple accounts using `fetchMultiple`.
 
 ```tsx
-const accounts = await program.account.counter.fetchMultiple([ACCOUNT_ADDRESS_ONE, ACCOUNT_ADDRESS_TWO])
+const accounts = await program.account.counter.fetchMultiple([
+  ACCOUNT_ADDRESS_ONE,
+  ACCOUNT_ADDRESS_TWO,
+]);
 ```
 
 # Demo
@@ -373,18 +376,18 @@ Once we have a provider, we can construct a `Program` instance.
 
 ```tsx
 useEffect(() => {
-  let provider: anchor.Provider
+  let provider: anchor.Provider;
 
   try {
-    provider = anchor.getProvider()
+    provider = anchor.getProvider();
   } catch {
-    provider = new anchor.AnchorProvider(connection, wallet, {})
-    anchor.setProvider(provider)
+    provider = new anchor.AnchorProvider(connection, wallet, {});
+    anchor.setProvider(provider);
   }
 
-  const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID)
-  setProgram(program)
-}, [])
+  const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID);
+  setProgram(program);
+}, []);
 ```
 
 Now that we've finished the Anchor setup, we can actually invoke the program's `initialize` instruction. We'll do this inside the `onClick` function.
@@ -405,11 +408,11 @@ const onClick = async () => {
       systemAccount: anchor.web3.SystemProgram.programId,
     })
     .signers([newAccount])
-    .rpc()
+    .rpc();
 
-    setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`)
-    setCounter(newAccount.publicKey)
-}
+  setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`);
+  setCounter(newAccount.publicKey);
+};
 ```
 
 ### 3. `Increment`
@@ -453,10 +456,10 @@ const onClick = async () => {
       counter: counter,
       user: wallet.publicKey,
     })
-    .rpc()
+    .rpc();
 
-  setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`)
-}
+  setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`);
+};
 ```
 
 ### 5. Display the correct count
@@ -468,10 +471,10 @@ We'll show how to observe account changes in a future lesson, but for now we jus
 Inside `refreshCount`, let's use `program` to fetch the counter account, then use `setCount` to set the count to the number stored on the program:
 
 ```tsx
-const refreshCount = async (program) => {
-  const counterAccount = await program.account.counter.fetch(counter)
-  setCount(counterAccount.count.toNumber())
-}
+const refreshCount = async program => {
+  const counterAccount = await program.account.counter.fetch(counter);
+  setCount(counterAccount.count.toNumber());
+};
 ```
 
 Super simple with Anchor!

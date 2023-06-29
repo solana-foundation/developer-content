@@ -1,10 +1,10 @@
 ---
 title: Type Cosplay
 objectives:
-- Explain the security risks associated with not checking account types
-- Implement an account type discriminator using long-form Rust
-- Use Anchor's `init` constraint to initialize accounts
-- Use Anchor's `Account` type for account validation
+  - Explain the security risks associated with not checking account types
+  - Implement an account type discriminator using long-form Rust
+  - Use Anchor's `init` constraint to initialize accounts
+  - Use Anchor's `Account` type for account validation
 ---
 
 # TL;DR
@@ -12,27 +12,27 @@ objectives:
 - Use discriminators to distinguish between different account types
 - To implement a discriminator in Rust, include a field in the account struct to represent the account type
 
-    ```rust
-    #[derive(BorshSerialize, BorshDeserialize)]
-    pub struct User {
-        discriminant: AccountDiscriminant,
-        user: Pubkey,
-    }
+  ```rust
+  #[derive(BorshSerialize, BorshDeserialize)]
+  pub struct User {
+      discriminant: AccountDiscriminant,
+      user: Pubkey,
+  }
 
-    #[derive(BorshSerialize, BorshDeserialize, PartialEq)]
-    pub enum AccountDiscriminant {
-        User,
-        Admin,
-    }
-    ```
+  #[derive(BorshSerialize, BorshDeserialize, PartialEq)]
+  pub enum AccountDiscriminant {
+      User,
+      Admin,
+  }
+  ```
 
 - To implement a discriminator check in Rust, verify that the discriminator of the deserialized account data matches the expected value
 
-    ```rust
-    if user.discriminant != AccountDiscriminant::User {
-        return Err(ProgramError::InvalidAccountData.into());
-    }
-    ```
+  ```rust
+  if user.discriminant != AccountDiscriminant::User {
+      return Err(ProgramError::InvalidAccountData.into());
+  }
+  ```
 
 - In Anchor, program account types automatically implement the `Discriminator` trait which creates an 8 byte unique identifier for a type
 - Use Anchor’s `Account<'info, T>` type to automatically check the discriminator of the account when deserializing the account data
@@ -258,25 +258,25 @@ Now in your `programs` folder you will have two programs. Run `anchor keys list`
 Next, update the test file's setup to include the new program and two new keypairs for the accounts we'll be initializing for the new program.
 
 ```tsx
-import * as anchor from "@project-serum/anchor"
-import { Program } from "@project-serum/anchor"
-import { TypeCosplay } from "../target/types/type_cosplay"
-import { TypeChecked } from "../target/types/type_checked"
-import { expect } from "chai"
+import * as anchor from "@project-serum/anchor";
+import { Program } from "@project-serum/anchor";
+import { TypeCosplay } from "../target/types/type_cosplay";
+import { TypeChecked } from "../target/types/type_checked";
+import { expect } from "chai";
 
 describe("type-cosplay", () => {
-  const provider = anchor.AnchorProvider.env()
-  anchor.setProvider(provider)
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
 
-  const program = anchor.workspace.TypeCosplay as Program<TypeCosplay>
-  const programChecked = anchor.workspace.TypeChecked as Program<TypeChecked>
+  const program = anchor.workspace.TypeCosplay as Program<TypeCosplay>;
+  const programChecked = anchor.workspace.TypeChecked as Program<TypeChecked>;
 
-  const userAccount = anchor.web3.Keypair.generate()
-  const newAdmin = anchor.web3.Keypair.generate()
+  const userAccount = anchor.web3.Keypair.generate();
+  const newAdmin = anchor.web3.Keypair.generate();
 
-  const userAccountChecked = anchor.web3.Keypair.generate()
-  const adminAccountChecked = anchor.web3.Keypair.generate()
-})
+  const userAccountChecked = anchor.web3.Keypair.generate();
+  const adminAccountChecked = anchor.web3.Keypair.generate();
+});
 ```
 
 ### 4. Implement the `type-checked` program

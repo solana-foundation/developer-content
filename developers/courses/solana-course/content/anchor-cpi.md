@@ -1,10 +1,10 @@
 ---
 title: Anchor CPIs and Errors
 objectives:
-- Make Cross Program Invocations (CPIs) from an Anchor program
-- Use the `cpi` feature to generate helper functions for invoking instructions on existing Anchor programs
-- Use `invoke` and `invoke_signed` to make CPIs where CPI helper functions are unavailable
-- Create and return custom Anchor errors
+  - Make Cross Program Invocations (CPIs) from an Anchor program
+  - Use the `cpi` feature to generate helper functions for invoking instructions on existing Anchor programs
+  - Use `invoke` and `invoke_signed` to make CPIs where CPI helper functions are unavailable
+  - Create and return custom Anchor errors
 ---
 
 # TL;DR
@@ -143,52 +143,52 @@ pub mod lootbox_program {
 
 ### Invoke an instruction on a non-Anchor program
 
-When the program you're calling is *not* an Anchor program, there are two possible options:
+When the program you're calling is _not_ an Anchor program, there are two possible options:
 
 1. It's possible that the program maintainers have published a crate with their own helper functions for calling into their program. For example, the `anchor_spl` crate provides helper functions that are virtually identical from a call-site perspective to what you would get with the `cpi` module of an Anchor program. E.g. you can mint using the [`mint_to` helper function](https://docs.rs/anchor-spl/latest/src/anchor_spl/token.rs.html#36-58) and use the [`MintTo` accounts struct](https://docs.rs/anchor-spl/latest/anchor_spl/token/struct.MintTo.html).
-    ```rust
-    token::mint_to(
-        CpiContext::new_with_signer(
-            ctx.accounts.token_program.to_account_info(),
-            token::MintTo {
-                mint: ctx.accounts.mint_account.to_account_info(),
-                to: ctx.accounts.token_account.to_account_info(),
-                authority: ctx.accounts.mint_authority.to_account_info(),
-            },
-            &[&[
-                "mint".as_bytes(),
-                &[*ctx.bumps.get("mint_authority").unwrap()],
-            ]]
-        ),
-        amount,
-    )?;
-    ```
+   ```rust
+   token::mint_to(
+       CpiContext::new_with_signer(
+           ctx.accounts.token_program.to_account_info(),
+           token::MintTo {
+               mint: ctx.accounts.mint_account.to_account_info(),
+               to: ctx.accounts.token_account.to_account_info(),
+               authority: ctx.accounts.mint_authority.to_account_info(),
+           },
+           &[&[
+               "mint".as_bytes(),
+               &[*ctx.bumps.get("mint_authority").unwrap()],
+           ]]
+       ),
+       amount,
+   )?;
+   ```
 2. If there is no helper module for the program whose instruction(s) you need to invoke, you can fall back to using `invoke` and `invoke_signed`. In fact, the source code of the `mint_to` helper function referenced above shows an example us using `invoke_signed` when given a `CpiContext`. You can follow a similar pattern if you decide to use an accounts struct and `CpiContext` to organize and prepare your CPI.
-    ```rust
-    pub fn mint_to<'a, 'b, 'c, 'info>(
-        ctx: CpiContext<'a, 'b, 'c, 'info, MintTo<'info>>,
-        amount: u64,
-    ) -> Result<()> {
-        let ix = spl_token::instruction::mint_to(
-            &spl_token::ID,
-            ctx.accounts.mint.key,
-            ctx.accounts.to.key,
-            ctx.accounts.authority.key,
-            &[],
-            amount,
-        )?;
-        solana_program::program::invoke_signed(
-            &ix,
-            &[
-                ctx.accounts.to.clone(),
-                ctx.accounts.mint.clone(),
-                ctx.accounts.authority.clone(),
-            ],
-            ctx.signer_seeds,
-        )
-        .map_err(Into::into)
-    }
-    ```
+   ```rust
+   pub fn mint_to<'a, 'b, 'c, 'info>(
+       ctx: CpiContext<'a, 'b, 'c, 'info, MintTo<'info>>,
+       amount: u64,
+   ) -> Result<()> {
+       let ix = spl_token::instruction::mint_to(
+           &spl_token::ID,
+           ctx.accounts.mint.key,
+           ctx.accounts.to.key,
+           ctx.accounts.authority.key,
+           &[],
+           amount,
+       )?;
+       solana_program::program::invoke_signed(
+           &ix,
+           &[
+               ctx.accounts.to.clone(),
+               ctx.accounts.mint.clone(),
+               ctx.accounts.authority.clone(),
+           ],
+           ctx.signer_seeds,
+       )
+       .map_err(Into::into)
+   }
+   ```
 
 ## Throw errors in Anchor
 
@@ -494,13 +494,14 @@ With that done, add a test for the `initializeTokenMint` instruction:
 
 ```ts
 it("Initializes the reward token", async () => {
-    const tx = await program.methods.initializeTokenMint().rpc()
-})
+  const tx = await program.methods.initializeTokenMint().rpc();
+});
 ```
 
 Notice that we didn't have to add `.accounts` because they call be inferred, including the `mint` account (assuming you have seed inference enabled).
 
 Next, update the test for the `addMovieReview` instruction. The primary additions are:
+
 1. To get the associated token address that needs to be passed into the instruction as an account that cannot be inferred
 2. Check at the end of the test that the associated token account has 10 tokens
 
@@ -508,25 +509,25 @@ Next, update the test for the `addMovieReview` instruction. The primary addition
 it("Movie review is added`", async () => {
   const tokenAccount = await getAssociatedTokenAddress(
     mint,
-    provider.wallet.publicKey
-  )
-  
+    provider.wallet.publicKey,
+  );
+
   const tx = await program.methods
     .addMovieReview(movie.title, movie.description, movie.rating)
     .accounts({
       tokenAccount: tokenAccount,
     })
-    .rpc()
-  
-  const account = await program.account.movieAccountState.fetch(movie_pda)
-  expect(movie.title === account.title)
-  expect(movie.rating === account.rating)
-  expect(movie.description === account.description)
-  expect(account.reviewer === provider.wallet.publicKey)
+    .rpc();
 
-  const userAta = await getAccount(provider.connection, tokenAccount)
-  expect(Number(userAta.amount)).to.equal((10 * 10) ^ 6)
-})
+  const account = await program.account.movieAccountState.fetch(movie_pda);
+  expect(movie.title === account.title);
+  expect(movie.rating === account.rating);
+  expect(movie.description === account.description);
+  expect(account.reviewer === provider.wallet.publicKey);
+
+  const userAta = await getAccount(provider.connection, tokenAccount);
+  expect(Number(userAta.amount)).to.equal((10 * 10) ^ 6);
+});
 ```
 
 After that, neither the test for `updateMovieReview` nor the test for `deleteMovieReview` need any changes.

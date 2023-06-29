@@ -1,12 +1,12 @@
 ---
 title: Hello World
 objectives:
-- Use the Rust module system
-- Define a function in Rust
-- Explain the `Result` type
-- Explain the entry point to a Solana program
-- Build and deploy a basic Solana program
-- Submit a transaction to invoke our “Hello, world!” program
+  - Use the Rust module system
+  - Define a function in Rust
+  - Explain the `Result` type
+  - Explain the entry point to a Solana program
+  - Build and deploy a basic Solana program
+  - Submit a transaction to invoke our “Hello, world!” program
 ---
 
 # TL;DR
@@ -266,6 +266,7 @@ You can locate the program ID on Solana Playground referencing the image below.
 Next, install the Node modules with `npm i`.
 
 Now, go ahead and run `npm start`. This command will:
+
 1. Generate a new keypair and create a `.env` file if one does not already exist
 2. Airdrop devnet SOL
 3. Invoke the “Hello, world!” program

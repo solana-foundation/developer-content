@@ -6,5 +6,5 @@
   "trailingComma": "all",
   "arrowParens": "avoid",
   "endOfLine": "auto",
-  "proseWrap": "always"
+  "proseWrap": "preserve"
 }

@@ -1,18 +1,18 @@
 ---
 title: Environment Variables in Solana Programs
 objectives:
-- Define program features in the `Cargo.toml` file
-- Use the Rust `cfg` attribute to conditionally compile code based on which features are or are not enabled
-- Use the Rust `cfg!` macro to conditionally compile code based on which features are or are not enabled
-- Create an admin-only instruction to set up a program account that can be used to store program configuration values
+  - Define program features in the `Cargo.toml` file
+  - Use the Rust `cfg` attribute to conditionally compile code based on which features are or are not enabled
+  - Use the Rust `cfg!` macro to conditionally compile code based on which features are or are not enabled
+  - Create an admin-only instruction to set up a program account that can be used to store program configuration values
 ---
 
 # TL;DR
 
--   There are no "out of the box" solutions for creating distinct environments in an on-chain program, but you can achieve something similar to environment variables if you get creative.
--   You can use the `cfg` attribute with **Rust features** (`#[cfg(feature = ...)]`) to run different code or provide different variable values based on the Rust feature provided. _This happens at compile-time and doesn't allow you to swap values after a program has been deployed_.
--   Similarly, you can use the `cfg!` **macro** to compile different code paths based on the features that are enabled.
--   Alternatively, you can achieve something similar to environment variables that can be modified after deployment by creating accounts and instructions that are only accessible by the program’s upgrade authority.
+- There are no "out of the box" solutions for creating distinct environments in an on-chain program, but you can achieve something similar to environment variables if you get creative.
+- You can use the `cfg` attribute with **Rust features** (`#[cfg(feature = ...)]`) to run different code or provide different variable values based on the Rust feature provided. _This happens at compile-time and doesn't allow you to swap values after a program has been deployed_.
+- Similarly, you can use the `cfg!` **macro** to compile different code paths based on the features that are enabled.
+- Alternatively, you can achieve something similar to environment variables that can be modified after deployment by creating accounts and instructions that are only accessible by the program’s upgrade authority.
 
 # Overview
 
@@ -315,7 +315,7 @@ Before we continue, take a few minutes to familiarize yourself with these files 
 
 Let's start by running the existing test.
 
-Make sure you use `yarn` or `npm install` to install the dependencies laid out in the `package.json` file. Then be sure to run `anchor keys list` to get the public key for your program printed to the console. This differs based on the keypair you have locally, so you need to update `lib.rs` and `Anchor.toml` to use *your* key.
+Make sure you use `yarn` or `npm install` to install the dependencies laid out in the `package.json` file. Then be sure to run `anchor keys list` to get the public key for your program printed to the console. This differs based on the keypair you have locally, so you need to update `lib.rs` and `Anchor.toml` to use _your_ key.
 
 Finally, run `anchor test` to start the test. It should fail with the following output:
 
@@ -323,11 +323,11 @@ Finally, run `anchor test` to start the test. It should fail with the following 
 Error: failed to send transaction: Transaction simulation failed: Error processing Instruction 0: incorrect program id for instruction
 ```
 
-The reason for this error is that we're attempting to use the mainnet USDC mint address (as hard-coded in the `lib.rs` file of the program), but that mint doesn't exist in the local environment. 
+The reason for this error is that we're attempting to use the mainnet USDC mint address (as hard-coded in the `lib.rs` file of the program), but that mint doesn't exist in the local environment.
 
 ### 3. Adding a `local-testing` feature
 
-To fix this, we need a mint we can use locally *and* hard-code into the program. Since the local environment is reset often during testing, you'll need to store a keypair that you can use to recreate the same mint address every time.
+To fix this, we need a mint we can use locally _and_ hard-code into the program. Since the local environment is reset often during testing, you'll need to store a keypair that you can use to recreate the same mint address every time.
 
 Additionally, you don't want to have to change the hard-coded address between local and mainnet builds since that could introduce human error (and is just annoying). So we'll create a `local-testing` feature that, when enabled, will make the program use our local mint but otherwise use the production USDC mint.
 
@@ -383,7 +383,7 @@ Next, update the `config.ts` test file to create a mint using the generated keyp
 
 ```ts
 const mint = new anchor.web3.PublicKey(
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
 );
 ```
 
@@ -713,21 +713,19 @@ it("Initialize Program Config Account", async () => {
       authority: wallet.publicKey,
       systemProgram: anchor.web3.SystemProgram.programId,
     })
-    .rpc()
+    .rpc();
 
   assert.strictEqual(
     (
       await program.account.programConfig.fetch(programConfig)
     ).feeBasisPoints.toNumber(),
-    100
-  )
+    100,
+  );
   assert.strictEqual(
-    (
-      await program.account.programConfig.fetch(programConfig)
-    ).admin.toString(),
-    wallet.publicKey.toString()
-  )
-})
+    (await program.account.programConfig.fetch(programConfig)).admin.toString(),
+    wallet.publicKey.toString(),
+  );
+});
 ```
 
 The second test verifies that the payment instruction is working correctly, with the fee being sent to the fee destination and the remaining balance being transferred to the receiver. Here we update the existing test to include the `programConfig` account.
@@ -743,27 +741,27 @@ it("Payment completes successfully", async () => {
       receiverTokenAccount: receiverTokenAccount,
       sender: sender.publicKey,
     })
-    .transaction()
+    .transaction();
 
-  await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender])
+  await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender]);
 
   assert.strictEqual(
     (await connection.getTokenAccountBalance(senderTokenAccount)).value
       .uiAmount,
-    0
-  )
+    0,
+  );
 
   assert.strictEqual(
     (await connection.getTokenAccountBalance(feeDestination)).value.uiAmount,
-    100
-  )
+    100,
+  );
 
   assert.strictEqual(
     (await connection.getTokenAccountBalance(receiverTokenAccount)).value
       .uiAmount,
-    9900
-  )
-})
+    9900,
+  );
+});
 ```
 
 The third test attempts to update the fee on the program config account, which should be successful.
@@ -778,15 +776,15 @@ it("Update Program Config Account", async () => {
       feeDestination: feeDestination,
       newAdmin: sender.publicKey,
     })
-    .rpc()
+    .rpc();
 
   assert.strictEqual(
     (
       await program.account.programConfig.fetch(programConfig)
     ).feeBasisPoints.toNumber(),
-    200
-  )
-})
+    200,
+  );
+});
 ```
 
 The fourth test tries to update the fee on the program config account, where the admin is not the one stored on the program config account, and this should fail.
@@ -802,13 +800,13 @@ it("Update Program Config Account with unauthorized admin (expect fail)", async 
         feeDestination: feeDestination,
         newAdmin: sender.publicKey,
       })
-      .transaction()
+      .transaction();
 
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender])
+    await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender]);
   } catch (err) {
-    expect(err)
+    expect(err);
   }
-})
+});
 ```
 
 Finally, run the test using the following command:
@@ -833,7 +831,7 @@ And that's it! You've made the program a lot easier to work with moving forward.
 
 # Challenge
 
-Now it's time for you to do some of this on your own. We mentioned being able to use the program's upgrade authority as the initial admin.  Go ahead and update the demo's `initialize_program_config` so that only the upgrade authority can call it rather than having a hardcoded `ADMIN`.
+Now it's time for you to do some of this on your own. We mentioned being able to use the program's upgrade authority as the initial admin. Go ahead and update the demo's `initialize_program_config` so that only the upgrade authority can call it rather than having a hardcoded `ADMIN`.
 
 Note that the `anchor test` command, when run on a local network, starts a new test validator using `solana-test-validator`. This test validator uses a non-upgradeable loader. The non-upgradeable loader makes it so the program's `program_data` account isn't initialized when the validator starts. You'll recall from the lesson that this account is how we access the upgrade authority from the program.
 
