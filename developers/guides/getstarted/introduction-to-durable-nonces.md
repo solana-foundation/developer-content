@@ -19,10 +19,9 @@ keywords:
 ---
 
 # Durable & Offline Transaction Signing using Nonces
-This guide is meant to be a one-stop shop for Solana's Durable Nonces: a highly under-utilized and under-appreciated way to power your Solana dapps and make their user experience more reliable and deterministic.
+This guide is meant to be a one-stop shop for Solana's Durable Nonces: a highly under-utilized and under-appreciated way to power your Solana dapps and make your user's experience more reliable and deterministic.
 
-> <https://github.com/0xproflupin/solana-durable-nonces>
-> The code for this guide can be found in the above repository, and its advisable to follow along and run the examples locally to get a better grasp of Durable Nonces
+> The code for this guide can be found in [this repository](https://github.com/0xproflupin/solana-durable-nonces), and it's advisable to follow along and run the examples locally to get a better grasp of Durable Nonces
 
 ## Durable Nonce Applications
 Before we dive deep into Durable Nonces, its important to understand that durable nonces provide an opportunity to create and sign a transaction that can be submitted at any point in the future, and much more. This opens up a wide range of use cases that are otherwise not possible or too difficult to implement:
@@ -89,7 +88,7 @@ As you can imagine, a side-effect of using recent blockhashes is the forced mort
 
 Another issue with blockhashes is the forced non-uniqueness of signed transactions in very small timeframes. In some cases, if the transactions are executed very quickly in succession, some get the same recent blockhashes with high probability, thus [making them duplicate and avoid their execution](https://solana.stackexchange.com/questions/1161/how-to-avoid-sendtransactionerror-this-transaction-has-already-been-processed?rq=1).
 
-To summarise:
+To summarize:
 
 1. What if I don't want to send the transaction right away?
 2. What if I want to sign the transaction offline as I don't want to keep my keys on a device that is connected to the net?
@@ -253,11 +252,11 @@ solana airdrop -k co-sender.json 0.5
 ```
 
 ### Using Recent Blockhashes
-Before we try to sign and send a durable transaction, let's see how transactions are submitted using blockhashes.
+Before we try to sign and send a durable transaction, let's see how transactions are normally submitted using recent blockhashes.
 
 > Its important to note that although we'll attempt to achieve the above using recent blockhashes, the expected outcome is failure, which will help us appreciate why durable nonces are necessary here.
 
-The first step is to build a transfer transaction from `sender` to `reciever` and sign it with `co-sender`'s wallet.
+The first step is to build a transfer transaction from `sender` to `receiver` and sign it with `co-sender`'s wallet.
 
 To sign an offline transaction, we need to use:
 1. `--sign-only`: which prevents clients from sending the transaction.
@@ -365,9 +364,9 @@ Signature: anQ8VtQgeSMoKTnQCubTenq1J7WKxAa1dbFMDLsbDWgV6GGL135G1Ydv4QTNd6GptP3Tx
 
 The transaction is successfully submitted!
 
-If we check it on the [explorer](https://solscan.io/tx/anQ8VtQgeSMoKTnQCubTenq1J7WKxAa1dbFMDLsbDWgV6GGL135G1Ydv4QTNd6GptP3TxDQ2ZWi3Y5qnEtjM7yg?cluster=devnet), we can see that an instruction, `AdvanceNonce` was prepended to the transaction, as we discussed before. This is done to avoid using the same nonce again.
+If we check it on the [explorer](https://solscan.io/tx/anQ8VtQgeSMoKTnQCubTenq1J7WKxAa1dbFMDLsbDWgV6GGL135G1Ydv4QTNd6GptP3TxDQ2ZWi3Y5qnEtjM7yg?cluster=devnet), we can see that an `AdvanceNonce` instruction was prepended to the transaction, as we discussed before. This is done to avoid using the same nonce again.
 
-Voila, we've gone through a very real-life use case of Durable Nonces. Now let's see how to use them in transactions using JavaScript.
+Voila, we've gone through a very real-life use case of Durable Nonces. Now let's see how to use them in transactions using JavaScript and the [`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/) package.
 
 ## Durable Nonces with Solana `web3.js`
 We'll use a similar example of making a simple transfer to demonstrate how to send transactions using durable nonces.
@@ -465,11 +464,13 @@ console.log("Signed Durable Transaction: ", serialisedTx);
 
 ## Live Example: Poll Simulation App
 ### Introduction
-The Poll Simulation app simulates a real-life poll mechanism, wherein voters are allowed to vote for a given set of times, and once the time comes for counting, the votes are counted, the count is publicly announced to everyone, and the winner is declared. This is tough to build on-chain, as changing the state of an account on-chain is a public action, and hence if a user votes for someone, others would know, and hence the count won't be hidden from the public until the voting has been completed.
+The Poll Simulation app simulates a real-life poll mechanism, wherein voters are allowed to vote for a given set of times. Once the time comes for determining the results of the poll: the votes are counted, the count is publicly announced to everyone, and the winner is declared.
+
+This is tough to build on-chain, as changing the state of an account on-chain is a public action, and hence if a user votes for someone, others would know, and hence the count won't be hidden from the public until the voting has been completed.
 
 Durable nonces can be used to partially fix this. Instead of signing and sending the transaction when voting for your candidate, the dapp can let the user sign the transaction using durable nonces, serialize the transaction as shown above in the web3.js example, and save the serialized transactions in a database until the time comes for counting.
 
-For counting the votes, the dapp then needs to sync, send or submit all the signed transactions one by one. With each submitted transaction, the state change will happen on-chain, and the winner can be decided.
+For counting the votes, the dapp then needs to sync, send, or submit all the signed transactions one by one. With each submitted transaction, the state change will happen on-chain, and the winner can be decided.
 
 ### Live App
 * The app is live on:
