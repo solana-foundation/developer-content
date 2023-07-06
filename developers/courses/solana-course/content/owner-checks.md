@@ -1,16 +1,22 @@
 ---
 title: Owner Checks
 objectives:
-  - Explain the security risks associated with not performing appropriate owner checks
+  - Explain the security risks associated with not performing appropriate owner
+    checks
   - Implement owner checks using long-form Rust
-  - Use Anchor’s `Account<'info, T>` wrapper and an account type to automate owner checks
-  - Use Anchor’s `#[account(owner = <expr>)]` constraint to explicitly define an external program that should own an account
+  - Use Anchor’s `Account<'info, T>` wrapper and an account type to automate
+    owner checks
+  - Use Anchor’s `#[account(owner = <expr>)]` constraint to explicitly define an
+    external program that should own an account
 ---
 
 # TL;DR
 
-- Use **Owner Checks** to verify that accounts are owned by the expected program. Without appropriate owner checks, accounts owned by unexpected programs could be used in an instruction.
-- To implement an owner check in Rust, simply check that an account’s owner matches an expected program ID
+- Use **Owner Checks** to verify that accounts are owned by the expected
+  program. Without appropriate owner checks, accounts owned by unexpected
+  programs could be used in an instruction.
+- To implement an owner check in Rust, simply check that an account’s owner
+  matches an expected program ID
 
 ```rust
 if ctx.accounts.account.owner != ctx.program_id {
@@ -18,14 +24,20 @@ if ctx.accounts.account.owner != ctx.program_id {
 }
 ```
 
-- Anchor program account types implement the `Owner` trait which allows the `Account<'info, T>` wrapper to automatically verify program ownership
-- Anchor gives you the option to explicitly define the owner of an account if it should be anything other than the currently executing program
+- Anchor program account types implement the `Owner` trait which allows the
+  `Account<'info, T>` wrapper to automatically verify program ownership
+- Anchor gives you the option to explicitly define the owner of an account if it
+  should be anything other than the currently executing program
 
 # Overview
 
-Owner checks are used to verify that an account passed into an instruction is owned by an expected program. This prevents accounts owned by an unexpected program from being used in an instruction.
+Owner checks are used to verify that an account passed into an instruction is
+owned by an expected program. This prevents accounts owned by an unexpected
+program from being used in an instruction.
 
-As a refresher, the `AccountInfo` struct contains the following fields. An owner check refers to checking that the `owner` field in the `AccountInfo` matches an expected program ID.
+As a refresher, the `AccountInfo` struct contains the following fields. An owner
+check refers to checking that the `owner` field in the `AccountInfo` matches an
+expected program ID.
 
 ```jsx
 /// Account information
@@ -52,13 +64,25 @@ pub struct AccountInfo<'a> {
 
 ### Missing owner check
 
-The example below shows an `admin_instruction` intended to be accessible only by an `admin` account stored on an `admin_config` account.
+The example below shows an `admin_instruction` intended to be accessible only by
+an `admin` account stored on an `admin_config` account.
 
-Although the instruction checks the `admin` account signed the transaction and matches the `admin` field stored on the `admin_config` account, there is no owner check to verify the `admin_config` account passed into the instruction is owned by the executing program.
+Although the instruction checks the `admin` account signed the transaction and
+matches the `admin` field stored on the `admin_config` account, there is no
+owner check to verify the `admin_config` account passed into the instruction is
+owned by the executing program.
 
-Since the `admin_config` is unchecked as indicated by the `AccountInfo` type, a fake `admin_config` account owned by a different program could be used in the `admin_instruction`. This means that an attacker could create a program with an `admin_config` whose data structure matches the `admin_config` of your program, set their public key as the `admin` and pass their `admin_config` account into your program. This would let them effectively spoof your program into thinking that they are the authorized admin for your program.
+Since the `admin_config` is unchecked as indicated by the `AccountInfo` type, a
+fake `admin_config` account owned by a different program could be used in the
+`admin_instruction`. This means that an attacker could create a program with an
+`admin_config` whose data structure matches the `admin_config` of your program,
+set their public key as the `admin` and pass their `admin_config` account into
+your program. This would let them effectively spoof your program into thinking
+that they are the authorized admin for your program.
 
-This simplified example only prints the `admin` to the program logs. However, you can imagine how a missing owner check could allow fake accounts to exploit an instruction.
+This simplified example only prints the `admin` to the program logs. However,
+you can imagine how a missing owner check could allow fake accounts to exploit
+an instruction.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -97,7 +121,9 @@ pub struct AdminConfig {
 
 ### Add owner check
 
-In vanilla Rust, you could solve this problem by comparing the `owner` field on the account to the program ID. If they do not match, you would return an `IncorrectProgramId` error.
+In vanilla Rust, you could solve this problem by comparing the `owner` field on
+the account to the program ID. If they do not match, you would return an
+`IncorrectProgramId` error.
 
 ```rust
 if ctx.accounts.admin_config.owner != ctx.program_id {
@@ -105,7 +131,9 @@ if ctx.accounts.admin_config.owner != ctx.program_id {
 }
 ```
 
-Adding an owner check prevents accounts owned by an unexpected program to be passed in as the `admin_config` account. If a fake `admin_config` account was used in the `admin_instruction`, then the transaction would fail.
+Adding an owner check prevents accounts owned by an unexpected program to be
+passed in as the `admin_config` account. If a fake `admin_config` account was
+used in the `admin_instruction`, then the transaction would fail.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -149,11 +177,20 @@ pub struct AdminConfig {
 
 Anchor can make this simpler with the `Account` type.
 
-`Account<'info, T>` is a wrapper around `AccountInfo` that verifies program ownership and deserializes underlying data into the specified account type `T`. This in turn allows you to use `Account<'info, T>` to easily validate ownership.
+`Account<'info, T>` is a wrapper around `AccountInfo` that verifies program
+ownership and deserializes underlying data into the specified account type `T`.
+This in turn allows you to use `Account<'info, T>` to easily validate ownership.
 
-For context, the `#[account]` attribute implements various traits for a data structure representing an account. One of these is the `Owner` trait which defines an address expected to own an account. The owner is set as the program ID specified in the `declare_id!` macro.
+For context, the `#[account]` attribute implements various traits for a data
+structure representing an account. One of these is the `Owner` trait which
+defines an address expected to own an account. The owner is set as the program
+ID specified in the `declare_id!` macro.
 
-In the example below, `Account<'info, AdminConfig>` is used to validate the `admin_config`. This will automatically perform the owner check and deserialize the account data. Additionally, the `has_one` constraint is used to check that the `admin` account matches the `admin` field stored on the `admin_config` account.
+In the example below, `Account<'info, AdminConfig>` is used to validate the
+`admin_config`. This will automatically perform the owner check and deserialize
+the account data. Additionally, the `has_one` constraint is used to check that
+the `admin` account matches the `admin` field stored on the `admin_config`
+account.
 
 This way, you don’t need to clutter your instruction logic with owner checks.
 
@@ -189,9 +226,17 @@ pub struct AdminConfig {
 
 ### Use Anchor’s `#[account(owner = <expr>)]` constraint
 
-In addition to the `Account` type, you can use an `owner` constraint. The `owner` constraint allows you to define the program that should own an account if it’s different from the currently executing one. This comes in handy if, for example, you are writing an instruction that expects an account to be a PDA derived from a different program. You can use the `seeds` and `bump` constraints and define the `owner` to properly derive and verify the address of the account passed in.
+In addition to the `Account` type, you can use an `owner` constraint. The
+`owner` constraint allows you to define the program that should own an account
+if it’s different from the currently executing one. This comes in handy if, for
+example, you are writing an instruction that expects an account to be a PDA
+derived from a different program. You can use the `seeds` and `bump` constraints
+and define the `owner` to properly derive and verify the address of the account
+passed in.
 
-To use the `owner` constraint, you’ll have to have access to the public key of the program you expect to own an account. You can either pass the program in as an additional account or hard-code the public key somewhere in your program.
+To use the `owner` constraint, you’ll have to have access to the public key of
+the program you expect to own an account. You can either pass the program in as
+an additional account or hard-code the public key somewhere in your program.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -232,22 +277,35 @@ pub struct AdminConfig {
 
 # Demo
 
-In this demo we’ll use two programs to demonstrate how a missing owner check could allow a fake account to drain the tokens from a simplified token “vault” account (note that this is very similar to the demo from the Signer Authorization lesson).
+In this demo we’ll use two programs to demonstrate how a missing owner check
+could allow a fake account to drain the tokens from a simplified token “vault”
+account (note that this is very similar to the demo from the Signer
+Authorization lesson).
 
-To help illustrate this, one program will be missing an account owner check on the vault account it withdraws tokens to.
+To help illustrate this, one program will be missing an account owner check on
+the vault account it withdraws tokens to.
 
-The second program will be a direct clone of the first program created by a malicious user to create an account identical to the first program’s vault account.
+The second program will be a direct clone of the first program created by a
+malicious user to create an account identical to the first program’s vault
+account.
 
-Without the owner check, this malicious user will be able to pass in the vault account owned by their “faked” program and the original program will still execute.
+Without the owner check, this malicious user will be able to pass in the vault
+account owned by their “faked” program and the original program will still
+execute.
 
 ### 1. Starter
 
-To get started, download the starter code from the `starter` branch of [this repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/starter). The starter code includes two programs `clone` and `owner_check` and the boilerplate setup for the test file.
+To get started, download the starter code from the `starter` branch of
+[this repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/starter).
+The starter code includes two programs `clone` and `owner_check` and the
+boilerplate setup for the test file.
 
 The `owner_check` program includes two instructions:
 
-- `initialize_vault` initializes a simplified vault account that stores the addresses of a token account and an authority account
-- `insecure_withdraw` withdraws tokens from the token account, but is missing an owner check for the vault account
+- `initialize_vault` initializes a simplified vault account that stores the
+  addresses of a token account and an authority account
+- `insecure_withdraw` withdraws tokens from the token account, but is missing an
+  owner check for the vault account
 
 ```rust
 use anchor_lang::prelude::*;
@@ -347,7 +405,9 @@ pub struct Vault {
 
 The `clone` program includes a single instruction:
 
-- `initialize_vault` initializes a “vault” account that mimics the vault account of the `owner_check` program. It stores the address of the real vault’s token account, but allows the malicious user to put their own authority account.
+- `initialize_vault` initializes a “vault” account that mimics the vault account
+  of the `owner_check` program. It stores the address of the real vault’s token
+  account, but allows the malicious user to put their own authority account.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -389,11 +449,21 @@ pub struct Vault {
 
 ### 2. Test `insecure_withdraw` instruction
 
-The test file includes a test to invoke the `initialize_vault` instruction on the `owner_check` program using the provider wallet as the `authority` and then mints 100 tokens to the token account.
+The test file includes a test to invoke the `initialize_vault` instruction on
+the `owner_check` program using the provider wallet as the `authority` and then
+mints 100 tokens to the token account.
 
-The test file also includes a test to invoke the `initialize_vault` instruction on the `clone` program to initialize a fake `vault` account storing the same `tokenPDA` account, but a different `authority`. Note that no new tokens are minted here.
+The test file also includes a test to invoke the `initialize_vault` instruction
+on the `clone` program to initialize a fake `vault` account storing the same
+`tokenPDA` account, but a different `authority`. Note that no new tokens are
+minted here.
 
-Let’s add a test to invoke the `insecure_withdraw` instruction. This test should pass in the cloned vault and the fake authority. Since there is no owner check to verify the `vaultClone` account is owned by the `owner_check` program, the instruction’s data validation check will pass and show `walletFake` as a valid authority. The tokens from the `tokenPDA` account will then be withdrawn to the `withdrawDestinationFake` account.
+Let’s add a test to invoke the `insecure_withdraw` instruction. This test should
+pass in the cloned vault and the fake authority. Since there is no owner check
+to verify the `vaultClone` account is owned by the `owner_check` program, the
+instruction’s data validation check will pass and show `walletFake` as a valid
+authority. The tokens from the `tokenPDA` account will then be withdrawn to the
+`withdrawDestinationFake` account.
 
 ```tsx
 describe("owner-check", () => {
@@ -427,7 +497,10 @@ owner-check
   ✔ Insecure withdraw (409ms)
 ```
 
-Note that `vaultClone` deserializes successfully even though Anchor automatically initializes new accounts with a unique 8 byte discriminator and checks the discriminator when deserializing an account. This is because the discriminator is a hash of the account type name.
+Note that `vaultClone` deserializes successfully even though Anchor
+automatically initializes new accounts with a unique 8 byte discriminator and
+checks the discriminator when deserializing an account. This is because the
+discriminator is a hash of the account type name.
 
 ```rust
 #[account]
@@ -437,15 +510,21 @@ pub struct Vault {
 }
 ```
 
-Since both programs initialize identical accounts and both structs are named `Vault`, the accounts have the same discriminator even though they are owned by different programs.
+Since both programs initialize identical accounts and both structs are named
+`Vault`, the accounts have the same discriminator even though they are owned by
+different programs.
 
 ### 3. Add `secure_withdraw` instruction
 
 Let’s close up this security loophole.
 
-In the `lib.rs` file of the `owner_check` program add a `secure_withdraw` instruction and a `SecureWithdraw` accounts struct.
+In the `lib.rs` file of the `owner_check` program add a `secure_withdraw`
+instruction and a `SecureWithdraw` accounts struct.
 
-In the `SecureWithdraw` struct, let’s use `Account<'info, Vault>` to ensure that an owner check is performed on the `vault` account. We’ll also use the `has_one` constraint to check that the `token_account` and `authority` passed into the instruction match the values stored on the `vault` account.
+In the `SecureWithdraw` struct, let’s use `Account<'info, Vault>` to ensure that
+an owner check is performed on the `vault` account. We’ll also use the `has_one`
+constraint to check that the `token_account` and `authority` passed into the
+instruction match the values stored on the `vault` account.
 
 ```rust
 #[program]
@@ -500,7 +579,10 @@ pub struct SecureWithdraw<'info> {
 
 ### 4. Test `secure_withdraw` instruction
 
-To test the `secure_withdraw` instruction, we’ll invoke the instruction twice. First, we’ll invoke the instruction using the `vaultClone` account, which we expect to fail. Then, we’ll invoke the instruction using the correct `vault` account to check that the instruction works as intended.
+To test the `secure_withdraw` instruction, we’ll invoke the instruction twice.
+First, we’ll invoke the instruction using the `vaultClone` account, which we
+expect to fail. Then, we’ll invoke the instruction using the correct `vault`
+account to check that the instruction works as intended.
 
 ```tsx
 describe("owner-check", () => {
@@ -550,7 +632,9 @@ describe("owner-check", () => {
 })
 ```
 
-Run `anchor test` to see that the transaction using the `vaultClone` account will now return an Anchor Error while the transaction using the `vault` account completes successfully.
+Run `anchor test` to see that the transaction using the `vaultClone` account
+will now return an Anchor Error while the transaction using the `vault` account
+completes successfully.
 
 ```bash
 'Program HQYNznB3XTqxzuEqqKMAD9XkYE5BGrnv8xmkoDNcqHYB invoke [1]',
@@ -564,21 +648,33 @@ Run `anchor test` to see that the transaction using the `vaultClone` account wil
 'Program HQYNznB3XTqxzuEqqKMAD9XkYE5BGrnv8xmkoDNcqHYB failed: custom program error: 0xbbf'
 ```
 
-Here we see how using Anchor’s `Account<'info, T>` type can simplify the account validation process to automate the ownership check. Additionally, note that Anchor Errors can specify the account that causes the error (e.g. the third line of the logs above say `AnchorError caused by account: vault`). This can be very helpful when debugging.
+Here we see how using Anchor’s `Account<'info, T>` type can simplify the account
+validation process to automate the ownership check. Additionally, note that
+Anchor Errors can specify the account that causes the error (e.g. the third line
+of the logs above say `AnchorError caused by account: vault`). This can be very
+helpful when debugging.
 
 ```bash
 ✔ Secure withdraw, expect error (78ms)
 ✔ Secure withdraw (10063ms)
 ```
 
-That’s all you need to ensure you check the owner on an account! Like some other exploits, it’s fairly simple to avoid but very important. Be sure to always think through which accounts should be owned by which programs and ensure that you add appropriate validation.
+That’s all you need to ensure you check the owner on an account! Like some other
+exploits, it’s fairly simple to avoid but very important. Be sure to always
+think through which accounts should be owned by which programs and ensure that
+you add appropriate validation.
 
-If you want to take a look at the final solution code you can find it on the `solution` branch of [the repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/solution).
+If you want to take a look at the final solution code you can find it on the
+`solution` branch of
+[the repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/solution).
 
 # Challenge
 
-Just as with other lessons in this module, your opportunity to practice avoiding this security exploit lies in auditing your own or other programs.
+Just as with other lessons in this module, your opportunity to practice avoiding
+this security exploit lies in auditing your own or other programs.
 
-Take some time to review at least one program and ensure that proper owner checks are performed on the accounts passed into each instruction.
+Take some time to review at least one program and ensure that proper owner
+checks are performed on the accounts passed into each instruction.
 
-Remember, if you find a bug or exploit in somebody else's program, please alert them! If you find one in your own program, be sure to patch it right away.
+Remember, if you find a bug or exploit in somebody else's program, please alert
+them! If you find one in your own program, be sure to patch it right away.
