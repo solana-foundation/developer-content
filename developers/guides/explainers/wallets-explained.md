@@ -43,7 +43,7 @@ Let's update our definition of wallets:
 
 ![](https://solana.ghost.io/content/images/2022/06/Wallets---4-Balance-1.png)
 
-⛓ Puzzle Piece 2: Blockchain
+## ⛓ Puzzle Piece 2: Blockchain
 ============================
 
 Let's continue to unroll the thread. We have established that balance is stored on the blockchain and not inside your computer. The next exciting trail we could follow is to ask ourselves how data, in general, is stored in the blockchain.
