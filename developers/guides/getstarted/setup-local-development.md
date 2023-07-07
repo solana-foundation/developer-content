@@ -40,10 +40,24 @@ deploying Solana programs to the blockchain.
 
 Users on Windows 10 or 11 should install:
 
-- [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install), which provides a Linux environment that runs inside your existing Windows installation. You can then run regular Linux software, including the Linux versions of Solana CLI. 
-- [Windows Terminal](https://www.microsoft.com/store/productId/9N0DX20HK701), a modern terminal for Windows.
+- [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install),
+  which provides a Linux environment that runs inside your existing Windows
+  installation. You can then run regular Linux software, including the Linux
+  versions of Solana CLI.
+- [Windows Terminal](https://www.microsoft.com/store/productId/9N0DX20HK701), a
+  modern terminal for Windows.
 
-Once you've installed both Windows Subsystem for Linux and Windows Terminal, open Windows Terminal and start a new tab for your Linux distribution, e.g., 'Ubuntu'. Then continue with this guide. 
+Once you've installed both Windows Subsystem for Linux and Windows Terminal,
+open Windows Terminal and start a new tab for your Linux distribution (e.g.
+'Ubuntu') using the `wsl` command.
+
+```sh
+# connect to your WSL/linux terminal
+wsl
+```
+
+Then continue with this guide, running each of the terminal commands within this
+Linux terminal.
 
 ## Install the Solana CLI
 
