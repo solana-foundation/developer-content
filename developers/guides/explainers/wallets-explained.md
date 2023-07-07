@@ -19,8 +19,6 @@ In this article, I will take you out of the rabbit hole. We will, together, put
 back the pieces of all the blockchain concepts by uncovering the true purpose of
 wallets.
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---3-Blockchain-Puzzle.png)
-
 Hint: Wallets are not here to show your losses in a bear market 😅, they are
 here to access the blockchain and build!
 
@@ -32,14 +30,14 @@ here to access the blockchain and build!
 fact, they do not hold anything. So why do we need even them in dapps and
 blockchain?
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---1-Phantom-Balance.png)
+![A screenshot of a wallet balance](https://solana.ghost.io/content/images/2022/06/Wallets---1-Phantom-Balance.png)
 
 Skeptical? Take a look at this:
 [https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet).
 If my crypto were stored inside a wallet, how come you can just look up what's
 inside my wallet on the Internet?
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---2-Solana-Explorer.png)
+![A screenshot of a transaction on the solana explorer](https://solana.ghost.io/content/images/2022/06/Wallets---2-Solana-Explorer.png)
 
 Why am I starting to talk about wallet balance? You may ask. Because the
 "wallet" term is misleading! For a casual crypto holder, that notion of token
@@ -60,7 +58,7 @@ Let's update our definition of wallets:
 - A wallet can be identified by a public key (its address).
 - A wallet balance is just data stored on the blockchain.
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---4-Balance-1.png)
+![A diagram showing how data is stored on-chain](https://solana.ghost.io/content/images/2022/06/Wallets---4-Balance-1.png)
 
 ## ⛓ Puzzle Piece 2: Blockchain
 
@@ -78,7 +76,7 @@ stored in blockchains.**
 _But first, let's take a step back and compare how data is stored in a web2
 world:_
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---5-Web2.png)
+![A diagram showing how data is stored in traditional systems](https://solana.ghost.io/content/images/2022/06/Wallets---5-Web2.png)
 
 In web2, your data is siloed inside a company's server, and the data is handled
 by the company. So if tomorrow they decide to delete for censorship or
@@ -87,7 +85,7 @@ comment, it is just a fact 😅).
 
 _Now, let's compare it to how data is stored in a blockchain:_
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---6-Web3.png)
+![A diagram showing how data is stored on a blockchain](https://solana.ghost.io/content/images/2022/06/Wallets---6-Web3.png)
 
 **A blockchain is a distributed ledger:**
 
@@ -128,7 +126,7 @@ other people's data or cheating the system:
 Let's take the example of a wallet balance, this time we gonna zoom inside a
 blockchain node:
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---8-A-node-s-Dairy.png)
+![An image showing a simplified version of a transactions stored on a ledger](https://solana.ghost.io/content/images/2022/06/Wallets---8-A-node-s-Dairy.png)
 
 Let's say we have 3 protagonists, Claire, Jay, and Brian. Claire happily sends 5
 SOL to both Jay and Brian. But Brian (the evil guy in my story) wants more than
@@ -149,7 +147,7 @@ indeed the user; there are two problems:
 
 **Enough teasing. What's the solution?**
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---8.1-A-node-s-dairy.png)
+![An image showing a simplified version of a transactions stored on a ledger](https://solana.ghost.io/content/images/2022/06/Wallets---8.1-A-node-s-dairy.png)
 
 Yes! The key is signing using the private key! We can "password protect our
 data" without communicating the password, thanks to asymmetric cryptography
@@ -199,7 +197,7 @@ How do permission and signing actually work? Let's say Brian tries to
 impersonate Claire to send himself some extra SOL from Claire's wallet
 (Remember? Wallet Addresses are public).
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---9-Transaction.png)
+![A diagram showing the lifecycle of a transaction](https://solana.ghost.io/content/images/2022/06/Wallets---9-Transaction.png)
 
 > Solana can do much more than **Transfer** Tokens, but the same logic applies
 > to every action, especially for modifying data, where you need to prove that
@@ -239,7 +237,7 @@ These apps just wrap around your keys and add UX niceties such as:
 
 _An example of how the recovery and balance feature work:_
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---10-Wallet-Apps.png)
+![A diagram showing an example of how the recovery and balance features on a wallet work](https://solana.ghost.io/content/images/2022/06/Wallets---10-Wallet-Apps.png)
 
 As you can see, the essential data live in the blockchain. Wallets are just
 convenience vaults that store your private key encrypted. This is just standard
