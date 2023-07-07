@@ -19,7 +19,7 @@ In this article, I will take you out of the rabbit hole. We will, together, put 
 
 Hint: Wallets are not here to show your losses in a bear market 😅, they are here to access the blockchain and build!
 
-💰 Puzzle Piece 1: The Balance Myth
+## 💰 Puzzle Piece 1: The Balance Myth
 ===================================
 
 🤫 Tell you a secret, wallets are misleading. They do not store your crypto. In fact, they do not hold anything. So why do we need even them in dapps and blockchain?
