@@ -3,9 +3,8 @@ date: Jun 15, 2022
 difficulty: intro
 title: "Wallets Explained"
 description:
-  "Tell you a secret, wallets are misleading. They do not store your crypto. In
-  fact, they do not hold anything. So why do we need even them in dapps and
-  blockchain?"
+  "What is a crypto wallet? They do not actually store your crypto. They store a
+  secret key that allows you to prove you own an address on a blockchain."
 tags:
   - wallets
 keywords:
@@ -22,9 +21,7 @@ wallets.
 Hint: Wallets are not here to show your losses in a bear market 😅, they are
 here to access the blockchain and build!
 
-## 💰 Puzzle Piece 1: The Balance Myth
-
-===================================
+## Puzzle Piece 1: The Balance Myth
 
 🤫 Tell you a secret, wallets are misleading. They do not store your crypto. In
 fact, they do not hold anything. So why do we need even them in dapps and
@@ -60,9 +57,7 @@ Let's update our definition of wallets:
 
 ![A diagram showing how data is stored on-chain](https://solana.ghost.io/content/images/2022/06/Wallets---4-Balance-1.png)
 
-## ⛓ Puzzle Piece 2: Blockchain
-
-============================
+## Puzzle Piece 2: Blockchain
 
 Let's continue to unroll the thread. We have established that balance is stored
 on the blockchain and not inside your computer. The next exciting trail we could
@@ -93,7 +88,7 @@ _Now, let's compare it to how data is stored in a blockchain:_
 2. Altogether, these servers represent "a blockchain," like a beehive 👁‍🗨
 3. These servers belong to no one or rather anyone.
 4. Anyone can be part of the blockchain, and you can use your grandma's laptop
-    as one of these servers.
+   as one of these servers.
 5. All the nodes store a copy of the data.
 
 > Actually, your grandma's hardware is not probably gonna cut it, but you got my
@@ -104,9 +99,7 @@ _Now, let's compare it to how data is stored in a blockchain:_
 - Does a blockchain necessarily need to be on the Internet?
 - What is the problem with sharing data with anyone?
 
-## ✍️ Puzzle Piece 3: Signing
-
-==========================
+## Puzzle Piece 3: Signing
 
 If we recap what we just learned about blockchains, all nodes contain a copy of
 your data. I don't know for you, but something is bugging me here...
@@ -139,11 +132,11 @@ If we were doing web2, you would be saying, well, we can check if the user is
 signed in, and if they are signed in, we can check if the balance's owner is
 indeed the user; there are two problems:
 
-1. There is no "session"; the blockchain does not track who is currently
-    "signed in."
+1. There is no "session"; the blockchain does not track who is currently "signed
+   in."
 2. Earlier, when we verified the wallet balance, we used the wallet public key;
-    the public key is, well ...public; you could use my public key and pretend
-    to be me.
+   the public key is, well ...public; you could use my public key and pretend to
+   be me.
 
 **Enough teasing. What's the solution?**
 
@@ -172,9 +165,7 @@ by cryptography with keys in your own hand!
 
 Congrats! You discovered the nature of trustless and decentralized systems.
 
-## 📝 Puzzle Piece 4: Transaction
-
-==============================
+## Puzzle Piece 4: Transaction
 
 We just uncovered the true nature of wallets just above. But what exactly do we
 sign? Private keys are used to sign transactions. A transaction is how we can
@@ -215,9 +206,7 @@ impersonate Claire to send himself some extra SOL from Claire's wallet
   supposed to have the authority to do so._
 - _We do not need to sign when just reading data._
 
-## 👛 Puzzle Piece 5: Wallet Apps
-
-==============================
+## Puzzle Piece 5: Wallet Apps
 
 And finally, to complete the circle, let's talk about wallet apps such as
 [Phantom](https://phantom.app/) or [Solflare](https://solflare.com/). As you now
@@ -244,31 +233,29 @@ convenience vaults that store your private key encrypted. This is just standard
 industry encryption and has nothing to do with the blockchain. The most
 important feature it provides really is signing using the private key.
 
-## 🌀 Putting things back in order
-
-===============================
+## Putting things back in order
 
 1. Data is stored in a swarm of servers (nodes); these validators form the
-    blockchain.
+   blockchain.
 2. Everyone can be a validator node. For this reason, data can be accessed by
-    anyone.
+   anyone.
 3. Changes in a blockchain happen with directives: instructions/transactions.
-4. To avoid chaos, we need a way to determine who can change what: this is
-    where signing comes into play.
+4. To avoid chaos, we need a way to determine who can change what: this is where
+   signing comes into play.
 5. Thanks to cryptography, we can sign a transaction (change) using a
-    public/private key pair: this stamp (or signature) allows us to "password
-    lock" some data without communicating the password to the world.
+   public/private key pair: this stamp (or signature) allows us to "password
+   lock" some data without communicating the password to the world.
 6. A blockchain is a state machine that stores an infinite list of records,
-    logs, or journals of every transaction. The blockchain verifies access to
-    data by checking a transaction signature.
+   logs, or journals of every transaction. The blockchain verifies access to
+   data by checking a transaction signature.
 7. **That's why wallets exist! To authenticate and authorize access by signing
-    with a private key!**
+   with a private key!**
 8. A wallet is purely a convenience we created to wrap the private key and add
-    niceties such as; securely storing the private key (with a password lock) or
-    showing the token account balance. So yes, wallets store an encrypted
-    version of your private key.
+   niceties such as; securely storing the private key (with a password lock) or
+   showing the token account balance. So yes, wallets store an encrypted version
+   of your private key.
 9. You can totally interact with the blockchain without a wallet app like
-    Solflare or Phantom! It would just be a harrowing user experience. ;)
+   Solflare or Phantom! It would just be a harrowing user experience. ;)
 
 _So here you have it, public/private key pairs provide a way for the blockchain
 to identify you and make sure you got the permission to do what you claim you
@@ -281,17 +268,11 @@ signature pens! ✍️.**
 
 ## What's Next?
 
-============
-
 Do you want to start building on Solana?
 
 - A gentle introduction to Solana:
   [https://solana.com/news/solana-scaffold-part-1-wallet-adapter](https://solana.com/news/solana-scaffold-part-1-wallet-adapter)
 - Tutorials: [https://soldev.app/](https://soldev.app/)
-
-## Going Further
-
-=============
 
 ### Blockchain and block chain
 
