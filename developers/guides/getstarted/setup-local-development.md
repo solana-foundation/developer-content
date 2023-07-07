@@ -1,14 +1,16 @@
 ---
 featured: true
-date: Apr 6, 2023
+date: Jun 26, 2023
 difficulty: intro
-title: "Install the Solana CLI for local development (Linux and Mac)"
+title: "Install the Solana CLI for local development"
 description:
   "Quickstart guide on how to install the Solana CLI and setup your local Solana
-  development environment on Linux and Mac."
+  development environment on Linux, Mac or Windows."
 tags:
   - quickstart
   - linux
+  - mac
+  - windows
   - local
   - cli
 keywords:
@@ -33,6 +35,15 @@ deploying Solana programs to the blockchain.
 - how to setup a localhost Solana cluster/validator
 - how to create a Solana wallet for developing
 - how to airdrop SOL tokens for your wallet
+
+## Windows users only
+
+Users on Windows 10 or 11 should install:
+
+- [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install), which provides a Linux environment that runs inside your existing Windows installation. You can then run regular Linux software, including the Linux versions of Solana CLI. 
+- [Windows Terminal](https://www.microsoft.com/store/productId/9N0DX20HK701), a modern terminal for Windows.
+
+Once you've installed both Windows Subsystem for Linux and Windows Terminal, open Windows Terminal and start a new tab for your Linux distribution, e.g., 'Ubuntu'. Then continue with this guide. 
 
 ## Install the Solana CLI
 
