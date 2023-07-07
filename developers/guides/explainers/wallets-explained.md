@@ -149,7 +149,7 @@ How do permission and signing actually work? Let's say Brian tries to impersonat
 *   _We need to sign when we mutate data. If we create or change data, we are supposed to have the authority to do so._
 *   _We do not need to sign when just reading data._
 
-👛 Puzzle Piece 5: Wallet Apps
+## 👛 Puzzle Piece 5: Wallet Apps
 ==============================
 
 And finally, to complete the circle, let's talk about wallet apps such as [Phantom](https://phantom.app/?ref=solana.ghost.io) or [Solflare](https://solflare.com/?ref=solana.ghost.io). As you now understand, the secret sauce to the world of blockchain is really about the public key and the signing using the private key.
