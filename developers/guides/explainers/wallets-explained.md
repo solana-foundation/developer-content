@@ -74,7 +74,7 @@ _Now, let's compare it to how data is stored in a blockchain:_
 
 💡 **Think**
 
-*   \[ \] Does a blockchain necessarily need to be on the Internet?
+*   Does a blockchain necessarily need to be on the Internet?
 *   \[ \] What is the problem with sharing data with anyone?
 
 ## ✍️ Puzzle Piece 3: Signing
