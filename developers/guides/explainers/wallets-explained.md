@@ -77,7 +77,7 @@ _Now, let's compare it to how data is stored in a blockchain:_
 *   \[ \] Does a blockchain necessarily need to be on the Internet?
 *   \[ \] What is the problem with sharing data with anyone?
 
-✍️ Puzzle Piece 3: Signing
+## ✍️ Puzzle Piece 3: Signing
 ==========================
 
 If we recap what we just learned about blockchains, all nodes contain a copy of your data. I don't know for you, but something is bugging me here...
