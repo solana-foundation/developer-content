@@ -189,7 +189,7 @@ _So here you have it, public/private key pairs provide a way for the blockchain 
 
 * * *
 
-What's Next?
+## What's Next?
 ============
 
 Do you want to start building on Solana?  
