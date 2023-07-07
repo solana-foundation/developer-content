@@ -196,7 +196,7 @@ Do you want to start building on Solana?  
 *   A gentle introduction to Solana: [https://solana.com/news/solana-scaffold-part-1-wallet-adapter](https://solana.com/news/solana-scaffold-part-1-wallet-adapter?ref=solana.ghost.io)
 *   Tutorials: [https://soldev.app/](https://soldev.app/?ref=solana.ghost.io)
 
-Going Further
+## Going Further
 =============
 
 ### Blockchain and block chain
