@@ -51,11 +51,6 @@ Once you've installed both Windows Subsystem for Linux and Windows Terminal,
 open Windows Terminal and start a new tab for your Linux distribution (e.g.
 'Ubuntu') using the `wsl` command.
 
-```sh
-# connect to your WSL/linux terminal
-wsl
-```
-
 Then continue with this guide, running each of the terminal commands within this
 Linux terminal.
 
