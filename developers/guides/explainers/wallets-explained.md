@@ -187,7 +187,6 @@ _So here you have it, public/private key pairs provide a way for the blockchain 
 
 **Wallets are called wallets because the first usage was to lock your balance historically. But in a smart contracts world, it is still about locking your data, not just balances. If anything, wallets should really be called stamps or signature pens! ✍️.**
 
-* * *
 
 ## What's Next?
 ============
