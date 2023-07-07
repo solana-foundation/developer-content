@@ -222,4 +222,3 @@ When you connect your wallet to a dapp. What does connecting a wallet really do?
 *   One for connecting the wallet.
 *   Another one to sign a message.
 
-* * *
