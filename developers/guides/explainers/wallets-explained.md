@@ -13,9 +13,9 @@ keywords:
   - blockchain explainers
 ---
 
-![](https://solana.ghost.io/content/images/2022/06/Wallets---3-Blockchain-Puzzle.png)
-
 In this article, I will take you out of the rabbit hole. We will, together, put back the pieces of all the blockchain concepts by uncovering the true purpose of wallets.
+
+![](https://solana.ghost.io/content/images/2022/06/Wallets---3-Blockchain-Puzzle.png)
 
 Hint: Wallets are not here to show your losses in a bear market 😅, they are here to access the blockchain and build!
 
