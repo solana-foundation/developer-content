@@ -26,7 +26,7 @@ Hint: Wallets are not here to show your losses in a bear market 😅, they are h
 
 ![](https://solana.ghost.io/content/images/2022/06/Wallets---1-Phantom-Balance.png)
 
-Skeptical? Take a look at this: [https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet&ref=solana.ghost.io). If my crypto were stored inside a wallet, how come you can just look up what's inside my wallet on the Internet?
+Skeptical? Take a look at this: [https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet). If my crypto were stored inside a wallet, how come you can just look up what's inside my wallet on the Internet?
 
 ![](https://solana.ghost.io/content/images/2022/06/Wallets---2-Solana-Explorer.png)
 
@@ -34,7 +34,7 @@ Why am I starting to talk about wallet balance? You may ask. Because the "wallet
 
 Your wallet balance is stored on the blockchain, not inside your Phantom app, not inside your nano ledger. So it is just data that you can query from the blockchain, and anyone can see it!
 
-Earlier, [I used the Solana explorer to check my wallet SOL balance](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet.&ref=solana.ghost.io). We can retrieve data about a wallet by identifying it by its public key.
+Earlier, [I used the Solana explorer to check my wallet SOL balance](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet). We can retrieve data about a wallet by identifying it by its public key.
 
 Let's update our definition of wallets:
 
@@ -152,7 +152,7 @@ How do permission and signing actually work? Let's say Brian tries to impersonat
 ## 👛 Puzzle Piece 5: Wallet Apps
 ==============================
 
-And finally, to complete the circle, let's talk about wallet apps such as [Phantom](https://phantom.app/?ref=solana.ghost.io) or [Solflare](https://solflare.com/?ref=solana.ghost.io). As you now understand, the secret sauce to the world of blockchain is really about the public key and the signing using the private key.
+And finally, to complete the circle, let's talk about wallet apps such as [Phantom](https://phantom.app/) or [Solflare](https://solflare.com/). As you now understand, the secret sauce to the world of blockchain is really about the public key and the signing using the private key.
 
 Wallets Apps are really just apps regardless of if it is a mobile wallet, a browser extension, or a desktop app, it really is just an app.
 
@@ -193,8 +193,8 @@ _So here you have it, public/private key pairs provide a way for the blockchain 
 
 Do you want to start building on Solana?  
 
-*   A gentle introduction to Solana: [https://solana.com/news/solana-scaffold-part-1-wallet-adapter](https://solana.com/news/solana-scaffold-part-1-wallet-adapter?ref=solana.ghost.io)
-*   Tutorials: [https://soldev.app/](https://soldev.app/?ref=solana.ghost.io)
+*   A gentle introduction to Solana: [https://solana.com/news/solana-scaffold-part-1-wallet-adapter](https://solana.com/news/solana-scaffold-part-1-wallet-adapter)
+*   Tutorials: [https://soldev.app/](https://soldev.app/)
 
 ## Going Further
 =============
