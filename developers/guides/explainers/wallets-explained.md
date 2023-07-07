@@ -120,7 +120,7 @@ That's a whole different paradigm here. In web2, authentication and authorizatio
 
 Congrats! You discovered the nature of trustless and decentralized systems.
 
-📝 Puzzle Piece 4: Transaction
+## 📝 Puzzle Piece 4: Transaction
 ==============================
 
 We just uncovered the true nature of wallets just above. But what exactly do we sign? Private keys are used to sign transactions. A transaction is how we can ask a blockchain to do something.
