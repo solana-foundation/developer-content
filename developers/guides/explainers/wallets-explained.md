@@ -170,7 +170,7 @@ _An example of how the recovery and balance feature work:_
 
 As you can see, the essential data live in the blockchain. Wallets are just convenience vaults that store your private key encrypted. This is just standard industry encryption and has nothing to do with the blockchain. The most important feature it provides really is signing using the private key.
 
-🌀 Putting things back in order
+## 🌀 Putting things back in order
 ===============================
 
 1.  Data is stored in a swarm of servers (nodes); these validators form the blockchain.
