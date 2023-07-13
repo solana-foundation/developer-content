@@ -8,14 +8,14 @@
     "url": "https://github.com/solana-foundation/developer-content"
   },
   "scripts": {
+    "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer build --clearCache",
-    "test": "yarn contentlayer:build",
-    "prettier": "npx prettier -w developers"
+    "test": "yarn contentlayer:build"
   },
   "devDependencies": {
     "contentlayer": "0.3.0",
     "eslint": "^8.38.0",
-    "prettier": "^3.0.0",
+    "gray-matter": "^4.0.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.0.4"
