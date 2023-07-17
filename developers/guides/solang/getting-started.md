@@ -136,7 +136,9 @@ constructor(address payer) {
 }
 ```
 
-Here's an important distinction between EVM smart contracts and Solana programs:
+### Storing of state data
+
+An important distinction between EVM smart contracts and Solana programs is how each stores "state" variables/data:
 
 - EVM smart contracts can directly store state variables.
 - Solana programs (or smart contracts), on the other hand, create separate
