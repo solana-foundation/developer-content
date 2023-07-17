@@ -46,7 +46,7 @@ Just follow the steps outlined below:
    of Solang.
 3. **Anchor Framework Installation**: Next, install the
    [Anchor Framework](https://www.anchor-lang.com/docs/installation). Anchor is a
-   widely used framework in the Solana ecosystem used to simplify the process of
+   widely used framework in the Solana ecosystem and simplifies the process of
    building Solana programs. With version 0.28, you can start building with
    Solang directly through Anchor.
 
