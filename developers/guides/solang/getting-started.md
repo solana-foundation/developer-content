@@ -110,6 +110,7 @@ contract starter {
     }
 }
 ```
+### Important Differences
 
 Compared to a standard EVM smart contract, there are two important differences
 you might notice:
