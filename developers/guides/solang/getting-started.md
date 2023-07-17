@@ -80,7 +80,6 @@ test file that demonstrate how to interact with the contract from the client.
 Next, let’s go over the starter code beginning with the contract itself. Within
 your project's `./solidity` directory, you’ll find the following contract below, which includes:
 
-The contract includes:
 
 - A `constructor` to initialize a state variable
 - A `print` function to print messages to the program logs
