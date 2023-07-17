@@ -1,5 +1,5 @@
 ---
-date: Jun 29, 2023
+date: Jul 17, 2023
 difficulty: intro
 title: "Getting Started with Solang"
 description:
