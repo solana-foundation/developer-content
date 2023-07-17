@@ -1,6 +1,6 @@
 ---
 # metaOnly mode prevents this from becoming a linked record in the DocsNav
 metaOnly: true
-sidebarLabel: Introduction
+title: Introduction
 sidebarSortOrder: 1
 ---
