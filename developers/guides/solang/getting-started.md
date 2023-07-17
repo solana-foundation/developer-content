@@ -78,7 +78,7 @@ test file that demonstrate how to interact with the contract from the client.
 ## Smart Contract Overview
 
 Next, let’s go over the starter code beginning with the contract itself. Within
-your project's `./solidity` directory, you’ll find the following contract below:
+your project's `./solidity` directory, you’ll find the following contract below, which includes:
 
 The contract includes:
 
