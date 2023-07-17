@@ -123,7 +123,7 @@ you might notice:
 @program_id("F1ipperKF9EfD821ZbbYjS319LXYiBmjhzkkf5a26rC") // on-chain contract address
 ```
 
-1. The `@payer` annotation:
+2. The `@payer` annotation:
 
    When storing data on-chain, a certain amount of SOL needs to be allocated to
    cover the storage costs. The `@payer` annotation specifies the user that will
