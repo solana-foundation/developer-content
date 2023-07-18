@@ -39,7 +39,7 @@ export default function handler(
   if (!records) return res.status(404).json({ notFound: true });
 
   // define the formatted href value to search for
-  const href = `/${slug.join("/")}`;
+  const href = slug.join("/");
 
   // init the record to be returned
   let record;
@@ -50,7 +50,7 @@ export default function handler(
     const navItem = computeNavItem(records[i]);
 
     // only care about the requested record
-    if (navItem.href != href) continue;
+    if (navItem.href != href && navItem.href != `/${href}`) continue;
 
     // set the requested record's data (weaving in the computed nav item data)
     record = Object.assign(navItem, records[i]);
