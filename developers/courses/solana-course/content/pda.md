@@ -31,7 +31,7 @@ PDAs serve two main functions:
 
 1. Provide a deterministic way to find the address of a program-owned account
 2. Authorize the program from which a PDA was derived to sign on its behalf in
-   the same way a user may sign with their private key
+   the same way a user may sign with their secret key
 
 In this lesson we'll focus on using PDAs to find and store data. We'll discuss
 signing with a PDA more thoroughly in a future lesson where we cover Cross
@@ -44,11 +44,10 @@ a program ID and one or more input seeds.
 
 Solana keypairs can be found on what is called the Ed25519 Elliptic Curve
 (Ed25519). Ed25519 is a deterministic signature scheme that Solana uses to
-generate corresponding public and private keys. Together, we call these
-keypairs.
+generate corresponding public and secret keys. Together, we call these keypairs.
 
 Alternatively, PDAs are addresses that lie _off_ the Ed25519 curve. This
-effectively means they are public keys _without_ a corresponding private key.
+effectively means they are public keys _without_ a corresponding secret key.
 This property of PDAs is essential for programs to be able to sign on their
 behalf, but we'll cover that in a future lesson.
 
@@ -73,7 +72,7 @@ While you, the developer, determine the seeds to pass into the
 called a "bump seed." The cryptographic function for deriving a PDA results in a
 key that lies _on_ the Ed25519 curve about 50% of the time. In order to ensure
 that the result _is not_ on the Ed25519 curve and therefore does not have a
-private key, the `find_program_address` function adds a numeric seed called a
+secret key, the `find_program_address` function adds a numeric seed called a
 bump seed.
 
 The function starts by using the value `255` as the bump seed, then checks to

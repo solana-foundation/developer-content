@@ -482,7 +482,7 @@ Now that you're up and running, it's time to create an endpoint that supports
 transaction requests for location check-in using the Scavenger Hunt program.
 
 Start by opening the file at `pages/api/checkIn.ts`. Notice that it has a helper
-function for initializing `eventOrganizer` from a private key environment
+function for initializing `eventOrganizer` from a secret key environment
 variable. The first thing we'll do in this file is the following:
 
 1. Export a `handler` function to handle an arbitrary HTTP request

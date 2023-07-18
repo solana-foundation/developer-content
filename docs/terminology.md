@@ -129,7 +129,7 @@ consensus.
 
 ## drone
 
-An off-chain service that acts as a custodian for a user's private key. It
+An off-chain service that acts as a custodian for a user's secret key. It
 typically serves to validate and sign transactions.
 
 ## entry
@@ -203,7 +203,7 @@ program. A [client](#client) can include one or multiple instructions in a
 
 ## keypair
 
-A [public key](#public-key-pubkey) and corresponding [private key](#private-key)
+A [public key](#public-key-pubkey) and corresponding [secret key](#private-key)
 for accessing an account.
 
 ## lamport
@@ -293,7 +293,8 @@ owed to a [stake](#stake) during redemption is the product of the
 
 ## private key
 
-The private key of a [keypair](#keypair).
+Another word for the [#secret-key]. Solana tools and documentation generally use
+the term 'secret key' instead.
 
 ## program
 
@@ -305,7 +306,7 @@ blockchains.
 ## program derived account (PDA)
 
 An account whose signing authority is a program and thus is not controlled by a
-private key like other accounts.
+secret key like other accounts.
 
 ## program id
 
@@ -361,6 +362,10 @@ root are excluded from consideration for consensus and can be discarded.
 
 The component of a [validator](#validator) responsible for [program](#program)
 execution.
+
+## secret key
+
+The secret key of a [keypair](#keypair).
 
 ## Sealevel
 

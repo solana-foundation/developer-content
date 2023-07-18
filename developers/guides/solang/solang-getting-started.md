@@ -228,8 +228,8 @@ contract.
 Here, the `payer` is specified as `wallet.publicKey`, and the address of the
 `dataAccount` that we plan to create is provided. The generated `dataAccount`
 Keypair is included as an additional signer on the transaction, as it's being
-used to create a new account. Essentially, this verifies that we hold the
-private key corresponding to the address of the new account we're creating.
+used to create a new account. Essentially, this verifies that we hold the secret
+key corresponding to the address of the new account we're creating.
 
 ```jsx
 // Client
