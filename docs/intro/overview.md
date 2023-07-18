@@ -69,7 +69,7 @@ can communicate with each other to update the state and query the blockchain.
 
 ## Wallets
 
-A wallet is a pair of public and private keys that are used to verify actions on
+A wallet is a pair of public and secret keys that are used to verify actions on
 the blockchain. The public key is used to identify the account and the private
 key is used to sign transactions.
 

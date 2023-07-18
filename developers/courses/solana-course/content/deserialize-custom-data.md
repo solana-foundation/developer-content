@@ -10,7 +10,7 @@ objectives:
 # TL;DR
 
 - **Program Derived Addresses**, or PDAs, are addresses that do not have a
-  corresponding private key. The concept of PDAs allows for programs to sign for
+  corresponding secret key. The concept of PDAs allows for programs to sign for
   transactions themselves and allows for storing and locating data.
 - You can derive a PDA using the `findProgramAddress(seeds, programid)` method.
 - You can get an array of all the accounts belonging to a program using
@@ -41,8 +41,8 @@ development.
 
 PDA stands for Program Derived Address. As the name suggests, it refers to an
 address (public key) derived from a program and some seeds. In a previous
-lesson, we discussed public/private keys and how they are used on Solana. Unlike
-a keypair, a PDA _does not_ have a corresponding private key. The purpose of a
+lesson, we discussed public/secret keys and how they are used on Solana. Unlike
+a keypair, a PDA _does not_ have a corresponding secret key. The purpose of a
 PDA is to create an address that a program can sign for in the same way a user
 may sign for a transaction with their wallet.
 
@@ -66,10 +66,10 @@ one or more input seeds.
 
 Regular Solana keypairs lie on the ed2559 Elliptic Curve. This cryptographic
 function ensures that every point along the curve has a corresponding point
-somewhere else on the curve, allowing for public/private keys. PDAs are
-addresses that lie _off_ the ed2559 Elliptic curve and therefore cannot be
-signed for by a private key (since there isn’t one). This ensures that the
-program is the only valid signer for that address.
+somewhere else on the curve, allowing for public/secret keys. PDAs are addresses
+that lie _off_ the ed2559 Elliptic curve and therefore cannot be signed for by a
+secret key (since there isn’t one). This ensures that the program is the only
+valid signer for that address.
 
 To find a public key that does not lie on the ed2559 curve, the program ID and
 seeds of the developer’s choice (like a string of text) are passed through the
