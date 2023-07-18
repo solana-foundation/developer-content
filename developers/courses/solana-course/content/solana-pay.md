@@ -393,7 +393,7 @@ Now that you've got a conceptual grasp on Solana Pay, let's put it into
 practice. We'll use Solana Pay to generate a series of QR codes for a scavenger
 hunt. Participants must visit each scavenger hunt location in order. At each
 location, they'll use the provided QR code to submit the appropriate transaction
-to the scavenger hunt's smart contract that keeps track of user progress.
+to the scavenger hunt's on-chain program that keeps track of user progress.
 
 ### 1. Starter
 
