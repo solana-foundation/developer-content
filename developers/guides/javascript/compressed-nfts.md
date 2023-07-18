@@ -1,5 +1,4 @@
 ---
-featured: true
 date: Apr 22, 2023
 title: Creating Compressed NFTs with JavaScript
 description:
