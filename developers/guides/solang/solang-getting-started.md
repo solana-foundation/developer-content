@@ -1,7 +1,7 @@
 ---
 date: Jul 17, 2023
 difficulty: intro
-title: "Getting Started with Solang"
+title: "Getting started with Solang"
 description:
   "Quickstart guide on how to build your first Solana Program with Solidity
   using Solang"
@@ -45,8 +45,8 @@ Just follow the steps outlined below:
    which includes the Solana Command Line Interface (CLI) and the latest version
    of Solang.
 3. **Anchor Framework Installation**: Next, install the
-   [Anchor Framework](https://www.anchor-lang.com/docs/installation). Anchor is a
-   widely used framework in the Solana ecosystem and simplifies the process of
+   [Anchor Framework](https://www.anchor-lang.com/docs/installation). Anchor is
+   a widely used framework in the Solana ecosystem and simplifies the process of
    building Solana programs. With version 0.28, you can start building with
    Solang directly through Anchor.
 
@@ -78,8 +78,8 @@ test file that demonstrate how to interact with the contract from the client.
 ## Smart Contract Overview
 
 Next, let’s go over the starter code beginning with the contract itself. Within
-your project's `./solidity` directory, you’ll find the following contract below, which includes:
-
+your project's `./solidity` directory, you’ll find the following contract below,
+which includes:
 
 - A `constructor` to initialize a state variable
 - A `print` function to print messages to the program logs
@@ -109,6 +109,7 @@ contract starter {
     }
 }
 ```
+
 ### Important Differences
 
 Compared to a standard EVM smart contract, there are two important differences
@@ -138,7 +139,8 @@ constructor(address payer) {
 
 ### Storing of state data
 
-An important distinction between EVM smart contracts and Solana programs is how each stores "state" variables/data:
+An important distinction between EVM smart contracts and Solana programs is how
+each stores "state" variables/data:
 
 - EVM smart contracts can directly store state variables.
 - Solana programs (or smart contracts), on the other hand, create separate
