@@ -8,6 +8,11 @@ import {
  * Standard content record fields
  */
 const basicContentFields: FieldDefs = {
+  id: {
+    type: "string",
+    description: "Manually defined unique id for this document",
+    required: false,
+  },
   title: {
     type: "string",
     description: "The primary title of the post",
@@ -49,13 +54,6 @@ const basicContentFields: FieldDefs = {
   //   required: false,
   // },
 
-  // todo: enable setting a featured flag via the metadata
-  // featured: {
-  //   type: "boolean",
-  //   description: "Whether or not this content is featured",
-  //   required: false,
-  // },
-
   image: {
     type: "string",
     description:
@@ -81,8 +79,8 @@ const basicContentFields: FieldDefs = {
   },
   featured: {
     type: "boolean",
-    description: "Should this content featured?",
-    default: false,
+    description: "Whether or not this content is featured",
+    required: false,
   },
   featuredPriority: {
     type: "number",
@@ -208,11 +206,6 @@ export const SolanaDoc = defineDocumentType(() => ({
     /**
      * Custom fields for this specific content record type
      */
-    id: {
-      type: "string",
-      description: "Manually defined unique id for this document",
-      required: false,
-    },
     href: {
       type: "string",
       description: "Manually defined href path for this document",
@@ -268,7 +261,12 @@ export default makeSource({
     "developers/resources/**",
   ],
 
-  // include the content record types to support
+  /**
+   * Listing of all supported content record types
+   *
+   * @dev when new content record types are added, ensure
+   * the `SimpleRecordGroupName` is updated accordingly
+   */
   documentTypes: [
     IgnoredDoc,
 
