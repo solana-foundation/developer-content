@@ -68,8 +68,8 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](developing/on-chain-programs/faq#berkeley-packet-filter-bpf) smart
-contract programs, allowing the program to interface with the runtime.
+[BPF](developing/on-chain-programs/faq#berkeley-packet-filter-bpf) on-chain
+programs, allowing the program to interface with the runtime.
 
 ## client
 
@@ -119,7 +119,8 @@ See [vote credit](#vote-credit).
 
 ## cross-program invocation (CPI)
 
-A call from one smart contract program to another. For more information, see
+A call from one on-chain [program](@program) to another. For more information,
+see
 [calling between programs](developing/programming-model/calling-between-programs.md).
 
 ## data plane
@@ -280,6 +281,11 @@ A computer participating in a [cluster](#cluster).
 
 The number of [validators](#validator) participating in a [cluster](#cluster).
 
+## on-chain program
+
+A programthat runs on a blockchain that can read and modify accounts over which
+the on-chain program has control.
+
 ## PoH
 
 See [Proof of History](#proof-of-history-poh).
@@ -296,12 +302,13 @@ owed to a [stake](#stake) during redemption is the product of the
 Another word for the [#secret-key]. Solana tools and documentation generally use
 the term 'secret key' instead.
 
-## program
+## program (or on-chain program)
 
 The executable code that interprets the [instructions](#instruction) sent inside
-of each [transaction](#transaction) on the Solana. These programs are often
-referred to as "[_smart contracts_](./developing//intro/programs.md)" on other
-blockchains.
+of each [transaction](#transaction) on the Solana.
+
+These programs are often referred to as
+"[_smart contracts_](./developing//intro/programs.md)" on other blockchains.
 
 ## program derived account (PDA)
 
@@ -369,7 +376,7 @@ The secret key of a [keypair](#keypair).
 
 ## Sealevel
 
-Solana's parallel smart contracts run-time.
+Solana's parallel run-time for [on-chain programs](#on-chain-program).
 
 ## shred
 
@@ -416,8 +423,8 @@ non-overlapping, comprising roughly equal real-world time as per
 
 ## smart contract
 
-A program on a blockchain that can read and modify accounts over which it has
-control.
+Another term for [on chain programs](#programs). Solana programs should use the
+term [on chain programs](#programs).
 
 ## sol
 

@@ -7,7 +7,7 @@ objectives:
   - Add implementations to Rust types
   - Deserialize instruction data into Rust data types
   - Execute different program logic for different types of instructions
-  - Explain the structure of a smart contract on Solana
+  - Explain the structure of an on-chain program on Solana
 ---
 
 # TL;DR

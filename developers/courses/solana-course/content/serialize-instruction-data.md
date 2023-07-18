@@ -80,10 +80,10 @@ It is not just an array of the accounts’ public keys. Each object in the array
 includes the account’s public key, whether or not it is a signer on the
 transaction, and whether or not it is writable. Including whether or not an
 account is writable during the execution of an instruction allows the runtime to
-facilitate parallel processing of smart contracts. Because you must define which
-accounts are read-only and which you will write to, the runtime can determine
-which transactions are non-overlapping or read-only and allow them to execute
-concurrently. To learn more about the Solana’s runtime, check out this
+facilitate parallel processing of on-chain programs. Because you must define
+which accounts are read-only and which you will write to, the runtime can
+determine which transactions are non-overlapping or read-only and allow them to
+execute concurrently. To learn more about the Solana’s runtime, check out this
 [blog post](https://solana.com/news/sealevel---parallel-processing-thousands-of-smart-contracts).
 
 ### Instruction Data
