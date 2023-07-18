@@ -20,5 +20,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm run contentlayer:build
+      - run: npm -g i yarn
+      - run: yarn install
+      - run: yarn contentlayer:build
