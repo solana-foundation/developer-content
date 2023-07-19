@@ -16,7 +16,7 @@ objectives:
   order and atomically, meaning that if any of the instructions fail for any
   reason, the entire transaction will fail to be processed.
 - Every _instruction_ is made up of 3 components: the intended program's ID, an
-  array of all account’s involved, and a byte buffer of instruction data.
+  array of all accounts involved, and a byte buffer of instruction data.
 - Every _transaction_ contains: an array of all accounts it intends to read from
   or write to, one or more instructions, a recent blockhash, and one or more
   signatures.

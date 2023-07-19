@@ -424,7 +424,7 @@ The secret key of a [keypair](#keypair).
 
 ## Sealevel
 
-Solana's parallel run-time for [on-chain programs](#on-chain-program).
+Solana's parallel runtime for [on-chain programs](#on-chain-program).
 
 ## shred
 
