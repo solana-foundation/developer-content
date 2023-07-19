@@ -116,8 +116,12 @@ export function computeNavItem(
     record.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
 
   // set the href based on the file's path
-  if (!record.href)
-    record.href = doc._raw.flattenedPath.replace(/^content/gm, "");
+  if (!record.href) {
+    record.href = doc._raw.flattenedPath.replace(
+      /^(content\/?)?(developers\/?)?/gm,
+      "/developers/",
+    );
+  }
 
   /**
    * when the record is only storing metadata, remove it as a linked item
