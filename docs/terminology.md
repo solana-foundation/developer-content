@@ -38,11 +38,24 @@ capable of modifying the account.
 
 A front-end application that interacts with a Solana cluster.
 
+## associated token account
+
+An account that stores tokens belonging to a particular `mint`. When sending
+tokens, the sender can create associated token accounts for the recipient on
+demand, so the recipient can recieve the token in the receipent's associated
+token account.
+
 ## bank state
 
 The result of interpreting all programs on the ledger at a given
 [tick height](#tick-height). It includes at least the set of all
 [accounts](#account) holding nonzero [native tokens](#native-token).
+
+## base58
+
+A way of representing binary values as strings. Unlike similar systems like
+base64, base58 omits similar-appearing characters to avoid confusion. Solana
+commonly uses base58 to refer to [wallet addresses](#wallet-address)
 
 ## block
 
@@ -259,6 +272,15 @@ on-chain programs.
 The duration of time for which a [validator](#validator) is unable to
 [vote](#ledger-vote) on another [fork](#fork).
 
+## major unit
+
+The 'main' unit of a currency. For example, among fiat currencies, the dollar
+(for USD), pound (for GBP) and Euro (for EUR) are major units. Solana's SOL
+token has a major unit called the [Sol](#sol). Each Sol is worth 1 billion of
+[lamports](#lamport). Since computers aren't good at decimal maths, transactions
+usually use [minor-units](#minor-unit), converting to major units only for user
+display.
+
 ## message
 
 The structured contents of a [transaction](#transaction). Generally containing a
@@ -268,6 +290,32 @@ of [instructions](#instruction).
 Learn more about the
 [message formatting inside of transactions](./developing/programming-model/transactions.md#message-format)
 here.
+
+## memo
+
+The [memo program](https://spl.solana.com/memo) provides a way to write text to
+the blockchain. The Memo program is often added as an instruction to transfer
+transactions as a text description by the sender of what the transfer is for.
+For example, 'Thanks!❤️ '.
+
+## minor unit
+
+The lesser unit of a currency. Well known minor units include US cents (for
+USD), pence (for GBP) and Eurocents (for EUR). Solana's Sol
+[cryptocurrency](#cryptocurrency) has a minor unit called the
+[Lamport](#lamport).
+
+## mint
+
+Verb. Minting tokens increases the supply of the tokens and transfers the new
+tokens to a specific [token account](#token-account).
+
+## mint account
+
+An [account](#account) used to [mint](#mint) tokens to store in a separate
+[token account](#token-account). Each token mint is unique for that network. For
+example, [USDC on Solana mainnet](https://www.circle.com/en/usdc/developers) has
+the mint address `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`.
 
 ## native token
 
@@ -469,6 +517,12 @@ The Nth [tick](#tick) in the [ledger](#ledger).
 
 A digitally transferable asset.
 
+## token account
+
+An [account](#account) that holds the balance for newly [mint](#mint)ed
+[token](#token)s. Each token account is associated with a single
+[mint account](#mint-account).
+
 ## tps
 
 [Transactions](#transaction) per second.
@@ -529,6 +583,23 @@ validator in its vote account when the validator reaches a [root](#root).
 ## wallet
 
 A collection of [keypairs](#keypair) that allows users to manage their funds.
+
+## wallet address
+
+The unique [public key](#public-key-pubkey) of a wallet. These are usually
+displayed to programs as a [base58](#base58) string.
+
+## wallet app
+
+An end-user program with a user interface to interfact with a blockchain. A
+wallet typically includes a UI to send and recieve tokens and NFTs, check
+balances of diffferent tokens, view NFTs, stake, and on.off ramp into fiat and
+back. See the
+[wallet apps on a Solana ecosytstem page](https://solana.com/ecosystem/explore?categories=wallet).
+
+## wallet name
+
+A unique memorable name used to refer to a [wallet address](@wallet-address).
 
 ## warmup period
 
