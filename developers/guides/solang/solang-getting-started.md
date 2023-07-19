@@ -4,7 +4,7 @@ date: Jul 17, 2023
 difficulty: intro
 title: "Getting started with Solang"
 description:
-  "Quickstart guide on how to build your first Solana Program with Solidity
+  "Quickstart guide on how to build your first Solana program with Solidity
   using Solang"
 tags:
   - quickstart
