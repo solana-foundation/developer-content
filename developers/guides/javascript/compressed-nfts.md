@@ -11,6 +11,8 @@ difficulty: intermediate
 tags:
   - compression
   - metaplex
+altRoutes:
+  - /developers/guides/compressed-nfts
 ---
 
 Compressed NFTs on Solana use the

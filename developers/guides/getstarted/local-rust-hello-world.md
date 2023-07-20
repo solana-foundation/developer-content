@@ -20,6 +20,8 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
+altRoutes:
+  - /developers/guides/local-rust-hello-world
 ---
 
 Rust is the most common programming language to write Solana programs with. This

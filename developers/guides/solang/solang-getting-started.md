@@ -17,13 +17,15 @@ keywords:
   - intro to solana development
   - blockchain developer
   - blockchain tutorial
+altRoutes:
+  - /developers/guides/solang-getting-started
 ---
 
 # Getting Started with Solang
 
 Welcome to this beginner’s guide on getting started with Solang!
-[Solang](https://solang.readthedocs.io/) is a Solidity Compiler that
-allows you to write Solana programs - referred to in other blockchains as 'smart
+[Solang](https://solang.readthedocs.io/) is a Solidity Compiler that allows you
+to write Solana programs - referred to in other blockchains as 'smart
 contracts' - using the Solidity programming language.
 
 If you’re an EVM developer that’s interested in leveraging the high speed and

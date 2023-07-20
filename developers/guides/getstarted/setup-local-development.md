@@ -23,6 +23,8 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
+altRoutes:
+  - /developers/guides/setup-local-development
 ---
 
 This quickstart guide will demonstrate how to quickly install and setup your
