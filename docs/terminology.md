@@ -215,6 +215,10 @@ program. A [client](#client) can include one or multiple instructions in a
 [transaction](#transaction). An instruction may contain one or more
 [cross-program invocations](#cross-program-invocation-cpi).
 
+## ix
+
+Short for [instruction](#instruction).
+
 ## keypair
 
 A [public key](#public-key-pubkey) and corresponding [secret key](#private-key)
@@ -492,6 +496,10 @@ behavior can be proven.
 
 2/3 of a [cluster](#cluster).
 
+## sx
+
+Short for [signature](#signature).
+
 ## sysvar
 
 A system [account](#account).
@@ -555,6 +563,10 @@ A set of [transactions](#transaction) that may be executed in parallel.
 ## tvu
 
 [Transaction validation unit](validator/tvu.md).
+
+## tx
+
+Short for [transaction](#transaction).
 
 ## validator
 
