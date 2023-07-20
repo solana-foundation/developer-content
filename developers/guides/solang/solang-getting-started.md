@@ -22,7 +22,7 @@ keywords:
 # Getting Started with Solang
 
 Welcome to this beginner’s guide on getting started with Solang!
-[Solang](https://solang.readthedocs.io/en/v0.3.1/) is a Solidity Compiler that
+[Solang](https://solang.readthedocs.io/) is a Solidity Compiler that
 allows you to write Solana programs - referred to in other blockchains as 'smart
 contracts' - using the Solidity programming language.
 
