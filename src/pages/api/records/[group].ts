@@ -3,24 +3,24 @@
  */
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { NavItem, SimpleRecordGroupName } from "@/types";
-import { computeNavItem, shouldIgnoreRecord } from "@/utils/navItem";
+import { SimpleRecordGroupName, SupportedDocTypes } from "@/types";
 import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
 } from "contentlayer/generated";
+import { simplifyRecords } from "@/utils/parsers";
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | NavItem[]>,
+  res: NextApiResponse<SimpleNotFound | SupportedDocTypes[]>,
 ) {
   // get the content record group
   const group = req.query?.group?.toString() as SimpleRecordGroupName;
   if (!group) return res.status(404).json({ notFound: true });
 
   // retrieve the correct group's records by its simple group name
-  const records = ((group: SimpleRecordGroupName) => {
+  let records: SupportedDocTypes[] = ((group: SimpleRecordGroupName) => {
     switch (group) {
       case "docs":
         return allSolanaDocs;
@@ -33,34 +33,11 @@ export default function handler(
 
   if (!records) return res.status(404).json({ notFound: true });
 
-  const listing: Array<any> = [];
-
-  // compute the listing data to return
-  records.map(record => {
-    if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
-
-    // @ts-ignore
-    const navItem = computeNavItem(record);
-
-    if (!navItem.href) return;
-
-    // @ts-ignore
-    record = Object.assign(navItem, record);
-
-    const attributesToDelete = ["_id", "_raw", "body", "type"];
-
-    if (!record.featured)
-      attributesToDelete.push("featured", "featuredPriority");
-
-    // remove any undesired content from the response
-    // @ts-ignore
-    attributesToDelete.forEach(e => delete record[e]);
-
-    listing.push(record);
-  });
+  // compute the simplified listing of the records
+  records = simplifyRecords(records);
 
   // todo: add pagination support?
 
   // finally, return the json formatted listing
-  return res.status(200).json(listing);
+  return res.status(200).json(records);
 }
