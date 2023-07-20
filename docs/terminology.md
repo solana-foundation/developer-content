@@ -603,7 +603,7 @@ displayed to programs as a [base58](#base58) string.
 
 ## wallet app
 
-An end-user program with a user interface to interfact with a blockchain. A
+An end-user program with a user interface (UI) to interact with a blockchain. A
 wallet typically includes a UI to send and recieve tokens and NFTs, check
 balances of diffferent tokens, view NFTs, stake, and on.off ramp into fiat and
 back. See the
