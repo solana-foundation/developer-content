@@ -476,7 +476,7 @@ non-overlapping, comprising roughly equal real-world time as per
 ## smart contract
 
 Another term for [on chain programs](#programs). Solana programs should use the
-term [on chain programs](#programs).
+term ["on-chain programs"](#program) or simply ["programs"](#program).
 
 ## sol
 
