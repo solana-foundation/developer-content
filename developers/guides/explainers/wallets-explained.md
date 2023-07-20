@@ -167,7 +167,7 @@ Congrats! You discovered the nature of trustless and decentralized systems.
 ## Puzzle Piece 4: Transaction
 
 We just uncovered the true nature of wallets just above. But what exactly do we
-sign? secret keys are used to sign transactions. A transaction is how we can ask
+sign? Secret keys are used to sign transactions. A transaction is how we can ask
 a blockchain to do something.
 
 And the good thing for us is that blockchains are all ears to receive orders.
