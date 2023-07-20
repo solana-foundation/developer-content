@@ -142,9 +142,8 @@ indeed the user; there are two problems:
 
 ![An image showing a simplified version of a transactions stored on a ledger](https://solana.ghost.io/content/images/2022/06/Wallets---8.1-A-node-s-dairy.png)
 
-Yes! The key is signing using the private key! We can "password protect our
-data" without communicating the password, thanks to asymmetric cryptography
-magic.
+Yes! The key is signing using the secret key! We can "password protect our data"
+without communicating the password, thanks to asymmetric cryptography magic.
 
 > What's asymmetric? _Think SSH keys_.
 
@@ -152,7 +151,7 @@ Can't wrap your head around it? Well, just think about the real world. For
 example, if a malicious imposter wants to withdraw money from your bank account,
 he would need your signature to do it. Well, that's precisely the same here: any
 modification to data identified by a public key also needs to be signed by the
-corresponding private key.
+corresponding secret key.
 
 > Yes, there was a world like that when mobile banking did not exist.
 
@@ -168,8 +167,8 @@ Congrats! You discovered the nature of trustless and decentralized systems.
 ## Puzzle Piece 4: Transaction
 
 We just uncovered the true nature of wallets just above. But what exactly do we
-sign? Private keys are used to sign transactions. A transaction is how we can
-ask a blockchain to do something.
+sign? Secret keys are used to sign transactions. A transaction is how we can ask
+a blockchain to do something.
 
 And the good thing for us is that blockchains are all ears to receive orders.
 Grossly speaking, a blockchain, or more precisely a blockchain node, stores logs
@@ -211,14 +210,14 @@ impersonate Claire to send himself some extra SOL from Claire's wallet
 And finally, to complete the circle, let's talk about wallet apps such as
 [Phantom](https://phantom.app/) or [Solflare](https://solflare.com/). As you now
 understand, the secret sauce to the world of blockchain is really about the
-public key and the signing using the private key.
+public key and the signing using the secret key.
 
 Wallets Apps are really just apps regardless of if it is a mobile wallet, a
 browser extension, or a desktop app, it really is just an app.
 
 These apps just wrap around your keys and add UX niceties such as:
 
-- Storing your private key encrypted and with a password lock.
+- Storing your secret key encrypted and with a password lock.
 - Adding a recovery passphrase to restore the key.
 - Fetching data from the blockchain to display your wallet's balance.
 - Letting you swap a token by connecting with exchanges.
@@ -229,9 +228,9 @@ _An example of how the recovery and balance feature work:_
 ![A diagram showing an example of how the recovery and balance features on a wallet work](https://solana.ghost.io/content/images/2022/06/Wallets---10-Wallet-Apps.png)
 
 As you can see, the essential data live in the blockchain. Wallets are just
-convenience vaults that store your private key encrypted. This is just standard
+convenience vaults that store your secret key encrypted. This is just standard
 industry encryption and has nothing to do with the blockchain. The most
-important feature it provides really is signing using the private key.
+important feature it provides really is signing using the secret key.
 
 ## Putting things back in order
 
@@ -243,26 +242,26 @@ important feature it provides really is signing using the private key.
 4. To avoid chaos, we need a way to determine who can change what: this is where
    signing comes into play.
 5. Thanks to cryptography, we can sign a transaction (change) using a
-   public/private key pair: this stamp (or signature) allows us to "password
+   public/secret key pair: this stamp (or signature) allows us to "password
    lock" some data without communicating the password to the world.
 6. A blockchain is a state machine that stores an infinite list of records,
    logs, or journals of every transaction. The blockchain verifies access to
    data by checking a transaction signature.
 7. **That's why wallets exist! To authenticate and authorize access by signing
-   with a private key!**
-8. A wallet is purely a convenience we created to wrap the private key and add
-   niceties such as; securely storing the private key (with a password lock) or
+   with a secret key!**
+8. A wallet is purely a convenience we created to wrap the secret key and add
+   niceties such as; securely storing the secret key (with a password lock) or
    showing the token account balance. So yes, wallets store an encrypted version
-   of your private key.
+   of your secret key.
 9. You can totally interact with the blockchain without a wallet app like
    Solflare or Phantom! It would just be a harrowing user experience. ;)
 
-_So here you have it, public/private key pairs provide a way for the blockchain
+_So here you have it, public/secret key pairs provide a way for the blockchain
 to identify you and make sure you got the permission to do what you claim you
 should be able to do!_
 
 **Wallets are called wallets because the first usage was to lock your balance
-historically. But in a smart contracts world, it is still about locking your
+historically. But in the on-chain program world, it is still about locking your
 data, not just balances. If anything, wallets should really be called stamps or
 signature pens! ✍️.**
 
@@ -297,7 +296,7 @@ have a public address:
 
 - So your SOL balance is actually stored in an account whose public address is
   your public key!  
-  Modification access to that account is locked by the corresponding private key
+  Modification access to that account is locked by the corresponding secret key
   signature!
 
 ### Authentication

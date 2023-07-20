@@ -4,7 +4,7 @@ date: Jul 17, 2023
 difficulty: intro
 title: "Getting started with Solang"
 description:
-  "Quickstart guide on how to build your first Solana Program with Solidity
+  "Quickstart guide on how to build your first Solana program with Solidity
   using Solang"
 tags:
   - quickstart
@@ -22,8 +22,9 @@ keywords:
 # Getting Started with Solang
 
 Welcome to this beginner’s guide on getting started with Solang!
-[Solang](https://solang.readthedocs.io/en/v0.3.1/) is a Solidity Compiler that
-allows you to write Solana programs using the Solidity programming language.
+[Solang](https://solang.readthedocs.io/) is a Solidity Compiler that
+allows you to write Solana programs - referred to in other blockchains as 'smart
+contracts' - using the Solidity programming language.
 
 If you’re an EVM developer that’s interested in leveraging the high speed and
 low fees of the Solana network, then Solang is the perfect tool for you. With
@@ -73,14 +74,15 @@ with the following command:
 anchor init project_name --solidity
 ```
 
-This command generates a new project with a basic Solang smart contract and a
-test file that demonstrate how to interact with the contract from the client.
+This command generates a new project with a basic Solang on-chain program
+(equivalent to a smart contract on EVM) and a test file that demonstrate how to
+interact with the program from the client.
 
-## Smart Contract Overview
+## On-chain program Overview
 
-Next, let’s go over the starter code beginning with the contract itself. Within
-your project's `./solidity` directory, you’ll find the following contract below,
-which includes:
+Next, let’s go over the starter code beginning with the on-chain program itself.
+Within your project's `./solidity` directory, you’ll find the following contract
+below, which includes:
 
 - A `constructor` to initialize a state variable
 - A `print` function to print messages to the program logs
@@ -113,16 +115,16 @@ contract starter {
 
 ### Important Differences
 
-Compared to a standard EVM smart contract, there are two important differences
-you might notice:
+Compared to an EVM smart contract, there are two important differences you might
+notice:
 
 1. The `@program_id` annotation:
 
    On Solana, smart contracts are referred to as “programs”. The `@program_id`
-   annotation is used to specify the on-chain address of the contract.
+   annotation is used to specify the on-chain address of the program.
 
 ```solidity
-@program_id("F1ipperKF9EfD821ZbbYjS319LXYiBmjhzkkf5a26rC") // on-chain contract address
+@program_id("F1ipperKF9EfD821ZbbYjS319LXYiBmjhzkkf5a26rC") // on-chain program address
 ```
 
 2. The `@payer` annotation:
@@ -144,9 +146,9 @@ An important distinction between EVM smart contracts and Solana programs is how
 each stores "state" variables/data:
 
 - EVM smart contracts can directly store state variables.
-- Solana programs (or smart contracts), on the other hand, create separate
-  accounts to hold state data. These are often referred to as "data accounts"
-  and are "owned" by a program.
+- Solana on-chain programs, on the other hand, create separate accounts to hold
+  state data. These are often referred to as "data accounts" and are "owned" by
+  a program.
 
 In this example, when the contract is deployed, it is deployed to the address
 specified in `@program_id`. When the `constructor` is called after the program
@@ -228,8 +230,8 @@ contract.
 Here, the `payer` is specified as `wallet.publicKey`, and the address of the
 `dataAccount` that we plan to create is provided. The generated `dataAccount`
 Keypair is included as an additional signer on the transaction, as it's being
-used to create a new account. Essentially, this verifies that we hold the
-private key corresponding to the address of the new account we're creating.
+used to create a new account. Essentially, this verifies that we hold the secret
+key corresponding to the address of the new account we're creating.
 
 ```jsx
 // Client
@@ -239,7 +241,7 @@ const tx = await program.methods
   .signers([dataAccount])
   .rpc()
 
-// Smart contract
+// on-chain program
 @payer(payer)
 constructor(address payer) {
     print("Hello, World!");
@@ -256,7 +258,7 @@ const val1 = await program.methods
   .accounts({ dataAccount: dataAccount.publicKey })
   .view()
 
-// Smart contract
+// on-chain program
 function get() public view returns (bool) {
         return value;
 }
@@ -272,7 +274,7 @@ await program.methods
   .accounts({ dataAccount: dataAccount.publicKey })
   .rpc()
 
-// Smart contract
+// on-chain program
 function flip() public {
         value = !value;
 }
@@ -283,7 +285,7 @@ To run the test, use the `anchor test` command in the terminal.
 The `anchor test` command performs the following tasks:
 
 - Start a local Solana validator
-- Build and deploy your smart contract to the local validator
+- Build and deploy your on-chain program to the local validator
 - Run the test file
 
 The following output should then be displayed in the console:
