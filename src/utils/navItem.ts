@@ -1,4 +1,4 @@
-import { NavItem } from "@/types";
+import { NavItem, SupportedDocTypes } from "@/types";
 import { DocumentTypes, SolanaDoc } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
 
@@ -95,7 +95,7 @@ export function shouldIgnoreRecord({
  * Compute a standard NavItem record for use with site navigation
  */
 export function computeNavItem(
-  doc: DocumentTypes & Partial<SolanaDoc>,
+  doc: SupportedDocTypes & Partial<SolanaDoc>,
   // BASE_DIR = "content/",
 ): NavItem {
   // populate the base NavItem record from the provided `doc`
