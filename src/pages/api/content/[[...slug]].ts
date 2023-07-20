@@ -50,8 +50,14 @@ export default function handler(
     // @ts-ignore
     const navItem = computeNavItem(records[i]);
 
-    // only care about the requested record
-    if (navItem.href != href && navItem.href != `/${href}`) continue;
+    // skip incorrect routes
+    if (
+      navItem.href != href &&
+      navItem.href != `/${href}` &&
+      records[i]?.altRoutes?.filter(route => route == href)?.[0] != href
+    ) {
+      continue;
+    }
 
     // set the requested record's data (weaving in the computed nav item data)
     record = Object.assign(navItem, records[i]);
