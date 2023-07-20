@@ -17,6 +17,8 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
+altRoutes:
+  - /developers/guides/introduction-to-durable-nonces
 ---
 
 This guide is meant to be a one-stop shop for Solana's Durable Nonces: a highly

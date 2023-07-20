@@ -24,6 +24,8 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
+altRoutes:
+  - /developers/guides/hello-world-in-your-browser
 ---
 
 For this "hello world" quickstart guide, we will use

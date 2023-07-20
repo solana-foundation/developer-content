@@ -12,6 +12,8 @@ keywords:
   - blockchain
   - wallets
   - blockchain explainers
+altRoutes:
+  - /developers/guides/wallets-explained
 ---
 
 In this article, I will take you out of the rabbit hole. We will, together, put
