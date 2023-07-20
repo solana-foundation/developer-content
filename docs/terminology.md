@@ -611,7 +611,7 @@ back. See the
 
 ## wallet name
 
-A unique memorable name used to refer to a [wallet address](@wallet-address).
+A unique memorable name used to refer to a [wallet address](#wallet-address).
 
 ## warmup period
 
