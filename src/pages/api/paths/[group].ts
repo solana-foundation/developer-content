@@ -52,6 +52,19 @@ export default function handler(
     if (!navItem.href || !!record.isExternal) return;
 
     listing.push(navItem);
+
+    // handle adding each of the alternative routes into the path listing
+    if (!!record?.altRoutes?.length) {
+      record.altRoutes.forEach(route => {
+        if (!!route?.trim()) {
+          listing.push(
+            Object.assign(navItem, {
+              href: route.trim(),
+            }),
+          );
+        }
+      });
+    }
   });
 
   // finally, return the json formatted listing

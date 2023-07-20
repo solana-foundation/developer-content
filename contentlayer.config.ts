@@ -24,10 +24,17 @@ const basicContentFields: FieldDefs = {
       "Brief description of the content (also used in the SEO metadata)",
     required: false,
   },
+  tags: {
+    type: "list",
+    of: { type: "string" },
+    description: "List of filterable tags for content",
+    required: false,
+  },
   keywords: {
     type: "list",
     of: { type: "string" },
-    description: "List of keywords for the content",
+    description:
+      "List of keywords for the content, primarily used for seo metadata",
     required: false,
   },
   date: {
@@ -40,20 +47,11 @@ const basicContentFields: FieldDefs = {
     description: "The date this content was last updated",
     required: false,
   },
-
-  canonical: {
-    type: "string",
-    description: "Canonical url of the content",
-    required: false,
+  difficulty: {
+    type: "enum",
+    description: "Difficulty level of the content",
+    options: ["Intro", "Beginner", "Intermediate", "Expert"],
   },
-
-  // todo: enable setting custom slugs via the metadata
-  // slug: {
-  //   type: "string",
-  //   description: "Custom URL slug for the content",
-  //   required: false,
-  // },
-
   image: {
     type: "string",
     description:
@@ -61,6 +59,9 @@ const basicContentFields: FieldDefs = {
     required: false,
   },
 
+  /**
+   * URL, link, and route information
+   */
   isExternal: {
     type: "boolean",
     description: "Is this content just a link to external content?",
@@ -68,15 +69,25 @@ const basicContentFields: FieldDefs = {
   },
   href: {
     type: "string",
-    description: "Absolute URL for external content",
-  },
-
-  tags: {
-    type: "list",
-    of: { type: "string" },
-    description: "List of filterable tags for content",
+    description: "Page route or absolute URL for this document",
     required: false,
   },
+  canonical: {
+    type: "string",
+    description: "Canonical url of the content",
+    required: false,
+  },
+  altRoutes: {
+    type: "list",
+    of: { type: "string" },
+    description:
+      "List of alternate routes that should redirect to this same document",
+    required: false,
+  },
+
+  /**
+   * Assorted metadata flags used for display and formatting
+   */
   featured: {
     type: "boolean",
     description: "Whether or not this content is featured",
@@ -87,13 +98,6 @@ const basicContentFields: FieldDefs = {
     description: "Sort priority for featured content displays",
     default: 999,
   },
-
-  difficulty: {
-    type: "enum",
-    description: "Difficulty level of the content",
-    options: ["Intro", "Beginner", "Intermediate", "Expert"],
-  },
-
   metaOnly: {
     type: "boolean",
     description: "Whether or not this record is used for only metadata",
@@ -206,17 +210,7 @@ export const SolanaDoc = defineDocumentType(() => ({
     /**
      * Custom fields for this specific content record type
      */
-    href: {
-      type: "string",
-      description: "Manually defined href path for this document",
-      required: false,
-    },
-    path: {
-      type: "string",
-      description:
-        "Path location of the markdown file, located within the '/docs' directory",
-      required: false,
-    },
+    // none
 
     /**
      * Custom fields that are used for the generated `nav.json` sidebar data
