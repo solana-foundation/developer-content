@@ -261,7 +261,7 @@ to identify you and make sure you got the permission to do what you claim you
 should be able to do!_
 
 **Wallets are called wallets because the first usage was to lock your balance
-historically. But in an on-chain programs world, it is still about locking your
+historically. But in the on-chain program world, it is still about locking your
 data, not just balances. If anything, wallets should really be called stamps or
 signature pens! ✍️.**
 
