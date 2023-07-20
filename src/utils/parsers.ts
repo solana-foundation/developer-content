@@ -87,12 +87,14 @@ export function simplifyRecords(
 
     record = Object.assign(navItem, record);
 
-    if (!record.featured)
-      attributesToDelete.push("featured", "featuredPriority");
+    const attrList = [];
+
+    if (!record.featured) attrList.push("featured", "featuredPriority");
+    if (!record?.metaOnly) attrList.push("metaOnly");
 
     // remove the undesired attributes from the response
     // @ts-ignore
-    attributesToDelete.forEach(e => delete record[e]);
+    attributesToDelete.concat(attrList).forEach(e => delete record[e]);
 
     listing.push(record);
   });
