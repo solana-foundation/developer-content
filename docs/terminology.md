@@ -599,7 +599,7 @@ A collection of [keypairs](#keypair) that allows users to manage their funds.
 ## wallet address
 
 The unique [public key](#public-key-pubkey) of a wallet. These are usually
-displayed to programs as a [base58](#base58) string.
+displayed to programs or user interfaces as a [base58](#base58) string.
 
 ## wallet app
 
