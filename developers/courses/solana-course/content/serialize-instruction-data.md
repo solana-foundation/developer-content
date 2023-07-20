@@ -11,12 +11,13 @@ objectives:
 # TL;DR
 
 - Transactions are made up of an array of instructions, a single transaction can
-  have any number of instructions in it, each targeting its own program. When a
-  transaction is submitted, the Solana runtime will process its instructions in
-  order and atomically, meaning that if any of the instructions fail for any
-  reason, the entire transaction will fail to be processed.
+  have one or more instructions in it, each targeting its own program. When a
+  transaction is submitted, the Solana runtime will process all the
+  transaction's instructions in order and atomically, meaning that if any of the
+  instructions fail for any reason, the entire transaction will fail to be
+  processed.
 - Every _instruction_ is made up of 3 components: the intended program's ID, an
-  array of all account’s involved, and a byte buffer of instruction data.
+  array of all accounts involved, and a byte buffer of instruction data.
 - Every _transaction_ contains: an array of all accounts it intends to read from
   or write to, one or more instructions, a recent blockhash, and one or more
   signatures.
@@ -80,10 +81,10 @@ It is not just an array of the accounts’ public keys. Each object in the array
 includes the account’s public key, whether or not it is a signer on the
 transaction, and whether or not it is writable. Including whether or not an
 account is writable during the execution of an instruction allows the runtime to
-facilitate parallel processing of smart contracts. Because you must define which
-accounts are read-only and which you will write to, the runtime can determine
-which transactions are non-overlapping or read-only and allow them to execute
-concurrently. To learn more about the Solana’s runtime, check out this
+facilitate parallel processing of on-chain programs. Because you must define
+which accounts are read-only and which you will write to, the runtime can
+determine which transactions are non-overlapping or read-only and allow them to
+execute concurrently. To learn more about the Solana’s runtime, check out this
 [blog post](https://solana.com/news/sealevel---parallel-processing-thousands-of-smart-contracts).
 
 ### Instruction Data

@@ -393,7 +393,7 @@ Now that you've got a conceptual grasp on Solana Pay, let's put it into
 practice. We'll use Solana Pay to generate a series of QR codes for a scavenger
 hunt. Participants must visit each scavenger hunt location in order. At each
 location, they'll use the provided QR code to submit the appropriate transaction
-to the scavenger hunt's smart contract that keeps track of user progress.
+to the scavenger hunt's on-chain program that keeps track of user progress.
 
 ### 1. Starter
 
@@ -482,7 +482,7 @@ Now that you're up and running, it's time to create an endpoint that supports
 transaction requests for location check-in using the Scavenger Hunt program.
 
 Start by opening the file at `pages/api/checkIn.ts`. Notice that it has a helper
-function for initializing `eventOrganizer` from a private key environment
+function for initializing `eventOrganizer` from a secret key environment
 variable. The first thing we'll do in this file is the following:
 
 1. Export a `handler` function to handle an arbitrary HTTP request

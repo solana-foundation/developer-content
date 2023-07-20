@@ -205,7 +205,7 @@ pub fn invoke_signed(
 ```
 
 For this lesson we will use `invoke_signed`. Unlike a regular signature where a
-private key is used to sign, `invoke_signed` uses the optional seeds, bump seed,
+secret key is used to sign, `invoke_signed` uses the optional seeds, bump seed,
 and program ID to derive a PDA and sign an instruction. This is done by
 comparing the derived PDA against all accounts passed into the instruction. If
 any of the accounts match the PDA, then the signer field for that account is set
