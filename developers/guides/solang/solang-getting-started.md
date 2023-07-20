@@ -23,7 +23,7 @@ keywords:
 
 Welcome to this beginner’s guide on getting started with Solang!
 [Solang](https://solang.readthedocs.io/en/v0.3.1/) is a Solidity Compiler that
-allows you to write Solana programs - referrd to in other blockchains as 'smart
+allows you to write Solana programs - referred to in other blockchains as 'smart
 contracts' - using the Solidity programming language.
 
 If you’re an EVM developer that’s interested in leveraging the high speed and
@@ -74,8 +74,9 @@ with the following command:
 anchor init project_name --solidity
 ```
 
-This command generates a new project with a basic Solang on-chain program and a
-test file that demonstrate how to interact with the contract from the client.
+This command generates a new project with a basic Solang on-chain program
+(equivalent to a smart contract on EVM) and a test file that demonstrate how to
+interact with the program from the client.
 
 ## On-chain program Overview
 
@@ -120,7 +121,7 @@ notice:
 1. The `@program_id` annotation:
 
    On Solana, smart contracts are referred to as “programs”. The `@program_id`
-   annotation is used to specify the on-chain address of the contract.
+   annotation is used to specify the on-chain address of the program.
 
 ```solidity
 @program_id("F1ipperKF9EfD821ZbbYjS319LXYiBmjhzkkf5a26rC") // on-chain program address
