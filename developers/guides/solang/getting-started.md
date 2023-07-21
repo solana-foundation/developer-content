@@ -18,6 +18,7 @@ keywords:
   - blockchain developer
   - blockchain tutorial
 altRoutes:
+  - /developers/guides/solang/solang-getting-started
   - /developers/guides/solang-getting-started
 ---
 
