@@ -26,6 +26,7 @@ keywords:
   - web3 developer
 altRoutes:
   - /developers/guides/hello-world-in-your-browser
+  - /developers/guides/solana-playground
 ---
 
 For this "hello world" quickstart guide, we will use
