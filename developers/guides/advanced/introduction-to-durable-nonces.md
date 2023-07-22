@@ -152,7 +152,7 @@ The solution lies with Durable Nonces⚡️
 
 ### Durable Nonces
 
-Durable Transaction Nonces, which are 32-byte alphanumerics, are used in place
+Durable Transaction Nonces, which are 32-byte in length (usually represented as base58 encoded strings), are used in place
 of recent blockhashes to make every transaction unique (to avoid
 double-spending) while removing the mortality on the unexecuted transaction.
 
@@ -170,7 +170,7 @@ with Solana transactions.
 ### Nonce Account
 
 The Nonce Account is the account that stores the value of the nonce. This
-account is owned by the `SystemProgram` and is rent-free; thus needs to maintain
+account is owned by the `SystemProgram` and is rent-excempt; thus needs to maintain
 the minimum balance for rent exemption (around 0.0015 SOL).
 
 ### Nonce Authority
@@ -249,7 +249,7 @@ Output
 AkrQn5QWLACSP5EMT2R1ZHyKaGWVFrDHJ6NL89HKtwjQ
 ```
 
-This is the 32-bit alphanumeric string that will be used in place of recent
+This is the base58 encoded hash that will be used in place of recent
 blockhashes while signing a transaction.
 
 ### Displace Nonce Account
