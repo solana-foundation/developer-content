@@ -55,7 +55,11 @@ The result of interpreting all programs on the ledger at a given
 
 A way of representing binary values as strings. Unlike similar systems like
 base64, base58 omits similar-appearing characters to avoid confusion. Solana
-commonly uses base58 to refer to [wallet addresses](#wallet-address)
+commonly uses base58 to refer to [wallet addresses](#wallet-address).
+
+## basis point
+
+A hundredth of one percent, or %0.01. Solana uses basis points to set royalties on NFTs. 
 
 ## block
 
