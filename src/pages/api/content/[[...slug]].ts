@@ -39,7 +39,10 @@ export default function handler(
   if (!records) return res.status(404).json({ notFound: true });
 
   // define the formatted href value to search for
-  const href = `/developers/${slug.join("/")}`;
+  const href = `${
+    slug[0].toLocaleLowerCase() == "docs" ? "" : "/developers"
+  }/${slug.join("/")}`;
+
   // note: this effectively enforces that only href's that start with "/developers" are supported
 
   // init the record to be returned
