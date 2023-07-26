@@ -119,7 +119,8 @@ export function computeNavItem(
   if (!record.href) {
     record.href = doc._raw.flattenedPath.replace(
       /^(content\/?)?(developers\/?)?/gm,
-      "/developers/",
+      // prepend the non-docs content
+      doc._raw.sourceFileDir.startsWith("docs") ? "/" : "/developers/",
     );
   }
 
