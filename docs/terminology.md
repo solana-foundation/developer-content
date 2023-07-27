@@ -84,7 +84,7 @@ a block chain.
 
 ## bip
 
-A pronounciation of [basis points](#basis-point). 
+A pronunciation of [basis points](#basis-point). 
 
 ## BPF loader
 
