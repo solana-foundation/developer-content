@@ -44,11 +44,11 @@ type grouping of content records aims to sever a specific purpose.
 Below is a table describing each currently active type of content, including the
 corresponding repo path and webpage for viewing on Solana.com.
 
-| Content Type | Repo Path                                           | Webpage URL                                               |
-| ------------ | --------------------------------------------------- | --------------------------------------------------------- |
-| guides       | [`./developers/guides`](./developers/guides/)       | [View guides](https://solana.com/developers/guides)       |
-| resources    | [`./developers/resources`](./developers/resources/) | [View resources](https://solana.com/developers/resources) |
-| courses      | [`./developers/courses`](./developers/courses/)     | soon, tm.                                                 |
+| Content Type | Repo Path                                     | Webpage URL                                               |
+| ------------ | --------------------------------------------- | --------------------------------------------------------- |
+| guides       | [`./content/guides`](./content/guides/)       | [View guides](https://solana.com/developers/guides)       |
+| resources    | [`./content/resources`](./content/resources/) | [View resources](https://solana.com/developers/resources) |
+| courses      | [`./content/courses`](./content/courses/)     | soon, tm.                                                 |
 
 ### Written in markdown
 
