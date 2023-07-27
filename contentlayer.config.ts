@@ -111,7 +111,7 @@ const basicContentFields: FieldDefs = {
  */
 export const DeveloperResource = defineDocumentType(() => ({
   name: "DeveloperResource",
-  filePathPattern: `developers/resources/**/*.md`,
+  filePathPattern: `content/resources/**/*.md`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -136,7 +136,7 @@ export const DeveloperResource = defineDocumentType(() => ({
  */
 export const DeveloperGuide = defineDocumentType(() => ({
   name: "DeveloperGuide",
-  filePathPattern: `developers/guides/**/*.md`,
+  filePathPattern: `content/guides/**/*.md`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -157,7 +157,7 @@ export const DeveloperGuide = defineDocumentType(() => ({
  */
 export const CourseMetadata = defineDocumentType(() => ({
   name: "CourseMetadata",
-  filePathPattern: `developers/courses/**/metadata.json`,
+  filePathPattern: `content/courses/**/metadata.json`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -182,7 +182,7 @@ export const CourseMetadata = defineDocumentType(() => ({
  */
 export const CourseLesson = defineDocumentType(() => ({
   name: "CourseLesson",
-  filePathPattern: `developers/courses/**/content/*.md`,
+  filePathPattern: `content/courses/**/content/*.md`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -250,9 +250,9 @@ export default makeSource({
   contentDirPath: ".",
   contentDirInclude: [
     "docs/**",
-    "developers/guides/**",
-    "developers/courses/**",
-    "developers/resources/**",
+    "content/guides/**",
+    "content/courses/**",
+    "content/resources/**",
   ],
 
   /**
