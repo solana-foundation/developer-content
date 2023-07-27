@@ -59,7 +59,7 @@ commonly uses base58 to refer to [wallet addresses](#wallet-address).
 
 ## basis point
 
-A hundredth of one percent, or %0.01. Solana uses basis points to set royalties on NFTs. 
+A hundredth of one percent, or %0.01. Sometimes pronounced as 'bip'. Solana uses basis points to set royalties on [NFTs](#nft). 
 
 ## block
 
@@ -81,6 +81,10 @@ the [genesis block](#genesis-block) has height one.
 
 The [validator](#validator) that produces the genesis (first) [block](#block) of
 a block chain.
+
+## bip
+
+A pronounciation of [basis points](#basis-point). 
 
 ## BPF loader
 
