@@ -18,8 +18,8 @@ altRoutes:
 
 # **SOL for Solana Testing Networks**
 
-This is a collection of the different ways for developers to acquire the SOL
-Token on Solana's testing networks, the Solana devnet and testnet.
+This is a collection of the different ways for developers to acquire SOL on
+Solana's testing networks, the Solana devnet and testnet.
 
 # 1. Solana Airdrop
 
