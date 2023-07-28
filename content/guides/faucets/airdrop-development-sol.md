@@ -1,3 +1,21 @@
+---
+date: Jul 29, 2023
+difficulty: intro
+title: "SOL Faucets for Testing Networks"
+description:
+  "How to acquire SOL, the native currency of the Solana blockchain on it's
+  development testing networks ?"
+tags:
+  - faucet
+keywords:
+  - faucet
+  - blockchain
+  - devnet
+  - testnet
+altRoutes:
+  - /developers/guides/airdrop-development-sol
+---
+
 # **SOL for Solana Testing Networks**
 
 This is a collection of the different ways for developers to acquire the SOL
@@ -35,7 +53,7 @@ _Available for Devnet_
 
 A web faucet hosted by Solana Foundation that has lower rate limits.
 
-faucet.solana.com
+[faucet.solana.com](https://faucet.solana.com)
 
 # 3. RPC Provider Faucets
 
