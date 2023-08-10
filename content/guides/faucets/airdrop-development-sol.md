@@ -12,8 +12,6 @@ keywords:
   - blockchain
   - devnet
   - testnet
-altRoutes:
-  - /developers/guides/airdrop-development-sol
 ---
 
 # **SOL for Solana Testing Networks**
