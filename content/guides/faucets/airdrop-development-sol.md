@@ -44,7 +44,7 @@ _⚠️ SolFaucet is not maintained by the Solana Foundation_
 const connection = new Connection("https://api.devnet.solana.com");
 connection.requestAirdrop();
 ```
-
+See more: [`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop) documentation inside web3.js.
 # 2. Web Faucet
 
 _Available for Devnet_
