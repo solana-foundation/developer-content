@@ -12,7 +12,7 @@ keywords:
   - testnet
 ---
 
-# **SOL for Solana Testing Networks**
+# Solana faucets to get SOL tokens for development
 
 This is a collection of the different ways for developers to acquire SOL on
 Solana's testing networks, the Solana devnet and testnet.
