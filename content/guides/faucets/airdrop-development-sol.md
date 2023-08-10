@@ -19,7 +19,7 @@ keywords:
 This is a collection of the different ways for developers to acquire SOL on
 Solana's testing networks, the Solana devnet and testnet.
 
-# 1. Solana Airdrop
+## 1. Solana Airdrop
 
 _Available on Devnet and Testnet_
 
@@ -45,7 +45,7 @@ const connection = new Connection("https://api.devnet.solana.com");
 connection.requestAirdrop();
 ```
 See more: [`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop) documentation inside web3.js.
-# 2. Web Faucet
+## 2. Web Faucet
 
 _Available for Devnet_
 
@@ -53,7 +53,7 @@ A web faucet hosted by Solana Foundation that has lower rate limits.
 
 [faucet.solana.com](https://faucet.solana.com)
 
-# 3. RPC Provider Faucets
+## 3. RPC Provider Faucets
 
 _Available for Devnet_
 
@@ -85,7 +85,7 @@ const connection = new Connection("your RPC url");
 connection.requestAirdrop();
 ```
 
-# 4. POW Faucet
+## 4. POW Faucet
 
 _Available for Devnet_
 
@@ -102,7 +102,7 @@ to your computing power.
 
 _The POW Faucet is maintained by Ellipsis Labs_
 
-# 5. Discord Faucet
+## 5. Discord Faucet
 
 The LamportDAO community has set up a Devnet Faucet Discord BOT.
 
