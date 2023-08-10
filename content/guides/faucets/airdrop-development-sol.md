@@ -1,7 +1,7 @@
 ---
 date: Jul 29, 2023
 difficulty: intro
-title: "SOL Faucets for Testing Networks"
+title: "Solana faucets to get SOL tokens for development"
 description:
   "How to acquire SOL, the native currency of the Solana blockchain on it's
   development testing networks ?"
