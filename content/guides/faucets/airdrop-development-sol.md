@@ -2,10 +2,7 @@
 date: Jul 29, 2023
 difficulty: intro
 title: "Solana faucets to get SOL tokens for development"
-description:
-  "A list of the most common ways to get devnet and testnet SOL tokens for
-  Solana development. Including: airdrop, web3.js, POW faucet, and more."
-  development testing networks ?"
+description: "A list of the most common ways to get devnet and testnet SOL tokens for Solana development. Including: airdrop, web3.js, POW faucet, and more."
 tags:
   - faucet
 keywords:
