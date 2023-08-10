@@ -28,17 +28,17 @@ there is a high number of airdrops.
 
 Here are three different ways of requesting airdrops with it:
 
-**With the Solana CLI:**
+### Using the Solana CLI:
 
 `solana airdrop 2`
 
-**Using a web faucet:**
+### Using a web faucet:
 
 [solfaucet.com](https://solfaucet.com)
 
 _⚠️ SolFaucet is not maintained by the Solana Foundation_
 
-**Using web3.js:**
+### Using web3.js:
 
 ```js
 const connection = new Connection("https://api.devnet.solana.com");
@@ -67,7 +67,7 @@ Currently Supported:
 1. [Helius](https://www.helius.dev/)
 2. [QuickNode](https://www.quicknode.com/chains/sol)
 
-**Using the Solana CLI**
+### Using the Solana CLI
 
 Specify your Cluster to be your RPC Providers URL.
 
@@ -78,7 +78,7 @@ guide.
 
 `solana airdrop 2`
 
-**Using Web3.js**
+### Using Web3.js
 
 ```js
 const connection = new Connection("your RPC url");
