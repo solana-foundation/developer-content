@@ -3,7 +3,8 @@ date: Jul 29, 2023
 difficulty: intro
 title: "Solana faucets to get SOL tokens for development"
 description:
-  "How to acquire SOL, the native currency of the Solana blockchain on it's
+  "A list of the most common ways to get devnet and testnet SOL tokens for
+  Solana development. Including: airdrop, web3.js, POW faucet, and more."
   development testing networks ?"
 tags:
   - faucet
