@@ -85,7 +85,7 @@ const connection = new Connection("your RPC url");
 connection.requestAirdrop();
 ```
 
-## 4. POW Faucet
+## 4. Proof of work Faucet
 
 _Available for Devnet_
 
@@ -100,7 +100,7 @@ to your computing power.
 
 `devnet-pow mine`
 
-_The POW Faucet is maintained by Ellipsis Labs_
+_⚠️ The [POW Faucet](https://github.com/jarry-xiao/proof-of-work-faucet) is maintained by Ellipsis Labs_
 
 ## 5. Discord Faucet
 
