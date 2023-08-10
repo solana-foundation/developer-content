@@ -69,7 +69,7 @@ Currently Supported:
 
 ### Using the Solana CLI
 
-Specify your Cluster to be your RPC Providers URL.
+Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC provider's URL.
 
 `solana config set --url <your RPC url>`
 
