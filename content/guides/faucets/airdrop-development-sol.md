@@ -64,8 +64,8 @@ here_
 
 Currently Supported:
 
-1. **[Helius](https://www.helius.dev/)**
-2. **[QuickNode](https://www.quicknode.com/chains/sol)**
+1. [Helius](https://www.helius.dev/)
+2. [QuickNode](https://www.quicknode.com/chains/sol)
 
 **Using the Solana CLI**
 
