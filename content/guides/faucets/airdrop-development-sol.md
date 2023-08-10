@@ -34,7 +34,7 @@ Here are three different ways of requesting airdrops with it:
 
 **Using a web faucet:**
 
-solfaucet.com
+[solfaucet.com](https://solfaucet.com)
 
 _⚠️ SolFaucet is not maintained by the Solana Foundation_
 
