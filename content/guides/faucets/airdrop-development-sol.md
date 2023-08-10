@@ -30,12 +30,6 @@ Here are three different ways of requesting airdrops with it:
 
 `solana airdrop 2`
 
-### Using a web faucet:
-
-[solfaucet.com](https://solfaucet.com)
-
-_⚠️ SolFaucet is not maintained by the Solana Foundation_
-
 ### Using web3.js:
 
 ```js
