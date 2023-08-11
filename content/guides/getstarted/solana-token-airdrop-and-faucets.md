@@ -1,10 +1,8 @@
 ---
 date: Jul 29, 2023
 difficulty: intro
-title: "SOL Faucets for Testing Networks"
-description:
-  "How to acquire SOL, the native currency of the Solana blockchain on it's
-  development testing networks ?"
+title: "Solana faucets to get SOL tokens for development"
+description: "A list of the most common ways to get devnet and testnet SOL tokens for Solana development. Including: airdrop, web3.js, POW faucet, and more."
 tags:
   - faucet
 keywords:
@@ -12,16 +10,14 @@ keywords:
   - blockchain
   - devnet
   - testnet
-altRoutes:
-  - /developers/guides/airdrop-development-sol
 ---
 
-# **SOL for Solana Testing Networks**
+# Solana faucets to get SOL tokens for development
 
 This is a collection of the different ways for developers to acquire SOL on
 Solana's testing networks, the Solana devnet and testnet.
 
-# 1. Solana Airdrop
+## 1. Solana Airdrop
 
 _Available on Devnet and Testnet_
 
@@ -30,24 +26,18 @@ there is a high number of airdrops.
 
 Here are three different ways of requesting airdrops with it:
 
-**With the Solana CLI:**
+### Using the Solana CLI:
 
 `solana airdrop 2`
 
-**Using a web faucet:**
-
-solfaucet.com
-
-_⚠️ SolFaucet is not maintained by the Solana Foundation_
-
-**Using web3.js:**
+### Using web3.js:
 
 ```js
 const connection = new Connection("https://api.devnet.solana.com");
 connection.requestAirdrop();
 ```
-
-# 2. Web Faucet
+See more: [`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop) documentation inside web3.js.
+## 2. Web Faucet
 
 _Available for Devnet_
 
@@ -55,7 +45,7 @@ A web faucet hosted by Solana Foundation that has lower rate limits.
 
 [faucet.solana.com](https://faucet.solana.com)
 
-# 3. RPC Provider Faucets
+## 3. RPC Provider Faucets
 
 _Available for Devnet_
 
@@ -66,12 +56,12 @@ here_
 
 Currently Supported:
 
-1. **[Helius](https://www.helius.dev/)**
-2. **[QuickNode](https://www.quicknode.com/chains/sol)**
+1. [Helius](https://www.helius.dev/)
+2. [QuickNode](https://www.quicknode.com/chains/sol)
 
-**Using the Solana CLI**
+### Using the Solana CLI
 
-Specify your Cluster to be your RPC Providers URL.
+Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC provider's URL.
 
 `solana config set --url <your RPC url>`
 
@@ -80,14 +70,14 @@ guide.
 
 `solana airdrop 2`
 
-**Using Web3.js**
+### Using Web3.js
 
 ```js
 const connection = new Connection("your RPC url");
 connection.requestAirdrop();
 ```
 
-# 4. POW Faucet
+## 4. Proof of work Faucet
 
 _Available for Devnet_
 
@@ -102,9 +92,9 @@ to your computing power.
 
 `devnet-pow mine`
 
-_The POW Faucet is maintained by Ellipsis Labs_
+_⚠️ The [POW Faucet](https://github.com/jarry-xiao/proof-of-work-faucet) is maintained by Ellipsis Labs_
 
-# 5. Discord Faucet
+## 5. Discord Faucet
 
 The LamportDAO community has set up a Devnet Faucet Discord BOT.
 
