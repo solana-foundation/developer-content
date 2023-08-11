@@ -2,7 +2,9 @@
 date: Jul 29, 2023
 difficulty: intro
 title: "Solana faucets to get SOL tokens for development"
-description: "A list of the most common ways to get devnet and testnet SOL tokens for Solana development. Including: airdrop, web3.js, POW faucet, and more."
+description:
+  "A list of the most common ways to get devnet and testnet SOL tokens for
+  Solana development. Including: airdrop, web3.js, POW faucet, and more."
 tags:
   - faucet
 keywords:
@@ -36,7 +38,11 @@ Here are three different ways of requesting airdrops with it:
 const connection = new Connection("https://api.devnet.solana.com");
 connection.requestAirdrop();
 ```
-See more: [`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop) documentation inside web3.js.
+
+See more:
+[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop)
+documentation inside web3.js.
+
 ## 2. Web Faucet
 
 _Available for Devnet_
@@ -61,7 +67,8 @@ Currently Supported:
 
 ### Using the Solana CLI
 
-Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC provider's URL.
+Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC
+provider's URL.
 
 `solana config set --url <your RPC url>`
 
@@ -92,7 +99,8 @@ to your computing power.
 
 `devnet-pow mine`
 
-_⚠️ The [POW Faucet](https://github.com/jarry-xiao/proof-of-work-faucet) is maintained by Ellipsis Labs_
+_⚠️ The [POW Faucet](https://github.com/jarry-xiao/proof-of-work-faucet) is
+maintained by Ellipsis Labs_
 
 ## 5. Discord Faucet
 
