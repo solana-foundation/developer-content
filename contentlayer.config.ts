@@ -151,6 +151,60 @@ export const DeveloperGuide = defineDocumentType(() => ({
 }));
 
 /**
+ * Content record schema for Developer Workshops
+ */
+export const DeveloperWorkshop = defineDocumentType(() => ({
+  name: "DeveloperWorkshop",
+  filePathPattern: `content/workshops/*.md`,
+  fields: {
+    // use the standard content fields
+    ...basicContentFields,
+
+    // define custom fields for this specific content...
+    repoUrl: {
+      type: "string",
+      description: "Repository URL for this developer workshop",
+      required: true,
+    },
+    objectives: {
+      type: "list",
+      of: { type: "string" },
+      description: "List of objectives for this workshop",
+      required: true,
+    },
+    duration: {
+      type: "string",
+      description: "Estimated duration of this workshop",
+      required: true,
+    },
+
+    /**
+     * Author specific details
+     */
+    author: {
+      type: "string",
+      description: "The name of the original author of this content",
+      required: false,
+    },
+    authorDescription: {
+      type: "string",
+      description: "Brief description of the original author of this content",
+      required: false,
+    },
+    authorTwitterHandle: {
+      type: "string",
+      description: "Twitter handle of the original author of this content",
+      required: false,
+    },
+    authorGithubUsername: {
+      type: "string",
+      description: "GitHub username of the original author of this content",
+      required: false,
+    },
+  },
+}));
+
+/**
  * Content record schema for the Course metadata file
  *
  * File: `courses/{course-name}/metadata.json`
@@ -253,6 +307,7 @@ export default makeSource({
     "content/guides/**",
     "content/courses/**",
     "content/resources/**",
+    "content/workshops/**",
   ],
 
   /**
@@ -268,6 +323,7 @@ export default makeSource({
     SolanaDoc,
     DeveloperGuide,
     DeveloperResource,
+    DeveloperWorkshop,
 
     // course specific content record types
     CourseMetadata,
