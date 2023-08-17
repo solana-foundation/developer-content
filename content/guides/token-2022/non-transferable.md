@@ -3,7 +3,7 @@ date: Aug 17, 2023
 difficulty: intro
 title: "Non-Transferable Tokens: Token 2022 Mint Extension"
 description:
-  "This guide walks you through how to use the Non-transferable extension to create "soul-bound" tokens."
+  "This guide walks you through how to use the Non-transferable extension to create 'soul-bound' tokens."
 tags:
   - token-2022
 keywords:
