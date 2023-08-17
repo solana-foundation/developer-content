@@ -1,4 +1,20 @@
-# Immutable Owner: Token 2022 Account Extension
+---
+date: Aug 17, 2023
+difficulty: beginner
+title: "Immutable Owner: Token 2022 Account Extension"
+description:
+  "This guide walks you through how to use the Immutable Owner extension to prevent the transfer of ownership of a token account."
+tags:
+  - token-2022
+keywords:
+  - beginner
+  - spl
+  - spl token
+  - token 2022
+  - token 2022 extensions
+altRoutes:
+  - /developers/guides/immutable-owner
+---
 
 With the Token program, the `SetAuthority` instruction can be used for various use cases. Among them, an Account's owner may transfer ownership of an account to another.
 
