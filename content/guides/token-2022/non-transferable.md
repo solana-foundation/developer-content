@@ -1,4 +1,20 @@
-# Non-Transferable Tokens: Token 2022 Mint Extension
+---
+date: Aug 17, 2023
+difficulty: intro
+title: "Non-Transferable Tokens: Token 2022 Mint Extension"
+description:
+  "This guide walks you through how to use the Non-transferable extension to create "soul-bound" tokens."
+tags:
+  - token-2022
+keywords:
+  - beginner
+  - spl
+  - spl token
+  - token 2022
+  - token 2022 extensions
+altRoutes:
+  - /developers/guides/non-transferable-tokens
+---
 
 In the world of digital collectibles, NFTs have plenty of uses outside of the current PFP meta. Enter the concept of "soul-bound" tokens - assets that are "bound" to an individual, ensuring exclusivity to an individual/account.
 
