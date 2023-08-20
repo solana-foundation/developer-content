@@ -141,7 +141,7 @@ const initializeImmutableOwnerInstruction = createInitializeImmutableOwnerInstru
 );
 ```
 
-We then initialize the Immutable Owner extension for the given token account. It's important to note that this can only be done for accounts that have not been initialized yet.
+We then initialize the Immutable Owner extension for the given account. It's important to note that this can only be done for accounts that have not been initialized yet.
 
 ```javascript
 const initializeAccountInstruction = createInitializeAccountInstruction(
