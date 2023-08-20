@@ -71,7 +71,7 @@ const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
 
 // Next, we create and fund the payer account
 const payer = Keypair.generate();
-const airdropSignature = await connection.requestAirdrop(payer.publicKey, 2 * LAMPORTS_PER_SOL);
+const airdropSignature = await connection.requestAirdrop(payer.publicKey, 10000000);
 await connection.confirmTransaction({ signature: airdropSignature, ...(await connection.getLatestBlockhash()) });
 
 // Next, we create a new keypair that will be the mint authority
