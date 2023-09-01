@@ -10,6 +10,7 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
+  allDeveloperWorkshops,
 } from "contentlayer/generated";
 
 export default function handler(
@@ -29,6 +30,8 @@ export default function handler(
         return allDeveloperGuides;
       // case "resources":
       //   return allDeveloperResources;
+      case "workshops": 
+        return allDeveloperWorkshops;
     }
   })(group);
 

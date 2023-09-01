@@ -177,6 +177,16 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
       description: "Estimated duration of this workshop",
       required: true,
     },
+    video: {
+      type: "string",
+      description: "Video recording of the workshop (if Available)",
+      required: false,
+    },
+    presentation: {
+      type: "string",
+      description: "Presentation for this workshop (if Available)",
+      required: false,
+    },
 
     /**
      * Author specific details
