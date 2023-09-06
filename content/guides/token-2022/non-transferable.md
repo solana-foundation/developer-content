@@ -1,8 +1,10 @@
 ---
 date: Sep 01, 2023
-title: How to use the Non-transferable mint extension
+title: How to use the Non-transferable extension
 description:
-  "In the world of digital collectibles, NFTs have plenty of uses outside of the current PFP meta. Enter the concept of "soul-bound" tokens - assets that are "bound" to an individual, ensuring exclusivity to an individual/account."
+  "In the world of digital collectibles, NFTs have plenty of uses outside of the
+  PFP meta. Enter the concept of 'soul-bound' tokens - assets that are tied to an
+  individual."
 keywords:
   - token 2022
   - token extensions
