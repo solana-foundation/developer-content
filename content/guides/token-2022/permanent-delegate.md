@@ -126,6 +126,12 @@ extensions we want for this mint.
 
 ## The Instructions
 
+Now, let's build the set of instructions to:
+
+- Create a new account
+- Initialize the permanent delegate extension
+- Initialize our new account as a token mint
+
 ```javascript
 const createAccountInstruction = SystemProgram.createAccount({
   fromPubkey: payer.publicKey, // account that will transfer lamports to created account
