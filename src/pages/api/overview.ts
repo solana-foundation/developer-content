@@ -8,6 +8,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   allDeveloperGuides,
   allDeveloperResources,
+  allDeveloperWorkshops
 } from "contentlayer/generated";
 import { extractFeaturedRecords, simplifyRecords } from "@/utils/parsers";
 
@@ -25,6 +26,12 @@ export default function handler(
     // featured resources
     resources: extractFeaturedRecords({
       records: allDeveloperResources,
+      limit: 6,
+      callback: simplifyRecords,
+    }),
+    // featured workshops
+    workshops: extractFeaturedRecords({
+      records: allDeveloperWorkshops,
       limit: 6,
       callback: simplifyRecords,
     }),

@@ -9,6 +9,7 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
+  allDeveloperWorkshops,
 } from "contentlayer/generated";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -33,6 +34,8 @@ export default function handler(
         return allDeveloperGuides;
       case "resources":
         return allDeveloperResources;
+      case "workshops":
+        return allDeveloperWorkshops;
     }
   })(group);
 

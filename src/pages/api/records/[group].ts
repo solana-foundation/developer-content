@@ -8,6 +8,7 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
+  allDeveloperWorkshops,
 } from "contentlayer/generated";
 import { simplifyRecords } from "@/utils/parsers";
 
@@ -28,6 +29,8 @@ export default function handler(
         return allDeveloperGuides;
       case "resources":
         return allDeveloperResources;
+      case "workshops":
+        return allDeveloperWorkshops;
     }
   })(group);
 
@@ -37,6 +40,7 @@ export default function handler(
   records = simplifyRecords(records);
 
   // todo: add pagination support?
+  // todo: migrate to trpc and add filters support as well
 
   // finally, return the json formatted listing
   return res.status(200).json(records);
