@@ -63,7 +63,7 @@ here_
 Currently Supported:
 
 1. [Helius](https://www.helius.dev/)
-2. [QuickNode](https://www.quicknode.com/chains/sol)
+2. [QuickNode](https://faucet.quicknode.com/solana/devnet)
 
 ### Using the Solana CLI
 
