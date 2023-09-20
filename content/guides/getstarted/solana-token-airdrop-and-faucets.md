@@ -58,7 +58,7 @@ _Available for Devnet_
 RPC Providers can opt in to distributing Devnet SOL via their Devnet Validators.
 
 _\*If you are an RPC Provider and want to distribute SOL please get in touch
-here_
+here: [Form](https://c852ena8x5c.typeform.com/to/cUj1iRhS)_
 
 Currently Supported:
 
