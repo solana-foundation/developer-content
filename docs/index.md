@@ -1,13 +1,10 @@
 ---
-title: Home
-sidebarLabel: Home
+sidebarSortOrder: 0
+title: Solana Documentation
 description: "Solana is a high performance network that is utilized for a range
   of use cases, \
   including finance, NFTs, payments, and gaming."
-# displayed_sidebar: introductionSidebar
 ---
-
-# Solana Documentation
 
 Solana is a blockchain built for mass adoption. It's a high performance network
 that is utilized for a range of use cases, including finance, NFTs, payments,
@@ -57,9 +54,3 @@ Explore what it takes to operate a Solana validator and help secure the network.
   hardware requirements and expected SOL needed to operate a validator
 - [Quick start guide](./validator/get-started/setup-a-validator) - Setup a
   validator and get connected to a cluster for the first time
-
-## Learn more
-
-import HomeCtaLinks from "../components/HomeCtaLinks";
-
-<HomeCtaLinks />
