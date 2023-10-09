@@ -1,4 +1,5 @@
 ---
+sidebarLabel: Staking
 title: Staking on Solana
 ---
 

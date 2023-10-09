@@ -1,5 +1,6 @@
 ---
-title: Terminology
+sidebarLabel: Terminology
+title: Inflation Related Terminology
 ---
 
 Many terms are thrown around when discussing inflation and the related

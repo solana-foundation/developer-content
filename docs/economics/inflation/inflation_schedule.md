@@ -1,5 +1,6 @@
 ---
-title: Solana's Proposed Inflation Schedule
+sidebarLabel: Proposed Inflation Schedule
+title: Proposed Inflation Schedule
 ---
 
 As mentioned above, the network's _Inflation Schedule_ is uniquely described by
