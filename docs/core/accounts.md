@@ -1,5 +1,6 @@
 ---
 sidebarLabel: Accounts
+sidebarSortOrder: 1
 title: Accounts and Storing State
 ---
 
