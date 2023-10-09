@@ -1,13 +1,13 @@
 ---
-title: "Overview of Writing Programs"
-sidebarLabel: "Overview"
+title: Developing on-chain programs
+sidebarLabel: Developing Programs
 ---
 
 Developers can write and deploy their own programs to the Solana blockchain.
 While developing these "on-chain" programs can seem cumbersome, the entire
 process can be broadly summarized into a few key steps.
 
-## Solana Development Lifecycle
+## On-chain program development lifecycle
 
 1. Setup your development environment
 2. Write your program
