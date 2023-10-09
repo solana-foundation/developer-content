@@ -1,5 +1,6 @@
 ---
-title: Stake Account Structure
+sidebarLabel: Stake Accounts
+title: Stake Accounts
 ---
 
 A stake account on Solana can be used to delegate tokens to validators on the
