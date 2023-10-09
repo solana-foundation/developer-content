@@ -1,5 +1,7 @@
 ---
-title: Rust API
+sidebarLabel: Rust
+title: Rust Client for Solana
+sidebarSortOrder: 1
 ---
 
 Solana's Rust crates are [published to crates.io][crates.io] and can be found

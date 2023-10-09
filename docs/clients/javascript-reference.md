@@ -1,5 +1,5 @@
 ---
-title: Web3 API Reference
+title: Web3.js API Examples
 ---
 
 ## Web3 API Reference Guide
