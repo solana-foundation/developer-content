@@ -1,4 +1,5 @@
 ---
+sidebarLabel: Economics
 title: Solana Economics Overview
 ---
 

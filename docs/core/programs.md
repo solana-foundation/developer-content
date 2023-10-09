@@ -1,4 +1,5 @@
 ---
+sidebarLabel: Programs
 title: What are Solana Programs?
 description:
   "A Solana Program, aka smart contract, is the executable code that interprets
