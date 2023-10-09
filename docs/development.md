@@ -1,5 +1,5 @@
 ---
-sidebarLabel: Solana Development
+sidebarLabel: Intro to Development
 title: "Introduction to Solana Development"
 description:
   "Learn about the basic development concepts of the Solana blockchain."
