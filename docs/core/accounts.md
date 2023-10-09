@@ -1,5 +1,6 @@
 ---
-title: "Accounts"
+sidebarLabel: Accounts
+title: Accounts and Storing State
 ---
 
 ## Storing State between Transactions

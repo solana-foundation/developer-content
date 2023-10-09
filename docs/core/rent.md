@@ -1,4 +1,5 @@
 ---
+sidebarLabel: Rent
 title: What is rent?
 description:
   "Rent: the small fee Solana accounts incur to store data on the blockchain.

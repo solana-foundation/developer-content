@@ -1,5 +1,6 @@
 ---
-title: Calling Between Programs
+sidebarLabel: CPI
+title: Cross-program Invocation (aka CPI)
 ---
 
 ## Cross-Program Invocations

@@ -1,4 +1,5 @@
 ---
+sidebarLabel: Rent
 title: Storage Rent Economics
 ---
 
