@@ -1,5 +1,6 @@
 ---
 title: "Transactions"
+sidebarSortOrder: 4
 description:
   "A Solana transaction consists of one or more instructions, an array of
   accounts to read and write data from, and one or more signatures."

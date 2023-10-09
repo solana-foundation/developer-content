@@ -1,5 +1,6 @@
 ---
 sidebarLabel: CPI
+# sidebarSortOrder: 5
 title: Cross-program Invocation (aka CPI)
 ---
 

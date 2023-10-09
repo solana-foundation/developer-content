@@ -1,5 +1,7 @@
 ---
-title: "Runtime"
+sidebarLabel: Runtime
+title: "Overview of the Solana Runtime"
+# sidebarSortOrder: 6
 ---
 
 ## Capability of Programs
