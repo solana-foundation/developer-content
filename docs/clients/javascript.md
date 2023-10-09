@@ -1,5 +1,7 @@
 ---
-title: Web3 JavaScript API
+sidebarLabel: JavaScript / TypeScript
+title: JavaScript Client for Solana
+sidebarSortOrder: 2
 ---
 
 ## What is Solana-Web3.js?
