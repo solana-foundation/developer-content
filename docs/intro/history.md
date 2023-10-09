@@ -1,5 +1,6 @@
 ---
-title: History
+sidebarLabel: History
+title: Brief History of Solana
 ---
 
 In November of 2017, Anatoly Yakovenko published a whitepaper describing Proof
@@ -33,7 +34,7 @@ Anatoly called the project Loom.
 
 On February 13th of 2018, Greg began prototyping the first open source
 implementation of Anatoly's whitepaper. The project was published to GitHub
-under the name Silk in the loomprotocol organization. On February 28th, Greg
+under the name Silk in the `loomprotocol` organization. On February 28th, Greg
 made his first release, demonstrating 10 thousand signed transactions could be
 verified and processed in just over half a second. Shortly after, another former
 Qualcomm cohort, Stephen Akridge, demonstrated throughput could be massively
