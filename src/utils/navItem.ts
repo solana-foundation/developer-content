@@ -52,17 +52,31 @@ export function generateNavItemListing(
     navItems.push(item);
   }
 
-  /**
-   * finally, return the NavItem array (sorted, of course)
-   * ---
-   * note on sorting: final sorting on the full navItems listing is different than category items
-   * sort here will actually sort using the `sidebarSortOrder=0` value
-   */
-  return navItems.sort(
-    (a, b) =>
-      (typeof a?.sidebarSortOrder == "undefined" ? 999 : a.sidebarSortOrder) -
-      (typeof b?.sidebarSortOrder == "undefined" ? 999 : b.sidebarSortOrder),
-  );
+  // finally, return the NavItem array (sorted, of course)
+  return sortNavItems(navItems);
+}
+
+/**
+ * Sort the listing of NavItems based on their `sidebarSortOrder`,
+ * including recursively sorting all child items
+ * ---
+ * note on sorting: final sorting on the full navItems listing is different than category items
+ * sort here will actually sort using the `sidebarSortOrder=0` value
+ */
+export function sortNavItems(navItems: NavItem[]) {
+  return navItems
+    .map(record => {
+      // sort the child items
+      if (Array.isArray(record.items)) {
+        record.items = sortNavItems(record.items);
+      }
+      return record;
+    })
+    .sort(
+      (a, b) =>
+        (typeof a?.sidebarSortOrder == "undefined" ? 999 : a.sidebarSortOrder) -
+        (typeof b?.sidebarSortOrder == "undefined" ? 999 : b.sidebarSortOrder),
+    );
 }
 
 /**
