@@ -1,5 +1,6 @@
 ---
 title: Introduction
+sidebarSortOrder: 1
 ---
 
 ## What is Solana?
@@ -46,10 +47,10 @@ blockchain!
 
 Furthermore, and much to our surprise, it can be implemented using a mechanism
 that has existed in Bitcoin since day one. The Bitcoin feature is called
-nLocktime and it can be used to postdate transactions using block height instead
-of a timestamp. As a Bitcoin client, you would use block height instead of a
-timestamp if you don't rely upon the network. Block height turns out to be an
-instance of what's being called a Verifiable Delay Function in cryptography
+`nLocktime` and it can be used to postdate transactions using block height
+instead of a timestamp. As a Bitcoin client, you would use block height instead
+of a timestamp if you don't rely upon the network. Block height turns out to be
+an instance of what's being called a Verifiable Delay Function in cryptography
 circles. It's a cryptographically secure way to say time has passed. In Solana,
 we use a far more granular verifiable delay function, a SHA 256 hash chain, to
 checkpoint the ledger and coordinate consensus. With it, we implement Optimistic
@@ -94,7 +95,7 @@ launched it.
 
 A SOL is the name of Solana's native token, which can be passed to nodes in a
 Solana cluster in exchange for running an on-chain program or validating its
-output. The system may perform micropayments of fractional SOLs, which are
+output. The system may perform micro-payments of fractional SOLs, which are
 called _lamports_. They are named in honor of Solana's biggest technical
 influence, [Leslie Lamport](https://en.wikipedia.org/wiki/Leslie_Lamport). A
 lamport has a value of 0.000000001 SOL.
