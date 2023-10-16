@@ -34,9 +34,9 @@ Based on these considerations and the community discussions following the
 initial design, the Solana Foundation proposes the following Inflation Schedule
 parameters:
 
-- Initial Inflation Rate: $8\%$
-- Disinflation Rate: $-15\%$
-- Long-term Inflation Rate: $1.5\%$
+- Initial Inflation Rate: 8%
+- Disinflation Rate: -15%
+- Long-term Inflation Rate: 1.5%
 
 These parameters define the proposed _Inflation Schedule_. Below we show
 implications of these parameters. These plots only show the impact of inflation
@@ -48,8 +48,8 @@ issued via inflation.
 
 ![](/img/p_inflation_schedule.png)
 
-In the above graph we see the annual inflation rate [$\%$] over time, given the
-inflation parameters proposed above.
+In the above graph we see the annual inflation rate percentage over time, given
+the inflation parameters proposed above.
 
 ![](/img/p_total_supply.png)
 
@@ -63,13 +63,13 @@ Adjusted Staking Yield metrics are then primarily a function of the % of total
 SOL staked on the network. Therefore we can we can model _Staking Yield_, if we
 introduce an additional parameter _% of Staked SOL_:
 
-$$
+<!-- $$
 \%~\text{SOL Staked} = \frac{\text{Total SOL Staked}}{\text{Total Current Supply}}
-$$
+$$ -->
 
 This parameter must be estimated because it is a dynamic property of the token
 holders and staking incentives. The values of _% of Staked SOL_ presented here
-range from $60\% - 90\%$, which we feel covers the likely range we expect to
+range from 60% - 90%, which we feel covers the likely range we expect to
 observe, based on feedback from the investor and validator communities as well
 as what is observed on comparable Proof-of-Stake protocols.
 
