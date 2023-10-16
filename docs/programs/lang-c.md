@@ -9,7 +9,7 @@ languages.
 
 C projects are laid out as follows:
 
-```
+```text
 /src/<program name>
 /makefile
 ```

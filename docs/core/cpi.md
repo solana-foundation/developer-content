@@ -4,17 +4,16 @@ sidebarLabel: CPI
 title: Cross-program Invocation (aka CPI)
 ---
 
-## Cross-Program Invocations
-
 The Solana runtime allows programs to call each other via a mechanism called
-cross-program invocation. Calling between programs is achieved by one program
-invoking an instruction of the other. The invoking program is halted until the
-invoked program finishes processing the instruction.
+"[cross-program invocation](/docs/core/cpi)", or `cpi` for short. Calling
+between programs is achieved by one program invoking an instruction of the
+other. The invoking program is halted until the invoked program finishes
+processing the instruction.
 
 For example, a client could create a transaction that modifies two accounts,
 each owned by separate on-chain programs:
 
-```rust,ignore
+```rust
 let message = Message::new(vec![
     token_instruction::pay(&alice_pubkey),
     acme_instruction::launch_missiles(&bob_pubkey),
@@ -25,7 +24,7 @@ client.send_and_confirm_message(&[&alice_keypair, &bob_keypair], &message);
 A client may instead allow the `acme` program to conveniently invoke `token`
 instructions on the client's behalf:
 
-```rust,ignore
+```rust
 let message = Message::new(vec![
     acme_instruction::pay_and_launch_missiles(&alice_pubkey, &bob_pubkey),
 ]);
@@ -37,7 +36,7 @@ Given two on-chain programs, `token` and `acme`, each implementing instructions
 call to a function defined in the `token` module by issuing a cross-program
 invocation:
 
-```rust,ignore
+```rust
 mod acme {
     use token_instruction;
 
@@ -103,7 +102,7 @@ signed in the original transaction by using
 To sign an account with program derived addresses, a program may
 `invoke_signed()`.
 
-```rust,ignore
+```rust
         invoke_signed(
             &instruction,
             accounts,
@@ -190,7 +189,7 @@ implemented with `Pubkey::create_with_seed`.
 
 For reference, that implementation is as follows:
 
-```rust,ignore
+```rust
 pub fn create_with_seed(
     base: &Pubkey,
     seed: &str,
@@ -211,7 +210,7 @@ These seeds can symbolically identify how the addresses are used.
 
 From `Pubkey`::
 
-```rust,ignore
+```rust
 /// Generate a derived program address
 ///     * seeds, symbolic keywords used to derive the key
 ///     * program_id, program that the address is derived for
@@ -257,7 +256,7 @@ address. In this example, we assume that
 `create_program_address(&[&["escrow"]], &escrow_program_id)` generates a valid
 program address that is off the curve.
 
-```rust,ignore
+```rust
 // deterministically derive the escrow key
 let escrow_pubkey = create_program_address(&[&["escrow"]], &escrow_program_id);
 
@@ -274,7 +273,7 @@ Programs can use the same function to generate the same address. In the function
 below the program issues a `token_instruction::transfer` from a program address
 as if it had the private key to sign the transaction.
 
-```rust,ignore
+```rust
 fn transfer_one_token_from_escrow(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -304,7 +303,7 @@ To generate a valid program address using `"escrow2"` as a seed, use
 `find_program_address`, iterating through possible bump seeds until a valid
 combination is found. The preceding example becomes:
 
-```rust,ignore
+```rust
 // find the escrow key and valid bump seed
 let (escrow_pubkey2, escrow_bump_seed) = find_program_address(&[&["escrow2"]], &escrow_program_id);
 
@@ -319,7 +318,7 @@ client.send_and_confirm_message(&[&alice_keypair], &message);
 
 Within the program, this becomes:
 
-```rust,ignore
+```rust
 fn transfer_one_token_from_escrow2(
     program_id: &Pubkey,
     accounts: &[AccountInfo],

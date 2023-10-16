@@ -647,7 +647,7 @@ prevent accidental loss of user funds.
 Solana addresses a 32-byte array, encoded with the bitcoin base58 alphabet. This
 results in an ASCII text string matching the following regular expression:
 
-```
+```text
 [1-9A-HJ-NP-Za-km-z]{32,44}
 ```
 
@@ -776,13 +776,13 @@ line utility. The latest version of `cargo` can be installed using a handy
 one-liner for your platform at [rustup.rs](https://rustup.rs). Once `cargo` is
 installed, `spl-token` can be obtained with the following command:
 
-```
+```bash
 cargo install spl-token-cli
 ```
 
 You can then check the installed version to verify
 
-```
+```bash
 spl-token --version
 ```
 
@@ -814,13 +814,13 @@ To create an SPL Token account with the following properties:
 1. Associated with the given mint
 1. Owned by the funding account's keypair
 
-```
+```bash
 spl-token create-account <TOKEN_MINT_ADDRESS>
 ```
 
 #### Example
 
-```
+```bash
 $ spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5XxyJwS73Vi5WsZL88D7
@@ -828,7 +828,7 @@ Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5
 
 Or to create an SPL Token account with a specific keypair:
 
-```
+```bash
 $ solana-keygen new -o token-account.json
 $ spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir token-account.json
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
@@ -839,13 +839,13 @@ Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5
 
 #### Command Line
 
-```
+```bash
 spl-token balance <TOKEN_ACCOUNT_ADDRESS>
 ```
 
 #### Example
 
-```
+```bash
 $ solana balance 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 0
 ```
@@ -862,13 +862,13 @@ provided.
 
 #### Command Line
 
-```
+```bash
 spl-token transfer <SENDER_ACCOUNT_ADDRESS> <AMOUNT> <RECIPIENT_WALLET_ADDRESS> --fund-recipient
 ```
 
 #### Example
 
-```
+```bash
 $ spl-token transfer 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN 1 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Transfer 1 tokens
   Sender: 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN
@@ -920,7 +920,7 @@ SOL (2,039,280 lamports).
 
 Template `spl-token transfer` command for a withdrawal:
 
-```
+```bash
 $ spl-token transfer --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 

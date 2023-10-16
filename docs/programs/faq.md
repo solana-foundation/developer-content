@@ -102,7 +102,7 @@ overrun as a warning.
 
 For example:
 
-```
+```text
 Error: Function _ZN16curve25519_dalek7edwards21EdwardsBasepointTable6create17h178b3d2411f7f082E Stack offset of -30728 exceeded max offset of -4096 by 26632 bytes, please minimize large stack variables
 ```
 

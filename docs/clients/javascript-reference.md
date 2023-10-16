@@ -64,7 +64,7 @@ for the full list.
 
 ### Transaction
 
-[SourceDocumentation](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html)
 
 A transaction is used to interact with programs on the Solana blockchain. These
 transactions are constructed with TransactionInstructions, containing all the
@@ -257,7 +257,7 @@ console.log(`Valid Program Address: ${validProgramAddress}`);
 
 ### SystemProgram
 
-[SourceDocumentation](https://solana-labs.github.io/solana-web3.js/classes/SystemProgram.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/SystemProgram.html)
 
 The SystemProgram grants the ability to create accounts, allocate account data,
 assign an account to programs, work with nonce accounts, and transfer lamports.
@@ -484,7 +484,7 @@ await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 
 ### Struct
 
-[SourceDocumentation](https://solana-labs.github.io/solana-web3.js/classes/Struct.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Struct.html)
 
 The struct class is used to create Rust compatible structs in javascript. This
 class is only compatible with Borsh encoded Rust structs.
@@ -634,7 +634,7 @@ offline with the nonce in place of the `recentBlockhash`.
 
 ### VoteAccount
 
-[SourceDocumentation](https://solana-labs.github.io/solana-web3.js/classes/VoteAccount.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/VoteAccount.html)
 
 Vote account is an object that grants the capability of decoding vote accounts
 from the native vote account program on the network.
@@ -708,7 +708,7 @@ VoteAccount {
 
 ### StakeProgram
 
-[SourceDocumentation](https://solana-labs.github.io/solana-web3.js/classes/StakeProgram.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/StakeProgram.html)
 
 The StakeProgram facilitates staking SOL and delegating them to any validators
 on the network. You can use StakeProgram to create a stake account, stake some

@@ -136,7 +136,7 @@ Therefore, the `maxDepth` of a tree is used to determine the maximum number of
 nodes (aka pieces of data or `leafs`) to store within the tree using a simple
 calculation:
 
-```
+```text
 nodes_count = 2 ^ maxDepth
 ```
 
@@ -149,7 +149,7 @@ above, you can determine the lowest `maxDepth` to store your data.
 If you wanted to create a tree to store 100 compressed nfts, we will need a
 minimum of "100 leafs" or "100 nodes".
 
-```
+```text
 // maxDepth=6 -> 64 nodes
 2^6 = 64
 
@@ -164,7 +164,7 @@ We must use a `maxDepth` of `7` to ensure we can store all of our data.
 If you wanted to create a tree to store 15000 compressed nfts, we will need a
 minimum of "15000 leafs" or "15000 nodes".
 
-```
+```text
 // maxDepth=13 -> 8192 nodes
 2^13 = 8192
 
@@ -286,9 +286,8 @@ const requiredSpace = getConcurrentMerkleTreeAccountSize(
 );
 
 // get the cost (in lamports) to store the tree on-chain
-const storageCost = await connection.getMinimumBalanceForRentExemption(
-  requiredSpace,
-);
+const storageCost =
+  await connection.getMinimumBalanceForRentExemption(requiredSpace);
 ```
 
 ### Example costs
