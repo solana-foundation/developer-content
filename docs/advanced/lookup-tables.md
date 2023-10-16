@@ -141,9 +141,9 @@ chain (via extending the lookup table), you can create a `v0` transaction to
 utilize the on chain lookup capabilities.
 
 Just like older `legacy` transactions, you can create all the
-[instructions](./../terminology.md#instruction) your transaction will execute on
+[instructions](/docs/terminology#instruction) your transaction will execute on
 chain. You can then provide an array of these instructions to the
-[Message](./../terminology.md#message) used in the `v0 transaction.
+[Message](/docs/terminology#message) used in the `v0 transaction.
 
 > NOTE: The instructions used inside a `v0` transaction can be constructed using
 > the same methods and functions used to create the instructions in the past.

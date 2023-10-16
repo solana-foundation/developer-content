@@ -44,11 +44,10 @@ then be deployed to the blockchain.
 ### 4. Generate the program's public address
 
 Using the [Solana CLI](./../../cli/install-solana-cli-tools.md), the developer
-will generate a new unique [Keypair](./../../terminology.md#keypair) for the new
-program. The public address (aka
-[Pubkey](./../../terminology.md#public-key-pubkey)) from this Keypair will be
-used on-chain as the program's public address (aka
-[`programId`](./../../terminology.md#program-id)).
+will generate a new unique [Keypair](/docs/terminology#keypair) for the new
+program. The public address (aka [Pubkey](/docs/terminology#public-key-pubkey))
+from this Keypair will be used on-chain as the program's public address (aka
+[`programId`](/docs/terminology#program-id)).
 
 ### 5. Deploying the program
 

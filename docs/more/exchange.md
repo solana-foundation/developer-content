@@ -49,7 +49,7 @@ the cluster you are joining.
 [Current parameters for Mainnet Beta](../clusters.md#example-solana-validator-command-line-2)
 
 The `--limit-ledger-size` parameter allows you to specify how many ledger
-[shreds](../terminology.md#shred) your node retains on disk. If you do not
+[shreds](/docs/terminology#shred) your node retains on disk. If you do not
 include this parameter, the validator will keep the entire ledger until it runs
 out of disk space. The default value attempts to keep the ledger disk usage
 under 500GB. More or less disk usage may be requested by adding an argument to
@@ -348,7 +348,7 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
 The `preBalances` and `postBalances` fields allow you to track the balance
 changes in every account without having to parse the entire transaction. They
 list the starting and ending balances of each account in
-[lamports](../terminology.md#lamport), indexed to the `accountKeys` list. For
+[lamports](/docs/terminology#lamport), indexed to the `accountKeys` list. For
 example, if the deposit address of interest is
 `G1wZ113tiUHdSpQEBcid8n1x8BAvcWZoZgxPKxgE5B7o`, this transaction represents a
 transfer of 1040000000 - 1030000000 = 10,000,000 lamports = 0.01 SOL
@@ -581,9 +581,9 @@ off to the cluster using the JSON-RPC
 Get the status of a batch of transactions using the
 [`getSignatureStatuses`](../api/http#getsignaturestatuses) JSON-RPC endpoint.
 The `confirmations` field reports how many
-[confirmed blocks](../terminology.md#confirmed-block) have elapsed since the
+[confirmed blocks](/docs/terminology#confirmed-block) have elapsed since the
 transaction was processed. If `confirmations: null`, it is
-[finalized](../terminology.md#finality).
+[finalized](/docs/terminology#finality).
 
 ```bash
 curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{

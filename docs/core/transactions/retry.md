@@ -7,7 +7,7 @@ title: Retrying Transactions
 On some occasions, a seemingly valid transaction may be dropped before it is
 included in a block. This most often occurs during periods of network
 congestion, when an RPC node fails to rebroadcast the transaction to the
-[leader](../terminology#leader). To an end-user, it may appear as if their
+[leader](/docs/terminology#leader). To an end-user, it may appear as if their
 transaction disappears entirely. While RPC nodes are equipped with a generic
 rebroadcasting algorithm, application developers are also capable of developing
 their own custom rebroadcasting logic.
@@ -63,7 +63,7 @@ communicate with one another, but does not provide any guarantees regarding
 transaction delivery.
 
 Because Solana’s leader schedule is known in advance of every
-[epoch](../terminology#epoch) (~2 days), an RPC node will broadcast its
+[epoch](/docs/terminology#epoch) (~2 days), an RPC node will broadcast its
 transaction directly to the current and next leaders. This is in contrast to
 other gossip protocols such as Ethereum that propagate transactions randomly and
 broadly across the entire network. By default, RPC nodes will try to forward
