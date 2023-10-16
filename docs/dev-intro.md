@@ -139,7 +139,7 @@ Transactions fees are calculated based on two main parts:
 
 - a statically set base fee per signature, and
 - the computational resources used during the transaction, measured in
-  "[_compute units_](../terminology.md#compute-units)"
+  "[_compute units_](./terminology.md#compute-units)"
 
 The more work a transaction requires, the more compute units it will use, and
 the more it will cost.
