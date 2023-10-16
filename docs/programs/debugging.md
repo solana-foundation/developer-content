@@ -29,7 +29,9 @@ it is helpful to focus on just the runtime and program logs and not the rest of
 the cluster logs. To focus in on program specific information the following log
 mask is recommended:
 
-`export RUST_LOG=solana_runtime::system_instruction_processor=trace,solana_runtime::message_processor=info,solana_bpf_loader=debug,solana_rbpf=debug`
+```bash
+export RUST_LOG=solana_runtime::system_instruction_processor=trace,solana_runtime::message_processor=info,solana_bpf_loader=debug,solana_rbpf=debug
+```
 
 Log messages coming directly from the program (not the runtime) will be
 displayed in the form:
@@ -70,7 +72,9 @@ the specifics of what failed are written to the
 For example, an access violation involving the stack will look something like
 this:
 
-`SBF program 4uQeVj5tqViQh7yWWGStvkEG1Zmhx6uasJtWCJziofM failed: out of bounds memory store (insn #615), addr 0x200001e38/8`
+```text
+SBF program 4uQeVj5tqViQh7yWWGStvkEG1Zmhx6uasJtWCJziofM failed: out of bounds memory store (insn #615), addr 0x200001e38/8
+```
 
 ## Monitoring Compute Budget Consumption
 
@@ -134,7 +138,7 @@ should be three files in that directory
 - helloworld.so -- an executable file loadable into the virtual machine. The
   command line for running `solana-ledger-tool` would be something like this
 
-```
+```bash
 solana-ledger-tool program run -l test-ledger -e debugger target/deploy/helloworld.so
 ```
 
@@ -147,43 +151,43 @@ a ledger in `test-ledger` subdirectory.
 In debugger mode `solana-ledger-tool program run` loads an `.so` file and starts
 listening for an incoming connection from a debugger
 
-```
+```text
 Waiting for a Debugger connection on "127.0.0.1:9001"...
 ```
 
 To connect to `solana-ledger-tool` and execute the program, run lldb. For
 debugging rust programs it may be beneficial to run solana-lldb wrapper to lldb,
 i.e. at a new shell prompt (other than the one used to start
-`solana-ledger-tool`) run the command
+`solana-ledger-tool`) run the command:
 
-```
+```bash
 solana-lldb
 ```
 
 This script is installed in platform-tools path. If that path is not added to
 `PATH` environment variable, it may be necessary to specify the full path, e.g.
 
-```
+```text
 ~/.cache/solana/v1.35/platform-tools/llvm/bin/solana-lldb
 ```
 
 After starting the debugger, load the .debug file by entering the following
 command at the debugger prompt
 
-```
+```text
 (lldb) file target/deploy/helloworld.debug
 ```
 
 If the debugger finds the file, it will print something like this
 
-```
+```text
 Current executable set to '/path/helloworld.debug' (bpf).
 ```
 
 Now, connect to the gdb server that `solana-ledger-tool` implements, and debug
 the program as usual. Enter the following command at lldb prompt
 
-```
+```text
 (lldb) gdb-remote 127.0.0.1:9001
 ```
 
@@ -203,9 +207,9 @@ For example on Linux a possible path to Solana customized lldb can be
 `<user>` is your Linux system username. This can also be added directly to
 `~/.config/Code/User/settings.json` file, e.g.
 
-```
+```json
 {
-    "lldb.library": "/home/<user>/.cache/solana/v1.35/platform-tools/llvm/lib/liblldb.so"
+  "lldb.library": "/home/<user>/.cache/solana/v1.35/platform-tools/llvm/lib/liblldb.so"
 }
 ```
 
@@ -213,26 +217,26 @@ In `.vscode` subdirectory of your on-chain project, create two files
 
 First file is `tasks.json` with the following content
 
-```
+```json
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build",
-            "type": "shell",
-            "command": "cargo build-sbf --debug",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "solana-debugger",
-            "type": "shell",
-            "command": "solana-ledger-tool program run -l test-ledger -e debugger ${workspaceFolder}/target/deploy/helloworld.so"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "cargo build-sbf --debug",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "solana-debugger",
+      "type": "shell",
+      "command": "solana-ledger-tool program run -l test-ledger -e debugger ${workspaceFolder}/target/deploy/helloworld.so"
+    }
+  ]
 }
 ```
 
@@ -241,18 +245,20 @@ The second task is to run `solana-ledger-tool program run` in debugger mode.
 
 Another file is `launch.json` with the following content
 
-```
+```json
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "lldb",
-            "request": "custom",
-            "name": "Debug",
-            "targetCreateCommands": ["target create ${workspaceFolder}/target/deploy/helloworld.debug"],
-            "processCreateCommands": ["gdb-remote 127.0.0.1:9001"]
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "custom",
+      "name": "Debug",
+      "targetCreateCommands": [
+        "target create ${workspaceFolder}/target/deploy/helloworld.debug"
+      ],
+      "processCreateCommands": ["gdb-remote 127.0.0.1:9001"]
+    }
+  ]
 }
 ```
 

@@ -10,7 +10,7 @@ Solana supports writing on-chain programs using the
 Solana Rust programs follow the typical
 [Rust project layout](https://doc.rust-lang.org/cargo/guide/project-layout.html):
 
-```
+```text
 /inc/
 /src/
 /Cargo.toml
@@ -236,7 +236,7 @@ available. Sometimes a program may depend on a crate that depends itself on
 If a program depends on `rand`, the compilation will fail because there is no
 `get-random` support for Solana. The error will typically look like this:
 
-```
+```bash
 error: target is not supported, for more information see: https://docs.rs/getrandom/#unsupported-targets
    --> /Users/jack/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.1.14/src/lib.rs:257:9
     |
@@ -250,13 +250,13 @@ error: target is not supported, for more information see: https://docs.rs/getran
 To work around this dependency issue, add the following dependency to the
 program's `Cargo.toml`:
 
-```
+```rust
 getrandom = { version = "0.1.14", features = ["dummy"] }
 ```
 
 or if the dependency is on getrandom v0.2 add:
 
-```
+```rust
 getrandom = { version = "0.2.2", features = ["custom"] }
 ```
 
@@ -294,7 +294,7 @@ with program logs the [Rust examples](#examples) contains a logging example.
 Rust's `panic!`, `assert!`, and internal panic results are printed to the
 [program logs](debugging.md#logging) by default.
 
-```
+```bash
 INFO  solana_runtime::message_processor] Finalized account CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
 INFO  solana_runtime::message_processor] Call SBF program CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
 INFO  solana_runtime::message_processor] Program log: Panicked at: 'assertion failed: `(left == right)`
@@ -311,7 +311,7 @@ implementation.
 
 First define the `custom-panic` feature in the program's `Cargo.toml`
 
-```toml
+```rust
 [features]
 default = ["custom-panic"]
 custom-panic = []

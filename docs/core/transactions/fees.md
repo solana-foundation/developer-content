@@ -55,8 +55,11 @@ directly as well:
 $ curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" -d '
   {"jsonrpc":"2.0","id":1, "method":"getFees"}
 '
+```
 
-# RESULT (lastValidSlot removed since it's inaccurate)
+Result: (lastValidSlot removed since it's inaccurate)
+
+```js
 {
   "jsonrpc": "2.0",
   "result": {

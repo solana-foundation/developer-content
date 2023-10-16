@@ -66,7 +66,7 @@ Recent results show the float operations take more instructions compared to
 integers equivalents. Fixed point implementations may vary but will also be less
 than the float equivalents:
 
-```
+```text
           u64   f32
 Multiply    8   176
 Divide      9   219
