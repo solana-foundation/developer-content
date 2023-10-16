@@ -1,5 +1,5 @@
 ---
-sidebarLabel: Terminology
+sidebarLabel: Inflation Terminology
 title: Inflation Related Terminology
 ---
 
@@ -80,14 +80,14 @@ currently $10\%$ per year").
   fraction of the _Total Current Supply_ that is staked at any given time. The
   explicit relationship is given by:
 
-$$
+<!-- $$
 \begin{aligned}
 \text{Staking Yield} =~&\text{Inflation Rate}\times\text{Validator Uptime}~\times \\
 &\left( 1 - \text{Validator Fee} \right) \times \left( \frac{1}{\%~\text{SOL Staked}} \right) \\
 \text{where:}\\
 \%~\text{SOL Staked} &= \frac{\text{Total SOL Staked}}{\text{Total Current Supply}}
 \end{aligned}
-$$
+$$ -->
 
 ### Token Dilution [%]
 
