@@ -13,8 +13,8 @@ ledger to securely validate off-chain data, verifying it has not been tampered
 with.
 
 This method of "compression" allows Solana programs and dApps to use cheap
-blockchain [ledger](./../terminology.md#ledger) space, instead of the more
-expensive [account](./../terminology.md#account) space, to securely store data.
+blockchain [ledger](/docs/terminology#ledger) space, instead of the more
+expensive [account](/docs/terminology#account) space, to securely store data.
 
 This is accomplished by using a special binary tree structure, known as a
 [concurrent merkle tree](#what-is-a-concurrent-merkle-tree), to create a hash of

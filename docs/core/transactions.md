@@ -7,12 +7,11 @@ description:
 ---
 
 On the Solana blockchain, program execution begins with a
-[transaction](./../../terminology.md#transaction) being submitted to the
-cluster. With each transaction consisting of one or many
-[instructions](./../../terminology.md#instruction), the runtime will process
-each of the instructions contained within the transaction, in order, and
-atomically. If any part of an instruction fails, then the entire transaction
-will fail.
+[transaction](/docs/terminology#transaction) being submitted to the cluster.
+With each transaction consisting of one or many
+[instructions](/docs/terminology#instruction), the runtime will process each of
+the instructions contained within the transaction, in order, and atomically. If
+any part of an instruction fails, then the entire transaction will fail.
 
 ## Overview of a Transaction
 
@@ -25,17 +24,17 @@ This transaction consists of three parts:
 - an array of accounts to read or write from
 - one or more signatures
 
-An [instruction](./../../terminology.md#instruction) is the smallest execution
-logic on Solana. Instructions are basically a call to update the global Solana
-state. Instructions invoke programs that make calls to the Solana runtime to
-update the state (for example, calling the token program to transfer tokens from
-your account to another account).
+An [instruction](/docs/terminology#instruction) is the smallest execution logic
+on Solana. Instructions are basically a call to update the global Solana state.
+Instructions invoke programs that make calls to the Solana runtime to update the
+state (for example, calling the token program to transfer tokens from your
+account to another account).
 
 [Programs](./../intro/programs.md) on Solana don’t store data/state; rather,
 data/state is stored in accounts.
 
-[Signatures](./../../terminology.md#signature) verify that we have the authority
-to read or write data to the accounts that we list.
+[Signatures](/docs/terminology#signature) verify that we have the authority to
+read or write data to the accounts that we list.
 
 ## Anatomy of a Transaction
 
@@ -114,7 +113,7 @@ keypair.
 
 ## Instructions
 
-Each [instruction](terminology.md#instruction) specifies a single program, a
+Each [instruction](/docs/terminology#instruction) specifies a single program, a
 subset of the transaction's accounts that should be passed to the program, and a
 data byte array that is passed to the program. The program interprets the data
 array and operates on the accounts specified by the instructions. The program
@@ -153,10 +152,10 @@ pub fn create_account(
 
 ### Program Id
 
-The instruction's [program id](./../../terminology.md#program-id) specifies
-which program will process this instruction. The program's account's owner
-specifies which loader should be used to load and execute the program, and the
-data contains information about how the runtime should execute the program.
+The instruction's [program id](/docs/terminology#program-id) specifies which
+program will process this instruction. The program's account's owner specifies
+which loader should be used to load and execute the program, and the data
+contains information about how the runtime should execute the program.
 
 In the case of [on-chain SBF programs](./../on-chain-programs/overview.md), the
 owner is the SBF Loader and the account data holds the BPF bytecode. Program
@@ -227,7 +226,7 @@ found in [Accounts](./accounts.md#signers)
 
 ## Recent Blockhash
 
-A transaction includes a recent [blockhash](../../terminology.md#blockhash) to
+A transaction includes a recent [blockhash](/docs/terminology#blockhash) to
 prevent duplication and to give transactions lifetimes. Any transaction that is
 completely identical to a previous one is rejected, so adding a newer blockhash
 allows multiple transactions to repeat the exact same action. Transactions also

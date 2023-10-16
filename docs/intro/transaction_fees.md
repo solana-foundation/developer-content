@@ -15,7 +15,7 @@ keywords:
   - affordable blockchain
 ---
 
-The small fees paid to process [instructions](./terminology.md#instruction) on
+The small fees paid to process [instructions](/docs/terminology#instruction) on
 the Solana blockchain are known as "_transaction fees_".
 
 As each transaction (which contains one or more instructions) is sent through
@@ -25,7 +25,7 @@ network to help support the [economic design](#economic-design) of the Solana
 blockchain.
 
 > **NOTE:** Transaction fees are different from
-> [account rent](./terminology.md#rent)! While transaction fees are paid to
+> [account rent](/docs/terminology#rent)! While transaction fees are paid to
 > process instructions on the Solana network, rent is paid to store data on the
 > blockchain.
 
@@ -57,7 +57,7 @@ The same is true on Solana. Specifically:
 
 - A fixed proportion (initially 50%) of each transaction fee is _burned_
   (destroyed), with the remaining going to the current
-  [leader](./terminology.md#leader) processing the transaction.
+  [leader](/docs/terminology#leader) processing the transaction.
 - A scheduled global inflation rate provides a source for
   [rewards](./implemented-proposals/staking-rewards.md) distributed to
   [Solana Validators](../src/running-validator.md).
@@ -71,12 +71,13 @@ completely burned, leaders are still incentivized to include as many
 transactions as possible in their slots.
 
 Burnt fees can also help prevent malicious validators from censoring
-transactions by being considered in [fork](./terminology.md#fork) selection.
+transactions by being considered in [fork](/docs/terminology#fork) selection.
 
 #### Example of an attack:
 
-In the case of a [Proof of History (PoH)](./terminology.md#proof-of-history-poh)
-fork with a malicious, censoring leader:
+In the case of a
+[Proof of History (PoH)](/docs/terminology#proof-of-history-poh) fork with a
+malicious, censoring leader:
 
 - due to the fees lost from censoring, we would expect the total fees burned to
   be **_less than_** a comparable honest fork
@@ -90,11 +91,11 @@ Transactions fees are calculated based on two main parts:
 
 - a statically set base fee per signature, and
 - the computational resources used during the transaction, measured in
-  "[_compute units_](./terminology.md#compute-units)"
+  "[_compute units_](/docs/terminology#compute-units)"
 
 Since each transaction may require a different amount of computational
 resources, they are alloted a maximum number of _compute units_ per transaction
-known as the "[_compute budget_](./terminology.md#compute-budget)".
+known as the "[_compute budget_](/docs/terminology#compute-budget)".
 
 The execution of each instruction within a transaction consumes a different
 number of _compute units_. After the maximum number of _compute units_ has been
@@ -110,13 +111,13 @@ and return an error. This results in a failed transaction.
 
 A Solana transaction can include an **optional** fee to prioritize itself
 against others known as a
-"_[prioritization fee](./terminology.md#prioritization-fee)_". Paying this
+"_[prioritization fee](/docs/terminology#prioritization-fee)_". Paying this
 additional fee helps boost how a transaction is prioritized against others,
 resulting in faster execution times.
 
 ### How the prioritization fee is calculated
 
-A transaction's [prioritization fee](./terminology.md#prioritization-fee) is
+A transaction's [prioritization fee](/docs/terminology#prioritization-fee) is
 calculated by multiplying the maximum number of **_compute units_** by the
 **_compute unit price_** (measured in _micro-lamports_).
 

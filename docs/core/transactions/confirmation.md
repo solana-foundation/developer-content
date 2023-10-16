@@ -3,7 +3,7 @@ title: "Transaction Confirmation"
 ---
 
 Problems relating to
-[transaction confirmation](./../terminology.md#transaction-confirmations) are
+[transaction confirmation](/docs/terminology#transaction-confirmations) are
 common with many newer developers while building applications. This article aims
 to boost the overall understanding of the confirmation mechanism used on the
 Solana blockchain, including some recommended best practices.
@@ -15,17 +15,16 @@ things...
 
 ### What is a transaction?
 
-Transactions consist of two components: a [message](./../terminology.md#message)
-and a [list of signatures](./../terminology.md#signature). The transaction
-message is where the magic happens and at a high level it consists of three
-components:
+Transactions consist of two components: a [message](/docs/terminology#message)
+and a [list of signatures](/docs/terminology#signature). The transaction message
+is where the magic happens and at a high level it consists of three components:
 
 - a **list of instructions** to invoke,
 - a **list of accounts** to load, and
 - a **“recent blockhash.”**
 
 In this article, we’re going to be focusing a lot on a transaction’s
-[recent blockhash](./../terminology.md#blockhash) because it plays a big role in
+[recent blockhash](/docs/terminology#blockhash) because it plays a big role in
 transaction confirmation.
 
 ### Transaction lifecycle refresher
@@ -47,10 +46,10 @@ touch on everything except steps 1 and 4.
 
 ## What is a Blockhash?
 
-A [“blockhash”](./../terminology.md#blockhash) refers to the last Proof of
-History (PoH) hash for a [“slot”](./../terminology.md#slot) (description below).
-Since Solana uses PoH as a trusted clock, a transaction’s recent blockhash can
-be thought of as a **timestamp**.
+A [“blockhash”](/docs/terminology#blockhash) refers to the last Proof of History
+(PoH) hash for a [“slot”](/docs/terminology#slot) (description below). Since
+Solana uses PoH as a trusted clock, a transaction’s recent blockhash can be
+thought of as a **timestamp**.
 
 ### Proof of History refresher
 

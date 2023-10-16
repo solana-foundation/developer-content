@@ -107,7 +107,7 @@ effective stake.
 When a stake account is delegated, or a delegation is deactivated, the operation
 does not take effect immediately.
 
-A delegation or deactivation takes several [epochs](../terminology.md#epoch) to
+A delegation or deactivation takes several [epochs](/docs/terminology#epoch) to
 complete, with a fraction of the delegation becoming active or inactive at each
 epoch boundary after the transaction containing the instructions has been
 submitted to the cluster.
