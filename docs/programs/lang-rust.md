@@ -174,7 +174,7 @@ source and the second as the destination.
 
 The members of the `AccountInfo` structure are read-only except for `lamports`
 and `data`. Both may be modified by the program in accordance with the
-[runtime enforcement policy](/docs/core/accounts#policy). Both of these members
+[runtime enforcement policy](/docs/core/runtime#policy). Both of these members
 are protected by the Rust `RefCell` construct, so they must be borrowed to read
 or write to them. The reason for this is they both point back to the original
 input byte array, but there may be multiple entries in the accounts slice that

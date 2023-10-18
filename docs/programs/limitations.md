@@ -52,11 +52,10 @@ built-ins. Due to the software emulated, they consume more compute units than
 integer operations. In general, fixed point operations are recommended where
 possible.
 
-The Solana Program Library math tests will report the performance of some math
-operations:
-https://github.com/solana-labs/solana-program-library/tree/master/libraries/math
-
-To run the test: sync the repo and run:
+The
+[Solana Program Library math](https://github.com/solana-labs/solana-program-library/tree/master/libraries/math)
+tests will report the performance of some math operations. To run the test, sync
+the repo and run:
 
 ```sh
 cargo test-sbf -- --nocapture --test-threads=1

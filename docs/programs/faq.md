@@ -69,9 +69,7 @@ This program error can occur while trying to deserialize the instruction, check
 that the structure passed in matches exactly the instruction. There may be some
 padding between fields. If the program implements the Rust `Pack` trait then try
 packing and unpacking the instruction type `T` to determine the exact encoding
-the program expects:
-
-https://github.com/solana-labs/solana/blob/v1.4/sdk/program/src/program_pack.rs
+the program expects.
 
 ## MissingRequiredSignature
 
