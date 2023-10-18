@@ -22,8 +22,8 @@ transactions speeds of the blockchain.
 
 ## Key points
 
-- Programs are essentially special type of
-  [Accounts](../programming-model/accounts.md) that is marked as "_executable_"
+- Programs are essentially special type of [Accounts](/docs/core/accounts) that
+  is marked as "_executable_"
 - Programs can own other Accounts
 - Programs can only _change the data_ or _debit_ accounts they own
 - Any program can _read_ or _credit_ another account
@@ -60,7 +60,7 @@ Solana blockchain.
 Similar to other "on chain" programs in Solana, native programs can be called by
 any other program/user. However, they can only be upgraded as part of the core
 blockchain and cluster updates. These native program upgrades are controlled via
-the releases to the [different clusters](../../cluster/overview.md).
+the releases to the [different clusters](/docs/core/clusters).
 
 #### Examples of native programs include:
 

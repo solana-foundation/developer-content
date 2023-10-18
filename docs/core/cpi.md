@@ -127,7 +127,7 @@ point that it gets called back.
 ## Program Derived Addresses
 
 Program derived addresses allow programmatically generated signatures to be used
-when [calling between programs](#cross-program-invocations).
+when [calling between programs](/docs/core/cpi).
 
 Using a program derived address, a program may be given the authority over an
 account and later transfer that authority to another. This is possible because
@@ -159,7 +159,7 @@ Program derived address:
 
 2. Allow programs to programmatically sign for program addresses that are
    present in instructions invoked via
-   [Cross-Program Invocations](#cross-program-invocations).
+   [Cross-Program Invocations](/docs/core/cpi).
 
 Given the two conditions, users can securely transfer or assign the authority of
 on-chain assets to program addresses, and the program can then assign that
@@ -339,9 +339,9 @@ fn transfer_one_token_from_escrow2(
 
 Since `find_program_address` requires iterating over a number of calls to
 `create_program_address`, it may use more
-[compute budget](developing/programming-model/runtime.md#compute-budget) when
-used on-chain. To reduce the compute cost, use `find_program_address` off-chain
-and pass the resulting bump seed to the program.
+[compute budget](/docs/core/runtime#compute-budget) when used on-chain. To
+reduce the compute cost, use `find_program_address` off-chain and pass the
+resulting bump seed to the program.
 
 ### Instructions that require signers
 
@@ -355,8 +355,6 @@ result against the addresses supplied in the instruction.
 
 ## Examples
 
-Refer to
-[Developing with Rust](developing/on-chain-programs/../../../on-chain-programs/developing-rust.md#examples)
-and
-[Developing with C](developing/on-chain-programs/../../../on-chain-programs/developing-c.md#examples)
-for examples of how to use cross-program invocation.
+Refer to [Developing with Rust](/docs/programs/lang-rust#examples) and
+[Developing with C](/docs/programs/lang-c#examples) for examples of how to use
+cross-program invocation.

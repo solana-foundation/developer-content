@@ -21,7 +21,7 @@ You can find the full documentation for the `@solana/web3.js` library
 | Transaction | One or more instructions signed by the client using one or more Keypairs and executed atomically with only two possible outcomes: success or failure.                    |
 
 For the full list of terms, see
-[Solana terminology](/docs/terminology#cross-program-invocation)
+[Solana terminology](/docs/terminology#cross-program-invocation-cpi)
 
 ## Getting Started
 

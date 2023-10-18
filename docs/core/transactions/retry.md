@@ -131,12 +131,12 @@ it is processed. The first scenario involves transactions that are submitted via
 an RPC pool. Occasionally, part of the RPC pool can be sufficiently ahead of the
 rest of the pool. This can cause issues when nodes within the pool are required
 to work together. In this example, the transaction’s
-[recentBlockhash](../developing/programming-model/transactions#recent-blockhash)
-is queried from the advanced part of the pool (Backend A). When the transaction
-is submitted to the lagging part of the pool (Backend B), the nodes will not
-recognize the advanced blockhash and will drop the transaction. This can be
-detected upon transaction submission if developers enable
-[preflight checks](../api/http#sendtransaction) on `sendTransaction`.
+[recentBlockhash](/docs/core/transactions#recent-blockhash) is queried from the
+advanced part of the pool (Backend A). When the transaction is submitted to the
+lagging part of the pool (Backend B), the nodes will not recognize the advanced
+blockhash and will drop the transaction. This can be detected upon transaction
+submission if developers enable [preflight checks](../api/http#sendtransaction)
+on `sendTransaction`.
 
 ![Dropped via RPC Pool](../../static/img/rt-dropped-via-rpc-pool.png)
 

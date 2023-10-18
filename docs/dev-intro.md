@@ -105,8 +105,7 @@ Here's a visual representation of what a transaction contains:
 Transactions can be created and signed using clients via SDKs, or even on-chain
 programs.
 
-You can learn more about transactions
-[here](../developing/programming-model/transactions.md).
+You can learn more about transactions [here](/docs/core/transactions).
 
 ### Instructions
 
@@ -124,7 +123,7 @@ Here's what an instruction looks like:
 | `Data`       | Input data provided to the program as additional information or parameters in the format of a byte array |
 
 You can read more about instructions
-[here](../developing/programming-model/transactions#instructions).
+[here](/docs/core/transactions#instructions).
 
 ### Transaction Fees
 
@@ -171,8 +170,7 @@ account doesn't have enough tokens to cover the rent, it will be removed.
 However, if the account does hold enough tokens to cover the rent for two years,
 it's considered "rent-exempt" and won't be deleted.
 
-You can read more about accounts
-[here](../developing/programming-model/accounts.md).
+You can read more about accounts [here](/docs/core/accounts).
 
 ## Programs
 
@@ -203,7 +201,7 @@ Developers most commonly write programs in Rust using frameworks such as Anchor.
 However, programs can be written in any language that compiles to BPF, including
 C++ and Move.
 
-You can learn more about programs [here](../developing/intro/programs.md).
+You can learn more about programs [here](/docs/core/programs).
 
 ## Testing and developing environments
 
@@ -229,7 +227,8 @@ In each environment, you'll be using one of three networks:
 Devnet has a faucet that allows you to get free SOL to test with. It costs $0 to
 do development on Solana.
 
-Check out the [clusters page](../clusters.md) for more information on these.
+Check out the [clusters page](/docs/core/clusters) for more information on
+these.
 
 ## Next steps
 
@@ -238,4 +237,4 @@ You're now ready to get started building on Solana!
 - [Deploy your first Solana program in the browser](./hello-world.md)
 - [Setup your local development environment](./local.md)
 - [Get started building programs locally with Rust](./rust.md)
-- [Overview of writing Solana programs](../developing/on-chain-programs/overview)
+- [Overview of writing Solana programs](/docs/programs)

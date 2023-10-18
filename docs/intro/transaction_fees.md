@@ -29,8 +29,7 @@ blockchain.
 > process instructions on the Solana network, rent is paid to store data on the
 > blockchain.
 
-> You can learn more about rent here:
-> [What is rent?](./developing/intro/rent.md)
+> You can learn more about rent here: [What is rent?](/docs/core/rent)
 
 ## Why pay transaction fees?
 
@@ -103,9 +102,8 @@ consumed (aka compute budget exhaustion), the runtime will halt the transaction
 and return an error. This results in a failed transaction.
 
 > **Learn more:** compute units and the
-> [Compute Budget](./developing/programming-model/runtime#compute-budget) in the
-> Runtime and [requesting a fee estimate](../api/http#getfeeformessage) from the
-> RPC.
+> [Compute Budget](/docs/core/runtime#compute-budget) in the Runtime and
+> [requesting a fee estimate](../api/http#getfeeformessage) from the RPC.
 
 ## Prioritization fee
 

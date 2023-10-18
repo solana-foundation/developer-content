@@ -164,8 +164,8 @@ generate a Solana keypair using any of our
 We recommend using a unique deposit account for each of your users.
 
 Solana accounts must be made rent-exempt by containing 2-years worth of
-[rent](developing/programming-model/accounts.md#rent) in SOL. In order to find
-the minimum rent-exempt balance for your deposit accounts, query the
+[rent](/docs/core/accounts#rent) in SOL. In order to find the minimum
+rent-exempt balance for your deposit accounts, query the
 [`getMinimumBalanceForRentExemption` endpoint](../api/http#getminimumbalanceforrentexemption):
 
 ```bash
@@ -551,11 +551,11 @@ these cases, it is your responsibility to verify that the transaction succeeded
 and was finalized by the cluster.
 
 **Note:** Each transaction contains a
-[recent blockhash](developing/programming-model/transactions.md#blockhash-format)
-to indicate its liveness. It is **critical** to wait until this blockhash
-expires before retrying a withdrawal transfer that does not appear to have been
-confirmed or finalized by the cluster. Otherwise, you risk a double spend. See
-more on [blockhash expiration](#blockhash-expiration) below.
+[recent blockhash](/docs/core/transactions#blockhash-format) to indicate its
+liveness. It is **critical** to wait until this blockhash expires before
+retrying a withdrawal transfer that does not appear to have been confirmed or
+finalized by the cluster. Otherwise, you risk a double spend. See more on
+[blockhash expiration](#blockhash-expiration) below.
 
 First, get a recent blockhash using the [`getFees`](../api/http#getfees)
 endpoint or the CLI command:
@@ -802,10 +802,10 @@ accounts do not:
    `spl-token create-account` command, or implicitly by the
    `spl-token transfer --fund-recipient ...` command.
 1. SPL Token accounts must remain
-   [rent-exempt](developing/programming-model/accounts.md#rent-exemption) for
-   the duration of their existence and therefore require a small amount of
-   native SOL tokens be deposited at account creation. For SPL Token v2
-   accounts, this amount is 0.00203928 SOL (2,039,280 lamports).
+   [rent-exempt](/docs/core/accounts#rent-exemption) for the duration of their
+   existence and therefore require a small amount of native SOL tokens be
+   deposited at account creation. For SPL Token v2 accounts, this amount is
+   0.00203928 SOL (2,039,280 lamports).
 
 #### Command Line
 
@@ -939,8 +939,8 @@ account.
 ## Testing the Integration
 
 Be sure to test your complete workflow on Solana devnet and testnet
-[clusters](../clusters.md) before moving to production on mainnet-beta. Devnet
-is the most open and flexible, and ideal for initial development, while testnet
-offers more realistic cluster configuration. Both devnet and testnet support a
-faucet, run `solana airdrop 1` to obtain some devnet or testnet SOL for
-development and testing.
+[clusters](/docs/core/clusters) before moving to production on mainnet-beta.
+Devnet is the most open and flexible, and ideal for initial development, while
+testnet offers more realistic cluster configuration. Both devnet and testnet
+support a faucet, run `solana airdrop 1` to obtain some devnet or testnet SOL
+for development and testing.

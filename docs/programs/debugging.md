@@ -9,8 +9,8 @@ that will allow RPC clients to interact with their program.
 
 ## Running unit tests
 
-- [Testing with Rust](developing-rust.md#how-to-test)
-- [Testing with C](developing-c.md#how-to-test)
+- [Testing with Rust](/docs/programs/lang-rust#how-to-test)
+- [Testing with C](/docs/programs/lang-c#how-to-test)
 
 ## Logging
 
@@ -20,8 +20,8 @@ messages.
 For information about how to log from a program see the language specific
 documentation:
 
-- [Logging from a Rust program](developing-rust.md#logging)
-- [Logging from a C program](developing-c.md#logging)
+- [Logging from a Rust program](/docs/programs/lang-rust#logging)
+- [Logging from a C program](/docs/programs/lang-c#logging)
 
 When running a local cluster the logs are written to stdout as long as they are
 enabled via the `RUST_LOG` log mask. From the perspective of program development
@@ -67,7 +67,7 @@ get more information:
 
 In the case of `VirtualMachineFailedToRunProgram` errors, more information about
 the specifics of what failed are written to the
-[program's execution logs](debugging.md#logging).
+[program's execution logs](/docs/programs/debugging#logging).
 
 For example, an access violation involving the stack will look something like
 this:
@@ -82,19 +82,18 @@ The program can log the remaining number of compute units it will be allowed
 before program execution is halted. Programs can use these logs to wrap
 operations they wish to profile.
 
-- [Log the remaining compute units from a Rust program](developing-rust.md#compute-budget)
-- [Log the remaining compute units from a C program](developing-c.md#compute-budget)
+- [Log the remaining compute units from a Rust program](/docs/programs/lang-rust#compute-budget)
+- [Log the remaining compute units from a C program](/docs/programs/lang-c#compute-budget)
 
-See [compute budget](developing/programming-model/runtime.md#compute-budget) for
-more information.
+See [compute budget](/docs/core/runtime#compute-budget) for more information.
 
 ## ELF Dump
 
 The SBF shared object internals can be dumped to a text file to gain more
 insight into a program's composition and what it may be doing at runtime.
 
-- [Create a dump file of a Rust program](developing-rust.md#elf-dump)
-- [Create a dump file of a C program](developing-c.md#elf-dump)
+- [Create a dump file of a Rust program](/docs/programs/lang-rust#elf-dump)
+- [Create a dump file of a C program](/docs/programs/lang-c#elf-dump)
 
 ## Instruction Tracing
 

@@ -120,7 +120,7 @@ See [vote credit](#vote-credit).
 ## cross-program invocation (CPI)
 
 A call from one smart contract program to another. For more information, see
-[calling between programs](developing/programming-model/calling-between-programs.md).
+[calling between programs](/docs/core/cpi).
 
 ## data plane
 
@@ -265,7 +265,7 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](./developing/programming-model/transactions.md#message-format)
+[message formatting inside of transactions](/docs/core/transactions#message-format)
 here.
 
 ## native token
@@ -299,8 +299,7 @@ The private key of a [keypair](#keypair).
 
 The executable code that interprets the [instructions](#instruction) sent inside
 of each [transaction](#transaction) on the Solana. These programs are often
-referred to as "[_smart contracts_](./developing//intro/programs.md)" on other
-blockchains.
+referred to as "[_smart contracts_](/docs/core/programs)" on other blockchains.
 
 ## program derived account (PDA)
 
@@ -341,13 +340,13 @@ blockchain. When accounts do not have enough balance to pay rent, they may be
 Garbage Collected.
 
 See also [rent exempt](#rent-exempt) below. Learn more about rent here:
-[What is rent?](../src/developing/intro/rent.md).
+[What is rent?](/docs/core/rent).
 
 ## rent exempt
 
 Accounts that maintain more than 2 years with of rent payments in their account
 are considered "_rent exempt_" and will not incur the
-[collection of rent](../src/developing/intro/rent.md#collecting-rent).
+[collection of rent](/docs/core/rent#collecting-rent).
 
 ## root
 
