@@ -137,10 +137,6 @@ below is the distribution of the largest accounts (at least 100KB) at slot
 5. **BPF Program Loader v2**: 191 accounts
 6. **BPF Program Loader v1**: 150 accounts
 
-> _Note: this data was pulled with a modified `solana-ledger-tool` built from
-> this branch:
-> [https://github.com/jstarry/solana/tree/large-account-stats](https://github.com/jstarry/solana/tree/large-account-stats)_
-
 ### Reclaiming buffer accounts
 
 Buffer accounts are used by the Upgradeable BPF loader to temporarily store
