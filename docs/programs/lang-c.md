@@ -123,8 +123,8 @@ source and the second as the destination.
 
 The members of the `SolAccountInfo` structure are read-only except for
 `lamports` and `data`. Both may be modified by the program in accordance with
-the [runtime enforcement policy](/docs/core/accounts#policy). When an
-instruction reference the same account multiple times there may be duplicate
+the [runtime enforcement policy](/docs/core/runtime#policy). When an instruction
+reference the same account multiple times there may be duplicate
 `SolAccountInfo` entries in the array but they both point back to the original
 input byte array. A program should handle these cases delicately to avoid
 overlapping read/writes to the same buffer. If a program implements their own

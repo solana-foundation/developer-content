@@ -29,9 +29,11 @@ $ cd break
 ```
 
 Next, follow the steps in the git repository's
-[README](https://github.com/solana-labs/break/blob/master/README.md).
+[README](https://github.com/solana-labs/break/blob/main/README.md).
 
 ## Language Specific
+
+You can find some language specific example programs at the following locations:
 
 - [Rust](/docs/programs/lang-rust#examples)
 - [C](/docs/programs/lang-c#examples)
