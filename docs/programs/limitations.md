@@ -12,8 +12,8 @@ Since Rust based on-chain programs must run be deterministic while running in a
 resource-constrained, single-threaded environment, they have some limitations on
 various libraries.
 
-See [Developing with Rust - Restrictions](./developing-rust.md#restrictions) for
-a detailed breakdown these restrictions and limitations.
+See [Developing with Rust - Restrictions](/docs/programs/lang-rust#restrictions)
+for a detailed breakdown these restrictions and limitations.
 
 ## Compute budget
 
@@ -21,8 +21,8 @@ To prevent abuse of the blockchain's computational resources, each transaction
 is allocated a [compute budget](/docs/terminology#compute-budget). Exceeding
 this compute budget will result in the transaction failing.
 
-See [computational constraints](../programming-model/runtime.md#compute-budget)
-in the Runtime for more specific details.
+See [computational constraints](/docs/core/runtime#compute-budget) in the
+Runtime for more specific details.
 
 ## Call stack depth - `CallDepthExceeded` error
 
@@ -38,8 +38,8 @@ Cross-program invocations allow programs to invoke other programs directly, but
 the depth is constrained currently to `4`.
 
 When a program exceeds the allowed
-[cross-program invocation call depth](../programming-model/calling-between-programs.md#call-depth),
-it will receive a `CallDepth` error
+[cross-program invocation call depth](/docs/core/cpi#call-depth), it will
+receive a `CallDepth` error
 
 ## Float Rust types support
 

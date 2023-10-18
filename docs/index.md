@@ -26,15 +26,13 @@ Dive right into Solana to start building or setup your tooling.
 Build a strong understanding of the core concepts that make Solana different
 from other blockchains.
 
-- [Transactions](./developing/programming-model/transactions) - Collection of
-  instructions for the blockchain to execute
-- [Accounts](./developing/programming-model/accounts) - Data and state storage
-  mechanism for Solana
-- [Programs](./developing/intro/programs) - The executable code used to perform
-  actions on the blockchain
-- [Cross-Program Invocation](./developing/programming-model/calling-between-programs) -
-  Core of the "composability" of Solana, this is how programs can "call" each
-  other.
+- [Transactions](/docs/core/transactions) - Collection of instructions for the
+  blockchain to execute
+- [Accounts](/docs/core/accounts) - Data and state storage mechanism for Solana
+- [Programs](/docs/core/programs) - The executable code used to perform actions
+  on the blockchain
+- [Cross-Program Invocation](/docs/core/cpi) - Core of the "composability" of
+  Solana, this is how programs can "call" each other.
 
 ## Understanding the architecture
 

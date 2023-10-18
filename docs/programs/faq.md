@@ -16,7 +16,8 @@ Developing programs on the Solana blockchain have some inherent limitation
 associated with them. Below is a list of common limitation that you may run
 into.
 
-See [Limitations of developing programs](./limitations.md) for more details
+See [limitations of developing programs](/docs/programs/limitations) for more
+details
 
 ## Berkeley Packet Filter (BPF)
 
@@ -79,18 +80,17 @@ an account is expected to be signed but is not.
 
 An implementation of a program might also cause this error when performing a
 cross-program invocation that requires a signed program address, but the passed
-signer seeds passed to
-[`invoke_signed`](developing/programming-model/calling-between-programs.md)
-don't match the signer seeds used to create the program address
-[`create_program_address`](developing/programming-model/calling-between-programs.md#program-derived-addresses).
+signer seeds passed to [`invoke_signed`](/docs/core/cpi) don't match the signer
+seeds used to create the program address
+[`create_program_address`](/docs/core/cpi#program-derived-addresses).
 
 ## `rand` Rust dependency causes compilation failure
 
-See [Rust Project Dependencies](developing-rust.md#project-dependencies)
+See [Rust Project Dependencies](/docs/programs/lang-rust#project-dependencies)
 
 ## Rust restrictions
 
-See [Rust restrictions](developing-rust.md#restrictions)
+See [Rust restrictions](/docs/programs/lang-rust#restrictions)
 
 ## Stack
 
@@ -137,8 +137,8 @@ Internally, programs have access to the 32KB memory region starting at virtual
 address 0x300000000 and may implement a custom heap based on the program's
 specific needs.
 
-- [Rust program heap usage](developing-rust.md#heap)
-- [C program heap usage](developing-c.md#heap)
+- [Rust program heap usage](/docs/programs/lang-rust#heap)
+- [C program heap usage](/docs/programs/lang-c#heap)
 
 ## Loaders
 
@@ -161,8 +161,8 @@ and the javascript APIs.
 For language specific information about implementing a program for a particular
 loader see:
 
-- [Rust program entrypoints](developing-rust.md#program-entrypoint)
-- [C program entrypoints](developing-c.md#program-entrypoint)
+- [Rust program entrypoints](/docs/programs/lang-rust#program-entrypoint)
+- [C program entrypoints](/docs/programs/lang-c#program-entrypoint)
 
 ### Deployment
 
@@ -182,7 +182,7 @@ When an instruction is directed at an executable SBF program the loader
 configures the program's execution environment, serializes the program's input
 parameters, calls the program's entrypoint, and reports any errors encountered.
 
-For further information see [deploying](deploying.md)
+For further information, see [deploying programs](/docs/programs/deploying).
 
 ### Input Parameter Serialization
 
@@ -196,8 +196,8 @@ byte array and provide aligned pointers to the program.
 
 For language specific information about serialization see:
 
-- [Rust program parameter deserialization](developing-rust.md#parameter-deserialization)
-- [C program parameter deserialization](developing-c.md#parameter-deserialization)
+- [Rust program parameter deserialization](/docs/programs/lang-rust#parameter-deserialization)
+- [C program parameter deserialization](/docs/programs/lang-c#parameter-deserialization)
 
 The latest loader serializes the program input parameters as follows (all
 encoding is little endian):

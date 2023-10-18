@@ -55,7 +55,7 @@ Programs export a known entrypoint symbol which the Solana runtime looks up and
 calls when invoking a program. Solana supports multiple versions of the SBF
 loader and the entrypoints may vary between them. Programs must be written for
 and deployed to the same loader. For more details see the
-[FAQ section on Loaders](./faq.md#loaders).
+[FAQ section on Loaders](/docs/programs/faq#loaders).
 
 Currently there are two supported loaders
 [SBF Loader](https://github.com/solana-labs/solana/blob/7ddf10e602d2ed87a9e3737aa8c32f1db9f909d8/sdk/program/src/bpf_loader.rs#L17)
@@ -71,7 +71,7 @@ extern uint64_t entrypoint(const uint8_t *input)
 
 This entrypoint takes a generic byte array which contains the serialized program
 parameters (program id, accounts, instruction data, etc...). To deserialize the
-parameters each loader contains its own [helper function](#Serialization).
+parameters each loader contains its own [helper function](#serialization).
 
 ### Serialization
 
@@ -91,7 +91,8 @@ their own deserialization function they need to ensure that any modifications
 the program wishes to commit must be written back into the input byte array.
 
 Details on how the loader serializes the program inputs can be found in the
-[Input Parameter Serialization](./faq.md#input-parameter-serialization) docs.
+[Input Parameter Serialization/docs/programs/faq#input-parameter-serialization)
+docs.
 
 ## Data Types
 
@@ -122,18 +123,17 @@ source and the second as the destination.
 
 The members of the `SolAccountInfo` structure are read-only except for
 `lamports` and `data`. Both may be modified by the program in accordance with
-the
-[runtime enforcement policy](developing/programming-model/accounts.md#policy).
-When an instruction reference the same account multiple times there may be
-duplicate `SolAccountInfo` entries in the array but they both point back to the
-original input byte array. A program should handle these cases delicately to
-avoid overlapping read/writes to the same buffer. If a program implements their
-own deserialization function care should be taken to handle duplicate accounts
+the [runtime enforcement policy](/docs/core/accounts#policy). When an
+instruction reference the same account multiple times there may be duplicate
+`SolAccountInfo` entries in the array but they both point back to the original
+input byte array. A program should handle these cases delicately to avoid
+overlapping read/writes to the same buffer. If a program implements their own
+deserialization function care should be taken to handle duplicate accounts
 appropriately.
 
 `data` is the general purpose byte array from the
-[instruction's instruction data](developing/programming-model/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions#instruction-data) being
+processed.
 
 `program_id` is the public key of the currently executing program.
 
@@ -153,8 +153,8 @@ logs.
 - [`sol_log(const char*)`](https://github.com/solana-labs/solana/blob/d2ee9db2143859fa5dc26b15ee6da9c25cc0429c/sdk/sbf/c/inc/solana_sdk.h#L128)
 - [`sol_log_64(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t)`](https://github.com/solana-labs/solana/blob/d2ee9db2143859fa5dc26b15ee6da9c25cc0429c/sdk/sbf/c/inc/solana_sdk.h#L134)
 
-The [debugging](debugging.md#logging) section has more information about working
-with program logs.
+The [debugging](/docs/programs/debugging#logging) section has more information
+about working with program logs.
 
 ## Compute Budget
 
@@ -166,8 +166,7 @@ Use the system call
 to log a message containing the remaining number of compute units the program
 may consume before execution is halted
 
-See [compute budget](developing/programming-model/runtime.md#compute-budget) for
-more information.
+See [compute budget](/docs/core/runtime#compute-budget) for more information.
 
 ## ELF Dump
 

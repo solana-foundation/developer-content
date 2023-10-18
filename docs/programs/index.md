@@ -38,8 +38,8 @@ Rust programs are effectively the same as creating a traditional
 ### 3. Compile the program
 
 Once the program is written, it must be complied down to
-[Berkley Packet Filter](./faq.md#berkeley-packet-filter-bpf) byte-code that will
-then be deployed to the blockchain.
+[Berkley Packet Filter](/docs/programs/faq.md#berkeley-packet-filter-bpf)
+byte-code that will then be deployed to the blockchain.
 
 ### 4. Generate the program's public address
 
@@ -59,15 +59,14 @@ manner.
 
 Once the entire program has been sent to the blockchain, a final transaction is
 sent to write all of the buffered byte-code to the program's data account. This
-either mark the new program as
-[`executable`](./../programming-model/accounts.md#executable), or complete the
-process to upgrade an existing program (if it already existed).
+either mark the new program as [`executable`](/docs/core/accounts#executable),
+or complete the process to upgrade an existing program (if it already existed).
 
 ## Support languages
 
 Solana programs are typically written in the
-[Rust language](./developing-rust.md), but [C/C++](./developing-c.md) are also
-supported.
+[Rust language](/docs/programs/lang-rust), but [C/C++](/docs/programs/lang-c)
+are also supported.
 
 There are also various community driven efforts to enable writing on-chain
 programs using other languages, including:
@@ -77,17 +76,17 @@ programs using other languages, including:
 
 ## Example programs
 
-You can also explore the [Program Examples](./examples.md) for examples of
-on-chain programs.
+You can also explore the [Program Examples](/docs/programs/examples) for
+examples of on-chain programs.
 
 ## Limitations
 
 As you dive deeper into program development, it is important to understand some
 of the important limitations associated with on-chain programs.
 
-Read more details on the [Limitations](./limitations.md) page
+Read more details on the [Limitations](/docs/programs/limitations) page
 
 ## Frequently asked questions
 
-Discover many of the [frequently asked questions](./faq.md) other developers
-have about writing/understanding Solana programs.
+Discover many of the [frequently asked questions](/docs/programs/faq) other
+developers have about writing/understanding Solana programs.

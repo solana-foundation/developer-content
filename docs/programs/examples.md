@@ -33,5 +33,5 @@ Next, follow the steps in the git repository's
 
 ## Language Specific
 
-- [Rust](developing-rust.md#examples)
-- [C](developing-c.md#examples)
+- [Rust](/docs/programs/lang-rust#examples)
+- [C](/docs/programs/lang-c#examples)

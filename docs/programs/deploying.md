@@ -114,15 +114,15 @@ following 3 phases:
 ## Reclaim rent from program accounts
 
 The storage of data on the Solana blockchain requires the payment of
-[rent](./../intro/rent.md), including for the byte-code for on-chain programs.
+[rent](/docs/core/rent), including for the byte-code for on-chain programs.
 Therefore as you deploy more or larger programs, the amount of rent paid to
 remain rent-exempt will also become larger.
 
 Using the current rent cost model configuration, a rent-exempt account requires
 a deposit of ~0.7 SOL per 100KB stored. These costs can have an outsized impact
 on developers who deploy their own programs since
-[program accounts](./../programming-model/accounts.md#executable) are among the
-largest we typically see on Solana.
+[program accounts](/docs/core/accounts#executable) are among the largest we
+typically see on Solana.
 
 #### Example of how much data is used for programs
 

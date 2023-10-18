@@ -11,7 +11,7 @@ description:
 The fee for every Solana Account to store data on the blockchain is called
 "_rent_". This _time and space_ based fee is required to keep an account, and
 therefore its data, alive on the blockchain since
-[clusters](../../cluster/overview.md) must actively maintain this data.
+[Clusters](/docs/core/clusters) must actively maintain this data.
 
 All Solana Accounts (and therefore Programs) are required to maintain a high
 enough LAMPORT balance to become [rent exempt](#rent-exempt) and remain on the
@@ -22,10 +22,9 @@ removed from the network in a process known as
 [Garbage Collection](#garbage-collection).
 
 > **Note:** Rent is different from
-> [transactions fees](../../transaction_fees.md). Rent is paid (or held in an
+> [transactions fees](/docs/core/transactions/fees). Rent is paid (or held in an
 > Account) to keep data stored on the Solana blockchain. Whereas transaction
-> fees are paid to process
-> [instructions](../developing/../programming-model/transactions.md#instructions)
+> fees are paid to process [instructions](/docs/core/transactions#instructions)
 > on the network.
 
 ### Rent rate

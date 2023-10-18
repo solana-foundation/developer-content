@@ -17,8 +17,7 @@ Solana Rust programs follow the typical
 ```
 
 Solana Rust programs may depend directly on each other in order to gain access
-to instruction helpers when making
-[cross-program invocations](developing/programming-model/calling-between-programs.md#cross-program-invocations).
+to instruction helpers when making [cross-program invocations](/docs/core/cpi).
 When doing so it's important to not pull in the dependent program's entrypoint
 symbols because they may conflict with the program's own. To avoid this,
 programs should define an `no-entrypoint` feature in `Cargo.toml` and use to
@@ -50,7 +49,7 @@ For example:
   [Depending on Rand](#depending-on-rand).
 - Crates may overflow the stack even if the stack overflowing code isn't
   included in the program itself. For more information refer to
-  [Stack](./faq.md#stack).
+  [Stack](/docs/programs/faq#stack).
 
 ## How to Build
 
@@ -97,7 +96,7 @@ Programs export a known entrypoint symbol which the Solana runtime looks up and
 calls when invoking a program. Solana supports multiple versions of the BPF
 loader and the entrypoints may vary between them. Programs must be written for
 and deployed to the same loader. For more details see the
-[FAQ section on Loaders](./faq.md#loaders).
+[FAQ section on Loaders](/docs/programs/faq#loaders).
 
 Currently there are two supported loaders
 [BPF Loader](https://github.com/solana-labs/solana/blob/d9b0fc0e3eec67dfe4a97d9298b15969b2804fab/sdk/program/src/bpf_loader.rs#L17)
@@ -150,7 +149,8 @@ their own deserialization function they need to ensure that any modifications
 the program wishes to commit be written back into the input byte array.
 
 Details on how the loader serializes the program inputs can be found in the
-[Input Parameter Serialization](./faq.md#input-parameter-serialization) docs.
+[Input Parameter Serialization](/docs/programs/faq#input-parameter-serialization)
+docs.
 
 ### Data Types
 
@@ -174,19 +174,19 @@ source and the second as the destination.
 
 The members of the `AccountInfo` structure are read-only except for `lamports`
 and `data`. Both may be modified by the program in accordance with the
-[runtime enforcement policy](developing/programming-model/accounts.md#policy).
-Both of these members are protected by the Rust `RefCell` construct, so they
-must be borrowed to read or write to them. The reason for this is they both
-point back to the original input byte array, but there may be multiple entries
-in the accounts slice that point to the same account. Using `RefCell` ensures
-that the program does not accidentally perform overlapping read/writes to the
-same underlying data via multiple `AccountInfo` structures. If a program
-implements their own deserialization function care should be taken to handle
-duplicate accounts appropriately.
+[runtime enforcement policy](/docs/core/accounts#policy). Both of these members
+are protected by the Rust `RefCell` construct, so they must be borrowed to read
+or write to them. The reason for this is they both point back to the original
+input byte array, but there may be multiple entries in the accounts slice that
+point to the same account. Using `RefCell` ensures that the program does not
+accidentally perform overlapping read/writes to the same underlying data via
+multiple `AccountInfo` structures. If a program implements their own
+deserialization function care should be taken to handle duplicate accounts
+appropriately.
 
 The instruction data is the general purpose byte array from the
-[instruction's instruction data](developing/programming-model/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions#instruction-data) being
+processed.
 
 ## Heap
 
@@ -225,8 +225,7 @@ single-threaded environment, as well as being deterministic:
   should be used instead.
 - The runtime enforces a limit on the number of instructions a program can
   execute during the processing of one instruction. See
-  [computation budget](developing/programming-model/runtime.md#compute-budget)
-  for more information.
+  [computation budget](/docs/core/runtime#compute-budget) for more information.
 
 ## Depending on Rand
 
@@ -286,13 +285,14 @@ can emulate `println!` by using `format!`:
 msg!("Some variable: {:?}", variable);
 ```
 
-The [debugging](debugging.md#logging) section has more information about working
-with program logs the [Rust examples](#examples) contains a logging example.
+The [debugging](/docs/programs/debugging.md#logging) section has more
+information about working with program logs the [Rust examples](#examples)
+contains a logging example.
 
 ## Panicking
 
 Rust's `panic!`, `assert!`, and internal panic results are printed to the
-[program logs](debugging.md#logging) by default.
+[program logs](/docs/programs/debugging#logging) by default.
 
 ```bash
 INFO  solana_runtime::message_processor] Finalized account CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
@@ -357,8 +357,7 @@ Use the system call
 to log a message containing the remaining number of compute units the program
 may consume before execution is halted
 
-See [compute budget](developing/programming-model/runtime.md#compute-budget) for
-more information.
+See [compute budget](/docs/core/runtime#compute-budget) for more information.
 
 ## ELF Dump
 
