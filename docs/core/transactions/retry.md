@@ -49,9 +49,7 @@ outside of what the client and the relaying RPC nodes are aware of. In the case
 of a TPU client, rebroadcast and leader forwarding is handled entirely by the
 client software.
 
-![Transaction Journey](../../static/img/rt-tx-journey.png)
-
-<!-- (../../static/img/p_ex_unstaked_dilution.png) -->
+![Overview of a transactions journey, from client to leader](/assets/docs/rt-tx-journey.png)
 
 ### How RPC Nodes Broadcast Transactions
 
@@ -88,7 +86,7 @@ The TPU processes transactions in five distinct phases:
 - [Proof of History Service](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/poh/src/poh_service.rs)
 - [Broadcast Stage](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/tpu.rs#L136)
 
-![TPU Overview](../../static/img/rt-tpu-jito-labs.png)
+![Overview of the Transaction Processing Unit (TPU)](/assets/docs/rt-tpu-jito-labs.png)
 
 Of these five phases, the Fetch Stage is responsible for receiving transactions.
 Within the Fetch Stage, validators will categorize incoming transactions
@@ -138,7 +136,7 @@ blockhash and will drop the transaction. This can be detected upon transaction
 submission if developers enable [preflight checks](../api/http#sendtransaction)
 on `sendTransaction`.
 
-![Dropped via RPC Pool](../../static/img/rt-dropped-via-rpc-pool.png)
+![Transaction dropped via an RPC Pool](/assets/docs/rt-dropped-via-rpc-pool.png)
 
 Temporarily network forks can also result in dropped transactions. If a
 validator is slow to replay its blocks within the Banking Stage, it may end up
@@ -148,7 +146,7 @@ minority fork. After the transaction is submitted, the cluster can then switch
 away from its minority fork before the transaction is processed. In this
 scenario, the transaction is dropped due to the blockhash not being found.
 
-![Dropped due to Minority Fork (Before Processed)](../../static/img/rt-dropped-minority-fork-pre-process.png)
+![Transaction dropped due to minority fork (before processed)](/assets/docs/rt-dropped-minority-fork-pre-process.png)
 
 ### After a transaction is processed and before it is finalized
 
@@ -160,7 +158,7 @@ would fail to reach consensus with the majority of validators that do not
 recognize the minority fork. At this time, the transaction would be dropped
 before it could be finalized.
 
-![Dropped due to Minority Fork (After Processed)](../../static/img/rt-dropped-minority-fork-post-process.png)
+![Transaction dropped due to minority fork (after processed)](/assets/docs/rt-dropped-minority-fork-post-process.png)
 
 ## Handling Dropped Transactions
 
