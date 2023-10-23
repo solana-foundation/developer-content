@@ -42,7 +42,7 @@ Here's a high level representation of this. It’s important to note that this i
 an oversimplification of the Solana network for the purposes of learning in an
 easy-to-understand way.
 
-![Solana developer workflows program-client model](/img/quickstarts/solana-overview-client-program.png)
+![Solana developer workflows program-client model](/assets/docs/quickstarts/solana-overview-client-program.png)
 
 ### Program development
 
@@ -88,7 +88,7 @@ them and update the state of the blockchain. Think of it like a write command
 that can be rejected if certain conditions aren't met.
 
 Here's a visual representation of what a transaction contains:
-![Visual layout of a transaction](/img/transaction.svg)
+![Visual layout of a transaction](/assets/docs/transaction.svg)
 
 - Signatures: An array of digital signatures from the transaction's signers.
 - Message: The actual instructions that the transaction is issuing to the

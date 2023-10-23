@@ -20,7 +20,7 @@ the staked token fractional representation of the _Total Current Supply_.
 Continuing with the same _Inflation Schedule_ parameters as above, we see the
 fraction of staked supply grow as shown below.
 
-![](/img/p_ex_staked_supply_w_range_initial_stake.png)
+![Graph of example growth of staked supply](/assets/docs/economics/example_staked_supply_w_range_initial_stake.png)
 
 Due to this relative change in representation, the proportion of stake of any
 token holder will also change as a function of the _Inflation Schedule_ and the
@@ -76,7 +76,7 @@ So as guessed, this dilution is independent of the total proportion of staked
 tokens and only depends on inflation rate. This can be seen with our example
 _Inflation Schedule_ here:
 
-![p_ex_unstaked_dilution](/img/p_ex_unstaked_dilution.png)
+![Graph of an example dilution of unstaked SOL](/assets/docs/economics/example_unstaked_dilution.png)
 
 ### Estimated Adjusted Staked Yield
 
@@ -125,7 +125,7 @@ So we see that the _Adjusted Staked Yield_ a function of the inflation rate and
 the percent of staked tokens on the network. We can see this plotted for various
 staking fractions here:
 
-![p_ex_adjusted_staked_yields](/img/p_ex_adjusted_staked_yields.png)
+![Graph of example adjusted staking yields](/assets/docs/economics/example_adjusted_staking_yields.png)
 
 It is also clear that in all cases, dilution of un-staked tokens $>$ adjusted
 staked yield (i.e. dilution of staked tokens). Explicitly we can look at the
@@ -158,7 +158,7 @@ staked. As shown above, the proportion of total tokens staked changes over time
 (i.e. $P_s = P_s(t)$ due to the re-staking of inflation issuance thus we see
 relative dilution grow over time as:
 
-![p_ex_relative_dilution](/img/p_ex_relative_dilution.png)
+![Graph of example relative un-staked vs staked SOL dilution](/assets/docs/economics/example_relative_dilution.png)
 
 As might be intuitive, as the total fraction of staked tokens increases the
 relative dilution of un-staked tokens grows dramatically. E.g. with $80\%$ of
