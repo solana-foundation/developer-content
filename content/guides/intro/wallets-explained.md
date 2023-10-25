@@ -31,8 +31,8 @@ blockchain?
 
 ![A screenshot of a wallet balance](/assets/guides/wallets-explained/Wallets---1-Phantom-Balance.png)
 
-Skeptical? Take a look at this:
-[https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet).
+Skeptical? Take a look at
+[this account's balance](https://explorer.solana.com/address/E35325pbtxCRsA4uVoC3cyBDZy8BMpmxvsvGcHNUa18k?cluster=devnet).
 If my crypto were stored inside a wallet, how come you can just look up what's
 inside my wallet on the Internet?
 
@@ -64,8 +64,6 @@ Let's update our definition of wallets:
 Let's continue to unroll the thread. We have established that balance is stored
 on the blockchain and not inside your computer. The next exciting trail we could
 follow is to ask ourselves how data, in general, is stored in the blockchain.
-
-> **Millions dollars FX Effect zoom into the blockchain piece**
 
 **To understand why we need wallets, we first need to understand how data is
 stored in blockchains.**
@@ -147,7 +145,7 @@ indeed the user; there are two problems:
 Yes! The key is signing using the secret key! We can "password protect our data"
 without communicating the password, thanks to asymmetric cryptography magic.
 
-> What's asymmetric? _Think SSH keys_.
+What's asymmetric? _Think SSH keys_.
 
 Can't wrap your head around it? Well, just think about the real world. For
 example, if a malicious imposter wants to withdraw money from your bank account,
@@ -155,7 +153,7 @@ he would need your signature to do it. Well, that's precisely the same here: any
 modification to data identified by a public key also needs to be signed by the
 corresponding secret key.
 
-> Yes, there was a world like that when mobile banking did not exist.
+Yes, there was a world like that when mobile banking did not exist.
 
 **That's the true nature of wallets!! They are here to sign access to data. They
 are signatures or stamps.**
