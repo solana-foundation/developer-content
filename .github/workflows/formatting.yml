@@ -1,9 +1,9 @@
 name: Formatting / Lint
 on:
   push:
-    branches: [master]
+    branches: [master, main]
   pull_request:
-    branches: [master]
+    branches: [master, main]
 jobs:
   Format:
     name: Test formatting via prettier...
