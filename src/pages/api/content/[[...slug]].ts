@@ -13,6 +13,7 @@ import {
   allDeveloperResources,
   allSolanaDocs,
   allDeveloperWorkshops,
+  DocumentTypes,
 } from "contentlayer/generated";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -81,10 +82,11 @@ export default function handler(
   if (!current) return res.status(404).json({ notFound: true });
 
   // locate full content record
-  let record = records.find(
-    item =>
+
+  let record = (records as DocumentTypes[]).filter(
+    (item: DocumentTypes) =>
       item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
-  );
+  )?.[0];
   if (!record) return res.status(404).json({ notFound: true });
 
   // remove the html formatted content (since it is undesired data to send over the wire)
