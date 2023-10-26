@@ -1,0 +1,47 @@
+name: Formatting / Lint
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  Format:
+    name: Test formatting via prettier...
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: before_install
+        run:
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+          && sudo sysctl -p
+
+      - name: installing yarn
+        run: yarn install
+      - name: prettier:check
+        run: yarn prettier:check
+  stage:
+    name: Test linting...
+    needs: Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: before_install
+        run:
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+          && sudo sysctl -p
+
+      - name: installing yarn
+        run: yarn install
+      - name: lint
+        run: yarn lint
