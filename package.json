@@ -10,11 +10,13 @@
   "scripts": {
     "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer build --clearCache",
-    "test": "yarn contentlayer:build",
     "dev": "yarn contentlayer:build && next dev -p 3001",
     "build": "yarn contentlayer:build && next build",
     "start": "next start",
-    "lint": "next lint"
+    "test": "yarn contentlayer:build",
+    "lint": "next lint",
+    "prettier:check": "prettier -c .",
+    "prettier:fix": "prettier -cw ."
   },
   "dependencies": {
     "@types/node": "20.4.2",
