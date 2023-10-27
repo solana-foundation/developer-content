@@ -30,7 +30,7 @@ export default function handler(
         return allDeveloperGuides;
       // case "resources":
       //   return allDeveloperResources;
-      case "workshops": 
+      case "workshops":
         return allDeveloperWorkshops;
     }
   })(group);
