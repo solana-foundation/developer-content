@@ -10,7 +10,7 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
-  allDeveloperWorkshops
+  allDeveloperWorkshops,
 } from "contentlayer/generated";
 
 export default function handler(
