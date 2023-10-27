@@ -1,5 +1,5 @@
 ---
-featured: true
+featured: false
 date: Jul 17, 2023
 difficulty: intro
 title: "Getting started with Solang"
