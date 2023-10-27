@@ -1,3 +1,20 @@
+---
+date: Oct 26, 2023
+difficulty: intermediate
+featured: true
+featuredPriority: 0
+title: "Configure and run a Solana RPC on AWS"
+description:
+  "Running Solana nodes on AWS can help to reduce operational costs and improve reliability of your validators or RPC services"
+tags:
+  - rpc
+  - infrastructure
+keywords:
+  - aws
+  - amazon
+  - node runner
+---
+
 # Solana on AWS
 
 Running Solana nodes on AWS can help to reduce operational costs and improve reliability of your validators or RPC services. In this guide we will review the major use cases for running self-managed Solana nodes, understand their infrastructure requirements, and costs considerations.
