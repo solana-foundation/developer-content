@@ -286,9 +286,8 @@ const requiredSpace = getConcurrentMerkleTreeAccountSize(
 );
 
 // get the cost (in lamports) to store the tree on-chain
-const storageCost = await connection.getMinimumBalanceForRentExemption(
-  requiredSpace,
-);
+const storageCost =
+  await connection.getMinimumBalanceForRentExemption(requiredSpace);
 ```
 
 ### Example costs

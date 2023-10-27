@@ -298,9 +298,8 @@ describe("initialization", () => {
         fromPubkey: wallet.publicKey,
         newAccountPubkey: userInsecure.publicKey,
         space: 32,
-        lamports: await provider.connection.getMinimumBalanceForRentExemption(
-          32,
-        ),
+        lamports:
+          await provider.connection.getMinimumBalanceForRentExemption(32),
         programId: program.programId,
       }),
     );

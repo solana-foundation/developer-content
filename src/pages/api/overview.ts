@@ -8,7 +8,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import {
   allDeveloperGuides,
   allDeveloperResources,
-  allDeveloperWorkshops
+  allDeveloperWorkshops,
 } from "contentlayer/generated";
 import { extractFeaturedRecords, simplifyRecords } from "@/utils/parsers";
 
