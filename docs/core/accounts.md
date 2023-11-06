@@ -149,10 +149,10 @@ that would reduce the balance to below the minimum amount will fail.
 Program executable accounts are required by the runtime to be rent-exempt to
 avoid being purged.
 
-:::info Use the
-[`getMinimumBalanceForRentExemption`](../../api/http#getminimumbalanceforrentexemption)
-RPC endpoint to calculate the minimum balance for a particular account size. The
-following calculation is illustrative only. :::
+> Note: Use the
+> [`getMinimumBalanceForRentExemption`](../../api/http#getminimumbalanceforrentexemption)
+> RPC endpoint to calculate the minimum balance for a particular account size.
+> The following calculation is illustrative only.
 
 For example, a program executable with the size of 15,000 bytes requires a
 balance of 105,290,880 lamports (=~ 0.105 SOL) to be rent-exempt:
