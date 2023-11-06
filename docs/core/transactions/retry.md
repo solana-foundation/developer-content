@@ -12,9 +12,7 @@ transaction disappears entirely. While RPC nodes are equipped with a generic
 rebroadcasting algorithm, application developers are also capable of developing
 their own custom rebroadcasting logic.
 
-## Facts
-
-:::note Fact Sheet
+## TLDR;
 
 - RPC nodes will attempt to rebroadcast transactions using a generic algorithm
 - Application developers can implement their own custom rebroadcasting logic
@@ -24,8 +22,6 @@ their own custom rebroadcasting logic.
   are submitted
 - Before re-signing any transaction, it is **very important** to ensure that the
   initial transaction’s blockhash has expired
-
-:::
 
 ## The Journey of a Transaction
 
@@ -176,8 +172,6 @@ the transaction, `sendTransaction` will return the transaction id that can be
 used to track the transaction. A successful response does not indicate whether
 the transaction will be processed or finalized by the cluster.
 
-:::note
-
 ### Request Parameters
 
 - `transaction`: `string` - fully-signed Transaction, as encoded string
@@ -194,14 +188,12 @@ the transaction will be processed or finalized by the cluster.
     provided, the RPC node will retry the transaction until it is finalized or
     until the blockhash expires.
 
-Response
+**Response:**
 
 - `transaction id`: `string` - First transaction signature embedded in the
   transaction, as base-58 encoded string. This transaction id can be used with
   [`getSignatureStatuses`](../api/http#getsignaturestatuses) to poll for status
   updates.
-
-:::
 
 ## Customizing Rebroadcast Logic
 

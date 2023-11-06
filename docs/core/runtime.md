@@ -129,9 +129,9 @@ units_ by the _compute unit price_ (measured in micro-lamports). These values
 may be set via the Compute Budget instructions `SetComputeUnitLimit` and
 `SetComputeUnitPrice` once per transaction.
 
-:::info You can learn more of the specifics of _how_ and _when_ to set a
-prioritization fee on the
-[transaction fees](./../../transaction_fees.md#prioritization-fee) page. :::
+> You can learn more of the specifics of _how_ and _when_ to set a
+> prioritization fee on the
+> [transaction fees](./../../transaction_fees.md#prioritization-fee) page.
 
 ### Accounts data size limit
 

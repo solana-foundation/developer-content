@@ -27,9 +27,8 @@ blockchain.
 > **NOTE:** Transaction fees are different from
 > [account rent](/docs/terminology#rent)! While transaction fees are paid to
 > process instructions on the Solana network, rent is paid to store data on the
-> blockchain.
-
-> You can learn more about rent here: [What is rent?](/docs/core/rent)
+> blockchain. You can learn more about rent here:
+> [What is rent?](/docs/core/rent)
 
 ## Why pay transaction fees?
 
@@ -123,9 +122,9 @@ Each transaction can set the maximum number of compute units it is allowed to
 consume and the compute unit price by including a `SetComputeUnitLimit` and
 `SetComputeUnitPrice` compute budget instruction respectively.
 
-:::info
-[Compute Budget instructions](https://github.com/solana-labs/solana/blob/master/sdk/src/compute_budget.rs)
-do **not** require any accounts. :::
+> Note: Unlike other instructions inside a Solana transaction,
+> [Compute Budget instructions](https://github.com/solana-labs/solana/blob/master/sdk/src/compute_budget.rs)
+> do **NOT** require any accounts.
 
 If no `SetComputeUnitLimit` instruction is provided, the limit will be
 calculated as the product of the number of instructions in the transaction and
@@ -147,10 +146,10 @@ functions. Each of these instructions can then be included in the transaction
 and sent to the cluster like normal. See also the
 [best practices](#prioritization-fee-best-practices) below.
 
-:::caution Transactions can only contain **one of each type** of compute budget
-instruction. Duplicate types will result in an
-[`TransactionError::DuplicateInstruction`](https://github.com/solana-labs/solana/blob/master/sdk/src/transaction/error.rs#L144-145)
-error, and ultimately transaction failure. :::
+> Caution: Transactions can only contain **one of each type** of compute budget
+> instruction. Duplicate types will result in an
+> [`TransactionError::DuplicateInstruction`](https://github.com/solana-labs/solana/blob/master/sdk/src/transaction/error.rs#L144-145)
+> error, and ultimately transaction failure.
 
 #### Rust
 

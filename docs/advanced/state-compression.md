@@ -82,14 +82,10 @@ and effectively invalidates the previous root hash and previous proof.
 Therefore, each change to these _traditional merkle trees_ are required to be
 performed in series.
 
-:::info
-
-This process of changing leaf data, and computing a new root hash can be a
-**very common** thing when using merkle trees! While it is one of the design
-points of the tree, it can result in one of the most notable drawbacks: rapid
-changes.
-
-:::
+> This process of changing leaf data, and computing a new root hash can be a
+> **very common** thing when using merkle trees! While it is one of the design
+> points of the tree, it can result in one of the most notable drawbacks: rapid
+> changes.
 
 ### What is a Concurrent merkle tree?
 
@@ -325,9 +321,6 @@ Compressed NFTs are one of the most popular use cases for State Compression on
 Solana. With compression, a one million NFT collection could be minted for
 `~50 SOL`, vice `~12,000 SOL` for its uncompressed equivalent collection.
 
-:::info Developer Guide
-
-Read our developer guide for
-[minting and transferring compressed NFTs](./../developing/guides/compressed-nfts).
-
-:::
+If you are interested in creating compressed NFTs yourself, read our developer
+guide for
+[minting and transferring compressed NFTs](https://solana.com/developers/guides/javascript/compressed-nfts).
