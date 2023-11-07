@@ -3,6 +3,8 @@ sidebarLabel: Intro to Development
 title: "Introduction to Solana Development"
 description:
   "Learn about the basic development concepts of the Solana blockchain."
+# sort order is set really high to ensure this doc is listed last
+sidebarSortOrder: 9999
 keywords:
   - accounts
   - transactions
