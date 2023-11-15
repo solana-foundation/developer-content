@@ -118,7 +118,7 @@ transaction. In this example below, we are creating a simple SOL transfer
 instruction:
 
 ```js
-// create an array with your desires `instructions`
+// create an array with your desired `instructions`
 const instructions = [
   web3.SystemProgram.transfer({
     fromPubkey: payer.publicKey,
