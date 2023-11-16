@@ -9,6 +9,7 @@ import {
   allDeveloperResources,
   allSolanaDocs,
   allDeveloperWorkshops,
+  allSolanaRPCDocs,
 } from "contentlayer/generated";
 import { simplifyRecords } from "@/utils/parsers";
 
@@ -23,6 +24,9 @@ export default function handler(
   // retrieve the correct group's records by its simple group name
   let records: SupportedDocTypes[] = ((group: SimpleRecordGroupName) => {
     switch (group) {
+      case "rpc":
+      case "docs,rpc":
+        return allSolanaRPCDocs;
       case "docs":
         return allSolanaDocs;
       case "guides":
@@ -40,7 +44,6 @@ export default function handler(
   records = simplifyRecords(records);
 
   // todo: add pagination support?
-  // todo: migrate to trpc and add filters support as well
 
   // finally, return the json formatted listing
   return res.status(200).json(records);
