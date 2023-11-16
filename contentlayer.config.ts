@@ -294,6 +294,18 @@ export const SolanaDoc = defineDocumentType(() => ({
 }));
 
 /**
+ * Content record schema a single Solana RPC documentation record
+ */
+export const SolanaRPCDoc = defineDocumentType(() => ({
+  name: "SolanaRPCDoc",
+  filePathPattern: "docs/rpc/**/*.mdx",
+  fields: {
+    // use the standard content fields
+    ...basicContentFields,
+  },
+}));
+
+/**
  * Simple record type to enable ignoring files in the contentlayer checks
  * Note: This should be used sparingly (and normally only for readme files)
  *
@@ -313,6 +325,7 @@ export default makeSource({
   // set the base content directories to search for content records
   contentDirPath: ".",
   contentDirInclude: [
+    "docs/rpc/**",
     "docs/**",
     "content/guides/**",
     "content/courses/**",
@@ -331,6 +344,7 @@ export default makeSource({
 
     // developer specific content
     SolanaDoc,
+    SolanaRPCDoc,
     DeveloperGuide,
     DeveloperResource,
     DeveloperWorkshop,
