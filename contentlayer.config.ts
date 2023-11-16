@@ -118,6 +118,11 @@ const basicContentFields: FieldDefs = {
     description: "Sort order of the doc, relative to its siblings",
     required: false,
   },
+  hideTableOfContents: {
+    type: "boolean",
+    description: "Force hide the table of contents displayed on page",
+    required: false,
+  },
 };
 
 /**
