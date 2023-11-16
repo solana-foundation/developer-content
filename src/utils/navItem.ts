@@ -139,7 +139,7 @@ export function sortNavItems(navItems: NavItem[]) {
  */
 export function shouldIgnoreRecord({
   fileName,
-  allowedExtensions = ["md"],
+  allowedExtensions = ["md", "mdx"],
 }: {
   fileName: string;
   allowedExtensions?: Array<string>;
@@ -192,6 +192,10 @@ export function computeNavItem(
       doc._raw.sourceFileDir.startsWith("docs") ? "/" : "/developers/",
     );
   }
+
+  // always lowercase certain specific values
+  record.href = record.href.toLowerCase();
+  record.id = record.id.toLowerCase();
 
   /**
    * when the record is only storing metadata, remove it as a linked item
