@@ -8,9 +8,10 @@ import { NavItem, SimpleRecordGroupName } from "@/types";
 import { generateNavItemListing } from "@/utils/navItem";
 import {
   allDeveloperGuides,
-  allDeveloperResources,
+  // allDeveloperResources,
   allSolanaDocs,
   allDeveloperWorkshops,
+  allSolanaRPCDocs,
 } from "contentlayer/generated";
 
 export default function handler(
@@ -24,13 +25,16 @@ export default function handler(
   // retrieve the correct group's records by its simple group name
   const records = ((group: SimpleRecordGroupName) => {
     switch (group) {
+      case "rpc":
+      case "docs,rpc":
+        return allSolanaRPCDocs;
       case "docs":
         return allSolanaDocs;
       case "guides":
         return allDeveloperGuides;
       // case "resources":
       //   return allDeveloperResources;
-      case "workshops": 
+      case "workshops":
         return allDeveloperWorkshops;
     }
   })(group);

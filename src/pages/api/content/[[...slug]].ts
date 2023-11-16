@@ -10,6 +10,7 @@ import {
   allDeveloperResources,
   allSolanaDocs,
   allDeveloperWorkshops,
+  allSolanaRPCDocs,
 } from "contentlayer/generated";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -28,8 +29,10 @@ export default function handler(
   // retrieve the correct group's records by its simple group name
   const records = ((group: SimpleRecordGroupName) => {
     switch (group) {
-      case "docs":
+      case "docs": {
+        if (slug[1] == "rpc") return allSolanaRPCDocs;
         return allSolanaDocs;
+      }
       case "guides":
         return allDeveloperGuides;
       case "resources":
@@ -43,8 +46,11 @@ export default function handler(
 
   // define the formatted href value to search for
   const href = `${
-    slug[0].toLocaleLowerCase() == "docs" ? "" : "/developers"
-  }/${slug.join("/")}`;
+    slug[0].toLocaleLowerCase() == "docs" ||
+    slug[0].toLocaleLowerCase() == "rpc"
+      ? ""
+      : "/developers"
+  }/${slug.join("/")}`.toLowerCase();
 
   // note: this effectively enforces that only href's that start with "/developers" are supported
 
