@@ -104,6 +104,20 @@ const basicContentFields: FieldDefs = {
     required: false,
     default: false,
   },
+
+  /**
+   * Custom fields that are used for the generated `nav.json` sidebar data
+   */
+  sidebarLabel: {
+    type: "string",
+    description: "Custom sidebar label to use, instead of the document's title",
+    required: false,
+  },
+  sidebarSortOrder: {
+    type: "number",
+    description: "Sort order of the doc, relative to its siblings",
+    required: false,
+  },
 };
 
 /**
@@ -275,21 +289,6 @@ export const SolanaDoc = defineDocumentType(() => ({
      * Custom fields for this specific content record type
      */
     // none
-
-    /**
-     * Custom fields that are used for the generated `nav.json` sidebar data
-     */
-    sidebarLabel: {
-      type: "string",
-      description:
-        "Custom sidebar label to use, instead of the document's title",
-      required: false,
-    },
-    sidebarSortOrder: {
-      type: "number",
-      description: "Sort order of the doc, relative to its siblings",
-      required: false,
-    },
   },
 }));
 
