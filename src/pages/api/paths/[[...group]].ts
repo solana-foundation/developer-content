@@ -10,7 +10,8 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
-  allDeveloperWorkshops
+  allDeveloperWorkshops,
+  allSolanaRPCDocs,
 } from "contentlayer/generated";
 
 export default function handler(
@@ -24,6 +25,9 @@ export default function handler(
   // retrieve the correct group's records by its simple group name
   const records = ((group: SimpleRecordGroupName) => {
     switch (group) {
+      case "rpc":
+      case "docs,rpc":
+        return allSolanaRPCDocs;
       case "docs":
         return allSolanaDocs;
       case "guides":
