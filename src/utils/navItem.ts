@@ -24,7 +24,10 @@ export function generateNavItemListing(
       grouping[record._raw.sourceFileDir] = { items: [] } as unknown as NavItem;
 
     // process the index file as the root of the NavItem
-    if (record._raw.sourceFileName == "index.md") {
+    if (
+      record._raw.sourceFileName == "index.md" ||
+      record._raw.sourceFileName == "index.mdx"
+    ) {
       grouping[record._raw.sourceFileDir] = Object.assign(
         grouping[record._raw.sourceFileDir],
         // @ts-ignore
