@@ -57,15 +57,6 @@ The response output will be a JSON object with the following fields:
 Requests can be sent in batches by sending an array of JSON-RPC request objects
 as the data for a single POST.
 
-## Definitions
-
-- Hash: A SHA-256 hash of a chunk of data.
-- Pubkey: The public key of a Ed25519 key-pair.
-- Transaction: A list of Solana instructions signed by a client keypair to
-  authorize those actions.
-- Signature: An Ed25519 signature of transaction's payload data including
-  instructions. This can be used to identify transactions.
-
 ### Example Request
 
 The commitment parameter should be included as the last element in the `params`
@@ -87,58 +78,14 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 '
 ```
 
-## RpcResponse Structure
+## Definitions
 
-Many methods that take a commitment parameter return an RpcResponse JSON object
-comprised of two parts:
-
-- `context` : An RpcResponseContext JSON structure including a `slot` field at
-  which the operation was evaluated.
-- `value` : The value returned by the operation itself.
-
-## Parsed Responses
-
-Some methods support an `encoding` parameter, and can return account or
-instruction data in parsed JSON format if `"encoding":"jsonParsed"` is requested
-and the node has a parser for the owning program. Solana nodes currently support
-JSON parsing for the following native and SPL programs:
-
-| Program                      | Account State | Instructions |
-| ---------------------------- | ------------- | ------------ |
-| Address Lookup               | v1.15.0       | v1.15.0      |
-| BPF Loader                   | n/a           | stable       |
-| BPF Upgradeable Loader       | stable        | stable       |
-| Config                       | stable        |              |
-| SPL Associated Token Account | n/a           | stable       |
-| SPL Memo                     | n/a           | stable       |
-| SPL Token                    | stable        | stable       |
-| SPL Token 2022               | stable        | stable       |
-| Stake                        | stable        | stable       |
-| Vote                         | stable        | stable       |
-
-The list of account parsers can be found
-[here](https://github.com/solana-labs/solana/blob/master/account-decoder/src/parse_account_data.rs),
-and instruction parsers
-[here](https://github.com/solana-labs/solana/blob/master/transaction-status/src/parse_instruction.rs).
-
-## Filter criteria
-
-Some methods support providing a `filters` object to enable pre-filtering the
-data returned within the RpcResponse JSON object. The following filters exist:
-
-- `memcmp: object` - compares a provided series of bytes with program account
-  data at a particular offset. Fields:
-
-  - `offset: usize` - offset into program account data to start comparison
-  - `bytes: string` - data to match, as encoded string
-  - `encoding: string` - encoding for filter `bytes` data, either "base58" or
-    "base64". Data is limited in size to 128 or fewer decoded bytes.<br />
-    **NEW: This field, and base64 support generally, is only available in
-    solana-core v1.14.0 or newer. Please omit when querying nodes on earlier
-    versions**
-
-- `dataSize: u64` - compares the program account data length with the provided
-  data size
+- Hash: A SHA-256 hash of a chunk of data.
+- Pubkey: The public key of a Ed25519 key-pair.
+- Transaction: A list of Solana instructions signed by a client keypair to
+  authorize those actions.
+- Signature: An Ed25519 signature of transaction's payload data including
+  instructions. This can be used to identify transactions.
 
 ## Health Check
 
