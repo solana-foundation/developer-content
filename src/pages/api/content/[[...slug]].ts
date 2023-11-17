@@ -66,7 +66,9 @@ export default function handler(
     if (
       navItem.href != href &&
       navItem.href != `/${href}` &&
-      records[i]?.altRoutes?.filter(route => route == href)?.[0] != href
+      records[i]?.altRoutes
+        ?.filter(route => route.toLowerCase() == href.toLowerCase())?.[0]
+        .toLowerCase() != href
     ) {
       continue;
     }
