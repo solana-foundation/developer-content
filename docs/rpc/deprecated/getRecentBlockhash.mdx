@@ -6,11 +6,13 @@ altRoutes:
   - /docs/rpc/getRecentBlockhash
 ---
 
-:::warning DEPRECATED This method is expected to be removed in solana-core v2.0
-**Please use [getLatestBlockhash](#getlatestblockhash) instead** :::
-
 Returns a recent block hash from the ledger, and a fee schedule that can be used
 to compute the cost of submitting a transaction using it.
+
+<Callout type={"warning"} title={"Deprecated Method"}>
+  This method is expected to be removed in `solana-core` v2.0. Please use
+  [getLatestBlockhash](/docs/rpc/http/getlatestblockhash) instead.
+</Callout>
 
 <DocSideBySide>
 
