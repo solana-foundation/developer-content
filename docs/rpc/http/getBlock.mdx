@@ -16,7 +16,7 @@ ledger
 ### Parameters
 
 <Parameter type={"u64"} required={true}>
-  slot number, as <code>u64</code> integer
+  slot number, as `u64` integer
 </Parameter>
 
 <Parameter type={"object"} optional={true}>
@@ -30,12 +30,9 @@ Configuration object containing the following fields:
   defaultValue={"finalized"}
   href="/docs/rpc#configuring-state-commitment"
 >
-  <li>
-    the default is <code>finalized</code>
-  </li>
-  <li>
-    <code>processed</code> is not supported.
-  </li>
+
+- `processed` is not supported.
+
 </Field>
 
 <Field 
@@ -63,7 +60,12 @@ encoding format for each returned Transaction
 
 </Field>
 
-<Field name="transactionDetails" type="string" optional={true} defaultValue={"full"}>
+<Field 
+  name="transactionDetails"
+  type="string"
+  optional={true}
+  defaultValue={"full"}
+>
 
 level of transaction detail to return
 
