@@ -6,12 +6,14 @@ altRoutes:
   - /docs/rpc/getFeeCalculatorForBlockhash
 ---
 
-:::warning DEPRECATED This method is expected to be removed in solana-core v2.0
-**Please use [isBlockhashValid](#isblockhashvalid) or
-[getFeeForMessage](#getfeeformessage) instead** :::
-
 Returns the fee calculator associated with the query blockhash, or `null` if the
 blockhash has expired
+
+<Callout type={"warning"} title={"Deprecated Method"}>
+  This method is expected to be removed in `solana-core` v2.0. Please use
+  [isBlockhashValid](/docs/rpc/http/isBlockhashValid) or
+  [getFeeForMessage](/docs/rpc/http/getFeeForMessage) instead.
+</Callout>
 
 <DocSideBySide>
 
