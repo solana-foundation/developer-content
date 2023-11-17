@@ -6,12 +6,14 @@ altRoutes:
   - /docs/rpc/blockSubscribe
 ---
 
-Subscribe to receive notification anytime a new block is Confirmed or Finalized.
+Subscribe to receive notification anytime a new block is `confirmed` or
+`finalized`.
 
-:::caution This subscription is **unstable** and only available if the validator
-was started with the `--rpc-pubsub-enable-block-subscription` flag.
-
-**NOTE: The format of this subscription may change in the future** :::
+<Callout type={"caution"} title={"Unstable Method"}>
+  This subscription is considered **unstable** and is only available if the
+  validator was started with the `--rpc-pubsub-enable-block-subscription` flag.
+  The format of this subscription may change in the future.
+</Callout>
 
 <DocSideBySide>
 
