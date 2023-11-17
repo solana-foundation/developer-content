@@ -172,8 +172,8 @@ The result field will be an object with the following fields:
         - `data: <[string, encoding]>` - the return data itself, as base-64
           encoded binary data
       - `computeUnitsConsumed: <u64|undefined>` - number of
-        [compute units](https://solana.com/docs/core/runtime#compute-budget)
-        consumed by the transaction
+        [compute units](/docs/core/runtime#compute-budget) consumed by the
+        transaction
     - `version: <"legacy"|number|undefined>` - Transaction version. Undefined if
       `maxSupportedTransactionVersion` is not set in request params.
   - `signatures: <array>` - present if "signatures" are requested for
@@ -288,8 +288,8 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 #### Transaction Structure
 
 Transactions are quite different from those on other blockchains. Be sure to
-review [Anatomy of a Transaction](https://solana.com/docs/core/transactions) to
-learn about transactions on Solana.
+review [Anatomy of a Transaction](/docs/core/transactions) to learn about
+transactions on Solana.
 
 The JSON structure of a transaction is defined as follows:
 
@@ -297,8 +297,7 @@ The JSON structure of a transaction is defined as follows:
   to the transaction. The list is always of length
   `message.header.numRequiredSignatures` and not empty. The signature at index
   `i` corresponds to the public key at index `i` in `message.accountKeys`. The
-  first one is used as the
-  [transaction id](https://solana.com/docs/terminology#transaction-id).
+  first one is used as the [transaction id](/docs/terminology#transaction-id).
 - `message: <object>` - Defines the content of the transaction.
   - `accountKeys: <array[string]>` - List of base-58 encoded public keys used by
     the transaction, including by the instructions and for signatures. The first
