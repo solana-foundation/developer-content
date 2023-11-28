@@ -33,9 +33,9 @@ so that they can be processed into a block. There are two main ways in which a
 transaction can be sent to leaders:
 
 1. By proxy via an RPC server and the
-   [sendTransaction](../api/http#sendtransaction) JSON-RPC method
+   [sendTransaction](/docs/rpc/http/sendtransaction) JSON-RPC method
 2. Directly to leaders via a
-   [TPU Client](https://docs.rs/solana-client/1.7.3/solana_client/tpu_client/index.html)
+   [TPU Client](https://docs.rs/solana-client/latest/solana_client/tpu_client/index.html)
 
 The vast majority of end-users will submit transactions via an RPC server. When
 a client submits a transaction, the receiving RPC node will in turn attempt to
@@ -129,8 +129,8 @@ to work together. In this example, the transaction’s
 advanced part of the pool (Backend A). When the transaction is submitted to the
 lagging part of the pool (Backend B), the nodes will not recognize the advanced
 blockhash and will drop the transaction. This can be detected upon transaction
-submission if developers enable [preflight checks](../api/http#sendtransaction)
-on `sendTransaction`.
+submission if developers enable
+[preflight checks](/docs/rpc/http/sendtransaction) on `sendTransaction`.
 
 ![Transaction dropped via an RPC Pool](/assets/docs/rt-dropped-via-rpc-pool.png)
 
@@ -179,7 +179,7 @@ the transaction will be processed or finalized by the cluster.
   - `skipPreflight`: `boolean` - if true, skip the preflight transaction checks
     (default: false)
   - (optional) `preflightCommitment`: `string` -
-    [Commitment](../api/http#configuring-state-commitment) level to use for
+    [Commitment](/docs/rpc/http/configuring-state-commitment) level to use for
     preflight simulations against the bank slot (default: "finalized").
   - (optional) `encoding`: `string` - Encoding used for the transaction data.
     Either "base58" (slow), or "base64". (default: "base58").
@@ -192,8 +192,8 @@ the transaction will be processed or finalized by the cluster.
 
 - `transaction id`: `string` - First transaction signature embedded in the
   transaction, as base-58 encoded string. This transaction id can be used with
-  [`getSignatureStatuses`](../api/http#getsignaturestatuses) to poll for status
-  updates.
+  [`getSignatureStatuses`](/docs/rpc/http/getsignaturestatuses) to poll for
+  status updates.
 
 ## Customizing Rebroadcast Logic
 
@@ -205,12 +205,12 @@ developers to manually control the retry process
 
 A common pattern for manually retrying transactions involves temporarily storing
 the `lastValidBlockHeight` that comes from
-[getLatestBlockhash](../api/http#getlatestblockhash). Once stashed, an
+[getLatestBlockhash](/docs/rpc/http/getlatestblockhash). Once stashed, an
 application can then
-[poll the cluster’s blockheight](../api/http#getblockheight) and manually retry
-the transaction at an appropriate interval. In times of network congestion, it’s
-advantageous to set `maxRetries` to 0 and manually rebroadcast via a custom
-algorithm. While some applications may employ an
+[poll the cluster’s blockheight](/docs/rpc/http/getblockheight) and manually
+retry the transaction at an appropriate interval. In times of network
+congestion, it’s advantageous to set `maxRetries` to 0 and manually rebroadcast
+via a custom algorithm. While some applications may employ an
 [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
 algorithm, others such as [Mango](https://www.mango.markets/) opt to
 [continuously resubmit](https://github.com/blockworks-foundation/mango-ui/blob/b6abfc6c13b71fc17ebbe766f50b8215fa1ec54f/src/utils/send.tsx#L713)
@@ -274,7 +274,7 @@ const sleep = async (ms: number) => {
 ```
 
 When polling via `getLatestBlockhash`, applications should specify their
-intended [commitment](../api/http#configuring-state-commitment) level. By
+intended [commitment](/docs/rpc/http/configuring-state-commitment) level. By
 setting its commitment to `confirmed` (voted on) or `finalized` (~30 blocks
 after `confirmed`), an application can avoid polling a blockhash from a minority
 fork.
@@ -315,6 +315,6 @@ if they unintentionally sent the same transaction twice.
 In Solana, a dropped transaction can be safely discarded once the blockhash it
 references is older than the `lastValidBlockHeight` received from
 `getLatestBlockhash`. Developers should keep track of this
-`lastValidBlockHeight` by querying [`getEpochInfo`](../api/http#getepochinfo)
+`lastValidBlockHeight` by querying [`getEpochInfo`](/docs/rpc/http/getepochinfo)
 and comparing with `blockHeight` in the response. Once a blockhash is
 invalidated, clients may re-sign with a newly-queried blockhash.

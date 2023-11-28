@@ -5,7 +5,7 @@ title: Clusters and Public RPC Endpoints
 
 The Solana blockchain has several different groups of validators, known as
 [Clusters](./clusters.md). Each serving different purposes within the overall
-ecosystem and containing dedicated api nodes to fulfill [JSON-RPC](/api)
+ecosystem and containing dedicated api nodes to fulfill [JSON-RPC](/docs/rpc)
 requests for their respective Cluster.
 
 The individual nodes within a Cluster are owned and operated by third parties,

@@ -194,10 +194,10 @@ Given the short expiration time frame, it’s imperative that clients help users
 create transactions with blockhash that is as recent as possible.
 
 When fetching blockhashes, the current recommended RPC API is called
-[`getLatestBlockhash`](/api/http#getlatestblockhash). By default, this API uses
-the `"finalized"` commitment level to return the most recently finalized block’s
-blockhash. However, you can override this behavior by
-[setting the `commitment` parameter](/api/http#configuring-state-commitment) to
+[`getLatestBlockhash`](/docs/rpc/http/getlatestblockhash). By default, this API
+uses the `"finalized"` commitment level to return the most recently finalized
+block’s blockhash. However, you can override this behavior by
+[setting the `commitment` parameter](/docs/rpc#configuring-state-commitment) to
 a different commitment level.
 
 **Recommendation**
@@ -267,9 +267,9 @@ behind the cluster, it will eventually catch up and detect your transaction’s
 expiration properly.
 
 For `simulateTransaction` requests, clients should use the
-[`replaceRecentBlockhash`](/api/http#simulatetransaction) parameter to tell the
-RPC node to replace the simulated transaction’s blockhash with a blockhash that
-will always be valid for simulation.
+[`replaceRecentBlockhash`](/docs/rpc/http/simulatetransaction) parameter to tell
+the RPC node to replace the simulated transaction’s blockhash with a blockhash
+that will always be valid for simulation.
 
 ### Avoid reusing stale blockhashes
 
@@ -311,28 +311,28 @@ Monitor the health of your RPC nodes to ensure that they have an up-to-date view
 of the cluster state with one of the following methods:
 
 1. Fetch your RPC node’s highest processed slot by using the
-   [`getSlot`](/api/http#getslot) RPC API with the `"processed"` commitment
+   [`getSlot`](/docs/rpc/http/getslot) RPC API with the `"processed"` commitment
    level and then call the
-   [`getMaxShredInsertSlot](/api/http#getmaxshredinsertslot) RPC API to get the
-   highest slot that your RPC node has received a “shred” of a block for. If the
-   difference between these responses is very large, the cluster is producing
-   blocks far ahead of what the RPC node has processed.
+   [`getMaxShredInsertSlot](/docs/rpc/http/getmaxshredinsertslot) RPC API to get
+   the highest slot that your RPC node has received a “shred” of a block for. If
+   the difference between these responses is very large, the cluster is
+   producing blocks far ahead of what the RPC node has processed.
 2. Call the `getLatestBlockhash` RPC API with the `"confirmed"` commitment level
    on a few different RPC API nodes and use the blockhash from the node that
    returns the highest slot for its
-   [context slot](/api/http#rpcresponse-structure).
+   [context slot](/docs/rpc#rpcresponse-structure).
 
 ### Wait long enough for expiration
 
 **Recommendation**
 
-When calling [`getLatestBlockhash`](/api/http#getlatestblockhash) RPC API to get
-a recent blockhash for your transaction, take note of the
+When calling [`getLatestBlockhash`](/docs/rpc/http/getlatestblockhash) RPC API
+to get a recent blockhash for your transaction, take note of the
 `"lastValidBlockHeight"` in the response.
 
-Then, poll the [`getBlockHeight`](/api/http#getblockheight) RPC API with the
-“confirmed” commitment level until it returns a block height greater than the
-previously returned last valid block height.
+Then, poll the [`getBlockHeight`](/docs/rpc/http/getblockheight) RPC API with
+the “confirmed” commitment level until it returns a block height greater than
+the previously returned last valid block height.
 
 ### Consider using “durable” transactions
 

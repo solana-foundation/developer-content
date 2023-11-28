@@ -44,7 +44,7 @@ collection.
 > At the time of writing this, new Accounts and Programs **are required** to be
 > initialized with enough LAMPORTS to become rent-exempt. The RPC endpoints have
 > the ability to calculate this
-> [estimated rent exempt balance](../../api/http#getminimumbalanceforrentexemption)
+> [estimated rent exempt balance](/docs/rpc/http/getminimumbalanceforrentexemption)
 > and is recommended to be used.
 
 Every time an account's balance is reduced, a check is performed to see if the

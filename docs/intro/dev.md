@@ -54,7 +54,7 @@ anyone who knows how to communicate with them can use them.
 
 You can communicate with these programs by writing dApps with any of the
 available client SDKs (or the [CLI](../cli.md)), all of which use the
-[JSON RPC API](../api) under the hood.
+[JSON RPC API](/docs/rpc) under the hood.
 
 ### Client development
 

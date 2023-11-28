@@ -7,7 +7,7 @@ sidebarSortOrder: 2
 ## What is Solana-Web3.js?
 
 The Solana-Web3.js library aims to provide complete coverage of Solana. The
-library was built on top of the [Solana JSON RPC API](/api).
+library was built on top of the [Solana JSON RPC API](/docs/rpc).
 
 You can find the full documentation for the `@solana/web3.js` library
 [here](https://solana-labs.github.io/solana-web3.js/).
