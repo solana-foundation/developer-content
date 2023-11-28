@@ -63,7 +63,7 @@ communicate with deployed programs. Your apps can submit transactions with
 instructions to these programs via a client SDK to create a wide variety of
 applications such as wallets, exchanges and more. The most popular apps are
 browser extension wallets and web apps, but you can build mobile/desktop apps or
-anything that can communicate with the JSON RPC API.
+anything that can communicate with the [JSON RPC API](/docs/rpc).
 
 These two pieces work together to create a network of dApps and programs that
 can communicate with each other to update the state and query the blockchain.
