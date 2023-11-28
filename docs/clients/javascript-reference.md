@@ -5,7 +5,7 @@ title: Web3.js API Examples
 ## Web3 API Reference Guide
 
 The `@solana/web3.js` library is a package that has coverage over the
-[Solana JSON RPC API](/api).
+[Solana JSON RPC API](/docs/rpc).
 
 You can find the full documentation for the `@solana/web3.js` library
 [here](https://solana-labs.github.io/solana-web3.js/).
@@ -16,8 +16,8 @@ You can find the full documentation for the `@solana/web3.js` library
 
 [Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html)
 
-Connection is used to interact with the [Solana JSON RPC](/api). You can use
-Connection to confirm transactions, get account info, and more.
+Connection is used to interact with the [Solana JSON RPC](/docs/rpc). You can
+use Connection to confirm transactions, get account info, and more.
 
 You create a connection by defining the JSON RPC cluster endpoint and the
 desired commitment. Once this is complete, you can use this connection object to

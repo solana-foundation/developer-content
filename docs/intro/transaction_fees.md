@@ -102,7 +102,7 @@ and return an error. This results in a failed transaction.
 
 > **Learn more:** compute units and the
 > [Compute Budget](/docs/core/runtime#compute-budget) in the Runtime and
-> [requesting a fee estimate](../api/http#getfeeformessage) from the RPC.
+> [requesting a fee estimate](/docs/rpc/http/getfeeformessage) from the RPC.
 
 ## Prioritization fee
 
@@ -197,7 +197,7 @@ by an executed transaction.
 #### Get recent prioritization fees
 
 Prior to sending a transaction to the cluster, you can use the
-[`getRecentPrioritizationFees`](/api/http#getrecentprioritizationfees) RPC
+[`getRecentPrioritizationFees`](/docs/rpc/http/getrecentprioritizationfees) RPC
 method to get a list of the recent paid prioritization fees within the recent
 blocks processed by the node.
 

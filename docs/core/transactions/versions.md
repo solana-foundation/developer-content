@@ -25,8 +25,8 @@ The Solana runtime supports two transaction versions:
 All RPC requests that return a transaction **_should_** specify the highest
 version of transactions they will support in their application using the
 `maxSupportedTransactionVersion` option, including
-[`getBlock`](../api/http#getblock) and
-[`getTransaction`](../api/http#gettransaction).
+[`getBlock`](/docs/rpc/http/getblock) and
+[`getTransaction`](/docs/rpc/http/gettransaction).
 
 An RPC request will fail if a
 [Versioned Transaction](./versioned-transactions.md) is returned that is higher

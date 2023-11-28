@@ -166,7 +166,7 @@ We recommend using a unique deposit account for each of your users.
 Solana accounts must be made rent-exempt by containing 2-years worth of
 [rent](/docs/core/accounts#rent) in SOL. In order to find the minimum
 rent-exempt balance for your deposit accounts, query the
-[`getMinimumBalanceForRentExemption` endpoint](../api/http#getminimumbalanceforrentexemption):
+[`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getminimumbalanceforrentexemption):
 
 ```bash
 curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
@@ -229,8 +229,8 @@ block and inspect for addresses of interest, using the JSON-RPC service of your
 Solana API node.
 
 - To identify which blocks are available, send a
-  [`getBlocks`](../api/http#getblocks) request, passing the last block you have
-  already processed as the start-slot parameter:
+  [`getBlocks`](/docs/rpc/http/getblocks) request, passing the last block you
+  have already processed as the start-slot parameter:
 
 ```bash
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -247,8 +247,8 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 Not every slot produces a block, so there may be gaps in the sequence of
 integers.
 
-- For each block, request its contents with a [`getBlock`](../api/http#getblock)
-  request:
+- For each block, request its contents with a
+  [`getBlock`](/docs/rpc/http/getblock) request:
 
 ### Block Fetching Tips
 
@@ -365,7 +365,7 @@ generally _not_ a viable method for tracking all your deposit addresses over all
 slots, but may be useful for examining a few accounts for a specific period of
 time.
 
-- Send a [`getSignaturesForAddress`](../api/http#getsignaturesforaddress)
+- Send a [`getSignaturesForAddress`](/docs/rpc/http/getsignaturesforaddress)
   request to the api node:
 
 ```bash
@@ -415,7 +415,7 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
 ```
 
 - For each signature returned, get the transaction details by sending a
-  [`getTransaction`](../api/http#gettransaction) request:
+  [`getTransaction`](/docs/rpc/http/gettransaction) request:
 
 ```bash
 curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -d '{
@@ -557,7 +557,7 @@ retrying a withdrawal transfer that does not appear to have been confirmed or
 finalized by the cluster. Otherwise, you risk a double spend. See more on
 [blockhash expiration](#blockhash-expiration) below.
 
-First, get a recent blockhash using the [`getFees`](../api/http#getfees)
+First, get a recent blockhash using the [`getFees`](/docs/rpc/http/getfees)
 endpoint or the CLI command:
 
 ```bash
@@ -574,12 +574,12 @@ solana transfer <USER_ADDRESS> <AMOUNT> --no-wait --allow-unfunded-recipient --b
 
 You can also build, sign, and serialize the transaction manually, and fire it
 off to the cluster using the JSON-RPC
-[`sendTransaction`](../api/http#sendtransaction) endpoint.
+[`sendTransaction`](/docs/rpc/http/sendtransaction) endpoint.
 
 #### Transaction Confirmations & Finality
 
 Get the status of a batch of transactions using the
-[`getSignatureStatuses`](../api/http#getsignaturestatuses) JSON-RPC endpoint.
+[`getSignatureStatuses`](/docs/rpc/http/getsignaturestatuses) JSON-RPC endpoint.
 The `confirmations` field reports how many
 [confirmed blocks](/docs/terminology#confirmed-block) have elapsed since the
 transaction was processed. If `confirmations: null`, it is
@@ -631,7 +631,7 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
 #### Blockhash Expiration
 
 You can check whether a particular blockhash is still valid by sending a
-[`getFeeCalculatorForBlockhash`](../api/http#getfeecalculatorforblockhash)
+[`getFeeCalculatorForBlockhash`](/docs/rpc/http/getfeecalculatorforblockhash)
 request with the blockhash as a parameter. If the response value is `null`, the
 blockhash is expired, and the withdrawal transaction using that blockhash should
 never succeed.

@@ -253,7 +253,7 @@ used to calculate the on-chain storage (in bytes) required for a tree to exist
 on chain.
 
 Once the required space (in bytes) has been calculated, and using the
-[`getMinimumBalanceForRentExemption`](/api/http#getminimumbalanceforrentexemption)
+[`getMinimumBalanceForRentExemption`](/docs/rpc/http/getminimumbalanceforrentexemption)
 RPC method, request the cost (in lamports) to allocate this amount of bytes
 on-chain.
 
