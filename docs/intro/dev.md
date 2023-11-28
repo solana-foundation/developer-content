@@ -145,7 +145,7 @@ Transactions fees are calculated based on two main parts:
 The more work a transaction requires, the more compute units it will use, and
 the more it will cost.
 
-You can read more about transaction fees [here](../transaction_fees.md).
+You can read more about transaction fees [here](/docs/core/transactions/fees).
 
 ## Accounts
 
@@ -236,7 +236,7 @@ these.
 
 You're now ready to get started building on Solana!
 
-- [Deploy your first Solana program in the browser](./hello-world.md)
-- [Setup your local development environment](./local.md)
-- [Get started building programs locally with Rust](./rust.md)
+- [Deploy your first Solana program in the browser](/developers/guides/getstarted/hello-world-in-your-browser)
+- [Setup your local development environment](/developers/guides/getstarted/setup-local-development)
+- [Get started building programs locally with Rust](/developers/guides/getstarted/local-rust-hello-world)
 - [Overview of writing Solana programs](/docs/programs)
