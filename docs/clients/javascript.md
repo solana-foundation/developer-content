@@ -127,8 +127,8 @@ order that instructions exist in a transaction determines the order they are
 executed.
 
 A transaction in Solana-Web3.js is created using the
-[`Transaction`](javascript-api.md#Transaction) object and adding desired
-messages, addresses, or instructions.
+[`Transaction`](./javascript.md#Transaction) object and adding desired messages,
+addresses, or instructions.
 
 Take the example of a transfer transaction:
 
