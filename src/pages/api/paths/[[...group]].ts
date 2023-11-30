@@ -11,10 +11,7 @@ import {
   allDeveloperResources,
   allSolanaDocs,
   allDeveloperWorkshops,
-<<<<<<<< HEAD:src/pages/api/paths/[[...group]].ts
   allSolanaRPCDocs,
-========
->>>>>>>> main:src/pages/api/paths/[group].ts
 } from "contentlayer/generated";
 
 export default function handler(
