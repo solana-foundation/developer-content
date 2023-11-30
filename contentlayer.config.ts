@@ -104,6 +104,25 @@ const basicContentFields: FieldDefs = {
     required: false,
     default: false,
   },
+
+  /**
+   * Custom fields that are used for the generated `nav.json` sidebar data
+   */
+  sidebarLabel: {
+    type: "string",
+    description: "Custom sidebar label to use, instead of the document's title",
+    required: false,
+  },
+  sidebarSortOrder: {
+    type: "number",
+    description: "Sort order of the doc, relative to its siblings",
+    required: false,
+  },
+  hideTableOfContents: {
+    type: "boolean",
+    description: "Force hide the table of contents displayed on page",
+    required: false,
+  },
 };
 
 /**
@@ -275,21 +294,18 @@ export const SolanaDoc = defineDocumentType(() => ({
      * Custom fields for this specific content record type
      */
     // none
+  },
+}));
 
-    /**
-     * Custom fields that are used for the generated `nav.json` sidebar data
-     */
-    sidebarLabel: {
-      type: "string",
-      description:
-        "Custom sidebar label to use, instead of the document's title",
-      required: false,
-    },
-    sidebarSortOrder: {
-      type: "number",
-      description: "Sort order of the doc, relative to its siblings",
-      required: false,
-    },
+/**
+ * Content record schema a single Solana RPC documentation record
+ */
+export const SolanaRPCDoc = defineDocumentType(() => ({
+  name: "SolanaRPCDoc",
+  filePathPattern: "docs/rpc/**/*.mdx",
+  fields: {
+    // use the standard content fields
+    ...basicContentFields,
   },
 }));
 
@@ -313,6 +329,7 @@ export default makeSource({
   // set the base content directories to search for content records
   contentDirPath: ".",
   contentDirInclude: [
+    "docs/rpc/**",
     "docs/**",
     "content/guides/**",
     "content/courses/**",
@@ -331,6 +348,7 @@ export default makeSource({
 
     // developer specific content
     SolanaDoc,
+    SolanaRPCDoc,
     DeveloperGuide,
     DeveloperResource,
     DeveloperWorkshop,
