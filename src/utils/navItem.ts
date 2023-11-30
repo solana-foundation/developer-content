@@ -105,6 +105,24 @@ export function generateNavItemListing(
 }
 
 /**
+ * Create a flat listing of all nav items provided
+ *
+ * note: normally, the provided `navItems` should be preprocessed by `generateNavItemListing`
+ */
+export function generateFlatNavItemListing(
+  navItems: Array<NavItem>,
+): Array<NavItem> {
+  return navItems.flatMap(({ items, ...node }: NavItem) => {
+    if (typeof items !== "undefined") {
+      return [node as NavItem]
+        .concat(items)
+        .flatMap(children => generateFlatNavItemListing([children]));
+    }
+    return node;
+  });
+}
+
+/**
  *
  */
 export function computeDetailsFromKey(key: string) {
@@ -178,6 +196,7 @@ export function computeNavItem(
     label: doc?.sidebarLabel || doc?.title,
     sidebarSortOrder: doc?.sidebarSortOrder,
     metaOnly: doc?.metaOnly,
+    altRoutes: doc.altRoutes,
   };
 
   // compute an id based on the doc's path

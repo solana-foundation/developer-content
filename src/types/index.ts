@@ -34,6 +34,7 @@ type NavItemBase = {
    *
    */
   items?: Array<any>;
+  altRoutes?: string[] | undefined;
 };
 
 export type NavItem = NavItemBase & {
