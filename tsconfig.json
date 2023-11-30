@@ -19,13 +19,19 @@
       "contentlayer/generated": ["./.contentlayer/generated"],
       "@/*": ["./src/*"],
       "@@/*": ["./*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     ".contentlayer/generated",
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
