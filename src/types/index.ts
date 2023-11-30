@@ -17,6 +17,8 @@ export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredDoc>;
  */
 export type SimpleRecordGroupName =
   | "docs"
+  | "rpc"
+  | "docs,rpc" // note: this is to support stringify-ing the route via the url
   | "guides"
   | "resources"
   | "workshops";
@@ -28,7 +30,10 @@ type NavItemBase = {
   href?: String;
   sidebarSortOrder?: number;
   metaOnly?: boolean;
-  /** List of alternate routes that should redirect to this same document */
+  /**
+   *
+   */
+  items?: Array<any>;
   altRoutes?: string[] | undefined;
 };
 
