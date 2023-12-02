@@ -21,7 +21,7 @@ You can find the full documentation for the `@solana/web3.js` library
 | Transaction | One or more instructions signed by the client using one or more Keypairs and executed atomically with only two possible outcomes: success or failure.                    |
 
 For the full list of terms, see
-[Solana terminology](/docs/terminology#cross-program-invocation-cpi)
+[Solana terminology](/docs/terminology.md#cross-program-invocation-cpi)
 
 ## Getting Started
 
@@ -127,8 +127,8 @@ order that instructions exist in a transaction determines the order they are
 executed.
 
 A transaction in Solana-Web3.js is created using the
-[`Transaction`](./javascript.md#Transaction) object and adding desired messages,
-addresses, or instructions.
+[`Transaction`](/docs/clients/javascript.md#Transaction) object and adding
+desired messages, addresses, or instructions.
 
 Take the example of a transfer transaction:
 

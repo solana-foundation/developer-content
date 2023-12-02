@@ -35,5 +35,5 @@ Next, follow the steps in the git repository's
 
 You can find some language specific example programs at the following locations:
 
-- [Rust](/docs/programs/lang-rust#examples)
-- [C](/docs/programs/lang-c#examples)
+- [Rust](/docs/programs/lang-rust.md#examples)
+- [C](/docs/programs/lang-c.md#examples)

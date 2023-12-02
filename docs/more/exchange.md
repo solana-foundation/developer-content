@@ -20,11 +20,11 @@ This setup enables you:
 
 Solana nodes demand relatively high computing power to handle our fast blocks
 and high TPS. For specific requirements, please see
-[hardware recommendations](../running-validator/validator-reqs.md).
+[hardware recommendations](https://docs.solanalabs.com/operations/requirements).
 
 To run an api node:
 
-1. [Install the Solana command-line tool suite](../cli/install-solana-cli-tools.md)
+1. [Install the Solana command-line tool suite](https://docs.solanalabs.com/cli/install)
 2. Start the validator with at least the following parameters:
 
 ```bash
@@ -46,10 +46,10 @@ to the port you want to expose.
 
 The `--entrypoint` and `--expected-genesis-hash` parameters are all specific to
 the cluster you are joining.
-[Current parameters for Mainnet Beta](../clusters.md#example-solana-validator-command-line-2)
+[Current parameters for Mainnet Beta](https://docs.solanalabs.com/clusters/available#example-solana-validator-command-line-2)
 
 The `--limit-ledger-size` parameter allows you to specify how many ledger
-[shreds](/docs/terminology#shred) your node retains on disk. If you do not
+[shreds](/docs/terminology.md#shred) your node retains on disk. If you do not
 include this parameter, the validator will keep the entire ledger until it runs
 out of disk space. The default value attempts to keep the ledger disk usage
 under 500GB. More or less disk usage may be requested by adding an argument to
@@ -60,7 +60,7 @@ selecting a custom limit value is
 
 Specifying one or more `--known-validator` parameters can protect you from
 booting from a malicious snapshot.
-[More on the value of booting with known validators](../running-validator/validator-start.md#known-validators)
+[More on the value of booting with known validators](https://docs.solanalabs.com/operations/guides/validator-start#known-validators)
 
 Optional parameters to consider:
 
@@ -86,7 +86,7 @@ solana-watchtower --validator-identity <YOUR VALIDATOR IDENTITY>
 ```
 
 > You can find more information about the
-> [best practices for Solana Watchtower](../validator/best-practices/monitoring.md#solana-watchtower)
+> [best practices for Solana Watchtower](https://docs.solanalabs.com/operations/best-practices/monitoring#solana-watchtower)
 > here in the docs.
 
 #### New Software Release Announcements
@@ -159,14 +159,14 @@ validators and only on the _Gossip_, _Repair_ and _ServeR_ ports.
 Solana accounts do not require any on-chain initialization; once they contain
 some SOL, they exist. To set up a deposit account for your exchange, simply
 generate a Solana keypair using any of our
-[wallet tools](../wallet-guide/cli.md).
+[wallet tools](https://docs.solanalabs.com/cli/wallets).
 
 We recommend using a unique deposit account for each of your users.
 
 Solana accounts must be made rent-exempt by containing 2-years worth of
-[rent](/docs/core/accounts#rent) in SOL. In order to find the minimum
+[rent](/docs/core/accounts.md#rent) in SOL. In order to find the minimum
 rent-exempt balance for your deposit accounts, query the
-[`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getminimumbalanceforrentexemption):
+[`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
 ```bash
 curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
@@ -184,7 +184,7 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
 
 You may wish to keep the keys for one or more collection accounts offline for
 greater security. If so, you will need to move SOL to hot accounts using our
-[offline methods](../offline-signing.md).
+[offline methods](https://docs.solanalabs.com/cli/examples/offline-signing).
 
 ## Listening for Deposits
 
@@ -229,8 +229,8 @@ block and inspect for addresses of interest, using the JSON-RPC service of your
 Solana API node.
 
 - To identify which blocks are available, send a
-  [`getBlocks`](/docs/rpc/http/getblocks) request, passing the last block you
-  have already processed as the start-slot parameter:
+  [`getBlocks`](/docs/rpc/http/getBlocks.mdx) request, passing the last block
+  you have already processed as the start-slot parameter:
 
 ```bash
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -248,7 +248,7 @@ Not every slot produces a block, so there may be gaps in the sequence of
 integers.
 
 - For each block, request its contents with a
-  [`getBlock`](/docs/rpc/http/getblock) request:
+  [`getBlock`](/docs/rpc/http/getBlock.mdx) request:
 
 ### Block Fetching Tips
 
@@ -348,7 +348,7 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
 The `preBalances` and `postBalances` fields allow you to track the balance
 changes in every account without having to parse the entire transaction. They
 list the starting and ending balances of each account in
-[lamports](/docs/terminology#lamport), indexed to the `accountKeys` list. For
+[lamports](/docs/terminology.md#lamport), indexed to the `accountKeys` list. For
 example, if the deposit address of interest is
 `G1wZ113tiUHdSpQEBcid8n1x8BAvcWZoZgxPKxgE5B7o`, this transaction represents a
 transfer of 1040000000 - 1030000000 = 10,000,000 lamports = 0.01 SOL
@@ -365,7 +365,7 @@ generally _not_ a viable method for tracking all your deposit addresses over all
 slots, but may be useful for examining a few accounts for a specific period of
 time.
 
-- Send a [`getSignaturesForAddress`](/docs/rpc/http/getsignaturesforaddress)
+- Send a [`getSignaturesForAddress`](/docs/rpc/http/getSignaturesForAddress.mdx)
   request to the api node:
 
 ```bash
@@ -415,7 +415,7 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
 ```
 
 - For each signature returned, get the transaction details by sending a
-  [`getTransaction`](/docs/rpc/http/gettransaction) request:
+  [`getTransaction`](/docs/rpc/http/getTransaction.mdx) request:
 
 ```bash
 curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -d '{
@@ -551,14 +551,14 @@ these cases, it is your responsibility to verify that the transaction succeeded
 and was finalized by the cluster.
 
 **Note:** Each transaction contains a
-[recent blockhash](/docs/core/transactions#blockhash-format) to indicate its
+[recent blockhash](/docs/core/transactions.md#blockhash-format) to indicate its
 liveness. It is **critical** to wait until this blockhash expires before
 retrying a withdrawal transfer that does not appear to have been confirmed or
 finalized by the cluster. Otherwise, you risk a double spend. See more on
 [blockhash expiration](#blockhash-expiration) below.
 
-First, get a recent blockhash using the [`getFees`](/docs/rpc/http/getfees)
-endpoint or the CLI command:
+First, get a recent blockhash using the
+[`getFees`](/docs/rpc/deprecated/getFees.mdx) endpoint or the CLI command:
 
 ```bash
 solana fees --url http://localhost:8899
@@ -574,16 +574,16 @@ solana transfer <USER_ADDRESS> <AMOUNT> --no-wait --allow-unfunded-recipient --b
 
 You can also build, sign, and serialize the transaction manually, and fire it
 off to the cluster using the JSON-RPC
-[`sendTransaction`](/docs/rpc/http/sendtransaction) endpoint.
+[`sendTransaction`](/docs/rpc/http/sendTransaction.mdx) endpoint.
 
 #### Transaction Confirmations & Finality
 
 Get the status of a batch of transactions using the
-[`getSignatureStatuses`](/docs/rpc/http/getsignaturestatuses) JSON-RPC endpoint.
-The `confirmations` field reports how many
-[confirmed blocks](/docs/terminology#confirmed-block) have elapsed since the
+[`getSignatureStatuses`](/docs/rpc/http/getSignatureStatuses.mdx) JSON-RPC
+endpoint. The `confirmations` field reports how many
+[confirmed blocks](/docs/terminology.md#confirmed-block) have elapsed since the
 transaction was processed. If `confirmations: null`, it is
-[finalized](/docs/terminology#finality).
+[finalized](/docs/terminology.md#finality).
 
 ```bash
 curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
@@ -631,7 +631,7 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
 #### Blockhash Expiration
 
 You can check whether a particular blockhash is still valid by sending a
-[`getFeeCalculatorForBlockhash`](/docs/rpc/http/getfeecalculatorforblockhash)
+[`getFeeCalculatorForBlockhash`](/docs/rpc/deprecated/getFeeCalculatorForBlockhash.mdx)
 request with the blockhash as a parameter. If the response value is `null`, the
 blockhash is expired, and the withdrawal transaction using that blockhash should
 never succeed.
@@ -802,8 +802,8 @@ accounts do not:
    `spl-token create-account` command, or implicitly by the
    `spl-token transfer --fund-recipient ...` command.
 1. SPL Token accounts must remain
-   [rent-exempt](/docs/core/accounts#rent-exemption) for the duration of their
-   existence and therefore require a small amount of native SOL tokens be
+   [rent-exempt](/docs/core/accounts.md#rent-exemption) for the duration of
+   their existence and therefore require a small amount of native SOL tokens be
    deposited at account creation. For SPL Token v2 accounts, this amount is
    0.00203928 SOL (2,039,280 lamports).
 
@@ -939,7 +939,7 @@ account.
 ## Testing the Integration
 
 Be sure to test your complete workflow on Solana devnet and testnet
-[clusters](/docs/core/clusters) before moving to production on mainnet-beta.
+[clusters](/docs/core/clusters.md) before moving to production on mainnet-beta.
 Devnet is the most open and flexible, and ideal for initial development, while
 testnet offers more realistic cluster configuration. Both devnet and testnet
 support a faucet, run `solana airdrop 1` to obtain some devnet or testnet SOL

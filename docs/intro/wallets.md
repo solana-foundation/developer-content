@@ -52,6 +52,6 @@ that might be right for you on the
 [Solana Ecosystem](https://solana.com/ecosystem/explore?categories=wallet) page.
 
 For advanced users or developers, the
-[command-line wallets](wallet-guide/cli.md) may be more appropriate, as new
-features on the Solana blockchain will always be supported on the command line
-first before being integrated into third-party solutions.
+[command-line wallets](https://docs.solanalabs.com/cli/wallets) may be more
+appropriate, as new features on the Solana blockchain will always be supported
+on the command line first before being integrated into third-party solutions.

@@ -8,7 +8,8 @@ terms with regards to balance of SOL. This document makes no suggestion as to
 the monetary value of SOL at any time._
 
 By staking your SOL tokens, you help secure the network and
-[earn rewards](implemented-proposals/staking-rewards.md) while doing so.
+[earn rewards](https://docs.solanalabs.com/implemented-proposals/staking-rewards)
+while doing so.
 
 You can stake by delegating your tokens to validators who process transactions
 and run the network.
@@ -42,7 +43,7 @@ validator lose a portion of their delegation. While this means an immediate loss
 for the token holder, it also is a loss of future rewards for the validator due
 to their reduced total delegation. More details on the slashing roadmap can be
 found
-[here](proposals/optimistic-confirmation-and-slashing.md#slashing-roadmap).
+[here](https://docs.solanalabs.com/proposals/optimistic-confirmation-and-slashing#slashing-roadmap).
 
 Rewards and slashing align validator and token holder interests which helps keep
 the network secure, robust and performant.
@@ -62,7 +63,7 @@ your favorite wallet's maintainers regarding status
 - Solana command line tools can perform all stake operations in conjunction with
   a CLI-generated keypair file wallet, a paper wallet, or with a connected
   Ledger Nano.
-  [Staking commands using the Solana Command Line Tools](cli/delegate-stake.md).
+  [Staking commands using the Solana Command Line Tools](https://docs.solanalabs.com/cli/examples/delegate-stake).
 
 #### Create a Stake Account
 
@@ -97,4 +98,5 @@ Follow the wallet's instructions for delegating your to your chosen validator.
 ## Stake Account Details
 
 For more information about the operations and permissions associated with a
-stake account, please see [Stake Accounts](staking/stake-accounts.md)
+stake account, please see
+[Stake Accounts](/docs/economics/staking/stake-accounts.md)

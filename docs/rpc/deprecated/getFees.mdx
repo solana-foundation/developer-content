@@ -4,6 +4,7 @@ title: getFees RPC Method
 hideTableOfContents: true
 altRoutes:
   - /docs/rpc/getFees
+  - /docs/rpc/http/getFees
 ---
 
 Returns a recent block hash from the ledger, a fee schedule that can be used to
@@ -33,7 +34,7 @@ Configuration object containing the following fields:
   name="commitment"
   type="string"
   optional={true}
-  href="/docs/rpc#configuring-state-commitment"
+  href="/docs/rpc/index.mdx#configuring-state-commitment"
 ></Field>
 
 </Parameter>
@@ -49,8 +50,8 @@ with the following fields:
 - `lastValidSlot: <u64>` - DEPRECATED - this value is inaccurate and should not
   be relied upon
 - `lastValidBlockHeight: <u64>` - last
-  [block height](/docs/terminology#block-height) at which the blockhash will be
-  valid
+  [block height](/docs/terminology.md#block-height) at which the blockhash will
+  be valid
 
 </DocLeftSide>
 

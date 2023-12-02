@@ -24,7 +24,7 @@ necessarily have any control over the account. In fact, a keypair or private key
 may not even exist for a stake account's address.
 
 The only time a stake account's address has a keypair file is when
-[creating a stake account using the command line tools](../cli/delegate-stake.md#create-a-stake-account).
+[creating a stake account using the command line tools](https://docs.solanalabs.com/cli/examples/delegate-stake#create-a-stake-account).
 A new keypair file is created first only to ensure that the stake account's
 address is new and unique.
 
@@ -107,9 +107,9 @@ effective stake.
 When a stake account is delegated, or a delegation is deactivated, the operation
 does not take effect immediately.
 
-A delegation or deactivation takes several [epochs](/docs/terminology#epoch) to
-complete, with a fraction of the delegation becoming active or inactive at each
-epoch boundary after the transaction containing the instructions has been
+A delegation or deactivation takes several [epochs](/docs/terminology.md#epoch)
+to complete, with a fraction of the delegation becoming active or inactive at
+each epoch boundary after the transaction containing the instructions has been
 submitted to the cluster.
 
 There is also a limit on how much total stake can become delegated or
@@ -117,7 +117,7 @@ deactivated in a single epoch, to prevent large sudden changes in stake across
 the network as a whole. Since warmup and cooldown are dependent on the behavior
 of other network participants, their exact duration is difficult to predict.
 Details on the warmup and cooldown timing can be found
-[here](../cluster/stake-delegation-and-rewards.md#stake-warmup-cooldown-withdrawal).
+[here](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards#stake-warmup-cooldown-withdrawal).
 
 #### Lockups
 

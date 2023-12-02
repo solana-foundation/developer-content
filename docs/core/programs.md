@@ -22,8 +22,8 @@ transactions speeds of the blockchain.
 
 ## Key points
 
-- Programs are essentially special type of [Accounts](/docs/core/accounts) that
-  is marked as "_executable_"
+- Programs are essentially special type of [Accounts](/docs/core/accounts.md)
+  that is marked as "_executable_"
 - Programs can own other Accounts
 - Programs can only _change the data_ or _debit_ accounts they own
 - Any program can _read_ or _credit_ another account
@@ -60,22 +60,23 @@ Solana blockchain.
 Similar to other "on chain" programs in Solana, native programs can be called by
 any other program/user. However, they can only be upgraded as part of the core
 blockchain and cluster updates. These native program upgrades are controlled via
-the releases to the [different clusters](/docs/core/clusters).
+the releases to the [different clusters](/docs/core/clusters.md).
 
 #### Examples of native programs include:
 
-- [System Program](../runtime-facilities/programs.md#system-program): Create new
-  accounts, transfer tokens, and more
-- [BPF Loader Program](../runtime-facilities/programs.md#bpf-loader): Deploys,
-  upgrades, and executes programs on chain
-- [Vote program](../runtime-facilities/programs.md#vote-program): Create and
-  manage accounts that track validator voting state and rewards.
+- [System Program](https://docs.solanalabs.com/runtime/programs#system-program):
+  Create new accounts, transfer tokens, and more
+- [BPF Loader Program](https://docs.solanalabs.com/runtime/programs#bpf-loader):
+  Deploys, upgrades, and executes programs on chain
+- [Vote program](https://docs.solanalabs.com/runtime/programs#vote-program):
+  Create and manage accounts that track validator voting state and rewards.
 
 ## Executable
 
 When a Solana program is deployed onto the network, it is marked as "executable"
-by the [BPF Loader Program](../runtime-facilities/programs.md#bpf-loader). This
-allows the Solana runtime to efficiently and properly execute the compiled
+by the
+[BPF Loader Program](https://docs.solanalabs.com/runtime/programs#bpf-loader).
+This allows the Solana runtime to efficiently and properly execute the compiled
 program code.
 
 ## Upgradable

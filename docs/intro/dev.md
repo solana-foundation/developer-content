@@ -53,8 +53,8 @@ and C++ programs directly to the blockchain. Once these programs are deployed,
 anyone who knows how to communicate with them can use them.
 
 You can communicate with these programs by writing dApps with any of the
-available client SDKs (or the [CLI](../cli.md)), all of which use the
-[JSON RPC API](/docs/rpc) under the hood.
+available client SDKs (or the [CLI](https://docs.solanalabs.com/cli)), all of
+which use the [JSON RPC API](/docs/rpc/index.mdx) under the hood.
 
 ### Client development
 
@@ -63,7 +63,7 @@ communicate with deployed programs. Your apps can submit transactions with
 instructions to these programs via a client SDK to create a wide variety of
 applications such as wallets, exchanges and more. The most popular apps are
 browser extension wallets and web apps, but you can build mobile/desktop apps or
-anything that can communicate with the [JSON RPC API](/docs/rpc).
+anything that can communicate with the [JSON RPC API](/docs/rpc/index.mdx).
 
 These two pieces work together to create a network of dApps and programs that
 can communicate with each other to update the state and query the blockchain.
@@ -107,7 +107,7 @@ Here's a visual representation of what a transaction contains:
 Transactions can be created and signed using clients via SDKs, or even on-chain
 programs.
 
-You can learn more about transactions [here](/docs/core/transactions).
+You can learn more about transactions [here](/docs/core/transactions.md).
 
 ### Instructions
 
@@ -125,7 +125,7 @@ Here's what an instruction looks like:
 | `Data`       | Input data provided to the program as additional information or parameters in the format of a byte array |
 
 You can read more about instructions
-[here](/docs/core/transactions#instructions).
+[here](/docs/core/transactions.md#instructions).
 
 ### Transaction Fees
 
@@ -140,12 +140,13 @@ Transactions fees are calculated based on two main parts:
 
 - a statically set base fee per signature, and
 - the computational resources used during the transaction, measured in
-  "[_compute units_](/docs/terminology#compute-units)"
+  "[_compute units_](/docs/terminology.md#compute-units)"
 
 The more work a transaction requires, the more compute units it will use, and
 the more it will cost.
 
-You can read more about transaction fees [here](/docs/core/transactions/fees).
+You can read more about transaction fees
+[here](/docs/core/transactions/fees.md).
 
 ## Accounts
 
@@ -172,7 +173,7 @@ account doesn't have enough tokens to cover the rent, it will be removed.
 However, if the account does hold enough tokens to cover the rent for two years,
 it's considered "rent-exempt" and won't be deleted.
 
-You can read more about accounts [here](/docs/core/accounts).
+You can read more about accounts [here](/docs/core/accounts.md).
 
 ## Programs
 
@@ -185,7 +186,7 @@ programs are stateless: any data they interact with is stored in separate
 accounts that are passed in via instructions.
 
 There are two sets of programs that are maintained by the Solana Labs team:
-[Native Programs](../developing/runtime-facilities/programs.md) and the
+[Native Programs](https://docs.solanalabs.com/runtime/programs) and the
 [Solana Program Library (SPL)](https://spl.solana.com/). These serve as core
 building blocks for on-chain interactions. Native programs are used for core
 blockchain functionality like creating new accounts, assigning ownership,
@@ -203,7 +204,7 @@ Developers most commonly write programs in Rust using frameworks such as Anchor.
 However, programs can be written in any language that compiles to BPF, including
 C++ and Move.
 
-You can learn more about programs [here](/docs/core/programs).
+You can learn more about programs [here](/docs/core/programs.md).
 
 ## Testing and developing environments
 
@@ -213,9 +214,10 @@ The easiest and quickest way to get started is the
 [Solana Playground](https://beta.solpg.io) - a browser based IDE that allows you
 to write, deploy, and test programs.
 
-The most popular setup is [local development](local.md) with a local validator
-that you run on your machine - this allows you to test your programs locally
-before deploying them to any network.
+The most popular setup is
+[local development](/content/guides/getstarted/setup-local-development.md) with
+a local validator that you run on your machine - this allows you to test your
+programs locally before deploying them to any network.
 
 In each environment, you'll be using one of three networks:
 
@@ -229,14 +231,14 @@ In each environment, you'll be using one of three networks:
 Devnet has a faucet that allows you to get free SOL to test with. It costs $0 to
 do development on Solana.
 
-Check out the [clusters page](/docs/core/clusters) for more information on
+Check out the [clusters page](/docs/core/clusters.md) for more information on
 these.
 
 ## Next steps
 
 You're now ready to get started building on Solana!
 
-- [Deploy your first Solana program in the browser](/developers/guides/getstarted/hello-world-in-your-browser)
-- [Setup your local development environment](/developers/guides/getstarted/setup-local-development)
-- [Get started building programs locally with Rust](/developers/guides/getstarted/local-rust-hello-world)
-- [Overview of writing Solana programs](/docs/programs)
+- [Deploy your first Solana program in the browser](/content/guides/getstarted/hello-world-in-your-browser.md)
+- [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
+- [Get started building programs locally with Rust](/content/guides/getstarted/local-rust-hello-world.md)
+- [Overview of writing Solana programs](/docs/programs/index.md)

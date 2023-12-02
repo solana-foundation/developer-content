@@ -25,7 +25,7 @@ uses an _address_ to look up an account. The address is a 256-bit public key.
 ## Signers
 
 Transactions include one or more digital
-[signatures](/docs/terminology#signature) each corresponding to an account
+[signatures](/docs/terminology.md#signature) each corresponding to an account
 address referenced by the transaction. Each of these addresses must be the
 public key of an ed25519 keypair, and the signature signifies that the holder of
 the matching private key signed, and thus, "authorized" the transaction. In this
@@ -35,17 +35,18 @@ Programs can then use that information to make authority decisions.
 
 ## Read-only
 
-Transactions can [indicate](transactions.md#message-header-format) that some of
-the accounts it references be treated as _read-only accounts_ in order to enable
-parallel account processing between transactions. The runtime permits read-only
-accounts to be read concurrently by multiple programs. If a program attempts to
-modify a read-only account, the transaction is rejected by the runtime.
+Transactions can [indicate](/docs/core/transactions.md#message-header-format)
+that some of the accounts it references be treated as _read-only accounts_ in
+order to enable parallel account processing between transactions. The runtime
+permits read-only accounts to be read concurrently by multiple programs. If a
+program attempts to modify a read-only account, the transaction is rejected by
+the runtime.
 
 ## Executable
 
 If an account is marked "executable" in its metadata, then it is considered a
 program which can be executed by including the account's public key in an
-instruction's [program id](/docs/core/transactions#program-id). Accounts are
+instruction's [program id](/docs/core/transactions.md#program-id). Accounts are
 marked as executable during a successful program deployment process by the
 loader that owns the account. When a program is deployed to the execution engine
 (SBF deployment), the loader determines that the bytecode in the account's data
@@ -67,7 +68,7 @@ and per instruction.
 An account address can be any arbitrary 256 bit value, and there are mechanisms
 for advanced users to create derived addresses
 (`SystemProgram::CreateAccountWithSeed`,
-[`Pubkey::CreateProgramAddress`](/docs/core/cpi#program-derived-addresses)).
+[`Pubkey::CreateProgramAddress`](/docs/core/cpi.md#program-derived-addresses)).
 
 Accounts that have never been created via the system program can also be passed
 to programs. When an instruction references an account that hasn't been
@@ -150,7 +151,7 @@ Program executable accounts are required by the runtime to be rent-exempt to
 avoid being purged.
 
 > Note: Use the
-> [`getMinimumBalanceForRentExemption`](/docs/rpc/http/getminimumbalanceforrentexemption)
+> [`getMinimumBalanceForRentExemption`](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx)
 > RPC endpoint to calculate the minimum balance for a particular account size.
 > The following calculation is illustrative only.
 
@@ -162,7 +163,7 @@ balance of 105,290,880 lamports (=~ 0.105 SOL) to be rent-exempt:
 ```
 
 Rent can also be estimated via the
-[`solana rent` CLI subcommand](cli/usage.md#solana-rent)
+[`solana rent` CLI subcommand](https://docs.solanalabs.com/cli/usage#solana-rent)
 
 ```text
 $ solana rent 15000
