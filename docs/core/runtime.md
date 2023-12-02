@@ -115,14 +115,14 @@ Then any transaction:
 > the various costs of the operations it performs.
 
 At runtime a program may log how much of the compute budget remains. See
-[debugging](developing/on-chain-programs/debugging.md#monitoring-compute-budget-consumption)
+[debugging](/docs/programs/debugging.md#monitoring-compute-budget-consumption)
 for more information.
 
 ### Prioritization fees
 
 As part of the Compute Budget, the runtime supports transactions including an
 **optional** fee to prioritize itself against others known as a
-[prioritization fee](./../../transaction_fees.md#prioritization-fee).
+[prioritization fee](/docs/intro/transaction_fees.md#prioritization-fee).
 
 This _prioritization fee_ is calculated by multiplying the number of _compute
 units_ by the _compute unit price_ (measured in micro-lamports). These values
@@ -131,7 +131,7 @@ may be set via the Compute Budget instructions `SetComputeUnitLimit` and
 
 > You can learn more of the specifics of _how_ and _when_ to set a
 > prioritization fee on the
-> [transaction fees](./../../transaction_fees.md#prioritization-fee) page.
+> [transaction fees](/docs/intro/transaction_fees.md#prioritization-fee) page.
 
 ### Accounts data size limit
 
@@ -164,7 +164,7 @@ used to activate a feature, which marks it pending, once marked pending the
 feature will be activated at the next epoch.
 
 To determine which features are activated use the
-[Solana command-line tools](cli/install-solana-cli-tools.md):
+[Solana command-line tools](https://docs.solanalabs.com/cli/install):
 
 ```bash
 solana feature status
@@ -172,4 +172,5 @@ solana feature status
 
 If you encounter problems, first ensure that the Solana tools version you are
 using match the version returned by `solana cluster-version`. If they do not
-match, [install the correct tool suite](cli/install-solana-cli-tools.md).
+match,
+[install the correct tool suite](https://docs.solanalabs.com/cli/install).

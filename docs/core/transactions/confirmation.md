@@ -3,7 +3,7 @@ title: "Transaction Confirmation"
 ---
 
 Problems relating to
-[transaction confirmation](/docs/terminology#transaction-confirmations) are
+[transaction confirmation](/docs/terminology.md#transaction-confirmations) are
 common with many newer developers while building applications. This article aims
 to boost the overall understanding of the confirmation mechanism used on the
 Solana blockchain, including some recommended best practices.
@@ -15,17 +15,18 @@ things...
 
 ### What is a transaction?
 
-Transactions consist of two components: a [message](/docs/terminology#message)
-and a [list of signatures](/docs/terminology#signature). The transaction message
-is where the magic happens and at a high level it consists of three components:
+Transactions consist of two components: a
+[message](/docs/terminology.md#message) and a
+[list of signatures](/docs/terminology.md#signature). The transaction message is
+where the magic happens and at a high level it consists of three components:
 
 - a **list of instructions** to invoke,
 - a **list of accounts** to load, and
 - a **“recent blockhash.”**
 
 In this article, we’re going to be focusing a lot on a transaction’s
-[recent blockhash](/docs/terminology#blockhash) because it plays a big role in
-transaction confirmation.
+[recent blockhash](/docs/terminology.md#blockhash) because it plays a big role
+in transaction confirmation.
 
 ### Transaction lifecycle refresher
 
@@ -46,10 +47,10 @@ touch on everything except steps 1 and 4.
 
 ## What is a Blockhash?
 
-A [“blockhash”](/docs/terminology#blockhash) refers to the last Proof of History
-(PoH) hash for a [“slot”](/docs/terminology#slot) (description below). Since
-Solana uses PoH as a trusted clock, a transaction’s recent blockhash can be
-thought of as a **timestamp**.
+A [“blockhash”](/docs/terminology.md#blockhash) refers to the last Proof of
+History (PoH) hash for a [“slot”](/docs/terminology.md#slot) (description
+below). Since Solana uses PoH as a trusted clock, a transaction’s recent
+blockhash can be thought of as a **timestamp**.
 
 ### Proof of History refresher
 
@@ -194,18 +195,18 @@ Given the short expiration time frame, it’s imperative that clients help users
 create transactions with blockhash that is as recent as possible.
 
 When fetching blockhashes, the current recommended RPC API is called
-[`getLatestBlockhash`](/docs/rpc/http/getlatestblockhash). By default, this API
-uses the `"finalized"` commitment level to return the most recently finalized
-block’s blockhash. However, you can override this behavior by
-[setting the `commitment` parameter](/docs/rpc#configuring-state-commitment) to
-a different commitment level.
+[`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx). By default, this
+API uses the `"finalized"` commitment level to return the most recently
+finalized block’s blockhash. However, you can override this behavior by
+[setting the `commitment` parameter](/docs/rpc/index.mdx#configuring-state-commitment)
+to a different commitment level.
 
 **Recommendation**
 
 The `"confirmed"` commitment level should almost always be used for RPC requests
 because it’s usually only a few slots behind the `"processed"` commitment and
 has a very low chance of belonging to a dropped
-[fork](./../cluster/fork-generation.md).
+[fork](https://docs.solanalabs.com/consensus/fork-generation).
 
 But feel free to consider the other options:
 
@@ -267,9 +268,9 @@ behind the cluster, it will eventually catch up and detect your transaction’s
 expiration properly.
 
 For `simulateTransaction` requests, clients should use the
-[`replaceRecentBlockhash`](/docs/rpc/http/simulatetransaction) parameter to tell
-the RPC node to replace the simulated transaction’s blockhash with a blockhash
-that will always be valid for simulation.
+[`replaceRecentBlockhash`](/docs/rpc/http/simulateTransaction.mdx) parameter to
+tell the RPC node to replace the simulated transaction’s blockhash with a
+blockhash that will always be valid for simulation.
 
 ### Avoid reusing stale blockhashes
 
@@ -311,28 +312,28 @@ Monitor the health of your RPC nodes to ensure that they have an up-to-date view
 of the cluster state with one of the following methods:
 
 1. Fetch your RPC node’s highest processed slot by using the
-   [`getSlot`](/docs/rpc/http/getslot) RPC API with the `"processed"` commitment
-   level and then call the
-   [`getMaxShredInsertSlot](/docs/rpc/http/getmaxshredinsertslot) RPC API to get
-   the highest slot that your RPC node has received a “shred” of a block for. If
-   the difference between these responses is very large, the cluster is
+   [`getSlot`](/docs/rpc/http/getSlot.mdx) RPC API with the `"processed"`
+   commitment level and then call the
+   [`getMaxShredInsertSlot](/docs/rpc/http/getMaxShredInsertSlot.mdx) RPC API to
+   get the highest slot that your RPC node has received a “shred” of a block
+   for. If the difference between these responses is very large, the cluster is
    producing blocks far ahead of what the RPC node has processed.
 2. Call the `getLatestBlockhash` RPC API with the `"confirmed"` commitment level
    on a few different RPC API nodes and use the blockhash from the node that
    returns the highest slot for its
-   [context slot](/docs/rpc#rpcresponse-structure).
+   [context slot](/docs/rpc/index.mdx#rpcresponse-structure).
 
 ### Wait long enough for expiration
 
 **Recommendation**
 
-When calling [`getLatestBlockhash`](/docs/rpc/http/getlatestblockhash) RPC API
-to get a recent blockhash for your transaction, take note of the
+When calling [`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx) RPC
+API to get a recent blockhash for your transaction, take note of the
 `"lastValidBlockHeight"` in the response.
 
-Then, poll the [`getBlockHeight`](/docs/rpc/http/getblockheight) RPC API with
-the “confirmed” commitment level until it returns a block height greater than
-the previously returned last valid block height.
+Then, poll the [`getBlockHeight`](/docs/rpc/http/getBlockHeight.mdx) RPC API
+with the “confirmed” commitment level until it returns a block height greater
+than the previously returned last valid block height.
 
 ### Consider using “durable” transactions
 
@@ -368,6 +369,6 @@ Here’s how these transactions are processed by the Solana runtime:
    processed again
 
 For more details about how these durable transactions work, you can read the
-[original proposal](./../implemented-proposals/durable-tx-nonces.md) and
-[check out an example](./clients/javascript-reference#nonceaccount) in the
-Solana docs.
+[original proposal](https://docs.solanalabs.com/implemented-proposals/durable-tx-nonces)
+and [check out an example](/docs/clients/javascript-reference.md#nonceaccount)
+in the Solana docs.

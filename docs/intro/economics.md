@@ -33,16 +33,17 @@ protection through partial burning of each transaction fee is also discussed
 below.
 
 First, an overview of the inflation design is presented. This section starts
-with defining and clarifying [Terminology](inflation/terminology.md) commonly
-used subsequently in the discussion of inflation and the related components.
+with defining and clarifying
+[Terminology](/docs/economics/inflation/terminology.md) commonly used
+subsequently in the discussion of inflation and the related components.
 Following that, we outline Solana's proposed
-[Inflation Schedule](inflation/inflation_schedule.md), i.e. the specific
-parameters that uniquely parameterize the protocol-driven inflationary issuance
-over time. Next is a brief section on
-[Adjusted Staking Yield](inflation/adjusted_staking_yield.md), and how token
-dilution might influence staking behavior.
+[Inflation Schedule](/docs/economics/inflation/inflation_schedule.md), i.e. the
+specific parameters that uniquely parameterize the protocol-driven inflationary
+issuance over time. Next is a brief section on
+[Adjusted Staking Yield](/docs/economics/inflation/_adjusted_staking_yield.md),
+and how token dilution might influence staking behavior.
 
-An overview of [Transaction Fees](/docs/core/transactions/fees) on Solana is
-followed by a discussion of [Storage Rent Economics](storage_rent_economics.md)
+An overview of [Transaction Fees](/docs/core/transactions/fees.md) on Solana is
+followed by a discussion of [Storage Rent Economics](/docs/intro/economics.md)
 in which we describe an implementation of storage rent to account for the
 externality costs of maintaining the active state of the ledger.

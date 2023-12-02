@@ -422,8 +422,9 @@ await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 
 Message is used as another way to construct transactions. You can construct a
 message using the accounts, header, instructions, and recentBlockhash that are a
-part of a transaction. A [Transaction](./javascript.md#Transaction) is a Message
-plus the list of required signatures required to execute the transaction.
+part of a transaction. A [Transaction](/docs/clients/javascript.md#Transaction)
+is a Message plus the list of required signatures required to execute the
+transaction.
 
 #### Example Usage
 
@@ -517,8 +518,9 @@ export class Fee extends Struct {
 
 The Enum class is used to represent a Rust compatible Enum in javascript. The
 enum will just be a string representation if logged but can be properly
-encoded/decoded when used in conjunction with [Struct](./javascript.md#Struct).
-This class is only compatible with Borsh encoded Rust enumerations.
+encoded/decoded when used in conjunction with
+[Struct](/docs/clients/javascript.md#Struct). This class is only compatible with
+Borsh encoded Rust enumerations.
 
 #### Example Usage
 
@@ -813,17 +815,17 @@ within Solana. You can designate a `staker` and `withdrawer` separately,
 allowing for a different account to withdraw other than the staker.
 
 You can find more usage of the `Authorized` object under
-[`StakeProgram`](./javascript.md#StakeProgram)
+[`StakeProgram`](/docs/clients/javascript.md#StakeProgram)
 
 ### Lockup
 
 [Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Lockup.html)
 
 Lockup is used in conjunction with the
-[StakeProgram](./javascript.md#StakeProgram) to create an account. The Lockup is
-used to determine how long the stake will be locked, or unable to be retrieved.
-If the Lockup is set to 0 for both epoch and the Unix timestamp, the lockup will
-be disabled for the stake account.
+[StakeProgram](/docs/clients/javascript.md#StakeProgram) to create an account.
+The Lockup is used to determine how long the stake will be locked, or unable to
+be retrieved. If the Lockup is set to 0 for both epoch and the Unix timestamp,
+the lockup will be disabled for the stake account.
 
 #### Example Usage
 
@@ -853,4 +855,4 @@ The above code creates a `createStakeAccountInstruction` to be used when
 creating an account with the `StakeProgram`. The Lockup is set to 0 for both the
 epoch and Unix timestamp, disabling lockup for the account.
 
-See [StakeProgram](./javascript.md#StakeProgram) for more.
+See [StakeProgram](/docs/clients/javascript.md#StakeProgram) for more.

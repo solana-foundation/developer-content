@@ -10,8 +10,8 @@ efficiently load more addresses in a single transaction.
 Since each transaction on the Solana blockchain requires a listing of every
 address that is interacted with as part of the transaction, this listing would
 effectively be capped at 32 addresses per transaction. With the help of
-[Address Lookup Tables](./lookup-tables.md), a transaction would now be able to
-raise that limit to 256 addresses per transaction.
+[Address Lookup Tables](/docs/advanced/lookup-tables.md), a transaction would
+now be able to raise that limit to 256 addresses per transaction.
 
 ## Compressing on chain addresses
 
@@ -27,7 +27,7 @@ table for use inside any given transaction.
 
 To utilize an Address Lookup Table inside a transaction, developers must use v0
 transactions that were introduced with the new
-[Versioned Transaction format](./versioned-transactions.md).
+[Versioned Transaction format](/docs/core/transactions/versions.md).
 
 ## How to create an address lookup table
 
@@ -65,7 +65,7 @@ console.log("lookup table address:", lookupTableAddress.toBase58());
 > NOTE: Address lookup tables can be **created** with either a `v0` transaction
 > or a `legacy` transaction. But the Solana runtime can only retrieve and handle
 > the additional addresses within a lookup table while using
-> [v0 Versioned Transactions](./versioned-transactions.md#current-transaction-versions).
+> [v0 Versioned Transactions](/docs/core/transactions/versions.md#current-transaction-versions).
 
 ## Add addresses to a lookup table
 
@@ -141,9 +141,9 @@ chain (via extending the lookup table), you can create a `v0` transaction to
 utilize the on chain lookup capabilities.
 
 Just like older `legacy` transactions, you can create all the
-[instructions](/docs/terminology#instruction) your transaction will execute on
-chain. You can then provide an array of these instructions to the
-[Message](/docs/terminology#message) used in the `v0 transaction.
+[instructions](/docs/terminology.md#instruction) your transaction will execute
+on chain. You can then provide an array of these instructions to the
+[Message](/docs/terminology.md#message) used in the `v0 transaction.
 
 > NOTE: The instructions used inside a `v0` transaction can be constructed using
 > the same methods and functions used to create the instructions in the past.
@@ -183,6 +183,7 @@ console.log(
 
 ## More Resources
 
-- Read the [proposal](./../proposals/versioned-transactions.md) for Address
-  Lookup Tables and Versioned transactions
+- Read the
+  [proposal](https://docs.solanalabs.com/proposals/versioned-transactions) for
+  Address Lookup Tables and Versioned transactions
 - [Example Rust program using Address Lookup Tables](https://github.com/TeamRaccoons/address-lookup-table-multi-swap)

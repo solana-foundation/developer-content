@@ -18,7 +18,7 @@ process can be broadly summarized into a few key steps.
 ### 1. Setup your development environment
 
 The most robust way of getting started with Solana development, is
-[installing the Solana CLI](./../../cli/install-solana-cli-tools.md) tools on
+[installing the Solana CLI](https://docs.solanalabs.com/cli/install) tools on
 your local computer. This will allow you to have the most powerful development
 environment.
 
@@ -43,11 +43,12 @@ byte-code that will then be deployed to the blockchain.
 
 ### 4. Generate the program's public address
 
-Using the [Solana CLI](./../../cli/install-solana-cli-tools.md), the developer
-will generate a new unique [Keypair](/docs/terminology#keypair) for the new
-program. The public address (aka [Pubkey](/docs/terminology#public-key-pubkey))
-from this Keypair will be used on-chain as the program's public address (aka
-[`programId`](/docs/terminology#program-id)).
+Using the [Solana CLI](https://docs.solanalabs.com/cli/install), the developer
+will generate a new unique [Keypair](/docs/terminology.md#keypair) for the new
+program. The public address (aka
+[Pubkey](/docs/terminology.md#public-key-pubkey)) from this Keypair will be used
+on-chain as the program's public address (aka
+[`programId`](/docs/terminology.md#program-id)).
 
 ### 5. Deploying the program
 
@@ -59,24 +60,25 @@ manner.
 
 Once the entire program has been sent to the blockchain, a final transaction is
 sent to write all of the buffered byte-code to the program's data account. This
-either mark the new program as [`executable`](/docs/core/accounts#executable),
-or complete the process to upgrade an existing program (if it already existed).
+either mark the new program as
+[`executable`](/docs/core/accounts.md#executable), or complete the process to
+upgrade an existing program (if it already existed).
 
 ## Support languages
 
 Solana programs are typically written in the
-[Rust language](/docs/programs/lang-rust), but [C/C++](/docs/programs/lang-c)
-are also supported.
+[Rust language](/docs/programs/lang-rust.md), but
+[C/C++](/docs/programs/lang-c.md) are also supported.
 
 There are also various community driven efforts to enable writing on-chain
 programs using other languages, including:
 
-- Python via [Seahorse](https://seahorse-lang.org/) (that acts as a wrapper the
-  Rust based Anchor framework)
+- Python via [Seahorse](https://seahorse.dev/) (that acts as a wrapper the Rust
+  based Anchor framework)
 
 ## Example programs
 
-You can also explore the [Program Examples](/docs/programs/examples) for
+You can also explore the [Program Examples](/docs/programs/examples.md) for
 examples of on-chain programs.
 
 ## Limitations
@@ -84,9 +86,9 @@ examples of on-chain programs.
 As you dive deeper into program development, it is important to understand some
 of the important limitations associated with on-chain programs.
 
-Read more details on the [Limitations](/docs/programs/limitations) page
+Read more details on the [Limitations](/docs/programs/limitations.md) page
 
 ## Frequently asked questions
 
-Discover many of the [frequently asked questions](/docs/programs/faq) other
+Discover many of the [frequently asked questions](/docs/programs/faq.md) other
 developers have about writing/understanding Solana programs.

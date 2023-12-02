@@ -15,8 +15,8 @@ keywords:
   - affordable blockchain
 ---
 
-The small fees paid to process [instructions](/docs/terminology#instruction) on
-the Solana blockchain are known as "_transaction fees_".
+The small fees paid to process [instructions](/docs/terminology.md#instruction)
+on the Solana blockchain are known as "_transaction fees_".
 
 As each transaction (which contains one or more instructions) is sent through
 the network, it gets processed by the current leader validation-client. Once
@@ -25,10 +25,10 @@ network to help support the [economic design](#economic-design) of the Solana
 blockchain.
 
 > **NOTE:** Transaction fees are different from
-> [account rent](/docs/terminology#rent)! While transaction fees are paid to
+> [account rent](/docs/terminology.md#rent)! While transaction fees are paid to
 > process instructions on the Solana network, rent is paid to store data on the
 > blockchain. You can learn more about rent here:
-> [What is rent?](/docs/core/rent)
+> [What is rent?](/docs/core/rent.md)
 
 ## Why pay transaction fees?
 
@@ -55,10 +55,10 @@ The same is true on Solana. Specifically:
 
 - A fixed proportion (initially 50%) of each transaction fee is _burned_
   (destroyed), with the remaining going to the current
-  [leader](/docs/terminology#leader) processing the transaction.
+  [leader](/docs/terminology.md#leader) processing the transaction.
 - A scheduled global inflation rate provides a source for
-  [rewards](./implemented-proposals/staking-rewards.md) distributed to
-  [Solana Validators](../src/running-validator.md).
+  [rewards](https://docs.solanalabs.com/implemented-proposals/staking-rewards)
+  distributed to [Solana Validators](https://docs.solanalabs.com/operations).
 
 ### Why burn some fees?
 
@@ -69,12 +69,12 @@ completely burned, leaders are still incentivized to include as many
 transactions as possible in their slots.
 
 Burnt fees can also help prevent malicious validators from censoring
-transactions by being considered in [fork](/docs/terminology#fork) selection.
+transactions by being considered in [fork](/docs/terminology.md#fork) selection.
 
 #### Example of an attack:
 
 In the case of a
-[Proof of History (PoH)](/docs/terminology#proof-of-history-poh) fork with a
+[Proof of History (PoH)](/docs/terminology.md#proof-of-history-poh) fork with a
 malicious, censoring leader:
 
 - due to the fees lost from censoring, we would expect the total fees burned to
@@ -89,11 +89,11 @@ Transactions fees are calculated based on two main parts:
 
 - a statically set base fee per signature, and
 - the computational resources used during the transaction, measured in
-  "[_compute units_](/docs/terminology#compute-units)"
+  "[_compute units_](/docs/terminology.md#compute-units)"
 
 Since each transaction may require a different amount of computational
 resources, they are alloted a maximum number of _compute units_ per transaction
-known as the "[_compute budget_](/docs/terminology#compute-budget)".
+known as the "[_compute budget_](/docs/terminology.md#compute-budget)".
 
 The execution of each instruction within a transaction consumes a different
 number of _compute units_. After the maximum number of _compute units_ has been
@@ -101,20 +101,20 @@ consumed (aka compute budget exhaustion), the runtime will halt the transaction
 and return an error. This results in a failed transaction.
 
 > **Learn more:** compute units and the
-> [Compute Budget](/docs/core/runtime#compute-budget) in the Runtime and
-> [requesting a fee estimate](/docs/rpc/http/getfeeformessage) from the RPC.
+> [Compute Budget](/docs/core/runtime.md#compute-budget) in the Runtime and
+> [requesting a fee estimate](/docs/rpc/http/getFeeForMessage.mdx) from the RPC.
 
 ## Prioritization fee
 
 A Solana transaction can include an **optional** fee to prioritize itself
 against others known as a
-"_[prioritization fee](/docs/terminology#prioritization-fee)_". Paying this
+"_[prioritization fee](/docs/terminology.md#prioritization-fee)_". Paying this
 additional fee helps boost how a transaction is prioritized against others,
 resulting in faster execution times.
 
 ### How the prioritization fee is calculated
 
-A transaction's [prioritization fee](/docs/terminology#prioritization-fee) is
+A transaction's [prioritization fee](/docs/terminology.md#prioritization-fee) is
 calculated by multiplying the maximum number of **_compute units_** by the
 **_compute unit price_** (measured in _micro-lamports_).
 
@@ -197,9 +197,9 @@ by an executed transaction.
 #### Get recent prioritization fees
 
 Prior to sending a transaction to the cluster, you can use the
-[`getRecentPrioritizationFees`](/docs/rpc/http/getrecentprioritizationfees) RPC
-method to get a list of the recent paid prioritization fees within the recent
-blocks processed by the node.
+[`getRecentPrioritizationFees`](/docs/rpc/http/getRecentPrioritizationFees.mdx)
+RPC method to get a list of the recent paid prioritization fees within the
+recent blocks processed by the node.
 
 You could then use this data to estimate an appropriate prioritization fee for
 your transaction to both (a) better ensure it gets processed by the cluster and

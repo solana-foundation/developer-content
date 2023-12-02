@@ -7,7 +7,7 @@ title: Retrying Transactions
 On some occasions, a seemingly valid transaction may be dropped before it is
 included in a block. This most often occurs during periods of network
 congestion, when an RPC node fails to rebroadcast the transaction to the
-[leader](/docs/terminology#leader). To an end-user, it may appear as if their
+[leader](/docs/terminology.md#leader). To an end-user, it may appear as if their
 transaction disappears entirely. While RPC nodes are equipped with a generic
 rebroadcasting algorithm, application developers are also capable of developing
 their own custom rebroadcasting logic.
@@ -33,7 +33,7 @@ so that they can be processed into a block. There are two main ways in which a
 transaction can be sent to leaders:
 
 1. By proxy via an RPC server and the
-   [sendTransaction](/docs/rpc/http/sendtransaction) JSON-RPC method
+   [sendTransaction](/docs/rpc/http/sendTransaction.mdx) JSON-RPC method
 2. Directly to leaders via a
    [TPU Client](https://docs.rs/solana-client/latest/solana_client/tpu_client/index.html)
 
@@ -57,7 +57,7 @@ communicate with one another, but does not provide any guarantees regarding
 transaction delivery.
 
 Because Solana’s leader schedule is known in advance of every
-[epoch](/docs/terminology#epoch) (~2 days), an RPC node will broadcast its
+[epoch](/docs/terminology.md#epoch) (~2 days), an RPC node will broadcast its
 transaction directly to the current and next leaders. This is in contrast to
 other gossip protocols such as Ethereum that propagate transactions randomly and
 broadly across the entire network. By default, RPC nodes will try to forward
@@ -125,12 +125,12 @@ it is processed. The first scenario involves transactions that are submitted via
 an RPC pool. Occasionally, part of the RPC pool can be sufficiently ahead of the
 rest of the pool. This can cause issues when nodes within the pool are required
 to work together. In this example, the transaction’s
-[recentBlockhash](/docs/core/transactions#recent-blockhash) is queried from the
-advanced part of the pool (Backend A). When the transaction is submitted to the
-lagging part of the pool (Backend B), the nodes will not recognize the advanced
-blockhash and will drop the transaction. This can be detected upon transaction
-submission if developers enable
-[preflight checks](/docs/rpc/http/sendtransaction) on `sendTransaction`.
+[recentBlockhash](/docs/core/transactions.md#recent-blockhash) is queried from
+the advanced part of the pool (Backend A). When the transaction is submitted to
+the lagging part of the pool (Backend B), the nodes will not recognize the
+advanced blockhash and will drop the transaction. This can be detected upon
+transaction submission if developers enable
+[preflight checks](/docs/rpc/http/sendTransaction.mdx) on `sendTransaction`.
 
 ![Transaction dropped via an RPC Pool](/assets/docs/rt-dropped-via-rpc-pool.png)
 
@@ -179,8 +179,8 @@ the transaction will be processed or finalized by the cluster.
   - `skipPreflight`: `boolean` - if true, skip the preflight transaction checks
     (default: false)
   - (optional) `preflightCommitment`: `string` -
-    [Commitment](/docs/rpc/http/configuring-state-commitment) level to use for
-    preflight simulations against the bank slot (default: "finalized").
+    [Commitment](/docs/rpc/index.mdx#configuring-state-commitment) level to use
+    for preflight simulations against the bank slot (default: "finalized").
   - (optional) `encoding`: `string` - Encoding used for the transaction data.
     Either "base58" (slow), or "base64". (default: "base58").
   - (optional) `maxRetries`: `usize` - Maximum number of times for the RPC node
@@ -192,7 +192,7 @@ the transaction will be processed or finalized by the cluster.
 
 - `transaction id`: `string` - First transaction signature embedded in the
   transaction, as base-58 encoded string. This transaction id can be used with
-  [`getSignatureStatuses`](/docs/rpc/http/getsignaturestatuses) to poll for
+  [`getSignatureStatuses`](/docs/rpc/http/getSignatureStatuses.mdx) to poll for
   status updates.
 
 ## Customizing Rebroadcast Logic
@@ -205,9 +205,9 @@ developers to manually control the retry process
 
 A common pattern for manually retrying transactions involves temporarily storing
 the `lastValidBlockHeight` that comes from
-[getLatestBlockhash](/docs/rpc/http/getlatestblockhash). Once stashed, an
+[getLatestBlockhash](/docs/rpc/http/getLatestBlockhash.mdx). Once stashed, an
 application can then
-[poll the cluster’s blockheight](/docs/rpc/http/getblockheight) and manually
+[poll the cluster’s blockheight](/docs/rpc/http/getBlockHeight.mdx) and manually
 retry the transaction at an appropriate interval. In times of network
 congestion, it’s advantageous to set `maxRetries` to 0 and manually rebroadcast
 via a custom algorithm. While some applications may employ an
@@ -274,8 +274,8 @@ const sleep = async (ms: number) => {
 ```
 
 When polling via `getLatestBlockhash`, applications should specify their
-intended [commitment](/docs/rpc/http/configuring-state-commitment) level. By
-setting its commitment to `confirmed` (voted on) or `finalized` (~30 blocks
+intended [commitment](/docs/rpc/index.mdx#configuring-state-commitment) level.
+By setting its commitment to `confirmed` (voted on) or `finalized` (~30 blocks
 after `confirmed`), an application can avoid polling a blockhash from a minority
 fork.
 
@@ -315,6 +315,7 @@ if they unintentionally sent the same transaction twice.
 In Solana, a dropped transaction can be safely discarded once the blockhash it
 references is older than the `lastValidBlockHeight` received from
 `getLatestBlockhash`. Developers should keep track of this
-`lastValidBlockHeight` by querying [`getEpochInfo`](/docs/rpc/http/getepochinfo)
-and comparing with `blockHeight` in the response. Once a blockhash is
-invalidated, clients may re-sign with a newly-queried blockhash.
+`lastValidBlockHeight` by querying
+[`getEpochInfo`](/docs/rpc/http/getEpochInfo.mdx) and comparing with
+`blockHeight` in the response. Once a blockhash is invalidated, clients may
+re-sign with a newly-queried blockhash.

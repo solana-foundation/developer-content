@@ -15,8 +15,8 @@ keywords:
   - affordable blockchain
 ---
 
-The small fees paid to process [instructions](/docs/terminology#instruction) on
-the Solana blockchain are known as "_transaction fees_".
+The small fees paid to process [instructions](/docs/terminology.md#instruction)
+on the Solana blockchain are known as "_transaction fees_".
 
 As each transaction (which contains one or more instructions) is sent through
 the network, it gets processed by the current leader validation-client. Once
@@ -24,7 +24,7 @@ confirmed as a global state transaction, this _transaction fee_ is paid to the
 network to help support the economic design of the Solana blockchain.
 
 > NOTE: Transactions fees are different from the blockchain's data storage fee
-> called [rent](./rent.md)
+> called [rent](/docs/core/rent.md)
 
 ### Transaction Fee Calculation
 

@@ -6,15 +6,15 @@ description:
   accounts.'
 ---
 
-On Solana, [State Compression](./state-compression.md) is the method of creating
-a "fingerprint" (or hash) of off-chain data and storing this fingerprint
-on-chain for secure verification. Effectively using the security of the Solana
-ledger to securely validate off-chain data, verifying it has not been tampered
-with.
+On Solana, [State Compression](/docs/advanced/state-compression.md) is the
+method of creating a "fingerprint" (or hash) of off-chain data and storing this
+fingerprint on-chain for secure verification. Effectively using the security of
+the Solana ledger to securely validate off-chain data, verifying it has not been
+tampered with.
 
 This method of "compression" allows Solana programs and dApps to use cheap
-blockchain [ledger](/docs/terminology#ledger) space, instead of the more
-expensive [account](/docs/terminology#account) space, to securely store data.
+blockchain [ledger](/docs/terminology.md#ledger) space, instead of the more
+expensive [account](/docs/terminology.md#account) space, to securely store data.
 
 This is accomplished by using a special binary tree structure, known as a
 [concurrent merkle tree](#what-is-a-concurrent-merkle-tree), to create a hash of
@@ -90,7 +90,7 @@ performed in series.
 ### What is a Concurrent merkle tree?
 
 In high throughput applications, like within the
-[Solana runtime](/src/validator/runtime.md), requests to change an on-chain
+[Solana runtime](/docs/core/runtime.md), requests to change an on-chain
 _traditional merkle tree_ could be received by validators in relatively rapid
 succession (e.g. within the same slot). Each leaf data change would still be
 required to performed in series. Resulting in each subsequent request for change
@@ -323,4 +323,4 @@ Solana. With compression, a one million NFT collection could be minted for
 
 If you are interested in creating compressed NFTs yourself, read our developer
 guide for
-[minting and transferring compressed NFTs](https://solana.com/developers/guides/javascript/compressed-nfts).
+[minting and transferring compressed NFTs](/content/guides/javascript/compressed-nfts.md).
