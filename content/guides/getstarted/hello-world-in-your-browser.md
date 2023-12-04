@@ -4,6 +4,7 @@ difficulty: intro
 featured: true
 featuredPriority: 0
 title: "Intro to Solana development (using only your browser)"
+seoTitle: "Introduction to Solana development"
 description:
   "Solana developer quickstart guide to learn how to setup, build, and deploy
   your first Solana program using only your browser with Solana Playground."

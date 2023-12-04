@@ -123,6 +123,21 @@ const basicContentFields: FieldDefs = {
     description: "Force hide the table of contents displayed on page",
     required: false,
   },
+
+  /**
+   * Custom SEO specific details
+   */
+  seoTitle: {
+    type: "string",
+    description: "Custom title to be used for SEO purposes",
+    required: false,
+  },
+  seoDescription: {
+    type: "string",
+    description:
+      "Custom description to be used for SEO purposes (recommended max of 155 characters)",
+    required: false,
+  },
 };
 
 /**

@@ -2,6 +2,7 @@
 date: Jul 29, 2023
 difficulty: intro
 title: "How to get Solana devnet SOL (including airdrops and faucets)"
+seoTitle: "Faucets: How to get Solana devnet SOL"
 description:
   "A list of the most common ways to get devnet and testnet SOL tokens for
   Solana development. Including: airdrop, web3.js, POW faucet, and more."
