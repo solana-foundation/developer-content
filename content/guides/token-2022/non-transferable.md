@@ -1,10 +1,10 @@
 ---
-date: Sep 01, 2023
+date: Dec 06, 2023
 title: How to use the Non-transferable extension
 description:
   "In the world of digital collectibles, NFTs have plenty of uses outside of the
-  PFP meta. Enter the concept of 'soul-bound' tokens - assets that are tied to an
-  individual."
+  PFP meta. Enter the concept of 'soul-bound' tokens - assets that are tied to
+  an individual."
 keywords:
   - token 2022
   - token extensions
@@ -17,52 +17,53 @@ altRoutes:
   - /developers/guides/non-transferable-tokens
 ---
 
-In the world of digital collectibles, NFTs have plenty of uses outside of the
-PFP meta. Enter the concept of "soul-bound" tokens - assets that are tied to an
-individual.
+The "soul-bound" token concept involves creating digital assets that are
+intrinsically linked to an individual. The `NonTransferable` extension makes it
+possible to create tokens that cannot be transferred. While tokens cannot be
+transferred, the owner can still burn tokens and close the Token Account. This
+prevents users from being "stuck" with an unwanted asset.
 
-This unlocks the potential for diplomas, identities, achievements, and more, all
-tokenized on-chain. These are assets that should remain exclusive to an
-individual/account.
+In this guide, we'll walk through an example of creating "soul-bound" tokens with
+the `NonTransferable` extension using Solana Playground. Here is the
+[final script](https://beta.solpg.io/6570c54bfb53fa325bfd0c4d).
 
-Token 2022 introduces the `NonTransferable` mint extension that makes this
-possible with tokens that cannot be transferred.
+## Getting Started
 
-## Understanding the implications
+Start by opening this Solana Playground
+[link](https://beta.solpg.io/656e19acfb53fa325bfd0c46) with the following
+starter code.
 
-However, this extension is very similar to issuing a token and then freezing the
-account with a more favourable UX. While tokens cannot be transferred, the owner
-can still burn and close the account. This allows the user the flexibility to no
-longer be associated or "stuck" with an unwanted asset.
-
-This guide walks you through how to use the Non-transferable extension to create
-"soul-bound" tokens.
-
-Let's get started!
-
-## Install dependencies
-
-```shell
-npm i @solana/web3.js @solana/spl-token
+```javascript
+// Client
+console.log("My address:", pg.wallet.publicKey.toString());
+const balance = await pg.connection.getBalance(pg.wallet.publicKey);
+console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 ```
 
-Install the `@solana/web3.js` and `@solana/spl-token` packages.
+If it is your first time using Solana Playground, you'll first need to create a
+Playground Wallet and fund the wallet with devnet SOL.
 
-## Setting up
+To get devnet SOL, run the `solana airdrop` command in the Playground's
+terminal, or visit this [devnet faucet](https://faucet.solana.com/).
 
-Let's start by setting up our script to create a new token mint.
+```
+solana airdrop 5
+```
 
-First, we will need to:
+Once you've created and funded the Playground wallet, click the "Run" button to
+run the starter code.
 
-- Establish a connection to the devnet cluster
-- Generate a payer account and fund it
-- Create a new token mint using the Token 2022 program
+## Add Dependencies
+
+Let's start by setting up our script. We'll be using the `@solana/web3.js` and
+`@solana/spl-token` libraries.
+
+Replace the starter code with the following:
 
 ```javascript
 import {
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   SystemProgram,
   Transaction,
   clusterApiUrl,
@@ -74,108 +75,280 @@ import {
   createInitializeMintInstruction,
   createInitializeNonTransferableMintInstruction,
   getMintLen,
+  mintTo,
+  createAccount,
+  transfer,
+  burn,
+  closeAccount,
 } from "@solana/spl-token";
 
-// We establish a connection to the cluster
+// Playground wallet
+const payer = pg.wallet.keypair;
+
+// Connection to devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-// Next, we create and fund the payer account
-const payer = Keypair.generate();
-const airdropSignature = await connection.requestAirdrop(
-  payer.publicKey,
-  2 * LAMPORTS_PER_SOL,
-);
-await connection.confirmTransaction({
-  signature: airdropSignature,
-  ...(await connection.getLatestBlockhash()),
-});
+// Transaction signature returned from sent transaction
+let transactionSignature: string;
 ```
 
-## Mint setup
+## Mint Setup
 
-Next, let's configure the properties of our token mint and generate the
-necessary authorities.
+First, let's define the properties of the Mint Account we'll be creating in the
+following step.
 
 ```javascript
+// Generate new keypair for Mint Account
 const mintKeypair = Keypair.generate();
-// address of the token mint
+// Address for Mint Account
 const mint = mintKeypair.publicKey;
-// The amount of decimals for our mint
-const decimals = 9;
-// authority that can mint new tokens
-const mintAuthority = Keypair.generate();
+// Decimals for Mint Account
+const decimals = 2;
+// Authority that can mint new tokens
+const mintAuthority = pg.wallet.publicKey;
+```
 
+Next, let's determine the size of the new Mint Account and calculate the minimum
+lamports needed for rent exemption.
+
+```javascript
+// Size of Mint Account with extension
 const mintLen = getMintLen([ExtensionType.NonTransferable]);
+// Minimum lamports required for Mint Account
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-Next, we get the size of our new account and calculate the amount for rent
-exemption. We use the helper `getMinLen` helper function, which takes an array
-of extensions we want for this mint.
+With Token Extensions, the size of the mint account will vary based on the
+extensions enabled.
 
-## The
+## Build Instructions
 
-Now, let's build the set of instructions to:
+Next, let's build the set of instructions to:
 
 - Create a new account
-- Initialize the non-transferable mint extension
-- Initialize our new account as a token mint
+- Initialize the `NonTransferable` extension
+- Initialize the remaining Mint Account data
+
+First, build the instruction to invoke the System Program to create an account
+and assign ownership to the Token Extensions Program.
 
 ```javascript
+// Instruction to invoke System Program to create new account
 const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: payer.publicKey, // The account that will transfer lamports to the created account
-  newAccountPubkey: mint, // Amount of lamports to transfer to the created account
-  space: mintLen, // Amount of space in bytes to allocate to the created account
-  lamports, // Amount of lamports to transfer to the created account
-  programId: TOKEN_2022_PROGRAM_ID, // Public key of the program to assign as the owner of the created account
+  fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
+  newAccountPubkey: mint, // Address of the account to create
+  space: mintLen, // Amount of bytes to allocate to the created account
+  lamports, // Amount of lamports transferred to created account
+  programId: TOKEN_2022_PROGRAM_ID, // Program assigned as owner of created account
 });
 ```
 
-We create our mint account and assign ownership to the token 2022 program.
+Next, build the instruction to initialize the `NonTransferable` extension for
+the Mint Account.
 
 ```javascript
+// Instruction to initialize the NonTransferable Extension
 const initializeNonTransferableMintInstruction =
   createInitializeNonTransferableMintInstruction(
-    mint, // mint account to make non-transferable
-    TOKEN_2022_PROGRAM_ID, // SPL token program id
+    mint, // Mint Account address
+    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
   );
 ```
 
-Next, we initialize the Non-Transferable extension for our mint.
+Lastly, build the instruction to initialize the rest of the Mint Account data.
+This is the same as with the original Token Program.
 
 ```javascript
+// Instruction to initialize Mint Account data
 const initializeMintInstruction = createInitializeMintInstruction(
-  mint, // token mint
-  decimals, // number of decimals
-  mintAuthority.publicKey, // minting authority
-  null, // optional authority that can freeze token accounts
-  TOKEN_2022_PROGRAM_ID, // SPL token program id
+  mint, // Mint Account Address
+  decimals, // Decimals of Mint
+  mintAuthority, // Designated Mint Authority
+  null, // Optional Freeze Authority
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-We then initialize our account as a mint account.
+## Send Transaction
 
-## Send and confirm
+Next, let's add the instructions to a new transaction and send it to the
+network. This will create a Mint Account with the `NonTransferable` extension
+enabled.
 
 ```javascript
+// Add instructions to new transaction
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeNonTransferableMintInstruction,
   initializeMintInstruction,
 );
-await sendAndConfirmTransaction(
+
+// Send transaction
+transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair],
-  undefined,
+  [payer, mintKeypair], // Signers
+);
+
+console.log(
+  "\nCreate Mint Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
-Finally, we add the instructions to our transaction and send it to the network.
-As a result, we've created a mint account with the non-transferable extension.
+Run the script by clicking the `Run` button. You can then inspect the
+transaction on the SolanaFM.
+
+## Create Token Accounts
+
+Next, let's set up two Token Accounts to demonstrate the functionality of the
+`NonTransferable` extension.
+
+First, create a `sourceTokenAccount` owned by the Playground wallet.
+
+```javascript
+// Create Token Account for Playground wallet
+const sourceTokenAccount = await createAccount(
+  connection,
+  payer, // Payer to create Token Account
+  mint, // Mint Account address
+  payer.publicKey, // Token Account owner
+  undefined, // Optional keypair, default to Associated Token Account
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+```
+
+Next, generate a random keypair and use it as the owner of a
+`destinationTokenAccount`.
+
+```javascript
+// Random keypair to use as owner of Token Account
+const randomKeypair = new Keypair();
+// Create Token Account for random keypair
+const destinationTokenAccount = await createAccount(
+  connection,
+  payer, // Payer to create Token Account
+  mint, // Mint Account address
+  randomKeypair.publicKey, // Token Account owner
+  undefined, // Optional keypair, default to Associated Token Account
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+```
+
+Lastly, mint 1 token to the `sourceTokenAccount` to fund it.
+
+```javascript
+// Mint tokens to sourceTokenAccount
+transactionSignature = await mintTo(
+  connection,
+  payer, // Transaction fee payer
+  mint, // Mint Account address
+  sourceTokenAccount, // Mint to
+  mintAuthority, // Mint Authority address
+  100, // Amount
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nMint Tokens:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+## Attempt Token Transfer
+
+Next, let's try to transfer tokens from the `sourceTokenAccount` to the
+`destinationTokenAccount`. We expect this transaction to fail due to the
+`NonTransferable` extension.
+
+```javascript
+try {
+  // Attempt to Transfer tokens
+  await transfer(
+    connection,
+    payer, // Transaction fee payer
+    sourceTokenAccount, // Transfer from
+    destinationTokenAccount, // Transfer to
+    payer.publicKey, // Source Token Account owner
+    100, // Amount
+    undefined, // Additional signers
+    undefined, // Confirmation options
+    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  );
+} catch (error) {
+  console.log("\nExpect Error:", error);
+}
+```
+
+Run the script by clicking the `Run` button. You can then inspect the error in
+the Playground terminal. You should see a message similar to the following:
+
+```
+Expect Error: { [Error: failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x25]
+  logs:
+   [ 'Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]',
+     'Program log: Instruction: Transfer',
+     'Program log: Transfer is disabled for this mint',
+     'Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 3454 of 200000 compute units',
+     'Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb failed: custom program error: 0x25' ] }
+```
+
+## Burn Tokens and Close Token Account
+
+While tokens can't be transferred, they can still be burned.
+
+```javascript
+// Burn tokens
+transactionSignature = await burn(
+  connection,
+  payer, // Transaction fee payer
+  sourceTokenAccount, // Burn from
+  mint, // Mint Account address
+  payer.publicKey, // Token Account owner
+  100, // Amount
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nBurn Tokens:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+The Token Account can then be closed to recover the SOL that was allocated to
+the account. Note that the token balance must be 0.
+
+```javascript
+// Close Token Account
+transactionSignature = await closeAccount(
+  connection,
+  payer, // Transaction fee payer
+  sourceTokenAccount, // Token Account to close
+  payer.publicKey, // Account to receive lamports from closed account
+  payer.publicKey, // Owner of Token Account
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nClose Token Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+Run the script by clicking the `Run` button. You can then inspect the
+transaction on the SolanaFM.
 
 ## Conclusion
 
-Token 2022's `NonTransferable` mint extension enables the creation of
-"soul-bound" tokens, ensuring that digital assets are bound to an individual
-account.
+The `NonTransferable` mint extension enables the creation of "soul-bound"
+tokens, ensuring that digital assets are bound to an individual account. This
+feature enables a unique mechanism for digital ownership such as for personal
+achievements, identity, or credentials that are inherently non-transferable.
