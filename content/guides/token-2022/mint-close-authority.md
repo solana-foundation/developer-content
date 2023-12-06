@@ -1,10 +1,10 @@
 ---
-date: Dec 04, 2023
+date: Dec 05, 2023
 title: How to use the Mint Close Authority extension
 description:
   "The Token program allows owners to close token accounts, but it is impossible
-  to close mint accounts. In Token-2022, it is possible to close mints by
-  initializing the MintCloseAuthority extension before initializing the mint."
+  to close mint accounts. With Token Extensions, it is possible to close mints
+  by initializing the MintCloseAuthority extension before initializing the mint."
 keywords:
   - token 2022
   - token extensions
@@ -17,13 +17,13 @@ altRoutes:
   - /developers/guides/mint-close-authority
 ---
 
-The Token program allows owners to close token accounts, but is impossible to
-close mint accounts. In Token-2022, it is possible to close mints by
-initializing the `MintCloseAuthority` extension before initializing the mint.
-Note that the supply on the mint must be 0 to close the account.
+With the original Token program, it is not possible to close existing Mint
+Accounts. With Token Extensions, the `MintCloseAuthority` extension enables a
+designated Close Authority to close a Mint Account if the supply of the mint
+is 0.
 
-In this guide, we'll walk through an example using Solana Playground. Here is a
-[link](https://beta.solpg.io/656e180ffb53fa325bfd0c45) to the final script.
+In this guide, we'll walk through an example of using Solana Playground. Here is
+the [final script](https://beta.solpg.io/65700c73fb53fa325bfd0c4a).
 
 ## Getting Started
 
@@ -76,75 +76,79 @@ import {
   getMintLen,
 } from "@solana/spl-token";
 
-// Establish a connection to the cluster
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
 // Playground wallet
 const payer = pg.wallet.keypair;
 
-// transaction signature return from sent transaction
+// Connection to devnet cluster
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+// Transaction signature returned from sent transaction
 let transactionSignature: string;
 ```
 
 ## Mint Setup
 
-Next, let's configure the properties of our token mint and the define the
-authorities.
+First, let's define the properties of the Mint Account we'll be creating in the
+following step.
 
 ```javascript
+// Generate new keypair for Mint Account
 const mintKeypair = Keypair.generate();
-// address of our token mint
+// Address for Mint Account
 const mint = mintKeypair.publicKey;
-// The amount of decimals for our mint
-const decimals = 9;
-// authority that can mint new tokens
-const mintAuthority = payer;
-// authority that can close the mint account
-const closeAuthority = payer;
+// Decimals for Mint Account
+const decimals = 2;
+// Authority that can mint new tokens
+const mintAuthority = pg.wallet.publicKey;
+// Authority that can close the Mint Account
+const closeAuthority = pg.wallet.publicKey;
 ```
 
-Next, let's get the size of the new mint account and calculate the minimum
-lamports required for rent exemption. We use the helper `getMinLen` helper
-function, which takes an array of extensions we want for this mint.
+Next, let's determine the size of the new Mint Account and calculate the minimum
+lamports needed for rent exemption.
 
 ```javascript
+// Size of Mint Account with extension
 const mintLen = getMintLen([ExtensionType.MintCloseAuthority]);
+// Minimum lamports required for Mint Account
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-With Token 2022, the size of the mint account will vary based on the extensions
-enabled.
+With Token Extensions, the size of the Mint Account will vary based on the
+extensions enabled.
 
 ## Build Instructions
 
-Now, let's build the set of instructions to:
+Next, let's build the set of instructions to:
 
 - Create a new account
-- Initialize the mint close authority extension
-- Initialize our new account as a token mint
+- Initialize the `MintCloseAuthority` extension
+- Initialize the remaining Mint Account data
 
 First, build the instruction to invoke the System Program to create an account
-and assign ownership to the Token 2022 Program.
+and assign ownership to the Token Extensions Program.
 
 ```javascript
+// Instruction to invoke System Program to create new account
 const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: payer.publicKey, // account that will transfer lamports to created account
-  newAccountPubkey: mint, // public key to use as the address of the created account
-  space: mintLen, // amount of bytes to allocate to the created account
-  lamports, // amount of lamports to transfer to created account
-  programId: TOKEN_2022_PROGRAM_ID, // public key of the program to assign as owner of created account
+  fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
+  newAccountPubkey: mint, // Address of the account to create
+  space: mintLen, // Amount of bytes to allocate to the created account
+  lamports, // Amount of lamports transferred to created account
+  programId: TOKEN_2022_PROGRAM_ID, // Program assigned as owner of created account
 });
 ```
 
-Next, build the instruction to initialize the Mint Close Authority extension for
-the mint account.
+Next, build the instruction to initialize the `MintCloseAuthority` extension for
+the Mint Account.
 
 ```javascript
+// Instruction to initialize the MintCloseAuthority Extension
 const initializeMintCloseAuthorityInstruction =
   createInitializeMintCloseAuthorityInstruction(
-    mint, // token mint account
-    closeAuthority.publicKey, // authority that can close the mint
-    TOKEN_2022_PROGRAM_ID, // SPL Token program id
+    mint, // Mint Account address
+    closeAuthority, // Designated Close Authority
+    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
   );
 ```
 
@@ -152,72 +156,76 @@ Lastly, build the instruction to initialize the rest of the Mint Account data.
 This is the same as with the original Token Program.
 
 ```javascript
+// Instruction to initialize Mint Account data
 const initializeMintInstruction = createInitializeMintInstruction(
-  mint, // token mint account
-  decimals, // number of decimals for token
-  mintAuthority.publicKey, // authority that can mint new tokens
-  null, // optional freeze authority
-  TOKEN_2022_PROGRAM_ID, // SPL Token program id
+  mint, // Mint Account Address
+  decimals, // Decimals of Mint
+  mintAuthority, // Designated Mint Authority
+  null, // Optional Freeze Authority
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
 ## Send Transaction
 
-Finally, we add the instructions to a new transaction and send it to the
-network. This will create a mint account with the `MintCloseAuthority`
-extension.
+Next, let's add the instructions to a new transaction and send it to the
+network. This will create a Mint Account with the `MintCloseAuthority` extension
+enabled.
 
 ```javascript
+// Add instructions to new transaction
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeMintCloseAuthorityInstruction,
   initializeMintInstruction,
 );
 
+// Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair],
+  [payer, mintKeypair], // Signers
 );
 
 console.log(
-  "\n",
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
+  "\nCreate Mint Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
 Run the script by clicking the `Run` button. You can then inspect the
-transaction on the Solana Explorer.
+transaction details on SolanaFM.
 
 ## Closing a mint account
 
-With the `MintCloseAuthority` extension on the mint and a valid authority, it's
-possible to close the mint account and reclaim the lamports on the mint account.
+With the `MintCloseAuthority` extension enabled, the Close Authority can close
+the Mint Account to reclaim the lamports from the account.
 
 ```javascript
+// Send transaction to close Mint Account
 transactionSignature = await closeAccount(
-  connection, // connection to use
-  payer, // payer of the transaction fees
-  mint, // mint account to close
-  payer.publicKey, // account to receive the lamports
-  closeAuthority, // authority that can close the mint
-  [], // signing accounts
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // SPL Token program id
+  connection,
+  payer, // Transaction fee payer
+  mint, // Mint Account address
+  payer.publicKey, // Account to receive lamports from closed account
+  closeAuthority, // Close Authority for Mint Account
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 
 console.log(
-  "\n",
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
+  "\nClose Mint Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
 Run the script by clicking the `Run` button. You can then inspect the
-transaction on the Solana Explorer.
+transaction details on the SolanaFM.
 
 ## Conclusion
 
-Token 2022's `MintCloseAuthority` extension is quite simple but effective. You
-get to reclaim SOL that otherwise would have been lost.
+The `MintCloseAuthority` extension is quite simple but effective. It enables
+developers to reclaim SOL that otherwise would have been permanently locked in a
+Mint Account. This functionality is particularly useful for applications
+designed to produce NFTs that are intended to be burned.
