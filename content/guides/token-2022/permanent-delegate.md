@@ -1,11 +1,11 @@
 ---
-date: Dec 04, 2023
+date: Dec 06, 2023
 title: How to use the Permanent Delegate extension
 description:
-  "With Token 2022, it's possible to specify a permanent account delegate for a
-  mint. This authority has **unlimited** delegate privileges over any account
-  associated with that mint, meaning that it can burn or transfer any amount of
-  tokens."
+  "With Token Extensions, it's possible to specify a permanent account delegate
+  for a mint. This authority has **unlimited** delegate privileges over any
+  account associated with that mint, meaning that it can burn or transfer any
+  amount of tokens."
 keywords:
   - token 2022
   - token extensions
@@ -18,13 +18,14 @@ altRoutes:
   - /developers/guides/permanent-delegate
 ---
 
-With Token 2022, it's possible to specify a permanent account delegate for a
-mint. This authority has **unlimited** delegate privileges over any token
+With Token Extensions, it's possible to specify a permanent account delegate for
+a mint. This authority has **unlimited** delegate privileges over any token
 account for that mint, meaning that it can burn or transfer any amount of
 tokens.
 
-In this guide, we'll walk through an example using Solana Playground. Here is a
-[link](https://beta.solpg.io/656e3c06fb53fa325bfd0c47) to the final script.
+In this guide, we'll walk through an example of creating a mint with the
+`PermanentDelegate` extension enabled using Solana Playground. Here is the
+[final script](https://beta.solpg.io/6570a56bfb53fa325bfd0c4b).
 
 ## Understanding the Implications
 
@@ -90,75 +91,79 @@ import {
   burnChecked,
 } from "@solana/spl-token";
 
-// We establish a connection to the cluster
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
 // Playground wallet
 const payer = pg.wallet.keypair;
 
-// transaction signature return from sent transaction
+// Connection to devnet cluster
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+// Transaction signature returned from sent transaction
 let transactionSignature: string;
 ```
 
 ## Mint Setup
 
-Next, let's configure the properties of our token mint and the define the
-authorities.
+First, let's define the properties of the Mint Account we'll be creating in the
+following step.
 
 ```javascript
+// Generate new keypair for Mint Account
 const mintKeypair = Keypair.generate();
-// address of our token mint
+// Address for Mint Account
 const mint = mintKeypair.publicKey;
-// the amount of decimals for our mint
-const decimals = 9;
-// authority that can mint new tokens
-const mintAuthority = payer;
-// authority that can sign for transfers and burn on any account
-const permanentDelegate = payer;
+// Decimals for Mint Account
+const decimals = 2;
+// Authority that can mint new tokens
+const mintAuthority = pg.wallet.publicKey;
+// Authority that can transfer or burn from any token account
+const permanentDelegate = pg.wallet.publicKey;
 ```
 
-Next, let's get the size for the mint account and calculate the minimum lamports
-required for rent exemption. We'll use the `getMinLen` helper function, which
-takes an array of extensions we want for this mint.
+Next, let's determine the size of the new Mint Account and calculate the minimum
+lamports needed for rent exemption.
 
 ```javascript
+// Size of Mint Account with extension
 const mintLen = getMintLen([ExtensionType.PermanentDelegate]);
+// Minimum lamports required for Mint Account
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-With Token 2022, the size of the mint account will vary based on the extensions
-enabled.
+With Token Extensions, the size of the mint account will vary based on the
+extensions enabled.
 
 ## Build Instructions
 
 Next, let's build the set of instructions to:
 
 - Create a new account
-- Initialize the permanent delegate extension
-- Initialize our new account as a token mint
+- Initialize the `PermanentDelegate` extension
+- Initialize the remaining Mint Account data
 
 First, build the instruction to invoke the System Program to create an account
-and assign ownership to the Token 2022 Program.
+and assign ownership to the Token Extensions Program.
 
 ```javascript
+// Instruction to invoke System Program to create new account
 const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: payer.publicKey, // account that will transfer lamports to created account
-  newAccountPubkey: mint, // public key to use as the address of the created account
-  space: mintLen, // amount of bytes to allocate to the created account
-  lamports, // amount of lamports to transfer to created account
-  programId: TOKEN_2022_PROGRAM_ID, // public key of the program to assign as owner of created account
+  fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
+  newAccountPubkey: mint, // Address of the account to create
+  space: mintLen, // Amount of bytes to allocate to the created account
+  lamports, // Amount of lamports transferred to created account
+  programId: TOKEN_2022_PROGRAM_ID, // Program assigned as owner of created account
 });
 ```
 
-Next, build the instruction to initialize the Permanent Delegate extension for
-the mint account.
+Next, build the instruction to initialize the `PermanentDelegate` extension for
+the Mint Account.
 
 ```javascript
-const initializePermanentDelegateInstruction =
+// Instruction to initialize the MintCloseAuthority Extension
+const initializeMintCloseAuthorityInstruction =
   createInitializePermanentDelegateInstruction(
-    mint, // token mint account
-    permanentDelegate.publicKey, // authority that may sign for transfers and burns on all accounts
-    TOKEN_2022_PROGRAM_ID, // SPL token program id
+    mint, // Mint Account address
+    permanentDelegate, // Designated Permanent Delegate
+    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
   );
 ```
 
@@ -166,102 +171,103 @@ Lastly, build the instruction to initialize the rest of the Mint Account data.
 This is the same as with the original Token Program.
 
 ```javascript
+// Instruction to initialize Mint Account data
 const initializeMintInstruction = createInitializeMintInstruction(
-  mint, // token mint
-  decimals, // number of decimals
-  mintAuthority.publicKey, // minting authority
-  null, // optional authority that can freeze token accounts
-  TOKEN_2022_PROGRAM_ID, // SPL token program id
+  mint, // Mint Account Address
+  decimals, // Decimals of Mint
+  mintAuthority, // Designated Mint Authority
+  null, // Optional Freeze Authority
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
 ## Send Transaction
 
-Finally, add the instructions to a new transaction and send it to the network.
-This will create a mint account with the `PermanentDelegate` extension.
+Next, let's add the instructions to a new transaction and send it to the
+network. This will create a Mint Account with the `PermanentDelegate` extension
+enabled.
 
 ```javascript
+// Add instructions to new transaction
 const transaction = new Transaction().add(
   createAccountInstruction,
-  initializePermanentDelegateInstruction,
+  initializeMintCloseAuthorityInstruction,
   initializeMintInstruction,
 );
 
+// Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair],
+  [payer, mintKeypair], // Signers
 );
 
 console.log(
-  "\n",
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
+  "\nCreate Mint Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
 Run the script by clicking the `Run` button. You can then inspect the
-transaction on the Solana Explorer.
+transaction on the SolanaFM.
 
 ## Create Token Accounts
 
-Next, let's set up two token accounts to demonstrate the functionality of the
+Next, let's set up two Token Accounts to demonstrate the functionality of the
 permanent delegate.
 
 First, generate a random keypair and use it as the owner of a
 `sourceTokenAccount`.
 
 ```javascript
-// generate random keypair to use as owner of a token account
+// Random keypair to use as owner of Token Account
 const randomKeypair = new Keypair();
-
-// create associated token account for random keypair
+// Create Token Account for random keypair
 const sourceTokenAccount = await createAccount(
   connection,
-  payer, // payer
-  mint, // mint address
-  randomKeypair.publicKey, // token account owner
-  undefined, // optional keypair
-  undefined, // confirmOptions
-  TOKEN_2022_PROGRAM_ID,
+  payer, // Payer to create Token Account
+  mint, // Mint Account address
+  randomKeypair.publicKey, // Token Account owner
+  undefined, // Optional keypair, default to Associated Token Account
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
 Next, create a `destinationTokenAccount` owned by the Playground wallet.
 
 ```javascript
-// create associated token account for playground wallet
+// Create Token Account for Playground wallet
 const destinationTokenAccount = await createAccount(
   connection,
-  payer, // payer
-  mint, // mint address
-  payer.publicKey, // token account owner
-  undefined, // optional keypair
-  undefined, // confirmOptions
-  TOKEN_2022_PROGRAM_ID,
+  payer, // Payer to create Token Account
+  mint, // Mint Account address
+  payer.publicKey, // Token Account owner
+  undefined, // Optional keypair, default to Associated Token Account
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
 Lastly, mint 2 tokens to the `sourceTokenAccount` to fund it.
 
 ```javascript
-// mint tokens to sourceTokenAccount
+// Mint tokens to sourceTokenAccount
 transactionSignature = await mintTo(
   connection,
-  payer, // payer
-  mint, // mint address
-  sourceTokenAccount, // destination
-  mintAuthority.publicKey, // mint authority
-  2_000_000_000, // amount
-  undefined, // multiSigners
-  undefined, // confirmOptions
-  TOKEN_2022_PROGRAM_ID, // program ID
+  payer, // Transaction fee payer
+  mint, // Mint Account address
+  sourceTokenAccount, // Mint to
+  mintAuthority, // Mint Authority address
+  200, // Amount
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 
 console.log(
-  "\n",
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
+  "\nMint Tokens:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
@@ -274,25 +280,24 @@ To transfer tokens with the permanent delegate, use the `transferChecked`
 instruction.
 
 ```javascript
-// transfer tokens from source to destination token account
+// Transfer tokens from source to destination
 transactionSignature = await transferChecked(
   connection,
-  payer, // payer
-  sourceTokenAccount, // transfer from
-  mint, // mint
-  destinationTokenAccount, // transfer to
-  permanentDelegate, // pass in permanent delegate as owner of token account
-  1_000_000_000, // amount
-  decimals, // decimals
-  undefined, // multiSigners
-  undefined, // confirmOptions
-  TOKEN_2022_PROGRAM_ID, // program ID
+  payer, // Transaction fee payer
+  sourceTokenAccount, // Transfer from
+  mint, // Mint Account address
+  destinationTokenAccount, // Transfer to
+  permanentDelegate, // Use Permanent Delegate as owner
+  100, // Amount
+  decimals, // Mint Account decimals
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 
 console.log(
-  "\n",
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
+  "\nTranfer Tokens:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
@@ -305,29 +310,29 @@ To burn tokens with the permanent delegate, use the `burnChecked` instruction.
 ```javascript
 transactionSignature = await burnChecked(
   connection,
-  payer, // payer
-  sourceTokenAccount, // transfer from
-  mint, // mint
-  permanentDelegate, // pass in permanent delegate as owner of source token account
-  1_000_000_000, // amount
-  decimals, // decimals
-  undefined, // multiSigners
-  undefined, // confirmOptions
-  TOKEN_2022_PROGRAM_ID, // program ID
+  payer, // Transaction fee payer
+  sourceTokenAccount, // Tranfer from
+  mint, // Mint Account address
+  permanentDelegate, // Use Permanent Delegate as owner
+  100, // Amount
+  decimals, // Mint Account decimals
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 
 console.log(
-  "\n",
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
+  "\nBurn Tokens:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
 Run the script by clicking the `Run` button. You can then inspect the
-transactions on the Solana Explorer.
+transactions on the SolanaFM.
 
+Recall that the `sourceTokenAccount` is owned by a randomly generated keypair.
 Note that the both the transfer and burn transactions complete successfully,
-even though the transactions are not signed by the owner of the token account.
+even though the transactions are not signed by the owner of the Token Account.
 
 ## Conclusion
 
