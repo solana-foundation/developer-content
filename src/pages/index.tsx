@@ -23,7 +23,7 @@ export default function Page() {
         <title>Solana Developer Content</title>
       </Head>
 
-      <main>nothing to see here</main>
+      <main className="p-4">nothing to see here</main>
     </>
   );
 }
