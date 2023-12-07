@@ -1,5 +1,5 @@
 ---
-date: Sep 01, 2023
+date: Dec 7, 2023
 title: How to use the Interest-Bearing extension
 description:
   "Interest-bearing tokens are tokens that can either increase or decrease in
@@ -17,152 +17,280 @@ altRoutes:
   - /developers/guides/interest-bearing-tokens
 ---
 
-Interest-bearing tokens can either increase or decrease in value over time.
-Similar to how a bank savings account or a loan accumulates interest.
+The `InterestBearingConfig` extension enables you to set an interest rate stored
+on the Mint Account. Interest is compounded continuously, based on the network's
+timestamp. However, this interest accrual is only a
+[calculation](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/interest_bearing_mint/mod.rs#L85)
+based on the set interest rate, and does not involve minting new tokens. In
+other words, the accrued interest is simply a visual UI conversion, but the
+underlying token quantity remains unchanged. This design eliminates the need for
+frequent rebase or update operations to adjust for accrued interest.
 
-The Interest-bearing extension allows you to set an interest rate on a token
-calculated continuously based on the network's timestamp.
+In this guide, we'll walk through an example of using Solana Playground. Here is
+the [final script](https://beta.solpg.io/65724856fb53fa325bfd0c53).
 
-## How does it work?
+## Getting Started
 
-The extension offers a new way to represent the value of the tokens. No new
-tokens are created/minted; only the displayed value of the token increases. It's
-just a visual representation. Think of it as seeing your bank balance increase
-due to interest, but no new physical money is added/created.
+Start by opening this Solana Playground
+[link](https://beta.solpg.io/656e19acfb53fa325bfd0c46) with the following
+starter code.
 
-This guide walks you through how to use the Interest-bearing extension to add an
-interest rate to a token.
-
-Let's get started!
-
-## Install dependencies
-
-```shell
-npm i @solana/web3.js @solana/spl-token
+```javascript
+// Client
+console.log("My address:", pg.wallet.publicKey.toString());
+const balance = await pg.connection.getBalance(pg.wallet.publicKey);
+console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 ```
 
-Install the `@solana/web3.js` and `@solana/spl-token` packages.
+If it is your first time using Solana Playground, you'll first need to create a
+Playground Wallet and fund the wallet with devnet SOL.
 
-## Setting up
+To get devnet SOL, run the `solana airdrop` command in the Playground's
+terminal, or visit this [devnet faucet](https://faucet.solana.com/).
 
-Let's start by setting up our script to create a new token mint.
+```
+solana airdrop 5
+```
 
-First, we will need to:
+Once you've created and funded the Playground wallet, click the "Run" button to
+run the starter code.
 
-- Establish a connection to the devnet cluster
-- Generate a payer account and fund it
-- Create a new token mint using the Token 2022 Program
+## Add Dependencies
+
+Let's start by setting up our script. We'll be using the `@solana/web3.js` and
+`@solana/spl-token` libraries.
+
+Replace the starter code with the following:
 
 ```javascript
 import {
-  clusterApiUrl,
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
+  SystemProgram,
+  Transaction,
+  clusterApiUrl,
+  sendAndConfirmTransaction,
 } from "@solana/web3.js";
 import {
-  amountToUiAmount,
-  createInterestBearingMint,
-  TOKEN_2022_PROGRAM_ID,
+  ExtensionType,
   updateRateInterestBearingMint,
+  createInitializeInterestBearingMintInstruction,
+  createInitializeMintInstruction,
+  getMintLen,
+  TOKEN_2022_PROGRAM_ID,
+  amountToUiAmount,
+  getInterestBearingMintConfigState,
+  getMint,
 } from "@solana/spl-token";
 
-// We establish a connection to the cluster
+// Playground wallet
+const payer = pg.wallet.keypair;
+
+// Connection to devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-// Next, we create and fund the payer account
-const payer = Keypair.generate();
-const airdropSignature = await connection.requestAirdrop(
-  payer.publicKey,
-  LAMPORTS_PER_SOL,
-);
-await connection.confirmTransaction({
-  signature: airdropSignature,
-  ...(await connection.getLatestBlockhash()),
+// Transaction signature returned from sent transaction
+let transactionSignature: string;
+```
+
+## Mint Setup
+
+First, let's define the properties of the Mint Account we'll be creating in the
+following step.
+
+```javascript
+// Generate new keypair for Mint Account
+const mintKeypair = Keypair.generate();
+// Address for Mint Account
+const mint = mintKeypair.publicKey;
+// Decimals for Mint Account
+const decimals = 2;
+// Authority that can mint new tokens
+const mintAuthority = pg.wallet.publicKey;
+// Authority that can update the interest rate
+const rateAuthority = pg.wallet.keypair;
+// Interest rate basis points (100 = 1%)
+// Max value = 32,767 (i16)
+const rate = 32_767;
+```
+
+Next, let's determine the size of the new Mint Account and calculate the minimum
+lamports needed for rent exemption.
+
+```javascript
+// Size of Mint Account with extension
+const mintLen = getMintLen([ExtensionType.InterestBearingConfig]);
+// Minimum lamports required for Mint Account
+const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
+```
+
+With Token Extensions, the size of the Mint Account will vary based on the
+extensions enabled.
+
+## Build Instructions
+
+Next, let's build the set of instructions to:
+
+- Create a new account
+- Initialize the `InterestBearingConfig` extension
+- Initialize the remaining Mint Account data
+
+First, build the instruction to invoke the System Program to create an account
+and assign ownership to the Token Extensions Program.
+
+```javascript
+// Instruction to invoke System Program to create new account
+const createAccountInstruction = SystemProgram.createAccount({
+  fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
+  newAccountPubkey: mint, // Address of the account to create
+  space: mintLen, // Amount of bytes to allocate to the created account
+  lamports, // Amount of lamports transferred to created account
+  programId: TOKEN_2022_PROGRAM_ID, // Program assigned as owner of created account
 });
 ```
 
-## Mint setup
-
-Next, let's configure the properties of our token mint and generate the
-necessary authorities.
+Next, build the instruction to initialize the `InterestBearingConfig` extension
+for the Mint Account.
 
 ```javascript
-const mintAuthority = Keypair.generate();
-const freezeAuthority = Keypair.generate();
-
-// rateAuthority: The authority that can update the interest rate
-const rateAuthority = Keypair.generate();
-const mintKeypair = Keypair.generate();
-
-// rate: The initial interest rate
-const rate = 50;
-const decimals = 0;
+// Instruction to initialize the InterestBearingConfig Extension
+const initializeInterestBearingMintInstruction =
+  createInitializeInterestBearingMintInstruction(
+    mint, // Mint Account address
+    rateAuthority.publicKey, // Designated Rate Authority
+    rate, // Interest rate basis points
+    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  );
 ```
 
-We create various authorities to manage different aspects of our mint (mint,
-freeze and rate authority), and then set our initial interest rate.
-
-## Initialize an interest-bearing account on a mint
+Lastly, build the instruction to initialize the rest of the Mint Account data.
+This is the same as with the original Token Program.
 
 ```javascript
-const mint = await createInterestBearingMint(
-  connection, // connection to use
-  payer, // payer of the transaction fees
-  mintAuthority.publicKey, // account that will control minting
-  freezeAuthority.publicKey, // optional account that can freeze token accounts
-  rateAuthority.publicKey, // account that can update the rate
-  rate, // the initial interest rate
-  decimals, // decimals for this mint
-  mintKeypair, // optional keypair
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // SPL token program account
+// Instruction to initialize Mint Account data
+const initializeMintInstruction = createInitializeMintInstruction(
+  mint, // Mint Account Address
+  decimals, // Decimals of Mint
+  mintAuthority, // Designated Mint Authority
+  null, // Optional Freeze Authority
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-As a result, we've created a new token mint with the interest-bearing extension
-applied.
+## Send Transaction
 
-## View interest generated
-
-We use the `amountToUiAmount` helper function from the `@solana/spl-token`
-library to view the interest generated.
+Next, let's add the instructions to a new transaction and send it to the
+network. This will create a Mint Account with the `InterestBearingConfig`
+extension enabled.
 
 ```javascript
-const accountBalance = 1000;
+// Add instructions to new transaction
+const transaction = new Transaction().add(
+  createAccountInstruction,
+  initializeInterestBearingMintInstruction,
+  initializeMintInstruction,
+);
 
+// Send transaction
+transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [payer, mintKeypair], // Signers
+);
+
+console.log(
+  "\nCreate Mint Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
+
+## Update Interest Rate
+
+The designated Rate Authority can then update the interest rate on the Mint
+Account at any time.
+
+```javascript
+// New interest rate in basis points
+const updateRate = 0;
+// Update interest rate on Mint Account
+transactionSignature = await updateRateInterestBearingMint(
+  connection,
+  payer, // Transaction fee payer
+  mint, // Mint Account Address
+  rateAuthority, // Designated Rate Authority
+  updateRate, // New interest rate
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nUpdate Rate:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+## Fetch Interest Config State
+
+Next, let's check the updated interest rate by fetching the Mint Account data.
+
+```javascript
+// Fetch Mint Account data
+const mintAccount = await getMint(
+  connection,
+  mint, // Mint Account Address
+  undefined, // Optional commitment
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+// Get Interest Config for Mint Account
+const interestBearingMintConfig = await getInterestBearingMintConfigState(
+  mintAccount, // Mint Account data
+);
+
+console.log(
+  "\nMint Config:",
+  JSON.stringify(interestBearingMintConfig, null, 2),
+);
+```
+
+<!-- stop -->
+
+## Calculate Accrued Interest
+
+Lastly, let's calculate the interest accrued for a given amount. Note that this
+calculation can be performed independently for any amount, without the need for
+minting tokens.
+
+```javascript
+// Wait 1 second
+sleep(1000);
+
+// Amount to convert
+const amount = 100;
+// Convert amount to UI amount with accrued interest
 const uiAmount = await amountToUiAmount(
-  connection, // connection to use
-  payer, // payer of the transaction fees
-  mint, // token mint
-  accountBalance, // amount of tokens to be converted to UI amount
-  TOKEN_2022_PROGRAM_ID, // Token program ID
+  connection, // Connection to the Solana cluster
+  payer, // Account that will transfer lamports for the transaction
+  mint, // Address of the Mint account
+  amount, // Amount to be converted
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
+
+console.log("\nAmount with Accrued Interest:", uiAmount);
 ```
 
-## Update the interest rate
-
-The `RateAuthority` can update the interest rate on the mint at any time.
-
-```javascript
-const updateRate = 50;
-const tx = await updateRateInterestBearingMint(
-  connection, // connection to use
-  payer, // payer of the transaction fee
-  mint, // public key of the mint
-  rateAuthority, // account that can update the rate
-  updateRate, // the initial interest rate
-  [], // signing accounts
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token program ID
-);
-```
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM and view the data logged in the Playground
+terminal.
 
 ## Conclusion
 
-The Interest-bearing extension for Token 2022 on Solana introduces a simple
-mechanism for tokens to increase/decrease in value over time.
-
-By seamlessly integrating tools commonly found in traditional finance, this
-innovation broadens Solana's capabilities, bridging the gap between conventional
-financial instruments and the world of blockchain.
+The `InterestBearingConfig` extension introduces a simple mechanism for tokens
+to increase or decrease in value over time. By seamlessly integrating tools
+commonly found in traditional finance, this innovation broadens Solana's
+capabilities, bridging the gap between conventional financial instruments and
+the world of blockchain.
