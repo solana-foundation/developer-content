@@ -28,3 +28,15 @@ module.exports = withContentlayer({
     ],
   },
 });
+
+/**
+ * Format the NextJS redirects
+ */
+function redirectFormatter(basePath, redirects, permanent = true) {
+  return redirects.map(item => {
+    item.basePath = false;
+    item.permanent = item.permanent ?? permanent;
+    item.destination = `${basePath}${item.destination}`;
+    return item;
+  });
+}
