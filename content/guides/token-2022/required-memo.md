@@ -1,5 +1,5 @@
 ---
-date: Sep 01, 2023
+date: Dec 7, 2023
 title: How to use the Required memo extension
 description:
   "Memos in financial transactions serve as a communication tool between sender
@@ -17,61 +17,58 @@ altRoutes:
   - /developers/guides/required-memo
 ---
 
-Memos in financial transactions serve as a communication tool between sender and
-recipient. It aids in the identification of both parties and offers clarity on
-the purpose of the transfer.
+The `MemoTransfer` extension enforces that every incoming transfer to a Token
+Account is accompanied by a [memo](https://spl.solana.com/memo) instruction.
+This memo instruction records a message in the transaction's program logs. This
+feature is particularly useful for adding context to transactions, making it
+easier to understand their purpose when reviewing the transaction logs later.
 
-The Required Memo extension enforces that all incoming transfers have an
-accompanying [memo](https://spl.solana.com/memo) instruction.
+In this guide, we'll walk through an example of using Solana Playground. Here is
+the [final script](https://beta.solpg.io/65724a91fb53fa325bfd0c54).
 
-## The value of adding memos
+## Getting Started
 
-**Identifying Parties**: Memos help pinpoint the sender and receiver. Given the
-anonymity of addresses, a memo can provide context, ensuring the right parties
-are involved.
+Start by opening this Solana Playground
+[link](https://beta.solpg.io/656e19acfb53fa325bfd0c46) with the following
+starter code.
 
-**Clarifying Purpose**: A memo provides clarity on the transaction's intent.
-
-**Tracking Finances**: If you're keeping an eye on your assets, memos help
-ensure you've sent or received the right amounts, which is especially useful
-during tax time (ahemm).
-
-These are a few examples of how transaction memos offer clarity, help in
-tracking, and add a personal touch, making every transaction easily
-identifiable.
-
-This guide walks you through how to use the Required Memo extension to enforce a
-memo on all incoming transfers.
-
-Let's get started!
-
-## Install dependencies
-
-```shell
-npm i @solana/web3.js @solana/spl-token
+```javascript
+// Client
+console.log("My address:", pg.wallet.publicKey.toString());
+const balance = await pg.connection.getBalance(pg.wallet.publicKey);
+console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 ```
 
-Install the `@solana/web3.js` and `@solana/spl-token` packages.
+If it is your first time using Solana Playground, you'll first need to create a
+Playground Wallet and fund the wallet with devnet SOL.
 
-## Setting up
+To get devnet SOL, run the `solana airdrop` command in the Playground's
+terminal, or visit this [devnet faucet](https://faucet.solana.com/).
 
-Let's start by setting up our script to create a new token mint.
+```
+solana airdrop 5
+```
 
-First, we will need to:
+Once you've created and funded the Playground wallet, click the "Run" button to
+run the starter code.
 
-- Establish a connection to the devnet cluster
-- Generate a payer account and fund it
-- Create a new token mint using the Token 2022 program
+## Add Dependencies
+
+Let's start by setting up our script. We'll be using the `@solana/web3.js` and
+`@solana/spl-token` libraries.
+
+Replace the starter code with the following:
 
 ```javascript
 import {
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL,
   SystemProgram,
   Transaction,
   clusterApiUrl,
   sendAndConfirmTransaction,
+  TransactionInstruction,
+  PublicKey,
 } from "@solana/web3.js";
 import {
   ExtensionType,
@@ -82,160 +79,355 @@ import {
   disableRequiredMemoTransfers,
   enableRequiredMemoTransfers,
   getAccountLen,
+  createAccount,
+  mintTo,
+  createTransferInstruction,
 } from "@solana/spl-token";
 
-// We establish a connection to the cluster
+// Playground wallet
+const payer = pg.wallet.keypair;
+
+// Connection to devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-// Next, we create and fund the payer account
-const payer = Keypair.generate();
-const airdropSignature = await connection.requestAirdrop(
-  payer.publicKey,
-  0.5 * LAMPORTS_PER_SOL,
-);
-await connection.confirmTransaction({
-  signature: airdropSignature,
-  ...(await connection.getLatestBlockhash()),
-});
+// Transaction to send
+let transaction: Transaction;
+// Transaction signature returned from sent transaction
+let transactionSignature: string;
 ```
 
-## Mint setup
+## Mint Setup
 
-Next, let's configure the properties of our token mint and generate the
-necessary authorities.
+We'll first need to create a new Mint Account before we can create Token
+Accounts.
 
 ```javascript
-// authority that can mint new tokens
-const mintAuthority = Keypair.generate();
-const decimals = 9;
+// Authority that can mint new tokens
+const mintAuthority = pg.wallet.publicKey;
+// Decimals for Mint Account
+const decimals = 2;
 
-// Next, we create a new token mint
+// Create Mint Account
 const mint = await createMint(
-  connection, // Connection to use
+  connection,
   payer, // Payer of the transaction and initialization fees
-  mintAuthority.publicKey, // Account or multisig that will control minting
-  mintAuthority.publicKey, // Optional account or multisig that can freeze token accounts
-  decimals, // Location of the decimal place
-  undefined, // Optional keypair, defaulting to a new random one
+  mintAuthority, // Mint Authority
+  null, // Optional Freeze Authority
+  decimals, // Decimals of Mint
+  undefined, // Optional keypair
   undefined, // Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Program ID
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-As a result, we create a new token mint using the `createMint` helper function.
+## Memo Transfer Token Account
 
-## Account setup
+Next, let's build a transaction to enable the `MemoTransfer` extension for a new
+Token Account.
+
+First, let's generate a new keypair to use as the address of the Token Account.
 
 ```javascript
-// owner of the token account
-const ownerKeypair = Keypair.generate();
-const accountKeypair = Keypair.generate();
-// address of our token account
-const account = accountKeypair.publicKey;
+// Random keypair to use as owner of Token Account
+const tokenAccountKeypair = Keypair.generate();
+// Address for Token Account
+const tokenAccount = tokenAccountKeypair.publicKey;
+```
 
+Next, let's determine the size of the new Token Account and calculate the
+minimum lamports needed for rent exemption.
+
+```javascript
+// Size of Token Account with extension
 const accountLen = getAccountLen([ExtensionType.MemoTransfer]);
+// Minimum lamports required for Token Account
 const lamports = await connection.getMinimumBalanceForRentExemption(accountLen);
 ```
 
-Next, we get the size of our new account and calculate the amount for rent
-exemption. We use the helper `getAccountLen` helper function, which takes an
-array of extensions we want for this account.
+With Token Extensions, the size of the Token Account will vary based on the
+extensions enabled.
 
-## The Instructions
+## Build Instructions
 
-Now, let's build the set of instructions to:
+Next, let's build the set of instructions to:
 
 - Create a new account
-- Initialize our new account as a token account
-- Enable the required memo extension
+- Initialize the Token Account data
+- Enable the `MemoTransfer` extension
+
+First, build the instruction to invoke the System Program to create an account
+and assign ownership to the Token Extensions Program.
 
 ```javascript
+// Instruction to invoke System Program to create new account
 const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: payer.publicKey, // The account that will transfer lamports to the created account
-  newAccountPubkey: account, // Amount of lamports to transfer to the created account
-  space: accountLen, // Amount of space in bytes to allocate to the created account
-  lamports, // Amount of lamports to transfer to the created account
-  programId: TOKEN_2022_PROGRAM_ID, // Public key of the program to assign as the owner of the created account
+  fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
+  newAccountPubkey: tokenAccount, // Address of the account to create
+  space: accountLen, // Amount of bytes to allocate to the created account
+  lamports, // Amount of lamports transferred to created account
+  programId: TOKEN_2022_PROGRAM_ID, // Program assigned as owner of created account
 });
 ```
 
-We create a new account and assign ownership to the token 2022 program.
+Next, build the instruction to initialize the Token Account data.
 
 ```javascript
+// Instruction to initialize Token Account data
 const initializeAccountInstruction = createInitializeAccountInstruction(
-  account, // New token account
-  mint, // Mint account
-  ownerKeypair.publicKey, // Owner of the new token account
-  TOKEN_2022_PROGRAM_ID, // Token program ID
+  tokenAccount, // Token Account Address
+  mint, // Mint Account
+  payer.publicKey, // Token Account Owner
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-Next, we initialize our newly created account to hold tokens.
+Lastly, build the instruction to enable the `MemoTransfer` extension for the
+Token Account.
 
 ```javascript
+// Instruction to initialize the MemoTransfer Extension
 const enableRequiredMemoTransfersInstruction =
   createEnableRequiredMemoTransfersInstruction(
-    account, // Token account to update
-    owner.publicKey, // The account owner/delegate
-    [], // The signer account(s)
+    tokenAccount, // Token Account address
+    payer.publicKey, // Token Account Owner
+    undefined, // Additional signers
     TOKEN_2022_PROGRAM_ID, // Token Program ID
   );
 ```
 
-We then initialize the Required memo extension for the given token account. It's
-important to note that this can be enabled and disabled at any time.
+## Send Transaction
 
-## Send and confirm
+Next, let's add the instructions to a new transaction and send it to the
+network. This will create a Token Account with the `MemoTransfer` extension
+enabled.
 
 ```javascript
-const transaction = new Transaction().add(
+// Add instructions to new transaction
+transaction = new Transaction().add(
   createAccountInstruction,
   initializeAccountInstruction,
   enableRequiredMemoTransfersInstruction,
 );
-await sendAndConfirmTransaction(
+
+// Send transaction
+transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, owner, accountKeypair],
-  undefined,
+  [payer, tokenAccountKeypair], // Signers
+);
+
+console.log(
+  "\nCreate Token Account:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
-Finally, we add the instructions to our transaction and send it to the network.
-As a result, we've created a token account for our new mint with the immutable
-owner extension applied.
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
 
-## Enabling memo transfers
+## Create and Fund Token Account
 
-An account owner can enable the required memo transfer extension at any time.
+Next, let's set up another Token Account to demonstrate the functionality of the
+`MemoTransfer` extension.
+
+First, create a `sourceTokenAccount` owned by the Playground wallet.
 
 ```javascript
-await enableRequiredMemoTransfers(
-  connection, // connection to use
-  payer, // payer of the transaction fee
-  account, // account to modify
-  owner, // owner of the account
-  [], // signing account if owner is a multisig
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Program ID
+// Create Token Account for Playground wallet
+const sourceTokenAccount = await createAccount(
+  connection,
+  payer, // Payer to create Token Account
+  mint, // Mint Account address
+  payer.publicKey, // Token Account owner
+  undefined, // Optional keypair, default to Associated Token Account
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-## Disabling memo transfers
-
-An account owner can disable the required memo transfer extension at any time.
+Next, mint 2 tokens to the `sourceTokenAccount` to fund it.
 
 ```javascript
-await disableRequiredMemoTransfers(
-  connection, // connection to use
-  payer, // payer of the transaction fee
-  account, // account to modify
-  owner, // owner of the account
-  [], // signing account if owner is a multisig
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Program ID
+// Mint tokens to sourceTokenAccount
+transactionSignature = await mintTo(
+  connection,
+  payer, // Transaction fee payer
+  mint, // Mint Account address
+  sourceTokenAccount, // Mint to
+  mintAuthority, // Mint Authority address
+  200, // Amount
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nMint Tokens:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
+
+## Transfer and Memo Instruction
+
+Let's prepare the token transfer and memo instruction.
+
+First, build the instruction to transfer tokens from the `sourceTokenAccount` to
+the `tokenAccount` with the `MemoTransfer` extension enabled.
+
+```javascript
+// Instruction to transfer tokens
+const transferInstruction = createTransferInstruction(
+  sourceTokenAccount, // Source Token Account
+  tokenAccount, // Destination Token Account
+  payer.publicKey, // Source Token Account owner
+  100, // Amount
+  undefined, // Additional signers
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+```
+
+Next, build the memo instruction. The message will be included in the program
+logs of the transaction the instruction is added to.
+
+```javascript
+// Message for the memo
+const message = "Hello, Solana";
+// Instruction to add memo
+const memoInstruction = new TransactionInstruction({
+  keys: [{ pubkey: payer.publicKey, isSigner: true, isWritable: true }],
+  data: Buffer.from(message, "utf-8"),
+  programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
+});
+```
+
+## Attempt Transfer without Memo
+
+To demonstrate the functionality of the `MemoTransfer` extension, let's first
+attempt to send a token transfer without a memo.
+
+```javascript
+try {
+  // Attempt to transfer without memo
+  transaction = new Transaction().add(transferInstruction);
+
+  // Send transaction
+  await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [payer], // Signers
+  );
+} catch (error) {
+  console.log("\nExpect Error:", error);
+}
+```
+
+Run the script by clicking the `Run` button. You can then inspect the error in
+the Playground terminal. You should see a message similar to the following:
+
+```
+Expect Error: { [Error: failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x24]
+  logs:
+   [ 'Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb invoke [1]',
+     'Program log: Instruction: Transfer',
+     'Program log: Error: No memo in previous instruction; required for recipient to receive a transfer',
+     'Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb consumed 6571 of 200000 compute units',
+     'Program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb failed: custom program error: 0x24' ] }
+```
+
+## Transfer with Memo
+
+Next, send a token transfer with the memo instruction included on the
+tranasction.
+
+```javascript
+// Add instructions to new transaction
+transaction = new Transaction().add(memoInstruction, transferInstruction);
+
+// Send transaction
+transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [payer], // Signers
+);
+
+console.log(
+  "\nTransfer with Memo:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
+
+## Enable and Disable Memo Transfer
+
+The `MemoTransfer` extension can also be freely enabled or disabled by the Token
+Account owner.
+
+To enable the `MemoTransfer` extension, use the `enableRequiredMemoTransfers`
+instruction.
+
+```javascript
+// Enable Required Memo Transfers
+transactionSignature = await enableRequiredMemoTransfers(
+  connection, // Connection to use
+  payer, // Payer of the transaction fee
+  tokenAccount, // Token Account to modify
+  payer.publicKey, // Owner of Token Account
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nEnable Required Memo Transfers:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+To disable the `MemoTransfer` extension, use the `disableRequiredMemoTransfers`
+instruction.
+
+```javascript
+// Disable Required Memo Transfers
+transactionSignature = await disableRequiredMemoTransfers(
+  connection, // Connection to use
+  payer, // Payer of the transaction fee
+  tokenAccount, // Token Account to modify
+  payer.publicKey, // Owner of Token Account
+  undefined, // Additional signers
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+);
+
+console.log(
+  "\nDisable Required Memo Transfers:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+Once the `MemoTransfer` extension is disabled, transactions to transfer tokens
+without a memo instruction will complete successfully.
+
+```javascript
+// Add instructions to new transaction
+transaction = new Transaction().add(transferInstruction);
+
+// Send transaction
+transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [payer], // Signers
+);
+
+console.log(
+  "\nTransfer without Memo:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+);
+```
+
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
 
 ## Conclusion
 
