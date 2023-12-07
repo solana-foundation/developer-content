@@ -23,8 +23,8 @@ possible to create tokens that cannot be transferred. While tokens cannot be
 transferred, the owner can still burn tokens and close the Token Account. This
 prevents users from being "stuck" with an unwanted asset.
 
-In this guide, we'll walk through an example of creating "soul-bound" tokens with
-the `NonTransferable` extension using Solana Playground. Here is the
+In this guide, we'll walk through an example of creating "soul-bound" tokens
+with the `NonTransferable` extension using Solana Playground. Here is the
 [final script](https://beta.solpg.io/6570c54bfb53fa325bfd0c4d).
 
 ## Getting Started
