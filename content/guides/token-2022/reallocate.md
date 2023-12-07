@@ -1,8 +1,8 @@
 ---
-date: Sep 01, 2023
-title: How to use the Reallocate extension
+date: Dec 7, 2023
+title: How to use the Reallocate instruction
 description:
-  "The token 2022 program has account extensions that can be applied after
+  "The Token Extensions program has account extensions that can be applied after
   initializing a token account. Unless you anticipate which extensions you will
   need in the future, this could be tricky as you'll need to allocate enough
   space for them on creation."
@@ -18,42 +18,51 @@ altRoutes:
   - /developers/guides/reallocate
 ---
 
-The token 2022 program has account extensions that can be applied after
-initializing a token account. Unless you anticipate which extensions you will
-need in the future, this could be tricky as you'll need to allocate enough space
-for them on creation.
+The `MemoTransfer` and `CpiGuard` extensions can be enabled for existing Token
+Accounts. However, enabling these extensions once a Token Account has already
+been created requires reallocating additional space to accommodate the extra
+data required by the extensions. This can be done using the `reallocate`
+instruction.
 
-In order for you to use these extensions, you will need to reallocate more space
-in the Account for the additional extension bytes.
+In this guide, we'll walk through an example of using Solana Playground. Here is
+the [final script](https://beta.solpg.io/65723a50fb53fa325bfd0c52).
 
-To address this, the Reallocate instruction allows an owner to reallocate more
-space to their token account to fit room for more extensions.
+## Getting Started
 
-Let's get started!
+Start by opening this Solana Playground
+[link](https://beta.solpg.io/656e19acfb53fa325bfd0c46) with the following
+starter code.
 
-## Install dependencies
-
-```shell
-npm i @solana/web3.js @solana/spl-token
+```javascript
+// Client
+console.log("My address:", pg.wallet.publicKey.toString());
+const balance = await pg.connection.getBalance(pg.wallet.publicKey);
+console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 ```
 
-Install the `@solana/web3.js` and `@solana/spl-token` packages.
+If it is your first time using Solana Playground, you'll first need to create a
+Playground Wallet and fund the wallet with devnet SOL.
 
-## Setting up
+To get devnet SOL, run the `solana airdrop` command in the Playground's
+terminal, or visit this [devnet faucet](https://faucet.solana.com/).
 
-Let’s start by setting up our script to create a new token mint.
+```
+solana airdrop 5
+```
 
-First, we will need to:
+Once you've created and funded the Playground wallet, click the "Run" button to
+run the starter code.
 
-- Establish a connection to the devnet cluster
-- Generate a payer account and fund it
-- Create a new token mint using the Token 2022 program
+## Add Dependencies
+
+Let's start by setting up our script. We'll be using the `@solana/web3.js` and
+`@solana/spl-token` libraries.
+
+Replace the starter code with the following:
 
 ```javascript
 import {
   Connection,
-  Keypair,
-  LAMPORTS_PER_SOL,
   Transaction,
   clusterApiUrl,
   sendAndConfirmTransaction,
@@ -62,120 +71,125 @@ import {
   ExtensionType,
   TOKEN_2022_PROGRAM_ID,
   createAccount,
-  createEnableRequiredMemoTransfersInstruction,
   createMint,
   createReallocateInstruction,
+  createEnableRequiredMemoTransfersInstruction,
 } from "@solana/spl-token";
 
-// We establish a connection to the cluster
+// Playground wallet
+const payer = pg.wallet.keypair;
+
+// Connection to devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-// Next, we create and fund the payer account
-const payer = Keypair.generate();
-const airdropSignature = await connection.requestAirdrop(
-  payer.publicKey,
-  LAMPORTS_PER_SOL,
-);
-await connection.confirmTransaction({
-  signature: airdropSignature,
-  ...(await connection.getLatestBlockhash()),
-});
+// Transaction signature returned from sent transaction
+let transactionSignature: string;
 ```
 
-## Mint setup
+## Create Mint and Token Account
 
-Next, let's configure the properties of our token mint and generate the
-necessary authorities.
+We'll first need to create a new Mint Account.
 
 ```javascript
-// authority that can mint new tokens
-const mintAuthority = Keypair.generate();
-const decimals = 9;
+// Authority that can mint new tokens
+const mintAuthority = pg.wallet.publicKey;
+// Decimals for Mint Account
+const decimals = 2;
 
-// Next, we create a new token mint
+// Create Mint Account
 const mint = await createMint(
-  connection, // Connection to use
+  connection,
   payer, // Payer of the transaction and initialization fees
-  mintAuthority.publicKey, //Account or multisig that will control minting
-  mintAuthority.publicKey, // Optional Account or multisig that can freeze token accounts
-  decimals, // Location of the decimal place
-  undefined, // Optional keypair, defaulting to a new random one
+  mintAuthority, // Mint Authority
+  null, // Optional Freeze Authority
+  decimals, // Decimals of Mint
+  undefined, // Optional keypair
   undefined, // Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Program ID
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-As a result, we create a new token mint using the `createMint` helper function.
-
-## Account setup
+Next, let's create a Token Account with no extensions enabled.
 
 ```javascript
-const owner = Keypair.generate();
-const account = await createAccount(
-  connection, // connection to use
-  payer, // payer of the transaction fee
-  mint, // mint for the account
-  owner.publicKey, // owner of the new account
-  undefined, // optional keypair
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // SPL token program id
+// Create Token Account for Playground wallet
+const tokenAccount = await createAccount(
+  connection,
+  payer, // Payer to create Token Account
+  mint, // Mint Account address
+  payer.publicKey, // Token Account owner
+  undefined, // Optional keypair, default to Associated Token Account
+  undefined, // Confirmation options
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
 ```
 
-Next, we create a new token account.
+## Build Instructions
 
-## The Instructions
+Next, let's build a transaction to enable the `MemoTransfer` extensions for an
+existing Token Account.
 
-Now, let's build the set of instructions to:
-
-- Apply the reallocate extension
-- Then apply the required memo extension
+First, build the instruction to reallocate the Token Account with enough space
+for the specified extension.
 
 ```javascript
+// Extensions to reallocate data for
 const extensions = [ExtensionType.MemoTransfer];
+// Instruction to reallocate Token Account data
 const reallocateInstruction = createReallocateInstruction(
-  account, // address of the token account
-  payer.publicKey, // address paying for the reallocation
-  extensions, // extensions to reallocate for
-  owner.publicKey, // owner of the account
-  undefined, // options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // SPL token program id
+  tokenAccount, // Token Account address
+  payer.publicKey, // Payer to reallocate data
+  extensions, // Extensions to reallocate
+  payer.publicKey, // Token Account owner
+  undefined, // Additional signers
+  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
 );
+```
 
-// enable required memo transfer instruction
+Next, build the instruction to enable the `MemoTransfer` extension for the Token
+Account.
+
+```javascript
+// Instruction to initialize the MemoTransfer Extension
 const enableRequiredMemoTransfersInstruction =
   createEnableRequiredMemoTransfersInstruction(
-    account, // token account to update
-    owner.publicKey, // accounts owner
-    [], // signer account(s)
-    TOKEN_2022_PROGRAM_ID, // SPL token program id
+    tokenAccount, // Token Account address
+    payer.publicKey, // Token Account Owner
+    undefined, // Additional signers
+    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
   );
 ```
 
-We then use the reallocate instruction to make more space for our Account and
-apply the required memo extension.
+## Send Transaction
 
-## Send and confirm
+Next, let's add the instructions to a new transaction and send it to the
+network. This will update the Token Account with the `MemoTransfer` extension
+enabled.
 
 ```javascript
+// Add instructions to new transaction
 const transaction = new Transaction().add(
   reallocateInstruction,
   enableRequiredMemoTransfersInstruction,
 );
 
-await sendAndConfirmTransaction(
+// Send Transactoin
+transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair],
-  undefined,
+  [payer],
+);
+
+console.log(
+  "\nReallocate:",
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
-Finally, we add the instructions to our transaction and send it to the network.
-As a result, we've created a mint account with the mint close authority
-extension.
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
 
 ## Conclusion
 
-The reallocate extension will always be useful when you need to add an extension
-on an already initialized account.
+The reallocate instruction is useful when you need to add an extension on an
+existing Token Account.
