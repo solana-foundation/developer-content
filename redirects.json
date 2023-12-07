@@ -239,7 +239,11 @@
       "destination": "/docs/core/cpi#program-derived-addresses"
     },
 
-    { "destination": "/docs/rpc/:path*", "source": "/api/:path*" },
+    { "destination": "/docs/rpc/http:path*", "source": "/api/http/:path*" },
+    {
+      "destination": "/docs/rpc/websocket/:path*",
+      "source": "/api/websocket/:path*"
+    },
     {
       "destination": "/docs/rpc/:path*",
       "source": "/developing/clients/jsonrpc-api"
