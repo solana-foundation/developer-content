@@ -69,7 +69,7 @@ icon and naming your project `hello_world`.
 
 ### Create a Playground wallet
 
-Normally with [local development](./setup-local-development.md), you will need
+Normally with [local development](/content/guides/getstarted/setup-local-development.md), you will need
 to create a file system wallet for use with the Solana CLI. But with the Solana
 Playground, you only need to click a few buttons to create a browser based
 wallet.
@@ -86,7 +86,7 @@ click "**Continue**".
 After your Playground Wallet is created, you will notice the bottom of the
 window now states your wallet's address, your SOL balance, and the Solana
 cluster you are connected to (Devnet is usually the default/recommended, but a
-"localhost" [test validator](./setup-local-development.md) is also acceptable).
+"localhost" [test validator](/content/guides/getstarted/setup-local-development.md) is also acceptable).
 
 ## Create a Solana program
 
@@ -113,7 +113,7 @@ use solana_program::{
 
 Every Solana program must define an `entrypoint` that tells the Solana runtime
 where to start executing your on chain code. Your program's
-[entrypoint](https://docs.solana.com/developing/on-chain-programs/developing-rust#program-entrypoint)
+[entrypoint](/docs/developing/on-chain-programs/developing-rust.md#program-entrypoint)
 should provide a public function named `process_instruction`:
 
 ```rust
@@ -139,7 +139,7 @@ Every on chain program should return the `Ok`
 tells the Solana runtime that your program executed successfully without errors.
 
 Our program above will simply
-[log a message](https://docs.solana.com/developing/on-chain-programs/debugging#logging)
+[log a message](/docs/developing/on-chain-programs/debugging.md#logging)
 of "_Hello, world!_" to the blockchain cluster, then gracefully exit with
 `Ok(())`.
 
@@ -179,9 +179,9 @@ solana airdrop 2
 ### Find your program id
 
 When executing a program using
-[web3.js](https://docs.solana.com/developing/clients/javascript-reference) or
+[web3.js](/docs/developing/clients/javascript-reference.md) or
 from
-[another Solana program](https://docs.solana.com/developing/programming-model/calling-between-programs),
+[another Solana program](/docs/developing/programming-model/calling-between-programs.md),
 you will need to provide the `program id` (aka public address of your program).
 
 Inside Solana Playground's **Build & Deploy** sidebar, you can find your
@@ -232,7 +232,7 @@ Playground utilities.
 ### Call the program
 
 To execute your on chain program, you must send a
-[transaction](https://docs.solana.com/developing/programming-model/transactions)
+[transaction](/docs/developing/programming-model/transactions.md)
 to it. Each transaction submitted to the Solana blockchain contains a listing of
 instructions (and the program's that instruction will interact with).
 
@@ -314,7 +314,7 @@ re-execute your program.
 See the links below to learn more about writing Solana programs, and setting up
 your local development environment:
 
-- [Setup your local development environment](./setup-local-development.md)
-- [Overview of writing Solana programs](https://docs.solana.com/developing/on-chain-programs/overview)
-- [Learn more about developing Solana programs with Rust](https://docs.solana.com/developing/on-chain-programs/developing-Rust)
-- [Debugging on chain programs](https://docs.solana.com/developing/on-chain-programs/debugging)
+- [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
+- [Overview of writing Solana programs](/docs/developing/on-chain-programs/overview.md)
+- [Learn more about developing Solana programs with Rust](/docs/developing/on-chain-programs/developing-rust.md)
+- [Debugging on chain programs](/docs/developing/on-chain-programs/debugging.md)
