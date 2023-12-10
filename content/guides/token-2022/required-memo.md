@@ -269,10 +269,10 @@ console.log(
 
 ## Transfer and Memo Instruction
 
-Let's prepare the token transfer and memo instruction.
+Next, let's prepare the token transfer and memo instructions.
 
 First, build the instruction to transfer tokens from the `sourceTokenAccount` to
-the `tokenAccount` with the `MemoTransfer` extension enabled.
+the `tokenAccount` which has the `MemoTransfer` extension enabled.
 
 ```javascript
 // Instruction to transfer tokens
@@ -337,7 +337,7 @@ Expect Error: { [Error: failed to send transaction: Transaction simulation faile
 ## Transfer with Memo
 
 Next, send a token transfer with the memo instruction included on the
-tranasction.
+transaction.
 
 ```javascript
 // Add instructions to new transaction
@@ -431,5 +431,8 @@ transaction details on SolanaFM.
 
 ## Conclusion
 
-The Required Memo extension in the Token 2022 program ensures every incoming
-transfer has a memo, enhancing transaction clarity and ease of tracking.
+The `MemoTransfer` extension ensures every incoming transfer to a Token Account
+includes a memo. By requiring a memo instruction with each transfer, a message
+is recorded in the transaction's program logs. This feature is especially useful
+for understanding the purpose of transactions when reviewing logs at a later
+time.
