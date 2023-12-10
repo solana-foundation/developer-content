@@ -17,10 +17,13 @@ altRoutes:
   - /developers/guides/mint-close-authority
 ---
 
-With the original Token program, it is not possible to close existing Mint
-Accounts. With Token Extensions, the `MintCloseAuthority` extension enables a
-designated Close Authority to close a Mint Account if the supply of the mint
-is 0.
+Currently, there's no option to close Mint Accounts owned by the Token Program
+and reclaim the SOL allocated to these accounts.
+
+The ` MintCloseAuthority` extension introduces a solution to this limitation by
+allowing a designated Close Authority to close a Mint Account if the supply of
+the mint is 0. This feature provides a mechanism to recover SOL allocated to
+Mint Accounts that are no longer in use.
 
 In this guide, we'll walk through an example of using Solana Playground. Here is
 the [final script](https://beta.solpg.io/65700c73fb53fa325bfd0c4a).
@@ -196,7 +199,7 @@ console.log(
 Run the script by clicking the `Run` button. You can then inspect the
 transaction details on SolanaFM.
 
-## Closing a mint account
+## Close Mint Account
 
 With the `MintCloseAuthority` extension enabled, the Close Authority can close
 the Mint Account to reclaim the lamports from the account.
@@ -225,7 +228,8 @@ transaction details on the SolanaFM.
 
 ## Conclusion
 
-The `MintCloseAuthority` extension is quite simple but effective. It enables
-developers to reclaim SOL that otherwise would have been permanently locked in a
-Mint Account. This functionality is particularly useful for applications
-designed to produce NFTs that are intended to be burned.
+The `MintCloseAuthority` extension enables developers to reclaim SOL that
+otherwise would have been permanently locked in a Mint Account. This feature is
+particularly useful for applications or games involving single-use NFTs that are
+meant to be burned. It ensures that the SOL allocated to Mint Accounts which are
+no longer used can be reclaimed and reused.
