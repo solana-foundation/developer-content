@@ -18,24 +18,23 @@ altRoutes:
   - /developers/guides/permanent-delegate
 ---
 
-With Token Extensions, it's possible to specify a permanent account delegate for
-a mint. This authority has **unlimited** delegate privileges over any token
-account for that mint, meaning that it can burn or transfer any amount of
-tokens.
+The `PermanentDelegate` extension allows for a designated Permanent Delegate for
+a Mint Account. The Permanent Delegate has unrestricted delegate privileges over
+all Token Accounts for that mint, enabling them to burn or transfer tokens
+without limitation.
 
-In this guide, we'll walk through an example of creating a mint with the
-`PermanentDelegate` extension enabled using Solana Playground. Here is the
-[final script](https://beta.solpg.io/6570a56bfb53fa325bfd0c4b).
+In this guide, we'll walk through an example of using Solana Playground. Here is
+the [final script](https://beta.solpg.io/6570a56bfb53fa325bfd0c4b).
 
 ## Understanding the Implications
 
 This is a very powerful feature, and it's implications have to be clearly stated
 for both users and app developers.
 
-The permanent delegate is effectively a global owner of all token accounts for
-the mint. Due to the unlimited powers of the permanent delegate, if the
+The Permanent Delegate is effectively a global owner of all Token Accounts for
+the mint. Due to the unlimited powers of the Permanent Delegate, if the
 delegate's keys are compromised, an attacker will have complete control over all
-token accounts for that mint.
+Token Accounts for that mint.
 
 ## Getting Started
 
@@ -129,7 +128,7 @@ const mintLen = getMintLen([ExtensionType.PermanentDelegate]);
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-With Token Extensions, the size of the mint account will vary based on the
+With Token Extensions, the size of the Mint Account will vary based on the
 extensions enabled.
 
 ## Build Instructions
@@ -214,7 +213,7 @@ transaction on the SolanaFM.
 ## Create Token Accounts
 
 Next, let's set up two Token Accounts to demonstrate the functionality of the
-permanent delegate.
+Permanent Delegate.
 
 First, generate a random keypair and use it as the owner of a
 `sourceTokenAccount`.
@@ -273,11 +272,13 @@ console.log(
 
 ## Transfer with Permanent Delegate
 
-Let's send a transaction to transfer 1 token from the `sourceTokenAccount` to
-the `destinationTokenAccount`.
+Next, let's send a transaction to transfer 1 token from the `sourceTokenAccount`
+to the `destinationTokenAccount`. Remember, the `sourceTokenAccount` is owned by
+a randomly generated keypair.
 
-To transfer tokens with the permanent delegate, use the `transferChecked`
-instruction.
+To transfer tokens using the Permanent Delegate, use the `transferChecked`
+instruction and specify the Permanent Delegate as the owner of the
+`sourceTokenAccount`.
 
 ```javascript
 // Transfer tokens from source to destination
@@ -303,15 +304,18 @@ console.log(
 
 ## Burn with Permanent Delegate
 
-Let's send a transaction to burn 1 token from the `sourceTokenAccount`.
+Next, let's also send a transaction to burn 1 token from the
+`sourceTokenAccount`.
 
-To burn tokens with the permanent delegate, use the `burnChecked` instruction.
+To burn tokens using the `Permanent Delegate`, use the `burnChecked` instruction
+and specify the Permanent Delegate as the owner of the `sourceTokenAccount`.
 
 ```javascript
+// Burn tokens from token account
 transactionSignature = await burnChecked(
   connection,
   payer, // Transaction fee payer
-  sourceTokenAccount, // Tranfer from
+  sourceTokenAccount, // Burn from
   mint, // Mint Account address
   permanentDelegate, // Use Permanent Delegate as owner
   100, // Amount
@@ -330,12 +334,14 @@ console.log(
 Run the script by clicking the `Run` button. You can then inspect the
 transactions on the SolanaFM.
 
-Recall that the `sourceTokenAccount` is owned by a randomly generated keypair.
 Note that the both the transfer and burn transactions complete successfully,
 even though the transactions are not signed by the owner of the Token Account.
 
 ## Conclusion
 
-The permanent delegate extension is a powerful extension that potentially opens
-up new use-cases for tokens. However, users should be aware of the implications
-of holding tokens for a mint that has enabled this extension.
+The `PermanentDelegate` extension is a powerful extension that enables
+developers to have much greater control over tokens they create, such as the
+ability to retrieve tokens that have been mistakenly transferred. While this
+extension offers greater flexibility, it's essential for users to be aware of
+the implications of holding tokens with this extension enabled, particularly the
+risks associated with compromised delegate keys.
