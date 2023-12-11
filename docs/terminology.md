@@ -68,8 +68,8 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](developing/on-chain-programs/faq#berkeley-packet-filter-bpf) smart
-contract programs, allowing the program to interface with the runtime.
+[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf) smart contract programs,
+allowing the program to interface with the runtime.
 
 ## client
 
@@ -111,7 +111,7 @@ A gossip network connecting all [nodes](#node) of a [cluster](#cluster).
 Some number of [epochs](#epoch) after [stake](#stake) has been deactivated while
 it progressively becomes available for withdrawal. During this period, the stake
 is considered to be "deactivating". More info about:
-[warmup and cooldown](implemented-proposals/staking-rewards.md#stake-warmup-cooldown-withdrawal)
+[warmup and cooldown](https://docs.solanalabs.com/implemented-proposals/staking-rewards#stake-warmup-cooldown-withdrawal)
 
 ## credit
 
@@ -120,7 +120,7 @@ See [vote credit](#vote-credit).
 ## cross-program invocation (CPI)
 
 A call from one smart contract program to another. For more information, see
-[calling between programs](developing/programming-model/calling-between-programs.md).
+[calling between programs](/docs/core/cpi.md).
 
 ## data plane
 
@@ -211,9 +211,9 @@ for accessing an account.
 A fractional [native token](#native-token) with the value of 0.000000001
 [sol](#sol).
 
-:::info Within the compute budget, a quantity of
-_[micro-lamports](https://github.com/solana-labs/solana/blob/ced8f6a512c61e0dd5308095ae8457add4a39e94/program-runtime/src/prioritization_fee.rs#L1-L2)_
-is used in the calculation of [prioritization fees](#prioritization-fee). :::
+> Within the compute budget, a quantity of
+> _[micro-lamports](https://github.com/solana-labs/solana/blob/ced8f6a512c61e0dd5308095ae8457add4a39e94/program-runtime/src/prioritization_fee.rs#L1-L2)_
+> is used in the calculation of [prioritization fees](#prioritization-fee).
 
 ## leader
 
@@ -265,7 +265,7 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](./developing/programming-model/transactions.md#message-format)
+[message formatting inside of transactions](/docs/core/transactions.md#message-format)
 here.
 
 ## native token
@@ -287,9 +287,9 @@ See [Proof of History](#proof-of-history-poh).
 ## point
 
 A weighted [credit](#credit) in a rewards regime. In the [validator](#validator)
-[rewards regime](cluster/stake-delegation-and-rewards.md), the number of points
-owed to a [stake](#stake) during redemption is the product of the
-[vote credits](#vote-credit) earned and the number of lamports staked.
+[rewards regime](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards),
+the number of points owed to a [stake](#stake) during redemption is the product
+of the [vote credits](#vote-credit) earned and the number of lamports staked.
 
 ## private key
 
@@ -299,7 +299,7 @@ The private key of a [keypair](#keypair).
 
 The executable code that interprets the [instructions](#instruction) sent inside
 of each [transaction](#transaction) on the Solana. These programs are often
-referred to as "[_smart contracts_](./developing//intro/programs.md)" on other
+referred to as "[_smart contracts_](/docs/core/programs.md)" on other
 blockchains.
 
 ## program derived account (PDA)
@@ -341,13 +341,13 @@ blockchain. When accounts do not have enough balance to pay rent, they may be
 Garbage Collected.
 
 See also [rent exempt](#rent-exempt) below. Learn more about rent here:
-[What is rent?](../src/developing/intro/rent.md).
+[What is rent?](/docs/core/rent.md).
 
 ## rent exempt
 
 Accounts that maintain more than 2 years with of rent payments in their account
 are considered "_rent exempt_" and will not incur the
-[collection of rent](../src/developing/intro/rent.md#collecting-rent).
+[collection of rent](/docs/core/rent.md#collecting-rent).
 
 ## root
 
@@ -435,7 +435,7 @@ behavior can be proven.
 ## sysvar
 
 A system [account](#account).
-[Sysvars](developing/runtime-facilities/sysvars.md) provide cluster state
+[Sysvars](https://docs.solanalabs.com/runtime/sysvars) provide cluster state
 information such as current tick height, rewards [points](#point) values, etc.
 Programs can access Sysvars via a Sysvar account (pubkey) or by querying via a
 syscall.
@@ -463,7 +463,7 @@ A digitally transferable asset.
 
 ## tpu
 
-[Transaction processing unit](validator/tpu.md).
+[Transaction processing unit](https://docs.solanalabs.com/validator/tpu).
 
 ## transaction
 
@@ -488,7 +488,7 @@ A set of [transactions](#transaction) that may be executed in parallel.
 
 ## tvu
 
-[Transaction validation unit](validator/tvu.md).
+[Transaction validation unit](https://docs.solanalabs.com/validator/tvu).
 
 ## validator
 
@@ -523,4 +523,4 @@ A collection of [keypairs](#keypair) that allows users to manage their funds.
 Some number of [epochs](#epoch) after [stake](#stake) has been delegated while
 it progressively becomes effective. During this period, the stake is considered
 to be "activating". More info about:
-[warmup and cooldown](cluster/stake-delegation-and-rewards.md#stake-warmup-cooldown-withdrawal)
+[warmup and cooldown](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards#stake-warmup-cooldown-withdrawal)
