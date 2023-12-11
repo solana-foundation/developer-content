@@ -19,9 +19,9 @@ keywords:
 
 Welcome to the Solana developer docs!
 
-This guide contains step-by-step instructions on how to get started. Before we
-get into the hands on part of the guide, we'll cover basic concepts that all
-developers need to be familiar with to build on Solana:
+This guide contains step-by-step instructions on how to get started. Before the
+hands-on part of the guide, we'll cover basic concepts that all developers need
+to be familiar with to build on Solana:
 
 - Transactions
 - Accounts
@@ -48,7 +48,7 @@ easy-to-understand way.
 
 ### Program development
 
-The first development workflow allows you to to create and deploy custom Rust, C
+The first development workflow allows you to create and deploy custom Rust, C
 and C++ programs directly to the blockchain. Once these programs are deployed,
 anyone who knows how to communicate with them can use them.
 

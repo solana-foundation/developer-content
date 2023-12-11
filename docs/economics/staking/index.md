@@ -93,7 +93,8 @@ information. Do your own due diligence.
 
 #### Delegate your Stake
 
-Follow the wallet's instructions for delegating your to your chosen validator.
+Follow the wallet's instructions for delegating your stake to your chosen
+validator.
 
 ## Stake Account Details
 
