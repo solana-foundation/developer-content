@@ -18,11 +18,11 @@ altRoutes:
   - /developers/guides/reallocate
 ---
 
-The `MemoTransfer` and `CpiGuard` extensions can be enabled for existing Token
-Accounts. However, enabling these extensions once a Token Account has already
-been created requires reallocating additional space to accommodate the extra
-data required by the extensions. This can be done using the `reallocate`
-instruction.
+To enable extensions on existing Token Accounts, additional space must first be
+reallocated to accommodate the extra data required by these extensions. This can
+be done using the `reallocate` instruction. For instance, this allows existing
+Token Accounts can be updated to enable the `MemoTransfer` and `CpiGuard`
+extensions.
 
 In this guide, we'll walk through an example of using Solana Playground. Here is
 the [final script](https://beta.solpg.io/65723a50fb53fa325bfd0c52).
@@ -88,7 +88,7 @@ let transactionSignature: string;
 
 ## Create Mint and Token Account
 
-We'll first need to create a new Mint Account.
+First, we'll need to create a new Mint Account.
 
 ```javascript
 // Authority that can mint new tokens
@@ -130,7 +130,9 @@ Next, let's build a transaction to enable the `MemoTransfer` extensions for an
 existing Token Account.
 
 First, build the instruction to reallocate the Token Account with enough space
-for the specified extension.
+for the specified extension. The Token Extensions Program includes a
+[reallocate](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/reallocate.rs#L24)
+instruction that automatically calculates the space and lamports required.
 
 ```javascript
 // Extensions to reallocate data for
@@ -191,5 +193,8 @@ transaction details on SolanaFM.
 
 ## Conclusion
 
-The reallocate instruction is useful when you need to add an extension on an
-existing Token Account.
+The reallocate instruction on the Token Extensions program offers a flexible way
+to update existing Token Accounts with additional functionalities. This
+instruction is useful for token owners who may not have foreseen the need for
+certain extensions initially, but find themselves requiring these additional
+features at a later time.
