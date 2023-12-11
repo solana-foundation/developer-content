@@ -18,10 +18,11 @@ altRoutes:
   - /developers/guides/default-account-state
 ---
 
-A token creator may want to restrict who can access and use their token. The
-`DefaultAccountState` extension allows all newly created token accounts to be
-frozen by default. This means Token Accounts must first be thawed (unfrozen) by
-the Freeze Authority of the mint before users can receive and use tokens.
+The `DefaultAccountState` extension provides the option to have all new Token
+Accounts to be frozen by default. With this configuration, Token Accounts must
+first be thawed (unfrozen) by the Freeze Authority of the mint before they
+become usable. This feature grants token creators the ability to have greater
+control over token distribution by limiting who can hold the tokens.
 
 In this guide, we'll walk through an example of using Solana Playground. Here is
 the [final script](https://beta.solpg.io/6570ae7afb53fa325bfd0c4c).
@@ -119,7 +120,7 @@ const mintLen = getMintLen([ExtensionType.DefaultAccountState]);
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-With Token Extensions, the size of the mint account will vary based on the
+With Token Extensions, the size of the Mint Account will vary based on the
 extensions enabled.
 
 ## Build Instructions
@@ -222,8 +223,7 @@ const tokenAccount = await createAccount(
 ```
 
 In the default frozen state, users are unable to hold or interact with tokens
-from the mint unless the Freeze Authority to thaws (unfreezes) the Token
-Account.
+from the mint until the Freeze Authority thaws (unfreezes) the Token Account.
 
 For instance, minting tokens to the new Token Account will fail.
 
@@ -261,7 +261,7 @@ the Playground terminal. You should see a message similar to the following:
 
 ## Unfreeze (Thaw) Token Account
 
-A Token Account can be unfrozen using the `thawAccount` instruction, in the same
+A Token Account can be unfrozen using the `thawAccount` instruction in the same
 way as with the original Token program.
 
 ```javascript
