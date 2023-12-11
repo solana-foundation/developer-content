@@ -1,6 +1,8 @@
+// @ts-check
 /** @type {import('next').NextConfig} */
 
 const { withContentlayer } = require("next-contentlayer");
+const redirectsJson = require("./redirects.json");
 
 module.exports = withContentlayer({
   reactStrictMode: true,
@@ -26,6 +28,16 @@ module.exports = withContentlayer({
         hostname: "**",
       },
     ],
+  },
+  async redirects() {
+    return [
+      // common solana docs
+      ...redirectFormatter("https://solana.com/", redirectsJson["common-docs"]),
+      ...redirectFormatter(
+        "https://docs.solanalabs.com/",
+        redirectsJson["solana-client"],
+      ),
+    ];
   },
 });
 
