@@ -17,9 +17,9 @@ altRoutes:
   - /developers/guides/non-transferable-tokens
 ---
 
-The "soul-bound" token concept involves creating digital assets that are
-intrinsically linked to an individual. The `NonTransferable` extension makes it
-possible to create tokens that cannot be transferred. While tokens cannot be
+The `NonTransferable` extension makes it possible to create tokens that cannot
+be transferred. This enables the creation of "soul-bound" tokens, where digital
+assets are intrinsically linked to an individual. While tokens cannot be
 transferred, the owner can still burn tokens and close the Token Account. This
 prevents users from being "stuck" with an unwanted asset.
 
@@ -118,7 +118,7 @@ const mintLen = getMintLen([ExtensionType.NonTransferable]);
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-With Token Extensions, the size of the mint account will vary based on the
+With Token Extensions, the size of the Mint Account will vary based on the
 extensions enabled.
 
 ## Build Instructions
