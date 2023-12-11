@@ -21,11 +21,11 @@ With any form of transaction, there's often a desire to collect or apply a fee.
 Similar to a small service charge every time you transfer money at a bank or the
 way royalties or taxes are collected for particular transfers.
 
-With Token Extensions, the `TransferFee` extension allows you to configure a
-transfer fee directly on the Mint Account, enabling fees to be collected at a
-protocol level. Every time tokens are transferred, the fee is set aside in the
-recipient's Token Account. This fee is untouchable by the recipient and can only
-be accessed by the Withdraw Authority.
+The `TransferFee` extension allows you to configure a transfer fee directly on
+the Mint Account, enabling fees to be collected at a protocol level. Every time
+tokens are transferred, the fee is set aside in the recipient's Token Account.
+This fee is untouchable by the recipient and can only be accessed by the
+Withdraw Authority.
 
 The design of pooling transfer fees at the recipient account is meant to
 maximize parallelization of transactions. Otherwise, one configured fee
@@ -35,8 +35,6 @@ throughput of the protocol.
 In this guide, we'll walk through an example of creating a mint with the
 `TransferFee` extension enabled using Solana Playground. Here is the
 [final script](https://beta.solpg.io/6570e5b7fb53fa325bfd0c4e).
-
-Let's get started!
 
 ## Getting Started
 
@@ -141,7 +139,7 @@ const mintLen = getMintLen([ExtensionType.TransferFeeConfig]);
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
 ```
 
-With Token Extensions, the size of the mint account will vary based on the
+With Token Extensions, the size of the Mint Account will vary based on the
 extensions enabled.
 
 ## Build Instructions
@@ -486,6 +484,7 @@ transaction on the SolanaFM.
 
 ## Conclusion
 
-The `TransferFee` extension makes it much easier to handle transfer fees,
-integrating them at the protocol level. It offers a superior UX for users and
-dApp developers, opening up new possibilities and use cases.
+The `TransferFee` extension enables token creators to enforce fees on each
+transfer without requiring extra instructions or specialized programs. This
+approach ensures that fees are collected in the same currency as the transferred
+tokens, simplifying the transaction process.
