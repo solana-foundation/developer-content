@@ -17,14 +17,14 @@ altRoutes:
   - /developers/guides/interest-bearing-tokens
 ---
 
-The `InterestBearingConfig` extension enables you to set an interest rate stored
-on the Mint Account. Interest is compounded continuously, based on the network's
-timestamp. However, this interest accrual is only a
-[calculation](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/interest_bearing_mint/mod.rs#L85)
-based on the set interest rate, and does not involve minting new tokens. In
-other words, the accrued interest is simply a visual UI conversion, but the
-underlying token quantity remains unchanged. This design eliminates the need for
-frequent rebase or update operations to adjust for accrued interest.
+The `InterestBearingConfig` extension enables developers to set an interest rate
+stored directedly on the Mint Account. Interest is compounded continuously,
+based on the network's timestamp. Note that the interest accrual is only a
+[calculation](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/interest_bearing_mint/mod.rs#L85),
+and does not involve minting new tokens. In other words, the accrued interest is
+simply a visual UI conversion, but the underlying token quantity remains
+unchanged. This design eliminates the need for frequent rebase or update
+operations to adjust for accrued interest.
 
 In this guide, we'll walk through an example of using Solana Playground. Here is
 the [final script](https://beta.solpg.io/65724856fb53fa325bfd0c53).
@@ -286,6 +286,21 @@ console.log("\nAmount with Accrued Interest:", uiAmount);
 Run the script by clicking the `Run` button. You can then inspect the
 transaction details on SolanaFM and view the data logged in the Playground
 terminal.
+
+You should see an output similar to snippet below, where the decimal values
+indicate the interest that has accumulated:
+
+```
+Mint Config: {
+  "rateAuthority": "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
+  "initializationTimestamp": 1702321738,
+  "preUpdateAverageRate": 32767,
+  "lastUpdateTimestamp": 1702321740,
+  "currentRate": 0
+}
+
+Amount with Accrued Interest: 1.000000207670422
+```
 
 ## Conclusion
 
