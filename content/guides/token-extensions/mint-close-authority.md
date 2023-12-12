@@ -3,9 +3,8 @@ date: Dec 05, 2023
 seoTitle: "Token Extensions: Mint Close Authority"
 title: How to use the Mint Close Authority extension
 description:
-  "The Token program allows owners to close token accounts, but it is impossible
-  to close mint accounts. With Token Extensions, it is possible to close mints
-  by initializing the MintCloseAuthority extension before initializing the mint."
+  "With Token Extensions, it is possible to close token mint accounts by
+  initializing the MintCloseAuthority extension before initializing the mint."
 keywords:
   - token 2022
   - token extensions
@@ -16,10 +15,10 @@ tags:
   - token extensions
 ---
 
-Currently, there's no option to close Mint Accounts owned by the Token Program
-and reclaim the SOL allocated to these accounts.
+With the original SPL token program, there was no option to close Mint Accounts
+owned by the Token Program and reclaim the SOL allocated to these accounts.
 
-The ` MintCloseAuthority` extension introduces a solution to this limitation by
+The `MintCloseAuthority` extension introduces a solution to this limitation by
 allowing a designated Close Authority to close a Mint Account if the supply of
 the mint is 0. This feature provides a mechanism to recover SOL allocated to
 Mint Accounts that are no longer in use.
