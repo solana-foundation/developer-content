@@ -1,6 +1,6 @@
 ---
 date: Dec 06, 2023
-seoTitle: "Token Extensions: Transfer Fees (in the same token)"
+seoTitle: "Token Extensions: Transfer Fees"
 title: How to use the Transfer Fee extension
 description:
   "With any form of transaction, there's often a desire to collect or apply a
@@ -36,6 +36,15 @@ throughput of the protocol.
 In this guide, we'll walk through an example of creating a mint with the
 `TransferFee` extension enabled using Solana Playground. Here is the
 [final script](https://beta.solpg.io/6570e5b7fb53fa325bfd0c4e).
+
+<Callout type="info">
+
+The Transfer Fee extension can ONLY take a fee from its same Token Mint. (e.g.
+if you created `TokenA`, all transfer fees via the Transfer Fee extension will
+be in `TokenA`). If you wish to achieve a similar transfer fee in a token other
+that itself, use the Transfer Hook extension.
+
+</Callout>
 
 ## Getting Started
 
@@ -330,7 +339,7 @@ console.log(
 
 When tokens are transferred, transfer fees automatically accumulate in the
 recipient Token Accounts. The Withdraw Authority can freely withdraw these
-tokens from the Token Accounts.
+withheld tokens from each Token Account of the Mint.
 
 To find the Token Accounts that have accumulated fees, we need to fetch all
 Token Accounts for the mint and then filter for ones which have withheld tokens.
