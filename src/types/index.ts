@@ -15,7 +15,13 @@ export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredDoc>;
  * @dev when adding new group names, ensure the desired support is added in all
  * other places the type `SimpleRecordGroupName` is used (e.g. api routes)
  */
-export type SimpleRecordGroupName = "docs" | "guides" | "resources";
+export type SimpleRecordGroupName =
+  | "docs"
+  | "rpc"
+  | "docs,rpc" // note: this is to support stringify-ing the route via the url
+  | "guides"
+  | "resources"
+  | "workshops";
 
 type NavItemBase = {
   id: String;
@@ -28,6 +34,7 @@ type NavItemBase = {
    *
    */
   items?: Array<any>;
+  altRoutes?: string[] | undefined;
 };
 
 export type NavItem = NavItemBase & {
