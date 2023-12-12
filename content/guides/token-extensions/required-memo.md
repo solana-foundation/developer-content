@@ -1,6 +1,7 @@
 ---
 date: Dec 7, 2023
-title: How to use the Required memo extension
+seoTitle: "Token Extensions: Required Memo"
+title: How to use the Required Memo token extension
 description:
   "Memos in financial transactions serve as a communication tool between sender
   and recipient. It aids in the identification of both parties and offers
@@ -13,8 +14,6 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/required-memo
 ---
 
 The `MemoTransfer` extension enforces that every incoming transfer to a Token
