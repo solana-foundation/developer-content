@@ -21,8 +21,8 @@ on the Solana blockchain are known as "_transaction fees_".
 As each transaction (which contains one or more instructions) is sent through
 the network, it gets processed by the current leader validation-client. Once
 confirmed as a global state transaction, this _transaction fee_ is paid to the
-network to help support the [economic design](#economic-design) of the Solana
-blockchain.
+network to help support the [economic design](#basic-economic-design) of the
+Solana blockchain.
 
 > **NOTE:** Transaction fees are different from
 > [account rent](/docs/terminology.md#rent)! While transaction fees are paid to
@@ -92,7 +92,7 @@ Transactions fees are calculated based on two main parts:
   "[_compute units_](/docs/terminology.md#compute-units)"
 
 Since each transaction may require a different amount of computational
-resources, they are alloted a maximum number of _compute units_ per transaction
+resources, they are allotted a maximum number of _compute units_ per transaction
 known as the "[_compute budget_](/docs/terminology.md#compute-budget)".
 
 The execution of each instruction within a transaction consumes a different

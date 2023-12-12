@@ -898,7 +898,7 @@ the initial balance can be assumed to be zero.
 
 ### Withdrawing
 
-The withdrawal address a user provides must be the that of their SOL wallet.
+The withdrawal address a user provides must be that of their SOL wallet.
 
 Before executing a withdrawal [transfer](#token-transfers), the exchange should
 check the address as
