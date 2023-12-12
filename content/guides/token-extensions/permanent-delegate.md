@@ -1,11 +1,11 @@
 ---
 date: Dec 06, 2023
+seoTitle: "Token Extensions: Permanent Delegate"
 title: How to use the Permanent Delegate extension
 description:
-  "With Token Extensions, it's possible to specify a permanent account delegate
-  for a mint. This authority has **unlimited** delegate privileges over any
-  account associated with that mint, meaning that it can burn or transfer any
-  amount of tokens."
+  "Token Extensions allow you to specify a permanent account delegate for a mint
+  with unlimited delegate privileges over any account associated with that mint,
+  including burning or transferring any amount of tokens."
 keywords:
   - token 2022
   - token extensions
@@ -14,27 +14,29 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/permanent-delegate
 ---
 
 The `PermanentDelegate` extension allows for a designated Permanent Delegate for
-a Mint Account. The Permanent Delegate has unrestricted delegate privileges over
-all Token Accounts for that mint, enabling them to burn or transfer tokens
+a Mint Account. This permanent delegate has unrestricted delegate privileges
+over all Token Accounts for that mint, enabling them to burn or transfer tokens
 without limitation.
 
-In this guide, we'll walk through an example of using Solana Playground. Here is
-the [final script](https://beta.solpg.io/6570a56bfb53fa325bfd0c4b).
+In this guide, we'll walk through an example of creating a token with the
+Permanent Delegate using Solana Playground. Here is the
+[final script](https://beta.solpg.io/6570a56bfb53fa325bfd0c4b) that this guide
+will walkthrough.
 
 ## Understanding the Implications
 
-This is a very powerful feature, and it's implications have to be clearly stated
+This is a very powerful feature, and its implications have to be clearly stated
 for both users and app developers.
 
+<Callout type="warning">
 The Permanent Delegate is effectively a global owner of all Token Accounts for
 the mint. Due to the unlimited powers of the Permanent Delegate, if the
 delegate's keys are compromised, an attacker will have complete control over all
 Token Accounts for that mint.
+</Callout>
 
 ## Getting Started
 
@@ -64,7 +66,7 @@ run the starter code.
 
 ## Add Dependencies
 
-Let's start by setting up our script. We'll be using the `@solana/web3.js` and
+Lets start by setting up our script. We'll be using the `@solana/web3.js` and
 `@solana/spl-token` libraries.
 
 Replace the starter code with the following:
@@ -102,7 +104,7 @@ let transactionSignature: string;
 
 ## Mint Setup
 
-First, let's define the properties of the Mint Account we'll be creating in the
+First, lets define the properties of the Mint Account we'll be creating in the
 following step.
 
 ```javascript
@@ -118,7 +120,7 @@ const mintAuthority = pg.wallet.publicKey;
 const permanentDelegate = pg.wallet.publicKey;
 ```
 
-Next, let's determine the size of the new Mint Account and calculate the minimum
+Next, lets determine the size of the new Mint Account and calculate the minimum
 lamports needed for rent exemption.
 
 ```javascript
@@ -133,7 +135,7 @@ extensions enabled.
 
 ## Build Instructions
 
-Next, let's build the set of instructions to:
+We will need to build a set of instructions to:
 
 - Create a new account
 - Initialize the `PermanentDelegate` extension
@@ -182,9 +184,8 @@ const initializeMintInstruction = createInitializeMintInstruction(
 
 ## Send Transaction
 
-Next, let's add the instructions to a new transaction and send it to the
-network. This will create a Mint Account with the `PermanentDelegate` extension
-enabled.
+Now add the instructions to a new transaction and send it to the network. This
+will create a Mint Account with the `PermanentDelegate` extension enabled.
 
 ```javascript
 // Add instructions to new transaction
@@ -212,7 +213,7 @@ transaction on the SolanaFM.
 
 ## Create Token Accounts
 
-Next, let's set up two Token Accounts to demonstrate the functionality of the
+Next, we will set up two Token Accounts to demonstrate the functionality of the
 Permanent Delegate.
 
 First, generate a random keypair and use it as the owner of a
@@ -272,7 +273,7 @@ console.log(
 
 ## Transfer with Permanent Delegate
 
-Next, let's send a transaction to transfer 1 token from the `sourceTokenAccount`
+Next, lets send a transaction to transfer 1 token from the `sourceTokenAccount`
 to the `destinationTokenAccount`. Remember, the `sourceTokenAccount` is owned by
 a randomly generated keypair.
 
@@ -297,15 +298,14 @@ transactionSignature = await transferChecked(
 );
 
 console.log(
-  "\nTranfer Tokens:",
+  "\nTransfer Tokens:",
   `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 ```
 
 ## Burn with Permanent Delegate
 
-Next, let's also send a transaction to burn 1 token from the
-`sourceTokenAccount`.
+Lets also send a transaction to burn 1 token from the `sourceTokenAccount`.
 
 To burn tokens using the `Permanent Delegate`, use the `burnChecked` instruction
 and specify the Permanent Delegate as the owner of the `sourceTokenAccount`.
@@ -334,8 +334,10 @@ console.log(
 Run the script by clicking the `Run` button. You can then inspect the
 transactions on the SolanaFM.
 
-Note that the both the transfer and burn transactions complete successfully,
+<Callout type="success">
+Note that both the transfer and burn transactions complete successfully,
 even though the transactions are not signed by the owner of the Token Account.
+</Callout>
 
 ## Conclusion
 
