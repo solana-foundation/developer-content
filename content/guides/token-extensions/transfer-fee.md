@@ -1,5 +1,6 @@
 ---
 date: Dec 06, 2023
+seoTitle: "Token Extensions: Transfer Fees (in the same token)"
 title: How to use the Transfer Fee extension
 description:
   "With any form of transaction, there's often a desire to collect or apply a
