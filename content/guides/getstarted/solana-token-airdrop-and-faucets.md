@@ -2,6 +2,7 @@
 date: Jul 29, 2023
 difficulty: intro
 title: "How to get Solana devnet SOL (including airdrops and faucets)"
+seoTitle: "Faucets: How to get Solana devnet SOL"
 description:
   "A list of the most common ways to get devnet and testnet SOL tokens for
   Solana development. Including: airdrop, web3.js, POW faucet, and more."
@@ -58,12 +59,12 @@ _Available for Devnet_
 RPC Providers can opt in to distributing Devnet SOL via their Devnet Validators.
 
 _\*If you are an RPC Provider and want to distribute SOL please get in touch
-here_
+here: [Form](https://c852ena8x5c.typeform.com/to/cUj1iRhS)_
 
 Currently Supported:
 
 1. [Helius](https://www.helius.dev/)
-2. [QuickNode](https://www.quicknode.com/chains/sol)
+2. [QuickNode](https://faucet.quicknode.com/solana/devnet)
 
 ### Using the Solana CLI
 
