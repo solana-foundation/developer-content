@@ -1,5 +1,6 @@
 ---
 date: Dec 05, 2023
+seoTitle: "Token Extensions: Mint Close Authority"
 title: How to use the Mint Close Authority extension
 description:
   "The Token program allows owners to close token accounts, but it is impossible
@@ -13,8 +14,6 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/mint-close-authority
 ---
 
 Currently, there's no option to close Mint Accounts owned by the Token Program
