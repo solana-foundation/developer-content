@@ -104,6 +104,40 @@ const basicContentFields: FieldDefs = {
     required: false,
     default: false,
   },
+
+  /**
+   * Custom fields that are used for the generated `nav.json` sidebar data
+   */
+  sidebarLabel: {
+    type: "string",
+    description: "Custom sidebar label to use, instead of the document's title",
+    required: false,
+  },
+  sidebarSortOrder: {
+    type: "number",
+    description: "Sort order of the doc, relative to its siblings",
+    required: false,
+  },
+  hideTableOfContents: {
+    type: "boolean",
+    description: "Force hide the table of contents displayed on page",
+    required: false,
+  },
+
+  /**
+   * Custom SEO specific details
+   */
+  seoTitle: {
+    type: "string",
+    description: "Custom title to be used for SEO purposes",
+    required: false,
+  },
+  seoDescription: {
+    type: "string",
+    description:
+      "Custom description to be used for SEO purposes (recommended max of 155 characters)",
+    required: false,
+  },
 };
 
 /**
@@ -176,6 +210,16 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
       type: "string",
       description: "Estimated duration of this workshop",
       required: true,
+    },
+    video: {
+      type: "string",
+      description: "Video recording of the workshop (if Available)",
+      required: false,
+    },
+    presentation: {
+      type: "string",
+      description: "Presentation for this workshop (if Available)",
+      required: false,
     },
 
     /**
@@ -265,21 +309,18 @@ export const SolanaDoc = defineDocumentType(() => ({
      * Custom fields for this specific content record type
      */
     // none
+  },
+}));
 
-    /**
-     * Custom fields that are used for the generated `nav.json` sidebar data
-     */
-    sidebarLabel: {
-      type: "string",
-      description:
-        "Custom sidebar label to use, instead of the document's title",
-      required: false,
-    },
-    sidebarSortOrder: {
-      type: "number",
-      description: "Sort order of the doc, relative to its siblings",
-      required: false,
-    },
+/**
+ * Content record schema a single Solana RPC documentation record
+ */
+export const SolanaRPCDoc = defineDocumentType(() => ({
+  name: "SolanaRPCDoc",
+  filePathPattern: "docs/rpc/**/*.mdx",
+  fields: {
+    // use the standard content fields
+    ...basicContentFields,
   },
 }));
 
@@ -303,6 +344,7 @@ export default makeSource({
   // set the base content directories to search for content records
   contentDirPath: ".",
   contentDirInclude: [
+    "docs/rpc/**",
     "docs/**",
     "content/guides/**",
     "content/courses/**",
@@ -321,6 +363,7 @@ export default makeSource({
 
     // developer specific content
     SolanaDoc,
+    SolanaRPCDoc,
     DeveloperGuide,
     DeveloperResource,
     DeveloperWorkshop,

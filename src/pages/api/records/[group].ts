@@ -8,6 +8,8 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allSolanaDocs,
+  allDeveloperWorkshops,
+  allSolanaRPCDocs,
 } from "contentlayer/generated";
 import { simplifyRecords } from "@/utils/parsers";
 
@@ -22,12 +24,17 @@ export default function handler(
   // retrieve the correct group's records by its simple group name
   let records: SupportedDocTypes[] = ((group: SimpleRecordGroupName) => {
     switch (group) {
+      case "rpc":
+      case "docs,rpc":
+        return allSolanaRPCDocs;
       case "docs":
         return allSolanaDocs;
       case "guides":
         return allDeveloperGuides;
       case "resources":
         return allDeveloperResources;
+      case "workshops":
+        return allDeveloperWorkshops;
     }
   })(group);
 
