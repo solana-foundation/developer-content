@@ -14,8 +14,6 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/transfer-fee
 ---
 
 With any form of transaction, there's often a desire to collect or apply a fee.
