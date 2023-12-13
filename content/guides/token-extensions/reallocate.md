@@ -1,11 +1,11 @@
 ---
 date: Dec 7, 2023
+seoTitle: "Token Extensions: Reallocate instruction"
 title: How to use the Reallocate instruction
 description:
-  "The Token Extensions program has account extensions that can be applied after
-  initializing a token account. Unless you anticipate which extensions you will
-  need in the future, this could be tricky as you'll need to allocate enough
-  space for them on creation."
+  "The Token Extensions program has an account extension that can be applied
+  after initializing a Token Account, enabling expanding support for more
+  extensions after initial creation."
 keywords:
   - token 2022
   - token extensions
@@ -14,15 +14,16 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/reallocate
 ---
 
-To enable extensions on existing Token Accounts, additional space must first be
-reallocated to accommodate the extra data required by these extensions. This can
-be done using the `reallocate` instruction. For instance, this allows existing
-Token Accounts can be updated to enable the `MemoTransfer` and `CpiGuard`
-extensions.
+To enable additional extensions on existing Token Accounts created via the Token
+Extension program, additional space must first be reallocated to accommodate the
+extra data required by these extensions. This can be done using the `reallocate`
+instruction.
+
+For example, this allows existing Token Accounts can be updated to enable the
+[`MemoTransfer`](/content/guides/token-extensions/required-memo.md) and
+`CpiGuard` extensions.
 
 In this guide, we'll walk through an example of using Solana Playground. Here is
 the [final script](https://beta.solpg.io/65723a50fb53fa325bfd0c52).
@@ -42,6 +43,14 @@ console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
 If it is your first time using Solana Playground, you'll first need to create a
 Playground Wallet and fund the wallet with devnet SOL.
+
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
 
 To get devnet SOL, run the `solana airdrop` command in the Playground's
 terminal, or visit this [devnet faucet](https://faucet.solana.com/).
@@ -131,8 +140,8 @@ existing Token Account.
 
 First, build the instruction to reallocate the Token Account with enough space
 for the specified extension. The Token Extensions Program includes a
-[reallocate](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/reallocate.rs#L24)
-instruction that automatically calculates the space and lamports required.
+[reallocate instruction](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/reallocate.rs#L24)
+that automatically calculates the space and lamports required.
 
 ```javascript
 // Extensions to reallocate data for
@@ -141,7 +150,7 @@ const extensions = [ExtensionType.MemoTransfer];
 const reallocateInstruction = createReallocateInstruction(
   tokenAccount, // Token Account address
   payer.publicKey, // Payer to reallocate data
-  extensions, // Extensions to reallocate
+  extensions, // Extensions to reallocate for
   payer.publicKey, // Token Account owner
   undefined, // Additional signers
   TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
