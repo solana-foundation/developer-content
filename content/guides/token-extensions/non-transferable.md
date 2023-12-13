@@ -1,10 +1,11 @@
 ---
 date: Dec 06, 2023
+seoTitle: "Token Extensions: Non-transferable"
 title: How to use the Non-transferable extension
 description:
   "In the world of digital collectibles, NFTs have plenty of uses outside of the
   PFP meta. Enter the concept of 'soul-bound' tokens - assets that are tied to
-  an individual."
+  an individual and cannot be transferred."
 keywords:
   - token 2022
   - token extensions
@@ -13,17 +14,15 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/non-transferable-tokens
 ---
 
 The `NonTransferable` extension makes it possible to create tokens that cannot
 be transferred. This enables the creation of "soul-bound" tokens, where digital
-assets are intrinsically linked to an individual. While tokens cannot be
+assets are intrinsically linked to an individual. While these tokens cannot be
 transferred, the owner can still burn tokens and close the Token Account. This
 prevents users from being "stuck" with an unwanted asset.
 
-In this guide, we'll walk through an example of creating "soul-bound" tokens
+In this guide, we will walk through an example of creating "soul-bound" tokens
 with the `NonTransferable` extension using Solana Playground. Here is the
 [final script](https://beta.solpg.io/6570c54bfb53fa325bfd0c4d).
 
@@ -42,6 +41,14 @@ console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
 If it is your first time using Solana Playground, you'll first need to create a
 Playground Wallet and fund the wallet with devnet SOL.
+
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
 
 To get devnet SOL, run the `solana airdrop` command in the Playground's
 terminal, or visit this [devnet faucet](https://faucet.solana.com/).
@@ -237,7 +244,8 @@ const destinationTokenAccount = await createAccount(
 );
 ```
 
-Lastly, mint 1 token to the `sourceTokenAccount` to fund it.
+Lastly, mint 1 token to the `sourceTokenAccount` to test the non-transferrable
+enforcement.
 
 ```javascript
 // Mint tokens to sourceTokenAccount
