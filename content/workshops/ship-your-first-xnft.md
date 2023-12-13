@@ -14,6 +14,7 @@ objectives:
 tags:
   - NFT
   - Backpack
+  - Beginner
 # author details
 author: Valentin Madrid
 authorDescription: "External Developer Advocate at Solana Foundation"
@@ -25,7 +26,8 @@ authorGithubUsername: valentinmadrid
 
 ## 🎒 What even is an xNFT ?
 
-First of all, the "X" in xNFT stands for eXecutable. So basically an xNFT is an
+First of all, the "X" in xNFT stands for eXecutable. So basically an xNFT is
+an  
 eXecutable NFT. But, where can it be executed?
 
 That's where [Backpack](https://www.backpack.app/) comes in. Backpack is a multi
