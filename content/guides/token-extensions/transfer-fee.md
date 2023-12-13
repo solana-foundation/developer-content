@@ -60,6 +60,14 @@ console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 If it is your first time using Solana Playground, you'll first need to create a
 Playground Wallet and fund the wallet with devnet SOL.
 
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
+
 To get devnet SOL, run the `solana airdrop` command in the Playground's
 terminal, or visit this [devnet faucet](https://faucet.solana.com/).
 
