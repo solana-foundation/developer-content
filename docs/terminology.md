@@ -38,28 +38,11 @@ capable of modifying the account.
 
 A front-end application that interacts with a Solana cluster.
 
-## associated token account
-
-An account that stores tokens belonging to a particular `mint`. When sending
-tokens, the sender can create associated token accounts for the recipient on
-demand, so the recipient can recieve the token in the receipent's associated
-token account.
-
 ## bank state
 
 The result of interpreting all programs on the ledger at a given
 [tick height](#tick-height). It includes at least the set of all
 [accounts](#account) holding nonzero [native tokens](#native-token).
-
-## base58
-
-A way of representing binary values as strings. Unlike similar systems like
-base64, base58 omits similar-appearing characters to avoid confusion. Solana
-commonly uses base58 to refer to [wallet addresses](#wallet-address).
-
-## basis point
-
-A hundredth of one percent, or %0.01. Sometimes pronounced as 'bip'. Solana uses basis points to set royalties on [NFTs](#nft). 
 
 ## block
 
@@ -82,15 +65,11 @@ the [genesis block](#genesis-block) has height one.
 The [validator](#validator) that produces the genesis (first) [block](#block) of
 a block chain.
 
-## bip
-
-A pronunciation of [basis points](#basis-point). 
-
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](developing/on-chain-programs/faq#berkeley-packet-filter-bpf) on-chain
-programs, allowing the program to interface with the runtime.
+[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf) smart contract programs,
+allowing the program to interface with the runtime.
 
 ## client
 
@@ -132,7 +111,7 @@ A gossip network connecting all [nodes](#node) of a [cluster](#cluster).
 Some number of [epochs](#epoch) after [stake](#stake) has been deactivated while
 it progressively becomes available for withdrawal. During this period, the stake
 is considered to be "deactivating". More info about:
-[warmup and cooldown](implemented-proposals/staking-rewards.md#stake-warmup-cooldown-withdrawal)
+[warmup and cooldown](https://docs.solanalabs.com/implemented-proposals/staking-rewards#stake-warmup-cooldown-withdrawal)
 
 ## credit
 
@@ -140,9 +119,8 @@ See [vote credit](#vote-credit).
 
 ## cross-program invocation (CPI)
 
-A call from one on-chain [program](@program) to another. For more information,
-see
-[calling between programs](developing/programming-model/calling-between-programs.md).
+A call from one smart contract program to another. For more information, see
+[calling between programs](/docs/core/cpi.md).
 
 ## data plane
 
@@ -151,7 +129,7 @@ consensus.
 
 ## drone
 
-An off-chain service that acts as a custodian for a user's secret key. It
+An off-chain service that acts as a custodian for a user's private key. It
 typically serves to validate and sign transactions.
 
 ## entry
@@ -223,13 +201,9 @@ program. A [client](#client) can include one or multiple instructions in a
 [transaction](#transaction). An instruction may contain one or more
 [cross-program invocations](#cross-program-invocation-cpi).
 
-## ix
-
-Short for [instruction](#instruction).
-
 ## keypair
 
-A [public key](#public-key-pubkey) and corresponding [secret key](#private-key)
+A [public key](#public-key-pubkey) and corresponding [private key](#private-key)
 for accessing an account.
 
 ## lamport
@@ -237,9 +211,9 @@ for accessing an account.
 A fractional [native token](#native-token) with the value of 0.000000001
 [sol](#sol).
 
-:::info Within the compute budget, a quantity of
-_[micro-lamports](https://github.com/solana-labs/solana/blob/ced8f6a512c61e0dd5308095ae8457add4a39e94/program-runtime/src/prioritization_fee.rs#L1-L2)_
-is used in the calculation of [prioritization fees](#prioritization-fee). :::
+> Within the compute budget, a quantity of
+> _[micro-lamports](https://github.com/solana-labs/solana/blob/ced8f6a512c61e0dd5308095ae8457add4a39e94/program-runtime/src/prioritization_fee.rs#L1-L2)_
+> is used in the calculation of [prioritization fees](#prioritization-fee).
 
 ## leader
 
@@ -284,15 +258,6 @@ on-chain programs.
 The duration of time for which a [validator](#validator) is unable to
 [vote](#ledger-vote) on another [fork](#fork).
 
-## major unit
-
-The 'main' unit of a currency. For example, among fiat currencies, the dollar
-(for USD), pound (for GBP) and Euro (for EUR) are major units. Solana's SOL
-token has a major unit called the [Sol](#sol). Each Sol is worth 1 billion of
-[lamports](#lamport). Since computers aren't good at decimal maths, transactions
-usually use [minor-units](#minor-unit), converting to major units only for user
-display.
-
 ## message
 
 The structured contents of a [transaction](#transaction). Generally containing a
@@ -300,34 +265,8 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](./developing/programming-model/transactions.md#message-format)
+[message formatting inside of transactions](/docs/core/transactions.md#message-format)
 here.
-
-## memo
-
-The [memo program](https://spl.solana.com/memo) provides a way to write text to
-the blockchain. The Memo program is often added as an instruction to transfer
-transactions as a text description by the sender of what the transfer is for.
-For example, 'Thanks!❤️ '.
-
-## minor unit
-
-The lesser unit of a currency. Well known minor units include US cents (for
-USD), pence (for GBP) and Eurocents (for EUR). Solana's Sol
-[cryptocurrency](#cryptocurrency) has a minor unit called the
-[Lamport](#lamport).
-
-## mint
-
-Verb. Minting tokens increases the supply of the tokens and transfers the new
-tokens to a specific [token account](#token-account).
-
-## mint account
-
-An [account](#account) used to [mint](#mint) tokens to store in a separate
-[token account](#token-account). Each token mint is unique for that network. For
-example, [USDC on Solana mainnet](https://www.circle.com/en/usdc/developers) has
-the mint address `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`.
 
 ## native token
 
@@ -341,11 +280,6 @@ A computer participating in a [cluster](#cluster).
 
 The number of [validators](#validator) participating in a [cluster](#cluster).
 
-## on-chain program
-
-A programthat runs on a blockchain that can read and modify accounts over which
-the on-chain program has control.
-
 ## PoH
 
 See [Proof of History](#proof-of-history-poh).
@@ -353,27 +287,25 @@ See [Proof of History](#proof-of-history-poh).
 ## point
 
 A weighted [credit](#credit) in a rewards regime. In the [validator](#validator)
-[rewards regime](cluster/stake-delegation-and-rewards.md), the number of points
-owed to a [stake](#stake) during redemption is the product of the
-[vote credits](#vote-credit) earned and the number of lamports staked.
+[rewards regime](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards),
+the number of points owed to a [stake](#stake) during redemption is the product
+of the [vote credits](#vote-credit) earned and the number of lamports staked.
 
 ## private key
 
-Another word for the [#secret-key]. Solana tools and documentation generally use
-the term 'secret key' instead.
+The private key of a [keypair](#keypair).
 
-## program (or on-chain program)
+## program
 
 The executable code that interprets the [instructions](#instruction) sent inside
-of each [transaction](#transaction) on the Solana.
-
-These programs are often referred to as
-"[_smart contracts_](./developing//intro/programs.md)" on other blockchains.
+of each [transaction](#transaction) on the Solana. These programs are often
+referred to as "[_smart contracts_](/docs/core/programs.md)" on other
+blockchains.
 
 ## program derived account (PDA)
 
 An account whose signing authority is a program and thus is not controlled by a
-secret key like other accounts.
+private key like other accounts.
 
 ## program id
 
@@ -409,13 +341,13 @@ blockchain. When accounts do not have enough balance to pay rent, they may be
 Garbage Collected.
 
 See also [rent exempt](#rent-exempt) below. Learn more about rent here:
-[What is rent?](../src/developing/intro/rent.md).
+[What is rent?](/docs/core/rent.md).
 
 ## rent exempt
 
 Accounts that maintain more than 2 years with of rent payments in their account
 are considered "_rent exempt_" and will not incur the
-[collection of rent](../src/developing/intro/rent.md#collecting-rent).
+[collection of rent](/docs/core/rent.md#collecting-rent).
 
 ## root
 
@@ -430,13 +362,9 @@ root are excluded from consideration for consensus and can be discarded.
 The component of a [validator](#validator) responsible for [program](#program)
 execution.
 
-## secret key
-
-The secret key of a [keypair](#keypair).
-
 ## Sealevel
 
-Solana's parallel runtime for [on-chain programs](#on-chain-program).
+Solana's parallel smart contracts run-time.
 
 ## shred
 
@@ -483,8 +411,8 @@ non-overlapping, comprising roughly equal real-world time as per
 
 ## smart contract
 
-Another term for [on chain programs](#programs). Solana programs should use the
-term ["on-chain programs"](#program) or simply ["programs"](#program).
+A program on a blockchain that can read and modify accounts over which it has
+control.
 
 ## sol
 
@@ -504,14 +432,10 @@ behavior can be proven.
 
 2/3 of a [cluster](#cluster).
 
-## sx
-
-Short for [signature](#signature).
-
 ## sysvar
 
 A system [account](#account).
-[Sysvars](developing/runtime-facilities/sysvars.md) provide cluster state
+[Sysvars](https://docs.solanalabs.com/runtime/sysvars) provide cluster state
 information such as current tick height, rewards [points](#point) values, etc.
 Programs can access Sysvars via a Sysvar account (pubkey) or by querying via a
 syscall.
@@ -533,19 +457,13 @@ The Nth [tick](#tick) in the [ledger](#ledger).
 
 A digitally transferable asset.
 
-## token account
-
-An [account](#account) that holds the balance for newly [mint](#mint)ed
-[token](#token)s. Each token account is associated with a single
-[mint account](#mint-account).
-
 ## tps
 
 [Transactions](#transaction) per second.
 
 ## tpu
 
-[Transaction processing unit](validator/tpu.md).
+[Transaction processing unit](https://docs.solanalabs.com/validator/tpu).
 
 ## transaction
 
@@ -570,11 +488,7 @@ A set of [transactions](#transaction) that may be executed in parallel.
 
 ## tvu
 
-[Transaction validation unit](validator/tvu.md).
-
-## tx
-
-Short for [transaction](#transaction).
+[Transaction validation unit](https://docs.solanalabs.com/validator/tvu).
 
 ## validator
 
@@ -604,26 +518,9 @@ validator in its vote account when the validator reaches a [root](#root).
 
 A collection of [keypairs](#keypair) that allows users to manage their funds.
 
-## wallet address
-
-The unique [public key](#public-key-pubkey) of a wallet. These are usually
-displayed to programs or user interfaces as a [base58](#base58) string.
-
-## wallet app
-
-An end-user program with a user interface (UI) to interact with a blockchain. A
-wallet typically includes a UI to send and recieve tokens and NFTs, check
-balances of diffferent tokens, view NFTs, stake, and on/off ramp into fiat and
-back. See the
-[wallet apps on a Solana ecosytstem page](https://solana.com/ecosystem/explore?categories=wallet).
-
-## wallet name
-
-A unique memorable name used to refer to a [wallet address](#wallet-address).
-
 ## warmup period
 
 Some number of [epochs](#epoch) after [stake](#stake) has been delegated while
 it progressively becomes effective. During this period, the stake is considered
 to be "activating". More info about:
-[warmup and cooldown](cluster/stake-delegation-and-rewards.md#stake-warmup-cooldown-withdrawal)
+[warmup and cooldown](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards#stake-warmup-cooldown-withdrawal)
