@@ -280,6 +280,11 @@ A computer participating in a [cluster](#cluster).
 
 The number of [validators](#validator) participating in a [cluster](#cluster).
 
+## on-chain program
+
+A program on a blockchain that can read and modify accounts over which it has
+control.
+
 ## PoH
 
 See [Proof of History](#proof-of-history-poh).
@@ -411,8 +416,7 @@ non-overlapping, comprising roughly equal real-world time as per
 
 ## smart contract
 
-A program on a blockchain that can read and modify accounts over which it has
-control.
+See [Proof of History](#on-chain-program).
 
 ## sol
 
