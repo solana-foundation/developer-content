@@ -4,6 +4,7 @@ difficulty: intro
 featured: true
 featuredPriority: 0
 title: "Intro to Solana development (using only your browser)"
+seoTitle: "Introduction to Solana development"
 description:
   "Solana developer quickstart guide to learn how to setup, build, and deploy
   your first Solana program using only your browser with Solana Playground."
@@ -54,9 +55,8 @@ especially on Windows.
 
 ### Import our example project
 
-In a new tab in your browser, open our example "_Hello World_" project on Solana
-Playground:
-[https://beta.solpg.io/6314a69688a7fca897ad7d1d](https://beta.solpg.io/6314a69688a7fca897ad7d1d)
+In a new tab in your browser, open our example "_Hello World_"
+[project on Solana Playground](https://beta.solpg.io/6314a69688a7fca897ad7d1d)
 
 Next, import the project into your local workspace by clicking the "**Import**"
 icon and naming your project `hello_world`.
