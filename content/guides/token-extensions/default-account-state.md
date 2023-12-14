@@ -1,11 +1,10 @@
 ---
 date: Dec 06, 2023
+seoTitle: "Token Extensions: Default Account State"
 title: How to use the Default Account State extension
 description:
-  "A token creator may want to restrict who can access and use their token.
-  While several approaches exist, many involve an initial reliance on
-  centralized services. Considering that anyone can create a token account for a
-  given mint, the current solutions are not comprehensive."
+  "Configure all new Token Accounts to be frozen by default, then requiring all
+  tokens to be unfrozen by the authority before they can be usable."
 keywords:
   - token 2022
   - token extensions
@@ -14,8 +13,6 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/default-account-state
 ---
 
 The `DefaultAccountState` extension provides the option to have all new Token
@@ -42,6 +39,14 @@ console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
 If it is your first time using Solana Playground, you'll first need to create a
 Playground Wallet and fund the wallet with devnet SOL.
+
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
 
 To get devnet SOL, run the `solana airdrop` command in the Playground's
 terminal, or visit this [devnet faucet](https://faucet.solana.com/).
