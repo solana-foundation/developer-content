@@ -613,7 +613,8 @@ The response fields to pay special attention to are:
 
 Transferring compressed NFTs is different from transferring uncompressed NFTs.
 Aside from using a different on-chain program, compressed NFTs require the use
-of a asset's "merkle proof" (or `proof` for short) to actually change ownership.
+of an asset's "merkle proof" (or `proof` for short) to actually change
+ownership.
 
 ### What is a merkle proof?
 
@@ -813,7 +814,7 @@ helper function.
 Since each of these hash values resemble and are formatted similar to
 PublicKeys, we can use the
 [`PublicKey`](https://solana-labs.github.io/solana-web3.js/classes/PublicKey.html)
-class in web3.js to convert them into a accepted byte array format.
+class in web3.js to convert them into an accepted byte array format.
 
 #### Send the transaction
 
