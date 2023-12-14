@@ -1,5 +1,6 @@
 ---
 date: Dec 7, 2023
+seoTitle: "Token Extensions: Interest-Bearing"
 title: How to use the Interest-Bearing extension
 description:
   "Interest-bearing tokens are tokens that can either increase or decrease in
@@ -13,18 +14,23 @@ difficulty: beginner
 tags:
   - token 2022
   - token extensions
-altRoutes:
-  - /developers/guides/interest-bearing-tokens
 ---
 
 The `InterestBearingConfig` extension enables developers to set an interest rate
-stored directedly on the Mint Account. Interest is compounded continuously,
-based on the network's timestamp. Note that the interest accrual is only a
+stored directly on the Mint Account. Interest is compounded continuously, based
+on the network's timestamp.
+
+In other words, the accrued interest is simply a visual UI conversion, but the
+underlying token quantity remains unchanged. This design eliminates the need for
+frequent rebase or update operations to adjust for accrued interest.
+
+<Callout type="info">
+
+Note that the interest accrual is only a
 [calculation](https://github.com/solana-labs/solana-program-library/blob/master/token/program-2022/src/extension/interest_bearing_mint/mod.rs#L85),
-and does not involve minting new tokens. In other words, the accrued interest is
-simply a visual UI conversion, but the underlying token quantity remains
-unchanged. This design eliminates the need for frequent rebase or update
-operations to adjust for accrued interest.
+and does not involve minting new tokens.
+
+</Callout>
 
 In this guide, we'll walk through an example of using Solana Playground. Here is
 the [final script](https://beta.solpg.io/65724856fb53fa325bfd0c53).
@@ -44,6 +50,14 @@ console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
 If it is your first time using Solana Playground, you'll first need to create a
 Playground Wallet and fund the wallet with devnet SOL.
+
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
 
 To get devnet SOL, run the `solana airdrop` command in the Playground's
 terminal, or visit this [devnet faucet](https://faucet.solana.com/).
@@ -257,8 +271,6 @@ console.log(
 );
 ```
 
-<!-- stop -->
-
 ## Calculate Accrued Interest
 
 Lastly, let's calculate the interest accrued for a given amount. Note that this
@@ -286,6 +298,14 @@ console.log("\nAmount with Accrued Interest:", uiAmount);
 Run the script by clicking the `Run` button. You can then inspect the
 transaction details on SolanaFM and view the data logged in the Playground
 terminal.
+
+<Callout type="caution">
+
+Interest is continuously compounded based on the timestamp in the network. Due
+to drift that may occur in the network timestamp, the accumulated interest could
+be lower than the expected value. Thankfully, this is rare.
+
+</Callout>
 
 You should see an output similar to snippet below, where the decimal values
 indicate the interest that has accumulated:
