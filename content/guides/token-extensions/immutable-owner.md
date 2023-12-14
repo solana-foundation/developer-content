@@ -1,11 +1,12 @@
 ---
 date: Dec 6, 2023
 difficulty: beginner
-title: "How to use the immutable owner extension"
-description: "With the Token program, the `SetAuthority` instruction can be used
-  for various use cases. Among them, an Account's owner may transfer ownership
-  of an account to another.
-  "
+seoTitle: "Token Extensions: Immutable Owner"
+title: "How to use the Immutable Owner extension"
+description:
+  "With the Token program, the `SetAuthority` instruction can be used to
+  transfer ownership of an account to another. The `ImmutableOwner` extension
+  can be used to prevent this."
 keywords:
   - token 2022
   - token extensions
@@ -21,8 +22,8 @@ With the Token Program, the `SetAuthority` instruction can be used to change a
 Token Account's owner to another account. The `ImmutableOwner` extension ensures
 that ownership of a Token Account cannot be reassigned.
 
-In this guide, we'll walk through an example of using Solana Playground. Here is
-the [final script](https://beta.solpg.io/65710736fb53fa325bfd0c4f).
+In this guide, we WILL walk through an example of using Solana Playground. Here
+is the [final script](https://beta.solpg.io/65710736fb53fa325bfd0c4f).
 
 ## Understanding the Implications
 
@@ -37,7 +38,8 @@ belongs to the original owner.
 With Token Extensions, Associated Token Accounts have the `ImmutableOwner`
 extension enabled by default, preventing the ownership from being changed.
 
-The `ImmutableOwner` extension can also be enabled for any new Token Account.
+The `ImmutableOwner` extension can also be enabled for any new Token Account
+created by the Token Extension program.
 
 ## Getting Started
 
@@ -54,6 +56,14 @@ console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
 If it is your first time using Solana Playground, you'll first need to create a
 Playground Wallet and fund the wallet with devnet SOL.
+
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
 
 To get devnet SOL, run the `solana airdrop` command in the Playground's
 terminal, or visit this [devnet faucet](https://faucet.solana.com/).
@@ -310,7 +320,7 @@ try {
 
 ## Conclusion
 
-The `ImmutableOwner` extension prevents an vulnerability that was previously
+The `ImmutableOwner` extension prevents a vulnerability that was previously
 possible by reassigning the owner of Associated Token Accounts. This security
 feature can also be applied to any new Token Account, guarding against
 unintended ownership changes.
