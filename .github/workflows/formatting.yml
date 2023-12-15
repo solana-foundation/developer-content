@@ -23,7 +23,7 @@ jobs:
       - name: installing yarn
         run: yarn install
       - name: prettier:check
-        run: yarn prettier:check
+        run: yarn prettier
   stage:
     name: Test linting...
     needs: Format

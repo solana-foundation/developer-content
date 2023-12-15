@@ -15,7 +15,7 @@
     "start": "next start",
     "test": "yarn contentlayer:build",
     "lint": "next lint",
-    "prettier:check": "prettier -c .",
+    "prettier": "prettier -c .",
     "prettier:fix": "prettier -cw ."
   },
   "dependencies": {
