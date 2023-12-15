@@ -116,8 +116,8 @@ use solana_program::{
 
 Every Solana program must define an `entrypoint` that tells the Solana runtime
 where to start executing your on chain code. Your program's
-[entrypoint](/docs/developing/on-chain-programs/developing-rust.md#program-entrypoint)
-should provide a public function named `process_instruction`:
+[entrypoint](/docs/programs/lang-rust.md#program-entrypoint) should provide a
+public function named `process_instruction`:
 
 ```rust
 // declare and export the program's entrypoint
@@ -142,8 +142,8 @@ Every on chain program should return the `Ok`
 tells the Solana runtime that your program executed successfully without errors.
 
 Our program above will simply
-[log a message](/docs/developing/on-chain-programs/debugging.md#logging) of
-"_Hello, world!_" to the blockchain cluster, then gracefully exit with `Ok(())`.
+[log a message](/docs/programs/debugging.md#logging) of "_Hello, world!_" to the
+blockchain cluster, then gracefully exit with `Ok(())`.
 
 ### Build your program
 
@@ -180,10 +180,9 @@ solana airdrop 2
 
 ### Find your program id
 
-When executing a program using
-[web3.js](/docs/developing/clients/javascript-reference.md) or from
-[another Solana program](/docs/developing/programming-model/calling-between-programs.md),
-you will need to provide the `program id` (aka public address of your program).
+When executing a program using [web3.js](/docs/clients/javascript-reference.md)
+or from [another Solana program](/docs/core/cpi.md), you will need to provide
+the `program id` (aka public address of your program).
 
 Inside Solana Playground's **Build & Deploy** sidebar, you can find your
 `program id` under the **Program Credentials** dropdown.
@@ -205,8 +204,8 @@ chain program using JavaScript. Specifically, will use the open source
 to aid in our client application.
 
 > This web3.js package is an abstraction layer on top of the
-> [JSON RPC API](/api) that reduced the need for rewriting common boilerplate,
-> helping to simplify your client side application code.
+> [JSON RPC API](/docs/rpc.md) that reduced the need for rewriting common
+> boilerplate, helping to simplify your client side application code.
 
 ### Initialize client
 
@@ -233,9 +232,9 @@ Playground utilities.
 ### Call the program
 
 To execute your on chain program, you must send a
-[transaction](/docs/developing/programming-model/transactions.md) to it. Each
-transaction submitted to the Solana blockchain contains a listing of
-instructions (and the program's that instruction will interact with).
+[transaction](/docs/core/transactions.md) to it. Each transaction submitted to
+the Solana blockchain contains a listing of instructions (and the program's that
+instruction will interact with).
 
 Here we create a new transaction and add a single `instruction` to it:
 
@@ -316,6 +315,6 @@ See the links below to learn more about writing Solana programs, and setting up
 your local development environment:
 
 - [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
-- [Overview of writing Solana programs](/docs/developing/on-chain-programs/overview.md)
-- [Learn more about developing Solana programs with Rust](/docs/developing/on-chain-programs/developing-rust.md)
-- [Debugging on chain programs](/docs/developing/on-chain-programs/debugging.md)
+- [Overview of writing Solana programs](/docs/programs/index.md)
+- [Learn more about developing Solana programs with Rust](/docs/programs/lang-rust.md)
+- [Debugging on chain programs](/docs/programs/debugging.md)
