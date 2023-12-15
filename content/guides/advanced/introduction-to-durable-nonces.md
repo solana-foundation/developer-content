@@ -65,38 +65,6 @@ implement:
    triggers. With Durable Nonces, these transactions can be pre-signed and
    executed when the trigger condition is met.
 
----
-
-We'll learn a ton in this guide:
-
-- [Durable Nonce Applications](#durable-nonce-applications)
-- [Introduction to Durable Nonces](#introduction-to-durable-nonces)
-  - [Double Spend](#double-spend)
-  - [Recent Blockhashes](#recent-blockhashes)
-  - [Durable Nonces](#durable-nonces)
-  - [Nonce Account](#nonce-account)
-  - [Nonce Authority](#nonce-authority)
-- [Durable Nonces with Solana CLI](#durable-nonces-with-solana-cli)
-  - [Create Nonce Authority](#create-nonce-authority)
-  - [Create Nonce Account](#create-nonce-account)
-  - [Fetch Nonce](#fetch-nonce)
-  - [Displace Nonce Account](#displace-nonce-account)
-  - [Advancing Nonce](#advancing-nonce)
-  - [Withdraw from Nonce Account](#withdraw-from-nonce-account)
-- [Live Example: DAO Offline Co-Signing](#live-example-dao-offline-co-signing)
-  - [Using Recent Blockhashes](#using-recent-blockhashes)
-  - [Using Durable Nonces](#using-durable-nonces)
-- [Durable Nonces with Solana `web3.js`](#durable-nonces-with-solana-web3js)
-  - [Create Nonce Authority](#create-nonce-authority-1)
-  - [Create Nonce Accounts](#create-nonce-accounts)
-  - [Fetch Initialised Nonce Account](#fetch-initialised-nonce-account)
-  - [Sign Transaction using Durable Nonce](#sign-transaction-using-durable-nonce)
-- [Live Example: Poll Simulation App](#live-example-poll-simulation-app)
-  - [Live App](#live-app)
-- [References](#references)
-
-Let's get started!
-
 ## Introduction to Durable Nonces
 
 ### Double Spend
