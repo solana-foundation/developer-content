@@ -1,5 +1,5 @@
 ---
-date: Dec 20, 2023
+date: Dec 21, 2023
 seoTitle: "Token Extensions: Metadata Pointer and Token Metadata"
 title: How to use the Metadata Pointer extension
 description:
@@ -16,18 +16,20 @@ tags:
   - token extensions
 ---
 
-Previously, adding extra data to a Mint Account required creating a Metadata
+Before the Token Extensions Program and the
+[Token Metadata Interface](https://github.com/solana-labs/solana-program-library/tree/master/token-metadata/interface),
+the process of adding extra data to a Mint Account required creating a Metadata
 Account through the
 [Metaplex Metadata Program](https://developers.metaplex.com/token-metadata).
 
-The `MetadataPointer` extension now enables a Mint Account to explicitly specify
-the address of its corresponding Metadata Account. This flexibility allows the
-Mint Account to point to any account owned by a program that implements the
-[Token Metadata Interface](https://github.com/solana-labs/solana-program-library/tree/master/token-metadata/interface).
+The `MetadataPointer` extension now enables a Mint Account to specify the
+address of its corresponding Metadata Account. This flexibility allows the Mint
+Account to point to any account owned by a program that implements the Token
+Metadata Interface.
 
 The Token Extensions Program directly implements the Token Metadata Interface,
 made accessible through the `TokenMetadata` extension. With the `TokenMetadata`
-extension, additional metadata can now be stored directly on the Mint Account.
+extension, the Mint Account can now store the metadata.
 
 In this guide, we will demonstrate how to create a Mint Account that enables
 both the `MetadataPointer` and `TokenMetadata` extensions. This setup simplifies
@@ -92,19 +94,19 @@ The Metadata Interface specifies the following
 
 - [**UpdateField**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L120):
   Updates an existing token metadata field or adds to the `additional_metadata`
-  if it does not already exist. Requires the account to be resized appropriately
-  after modification.
+  if it does not already exist. Requires resizing the account after
+  modification.
 
 - [**RemoveKey**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L137):
   Deletes a key-value pair from the `additional_metadata`. This instruction does
   not apply to the required name, symbol, and URI fields.
 
 - [**UpdateAuthority**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L147):
-  Updates the authority allows to modify the token metadata.
+  Updates the authority allows to change the token metadata.
 
 - [**Emit**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L162):
   Emits the token metadata in the format of the `TokenMetadata` struct. This
-  allows for account data to be stored in a different format while maintaining
+  allows account data to be stored in a different format while maintaining
   compatibility with the Interface standards.
 
 ## Getting Started
@@ -171,10 +173,9 @@ and request an airdrop to fund the keypair. We will reuse this keypair as a
 
 ## Add Dependencies
 
-Next, update the starter code with the dependencies we'll need to run the
-example.
+Next, update the starter code with the dependencies needed to run the example.
 
-Begin by installing `@solana/spl-token-metadata`. Note that the starter code
+Begin by installing `@solana/spl-token-metadata`. Note that the starter project
 already includes the `@solana/web3.js` and `@solana/spl-token` libraries.
 
 ```
@@ -225,7 +226,7 @@ let transactionSignature: string;
 
 ## Mint Setup
 
-Next, let's define the properties of the Mint Account we'll be creating in the
+Next, define the properties of the Mint Account we'll be creating in the
 following step.
 
 ```javascript
@@ -339,8 +340,8 @@ required metadata fields (name, symbol, URI).
 
 For this instruction, use the Token Extensions Program as the `programId`, which
 functions as the "Metadata Program". Additionally, the Mint Account's address is
-used as the `metadata` argument to indicate that the Mint itself is the
-"Metadata Account".
+used as the `metadata` to indicate that the Mint itself is the "Metadata
+Account".
 
 ```js
 // Instruction to initialize Metadata Account data
@@ -357,7 +358,7 @@ const initializeMetadataInstruction = createInitializeInstruction({
 ```
 
 Next, build the instruction to update the metadata with a custom field using the
-`UpdateField` instruction of the Token Metadata Interface.
+`UpdateField` instruction from the Token Metadata Interface.
 
 This instruction will either update the value of an existing field or add it to
 `additional_metadata` if it does not already exist. Note that you may need to
@@ -380,7 +381,7 @@ const updateFieldInstruction = createUpdateFieldInstruction({
 
 Next, add the instructions to a new transaction and send it to the network. This
 will create a Mint Account with the `MetadataPointer` and `TokenMetadata`
-extensions enabled and store the metadata directly on the Mint Account.
+extensions enabled and store the metadata on the Mint Account.
 
 ```javascript
 // Add instructions to new transaction
@@ -434,12 +435,12 @@ Next, read the Metadata portion of the account data:
 
 <Callout type="info">
 
-Currently, reading the metadata requires manually identifying its location
-within the account data. In the future, a dedicated helper function might
-simplify this process.
+Currently, reading the metadata requires identifying its location within the
+account data. In this specific example, the Mint Account stores the metadata at
+an offset of 72 bytes from the beginning of the `tlvData`.
 
-In this specific example, the metadata is stored at an offset of 72 bytes from
-the beginning of the `tlvData` on the Mint Account.
+In the future, `@solana/spl-token` will include a dedicated helper function to
+simplify this process.
 
 </Callout>
 
@@ -453,7 +454,7 @@ console.log("\nMetadata:", JSON.stringify(metadata, null, 2));
 Run the script by running `npm start`. You can then inspect the transaction
 details on the SolanaFM.
 
-You should also see console output similar to the following:
+You should also see console output like the following:
 
 ```
 Metadata Pointer: {
@@ -484,8 +485,8 @@ the Token Metadata Interface.
 <Callout type="info">
 
 The `idempotent` flag is used to specify whether the transaction should fail if
-the specified key does not exist on the account. If the idempotent flag is set
-to `true`, then the instruction will not error if the key does not exist.
+the key does not exist on the account. If the idempotent flag is set to `true`,
+then the instruction will not error if the key does not exist.
 
 </Callout>
 
@@ -520,7 +521,7 @@ console.log(
 );
 ```
 
-Run the script again using `npm start`. If you inspect Mint Account data on the
+Run the script again using `npm start`. If you inspect the Mint Account data on
 SolanaFM (JSON tab), you should see that the additional metadata is empty.
 
 ```
@@ -541,6 +542,6 @@ SolanaFM (JSON tab), you should see that the additional metadata is empty.
 
 ## Conclusion
 
-By enabling both the `MetadataPointer` and `TokenMetadata` extensions, metadata
-can be stored directly on the Mint Account. This feature significantly
-simplifies the process of adding metadata to a Mint Account.
+By enabling both the `MetadataPointer` and `TokenMetadata` extensions, the Mint
+Account can directly store metadata. This feature simplifies the process of
+adding metadata to a Mint Account.
