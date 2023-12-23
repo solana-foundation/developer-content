@@ -304,6 +304,10 @@
       "source": "/developing/guides/compressed-nfts"
     },
     {
+      "destination": "/developers/guides/javascript/social-logins-particle",
+      "source": "/developing/guides/social-logins-particle"
+    },
+    {
       "destination": "/docs/programs",
       "source": "/developing/on-chain-programs/overview"
     },
