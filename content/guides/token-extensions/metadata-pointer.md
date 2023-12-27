@@ -34,7 +34,8 @@ extension, the Mint Account can now store the metadata.
 In this guide, we will demonstrate how to create a Mint Account that enables
 both the `MetadataPointer` and `TokenMetadata` extensions. This setup simplifies
 the process of adding metadata to a Mint Account by storing all the data on a
-single account.
+single account. Here is the
+[final script](https://beta.solpg.io/658c5a75cffcf4b13384ceb5).
 
 <Callout type="info">
 
@@ -111,80 +112,46 @@ The Metadata Interface specifies the following
 
 ## Getting Started
 
-In this guide, we'll be running the code locally. To get the starter code, run:
+Start by opening this Solana Playground
+[link](https://beta.solpg.io/656e19acfb53fa325bfd0c46) with the following
+starter code.
 
-```
-npx solana-starter
-```
-
-Then `cd` and open the project.
-
-```
-cd solana-starter
-```
-
-You should see the following starter code in `./src/index.ts`.
-
-```js
-import { Connection, LAMPORTS_PER_SOL, clusterApiUrl } from "@solana/web3.js";
-import { getOrCreateKeypair } from "./utils";
-
-// Helper function to generate or reuse existing keypairs from `.env` file
-const wallet_1 = getOrCreateKeypair("wallet_1");
-console.log("wallet_1 address:", wallet_1.publicKey.toBase58());
-
-// Establish a connection to the Solana devnet cluster
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
-// Request the airdrop
-const transactionSignature = await connection.requestAirdrop(
-  wallet_1.publicKey,
-  5 * LAMPORTS_PER_SOL, // 5 SOL
-);
-
-// Fetch the latest blockhash from the cluster
-const { blockhash, lastValidBlockHeight } =
-  await connection.getLatestBlockhash();
-
-// Confirm the airdrop transaction
-await connection.confirmTransaction(
-  {
-    blockhash,
-    lastValidBlockHeight,
-    signature: transactionSignature,
-  },
-  "confirmed",
-);
-
-// Fetch the lamport balance after requesting airdrop
-const balance = await connection.getBalance(wallet_1.publicKey);
-console.log("wallet_1 balance:", balance / LAMPORTS_PER_SOL);
-
-// Link to the transaction on Solana Explorer
-console.log(
-  "Transaction Signature:",
-  `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`,
-);
+```javascript
+// Client
+console.log("My address:", pg.wallet.publicKey.toString());
+const balance = await pg.connection.getBalance(pg.wallet.publicKey);
+console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 ```
 
-To run the script, run `npm start`. This will write a keypair to a `.env` file
-and request an airdrop to fund the keypair. We will reuse this keypair as a
-"wallet" to pay for both account creation and transaction fees.
+If it is your first time using Solana Playground, you'll first need to create a
+Playground Wallet and fund the wallet with devnet SOL.
+
+<Callout type="info">
+
+If you do not have a Playground wallet, you may see a type error within the
+editor on all declarations of `pg.wallet.publicKey`. This type error will clear
+after you create a Playground wallet.
+
+</Callout>
+
+To get devnet SOL, run the `solana airdrop` command in the Playground's
+terminal, or visit this [devnet faucet](https://faucet.solana.com/).
+
+```
+solana airdrop 5
+```
+
+Once you've created and funded the Playground wallet, click the "Run" button to
+run the starter code.
 
 ## Add Dependencies
 
-Next, update the starter code with the dependencies needed to run the example.
+Let's start by setting up our script. We'll be using the `@solana/web3.js`,
+`@solana/spl-token`, and `@solana/spl-token-metadata` libraries.
 
-Begin by installing `@solana/spl-token-metadata`. Note that the starter project
-already includes the `@solana/web3.js` and `@solana/spl-token` libraries.
+Replace the starter code with the following:
 
-```
-npm install @solana/spl-token-metadata
-```
-
-Then replace the starter code with the following:
-
-```js
+```javascript
 import {
   Connection,
   Keypair,
@@ -210,10 +177,9 @@ import {
   pack,
   TokenMetadata,
 } from "@solana/spl-token-metadata";
-import { getOrCreateKeypair } from "./utils";
 
-// Local Keypair for payer
-const wallet_1 = getOrCreateKeypair("wallet_1");
+// Playground wallet
+const payer = pg.wallet.keypair;
 
 // Connection to devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -237,11 +203,13 @@ const mint = mintKeypair.publicKey;
 // Decimals for Mint Account
 const decimals = 2;
 // Authority that can mint new tokens
-const mintAuthority = wallet_1.publicKey;
+const mintAuthority = pg.wallet.publicKey;
+// Authority that can update token metadata
+const updateAuthority = pg.wallet.publicKey;
 
 // Metadata to store in Mint Account
 const metaData: TokenMetadata = {
-  updateAuthority: wallet_1.publicKey,
+  updateAuthority: updateAuthority,
   mint: mint,
   name: "OPOS",
   symbol: "OPOS",
@@ -297,7 +265,7 @@ and assign ownership to the Token Extensions Program.
 ```js
 // Instruction to invoke System Program to create new account
 const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: wallet_1.publicKey, // Account that will transfer lamports to created account
+  fromPubkey: payer.publicKey, // Account that will transfer lamports to created account
   newAccountPubkey: mint, // Address of the account to create
   space: mintLen, // Amount of bytes to allocate to the created account
   lamports, // Amount of lamports transferred to created account
@@ -315,7 +283,7 @@ Account.
 const initializeMetadataPointerInstruction =
   createInitializeMetadataPointerInstruction(
     mint, // Mint Account address
-    wallet_1.publicKey, // Authority that can set the metadata address
+    updateAuthority, // Authority that can set the metadata address
     mint, // Account address that holds the metadata
     TOKEN_2022_PROGRAM_ID,
   );
@@ -348,9 +316,9 @@ Account".
 const initializeMetadataInstruction = createInitializeInstruction({
   programId: TOKEN_2022_PROGRAM_ID, // Token Extension Program as Metadata Program
   metadata: mint, // Account address that holds the metadata
-  updateAuthority: wallet_1.publicKey, // Authority that can update the metadata
+  updateAuthority: updateAuthority, // Authority that can update the metadata
   mint: mint, // Mint Account address
-  mintAuthority: wallet_1.publicKey, // Designated Mint Authority
+  mintAuthority: mintAuthority, // Designated Mint Authority
   name: metaData.name,
   symbol: metaData.symbol,
   uri: metaData.uri,
@@ -363,15 +331,15 @@ Next, build the instruction to update the metadata with a custom field using the
 This instruction will either update the value of an existing field or add it to
 `additional_metadata` if it does not already exist. Note that you may need to
 reallocate more space to the account to accommodate the additional data. In this
-example, we allocated the space up front when calculating the initial size of
-the Mint Account.
+example, we allocated all the lamports required for rent up front when creating
+the account.
 
 ```js
 // Instruction to update metadata, adding custom field
 const updateFieldInstruction = createUpdateFieldInstruction({
   programId: TOKEN_2022_PROGRAM_ID, // Token Extension Program as Metadata Program
   metadata: mint, // Account address that holds the metadata
-  updateAuthority: wallet_1.publicKey, // Authority that can update the metadata
+  updateAuthority: updateAuthority, // Authority that can update the metadata
   field: metaData.additionalMetadata[0][0], // key
   value: metaData.additionalMetadata[0][1], // value
 });
@@ -397,7 +365,7 @@ transaction = new Transaction().add(
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [wallet_1, mintKeypair], // Signers
+  [payer, mintKeypair], // Signers
 );
 
 console.log(
@@ -409,7 +377,7 @@ console.log(
 ## Read Metadata from Mint Account
 
 Next, fetch and read from the Mint Account to verify that the metadata has been
-successfully stored.
+stored.
 
 Start by fetching the Mint Account's data:
 
@@ -451,20 +419,20 @@ const metadata = unpack(slicedBuffer);
 console.log("\nMetadata:", JSON.stringify(metadata, null, 2));
 ```
 
-Run the script by running `npm start`. You can then inspect the transaction
-details on the SolanaFM.
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
 
 You should also see console output like the following:
 
 ```
 Metadata Pointer: {
-  "authority": "5hvJBvAc1PYnHhBxc6SENk9dBXtuPdJsvD9ac7NGFdGj",
-  "metadataAddress": "5s1HmztJ1vZXSWsz3VLvdwkcwPA6cva4viY8E9QJiL6m"
+  "authority": "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
+  "metadataAddress": "BFqmKEm12CrDbcFAncjL34Anu5w18LruxQrgvy7aExzV"
 }
 
 Metadata: {
-  "updateAuthority": "5hvJBvAc1PYnHhBxc6SENk9dBXtuPdJsvD9ac7NGFdGj",
-  "mint": "5s1HmztJ1vZXSWsz3VLvdwkcwPA6cva4viY8E9QJiL6m",
+  "updateAuthority": "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
+  "mint": "BFqmKEm12CrDbcFAncjL34Anu5w18LruxQrgvy7aExzV",
   "name": "OPOS",
   "symbol": "OPOS",
   "uri": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json",
@@ -495,7 +463,7 @@ then the instruction will not error if the key does not exist.
 const removeKeyInstruction = createRemoveKeyInstruction({
   programId: TOKEN_2022_PROGRAM_ID, // Token Extension Program as Metadata Program
   metadata: mint, // Address of the metadata
-  updateAuthority: wallet_1.publicKey, // Authority that can update the metadata
+  updateAuthority: updateAuthority, // Authority that can update the metadata
   key: metaData.additionalMetadata[0][0], // Key to remove from the metadata
   idempotent: true, // If the idempotent flag is set to true, then the instruction will not error if the key does not exist
 });
@@ -507,7 +475,7 @@ transaction = new Transaction().add(removeKeyInstruction);
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [wallet_1],
+  [payer],
 );
 
 console.log(
@@ -521,22 +489,25 @@ console.log(
 );
 ```
 
-Run the script again using `npm start`. If you inspect the Mint Account data on
-SolanaFM (JSON tab), you should see that the additional metadata is empty.
+Run the script by clicking the `Run` button. You can then inspect the
+transaction details on SolanaFM.
+
+If you inspect the Mint Account data on SolanaFM (JSON tab), you should see that
+the additional metadata is empty.
 
 ```
 {
-    "extensionLength": 192,
-    "updateAuthority": "5hvJBvAc1PYnHhBxc6SENk9dBXtuPdJsvD9ac7NGFdGj",
-    "mint": "5s1HmztJ1vZXSWsz3VLvdwkcwPA6cva4viY8E9QJiL6m",
-    "name": "OPOS",
-    "symbol": "OPOS",
-    "uri": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json",
-    "additionalMetadata": {
-        "dataType": "Map",
-        "value": []
-    },
-    "enumType": "tokenMetadata"
+  "extensionLength": 192,
+  "updateAuthority": "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
+  "mint": "BFqmKEm12CrDbcFAncjL34Anu5w18LruxQrgvy7aExzV",
+  "name": "OPOS",
+  "symbol": "OPOS",
+  "uri": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json",
+  "additionalMetadata": {
+      "dataType": "Map",
+      "value": []
+  },
+  "enumType": "tokenMetadata"
 }
 ```
 
