@@ -72,7 +72,9 @@ export default function handler(
     if (
       flatNavItems[i].href != href &&
       flatNavItems[i].href != `/${href}` &&
-      flatNavItems[i]?.altRoutes?.filter(route => route == href)?.[0] != href
+      !flatNavItems[i]?.altRoutes?.filter(
+        route => route.toLocaleLowerCase() == href,
+      ).length
     ) {
       continue;
     }

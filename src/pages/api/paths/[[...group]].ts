@@ -64,11 +64,11 @@ export default function handler(
     if (!!record?.altRoutes?.length) {
       record.altRoutes.forEach(route => {
         if (!!route?.trim()) {
-          listing.push(
-            Object.assign(navItem, {
-              href: route.trim(),
-            }),
-          );
+          listing.push({
+            ...navItem,
+            href: route.trim(),
+            altRoutes: undefined,
+          });
         }
       });
     }
