@@ -29,7 +29,7 @@ Metadata Interface.
 
 The Token Extensions Program directly implements the Token Metadata Interface,
 made accessible through the `TokenMetadata` extension. With the `TokenMetadata`
-extension, the Mint Account can now store the metadata.
+extension, the Mint Account itself can now store the metadata.
 
 In this guide, we will demonstrate how to create a Mint Account that enables
 both the `MetadataPointer` and `TokenMetadata` extensions. This setup simplifies
@@ -91,12 +91,12 @@ The Metadata Interface specifies the following
 [instructions](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs):
 
 - [**Initialize**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L97):
-  Initialize the required token metadata fields (name, symbol, URI).
+  Initialize the basic token metadata fields (name, symbol, URI).
 
 - [**UpdateField**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L120):
   Updates an existing token metadata field or adds to the `additional_metadata`
-  if it does not already exist. Requires resizing the account after
-  modification.
+  if it does not already exist. Requires resizing the account to accommodate for
+  addition space.
 
 - [**RemoveKey**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L137):
   Deletes a key-value pair from the `additional_metadata`. This instruction does
@@ -204,7 +204,7 @@ const mint = mintKeypair.publicKey;
 const decimals = 2;
 // Authority that can mint new tokens
 const mintAuthority = pg.wallet.publicKey;
-// Authority that can update token metadata
+// Authority that can update the metadata pointer and token metadata
 const updateAuthority = pg.wallet.publicKey;
 
 // Metadata to store in Mint Account
@@ -241,10 +241,10 @@ extensions enabled.
 
 <Callout type="info">
 
-At the time of this writing, the `TokenMetadata` extension for
-`@solana/spl-token` is still in development.
+At the time of writing, the `TokenMetadata` extension for `@solana/spl-token` is
+still in development and unavailable to use.
 
-In the code snippet above, we manually add 4 bytes for the `TokenMetadata`
+In the code snippet above, we manually allocate 4 bytes for the `TokenMetadata`
 extension and then calculate the space required by the metadata.
 
 </Callout>
@@ -256,8 +256,8 @@ Next, let's build the set of instructions to:
 - Create a new account
 - Initialize the `MetadataPointer` extension
 - Initialize the remaining Mint Account data
-- Initialize the `TokenMetadata` extension and required metadata
-- Update the metadata with a custom field
+- Initialize the `TokenMetadata` extension and token metadata
+- Update the token metadata with a custom field
 
 First, build the instruction to invoke the System Program to create an account
 and assign ownership to the Token Extensions Program.
@@ -376,8 +376,7 @@ console.log(
 
 ## Read Metadata from Mint Account
 
-Next, fetch and read from the Mint Account to verify that the metadata has been
-stored.
+Next, fetch the Mint Account to verify that the metadata has been stored.
 
 Start by fetching the Mint Account's data:
 
@@ -422,7 +421,7 @@ console.log("\nMetadata:", JSON.stringify(metadata, null, 2));
 Run the script by clicking the `Run` button. You can then inspect the
 transaction details on SolanaFM.
 
-You should also see console output like the following:
+You should also see console output similar to the following:
 
 ```
 Metadata Pointer: {
@@ -492,8 +491,8 @@ console.log(
 Run the script by clicking the `Run` button. You can then inspect the
 transaction details on SolanaFM.
 
-If you inspect the Mint Account data on SolanaFM (JSON tab), you should see that
-the additional metadata is empty.
+If you inspect the Mint Account data on SolanaFM using the JSON tab, you should
+see that the additional metadata is empty.
 
 ```
 {
@@ -514,5 +513,5 @@ the additional metadata is empty.
 ## Conclusion
 
 By enabling both the `MetadataPointer` and `TokenMetadata` extensions, the Mint
-Account can directly store metadata. This feature simplifies the process of
-adding metadata to a Mint Account.
+Account can now directly store token metadata. This feature simplifies the
+process of adding metadata to a Mint Account.
