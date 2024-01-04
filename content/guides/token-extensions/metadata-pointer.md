@@ -35,14 +35,7 @@ In this guide, we will demonstrate how to create a Mint Account that enables
 both the `MetadataPointer` and `TokenMetadata` extensions. This setup simplifies
 the process of adding metadata to a Mint Account by storing all the data on a
 single account. Here is the
-[final script](https://beta.solpg.io/658c5a75cffcf4b13384ceb5).
-
-<Callout type="info">
-
-The `@solana/spl-token-metadata` library used in this guide is under active
-development and is subject to change.
-
-</Callout>
+[final script](https://beta.solpg.io/65964e90cffcf4b13384ceca).
 
 ## Token Metadata Interface Overview
 
@@ -168,12 +161,14 @@ import {
   createInitializeMetadataPointerInstruction,
   getMint,
   getMetadataPointerState,
+  getTokenMetadata,
+  TYPE_SIZE,
+  LENGTH_SIZE,
 } from "@solana/spl-token";
 import {
   createInitializeInstruction,
   createUpdateFieldInstruction,
   createRemoveKeyInstruction,
-  unpack,
   pack,
   TokenMetadata,
 } from "@solana/spl-token-metadata";
@@ -221,9 +216,12 @@ const metaData: TokenMetadata = {
 Next, determine the size of the new Mint Account and calculate the minimum
 lamports needed for rent exemption.
 
+In the code snippet below, we allocate 4 bytes for the `TokenMetadata` extension
+and then calculate the space required by the metadata.
+
 ```javascript
 // Size of MetadataExtension 2 bytes for type, 2 bytes for length
-const metadataExtension = 4;
+const metadataExtension = TYPE_SIZE + LENGTH_SIZE;
 // Size of metadata
 const metadataLen = pack(metaData).length;
 
@@ -238,16 +236,6 @@ const lamports = await connection.getMinimumBalanceForRentExemption(
 
 With Token Extensions, the size of the Mint Account will vary based on the
 extensions enabled.
-
-<Callout type="info">
-
-At the time of writing, the `TokenMetadata` extension for `@solana/spl-token` is
-still in development and unavailable to use.
-
-In the code snippet above, we manually allocate 4 bytes for the `TokenMetadata`
-extension and then calculate the space required by the metadata.
-
-</Callout>
 
 ## Build Instructions
 
@@ -376,9 +364,10 @@ console.log(
 
 ## Read Metadata from Mint Account
 
-Next, fetch the Mint Account to verify that the metadata has been stored.
+Next, check that the metadata has been stored on the Mint Account.
 
-Start by fetching the Mint Account's data:
+Start by fetching the Mint Account and reading the `MetadataPointer` extension
+portion of the account data:
 
 ```js
 // Retrieve mint information
@@ -388,11 +377,7 @@ const mintInfo = await getMint(
   "confirmed",
   TOKEN_2022_PROGRAM_ID,
 );
-```
 
-Next, read the `MetadataPointer` extension portion of the account data:
-
-```js
 // Retrieve and log the metadata pointer state
 const metadataPointer = getMetadataPointerState(mintInfo);
 console.log("\nMetadata Pointer:", JSON.stringify(metadataPointer, null, 2));
@@ -400,21 +385,12 @@ console.log("\nMetadata Pointer:", JSON.stringify(metadataPointer, null, 2));
 
 Next, read the Metadata portion of the account data:
 
-<Callout type="info">
-
-Currently, reading the metadata requires identifying its location within the
-account data. In this specific example, the Mint Account stores the metadata at
-an offset of 72 bytes from the beginning of the `tlvData`.
-
-In the future, `@solana/spl-token` will include a dedicated helper function to
-simplify this process.
-
-</Callout>
-
 ```js
-// Extract and log the metadata
-const slicedBuffer = mintInfo.tlvData.subarray(72);
-const metadata = unpack(slicedBuffer);
+// Retrieve and log the metadata state
+const metadata = await getTokenMetadata(
+  connection,
+  mint, // Mint Account address
+);
 console.log("\nMetadata:", JSON.stringify(metadata, null, 2));
 ```
 
@@ -482,6 +458,13 @@ console.log(
   `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
 );
 
+// Retrieve and log the metadata state
+const updatedMetadata = await getTokenMetadata(
+  connection,
+  mint, // Mint Account address
+);
+console.log("\nUpdated Metadata:", JSON.stringify(updatedMetadata, null, 2));
+
 console.log(
   "\nMint Account:",
   `https://solana.fm/address/${mint}?cluster=devnet-solana`,
@@ -489,24 +472,18 @@ console.log(
 ```
 
 Run the script by clicking the `Run` button. You can then inspect the
-transaction details on SolanaFM.
+transaction details and Mint Account on SolanaFM.
 
-If you inspect the Mint Account data on SolanaFM using the JSON tab, you should
-see that the additional metadata is empty.
+You should also see console output similar to the following:
 
 ```
-{
-  "extensionLength": 192,
-  "updateAuthority": "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
-  "mint": "BFqmKEm12CrDbcFAncjL34Anu5w18LruxQrgvy7aExzV",
+Updated Metadata: {
+  "updateAuthority": "Ehqz1TAMboGbY5oBWqKKWmv5hhvQuwcpkaWbVjkU96cZ",
+  "mint": "9wdvSnsqgYo4HFBYMtiCvVNQfFBYdzSeACjLuxVCDcjB",
   "name": "OPOS",
   "symbol": "OPOS",
   "uri": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json",
-  "additionalMetadata": {
-      "dataType": "Map",
-      "value": []
-  },
-  "enumType": "tokenMetadata"
+  "additionalMetadata": []
 }
 ```
 
