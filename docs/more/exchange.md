@@ -804,7 +804,7 @@ accounts do not:
 1. SPL Token accounts must remain
    [rent-exempt](/docs/core/accounts.md#rent-exemption) for the duration of
    their existence and therefore require a small amount of native SOL tokens be
-   deposited at account creation. For SPL Token v2 accounts, this amount is
+   deposited at account creation. For SPL Token accounts, this amount is
    0.00203928 SOL (2,039,280 lamports).
 
 #### Command Line
@@ -915,8 +915,8 @@ via a
 [TransferChecked](https://github.com/solana-labs/solana-program-library/blob/fc0d6a2db79bd6499f04b9be7ead0c400283845e/token/program/src/instruction.rs#L268)
 instruction. Note that it is possible that the ATA address does not yet exist,
 at which point the exchange should fund the account on behalf of the user. For
-SPL Token v2 accounts, funding the withdrawal account will require 0.00203928
-SOL (2,039,280 lamports).
+SPL Token accounts, funding the withdrawal account will require 0.00203928 SOL
+(2,039,280 lamports).
 
 Template `spl-token transfer` command for a withdrawal:
 
@@ -935,6 +935,36 @@ its mint. This allows them to
 account at will, rendering the account unusable until thawed. If this feature is
 in use, the freeze authority's pubkey will be registered in the SPL Token's mint
 account.
+
+### Supporting the SPL Token-2022 (Token-Extensions) Standard
+
+[SPL Token-2022](https://spl.solana.com/token-2022) is the newest standard for
+wrapped/synthetic token creation and exchange on the Solana blockchain.
+
+Also known as "Token Extensions", the standard contains many new features that
+token creators and account holders may optionally enable. These features include
+confidential transfers, fees on transfer, closing mints, metadata, permanent
+delegates, immutable ownership, and much more. Please see the
+[extension guide](https://spl.solana.com/token-2022/extensions) for more
+information.
+
+If your exchange supports SPL Token, there isn't a lot more work required to
+support SPL Token-2022:
+
+- the CLI tool works seamlessly with both programs starting with version 3.0.0.
+- `preTokenBalances` and `postTokenBalances` include SPL Token-2022 balances
+- RPC indexes SPL Token-2022 accounts, but they must be queried separately with
+  program id `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`
+
+The Associated Token Account works the same way, and properly calculates the
+required deposit amount of SOL for the new account.
+
+Because of extensions, however, accounts may be larger than 165 bytes, so they
+may require more than 0.00203928 SOL to fund.
+
+For example, the Associated Token Account program always includes the "immutable
+owner" extension, so accounts take a minimum of 170 bytes, which requires
+0.00207408 SOL.
 
 ## Testing the Integration
 
