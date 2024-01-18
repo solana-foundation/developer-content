@@ -804,7 +804,7 @@ accounts do not:
 1. SPL Token accounts must remain
    [rent-exempt](/docs/core/accounts.md#rent-exemption) for the duration of
    their existence and therefore require a small amount of native SOL tokens be
-   deposited at account creation. For SPL Token v2 accounts, this amount is
+   deposited at account creation. For SPL Token accounts, this amount is
    0.00203928 SOL (2,039,280 lamports).
 
 #### Command Line
@@ -915,8 +915,8 @@ via a
 [TransferChecked](https://github.com/solana-labs/solana-program-library/blob/fc0d6a2db79bd6499f04b9be7ead0c400283845e/token/program/src/instruction.rs#L268)
 instruction. Note that it is possible that the ATA address does not yet exist,
 at which point the exchange should fund the account on behalf of the user. For
-SPL Token v2 accounts, funding the withdrawal account will require 0.00203928
-SOL (2,039,280 lamports).
+SPL Token accounts, funding the withdrawal account will require 0.00203928 SOL
+(2,039,280 lamports).
 
 Template `spl-token transfer` command for a withdrawal:
 
@@ -935,6 +935,159 @@ its mint. This allows them to
 account at will, rendering the account unusable until thawed. If this feature is
 in use, the freeze authority's pubkey will be registered in the SPL Token's mint
 account.
+
+### Basic Support for the SPL Token-2022 (Token-Extensions) Standard
+
+[SPL Token-2022](https://spl.solana.com/token-2022) is the newest standard for
+wrapped/synthetic token creation and exchange on the Solana blockchain.
+
+Also known as "Token Extensions", the standard contains many new features that
+token creators and account holders may optionally enable. These features include
+confidential transfers, fees on transfer, closing mints, metadata, permanent
+delegates, immutable ownership, and much more. Please see the
+[extension guide](https://spl.solana.com/token-2022/extensions) for more
+information.
+
+If your exchange supports SPL Token, there isn't a lot more work required to
+support SPL Token-2022:
+
+- the CLI tool works seamlessly with both programs starting with version 3.0.0.
+- `preTokenBalances` and `postTokenBalances` include SPL Token-2022 balances
+- RPC indexes SPL Token-2022 accounts, but they must be queried separately with
+  program id `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`
+
+The Associated Token Account works the same way, and properly calculates the
+required deposit amount of SOL for the new account.
+
+Because of extensions, however, accounts may be larger than 165 bytes, so they
+may require more than 0.00203928 SOL to fund.
+
+For example, the Associated Token Account program always includes the "immutable
+owner" extension, so accounts take a minimum of 170 bytes, which requires
+0.00207408 SOL.
+
+### Extension-Specific Considerations
+
+The previous section outlines the most basic support for SPL Token-2022. Since
+the extensions modify the behavior of tokens, exchanges may need to change how
+they handle tokens.
+
+It is possible to see all extensions on a mint or token account:
+
+```bash
+$ spl-token display <account address>
+```
+
+#### Transfer Fee
+
+A token may be configured with a transfer fee, where a portion of transferred
+tokens are withheld at the destination for future collection.
+
+If your exchange transfers these tokens, beware that they may not all arrive at
+the destination due to the withheld amount.
+
+It is possible to specify the expected fee during a transfer to avoid any
+surprises:
+
+```bash
+$ spl-token transfer --expected-fee <fee amount> --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
+```
+
+#### Mint Close Authority
+
+With this extension, a token creator may close a mint, provided the supply of
+tokens is zero.
+
+When a mint is closed, there may still be empty token accounts in existence, and
+they will no longer be associated to a valid mint.
+
+It is safe to simply close these token accounts:
+
+```bash
+$ spl-token close --address <account address>
+```
+
+#### Confidential Transfer
+
+Mints may be configured for confidential transfers, so that token amounts are
+encrypted, but the account owners are still public.
+
+Exchanges may configure token accounts to send and receive confidential
+transfers, to hide user amounts. It is not required to enable confidential
+transfers on token accounts, so exchanges can force users to send tokens
+non-confidentially.
+
+To enable confidential transfers, the account must be configured for it:
+
+```bash
+$ spl-token configure-confidential-transfer-account --address <account address>
+```
+
+And to transfer:
+
+```bash
+$ spl-token transfer --confidential <exchange token account> <withdrawal amount> <withdrawal address>
+```
+
+During a confidential transfer, the `preTokenBalance` and `postTokenBalance`
+fields will show no change. In order to sweep deposit accounts, you must decrypt
+the new balance to withdraw the tokens:
+
+```bash
+$ spl-token apply-pending-balance --address <account address>
+$ spl-token withdraw-confidential-tokens --address <account address> <amount or ALL>
+```
+
+#### Default Account State
+
+Mints may be configured with a default account state, such that all new token
+accounts are frozen by default. These token creators may require users to go
+through a separate process to thaw the account.
+
+#### Non-Transferable
+
+Some tokens are non-transferable, but they may still be burned and the account
+can be closed.
+
+#### Permanent Delegate
+
+Token creators may designate a permanent delegate for all of their tokens. The
+permanent delegate may transfer or burn tokens from any account, potentially
+stealing funds.
+
+This is a legal requirement for stablecoins in certain jurisdictions, or could
+be used for token repossession schemes.
+
+Beware that these tokens may be transferred without your exchange's knowledge.
+
+#### Transfer Hook
+
+Tokens may be configured with an additional program that must be called during
+tranfers, in order to validate the transfer or perform any other logic.
+
+Since the Solana runtime requires all accounts to be explicitly passed to a
+program, and transfer hooks require additional accounts, the exchange needs to
+create transfer instructions differently for these tokens.
+
+The CLI and instruction creators such as
+`createTransferCheckedWithTransferHookInstruction` add the extra accounts
+automatically, but the additional accounts may also be specified explicitly:
+
+```bash
+$ spl-token transfer --transfer-hook-account <pubkey:role> --transfer-hook-account <pubkey:role> ...
+```
+
+#### Required Memo on Transfer
+
+Users may configure their token accounts to require a memo on transfer.
+
+Exchanges may need to prepend a memo instruction before transferring tokens back
+to users, or they may require users to prepend a memo instruction before sending
+to the exchange:
+
+```bash
+$ spl-token transfer --with-memo <memo text> <exchange token account> <withdrawal amount> <withdrawal address>
+```
 
 ## Testing the Integration
 
