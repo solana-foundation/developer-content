@@ -1,8 +1,6 @@
 ---
 date: Oct 26, 2023
 difficulty: intermediate
-featured: true
-featuredPriority: 0
 title: "Configure and run a Solana RPC on AWS"
 description:
   "Running Solana nodes on AWS can help to reduce operational costs and improve
