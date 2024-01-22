@@ -45,8 +45,8 @@ each type of extension.
 | [Interest-Bearing](https://solana.com/developers/guides/token-extensions/interest-bearing-tokens)  | --interest-rate \<rate>                   |
 | [Permanent Delegate](https://solana.com/developers/guides/token-extensions/permanent-delegate)     | --enable-permanent-delegate               |
 | Transfer Hook                                                                                      | --transfer-hook \<programID>              |
-| Metadata                                                                                           | --enable-metadata                         |
-| Metadata Pointer                                                                                   | --metadata-address \<accountId>           |
+| [Metadata](https://solana.com/developers/guides/token-extensions/metadata-pointer)                 | --enable-metadata                         |
+| [Metadata Pointer](https://solana.com/developers/guides/token-extensions/metadata-pointer)         | --metadata-address \<accountId>           |
 | Confidential Transfers                                                                             | --enable-confidential-transfers auto      |
 
 You enable some extensions on a token account instead of the mint, which you can
@@ -137,7 +137,7 @@ create new ways to use metadata onchain, all bundled together under token
 extensions.
 
 You can
-[start building with the metadata extension today](https://github.com/solana-foundation/developer-content/pull/41/files).
+[start building with the metadata extension today](https://solana.com/developers/guides/token-extensions/metadata-pointer).
 
 ## How do I migrate tokens from one standard to another?
 
