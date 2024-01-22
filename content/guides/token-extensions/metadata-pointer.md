@@ -3,7 +3,7 @@ date: Dec 21, 2023
 seoTitle: "Token Extensions: Metadata Pointer and Token Metadata"
 title: How to use the Metadata Pointer extension
 description:
-  "The Metadata Pointer extensions enables a Mint Account to specify the address
+  "The Metadata Pointer extension enables a Mint Account to specify the address
   of the account that stores its metadata. When used along with the Metadata
   Extension, metadata can be stored directly on the Mint Account."
 keywords:
@@ -339,11 +339,18 @@ Next, add the instructions to a new transaction and send it to the network. This
 will create a Mint Account with the `MetadataPointer` and `TokenMetadata`
 extensions enabled and store the metadata on the Mint Account.
 
+<Callout>
+Some token extension instructions are required to be atomically ordered before
+initializing the mint. While others must be after. Having these instructions
+"out of order" may result in your transaction failing.
+</Callout>
+
 ```javascript
 // Add instructions to new transaction
 transaction = new Transaction().add(
   createAccountInstruction,
   initializeMetadataPointerInstruction,
+  // note: the above instructions are required before initializing the mint
   initializeMintInstruction,
   initializeMetadataInstruction,
   updateFieldInstruction,
