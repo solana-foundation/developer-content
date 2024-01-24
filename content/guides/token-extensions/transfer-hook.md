@@ -2,9 +2,10 @@
 date: Jan 08, 2023
 seoTitle: "Token Extensions: Transfer Hook"
 title: How to use the Transfer Hook extension
-description: "The Transfer Hook extension and Transfer Hook Interface introduce 
-  the ability to create Mint Accounts that execute custom instruction logic on 
-  every token transfer."
+description:
+  "The Transfer Hook extension and Transfer Hook Interface introduce the ability
+  to create Mint Accounts that execute custom instruction logic on every token
+  transfer."
 keywords:
   - token 2022
   - token extensions
