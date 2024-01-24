@@ -66,6 +66,14 @@ Values: `base58` (_slow_, **DEPRECATED**), or `base64`.
 
 </Field>
 
+<Field name="innerInstructions" type="bool" optional={true} defaultValue={false}>
+
+If `true` the response will include
+[inner instructions](/docs/rpc/json-structures#inner-instructions). These inner
+instructions will be `jsonParsed` where possible, otherwise `json`.
+
+</Field>
+
 <Field name="accounts" type={"object"} optional={true}>
 
 Accounts configuration object containing the following fields:
@@ -131,6 +139,9 @@ with the following fields:
     base-58 encoded Pubkey
   - `data: <[string, encoding]>` - the return data itself, as base-64 encoded
     binary data
+- `innerInstructions: <object | undefined>` - Defined only if
+  `innerInstructions` was set to `true`. The value is a list of
+  [inner instructions](/docs/rpc/json-structures#inner-instructions).
 
 </DocLeftSide>
 
