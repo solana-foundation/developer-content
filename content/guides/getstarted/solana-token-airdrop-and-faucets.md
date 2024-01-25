@@ -107,7 +107,7 @@ maintained by Ellipsis Labs_
 
 Various Discord communities have setup Devnet SOL Faucets as BOTs.
 
-| Community | Usage | Link |
-|-|-|-|
-| The 76 Devs | Run `!gibsol` in the BOT commands channel. | [Join Server](https://discord.gg/RrChGyDeRv) |
+| Community      | Usage                                                       | Link                                         |
+| -------------- | ----------------------------------------------------------- | -------------------------------------------- |
+| The 76 Devs    | Run `!gibsol` in the BOT commands channel.                  | [Join Server](https://discord.gg/RrChGyDeRv) |
 | The LamportDAO | Run `/drop <address> <amount>` in the BOT commands channel. | [Join Server](https://discord.gg/JBVrJgtFkq) |
