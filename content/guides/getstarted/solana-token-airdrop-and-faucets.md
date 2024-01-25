@@ -103,13 +103,11 @@ to your computing power.
 _⚠️ The [POW Faucet](https://github.com/jarry-xiao/proof-of-work-faucet) is
 maintained by Ellipsis Labs_
 
-## 5. Discord Faucet
+## 5. Discord Faucets
 
-The LamportDAO community has set up a Devnet Faucet Discord BOT.
+Various Discord communities have setup Devnet SOL Faucets as BOTs.
 
-You can join the LamportDAO Discord by clicking
-[here](https://discord.gg/JBVrJgtFkq).
-
-After that, head to a channel made for BOT commands and run send this message:
-
-`/drop <address> <amount>`
+| Community      | Usage                                                       | Link                                         |
+| -------------- | ----------------------------------------------------------- | -------------------------------------------- |
+| The 76 Devs    | Run `!gibsol` in the BOT commands channel.                  | [Join Server](https://discord.gg/RrChGyDeRv) |
+| The LamportDAO | Run `/drop <address> <amount>` in the BOT commands channel. | [Join Server](https://discord.gg/JBVrJgtFkq) |
