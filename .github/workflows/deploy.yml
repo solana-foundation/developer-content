@@ -1,11 +1,10 @@
-name: Production Deployment via Tag
+name: Deploy to Production
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   push:
-    tags:
-      - "deploy"
+    branches: [master, main]
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
