@@ -3,6 +3,8 @@ env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
+  push:
+    branches: [master, main]
   workflow_run:
     workflows: ["Formatting / Lint"]
     types:
