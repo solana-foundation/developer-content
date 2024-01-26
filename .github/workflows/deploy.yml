@@ -5,15 +5,14 @@ env:
 on:
   push:
     branches: [master, main]
-  workflow_run:
-    workflows: ["Formatting / Lint"]
-    types:
-      - completed
-    branches: [master, main]
+  # workflow_run:
+  #   workflows: ["Formatting / Lint"]
+  #   types:
+  #     - completed
+  #   branches: [master, main]
 jobs:
   deploy-production:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
