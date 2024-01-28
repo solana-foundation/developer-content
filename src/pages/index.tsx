@@ -5,7 +5,7 @@ export function getServerSideProps() {
   if (process.env.NODE_ENV != "development") {
     return {
       redirect: {
-        destination: "https://solana.com/developers",
+        destination: "https://solana.com/docs",
         permanent: true,
       },
     };
