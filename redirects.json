@@ -121,6 +121,10 @@
       "destination": "/operations/validator-initiatives"
     },
     {
+      "source": "/validator/:path*",
+      "destination": "/validator/:path*"
+    },
+    {
       "source": "/running-validator/validator-reqs",
       "destination": "/operations/requirements"
     },
