@@ -79,8 +79,13 @@
       "source": "/wallet-guide/hardware-wallet/ledger",
       "destination": "/cli/wallets/hardware-wallet/ledger"
     },
+    {
+      "source": "/cli/:path*",
+      "destination": "/cli/:path*"
+    },
 
-    { "source": "/cluster/overview", "destination": "/clusters/index" },
+    { "source": "/clusters", "destination": "/clusters" },
+    { "source": "/cluster/overview", "destination": "/clusters" },
     { "source": "/cluster/bench-tps", "destination": "/clusters/benchmark" },
     {
       "source": "/cluster/performance-metrics",
