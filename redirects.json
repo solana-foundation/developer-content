@@ -249,6 +249,7 @@
     },
 
     { "destination": "/docs/rpc/http:path*", "source": "/api/http/:path*" },
+    { "destination": "/docs/rpc", "source": "/api" },
     {
       "destination": "/docs/rpc/websocket/:path*",
       "source": "/api/websocket/:path*"
