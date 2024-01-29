@@ -22,6 +22,22 @@
       "destination": "/implemented-proposals"
     },
     {
+      "source": "/implemented-proposals",
+      "destination": "/implemented-proposals"
+    },
+    {
+      "source": "/implemented-proposals/:path*",
+      "destination": "/implemented-proposals/path*"
+    },
+    {
+      "source": "/proposals/:path*",
+      "destination": "/proposals/:path*"
+    },
+    {
+      "source": "/accepted-proposals/:path*",
+      "destination": "/proposals/:path*"
+    },
+    {
       "source": "/cli/install-solana-cli-tools",
       "destination": "/cli/install"
     },
