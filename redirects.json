@@ -1,4 +1,182 @@
 {
+  "common-docs": [
+    { "source": "/apps", "destination": "/developers" },
+    {
+      "source": "/developing/programming-model/overview",
+      "destination": "/docs/programs"
+    },
+    { "source": "/apps/break", "destination": "/docs/programs/examples" },
+    { "source": "/apps/drones", "destination": "/docs/programs/examples" },
+    { "source": "/apps/hello-world", "destination": "/docs/programs/examples" },
+    {
+      "source": "/apps/javascript-api",
+      "destination": "/docs/clients/javascript"
+    },
+    { "source": "/apps/programming-faq", "destination": "/docs/programs/faq" },
+    { "source": "/apps/rent", "destination": "/docs/core/rent" },
+    { "source": "/apps/webwallet", "destination": "/docs/intro/wallets" },
+    {
+      "source": "/implemented-proposals/cross-program-invocation",
+      "destination": "/docs/core/cpi"
+    },
+    {
+      "source": "/implemented-proposals/program-derived-addresses",
+      "destination": "/docs/core/cpi#program-derived-addresses"
+    },
+
+    { "destination": "/docs/rpc/http:path*", "source": "/api/http/:path*" },
+    { "destination": "/docs/rpc", "source": "/api" },
+    {
+      "destination": "/docs/rpc/websocket/:path*",
+      "source": "/api/websocket/:path*"
+    },
+    {
+      "destination": "/docs/rpc/:path*",
+      "source": "/developing/clients/jsonrpc-api"
+    },
+    { "destination": "/docs/rpc/:path*", "source": "/apps/jsonrpc-api" },
+    { "destination": "/docs/terminology", "source": "/terminology" },
+    { "destination": "/docs/core/rent", "source": "/developing/intro/rent" },
+    {
+      "destination": "/docs/core/programs",
+      "source": "/developing/intro/programs"
+    },
+    {
+      "destination": "/docs/core/accounts",
+      "source": "/developing/programming-model/accounts"
+    },
+    {
+      "destination": "/docs/core/cpi",
+      "source": "/developing/programming-model/calling-between-programs"
+    },
+    {
+      "destination": "/docs/core/runtime",
+      "source": "/developing/programming-model/runtime"
+    },
+    {
+      "destination": "/docs/core/transactions",
+      "source": "/developing/programming-model/transactions"
+    },
+    {
+      "destination": "/docs/core/transactions/fees",
+      "source": "/developing/intro/transaction_fees"
+    },
+    {
+      "destination": "/docs/core/transactions/confirmation",
+      "source": "/developing/transaction_confirmation"
+    },
+    {
+      "destination": "/docs/core/transactions/versions",
+      "source": "/developing/versioned-transactions"
+    },
+    {
+      "destination": "/docs/core/transactions/retry",
+      "source": "/integrations/retrying-transactions"
+    },
+    {
+      "destination": "/docs/intro/dev",
+      "source": "/developing/programming-model/overview"
+    },
+    {
+      "destination": "/docs/advanced/lookup-tables",
+      "source": "/developing/lookup-tables"
+    },
+    {
+      "destination": "/docs/advanced/state-compression",
+      "source": "/learn/state-compression"
+    },
+    {
+      "destination": "/developers/guides/javascript/compressed-nfts",
+      "source": "/developing/guides/compressed-nfts"
+    },
+    {
+      "destination": "/docs/programs",
+      "source": "/developing/on-chain-programs/overview"
+    },
+    {
+      "destination": "/docs/programs/debugging",
+      "source": "/developing/on-chain-programs/debugging"
+    },
+    {
+      "destination": "/docs/programs/deploying",
+      "source": "/developing/on-chain-programs/deploying"
+    },
+    {
+      "destination": "/docs/programs/examples",
+      "source": "/developing/on-chain-programs/examples"
+    },
+    {
+      "destination": "/docs/programs/faq",
+      "source": "/developing/on-chain-programs/faq"
+    },
+    {
+      "destination": "/docs/programs/limitations",
+      "source": "/developing/on-chain-programs/limitations"
+    },
+    {
+      "destination": "/docs/programs/lang-rust",
+      "source": "/developing/on-chain-programs/developing-rust"
+    },
+    {
+      "destination": "/docs/programs/lang-c",
+      "source": "/developing/on-chain-programs/developing-c"
+    },
+    {
+      "destination": "/docs/clients/javascript-reference",
+      "source": "/developing/clients/javascript-reference"
+    },
+    {
+      "destination": "/docs/clients/javascript",
+      "source": "/developing/clients/javascript-api"
+    },
+    {
+      "destination": "/docs/clients/rust",
+      "source": "/developing/clients/rust-api"
+    },
+    { "destination": "/docs/intro/dev", "source": "/getstarted/overview" },
+    {
+      "destination": "/developers/guides/getstarted/hello-world-in-your-browser",
+      "source": "/getstarted/hello-world"
+    },
+    {
+      "destination": "/developers/guides/getstarted/setup-local-development",
+      "source": "/getstarted/local"
+    },
+    {
+      "destination": "/developers/guides/getstarted/local-rust-hello-world",
+      "source": "/getstarted/rust"
+    },
+    {
+      "destination": "/docs/core/clusters",
+      "source": "/clusters/rpc-endpoints"
+    },
+    { "destination": "/docs/economics/staking", "source": "/staking" },
+    {
+      "destination": "/docs/economics/staking/:path*",
+      "source": "/staking/:path*"
+    },
+    {
+      "destination": "/docs/economics/inflation/:path*",
+      "source": "/inflation/:path*"
+    },
+    {
+      "destination": "/docs/more/exchange",
+      "source": "/integrations/exchange"
+    },
+    {
+      "destination": "/docs/intro/transaction_fees",
+      "source": "/transaction_fees"
+    },
+    {
+      "destination": "/docs/intro/economics",
+      "source": "/storage_rent_economics"
+    },
+    { "destination": "/docs/intro/economics", "source": "/economics_overview" },
+    { "destination": "/docs/intro/history", "source": "/history" },
+    { "destination": "/docs/intro/wallets", "source": "/wallet-guide/support" },
+    { "destination": "/docs/intro/wallets", "source": "/wallet-guide" },
+    { "destination": "/docs/intro", "source": "/introduction" }
+  ],
   "solana-client": [
     {
       "source": "/apps/sysvars",
@@ -258,183 +436,5 @@
       "source": "/accepted-proposals/:path*",
       "destination": "/proposals/:path*"
     }
-  ],
-  "common-docs": [
-    { "source": "/apps", "destination": "/developers" },
-    {
-      "source": "/developing/programming-model/overview",
-      "destination": "/docs/programs"
-    },
-    { "source": "/apps/break", "destination": "/docs/programs/examples" },
-    { "source": "/apps/drones", "destination": "/docs/programs/examples" },
-    { "source": "/apps/hello-world", "destination": "/docs/programs/examples" },
-    {
-      "source": "/apps/javascript-api",
-      "destination": "/docs/clients/javascript"
-    },
-    { "source": "/apps/programming-faq", "destination": "/docs/programs/faq" },
-    { "source": "/apps/rent", "destination": "/docs/core/rent" },
-    { "source": "/apps/webwallet", "destination": "/docs/intro/wallets" },
-    {
-      "source": "/implemented-proposals/cross-program-invocation",
-      "destination": "/docs/core/cpi"
-    },
-    {
-      "source": "/implemented-proposals/program-derived-addresses",
-      "destination": "/docs/core/cpi#program-derived-addresses"
-    },
-
-    { "destination": "/docs/rpc/http:path*", "source": "/api/http/:path*" },
-    { "destination": "/docs/rpc", "source": "/api" },
-    {
-      "destination": "/docs/rpc/websocket/:path*",
-      "source": "/api/websocket/:path*"
-    },
-    {
-      "destination": "/docs/rpc/:path*",
-      "source": "/developing/clients/jsonrpc-api"
-    },
-    { "destination": "/docs/rpc/:path*", "source": "/apps/jsonrpc-api" },
-    { "destination": "/docs/terminology", "source": "/terminology" },
-    { "destination": "/docs/core/rent", "source": "/developing/intro/rent" },
-    {
-      "destination": "/docs/core/programs",
-      "source": "/developing/intro/programs"
-    },
-    {
-      "destination": "/docs/core/accounts",
-      "source": "/developing/programming-model/accounts"
-    },
-    {
-      "destination": "/docs/core/cpi",
-      "source": "/developing/programming-model/calling-between-programs"
-    },
-    {
-      "destination": "/docs/core/runtime",
-      "source": "/developing/programming-model/runtime"
-    },
-    {
-      "destination": "/docs/core/transactions",
-      "source": "/developing/programming-model/transactions"
-    },
-    {
-      "destination": "/docs/core/transactions/fees",
-      "source": "/developing/intro/transaction_fees"
-    },
-    {
-      "destination": "/docs/core/transactions/confirmation",
-      "source": "/developing/transaction_confirmation"
-    },
-    {
-      "destination": "/docs/core/transactions/versions",
-      "source": "/developing/versioned-transactions"
-    },
-    {
-      "destination": "/docs/core/transactions/retry",
-      "source": "/integrations/retrying-transactions"
-    },
-    {
-      "destination": "/docs/intro/dev",
-      "source": "/developing/programming-model/overview"
-    },
-    {
-      "destination": "/docs/advanced/lookup-tables",
-      "source": "/developing/lookup-tables"
-    },
-    {
-      "destination": "/docs/advanced/state-compression",
-      "source": "/learn/state-compression"
-    },
-    {
-      "destination": "/developers/guides/javascript/compressed-nfts",
-      "source": "/developing/guides/compressed-nfts"
-    },
-    {
-      "destination": "/docs/programs",
-      "source": "/developing/on-chain-programs/overview"
-    },
-    {
-      "destination": "/docs/programs/debugging",
-      "source": "/developing/on-chain-programs/debugging"
-    },
-    {
-      "destination": "/docs/programs/deploying",
-      "source": "/developing/on-chain-programs/deploying"
-    },
-    {
-      "destination": "/docs/programs/examples",
-      "source": "/developing/on-chain-programs/examples"
-    },
-    {
-      "destination": "/docs/programs/faq",
-      "source": "/developing/on-chain-programs/faq"
-    },
-    {
-      "destination": "/docs/programs/limitations",
-      "source": "/developing/on-chain-programs/limitations"
-    },
-    {
-      "destination": "/docs/programs/lang-rust",
-      "source": "/developing/on-chain-programs/developing-rust"
-    },
-    {
-      "destination": "/docs/programs/lang-c",
-      "source": "/developing/on-chain-programs/developing-c"
-    },
-    {
-      "destination": "/docs/clients/javascript-reference",
-      "source": "/developing/clients/javascript-reference"
-    },
-    {
-      "destination": "/docs/clients/javascript",
-      "source": "/developing/clients/javascript-api"
-    },
-    {
-      "destination": "/docs/clients/rust",
-      "source": "/developing/clients/rust-api"
-    },
-    { "destination": "/docs/intro/dev", "source": "/getstarted/overview" },
-    {
-      "destination": "/developers/guides/getstarted/hello-world-in-your-browser",
-      "source": "/getstarted/hello-world"
-    },
-    {
-      "destination": "/developers/guides/getstarted/setup-local-development",
-      "source": "/getstarted/local"
-    },
-    {
-      "destination": "/developers/guides/getstarted/local-rust-hello-world",
-      "source": "/getstarted/rust"
-    },
-    {
-      "destination": "/docs/core/clusters",
-      "source": "/clusters/rpc-endpoints"
-    },
-    { "destination": "/docs/economics/staking", "source": "/staking" },
-    {
-      "destination": "/docs/economics/staking/:path*",
-      "source": "/staking/:path*"
-    },
-    {
-      "destination": "/docs/economics/inflation/:path*",
-      "source": "/inflation/:path*"
-    },
-    {
-      "destination": "/docs/more/exchange",
-      "source": "/integrations/exchange"
-    },
-    {
-      "destination": "/docs/intro/transaction_fees",
-      "source": "/transaction_fees"
-    },
-    {
-      "destination": "/docs/intro/economics",
-      "source": "/storage_rent_economics"
-    },
-    { "destination": "/docs/intro/economics", "source": "/economics_overview" },
-    { "destination": "/docs/intro/history", "source": "/history" },
-    { "destination": "/docs/intro/wallets", "source": "/wallet-guide/support" },
-    { "destination": "/docs/intro/wallets", "source": "/wallet-guide" },
-    { "destination": "/docs/intro", "source": "/introduction" }
   ]
 }
