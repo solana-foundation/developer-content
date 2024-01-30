@@ -175,6 +175,7 @@
     { "destination": "/docs/intro/history", "source": "/history" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/support" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide" },
+    { "destination": "/docs/intro/wallets", "source": "/wallet-guide/:path" },
     { "destination": "/docs/intro", "source": "/introduction" }
   ],
   "solana-client": [
@@ -432,6 +433,7 @@
       "source": "/proposals/:path*",
       "destination": "/proposals/:path*"
     },
+    { "source": "/wallet-guide/:path*", "destination": "/cli/wallets" },
     {
       "source": "/accepted-proposals/:path*",
       "destination": "/proposals/:path*"
