@@ -1,27 +1,25 @@
-import { GetServerSidePropsContext } from "next";
+// import { GetServerSidePropsContext } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import solanaLogo from "@/../public/solana-logo.svg";
 import solanaWordmark from "@/../public/solana-wordmark.svg";
 
-export function getServerSideProps({ req }: GetServerSidePropsContext) {
-  // console.log(req.headers.host);
-
-  // redirect away in non-dev mode
-  if (process.env.NODE_ENV != "development") {
-    return {
-      redirect: {
-        destination: "https://solana.com/docs",
-        permanent: true,
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-}
+// export function getServerSideProps({ req }: GetServerSidePropsContext) {
+//   // console.log(req.headers.host);
+//   // redirect away in non-dev mode
+//   // if (process.env.NODE_ENV != "development") {
+//   //   return {
+//   //     redirect: {
+//   //       destination: "https://solana.com/docs",
+//   //       permanent: true,
+//   //     },
+//   //   };
+//   // }
+//   return {
+//     props: {},
+//   };
+// }
 
 export default function Page() {
   return (
