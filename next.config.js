@@ -31,8 +31,15 @@ module.exports = withContentlayer({
   },
   async redirects() {
     return [
+      // handle language based routes
+      {
+        source: "/:lang(\\w{2}\\-?\\w{2}?)/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
       // common solana docs
       ...redirectFormatter("https://solana.com/", redirectsJson["common-docs"]),
+      // validator client docs
       ...redirectFormatter(
         "https://docs.solanalabs.com/",
         redirectsJson["solana-client"],
