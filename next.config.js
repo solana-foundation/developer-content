@@ -33,7 +33,12 @@ module.exports = withContentlayer({
     return [
       // handle language based routes
       {
-        source: "/:lang(\\w{2}\\-?\\w{2}?)/:path*",
+        source: "/:lang(\\w{2}\\-\\w{2})/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
+      {
+        source: "/:lang(\\w{2})/:path*",
         destination: "/:path*",
         permanent: true,
       },
