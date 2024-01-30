@@ -25,3 +25,19 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.card {
+  @apply border border-gray-700 rounded-lg;
+  @apply p-5 bg-gray-900;
+  @apply block w-full space-y-4;
+}
+.card h2 {
+  @apply text-2xl font-semibold;
+}
+.card p {
+  @apply text-base text-gray-400;
+}
+
+.card a {
+  @apply underline;
+}
