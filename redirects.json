@@ -26,18 +26,6 @@
       "destination": "/implemented-proposals"
     },
     {
-      "source": "/implemented-proposals/:path*",
-      "destination": "/implemented-proposals/path*"
-    },
-    {
-      "source": "/proposals/:path*",
-      "destination": "/proposals/:path*"
-    },
-    {
-      "source": "/accepted-proposals/:path*",
-      "destination": "/proposals/:path*"
-    },
-    {
       "source": "/cli/install-solana-cli-tools",
       "destination": "/cli/install"
     },
@@ -95,10 +83,6 @@
       "source": "/wallet-guide/hardware-wallet/ledger",
       "destination": "/cli/wallets/hardware-wallet/ledger"
     },
-    {
-      "source": "/cli/:path*",
-      "destination": "/cli/:path*"
-    },
 
     { "source": "/clusters", "destination": "/clusters" },
     { "source": "/cluster/overview", "destination": "/clusters" },
@@ -140,10 +124,6 @@
     {
       "source": "/validator/overview/validator-initiatives",
       "destination": "/operations/validator-initiatives"
-    },
-    {
-      "source": "/validator/:path*",
-      "destination": "/validator/:path*"
     },
     {
       "source": "/running-validator/validator-reqs",
@@ -238,9 +218,45 @@
       "source": "/developing/runtime-facilities/:path*",
       "destination": "/runtime/:path*"
     },
+
+    { "source": "/faq", "destination": "/faq" },
+    { "source": "/architecture", "destination": "/architecture" },
+    {
+      "source": "/backwards-compatibility",
+      "destination": "/backwards-compatibility"
+    },
+    {
+      "source": "/validator/:path*",
+      "destination": "/validator/:path*"
+    },
+    {
+      "source": "/cli/:path*",
+      "destination": "/cli/:path*"
+    },
+    { "source": "/clusters/:path*", "destination": "/clusters/:path*" },
+    {
+      "source": "/consensus/:path*",
+      "destination": "/consensus/:path*"
+    },
+    {
+      "source": "/operations/:path*",
+      "destination": "/operations/:path*"
+    },
     {
       "source": "/runtime/:path*",
       "destination": "/runtime/:path*"
+    },
+    {
+      "source": "/implemented-proposals/:path*",
+      "destination": "/implemented-proposals/path*"
+    },
+    {
+      "source": "/proposals/:path*",
+      "destination": "/proposals/:path*"
+    },
+    {
+      "source": "/accepted-proposals/:path*",
+      "destination": "/proposals/:path*"
     }
   ],
   "common-docs": [
