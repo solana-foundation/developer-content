@@ -237,6 +237,10 @@
     {
       "source": "/developing/runtime-facilities/:path*",
       "destination": "/runtime/:path*"
+    },
+    {
+      "source": "/runtime/:path*",
+      "destination": "/runtime/:path*"
     }
   ],
   "common-docs": [
