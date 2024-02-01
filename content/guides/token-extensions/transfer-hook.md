@@ -39,7 +39,11 @@ This design decision is made to prevent malicious use of Transfer Hook programs.
 </Callout>
 
 In this guide, we will create a Transfer Hook program using the Anchor
-framework. This program will require the sender to pay a fee in wrapped SOL
+framework however, it is possible to implement the Transfer Hook Interface using a native program as well.
+Learn more about Anchor framework here: 
+[Anchor Framework](https://www.anchor-lang.com/)
+
+This program will require the sender to pay a fee in wrapped SOL
 (wSOL) on every token transfer. Here is the
 [final program](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/main).
 
@@ -81,7 +85,232 @@ By storing the extra accounts required by the `Execute` instruction in the
 predefined PDA, these accounts can be automatically added to a token transfer
 instruction from the client.
 
-## Program Overview
+## Hello-world Transfer hook
+
+This example is the hello world of transfer hooks. It is a simple transfer hook that will just print a message on every token transfer.
+We start by opening the example in Solana play ground. (An online tool to build and deploy solana programs) 
+[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
+
+The example consists of an anchor program which implements the transfer hook interface and a test file to test the program.
+
+This program will only include 3 instructions:
+
+1. `initialize_extra_account_meta_list`: Creates an account that stores a list
+   of extra accounts required by the `transfer_hook` instruction. In the hello world we leave this empty. 
+2. `transfer_hook`: This instruction is invoked via CPI on every token transfer
+   to perform a wrapped SOL token transfer.
+3. `fallback`: Because we are using Anchor and the token program is a native program we need to add a fallback instruction to manually match the instruction discriminator and invoke our custom `transfer_hook` instruction. You don't need to change this function.
+
+Every time the token gets transferred this `transfer_hook` function will be called by the token program.
+
+```rust
+pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {
+
+    msg!("Hello Transfer Hook!");
+
+    Ok(())
+}
+```
+
+In this function you can now add your additional logic. For example you could let the transfer fail whenever an amount is transferred that is bigger than 50 like so: 
+
+```rust
+#[error_code]
+pub enum MyError {
+    #[msg("The amount is too big")]
+    AmountTooBig,
+}
+
+pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {
+
+    msg!("Hello Transfer Hook!");
+
+    if amount > 50 {
+        return err!(MyError::AmountTooBig);
+    }
+
+    Ok(())
+}
+``` 
+
+To run the example in Solana Playground follow this link: 
+[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
+
+And then in there type `build` which will update the value of `declare_id` in the `lib.rs` file with a newly
+generated program ID. Then type `deploy` to deploy your program to dev net. When when the program is deployed you can run the test file by typing `test` in the terminal.
+
+This will then give you the following output: 
+
+```bash
+  transfer-hook.test.ts:
+  transfer-hook
+    Transaction Signature: kB8Hkn8NEavK7xztEhQZXKSeidgEK81PZNmgSSodZFVyzM9o18GwNi4bDWD9Q3cbmh75Vn1jqyinYH3YdgJfnuJ
+    ✔ Create Mint Account with Transfer Hook Extension (539ms)
+    Transaction Signature: Bf9eYieas6jpV8UxS5upuRv2oMebDdHgDstLMw86ptM7cd4qRpaxRyFYmNZC1WZMcDXP68PoGoApUrrrQKeBbJA
+    ✔ Create Token Accounts and Mint Tokens (744ms)
+    Transaction Signature: 3oRtCjM6oSdkxQKUyGF3r6hmZGLUpNefihHoGQT5cftRPeQtimvVukLPvb3PSpvLrUsoCWBnz6nSm6ZbPRUhx7UP
+    ✔ Create ExtraAccountMetaList Account (728ms)
+    Transfer Signature: WNAWK2o7wWpVCqPz2uoMtHRe1F5B1jfW8v4kezdQYqaXE3nRAPfqUFkFHg31uYmpZCjncZUwo4g9ZuhgMC9cS1i
+    ✔ Transfer Hook with Extra Account Meta (1327ms)
+  4 passing (3s)
+```
+
+If you do not want to use JS to create your token you can also use the cli like so after you deployed your program: 
+
+```bash
+spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb create-token --transfer-hook yourTransferHookProgramId
+```
+
+## Counter Transfer hook
+
+The next example will show you how you can increase a counter every time your token has been transferred.
+[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/counter)
+
+If you want to add logic to your transfer hook that needs additional accounts you need to add them to the ExtraAccountMetaList account.
+In our case here we want a PDA which saves the amount how often the token has been transferred.
+
+This can be done by adding the following code to the `initialize_extra_account_meta_list` instruction:
+
+```rust
+let account_metas = vec![
+    ExtraAccountMeta::new_with_seeds(
+        &[Seed::Literal {
+            bytes: "counter".as_bytes().to_vec(),
+        }],
+        false, // is_signer
+        true,  // is_writable
+    )?,
+];
+```
+
+And we also need to create this account when we initialize the new mint account and we need to pass it in every time we transfer the token.
+
+```rust
+#[derive(Accounts)]
+pub struct InitializeExtraAccountMetaList<'info> {
+    #[account(mut)]
+    payer: Signer<'info>,
+
+    /// CHECK: ExtraAccountMetaList Account, must use these seeds
+    #[account(
+        mut,
+        seeds = [b"extra-account-metas", mint.key().as_ref()], 
+        bump
+    )]
+    pub extra_account_meta_list: AccountInfo<'info>,
+    pub mint: InterfaceAccount<'info, Mint>,
+    #[account(
+        init_if_needed,
+        seeds = [b"counter"], 
+        bump,
+        payer = payer,
+        space = 16
+    )]
+    pub counter_account: Account<'info, CounterAccount>,
+    pub token_program: Interface<'info, TokenInterface>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct TransferHook<'info> {
+    #[account(
+        token::mint = mint, 
+        token::authority = owner,
+    )]
+    pub source_token: InterfaceAccount<'info, TokenAccount>,
+    pub mint: InterfaceAccount<'info, Mint>,
+    #[account(
+        token::mint = mint,
+    )]
+    pub destination_token: InterfaceAccount<'info, TokenAccount>,
+    /// CHECK: source token account owner, can be SystemAccount or PDA owned by another program
+    pub owner: UncheckedAccount<'info>,
+    /// CHECK: ExtraAccountMetaList Account,
+    #[account(
+        seeds = [b"extra-account-metas", mint.key().as_ref()], 
+        bump
+    )]
+    pub extra_account_meta_list: UncheckedAccount<'info>,
+    #[account(
+        seeds = [b"counter"],
+        bump
+    )]
+    pub counter_account: Account<'info, CounterAccount>,
+}
+```
+
+And the account will hold a u64 counter variable:
+  
+```rust
+#[account]
+pub struct CounterAccount {
+    counter: u64,
+}
+```
+
+Now in our transfer hook function we can just increase this counter by one every time it gets called: 
+
+```rust
+pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {
+
+    ctx.accounts.counter_account.counter.checked_add(1).unwrap();
+    msg!("This token has been transferred {0} times", ctx.accounts.counter_account.counter);
+    
+    Ok(())
+}
+```
+
+In the client these additional accounts are added automatically by the helper function createTransferCheckedWithTransferHookInstruction:
+
+```js
+let transferInstructionWithHelper = await createTransferCheckedWithTransferHookInstruction( 
+  connection,
+  sourceTokenAccount,
+  mint.publicKey,
+  destinationTokenAccount,
+  wallet.publicKey,
+  amountBigInt,
+  decimals,
+  [],
+  "confirmed",
+  TOKEN_2022_PROGRAM_ID,
+);
+```
+
+To run the example in Solana Playground follow this link: 
+[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/counter)
+
+And then in there type `build` which will update the value of `declare_id` in the `lib.rs` file with a newly
+generated program ID. Then type `deploy` to deploy your program to dev net. When when the program is deployed you can run the test file by typing `test` in the terminal.
+
+This will then give you the following output. In last transaction you will then able to see how often your token has been transferred:
+
+```bash
+"This token has been transfered 1 times"
+```
+
+```bash
+Running tests...
+  transfer-hook.test.ts:
+  transfer-hook
+    Transaction Signature: 48r6effAA4B9RVh13eBXdGjmcPKcm6QwnvodX2dT5nNfJyzoS3AejqatKXyqcmpzPdcmpTjgALnd1xx7v17ggptV
+    ✔ Create Mint Account with Transfer Hook Extension (545ms)
+    Transaction Signature: nfkBH6cbM5c94od3VG4QmxHkXJzm6VEFxogbQKpd7gERJNgESyu1gEjLJnPiUer59sXnx787eB6hYBkhdkFnzdL
+    ✔ Create Token Accounts and Mint Tokens (354ms)
+    Extra accounts meta: null
+    Transaction Signature: 4T6FS3Y95Kjkf9fy5jtCYWo2Wf1SSQKmo6GUK2YqXEcgR4Wrr6aLmnoEBcBNCpEv4ALbJuwu5KtVdxb1S3ynMPJY
+    ✔ Create ExtraAccountMetaList Account (695ms)
+    Extra accounts meta: 9mifVeGPh7CHyf1NrcUWzzVKMU7g3AwQ6L3md3fMNqju
+    Counter PDa: 334HLdMwbhSGYf8QWHHmEkeZf6x6caXGF6oxVnCEmaQd
+    Transfer Signature: 32zoL4oTC3XPVsgeDmT3KsTS4v8U4qe3GPKMF72QX5eSHgAFagKEyvRrGuoP2UEGLpj41Ygm9dSRi5YKghxS24EN
+    ✔ Transfer Hook with Extra Account Meta (776ms)
+  4 passing (2s)
+```
+
+## Transfer Hook with wSOl Transfer fee (advanced example)
+
+### Program Overview
 
 In this guide, we will build a Transfer Hook program using the Anchor framework.
 This program will require the sender to pay a wSOL fee for every token transfer.
@@ -102,7 +331,7 @@ This program will only include 3 instructions:
    fallback instruction to manually match the instruction discriminator and
    invoke our custom `transfer_hook` instruction.
 
-## Getting Started
+### Getting Started
 
 Start by opening this Solana Playground
 [link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/starter)
@@ -168,7 +397,7 @@ build
 This will update the value of `declare_id` in the `lib.rs` file with a newly
 generated program ID.
 
-## Initialize ExtraAccountMetas Account Instruction
+### Initialize ExtraAccountMetas Account Instruction
 
 In this step, we will implement the `initialize_extra_account_meta_list`
 instruction for our Transfer Hook program. This instruction creates an
@@ -499,7 +728,7 @@ ExtraAccountMetas account.
 
 </Callout>
 
-## Custom Transfer Hook Instruction
+### Custom Transfer Hook Instruction
 
 Next, let’s implement the custom `transfer_hook` instruction. This is the
 instruction the Token Extension program will invoke on every token transfer.
@@ -672,7 +901,7 @@ wSOL token account. This transfer is signed for using the delegate PDA. For
 every token transfer, the sender must first approve the delegate for the
 transfer amount.
 
-## Fallback Instruction
+### Fallback Instruction
 
 Lastly, we need to add a fallback instruction to the Anchor program to handle
 the CPI from the Token Extensions program.
@@ -731,7 +960,7 @@ It would remove the need for the fallback instruction.
 
 </Callout>
 
-## Build and Deploy Program
+### Build and Deploy Program
 
 The Transfer Hook program is now complete. Ensure that you have enough Devnet
 SOL in your Playground wallet to deploy the program.
@@ -748,7 +977,7 @@ Next, deploy the program using the command:
 deploy
 ```
 
-## Test File Overview
+### Test File Overview
 
 Next, let's test the program. Open the `transfer-hook.test.ts` file, and you
 should see the following starter code:
@@ -973,7 +1202,7 @@ before(async () => {
 });
 ```
 
-## Create Mint Account
+### Create Mint Account
 
 To begin, build a transaction to create a new Mint Account with the Transfer
 Hook extension enabled. In this transaction, make sure to specify our program as
@@ -1029,7 +1258,7 @@ it("Create Mint Account with Transfer Hook Extension", async () => {
 });
 ```
 
-## Creating Token Accounts
+### Creating Token Accounts
 
 Next, as part of the setup, create the Associated Token Accounts for both the
 sender and recipient. Also, fund the sender's account with some tokens.
@@ -1087,7 +1316,7 @@ it("Create Token Accounts and Mint Tokens", async () => {
 });
 ```
 
-## Create ExtraAccountMeta Account
+### Create ExtraAccountMeta Account
 
 Before sending a token transfer, we need to create the ExtraAccountMetas account
 to store all the additional accounts required by the transfer hook instruction.
@@ -1131,7 +1360,7 @@ it("Create ExtraAccountMetaList Account", async () => {
 });
 ```
 
-## Transfer Tokens
+### Transfer Tokens
 
 Finally, we are ready to send a token transfer. In addition to the transfer
 instruction, there are a few additional instructions that need to be included.
@@ -1178,62 +1407,18 @@ it("Transfer Hook with Extra Account Meta", async () => {
     senderWSolTokenAccount,
   );
 
-  // Standard token transfer instruction
-  const transferInstruction = createTransferCheckedInstruction(
+  // This helper function will automatically derive all the additional accounts that were defined in the ExtraAccountMetas account 
+  let transferInstructionWithHelper = await createTransferCheckedWithTransferHookInstruction( 
+    connection,
     sourceTokenAccount,
     mint.publicKey,
     destinationTokenAccount,
     wallet.publicKey,
-    amount,
+    amountBigInt,
     decimals,
     [],
+    "confirmed",
     TOKEN_2022_PROGRAM_ID,
-  );
-
-  // Automatic account resolution not working correctly for the WSol PDA
-  // Manually add all the extra accounts required by the transfer hook instruction
-  // Also include the address of the ExtraAccountMetaList account and Transfer Hook Program
-  transferInstruction.keys.push(
-    {
-      pubkey: new PublicKey("So11111111111111111111111111111111111111112"),
-      isSigner: false,
-      isWritable: false,
-    },
-    {
-      pubkey: new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"),
-      isSigner: false,
-      isWritable: false,
-    },
-    {
-      pubkey: new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"),
-      isSigner: false,
-      isWritable: false,
-    },
-    {
-      pubkey: delegatePDA,
-      isSigner: false,
-      isWritable: false,
-    },
-    {
-      pubkey: delegateWSolTokenAccount,
-      isSigner: false,
-      isWritable: true,
-    },
-    {
-      pubkey: senderWSolTokenAccount,
-      isSigner: false,
-      isWritable: true,
-    },
-    {
-      pubkey: program.programId,
-      isSigner: false,
-      isWritable: false,
-    },
-    {
-      pubkey: extraAccountMetaListPDA,
-      isSigner: false,
-      isWritable: false,
-    },
   );
 
   const transaction = new Transaction().add(
@@ -1242,6 +1427,7 @@ it("Transfer Hook with Extra Account Meta", async () => {
     approveInstruction,
     transferInstruction,
   );
+
   const txSig = await sendAndConfirmTransaction(
     connection,
     transaction,
@@ -1255,16 +1441,8 @@ it("Transfer Hook with Extra Account Meta", async () => {
 The transfer instruction must include all additional AccountMetas, the address
 of the ExtraAccountMetas account, and the address of the Transfer Hook program.
 
-<Callout type="info">
 
-In this example, we manually add the accounts to the transaction. The
-`@solana/spl-token` library provides a helper function to automatically resolve
-the necessary accounts. However, this function currently does not work if a seed
-for a PDA is also included on the ExtraAccountMetas account.
-
-</Callout>
-
-## Run Test File
+### Run Test File
 
 Once you have updated all the tests, the final step is to run the test.
 
@@ -1291,7 +1469,7 @@ Running tests...
   4 passing (5s)
 ```
 
-## Conclusion
+### Conclusion
 
 The Transfer Hook extension and Transfer Hook Interface allow for the creation
 of Mint Accounts that execute custom instruction logic on every token transfer.
