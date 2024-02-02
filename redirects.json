@@ -430,7 +430,7 @@
     },
     {
       "source": "/implemented-proposals/:path*",
-      "destination": "/implemented-proposals/path*"
+      "destination": "/implemented-proposals/:path*"
     },
     {
       "source": "/proposals/:path*",
