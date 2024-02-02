@@ -43,8 +43,8 @@ works.
 
 - [Validators](https://docs.solanalabs.com/validator/anatomy) - the individual
   nodes that are the backbone of the network
-- [Clusters](https://docs.solanalabs.com/clusters/overview) - a collection of
-  validators that work together for consensus
+- [Clusters](/docs/core/clusters.md) - a collection of validators that work
+  together for consensus
 
 ## Running a validator
 
