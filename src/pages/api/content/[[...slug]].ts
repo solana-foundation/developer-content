@@ -55,7 +55,11 @@ export default function handler(
     slug[0].toLocaleLowerCase() == "rpc"
       ? ""
       : "/developers"
-  }/${slug.join("/")}`.toLowerCase();
+  }/${slug.join("/")}`
+    .toLowerCase()
+    .replaceAll(/\/index(.mdx?)?/gi, "");
+
+  console.log("href:", href);
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
   const flatNavItems = generateFlatNavItemListing(
