@@ -23,7 +23,10 @@
       "source": "/implemented-proposals/program-derived-addresses",
       "destination": "/docs/core/cpi#program-derived-addresses"
     },
-
+    {
+      "source": "/docs/rpc/index:path*",
+      "destination": "/docs/rpc"
+    },
     { "destination": "/docs/rpc/http:path*", "source": "/api/http/:path*" },
     { "destination": "/docs/rpc", "source": "/api" },
     {
