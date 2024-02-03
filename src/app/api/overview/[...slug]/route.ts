@@ -4,24 +4,26 @@
  * display on https://solana.com/developers)
  */
 
-import type { NextApiRequest, NextApiResponse } from "next";
+import { notFound } from "next/navigation";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import {
   allDeveloperGuides,
   allDeveloperResources,
   allDeveloperWorkshops,
 } from "contentlayer/generated";
 import { extractFeaturedRecords, simplifyRecords } from "@/utils/parsers";
-import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | any>,
-) {
-  // get the url params
-  const slug = req.query?.slug || [];
+type RouteProps = {
+  params: {
+    slug: string[];
+  };
+};
 
-  if (!slug || !Array.isArray(slug))
-    return res.status(404).json({ notFound: true });
+export function GET(_req: Request, { params: { slug } }: RouteProps) {
+  // dummy check on the url params
+  if (!slug || !Array.isArray(slug)) {
+    return notFound();
+  }
 
   // initialize and default the content locale to english
   let locale = DEFAULT_LOCALE_EN;
@@ -30,9 +32,10 @@ export default function handler(
   if (new RegExp(LOCALE_REGEX).test(slug[0])) {
     locale = slug.shift() || DEFAULT_LOCALE_EN;
   }
+
   console.log("locale:", locale);
 
-  return res.status(200).json({
+  return Response.json({
     // featured guides
     guides: extractFeaturedRecords({
       records: allDeveloperGuides,

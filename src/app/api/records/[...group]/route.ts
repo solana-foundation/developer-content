@@ -2,7 +2,8 @@
  * api route to generate a listing of records for a given `group`
  */
 
-import type { NextApiRequest, NextApiResponse } from "next";
+import { notFound } from "next/navigation";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import { SimpleRecordGroupName, SupportedDocTypes } from "@/types";
 import {
   allDeveloperGuides,
@@ -12,17 +13,18 @@ import {
   allSolanaRPCDocs,
 } from "contentlayer/generated";
 import { simplifyRecords } from "@/utils/parsers";
-import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | SupportedDocTypes[]>,
-) {
-  // get the content record group
-  const group = req.query?.group || [];
+type RouteProps = {
+  params: {
+    group: string[];
+  };
+};
 
-  if (!group || !Array.isArray(group) || group.length <= 0)
-    return res.status(404).json({ notFound: true });
+export function GET(_req: Request, { params: { group } }: RouteProps) {
+  // dummy check on the url params
+  if (!group || !Array.isArray(group) || group.length <= 0) {
+    return notFound();
+  }
 
   // initialize and default the content locale to english
   let locale = DEFAULT_LOCALE_EN;
@@ -36,7 +38,7 @@ export default function handler(
 
   // get the content record group name
   const groupName = group.toString() as SimpleRecordGroupName;
-  if (!groupName) return res.status(404).json({ notFound: true });
+  if (!groupName) return notFound();
 
   // retrieve the correct group's records by its simple group name
   let records: SupportedDocTypes[] = ((groupName: SimpleRecordGroupName) => {
@@ -55,7 +57,7 @@ export default function handler(
     }
   })(groupName);
 
-  if (!records) return res.status(404).json({ notFound: true });
+  if (!records) return notFound();
 
   // compute the simplified listing of the records
   records = simplifyRecords(records);
@@ -63,5 +65,5 @@ export default function handler(
   // todo: add pagination support?
 
   // finally, return the json formatted listing
-  return res.status(200).json(records);
+  return Response.json(records);
 }
