@@ -149,6 +149,10 @@
       "destination": "/docs/core/clusters",
       "source": "/clusters/rpc-endpoints"
     },
+    {
+      "destination": "/docs/core/clusters",
+      "source": "/cluster/rpc-endpoints"
+    },
     { "destination": "/docs/economics/staking", "source": "/staking" },
     {
       "destination": "/docs/economics/staking/:path*",
