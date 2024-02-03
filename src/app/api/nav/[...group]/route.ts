@@ -3,27 +3,29 @@
  * each supported content record `group`
  */
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import { NavItem, SimpleRecordGroupName } from "@/types";
+import { notFound } from "next/navigation";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
+import { SimpleRecordGroupName } from "@/types";
 import { generateNavItemListing } from "@/utils/navItem";
 import {
   allDeveloperGuides,
-  // allDeveloperResources,
+  allDeveloperResources,
   allSolanaDocs,
   allDeveloperWorkshops,
   allSolanaRPCDocs,
 } from "contentlayer/generated";
-import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | NavItem[]>,
-) {
-  // get the content record group
-  const group = req.query?.group || [];
+type RouteProps = {
+  params: {
+    group: string[];
+  };
+};
 
-  if (!group || !Array.isArray(group) || group.length <= 0)
-    return res.status(404).json({ notFound: true });
+export function GET(_req: Request, { params: { group } }: RouteProps) {
+  // dummy check on the url params
+  if (!group || !Array.isArray(group) || group.length <= 0) {
+    return notFound();
+  }
 
   // initialize and default the content locale to english
   let locale = DEFAULT_LOCALE_EN;
@@ -33,9 +35,11 @@ export default function handler(
     locale = group.shift() || DEFAULT_LOCALE_EN;
   }
 
+  console.log("locale:", locale);
+
   // get the content record group name
   const groupName = group.toString() as SimpleRecordGroupName;
-  if (!groupName) return res.status(404).json({ notFound: true });
+  if (!groupName) return notFound();
 
   // retrieve the correct group's records by its simple group name
   const records = ((groupName: SimpleRecordGroupName) => {
@@ -47,17 +51,17 @@ export default function handler(
         return allSolanaDocs;
       case "guides":
         return allDeveloperGuides;
-      // case "resources":
-      //   return allDeveloperResources;
+      case "resources":
+        return allDeveloperResources;
       case "workshops":
         return allDeveloperWorkshops;
     }
   })(groupName);
 
-  if (!records) return res.status(404).json({ notFound: true });
+  if (!records) return notFound();
 
   const navItems = generateNavItemListing(records);
 
   // finally, return the json formatted listing of NavItems
-  return res.status(200).json(navItems);
+  return Response.json(navItems);
 }
