@@ -93,9 +93,28 @@ export default function handler(
       continue;
     }
 
+    // set the current requested record
     current = flatNavItems[i];
-    if (flatNavItems.length >= i - 1) prev = flatNavItems[i - 1];
-    if (flatNavItems.length >= i + 1) next = flatNavItems[i + 1];
+
+    // get the "previous" record link to display (that is an actual link)
+    if (flatNavItems.length >= i - 1) {
+      for (let j = i; j > 0; j--) {
+        if (!flatNavItems[j - 1].metaOnly) {
+          prev = flatNavItems[j - 1];
+          break;
+        }
+      }
+    }
+
+    // get the "next" record link to display (that is an actual link)
+    if (flatNavItems.length >= i + 1) {
+      for (let j = i; j < flatNavItems.length; j++) {
+        if (!flatNavItems[j + 1].metaOnly) {
+          next = flatNavItems[j + 1];
+          break;
+        }
+      }
+    }
 
     // break out of the loop and stop processing
     break;
