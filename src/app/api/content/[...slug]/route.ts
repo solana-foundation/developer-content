@@ -17,17 +17,19 @@ import {
   allSolanaRPCDocs,
   DocumentTypes,
 } from "contentlayer/generated";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { notFound } from "next/navigation";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | any>,
-) {
-  // get the content record group
-  const slug = req.query?.slug || [];
+type RouteProps = {
+  params: {
+    slug: string[];
+  };
+};
 
-  if (!slug || !Array.isArray(slug) || slug.length <= 0)
-    return res.status(404).json({ notFound: true });
+export function GET(_req: Request, { params: { slug } }: RouteProps) {
+  // dummy check on the url params
+  if (!slug || !Array.isArray(slug) || slug.length <= 0) {
+    notFound();
+  }
 
   // initialize and default the content locale to english
   let locale = DEFAULT_LOCALE_EN;
@@ -56,7 +58,7 @@ export default function handler(
     }
   })(group);
 
-  if (!records) return res.status(404).json({ notFound: true });
+  if (!records) return notFound();
 
   // define the formatted href value to search for
   // note: this effectively enforces that only href's that start with "/developers" are supported
@@ -120,7 +122,7 @@ export default function handler(
     break;
   }
 
-  if (!current) return res.status(404).json({ notFound: true });
+  if (!current) return notFound();
 
   // locate full content record
 
@@ -128,7 +130,8 @@ export default function handler(
     (item: DocumentTypes) =>
       item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
   )?.[0];
-  if (!record) return res.status(404).json({ notFound: true });
+
+  if (!record) notFound();
 
   // remove the html formatted content (since it is undesired data to send over the wire)
   if (typeof record.body.raw !== "undefined") {
@@ -141,5 +144,5 @@ export default function handler(
   // todo: support sending related content records back to the client
 
   // finally, return the json formatted listing of NavItems (with the next and prev records)
-  return res.status(200).json(Object.assign(current, record, { next, prev }));
+  return Response.json(Object.assign(current, record, { next, prev }));
 }
