@@ -4,6 +4,7 @@
  */
 
 import { NavItem, SimpleRecordGroupName } from "@/types";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
   generateNavItemListing,
@@ -28,6 +29,15 @@ export default function handler(
   if (!slug || !Array.isArray(slug) || slug.length <= 0)
     return res.status(404).json({ notFound: true });
 
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
+    locale = slug.shift() || DEFAULT_LOCALE_EN;
+  }
+
+  // determine the correct group based on the route prefix
   const group = slug[0] as SimpleRecordGroupName;
 
   // retrieve the correct group's records by its simple group name

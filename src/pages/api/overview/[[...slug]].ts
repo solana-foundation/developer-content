@@ -11,11 +11,27 @@ import {
   allDeveloperWorkshops,
 } from "contentlayer/generated";
 import { extractFeaturedRecords, simplifyRecords } from "@/utils/parsers";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<SimpleNotFound | any>,
 ) {
+  // get the url params
+  const slug = req.query?.slug || [];
+
+  if (!slug || !Array.isArray(slug))
+    return res.status(404).json({ notFound: true });
+
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
+    locale = slug.shift() || DEFAULT_LOCALE_EN;
+  }
+  console.log("locale:", locale);
+
   return res.status(200).json({
     // featured guides
     guides: extractFeaturedRecords({

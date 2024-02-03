@@ -13,18 +13,33 @@ import {
   allDeveloperWorkshops,
   allSolanaRPCDocs,
 } from "contentlayer/generated";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<SimpleNotFound | NavItem[]>,
 ) {
   // get the content record group
-  const group = req.query?.group?.toString() as SimpleRecordGroupName;
-  if (!group) return res.status(404).json({ notFound: true });
+  const group = req.query?.group || [];
+
+  if (!group || !Array.isArray(group) || group.length <= 0)
+    return res.status(404).json({ notFound: true });
+
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(group[0])) {
+    locale = group.shift() || DEFAULT_LOCALE_EN;
+  }
+
+  // get the content record group name
+  const groupName = group.toString() as SimpleRecordGroupName;
+  if (!groupName) return res.status(404).json({ notFound: true });
 
   // retrieve the correct group's records by its simple group name
-  const records = ((group: SimpleRecordGroupName) => {
-    switch (group) {
+  const records = ((groupName: SimpleRecordGroupName) => {
+    switch (groupName) {
       case "rpc":
       case "docs,rpc":
         return allSolanaRPCDocs;
@@ -37,7 +52,7 @@ export default function handler(
       case "workshops":
         return allDeveloperWorkshops;
     }
-  })(group);
+  })(groupName);
 
   if (!records) return res.status(404).json({ notFound: true });
 
