@@ -3,6 +3,7 @@
  * based on the provided url `slug`
  */
 
+import { notFound } from "next/navigation";
 import { NavItem, SimpleRecordGroupName } from "@/types";
 import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import {
@@ -17,7 +18,6 @@ import {
   allSolanaRPCDocs,
   DocumentTypes,
 } from "contentlayer/generated";
-import { notFound } from "next/navigation";
 
 type RouteProps = {
   params: {
@@ -125,7 +125,6 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   if (!current) return notFound();
 
   // locate full content record
-
   let record = (records as DocumentTypes[]).filter(
     (item: DocumentTypes) =>
       item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
