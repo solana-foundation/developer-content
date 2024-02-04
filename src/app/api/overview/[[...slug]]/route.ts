@@ -19,12 +19,7 @@ type RouteProps = {
   };
 };
 
-export function GET(_req: Request, { params: { slug } }: RouteProps) {
-  // dummy check on the url params
-  if (!slug || !Array.isArray(slug)) {
-    return notFound();
-  }
-
+export function GET(_req: Request, { params: { slug = [] } }: RouteProps) {
   // initialize and default the content locale to english
   let locale = DEFAULT_LOCALE_EN;
 
