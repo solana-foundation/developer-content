@@ -78,6 +78,8 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     generateNavItemListing(records),
   );
 
+  console.log(flatNavItems);
+
   // initialize the NavItem record trackers
   let current: NavItem | null = null;
   let next: NavItem | null = null;
@@ -101,7 +103,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // get the "previous" record link to display (that is an actual link)
     if (flatNavItems.length >= i - 1) {
       for (let j = i; j > 0; j--) {
-        if (!flatNavItems[j - 1].metaOnly) {
+        if (!flatNavItems[j - 1]?.metaOnly) {
           prev = flatNavItems[j - 1];
           break;
         }
@@ -111,7 +113,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // get the "next" record link to display (that is an actual link)
     if (flatNavItems.length >= i + 1) {
       for (let j = i; j < flatNavItems.length; j++) {
-        if (!flatNavItems[j + 1].metaOnly) {
+        if (!flatNavItems[j + 1]?.metaOnly) {
           next = flatNavItems[j + 1];
           break;
         }
