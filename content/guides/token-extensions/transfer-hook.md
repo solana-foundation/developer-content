@@ -18,6 +18,7 @@ tags:
 
 The Transfer Hook extension and Transfer Hook Interface introduce the ability to
 create Mint Accounts that execute custom instruction logic on every token
+transfer.
 
 To achieve this, developers must build a program that implements the
 [Transfer Hook Interface](https://github.com/solana-labs/solana-program-library/tree/master/token/transfer-hook/interface)
@@ -84,8 +85,8 @@ instruction from the client.
 
 This example is the hello world of transfer hooks. It is a simple transfer hook
 that will just print a message on every token transfer. We start by opening the
-example in Solana play ground. (An online tool to build and deploy solana
-programs)
+example in Solana Playground, an online tool to build and deploy solana
+programs:
 [link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
 
 The example consists of an anchor program which implements the transfer hook
@@ -115,7 +116,7 @@ pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {
 }
 ```
 
-In this function you can now add your additional logic. For example you could
+In this function you can now add your additional logic. For example, you could
 let the transfer fail whenever an amount is transferred that is bigger than 50
 like so:
 
@@ -141,12 +142,12 @@ pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {
 To run the example in Solana Playground follow this link:
 [link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
 
-And then in there type `build` which will update the value of `declare_id` in
-the `lib.rs` file with a newly generated program ID. Then type `deploy` to
-deploy your program to dev net. When when the program is deployed you can run
-the test file by typing `test` in the terminal.
+In Playground's terminal, run the `build` command which will update the value of
+`declare_id` in the `lib.rs` file with a newly generated program ID. Then run
+the `deploy` command to deploy your program to devnet. When when the program is
+deployed you can run the test file by using the `test` command in the terminal.
 
-This will then give you the following output:
+This will then give you the output similar to this:
 
 ```bash
   transfer-hook.test.ts:
@@ -162,8 +163,8 @@ This will then give you the following output:
   4 passing (3s)
 ```
 
-If you do not want to use JS to create your token you can also use the cli like
-so after you deployed your program:
+If you do not want to use javascript to create your token, you can also use the
+`spl-token` command from the Solana CLI after you deployed your program:
 
 ```bash
 spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb create-token --transfer-hook yourTransferHookProgramId
@@ -252,7 +253,7 @@ pub struct TransferHook<'info> {
 }
 ```
 
-And the account will hold a u64 counter variable:
+And the account will hold a `u64` counter variable:
 
 ```rust
 #[account]
@@ -298,8 +299,8 @@ To run the example in Solana Playground follow this link:
 
 And then in there type `build` which will update the value of `declare_id` in
 the `lib.rs` file with a newly generated program ID. Then type `deploy` to
-deploy your program to dev net. When when the program is deployed you can run
-the test file by typing `test` in the terminal.
+deploy your program to devnet. When when the program is deployed you can run the
+test file by typing `test` in the terminal.
 
 This will then give you the following output. In last transaction you will then
 able to see how often your token has been transferred:
@@ -328,10 +329,9 @@ Running tests...
 
 ## Transfer Hook with wSOl Transfer fee (advanced example)
 
-### Program Overview
-
-In this guide, we will build a Transfer Hook program using the Anchor framework.
-This program will require the sender to pay a wSOL fee for every token transfer.
+In the next part of this guide, we will build a more advanced Transfer Hook
+program using the Anchor framework. This program will require the sender to pay
+a wSOL fee for every token transfer.
 
 The wSOL transfers will be executed using a delegate that is a PDA derived from
 the Transfer Hook program. This is necessary because the signature from the
