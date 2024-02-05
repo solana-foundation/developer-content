@@ -78,8 +78,6 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     generateNavItemListing(records),
   );
 
-  console.log(flatNavItems);
-
   // initialize the NavItem record trackers
   let current: NavItem | null = null;
   let next: NavItem | null = null;
