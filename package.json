@@ -16,9 +16,12 @@
     "test": "yarn contentlayer:build",
     "lint": "next lint",
     "prettier": "prettier -c \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
-    "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\""
+    "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
+    "crowdin:download": "crowdin download",
+    "crowdin:upload": "crowdin upload"
   },
   "dependencies": {
+    "@crowdin/cli": "^3.17.0",
     "@types/node": "20.4.2",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
