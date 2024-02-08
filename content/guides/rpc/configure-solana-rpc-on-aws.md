@@ -58,11 +58,11 @@ between 150 TB to 300 TB of data transfer out to the Internet per month, so talk
 to your AWS account manager about potential cost optimization.
 
 - To run a single Consensus node on AWS, use the
-  [Solana Node Runner CDK application](https://github.com/aws-samples/aws-blockchain-node-runners/tree/solana/lib/solana)
+  [Solana Node Runner CDK application](https://github.com/aws-samples/aws-blockchain-node-runners/tree/main/lib/solana)
   in
   [AWS Blockchain Node Runners](https://aws-samples.github.io/aws-blockchain-node-runners/)
   and use
-  [sample config for Consensus node](https://github.com/aws-samples/aws-blockchain-node-runners/blob/solana/lib/solana/sample-configs/.env-sample-validator).
+  [sample config for Consensus node](https://github.com/aws-samples/aws-blockchain-node-runners/blob/main/lib/solana/sample-configs/.env-sample-consensus).
 
 ### Base RPC nodes
 
@@ -92,11 +92,11 @@ Consensus nodes, but can still be sufficient and better be discussed with your
 AWS account manager.
 
 - To run Base RPC node on AWS, use the
-  [Solana Node Runner CDK application](https://github.com/aws-samples/aws-blockchain-node-runners/tree/solana/lib/solana)
+  [Solana Node Runner CDK application](https://github.com/aws-samples/aws-blockchain-node-runners/tree/main/lib/solana)
   in
   [AWS Blockchain Node Runners](https://aws-samples.github.io/aws-blockchain-node-runners/)
   and use
-  [sample config for RPC node](https://github.com/aws-samples/aws-blockchain-node-runners/blob/solana/lib/solana/sample-configs/.env-sample-baserpc).
+  [sample config for RPC node](https://github.com/aws-samples/aws-blockchain-node-runners/blob/main/lib/solana/sample-configs/.env-sample-baserpc).
   You can use both Single-node and Highly Available-node setup.
 
 ### Extended RPC nodes with secondary indexes
@@ -118,11 +118,11 @@ As with the RPC nodes, data transfer amount may vary and the estimated amount is
 15 TB of outgoing data per month per node.
 
 - To run Extended RPC nodes on AWS, use the
-  [Solana Node Runner CDK application](https://github.com/aws-samples/aws-blockchain-node-runners/tree/solana/lib/solana)
+  [Solana Node Runner CDK application](https://github.com/aws-samples/aws-blockchain-node-runners/tree/main/lib/solana)
   in
   [AWS Blockchain Node Runners](https://aws-samples.github.io/aws-blockchain-node-runners/)
   and use
-  [sample config for RPC with secondary indexes node](https://github.com/aws-samples/aws-blockchain-node-runners/blob/solana/lib/solana/sample-configs/.env-sample-extendedrpc).
+  [sample config for RPC with secondary indexes node](https://github.com/aws-samples/aws-blockchain-node-runners/blob/main/lib/solana/sample-configs/.env-sample-extendedrpc).
   You can use both Single-node and Highly Available-node setup.
 
 ### History nodes
