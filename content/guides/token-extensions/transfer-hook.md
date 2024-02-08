@@ -87,7 +87,7 @@ This example is the hello world of transfer hooks. It is a simple transfer hook
 that will just print a message on every token transfer. We start by opening the
 example in Solana Playground, an online tool to build and deploy solana
 programs:
-[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
+[link](https://beta.solpg.io/github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
 
 The example consists of an anchor program which implements the transfer hook
 interface and a test file to test the program.
@@ -140,7 +140,7 @@ pub fn transfer_hook(ctx: Context<TransferHook>, amount: u64) -> Result<()> {
 ```
 
 To run the example in Solana Playground follow this link:
-[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
+[link](https://beta.solpg.io/github.com/solana-developers/anchor-transfer-hook/tree/hello_world)
 
 In Playground's terminal, run the `build` command which will update the value of
 `declare_id` in the `lib.rs` file with a newly generated program ID. Then run
@@ -174,7 +174,7 @@ spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb create-token 
 
 The next example will show you how you can increase a counter every time your
 token has been transferred.
-[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/counter)
+[link](https://beta.solpg.io/github.com/solana-developers/anchor-transfer-hook/tree/counter)
 
 If you want to add logic to your transfer hook that needs additional accounts
 you need to add them to the ExtraAccountMetaList account. In our case here we
@@ -295,7 +295,7 @@ let transferInstructionWithHelper =
 ```
 
 To run the example in Solana Playground follow this link:
-[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/counter)
+[link](https://beta.solpg.io/github.com/solana-developers/anchor-transfer-hook/tree/counter)
 
 And then in there type `build` which will update the value of `declare_id` in
 the `lib.rs` file with a newly generated program ID. Then type `deploy` to
@@ -351,12 +351,12 @@ This program will only include 3 instructions:
 
 This program will require the sender to pay a fee in wrapped SOL (wSOL) on every
 token transfer. Here is the
-[final program](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/main).
+[final program](https://beta.solpg.io/github.com/solana-developers/anchor-transfer-hook/tree/main).
 
 ### Getting Started
 
 Start by opening this Solana Playground
-[link](https://beta.solpg.io/https://github.com/solana-developers/anchor-transfer-hook/tree/starter)
+[link](https://beta.solpg.io/github.com/solana-developers/anchor-transfer-hook/tree/starter)
 and then click the "Import" button to copy the project.
 
 The starter code includes a `lib.rs` and `transfer-hook.test.ts` file which are
