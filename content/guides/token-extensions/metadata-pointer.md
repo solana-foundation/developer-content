@@ -96,7 +96,7 @@ The Metadata Interface specifies the following
   not apply to the required name, symbol, and URI fields.
 
 - [**UpdateAuthority**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L147):
-  Updates the authority allows to change the token metadata.
+  Updates the authority allowed to change the token metadata.
 
 - [**Emit**](https://github.com/solana-labs/solana-program-library/blob/master/token-metadata/interface/src/instruction.rs#L162):
   Emits the token metadata in the format of the `TokenMetadata` struct. This
