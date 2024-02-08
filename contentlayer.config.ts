@@ -145,7 +145,7 @@ const basicContentFields: FieldDefs = {
  */
 export const DeveloperResource = defineDocumentType(() => ({
   name: "DeveloperResource",
-  filePathPattern: `content/resources/**/*.md`,
+  filePathPattern: `content/resources/**/*.(md|mdx)`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -170,7 +170,7 @@ export const DeveloperResource = defineDocumentType(() => ({
  */
 export const DeveloperGuide = defineDocumentType(() => ({
   name: "DeveloperGuide",
-  filePathPattern: `content/guides/**/*.md`,
+  filePathPattern: `content/guides/**/*.(md|mdx)`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -189,7 +189,7 @@ export const DeveloperGuide = defineDocumentType(() => ({
  */
 export const DeveloperWorkshop = defineDocumentType(() => ({
   name: "DeveloperWorkshop",
-  filePathPattern: `content/workshops/*.md`,
+  filePathPattern: `content/workshops/*.(md|mdx)`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -280,7 +280,7 @@ export const CourseMetadata = defineDocumentType(() => ({
  */
 export const CourseLesson = defineDocumentType(() => ({
   name: "CourseLesson",
-  filePathPattern: `content/courses/**/content/*.md`,
+  filePathPattern: `content/courses/**/content/*.(md|mdx)`,
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -300,7 +300,7 @@ export const CourseLesson = defineDocumentType(() => ({
  */
 export const SolanaDoc = defineDocumentType(() => ({
   name: "SolanaDoc",
-  filePathPattern: "docs/**/*.md",
+  filePathPattern: "docs/**/*.(md|mdx)",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -317,7 +317,7 @@ export const SolanaDoc = defineDocumentType(() => ({
  */
 export const SolanaRPCDoc = defineDocumentType(() => ({
   name: "SolanaRPCDoc",
-  filePathPattern: "docs/rpc/**/*.mdx",
+  filePathPattern: "docs/rpc/**/*.(md|mdx)",
   fields: {
     // use the standard content fields
     ...basicContentFields,
