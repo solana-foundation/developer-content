@@ -1,0 +1,25 @@
+project_id: '6'
+api_token_env: 'CROWDIN_PERSONAL_TOKEN'
+base_url: 'https://solana.crowdin.com'
+preserve_hierarchy: true
+files: [
+    # # JSON translation files
+    # {
+    # source: '/i18n/en/**/*',
+    # translation: '/i18n/%two_letters_code%/**/%original_file_name%',
+    # },
+    # Docs Markdown files
+    {
+      source: '/docs/**/*.md',
+      translation: '/i18n/%two_letters_code%/docs/**/%original_file_name%',
+    },
+    {
+      source: '/docs/**/*.mdx',
+      translation: '/i18n/%two_letters_code%/docs/**/%original_file_name%',
+    },
+    # Custom sidebar category files
+    # {
+    #   source: '/src/**/*.json',
+    #   translation: '/i18n/%two_letters_code%/docusaurus-plugin-content-docs/current/**/%original_file_name%',
+    # },
+  ]
