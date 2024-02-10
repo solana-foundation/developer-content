@@ -1,6 +1,7 @@
 import { NavItem, type SupportedDocTypes } from "@/types";
 import { type SolanaDoc } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
+import { I18N_INCLUDE_IN_PATHS, I18N_LOCALE_REGEX } from "./constants";
 
 /**
  * Generate a directory/category grouped `NavItem[]` listing by the provided flat
@@ -20,22 +21,22 @@ export function generateNavItemListing(
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
     // init the dir based category
-    if (!grouping[record._raw.sourceFileDir])
-      grouping[record._raw.sourceFileDir] = { items: [] } as unknown as NavItem;
+    if (!grouping[record.href])
+      grouping[record.href] = { items: [] } as unknown as NavItem;
 
     // process the index file as the root of the NavItem
     if (
       record._raw.sourceFileName == "index.md" ||
       record._raw.sourceFileName == "index.mdx"
     ) {
-      grouping[record._raw.sourceFileDir] = Object.assign(
-        grouping[record._raw.sourceFileDir],
+      grouping[record.href] = Object.assign(
+        grouping[record.href],
         // @ts-ignore
         computeNavItem(record),
       );
     } else {
       // @ts-ignore
-      grouping[record._raw.sourceFileDir].items.push(computeNavItem(record));
+      grouping[record.href].items.push(computeNavItem(record));
     }
   });
 
@@ -186,49 +187,43 @@ export function shouldIgnoreRecord({
  */
 export function computeNavItem(
   doc: SupportedDocTypes & Partial<SolanaDoc>,
-  // BASE_DIR = "content/",
 ): NavItem {
   // populate the base NavItem record from the provided `doc`
-  const record: NavItem = {
-    path: doc._id, // this is the full file path, computed by contentlayer
-    id: doc?.id || "",
-    href: doc?.href,
+  const navItem: NavItem = {
+    /** i18n locale */
+    locale: doc.locale,
+    /** unique identifier for each record, including any i18n info */
+    id: doc._id,
+    /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
+    path: doc._raw.sourceFilePath,
+    href: doc.href,
     label: doc?.sidebarLabel || doc?.title,
     sidebarSortOrder: doc?.sidebarSortOrder,
     metaOnly: doc?.metaOnly,
     altRoutes: doc.altRoutes,
   };
 
-  // compute an id based on the doc's path
-  if (!record.id) record.id = doc._raw.flattenedPath.replaceAll("/", "-");
-
   // compute a label based on the doc's file name
-  if (!record.label)
-    record.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
-
-  // set the href based on the file's path
-  if (!record.href) {
-    record.href = doc._raw.flattenedPath.replace(
-      /^(content\/?)?(developers\/?)?/gm,
-      // prepend the non-docs content
-      doc._raw.sourceFileDir.startsWith("docs") ? "/" : "/developers/",
-    );
+  if (!navItem.label) {
+    navItem.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
   }
 
-  // always lowercase certain specific values
-  record.href = record.href.toLowerCase();
-  record.id = record.id.toLowerCase();
+  // strip the i18n data from the path, when desired
+  if (!I18N_INCLUDE_IN_PATHS) {
+    navItem.path = navItem.path?.replace(I18N_LOCALE_REGEX, "");
+  }
 
   /**
-   * when the record is only storing metadata, remove it as a linked item
+   * when the navItem record is only storing metadata, remove it as a linked item
    * ---
-   * note: the `record.path` value should NOT be deleted
-   * since it is ued to determine the index of a category.
-   * also, deleting `record.metaOnly` prevents confusing
+   * note: the `navItem.path` value should NOT be deleted
+   * since it is used to determine the index of a category.
+   *
+   * note: deleting `navItem.metaOnly` prevents confusing
    * data in the generated nav item listing (especially for categories)
    */
-  if (!!record.metaOnly) delete record.href;
-  else delete record.metaOnly;
+  if (!!navItem.metaOnly) delete navItem.href;
+  else delete navItem.metaOnly;
 
-  return record;
+  return navItem;
 }
