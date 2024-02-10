@@ -5,14 +5,8 @@
 import { notFound } from "next/navigation";
 import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import { SimpleRecordGroupName, SupportedDocTypes } from "@/types";
-import {
-  allDeveloperGuides,
-  allDeveloperResources,
-  allSolanaDocs,
-  allDeveloperWorkshops,
-  allSolanaRPCDocs,
-} from "contentlayer/generated";
 import { simplifyRecords } from "@/utils/parsers";
+import { getRecordsForGroup } from "@/utils/records";
 
 type RouteProps = {
   params: {
@@ -34,36 +28,23 @@ export function GET(_req: Request, { params: { group } }: RouteProps) {
     locale = group.shift() || DEFAULT_LOCALE_EN;
   }
 
-  console.log("locale:", locale);
-
   // get the content record group name
-  const groupName = group.toString() as SimpleRecordGroupName;
-  if (!groupName) return notFound();
+  const simpleGroupName = group.toString() as SimpleRecordGroupName;
+  if (!simpleGroupName) return notFound();
 
-  // retrieve the correct group's records by its simple group name
-  let records: SupportedDocTypes[] = ((groupName: SimpleRecordGroupName) => {
-    switch (groupName) {
-      case "rpc":
-      case "docs,rpc":
-        return allSolanaRPCDocs;
-      case "docs":
-        return allSolanaDocs;
-      case "guides":
-        return allDeveloperGuides;
-      case "resources":
-        return allDeveloperResources;
-      case "workshops":
-        return allDeveloperWorkshops;
-    }
-  })(groupName);
+  const records = getRecordsForGroup(simpleGroupName, {
+    locale,
+  });
 
+  /**
+   * note: we intentionally only return a 404 if there was an error with `records`
+   * not if there are no records for the given `simpleGroupName`
+   */
   if (!records) return notFound();
-
-  // compute the simplified listing of the records
-  records = simplifyRecords(records);
 
   // todo: add pagination support?
 
+  // compute the simplified listing of the records to send less data over the wire
   // finally, return the json formatted listing
-  return Response.json(records);
+  return Response.json(simplifyRecords(records as SupportedDocTypes[]));
 }
