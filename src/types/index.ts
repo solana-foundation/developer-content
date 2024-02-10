@@ -37,10 +37,11 @@ export type SimpleRecordGroupName =
   | "workshops";
 
 type NavItemBase = {
-  id: String;
-  label: String;
-  path?: String;
-  href?: String;
+  id: string;
+  label: string;
+  locale?: string;
+  path?: string;
+  href?: string;
   sidebarSortOrder?: number;
   metaOnly?: boolean;
   /**
