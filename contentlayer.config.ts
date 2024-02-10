@@ -10,11 +10,6 @@ import {
  * Standard content record fields
  */
 const basicContentFields: FieldDefs = {
-  id: {
-    type: "string",
-    description: "Manually defined unique id for this document",
-    required: false,
-  },
   title: {
     type: "string",
     description: "The primary title of the post",
