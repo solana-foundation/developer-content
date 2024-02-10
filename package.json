@@ -18,11 +18,11 @@
     "prettier": "prettier -c \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "crowdin:download": "crowdin download",
-    "crowdin:upload": "crowdin upload"
+    "crowdin:upload": "crowdin upload sources"
   },
   "dependencies": {
-    "@crowdin/cli": "^3.17.0",
-    "@types/node": "20.4.2",
+    "@crowdin/cli": "^3.18.0",
+    "@types/node": "20.11.17",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",

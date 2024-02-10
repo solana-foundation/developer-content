@@ -106,10 +106,10 @@
     ts-pattern "^4.3.0"
     type-fest "^3.12.0"
 
-"@crowdin/cli@^3.17.0":
-  version "3.17.0"
-  resolved "https://registry.yarnpkg.com/@crowdin/cli/-/cli-3.17.0.tgz#e69670045eed106a5e90df3dceba2329fb82c2b8"
-  integrity sha512-ipr5wyBvpVuJ/DtJgDqTJiECu7zsVn9DwyTdf+sa0ukksXyiX3+H6wPm4eefIfEVSEaM92Q572dJZ5OnIH/Sag==
+"@crowdin/cli@^3.18.0":
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/@crowdin/cli/-/cli-3.18.0.tgz#17ff3fe7a43f7a31c3cde24ecbafacf4a5c3aad1"
+  integrity sha512-W4lvXhnAfGWxFW4L6n6tNIaXxuHO8vzRBQmbOz6OqLA7EgGLvYih0L9zeQpt9KNda66lC/iKqnA52ezTqPAEgg==
   dependencies:
     command-exists-promise "^2.0.2"
     node-fetch "2.6.7"
@@ -788,10 +788,12 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-0.7.34.tgz#10964ba0dee6ac4cd462e2795b6bebd407303433"
   integrity sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==
 
-"@types/node@20.4.2":
-  version "20.4.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.2.tgz#129cc9ae69f93824f92fac653eebfb4812ab4af9"
-  integrity sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==
+"@types/node@20.11.17":
+  version "20.11.17"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.17.tgz#cdd642d0e62ef3a861f88ddbc2b61e32578a9292"
+  integrity sha512-QmgQZGWu1Yw9TDyAP9ZzpFJKynYNeOvwMJmaxABfieQoVoiVOS6MN1WSpqpRcbeA5+RW82kraAVxCCJg+780Qw==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/node@>=12.12.47", "@types/node@>=13.7.0":
   version "20.11.7"
