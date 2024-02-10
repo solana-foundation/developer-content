@@ -48,9 +48,15 @@ documentation inside web3.js.
 
 _Available for Devnet_
 
-A web faucet hosted by Solana Foundation that has lower rate limits.
+1. [faucet.solana.com](https://faucet.solana.com) - A web faucet hosted by Solana Foundation that has lower rate limits.
+1. [solfaucet](https://solfaucet.com/)
+1. [quicknode](https://faucet.quicknode.com/solana/devnet)
 
-[faucet.solana.com](https://faucet.solana.com)
+_Available for Testnet_
+
+1. [solfaucet](https://solfaucet.com/)
+1. [quicknode](https://faucet.quicknode.com/solana/testnet)
+1. [testnetfaucet](https://testnetfaucet.org)
 
 ## 3. RPC Provider Faucets
 
