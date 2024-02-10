@@ -102,3 +102,6 @@ typings/
 
 # This repo uses yarn
 package-lock.json
+
+# translations are stored in the `i18n` via crowdin
+i18n
