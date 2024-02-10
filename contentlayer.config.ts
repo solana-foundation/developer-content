@@ -145,7 +145,8 @@ const basicContentFields: FieldDefs = {
  */
 export const DeveloperResource = defineDocumentType(() => ({
   name: "DeveloperResource",
-  filePathPattern: `content/resources/**/*.md`,
+  filePathPattern:
+    "{content/resources,/content/resources,i18n/**/content/resources}/**/*.{md,mdx}",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -170,7 +171,8 @@ export const DeveloperResource = defineDocumentType(() => ({
  */
 export const DeveloperGuide = defineDocumentType(() => ({
   name: "DeveloperGuide",
-  filePathPattern: `content/guides/**/*.md`,
+  filePathPattern:
+    "{content/guides,/content/guides,i18n/**/content/guides}/**/*.{md,mdx}",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -189,7 +191,8 @@ export const DeveloperGuide = defineDocumentType(() => ({
  */
 export const DeveloperWorkshop = defineDocumentType(() => ({
   name: "DeveloperWorkshop",
-  filePathPattern: `content/workshops/*.md`,
+  filePathPattern:
+    "{content/workshops,/content/workshops,i18n/**/content/workshops}/**/*.{md,mdx}",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -255,7 +258,8 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
  */
 export const CourseMetadata = defineDocumentType(() => ({
   name: "CourseMetadata",
-  filePathPattern: `content/courses/**/metadata.json`,
+  filePathPattern:
+    "{content/courses,/content/courses,i18n/**/content/courses}/**/metadata.json",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -280,7 +284,8 @@ export const CourseMetadata = defineDocumentType(() => ({
  */
 export const CourseLesson = defineDocumentType(() => ({
   name: "CourseLesson",
-  filePathPattern: `content/courses/**/content/*.md`,
+  filePathPattern:
+    "{content/courses/**/lessons,/content/courses/**/lessons,i18n/**/content/courses/**/lessons}/**/*.{md,mdx}",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -300,7 +305,7 @@ export const CourseLesson = defineDocumentType(() => ({
  */
 export const SolanaDoc = defineDocumentType(() => ({
   name: "SolanaDoc",
-  filePathPattern: "docs/**/*.md",
+  filePathPattern: "{docs,/docs,i18n/**/docs}/**/*.{md,mdx}",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -317,7 +322,7 @@ export const SolanaDoc = defineDocumentType(() => ({
  */
 export const SolanaRPCDoc = defineDocumentType(() => ({
   name: "SolanaRPCDoc",
-  filePathPattern: "docs/rpc/**/*.mdx",
+  filePathPattern: "{docs,/docs,i18n/**/docs}/rpc/**/*.{md,mdx}",
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -344,7 +349,7 @@ export default makeSource({
   // set the base content directories to search for content records
   contentDirPath: ".",
   contentDirInclude: [
-    "docs/rpc/**",
+    "i18n/**",
     "docs/**",
     "content/guides/**",
     "content/courses/**",
@@ -361,9 +366,12 @@ export default makeSource({
   documentTypes: [
     IgnoredDoc,
 
-    // developer specific content
-    SolanaDoc,
+    // solana docs
     SolanaRPCDoc,
+    // !note: rpc doc must be before regular docs
+    SolanaDoc,
+
+    // developer specific content
     DeveloperGuide,
     DeveloperResource,
     DeveloperWorkshop,
