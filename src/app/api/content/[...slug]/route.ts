@@ -4,7 +4,11 @@
  */
 
 import { notFound } from "next/navigation";
-import { NavItem, SimpleRecordGroupName } from "@/types";
+import type {
+  NavItem,
+  SimpleRecordGroupName,
+  SupportedDocTypes,
+} from "@/types";
 import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
@@ -16,7 +20,6 @@ import {
   allSolanaDocs,
   allDeveloperWorkshops,
   allSolanaRPCDocs,
-  DocumentTypes,
 } from "contentlayer/generated";
 
 type RouteProps = {
@@ -75,7 +78,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
   const flatNavItems = generateFlatNavItemListing(
-    generateNavItemListing(records),
+    generateNavItemListing(records as SupportedDocTypes[]),
   );
 
   // initialize the NavItem record trackers
@@ -125,8 +128,8 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   if (!current) return notFound();
 
   // locate full content record
-  let record = (records as DocumentTypes[]).filter(
-    (item: DocumentTypes) =>
+  let record = (records as SupportedDocTypes[]).filter(
+    (item: SupportedDocTypes) =>
       item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
   )?.[0];
 

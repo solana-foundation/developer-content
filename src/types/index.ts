@@ -2,12 +2,25 @@
  *
  */
 
-import { DocumentTypes, IgnoredDoc } from "contentlayer/generated";
+import type { DocumentTypes, IgnoredDoc } from "contentlayer/generated";
 
 /**
- * Short hand for removing the IgnoredDoc
+ * Short hand for removing any ignored documents
  */
-export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredDoc>;
+export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredDoc> &
+  ComputedFieldsTypeHack;
+
+/**
+ * hack:
+ * due to the way content layer generates the types, it does not deduplicate computed fields making them required
+ * so we are manually overriding that
+ *
+ * todo: PR something to `contentlayer` to prevent needing this hack
+ */
+export type ComputedFieldsTypeHack = {
+  locale: string;
+  href: string;
+};
 
 /**
  * Simplified string names of each support content record group

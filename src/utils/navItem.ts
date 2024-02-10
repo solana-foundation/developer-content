@@ -1,5 +1,5 @@
-import { NavItem, SupportedDocTypes } from "@/types";
-import { DocumentTypes, SolanaDoc } from "contentlayer/generated";
+import { NavItem, type SupportedDocTypes } from "@/types";
+import { type SolanaDoc } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
 
 /**
@@ -7,7 +7,7 @@ import { ucFirst } from "./helpers";
  * array of document `records`
  */
 export function generateNavItemListing(
-  records: Array<DocumentTypes>,
+  records: Array<SupportedDocTypes>,
 ): Array<NavItem> {
   // init a generic group tracker object
   const grouping: any = {};
