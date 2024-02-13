@@ -5,15 +5,9 @@
 
 import { notFound } from "next/navigation";
 import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
-import { SimpleRecordGroupName } from "@/types";
+import { SimpleRecordGroupName, SupportedDocTypes } from "@/types";
 import { generateNavItemListing } from "@/utils/navItem";
-import {
-  allDeveloperGuides,
-  allDeveloperResources,
-  allSolanaDocs,
-  allDeveloperWorkshops,
-  allSolanaRPCDocs,
-} from "contentlayer/generated";
+import { getRecordsForGroup } from "@/utils/records";
 
 type RouteProps = {
   params: {
@@ -35,32 +29,18 @@ export function GET(_req: Request, { params: { group } }: RouteProps) {
     locale = group.shift() || DEFAULT_LOCALE_EN;
   }
 
-  console.log("locale:", locale);
-
   // get the content record group name
-  const groupName = group.toString() as SimpleRecordGroupName;
-  if (!groupName) return notFound();
+  const simpleGroupName = group.toString() as SimpleRecordGroupName;
+  if (!simpleGroupName) return notFound();
 
   // retrieve the correct group's records by its simple group name
-  const records = ((groupName: SimpleRecordGroupName) => {
-    switch (groupName) {
-      case "rpc":
-      case "docs,rpc":
-        return allSolanaRPCDocs;
-      case "docs":
-        return allSolanaDocs;
-      case "guides":
-        return allDeveloperGuides;
-      case "resources":
-        return allDeveloperResources;
-      case "workshops":
-        return allDeveloperWorkshops;
-    }
-  })(groupName);
+  const records = getRecordsForGroup(simpleGroupName, {
+    locale,
+  });
 
   if (!records) return notFound();
 
-  const navItems = generateNavItemListing(records);
+  const navItems = generateNavItemListing(records as SupportedDocTypes[]);
 
   // finally, return the json formatted listing of NavItems
   return Response.json(navItems);
