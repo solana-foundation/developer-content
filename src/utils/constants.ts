@@ -1,7 +1,23 @@
 /**
  * Default language locale to use for the content
  */
-export const DEFAULT_LOCALE_EN = "en";
+export const DEFAULT_LOCALE_EN: string = "en";
+
+/**
+ * All supported locales (as two letter short codes)
+ *
+ * note: when new locales are added, they should be added in Crowdin first
+ *
+ * Any locales that fails to build can be listed here for further troubleshooting:
+ * - n/a
+ */
+export const SUPPORTED_LOCALES: string[] = [
+  DEFAULT_LOCALE_EN,
+  "de",
+  "es",
+  "ru",
+  "zh",
+];
 
 /**
  * Standard RegEx to parse a 2 character locale code
