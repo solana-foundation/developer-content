@@ -195,11 +195,18 @@ See [cross-program invocation](#cross-program-invocation-cpi).
 
 ## instruction
 
-The smallest contiguous unit of execution logic in a [program](#program). An
-instruction specifies which program it is calling, which accounts it wants to
+A call to invoke a specific [instruction-handler](#instruction-handler) in a
+[program](#program). An instruction also specifies which accounts it wants to
 read or modify, and additional data that serves as auxiliary input to the
-program. A [client](#client) can include one or multiple instructions in a
-[transaction](#transaction). An instruction may contain one or more
+[instruction-handler](#instruction-handler). A [client](#client) must include at
+least one instruction in a [transaction](#transaction), and all instructions
+must complete for the transaction to be considered successful.
+
+## instruction handler
+
+Instruction handlers are [program](#program) functions that process
+[instructions](#instruction) from [transactions](#transaction). An instruction
+handler may contain one or more
 [cross-program invocations](#cross-program-invocation-cpi).
 
 ## keypair
