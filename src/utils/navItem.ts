@@ -1,7 +1,16 @@
-import { NavItem, type SupportedDocTypes } from "@/types";
+import type {
+  NavItem,
+  SimpleRecordGroupName,
+  SupportedDocTypes,
+} from "@/types";
 import { type SolanaDoc } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
-import { I18N_INCLUDE_IN_PATHS, I18N_LOCALE_REGEX } from "./constants";
+import {
+  DEFAULT_LOCALE_EN,
+  I18N_INCLUDE_IN_PATHS,
+  I18N_LOCALE_REGEX,
+  LOCALE_REGEX,
+} from "./constants";
 
 /**
  * Generate a directory/category grouped `NavItem[]` listing by the provided flat
@@ -244,4 +253,46 @@ export function computeNavItem(
   else delete navItem.metaOnly;
 
   return navItem;
+}
+
+/**
+ * Compute and format standard details based on the url provided slug
+ */
+export function computeDetailsFromSlug(slug: string[]) {
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
+    locale = slug.shift() || DEFAULT_LOCALE_EN;
+  }
+
+  // determine the correct group based on the route prefix
+  let group = slug.shift() as SimpleRecordGroupName;
+
+  // handle special sub groups like the rpc section
+  if (group == "docs" && slug[0] == "rpc") {
+    group = slug.shift() as SimpleRecordGroupName;
+  }
+
+  // formatted the `href` value to search for
+  let href = slug
+    .join("/")
+    .toLowerCase()
+    .replaceAll(/\/index(.mdx?)?/gi, "");
+
+  if (group == "docs") {
+    href = `/docs/${href}`;
+  } else if (group == "rpc" || group == "docs,rpc") {
+    href = `/docs/rpc/${href}`;
+  } else {
+    href = `/developers/${href}`;
+  }
+
+  return {
+    locale,
+    group,
+    slug,
+    href,
+  };
 }
