@@ -20,23 +20,29 @@ export function generateNavItemListing(
   records.forEach(record => {
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
+    let key = record._raw.sourceFileDir;
+
+    // strip the i18n data, when desired
+    if (!I18N_INCLUDE_IN_PATHS) {
+      key = key.replace(I18N_LOCALE_REGEX, "");
+    }
+
     // init the dir based category
-    if (!grouping[record.href])
-      grouping[record.href] = { items: [] } as unknown as NavItem;
+    if (!grouping[key]) grouping[key] = { items: [] } as unknown as NavItem;
 
     // process the index file as the root of the NavItem
     if (
       record._raw.sourceFileName == "index.md" ||
       record._raw.sourceFileName == "index.mdx"
     ) {
-      grouping[record.href] = Object.assign(
-        grouping[record.href],
+      grouping[key] = Object.assign(
+        grouping[key],
         // @ts-ignore
         computeNavItem(record),
       );
     } else {
       // @ts-ignore
-      grouping[record.href].items.push(computeNavItem(record));
+      grouping[key].items.push(computeNavItem(record));
     }
   });
 
@@ -47,8 +53,6 @@ export function generateNavItemListing(
     // handle category items that do not have metadata pulled from a file (i.e. no `path`)
     if (!currentItem.path) {
       Object.assign(currentItem, computeDetailsFromKey(key));
-      // currentItem.label = ucFirst(key.split("/").reverse()[0]);
-      // currentItem.id = key.replaceAll("/", "-");
     }
 
     const parentKey = key.slice(0, key.lastIndexOf("/"));
@@ -193,9 +197,9 @@ export function computeNavItem(
     /** i18n locale */
     locale: doc.locale,
     /** unique identifier for each record, including any i18n info */
-    id: doc._id,
+    id: doc._id.toLowerCase(),
     /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
-    path: doc._raw.sourceFilePath,
+    path: doc._raw.flattenedPath.replaceAll("/", "-"),
     href: doc.href,
     label: doc?.sidebarLabel || doc?.title,
     sidebarSortOrder: doc?.sidebarSortOrder,
@@ -203,15 +207,15 @@ export function computeNavItem(
     altRoutes: doc.altRoutes,
   };
 
-  // compute a label based on the doc's file name
-  if (!navItem.label) {
-    navItem.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
+  // strip the i18n data, when desired
+  if (!I18N_INCLUDE_IN_PATHS) {
+    navItem.path = navItem.path!.replace(I18N_LOCALE_REGEX, "");
+    navItem.id = navItem.path!.replaceAll("/", "-");
   }
 
-  // strip the i18n data from the path, when desired
-  if (!I18N_INCLUDE_IN_PATHS) {
-    navItem.path = navItem.path?.replace(I18N_LOCALE_REGEX, "");
-  }
+  // compute a label based on the doc's file name
+  if (!navItem.label)
+    navItem.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
 
   /**
    * when the navItem record is only storing metadata, remove it as a linked item
