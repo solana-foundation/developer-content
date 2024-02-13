@@ -4,15 +4,11 @@
  */
 
 import { notFound } from "next/navigation";
-import type {
-  NavItem,
-  SimpleRecordGroupName,
-  SupportedDocTypes,
-} from "@/types";
-import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
+import type { NavItem, SupportedDocTypes } from "@/types";
 import {
   generateFlatNavItemListing,
   generateNavItemListing,
+  computeDetailsFromSlug,
 } from "@/utils/navItem";
 import { getRecordsForGroup } from "@/utils/records";
 
@@ -28,35 +24,16 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     notFound();
   }
 
-  // initialize and default the content locale to english
-  let locale = DEFAULT_LOCALE_EN;
+  const { group, locale, href } = computeDetailsFromSlug(slug);
 
-  // extract the requested locale from the url (when provided)
-  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
-    locale = slug.shift() || DEFAULT_LOCALE_EN;
-  }
-
-  // determine the correct group based on the route prefix
-  const simpleGroupName = slug[0] as SimpleRecordGroupName;
-  if (!simpleGroupName) return notFound();
+  if (!group) return notFound();
 
   // retrieve the correct group's records by its simple group name
-  const records = getRecordsForGroup(simpleGroupName, {
+  const records = getRecordsForGroup(group, {
     locale,
   });
 
   if (!records) return notFound();
-
-  // define the formatted href value to search for
-  // note: this effectively enforces that only href's that start with "/developers" are supported
-  const href = `${
-    slug[0].toLocaleLowerCase() == "docs" ||
-    slug[0].toLocaleLowerCase() == "rpc"
-      ? ""
-      : "/developers"
-  }/${slug.join("/")}`
-    .toLowerCase()
-    .replaceAll(/\/index(.mdx?)?/gi, "");
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
   const flatNavItems = generateFlatNavItemListing(
