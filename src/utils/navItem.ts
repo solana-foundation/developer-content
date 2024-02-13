@@ -279,7 +279,8 @@ export function computeDetailsFromSlug(slug: string[]) {
   let href = slug
     .join("/")
     .toLowerCase()
-    .replaceAll(/\/index(.mdx?)?/gi, "");
+    .replaceAll(/\/index(.mdx?)?/gi, "")
+    .trim();
 
   if (group == "docs") {
     href = `/docs/${href}`;
@@ -287,6 +288,11 @@ export function computeDetailsFromSlug(slug: string[]) {
     href = `/docs/rpc/${href}`;
   } else {
     href = `/developers/${href}`;
+  }
+
+  // remove all trailing slashes
+  while (href.endsWith("/")) {
+    href = href.substring(0, href.length - 1);
   }
 
   return {
