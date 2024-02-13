@@ -30,10 +30,10 @@
       "source": "/api/websocket/:path*"
     },
     {
-      "destination": "/docs/rpc/:path*",
+      "destination": "/docs/rpc",
       "source": "/developing/clients/jsonrpc-api"
     },
-    { "destination": "/docs/rpc/:path*", "source": "/apps/jsonrpc-api" },
+    { "destination": "/docs/rpc", "source": "/apps/jsonrpc-api" },
     { "destination": "/docs/terminology", "source": "/terminology" },
     { "destination": "/docs/core/rent", "source": "/developing/intro/rent" },
     {
