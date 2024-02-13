@@ -14,13 +14,7 @@ import {
   generateFlatNavItemListing,
   generateNavItemListing,
 } from "@/utils/navItem";
-import {
-  allDeveloperGuides,
-  allDeveloperResources,
-  allSolanaDocs,
-  allDeveloperWorkshops,
-  allSolanaRPCDocs,
-} from "contentlayer/generated";
+import { getRecordsForGroup } from "@/utils/records";
 
 type RouteProps = {
   params: {
@@ -43,23 +37,13 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   }
 
   // determine the correct group based on the route prefix
-  const group = slug[0] as SimpleRecordGroupName;
+  const simpleGroupName = slug[0] as SimpleRecordGroupName;
+  if (!simpleGroupName) return notFound();
 
   // retrieve the correct group's records by its simple group name
-  const records = ((group: SimpleRecordGroupName) => {
-    switch (group) {
-      case "docs": {
-        if (slug[1] == "rpc") return allSolanaRPCDocs;
-        return allSolanaDocs;
-      }
-      case "guides":
-        return allDeveloperGuides;
-      case "resources":
-        return allDeveloperResources;
-      case "workshops":
-        return allDeveloperWorkshops;
-    }
-  })(group);
+  const records = getRecordsForGroup(simpleGroupName, {
+    locale,
+  });
 
   if (!records) return notFound();
 
@@ -73,8 +57,6 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   }/${slug.join("/")}`
     .toLowerCase()
     .replaceAll(/\/index(.mdx?)?/gi, "");
-
-  console.log("href:", href);
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
   const flatNavItems = generateFlatNavItemListing(
@@ -130,7 +112,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   // locate full content record
   let record = (records as SupportedDocTypes[]).filter(
     (item: SupportedDocTypes) =>
-      item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
+      item.href.toLowerCase() == current?.href?.toLowerCase(),
   )?.[0];
 
   if (!record) notFound();
