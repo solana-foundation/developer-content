@@ -20,29 +20,28 @@ export function generateNavItemListing(
   records.forEach(record => {
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
-    let key = record._raw.sourceFileDir;
-
-    // strip the i18n data, when desired
-    if (!I18N_INCLUDE_IN_PATHS) {
-      key = key.replace(I18N_LOCALE_REGEX, "");
-    }
+    const { id: computedKey } = computeRecordPathAndId(
+      record._raw.sourceFileDir,
+    );
 
     // init the dir based category
-    if (!grouping[key]) grouping[key] = { items: [] } as unknown as NavItem;
+    if (!grouping[computedKey]) {
+      grouping[computedKey] = { items: [] } as unknown as NavItem;
+    }
 
     // process the index file as the root of the NavItem
     if (
       record._raw.sourceFileName == "index.md" ||
       record._raw.sourceFileName == "index.mdx"
     ) {
-      grouping[key] = Object.assign(
-        grouping[key],
+      grouping[computedKey] = Object.assign(
+        grouping[computedKey],
         // @ts-ignore
         computeNavItem(record),
       );
     } else {
       // @ts-ignore
-      grouping[key].items.push(computeNavItem(record));
+      grouping[computedKey].items.push(computeNavItem(record));
     }
   });
 
@@ -132,8 +131,24 @@ export function generateFlatNavItemListing(
  */
 export function computeDetailsFromKey(key: string) {
   return {
-    label: ucFirst(key.split("/").reverse()[0]),
-    id: key.replaceAll("/", "-"),
+    label: ucFirst(key.split("-").reverse()[0]),
+    id: computeRecordPathAndId(key).id,
+  };
+}
+
+/**
+ * Compute the path and id for a record, removing the i18n data as desired
+ */
+export function computeRecordPathAndId(path: string) {
+  path = path.toLowerCase();
+
+  if (!I18N_INCLUDE_IN_PATHS) {
+    path = path.replace(I18N_LOCALE_REGEX, "");
+  }
+
+  return {
+    path: path,
+    id: path.replaceAll("/", "-"),
   };
 }
 
@@ -192,14 +207,16 @@ export function shouldIgnoreRecord({
 export function computeNavItem(
   doc: SupportedDocTypes & Partial<SolanaDoc>,
 ): NavItem {
+  const computedPathAndId = computeRecordPathAndId(doc._raw.flattenedPath);
+
   // populate the base NavItem record from the provided `doc`
   const navItem: NavItem = {
     /** i18n locale */
     locale: doc.locale,
     /** unique identifier for each record, including any i18n info */
-    id: doc._id.toLowerCase(),
+    id: computedPathAndId.id,
     /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
-    path: doc._raw.flattenedPath.replaceAll("/", "-"),
+    path: computedPathAndId.path,
     href: doc.href,
     label: doc?.sidebarLabel || doc?.title,
     sidebarSortOrder: doc?.sidebarSortOrder,
@@ -207,15 +224,12 @@ export function computeNavItem(
     altRoutes: doc.altRoutes,
   };
 
-  // strip the i18n data, when desired
-  if (!I18N_INCLUDE_IN_PATHS) {
-    navItem.path = navItem.path!.replace(I18N_LOCALE_REGEX, "");
-    navItem.id = navItem.path!.replaceAll("/", "-");
-  }
-
   // compute a label based on the doc's file name
-  if (!navItem.label)
+  if (!navItem.label) {
+    if (navItem.label.includes("deprecated")) console.log(navItem);
+
     navItem.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
+  }
 
   /**
    * when the navItem record is only storing metadata, remove it as a linked item
