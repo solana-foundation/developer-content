@@ -1,10 +1,8 @@
 ---
 date: Mar 28, 2023
 difficulty: intro
-title: "Setup, build, and deploy a Solana program locally in Rust"
-description:
-  "This quickstart guide will demonstrate how to quickly setup, build, and
-  deploy your first Rust based Solana program to the blockchain."
+title: Setup, build, and deploy a Solana program locally in Rust
+description: This quickstart guide will demonstrate how to quickly setup, build, and deploy your first Rust based Solana program to the blockchain.
 tags:
   - quickstart
   - local
@@ -28,7 +26,7 @@ Rust is the most common programming language to write Solana programs with. This
 quickstart guide will demonstrate how to quickly setup, build, and deploy your
 first Rust based Solana program to the blockchain.
 
-> **NOTE: ** This guide uses the Solana CLI and assumes you have setup your
+> \*\*NOTE: \*\* This guide uses the Solana CLI and assumes you have setup your
 > local development environment. Checkout our
 > [local development quickstart guide](./setup-local-development.md) here to
 > quickly get setup.
@@ -89,22 +87,6 @@ Add the `solana-program` crate to your new Rust library:
 ```bash
 cargo add solana-program
 ```
-
-<Callout title="Pro Tip">
-It is highly recommended to keep your `solana-program` and other
-Solana Rust dependencies in-line with your installed version of the Solana
-CLI. For example, if you are running Solana CLI `1.17.17`, you can instead
-run:
-
-```
-cargo add solana-program@"=1.17.17"
-```
-
-This will ensure your crate uses only `1.17.17` and nothing else. If you
-experience compatibility issues with Solana dependencies, check out the
-[Solana Stack Exchange](https://solana.stackexchange.com/questions/9798/error-building-program-with-solana-program-v1-18-and-cli-v1-17/9799)
-
-</Callout>
 
 Open your `Cargo.toml` file and add these required Rust library configuration
 settings, updating your project name as appropriate:
