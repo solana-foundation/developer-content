@@ -38,14 +38,13 @@ deploying Solana programs to the blockchain.
 - how to create a Solana wallet for developing
 - how to airdrop SOL tokens for your wallet
 
-If you are very new to development in general, or have just tried EVM based blockchains or just have fiddled with Nodejs and reactJS, your machine is not yet ready to help you code on solana.
+If you are very new to development in general, or have just tried EVM based blockchains or just have fiddled with Node.js and React, your machine is not yet ready to help you code on solana.
 
 Are YOU ready though? Let’s start.
 
 Choose which operating system you’ll be using to build on Solana.
 Mainly We will cover three operating systems, Windows (with/without WSL), Linux and MacOS.
 
-This guide has seven sections
 
 1. Install Dependencies
 2. Install rust and cargo toolchain
@@ -59,14 +58,14 @@ This guide has seven sections
 
 Just because rust compiles and builds your software into binary that can run for the computer architecture we specify, we need to install some OS level dependencies on our machine. 
 
-### Let’s start with Windows 8/10/11
+### Let’s start with Windows 10/11
 
 There are two ways to get started on windows, 
 
 1.  build on windows
 2.  build on windows but with WSL
 
-WSL is windows subsystem for linux, which translates Linux system calls into Windows system calls using a compatibility layer, **for running Linux binary executables natively** and it runs Linux processes alongside the Windows kernel in a lightweight virtual machine. 
+WSL is windows subsystem for linux, which allows you to run Linux software easily on Windows using a lightweight VM that instantly starts when you need it
 
 WSL and linux will mostly have same steps to go through.
 
@@ -94,19 +93,17 @@ When you download, make sure to run the tool as an administrator (right click on
     
 2. Follow this tutorial to open VSCode in WSL 
     
-    [](https://code.visualstudio.com/docs/remote/wsl-tutorial)
+    [VSCode WSL Tutorial](https://code.visualstudio.com/docs/remote/wsl-tutorial)
     
 3. Install dependencies required, make sure you open VSCode as an administrator before switching to WSL. Then open a terminal inside VSCode and type this command to install build essential dependencies. Rust and Anchor might need these. 
     
-    ```jsx
+    ```bash
     sudo apt-get install \
         build-essential \
         pkg-config \
         libudev-dev llvm libclang-dev \
         protobuf-compiler libssl-dev
     ```
-    
-4. done with installing dependencies on WSL, Continue to install rust in the next section.
 
 ---
 
@@ -114,7 +111,7 @@ When you download, make sure to run the tool as an administrator (right click on
 
 Installing dependencies in linux is same as windows with WSL.
 
-```jsx
+```bash
 sudo apt-get install -y \
     build-essential \
     pkg-config \
@@ -131,7 +128,7 @@ Sign in with your apple Id and download.
 
 You can check if your xcode cli is installed via this command.
 
-```jsx
+```bash
 xcode-select -p
 ```
 
@@ -141,13 +138,13 @@ There are three ways to install xcode cli tools
 
 1. Install tools via terminal
     
-    ```jsx
+    ```bash
     xcode-select --install
     ```
     
 2. Download installer and install it with graphical interface
     
-    [](https://developer.apple.com/download/all/)
+    [Apple Devloper Tools](https://developer.apple.com/download/all/)
     
     ![setup—-xcode](/assets/guides/setup-local-environment/setup—-xcode.png)
     
@@ -165,7 +162,7 @@ Congrats, we have installed system dependencies and build essentials required to
 
 ## 2. Install rust
 
-Rust is a multi-paradigm, general-purpose programming language that emphasizes performance, type safety, and concurrency. Or let’s just say its a coool language in boomer world.
+Rust is a multi-paradigm, general-purpose programming language that emphasizes performance, type safety, and concurrency.
 
 rustc (compiler for rust), cargo (package manager for rust) and rustup (rust version installer & manager for stable and beta versions) all three will setup at once.
 
@@ -184,13 +181,13 @@ Make sure to restart your computer after installation just in case to load all t
 one single spell will set you up.
 It downloads the script to setup in your computer and runs the script to install binaries.
 
-```jsx
+```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
 Now either refresh your terminal, or just close and open a new one.
 
-```jsx
+```bash
 source ~/.bashrc
 ```
 
@@ -204,20 +201,21 @@ To interact with a Solana cluster (bunch of big state synced servers), we will u
 
 1. Open terminal as administrator, copy and paste this command in your cmd, this downloads solana toolchain into a temporary location on C drive. 
     
-    ```jsx
+    ```bash
     cmd /c "curl https://release.solana.com/v1.18.1/solana-install-init-x86_64-pc-windows-msvc.exe --output C:\solana-install-tmp\solana-install-init.exe --create-dirs"
     ```
     
 2. now we can finally install the solana cli
     
-    ```jsx
+    ```bash
     C:\solana-install-tmp\solana-install-init.exe v1.18.1
     ```
     
 3. Make sure you match the version numbers to match with the target you are building on, here we used v1.18.1 which builds for latest testnet release on GitHub at the time of writing this blog. You can check other [version and releases on GitHub](https://github.com/solana-labs/solana/releases/tag/v1.17.18).
+
 4. Restart your terminal and Check the solana version 
     
-    ```jsx
+    ```bash
     solana --version
     ```
     
@@ -226,14 +224,14 @@ To interact with a Solana cluster (bunch of big state synced servers), we will u
 
 1.  Install Solana
     
-    ```jsx
+    ```bash
     sh -c "$(curl -sSfL https://release.solana.com/v1.18.1/install)"
     ```
     
 2. You can replace `v1.18.1` with the release tag matching the software version of your desired release, or use one of the three symbolic channel names: `stable`, `beta`, or `edge`.
 3. Depending on your system, the end of the installer messaging may prompt you to updatge PATH environment. 
     
-    ```jsx
+    ```bash
     Please update your PATH environment variable to include the solana programs:
     ```
     
@@ -243,14 +241,14 @@ To interact with a Solana cluster (bunch of big state synced servers), we will u
     
 4. To check if your installation is done, check the version.
     
-    ```jsx
+    ```bash
     solana --version
     ```
     
 5. You can check more versions and releases according to the target 
-[https://github.com/solana-labs/solana/releases](https://github.com/solana-labs/solana/releases)
+[solana/releases](https://github.com/solana-labs/solana/releases)
     
-    ```jsx
+    ```bash
     solana-install update
     ```
     
@@ -265,13 +263,13 @@ As anchor is Installed via Cargo CLI, for all the operating systems, this step w
 
 Install anchor
 
-```jsx
+```bash
 cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
 ```
 
 Install latest version of anchor
 
-```jsx
+```bash
 avm install latest
 avm use latest
 ```
@@ -279,7 +277,7 @@ avm use latest
 Now close and reopen new terminal
 Verify if the installation worked for you and anchor is installed correctly.
 
-```jsx
+```bash
 anchor --version
 ```
 
@@ -287,17 +285,17 @@ anchor --version
 
 ## 5. Setup a localhost blockchain cluster
 
-The Solana CLI comes with the [test validator](https://docs.solana.com/developing/test-validator) built in.
+The Solana CLI comes with the
+[test validator](https://docs.solana.com/developing/test-validator) built in.
 This command line tool will allow you to run a full blockchain cluster on your machine.
 
 ```bash
 solana-test-validator
 ```
 
-> PRO TIP: Run the Solana test validator in a new/separate terminal window
-that will remain open. The command line program must remain running for your
-localhost cluster to remain online and ready for action.
-> 
+> **PRO TIP:** Run the Solana test validator in a new/separate terminal window
+> that will remain open. The command line program must remain running for your
+> localhost cluster to remain online and ready for action.
 
 Configure your Solana CLI to use your localhost validator for all your future
 terminal commands:
@@ -327,10 +325,9 @@ By default, the `solana-keygen` command will create a new file system wallet
 located at `~/.config/solana/id.json`. You can manually specify the output file
 location using the `--outfile /path` option.
 
-> NOTE: If you already have a file system wallet saved at the default
-location, this command will NOT override it (unless you explicitly force
-override using the --force flag).
-> 
+> **NOTE:** If you already have a file system wallet saved at the default
+> location, this command will **NOT** override it (unless you explicitly force
+> override using the `--force` flag).
 
 ### Set your new wallet as default
 
@@ -350,11 +347,9 @@ SOL tokens to it:
 solana airdrop 2
 ```
 
-> NOTE: The solana airdrop command has a limit of how many SOL tokens can
-be requested per airdrop for each cluster (localhost, testnet, or devnet).
-If your airdrop transaction fails, lower your airdrop request quantity and try
-again.
-> 
+> **NOTE:** `The solana airdrop` command has a limit of how many SOL tokens can
+> be requested _per airdrop_ for each cluster (localhost, testnet, or devnet).
+> If your airdrop transaction fails, lower your airdrop request quantity and try again.
 
 You can check your current wallet's SOL balance any time:
 
@@ -366,5 +361,5 @@ solana balance
 
 See the links below to learn more about writing Rust based Solana programs:
 
-- [Create and deploy a Solana Rust program](notion://www.notion.so/solanafoundation/local-rust-hello-world.md)
+- [Create and deploy a Solana Rust program](./local-rust-hello-world.md)
 - [Overview of writing Solana programs](https://docs.solana.com/developing/on-chain-programs/overview)
