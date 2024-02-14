@@ -28,10 +28,12 @@ Rust is the most common programming language to write Solana programs with. This
 quickstart guide will demonstrate how to quickly setup, build, and deploy your
 first Rust based Solana program to the blockchain.
 
-> **NOTE: ** This guide uses the Solana CLI and assumes you have setup your
-> local development environment. Checkout our
-> [local development quickstart guide](./setup-local-development.md) here to
-> quickly get setup.
+<Callout type="caution" title="Do you have the Solana CLI installed?">
+This guide uses the Solana CLI and assumes you have setup your
+local development environment. Checkout our
+[local development quickstart guide](./setup-local-development.md) here to
+quickly get setup.
+</Callout>
 
 ## What you will learn
 
@@ -60,9 +62,11 @@ machine.
 solana-test-validator
 ```
 
-> **PRO TIP:** Run the Solana test validator in a new/separate terminal window
-> that will remain open. This command line program must remain running for your
-> localhost validator to remain online and ready for action.
+<Callout title="PRO TIP">
+Run the Solana test validator in a new/separate terminal window
+that will remain open. This command line program must remain running for your
+localhost validator to remain online and ready for action.
+</Callout>
 
 Configure your Solana CLI to use your localhost validator for all your future
 terminal commands and Solana program deployment:
@@ -175,11 +179,13 @@ the root of your project (i.e. the directory with your `Cargo.toml` file):
 cargo build-bpf
 ```
 
-> **NOTE:** After each time you build your Solana program, the above command
-> will output the build path of your compiled program's `.so` file and the
-> default keyfile that will be used for the program's address. `cargo build-bpf`
-> installs the toolchain from the currently installed solana CLI tools. You may
-> need to upgrade those tools if you encounter any version incompatibilities.
+<Callout>
+After each time you build your Solana program, the above command
+will output the build path of your compiled program's `.so` file and the
+default keyfile that will be used for the program's address. `cargo build-bpf`
+installs the toolchain from the currently installed solana CLI tools. You may
+need to upgrade those tools if you encounter any version incompatibilities.
+</Callout>
 
 ## Deploy your Solana program
 
@@ -204,8 +210,10 @@ Program Id: EFH95fWg49vkFNbAdw9vy75tM7sWZ2hQbTTUmuACGip3
 You have successfully setup, built, and deployed a Solana program using the Rust
 language.
 
-> PS: Check your Solana wallet's balance again after you deployed. See how much
-> SOL it cost to deploy your simple program?
+<Callout type="success" title="Check your wallet balance!">
+Check your Solana wallet's balance again after you deployed. See how much
+SOL it cost to deploy your simple program?
+</Callout>
 
 ## Next steps
 
