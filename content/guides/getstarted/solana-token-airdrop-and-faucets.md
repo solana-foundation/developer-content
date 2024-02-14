@@ -48,15 +48,24 @@ documentation inside web3.js.
 
 _Available for Devnet_
 
-1. [faucet.solana.com](https://faucet.solana.com) - A web faucet hosted by Solana Foundation that has lower rate limits.
-1. [solfaucet](https://solfaucet.com/)
-1. [quicknode](https://faucet.quicknode.com/solana/devnet)
+1. [faucet.solana.com](https://faucet.solana.com) - A public web faucet hosted
+   by the Solana Foundation
+2. [SolFaucet.com](https://solfaucet.com/) - Web UI for airdrops from the public
+   RPC endpoints
+3. [QuickNode](https://faucet.quicknode.com/solana/devnet) - A web faucet
+   operated by QuickNode
 
 _Available for Testnet_
 
-1. [solfaucet](https://solfaucet.com/)
-1. [quicknode](https://faucet.quicknode.com/solana/testnet)
-1. [testnetfaucet](https://testnetfaucet.org)
+1. [faucet.solana.com](https://faucet.solana.com) - A public web faucet hosted
+   by the Solana Foundation
+2. [SolFaucet.com](https://solfaucet.com/) - Web UI for airdrops from the public
+   RPC endpoints
+3. [QuickNode](https://faucet.quicknode.com/solana/testnet) - A web faucet
+   operated by QuickNode
+4. [TestnetFaucet.org](https://testnetfaucet.org) - A web faucet with a rate
+   limit separate than the public RPC endpoints, operated by
+   [@Ferric](https://twitter.com/ferric)
 
 ## 3. RPC Provider Faucets
 
