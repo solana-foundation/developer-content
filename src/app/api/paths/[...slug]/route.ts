@@ -55,17 +55,17 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     listing.push(navItem);
 
     // handle adding each of the alternative routes into the path listing
-    if (!!record?.altRoutes?.length) {
-      record.altRoutes.forEach(route => {
-        if (!!route?.trim()) {
-          listing.push({
-            ...navItem,
-            href: route.trim(),
-            altRoutes: undefined,
-          });
-        }
-      });
-    }
+    // if (!!record?.altRoutes?.length) {
+    //   record.altRoutes.forEach(route => {
+    //     if (!!route?.trim()) {
+    //       listing.push({
+    //         ...navItem,
+    //         href: route.trim(),
+    //         altRoutes: undefined,
+    //       });
+    //     }
+    //   });
+    // }
   });
 
   // finally, return the json formatted listing
