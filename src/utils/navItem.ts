@@ -287,7 +287,7 @@ export function computeDetailsFromSlug(slug: string[]) {
   } else if (group == "rpc" || group == "docs,rpc") {
     href = `/docs/rpc/${href}`;
   } else {
-    href = `/developers/${href}`;
+    href = `/developers/${group}/${href}`;
   }
 
   // remove all trailing slashes
