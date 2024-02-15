@@ -36,7 +36,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   if (!records) return notFound();
 
   // init the listing response
-  const listing: Array<NavItem> = [];
+  let listing: Array<NavItem> = [];
 
   /**
    * todo: assorted things
@@ -67,6 +67,13 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     //   });
     // }
   });
+
+  // remove the /docs/rpc from the `docs` grouping since it should be handled by the `rpc` grouping
+  if (group == "docs") {
+    listing = listing.filter(
+      item => item.href != "/docs/rpc" && item.href != "/docs/rpc/",
+    );
+  }
 
   // finally, return the json formatted listing
   return Response.json(listing);
