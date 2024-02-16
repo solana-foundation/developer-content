@@ -21,7 +21,8 @@ create Mint Accounts that execute custom instruction logic on every token
 transfer.
 
 This unlocks many new use cases for token transfers, such as:
-- Enforcing NFT royalties 
+
+- Enforcing NFT royalties
 - Black or white list wallets that can receive tokens
 - Implementing custom fees on token transfers
 - Creating custom token transfer events

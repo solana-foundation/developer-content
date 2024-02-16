@@ -130,25 +130,30 @@ Various Discord communities have setup devnet SOL Faucets as BOTs.
 
 ## 6. Reuse devnet SOL
 
-The most sustainable way to save SOL is to reuse it. With the Solana CLI you can for examples show and close all previous buffer accounts like this: 
+The most sustainable way to save SOL is to reuse it. With the Solana CLI you can
+for examples show and close all previous buffer accounts like this:
 
 ```bash
 solana program show --buffers
 ```
 
-These are created when you deploy a program. All the programs data is transferred into this account during the deploy and when its done the data of your program is replaced with the new data. Sometimes these are not closed correctly. You can close them like this to get the sol in them back:
+These are created when you deploy a program. All the programs data is
+transferred into this account during the deploy and when its done the data of
+your program is replaced with the new data. Sometimes these are not closed
+correctly. You can close them like this to get the sol in them back:
 
 ```bash
 solana program close <buffer account>
 ```
 
-You can also the command 
+You can also the command
 
 ```bash
-solana program show --programs 
+solana program show --programs
 ```
 
-to show all programs you deployed already. You can then close them with the following command to close them and retrieve the sol you used to deploy them: 
+to show all programs you deployed already. You can then close them with the
+following command to close them and retrieve the sol you used to deploy them:
 
 ```bash
 solana program close <program id>
@@ -158,10 +163,11 @@ You can then use that sol to deploy new programs.
 
 <Callout type="info">
 
-Note though that you will not able to use the same program id again once you closed a program. 
-So make sure are closing the right program and that you will not need that id anymore. 
+Note though that you will not able to use the same program id again once you
+closed a program. So make sure are closing the right program and that you will
+not need that id anymore.
 
-If you get rate limited you can add -u "urlToYourRpc" to the command to use a different rpc.
+If you get rate limited you can add -u "urlToYourRpc" to the command to use a
+different rpc.
 
 </Callout>
-
