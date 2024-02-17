@@ -86,16 +86,9 @@ WSL and linux will mostly have same steps to go through.
     before switching to WSL. Then open a terminal inside VSCode and type this
     command to install build essential dependencies. Rust and Anchor might need
     these.
-        ```bash
-        sudo apt-get install \
-            build-essential \
-            pkg-config \
-            libudev-dev llvm libclang-dev \
-            protobuf-compiler libssl-dev
-        ```
-    > WSL can be a little slow to work with solana.
-    > Try it out, if you feel the same, dualboot linux,
-    > Or use https://beta.solpg.io
+    `bash     sudo apt-get install \         build-essential \         pkg-config \         libudev-dev llvm libclang-dev \         protobuf-compiler libssl-dev     `
+    > WSL can be a little slow to work with solana. Try it out, if you feel the
+    > same, dualboot linux, Or use https://beta.solpg.io
 
 ---
 
@@ -143,7 +136,7 @@ There are three ways to install xcode cli tools
 3.  You might also like to install homebrew to install packages like linux
     people do using apt-get. Optional way to install homebrew and Xcode build
     utilities is to follow the below blog.
-        [Xcode Command Line Tools with Homebrew · Mac Install Guide](https://mac.install.guide/commandlinetools/3)
+    [Xcode Command Line Tools with Homebrew · Mac Install Guide](https://mac.install.guide/commandlinetools/3)
 
 ---
 
@@ -219,9 +212,7 @@ provides the most direct, flexible, and secure access to your Solana accounts
 
 5.  You can check more versions and releases according to the target
     [solana/releases](https://github.com/solana-labs/solana/releases)
-        ```bash
-        solana-install update
-        ```
+    `bash     solana-install update     `
 
 ---
 
