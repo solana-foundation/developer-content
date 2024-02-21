@@ -1,8 +1,8 @@
 ---
 date: Feb 21, 2024
 difficulty: intro
-title: "Tokens Explained"
-description: "Minimal Solana token program skeleton: entry point, parameters for accounts, and instruction data."
+title: 'Tokens Explained'
+description: 'Minimal Solana token program skeleton: entry point, parameters for accounts, and instruction data.'
 tags:
   - token
 keywords:
