@@ -21,7 +21,6 @@ altRoutes:
 
 In Solana, EVERYTHING is an Account, making it crucial to understand how accounts function before delving into the token system.
 
-![image](https://github.com/Ayushjhax/developer-content/assets/116433617/3e30c854-0c57-4174-b5cc-010a976a84a3)
 
 ### Analogy: Language Barrier
 
@@ -40,8 +39,6 @@ To better grasp the concept, let's use an analogy. Imagine you speak English (li
 
 ## Exploring Different Types of Accounts in Solana
 
-![image](https://github.com/Ayushjhax/developer-content/assets/116433617/cf253051-a943-43d1-a56e-37e8adc39f46)
-
 Now, let's dive into the different types of accounts in Solana, each playing a crucial role in the ecosystem.
 
 ### Wallet Account
@@ -55,8 +52,6 @@ These accounts are associated with users or wallets and hold vital information a
 ### Mint Account
 
 The mint account stores data about the token itself, including properties such as mint authority, supply, decimals, and freeze authority. Think of these as the instruction manuals for each token. They tell you how many tokens are out there, who's allowed to make more, that sort of thing.
-
-![image](https://github.com/Ayushjhax/developer-content/assets/116433617/e325ff8a-c020-4ca6-91ad-dda7ea83a32b)
 
 - **Mint authority:** The designation of your own or some other program using which the mint tokens can be signed.
 - **Supply:** Holds information on how many tokens have been issued overall.
@@ -75,7 +70,7 @@ These accounts hold metadata of mint accounts, storing information about the tok
 - DESCRIPTION
 - IMAGE
 
-<img width="228" alt="image" src="https://github.com/Ayushjhax/developer-content/assets/116433617/b6a6ac3f-9b4d-4119-b7c4-763bb9799c60">
+
 
 ## Deep Dive into Tokens
 
@@ -83,16 +78,12 @@ These accounts hold metadata of mint accounts, storing information about the tok
 
 Tokens in Solana are created using the Token Program, which acts as the Token Factory. This program allows users to mint, transfer, and burn tokens between accounts, functioning as a factory of accounts that enable token functionalities.
 
-![image](https://github.com/Ayushjhax/developer-content/assets/116433617/ece10ac7-028d-4cb1-a737-54cdf6fc6c28)
-
 #### The Solana Token Machine
 
 Solana has a special tool called the Token Program that handles all the token stuff. Think of it like a factory:
 - **Minting:** This is like printing brand-new tokens based on those instruction manuals (Mint Accounts).
 - **Transferring:** Like moving tokens from your RadCoin box to your friend's.
 - **Burning:** Kind of like tossing tokens in the shredder – they're gone forever!
-
-![image](https://github.com/Ayushjhax/developer-content/assets/116433617/012918dc-cc23-4ca9-b6c5-7c9c2052e4aa)
 
 ### Analogy: Token Factory
 
