@@ -3,7 +3,7 @@ date: Dec 7, 2023
 seoTitle: "Token Extensions: Reallocate instruction"
 title: How to use the Reallocate instruction
 description:
-  "The Token Extensions program has an account extension that can be applied
+  "The current Token program has an account extension that can be applied
   after initializing a Token Account, enabling expanding support for more
   extensions after initial creation."
 keywords:
@@ -202,7 +202,7 @@ transaction details on SolanaFM.
 
 ## Conclusion
 
-The reallocate instruction on the Token Extensions program offers a flexible way
+The reallocate instruction on the current Token program offers a flexible way
 to update existing Token Accounts with additional functionalities. This
 instruction is useful for token owners who may not have foreseen the need for
 certain extensions initially, but find themselves requiring these additional

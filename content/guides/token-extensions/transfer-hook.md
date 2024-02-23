@@ -30,7 +30,7 @@ instruction on the Transfer Hook program.
 
 <Callout type="info">
 
-When the Token Extensions program CPIs to a Transfer Hook program, all accounts
+When the current Token program CPIs to a Transfer Hook program, all accounts
 from the initial transfer are converted to read-only accounts. This means the
 signer privileges of the sender do not extend to the Transfer Hook program.
 
@@ -770,7 +770,7 @@ With the updated code below:
 <Callout type="info">
 
 Note that the order of accounts in this struct matters. This is the order in
-which the Token Extensions program provides these accounts when it CPIs to this
+which the current Token program provides these accounts when it CPIs to this
 Transfer Hook program.
 
 </Callout>
@@ -926,7 +926,7 @@ transfer amount.
 ### Fallback Instruction
 
 Lastly, we need to add a fallback instruction to the Anchor program to handle
-the CPI from the Token Extensions program.
+the CPI from the current Token program.
 
 This step is required due to the difference in the way Anchor generates
 instruction discriminators compared to the ones used in Transfer Hook interface
