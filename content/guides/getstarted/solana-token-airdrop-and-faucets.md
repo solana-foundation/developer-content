@@ -71,7 +71,7 @@ _Available for Testnet_
 
 _Available for Devnet_
 
-RPC Providers can opt in to distributing Devnet SOL via their Devnet Validators.
+RPC Providers can opt in to distributing devnet SOL via their Devnet Validators.
 
 _\*If you are an RPC Provider and want to distribute SOL please get in touch
 here: [Form](https://c852ena8x5c.typeform.com/to/cUj1iRhS)_
@@ -80,6 +80,7 @@ Currently Supported:
 
 1. [Helius](https://www.helius.dev/)
 2. [QuickNode](https://faucet.quicknode.com/solana/devnet)
+3. [Triton](https://triton.one/)
 
 ### Using the Solana CLI
 
@@ -104,7 +105,7 @@ connection.requestAirdrop();
 
 _Available for Devnet_
 
-This is a proof of work Faucet where Devnet SOL can be distributed to you thanks
+This is a proof of work Faucet where devnet SOL can be distributed to you thanks
 to your computing power.
 
 **Install the Devnet POW Crate:**
@@ -120,9 +121,53 @@ maintained by Ellipsis Labs_
 
 ## 5. Discord Faucets
 
-Various Discord communities have setup Devnet SOL Faucets as BOTs.
+Various Discord communities have setup devnet SOL Faucets as BOTs.
 
 | Community      | Usage                                                       | Link                                         |
 | -------------- | ----------------------------------------------------------- | -------------------------------------------- |
 | The 76 Devs    | Run `!gibsol` in the BOT commands channel.                  | [Join Server](https://discord.gg/RrChGyDeRv) |
 | The LamportDAO | Run `/drop <address> <amount>` in the BOT commands channel. | [Join Server](https://discord.gg/JBVrJgtFkq) |
+
+## 6. Reuse devnet SOL
+
+The most sustainable way to save SOL is to reuse it. With the Solana CLI you can
+for examples show and close all previous buffer accounts like this:
+
+```bash
+solana program show --buffers
+```
+
+These are created when you deploy a program. All the programs data is
+transferred into this account during the deploy and when its done the data of
+your program is replaced with the new data. Sometimes these are not closed
+correctly. You can close them like this to get the sol in them back:
+
+```bash
+solana program close <buffer account>
+```
+
+You can also the command
+
+```bash
+solana program show --programs
+```
+
+to show all programs you deployed already. You can then close them with the
+following command to close them and retrieve the sol you used to deploy them:
+
+```bash
+solana program close <program id>
+```
+
+You can then use that sol to deploy new programs.
+
+<Callout type="info">
+
+Note though that you will not able to use the same program id again once you
+closed a program. So make sure are closing the right program and that you will
+not need that id anymore.
+
+If you get rate limited you can add -u "urlToYourRpc" to the command to use a
+different rpc.
+
+</Callout>

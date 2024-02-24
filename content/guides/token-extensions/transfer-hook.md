@@ -20,6 +20,15 @@ The Transfer Hook extension and Transfer Hook Interface introduce the ability to
 create Mint Accounts that execute custom instruction logic on every token
 transfer.
 
+This unlocks many new use cases for token transfers, such as:
+
+- Enforcing NFT royalties
+- Black or white list wallets that can receive tokens
+- Implementing custom fees on token transfers
+- Creating custom token transfer events
+- Track statistics over your token transfers
+- And many more
+
 To achieve this, developers must build a program that implements the
 [Transfer Hook Interface](https://github.com/solana-labs/solana-program-library/tree/master/token/transfer-hook/interface)
 and initialize a Mint Account with the Transfer Hook extension enabled.
