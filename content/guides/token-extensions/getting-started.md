@@ -21,13 +21,15 @@ tags:
 Token extensions are the next generation of the Solana Program Library standard.
 Token extensions introduce a new set of ways to extend the normal token
 functionality. The original Token program brought the basic capabilities of
-minting, transferring and freezing tokens. The Token Extensions program includes 
-the same features, but come with additional features such as confidential transfers, 
-custom transfer logic, extended metadata, and much more.
+minting, transferring and freezing tokens. The Token Extensions program includes
+the same features, but come with additional features such as confidential
+transfers, custom transfer logic, extended metadata, and much more.
 
-The [Token Extensions program](https://spl.solana.com/token-2022) has the programID
-`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` and is a superset of the original
-functionality provided by the [Token Program](https://spl.solana.com/token) at `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`.
+The [Token Extensions program](https://spl.solana.com/token-2022) has the
+programID `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` and is a superset of the
+original functionality provided by the
+[Token Program](https://spl.solana.com/token) at
+`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`.
 
 ## How do I create a token with token extensions?
 
