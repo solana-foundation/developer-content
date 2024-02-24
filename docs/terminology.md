@@ -269,6 +269,13 @@ Learn more about the
 [message formatting inside of transactions](/docs/core/transactions.md#message-format)
 here.
 
+## Nakamoto coefficient
+
+A measure of decentralization, the Nakamoto Coefficient is the smallest number
+of independent entities that can act collectively to shut down a blockchain. The
+term was coined by Balaji S. Srinivasan and Leland Lee in
+[Quantifying Decentralization](https://news.earn.com/quantifying-decentralization-e39db233c28e).
+
 ## native token
 
 The [token](#token) used to track work done by [nodes](#node) in a cluster.
