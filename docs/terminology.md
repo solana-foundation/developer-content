@@ -198,7 +198,7 @@ See [cross-program invocation](#cross-program-invocation-cpi).
 A call to invoke a specific [instruction-handler](#instruction-handler) in a
 [program](#program). An instruction also specifies which accounts it wants to
 read or modify, and additional data that serves as auxiliary input to the
-[instruction-handler](#instruction-handler). A [client](#client) must include at
+[instruction handler](#instruction-handler). A [client](#client) must include at
 least one instruction in a [transaction](#transaction), and all instructions
 must complete for the transaction to be considered successful.
 
