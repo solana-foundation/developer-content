@@ -1,5 +1,5 @@
 ---
-date: Dec 06, 2023
+date: Feb 26, 2024
 seoTitle: "Token Extensions Guide: Create tokens with Metadata"
 title: Create tokens with metadata on Solana using token extensions with Solana CLI
 description:
