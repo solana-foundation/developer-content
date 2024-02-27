@@ -5,8 +5,7 @@ featured: true
 featuredPriority: 1
 title: "Build on Solana From Rust Basics to Advanced Development"
 seoTitle: "Building and Deploying a Solana Smart Contract with Rust and Anchor"
-description:
-  "Dive deep into blockchain development with our comprehensive guide on building and deploying a Solana smart contract using Rust and Anchor, From basic Rust"
+description: "Dive deep into blockchain development with our comprehensive guide on building and deploying a Solana smart contract using Rust and Anchor, From basic Rust"
 tags:
   - Solana Playground
   - Anchor
@@ -32,11 +31,10 @@ This guide leverages [Solana Playground](https://beta.solpg.io), a powerful brow
 ## What you will learn
 
 - rust basic syntax
-- rust functions 
+- rust functions
 - rust structs and implementations
 - rust ownership and borrowing
 - rust references without ownership
-
 
 ## Introduction
 
@@ -149,7 +147,7 @@ println!("Heroes: {:?}", hero_names);
 
 Arrays provide safety and performance by storing elements contiguously in memory. However, their size must be known at compile time, and all elements must be of the same type.
 
-**Slicing Arrays**
+### Slicing Arrays
 
 Slicing allows us to reference a contiguous sequence of elements in an array, effectively creating a "view" into the array without copying its contents:
 
@@ -195,7 +193,7 @@ pub fn scoping_ownership() {
 
 Here, `s` is only valid within the braces that define its scope. Once the scope ends, `s` is no longer accessible, illustrating how Rust automatically cleans up and frees resources.
 
-**String Ownership and Mutation**
+### String Ownership and Mutation
 
 Ownership rules in Rust prevent data races at compile time and manage heap data efficiently. The `String` type, unlike string literals, is mutable and stored on the heap.
 
@@ -209,7 +207,7 @@ pub fn string_ownership() {
 
 Mutating a `String` by appending "World" demonstrates ownership in action. When a variable like `my_str` goes out of scope, Rust automatically calls `drop` to free the heap memory.
 
-**Copy Semantics in Rust**
+### Copy Semantics in Rust
 
 Rust differentiates between types that are `Copy` and those that are not, influencing how variables interact with ownership rules.
 
@@ -222,7 +220,7 @@ pub fn int_binding_varibles_ownership() {
 
 Primitive types like integers implement the `Copy` trait, allowing for variable bindings to create a full copy of the data rather than transferring ownership.
 
-**Moving and Cloning**
+### Moving and Cloning
 
 For types that do not implement the `Copy` trait, such as `String`, Rust enforces move semantics to ensure safe memory management.
 
@@ -253,7 +251,7 @@ pub fn ownership_and_functions() {
 
 Passing a `String` to a function transfers ownership, rendering it inaccessible post-call unless returned. Primitive types, however, are copied, not moved.
 
-**Mutable References**
+### Mutable References
 
 Rust allows mutable references to change data without taking ownership, governed by strict rules to ensure safety.
 
@@ -295,9 +293,7 @@ In this code, `find_len` takes a reference to a `String` (`&String`) instead of 
 While references allow read-only access to data, Rust also provides a way to modify data through mutable references. This is known as borrowing. However, Rust enforces strict rules to ensure safety and concurrency:
 
 1. You can have either one mutable reference or any number of immutable references to a particular piece of data in a particular scope, but not both.
-    
 2. References must always be valid.
-    
 
 #### Modifying a String: Mutable References
 
@@ -411,10 +407,8 @@ impl Rectangle {
 
 In this implementation:
 
-* The `area` method calculates the area of the rectangle. It takes an immutable reference to `self`, indicating that it borrows the `Rectangle` instance without taking ownership. This allows us to read the `Rectangle`'s data without consuming it.
-    
-* The `change_len` method modifies the rectangle's length. It takes a mutable reference to `self`, allowing it to change the data within the struct. This method demonstrates how methods can alter the instance they belong to.
-    
+- The `area` method calculates the area of the rectangle. It takes an immutable reference to `self`, indicating that it borrows the `Rectangle` instance without taking ownership. This allows us to read the `Rectangle`'s data without consuming it.
+- The `change_len` method modifies the rectangle's length. It takes a mutable reference to `self`, allowing it to change the data within the struct. This method demonstrates how methods can alter the instance they belong to.
 
 #### Using Struct Methods
 
@@ -441,4 +435,3 @@ In the `create_rec` function, we create an instance of `Rectangle`, calculate it
 
 - [Introduction to anchor](/content/guides/buildadapp/introduction-to-anchor.md)
 - [Deploy and test the program](/content/guides/buildadapp/deploy-and-testing-the-anchor-program.md)
-
