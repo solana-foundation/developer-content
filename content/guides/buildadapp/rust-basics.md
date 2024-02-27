@@ -32,9 +32,11 @@ Embark on a journey to Solana development with a twist—no local environment se
 ## What you will learn
 
 - rust basic syntax
-- rust ownership and borrowing
 - rust functions 
 - rust structs and implementations
+- rust ownership and borrowing
+- rust references without ownership
+
 
 ## Introduction
 
