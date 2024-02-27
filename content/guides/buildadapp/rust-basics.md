@@ -436,3 +436,12 @@ pub fn create_rec() {
 ```
 
 In the `create_rec` function, we create an instance of `Rectangle`, calculate its area using the `area` method, and then modify its length with the `change_len` method. The use of mutable and immutable references (`&mut self` and `&self`) in method signatures controls how methods interact with the struct's data, ensuring safe access and modification patterns.
+
+## Next steps
+
+See the links below to learn more about writing Solana programs, and setting up
+your local development environment:
+
+- [Introduction to anchor](/content/guides/buildadapp/setup-local-development.md)
+- [Deploy and testing the program](/docs/programs/index.md)
+
