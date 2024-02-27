@@ -476,6 +476,20 @@ The Nth [tick](#tick) in the [ledger](#ledger).
 
 A digitally transferable asset.
 
+## Token Extensions Program
+
+The [Token Extensions Program](https://spl.solana.com/token-2022) has the
+program ID `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` and includes all the
+same features as the [Token Program](#token-program), but comes with extensions
+such as confidential transfers, custom transfer logic, extended metadata, and
+much more.
+
+## Token Program
+
+The [Token Program](https://spl.solana.com/token) has the program ID
+`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`, and provides the basic
+capabilities of transferring, freezing, and minting tokens.
+
 ## tps
 
 [Transactions](#transaction) per second.
