@@ -440,5 +440,5 @@ In the `create_rec` function, we create an instance of `Rectangle`, calculate it
 ## Next steps
 
 - [Introduction to anchor](/content/guides/buildadapp/introduction-to-anchor.md)
-- [Deploy and testing the program](/content/guides/buildadapp/deploy-and-testing-the-anchor-program.md)
+- [Deploy and test the program](/content/guides/buildadapp/deploy-and-testing-the-anchor-program.md)
 
