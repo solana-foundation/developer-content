@@ -27,7 +27,7 @@ altRoutes:
   - /developers/tutorials/anchor-browser-development
 ---
 
-Embark on a journey to Solana development with a twist—no local environment setup needed. This guide leverages [Solana Playground](https://beta.solpg.io), a powerful browser-based IDE, to teach you how to build, test, and deploy a Solana smart contract. From creating heroic through CRUD operations, learn everything in the comfort of your browser. No downloads required.
+This guide leverages [Solana Playground](https://beta.solpg.io), a powerful browser-based IDE, to teach you how to build, test, and deploy a Solana smart contract. From creating heroic through CRUD operations, learn everything in the comfort of your browser. No downloads required.
 
 ## What you will learn
 
