@@ -442,6 +442,6 @@ In the `create_rec` function, we create an instance of `Rectangle`, calculate it
 See the links below to learn more about writing Solana programs, and setting up
 your local development environment:
 
-- [Introduction to anchor](/content/guides/buildadapp/setup-local-development.md)
-- [Deploy and testing the program](/docs/programs/index.md)
+- [Introduction to anchor](/content/guides/buildadapp/introduction-to-anchor.md)
+- [Deploy and testing the program](/content/guides/buildadapp/deploy-and-test-the-anchor-program.md)
 
