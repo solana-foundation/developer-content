@@ -464,4 +464,6 @@ pub enum ErrorCode {
 // 4. Deploying
 ```
 
-We've covered the most important pieces of the program, now we can compile and deploy and test the program.
+## Next steps
+
+- [Deploy and test the program](/content/guides/buildadapp/deploy-and-testing-the-anchor-program.md)
