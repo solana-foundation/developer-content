@@ -1,3 +1,31 @@
+---
+date: 2024-02-27
+difficulty: intermediate
+featured: true
+featuredPriority: 1
+title: "Building a program using Anchor"
+description:
+  "This guide covers the most important anchor topics used while building the heroes program."
+tags:
+  - Solana Playground
+  - Anchor
+  - Rust
+  - Smart Contract
+  - Blockchain Development
+keywords:
+  - Solana Playground
+  - Anchor framework
+  - Smart contracts
+  - Rust programming
+  - Blockchain tutorial
+  - Solana development
+  - Web3 development
+  - Decentralized applications
+altRoutes:
+  - /developers/guides/creating-heroes-on-solana
+  - /developers/tutorials/anchor-browser-development
+---
+
 ### Introduction to Anchor
 
 Anchor abstracts away the complexities of directly interacting with the Solana program library (SPL), offering developers a cleaner and more intuitive way to build decentralized applications (dApps). It leverages Rust's type safety and the expressiveness of its syntax to ensure that smart contracts are both secure and easy to write.
