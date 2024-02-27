@@ -1,3 +1,31 @@
+---
+date: 2024-02-27
+difficulty: intermediate
+featured: true
+featuredPriority: 1
+title: "Deploy and test the Anchor program"
+description:
+  "This guide demonstrates how we build, deploy and eventually write some testcases to the program "
+tags:
+  - Solana Playground
+  - Anchor
+  - Rust
+  - Smart Contract
+  - Blockchain Development
+keywords:
+  - Solana Playground
+  - Anchor framework
+  - Smart contracts
+  - Rust programming
+  - Blockchain tutorial
+  - Solana development
+  - Web3 development
+  - Decentralized applications
+altRoutes:
+  - /developers/guides/creating-heroes-on-solana
+  - /developers/tutorials/anchor-browser-development
+---
+
 ### Deploying the program
 
 You need to have some test SOL to facilitate the deployment of the program. They’re several ways you can get test SOL in your account, but my most recommended way is to use the [official Solana faucet](https://faucet.solana.com/). Paste in your address and airdrop some test SOL.
