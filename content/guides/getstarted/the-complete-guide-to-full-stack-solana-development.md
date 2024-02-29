@@ -21,8 +21,7 @@ keywords:
   - Anchor framework
   - Rust programming
   - Phantom wallet integration
-Origin article:
-  - https://medium.com/@Anatolii_Zhadan/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-18a1e1bdbb3b
+image: https://cdn-images-1.medium.com/max/800/1*c2eT3HzoEjs1YnEox9fvhg.png
 ---
 
 ### The Complete Guide to Full Stack Solana Development with React, Anchor, Rust, and Phantom
@@ -65,8 +64,6 @@ If you are already familiar with Solana and know how it works, you can skip the 
    - [Deploying applications to the devnet and mainnet](#deploying-applications-to-the-devnet-and-mainnet)
 
 
----
-
 ### Introduction
 
 #### Brief overview of Solana's blockchain technology and its benefits
@@ -77,7 +74,6 @@ Transaction costs on Solana are surprisingly low, with an average fee of around 
 
 Solana's ecosystem benefits from robust partnerships with tech giants and a commitment to constant innovation, as evidenced by updates such as Firedancer that further improve its performance and scalability. Despite challenges such as network instability, Solana's continuous improvements and strategic collaborations emphasize its potential as a dominant force in blockchain technology.
 
----
 
 ### Preliminary requirements
 
@@ -117,7 +113,6 @@ In addition to these software tools, developing on Solana also requires installi
 
 Don't forget to install the [Phantom wallet](https://phantom.app/) for a seamless Solana experience.
 
----
 
 ### Section 1: Understanding Solana
 
@@ -137,8 +132,6 @@ PoH works alongside PoS in Solana to enhance its efficiency. It employs a crypto
 #### Solana Architecture:
 
 Solana's architecture is engineered to maximize throughput and reduce transaction confirmation times through innovative technologies like the Gulf Stream protocol for transaction forwarding, Sealevel for parallel smart contract processing, and Turbine for efficient block propagation. Coupled with PoH, these technologies allow Solana to achieve remarkable speed and scalability, making it a formidable platform for dApps, DeFi, and NFTs. The introduction of PoH marks a significant advancement in blockchain technology by addressing common scalability and speed bottlenecks.
-
----
 
 ### Key Concepts in Solana Development (Accounts, Programs, Transactions):
 
@@ -161,8 +154,6 @@ Transactions in Solana are how users interact with programs, containing instruct
 Understanding these foundational concepts is vital for developers transitioning from other blockchains or new to blockchain development, highlighting Solana's unique consensus mechanism and efficient program and account models.
 To enhance readability and consistency in your markdown document, I have made adjustments to improve the structure and clarity. Here's the revised markdown:
 
----
-
 ### **Section 2: Setting Up the Development Environment:**
 
 #### Installing Solana CLI tools:
@@ -182,7 +173,6 @@ Finally, transfer SOL tokens to your wallet using `solana airdrop 2` to pay for 
 #### Why Anchor?:
 The Anchor framework simplifies the development of Solana smart contracts by providing a layer of abstraction above the core Solana development kit. It offers tools and a runtime environment to efficiently build, test, and deploy programs on the Solana blockchain. Anchor is designed to simplify the development process, reduce boilerplate code, and introduce familiar programming patterns into Solana, making it more accessible to developers familiar with other smart contract platforms. By offering a Rust-based framework that automates many of the lower-level details involved in developing programs on Solana, Anchor allows developers to focus on the logic of the application rather than the intricacies of the blockchain itself.
 
----
 
 ### Section 3: Building Your First Solana Program with Rust and Anchor:
 
@@ -268,8 +258,6 @@ pub struct GreetingAccount {
 
 You can learn more by this [link](https://www.soldev.app/course/intro-to-anchor).
 
----
-
 #### Step 3: Building the Program
 
 **Build your project:** Run the `anchor build` command:
@@ -283,7 +271,6 @@ This command compiles your Rust program into a BPF (Berkeley Packet Filter) byte
 solana address -k target/deploy/my_solana_dapp-keypair.json
 ```
 
----
 
 ### Compiling and Deploying the Program to the Local Solana Network:
 
@@ -330,12 +317,10 @@ Data Length: 200840 (0x31088) bytes
 Balance: 1.39905048 SOL
 ```
 
----
 #### Conclusion:
 
 You have now created and deployed a simple Solana program using Rust and Anchor. Experimenting with more complex logic and interactions will help you better understand Solana's capabilities.
 
----
 
 ### Section 4: Integrating with the Frontend using React and Anchor:
 
@@ -527,7 +512,6 @@ solana airdrop 10 3EEQVdGGCqiY4CEHiZ3S9CiTnGqE8mztUfFFZmTjYq4V
 
 After running the app with `npm run`, you'll see the UI allowing you to "**Select Wallet**", connect the wallet, and press "**Create Greeting**". This leads to greeting creation, and you can increment it by pressing "Increment Greeting". This confirms that our app is working as expected.
 
----
 
 ### Section 6: Testing and Deployment:
 
@@ -625,7 +609,6 @@ When using Anchor, deploying to **devnet** and **mainnet** is streamlined, provi
 - Use Solana Explorer and Anchor's logging for troubleshooting and optimization.
 - Engage with your user community for feedback and support.
 
----
 
 ### Finish:
 
