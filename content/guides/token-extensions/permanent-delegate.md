@@ -167,8 +167,8 @@ Next, build the instruction to initialize the `PermanentDelegate` extension for
 the Mint Account.
 
 ```javascript
-// Instruction to initialize the MintCloseAuthority Extension
-const initializeMintCloseAuthorityInstruction =
+// Instruction to initialize the PermanentDelegate Extension
+const initializePermanentDelegateInstruction =
   createInitializePermanentDelegateInstruction(
     mint, // Mint Account address
     permanentDelegate, // Designated Permanent Delegate
@@ -199,7 +199,7 @@ will create a Mint Account with the `PermanentDelegate` extension enabled.
 // Add instructions to new transaction
 const transaction = new Transaction().add(
   createAccountInstruction,
-  initializeMintCloseAuthorityInstruction,
+  initializePermanentDelegateInstruction,
   initializeMintInstruction,
 );
 

@@ -195,11 +195,18 @@ See [cross-program invocation](#cross-program-invocation-cpi).
 
 ## instruction
 
-The smallest contiguous unit of execution logic in a [program](#program). An
-instruction specifies which program it is calling, which accounts it wants to
+A call to invoke a specific [instruction handler](#instruction-handler) in a
+[program](#program). An instruction also specifies which accounts it wants to
 read or modify, and additional data that serves as auxiliary input to the
-program. A [client](#client) can include one or multiple instructions in a
-[transaction](#transaction). An instruction may contain one or more
+[instruction handler](#instruction-handler). A [client](#client) must include at
+least one instruction in a [transaction](#transaction), and all instructions
+must complete for the transaction to be considered successful.
+
+## instruction handler
+
+Instruction handlers are [program](#program) functions that process
+[instructions](#instruction) from [transactions](#transaction). An instruction
+handler may contain one or more
 [cross-program invocations](#cross-program-invocation-cpi).
 
 ## keypair
@@ -268,6 +275,13 @@ of [instructions](#instruction).
 Learn more about the
 [message formatting inside of transactions](/docs/core/transactions.md#message-format)
 here.
+
+## Nakamoto coefficient
+
+A measure of decentralization, the Nakamoto Coefficient is the smallest number
+of independent entities that can act collectively to shut down a blockchain. The
+term was coined by Balaji S. Srinivasan and Leland Lee in
+[Quantifying Decentralization](https://news.earn.com/quantifying-decentralization-e39db233c28e).
 
 ## native token
 
@@ -461,6 +475,20 @@ The Nth [tick](#tick) in the [ledger](#ledger).
 ## token
 
 A digitally transferable asset.
+
+## Token Extensions Program
+
+The [Token Extensions Program](https://spl.solana.com/token-2022) has the
+program ID `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` and includes all the
+same features as the [Token Program](#token-program), but comes with extensions
+such as confidential transfers, custom transfer logic, extended metadata, and
+much more.
+
+## Token Program
+
+The [Token Program](https://spl.solana.com/token) has the program ID
+`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`, and provides the basic
+capabilities of transferring, freezing, and minting tokens.
 
 ## tps
 

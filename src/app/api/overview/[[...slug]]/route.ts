@@ -4,7 +4,8 @@
  * display on https://solana.com/developers)
  */
 
-import type { NextApiRequest, NextApiResponse } from "next";
+import { notFound } from "next/navigation";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import {
   allDeveloperGuides,
   allDeveloperResources,
@@ -12,11 +13,24 @@ import {
 } from "contentlayer/generated";
 import { extractFeaturedRecords, simplifyRecords } from "@/utils/parsers";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | any>,
-) {
-  return res.status(200).json({
+type RouteProps = {
+  params: {
+    slug: string[];
+  };
+};
+
+export function GET(_req: Request, { params: { slug = [] } }: RouteProps) {
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
+    locale = slug.shift() || DEFAULT_LOCALE_EN;
+  }
+
+  console.log("locale:", locale);
+
+  return Response.json({
     // featured guides
     guides: extractFeaturedRecords({
       records: allDeveloperGuides,

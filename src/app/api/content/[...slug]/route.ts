@@ -3,7 +3,9 @@
  * based on the provided url `slug`
  */
 
+import { notFound } from "next/navigation";
 import { NavItem, SimpleRecordGroupName } from "@/types";
+import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
   generateNavItemListing,
@@ -16,18 +18,28 @@ import {
   allSolanaRPCDocs,
   DocumentTypes,
 } from "contentlayer/generated";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<SimpleNotFound | any>,
-) {
-  // get the content record group
-  const slug = req.query?.slug || [];
+type RouteProps = {
+  params: {
+    slug: string[];
+  };
+};
 
-  if (!slug || !Array.isArray(slug) || slug.length <= 0)
-    return res.status(404).json({ notFound: true });
+export function GET(_req: Request, { params: { slug } }: RouteProps) {
+  // dummy check on the url params
+  if (!slug || !Array.isArray(slug) || slug.length <= 0) {
+    notFound();
+  }
 
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
+    locale = slug.shift() || DEFAULT_LOCALE_EN;
+  }
+
+  // determine the correct group based on the route prefix
   const group = slug[0] as SimpleRecordGroupName;
 
   // retrieve the correct group's records by its simple group name
@@ -46,7 +58,7 @@ export default function handler(
     }
   })(group);
 
-  if (!records) return res.status(404).json({ notFound: true });
+  if (!records) return notFound();
 
   // define the formatted href value to search for
   // note: this effectively enforces that only href's that start with "/developers" are supported
@@ -55,7 +67,11 @@ export default function handler(
     slug[0].toLocaleLowerCase() == "rpc"
       ? ""
       : "/developers"
-  }/${slug.join("/")}`.toLowerCase();
+  }/${slug.join("/")}`
+    .toLowerCase()
+    .replaceAll(/\/index(.mdx?)?/gi, "");
+
+  console.log("href:", href);
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
   const flatNavItems = generateFlatNavItemListing(
@@ -79,23 +95,42 @@ export default function handler(
       continue;
     }
 
+    // set the current requested record
     current = flatNavItems[i];
-    if (flatNavItems.length >= i - 1) prev = flatNavItems[i - 1];
-    if (flatNavItems.length >= i + 1) next = flatNavItems[i + 1];
+
+    // get the "previous" record link to display (that is an actual link)
+    if (flatNavItems.length >= i - 1) {
+      for (let j = i; j > 0; j--) {
+        if (!flatNavItems[j - 1]?.metaOnly) {
+          prev = flatNavItems[j - 1];
+          break;
+        }
+      }
+    }
+
+    // get the "next" record link to display (that is an actual link)
+    if (flatNavItems.length >= i + 1) {
+      for (let j = i; j < flatNavItems.length; j++) {
+        if (!flatNavItems[j + 1]?.metaOnly) {
+          next = flatNavItems[j + 1];
+          break;
+        }
+      }
+    }
 
     // break out of the loop and stop processing
     break;
   }
 
-  if (!current) return res.status(404).json({ notFound: true });
+  if (!current) return notFound();
 
   // locate full content record
-
   let record = (records as DocumentTypes[]).filter(
     (item: DocumentTypes) =>
       item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
   )?.[0];
-  if (!record) return res.status(404).json({ notFound: true });
+
+  if (!record) notFound();
 
   // remove the html formatted content (since it is undesired data to send over the wire)
   if (typeof record.body.raw !== "undefined") {
@@ -108,5 +143,5 @@ export default function handler(
   // todo: support sending related content records back to the client
 
   // finally, return the json formatted listing of NavItems (with the next and prev records)
-  return res.status(200).json(Object.assign(current, record, { next, prev }));
+  return Response.json(Object.assign(current, record, { next, prev }));
 }
