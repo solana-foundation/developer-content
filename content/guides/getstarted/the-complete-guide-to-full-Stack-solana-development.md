@@ -22,7 +22,7 @@ keywords:
   - Rust programming
   - Phantom wallet integration
 altRoutes:
-  - Medium[https://medium.com/@Anatolii_Zhadan/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-18a1e1bdbb3b]
+  - [Medium](https://medium.com/@Anatolii_Zhadan/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-18a1e1bdbb3b)
 ---
 
 ### The Complete Guide to Full Stack Solana Development with React, Anchor, Rust, and Phantom
@@ -633,6 +633,7 @@ This guide has provided a foundational understanding of developing on Solana wit
 
  blockchain development is an ongoing journey of learning and innovation. Good luck on your development journey, and let's build the future of blockchain together.
 
-### Links to follow me:
+### Links to contact me:
 - [LinkedIn](https://www.linkedin.com/in/anatolii-zhadan/)
-- [Hackernoon](https://hackernoon.com/u/zhadan)
+### Origin article:
+- [Medium](https://medium.com/@Anatolii_Zhadan/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-18a1e1bdbb3b)
