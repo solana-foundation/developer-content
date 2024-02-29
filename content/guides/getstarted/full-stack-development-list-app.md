@@ -23,7 +23,10 @@ keywords:
   - rust
 ---
 
-## Intro and general overview
+## Overview
+
+![BANNERSOLANAFULLSTACK](https://github.com/aeither/developer-content/assets/36173828/11bebb2d-8610-4dcb-85e8-97b9d80015cb)
+
 
 [Nader Dabit](https://dev.to/edge-and-node/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-3291) did a really good full-stack Solana development guide more than 2 years ago. A lot has changed since then.
 
