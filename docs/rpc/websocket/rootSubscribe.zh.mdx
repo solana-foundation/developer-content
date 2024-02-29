@@ -1,0 +1,55 @@
+---
+sidebarLabel: rootSubscribe
+title: rootSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/rootSubscribe
+---
+
+订阅以在验证器设置新根时接收通知。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+`integer` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "rootSubscribe" }
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 0, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式：
+
+结果是最新的根槽号。
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "rootNotification",
+  "params": {
+    "result": 42,
+    "subscription": 0
+  }
+}
+```

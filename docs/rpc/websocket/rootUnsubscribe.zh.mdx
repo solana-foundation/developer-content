@@ -1,0 +1,48 @@
+---
+sidebarLabel: rootUnsubscribe
+title: rootUnsubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/rootUnsubscribe
+---
+
+取消订阅根通知
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"number"} required={true}>
+  要取消的订阅 ID
+</Parameter>
+
+### 结果
+
+`<bool>` - 取消订阅成功消息
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "rootUnsubscribe",
+  "params": [0]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": true, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

@@ -1,0 +1,66 @@
+---
+sidebarLabel: slotSubscribe
+title: slotSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/slotSubscribe
+---
+
+订阅以在验证器处理槽时随时接收通知
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+`<integer>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "slotSubscribe" }
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 0, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式：
+
+通知将是一个具有以下字段的对象：
+
+- `parent: <u64>` - 父插槽
+- `root: <u64>` - 当前根槽位
+- `slot: <u64>` - 新设置的槽值
+
+  例子：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "slotNotification",
+  "params": {
+    "result": {
+      "parent": 75,
+      "root": 44,
+      "slot": 76
+    },
+    "subscription": 0
+  }
+}
+```

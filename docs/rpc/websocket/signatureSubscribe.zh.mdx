@@ -1,0 +1,141 @@
+---
+sidebarLabel: signatureSubscribe
+title: signatureSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/signatureSubscribe
+---
+
+订阅以在具有给定签名的交易达到指定的承诺级别时接收通知。
+
+
+<Callout type={"caution"}>
+  这是对单个通知的订阅。`signatureNotification`一旦RPC 发送通知，它就会被服务器自动取消。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+
+  交易签名，作为 base-58 编码的字符串
+
+  <Callout type={"info"}>
+    交易签名必须是交易的第一个签名
+    (有关更多详细信息，请参阅 [交易id](/docs/terminology.md#transaction-id))。
+</Callout>
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="启用接收通知" type="bool" optional={true}>
+
+  除了在处理签名时之外，是否在 RPC 收到签名时订阅通知。
+
+</Field>
+
+</Parameter>
+
+### Result
+
+`<integer>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "signatureSubscribe",
+  "params": [
+    "2EBVM6cB8vAAD93Ktr6Vd8p67XPbQzCJX47MpReuiCXJAtcjaxpvWpcg9Ege1Nr5Tk3a2GFrByT7WPBjdsTycY9b",
+    {
+      "commitment": "finalized",
+      "enableReceivedNotification": false
+    }
+  ]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 0, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式：
+
+通知将是一个 RpcResponse JSON 对象，其值包含以下对象：
+
+- `slot: <u64>` - 相应的插槽。
+- `value: <object|string>` -  通知值
+  [`RpcSignatureResult`](https://github.com/solana-labs/solana/blob/6d28fd455b07e3557fc6c0c3ddf3ba03e3fe8482/rpc-client-api/src/response.rs#L265-L268),
+  导致：
+  - 何时 `enableReceivedNotification` 并且 `true` 收到签名：文字字符串
+    [`"receivedSignature"`](https://github.com/solana-labs/solana/blob/6d28fd455b07e3557fc6c0c3ddf3ba03e3fe8482/rpc-client-api/src/response.rs#L286-L288)，或
+  - 处理签名时: `err: <object|null>`:
+    - `null` 如果交易在指定的承诺级别成功处理，或者
+    - a
+      [`TransactionError`](https://github.com/solana-labs/solana/blob/6d28fd455b07e3557fc6c0c3ddf3ba03e3fe8482/sdk/src/transaction/error.rs#L15-L164), 如果交易失败
+
+#### 响应示例：
+
+  以下是成功处理的交易的通知响应示例 ：
+
+
+  ```json
+{
+  "jsonrpc": "2.0",
+  "method": "signatureNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5207624
+      },
+      "value": {
+        "err": null
+      }
+    },
+    "subscription": 24006
+  }
+}
+```
+
+  以下是成功收到交易签名的通知的响应示例 ：
+
+
+  ```json
+{
+  "jsonrpc": "2.0",
+  "method": "signatureNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5207624
+      },
+      "value": "receivedSignature"
+    },
+    "subscription": 24006
+  }
+}
+```

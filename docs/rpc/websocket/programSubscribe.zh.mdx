@@ -1,0 +1,209 @@
+---
+sidebarLabel: programSubscribe
+title: programSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/programSubscribe
+---
+
+订阅程序，以便在给定程序拥有的帐户的端口或数据发生更改时接收通知
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+
+公钥`program_id`，作为 base-58 编码的字符串
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field
+  name="过滤器"
+  type="array"
+  optional={true}
+  href={"/docs/rpc/index.zh.mdx#过滤条件"}
+>
+
+  使用各种过滤对象过滤结果
+
+  <Callout type={"info"}>
+    结果帐户必须满足所有过滤条件才能包含在返回的结果中。
+</Callout>
+
+</Field>
+
+<Field 
+  name="编码"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#解析后的响应"
+>
+
+  账户数据的编码格式
+
+  <Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
+
+<details>
+
+- `base58` 是慢的。
+- `jsonParsed` 编码尝试使用特定于程序的状态解析器来返回更多人类可读且明确的帐户状态数据。
+- 如果 `jsonParsed` 请求但无法找到解析器，则该字段将回退到`base64`编码，当`data`字段为 type时可检测到`string`。
+
+</details>
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+`<integer>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "programSubscribe",
+  "params": [
+    "11111111111111111111111111111111",
+    {
+      "encoding": "base64",
+      "commitment": "finalized"
+    }
+  ]
+}
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "programSubscribe",
+  "params": [
+    "11111111111111111111111111111111",
+    {
+      "encoding": "jsonParsed"
+    }
+  ]
+}
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "programSubscribe",
+  "params": [
+    "11111111111111111111111111111111",
+    {
+      "encoding": "base64",
+      "filters": [
+        {
+          "dataSize": 80
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 24040, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### #### Notification format
+
+
+通知格式是单个程序帐户对象，如
+[getProgramAccounts](/docs/rpc/http/getprogramaccounts)RPC HTTP 方法中所示 。
+
+Base58编码:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "programNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5208469
+      },
+      "value": {
+        "pubkey": "H4vnBqifaSACnKa7acsxstsY1iV1bvJNxsCY7enrd1hq",
+        "account": {
+          "data": [
+            "11116bv5nS2h3y12kD1yUKeMZvGcKLSjQgX6BeV7u1FrjeJcKfsHPXHRDEHrBesJhZyqnnq9qJeUuF7WHxiuLuL5twc38w2TXNLxnDbjmuR",
+            "base58"
+          ],
+          "executable": false,
+          "lamports": 33594,
+          "owner": "11111111111111111111111111111111",
+          "rentEpoch": 636,
+          "space": 80
+        }
+      }
+    },
+    "subscription": 24040
+  }
+}
+```
+
+解析后的 JSON 编码：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "programNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5208469
+      },
+      "value": {
+        "pubkey": "H4vnBqifaSACnKa7acsxstsY1iV1bvJNxsCY7enrd1hq",
+        "account": {
+          "data": {
+            "program": "nonce",
+            "parsed": {
+              "type": "initialized",
+              "info": {
+                "authority": "Bbqg1M4YVVfbhEzwA9SpC9FhsaG83YMTYoR4a8oTDLX",
+                "blockhash": "LUaQTmM7WbMRiATdMMHaRGakPtCkc2GHtH57STKXs6k",
+                "feeCalculator": {
+                  "lamportsPerSignature": 5000
+                }
+              }
+            }
+          },
+          "executable": false,
+          "lamports": 33594,
+          "owner": "11111111111111111111111111111111",
+          "rentEpoch": 636,
+          "space": 80
+        }
+      }
+    },
+    "subscription": 24040
+  }
+}
+```
