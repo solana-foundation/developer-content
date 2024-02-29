@@ -34,7 +34,7 @@ altRoutes:
 <h1 align="center">
     <br>
     <a href="https://github.com/Samuellyworld/anchor-crowdfund">
-        <img src="./public/crowdfund.png" alt="crowdfund" width="130" height="130" />
+        <img src="https://i.postimg.cc/1zSZBmp4/png-transparent-sarawak-crowdfunding-kickstarter-advertising-campaign-others-text-logo-grass-removeb.png" alt="crowdfund" width="130" height="130" />
     </a>
     <br>
 </h1>
@@ -55,7 +55,7 @@ What you will learn:
 
 <p align="center">
   <br>
-      <img src="./public/system-design.png" alt="system design"/>
+      <img src="https://i.postimg.cc/jSbsg4Ts/Untitled-drawio-1.png" alt="system design"/>
   <br>
 </p>
 
