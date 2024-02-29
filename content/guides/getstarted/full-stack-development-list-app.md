@@ -25,37 +25,37 @@ keywords:
 
 ## Intro and general overview
 
-Nader Dabit https://dev.to/edge-and-node/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-3291 did a really good full stack solana development guide more than 2 years ago. A lot have changed since then.
+[Nader Dabit](https://dev.to/edge-and-node/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-3291) did a really good full-stack Solana development guide more than 2 years ago. A lot has changed since then.
 
-I will be as concise as possible to make it beginner friendly to show you how to build a full stack dapp in 2024. Particular attention would be done on the updates and changes of libraries and toolings.
+I will be as concise as possible to make it beginner-friendly and show you how to build a full-stack Dapp in 2024. Particular attention would be given to the updates and changes to libraries and tooling.
 
-Why create another full stack guide?
-There are a lot of great guides out there that are outdated using code from old version of libraries and tools. With that being said. I will point out what is new compared to older versions so it can also works for whoever already started a project to migrate to the latest and use the latest tools.
+Why create another full-stack guide? 
 
-What framework to use?
-We have mainly 3: Solana, Anchor and Seahorse.
-Seahorse is not maintained and Anchor is built on top of Solana making it easier and less bloated to create program. The best choise goes to Anchor for anyone starting a new projects
+There are a lot of great guides out there that are outdated, using code from old versions of libraries and tools. With that being said, I will point out what is new compared to older versions so it can also work for whoever already started a project to migrate to the latest and use the latest tools.
+
+What framework should I use? We have mainly 3: Solana, Anchor, and Seahorse. Seahorse is not maintained, and Anchor is built on top of Solana, making it easier and less bloated to create programs. The best choice goes to Anchor for anyone starting a new project.
 
 ## Project overview
 
 The tooling we'll be using today includes:
 
-Solana Playground - browser based program editor. It comes with testing wallet, testnet SOL airdrop, CLI, test file. Which allow us to start right away. Export DSL which is the equivalent to EVM ABI for solana programs
+Solana Playground is a browser-based program editor. It comes with a testing wallet, testnet SOL airdrop, CLI, and test file. Which allows us to start right away. Export DSL, which is the equivalent of EVM ABI for Solana programs.
 
-Anchor JS SDK and Anchor Rust Lang - We will use Anchor for building the program and the JS library to call the contract from the frontend.
+Anchor JS SDK and Anchor Rust Lang: We will use Anchor for building the program and the JS library to call the contract from the frontend.
 
-solana/web3.js - It provides utilities to help us connect wallet and format values.
+solana/web3.js - It provides utilities to help us connect wallets and format values.
 
-React Remix - Remix is a very intuitive react framework
+React Remix: Remix is a very intuitive React framework.
 
-At the end of the guide you will be able to build a working full stack solana app from where you can continue tinkering and build your own ideas.
+At the end of the guide, you will be able to build a working full-stack Solana app from which you can continue tinkering and building your own ideas.
 
-We will focus on setup solana playground, deploy our first program and test it.
-Build the frontend, add connect wallet and call the program deployed on devnet.
+We will focus on setting up the Solana playground, deploying our first program, and testing it. Build the frontend, add a connect wallet, and call the program deployed on the devnet.
 
 ## Demo
 
-Here is a quick demo of what we are going to accomplish
+Here is a quick demo of what we are going to accomplish.
+
+https://github.com/aeither/developer-content/assets/36173828/29c7db2d-eac3-4c1b-9530-af0e4bd278e0
 
 ## Requirements
 
@@ -74,15 +74,15 @@ Go to "Build & Deploy" Tab and copy the Program ID and export the IDL
 
 Open https://beta.solpg.io/ and create a new Anchor project.
 
-![CleanShot 2024-03-01 at 04 23 46@2x](https://github.com/aeither/developer-content/assets/36173828/02eb56a1-1884-4807-a323-04115229535e)
+![image1](https://github.com/aeither/developer-content/assets/36173828/02eb56a1-1884-4807-a323-04115229535e)
 
-We need SOL to deploy the program. You have to claim 5 SOL from the Solana Faucet. Copy the address of your wallet. 
+We need SOL to deploy the program. You have to claim 5 SOLs from the Solana Faucet. Copy the address of your wallet. 
 
-![CleanShot 2024-03-01 at 04 27 32@2x](https://github.com/aeither/developer-content/assets/36173828/a9345b43-c05b-4636-b945-ea2be1eac636)
+![image2](https://github.com/aeither/developer-content/assets/36173828/a9345b43-c05b-4636-b945-ea2be1eac636)
 
 Open [Solana Faucet](https://faucet.solana.com/) and paste your wallet address. Make sure it is set to devnet and amount to 5.
 
-![CleanShot 2024-03-01 at 04 29 42@2x](https://github.com/aeither/developer-content/assets/36173828/951441ae-68ad-4054-9765-2586419f8c67)
+![image3](https://github.com/aeither/developer-content/assets/36173828/951441ae-68ad-4054-9765-2586419f8c67)
 
 ## Create the program
 
@@ -164,7 +164,7 @@ use anchor_lang::prelude::*;
 declare_id!("CfqCT3ojotQKHizmE73CBo95LT6MLCKQCEm3dnztJPUk");
 ```
 
-The first line of code imports all the necessary components from the Anchor framework making them readily available for use in the program.
+The first line of code imports all the necessary components from the Anchor framework, making them readily available for use in the program.
 
 This `declare_id` macro declares the program's ID, a unique identifier for the program on the Solana blockchain.
 
@@ -201,26 +201,25 @@ The `#[derive(Accounts)]` macro is used to define the context for each instructi
 
 Now we can build and deploy the program.
 
-![CleanShot 2024-03-01 at 04 46 02@2x](https://github.com/aeither/developer-content/assets/36173828/f3f88db0-6260-49b6-983d-4404e8d42f01)
+![image4](https://github.com/aeither/developer-content/assets/36173828/f3f88db0-6260-49b6-983d-4404e8d42f01)
 
 After few seconds. The program will be available on devnet allowing us to run tests.
 
 We can manually test the instructions
 
-![CleanShot 2024-03-01 at 04 47 02@2x](https://github.com/aeither/developer-content/assets/36173828/48082e55-5169-482e-bac8-fe1539f65d39)
+![image5](https://github.com/aeither/developer-content/assets/36173828/48082e55-5169-482e-bac8-fe1539f65d39)
 
 and the check the result by fetching the accounts
 
-![CleanShot 2024-03-01 at 04 47 32@2x](https://github.com/aeither/developer-content/assets/36173828/782e5955-d3e2-443b-a9eb-082a08cbb101)
+![image6](https://github.com/aeither/developer-content/assets/36173828/782e5955-d3e2-443b-a9eb-082a08cbb101)
 
 ## Frontend
 
-I used visual studio code to build the frontend which I recommend. 
-Here is the complete app where you can inspect the implementation.
+I used Visual Studio code to build the frontend, which I recommend. Here is the complete app, where you can inspect the implementation.
 
 [Narrative Tracker App](https://github.com/aeither/solana-narrative-tracker)
 
-To allow users to use the app we need to connect their wallet. Inside `ContextProvider.tsx` we created the provider wrapper to connect to the devnet and enabled the wallet.
+To allow users to use the app, we need to connect their wallet. Inside `ContextProvider.tsx` we created the provider wrapper to connect to the devnet and enabled the wallet.
 
 ```jsx
 import { Adapter, WalletError } from "@solana/wallet-adapter-base";
@@ -393,7 +392,7 @@ const InitializeComponent = () => {
 export default InitializeComponent;
 ```
 
-Let's break it down. We used a handy multi wallet connect button provided by Solana
+Let's break it down. We used a handy multi-wallet connect button provided by Solana.
 
 ```jsx
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
@@ -411,7 +410,7 @@ const wallet = useWallet();
 // wallet.publicKey
 ```
 
-We used 2 hooks to look for user data on-chain when the page is loaded
+We used two hooks to look for user data on-chain when the page is loaded.
 
 ```jsx
 const [userAccountPDA] = PublicKey.findProgramAddressSync(
@@ -671,7 +670,7 @@ npm start
 
 ## Conclusion
 
-Congrats on completing the guide. Thanks to web faucets, web editors you can start right away without the hussle to install anything. even I used visual studio code. A lot of browser based are out there making the whole development in the browser feasable.
+Congrats on completing the guide! Thanks to web faucets and web editors, you can start right away without the hassle of installing anything. even though I used Visual Studio code. A lot of browser-based applications are out there, making the whole development of the browser feasible.
 
 ## Next
 
