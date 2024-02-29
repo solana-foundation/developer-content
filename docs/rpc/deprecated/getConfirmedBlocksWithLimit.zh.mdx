@@ -1,0 +1,71 @@
+---
+sidebarLabel: getConfirmedBlocksWithLimit
+title: getConfirmedBlocksWithLimit RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getConfirmedBlocksWithLimit
+  - /docs/rpc/http/getConfirmedBlocksWithLimit
+---
+
+返回从给定槽开始的已确认块的列表
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除`solana-core`。请改用
+  [getBlocksWithLimit](/docs/rpc/http/getblockswithlimit)。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} required={true}>
+  start_slot, 作为 u64 整数
+</Parameter>
+
+<Parameter type={"u64"} required={true}>
+  limit, 作为 u64 整数
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+  结果字段将是一个 u64 整数数组，列出已确认的块，从 开始`start_slot`最多`limit`可达块（含）。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "getConfirmedBlocksWithLimit",
+    "params": [5, 3]
+  }
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": [5, 6, 7], "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

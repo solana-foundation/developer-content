@@ -1,0 +1,82 @@
+---
+sidebarLabel: getRecentBlockhash
+title: getRecentBlockhash RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/http/getRecentBlockhash
+  - /docs/rpc/getRecentBlockhash
+---
+
+从分类账返回最近的块哈希，以及可用于计算使用它提交交易的成本的费用表。
+
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除`solana-core`。请改用
+  [getLatestBlockhash](/docs/rpc/http/getlatestblockhash)。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  要查询的帐户的公钥，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+包含 JSON 对象的 RpcResponse，该对象由字符串 blockhash 和 FeeCalculator JSON 对象组成。
+
+- `RpcResponse<object>` - RpcResponse JSON 对象，其value字段设置为 JSON 对象，包括：
+- `blockhash: <string>` - 作为 base-58 编码字符串的哈希值
+- `feeCalculator: <object>` - FeeCalculator 对象，该块哈希的费用表
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getRecentBlockhash"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1
+    },
+    "value": {
+      "blockhash": "CSymwgTNX1j3E4qhKfJAUE41nBWEwXufoYryPbkde5RR",
+      "feeCalculator": {
+        "lamportsPerSignature": 5000
+      }
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

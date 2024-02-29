@@ -1,0 +1,94 @@
+---
+sidebarLabel: getFeeCalculatorForBlockhash
+title: getFeeCalculatorForBlockhash RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getFeeCalculatorForBlockhash
+  - /docs/rpc/http/getFeeCalculatorForBlockhash
+---
+
+返回与查询区块哈希相关的费用计算器，或者`null`区块哈希是否已过期
+
+
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除`solana-core`。请改用
+  [isBlockhashValid](/docs/rpc/http/isBlockhashValid) 或
+  [getFeeForMessage](/docs/rpc/http/getFeeForMessage) 。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  查询 blockhash，作为 base-58 编码的字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，其`value`等于：
+
+- `<null>` - 如果查询块哈希已过期；或者
+- `<object>` - 否则，一个 JSON 对象包含：
+  - `feeCalculator: <object>` - `FeeCalculator`描述查询的区块哈希的集群费率的对象
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getFeeCalculatorForBlockhash",
+    "params": [
+      "GJxqhuxcgfn5Tcj6y3f8X4FeCDd2RQ6SnEMo1AAxrPRZ"
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 221
+    },
+    "value": {
+      "feeCalculator": {
+        "lamportsPerSignature": 5000
+      }
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

@@ -1,0 +1,85 @@
+---
+sidebarLabel: getFees
+title: getFees RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getFees
+  - /docs/rpc/http/getFees
+---
+
+从分类账中返回最近的块哈希值、可用于计算使用它提交交易的成本的费用表，以及块哈希值有效的最后一个槽位。
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除`solana-core`。请改用
+  [getFeeForMessage](/docs/rpc/http/getFeeForMessage)。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  要查询的帐户的公钥，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，`value`设置为具有以下字段的 JSON 对象：
+
+- `blockhash: <string>` - 作为 base-58 编码字符串的哈希值
+- `feeCalculator: <object>` -  FeeCalculator 对象，该块哈希的费用表
+- `lastValidSlot: <u64>` - 已弃用 - 该值不准确，不应依赖
+- `lastValidBlockHeight: <u64>` - 区块哈希有效的最后一个
+  [区块高度](/docs/terminology.md#block-height)。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  { "jsonrpc":"2.0", "id": 1, "method":"getFees"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1
+    },
+    "value": {
+      "blockhash": "CSymwgTNX1j3E4qhKfJAUE41nBWEwXufoYryPbkde5RR",
+      "feeCalculator": {
+        "lamportsPerSignature": 5000
+      },
+      "lastValidSlot": 297,
+      "lastValidBlockHeight": 296
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

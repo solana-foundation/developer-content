@@ -1,0 +1,59 @@
+---
+sidebarLabel: getSnapshotSlot
+title: getSnapshotSlot RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/http/getSnapshotSlot
+  - /docs/rpc/getSnapshotSlot
+---
+
+返回节点具有快照的最高插槽
+
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除`solana-core`。请改用
+  [getHighestSnapshotSlot](/docs/rpc/http/getHighestSnapshotSlot)。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+`<u64>` - 快照插槽
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getSnapshotSlot"}
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 100, "id": 1 }
+```
+
+节点没有快照时的结果：
+
+  ```json
+{
+  "jsonrpc": "2.0",
+  "error": { "code": -32008, "message": "No snapshot" },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

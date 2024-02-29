@@ -1,0 +1,63 @@
+---
+sidebarLabel: getConfirmedBlocks
+title: getConfirmedBlocks RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getConfirmedBlocks
+  - /docs/rpc/http/getConfirmedBlocks
+---
+
+返回两个槽之间已确认块的列表
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除solana-core。请改用 [getBlocks](/docs/rpc/http/getblocks)。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} required={true}>
+  start_slot, 作为 u64 整数
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+  结果字段将是一个 u64 整数数组，列出`start_slot`和之间的确认块`end_slot`- 如果提供，或最新确认块（包括在内）。
+  允许的最大范围是 500,000 个插槽。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc": "2.0","id":1,"method":"getConfirmedBlocks","params":[5, 10]}
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": [5, 6, 7, 8, 9, 10], "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
