@@ -1,0 +1,89 @@
+---
+sidebarLabel: getBlockProduction
+title: getBlockProduction RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getBlockProduction
+---
+
+返回当前或上一个纪元的最新块生产信息。
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.mdx.zh#配置状态承诺"
+></Field>
+
+<Field name="身份" type="string" optional={true}>
+  仅返回此验证者身份的结果（base-58 编码）
+</Field>
+
+<Field name="范围" type="object" optional={true}>
+  返回区块生产的时隙范围。如果未提供参数，则默认为当前纪元。
+
+- `firstSlot: <u64>` - 第一个返回区块生产信息的槽位（含）
+- (optional) `lastSlot: <u64>` - 返回块生产信息的最后一个槽（包含）。如果未提供参数，则默认为最高插槽
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，其`value`等于：
+
+- `<object>`
+  - `byIdentity: <object>` - 验证者身份的字典，作为 base-58 编码的字符串。值是一个两元素数组，包含领导者槽的数量和生成的块的数量。
+  - `range: <object>` -  区块生产槽位范围
+    - `firstSlot: <u64>` - 区块生产信息的第一个槽位（含）
+    - `lastSlot: <u64>` - 区块生产信息的最后一个槽位（含）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getBlockProduction"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 9887
+    },
+    "value": {
+      "byIdentity": {
+        "85iYT5RuzRTDgjyRa3cP8SYhM2j21fj7NhfJ3peu1DPr": [9888, 9886]
+      },
+      "range": {
+        "firstSlot": 0,
+        "lastSlot": 9887
+      }
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>
