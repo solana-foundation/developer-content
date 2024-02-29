@@ -213,11 +213,441 @@ and the check the result by fetching the accounts
 
 ![CleanShot 2024-03-01 at 04 47 32@2x](https://github.com/aeither/developer-content/assets/36173828/782e5955-d3e2-443b-a9eb-082a08cbb101)
 
+## Frontend
 
+I used visual studio code to build the frontend which I recommend. 
+Here is the complete app where you can inspect the implementation.
+
+[Narrative Tracker App](https://github.com/aeither/solana-narrative-tracker)
+
+To allow users to use the app we need to connect their wallet. Inside `ContextProvider.tsx` we created the provider wrapper to connect to the devnet and enabled the wallet.
+
+```jsx
+import { Adapter, WalletError } from "@solana/wallet-adapter-base";
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider as ReactUIWalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+  TorusWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
+import { FC, ReactNode, useCallback } from "react";
+import { AutoConnectProvider, useAutoConnect } from "./AutoConnectProvider";
+import { RPC_URL } from "~/constants";
+
+const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  const { autoConnect } = useAutoConnect();
+
+  const wallets: Adapter[] = [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter(),
+    new TorusWalletAdapter(),
+  ] as any;
+
+  const onError = useCallback((error: WalletError) => {
+    console.error(error);
+  }, []);
+
+  return (
+    <ConnectionProvider endpoint={RPC_URL || "https://api.devnet.solana.com"}>
+      <WalletProvider
+        wallets={wallets}
+        onError={onError}
+        autoConnect={autoConnect}
+      >
+        <ReactUIWalletModalProvider>{children}</ReactUIWalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+};
+
+export const ContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
+  return (
+    <AutoConnectProvider>
+      <WalletContextProvider>{children}</WalletContextProvider>
+    </AutoConnectProvider>
+  );
+};
+```
+
+Then we used the wrapper inside the `root.tsx` file `<ContextProvider>`
+
+Let's go to the homepage located at `routes/_index.tsx`
+
+```tsx
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { PublicKey } from "@solana/web3.js";
+import { useEffect, useState } from "react";
+import useProgram from "~/hooks/use-program";
+
+const InitializeComponent = () => {
+  const { initUserAnchor, program, addItemAnchor } = useProgram();
+  const wallet = useWallet();
+
+  const [user, setUser] = useState<string | undefined>(undefined);
+  const [narratives, setNarratives] = useState<any[]>();
+  const [content, setContent] = useState("");
+
+  const onInitializeClick = async () => {
+    await initUserAnchor();
+  };
+
+  const onAddItemAnchor = async (content: string) => {
+    await addItemAnchor(content);
+
+    setContent("");
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (program && wallet && wallet.publicKey) {
+        try {
+          const [userAccountPDA] = PublicKey.findProgramAddressSync(
+            [Buffer.from("user"), wallet.publicKey.toBuffer()],
+            program.programId
+          );
+
+          const userAccount = await program.account.userAccount.fetch(
+            userAccountPDA
+          );
+
+          setUser(userAccount.authority.toString());
+        } catch (error) {
+          setUser("");
+          console.error(error);
+        }
+      }
+    };
+    fetchUser();
+  }, [wallet, program]);
+
+  useEffect(() => {
+    const fetchNarratives = async () => {
+      if (program && wallet && wallet.publicKey) {
+        const myItemAccounts = await program.account.itemAccount.all([
+          {
+            memcmp: {
+              offset: 8, // Discriminator.
+              bytes: wallet.publicKey.toString(),
+            },
+          },
+        ]);
+
+        // myItemAccounts[0].account.content
+        setNarratives(myItemAccounts);
+      }
+    };
+    fetchNarratives();
+  }, [wallet, program]);
+
+  return (
+    <div className="flex w-full flex-col justify-center items-center">
+      <div className="flex flex-col w-full max-w-md items-center py-12 gap-4">
+        <WalletMultiButton />
+
+        {user == "" && (
+          <>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={onInitializeClick}
+              disabled={!wallet.connected}
+            >
+              Initialize
+            </button>
+          </>
+        )}
+
+        <input
+          type="text"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="mt-1 block w-full rounded-md border-2 border-blue-500 shadow-lg focus:border-indigo-500 focus:ring focus:ring-indigo-300 focus:ring-opacity-50"
+        />
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => onAddItemAnchor(content)}
+          disabled={!wallet.connected}
+        >
+          add narrative
+        </button>
+
+        {/* List */}
+        <div className="flex flex-col gap-2 pt-16">
+          {narratives?.map((narrative) => (
+            <>
+              <div className="text-2xl font-bold">
+                {narrative.account.content}
+              </div>
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default InitializeComponent;
+```
+
+Let's break it down. We used a handy multi wallet connect button provided by Solana
+
+```jsx
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+
+...
+    <WalletMultiButton />
+```
+
+With `wallet` we check the user connection status to show conditional components
+
+```jsx
+const wallet = useWallet();
+
+...
+// wallet.publicKey
+```
+
+We used 2 hooks to look for user data on-chain when the page is loaded
+
+```jsx
+const [userAccountPDA] = PublicKey.findProgramAddressSync(
+  [Buffer.from("user"), wallet.publicKey.toBuffer()],
+  program.programId
+);
+
+const userAccount = await program.account.userAccount.fetch(userAccountPDA);
+```
+
+```jsx
+const myItemAccounts = await program.account.itemAccount.all([
+  {
+    memcmp: {
+      offset: 8, // Discriminator.
+      bytes: wallet.publicKey.toString(),
+    },
+  },
+]);
+```
+
+The contract calls can be found in the useProgram hook
+
+```jsx
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+import { useWallet } from "@solana/wallet-adapter-react";
+import "@solana/wallet-adapter-react-ui/styles.css";
+import { PublicKey, TransactionConfirmationStrategy } from "@solana/web3.js";
+import { useEffect, useState } from "react";
+import { PROGRAM_ID, connection } from "~/constants";
+import { IDL, IDLType } from "~/constants/idl";
+
+export type SetUserAnchor = (
+  score: number,
+  health: number
+) => Promise<string | undefined>;
+
+export default function useProgram() {
+  const wallet = useWallet();
+  const [program, setProgram] = useState<Program<IDLType>>();
+
+  useEffect(() => {
+    // Load program when sdk is defined
+    load();
+    async function load() {
+      if (wallet.wallet) {
+        const provider = new AnchorProvider(
+          connection,
+          wallet as any,
+          AnchorProvider.defaultOptions()
+        );
+
+        const program = new Program(IDL, PROGRAM_ID, provider);
+        setProgram(program);
+      }
+    }
+  }, [wallet]);
+
+  const initUserAnchor = async () => {
+    try {
+      if (!program || !wallet.publicKey || !wallet.signTransaction) return;
+
+      // Derive the PDA for the newUserAccount
+      const [newUserAccountPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("user"), wallet.publicKey.toBuffer()],
+        program.programId
+      );
+
+      // Send transaction
+      const txHash = await program.methods
+        .initUser()
+        .accounts({
+          newUserAccount: newUserAccountPDA,
+        })
+        .rpc();
+      console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
+
+      // Confirm transaction
+      const commitment = "confirmed";
+      const latestBlockHash = await connection.getLatestBlockhash(commitment);
+      const strategy: TransactionConfirmationStrategy = {
+        signature: txHash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        blockhash: latestBlockHash.blockhash,
+      };
+      await connection.confirmTransaction(strategy, commitment);
+
+      // Fetch the created account
+      const newAccount = await program.account.userAccount.fetch(
+        wallet.publicKey
+      );
+
+      console.log("On-chain last Id is: ", newAccount.lastId.toString());
+
+      return txHash;
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
+  };
+
+  const addItemAnchor = async (content: string) => {
+    try {
+      if (!program || !wallet.publicKey || !wallet.signTransaction) return;
+
+      // Derive the PDA for the newUserAccount
+      const [userAccountPDA] = PublicKey.findProgramAddressSync(
+        [Buffer.from("user"), wallet.publicKey.toBuffer()],
+        program.programId
+      );
+      // Fetch the created account
+      const userAccount = await program.account.userAccount.fetch(
+        userAccountPDA
+      );
+
+      // Derive the PDA for the itemAccountPDA
+      const [itemAccountPDA] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("item"),
+          wallet.publicKey.toBuffer(),
+          Uint8Array.from([userAccount.lastId]),
+        ],
+        program.programId
+      );
+
+      // Send transaction
+      const txHash = await program.methods
+        .addItem(content)
+        .accounts({
+          userAccount: userAccountPDA,
+          newItemAccount: itemAccountPDA,
+        })
+        .rpc();
+      console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
+
+      // Confirm transaction
+      const commitment = "confirmed";
+      const latestBlockHash = await connection.getLatestBlockhash(commitment);
+      const strategy: TransactionConfirmationStrategy = {
+        signature: txHash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        blockhash: latestBlockHash.blockhash,
+      };
+      await connection.confirmTransaction(strategy, commitment);
+
+      // Fetch the created account
+      const itemAccount = await program.account.itemAccount.fetch(
+        itemAccountPDA
+      );
+
+      console.log("On-chain narrative is: ", itemAccount.content);
+
+      return txHash;
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
+  };
+
+  return {
+    program,
+    initUserAnchor,
+    addItemAnchor,
+  };
+}
+```
+
+Notice here Anchor is actively maintained by coral Team. The repository is moved from the old repository to `@coral-xyz/anchor`.
+
+```jsx
+import { AnchorProvider, Program } from "@coral-xyz/anchor";
+```
+
+Once the wallet is connected we initiate the program
+
+```jsx
+const provider = new AnchorProvider(
+  connection,
+  wallet as any,
+  AnchorProvider.defaultOptions()
+);
+
+const program = new Program(IDL, PROGRAM_ID, provider);
+```
+
+For the RPC I am using the one from Helius. You can create an account [here](https://www.helius.dev/) to get the API KEY and add it to the environment variable `HELIUS_API_KEY`
+
+```jsx
+export const RPC_URL =
+  typeof window !== "undefined"
+    ? `https://devnet.helius-rpc.com/?api-key=${
+        (window as unknown as any).ENV.HELIUS_API_KEY
+      }`
+    : "https://api.devnet.solana.com";
+```
+
+Derive the PDA is sync now. Before it was `await PublicKey.findProgramAddress()`
+
+```jsx
+const [newUserAccountPDA] = PublicKey.findProgramAddressSync(
+  [Buffer.from("user"), wallet.publicKey.toBuffer()],
+  program.programId
+);
+```
+
+To send a transaction we use `rpc` at the end instead of `program.rpc.addItem` which is now deprecated.
+
+```jsx
+// Send transaction
+const txHash = await program.methods
+  .addItem(content)
+  .accounts({
+    userAccount: userAccountPDA,
+    newItemAccount: itemAccountPDA,
+  })
+  .rpc();
+```
+
+After the transaction is submitted we wait for the confirmation. Notice that `confirmTransaction` now requires a `TransactionConfirmationStrategy`
+
+```jsx
+// Confirm transaction
+const commitment = "confirmed";
+const latestBlockHash = await connection.getLatestBlockhash(commitment);
+const strategy: TransactionConfirmationStrategy = {
+  signature: txHash,
+  lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+  blockhash: latestBlockHash.blockhash,
+};
+await connection.confirmTransaction(strategy, commitment);
+
+```
 
 ## Development
 
-From your terminal:
+To run the app on localhost:
 
 ```sh
 npm run dev
@@ -239,3 +669,19 @@ Then run the app in production mode:
 npm start
 ```
 
+## Conclusion
+
+Congrats on completing the guide. Thanks to web faucets, web editors you can start right away without the hussle to install anything. even I used visual studio code. A lot of browser based are out there making the whole development in the browser feasable.
+
+## Next
+
+Keep learning and exploring Solana development with more guides [Guides](https://solana.com/developers/guides).
+and checkout the below for link to related resources.
+
+## Useful link
+
+[Anchor](https://www.anchor-lang.com/)
+
+[Browser Program Editor](https://beta.solpg.io/)
+
+The code of the project is located: [Narrative Tracker App](https://github.com/aeither/solana-narrative-tracker)
