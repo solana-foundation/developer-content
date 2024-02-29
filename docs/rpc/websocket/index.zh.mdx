@@ -1,0 +1,22 @@
+---
+title: Solana RPC Websocket Methods
+seoTitle: Solana RPC Websocket Methods
+sidebarLabel: Websocket Methods
+sidebarSortOrder: 2
+hideTableOfContents: false
+---
+
+连接到 RPC PubSub websocket 后 `ws://<ADDRESS>/`:
+
+- 使用以下方法向websocket提交订阅请求
+- 多个订阅可能同时处于活动状态
+- 许多订阅都采用可选
+  [`commitment(承诺)` 参数](/docs/rpc/index.zh.mdx#配置状态承诺)，
+定义更改应如何最终确定才能触发通知。对于订阅，如果未指定承诺，则默认值为`finalized(已完成)`。
+
+## RPC PubSub WebSocket 端点
+
+默认端口: `8900`
+
+- ws://localhost:8900
+- http://192.168.1.88:8900
