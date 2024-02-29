@@ -168,8 +168,7 @@ MWR implementation_
 
 ## Seed Vault
 
-The
-[Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault)
+The [Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault)
 is a system service providing secure key custody to Wallet apps. It helps to
 keep your secrets safe, by moving them to the highest privileged environment
 available on the device. Your keys, seeds, and secret phrases never leave the
@@ -182,8 +181,7 @@ compromised.
 
 ## Solana dApp Store
 
-The
-[Solana dApp Store](https://github.com/solana-mobile/dapp-publishing#welcome-publishers)
+The [Solana dApp Store](https://github.com/solana-mobile/dapp-publishing#welcome-publishers)
 is an alternate app distribution system well-suited for distributing apps
 developed to the Solana ecosystem.
 
