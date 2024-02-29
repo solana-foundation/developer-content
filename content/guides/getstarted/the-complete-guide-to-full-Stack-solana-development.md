@@ -21,8 +21,8 @@ keywords:
   - Anchor framework
   - Rust programming
   - Phantom wallet integration
-altRoutes:
-  - [Medium](https://medium.com/@Anatolii_Zhadan/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-18a1e1bdbb3b)
+Origin article:
+  - https://medium.com/@Anatolii_Zhadan/the-complete-guide-to-full-stack-solana-development-with-react-anchor-rust-and-phantom-18a1e1bdbb3b
 ---
 
 ### The Complete Guide to Full Stack Solana Development with React, Anchor, Rust, and Phantom
