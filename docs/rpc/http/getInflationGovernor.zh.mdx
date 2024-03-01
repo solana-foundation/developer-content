@@ -1,0 +1,70 @@
+---
+sidebarLabel: getInflationGovernor
+title: getInflationGovernor RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getInflationGovernor
+---
+
+返回当前的通货膨胀调节器
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+  结果字段将是一个包含以下字段的 JSON 对象：
+
+- `initial: <f64>` -  从时间 0 开始的初始通货膨胀百分比
+- `terminal: <f64>` - 终期通胀百分比
+- `taper: <f64>` - 通货膨胀率每年下降。（速率降低是使用创世配置中的目标时隙时间得出的）
+- `foundation: <f64>` - 分配给基金会的通货膨胀总额的百分比
+- `foundationTerm: <f64>` - 基金会池通货膨胀的持续时间（以年为单位）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getInflationGovernor"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "foundation": 0.05,
+    "foundationTerm": 7,
+    "initial": 0.15,
+    "taper": 0.15,
+    "terminal": 0.015
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

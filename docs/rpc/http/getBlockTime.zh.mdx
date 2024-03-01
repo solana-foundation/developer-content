@@ -1,0 +1,73 @@
+---
+sidebarLabel: getBlockTime
+title: getBlockTime RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getBlockTime
+---
+
+返回块的估计生产时间。
+
+
+<Callout type={"info"}>
+  每个验证者通过间歇性地向特定区块的投票添加时间戳来定期向账本报告其 UTC 时间。
+  请求的区块时间是根据账本上记录的一组最近区块中投票时间戳的权益加权平均值计算得出的。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} required={true}>
+  块号，由Slot标识
+</Parameter>
+
+### 结果
+
+- `<i64>` - 估计的生产时间，作为 Unix 时间戳（自 Unix 纪元以来的秒数）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc":"2.0", "id":1,
+    "method": "getBlockTime",
+    "params":[5]
+  }
+'
+```
+
+### 响应
+
+  当区块时间可用时：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": 1574721591,
+  "id": 1
+}
+```
+
+  当区块时间不可用时：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32004,
+    "message": "Block not available for slot 150"
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

@@ -1,0 +1,75 @@
+---
+sidebarLabel: getHealth
+title: getHealth RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getHealth
+---
+
+返回节点的当前健康状况。健康节点是位于 `HEALTH_CHECK_SLOT_DISTANCE`最新集群确认插槽内的节点。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+  如果节点健康： "ok"
+  如果节点不健康，则返回 JSON RPC 错误响应。错误响应的具体情况**不稳定**，将来可能会发生变化
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getHealth"}
+'
+```
+
+### 响应
+
+  健康结果：
+
+```json
+{ "jsonrpc": "2.0", "result": "ok", "id": 1 }
+```
+
+  不健康结果（通用）：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32005,
+    "message": "Node is unhealthy",
+    "data": {}
+  },
+  "id": 1
+}
+```
+
+  不健康的结果（如果有其他信息）
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32005,
+    "message": "Node is behind by 42 slots",
+    "data": {
+      "numSlotsBehind": 42
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

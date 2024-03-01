@@ -1,0 +1,71 @@
+---
+sidebarLabel: getHighestSnapshotSlot
+title: getHighestSnapshotSlot RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getHighestSnapshotSlot
+---
+
+返回节点具有快照的最高槽位信息。
+
+这将找到最高的完整快照槽，以及基于完整快照槽的最高增量快照槽（如果有）。
+
+<Callout type={"caution"} title={"版本限制"}>
+  此方法仅在 v1.9 或更高版本中可用`solana-core`。v1.8及以下版本请使用
+  [getSnapshotSlot](/docs/rpc/http/getSnapshotSlot)`solana-core`。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+  当节点有快照时，这会返回一个包含以下字段的 JSON 对象：
+
+- `full: <u64>` - 最高的完整快照插槽
+- `incremental: <u64|null>` - 最高增量快照槽基于 `full`
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1,"method":"getHighestSnapshotSlot"}
+'
+```
+
+### 响应
+
+  当节点有快照时的结果：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "full": 100,
+    "incremental": 110
+  },
+  "id": 1
+}
+```
+
+  节点没有快照时的结果：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": { "code": -32008, "message": "No snapshot" },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>
