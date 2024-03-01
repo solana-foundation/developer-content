@@ -125,7 +125,8 @@ mod crowdfund {
 }
 ```
 
-Inside the Module, we can define the functions that will be used in the smart:
+Inside the Module, we can define the functions that will be used in the smart
+contract:
 
 Lets write the function to create a new campaign. The function takes in the
 following parameters:
@@ -454,6 +455,9 @@ crucial to import necessary dependencies. Ensure that you have the deployed
 building the smart contracts. Here's how you can import the required
 dependencies:
 
+In my App, I have the idl.json file in the root directory of the project. and
+this was written in `App.js`.
+
 ```js
 import idl from "./idl.json";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
@@ -474,7 +478,7 @@ const opts = {
 const { SystemProgram } = web3;
 ```
 
-Creating a Campaign To create a campaign, follow these steps:
+Creating a Campaign. To create a campaign, follow these steps:
 
 - Define a function named createCampaign.
 - Inside the function, instantiate a new Program using the imported idl,
@@ -538,7 +542,8 @@ const donateToCampaign = async publicKey => {
 };
 ```
 
-Withdrawing from a Campaign To withdraw from a campaign, use the following code:
+Withdrawing from a Campaign. To withdraw from a campaign, use the following
+code:
 
 ```js
 const withdrawFromCampaign = async publicKey => {
