@@ -1,0 +1,84 @@
+---
+sidebarLabel: getTokenAccountBalance
+title: getTokenAccountBalance RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getTokenAccountBalance
+---
+
+返回 SPL 令牌帐户的令牌余额。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  要查询的 Token 账户的 pubkey，为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象：
+
+- `amount: <string>` - 不带小数的原始余额，u64 的字符串表示形式
+- `decimals: <u8>` - 小数点右侧以 10 为基数的位数
+- `uiAmount: <number|null>` -  余额，使用mint-prescribed规定的小数位 **已弃用**
+- `uiAmountString: <string>` - 余额作为字符串，使用mint-prescribed规定的小数
+
+有关返回数据的更多详细信息， 来自[getBlock](/docs/rpc/http/getblock)的[代币余额结构(/docs/rpc/json-structures#token-balances)响应遵循类似的结构。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### Code sample
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "getTokenAccountBalance",
+    "params": [
+      "7fUAJdStEuGbc3sM84cKRL6yYaaSstyLSU4ve5oovLS7"
+    ]
+  }
+'
+```
+
+### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1114
+    },
+    "value": {
+      "amount": "9864",
+      "decimals": 2,
+      "uiAmount": 98.64,
+      "uiAmountString": "98.64"
+    },
+    "id": 1
+  }
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

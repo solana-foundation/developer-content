@@ -1,0 +1,67 @@
+---
+sidebarLabel: getStakeMinimumDelegation
+title: getStakeMinimumDelegation RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getStakeMinimumDelegation
+---
+
+返回权益最小委托，以 lamports 为单位。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，其`value`等于：
+
+- `<u64>` - 最小权益委托，在 lampors 中
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc":"2.0", "id":1,
+    "method": "getStakeMinimumDelegation"
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 501
+    },
+    "value": 1000000000
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

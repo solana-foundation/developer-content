@@ -1,0 +1,89 @@
+---
+sidebarLabel: getRecentPrioritizationFees
+title: getRecentPrioritizationFees RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getRecentPrioritizationFees
+---
+
+返回最近区块的优先费用列表。
+
+
+<Callout type={"info"}>
+  目前，节点的优先级缓存最多可存储 150 个块的数据。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"array"} optional={true}>
+
+  帐户地址数组（最多 128 个地址），采用 base-58 编码字符串
+
+<Callout type={"info"}>
+  如果提供此参数，则响应将反映将所有提供的帐户锁定为可写的交易的费用。
+</Callout>
+
+</Parameter>
+
+### 结果
+
+`RpcPrioritizationFee<object>` 具有以下字段的数组：
+
+- `slot: <u64>` - 观察到费用的时段
+- `prioritizationFee: <u64>` - 至少一笔成功落地的交易支付的每计算单元费用，以 micro-lamports 的增量指定（0.000001 lamports）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc":"2.0", "id":1,
+    "method": "getRecentPrioritizationFees",
+    "params": [
+      ["CxELquR1gPP8wHe33gZ4QxqGB3sZ9RSwsJ2KshVewkFY"]
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "slot": 348125,
+      "prioritizationFee": 0
+    },
+    {
+      "slot": 348126,
+      "prioritizationFee": 1000
+    },
+    {
+      "slot": 348127,
+      "prioritizationFee": 500
+    },
+    {
+      "slot": 348128,
+      "prioritizationFee": 0
+    },
+    {
+      "slot": 348129,
+      "prioritizationFee": 1234
+    }
+  ],
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

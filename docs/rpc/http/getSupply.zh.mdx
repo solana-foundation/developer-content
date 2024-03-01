@@ -1,0 +1,81 @@
+---
+sidebarLabel: getSupply
+title: getSupply RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getSupply
+---
+
+返回有关当前供应的信息。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="排除非循环帐户列表" type="bool" optional={true}>
+  从响应中排除非流通账户列表
+</Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象：
+
+- `total: <u64>` - lamports的总供应量
+- `circulating: <u64>` - lamports中的循环供应
+- `nonCirculating: <u64>` - lamports中的非循环供应
+- `nonCirculatingAccounts: <array>` - 非循环帐户的帐户地址数组，作为字符串。如果`excludeNonCirculatingAccountsList`启用，返回的数组将为空。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0", "id":1, "method":"getSupply"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1114
+    },
+    "value": {
+      "circulating": 16000,
+      "nonCirculating": 1000000,
+      "nonCirculatingAccounts": [
+        "FEy8pTbP5fEoqMV1GdTz83byuA8EKByqYat1PKDgVAq5",
+        "9huDUZfxoJ7wGMTffUE7vh1xePqef7gyrLJu9NApncqA",
+        "3mi1GmwEE3zo2jmfDuzvjSX9ovRXsDUKHvsntpkhuLJ9",
+        "BYxEJTDerkaRWBem3XgnVcdhppktBXa2HbkHPKj2Ui4Z"
+      ],
+      "total": 1016000
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

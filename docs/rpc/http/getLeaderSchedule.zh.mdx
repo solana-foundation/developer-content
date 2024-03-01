@@ -1,0 +1,91 @@
+---
+sidebarLabel: getLeaderSchedule
+title: getLeaderSchedule RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getLeaderSchedule
+---
+
+返回一个纪元的领导者时间表
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} optional={true}>
+
+  获取与所提供的槽相对应的纪元的领导者时间表。
+
+  <Callout type={"info"}>
+    如果未指定，则获取当前时期的领导者计划
+  </Callout>
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="身份" type="string" optional={true}>
+  仅返回此验证者身份的结果（base-58 编码）
+</Field>
+
+</Parameter>
+
+### 结果
+
+  返回具有以下两个值之一的结果：
+
+- `<null>` - 如果未找到请求的纪元，或者
+- `<object>` - 结果字段将是验证者身份的字典，作为 base-58 编码字符串，及其相应的领导者槽索引作为值（索引相对于所请求的纪元中的第一个槽）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getLeaderSchedule",
+    "params": [
+      null,
+      {
+        "identity": "4Qkev8aNZcqFNSRhQzwyLMFSsi94jHqE8WNVTJzTP99F"
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "4Qkev8aNZcqFNSRhQzwyLMFSsi94jHqE8WNVTJzTP99F": [
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+      21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
+      39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56,
+      57, 58, 59, 60, 61, 62, 63
+    ]
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

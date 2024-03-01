@@ -1,0 +1,94 @@
+---
+sidebarLabel: getTokenLargestAccounts
+title: getTokenLargestAccounts RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getTokenLargestAccounts
+---
+
+返回特定 SPL 令牌类型的 20 个最大帐户。
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  要查询的令牌 Mint 的 pubkey，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+    name="承诺"
+    type="string"
+    optional={true}
+    href="/docs/rpc/index.zh.mdx#配置状态承诺"
+  ></Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象数组：
+
+- `address: <string>` -  代币账户的地址
+- `amount: <string>` - 原始代币账户余额（不带小数），u64 的字符串表示形式
+- `decimals: <u8>` - 小数点右侧以 10 为基数的位数
+- `uiAmount: <number|null>` - 代币账户余额，使用铸币厂规定的小数位 **已弃用**
+- `uiAmountString: <string>` - 代币账户余额作为字符串，使用mint-prescribed规定的小数
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "getTokenLargestAccounts",
+    "params": [
+      "3wyAj7Rt1TWVPZVteFJPLa26JmLvdb1CAKEFZm3NY75E"
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1114
+    },
+    "value": [
+      {
+        "address": "FYjHNoFtSQ5uijKrZFyYAxvEr87hsKXkXcxkcmkBAf4r",
+        "amount": "771",
+        "decimals": 2,
+        "uiAmount": 7.71,
+        "uiAmountString": "7.71"
+      },
+      {
+        "address": "BnsywxTcaYeNUtzrPxQUvzAWxfzZe3ZLUJ4wMMuLESnu",
+        "amount": "229",
+        "decimals": 2,
+        "uiAmount": 2.29,
+        "uiAmountString": "2.29"
+      }
+    ]
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

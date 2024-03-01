@@ -1,0 +1,174 @@
+---
+sidebarLabel: getTokenAccountsByDelegate
+title: getTokenAccountsByDelegate RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getTokenAccountsByDelegate
+---
+
+返回经批准的代表的所有 SPL 令牌帐户。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  委托查询的账户公钥，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  具有以下字段之一的 JSON 对象：
+
+- `mint: <string>` - 用于限制帐户的特定令牌 Mint 的 Pubkey，作为 base-58 编码字符串；或者
+- `programId: <string>` - 拥有账户的Token程序的Pubkey，作为base-58编码的字符串
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+<Field name="数据切片" type="object" optional={true}>
+  请求帐户数据的一部分。
+- `length: <usize>` - 返回的字节数
+- `offset: <usize>` - 开始读取的字节偏移量
+
+<Callout type={"info"}>
+  数据切片仅适用于`base58`、`base64`、 或`base64+zstd` 编码。
+</Callout>
+
+</Field>
+
+<Field 
+  name="编码"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#解析后的响应"
+>
+
+  账户数据的编码格式
+
+  <Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
+
+<details>
+
+  - `base58` 速度很慢并且帐户数据仅限于 129 字节以下。
+  - `base64` 将返回任意大小的帐户数据的 Base64 编码数据。
+  - `base64+zstd` [使用Zstandard](https://facebook.github.io/zstd/)压缩帐户数据 并对结果进行 base64 编码。
+  - `jsonParsed` 编码尝试使用特定于程序的状态解析器来返回更多人类可读且明确的帐户状态数据。
+  - 如果 `jsonParsed` 请求但无法找到解析器，则该字段将回退到`base64`编码，当data字段为 type 时可检测到`<string>`。
+
+</details>
+
+</Field>
+
+</Parameter>
+
+### Result
+
+  结果将是一个 RpcResponse JSON 对象，其`value`等于 JSON 对象数组，其中包含：
+  - `pubkey: <string>` - 帐户 Pubkey 作为 base-58 编码字符串
+  - `account: <object>` - 一个 JSON 对象，具有以下子字段：
+  - `lamports: <u64>` - 分配给该帐户的 lamport 数量，作为 u64
+  - `owner: <string>` - 该帐户已分配到的程序的 base-58 编码的公钥
+  - `data: <[string,encoding]|object>` - 与帐户关联的数据，作为编码的二进制数据或 JSON 格式 `{<program>: <state>}` - 取决于编码参数
+  - `executable: <bool>` - 布尔值，指示帐户是否包含程序（并且严格只读）
+  - `rentEpoch: <u64>` - 该账户下一次欠租金的纪元，如 u64
+  - `size: <u64>` - 帐户的数据大小
+
+当使用编码请求数据时，结构内部可能会出现类似于[令牌余额结构](/docs/rpc/json-structures.zh#代币余额)`jsonParsed`的格式 ，对于和 - 后者是可选对象。`tokenAmount` `delegatedAmount`。
+
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getTokenAccountsByDelegate",
+    "params": [
+      "4Nd1mBQtrMJVYVfKf2PJy9NZUZdTAsp7D4xWLs4gDB4T",
+      {
+        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+      },
+      {
+        "encoding": "jsonParsed"
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1114
+    },
+    "value": [
+      {
+        "account": {
+          "data": {
+            "program": "spl-token",
+            "parsed": {
+              "info": {
+                "tokenAmount": {
+                  "amount": "1",
+                  "decimals": 1,
+                  "uiAmount": 0.1,
+                  "uiAmountString": "0.1"
+                },
+                "delegate": "4Nd1mBQtrMJVYVfKf2PJy9NZUZdTAsp7D4xWLs4gDB4T",
+                "delegatedAmount": {
+                  "amount": "1",
+                  "decimals": 1,
+                  "uiAmount": 0.1,
+                  "uiAmountString": "0.1"
+                },
+                "state": "initialized",
+                "isNative": false,
+                "mint": "3wyAj7Rt1TWVPZVteFJPLa26JmLvdb1CAKEFZm3NY75E",
+                "owner": "CnPoSPKXu7wJqxe59Fs72tkBeALovhsCxYeFwPCQH9TD"
+              },
+              "type": "account"
+            },
+            "space": 165
+          },
+          "executable": false,
+          "lamports": 1726080,
+          "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+          "rentEpoch": 4,
+          "space": 165
+        },
+        "pubkey": "28YTZEwqtMHWrhWcvv34se7pjS7wctgqzCPB3gReCFKp"
+      }
+    ]
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>
