@@ -1,0 +1,72 @@
+---
+sidebarLabel: requestAirdrop
+title: requestAirdrop RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/requestAirdrop
+---
+
+请求将 lamports 空投到 Pubkey
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  用于接收 lamports 的帐户的公钥，作为 base-58 编码的字符串
+</Parameter>
+
+<Parameter type={"integer"} required={true}>
+  lamports 空投，作为 "u64"
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+    name="承诺"
+    type="string"
+    optional={true}
+    href="/docs/rpc/index.zh.mdx#配置状态承诺"
+  ></Field>
+
+</Parameter>
+
+### 结果
+
+`<string>` - 空投的交易签名，作为base-58编码的字符串
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "requestAirdrop",
+    "params": [
+      "83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri",
+      1000000000
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": "5VERv8NMvzbJMEkV8xnrLkEaWRtSz9CosKDYjCJjBRnbJLgp8uirBgmQpjKhoR4tjF3ZpRzrFmBV6UjKdiSZkQUW",
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

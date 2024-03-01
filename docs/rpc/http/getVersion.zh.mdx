@@ -1,0 +1,49 @@
+---
+sidebarLabel: getVersion
+title: getVersion RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getVersion
+---
+
+返回节点上运行的当前 Solana 版本
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+  结果字段将是一个包含以下字段的 JSON 对象：
+
+- `solana-core` -  solana-core 的软件版本作为`string`
+- `feature-set` - 当前软件功能集的唯一标识符 `u32`
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getVersion"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": { "feature-set": 2891131721, "solana-core": "1.16.7" },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

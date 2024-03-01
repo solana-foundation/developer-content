@@ -1,0 +1,84 @@
+---
+sidebarLabel: isBlockhashValid
+title: isBlockhashValid RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/isBlockhashValid
+---
+
+返回区块哈希是否仍然有效
+
+
+<Callout type={"caution"} title={"版本限制"}>
+  此方法仅在 v1.9 或更高版本中可用`solana-core`。 v1.8 及以下版本请使用
+  [getFeeCalculatorForBlockhash](/docs/rpc/http/getFeeCalculatorForBlockhash) `solana-core`。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  要评估的块的 blockhash，作为 base-58 编码的字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+    name="承诺"
+    type="string"
+    optional={true}
+    href="/docs/rpc/index.zh.mdx#配置状态承诺"
+  ></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+`<bool>` - `true` 如果区块哈希仍然有效
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "id":45,
+    "jsonrpc":"2.0",
+    "method":"isBlockhashValid",
+    "params":[
+      "J7rBdM6AecPDEZp8aPq5iPSNKVkU5Q76F3oAV4eW5wsW",
+      {"commitment":"processed"}
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 2483
+    },
+    "value": false
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

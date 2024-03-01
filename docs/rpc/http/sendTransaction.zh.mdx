@@ -1,0 +1,112 @@
+---
+sidebarLabel: sendTransaction
+title: sendTransaction RPC Method
+sidebarSortOrder: 0
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/sendTransaction
+---
+
+将签名的交易提交到集群进行处理。
+
+此方法不会以任何方式改变交易；它将客户端创建的事务按原样中继到节点。
+
+如果节点的rpc服务收到交易，该方法立即成功，无需等待任何确认。此方法的成功响应并不能保证集群处理或确认事务。
+
+虽然 rpc 服务会合理地重试提交它，但如果交易`recent_blockhash`在落地之前过期，则交易可能会被拒绝。
+
+用于 [`getSignatureStatuses`](#getsignaturestatuses) 确保交易得到处理和确认。
+
+提交之前，将执行以下预检检查：
+
+1. 交易签名已验证
+2. 该交易是根据预检承诺指定的银行时段进行模拟的。失败时将返回错误。如果需要，可以禁用预检检查。建议指定相同的承诺和预检承诺，以避免混淆行为。
+
+返回的签名是交易中的第一个签名，用于标识交易
+([交易id](/docs/terminology.md#transaction-id))。在提交之前可以轻松地从交易数据中提取该标识符。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  完全签名的交易，作为编码字符串。
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下可选字段：
+
+
+  <Field
+  name="编码"
+  type="string"
+  defaultValue="base58"
+  href="/docs/rpc/index.zh.mdx#解析后的响应"
+>
+
+    用于交易数据的编码。
+    Values: `base58` (慢速, **已弃用**), or `base64`.
+
+</Field>
+
+<Field name="跳过预检" type="bool" defaultValue="false">
+  当 `true`, ，跳过预检事务检查
+</Field>
+
+<Field
+  name="飞行前承诺"
+  type="string"
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+  defaultValue="finalized(已完成)"
+>
+  用于预检的承诺级别。
+</Field>
+
+<Field name="最大重试次数" type="usize">
+  RPC 节点重试向领导者发送交易的最大次数。如果未提供此参数，RPC 节点将重试交易，直到交易完成或区块哈希过期。
+</Field>
+
+<Field name="最小上下文槽" type="number">
+  设置执行飞行前事务检查的最小时隙
+</Field>
+
+</Parameter>
+
+### 结果
+
+`<string>` - 嵌入交易中的第一个交易签名，作为 base-58 编码字符串 ([交易id](/docs/terminology.md#transaction-id))
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "sendTransaction",
+    "params": [
+      "4hXTCkRzt9WyecNzV1XPgCDfGAZzQKNxLXgynz5QDuWWPSAZBZSHptvWRL3BjCvzUXRdKvHL2b7yGrRQcWyaqsaBCncVG7BFggS8w9snUts67BSh3EqKpXLUm5UMHfD7ZBe9GhARjbNQMLJ1QD3Spr6oMTBU6EhdB4RD8CP2xUxr2u3d6fos36PD98XS6oX8TQjLpsMwncs5DAMiD4nNnR8NBfyghGCWvCVifVwvA8B8TJxE1aiyiv2L429BCWfyzAme5sZW8rDb14NeCQHhZbtNqfXhcp2tAnaAT"
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": "2id3YC2jK9G5Wo2phDx4gJVAew8DcY5NAojnVuao8rkxwPYPe8cSwE5GzhEgJA2y8fVjDEo6iR6ykBvDxrTQrtpb",
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

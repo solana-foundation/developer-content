@@ -1,0 +1,105 @@
+---
+sidebarLabel: getVoteAccounts
+title: getVoteAccounts RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getVoteAccounts
+---
+
+返回当前银行中所有投票账户的账户信息和相关权益。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+    name="承诺"
+    type="string"
+    optional={true}
+    href="/docs/rpc/index.zh.mdx#配置状态承诺"
+  ></Field>
+
+<Field name="votePubkey" type="string" optional={true}>
+  仅返回此验证者投票地址的结果（base-58 编码）
+</Field>
+
+<Field name="keepUnstakedDelinquents" type="bool" optional={true}>
+  不要过滤掉没有权益的拖欠验证者
+</Field>
+
+<Field name="delinquentSlotDistance" type="u64" optional={true}>
+  指定提示后面的槽数，验证者必须将其视为拖欠。注意：为了生态系统产品之间的一致性，不建议指定该参数。
+</Field>
+
+</Parameter>
+
+### 结果
+
+  结果字段将是`current`和`delinquent`帐户的 JSON 对象，每个对象包含一个 JSON 对象数组，其中包含以下子字段：
+
+- `votePubkey: <string>` - 投票账户地址，采用 base-58 编码字符串
+- `nodePubkey: <string>` - 验证者身份，作为 base-58 编码字符串
+- `activatedStake: <u64>` - lamports 中的股份，委托给该投票账户并在该纪元中活跃
+- `epochVoteAccount: <bool>` - bool，投票账户是否在该纪元中被质押
+- `commission: <number>` - 投票账户奖励支付的百分比（0-100）
+- `lastVote: <u64>` - 此投票账户最近投票的时段
+- `epochCredits: <array>` - 最多五个时期获得的学分的最新历史记录，作为包含以下内容的数组的数组`[epoch, credits, previousCredits]`：
+- `rootSlot: <u64>` - 此投票账户的当前根槽位
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+将结果限制为单个验证者投票账户：
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getVoteAccounts",
+    "params": [
+      {
+        "votePubkey": "3ZT31jkAGhUaw8jsy4bTknwBMP8i4Eueh52By4zXcsVw"
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "current": [
+      {
+        "commission": 0,
+        "epochVoteAccount": true,
+        "epochCredits": [
+          [1, 64, 0],
+          [2, 192, 64]
+        ],
+        "nodePubkey": "B97CCUW3AEZFGy6uUg6zUdnNYvnVq5VG8PUtb2HayTDD",
+        "lastVote": 147,
+        "activatedStake": 42,
+        "votePubkey": "3ZT31jkAGhUaw8jsy4bTknwBMP8i4Eueh52By4zXcsVw"
+      }
+    ],
+    "delinquent": []
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

@@ -1,0 +1,93 @@
+---
+title: Solana RPC HTTP Methods
+seoTitle: Solana RPC HTTP Methods
+sidebarLabel: HTTP Methods
+sidebarSortOrder: 0
+hideTableOfContents: false
+---
+
+Solana 节点使用
+[JSON-RPC 2.0](https://www.jsonrpc.org/specification)规范接受 HTTP 请求 。
+
+> 对于 JavaScript 应用程序，使用
+> [@solana/web3.js](https://github.com/solana-labs/solana-web3.js) 库作为
+> RPC 方法与 Solana 节点交互的便捷接口。
+> 对于与 Solana 节点的 PubSub 连接，请使用
+> [Websocket API](/docs/rpc/websocket/index.mdx).
+
+## RPC HTTP 端点
+
+默认端口: `8899`
+
+- http://localhost:8899
+- http://192.168.1.88:8899
+
+## 请求格式
+
+要发出 JSON-RPC 请求，请发送带有标头的 HTTP POST 请求 `Content-Type: application/json`。JSON 请求数据应包含 4 个字段：
+
+- `jsonrpc: <string>` - 设置 `"2.0"`
+- `id: <number>` - 客户端生成的唯一标识整数
+- `method: <string>` - 包含要调用的方法的字符串
+- `params: <array>` - 有序参数值的 JSON 数组
+
+使用 curl 示例:
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getBalance",
+    "params": [
+      "83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri"
+    ]
+  }
+'
+```
+
+响应输出将是一个包含以下字段的 JSON 对象：
+
+- `jsonrpc: <string>` - 匹配请求规范
+- `id: <number>` - 匹配请求标识符
+- `result: <array|number|object|string>` - 请求的数据或成功确认
+
+通过发送 JSON-RPC 请求对象数组作为单个 POST 的数据，可以批量发送请求。
+
+### 请求示例
+
+承诺参数应作为数组中的最后一个元素包含`params` ：
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getBalance",
+    "params": [
+      "83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri",
+      {
+        "commitment": "finalized"
+      }
+    ]
+  }
+'
+```
+
+## 定义
+
+- 哈希: 数据块的 SHA-256 哈希。
+- Pubkey: Ed25519 密钥对的公钥。
+- 交易: 由客户端密钥对签名的 Solana 指令列表，用于授权这些操作。
+- 签名: 交易有效负载数据（包括指令）的 Ed25519 签名。这可以用来识别交易。
+
+## 健康检查
+
+虽然不是 JSON RPC API，但`GET /healthRPC` HTTP 端点提供了一种运行状况检查机制，供负载均衡器或其他网络基础设施使用。
+此请求将始终返回 HTTP 200 OK 响应，其正文为“ok”、“behind”或“unknown”：
+
+
+
+- `ok`: 该节点位于 `HEALTH_CHECK_SLOT_DISTANCE` 最新集群确认槽位的槽位内
+- `behind { distance }`: 该节点 `distance` 位于最新集群确认插槽的插槽后面，其中 `distance > HEALTH_CHECK_SLOT_DISTANCE`
+- `unknown`: 节点无法确定它相对于集群的位置

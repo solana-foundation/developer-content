@@ -1,0 +1,174 @@
+---
+sidebarLabel: simulateTransaction
+title: simulateTransaction RPC Method
+sidebarSortOrder: 0
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/simulateTransaction
+---
+
+模拟发送交易
+
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+
+  交易，作为编码字符串。
+
+  <Callout type={"info"}>
+    交易必须具有有效的区块哈希，但不需要签名。
+  </Callout>
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+  配置对象包含以下字段：
+
+  <Field
+  name="承诺"
+  type="string"
+  defaultValue="finalized(已完成)"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+>
+    模拟交易的承诺级别
+  </Field>
+
+<Field name="sigVerify" type="bool" optional={true} defaultValue={false}>
+  是否 `true` 验证交易签名（与 冲突 `replaceRecentBlockhash`）
+</Field>
+
+<Field
+  name="replaceRecentBlockhash"
+  type="bool"
+  optional={true}
+  defaultValue={false}
+>
+  如果`true`交易最近的区块哈希值将被替换为最新的区块哈希值。（与 冲突`sigVerify`）
+</Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小时隙
+</Field>
+
+<Field name="编码" type="string" defaultValue="base58" optional={true}>
+
+  用于交易数据的编码。
+Values: `base58` (慢速, **已弃用**), 或 `base64`.
+
+</Field>
+
+<Field name="内部说明" type="bool" optional={true} defaultValue={false}>
+
+如果`true`响应将包含 [内部指令](/docs/rpc/json-structures.zh#内部指令)。这些内部说明将`jsonParsed`在可能的情况下进行，否则`json`。
+
+</Field>
+
+<Field name="帐户" type={"object"} optional={true}>
+
+  帐户配置对象包含以下字段：
+
+  <Field name="地址" type="array">
+    要返回的帐户数`array`，作为 base-58 编码字符串
+</Field>
+
+<Field name="编码" type="string" defaultValue="base64">
+
+  返回的帐户数据的编码
+
+  <Values values={["base64", "base58", "base64+zstd", "jsonParsed"]} />
+
+<details>
+
+- `jsonParsed` 编码尝试使用特定于程序的状态解析器来返回更多人类可读且明确的帐户状态数据。
+- 如果 `jsonParsed` 请求但
+  [找不到解析器](https://github.com/solana-labs/solana/blob/cfd0a00ae2ba85a6d76757df8b4fa38ed242d185/account-decoder/src/parse_account_data.rs#L98-L100)则该字段会回退到`base64`编码，当返回的 `accounts.data`字段为 type时可检测到`string`。
+
+</details>
+
+</Field>
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+  结果将是一个 RpcResponse JSON 对象，`value`设置为具有以下字段的 JSON 对象：
+
+- `err: <object|string|null>` -  如果交易失败则返回错误，如果交易成功则返回 null。
+  [交易错误定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+- `logs: <array|null>` - 交易指令在执行期间输出的日志消息数组，如果在交易能够执行之前模拟失败（例如由于无效的区块哈希或签名验证失败），则为 null
+- `accounts: <array|null>` - `accounts.addresses` 与请求中的数组长度相同的帐户数组
+  - `<null>` - 如果帐户不存在或不`err`为空
+  - `<object>` - 否则，一个 JSON 对象包含：
+    - `lamports: <u64>` - 分配给该帐户的 lamport 数量，作为 u64
+    - `owner: <string>` - 该帐户已分配到的程序的 base-58 编码的公钥
+    - `data: <[string, encoding]|object>` - 与帐户关联的数据，作为编码的二进制数据或 JSON 格式 `{<program>: <state>}` - 取决于编码参数
+    - `executable: <bool>` - 布尔值，指示帐户是否包含程序（并且严格只读）
+    - `rentEpoch: <u64>` - 该账户下一次欠租金的纪元，如 u64
+- `unitsConsumed: <u64|undefined>` - 处理该事务期间消耗的计算预算单位数量
+- `returnData: <object|null>` - 交易中指令生成的最新返回数据，包含以下字段：
+  - `programId: <string>` - 生成返回数据的程序，作为 base-58 编码的 Pubkey
+  - `data: <[string, encoding]>` - 返回数据本身，作为 base-64 编码的二进制数据
+- `innerInstructions: <object | undefined>` -  仅当 `innerInstructions`设置为时才定义`true`。 该值是[内部指令](/docs/rpc/json-structures.zh#内部指令)的列表
+
+    </DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "simulateTransaction",
+    "params": [
+      "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAEDArczbMia1tLmq7zz4DinMNN0pJ1JtLdqIJPUw3YrGCzYAMHBsgN27lcgB6H2WQvFgyZuJYHa46puOQo9yQ8CVQbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCp20C7Wj2aiuk5TReAXo+VTVg8QTHjs0UjNMMKCvpzZ+ABAgEBARU=",
+      {
+        "encoding":"base64",
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 218
+    },
+    "value": {
+      "err": null,
+      "accounts": null,
+      "logs": [
+        "Program 83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri invoke [1]",
+        "Program 83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri consumed 2366 of 1400000 compute units",
+        "Program return: 83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri KgAAAAAAAAA=",
+        "Program 83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri success"
+      ],
+      "returnData": {
+        "data": ["Kg==", "base64"],
+        "programId": "83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri"
+      },
+      "unitsConsumed": 2366
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>
