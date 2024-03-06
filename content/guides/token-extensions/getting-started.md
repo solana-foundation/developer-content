@@ -97,6 +97,7 @@ make sense to combine:
 - Confidential transfer + fees (until 1.18)
 - Confidential transfer + transfer hooks (these transfers can only see source /
   destination accounts, therefore cannot act on the amount transferred)
+- Confidential transfer + permanent delegate
 
 Other than these, you have the option to customize with any combination of token
 extensions that suit your project’s needs.
