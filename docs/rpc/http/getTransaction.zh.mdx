@@ -32,20 +32,28 @@ altRoutes:
 
 - `processed` 不支持。
 
-  </Field>
+      </Field>
+
+  {" "}
+
+  {" "}
 
   <Field name="maxSupportedTransactionVersion" type="number" optional={true}>
     设置要在响应中返回的最大事务版本。如果请求的交易是更高版本，则会返回错误。如果省略该参数，则仅返回遗留事务，任何版本化事务都会提示错误。
   </Field>
 
-  <Field
-  name="编码"
-  type="string"
-  optional={true}
-  href="/docs/rpc/index.zh.mdx#解析后的响应"
->
+      <Field
+
+  name="编码" type="string" optional={true} href="/docs/rpc/index.zh.mdx#解析后
+  的响应"
+
+  >
 
   返回交易的编码
+
+  {" "}
+
+  {" "}
 
   <Values values={["json", "jsonParsed", "base64", "base58"]} />
 
