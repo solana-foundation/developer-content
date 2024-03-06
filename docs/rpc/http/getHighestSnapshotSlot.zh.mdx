@@ -25,7 +25,7 @@ altRoutes:
 
 ### 结果
 
-  当节点有快照时，这会返回一个包含以下字段的 JSON 对象：
+当节点有快照时，这会返回一个包含以下字段的 JSON 对象：
 
 - `full: <u64>` - 最高的完整快照插槽
 - `incremental: <u64|null>` - 最高增量快照槽基于 `full`
@@ -44,7 +44,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 
 ### 响应
 
-  当节点有快照时的结果：
+当节点有快照时的结果：
 
 ```json
 {
@@ -57,7 +57,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 }
 ```
 
-  节点没有快照时的结果：
+节点没有快照时的结果：
 
 ```json
 {

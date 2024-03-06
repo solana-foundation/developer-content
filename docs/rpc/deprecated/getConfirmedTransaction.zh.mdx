@@ -9,7 +9,6 @@ altRoutes:
 
 返回已确认交易的交易详细信息
 
-
 <Callout type={"warning"} title={"已弃用的方法"}>
   该方法预计在 v2.0 中被删除`solana-core`。请改用
   [getTransaction](/docs/rpc/http/getTransaction)。
@@ -27,7 +26,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -44,15 +43,18 @@ altRoutes:
   href="/docs/rpc/index.zh.mdx#解析后的响应"
 >
 
-  账户数据的编码格式
+账户数据的编码格式
 
-  <Values values={["json", "base58", "base64", "jsonParsed"]} />
+{" "}
+<Values values={["json", "base58", "base64", "jsonParsed"]} />
 
 <details>
 
 - `base58` 速度很慢并且帐户数据仅限于 129 字节以下。
-- `jsonParsed` 编码尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确的数据 `transaction.message.instructions`。
-- 如果 `jsonParsed` 请求但无法找到解析器，则指令将回退到常规`json`编码（`accounts`、`data`和 `programIdIndex`字段）。
+- `jsonParsed` 编码尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确
+  的数据 `transaction.message.instructions`。
+- 如果 `jsonParsed` 请求但无法找到解析器，则指令将回退到常规`json`编码
+  （`accounts`、`data`和 `programIdIndex`字段）。
 
 </details>
 
@@ -64,20 +66,29 @@ altRoutes:
 
 - `<null>` - 如果交易未找到或未确认
 - `<object>` - 如果交易被确认，则具有以下字段的对象：
-  - `slot: <u64>` -  处理该交易的槽位
+  - `slot: <u64>` - 处理该交易的槽位
   - `transaction: <object|[string,encoding]>` -
-    [交易](/docs/rpc/json-structures.zh#交易)对象，可以是 JSON 格式，也可以是编码的二进制数据，具体取决于编码参数
-  - `blockTime: <i64|null>` -  估计的生产时间，作为处理事务时的 Unix 时间戳（自 Unix 纪元以来的秒数）。如果不可用则为 null
+    [交易](/docs/rpc/json-structures.zh#交易)对象，可以是 JSON 格式，也可以是编
+    码的二进制数据，具体取决于编码参数
+  - `blockTime: <i64|null>` - 估计的生产时间，作为处理事务时的 Unix 时间戳（自
+    Unix 纪元以来的秒数）。如果不可用则为 null
   - `meta: <object|null>` - 交易状态元数据对象：
     - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。
       [ 交易错误定义](https://docs.rs/solana-sdk/latest/solana_sdk/transaction/enum.TransactionError.html)
     - `fee: <u64>` - 此交易收取的费用，为 u64 整数
     - `preBalances: <array>` - 处理交易之前的 u64 帐户余额数组
     - `postBalances: <array>` - 交易处理后的 u64 账户余额数组
-    - `innerInstructions: <array|null>` - [内部指令](/docs/rpc/json-structures.zh#内部指令)列表 或 null在此交易期间未启用内部指令记录
-    - `preTokenBalances: <array|undefined>` - [处理交易之前的代币余额](/docs/rpc/json-structures.zh#代币余额)列表 ，如果在此交易期间尚未启用代币余额记录，则忽略该列表
-    - `postTokenBalances: <array|undefined>` - [交易处理后的代币余额](/docs/rpc/json-structures.zh#代币余额) 列表，如果在此交易期间尚未启用代币余额记录，则忽略该列表
-    - `logMessages: <array|null>` - 字符串日志消息数组，或者null在此事务期间未启用日志消息记录
+    - `innerInstructions: <array|null>` -
+      [内部指令](/docs/rpc/json-structures.zh#内部指令)列表 或 null在此交易期间
+      未启用内部指令记录
+    - `preTokenBalances: <array|undefined>` -
+      [处理交易之前的代币余额](/docs/rpc/json-structures.zh#代币余额)列表 ，如果
+      在此交易期间尚未启用代币余额记录，则忽略该列表
+    - `postTokenBalances: <array|undefined>` -
+      [交易处理后的代币余额](/docs/rpc/json-structures.zh#代币余额) 列表，如果在
+      此交易期间尚未启用代币余额记录，则忽略该列表
+    - `logMessages: <array|null>` - 字符串日志消息数组，或者null在此事务期间未启
+      用日志消息记录
     - 已弃用: `status: <object>` - 交易状态
       - `"Ok": <null>` - 交易成功
       - `"Err": <ERR>` - 交易失败并出现 TransactionError

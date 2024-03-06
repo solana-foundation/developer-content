@@ -8,7 +8,6 @@ altRoutes:
 
 订阅以接收来自验证者的有关每个插槽的各种更新的通知
 
-
 <Callout type={"caution"}>
   此订阅不稳定。此订阅的格式将来可能会发生变化，并且可能并不总是受支持。
 </Callout>
@@ -23,7 +22,7 @@ altRoutes:
 
 ### 结果
 
-`<integer>` -  订阅 ID（取消订阅时需要）
+`<integer>` - 订阅 ID（取消订阅时需要）
 
 </DocLeftSide>
 
@@ -49,9 +48,11 @@ altRoutes:
 通知将是一个具有以下字段的对象：
 
 - `err: <string|undefined>` - 错误消息。仅当更新类型为`dead(死亡)`时才出现。
-- `parent: <u64|undefined>` -父插槽。仅当更新类型为`createdBank(创建银行)`时才出现。
+- `parent: <u64|undefined>` -父插槽。仅当更新类型为`createdBank(创建银行)`时才出
+  现。
 - `slot: <u64>` - 新更新的插槽
-- `stats: <object|undefined>` - 错误消息。仅当更新类型为“冻结”时才出现。具有以下字段的对象：
+- `stats: <object|undefined>` - 错误消息。仅当更新类型为“冻结”时才出现。具有以下
+  字段的对象：
   - `maxTransactionsPerEntry: <u64>`,
   - `numFailedTransactions: <u64>`,
   - `numSuccessfulTransactions: <u64>`,

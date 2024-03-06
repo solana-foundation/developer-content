@@ -8,7 +8,6 @@ altRoutes:
 
 订阅程序，以便在给定程序拥有的帐户的端口或数据发生更改时接收通知
 
-
 <DocSideBySide>
 
 <DocLeftSide>
@@ -23,7 +22,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -39,10 +38,11 @@ altRoutes:
   href={"/docs/rpc/index.zh.mdx#过滤条件"}
 >
 
-  使用各种过滤对象过滤结果
+使用各种过滤对象过滤结果
 
-  <Callout type={"info"}>
-    结果帐户必须满足所有过滤条件才能包含在返回的结果中。
+{" "}
+<Callout type={"info"}>
+  结果帐户必须满足所有过滤条件才能包含在返回的结果中。
 </Callout>
 
 </Field>
@@ -54,15 +54,18 @@ altRoutes:
   href="/docs/rpc/index.zh.mdx#解析后的响应"
 >
 
-  账户数据的编码格式
+账户数据的编码格式
 
-  <Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
+{" "}
+<Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
 
 <details>
 
 - `base58` 是慢的。
-- `jsonParsed` 编码尝试使用特定于程序的状态解析器来返回更多人类可读且明确的帐户状态数据。
-- 如果 `jsonParsed` 请求但无法找到解析器，则该字段将回退到`base64`编码，当`data`字段为 type时可检测到`string`。
+- `jsonParsed` 编码尝试使用特定于程序的状态解析器来返回更多人类可读且明确的帐户
+  状态数据。
+- 如果 `jsonParsed` 请求但无法找到解析器，则该字段将回退到`base64`编码，
+  当`data`字段为 type时可检测到`string`。
 
 </details>
 
@@ -132,7 +135,6 @@ altRoutes:
 </DocSideBySide>
 
 #### #### Notification format
-
 
 通知格式是单个程序帐户对象，如
 [getProgramAccounts](/docs/rpc/http/getprogramaccounts)RPC HTTP 方法中所示 。

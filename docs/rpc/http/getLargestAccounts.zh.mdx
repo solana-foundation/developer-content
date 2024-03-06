@@ -8,7 +8,6 @@ altRoutes:
 
 按 lamport 余额返回 20 个最大的帐户（结果最多可以缓存两个小时）
 
-
 <DocSideBySide>
 
 <DocLeftSide>
@@ -17,7 +16,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -35,7 +34,7 @@ altRoutes:
 
 ### 结果
 
-  结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的数组 `<object>`：
+结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的数组 `<object>`：
 
 - `address: <string>` - 账户的base-58编码地址
 - `lamports: <u64>` - 帐户中的lamport数量，作为u64

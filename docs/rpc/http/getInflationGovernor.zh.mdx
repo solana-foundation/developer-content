@@ -8,7 +8,6 @@ altRoutes:
 
 返回当前的通货膨胀调节器
 
-
 <DocSideBySide>
 
 <DocLeftSide>
@@ -17,7 +16,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -30,11 +29,12 @@ altRoutes:
 
 ### 结果
 
-  结果字段将是一个包含以下字段的 JSON 对象：
+结果字段将是一个包含以下字段的 JSON 对象：
 
-- `initial: <f64>` -  从时间 0 开始的初始通货膨胀百分比
+- `initial: <f64>` - 从时间 0 开始的初始通货膨胀百分比
 - `terminal: <f64>` - 终期通胀百分比
-- `taper: <f64>` - 通货膨胀率每年下降。（速率降低是使用创世配置中的目标时隙时间得出的）
+- `taper: <f64>` - 通货膨胀率每年下降。（速率降低是使用创世配置中的目标时隙时间
+  得出的）
 - `foundation: <f64>` - 分配给基金会的通货膨胀总额的百分比
 - `foundationTerm: <f64>` - 基金会池通货膨胀的持续时间（以年为单位）
 

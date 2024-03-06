@@ -9,7 +9,6 @@ altRoutes:
 
 从分类账返回最近的块哈希，以及可用于计算使用它提交交易的成本的费用表。
 
-
 <Callout type={"warning"} title={"已弃用的方法"}>
   该方法预计在 v2.0 中被删除`solana-core`。请改用
   [getLatestBlockhash](/docs/rpc/http/getlatestblockhash)。
@@ -27,9 +26,10 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
-  <Field
+{" "}
+<Field
   name="承诺"
   type="string"
   optional={true}
@@ -40,9 +40,11 @@ altRoutes:
 
 ### 结果
 
-包含 JSON 对象的 RpcResponse，该对象由字符串 blockhash 和 FeeCalculator JSON 对象组成。
+包含 JSON 对象的 RpcResponse，该对象由字符串 blockhash 和 FeeCalculator JSON 对
+象组成。
 
-- `RpcResponse<object>` - RpcResponse JSON 对象，其value字段设置为 JSON 对象，包括：
+- `RpcResponse<object>` - RpcResponse JSON 对象，其value字段设置为 JSON 对象，包
+  括：
 - `blockhash: <string>` - 作为 base-58 编码字符串的哈希值
 - `feeCalculator: <object>` - FeeCalculator 对象，该块哈希的费用表
 

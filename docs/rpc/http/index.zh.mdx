@@ -6,13 +6,12 @@ sidebarSortOrder: 0
 hideTableOfContents: false
 ---
 
-Solana 节点使用
-[JSON-RPC 2.0](https://www.jsonrpc.org/specification)规范接受 HTTP 请求 。
+Solana 节点使用 [JSON-RPC 2.0](https://www.jsonrpc.org/specification)规范接受
+HTTP 请求 。
 
 > 对于 JavaScript 应用程序，使用
-> [@solana/web3.js](https://github.com/solana-labs/solana-web3.js) 库作为
-> RPC 方法与 Solana 节点交互的便捷接口。
-> 对于与 Solana 节点的 PubSub 连接，请使用
+> [@solana/web3.js](https://github.com/solana-labs/solana-web3.js) 库作为 RPC 方
+> 法与 Solana 节点交互的便捷接口。对于与 Solana 节点的 PubSub 连接，请使用
 > [Websocket API](/docs/rpc/websocket/index.mdx).
 
 ## RPC HTTP 端点
@@ -24,7 +23,8 @@ Solana 节点使用
 
 ## 请求格式
 
-要发出 JSON-RPC 请求，请发送带有标头的 HTTP POST 请求 `Content-Type: application/json`。JSON 请求数据应包含 4 个字段：
+要发出 JSON-RPC 请求，请发送带有标头的 HTTP POST 请求
+`Content-Type: application/json`。JSON 请求数据应包含 4 个字段：
 
 - `jsonrpc: <string>` - 设置 `"2.0"`
 - `id: <number>` - 客户端生成的唯一标识整数
@@ -83,11 +83,11 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 
 ## 健康检查
 
-虽然不是 JSON RPC API，但`GET /healthRPC` HTTP 端点提供了一种运行状况检查机制，供负载均衡器或其他网络基础设施使用。
-此请求将始终返回 HTTP 200 OK 响应，其正文为“ok”、“behind”或“unknown”：
-
-
+虽然不是 JSON RPC API，但`GET /healthRPC` HTTP 端点提供了一种运行状况检查机制，
+供负载均衡器或其他网络基础设施使用。此请求将始终返回 HTTP 200 OK 响应，其正文为
+“ok”、“behind”或“unknown”：
 
 - `ok`: 该节点位于 `HEALTH_CHECK_SLOT_DISTANCE` 最新集群确认槽位的槽位内
-- `behind { distance }`: 该节点 `distance` 位于最新集群确认插槽的插槽后面，其中 `distance > HEALTH_CHECK_SLOT_DISTANCE`
+- `behind { distance }`: 该节点 `distance` 位于最新集群确认插槽的插槽后面，其中
+  `distance > HEALTH_CHECK_SLOT_DISTANCE`
 - `unknown`: 节点无法确定它相对于集群的位置

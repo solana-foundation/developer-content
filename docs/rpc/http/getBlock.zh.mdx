@@ -8,7 +8,6 @@ altRoutes:
 
 返回账本中已确认区块的身份和交易信息
 
-
 <DocSideBySide>
 
 <DocLeftSide>
@@ -21,7 +20,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -43,14 +42,17 @@ altRoutes:
   href="/docs/rpc/index.zh.mdx#解析后的响应"
 >
 
-  每个返回的Transaction的编码格式
+每个返回的Transaction的编码格式
 
-  <Values values={["json", "jsonParsed", "base58", "base64"]} />
+{" "}
+<Values values={["json", "jsonParsed", "base58", "base64"]} />
 
 <details>
 
-- `jsonParsed` 尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确的数据 `transaction.message.instructions`。
-- 如果 `jsonParsed` 请求但找不到解析器，则指令将回退到常规 JSON 编码（`accounts`、`data`和`programIdIndex` 字段）。
+- `jsonParsed` 尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确的数
+  据 `transaction.message.instructions`。
+- 如果 `jsonParsed` 请求但找不到解析器，则指令将回退到常规 JSON 编码
+  （`accounts`、`data`和`programIdIndex` 字段）。
 
 </details>
 
@@ -63,14 +65,15 @@ altRoutes:
   defaultValue={"full"}
 >
 
-  要返回的交易详细信息级别
+要返回的交易详细信息级别
 
 <Values values={["full", "accounts", "signatures", "none"]} />
 
 <details>
 
 - 如果 `accounts` 有要求，交易详细信息仅包括每笔交易中的签名和带注释的帐户列表。
-- 交易元数据仅限于：fee、err、pre_balances、post_balances、pre_token_balances 和 post_token_balances。
+- 交易元数据仅限于：fee、err、pre_balances、post_balances、pre_token_balances 和
+  post_token_balances。
 
 </details>
 
@@ -78,7 +81,7 @@ altRoutes:
 
 <Field name="maxSupportedTransactionVersion" type="number" optional={true}>
 
-  在响应中返回的最大交易版本。
+在响应中返回的最大交易版本。
 
 <details>
 
@@ -97,56 +100,77 @@ altRoutes:
 
 ### 结果
 
-  结果字段将是具有以下字段的对象：
+结果字段将是具有以下字段的对象：
 
 - `<null>` - 如果指定的区块没有被确认
 - `<object>` - 如果块被确认，则具有以下字段的对象：
   - `blockhash: <string>` - 该块的块哈希，作为 base-58 编码字符串
-  - `previousBlockhash: <string>` - 该块的父块的块哈希，作为 base-58 编码字符串；如果由于账本清理导致父区块不可用，该字段将返回“11111111111111111111111111111111”
+  - `previousBlockhash: <string>` - 该块的父块的块哈希，作为 base-58 编码字符
+    串；如果由于账本清理导致父区块不可用，该字段将返回
+    “11111111111111111111111111111111”
   - `parentSlot: <u64>` - 该块的父块的槽索引
-  - `transactions: <array>` - 如果需要“full(完整)”交易详细信息，请提供；JSON 对象数组，包含：
+  - `transactions: <array>` - 如果需要“full(完整)”交易详细信息，请提供；JSON 对
+    象数组，包含：
     - `transaction: <object|[string,encoding]>` -
-      [交易](/docs/rpc/json-structures.zh#交易)对象，可以是 JSON 格式，也可以是编码的二进制数据，具体取决于编码参数
+      [交易](/docs/rpc/json-structures.zh#交易)对象，可以是 JSON 格式，也可以是
+      编码的二进制数据，具体取决于编码参数
     - `meta: <object>` - 交易状态元数据对象，包含`null` 或：
       - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。
         [交易错误定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
       - `fee: <u64>` - 此交易收取的费用，为 u64 整数
       - `preBalances: <array>` - 处理交易之前的 u64 帐户余额数组
       - `postBalances: <array>` - 交易处理后的 u64 账户余额数组
-      - `innerInstructions: <array|null>` - [内部指令](/docs/rpc/json-structures.zh#内部指令) 列表 或 `null`在此交易期间未启用内部指令记录
-      - `preTokenBalances: <array|undefined>` - [处理交易之前的代币余额](/docs/rpc/json-structures.zh#代币余额) 列表 ，如果在此交易期间尚未启用代币余额记录，则忽略该列表
-      - `postTokenBalances: <array|undefined>` -[交易处理后的代币余额](/docs/rpc/json-structures.zh#代币余额) 列表， 如果在此交易期间尚未启用代币余额记录，则忽略该列表
-      - `logMessages: <array|null>` - 字符串日志消息数组，或者`null`在此事务期间未启用日志消息记录
-      - `rewards: <array|null>` - 交易级奖励，如果请求奖励则填充；JSON 对象数组，包含：
+      - `innerInstructions: <array|null>` -
+        [内部指令](/docs/rpc/json-structures.zh#内部指令) 列表 或 `null`在此交易
+        期间未启用内部指令记录
+      - `preTokenBalances: <array|undefined>` -
+        [处理交易之前的代币余额](/docs/rpc/json-structures.zh#代币余额) 列表 ，
+        如果在此交易期间尚未启用代币余额记录，则忽略该列表
+      - `postTokenBalances: <array|undefined>` -[交易处理后的代币余额](/docs/rpc/json-structures.zh#代币余额)
+        列表， 如果在此交易期间尚未启用代币余额记录，则忽略该列表
+      - `logMessages: <array|null>` - 字符串日志消息数组，或者`null`在此事务期间
+        未启用日志消息记录
+      - `rewards: <array|null>` - 交易级奖励，如果请求奖励则填充；JSON 对象数
+        组，包含：
         - `pubkey: <string>` - 接收奖励的账户的公钥，采用 base-58 编码字符串
         - `lamports: <i64>`- 帐户贷记或借记的奖励灯数量，作为 i64
         - `postBalance: <u64>` - 应用奖励后lamports的账户余额
-        - `rewardType: <string|undefined>` - 奖励类型："fee(费用)", "rent(租金)",
-          "voting(投票)", "staking(质押)"
-        - `commission: <u8|undefined>` - 奖励入账时的投票账户佣金，仅用于投票和质押奖励
+        - `rewardType: <string|undefined>` - 奖励类型："fee(费用)", "rent(租
+          金)", "voting(投票)", "staking(质押)"
+        - `commission: <u8|undefined>` - 奖励入账时的投票账户佣金，仅用于投票和
+          质押奖励
       - 已弃用: `status: <object>` - 交易状态
         - `"Ok": <null>` - 交易成功
         - `"Err": <ERR>` - 交易失败并出现 TransactionError
       - `loadedAddresses: <object|undefined>` - 从地址查找表加载的交易地址。
-        `maxSupportedTransactionVersion` 如果请求参数中未设置，或者`jsonParsed`请求参数中设置了编码，则未定义 。
-        - `writable: <array[string]>` - 可写加载帐户的 base-58 编码地址的有序列表
-        - `readonly: <array[string]>` - 只读加载帐户的 Base-58 编码地址的有序列表
-      - `returnData: <object|undefined>` -  交易中指令生成的最新返回数据，包含以下字段：
+        `maxSupportedTransactionVersion` 如果请求参数中未设置，或
+        者`jsonParsed`请求参数中设置了编码，则未定义 。
+        - `writable: <array[string]>` - 可写加载帐户的 base-58 编码地址的有序列
+          表
+        - `readonly: <array[string]>` - 只读加载帐户的 Base-58 编码地址的有序列
+          表
+      - `returnData: <object|undefined>` - 交易中指令生成的最新返回数据，包含以
+        下字段：
         - `programId: <string>` - 生成返回数据的程序，作为 base-58 编码的 Pubkey
-        - `data: <[string, encoding]>` - 返回数据本身，作为 base-64 编码的二进制数据
+        - `data: <[string, encoding]>` - 返回数据本身，作为 base-64 编码的二进制
+          数据
       - `computeUnitsConsumed: <u64|undefined>` - 交易消耗的
         [计算单位](/docs/core/runtime.md#compute-budget) 数量
     - `version: <"legacy"|number|undefined>` - 交易版本。
       `maxSupportedTransactionVersion` 如果请求参数中未设置，则未定义 。
-  - `signatures: <array>` - 如果交易详细信息需要“签名”，请出示；签名字符串数组，对应于区块中的交易顺序
-  - `rewards: <array|undefined>` - 区块级奖励，如果需要奖励则显示；JSON 对象数组，包含：
+  - `signatures: <array>` - 如果交易详细信息需要“签名”，请出示；签名字符串数组，
+    对应于区块中的交易顺序
+  - `rewards: <array|undefined>` - 区块级奖励，如果需要奖励则显示；JSON 对象数
+    组，包含：
     - `pubkey: <string>` - 接收奖励的账户的公钥，采用 base-58 编码字符串
     - `lamports: <i64>`- 帐户贷记或借记的奖励灯数量，作为 i64
     - `postBalance: <u64>` - 应用奖励后lamports的账户余额
     - `rewardType: <string|undefined>` - 奖励类型： "fee(费用)", "rent(租金)",
       "voting(投票)", "staking(质押)"
-    - `commission: <u8|undefined>` -  奖励入账时的投票账户佣金，仅用于投票和质押奖励
-  - `blockTime: <i64|null>` - 估计的生产时间，作为 Unix 时间戳（自 Unix 纪元以来的秒数）。如果不可用则为 null
+    - `commission: <u8|undefined>` - 奖励入账时的投票账户佣金，仅用于投票和质押
+      奖励
+  - `blockTime: <i64|null>` - 估计的生产时间，作为 Unix 时间戳（自 Unix 纪元以来
+    的秒数）。如果不可用则为 null
   - `blockHeight: <u64|null>` - 该块下方的块数
 
 </DocLeftSide>

@@ -9,7 +9,6 @@ altRoutes:
 
 返回最新的区块哈希
 
-
 <Callout type={"caution"} title={"版本限制"}>
   此方法仅在 v1.9 或更高版本中可用solana-core。v1.8 及以下版本请使用
   [getRecentBlockhash](/docs/rpc/http/getRecentBlockhash)`solana-core`。
@@ -23,9 +22,10 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
-  <Field
+{" "}
+<Field
   name="承诺"
   type="string"
   optional={true}
@@ -40,10 +40,12 @@ altRoutes:
 
 ### 结果
 
-`RpcResponse<object>` - RpcResponse JSON 对象，其value字段设置为 JSON 对象，包括：
+`RpcResponse<object>` - RpcResponse JSON 对象，其value字段设置为 JSON 对象，包
+括：
 
 - `blockhash: <string>` - 作为 base-58 编码字符串的哈希值
-- `lastValidBlockHeight: <u64>` - 区块哈希有效的最后一个[区块高度](/docs/terminology.md#block-height)。
+- `lastValidBlockHeight: <u64>` - 区块哈希有效的最后一
+  个[区块高度](/docs/terminology.md#block-height)。
 
 </DocLeftSide>
 

@@ -16,7 +16,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -33,12 +33,13 @@ altRoutes:
 
 ### 结果
 
-  结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象：
+结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象：
 
 - `total: <u64>` - lamports的总供应量
 - `circulating: <u64>` - lamports中的循环供应
 - `nonCirculating: <u64>` - lamports中的非循环供应
-- `nonCirculatingAccounts: <array>` - 非循环帐户的帐户地址数组，作为字符串。如果`excludeNonCirculatingAccountsList`启用，返回的数组将为空。
+- `nonCirculatingAccounts: <array>` - 非循环帐户的帐户地址数组，作为字符串。如
+  果`excludeNonCirculatingAccountsList`启用，返回的数组将为空。
 
 </DocLeftSide>
 

@@ -8,7 +8,6 @@ altRoutes:
 
 返回参与集群的所有节点的信息
 
-
 <DocSideBySide>
 
 <DocLeftSide>
@@ -19,12 +18,13 @@ altRoutes:
 
 ### 结果
 
-  结果字段将是一个 JSON 对象数组，每个对象都具有以下子字段：
+结果字段将是一个 JSON 对象数组，每个对象都具有以下子字段：
 
 - `pubkey: <string>` - 节点公钥，作为 base-58 编码的字符串
 - `gossip: <string|null>` - 节点的Gossip网络地址
 - `tpu: <string|null>` - 节点的 TPU 网络地址
-- `rpc: <string|null>` - 节点的 JSON RPC 网络地址，或者`null`如果未启用 JSON RPC 服务
+- `rpc: <string|null>` - 节点的 JSON RPC 网络地址，或者`null`如果未启用 JSON RPC
+  服务
 - `version: <string|null>` - 节点的软件版本，或者`null`如果版本信息不可用
 - `featureSet: <u32|null >` - 节点功能集的唯一标识符
 - `shredVersion: <u16|null>` - 节点已配置使用的粉碎版本

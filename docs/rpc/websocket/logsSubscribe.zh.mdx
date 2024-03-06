@@ -19,7 +19,7 @@ altRoutes:
 
 <Field type="string">
 
-  具有以下值之一的字符串：
+具有以下值之一的字符串：
 
 - `all` - 订阅除简单投票交易之外的所有交易
 - `allWithVotes` - 订阅所有交易，包括简单的投票交易
@@ -28,12 +28,14 @@ altRoutes:
 
 <Field type="object">
 
-  具有以下字段的对象：
+具有以下字段的对象：
 
-  - `mentions: [ <string> ]` -  包含单个 Pubkey 的数组（作为 base-58 编码字符串）；如果存在，仅订阅提及该地址的交易
+- `mentions: [ <string> ]` - 包含单个 Pubkey 的数组（作为 base-58 编码字符串）；
+  如果存在，仅订阅提及该地址的交易
 
 <Callout type={"caution"} title={true}>
-  该`mentions`字段当前 [仅支持](https://github.com/solana-labs/solana/blob/master/rpc/src/rpc_pubsub.rs#L481)
+  该`mentions`字段当前
+  [仅支持](https://github.com/solana-labs/solana/blob/master/rpc/src/rpc_pubsub.rs#L481)
   每个方法调用一个公共密钥字符串。列出其他地址将导致错误。
 </Callout>
 
@@ -43,9 +45,10 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
-  <Field
+{" "}
+<Field
   name="承诺"
   type="string"
   optional={true}
@@ -98,10 +101,12 @@ altRoutes:
 #### 通知格式：
 
 该通知将是一个 RpcResponse JSON 对象，其值等于：
+
 - `signature: <string>` - 交易签名base58编码。
 - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。
   [交易错误定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
-- `logs: <array|null>` - 交易指令在执行期间输出的日志消息数组，如果在交易能够执行之前模拟失败（例如由于无效的区块哈希或签名验证失败），则为 null
+- `logs: <array|null>` - 交易指令在执行期间输出的日志消息数组，如果在交易能够执
+  行之前模拟失败（例如由于无效的区块哈希或签名验证失败），则为 null
 
   例子：
 

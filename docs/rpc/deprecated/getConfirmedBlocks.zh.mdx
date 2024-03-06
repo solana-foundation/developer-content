@@ -10,7 +10,8 @@ altRoutes:
 返回两个槽之间已确认块的列表
 
 <Callout type={"warning"} title={"已弃用的方法"}>
-  该方法预计在 v2.0 中被删除solana-core。请改用 [getBlocks](/docs/rpc/http/getblocks)。
+  该方法预计在 v2.0 中被删除solana-core。请改用
+  [getBlocks](/docs/rpc/http/getblocks)。
 </Callout>
 
 <DocSideBySide>
@@ -25,9 +26,10 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
-  <Field
+{" "}
+<Field
   name="commitment"
   type="string"
   optional={true}
@@ -38,8 +40,8 @@ altRoutes:
 
 ### 结果
 
-  结果字段将是一个 u64 整数数组，列出`start_slot`和之间的确认块`end_slot`- 如果提供，或最新确认块（包括在内）。
-  允许的最大范围是 500,000 个插槽。
+结果字段将是一个 u64 整数数组，列出`start_slot`和之间的确认块`end_slot`- 如果提
+供，或最新确认块（包括在内）。允许的最大范围是 500,000 个插槽。
 
 </DocLeftSide>
 

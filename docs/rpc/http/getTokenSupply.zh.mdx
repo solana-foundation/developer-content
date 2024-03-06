@@ -20,25 +20,27 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
-  <Field
-    name="承诺"
-    type="string"
-    optional={true}
-    href="/docs/rpc/index.zh.mdx#配置状态承诺"
-  ></Field>
+{" "}
+<Field
+  name="承诺"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
 
 </Parameter>
 
 ### 结果
 
-  结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象：
+结果将是一个 RpcResponse JSON 对象，其`value`等于包含以下内容的 JSON 对象：
 
 - `amount: <string>` - 原始总代币供应量（不带小数），u64 的字符串表示形式
 - `decimals: <u8>` - 小数点右侧以 10 为基数的位数
 - `uiAmount: <number|null>` - 代币供应总量，使用造币厂规定的小数位数 **已弃用**
-- `uiAmountString: <string>` - 代币总供应量作为字符串，使用mint-prescribed规定的小数
+- `uiAmountString: <string>` - 代币总供应量作为字符串，使用mint-prescribed规定的
+  小数
 
 </DocLeftSide>
 

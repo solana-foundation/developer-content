@@ -6,7 +6,8 @@ altRoutes:
   - /docs/rpc/getHealth
 ---
 
-返回节点的当前健康状况。健康节点是位于 `HEALTH_CHECK_SLOT_DISTANCE`最新集群确认插槽内的节点。
+返回节点的当前健康状况。健康节点是位于 `HEALTH_CHECK_SLOT_DISTANCE`最新集群确认
+插槽内的节点。
 
 <DocSideBySide>
 
@@ -18,8 +19,8 @@ altRoutes:
 
 ### 结果
 
-  如果节点健康： "ok"
-  如果节点不健康，则返回 JSON RPC 错误响应。错误响应的具体情况**不稳定**，将来可能会发生变化
+如果节点健康： "ok" 如果节点不健康，则返回 JSON RPC 错误响应。错误响应的具体情
+况**不稳定**，将来可能会发生变化
 
 </DocLeftSide>
 
@@ -35,13 +36,13 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 
 ### 响应
 
-  健康结果：
+健康结果：
 
 ```json
 { "jsonrpc": "2.0", "result": "ok", "id": 1 }
 ```
 
-  不健康结果（通用）：
+不健康结果（通用）：
 
 ```json
 {
@@ -55,7 +56,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 }
 ```
 
-  不健康的结果（如果有其他信息）
+不健康的结果（如果有其他信息）
 
 ```json
 {

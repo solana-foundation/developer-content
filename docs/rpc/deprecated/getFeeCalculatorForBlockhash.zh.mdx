@@ -9,8 +9,6 @@ altRoutes:
 
 返回与查询区块哈希相关的费用计算器，或者`null`区块哈希是否已过期
 
-
-
 <Callout type={"warning"} title={"已弃用的方法"}>
   该方法预计在 v2.0 中被删除`solana-core`。请改用
   [isBlockhashValid](/docs/rpc/http/isBlockhashValid) 或
@@ -29,7 +27,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -46,11 +44,12 @@ altRoutes:
 
 ### 结果
 
-  结果将是一个 RpcResponse JSON 对象，其`value`等于：
+结果将是一个 RpcResponse JSON 对象，其`value`等于：
 
 - `<null>` - 如果查询块哈希已过期；或者
 - `<object>` - 否则，一个 JSON 对象包含：
-  - `feeCalculator: <object>` - `FeeCalculator`描述查询的区块哈希的集群费率的对象
+  - `feeCalculator: <object>` - `FeeCalculator`描述查询的区块哈希的集群费率的对
+    象
 
 </DocLeftSide>
 

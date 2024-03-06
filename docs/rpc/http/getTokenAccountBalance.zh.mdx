@@ -20,9 +20,10 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
-  <Field
+{" "}
+<Field
   name="承诺"
   type="string"
   optional={true}
@@ -37,10 +38,11 @@ altRoutes:
 
 - `amount: <string>` - 不带小数的原始余额，u64 的字符串表示形式
 - `decimals: <u8>` - 小数点右侧以 10 为基数的位数
-- `uiAmount: <number|null>` -  余额，使用mint-prescribed规定的小数位 **已弃用**
+- `uiAmount: <number|null>` - 余额，使用mint-prescribed规定的小数位 **已弃用**
 - `uiAmountString: <string>` - 余额作为字符串，使用mint-prescribed规定的小数
 
-有关返回数据的更多详细信息， 来自[getBlock](/docs/rpc/http/getblock)的[代币余额结构(/docs/rpc/json-structures#token-balances)响应遵循类似的结构。
+有关返回数据的更多详细信息， 来自[getBlock](/docs/rpc/http/getblock)的[代币余额
+结构(/docs/rpc/json-structures#token-balances)响应遵循类似的结构。
 
 </DocLeftSide>
 

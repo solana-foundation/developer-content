@@ -8,7 +8,6 @@ altRoutes:
 
 返回块的估计生产时间。
 
-
 <Callout type={"info"}>
   每个验证者通过间歇性地向特定区块的投票添加时间戳来定期向账本报告其 UTC 时间。
   请求的区块时间是根据账本上记录的一组最近区块中投票时间戳的权益加权平均值计算得出的。
@@ -46,7 +45,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 
 ### 响应
 
-  当区块时间可用时：
+当区块时间可用时：
 
 ```json
 {
@@ -56,7 +55,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 }
 ```
 
-  当区块时间不可用时：
+当区块时间不可用时：
 
 ```json
 {

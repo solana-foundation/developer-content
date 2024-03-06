@@ -8,7 +8,6 @@ altRoutes:
 
 返回当前或上一个纪元的最新块生产信息。
 
-
 <DocSideBySide>
 
 <DocLeftSide>
@@ -17,7 +16,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -34,7 +33,8 @@ altRoutes:
   返回区块生产的时隙范围。如果未提供参数，则默认为当前纪元。
 
 - `firstSlot: <u64>` - 第一个返回区块生产信息的槽位（含）
-- (optional) `lastSlot: <u64>` - 返回块生产信息的最后一个槽（包含）。如果未提供参数，则默认为最高插槽
+- (optional) `lastSlot: <u64>` - 返回块生产信息的最后一个槽（包含）。如果未提供
+  参数，则默认为最高插槽
 
 </Field>
 
@@ -42,11 +42,12 @@ altRoutes:
 
 ### 结果
 
-  结果将是一个 RpcResponse JSON 对象，其`value`等于：
+结果将是一个 RpcResponse JSON 对象，其`value`等于：
 
 - `<object>`
-  - `byIdentity: <object>` - 验证者身份的字典，作为 base-58 编码的字符串。值是一个两元素数组，包含领导者槽的数量和生成的块的数量。
-  - `range: <object>` -  区块生产槽位范围
+  - `byIdentity: <object>` - 验证者身份的字典，作为 base-58 编码的字符串。值是一
+    个两元素数组，包含领导者槽的数量和生成的块的数量。
+  - `range: <object>` - 区块生产槽位范围
     - `firstSlot: <u64>` - 区块生产信息的第一个槽位（含）
     - `lastSlot: <u64>` - 区块生产信息的最后一个槽位（含）
 

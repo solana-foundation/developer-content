@@ -11,19 +11,23 @@ altRoutes:
 
 此方法不会以任何方式改变交易；它将客户端创建的事务按原样中继到节点。
 
-如果节点的rpc服务收到交易，该方法立即成功，无需等待任何确认。此方法的成功响应并不能保证集群处理或确认事务。
+如果节点的rpc服务收到交易，该方法立即成功，无需等待任何确认。此方法的成功响应并
+不能保证集群处理或确认事务。
 
-虽然 rpc 服务会合理地重试提交它，但如果交易`recent_blockhash`在落地之前过期，则交易可能会被拒绝。
+虽然 rpc 服务会合理地重试提交它，但如果交易`recent_blockhash`在落地之前过期，则
+交易可能会被拒绝。
 
 用于 [`getSignatureStatuses`](#getsignaturestatuses) 确保交易得到处理和确认。
 
 提交之前，将执行以下预检检查：
 
 1. 交易签名已验证
-2. 该交易是根据预检承诺指定的银行时段进行模拟的。失败时将返回错误。如果需要，可以禁用预检检查。建议指定相同的承诺和预检承诺，以避免混淆行为。
+2. 该交易是根据预检承诺指定的银行时段进行模拟的。失败时将返回错误。如果需要，可
+   以禁用预检检查。建议指定相同的承诺和预检承诺，以避免混淆行为。
 
 返回的签名是交易中的第一个签名，用于标识交易
-([交易id](/docs/terminology.md#transaction-id))。在提交之前可以轻松地从交易数据中提取该标识符。
+([交易id](/docs/terminology.md#transaction-id))。在提交之前可以轻松地从交易数据
+中提取该标识符。
 
 <DocSideBySide>
 
@@ -37,8 +41,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下可选字段：
-
+配置对象包含以下可选字段：
 
   <Field
   name="编码"
@@ -66,7 +69,8 @@ altRoutes:
 </Field>
 
 <Field name="最大重试次数" type="usize">
-  RPC 节点重试向领导者发送交易的最大次数。如果未提供此参数，RPC 节点将重试交易，直到交易完成或区块哈希过期。
+  RPC 节点重试向领导者发送交易的最大次数。如果未提供此参数，RPC
+  节点将重试交易，直到交易完成或区块哈希过期。
 </Field>
 
 <Field name="最小上下文槽" type="number">
@@ -77,7 +81,8 @@ altRoutes:
 
 ### 结果
 
-`<string>` - 嵌入交易中的第一个交易签名，作为 base-58 编码字符串 ([交易id](/docs/terminology.md#transaction-id))
+`<string>` - 嵌入交易中的第一个交易签名，作为 base-58 编码字符串
+([交易id](/docs/terminology.md#transaction-id))
 
 </DocLeftSide>
 

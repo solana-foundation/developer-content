@@ -7,7 +7,8 @@ altRoutes:
   - /docs/rpc/http/getFees
 ---
 
-从分类账中返回最近的块哈希值、可用于计算使用它提交交易的成本的费用表，以及块哈希值有效的最后一个槽位。
+从分类账中返回最近的块哈希值、可用于计算使用它提交交易的成本的费用表，以及块哈希
+值有效的最后一个槽位。
 
 <Callout type={"warning"} title={"已弃用的方法"}>
   该方法预计在 v2.0 中被删除`solana-core`。请改用
@@ -26,7 +27,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -39,10 +40,10 @@ altRoutes:
 
 ### 结果
 
-  结果将是一个 RpcResponse JSON 对象，`value`设置为具有以下字段的 JSON 对象：
+结果将是一个 RpcResponse JSON 对象，`value`设置为具有以下字段的 JSON 对象：
 
 - `blockhash: <string>` - 作为 base-58 编码字符串的哈希值
-- `feeCalculator: <object>` -  FeeCalculator 对象，该块哈希的费用表
+- `feeCalculator: <object>` - FeeCalculator 对象，该块哈希的费用表
 - `lastValidSlot: <u64>` - 已弃用 - 该值不准确，不应依赖
 - `lastValidBlockHeight: <u64>` - 区块哈希有效的最后一个
   [区块高度](/docs/terminology.md#block-height)。

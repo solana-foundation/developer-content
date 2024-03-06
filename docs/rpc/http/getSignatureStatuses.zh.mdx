@@ -6,7 +6,8 @@ altRoutes:
   - /docs/rpc/getSignatureStatuses
 ---
 
-返回签名列表的状态。每个签名必须是[txid](/docs/terminology.md#transaction-id)，即交易的第一个签名。
+返回签名列表的状态。每个签名必须是[txid](/docs/terminology.md#transaction-id)，
+即交易的第一个签名。
 
 <Callout type={"info"}>
   除非`searchTransactionHistory`包含配置参数，否则此方法仅搜索签名的最近状态缓存，该缓存保留所有活动插槽和`MAX_RECENT_BLOCKHASHES`根插槽的状态。
@@ -24,7 +25,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
   <Field name="搜索交易历史" type="bool" optional={true}>
 
@@ -36,14 +37,19 @@ altRoutes:
 
 ### 结果
 
-  由以下任一组成的数组`RpcResponse<object>`：
+由以下任一组成的数组`RpcResponse<object>`：
 
 - `<null>` - 未知交易，或
 - `<object>`
   - `slot: <u64>` - 处理交易的槽位
-  - `confirmations: <usize|null>` - 自签名确认以来的块数，如果有根则为空，并且由集群的绝大多数确定
-  - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。请参阅 [TransactionError 定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)。
-  - `confirmationStatus: <string|null>` -  交易的集群确认状态；两者`processed`任`confirmed`一`finalized`。有关乐观确认的更多信息，请参阅 [承诺](/docs/rpc/index.zh.mdx#配置状态承诺)。
+  - `confirmations: <usize|null>` - 自签名确认以来的块数，如果有根则为空，并且由
+    集群的绝大多数确定
+  - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。请参
+    阅
+    [TransactionError 定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)。
+  - `confirmationStatus: <string|null>` - 交易的集群确认状态；两
+    者`processed`任`confirmed`一`finalized`。有关乐观确认的更多信息，请参阅
+    [承诺](/docs/rpc/index.zh.mdx#配置状态承诺)。
   - 已弃用: `status: <object>` - 交易状态
     - `"Ok": <null>` - 交易成功
     - `"Err": <ERR>` - 交易失败并出现 TransactionError

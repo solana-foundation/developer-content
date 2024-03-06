@@ -7,7 +7,8 @@ altRoutes:
   - /docs/rpc/getSignaturesForAddress
 ---
 
-返回在其列表中包含给定地址的已确认交易的签名`accountKeys`。从提供的签名或最近确认的块开始向后返回签名
+返回在其列表中包含给定地址的已确认交易的签名`accountKeys`。从提供的签名或最近确
+认的块开始向后返回签名
 
 <DocSideBySide>
 
@@ -21,7 +22,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
 <Field
   name="承诺"
@@ -50,15 +51,18 @@ altRoutes:
 
 ### 结果
 
-  一个数组，从最新到最旧的`<object>`交易排序，包含具有以下字段的交易签名信息：
+一个数组，从最新到最旧的`<object>`交易排序，包含具有以下字段的交易签名信息：
 
 - `signature: <string>` - 交易签名为 base-58 编码字符串
 - `slot: <u64>` - 包含交易块的槽
-- `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。 有关详细信息，请参阅
+- `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。 有关
+  详细信息，请参阅
   [TransactionError 定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)。
 - `memo: <string|null>` - 与交易相关的备忘录，如果不存在备忘录则为 null
-- `blockTime: <i64|null>` - 估计的生产时间，作为交易处理时的 Unix 时间戳（自 Unix 纪元以来的秒数）。如果不可用则为 null。
-- `confirmationStatus: <string|null>` - 交易的集群确认状态；两者`processed`任`confirmed`一`finalized`。有关乐观确认的更多信息，请参阅
+- `blockTime: <i64|null>` - 估计的生产时间，作为交易处理时的 Unix 时间戳（自
+  Unix 纪元以来的秒数）。如果不可用则为 null。
+- `confirmationStatus: <string|null>` - 交易的集群确认状态；两
+  者`processed`任`confirmed`一`finalized`。有关乐观确认的更多信息，请参阅
   [承诺](/docs/rpc/index.zh.mdx#配置状态承诺)。
 
 </DocLeftSide>

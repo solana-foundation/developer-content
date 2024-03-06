@@ -20,7 +20,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段:
+配置对象包含以下字段:
 
 <Field
   name="承诺"
@@ -36,15 +36,17 @@ altRoutes:
   href="/docs/rpc/index.mdx#parsed-responses"
 >
 
-  账户数据的编码格式
+账户数据的编码格式
 
 <Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
 
 <details>
 
 - `base58` 是慢的。
-- `jsonParsed` 编码尝试使用特定于程序的状态解析器返回更多人类可读且明确的帐户状态数据
-- 如果`jsonParsed`请求但无法找到解析器，则该字段将回退为二进制编码，当该`data`字段为type时可检测到`string`。
+- `jsonParsed` 编码尝试使用特定于程序的状态解析器返回更多人类可读且明确的帐户状
+  态数据
+- 如果`jsonParsed`请求但无法找到解析器，则该字段将回退为二进制编码，当该`data`字
+  段为type时可检测到`string`。
 
 </details>
 
@@ -88,8 +90,8 @@ altRoutes:
 
 #### 通知格式:
 
-通知格式与
-[getAccountInfo](/docs/rpc/http/getAccountInfo) RPC HTTP 方法中看到的相同 。
+通知格式与 [getAccountInfo](/docs/rpc/http/getAccountInfo) RPC HTTP 方法中看到的
+相同 。
 
 Base58编码:
 

@@ -9,7 +9,6 @@ altRoutes:
 
 返回节点具有快照的最高插槽
 
-
 <Callout type={"warning"} title={"已弃用的方法"}>
   该方法预计在 v2.0 中被删除`solana-core`。请改用
   [getHighestSnapshotSlot](/docs/rpc/http/getHighestSnapshotSlot)。
@@ -47,7 +46,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 
 节点没有快照时的结果：
 
-  ```json
+```json
 {
   "jsonrpc": "2.0",
   "error": { "code": -32008, "message": "No snapshot" },

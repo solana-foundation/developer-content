@@ -8,7 +8,6 @@ altRoutes:
 
 订阅以在新区块为`confirmed(已确认)`或`finalized(已完成)`时接收通知。
 
-
 <Callout type={"caution"} title={"不稳定的方法"}>
   此订阅被认为不稳定，并且仅在使用该`--rpc-pubsub-enable-block-subscription`标志启动验证器时才可用。
   此订阅的格式将来可能会发生变化。
@@ -22,16 +21,19 @@ altRoutes:
 
 <Parameter name="过滤器" type={"string | object"} required={true}>
 
-  日志的过滤条件以按帐户类型接收结果；目前支持：
+日志的过滤条件以按帐户类型接收结果；目前支持：
 
-  <Field type="string" value="all">
+{" "}
+<Field type="string" value="all">
   `all` - 包含区块中的所有交易
 </Field>
 
 <Field type="object">
 
-  具有以下字段的 JSON 对象：
-  - `mentionsAccountOrProgram: <string>` - 仅返回提及所提供的公钥（作为 base-58 编码字符串）的交易。如果给定块中没有提及，则不会发送任何通知。
+具有以下字段的 JSON 对象：
+
+- `mentionsAccountOrProgram: <string>` - 仅返回提及所提供的公钥（作为 base-58 编
+  码字符串）的交易。如果给定块中没有提及，则不会发送任何通知。
 
 </Field>
 
@@ -39,7 +41,7 @@ altRoutes:
 
 <Parameter type={"object"} optional={true}>
 
-  配置对象包含以下字段：
+配置对象包含以下字段：
 
   <Field
   name="承诺"
@@ -61,14 +63,17 @@ altRoutes:
   href="/docs/rpc/index.zh.mdx#解析后的响应"
 >
 
-  每个返回的Transaction的编码格式
+每个返回的Transaction的编码格式
 
-  <Values values={["json", "jsonParsed", "base58", "base64"]} />
+{" "}
+<Values values={["json", "jsonParsed", "base58", "base64"]} />
 
 <details>
 
-- `jsonParsed` 尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确的数据 `transaction.message.instructions`。
-- 如果 `jsonParsed` 请求但找不到解析器，则指令将回退到常规 JSON 编码（`accounts`、`data`和`programIdIndex` 字段）。
+- `jsonParsed` 尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确的数
+  据 `transaction.message.instructions`。
+- 如果 `jsonParsed` 请求但找不到解析器，则指令将回退到常规 JSON 编码
+  （`accounts`、`data`和`programIdIndex` 字段）。
 
 </details>
 
@@ -81,15 +86,16 @@ altRoutes:
   defaultValue={"full"}
 >
 
-  要返回的交易详细信息级别
+要返回的交易详细信息级别
 
-  <Values values={["full", "accounts", "signatures", "none"]} />
+{" "}
+<Values values={["full", "accounts", "signatures", "none"]} />
 
 <details>
 
 - 如果 `accounts` 有要求，交易详细信息仅包括每笔交易中的签名和带注释的帐户列表。
-- 交易元数据仅限于: fee, err, pre_balances,
-  post_balances, pre_token_balances, 和 post_token_balances。
+- 交易元数据仅限于: fee, err, pre_balances, post_balances, pre_token_balances,
+  和 post_token_balances。
 
 </details>
 
@@ -97,7 +103,7 @@ altRoutes:
 
 <Field name="最大支持的交易版本" type="number" optional={true}>
 
-  在响应中返回的最大交易版本。
+在响应中返回的最大交易版本。
 
   <details>
 
@@ -167,7 +173,8 @@ altRoutes:
 
 - `slot: <u64>` - 相应的插槽。
 - `err: <object|null>` - 如果发布通知出现问题，则出错，否则为空。
-- `block: <object|null>` - [getBlock](/docs/rpc/http/getblock.zh)RPC HTTP 方法中看到的块对象 。
+- `block: <object|null>` - [getBlock](/docs/rpc/http/getblock.zh)RPC HTTP 方法中
+  看到的块对象 。
 
 ```json
 {
