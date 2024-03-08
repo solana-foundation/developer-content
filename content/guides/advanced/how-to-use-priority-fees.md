@@ -118,7 +118,8 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 '
 ```
 
-Different approaches to setting Priority Fees exist, and some third-party APIs
+Different approaches to setting Priority Fees exist, and some
+[third-party APIs](https://docs.helius.dev/solana-rpc-nodes/alpha-priority-fee-api)
 are available to determine the best fee to apply. Given the dynamic nature of
 the network, there will not be a "perfect" way to set priority fees, and careful
 analysis should be used before choosing a path forward.
