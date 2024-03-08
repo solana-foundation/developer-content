@@ -6,9 +6,9 @@ title: "Program Examples"
 
 [Break](https://break.solana.com/) is a React app that gives users a visceral
 feeling for just how fast and high-performance the Solana network really is. Can
-you _break_ the Solana blockchain? During a 15 second play-though, each click of
+you _break_ the Solana blockchain? During a 15 second play-through, each click of
 a button or keystroke sends a new transaction to the cluster. Smash the keyboard
-as fast as you can and watch your transactions get finalized in real time while
+as fast as you can and watch your transactions get finalized in real-time while
 the network takes it all in stride!
 
 Break can be played on our Devnet, Testnet and Mainnet Beta networks. Plays are
