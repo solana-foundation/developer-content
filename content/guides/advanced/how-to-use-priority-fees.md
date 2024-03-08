@@ -17,8 +17,6 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
-altRoutes:
-  - /developers/guides/how-to-use-priority-fees/
 ---
 
 This guide is meant to be a reference for developers who want to add priority
@@ -27,11 +25,13 @@ them, special considerations, and best practices to estimate them.
 
 ## What are Priority Fees?
 
-Prioritization Fees are priced in microLamports per Compute Unit (e.g., small
-amounts of Solana) appended to transactions to make them economically compelling
-to include in transactions by validator nodes in the network. This additional
-fee will be on top of the Base Fee already set, which is 5000 lamports per
-signature in your transaction.
+Prioritization Fees are an optional fee, priced in
+[micro-lamports](/docs/terminology#lamport) per
+[Compute Unit](/docs/terminology#compute-units) (e.g. small amounts of SOL),
+appended to transactions to make them economically compelling for validator
+nodes to include in blocks on the network. This additional fee will be on top of
+the base [Transaction Fee](/docs/core/transactions/fees) already set, which is
+5000 lamports per signature in your transaction.
 
 ## Why Should I Use Priority Fees?
 
@@ -45,12 +45,14 @@ validators will drop transactions without priority fees.
 
 ## How do I Implement Priority Fees?
 
-When adding priority fees to a transaction, keep in mind the amount of CU used
-for your transaction. The higher the CU required for the transaction, the more
-fees you will pay when adding priority fees. Using the Compute Budget Program,
-you can change the CU requested for your transaction and add any additional
-priority fee required. Do note that your CU request must be equal to or greater
-than the CU needed for the transaction; otherwise, the transaction will fail.
+When adding priority fees to a transaction, keep in mind the amount of compute
+units (CU) used for your transaction. The higher the CU required for the
+transaction, the more fees you will pay when adding priority fees.
+
+Using the [Compute Budget Program](/docs/core/runtime#compute-budget), you can
+change the CU requested for your transaction and add any additional priority fee
+required. Do note that your CU request must be equal to or greater than the CU
+needed for the transaction; otherwise, the transaction will fail.
 
 Let's take a simple transfer SOL transaction and add priority fees. A
 [transfer SOL transaction takes 300 CU](https://explorer.solana.com/tx/5scDyuiiEbLxjLUww3APE9X7i8LE3H63unzonUwMG7s2htpoAGG17sgRsNAhR1zVs6NQAnZeRVemVbkAct5myi17).
@@ -58,6 +60,8 @@ To best optimize our transaction, request exactly 300 CU with the Compute Budget
 Program when adding additional priority fees.
 
 ```typescript
+// import { ... } from "@solana/web3.js"
+
 const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
   units: 300,
 });
@@ -78,26 +82,32 @@ const transaction = new Transaction()
   );
 ```
 
-[Here](https://explorer.solana.com/tx/5scDyuiiEbLxjLUww3APE9X7i8LE3H63unzonUwMG7s2htpoAGG17sgRsNAhR1zVs6NQAnZeRVemVbkAct5myi17),
-we used `ComputeBudgetProgram.setComputeUnitLimit` to set the Compute Unit Limit
-to 300 CUs while also adding a priority fee with
-`ComputeBudgetProgram.setComputeUnitPrice` of 20000 microlamports.
+Viewing
+[this transaction](https://explorer.solana.com/tx/5scDyuiiEbLxjLUww3APE9X7i8LE3H63unzonUwMG7s2htpoAGG17sgRsNAhR1zVs6NQAnZeRVemVbkAct5myi17)
+on the Solana Explorer, see that we used
+`ComputeBudgetProgram.setComputeUnitLimit` to set the Compute Unit Limit to 300
+CUs while also adding a priority fee of 20000 micro-lamports with
+`ComputeBudgetProgram.setComputeUnitPrice`.
 
 ## How Do I Estimate Priority Fees?
 
 The best way to estimate priority fees for a given transaction is to query the
 historical priority fees required to land a transaction given the correct
-accounts. The getRecentPrioritizationFees JSON RPC API method will retrieve the
-lowest priority fees used recently to land a transaction in a block. When using
-getRecentPrioritizationFees, provide the accounts used in your transaction;
-otherwise, you'll find the lowest fee to land a transaction overall. Account
-contention within a block decides priority, and validators will schedule
-accordingly. The RPC method will return max(account_1_min_fee,
-account_2_min_fee, ... account_n_min_fee) which is the base fee to consider when
-adding priority fees.
+accounts. The
+[getRecentPrioritizationFees](/docs/rpc/http/getrecentprioritizationfees) JSON
+RPC API method will retrieve the lowest priority fees used recently to land a
+transaction in a block.
 
-```curl
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+When using `getRecentPrioritizationFees`, provide the accounts used in your
+transaction; otherwise, you'll find the lowest fee to land a transaction
+overall. Account contention within a block decides priority, and validators will
+schedule accordingly.
+
+This RPC method will return the highest fee associated with the provided
+accounts, which then becomes the base fee to consider when adding priority fees.
+
+```shell
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc":"2.0", "id":1,
     "method": "getRecentPrioritizationFees",
@@ -115,9 +125,11 @@ analysis should be used before choosing a path forward.
 
 ## Special Considerations
 
-If you use priority fees with a Durable Nonce Transaction, you must ensure the
-`AdvanceNonce` instruction is your transaction's first instruction. This is
-critical to ensure your transaction is successful; otherwise, it will fail.
+If you use priority fees with a
+[Durable Nonce](/developers/guides/advanced/introduction-to-durable-nonces)
+Transaction, you must ensure the `AdvanceNonce` instruction is your
+transaction's first instruction. This is critical to ensure your transaction is
+successful; otherwise, it will fail.
 
 ```typescript
 const advanceNonce = SystemProgram.nonceAdvance({
