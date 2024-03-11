@@ -40,11 +40,9 @@ hideTableOfContents: false
     交易重复并赋予交易生命周期。
   - `instructions: <array[object]>` - 如果全部成功，将按顺序执行并在一个原子事务
     中提交的程序指令列表。
-    - `programIdIndex: <number>` - 数组索引，`message.accountKeys`指示执行该指令
-      的程序帐户。
-    - `accounts: <array[number]>` - 数组中的有序索引列表，
-      `message.accountKeys`指示要传递给程序的帐户。
-    - `data: <string>` - 程序输入数据以 base-58 字符串编码。
+    - `programIdIndex: <number>` - 指示执行此指令的程序账户在 `message.accountKeys` 数组中的索引。
+    - `accounts: <array[number]>` - 指示要传递给程序的 `message.accountKeys` 数组中的有序索引列表。
+    - `data: <string>` - 以 base-58 字符串编码的程序输入数据。
   - `addressTableLookups: <array[object]|undefined>` - 交易使用的地址表查找列
     表，用于从链上地址查找表动态加载地址。 `maxSupportedTransactionVersion`如果
     未设置则未定义。
@@ -68,7 +66,7 @@ Solana 运行时记录在事务处理期间调用的跨程序指令，并使这�
     程序帐户。
   - `accounts: <array[number]>` - 数组中的有序索引列表， `message.accountKeys`指
     示要传递给程序的帐户。
-  - `data: <string>` - 程序输入数据以 base-58 字符串编码。
+  - `data: <string>` - 以 base-58 字符串编码的程序输入数据。
 
 ## 代币余额
 
