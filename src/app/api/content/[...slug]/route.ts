@@ -5,6 +5,7 @@
 
 import { notFound } from "next/navigation";
 import type { NavItem, SupportedDocTypes } from "@/types";
+import { DEFAULT_LOCALE_EN } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
   generateNavItemListing,
@@ -28,17 +29,17 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!group) return notFound();
 
-  // retrieve the correct group's records by its simple group name
-  const records = getRecordsForGroup(group, {
-    locale,
-  });
-
-  if (!records) return notFound();
+  // get the base locale's record to serve as the default content
+  const baseLocalRecords = getRecordsForGroup(group, {
+    locale: DEFAULT_LOCALE_EN,
+  }) as SupportedDocTypes[];
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
-  const flatNavItems = generateFlatNavItemListing(
-    generateNavItemListing(records as SupportedDocTypes[]),
+  let flatNavItems = generateFlatNavItemListing(
+    generateNavItemListing(baseLocalRecords),
   );
+
+  if (!flatNavItems || flatNavItems.length <= 0) return notFound();
 
   // initialize the NavItem record trackers
   let current: NavItem | null = null;
@@ -63,7 +64,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // get the "previous" record link to display (that is an actual link)
     if (flatNavItems.length >= i - 1) {
       for (let j = i; j > 0; j--) {
-        if (!flatNavItems[j - 1]?.metaOnly) {
+        if (!!flatNavItems[j - 1]?.href) {
           prev = flatNavItems[j - 1];
           break;
         }
@@ -73,7 +74,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // get the "next" record link to display (that is an actual link)
     if (flatNavItems.length >= i + 1) {
       for (let j = i; j < flatNavItems.length; j++) {
-        if (!flatNavItems[j + 1]?.metaOnly) {
+        if (!!flatNavItems[j + 1]?.href) {
           next = flatNavItems[j + 1];
           break;
         }
@@ -86,11 +87,39 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!current) return notFound();
 
-  // locate full content record
-  let record = (records as SupportedDocTypes[]).filter(
+  // locate full content record for the base locale
+  let record = baseLocalRecords.find(
     (item: SupportedDocTypes) =>
-      item.href.toLowerCase() == current?.href?.toLowerCase(),
-  )?.[0];
+      item.href.toLowerCase() == current.href?.toLowerCase(),
+  );
+
+  if (!record) notFound();
+
+  /**
+   * with the base locale record and data in hand, we can attempt to
+   * locate the desired locale's record data
+   */
+  if (locale !== DEFAULT_LOCALE_EN) {
+    const localeRecords = getRecordsForGroup(group, {
+      locale,
+    }) as SupportedDocTypes[];
+
+    const localRecord = localeRecords.find(
+      (item: SupportedDocTypes) =>
+        item.href.toLowerCase() == current.href?.toLowerCase(),
+    );
+    if (localRecord) {
+      record = localRecord;
+    }
+
+    flatNavItems = generateFlatNavItemListing(
+      generateNavItemListing(localeRecords),
+    );
+
+    // get the locale specific next/prev info
+    if (!!next) next = flatNavItems.find(item => item.id == next!.id) || next;
+    if (!!prev) prev = flatNavItems.find(item => item.id == prev!.id) || prev;
+  }
 
   if (!record) notFound();
 
