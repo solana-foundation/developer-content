@@ -27,9 +27,9 @@ jobs:
       # todo: if not content files changed, skip uploading
       # todo: only upload the changed files
       - name: Upload latest content to crowdin
-        run: npm run crowdin:upload
+        run: npm run crowdin:upload --no-progress
       - name: Download latest translations from crowdin
-        run: npm run crowdin:download
+        run: npm run crowdin:download --no-progress
       - name: Current translation completion status
         run: npx crowdin status
       - name: Build Project Artifacts
