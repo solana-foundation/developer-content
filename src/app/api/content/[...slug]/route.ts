@@ -90,7 +90,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   // locate full content record for the base locale
   let record = baseLocalRecords.find(
     (item: SupportedDocTypes) =>
-      item.href.toLowerCase() == current.href?.toLowerCase(),
+      item.href.toLowerCase() == current?.href?.toLowerCase(),
   );
 
   if (!record) notFound();
@@ -106,7 +106,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
     const localRecord = localeRecords.find(
       (item: SupportedDocTypes) =>
-        item.href.toLowerCase() == current.href?.toLowerCase(),
+        item.href.toLowerCase() == current?.href?.toLowerCase(),
     );
     if (localRecord) {
       record = localRecord;
