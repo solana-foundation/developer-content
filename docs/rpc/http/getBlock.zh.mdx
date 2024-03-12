@@ -23,7 +23,7 @@ altRoutes:
 配置对象包含以下字段：
 
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   defaultValue={"finalized(已完成)"}
@@ -35,7 +35,7 @@ altRoutes:
 </Field>
 
 <Field 
-  name="编码"
+  name="encoding"
   type="string"
   defaultValue="json"
   optional={true}
@@ -43,8 +43,6 @@ altRoutes:
 >
 
 每个返回的Transaction的编码格式
-
-{" "}
 
 <Values values={["json", "jsonParsed", "base58", "base64"]} />
 
@@ -93,7 +91,7 @@ altRoutes:
 
 </Field>
 
-<Field name="奖励" type="bool" optional={true}>
+<Field name="rewards" type="bool" optional={true}>
   是否填充`rewards`数组。如果不提供参数，则默认包含奖励。
 </Field>
 

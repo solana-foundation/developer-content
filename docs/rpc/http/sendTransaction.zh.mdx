@@ -55,12 +55,12 @@ altRoutes:
 
 </Field>
 
-<Field name="跳过预检" type="bool" defaultValue="false">
+<Field name="skipPreflight" type="bool" defaultValue="false">
   当 `true`, ，跳过预检事务检查
 </Field>
 
 <Field
-  name="飞行前承诺"
+  name="preflightCommitment"
   type="string"
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
   defaultValue="finalized(已完成)"
@@ -68,12 +68,12 @@ altRoutes:
   用于预检的承诺级别。
 </Field>
 
-<Field name="最大重试次数" type="usize">
+<Field name="maxRetries" type="usize">
   RPC 节点重试向领导者发送交易的最大次数。如果未提供此参数，RPC
   节点将重试交易，直到交易完成或区块哈希过期。
 </Field>
 
-<Field name="最小上下文槽" type="number">
+<Field name="minContextSlot" type="number">
   设置执行飞行前事务检查的最小时隙
 </Field>
 

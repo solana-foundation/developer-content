@@ -24,7 +24,7 @@ altRoutes:
 配置对象包含以下字段：
 
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
@@ -39,7 +39,7 @@ altRoutes:
 </Field>
 
 <Field 
-  name="编码"
+  name="encoding"
   type="string"
   defaultValue="json"
   optional={true}
@@ -47,8 +47,6 @@ altRoutes:
 >
 
 返回的Account数据的编码格式
-
-{" "}
 
 <Values values={["jsonParsed", "base58", "base64", "base64+zstd"]} />
 
@@ -67,7 +65,7 @@ altRoutes:
 
 </Field>
 
-<Field name="数据切片" type="object" optional={true}>
+<Field name="dataSlice" type="object" optional={true}>
   请求帐户数据的一部分。
 
 - `length: <usize>` - 返回的字节数
@@ -80,15 +78,13 @@ altRoutes:
 </Field>
 
 <Field 
-  name="过滤器"
+  name="filters"
   type="array"
   optional={true}
   href={"/docs/rpc/index.zh.mdx#过滤条件"}
 >
 
 使用最多 4 个过滤对象过滤结果
-
-{" "}
 
 <Callout type={"info"}>
   结果帐户必须满足所有过滤条件才能包含在返回的结果中

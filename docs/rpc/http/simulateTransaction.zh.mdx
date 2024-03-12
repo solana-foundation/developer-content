@@ -19,8 +19,6 @@ altRoutes:
 
 交易，作为编码字符串。
 
-{" "}
-
 <Callout type={"info"}>交易必须具有有效的区块哈希，但不需要签名。</Callout>
 
 </Parameter>
@@ -29,10 +27,8 @@ altRoutes:
 
 配置对象包含以下字段：
 
-{" "}
-
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   defaultValue="finalized(已完成)"
   optional={true}
@@ -59,34 +55,30 @@ altRoutes:
   可以评估请求的最小时隙
 </Field>
 
-<Field name="编码" type="string" defaultValue="base58" optional={true}>
+<Field name="encoding" type="string" defaultValue="base58" optional={true}>
 
 用于交易数据的编码。Values: `base58` (慢速, **已弃用**), 或 `base64`.
 
 </Field>
 
-<Field name="内部说明" type="bool" optional={true} defaultValue={false}>
+<Field name="innerInstructions" type="bool" optional={true} defaultValue={false}>
 
 如果`true`响应将包含 [内部指令](/docs/rpc/json-structures.zh#内部指令)。这些内部
 说明将`jsonParsed`在可能的情况下进行，否则`json`。
 
 </Field>
 
-<Field name="帐户" type={"object"} optional={true}>
+<Field name="accounts" type={"object"} optional={true}>
 
 帐户配置对象包含以下字段：
 
-{" "}
-
-<Field name="地址" type="array">
+<Field name="addresses" type="array">
   要返回的帐户数`array`，作为 base-58 编码字符串
 </Field>
 
-<Field name="编码" type="string" defaultValue="base64">
+<Field name="encoding" type="string" defaultValue="base64">
 
 返回的帐户数据的编码
-
-{" "}
 
 <Values values={["base64", "base58", "base64+zstd", "jsonParsed"]} />
 

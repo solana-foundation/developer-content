@@ -23,8 +23,6 @@ altRoutes:
 
 日志的过滤条件以按帐户类型接收结果；目前支持：
 
-{" "}
-
 <Field type="string" value="all">
   `all` - 包含区块中的所有交易
 </Field>
@@ -44,8 +42,8 @@ altRoutes:
 
 配置对象包含以下字段：
 
-  <Field
-  name="承诺"
+<Field
+  name="commitment"
   type="string"
   optional={true}
   defaultValue={"finalized"}
@@ -57,7 +55,7 @@ altRoutes:
 </Field>
 
 <Field 
-  name="编码"
+  name="encoding"
   type="string"
   defaultValue="json"
   optional={true}
@@ -65,8 +63,6 @@ altRoutes:
 >
 
 每个返回的Transaction的编码格式
-
-{" "}
 
 <Values values={["json", "jsonParsed", "base58", "base64"]} />
 
@@ -82,15 +78,13 @@ altRoutes:
 </Field>
 
 <Field
-  name="交易详情"
+  name="transactionDetails"
   type="string"
   optional={true}
   defaultValue={"full"}
 >
 
 要返回的交易详细信息级别
-
-{" "}
 
 <Values values={["full", "accounts", "signatures", "none"]} />
 
@@ -104,7 +98,7 @@ altRoutes:
 
 </Field>
 
-<Field name="最大支持的交易版本" type="number" optional={true}>
+<Field name="maxSupportedTransactionVersion" type="number" optional={true}>
 
 在响应中返回的最大交易版本。
 
@@ -117,7 +111,7 @@ altRoutes:
 
 </Field>
 
-<Field name="显示奖励" type="bool" optional={true}>
+<Field name="showRewards" type="bool" optional={true}>
   是否填充`rewards`数组。如果不提供参数，则默认包含奖励。
 </Field>
 

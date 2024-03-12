@@ -29,23 +29,28 @@ altRoutes:
 配置对象包含以下字段：
 
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   defaultValue="finalized"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
 ></Field>
 
-<Field name="交易详情" type="string" defaultValue="full" optional={true}>
+<Field
+  name="transactionDetails"
+  type="string"
+  defaultValue="full"
+  optional={true}
+>
   要返回的交易详细信息级别，`full(完整)`、`signatures(签名)`或`none(无)`
 </Field>
 
-<Field name="奖励" type="bool" defaultValue={true} optional={true}>
+<Field name="rewards" type="bool" defaultValue={true} optional={true}>
   是否填充`rewards`数组。
 </Field>
 
 <Field 
-  name="编码"
+  name="encoding"
   type="string"
   defaultValue="json"
   optional={true}
@@ -53,8 +58,6 @@ altRoutes:
 >
 
 账户数据的编码格式
-
-{" "}
 
 <Values values={["json", "base58", "base64", "jsonParsed"]} />
 

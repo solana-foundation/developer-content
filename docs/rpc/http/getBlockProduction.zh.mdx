@@ -19,17 +19,17 @@ altRoutes:
 配置对象包含以下字段：
 
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   href="/docs/rpc/index.mdx.zh#配置状态承诺"
 ></Field>
 
-<Field name="身份" type="string" optional={true}>
+<Field name="identity" type="string" optional={true}>
   仅返回此验证者身份的结果（base-58 编码）
 </Field>
 
-<Field name="范围" type="object" optional={true}>
+<Field name="range" type="object" optional={true}>
   返回区块生产的时隙范围。如果未提供参数，则默认为当前纪元。
 
 - `firstSlot: <u64>` - 第一个返回区块生产信息的槽位（含）

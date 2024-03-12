@@ -32,22 +32,18 @@ altRoutes:
 
 配置对象包含以下字段：
 
-{" "}
-
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
 ></Field>
 
-{" "}
-
 <Field name="minContextSlot" type="number" optional={true}>
   可以评估请求的最小槽位
 </Field>
 
-  <Field name="数据切片" type="object" optional={true}>
+  <Field name="dataSlice" type="object" optional={true}>
     请求帐户数据的一部分。
     - `length: <usize>` - 返回的字节数
     - `offset: <usize>` - 开始读取的字节偏移量

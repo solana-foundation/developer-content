@@ -34,25 +34,23 @@ altRoutes:
 <Parameter type={"object"} optional={true}>
   配置对象包含以下字段：
 
-{" "}
-
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   defaultValue="finalized(已完成)"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
 ></Field>
 
-<Field name="限制" type="number" optional={true}>
+<Field name="limit" type="number" optional={true}>
   返回的最大交易签名（1 到 1,000 之间，默认值：1,000）。
 </Field>
 
-<Field name="之前" type="string" optional={true}>
+<Field name="before" type="string" optional={true}>
   从此交易签名开始向后搜索。（如果未提供，则搜索从最高的最大确认块的顶部开始。）
 </Field>
 
-<Field name="直到" type="string" optional={true}>
+<Field name="until" type="string" optional={true}>
   搜索直到该交易签名，如果在达到限制之前找到。
 </Field>
 

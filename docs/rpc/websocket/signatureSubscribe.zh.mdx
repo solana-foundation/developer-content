@@ -23,8 +23,6 @@ altRoutes:
 
 交易签名，作为 base-58 编码的字符串
 
-{" "}
-
 <Callout type={"info"}>
   交易签名必须是交易的第一个签名 (有关更多详细信息，请参阅
   [交易id](/docs/terminology.md#transaction-id))。
@@ -36,16 +34,14 @@ altRoutes:
 
 配置对象包含以下字段：
 
-{" "}
-
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
 ></Field>
 
-<Field name="启用接收通知" type="bool" optional={true}>
+<Field name="enableReceivedNotification" type="bool" optional={true}>
 
 除了在处理签名时之外，是否在 RPC 收到签名时订阅通知。
 

@@ -25,7 +25,7 @@ altRoutes:
 配置对象包含以下字段：
 
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
@@ -40,8 +40,6 @@ altRoutes:
 
 使用各种过滤对象过滤结果
 
-{" "}
-
 <Callout type={"info"}>
   结果帐户必须满足所有过滤条件才能包含在返回的结果中。
 </Callout>
@@ -49,15 +47,13 @@ altRoutes:
 </Field>
 
 <Field 
-  name="编码"
+  name="encoding"
   type="string"
   optional={true}
   href="/docs/rpc/index.zh.mdx#解析后的响应"
 >
 
 账户数据的编码格式
-
-{" "}
 
 <Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
 

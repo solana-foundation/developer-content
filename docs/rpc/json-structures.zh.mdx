@@ -40,8 +40,10 @@ hideTableOfContents: false
     交易重复并赋予交易生命周期。
   - `instructions: <array[object]>` - 如果全部成功，将按顺序执行并在一个原子事务
     中提交的程序指令列表。
-    - `programIdIndex: <number>` - 指示执行此指令的程序账户在 `message.accountKeys` 数组中的索引。
-    - `accounts: <array[number]>` - 指示要传递给程序的 `message.accountKeys` 数组中的有序索引列表。
+    - `programIdIndex: <number>` - 指示执行此指令的程序账户在
+      `message.accountKeys` 数组中的索引。
+    - `accounts: <array[number]>` - 指示要传递给程序的 `message.accountKeys` 数
+      组中的有序索引列表。
     - `data: <string>` - 以 base-58 字符串编码的程序输入数据。
   - `addressTableLookups: <array[object]|undefined>` - 交易使用的地址表查找列
     表，用于从链上地址查找表动态加载地址。 `maxSupportedTransactionVersion`如果

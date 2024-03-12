@@ -25,7 +25,7 @@ altRoutes:
 配置对象包含以下字段：
 
 <Field
-  name="承诺"
+  name="commitment"
   type="string"
   optional={true}
   href="/docs/rpc/index.zh.mdx#配置状态承诺"
@@ -35,11 +35,11 @@ altRoutes:
   可以评估请求的最小槽位
 </Field>
 
-<Field name="限制" type="number" optional={true} defaultValue={"1000"}>
+<Field name="limit" type="number" optional={true} defaultValue={"1000"}>
   返回的最大交易签名（1 到 1,000 之间）。
 </Field>
 
-<Field name="之前" type="string" optional={true}>
+<Field name="before" type="string" optional={true}>
   从此交易签名开始向后搜索。如果未提供，则搜索从最高的最大确认块的顶部开始。
 </Field>
 
