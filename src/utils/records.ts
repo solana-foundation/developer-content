@@ -26,6 +26,7 @@ export function getRecordsForGroup(
   switch (simpleGroupName) {
     case "rpc":
     case "docs,rpc": {
+      simpleGroupName = "rpc";
       records = allSolanaRPCDocs;
       break;
     }
@@ -44,6 +45,23 @@ export function getRecordsForGroup(
     case "workshops": {
       records = allDeveloperWorkshops;
       break;
+    }
+  }
+
+  /**
+   * handle special cases of joining multiple groups together
+   */
+  if (simpleGroupName == "rpc") {
+    /**
+     * since "docs" and "docs/rpc" are handled as separate record types, we
+     * need to manually located and add in the root docs page so it appears in
+     * the correct places on the frontend (including in the navigation sidebar)
+     */
+    const docsIndex = allSolanaDocs.find(
+      record => record.locale == options.locale && record.href == "/docs",
+    );
+    if (docsIndex) {
+      records.push(Object.assign(docsIndex, { featuredPriority: 0 }) as any);
     }
   }
 
