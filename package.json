@@ -11,7 +11,7 @@
     "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer build --clearCache",
     "dev": "yarn contentlayer:build && next dev -p 3001",
-    "build": "yarn crowdin:download --no-progress && yarn contentlayer:build && next build",
+    "build": "yarn contentlayer:build && next build",
     "start": "next start -p 3001",
     "test": "yarn contentlayer:build",
     "lint": "next lint",
