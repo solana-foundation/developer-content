@@ -175,9 +175,12 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
   "method": "getMinimumBalanceForRentExemption",
   "params":[0]
 }'
+```
 
-# Result
-{"jsonrpc":"2.0","result":890880,"id":1}
+##### Result
+
+```json
+{ "jsonrpc": "2.0", "result": 890880, "id": 1 }
 ```
 
 ### Offline Accounts
@@ -239,9 +242,18 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
   "method": "getBlocks",
   "params": [160017005, 160017015]
 }'
+```
 
-# Result
-{"jsonrpc":"2.0","result":[160017005,160017006,160017007,160017012,160017013,160017014,160017015],"id":1}
+##### Result
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    160017005, 160017006, 160017007, 160017012, 160017013, 160017014, 160017015
+  ],
+  "id": 1
+}
 ```
 
 Not every slot produces a block, so there may be gaps in the sequence of
@@ -279,8 +291,11 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
     }
   ]
 }'
+```
 
-# Result
+##### Result
+
+```json
 {
   "jsonrpc": "2.0",
   "result": {
@@ -380,8 +395,11 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
     }
   ]
 }'
+```
 
-# Result
+##### Result
+
+```json
 {
   "jsonrpc": "2.0",
   "result": [
@@ -430,8 +448,11 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
     }
   ]
 }'
+```
 
-# Result
+##### Result
+
+```json
 {
   "jsonrpc": "2.0",
   "result": {
@@ -444,17 +465,9 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
         "Program 11111111111111111111111111111111 invoke [1]",
         "Program 11111111111111111111111111111111 success"
       ],
-      "postBalances": [
-        1110663066,
-        1,
-        1040000000
-      ],
+      "postBalances": [1110663066, 1, 1040000000],
       "postTokenBalances": [],
-      "preBalances": [
-        1120668066,
-        1,
-        1030000000
-      ],
+      "preBalances": [1120668066, 1, 1030000000],
       "preTokenBalances": [],
       "rewards": [],
       "status": {
@@ -488,9 +501,7 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
           {
             "accountKey": "4syr5pBaboZy4cZyF6sys82uGD7jEvoAP2ZMaoich4fZ",
             "readonlyIndexes": [],
-            "writableIndexes": [
-              3
-            ]
+            "writableIndexes": [3]
           }
         ],
         "instructions": [
@@ -597,8 +608,11 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
     ]
   ]
 }'
+```
 
-# Result
+##### Result
+
+```json
 {
   "jsonrpc": "2.0",
   "result": {
@@ -743,10 +757,161 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
   "method": "getMinimumBalanceForRentExemption",
   "params": [0]
 }'
-
-# Result
-{"jsonrpc":"2.0","result":890880,"id":1}
 ```
+
+##### Result
+
+```json
+{ "jsonrpc": "2.0", "result": 890880, "id": 1 }
+```
+
+## The Importance of Implementing Priority Fees
+
+In periods of high demand, it’s possible for a transaction to expire before a
+validator has included such transactions in their block because they chose other
+transactions with higher economic value. Valid Transactions on Solana may be
+delayed or dropped if Prioritization Fees are not implemented properly.
+
+[Prioritization Fees](/docs/terminology#prioritization-fee) are additional fees
+that can be added on top of the
+[base Transaction Fee](/docs/core/transactions/fees) to ensure transaction
+inclusion within blocks and in these situations and help ensure deliverability.
+
+These priority fees are added to transaction by adding a special Compute Budget
+instruction that sets the desired priority fee to be paid.
+
+<Callout type="caution" title="Important Note">
+
+Failure to implement these instructions may result in network disruptions and
+dropped transactions. It is strongly recommended that every exchange supporting
+Solana make use of priority fees to avoid disruption.
+
+</Callout>
+
+### What is a Prioritization Fee?
+
+Prioritization Fees are priced in micro-lamports per Compute Unit (e.g. small
+amounts of SOL) prepended to transactions to make them economically compelling
+for validator nodes to include within blocks on the network.
+
+### How much should the Prioritization Fee be?
+
+The method for setting your prioritization fee should involve querying recent
+prioritization fees to set a fee which is likely to be compelling for the
+network. Using the
+[`getRecentPrioritizationFees`](/docs/rpc/http/getrecentprioritizationfees) RPC
+method, you can query for the prioritization fees required to land a transaction
+in a recent block.
+
+Pricing strategy for these priority fees will vary based on your use case. There
+is no canonical way to do so. One strategy for setting your Prioritization Fees
+might be to calculate your transaction success rate and then increase your
+Prioritization Fee against a query to the recent transaction fees API and adjust
+accordingly. Pricing for Prioritization Fees will be dynamic based on the
+activity on the network and bids placed by other participants, only knowable
+after the fact.
+
+One challenge with using the `getRecentPrioritizationFees` API call is that it
+may only return the lowest fee for each block. This will often be zero, which is
+not a fully useful approximation of what Prioritization Fee to use in order to
+avoid being rejected by validator nodes.
+
+The `getRecentPrioritizationFees` API takes accounts’ pubkeys as parameters, and
+then returns the highest of the minimum prioritization fees for these accounts.
+When no account is specified, the API will return the lowest fee to land to
+block, which is usually zero (unless the block is full).
+
+Exchanges and applications should query the RPC endpoint with the accounts that
+a transaction is going to write-lock. The RPC endpoint will return the
+`max(account_1_min_fee, account_2_min_fee, ... account_n_min_fee)`, which should
+be the base point for the user to set the prioritization fee for that
+transaction.
+
+There are different approaches to setting Prioritization Fees and some
+[third-party APIs](https://docs.helius.dev/solana-rpc-nodes/alpha-priority-fee-api)
+are available to determine the best fee to apply. Given the dynamic nature of
+the network, there will not be a “perfect” way to go about pricing your
+Prioritization fees and careful analysis should be applied before choosing a
+path forward.
+
+### How to Implement Prioritization Fees
+
+Adding priority fees on a transaction consists of prepending two Compute Budget
+instructions on a given transaction:
+
+- one to set the compute unit price, and
+- another to set the compute unit limit
+
+<Callout>
+
+Here, you can also find a more detailed developer
+[guide on how to use priority fees](/developers/guides/advanced/how-to-use-priority-fees)
+which includes more information about implementing priority fees.
+
+</Callout>
+
+Create a `setComputeUnitPrice` instruction to add a Prioritization Fee above the
+Base Transaction Fee (5,000 Lamports).
+
+```typescript
+// import { ComputeBudgetProgram } from "@solana/web3.js"
+ComputeBudgetProgram.setComputeUnitPrice({ microLamports: number });
+```
+
+The value provided in micro-lamports will be multiplied by the Compute Unit (CU)
+budget to determine the Prioritization Fee in Lamports. For example, if your CU
+budget is 1M CU, and you add `1 microLamport/CU`, the Prioritization Fee will be
+1 lamport (1M \* 0. 000001). The total fee will then be 5001 lamports.
+
+To set a new compute unit budget for the transaction, create a
+`setComputeUnitLimit` instruction
+
+```typescript
+// import { ComputeBudgetProgram } from "@solana/web3.js"
+ComputeBudgetProgram.setComputeUnitLimit({ units: number });
+```
+
+The `units` value provided will replace the Solana runtime's default compute
+budget value. Transactions should request the minimum amount of CU required for
+execution to maximize throughput and minimize overall fees.
+
+```typescript
+// import { ... } from "@solana/web3.js"
+
+const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
+  units: 1000000,
+});
+
+const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
+  microLamports: 1,
+});
+
+const transaction = new Transaction()
+  .add(modifyComputeUnits)
+  .add(addPriorityFee)
+  .add(
+    SystemProgram.transfer({
+      fromPubkey: payer.publicKey,
+      toPubkey: toAccount,
+      lamports: 10000000,
+    }),
+  );
+```
+
+### Prioritization Fees And Durable Nonces
+
+If your setup uses Durable Nonce Transactions, it is important to properly
+implement Prioritization Fees in combination with Durable Transaction Nonces to
+ensure successful transactions. Failure to do so will cause intended Durable
+Nonce transactions not to be detected as such.
+
+If you ARE using Durable Transaction Nonces, the `AdvanceNonceAccount`
+instruction MUST be specified FIRST in the instructions list, even when the
+compute budget instructions are used to specify priority fees.
+
+You can find a specific code example
+[using durable nonces and priority fees together](/developers/guides/advanced/how-to-use-priority-fees#special-considerations)
+in this developer guide.
 
 ## Supporting the SPL Token Standard
 
@@ -1063,7 +1228,7 @@ Beware that these tokens may be transferred without your exchange's knowledge.
 #### Transfer Hook
 
 Tokens may be configured with an additional program that must be called during
-tranfers, in order to validate the transfer or perform any other logic.
+transfers, in order to validate the transfer or perform any other logic.
 
 Since the Solana runtime requires all accounts to be explicitly passed to a
 program, and transfer hooks require additional accounts, the exchange needs to
