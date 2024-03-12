@@ -15,12 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Install Vercel CLI and Yarn
+        run: npm install --global vercel@latest yarn
       - name: Pull Vercel Environment Information
         run:
           vercel pull --yes --environment=production
           --token=${{secrets.VERCEL_TOKEN }}
+      - name: Install dependencies via yarn
+        run: yarn install
       # todo: if not content files changed, skip uploading
       # todo: only upload the changed files
       - name: Upload latest content to crowdin
