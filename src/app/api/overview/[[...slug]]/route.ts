@@ -4,14 +4,10 @@
  * display on https://solana.com/developers)
  */
 
-import { notFound } from "next/navigation";
 import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
-import {
-  allDeveloperGuides,
-  allDeveloperResources,
-  allDeveloperWorkshops,
-} from "contentlayer/generated";
 import { extractFeaturedRecords, simplifyRecords } from "@/utils/parsers";
+import type { SupportedDocTypes } from "@/types";
+import { getRecordsForGroup } from "@/utils/records";
 
 type RouteProps = {
   params: {
@@ -28,24 +24,28 @@ export function GET(_req: Request, { params: { slug = [] } }: RouteProps) {
     locale = slug.shift() || DEFAULT_LOCALE_EN;
   }
 
-  console.log("locale:", locale);
-
   return Response.json({
     // featured guides
     guides: extractFeaturedRecords({
-      records: allDeveloperGuides,
+      records: getRecordsForGroup("guides", {
+        locale,
+      }) as SupportedDocTypes[],
       limit: 6,
       callback: simplifyRecords,
     }),
     // featured resources
     resources: extractFeaturedRecords({
-      records: allDeveloperResources,
+      records: getRecordsForGroup("resources", {
+        locale,
+      }) as SupportedDocTypes[],
       limit: 6,
       callback: simplifyRecords,
     }),
     // featured workshops
     workshops: extractFeaturedRecords({
-      records: allDeveloperWorkshops,
+      records: getRecordsForGroup("workshops", {
+        locale,
+      }) as SupportedDocTypes[],
       limit: 6,
       callback: simplifyRecords,
     }),

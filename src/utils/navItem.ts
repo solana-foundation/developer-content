@@ -1,13 +1,23 @@
-import { NavItem, SupportedDocTypes } from "@/types";
-import { DocumentTypes, SolanaDoc } from "contentlayer/generated";
+import type {
+  NavItem,
+  SimpleRecordGroupName,
+  SupportedDocTypes,
+} from "@/types";
+import { type SolanaDoc } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
+import {
+  DEFAULT_LOCALE_EN,
+  I18N_INCLUDE_IN_PATHS,
+  I18N_LOCALE_REGEX,
+  LOCALE_REGEX,
+} from "./constants";
 
 /**
  * Generate a directory/category grouped `NavItem[]` listing by the provided flat
  * array of document `records`
  */
 export function generateNavItemListing(
-  records: Array<DocumentTypes>,
+  records: Array<SupportedDocTypes>,
 ): Array<NavItem> {
   // init a generic group tracker object
   const grouping: any = {};
@@ -19,23 +29,28 @@ export function generateNavItemListing(
   records.forEach(record => {
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
+    const { id: computedKey } = computeRecordPathAndId(
+      record._raw.sourceFileDir,
+    );
+
     // init the dir based category
-    if (!grouping[record._raw.sourceFileDir])
-      grouping[record._raw.sourceFileDir] = { items: [] } as unknown as NavItem;
+    if (!grouping[computedKey]) {
+      grouping[computedKey] = { items: [] } as unknown as NavItem;
+    }
 
     // process the index file as the root of the NavItem
     if (
       record._raw.sourceFileName == "index.md" ||
       record._raw.sourceFileName == "index.mdx"
     ) {
-      grouping[record._raw.sourceFileDir] = Object.assign(
-        grouping[record._raw.sourceFileDir],
+      grouping[computedKey] = Object.assign(
+        grouping[computedKey],
         // @ts-ignore
         computeNavItem(record),
       );
     } else {
       // @ts-ignore
-      grouping[record._raw.sourceFileDir].items.push(computeNavItem(record));
+      grouping[computedKey].items.push(computeNavItem(record));
     }
   });
 
@@ -46,8 +61,6 @@ export function generateNavItemListing(
     // handle category items that do not have metadata pulled from a file (i.e. no `path`)
     if (!currentItem.path) {
       Object.assign(currentItem, computeDetailsFromKey(key));
-      // currentItem.label = ucFirst(key.split("/").reverse()[0]);
-      // currentItem.id = key.replaceAll("/", "-");
     }
 
     const parentKey = key.slice(0, key.lastIndexOf("/"));
@@ -127,8 +140,24 @@ export function generateFlatNavItemListing(
  */
 export function computeDetailsFromKey(key: string) {
   return {
-    label: ucFirst(key.split("/").reverse()[0]),
-    id: key.replaceAll("/", "-"),
+    label: ucFirst(key.split("-").reverse()[0]),
+    id: computeRecordPathAndId(key).id,
+  };
+}
+
+/**
+ * Compute the path and id for a record, removing the i18n data as desired
+ */
+export function computeRecordPathAndId(path: string) {
+  path = path.toLowerCase();
+
+  if (!I18N_INCLUDE_IN_PATHS) {
+    path = path.replace(I18N_LOCALE_REGEX, "");
+  }
+
+  return {
+    path: path,
+    id: path.replaceAll("/", "-"),
   };
 }
 
@@ -186,49 +215,90 @@ export function shouldIgnoreRecord({
  */
 export function computeNavItem(
   doc: SupportedDocTypes & Partial<SolanaDoc>,
-  // BASE_DIR = "content/",
 ): NavItem {
+  const computedPathAndId = computeRecordPathAndId(doc._raw.flattenedPath);
+
   // populate the base NavItem record from the provided `doc`
-  const record: NavItem = {
-    path: doc._id, // this is the full file path, computed by contentlayer
-    id: doc?.id || "",
-    href: doc?.href,
+  const navItem: NavItem = {
+    /** i18n locale */
+    locale: doc.locale,
+    /** unique identifier for each record, including any i18n info */
+    id: computedPathAndId.id,
+    /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
+    path: computedPathAndId.path,
+    href: doc.href,
     label: doc?.sidebarLabel || doc?.title,
     sidebarSortOrder: doc?.sidebarSortOrder,
     metaOnly: doc?.metaOnly,
     altRoutes: doc.altRoutes,
   };
 
-  // compute an id based on the doc's path
-  if (!record.id) record.id = doc._raw.flattenedPath.replaceAll("/", "-");
-
   // compute a label based on the doc's file name
-  if (!record.label)
-    record.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
+  if (!navItem.label) {
+    if (navItem.label.includes("deprecated")) console.log(navItem);
 
-  // set the href based on the file's path
-  if (!record.href) {
-    record.href = doc._raw.flattenedPath.replace(
-      /^(content\/?)?(developers\/?)?/gm,
-      // prepend the non-docs content
-      doc._raw.sourceFileDir.startsWith("docs") ? "/" : "/developers/",
-    );
+    navItem.label = ucFirst(doc._raw.sourceFileName.split(".")[0]);
   }
 
-  // always lowercase certain specific values
-  record.href = record.href.toLowerCase();
-  record.id = record.id.toLowerCase();
-
   /**
-   * when the record is only storing metadata, remove it as a linked item
+   * when the navItem record is only storing metadata, remove it as a linked item
    * ---
-   * note: the `record.path` value should NOT be deleted
-   * since it is ued to determine the index of a category.
-   * also, deleting `record.metaOnly` prevents confusing
+   * note: the `navItem.path` value should NOT be deleted
+   * since it is used to determine the index of a category.
+   *
+   * note: deleting `navItem.metaOnly` prevents confusing
    * data in the generated nav item listing (especially for categories)
    */
-  if (!!record.metaOnly) delete record.href;
-  else delete record.metaOnly;
+  if (!!navItem.metaOnly) delete navItem.href;
+  else delete navItem.metaOnly;
 
-  return record;
+  return navItem;
+}
+
+/**
+ * Compute and format standard details based on the url provided slug
+ */
+export function computeDetailsFromSlug(slug: string[]) {
+  // initialize and default the content locale to english
+  let locale = DEFAULT_LOCALE_EN;
+
+  // extract the requested locale from the url (when provided)
+  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
+    locale = slug.shift() || DEFAULT_LOCALE_EN;
+  }
+
+  // determine the correct group based on the route prefix
+  let group = slug.shift() as SimpleRecordGroupName;
+
+  // handle special sub groups like the rpc section
+  if (group == "docs" && slug[0] == "rpc") {
+    group = slug.shift() as SimpleRecordGroupName;
+  }
+
+  // formatted the `href` value to search for
+  let href = slug
+    .join("/")
+    .toLowerCase()
+    .replaceAll(/\/index(.mdx?)?/gi, "")
+    .trim();
+
+  if (group == "docs") {
+    href = `/docs/${href}`;
+  } else if (group == "rpc" || group == "docs,rpc") {
+    href = `/docs/rpc/${href}`;
+  } else {
+    href = `/developers/${group}/${href}`;
+  }
+
+  // remove all trailing slashes
+  while (href.endsWith("/")) {
+    href = href.substring(0, href.length - 1);
+  }
+
+  return {
+    locale,
+    group,
+    slug,
+    href,
+  };
 }

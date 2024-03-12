@@ -4,59 +4,34 @@
  */
 
 import { notFound } from "next/navigation";
-import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
-import { NavItem, SimpleRecordGroupName } from "@/types";
-import { computeNavItem, shouldIgnoreRecord } from "@/utils/navItem";
+import type { NavItem } from "@/types";
 import {
-  allDeveloperGuides,
-  allDeveloperResources,
-  allSolanaDocs,
-  allDeveloperWorkshops,
-  allSolanaRPCDocs,
-} from "contentlayer/generated";
+  computeNavItem,
+  shouldIgnoreRecord,
+  computeDetailsFromSlug,
+} from "@/utils/navItem";
+import { getRecordsForGroup } from "@/utils/records";
 
 type RouteProps = {
   params: {
-    group: string[];
+    slug: string[];
   };
 };
 
-export function GET(_req: Request, { params: { group } }: RouteProps) {
+export function GET(_req: Request, { params: { slug } }: RouteProps) {
   // dummy check on the url params
-  if (!group || !Array.isArray(group) || group.length <= 0) {
+  if (!slug || !Array.isArray(slug) || slug.length <= 0) {
     return notFound();
   }
 
-  // initialize and default the content locale to english
-  let locale = DEFAULT_LOCALE_EN;
+  const { group, locale } = computeDetailsFromSlug(slug);
 
-  // extract the requested locale from the url (when provided)
-  if (new RegExp(LOCALE_REGEX).test(group[0])) {
-    locale = group.shift() || DEFAULT_LOCALE_EN;
-  }
-
-  console.log("locale:", locale);
-
-  // get the content record group name
-  const groupName = group.toString() as SimpleRecordGroupName;
-  if (!groupName) return notFound();
+  if (!group) return notFound();
 
   // retrieve the correct group's records by its simple group name
-  const records = ((groupName: SimpleRecordGroupName) => {
-    switch (groupName) {
-      case "rpc":
-      case "docs,rpc":
-        return allSolanaRPCDocs;
-      case "docs":
-        return allSolanaDocs;
-      case "guides":
-        return allDeveloperGuides;
-      case "resources":
-        return allDeveloperResources;
-      case "workshops":
-        return allDeveloperWorkshops;
-    }
-  })(groupName);
+  const records = getRecordsForGroup(group, {
+    locale,
+  });
 
   if (!records) return notFound();
 
@@ -94,7 +69,7 @@ export function GET(_req: Request, { params: { group } }: RouteProps) {
   });
 
   // remove the /docs/rpc from the `docs` grouping since it should be handled by the `rpc` grouping
-  if (groupName == "docs") {
+  if (group == "docs") {
     listing = listing.filter(
       item => item.href != "/docs/rpc" && item.href != "/docs/rpc/",
     );

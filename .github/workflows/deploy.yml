@@ -21,6 +21,14 @@ jobs:
         run:
           vercel pull --yes --environment=production
           --token=${{secrets.VERCEL_TOKEN }}
+      # todo: if not content files changed, skip uploading
+      # todo: only upload the changed files
+      - name: Upload latest content to crowdin
+        run: npm run crowdin:upload
+      - name: Download latest translations from crowdin
+        run: npm run crowdin:download
+      - name: Current translation completion status
+        run: npx crowdin status
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel
