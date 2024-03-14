@@ -54,3 +54,9 @@ type NavItemBase = {
 export type NavItem = NavItemBase & {
   items?: Array<NavItemBase>;
 };
+
+export type BreadcrumbItem = {
+  href?: string;
+  title?: string;
+  label: string;
+};

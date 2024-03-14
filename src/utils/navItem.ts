@@ -65,7 +65,11 @@ export function generateNavItemListing(
       Object.assign(currentItem, computeDetailsFromKey(key));
     }
 
-    const parentKey = key.slice(0, key.lastIndexOf(GROUPING_KEY_SEPARATOR));
+    const parentKey = key.slice(
+      0,
+      currentItem?.path?.lastIndexOf("/") ||
+        key.lastIndexOf(GROUPING_KEY_SEPARATOR),
+    );
 
     if (
       key.lastIndexOf(GROUPING_KEY_SEPARATOR) > 0 &&

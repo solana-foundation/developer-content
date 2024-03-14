@@ -4,7 +4,7 @@
  */
 
 import { notFound } from "next/navigation";
-import type { NavItem, SupportedDocTypes } from "@/types";
+import type { BreadcrumbItem, NavItem, SupportedDocTypes } from "@/types";
 import { DEFAULT_LOCALE_EN } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
@@ -123,6 +123,22 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!record) notFound();
 
+  const breadcrumbs: BreadcrumbItem[] = [];
+  let parentId = current.id.substring(0, current.id.lastIndexOf("-"));
+
+  for (let i = 0; i <= parentId.split("-").length + 2; i++) {
+    const item = flatNavItems.find(item => item.id == parentId);
+
+    if (item) {
+      breadcrumbs.unshift({
+        href: item.href,
+        label: item.label,
+      });
+    }
+
+    parentId = parentId.substring(0, parentId.lastIndexOf("-"));
+  }
+
   // remove the html formatted content (since it is undesired data to send over the wire)
   if (typeof record.body.raw !== "undefined") {
     // @ts-ignore
@@ -134,5 +150,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   // todo: support sending related content records back to the client
 
   // finally, return the json formatted listing of NavItems (with the next and prev records)
-  return Response.json(Object.assign(current, record, { next, prev }));
+  return Response.json(
+    Object.assign(current, record, { breadcrumbs, next, prev }),
+  );
 }
