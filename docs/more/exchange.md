@@ -765,7 +765,7 @@ curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
 { "jsonrpc": "2.0", "result": 890880, "id": 1 }
 ```
 
-## The Importance of Implementing Priority Fees
+## Prioritization Fees and Compute Units
 
 In periods of high demand, it’s possible for a transaction to expire before a
 validator has included such transactions in their block because they chose other
@@ -872,14 +872,26 @@ ComputeBudgetProgram.setComputeUnitLimit({ units: number });
 ```
 
 The `units` value provided will replace the Solana runtime's default compute
-budget value. Transactions should request the minimum amount of CU required for
-execution to maximize throughput and minimize overall fees.
+budget value.
+
+<Callout type="caution" title="Set the lowest CU required for the transaction">
+
+Transactions should request the minimum amount of compute units (CU) required
+for execution to maximize throughput and minimize overall fees.
+
+You can get the CU consumed by a transaction by sending the transaction on a
+different Solana cluster, like devnet. For example, a
+[simple token transfer](https://explorer.solana.com/tx/5scDyuiiEbLxjLUww3APE9X7i8LE3H63unzonUwMG7s2htpoAGG17sgRsNAhR1zVs6NQAnZeRVemVbkAct5myi17)
+takes 300 CU.
+
+</Callout>
 
 ```typescript
 // import { ... } from "@solana/web3.js"
 
 const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
-  units: 1000000,
+  // note: set this to be the lowest actual CU consumed by the transaction
+  units: 300,
 });
 
 const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
