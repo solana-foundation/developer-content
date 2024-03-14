@@ -12,6 +12,8 @@ import {
   LOCALE_REGEX,
 } from "./constants";
 
+const GROUPING_KEY_SEPARATOR = "-";
+
 /**
  * Generate a directory/category grouped `NavItem[]` listing by the provided flat
  * array of document `records`
@@ -63,11 +65,12 @@ export function generateNavItemListing(
       Object.assign(currentItem, computeDetailsFromKey(key));
     }
 
-    const parentKey = key.slice(0, key.lastIndexOf("/"));
+    const parentKey = key.slice(0, key.lastIndexOf(GROUPING_KEY_SEPARATOR));
+
     if (
-      key.lastIndexOf("/") > 0 &&
+      key.lastIndexOf(GROUPING_KEY_SEPARATOR) > 0 &&
       key != parentKey &&
-      parentKey != key.slice(0, key.indexOf("/"))
+      parentKey != key.slice(0, key.indexOf(GROUPING_KEY_SEPARATOR))
     ) {
       // handle the `parentKey` already existing
       if (Object.hasOwn(grouping, parentKey)) {
@@ -140,7 +143,7 @@ export function generateFlatNavItemListing(
  */
 export function computeDetailsFromKey(key: string) {
   return {
-    label: ucFirst(key.split("-").reverse()[0]),
+    label: ucFirst(key.split(GROUPING_KEY_SEPARATOR).reverse()[0]),
     id: computeRecordPathAndId(key).id,
   };
 }
@@ -157,7 +160,7 @@ export function computeRecordPathAndId(path: string) {
 
   return {
     path: path,
-    id: path.replaceAll("/", "-"),
+    id: path.replaceAll("/", GROUPING_KEY_SEPARATOR),
   };
 }
 
