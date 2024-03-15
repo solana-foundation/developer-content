@@ -79,7 +79,7 @@ information in your programs to keep your program usage down.
 For example, both base58 encoding and concatenation are expensive operations.
 
 ```rust
-/ 11962 CU !!
+// 11962 CU !!
 // Base58 encoding is expensive, concatenation is expensive
 compute_fn! { "Log a pubkey to account info" =>
     msg!("A string {0}", ctx.accounts.counter.to_account_info().key());
@@ -161,7 +161,7 @@ compute_fn! { "Borsh Serialize" =>
 }
 
 // 151 CU - total CU including serialization 1254
-  let counter = &mut ctx.accounts.counter_zero_copy.load_mut()?;
+let counter = &mut ctx.accounts.counter_zero_copy.load_mut()?;
 compute_fn! { "Zero Copy Serialize" =>
     counter.count = counter.count.checked_add(1).unwrap();
 }
@@ -226,6 +226,6 @@ pub struct PdaAccounts<'info> {
 ## Further Compute Optimizations
 
 There are many other ways to optimize your program's compute usage, such as
-writing in native in stead of anchor, but it all comes at a cost. If you want
+writing in native instead of anchor, but it all comes at a cost. If you want
 the absolute best compute usage on your program, you should evaluate and test
 different methods to see what works best for your specific use case.
