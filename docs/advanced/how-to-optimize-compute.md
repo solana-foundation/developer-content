@@ -226,6 +226,6 @@ pub struct PdaAccounts<'info> {
 ## Further Compute Optimizations
 
 There are many other ways to optimize your program's compute usage, such as
-writing in native instead of anchor, but it all comes at a cost. If you want
-the absolute best compute usage on your program, you should evaluate and test
+writing in native instead of anchor, but it all comes at a cost. If you want the
+absolute best compute usage on your program, you should evaluate and test
 different methods to see what works best for your specific use case.
