@@ -65,7 +65,8 @@ compute_fn!("My message" => {
 
 The output of this macro will give you the compute usage before and after your
 code, helping you understand what parts of your program are using the most
-compute.
+compute. You can find an example of using this macro in the
+[cu_optimizations repository.](https://github.com/Woody4618/cu_optimizations/blob/main/anchor/counter/anchor/programs/counter/src/lib.rs#L18)
 
 ## Optimizing your Program
 
