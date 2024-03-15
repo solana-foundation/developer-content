@@ -1,4 +1,5 @@
 ---
+featured: true
 date: Mar 15, 2024
 difficulty: intermediate
 title: "How to Optimize Compute Usage on Solana"
@@ -25,7 +26,7 @@ your programs. Program compute usage has an impact on both the max performance
 your users can have, as well as increase the cost of executing transactions with
 priority fees.
 
-Optimizing your Compute Unit(CU) usage has the following benefits:
+Optimizing your Compute Unit (CU) usage has the following benefits:
 
 1. A smaller transaction is more likely to be included in a block.
 2. Cheaper instructions make your program more composable.
@@ -66,7 +67,7 @@ compute_fn!("My message" => {
 The output of this macro will give you the compute usage before and after your
 code, helping you understand what parts of your program are using the most
 compute. You can find an example of using this macro in the
-[cu_optimizations repository.](https://github.com/Woody4618/cu_optimizations/blob/main/anchor/counter/anchor/programs/counter/src/lib.rs#L18)
+[cu_optimizations repository.](https://github.com/solana-developers/cu_optimizations/blob/main/anchor/counter/anchor/programs/counter/src/lib.rs#L18)
 
 ## Optimizing your Program
 
@@ -76,7 +77,7 @@ While logging is a great way to understand what is going on inside your program,
 logging is also very expensive. You should avoid logging non-essential
 information in your programs to keep your program usage down.
 
-For example, both base58 encoding and concatenation are expensive operations.
+For example, both base58 encoding and concatenation are expensive operations:
 
 ```rust
 // 11962 CU !!
@@ -141,7 +142,6 @@ account struct. If possible, use zero copy and directly interact with the
 account data to avoid these expensive operations.
 
 ```rust
-
 // 6302 CU
 pub fn initialize(_ctx: Context<InitializeCounter>) -> Result<()> {
     Ok(())
