@@ -61,19 +61,10 @@ code [here](https://github.com/solana-developers/create-solana-dapp).
 
 Now respond to the prompts as follows:
 
-```shell
-# Enter project name
-my-journal-dapp
-
-# Select a preset
-Next.js
-
-# Select a UI library
-Tailwind
-
-# Select an Anchor template
-Counter
-```
+- Enter project name: `my-journal-dapp`
+- Select a preset: `Next.js`
+- Select a UI library: `Tailwind`
+- Select an Anchor template: `counter` program
 
 By selecting `counter` for the Anchor template, a simple counter
 [program](/docs/terminology.md#program), written in rust using the Anchor
@@ -289,11 +280,6 @@ constraints to reallocate the space for the account on-chain:
 
 The `seeds` and `bump` constraints are still needed to be able to find the
 specific PDA we want to update.
-
-The `mut` constraints allows us to mutate/change the data within the account.
-Because how the Solana blockchain handles reading from accounts and writing to
-accounts differently, we must explicitly define which accounts will be mutable
-so the Solana runtime can correctly process them.
 
 ### Delete a journal entry
 
@@ -570,5 +556,5 @@ function JournalCard({ account }: { account: PublicKey }) {
 ## Resources
 
 - Journal dApp:
-  [solana-journal-eight.vercel.app](solana-journal-eight.vercel.app)
+  [solana-journal-eight.vercel.app](https://solana-journal-eight.vercel.app)
 - Program example code:
