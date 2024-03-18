@@ -1,24 +1,21 @@
 ---
-date: March 4, 2024
+date: March 18, 2024
 difficulty: intro
-featured: true
-featuredPriority: 0
-title: "How to create a Journal dApp on Solana"
-seoTitle: "how to create a Journal dApp on Solana"
+title: "How to create a journal dApp on Solana"
 description:
   "Solana developer quickstart guide to learn how to create a basic CRUD dApp on
-  the solana blockchain."
+  the Solana blockchain with a simple journal program."
 tags:
   - quickstart
-  - Solana dApp
+  - dApp
   - anchor
   - rust
   - react
-  - solana program
+  - program
 keywords:
   - playground
   - solana pg
-  - on chain
+  - on-chain
   - rust
   - anchor program
   - tutorial
@@ -29,37 +26,37 @@ keywords:
   - web3 crud app
 ---
 
-## Creating a Journal dApp on Solana
-
-In this guide, you will learn how to create and deploy both the solana program
+In this guide, you will learn how to create and deploy both the Solana program
 and UI for a basic on-chain CRUD dApp. This dApp will allow you to create
 journal entries, update journal entries, read journal entries, and delete
-journal entries all through on chain transactions.
+journal entries all through on-chain transactions.
 
 ## What you will learn
 
 - Setting up your environment
-- Using `npx-create-solana-dapp`
-- Anchor Program Development
+- Using `npx create-solana-dapp`
+- Anchor program development
 - Anchor PDAs and accounts
-- Deploying a solana program
+- Deploying a Solana program
 - Testing an on-chain program
 - Connecting an on-chain program to a React UI
 
 ## Prerequisites
 
+For this guide, you will need to have your local development environment setup
+with a few tools:
+
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Node JS](https://nodejs.org/en/download)
-- [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
 - [Solana CLI & Anchor](https://solana.com/developers/guides/getstarted/setup-local-development)
 
 ## Setting up the project
 
 ```shell
-npx-create-solana-dapp
+npx create-solana-dapp
 ```
 
-This cli command enables quick solana dApp creation. You can find the source
+This CLI command enables quick Solana dApp creation. You can find the source
 code [here](https://github.com/solana-developers/create-solana-dapp).
 
 Now respond to the prompts as follows:
@@ -78,9 +75,10 @@ Tailwind
 Counter
 ```
 
-By selecting counter for the anchor template, a counter solana program writen in
-rust using the Anchor framework will generate for you. Before we start editing
-this template, lets make sure everything is worked as expected:
+By selecting `counter` for the Anchor template, a simple counter
+[program](/docs/terminology.md#program), written in rust using the Anchor
+framework, will be generated for you. Before we start editing this generated
+template program, let's make sure everything is working as expected:
 
 ```shell
 cd my-journal-dapp
@@ -90,18 +88,18 @@ npm install
 npm run dev
 ```
 
-## Writing a Solana Program with Anchor
+## Writing a Solana program with Anchor
 
-If you're new to anchor,
+If you're new to Anchor,
 [The Anchor Book](https://book.anchor-lang.com/introduction/introduction.html)
-and [Anchor Exmaples](https://examples.anchor-lang.com/) are great references to
+and [Anchor Examples](https://examples.anchor-lang.com/) are great references to
 help you learn.
 
-In `my-journal-dapp`, navigate to `anchor/programs/journal/src.lib.rs`. There
-will already be a template code generated in this folder. Let's delete it and
+In `my-journal-dapp`, navigate to `anchor/programs/journal/src/lib.rs`. There
+will already be template code generated in this folder. Let's delete it and
 start from scratch so we can walk through each step.
 
-### Define your anchor program:
+### Define your Anchor program
 
 ```rust
 use anchor_lang::prelude::*;
@@ -115,13 +113,13 @@ pub mod journal {
 }
 ```
 
-### Define your program state:
+### Define your program state
 
 The state is the data structure used to define the information you want to save
 to the account. Since Solana on-chain programs do not have storage, the data is
 stored in accounts that live on the blockchain.
 
-When using anchor, the `#[account]` attribute macro is used to define your
+When using Anchor, the `#[account]` attribute macro is used to define your
 program state.
 
 ```rust
@@ -133,22 +131,27 @@ pub struct JournalEntryState {
 }
 ```
 
-For this journal aApp, we'll be storing the journal's owner, the title of each
-journal entry, and the message of each journal entry.
+For this journal dApp, we will be storing:
 
-### Create a journal entry:
+- the journal's owner
+- the title of each journal entry, and
+- the message of each journal entry
 
-Now, let's add an instruction to this program that creates a new journal entry.
-To do this, we will update the `#[program]` code that we already defined earlier
-to include an instruction for `create_journal_entry`.
+### Create a journal entry
+
+Now, let's add an
+[instruction handler](/docs/terminology.md#instruction-handler) to this program
+that creates a new journal entry. To do this, we will update the `#[program]`
+code that we already defined earlier to include an instruction for
+`create_journal_entry`.
 
 When creating a journal entry, the user will need to provide the `title` and
 `message` of the journal entry. So we need to add those two variables as
-additional parameters.
+additional arguments.
 
-When calling this instruction, we want to save the `owner` of the account, the
-journal entry `title`, and the journal entry `message` to the account's
-`JournalEntryState`.
+When calling this instruction handler function, we want to save the `owner` of
+the account, the journal entry `title`, and the journal entry `message` to the
+account's `JournalEntryState`.
 
 ```rust
 #[program]
@@ -173,11 +176,11 @@ mod journal {
 }
 ```
 
-For the anchor framework, every instruction takes a `Context` type as its first
+With the Anchor framework, every instruction takes a `Context` type as its first
 argument. The `Context` macro is used to define a struct that encapsulates
-accounts that will be passed to a given instruction. Therefore, each `Context`
-must have a specified type with respect to the instruction. In this case, we
-need to define a data structure for `CreateEntry`.
+accounts that will be passed to a given instruction handler. Therefore, each
+`Context` must have a specified type with respect to the instruction handler. In
+our case, we need to define a data structure for `CreateEntry`:
 
 ```rust
 #[derive(Accounts)]
@@ -200,30 +203,33 @@ pub struct CreateEntry<'info> {
 In the above code, we used the following macros:
 
 - `#[derive(Accounts)]` macro is used to deserialize and validate the list of
-  accounts specified within the struct.
+  accounts specified within the struct
 - `#[instruction(...)]` attribute macro is used to access the instruction data
-  passed into the instruction.
+  passed into the instruction handler
 - `#[account(...)]` attribute macro then specifies additional constraints on the
-  accounts.
+  accounts
 
-A journal entry is a
-[PDA](https://solanacookbook.com/core-concepts/pdas.html#facts). Since we are
-creating a new journal entry, it needs to be initialized.
+Each journal entry is a Program Derived Address (
+[PDA](https://solanacookbook.com/core-concepts/pdas.html#facts)) that stores the
+entries state on-chain. Since we are creating a new journal entry here, it needs
+to be initialized using the `init_if_needed` constraint.
 
-A PDA is initalized with `seeds`, `bumps`, and `init`. The `init` constraint
-also requires a `payer` and `space` to define who is paying the rent to hold
-this account on chain and how much space needs to be allocated.
+With Anchor, a PDA is initialized with the `seeds`, `bumps`, and
+`init_if_needed` constraints. The `init_if_needed` constraint also requires the
+`payer` and `space` constraints to define who is paying the
+[rent](/docs/terminology.md#rent) to hold this account's data on-chain and how
+much space needs to be allocated for that data.
 
 Note: Calculating space is defined
 [here](https://book.anchor-lang.com/anchor_references/space.html).
 
 ### Updating a journal entry
 
-Next, lets add an `update_journal_entry` instruction with a context that has an
-`UpdateEntry` type.
+Now that we can create a new journal entry, let's add an `update_journal_entry`
+instruction handler with a context that has an `UpdateEntry` type.
 
-To do this, the instruction will need rewrite the data for a specific PDA that
-was saved to the `JournalEntryState` of the account when the owner of
+To do this, the instruction will need to rewrite/update the data for a specific
+PDA that was saved to the `JournalEntryState` of the account when the owner of
 the journal entry calls the `update_journal_entry` instruction.
 
 ```rust
@@ -270,25 +276,31 @@ pub struct UpdateEntry<'info> {
 In the above code, you should notice that it is very similar to creating a
 journal entry but there are a couple key differences. Since
 `update_journal_entry` is editing an already existing PDA, we do not need to
-`init`. However, the data being passed to the instruction could be different,
-we'll need to use the `realloc` constraint to reallocate the space for the
-account.
+initialize it. However, the message being passed to the instruction handler
+could have a different space size required to store it (i.e. the `message` could
+be shorter or longer), so we will need to use a few specific `realloc`
+constraints to reallocate the space for the account on-chain:
 
-- `realloc` - sets the new space required.
+- `realloc` - sets the new space required
 - `realloc::payer` - defines the account that will either pay or be refunded
   based on the newly required lamports
 - `realloc::zero` - defines that the account may be updated multiple times when
   set to `true`
 
-The `seeds` and `bump` contraints are needed to be able to find the specific PDA
-we want to update.
+The `seeds` and `bump` constraints are still needed to be able to find the
+specific PDA we want to update.
 
-### Delete a Journal Entry
+The `mut` constraints allows us to mutate/change the data within the account.
+Because how the Solana blockchain handles reading from accounts and writing to
+accounts differently, we must explicitly define which accounts will be mutable
+so the Solana runtime can correctly process them.
 
-Lastly, we'll add a `delete_journal_entry` instruction with a context that has a
-`DeleteEntry` type.
+### Delete a journal entry
 
-To do this, we'll simply need to close the account for the specified journal
+Lastly, we will add a `delete_journal_entry` instruction handler with a context
+that has a `DeleteEntry` type.
+
+To do this, we will simply need to close the account for the specified journal
 entry.
 
 ```rust
@@ -311,7 +323,7 @@ pub struct DeleteEntry<'info> {
         mut,
         seeds = [title.as_bytes(), owner.key().as_ref()],
         bump,
-        close= owner,
+        close = owner,
     )]
     pub journal_entry: Account<'info, JournalEntryState>,
     #[account(mut)]
@@ -320,32 +332,33 @@ pub struct DeleteEntry<'info> {
 }
 ```
 
-In the above code, we use the `close` contraint to close out the account and
-refund the rent back to the journal entry's owner.
+In the above code, we use the `close` constraint to close out the account
+on-chain and refund the rent back to the journal entry's owner.
 
-The `seeds` and `bump` contraints are needed to validate the account.
+The `seeds` and `bump` constraints are needed to validate the account.
 
-### Build and deploy your Anchor Program
+### Build and deploy your Anchor program
 
 ```shell
 npm run anchor build
 npm run anchor deploy
 ```
 
-## Connecting a Solana Program to a UI
+## Connecting a Solana program to a UI
 
 `create-solana-dapp` already sets up a UI with a wallet connector for you. All
-we need to do is simply modify if to fit your newly created program. To recap,
-this journal program has the following instructions:
+we need to do is simply modify if to fit your newly created program.
 
-- Create Entry
-- Update Entry
-- Delete Entry
+Since this journal program has the three instructions, we will need components
+in the UI that will be able to call each of these instructions:
 
-So we will need components on the UI that will call each of these
-instructutions. Let's navigate to `web/components/journal`.
+- create entry
+- update entry
+- delete entry
 
-Open `journal-data-access.tsx` and we'll add our three instructions.
+Within your project's repo, open the
+`web/components/journal/journal-data-access.tsx` to add code to be able to call
+each of our instructions.
 
 Update the `useJournalProgram` function to be able to create an entry:
 
@@ -417,17 +430,17 @@ const deleteEntry = useMutation({
 });
 ```
 
-Next, update the UI in `journal-ui.tsx` to take in user input values for the
-`title` and `message` of when creating a journal entry:
+Next, update the UI in `web/components/journal/journal-ui.tsx` to take in user
+input values for the `title` and `message` of when creating a journal entry:
 
-```typescript
+```tsx
 export function JournalCreate() {
   const { createEntry } = useJournalProgram();
   const { publicKey } = useWallet();
-  const [title, setTitle] = useState('');
-  const [message, setMessage] = useState('');
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
 
-  const isFormValid = title.trim() !== '' && message.trim() !== '';
+  const isFormValid = title.trim() !== "" && message.trim() !== "";
 
   const handleSubmit = () => {
     if (publicKey && isFormValid) {
@@ -435,8 +448,8 @@ export function JournalCreate() {
     }
   };
 
-  if (!publicKey){
-    return <p>Connect your wallet</p>
+  if (!publicKey) {
+    return <p>Connect your wallet</p>;
   }
 
   return (
@@ -445,22 +458,23 @@ export function JournalCreate() {
         type="text"
         placeholder="Title"
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={e => setTitle(e.target.value)}
         className="input input-bordered w-full max-w-xs"
       />
       <textarea
         placeholder="Message"
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={e => setMessage(e.target.value)}
         className="textarea textarea-bordered w-full max-w-xs"
       />
       <br></br>
       <button
+        type="button"
         className="btn btn-xs lg:btn-md btn-primary"
         onClick={handleSubmit}
         disabled={createEntry.isPending || !isFormValid}
       >
-        Create Journal Entry {createEntry.isPending && '...'}
+        Create Journal Entry {createEntry.isPending && "..."}
       </button>
     </div>
   );
@@ -470,18 +484,16 @@ export function JournalCreate() {
 Lastly, update the UI in `journal-ui.tsx` to take in a user input values for the
 `message` of when updating a journal entry:
 
-```typescript
+```tsx
 function JournalCard({ account }: { account: PublicKey }) {
-  const {
-    accountQuery,
-    updateEntry,
-    deleteEntry
-  } = useJournalProgramAccount({ account });
+  const { accountQuery, updateEntry, deleteEntry } = useJournalProgramAccount({
+    account,
+  });
   const { publicKey } = useWallet();
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const title = accountQuery.data?.title;
 
-  const isFormValid = message.trim() !== '';
+  const isFormValid = message.trim() !== "";
 
   const handleSubmit = () => {
     if (publicKey && isFormValid && title) {
@@ -489,8 +501,8 @@ function JournalCard({ account }: { account: PublicKey }) {
     }
   };
 
-  if (!publicKey){
-    return <p>Connect your wallet</p>
+  if (!publicKey) {
+    return <p>Connect your wallet</p>;
   }
 
   return accountQuery.isLoading ? (
@@ -505,14 +517,12 @@ function JournalCard({ account }: { account: PublicKey }) {
           >
             {accountQuery.data?.title}
           </h2>
-          <p>
-          {accountQuery.data?.message}
-          </p>
+          <p>{accountQuery.data?.message}</p>
           <div className="card-actions justify-around">
             <textarea
               placeholder="Update message here"
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={e => setMessage(e.target.value)}
               className="textarea textarea-bordered w-full max-w-xs"
             />
             <button
@@ -520,7 +530,7 @@ function JournalCard({ account }: { account: PublicKey }) {
               onClick={handleSubmit}
               disabled={updateEntry.isPending || !isFormValid}
             >
-              Update Journal Entry {updateEntry.isPending && '...'}
+              Update Journal Entry {updateEntry.isPending && "..."}
             </button>
           </div>
           <div className="text-center space-y-4">
@@ -535,7 +545,7 @@ function JournalCard({ account }: { account: PublicKey }) {
               onClick={() => {
                 if (
                   !window.confirm(
-                    'Are you sure you want to close this account?'
+                    "Are you sure you want to close this account?",
                   )
                 ) {
                   return;
