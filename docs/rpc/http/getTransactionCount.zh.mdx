@@ -1,0 +1,57 @@
+---
+sidebarLabel: getTransactionCount
+title: getTransactionCount RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getTransactionCount
+---
+
+返回分类账中的当前交易计数
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+`<u64>` - 分类账中的当前交易计数
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getTransactionCount"}
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 268, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

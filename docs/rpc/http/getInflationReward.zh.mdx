@@ -1,0 +1,94 @@
+---
+sidebarLabel: getInflationReward
+title: getInflationReward RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getInflationReward
+---
+
+返回一个时期地址列表的通货膨胀/质押奖励
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"array"} optional={true}>
+  要查询的地址数组，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="epoch" type="u64" optional={true}>
+  奖励发生的纪元。如果省略，将使用前一个纪元
+</Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+结果字段将是一个包含以下字段的 JSON 数组：
+
+- `epoch: <u64>` - 奖励发生的时期
+- `effectiveSlot: <u64>` - 奖励生效的时段
+- `amount: <u64>` - 以lamports为单位的奖励金额
+- `postBalance: <u64>` - 在lamports中发布账户余额
+- `commission: <u8|undefined>` - 奖励入账时投票账户佣金
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getInflationReward",
+    "params": [
+      [
+        "6dmNQ5jwLeLk5REvio1JcMshcbvkYMwy26sJ8pbkvStu",
+        "BGsqMegLpV6n6Ve146sSX2dTjUMj3M92HnU8BbNRMhF2"
+      ],
+      {"epoch": 2}
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "amount": 2500,
+      "effectiveSlot": 224,
+      "epoch": 2,
+      "postBalance": 499999442500
+    },
+    null
+  ],
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

@@ -1,0 +1,375 @@
+---
+sidebarLabel: blockSubscribe
+title: blockSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/blockSubscribe
+---
+
+订阅以在新区块为`confirmed(已确认)`或`finalized(已完成)`时接收通知。
+
+<Callout type={"caution"} title={"不稳定的方法"}>
+  此订阅被认为不稳定，并且仅在使用该`--rpc-pubsub-enable-block-subscription`标志启动验证器时才可用。
+  此订阅的格式将来可能会发生变化。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter name="过滤器" type={"string | object"} required={true}>
+
+日志的过滤条件以按帐户类型接收结果；目前支持：
+
+<Field type="string" value="all">
+  `all` - 包含区块中的所有交易
+</Field>
+
+<Field type="object">
+
+具有以下字段的 JSON 对象：
+
+- `mentionsAccountOrProgram: <string>` - 仅返回提及所提供的公钥（作为 base-58 编
+  码字符串）的交易。如果给定块中没有提及，则不会发送任何通知。
+
+</Field>
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  defaultValue={"finalized"}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+>
+
+- `processed` 不支持。
+
+</Field>
+
+<Field 
+  name="encoding"
+  type="string"
+  defaultValue="json"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#解析后的响应"
+>
+
+每个返回的Transaction的编码格式
+
+<Values values={["json", "jsonParsed", "base58", "base64"]} />
+
+<details>
+
+- `jsonParsed` 尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确的数
+  据 `transaction.message.instructions`。
+- 如果 `jsonParsed` 请求但找不到解析器，则指令将回退到常规 JSON 编码
+  （`accounts`、`data`和`programIdIndex` 字段）。
+
+</details>
+
+</Field>
+
+<Field
+  name="transactionDetails"
+  type="string"
+  optional={true}
+  defaultValue={"full"}
+>
+
+要返回的交易详细信息级别
+
+<Values values={["full", "accounts", "signatures", "none"]} />
+
+<details>
+
+- 如果 `accounts` 有要求，交易详细信息仅包括每笔交易中的签名和带注释的帐户列表。
+- 交易元数据仅限于: fee, err, pre_balances, post_balances, pre_token_balances,
+  和 post_token_balances。
+
+</details>
+
+</Field>
+
+<Field name="maxSupportedTransactionVersion" type="number" optional={true}>
+
+在响应中返回的最大交易版本。
+
+  <details>
+
+- 如果请求的区块包含更高版本的交易，则会返回错误。
+- 如果省略该参数，则仅返回遗留交易，并且包含任何版本化交易的块将提示错误。
+
+</details>
+
+</Field>
+
+<Field name="showRewards" type="bool" optional={true}>
+  是否填充`rewards`数组。如果不提供参数，则默认包含奖励。
+</Field>
+
+</Parameter>
+
+### 结果
+
+`integer` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "blockSubscribe",
+  "params": ["all"]
+}
+```
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "1",
+  "method": "blockSubscribe",
+  "params": [
+    {
+      "mentionsAccountOrProgram": "LieKvPRE8XeX3Y2xVNHjKlpAScD12lYySBVQ4HqoJ5op"
+    },
+    {
+      "commitment": "confirmed",
+      "encoding": "base64",
+      "showRewards": true,
+      "transactionDetails": "full"
+    }
+  ]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 0, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式:
+
+通知将是一个具有以下字段的对象:
+
+- `slot: <u64>` - 相应的插槽。
+- `err: <object|null>` - 如果发布通知出现问题，则出错，否则为空。
+- `block: <object|null>` - [getBlock](/docs/rpc/http/getblock.zh)RPC HTTP 方法中
+  看到的块对象 。
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "blockNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 112301554
+      },
+      "value": {
+        "slot": 112301554,
+        "block": {
+          "previousBlockhash": "GJp125YAN4ufCSUvZJVdCyWQJ7RPWMmwxoyUQySydZA",
+          "blockhash": "6ojMHjctdqfB55JDpEpqfHnP96fiaHEcvzEQ2NNcxzHP",
+          "parentSlot": 112301553,
+          "transactions": [
+            {
+              "transaction": [
+                "OpltwoUvWxYi1P2U8vbIdE/aPntjYo5Aa0VQ2JJyeJE2g9Vvxk8dDGgFMruYfDu8/IfUWb0REppTe7IpAuuLRgIBAAkWnj4KHRpEWWW7gvO1c0BHy06wZi2g7/DLqpEtkRsThAXIdBbhXCLvltw50ZnjDx2hzw74NVn49kmpYj2VZHQJoeJoYJqaKcvuxCi/2i4yywedcVNDWkM84Iuw+cEn9/ROCrXY4qBFI9dveEERQ1c4kdU46xjxj9Vi+QXkb2Kx45QFVkG4Y7HHsoS6WNUiw2m4ffnMNnOVdF9tJht7oeuEfDMuUEaO7l9JeUxppCvrGk3CP45saO51gkwVYEgKzhpKjCx3rgsYxNR81fY4hnUQXSbbc2Y55FkwgRBpVvQK7/+clR4Gjhd3L4y+OtPl7QF93Akg1LaU9wRMs5nvfDFlggqI9PqJl+IvVWrNRdBbPS8LIIhcwbRTkSbqlJQWxYg3Bo2CTVbw7rt1ZubuHWWp0mD/UJpLXGm2JprWTePNULzHu67sfqaWF99LwmwjTyYEkqkRt1T0Je5VzHgJs0N5jY4iIU9K3lMqvrKOIn/2zEMZ+ol2gdgjshx+sphIyhw65F3J/Dbzk04LLkK+CULmN571Y+hFlXF2ke0BIuUG6AUF+4214Cu7FXnqo3rkxEHDZAk0lRrAJ8X/Z+iwuwI5cgbd9uHXZaGT2cvhRs7reawctIXtX1s3kTqM9YV+/wCpDLAp8axcEkaQkLDKRoWxqp8XLNZSKial7Rk+ELAVVKWoWLRXRZ+OIggu0OzMExvVLE5VHqy71FNHq4gGitkiKYNFWSLIE4qGfdFLZXy/6hwS+wq9ewjikCpd//C9BcCL7Wl0iQdUslxNVCBZHnCoPYih9JXvGefOb9WWnjGy14sG9j70+RSVx6BlkFELWwFvIlWR/tHn3EhHAuL0inS2pwX7ZQTAU6gDVaoqbR2EiJ47cKoPycBNvHLoKxoY9AZaBjPl6q8SKQJSFyFd9n44opAgI6zMTjYF/8Ok4VpXEESp3QaoUyTI9sOJ6oFP6f4dwnvQelgXS+AEfAsHsKXxGAIUDQENAgMEBQAGBwgIDg8IBJCER3QXl1AVDBADCQoOAAQLERITDAjb7ugh3gOuTy==",
+                "base64"
+              ],
+              "meta": {
+                "err": null,
+                "status": {
+                  "Ok": null
+                },
+                "fee": 5000,
+                "preBalances": [
+                  1758510880, 2067120, 1566000, 1461600, 2039280, 2039280,
+                  1900080, 1865280, 0, 3680844220, 2039280
+                ],
+                "postBalances": [
+                  1758505880, 2067120, 1566000, 1461600, 2039280, 2039280,
+                  1900080, 1865280, 0, 3680844220, 2039280
+                ],
+                "innerInstructions": [
+                  {
+                    "index": 0,
+                    "instructions": [
+                      {
+                        "programIdIndex": 13,
+                        "accounts": [1, 15, 3, 4, 2, 14],
+                        "data": "21TeLgZXNbtHXVBzCaiRmH"
+                      },
+                      {
+                        "programIdIndex": 14,
+                        "accounts": [3, 4, 1],
+                        "data": "6qfC8ic7Aq99"
+                      },
+                      {
+                        "programIdIndex": 13,
+                        "accounts": [1, 15, 3, 5, 2, 14],
+                        "data": "21TeLgZXNbsn4QEpaSEr3q"
+                      },
+                      {
+                        "programIdIndex": 14,
+                        "accounts": [3, 5, 1],
+                        "data": "6LC7BYyxhFRh"
+                      }
+                    ]
+                  },
+                  {
+                    "index": 1,
+                    "instructions": [
+                      {
+                        "programIdIndex": 14,
+                        "accounts": [4, 3, 0],
+                        "data": "7aUiLHFjSVdZ"
+                      },
+                      {
+                        "programIdIndex": 19,
+                        "accounts": [17, 18, 16, 9, 11, 12, 14],
+                        "data": "8kvZyjATKQWYxaKR1qD53V"
+                      },
+                      {
+                        "programIdIndex": 14,
+                        "accounts": [9, 11, 18],
+                        "data": "6qfC8ic7Aq99"
+                      }
+                    ]
+                  }
+                ],
+                "logMessages": [
+                  "Program QMNeHCGYnLVDn1icRAfQZpjPLBNkfGbSKRB83G5d8KB invoke [1]",
+                  "Program QMWoBmAyJLAsA1Lh9ugMTw2gciTihncciphzdNzdZYV invoke [2]"
+                ],
+                "preTokenBalances": [
+                  {
+                    "accountIndex": 4,
+                    "mint": "iouQcQBAiEXe6cKLS85zmZxUqaCqBdeHFpqKoSz615u",
+                    "uiTokenAmount": {
+                      "uiAmount": null,
+                      "decimals": 6,
+                      "amount": "0",
+                      "uiAmountString": "0"
+                    },
+                    "owner": "LieKvPRE8XeX3Y2xVNHjKlpAScD12lYySBVQ4HqoJ5op",
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  },
+                  {
+                    "accountIndex": 5,
+                    "mint": "iouQcQBAiEXe6cKLS85zmZxUqaCqBdeHFpqKoSz615u",
+                    "uiTokenAmount": {
+                      "uiAmount": 11513.0679,
+                      "decimals": 6,
+                      "amount": "11513067900",
+                      "uiAmountString": "11513.0679"
+                    },
+                    "owner": "rXhAofQCT7NN9TUqigyEAUzV1uLL4boeD8CRkNBSkYk",
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  },
+                  {
+                    "accountIndex": 10,
+                    "mint": "Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1",
+                    "uiTokenAmount": {
+                      "uiAmount": null,
+                      "decimals": 6,
+                      "amount": "0",
+                      "uiAmountString": "0"
+                    },
+                    "owner": "CL9wkGFT3SZRRNa9dgaovuRV7jrVVigBUZ6DjcgySsCU",
+                    "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                  },
+                  {
+                    "accountIndex": 11,
+                    "mint": "Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1",
+                    "uiTokenAmount": {
+                      "uiAmount": 15138.514093,
+                      "decimals": 6,
+                      "amount": "15138514093",
+                      "uiAmountString": "15138.514093"
+                    },
+                    "owner": "LieKvPRE8XeX3Y2xVNHjKlpAScD12lYySBVQ4HqoJ5op",
+                    "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                  }
+                ],
+                "postTokenBalances": [
+                  {
+                    "accountIndex": 4,
+                    "mint": "iouQcQBAiEXe6cKLS85zmZxUqaCqBdeHFpqKoSz615u",
+                    "uiTokenAmount": {
+                      "uiAmount": null,
+                      "decimals": 6,
+                      "amount": "0",
+                      "uiAmountString": "0"
+                    },
+                    "owner": "LieKvPRE8XeX3Y2xVNHjKlpAScD12lYySBVQ4HqoJ5op",
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  },
+                  {
+                    "accountIndex": 5,
+                    "mint": "iouQcQBAiEXe6cKLS85zmZxUqaCqBdeHFpqKoSz615u",
+                    "uiTokenAmount": {
+                      "uiAmount": 11513.103028,
+                      "decimals": 6,
+                      "amount": "11513103028",
+                      "uiAmountString": "11513.103028"
+                    },
+                    "owner": "rXhAofQCT7NN9TUqigyEAUzV1uLL4boeD8CRkNBSkYk",
+                    "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+                  },
+                  {
+                    "accountIndex": 10,
+                    "mint": "Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1",
+                    "uiTokenAmount": {
+                      "uiAmount": null,
+                      "decimals": 6,
+                      "amount": "0",
+                      "uiAmountString": "0"
+                    },
+                    "owner": "CL9wkGFT3SZRRNa9dgaovuRV7jrVVigBUZ6DjcgySsCU",
+                    "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                  },
+                  {
+                    "accountIndex": 11,
+                    "mint": "Saber2gLauYim4Mvftnrasomsv6NvAuncvMEZwcLpD1",
+                    "uiTokenAmount": {
+                      "uiAmount": 15489.767829,
+                      "decimals": 6,
+                      "amount": "15489767829",
+                      "uiAmountString": "15489.767829"
+                    },
+                    "owner": "BeiHVPRE8XeX3Y2xVNrSsTpAScH94nYySBVQ4HqgN9at",
+                    "programId": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+                  }
+                ],
+                "rewards": []
+              }
+            }
+          ],
+          "blockTime": 1639926816,
+          "blockHeight": 101210751
+        },
+        "err": null
+      }
+    },
+    "subscription": 14
+  }
+}
+```

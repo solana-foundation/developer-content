@@ -1,0 +1,71 @@
+---
+sidebarLabel: getSlotLeaders
+title: getSlotLeaders RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getSlotLeaders
+---
+
+返回给定槽位范围的槽位前导者
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} optional={true}>
+  起始槽，作为 u64 整数
+</Parameter>
+
+<Parameter type={"u64"} optional={true}>
+  限制，作为 u64 整数（1 到 5,000 之间）
+</Parameter>
+
+### 结果
+
+`<array[string]>` - 作为 base-58 编码字符串的节点身份公钥数组
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+如果当前位置是`#99` - `10`使用以下请求查询下一个领导者：
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc":"2.0", "id": 1,
+    "method": "getSlotLeaders",
+    "params": [100, 10]
+  }
+'
+```
+
+### 响应
+
+返回的第一个领导者是 slot 的领导者`#100`：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    "ChorusmmK7i1AxXeiTtQgQZhQNiXYU84ULeaYF1EH15n",
+    "ChorusmmK7i1AxXeiTtQgQZhQNiXYU84ULeaYF1EH15n",
+    "ChorusmmK7i1AxXeiTtQgQZhQNiXYU84ULeaYF1EH15n",
+    "ChorusmmK7i1AxXeiTtQgQZhQNiXYU84ULeaYF1EH15n",
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "Awes4Tr6TX8JDzEhCZY2QVNimT6iD1zWHzf1vNyGvpLM",
+    "DWvDTSh3qfn88UoQTEKRV2JnLt5jtJAVoiCo3ivtMwXP",
+    "DWvDTSh3qfn88UoQTEKRV2JnLt5jtJAVoiCo3ivtMwXP"
+  ],
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

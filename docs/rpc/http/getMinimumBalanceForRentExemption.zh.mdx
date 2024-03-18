@@ -1,0 +1,62 @@
+---
+sidebarLabel: getMinimumBalanceForRentExemption
+title: getMinimumBalanceForRentExemption RPC Method
+sidebarSortOrder: 0
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getMinimumBalanceForRentExemption
+---
+
+返回免除账户租金所需的最低余额
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"usize"} optional={true}>
+  帐户的数据长度
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### 结果
+
+`<u64>` - 帐户中保持免租金所需的最低限度的lamports
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "getMinimumBalanceForRentExemption",
+    "params": [50]
+  }
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 500, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

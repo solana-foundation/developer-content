@@ -1,0 +1,138 @@
+---
+sidebarLabel: getAccountInfo
+title: getAccountInfo RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getAccountInfo
+---
+
+返回与提供的 Pubkey 帐户关联的所有信息
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  要查询的帐户的公钥，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field 
+  name="encoding"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#解析后的响应"
+>
+
+账户数据的编码格式
+
+<Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
+
+<details>
+
+- `base58` 速度很慢并且帐户数据仅限于 129 字节以下。
+- `base64` 将返回任意大小的帐户数据的 Base64 编码数据。
+- `base64+zstd` 使用 [Zstandard](https://facebook.github.io/zstd/) 压缩帐户数据
+  并对结果进行 base64 编码。
+- `jsonParsed` 编码尝试使用特定于程序的状态解析器来返回更多人类可读且明确的帐户
+  状态数据。
+- 如果 `jsonParsed` 请求但无法找到解析器，则该字段将回退到`base64`编码，
+  当`data`字段为 type时可检测到`string`。
+
+</details>
+
+</Field>
+
+<Field name="dataSlice" type="object" optional={true}>
+  请求帐户数据的一部分。
+
+- `length: <usize>` - 返回的字节数
+- `offset: <usize>` - 开始读取的字节偏移量
+
+<Callout type={"info"}>
+  数据切片仅适用于`base58`、`base64`、 或`base64+zstd` 编码。
+</Callout>
+
+</Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+结果将是一个 RpcResponse JSON 对象，其`value`等于：
+
+- `<null>` - 如果请求的帐户不存在
+- `<object>` - 否则，一个 JSON 对象包含：
+  - `lamports: <u64>` - 分配给该帐户的 lamport 数量，作为 u64
+  - `owner: <string>` - 该帐户已分配到的程序的 base-58 编码的公钥
+  - `data: <[string, encoding]|object>` - 与帐户关联的数据，作为编码的二进制数据
+    或 JSON 格式`{<program>: <state>}`- 取决于编码参数
+  - `executable: <bool>` - 布尔值，指示帐户是否包含程序（并且严格只读）
+  - `rentEpoch: <u64>` - 该账户下一次欠租金的纪元，如 u64
+  - `size: <u64>` - 帐户的数据大小
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getAccountInfo",
+    "params": [
+      "vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg",
+      {
+        "encoding": "base58"
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 1
+    },
+    "value": {
+      "data": [
+        "11116bv5nS2h3y12kD1yUKeMZvGcKLSjQgX6BeV7u1FrjeJcKfsHRTPuR3oZ1EioKtYGiYxpxMG5vpbZLsbcBYBEmZZcMKaSoGx9JZeAuWf",
+        "base58"
+      ],
+      "executable": false,
+      "lamports": 1000000000,
+      "owner": "11111111111111111111111111111111",
+      "rentEpoch": 2,
+      "space": 80
+    }
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

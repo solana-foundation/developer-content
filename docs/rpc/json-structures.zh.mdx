@@ -1,0 +1,85 @@
+---
+title: Common JSON Data Structures for Solana RPC Methods
+sidebarLabel: Data Structures as JSON
+sidebarSortOrder: -1
+hideTableOfContents: false
+---
+
+各种 Solana RPC 方法将返回更复杂的响应作为结构化 JSON 对象，并填充特定的键值。
+
+这些 JSON 数据结构中最常见的包括：
+
+- [交易](#交易)
+- [内部指令](#内部指令)
+- [代币余额](#代币余额)
+
+## 交易
+
+交易与其他区块链上的交易完全不同。 一定要查
+看[交易剖析](/docs/core/transactions.md)来学习Solana的交易情况
+
+一笔交易的JSON结构定义如下：
+
+- `signatures: <array[string]>` - 应用于交易的 base-58 编码签名列表。该列表总是
+  有长度 `message.header.numRequiredSignatures`且不为空。 索引处的签名 对应于
+  中`i`索引处的公钥。第一个被用作
+  [交易id](/docs/terminology.md#transaction-id)`i` `message.accountKeys`。
+- `message: <object>` - 定义交易的内容。
+  - `accountKeys: <array[string]>` - 交易使用的 base-58 编码公钥列表，包括指令和
+    签名。第一个 `message.header.numRequiredSignatures`公钥必须签署交易。
+  - `header: <object>` - 详细说明交易所需的账户类型和签名。
+    - `numRequiredSignatures: <number>` - 使交易有效所需的签名总数。 签名必须匹
+      配`message.accountKeys`的第一个`numRequiredSignatures`。
+    - `numReadonlySignedAccounts: <number>` - 签名密钥的最后一
+      个`numReadonlySignedAccounts`是只读帐户。程序可以处理在单个 PoH 条目中加载
+      只读帐户的多个交易，但不允许贷记或借记帐户或修改帐户数据。针对相同读写帐户
+      的交易按顺序求值。
+    - `numReadonlyUnsignedAccounts: <number>` - 未签名密钥的最后一
+      个`numReadonlyUnsignedAccounts`是只读帐户。
+  - `recentBlockhash: <string>` - 账本中最近区块的 base-58 编码哈希值，用于防止
+    交易重复并赋予交易生命周期。
+  - `instructions: <array[object]>` - 如果全部成功，将按顺序执行并在一个原子事务
+    中提交的程序指令列表。
+    - `programIdIndex: <number>` - 指示执行此指令的程序账户在
+      `message.accountKeys` 数组中的索引。
+    - `accounts: <array[number]>` - 指示要传递给程序的 `message.accountKeys` 数
+      组中的有序索引列表。
+    - `data: <string>` - 以 base-58 字符串编码的程序输入数据。
+  - `addressTableLookups: <array[object]|undefined>` - 交易使用的地址表查找列
+    表，用于从链上地址查找表动态加载地址。 `maxSupportedTransactionVersion`如果
+    未设置则未定义。
+    - `accountKey: <string>` - 地址查找表帐户的 base-58 编码公钥。
+    - `writableIndexes: <array[number]>` - 用于从查找表加载可写帐户地址的索引列
+      表。
+    - `readonlyIndexes: <array[number]>` - 用于从查找表加载只读帐户地址的索引列
+      表。
+
+## 内部指令
+
+Solana 运行时记录在事务处理期间调用的跨程序指令，并使这些指令可用于提高每条事务
+指令在链上执行的内容的透明度。调用的指令按原始事务指令分组并按处理顺序列出。
+
+内部指令的 JSON 结构定义为以下结构的对象列表：
+
+- `index: number` - 内部指令源自的交易指令的索引
+- `instructions: <array[object]>` - 在单个事务指令期间调用的内部程序指令的有序列
+  表。
+  - `programIdIndex: <number>` - 数组索引，`message.accountKeys`指示执行该指令的
+    程序帐户。
+  - `accounts: <array[number]>` - 数组中的有序索引列表， `message.accountKeys`指
+    示要传递给程序的帐户。
+  - `data: <string>` - 以 base-58 字符串编码的程序输入数据。
+
+## 代币余额
+
+代币余额的 JSON 结构定义为以下结构的对象列表：
+
+- `accountIndex: <number>` - 提供代币余额的账户索引。
+- `mint: <string>` - 代币铸币厂的公钥。
+- `owner: <string|undefined>` - 代币余额所有者的公钥。
+- `programId: <string|undefined>` - 拥有该帐户的Token程序的Pubkey。
+- `uiTokenAmount: <object>` -
+  - `amount: <string>` - 令牌的原始数量作为字符串，忽略小数。
+  - `decimals: <number>` - 为代币的mint配置的小数位数。
+  - `uiAmount: <number|null>` - 代币金额以浮点数表示，包含小数。**已弃用**
+  - `uiAmountString: <string>` - 以字符串形式表示的代币金额，包含小数。

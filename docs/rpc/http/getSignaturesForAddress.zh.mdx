@@ -1,0 +1,109 @@
+---
+sidebarLabel: getSignaturesForAddress
+title: getSignaturesForAddress RPC Method
+sidebarSortOrder: 10
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getSignaturesForAddress
+---
+
+返回在其列表中包含给定地址的已确认交易的签名`accountKeys`。从提供的签名或最近确
+认的块开始向后返回签名
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  帐户地址为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+<Field name="limit" type="number" optional={true} defaultValue={"1000"}>
+  返回的最大交易签名（1 到 1,000 之间）。
+</Field>
+
+<Field name="before" type="string" optional={true}>
+  从此交易签名开始向后搜索。如果未提供，则搜索从最高的最大确认块的顶部开始。
+</Field>
+
+<Field name="until" type="string" optional={true}>
+  搜索直到此交易签名，如果在达到限制之前找到
+</Field>
+
+</Parameter>
+
+### 结果
+
+一个数组，从最新到最旧的`<object>`交易排序，包含具有以下字段的交易签名信息：
+
+- `signature: <string>` - 交易签名为 base-58 编码字符串
+- `slot: <u64>` - 包含交易块的槽
+- `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。 有关
+  详细信息，请参阅
+  [TransactionError 定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)。
+- `memo: <string|null>` - 与交易相关的备忘录，如果不存在备忘录则为 null
+- `blockTime: <i64|null>` - 估计的生产时间，作为交易处理时的 Unix 时间戳（自
+  Unix 纪元以来的秒数）。如果不可用则为 null。
+- `confirmationStatus: <string|null>` - 交易的集群确认状态；两
+  者`processed`任`confirmed`一`finalized`。有关乐观确认的更多信息，请参阅
+  [承诺](/docs/rpc/index.zh.mdx#配置状态承诺)。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getSignaturesForAddress",
+    "params": [
+      "Vote111111111111111111111111111111111111111",
+      {
+        "limit": 1
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "err": null,
+      "memo": null,
+      "signature": "5h6xBEauJ3PK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv",
+      "slot": 114,
+      "blockTime": null
+    }
+  ],
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

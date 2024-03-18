@@ -1,0 +1,71 @@
+---
+sidebarLabel: voteSubscribe
+title: voteSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/voteSubscribe
+---
+
+订阅即可在gossip中观察到新投票时随时收到通知。这些投票是预先达成共识的，因此不能
+保证这些投票会进入分类账。
+
+<Callout type={"caution"} title={"不稳定的方法"}>
+  此订阅不稳定，仅当验证器使用该`--rpc-pubsub-enable-vote-subscription`标志启动时才可用。
+  此订阅的格式将来可能会发生变化。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+`<integer>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "voteSubscribe" }
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 0, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式：
+
+通知将是一个具有以下字段的对象：
+
+- `hash: <string>` - 投票哈希
+- `slots: <array>` - 投票覆盖的槽位，作为 u64 整数数组
+- `timestamp: <i64|null>` - 投票的时间戳
+- `signature: <string>` - 包含此投票的交易的签名
+- `votePubkey: <string>` - 投票账户的公钥，为base-58编码字符串
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "voteNotification",
+  "params": {
+    "result": {
+      "hash": "8Rshv2oMkPu5E4opXTRyuyBeZBqQ4S477VG26wUTFxUM",
+      "slots": [1, 2],
+      "timestamp": null
+    },
+    "subscription": 0
+  }
+}
+```

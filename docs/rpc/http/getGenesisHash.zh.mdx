@@ -1,0 +1,45 @@
+---
+sidebarLabel: getGenesisHash
+title: getGenesisHash RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getGenesisHash
+---
+
+返回创世哈希
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+- `<string>` - 作为 base-58 编码字符串的哈希值
+
+</DocLeftSide>
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getGenesisHash"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": "GH7ome3EiwEr7tu9JuTh2dpYWBJK3z69Xm1ZE3MEE6JC",
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

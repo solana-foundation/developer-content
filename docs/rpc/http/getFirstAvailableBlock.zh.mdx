@@ -1,0 +1,44 @@
+---
+sidebarLabel: getFirstAvailableBlock
+title: getFirstAvailableBlock RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getFirstAvailableBlock
+---
+
+返回尚未从账本中清除的最低已确认区块的槽位
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+- `<u64>` - 槽
+
+</DocLeftSide>
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc":"2.0","id":1,
+    "method":"getFirstAvailableBlock"
+  }
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 250000, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

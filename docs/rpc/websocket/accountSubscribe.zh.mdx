@@ -1,0 +1,159 @@
+---
+sidebarLabel: accountSubscribe
+title: accountSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/accountSubscribe
+---
+
+订阅帐户，以便在给定帐户公钥的端口或数据发生更改时接收通知
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  帐户公钥，作为 base-58 编码字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段:
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.mdx#configuring-state-commitment"
+></Field>
+
+<Field 
+  name="encoding"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.mdx#parsed-responses"
+>
+
+账户数据的编码格式
+
+<Values values={["base58", "base64", "base64+zstd", "jsonParsed"]} />
+
+<details>
+
+- `base58` 是慢的。
+- `jsonParsed` 编码尝试使用特定于程序的状态解析器返回更多人类可读且明确的帐户状
+  态数据
+- 如果`jsonParsed`请求但无法找到解析器，则该字段将回退为二进制编码，当该`data`字
+  段为type时可检测到`string`。
+
+</details>
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+`<number>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "accountSubscribe",
+  "params": [
+    "CM78CPUeXjn8o3yroDHxUtKsZZgoy4GPkPPXfouKNH12",
+    {
+      "encoding": "jsonParsed",
+      "commitment": "finalized"
+    }
+  ]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 23784, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式:
+
+通知格式与 [getAccountInfo](/docs/rpc/http/getAccountInfo) RPC HTTP 方法中看到的
+相同 。
+
+Base58编码:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "accountNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5199307
+      },
+      "value": {
+        "data": [
+          "11116bv5nS2h3y12kD1yUKeMZvGcKLSjQgX6BeV7u1FrjeJcKfsHPXHRDEHrBesJhZyqnnq9qJeUuF7WHxiuLuL5twc38w2TXNLxnDbjmuR",
+          "base58"
+        ],
+        "executable": false,
+        "lamports": 33594,
+        "owner": "11111111111111111111111111111111",
+        "rentEpoch": 635,
+        "space": 80
+      }
+    },
+    "subscription": 23784
+  }
+}
+```
+
+解析后的 JSON 编码:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "accountNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5199307
+      },
+      "value": {
+        "data": {
+          "program": "nonce",
+          "parsed": {
+            "type": "initialized",
+            "info": {
+              "authority": "Bbqg1M4YVVfbhEzwA9SpC9FhsaG83YMTYoR4a8oTDLX",
+              "blockhash": "LUaQTmM7WbMRiATdMMHaRGakPtCkc2GHtH57STKXs6k",
+              "feeCalculator": {
+                "lamportsPerSignature": 5000
+              }
+            }
+          }
+        },
+        "executable": false,
+        "lamports": 33594,
+        "owner": "11111111111111111111111111111111",
+        "rentEpoch": 635,
+        "space": 80
+      }
+    },
+    "subscription": 23784
+  }
+}
+```
