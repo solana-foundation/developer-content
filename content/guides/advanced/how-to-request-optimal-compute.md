@@ -1,9 +1,16 @@
 ---
+date: Mar 19, 2024
+difficulty: intermediate
 title: How to Request Optimal Compute Budget
+description:
+  "Learn how to to use transaction simulation to get the compute units consumed
+  and build an optimal transaction."
+tags:
+  - compute
 ---
 
 All transactions on Solana use
-[Compute Units(CU)](https://solana.com/docs/terminology#compute-units), which
+[Compute Units (CU)](https://solana.com/docs/terminology#compute-units), which
 measure the computational resources your transaction uses on the network. When
 you pay
 [priority fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees)
@@ -15,11 +22,13 @@ transaction requests.
 ## How to Request Compute Budget
 
 For precise control over your transaction's computational resources, use the
-setComputeUnitLimit instruction from the Compute Budget program. This
+`setComputeUnitLimit` instruction from the Compute Budget program. This
 instruction allocates a specific number of compute units for your transaction,
 ensuring you only pay for what you need.
 
 ```javascript
+// import { ComputeBudgetProgram } from "@solana/web3.js"
+
 const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
   units: 300,
 });
@@ -32,9 +41,13 @@ The
 [simulateTransaction RPC method](https://solana.com/docs/rpc/http/simulatetransaction)
 will return the estimated compute units consumed given a transaction. Using this
 RPC method, you can calculate the compute units, set the compute units in your
-new transaction, and send it for an optimal result. The code looks as follows:
+new transaction, and send it for an optimal result.
+
+An example function to get the compute units from a simulation looks as follows:
 
 ```javascript
+// import { ... } from "@solana/web3.js"
+
 async function getSimulationUnits(
   connection: Connection,
   instructions: TransactionInstruction[],
@@ -63,6 +76,14 @@ async function getSimulationUnits(
   }
   return simulation.value.unitsConsumed;
 }
+```
+
+Using this `getSimulationUnits` function above, you can build an optimal
+transaction that use an appropriate amount of compute units for what the
+transaction consumes:
+
+```javascript
+// import { ... } from "@solana/web3.js"
 
 async function buildOptimalTransaction(
   connection: Connection,
@@ -94,27 +115,46 @@ async function buildOptimalTransaction(
 }
 ```
 
-Credit to [Sammmmmy](https://twitter.com/stegaBOB) for the source
+<Callout type="success" title="Credit for this example code">
 
-Special Considerations
+Credit to Sammmmmy, aka [@stegaBOB](https://twitter.com/stegaBOB), for the
+source code of these two functions.
+
+</Callout>
+
+## Special Considerations
 
 Compute units for transactions are not always stable. For example, the compute
 usage can change if the transaction you are executing has a call to
-find_program_address, such as when finding a program derived address.
+`find_program_address`, such as when finding a program derived address.
 
 If you have a variable compute usage on your transactions, you can do one of two
 things:
 
-Run a test over your transactions over some time to find out the ceiling compute
-unit usage and use that number. Take the compute units returned from
-simulateTransaction and add a percentage to the total. For example, if you chose
-to add 10% more CU and the result you received from simulateTransaction was 1000
-CU, you would set 1100 CU on your transaction.
+1. Run a test over your transactions over some time to find out the ceiling
+   compute unit usage and use that number.
 
-Conclusion
+2. Take the compute units returned from `simulateTransaction` and add a
+   percentage to the total. For example, if you chose to add 10% more CU and the
+   result you received from `simulateTransaction` was 1000 CU, you would set
+   1100 CU on your transaction.
+
+## Conclusion
 
 Requesting the optimal compute units for your transaction is essential to help
 you pay less for your transaction and to help schedule your transaction better
-on the network. Wallets, dapps, and other services should ensure their compute
+on the network. Wallets, dApps, and other services should ensure their compute
 unit requests are optimal to provide the best experience possible for their
 users.
+
+## More Resources
+
+You can learn more about the Compute Budget and related topics with these
+resources:
+
+- documentation for the
+  [Compute Budget](https://solana.com/docs/core/runtime#compute-budget)
+- Guide on
+  [how to use priority fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees)
+- Guide on
+  [how to optimize compute units in programs](https://solana.com/developers/guides/advanced/how-to-optimize-compute)
