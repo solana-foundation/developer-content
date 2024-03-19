@@ -2,11 +2,19 @@
 title: How to Request Optimal Compute Budget
 ---
 
-All transactions on Solana use Compute Units(CU), which measure the computational resources your transaction uses on the network. When you pay priority fees on your transactions, you must specify the exact amount of compute units you expect to use; otherwise, you will overpay for your transaction. This guide will provide step-by-step instructions on optimizing the compute units for your transaction requests.
+All transactions on Solana use Compute Units(CU), which measure the
+computational resources your transaction uses on the network. When you pay
+priority fees on your transactions, you must specify the exact amount of compute
+units you expect to use; otherwise, you will overpay for your transaction. This
+guide will provide step-by-step instructions on optimizing the compute units for
+your transaction requests.
 
 ## How to Request Compute Budget
 
-For precise control over your transaction's computational resources, use the setComputeUnitLimit instruction from the Compute Budget program. This instruction allocates a specific number of compute units for your transaction, ensuring you only pay for what you need.
+For precise control over your transaction's computational resources, use the
+setComputeUnitLimit instruction from the Compute Budget program. This
+instruction allocates a specific number of compute units for your transaction,
+ensuring you only pay for what you need.
 
 ```javascript
 const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
@@ -14,9 +22,13 @@ const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
 });
 ```
 
-This instruction will allocate a specific amount of compute units for your transaction. How do we come up with the number to use?
+This instruction will allocate a specific amount of compute units for your
+transaction. How do we come up with the number to use?
 
-The simulateTransaction RPC method will return the estimated compute units consumed given a transaction. Using this RPC method, you can calculate the compute units, set the compute units in your new transaction, and send it for an optimal result. The code looks as follows:
+The simulateTransaction RPC method will return the estimated compute units
+consumed given a transaction. Using this RPC method, you can calculate the
+compute units, set the compute units in your new transaction, and send it for an
+optimal result. The code looks as follows:
 
 ```javascript
 async function getSimulationUnits(
@@ -82,19 +94,23 @@ Credit to [Sammmmmy](https://twitter.com/stegaBOB) for the source
 
 Special Considerations
 
-Compute units for transactions are not always stable. For example, the compute usage can change if the transaction you are executing has a call to find_program_address, such as when finding a program derived address.
+Compute units for transactions are not always stable. For example, the compute
+usage can change if the transaction you are executing has a call to
+find_program_address, such as when finding a program derived address.
 
-If you have a variable compute usage on your transactions, you can do one of two things:
+If you have a variable compute usage on your transactions, you can do one of two
+things:
 
-Run a test over your transactions over some time to find out the ceiling compute unit usage and use that number.
-Take the compute units returned from simulateTransaction and add a percentage to the total. For example, if you chose to add 10% more CU and the result you received from simulateTransaction was 1000 CU, you would set 1100 CU on your transaction.
+Run a test over your transactions over some time to find out the ceiling compute
+unit usage and use that number. Take the compute units returned from
+simulateTransaction and add a percentage to the total. For example, if you chose
+to add 10% more CU and the result you received from simulateTransaction was 1000
+CU, you would set 1100 CU on your transaction.
 
 Conclusion
 
-Requesting the optimal compute units for your transaction is essential to help you pay less for your transaction and to help schedule your transaction better on the network. Wallets, dapps, and other services should ensure their compute unit requests are optimal to provide the best experience possible for their users.
-
-
-
-
-
-
+Requesting the optimal compute units for your transaction is essential to help
+you pay less for your transaction and to help schedule your transaction better
+on the network. Wallets, dapps, and other services should ensure their compute
+unit requests are optimal to provide the best experience possible for their
+users.
