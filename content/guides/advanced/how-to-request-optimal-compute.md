@@ -2,12 +2,15 @@
 title: How to Request Optimal Compute Budget
 ---
 
-All transactions on Solana use Compute Units(CU), which measure the
-computational resources your transaction uses on the network. When you pay
-priority fees on your transactions, you must specify the exact amount of compute
-units you expect to use; otherwise, you will overpay for your transaction. This
-guide will provide step-by-step instructions on optimizing the compute units for
-your transaction requests.
+All transactions on Solana use
+[Compute Units(CU)](https://solana.com/docs/terminology#compute-units), which
+measure the computational resources your transaction uses on the network. When
+you pay
+[priority fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees)
+on your transactions, you must specify the exact amount of compute units you
+expect to use; otherwise, you will overpay for your transaction. This guide will
+provide step-by-step instructions on optimizing the compute units for your
+transaction requests.
 
 ## How to Request Compute Budget
 
@@ -25,10 +28,11 @@ const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
 This instruction will allocate a specific amount of compute units for your
 transaction. How do we come up with the number to use?
 
-The simulateTransaction RPC method will return the estimated compute units
-consumed given a transaction. Using this RPC method, you can calculate the
-compute units, set the compute units in your new transaction, and send it for an
-optimal result. The code looks as follows:
+The
+[simulateTransaction RPC method](https://solana.com/docs/rpc/http/simulatetransaction)
+will return the estimated compute units consumed given a transaction. Using this
+RPC method, you can calculate the compute units, set the compute units in your
+new transaction, and send it for an optimal result. The code looks as follows:
 
 ```javascript
 async function getSimulationUnits(
