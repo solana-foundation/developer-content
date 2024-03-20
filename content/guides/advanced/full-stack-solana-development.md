@@ -75,8 +75,11 @@ Once you have everything installed, run this command:
 rustc --version && solana --version && node -v && yarn --version && anchor --version
 ```
 
-**Windows users** -- make sure you're running a WSL terminal, not a Windows
-terminal.
+<Callout type="caution" title="Windows Users">
+
+Make sure you're running a WSL terminal, not a Windows terminal.
+
+</Callout>
 
 You should see a number of versions printed out. If you get an error, you'll
 need to install the missing tool.
@@ -92,7 +95,9 @@ sign transactions and interact with your wallet. I only use my wallet for
 development, so I left mine blank.
 
 The last thing you'll need is a Solana browser wallet extension to interact with
-the web-app you build. I recommend [Phantom](https://phantom.app/).
+the web-app you build. Some popular wallets you could use are:
+[Phantom](https://phantom.app/), [Solflare](https://solflare.com/), and
+[Backpack](https://backpack.app/).
 
 ## Write and deploy a Solana program
 
@@ -135,8 +140,8 @@ WebSocket PubSub URL: ws://127.0.0.1:8900
 ```
 
 Nice! You have an entire Solana network running on your machine. Keep this
-terminal window open -- if you close it the network shuts down. Head back to
-terminal window 1 and run these:
+terminal window open -- if you close it this local network shuts down. Open a
+new terminal window and run these:
 
 ```shell
 solana airdrop 100
@@ -682,8 +687,10 @@ validator.
 
 ### Deploy to devnet
 
-From here on out, we're DONE with local development. We'll be using the devnet
-for our next steps.
+From here on out, we're DONE with local development. We will be using Solana's
+devnet within this guide. Solana's devnet is a public development blockchain
+with real data and fake tokens on it. Think of it like a your "staging
+environment" before deploying your code to production.
 
 We'll need some Solana devnet tokens to pay for transactions. You can configure
 your CLI wallet to devnet and get some tokens with these commands:
@@ -1173,10 +1180,10 @@ function App() {
 export default App;
 ```
 
-Load up `http://localhost:5173/` and you should see a button. Make sure you're
-connected to the
-[devnet](https://docs.phantom.app/introduction/developer-settings) on Phantom
-and and click the button. You should see the counter increment and the
+Open up `http://localhost:5173/` and you should now see a button. Make sure you
+are connected to `devnet` on your browser wallet and click that button. You
+should see a popup or notification that will ask you to sign a transaction.
+After you confirm that transaction, you should see the counter increment and the
 associated token account minted.
 
 You did it! You are now a full-stack Solana developer.
