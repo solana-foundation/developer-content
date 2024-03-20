@@ -61,7 +61,7 @@ Here's a list of the tools you'll need to have installed:
 - [Node.js](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Solana CLI](/developers/guides/getstarted/setup-local-development)
+- [Solana CLI](/developers/guides/getstarted/setup-local-development#3-install-solana-cli)
 - [Anchor](https://www.anchor-lang.com/docs/installation)
 
 You can download Node and Yarn from their setup pages which I've linked above.
@@ -72,7 +72,7 @@ which has detailed instructions for different operating systems.
 Once you have everything installed, run this command:
 
 ```
-rustc --version && solana --version && node -v && yarn --version && anchor --version
+solana --version; node -v; yarn --version; anchor --version
 ```
 
 <Callout type="caution" title="Windows Users">
@@ -140,16 +140,20 @@ WebSocket PubSub URL: ws://127.0.0.1:8900
 ```
 
 Nice! You have an entire Solana network running on your machine. Keep this
-terminal window open -- if you close it this local network shuts down. Open a
-new terminal window and run these:
+terminal window open -- if you close it this local network shuts down. This local network
+automatically airdrops 500000000 SOL to your CLI address by default. Just for fun, let's airdrop some more.  
+
+Open a new terminal window and run these:
 
 ```shell
 solana airdrop 100
 solana balance
 ```
 
-You should see how much SOL you have on the local network. Let's write some
-code!
+You should now see `500000100 SOL`! This is enough for anything you can imagine. When working 
+with other clusters (like the devnet or testnet), you'll start with 0 SOL. It's important to use your SOL carefully and only airdrop when your balance is low. 
+
+Alright, let's write some code!
 
 ### Set up an Anchor project
 
@@ -166,6 +170,16 @@ cd counter
 Our program code will live in `programs/counter/src`. We'll interact and test
 this program using tests in `tests/counter.ts` powered by Mocha/Chai. You can
 ignore everything else in here for now.
+
+The most common flow in developing programs on Solana is:
+
+- write program in Rust
+- build program to check for errors (or use
+  [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+  to get real-time errors)
+- write Mocha/Chai tests to make sure it does what you expect
+- test program
+- repeat until you're ready to deploy
 
 Anchor projects come with everything we need to deploy out of the box. Run this
 to build and deploy the program:
@@ -230,18 +244,8 @@ the program logic will depend on. It also assigns ownership of accounts to the
 program, ensuring that the program has control over its state. Think of it
 setting up a new office before you can begin business.
 
-This is a Solana program does only one thing: it initializes. Once that's done,
+This is a Solana program that does only one thing: it initializes. Once that's done,
 it exits. It doesn't do anything in the initialization step here.
-
-The most common flow in developing programs on Solana is:
-
-- write program in Rust
-- build program to check for errors (or use
-  [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
-  to get real-time errors)
-- write Mocha/Chai tests to make sure it does what you expect
-- test program
-- repeat until you're ready to deploy
 
 You'll find the included test for this program in `tests/counter.ts`:
 
@@ -298,17 +302,15 @@ the `--skip-local-validator` flag.
 
 ### Write a counter program in Rust
 
-We're ready to write our own program. We'll be building a simple counter program
+Ready to write your first program? We'll be building a simple program 
 that increments a counter and returns the current value.
 
-Before we do this, delete your `target` folder to start from a clean slate. This
-will remove all artifacts for your previous program, including the keypair used
-to deploy it. This means you will lose control of any programs previously
-deployed. While this isn't the common flow, the program we're going to deploy
-next is much bigger so it isn't possible to upgrade the one we currently have
-deployed.
+Before we can get started, delete your `counter/target` folder to start from a clean slate. When you run `anchor build`, it does a lot of things behind the scenes, including generating a keypair for your program, which is stored in `counter/target/deploy/counter-keypair.json`.
 
-Open up `programs/counter/src/lib.rs` and replace it with this:
+Deleting the `target` folder will remove all artifacts for the previous program, including the keypair used to deploy it. This means you will lose control of any programs previously
+deployed (we don't care about the template program so it's okay).  
+
+We're ready, let's make a counter! Open up `programs/counter/src/lib.rs` and replace it with this:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -373,6 +375,13 @@ pub struct Counter {
 }
 ```
 
+The layout of this program is:
+- import necessary Rust libraries
+- declare the program's address
+- define program instructions (functional logic) 
+- define structs for the instructions (the data format that will be passed in)
+- define structs for the accounts this program needs (including the format of the data stored on-chain) 
+
 The code here is simpler than it looks. Let's go block by block through the new
 stuff.
 
@@ -410,25 +419,84 @@ some context (`ctx`) - the state of the blockchain, which accounts are
 interacting with it, any data passed in, etc. Think of this like the body of a
 POST request.
 
-`let counter = &ctx.accounts.counter;` creates a new account using the value
-`counter` passed in from the context. This will make more sense when we look at
+Both of these instructions take in arguments that have specific formats which we define later on and they return a `Result` type, which is a way to handle responses/errors in Rust (kind of like a HTTP response code).
+
+`let counter = &ctx.accounts.counter;` creates an immutable reference using the value
+`counter` passed in from the context. For this program, we'll be generating a keypair and passing in its address as the `counter` parameter. This will make more sense when we look at
 the test.
 
 The `msg!` is a print statement that we can see on the logs in our blockchain
 explorer.
 
-The `increment` instruction creates a mutable reference to the counter account
-we created in `initialize`. It then simply increments the value by 1
+The `increment` instruction obtains a mutable reference to the counter account from the context passed in. After logging the current value with a `msg!` statement, it uses the `checked_add` method to increment the value by 1. `unwrap` gives us the result of the operation (this would fail the tx if the addition overflows the u64 type). We end with another `msg!` statement and then return an `Ok(())` result.
 
-The other new things added are the necessary data structures for this program.
-We have to define what accounts are required by each instruction, and what type
-of data they contain.
+Finally, let's take a look at the struct definitions:
+```rust
+// Accounts required by the initialize instruction
+#[derive(Accounts)]
+pub struct Initialize<'info> {
+    // The account paying to create the counter account
+    #[account(mut)]
+    pub user: Signer<'info>, // specify account must be signer on the transaction
+
+    // The counter account being created and initialized in the instruction
+    #[account(
+        init,         // specifies we are creating this account
+        payer = user, // specifies account paying for the creation of the account
+        space = 8 + 8 // space allocated to the new account (8 byte discriminator + 8 byte for u64)
+    )]
+    pub counter: Account<'info, Counter>, // specify account is 'Counter' type
+    pub system_program: Program<'info, System>, // specify account must be System Program
+}
+
+// Account required by the increment instruction
+#[derive(Accounts)]
+pub struct Increment<'info> {
+    #[account(mut)] // specify account is mutable because we are updating its data
+    pub counter: Account<'info, Counter>, // specify account is 'Counter' type
+}
+
+// Define structure of `Counter` account
+#[account]
+pub struct Counter {
+    pub count: u64, // define count value type as u64
+}
+```
+Make sure you go over the comments!
+
+The `initialize` instruction does only one this: it creates a new account of the `Counter` type. To do this, we need to know who's paying, details of the account we're creating like the space and the address, and which program to use to create the account.
+
+Let's go line by line:
+- `#[derive(Accounts)]` is an attribute that tells Anchor to generate the necessary serialization and deserialization code for the accounts.
+- `#[account(mut)]` tells Anchor that the account is mutable
+- `pub user: Signer<'info>,` the user is of type `Signer<>` that signs and pays for the transaction. `'info` is the Rust lifetime.
+- `#[account(init, payer = user, space = 8 + 8)]` 
+  - `#[account(init)]` tells Anchor that this is an account that will be created
+  - `payer = user` tells Anchor that the account is owned by the user
+  - `space = 8 + 8` tells Anchor how much space to allocate for the account
+- `pub counter: Account<'info, Counter>,` the created account should be of type `Counter`
+- `pub system_program: Program<'info, System>,` adds a constraint that the system program must be in the list of accounts for the transaction
+
+**It's normal for this code to feel unfamiliar**. Anchor does things like separate the account creation and account type declarations. As you write more programs, you'll get used to it.
+
+The `increment` instruction is far simpler - it expects an account of type `Counter` passed in.  The `Counter` type is just a struct that has a `count` field of type `u64`, which is a 64-bit unsigned integer.
+
+We're almost ready to build this program!
 
 Each Anchor project has it's own program address when it's first built. Since
 you've just copied my code, the program address at the top of your `lib.rs`
-won't match the one in your `Anchor.toml`. You can sync these with
-`anchor keys sync`. Now you can hit `anchor build` to make sure there are no
-errors.
+won't match yours. To generate a keypair, run `anchor build`, and then run `anchor keys sync` to set it in your `Anchor.toml` and in the `id` field of your `lib.rs`.
+
+To recap what the whole flow so far:
+- `anchor init` to create a new project
+- `anchor build` to compile the template program
+- `anchor test --skip-local-validator` to test the template 
+- delete `target` folder to start from a clean slate
+- Update Rust in `lib.rs` with new logic
+- `anchor build` to generate a new keypair & compile our new program  
+- `anchor keys sync` to set the new program address
+
+Next time, you can skip building and testing the template.  
 
 ### Writing a test for our program
 
@@ -525,11 +593,6 @@ logs. You can also view transactions in the
 [Solana explorer](https://explorer.solana.com/?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8899)
 by configuring it to use the local cluster.
 
-Delete your `target` folder and run `anchor build` again. Before we can test
-this, you need to replace the `declare_id!` macro with the address of your
-program (cause you copy/pasted my program). You can do this with
-`anchor keys sync`.
-
 Let's run this! `anchor test --skip-local-validator` should give you:
 
 ```shell
@@ -541,17 +604,42 @@ Count: 1
 Done in 26.34s.
 ```
 
-### Upgrade your Anchor program
+### Finalize your Anchor program with a PDA
 
 The program we have is pretty good and it does what we want, but it's using an
 inefficient method of storing data and is not completely secure.
 
 Right now, we're manually creating an account for storing counter data. This
 requires keeping track of the account, and if the keypair is leaked anyone can
-change it's value. We are also statically allocating the account size, which is
+change its value. We are also statically allocating the account size, which is
 not ideal.
 
-Update your `lib.rs` file to this:
+The right way to store data is with a Program Derived Address. A PDA is an account 
+that's controlled by a program with an address that you can "derive" from a combination 
+of known items: a seed (a string of our choice) and the program ID. The data stored in a PDA is more secure because only the program can change it.  
+
+Now, instead of having to keep track of and manage a keypair that stores the data, we can just use 
+a function that derives a PDA for us:
+
+```ts
+  // new method
+  const [counterPDA] = PublicKey.findProgramAddressSync(
+    [Buffer.from("counter")], // This is the seed -- just the string "counter"
+    program.programId,        // If we're interacting with the program, we know its ID
+  );
+
+  // vs old method
+  const counterAccount = new Keypair(); // You have to keep track of this value 
+  // can't be easily shared with others
+  // security concern - if the keypair is leaked, anyone can change the value
+```
+
+The final bit of a PDA is a `bump` seed. This is an extra item that is used to make sure the generated address does not have a private key. So you find a PDA using:
+- program id
+- seed (your string)
+- bump seed (a number stored in the account)
+
+Here's what the updated code in your `lib.rs` for this is: 
 
 ```rust
 use anchor_lang::prelude::*;
@@ -614,14 +702,19 @@ pub struct Counter {
     pub bump: u8,   // 1 byte
 }
 ```
+You know most of this code. Let's dive into the changes we made to use a PDA:
 
-Now that we're storing the counter data in a PDA, we can derive the address of
-it anywhere without needing a keypair. This also guarantees that only the
-program itself can sign transactions. This provides a built-in security layer
-since no one can maliciously create a `Counter` account that the program would
-mistakenly use.
+In the `initialize` function, we store the `bump` seed in the `Counter` account with `counter.bump = ctx.bumps.counter;`. This allows us to retrieve the bump seed later when we need to derive the PDA again. We're also allocating space based on the size of the `Counter` struct.
 
-Here is what the new test in `tests/counter.ts` will look like:
+In the `Initialize` struct, we've updated the `#[account()]` attribute for the `counter` field:
+- `seeds = [b"counter"]` specifies the seed used to derive the PDA. In this case, it's just the string "counter" converted to a byte slice.
+- `bump` tells Anchor to use the canonical bump seed for the PDA.
+
+The `Increment` struct has also been updated with the same PDA seed and bump. Finally, the `Counter` struct now includes a `bump` field to store the bump seed.
+
+This approach provides better security and eliminates the need to manage a separate keypair for the counter account. The bump seed is stored in the Counter account itself, making it easy to retrieve when needed.
+
+Let's test this! Here is what the new test in `tests/counter.ts` will look like:
 
 ```ts
 import * as anchor from "@coral-xyz/anchor";
@@ -670,14 +763,52 @@ describe("counter", () => {
 As you can see, we're not generating a keypair here. Everything we need to
 initialize this program and interact with it is easily definable and shareable.
 
-Solana programs don't store state - everything is stored in accounts. This makes
-it easy to upgrade programs without having to worry about losing data.
+Now it's time to deploy this. Solana programs don't store state - everything is stored in accounts. This makes
+it easy to upgrade programs without having to worry about losing data. When you deploy a program, space is only allocated to be double the first program's size you deploy. So if your original program is 100 bytes, the new program can be up to 200 bytes. If your program is bigger, you'll have to extend it. 
 
-Once again, delete your `target` folder. Here's what you'll need to run to test
-this:
-
+Our new program is more than 2x the size of the original so if we run `anchor test --skip-local-validator` we'll get this error:
 ```shell
-anchor keys sync
+Error: Deploying program failed: RPC response error -32002: Transaction simulation failed: Error processing Instruction 0: account data too small for instruction [3 log messages]
+```
+
+We have three options here:
+- Extend the size of the old program account
+- Deploy a new program
+- Reset the local validator
+
+Let's go with the first option since we have millions in SOL. First, let's get the size of the old program account:
+```shell
+solana program show --program-id C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm
+```
+
+You'll see the output in bytes:
+```shell
+Program Id: C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm
+Owner: BPFLoaderUpgradeab1e11111111111111111111111
+ProgramData Address: GmNw1kazPye54vg3U56V6uU6XwYUheQYBGiDb5pZRuq6
+Authority: FmpP9UGJUBoYUDFpBYALDGudAZtTTmK46tBpC6TkcXry
+Last Deployed In Slot: 17666
+Data Length: 199448 (0x30b18) bytes
+Balance: 1.38936216 SOL
+```
+
+To find out the size of the new program, run this:
+```shell
+du -h target/deploy/counter.so
+```
+
+This will print the disk usage of the compiled program. If you wanna find out how much SOL this will cost:
+```shell
+solana rent 200000
+```
+
+Let's extend, you need the program ID and the extension size in bytes:
+```shell
+solana program extend C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm 200000
+```
+
+Now we can deploy and test the new program:
+```shell
 anchor test --skip-local-validator
 ```
 
@@ -709,7 +840,6 @@ we'll be doing:
 
 - Update our `Anchor.toml` file to use the devnet
 - Deploy our program to the devnet
-- Update our program address to the devnet with anchor keys sync
 - Rerun the test to initialize our program and increment the counter
 
 Update your `Anchor.toml` file to use the devnet network and add the address for
@@ -763,6 +893,24 @@ Copy the address and check it out on the
 
 You're off localhost! Anyone on the internet can now interact with your program.
 Let's give them a front-end to do that.
+
+Program deploy failed?
+Program code is temporarily stored in [buffer accounts](docs/programs/deploying#state-accounts) while programs are being deployed. You can view and close these accounts with:
+```shell
+solana program show --buffers
+solana program close --buffers
+```
+
+Running out of gas? 
+If you've completely run out of gas, you can close programs you've previously deployed. This is **not reversible**. These programs will be deleted and can't be re-deployed. As a last resort:
+```shell
+solana program close --programid <program id>
+```
+
+Or if you're feeling really daring:
+```shell
+solana program close --all
+```
 
 ## Build a React client for your app
 
@@ -898,7 +1046,7 @@ providers.
 
 Head back to `http://localhost:5173/` and you should see this:
 
-![image](https://hackmd.io/_uploads/HJWI35ana.png)
+![localhost vite app with select wallet button](/assets/guides/full-stack-solana-dev/fs-hello-solana.png)
 
 We're ready to rumble!
 
@@ -1071,17 +1219,6 @@ writing data to the blockchain!
 
 ### Writing to the blockchain
 
-Start by adding the `@solana/spl-token` library. We'll use this to get the
-associated token account address for the user's wallet.
-
-```shell
-yarn add @solana/spl-token
-```
-
-The associated token account is where the user's tokens for this program are
-stored. We need this cause we're going to mint a token in the increment
-transaction.
-
 Now to add increment functionality. We're going to put it all in a button
 component. Create a new file `components/increment-button.tsx` and add this
 code:
@@ -1089,7 +1226,6 @@ code:
 ```tsx
 import { useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { program, mintPDA } from "../anchor/setup";
 
 export default function IncrementButton() {
@@ -1103,17 +1239,9 @@ export default function IncrementButton() {
     setIsLoading(true);
 
     try {
-      const associatedTokenAccount = getAssociatedTokenAddressSync(
-        mintPDA,
-        publicKey,
-      );
-
+      // Create a transaction to invoke the increment function 
       const transaction = await program.methods
-        .increment()
-        .accounts({
-          user: publicKey,
-          tokenAccount: associatedTokenAccount,
-        })
+        .increment() // This takes no arguments so we don't need to pass anything
         .transaction();
 
       const transactionSignature = await sendTransaction(
