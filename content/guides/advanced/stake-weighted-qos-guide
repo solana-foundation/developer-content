@@ -1,5 +1,5 @@
 ---
-featured: fale
+featured: false
 date: Mar 20, 2024
 difficulty: intermediate
 title: "A Guide to Stake-weighted Quality of Service on Solana"
@@ -65,11 +65,11 @@ The overrides file for --staked-nodes-overrides looks like this:
   1.1.1.1: 1000000000000000
   2.2.2.2: 4000000000000000```
 
-stake_map contains a map of IP to the stake amount to apply to each RPC. When set, the validator will prioritize QUIC connections with the RPC found at that IP, assigning an amount of stake to their transactions.
+```stake_map``` contains a map of IP to the stake amount to apply to each RPC. When set, the validator will prioritize QUIC connections with the RPC found at that IP, assigning an amount of stake to their transactions.
 
 ### Configuring the RPC node
 
-On the RPC you will have to use –public-tpu-forwards-address to forward transactions to a specific leader. The exact usage would be –public-tpu-forwards-address <IP-ADDRESS>, with the IP being of the leader you have the staked-nodes-overrides enabled on. The peering would looking like the following:
+On the RPC you will have to use ```–public-tpu-forwards-address``` to forward transactions to a specific leader. The exact usage would be ```–public-tpu-forwards-address <IP-ADDRESS>```, with the IP being of the leader you have the staked-nodes-overrides enabled on. The peering would looking like the following:
 
 ## Conclusion
 Stake-weighted QoS is an optional feature which arrived in v1.14 of the Solana client, now known as Agave. Agave is a forked version of the Solana Labs client which has become the active branch used by the Anza team, a spin out organization composed of the former Solana Labs engineering team. 
