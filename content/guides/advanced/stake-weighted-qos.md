@@ -107,7 +107,7 @@ Stake-weighted QoS will not work unless BOTH sides are properly configured.
 ### Configuring the Validator node
 
 On the validator, you’ll have to enable
-`--staked-nodes-overrides /path/to/overrides.yml`. The `–staked-nodes-overrides`
+`--staked-nodes-overrides /path/to/overrides.yml`. The `–-staked-nodes-overrides`
 flag helps the validator prioritize transactions being sent from known sources
 to apply stake to their transactions. This can help a validator prioritize
 certain transactions over known hosts over others, enabling the usage of
@@ -135,13 +135,13 @@ split proportionally based on the lamport amounts specified in the
 
 ### Configuring the RPC node
 
-On the RPC you will have to use `–public-tpu-forwards-address` to forward
+On the RPC you will have to use `–-rpc-send-transaction-tpu-peer` to forward
 transactions to a specific leader. The exact usage would be
-`–public-tpu-forwards-address <IP-ADDRESS>`, with the IP being of the leader you
+`–-rpc-send-transaction-tpu-peer HOST:PORT`, with the Host being of the leader you
 have the staked-nodes-overrides enabled on. The peering would looking like the
 following:
 
-![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs.png)
+![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs-guide.png)
 
 ## Conclusion
 
