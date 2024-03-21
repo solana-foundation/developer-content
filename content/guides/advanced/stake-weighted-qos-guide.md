@@ -36,7 +36,12 @@ the network by reducing the likelihood that low-or-no-stake (lower quality)
 validators are able to “drown out” transactions emanating from higher-quality
 (higher stake) validators (aka enhanced Sybil Resistance).
 
-One potential benefit of implementing Stake-weighted QoS could be realized if certain agreements between Validators and RPC nodes are in place. RPC nodes may land more transactions in blocks by agreeing to peer with Validators, and Validators may sell more capacity to RPC nodes. These agreements must be made directly between RPC operators and Validators and include the implementation of the steps captured below in this doc to complete the peering.
+One potential benefit of implementing Stake-weighted QoS could be realized if
+certain agreements between Validators and RPC nodes are in place. RPC nodes may
+land more transactions in blocks by agreeing to peer with Validators, and
+Validators may sell more capacity to RPC nodes. These agreements must be made
+directly between RPC operators and Validators and include the implementation of
+the steps captured below in this doc to complete the peering.
 
 ## Who does Stake-weighted QoS benefit?
 
@@ -114,13 +119,16 @@ The overrides file for `--staked-nodes-overrides` looks like this:
 
 ```yml
 stake_map:
-  1.1.1.1: 1000000000000000
-  2.2.2.2: 4000000000000000
+  pubkey1: 1000000000000000
+  pubkey2: 4000000000000000
 ```
 
-`stake_map` contains a map of IP to the stake amount to apply to each RPC. When
-set, the validator will prioritize QUIC connections with the RPC found at that
-IP, assigning an amount of stake to their transactions.
+`stake_map` contains a map of identity public key to the stake amount in
+lamports to apply to each RPC. When set, the validator will prioritize QUIC
+connections with the RPC found at that identity publicKey, assigning an amount
+of stake to their transactions. The 80% of the leader’s TPU capacity will be
+split proportionally based on the lamport amounts specified in the
+`staked-nodes-overrides` file.
 
 ### Configuring the RPC node
 
