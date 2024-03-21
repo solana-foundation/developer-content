@@ -9,6 +9,7 @@ description:
   to optimize compute usage in your programs on Solana."
 tags:
   - rust
+  - compute
 keywords:
   - tutorial
   - priority fees
