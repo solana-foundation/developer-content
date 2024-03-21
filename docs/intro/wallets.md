@@ -16,25 +16,36 @@ file system, a piece of paper, or a specialized device called a _hardware
 wallet_. There are also various smartphone apps and computer programs that
 provide a user-friendly way to create and manage wallets.
 
-A _keypair_ is a securely generated _secret key_ and its
-cryptographically-derived _public key_. A secret key and its corresponding
-public key are together known as a _keypair_. A wallet contains a collection of
-one or more keypairs and provides some means to interact with them.
+### Keypair
 
-The _public key_ (commonly shortened to _pubkey_) is known as the wallet's
-_receiving address_ or simply its _address_. The wallet address **may be shared
-and displayed freely**. When another party is going to send some amount of
-cryptocurrency to a wallet, they need to know the wallet's receiving address.
-Depending on a blockchain's implementation, the address can also be used to view
-certain information about a wallet, such as viewing the balance, but has no
-ability to change anything about the wallet or withdraw any tokens.
+A [_keypair_](/docs/terminology.md#keypair) is a securely generated
+[_secret key_](#secret-key) and its cryptographically-derived
+[_public key_](#public-key). A secret key and its corresponding public key are
+together known as a _keypair_. A wallet contains a collection of one or more
+keypairs and provides some means to interact with them.
 
-The _secret key_ is required to digitally sign any transactions to send
+### Public key
+
+The [_public key_](/docs/terminology.md#public-key-pubkey) (commonly shortened
+to _pubkey_) is known as the wallet's _receiving address_ or simply its
+_address_. The wallet address **may be shared and displayed freely**. When
+another party is going to send some amount of cryptocurrency to a wallet, they
+need to know the wallet's receiving address. Depending on a blockchain's
+implementation, the address can also be used to view certain information about a
+wallet, such as viewing the balance, but has no ability to change anything about
+the wallet or withdraw any tokens.
+
+### Secret key
+
+The [_secret key_](/docs/terminology.md#private-key) (also referred to as
+_private key_) is required to digitally sign any transactions to send
 cryptocurrencies to another address or to make any changes to the wallet. The
 secret key **must never be shared**. If someone gains access to the secret key
 to a wallet, they can withdraw all the tokens it contains. If the secret key for
 a wallet is lost, any tokens that have been sent to that wallet's address are
 **permanently lost**.
+
+## Security
 
 Different wallet solutions offer different approaches to keypair security,
 interacting with the keypair, and signing transactions to use/spend the tokens.
