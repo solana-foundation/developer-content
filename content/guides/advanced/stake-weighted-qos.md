@@ -2,6 +2,7 @@
 featured: false
 date: Mar 20, 2024
 difficulty: intermediate
+seoTitle: "Stake-weighted Quality of Service on Solana"
 title: "A Guide to Stake-weighted Quality of Service on Solana"
 description:
   "Stake-weighed QoS (Quality-of-Service) is an implementation feature which,
@@ -18,6 +19,8 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
+altRoutes:
+  - /developers/guides/advanced/stake-weighted-qos-guide
 ---
 
 ## What is Stake-weighted Quality of Service (QoS)?
