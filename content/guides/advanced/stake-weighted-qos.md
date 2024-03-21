@@ -107,16 +107,17 @@ Stake-weighted QoS will not work unless BOTH sides are properly configured.
 ### Configuring the Validator node
 
 On the validator, you’ll have to enable
-`--staked-nodes-overrides /path/to/overrides.yml`. The `–staked-nodes-overrides`
-flag helps the validator prioritize transactions being sent from known sources
-to apply stake to their transactions. This can help a validator prioritize
-certain transactions over known hosts over others, enabling the usage of
-Stake-weighted QoS with RPCs. RPCs should not be staked in any way.
+`--staked-nodes-overrides /path/to/overrides.yml`. The
+`–-staked-nodes-overrides` flag helps the validator prioritize transactions
+being sent from known sources to apply stake to their transactions. This can
+help a validator prioritize certain transactions over known hosts over others,
+enabling the usage of Stake-weighted QoS with RPCs. RPCs should not be staked in
+any way.
 
 Today, Stake-weighted QoS gives a stake-weighted priority to 80% of a leader’s
 TPU capacity. However, there are configuration options which can be used to
-virtually assign different stake-weights to TPU peers, including giving unstaked
-peers stake.
+virtually assign different stake-weights to TPU peers, including assigning
+unstaked peers virtual stake.
 
 The overrides file for `--staked-nodes-overrides` looks like this:
 
@@ -131,17 +132,17 @@ lamports to apply to each RPC. When set, the validator will prioritize QUIC
 connections with the RPC found at that identity publicKey, assigning an amount
 of stake to their transactions. The 80% of the leader’s TPU capacity will be
 split proportionally based on the lamport amounts specified in the
-`staked-nodes-overrides` file.
+`staked-nodes-overrides` file and existing cluster stake.
 
 ### Configuring the RPC node
 
-On the RPC you will have to use `–public-tpu-forwards-address` to forward
+On the RPC you will have to use `–-rpc-send-transaction-tpu-peer` to forward
 transactions to a specific leader. The exact usage would be
-`–public-tpu-forwards-address <IP-ADDRESS>`, with the IP being of the leader you
-have the staked-nodes-overrides enabled on. The peering would looking like the
-following:
+`–-rpc-send-transaction-tpu-peer HOST:PORT`, with the Host being of the leader
+you have the staked-nodes-overrides enabled on. The peering would looking like
+the following:
 
-![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs.png)
+![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs-guide.png)
 
 ## Conclusion
 
