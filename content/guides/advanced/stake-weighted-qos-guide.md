@@ -36,6 +36,8 @@ the network by reducing the likelihood that low-or-no-stake (lower quality)
 validators are able to “drown out” transactions emanating from higher-quality
 (higher stake) validators (aka enhanced Sybil Resistance).
 
+The benefit of implementing Stake-weighted QoS is based on agreements between Validators and RPC nodes. RPC nodes may land more transactions in blocks by agreeing to peer with Validators, and Validators may sell more capacity to RPC nodes. These agreements must be made directly between RPC operators and Validators via traditional means. Once an agreement is made, both parties will need to implement the steps captured below in this doc to complete the peering.
+
 ## Who does Stake-weighted QoS benefit?
 
 Commercial RPC infrastructure operators and exchanges will likely be among the
