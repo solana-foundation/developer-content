@@ -6,7 +6,7 @@ altRoutes:
   - /docs/rpc/getEpochSchedule
 ---
 
-从该集群的创世配置返回纪元调度信息
+从该集群的创世配置返回纪元(epoch)调度信息
 
 <DocSideBySide>
 
@@ -14,20 +14,17 @@ altRoutes:
 
 ### 参数
 
-**没有任何**
+**无参数**
 
 ### 结果
 
 结果字段将是具有以下字段的对象：
 
 - `slotsPerEpoch: <u64>` - 每个时期的最大槽数
-- `leaderScheduleSlotOffset: <u64>` - 纪元开始之前的时隙数，用于计算该纪元的领导
-  者调度
+- `leaderScheduleSlotOffset: <u64>` - 纪元开始之前的槽数，用于计算该纪元的领导者调度
 - `warmup: <bool>` - 纪元是否开始较短并逐渐增长
-- `firstNormalEpoch: <u64>` - 第一个正常长度的纪元，log2(slotsPerEpoch) -
-  log2(MINIMUM_SLOTS_PER_EPOCH)
-- `firstNormalSlot: <u64>` - MINIMUM_SLOTS_PER_EPOCH \*
-  (2.pow(firstNormalEpoch) - 1)
+- `firstNormalEpoch: <u64>` - 第一个正常长度的纪元，log2(slotsPerEpoch) - log2(MINIMUM_SLOTS_PER_EPOCH)
+- `firstNormalSlot: <u64>` - MINIMUM_SLOTS_PER_EPOCH \* (2.pow(firstNormalEpoch) - 1)
 
 </DocLeftSide>
 
