@@ -1,0 +1,77 @@
+---
+sidebarLabel: getBlocks
+title: getBlocks RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getBlocks
+---
+
+返回两个槽之间已确认块的列表
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} required={true}>
+  start_slot，`u64`整数
+</Parameter>
+
+<Parameter type={"u64"} optional={true}>
+  end_slot，`u64`整数（不得高于 500,000 个块`start_slot`）
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+  <Field
+  name="commitment"
+  type="string"
+  optional={true}
+  defaultValue={"finalized(已完成)"}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+>
+
+- 不支持 "processed"
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+结果字段将是一个 u64 整数数组，列出`start_slot`和之间的确认块`end_slot`- 如果提
+供，或最新确认块（包括在内）。允许的最大范围是 500,000 个插槽。
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "getBlocks",
+    "params": [
+      5, 10
+    ]
+  }
+'
+```
+
+### 回复
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [5, 6, 7, 8, 9, 10],
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

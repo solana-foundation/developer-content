@@ -1,0 +1,47 @@
+---
+sidebarLabel: slotUnsubscribe
+title: slotUnsubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/slotUnsubscribe
+---
+
+处理槽取消订阅
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"integer"} required={true}>
+  要取消的订阅 ID
+</Parameter>
+
+### 结果
+
+`<bool>` - 取消订阅成功消息
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "slotUnsubscribe",
+  "params": [0]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": true, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

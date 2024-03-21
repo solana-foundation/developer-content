@@ -1,0 +1,108 @@
+---
+sidebarLabel: getSignatureStatuses
+title: getSignatureStatuses RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getSignatureStatuses
+---
+
+返回签名列表的状态。每个签名必须是[txid](/docs/terminology.md#transaction-id)，
+即交易的第一个签名。
+
+<Callout type={"info"}>
+  除非`searchTransactionHistory`包含配置参数，否则此方法仅搜索签名的最近状态缓存，该缓存保留所有活动插槽和`MAX_RECENT_BLOCKHASHES`根插槽的状态。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"array"} required={true}>
+  待确认的交易签名数组，采用 base-58 编码字符串（最多 256 个）
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field name="searchTransactionHistory" type="bool" optional={true}>
+
+    如果 `true`- Solana 节点将在其账本缓存中搜索最近状态缓存中未找到的任何签名
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+由以下任一组成的数组`RpcResponse<object>`：
+
+- `<null>` - 未知交易，或
+- `<object>`
+  - `slot: <u64>` - 处理交易的槽位
+  - `confirmations: <usize|null>` - 自签名确认以来的块数，如果有根则为空，并且由
+    集群的绝大多数确定
+  - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。请参
+    阅
+    [TransactionError 定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)。
+  - `confirmationStatus: <string|null>` - 交易的集群确认状态；两
+    者`processed`任`confirmed`一`finalized`。有关乐观确认的更多信息，请参阅
+    [承诺](/docs/rpc/index.zh.mdx#配置状态承诺)。
+  - 已弃用: `status: <object>` - 交易状态
+    - `"Ok": <null>` - 交易成功
+    - `"Err": <ERR>` - 交易失败并出现 TransactionError
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getSignatureStatuses",
+    "params": [
+      [
+        "5VERv8NMvzbJMEkV8xnrLkEaWRtSz9CosKDYjCJjBRnbJLgp8uirBgmQpjKhoR4tjF3ZpRzrFmBV6UjKdiSZkQUW"
+      ],
+      {
+        "searchTransactionHistory": true
+      }
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "context": {
+      "slot": 82
+    },
+    "value": [
+      {
+        "slot": 48,
+        "confirmations": null,
+        "err": null,
+        "status": {
+          "Ok": null
+        },
+        "confirmationStatus": "finalized"
+      },
+      null
+    ]
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

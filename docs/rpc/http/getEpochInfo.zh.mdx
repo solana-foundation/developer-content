@@ -1,0 +1,74 @@
+---
+sidebarLabel: getEpochInfo
+title: getEpochInfo RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getEpochInfo
+---
+
+返回有关当前纪元的信息
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+结果字段将是具有以下字段的对象：
+
+- `absoluteSlot: <u64>` - 当前插槽
+- `blockHeight: <u64>` - 当前区块高度
+- `epoch: <u64>` - 当前纪元
+- `slotIndex: <u64>` - 相对于当前纪元开始的当前槽位
+- `slotsInEpoch: <u64>` - 该纪元中的槽数
+- `transactionCount: <u64|null>` - 自创世以来无错误处理的交易总数
+
+</DocLeftSide>
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getEpochInfo"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "absoluteSlot": 166598,
+    "blockHeight": 166500,
+    "epoch": 27,
+    "slotIndex": 2790,
+    "slotsInEpoch": 8192,
+    "transactionCount": 22661093
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

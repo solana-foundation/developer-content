@@ -1,0 +1,95 @@
+---
+sidebarLabel: getRecentPerformanceSamples
+title: getRecentPerformanceSamples RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getRecentPerformanceSamples
+---
+
+以相反的槽顺序返回最近性能示例的列表。性能样本每 60 秒采集一次，包括给定时间窗口
+内发生的事务和时隙的数量。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter name="limit" type={"usize"} optional={true}>
+
+要返回的样本数（最多 720）
+
+</Parameter>
+
+### 结果
+
+`RpcPerfSample<object>` 具有以下字段的数组：
+
+- `slot: <u64>` - 采样槽位
+- `numTransactions: <u64>` - 样本期内处理的交易数量
+- `numSlots: <u64>` - 样本期内完成的槽数
+- `samplePeriodSecs: <u16>` - 样本窗口中的秒数
+- `numNonVoteTransaction: <u64>` - 样本期内处理的非投票交易数量。
+
+<Callout type={"info"}>
+  `numNonVoteTransaction` 从 v1.15 开始出现。要获得多个投票交易计算：
+  <br />
+  `numTransactions - numNonVoteTransaction`
+</Callout>
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc":"2.0", "id":1,
+    "method": "getRecentPerformanceSamples",
+    "params": [4]}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": [
+    {
+      "numSlots": 126,
+      "numTransactions": 126,
+      "numNonVoteTransaction": 1,
+      "samplePeriodSecs": 60,
+      "slot": 348125
+    },
+    {
+      "numSlots": 126,
+      "numTransactions": 126,
+      "numNonVoteTransaction": 1,
+      "samplePeriodSecs": 60,
+      "slot": 347999
+    },
+    {
+      "numSlots": 125,
+      "numTransactions": 125,
+      "numNonVoteTransaction": 0,
+      "samplePeriodSecs": 60,
+      "slot": 347873
+    },
+    {
+      "numSlots": 125,
+      "numTransactions": 125,
+      "numNonVoteTransaction": 0,
+      "samplePeriodSecs": 60,
+      "slot": 347748
+    }
+  ],
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

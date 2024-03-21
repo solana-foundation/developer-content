@@ -1,0 +1,64 @@
+---
+sidebarLabel: getBlockCommitment
+title: getBlockCommitment RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getBlockCommitment
+---
+
+返回特定块的承诺
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"u64"} required={true}>
+  块号，由Slot标识
+</Parameter>
+
+### 结果
+
+结果字段将是一个 JSON 对象，其中包含：
+
+- `commitment` - 承诺，包括:
+  - `<null>` - 未知区块
+  - `<array>` - `MAX_LOCKOUT_HISTORY`- 承诺，u64 整数数组，记录在从 0 到+ 1的每
+    个深度的区块上投票的 lamports 中的集群权益数量
+- `totalStake` - 当前 epoch 的 lamports 活跃股份总数
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0", "id": 1,
+    "method": "getBlockCommitment",
+    "params":[5]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "commitment": [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      0, 0, 0, 0, 0, 10, 32
+    ],
+    "totalStake": 42
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

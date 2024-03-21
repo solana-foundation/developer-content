@@ -1,0 +1,132 @@
+---
+sidebarLabel: logsSubscribe
+title: logsSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/logsSubscribe
+---
+
+订阅交易日志
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter name="过滤器" type={"string | object"} required={true}>
+  日志的过滤条件以按帐户类型接收结果。目前支持以下过滤器类型：
+
+<Field type="string">
+
+具有以下值之一的字符串：
+
+- `all` - 订阅除简单投票交易之外的所有交易
+- `allWithVotes` - 订阅所有交易，包括简单的投票交易
+
+</Field>
+
+<Field type="object">
+
+具有以下字段的对象：
+
+- `mentions: [ <string> ]` - 包含单个 Pubkey 的数组（作为 base-58 编码字符串）；
+  如果存在，仅订阅提及该地址的交易
+
+<Callout type={"caution"} title={true}>
+  该`mentions`字段当前
+  [仅支持](https://github.com/solana-labs/solana/blob/master/rpc/src/rpc_pubsub.rs#L481)
+  每个方法调用一个公共密钥字符串。列出其他地址将导致错误。
+</Callout>
+
+</Field>
+
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+</Parameter>
+
+### Result
+
+`<integer>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "logsSubscribe",
+  "params": [
+    {
+      "mentions": [ "11111111111111111111111111111111" ]
+    },
+    {
+      "commitment": "finalized"
+    }
+  ]
+}
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "logsSubscribe",
+  "params": [ "all" ]
+}
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 24040, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+#### 通知格式：
+
+该通知将是一个 RpcResponse JSON 对象，其值等于：
+
+- `signature: <string>` - 交易签名base58编码。
+- `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。
+  [交易错误定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
+- `logs: <array|null>` - 交易指令在执行期间输出的日志消息数组，如果在交易能够执
+  行之前模拟失败（例如由于无效的区块哈希或签名验证失败），则为 null
+
+  例子：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "logsNotification",
+  "params": {
+    "result": {
+      "context": {
+        "slot": 5208469
+      },
+      "value": {
+        "signature": "5h6xBEauJ3PK6SWCZ1PGjBvj8vDdWG3KpwATGy1ARAXFSDwt8GFXM7W5Ncn16wmqokgpiKRLuS83KUxyZyv2sUYv",
+        "err": null,
+        "logs": [
+          "SBF program 83astBRguLMdt2h5U1Tpdq5tjFoJ6noeGwaY3mDLVcri success"
+        ]
+      }
+    },
+    "subscription": 24040
+  }
+}
+```

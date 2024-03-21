@@ -1,0 +1,84 @@
+---
+sidebarLabel: slotsUpdatesSubscribe
+title: slotsUpdatesSubscribe RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/slotsUpdatesSubscribe
+---
+
+订阅以接收来自验证者的有关每个插槽的各种更新的通知
+
+<Callout type={"caution"}>
+  此订阅不稳定。此订阅的格式将来可能会发生变化，并且可能并不总是受支持。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+`<integer>` - 订阅 ID（取消订阅时需要）
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```json
+{ "jsonrpc": "2.0", "id": 1, "method": "slotsUpdatesSubscribe" }
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 0, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
+
+### 通知格式
+
+通知将是一个具有以下字段的对象：
+
+- `err: <string|undefined>` - 错误消息。仅当更新类型为`dead(死亡)`时才出现。
+- `parent: <u64|undefined>` -父插槽。仅当更新类型为`createdBank(创建银行)`时才出
+  现。
+- `slot: <u64>` - 新更新的插槽
+- `stats: <object|undefined>` - 错误消息。仅当更新类型为“冻结”时才出现。具有以下
+  字段的对象：
+  - `maxTransactionsPerEntry: <u64>`,
+  - `numFailedTransactions: <u64>`,
+  - `numSuccessfulTransactions: <u64>`,
+  - `numTransactionEntries: <u64>`,
+- `timestamp: <i64>` - 更新的 Unix 时间戳
+- `type: <string>` - 更新类型，其中之一：
+  - "firstShredReceived"
+  - "completed"
+  - "createdBank"
+  - "frozen"
+  - "dead"
+  - "optimisticConfirmation"
+  - "root"
+
+```bash
+{
+  "jsonrpc": "2.0",
+  "method": "slotsUpdatesNotification",
+  "params": {
+    "result": {
+      "parent": 75,
+      "slot": 76,
+      "timestamp": 1625081266243,
+      "type": "optimisticConfirmation"
+    },
+    "subscription": 0
+  }
+}
+```

@@ -1,0 +1,56 @@
+---
+sidebarLabel: getInflationRate
+title: getInflationRate RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getInflationRate
+---
+
+返回当前纪元的具体通货膨胀值
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+结果字段将是一个包含以下字段的 JSON 对象：
+
+- `total: <f64>` - 总通货膨胀
+- `validator: <f64>` - 分配给验证者的通货膨胀
+- `foundation: <f64>` - 通货膨胀分配给基金会
+- `epoch: <u64>` - 这些值有效的时期
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getInflationRate"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "epoch": 100,
+    "foundation": 0.001,
+    "total": 0.149,
+    "validator": 0.148
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

@@ -1,0 +1,49 @@
+---
+sidebarLabel: getIdentity
+title: getIdentity RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getIdentity
+---
+
+返回当前节点的身份公钥
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+结果字段将是一个包含以下字段的 JSON 对象：
+
+- `identity` - 当前节点的身份公钥（作为base-58编码的字符串）
+
+</DocLeftSide>
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getIdentity"}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "identity": "2r1F4iWqVcb8M1DbAjQuFpebkQHY9hcVU4WuW2DJBppN"
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

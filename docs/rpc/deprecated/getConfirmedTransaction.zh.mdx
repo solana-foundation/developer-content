@@ -1,0 +1,144 @@
+---
+sidebarLabel: getConfirmedTransaction
+title: getConfirmedTransaction RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getConfirmedTransaction
+  - /docs/rpc/http/getConfirmedTransaction
+---
+
+返回已确认交易的交易详细信息
+
+<Callout type={"warning"} title={"已弃用的方法"}>
+  该方法预计在 v2.0 中被删除`solana-core`。请改用
+  [getTransaction](/docs/rpc/http/getTransaction)。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  交易签名，作为 base-58 编码的字符串
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field 
+  name="encoding"
+  type="string"
+  defaultValue="json"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#解析后的响应"
+>
+
+账户数据的编码格式
+
+<Values values={["json", "base58", "base64", "jsonParsed"]} />
+
+<details>
+
+- `base58` 速度很慢并且帐户数据仅限于 129 字节以下。
+- `jsonParsed` 编码尝试使用特定于程序的指令解析器在列表中返回更多人类可读和明确
+  的数据 `transaction.message.instructions`。
+- 如果 `jsonParsed` 请求但无法找到解析器，则指令将回退到常规`json`编码
+  （`accounts`、`data`和 `programIdIndex`字段）。
+
+</details>
+
+</Field>
+
+</Parameter>
+
+### 结果
+
+- `<null>` - 如果交易未找到或未确认
+- `<object>` - 如果交易被确认，则具有以下字段的对象：
+  - `slot: <u64>` - 处理该交易的槽位
+  - `transaction: <object|[string,encoding]>` -
+    [交易](/docs/rpc/json-structures.zh#交易)对象，可以是 JSON 格式，也可以是编
+    码的二进制数据，具体取决于编码参数
+  - `blockTime: <i64|null>` - 估计的生产时间，作为处理事务时的 Unix 时间戳（自
+    Unix 纪元以来的秒数）。如果不可用则为 null
+  - `meta: <object|null>` - 交易状态元数据对象：
+    - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。
+      [ 交易错误定义](https://docs.rs/solana-sdk/latest/solana_sdk/transaction/enum.TransactionError.html)
+    - `fee: <u64>` - 此交易收取的费用，为 u64 整数
+    - `preBalances: <array>` - 处理交易之前的 u64 帐户余额数组
+    - `postBalances: <array>` - 交易处理后的 u64 账户余额数组
+    - `innerInstructions: <array|null>` -
+      [内部指令](/docs/rpc/json-structures.zh#内部指令)列表 或 null在此交易期间
+      未启用内部指令记录
+    - `preTokenBalances: <array|undefined>` -
+      [处理交易之前的代币余额](/docs/rpc/json-structures.zh#代币余额)列表 ，如果
+      在此交易期间尚未启用代币余额记录，则忽略该列表
+    - `postTokenBalances: <array|undefined>` -
+      [交易处理后的代币余额](/docs/rpc/json-structures.zh#代币余额) 列表，如果在
+      此交易期间尚未启用代币余额记录，则忽略该列表
+    - `logMessages: <array|null>` - 字符串日志消息数组，或者null在此事务期间未启
+      用日志消息记录
+    - 已弃用: `status: <object>` - 交易状态
+      - `"Ok": <null>` - 交易成功
+      - `"Err": <ERR>` - 交易失败并出现 TransactionError
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "getConfirmedTransaction",
+    "params": [
+      "2nBhEBYYvfaAe16UMNqRHre4YNSskvuYgx3M6E4JP1oDYvZEJHvoPzyUidNgNX5r9sTyN1J9UxtbCXy2rqYcuyuv",
+      "base64"
+    ]
+  }
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "meta": {
+      "err": null,
+      "fee": 5000,
+      "innerInstructions": [],
+      "postBalances": [499998932500, 26858640, 1, 1, 1],
+      "postTokenBalances": [],
+      "preBalances": [499998937500, 26858640, 1, 1, 1],
+      "preTokenBalances": [],
+      "status": {
+        "Ok": null
+      }
+    },
+    "slot": 430,
+    "transaction": [
+      "AVj7dxHlQ9IrvdYVIjuiRFs1jLaDMHixgrv+qtHBwz51L4/ImLZhszwiyEJDIp7xeBSpm/TX5B7mYzxa+fPOMw0BAAMFJMJVqLw+hJYheizSoYlLm53KzgT82cDVmazarqQKG2GQsLgiqktA+a+FDR4/7xnDX7rsusMwryYVUdixfz1B1Qan1RcZLwqvxvJl4/t3zHragsUp0L47E24tAFUgAAAABqfVFxjHdMkoVmOYaR1etoteuKObS21cc1VbIQAAAAAHYUgdNXR0u3xNdiTr072z2DVec9EQQ/wNo1OAAAAAAAtxOUhPBp2WSjUNJEgfvy70BbxI00fZyEPvFHNfxrtEAQQEAQIDADUCAAAAAQAAAAAAAACtAQAAAAAAAAdUE18R96XTJCe+YfRfUp6WP+YKCy/72ucOL8AoBFSpAA==",
+      "base64"
+    ]
+  },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>

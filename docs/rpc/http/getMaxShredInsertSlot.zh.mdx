@@ -1,0 +1,42 @@
+---
+sidebarLabel: getMaxShredInsertSlot
+title: getMaxShredInsertSlot RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getMaxShredInsertSlot
+---
+
+获取切碎插入后看到的最大插槽。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**没有任何**
+
+### 结果
+
+`<u64>` - 插槽号
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getMaxShredInsertSlot"}
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 1234, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>

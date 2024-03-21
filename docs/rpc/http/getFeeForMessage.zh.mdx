@@ -1,0 +1,80 @@
+---
+sidebarLabel: getFeeForMessage
+title: getFeeForMessage RPC Method
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getFeeForMessage
+---
+
+获取网络对特定消息收取的费用
+
+<Callout type={"caution"} title={"版本限制"}>
+  此方法仅在 v1.9 或更高版本中可用`solana-core`。v1.8 及以下版本请使用
+  [getFees](/docs/rpc/deprecated/getFees.mdx)`solana-core`。
+</Callout>
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+<Parameter type={"string"} required={true}>
+  Base-64 编码消息
+</Parameter>
+
+<Parameter type={"object"} optional={true}>
+
+配置对象包含以下字段：
+
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.zh.mdx#配置状态承诺"
+></Field>
+
+<Field name="minContextSlot" type="number" optional={true}>
+  可以评估请求的最小槽位
+</Field>
+
+</Parameter>
+
+### 结果
+
+- `<u64|null>` - 指定区块哈希消息对应的费用
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+{
+  "id":1,
+  "jsonrpc":"2.0",
+  "method":"getFeeForMessage",
+  "params":[
+    "AQABAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAA",
+    {
+      "commitment":"processed"
+    }
+  ]
+}
+'
+```
+
+### 响应
+
+```json
+{
+  "jsonrpc": "2.0",
+  "result": { "context": { "slot": 5068 }, "value": 5000 },
+  "id": 1
+}
+```
+
+</DocRightSide>
+</DocSideBySide>
