@@ -109,9 +109,9 @@ Except where otherwise noted.
 Inside your Linux/WSL terminal session, continue to setup your local Solana
 development environment using the "Linux" steps below.
 
-WSL can sometimes be a little slow due to it's file system write speed
+WSL can sometimes be a little slow due to its file system write speed
 limitations. You can also try dual booting your computer, installing a Linux
-operating system natively on the same machine, or use the fully web browser
+operating system natively on the same machine, or using the full web browser
 based Solana IDE called [Solana Playground](https://beta.solpg.io).
 
 ### Dependencies for Linux
@@ -154,7 +154,7 @@ xcode-select --install
 
    ![Xcode CLI from Apple](/assets/guides/setup-local-environment/setup-xcode.png)
 
-3. Installing via homebrew: we the following guide to
+3. Installing via homebrew: we have the following guide to
    [install Xcode Command Line Tools with Homebrew](https://mac.install.guide/commandlinetools/3)
 
 <Callout type="success" title="Congrats">
@@ -225,7 +225,7 @@ tasks, like:
     ```
 
     If you get the above message, simply copy and paste the command recommended
-    by the Solana CLI installer to update your your `PATH` environment variable.
+    by the Solana CLI installer to update your `PATH` environment variable.
 
     After running this command. restart your terminal to make sure your Solana
     binaries are accessible in all the terminal sessions you open afterwards.
