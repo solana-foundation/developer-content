@@ -58,7 +58,7 @@ drive, as a user, token holder, app developer, or validator.
 
 To connect to the `devnet` Cluster using the Solana CLI:
 
-```bash
+```shell
 solana config set --url https://api.devnet.solana.com
 ```
 
@@ -91,7 +91,7 @@ stability and validator behavior.
 
 To connect to the `testnet` Cluster using the Solana CLI:
 
-```bash
+```shell
 solana config set --url https://api.testnet.solana.com
 ```
 
@@ -120,7 +120,7 @@ token holders.
 
 To connect to the `mainnet-beta` Cluster using the Solana CLI:
 
-```bash
+```shell
 solana config set --url https://api.mainnet-beta.solana.com
 ```
 

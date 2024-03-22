@@ -23,7 +23,7 @@ transfer the tokens.
 
 First fetch the latest version of the example code:
 
-```bash
+```shell
 $ git clone https://github.com/solana-labs/break.git
 $ cd break
 ```

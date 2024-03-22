@@ -27,7 +27,7 @@ To run an api node:
 1. [Install the Solana command-line tool suite](https://docs.solanalabs.com/cli/install)
 2. Start the validator with at least the following parameters:
 
-```bash
+```shell
 solana-validator \
   --ledger <LEDGER_PATH> \
   --identity <VALIDATOR_IDENTITY_KEYPAIR> \
@@ -81,7 +81,7 @@ which can monitor your validator and detect with the `solana-validator` process
 is unhealthy. It can directly be configured to alert you via Slack, Telegram,
 Discord, or Twillio. For details, run `solana-watchtower --help`.
 
-```bash
+```shell
 solana-watchtower --validator-identity <YOUR VALIDATOR IDENTITY>
 ```
 
@@ -168,7 +168,7 @@ Solana accounts must be made rent-exempt by containing 2-years worth of
 rent-exempt balance for your deposit accounts, query the
 [`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
@@ -235,7 +235,7 @@ Solana API node.
   [`getBlocks`](/docs/rpc/http/getBlocks.mdx) request, passing the last block
   you have already processed as the start-slot parameter:
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
@@ -276,7 +276,7 @@ By default, fetched blocks will return a lot of transaction info and metadata
 that isn't necessary for tracking account balances. Set the "transactionDetails"
 parameter to speed up block fetching.
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -d '{
   "jsonrpc": "2.0",
   "id": 1,
@@ -383,7 +383,7 @@ time.
 - Send a [`getSignaturesForAddress`](/docs/rpc/http/getSignaturesForAddress.mdx)
   request to the api node:
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
@@ -435,7 +435,7 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 - For each signature returned, get the transaction details by sending a
   [`getTransaction`](/docs/rpc/http/getTransaction.mdx) request:
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -d '{
   "jsonrpc":"2.0",
   "id":1,
@@ -546,7 +546,7 @@ generate, submit, and confirm transfer transactions. By default, this method
 will wait and track progress on stderr until the transaction has been finalized
 by the cluster. If the transaction fails, it will report any transaction errors.
 
-```bash
+```shell
 solana transfer <USER_ADDRESS> <AMOUNT> --allow-unfunded-recipient --keypair <KEYPAIR> --url http://localhost:8899
 ```
 
@@ -571,7 +571,7 @@ finalized by the cluster. Otherwise, you risk a double spend. See more on
 First, get a recent blockhash using the
 [`getFees`](/docs/rpc/deprecated/getFees.mdx) endpoint or the CLI command:
 
-```bash
+```shell
 solana fees --url http://localhost:8899
 ```
 
@@ -579,7 +579,7 @@ In the command-line tool, pass the `--no-wait` argument to send a transfer
 asynchronously, and include your recent blockhash with the `--blockhash`
 argument:
 
-```bash
+```shell
 solana transfer <USER_ADDRESS> <AMOUNT> --no-wait --allow-unfunded-recipient --blockhash <RECENT_BLOCKHASH> --keypair <KEYPAIR> --url http://localhost:8899
 ```
 
@@ -596,7 +596,7 @@ endpoint. The `confirmations` field reports how many
 transaction was processed. If `confirmations: null`, it is
 [finalized](/docs/terminology.md#finality).
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc":"2.0",
   "id":1,
@@ -750,7 +750,7 @@ holding no data), currently: 0.000890880 SOL
 
 Similarly, every deposit account must contain at least this balance.
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
@@ -953,13 +953,13 @@ line utility. The latest version of `cargo` can be installed using a handy
 one-liner for your platform at [rustup.rs](https://rustup.rs). Once `cargo` is
 installed, `spl-token` can be obtained with the following command:
 
-```bash
+```shell
 cargo install spl-token-cli
 ```
 
 You can then check the installed version to verify
 
-```bash
+```shell
 spl-token --version
 ```
 
@@ -991,13 +991,13 @@ To create an SPL Token account with the following properties:
 1. Associated with the given mint
 1. Owned by the funding account's keypair
 
-```bash
+```shell
 spl-token create-account <TOKEN_MINT_ADDRESS>
 ```
 
 #### Example
 
-```bash
+```shell
 $ spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5XxyJwS73Vi5WsZL88D7
@@ -1005,7 +1005,7 @@ Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5
 
 Or to create an SPL Token account with a specific keypair:
 
-```bash
+```shell
 $ solana-keygen new -o token-account.json
 $ spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir token-account.json
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
@@ -1016,13 +1016,13 @@ Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5
 
 #### Command Line
 
-```bash
+```shell
 spl-token balance <TOKEN_ACCOUNT_ADDRESS>
 ```
 
 #### Example
 
-```bash
+```shell
 $ solana balance 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 0
 ```
@@ -1039,13 +1039,13 @@ provided.
 
 #### Command Line
 
-```bash
+```shell
 spl-token transfer <SENDER_ACCOUNT_ADDRESS> <AMOUNT> <RECIPIENT_WALLET_ADDRESS> --fund-recipient
 ```
 
 #### Example
 
-```bash
+```shell
 $ spl-token transfer 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN 1 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Transfer 1 tokens
   Sender: 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN
@@ -1097,7 +1097,7 @@ SPL Token accounts, funding the withdrawal account will require 0.00203928 SOL
 
 Template `spl-token transfer` command for a withdrawal:
 
-```bash
+```shell
 $ spl-token transfer --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
@@ -1151,7 +1151,7 @@ they handle tokens.
 
 It is possible to see all extensions on a mint or token account:
 
-```bash
+```shell
 $ spl-token display <account address>
 ```
 
@@ -1166,7 +1166,7 @@ the destination due to the withheld amount.
 It is possible to specify the expected fee during a transfer to avoid any
 surprises:
 
-```bash
+```shell
 $ spl-token transfer --expected-fee <fee amount> --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
@@ -1180,7 +1180,7 @@ they will no longer be associated to a valid mint.
 
 It is safe to simply close these token accounts:
 
-```bash
+```shell
 $ spl-token close --address <account address>
 ```
 
@@ -1196,13 +1196,13 @@ non-confidentially.
 
 To enable confidential transfers, the account must be configured for it:
 
-```bash
+```shell
 $ spl-token configure-confidential-transfer-account --address <account address>
 ```
 
 And to transfer:
 
-```bash
+```shell
 $ spl-token transfer --confidential <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
@@ -1210,7 +1210,7 @@ During a confidential transfer, the `preTokenBalance` and `postTokenBalance`
 fields will show no change. In order to sweep deposit accounts, you must decrypt
 the new balance to withdraw the tokens:
 
-```bash
+```shell
 $ spl-token apply-pending-balance --address <account address>
 $ spl-token withdraw-confidential-tokens --address <account address> <amount or ALL>
 ```
@@ -1250,7 +1250,7 @@ The CLI and instruction creators such as
 `createTransferCheckedWithTransferHookInstruction` add the extra accounts
 automatically, but the additional accounts may also be specified explicitly:
 
-```bash
+```shell
 $ spl-token transfer --transfer-hook-account <pubkey:role> --transfer-hook-account <pubkey:role> ...
 ```
 
@@ -1262,7 +1262,7 @@ Exchanges may need to prepend a memo instruction before transferring tokens back
 to users, or they may require users to prepend a memo instruction before sending
 to the exchange:
 
-```bash
+```shell
 $ spl-token transfer --with-memo <memo text> <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 

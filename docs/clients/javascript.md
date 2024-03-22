@@ -29,13 +29,13 @@ For the full list of terms, see
 
 #### yarn
 
-```bash
+```shell
 yarn add @solana/web3.js
 ```
 
 #### npm
 
-```bash
+```shell
 npm install --save @solana/web3.js
 ```
 

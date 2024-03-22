@@ -74,8 +74,8 @@ Encoding for the returned Transaction
 - `<object>` - if transaction is confirmed, an object with the following fields:
   - `slot: <u64>` - the slot this transaction was processed in
   - `transaction: <object|[string,encoding]>` -
-    [Transaction](/docs/rpc/json-structures#transactions) object, either in JSON
-    format or encoded binary data, depending on encoding parameter
+    [Transaction](/docs/rpc/json-structures.mdx#transactions) object, either in
+    JSON format or encoded binary data, depending on encoding parameter
   - `blockTime: <i64|null>` - estimated production time, as Unix timestamp
     (seconds since the Unix epoch) of when the transaction was processed. null
     if not available
@@ -143,15 +143,18 @@ Encoding for the returned Transaction
 
 ### Code sample
 
-```bash
+```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,
     "method": "getTransaction",
     "params": [
-      "2nBhEBYYvfaAe16UMNqRHre4YNSskvuYgx3M6E4JP1oDYvZEJHvoPzyUidNgNX5r9sTyN1J9UxtbCXy2rqYcuyuv",
-      "json"
+      "3KBcrX7iE4qoNT5YprRQG9b5d8opEKgrZfxL5BipM3U5b1YnFQ8An5DM1Zy524YEARJUu13YVfFeEDBXSqYeVUxy",
+      {
+        "encoding": "json",
+        "maxSupportedTransactionVersion": 0
+      }
     ]
   }
 '
@@ -161,52 +164,63 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 
 ```json
 {
+  "id": 1,
   "jsonrpc": "2.0",
   "result": {
+    "blockTime": 1711126026,
     "meta": {
+      "computeUnitsConsumed": 150,
       "err": null,
-      "fee": 5000,
+      "fee": 10000,
       "innerInstructions": [],
-      "postBalances": [499998932500, 26858640, 1, 1, 1],
+      "loadedAddresses": {
+        "readonly": [],
+        "writable": []
+      },
+      "logMessages": [
+        "Program 11111111111111111111111111111111 invoke [1]",
+        "Program 11111111111111111111111111111111 success"
+      ],
+      "postBalances": [1717948251816, 890880, 1],
       "postTokenBalances": [],
-      "preBalances": [499998937500, 26858640, 1, 1, 1],
+      "preBalances": [1717949152696, 0, 1],
       "preTokenBalances": [],
       "rewards": [],
       "status": {
         "Ok": null
       }
     },
-    "slot": 430,
+    "slot": 287082980,
     "transaction": {
       "message": {
         "accountKeys": [
-          "3UVYmECPPMZSCqWKfENfuoTv51fTDTWicX9xmBD2euKe",
-          "AjozzgE83A3x1sHNUR64hfH7zaEBWeMaFuAN9kQgujrc",
-          "SysvarS1otHashes111111111111111111111111111",
-          "SysvarC1ock11111111111111111111111111111111",
-          "Vote111111111111111111111111111111111111111"
+          "nick6zJc6HpW3kfBm4xS2dmbuVRyb5F3AnUvj5ymzR5",
+          "oWpo1diVUgUNaMeTug2EoicPdMUKT6KDx6gLUyQdEzm",
+          "11111111111111111111111111111111"
         ],
+        "addressTableLookups": [],
         "header": {
           "numReadonlySignedAccounts": 0,
-          "numReadonlyUnsignedAccounts": 3,
-          "numRequiredSignatures": 1
+          "numReadonlyUnsignedAccounts": 1,
+          "numRequiredSignatures": 2
         },
         "instructions": [
           {
-            "accounts": [1, 2, 3, 0],
-            "data": "37u9WtQpcm6ULa3WRQHmj49EPs4if7o9f1jSRVZpm2dvihR9C8jY4NqEwXUbLwx15HBSNcP1",
-            "programIdIndex": 4
+            "accounts": [0, 1],
+            "data": "111112GJ1Cfr4Mnah1YBPDnXiJiZF6iLU2WSRn5rMNc3q9NWxpaodgPyGFJ8gzafyzCqqR",
+            "programIdIndex": 2,
+            "stackHeight": null
           }
         ],
-        "recentBlockhash": "mfcyqEXB3DnHXki6KjjmZck6YjmZLvpAByy2fj4nh6B"
+        "recentBlockhash": "4V1LHXEMBXu84rdw8ZTagSQz8qErJGW7YCquddWNvK2S"
       },
       "signatures": [
-        "2nBhEBYYvfaAe16UMNqRHre4YNSskvuYgx3M6E4JP1oDYvZEJHvoPzyUidNgNX5r9sTyN1J9UxtbCXy2rqYcuyuv"
+        "3KBcrX7iE4qoNT5YprRQG9b5d8opEKgrZfxL5BipM3U5b1YnFQ8An5DM1Zy524YEARJUu13YVfFeEDBXSqYeVUxy",
+        "G1kfkcb2nhUybtsa9NHXgLvowMDDwN8zvtZCM13KWCtfhPnrEm6xcM7Dsi9vYM38bFppLzNuEbYhv7JymLxWz6F"
       ]
-    }
-  },
-  "blockTime": null,
-  "id": 1
+    },
+    "version": 0
+  }
 }
 ```
 

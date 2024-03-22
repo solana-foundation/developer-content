@@ -31,7 +31,7 @@ Here are three different ways of requesting airdrops with it:
 
 ### Using the Solana CLI:
 
-```bash
+```shell
 solana airdrop 2
 ```
 
@@ -93,14 +93,14 @@ Currently Supported:
 Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC
 provider's URL.
 
-```bash
+```shell
 solana config set --url <your RPC url>
 ```
 
 Then you can request an airdrop like you would in the first option in this
 guide.
 
-```bash
+```shell
 solana airdrop 2
 ```
 
@@ -120,13 +120,13 @@ to your computing power.
 
 **Install the Devnet POW Crate:**
 
-```bash
+```shell
 cargo install devnet-pow
 ```
 
 **Start mining devnet SOL**
 
-```bash
+```shell
 devnet-pow mine
 ```
 
@@ -147,7 +147,7 @@ Various Discord communities have setup devnet SOL Faucets as BOTs.
 The most sustainable way to save SOL is to reuse it. With the Solana CLI you can
 show and close all previous buffer accounts with the following command:
 
-```bash
+```shell
 solana program show --buffers
 ```
 
@@ -163,21 +163,21 @@ Normally, these buffer accounts are closed automatically. In the event they are
 not, you can close them manually to reclaim the SOL in them using the following
 command:
 
-```bash
+```shell
 solana program close <buffer account>
 ```
 
 You can also the `show` subcommand to show all programs you deployed have
 already deployed to your currently selected cluster:
 
-```bash
+```shell
 solana program show --programs
 ```
 
 You can then close each program with the `close` subcommand to close them and
 retrieve the SOL you used to deploy them:
 
-```bash
+```shell
 solana program close <program id>
 ```
 

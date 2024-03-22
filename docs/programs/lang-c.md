@@ -16,7 +16,7 @@ C projects are laid out as follows:
 
 The `makefile` should contain the following:
 
-```bash
+```shell
 OUT_DIR := <path to place to resulting shared object>
 include ~/.local/share/solana/install/active_release/bin/sdk/sbf/c/sbf.mk
 ```
@@ -34,7 +34,7 @@ First setup the environment:
 
 Then build using make:
 
-```bash
+```shell
 make -C <program directory>
 ```
 
@@ -180,7 +180,7 @@ instruction and its context.
 
 To create a dump file:
 
-```bash
+```shell
 $ cd <program directory>
 $ make dump_<program name>
 ```
