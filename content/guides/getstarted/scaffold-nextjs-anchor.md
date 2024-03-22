@@ -1,5 +1,5 @@
 ---
-date: Jan 18, 2023
+date: Mar 22, 2024
 difficulty: intro
 title: "Scaffolding your Web and Anchor project on Solana"
 seoTitle: "Scaffold Web and Anchor Project"
