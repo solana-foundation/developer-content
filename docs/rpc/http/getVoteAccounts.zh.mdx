@@ -46,8 +46,8 @@ altRoutes:
 
 - `votePubkey: <string>` - 投票账户地址，采用 base-58 编码字符串
 - `nodePubkey: <string>` - 验证者身份，作为 base-58 编码字符串
-- `activatedStake: <u64>` - lamports 中的股份，委托给该投票账户并在该纪元中活跃
-- `epochVoteAccount: <bool>` - bool，投票账户是否在该纪元中被质押
+- `activatedStake: <u64>` - lamports 中的股份，委托给该投票账户并在该 epoch 中活跃
+- `epochVoteAccount: <bool>` - bool，投票账户是否在该 epoch 中被质押
 - `commission: <number>` - 投票账户奖励支付的百分比（0-100）
 - `lastVote: <u64>` - 此投票账户最近投票的时段
 - `epochCredits: <array>` - 最多五个时期获得的积分的最新历史记录，作为包含以下内

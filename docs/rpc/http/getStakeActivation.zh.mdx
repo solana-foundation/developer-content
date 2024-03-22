@@ -6,7 +6,7 @@ altRoutes:
   - /docs/rpc/getStakeActivation
 ---
 
-返回权益账户的纪元激活信息
+返回权益账户的 epoch 激活信息
 
 <DocSideBySide>
 
@@ -34,8 +34,8 @@ altRoutes:
 </Field>
 
 <Field name="epoch" type="u64" optional={true}>
-  计算激活详细信息的纪元。如果未提供参数，则默认为当前纪元。
-  **已弃用的方法**，当前纪元以外的输入返回错误。
+  计算激活详细信息的 epoch。如果未提供参数，则默认为当前 epoch。
+  **已弃用的方法**，当前 epoch 以外的输入返回错误。
 </Field>
 
 </Parameter>
@@ -47,7 +47,7 @@ altRoutes:
 - `state: <string>` - 质押账户的激活状态，要么：`active`、
   `inactive`、`activating`、 或`deactivating`
 - `active: <u64>` - 权益在该时期活跃
-- `inactive: <u64>` - 权益在该纪元内不活跃
+- `inactive: <u64>` - 权益在该 epoch内不活跃
 
 </DocLeftSide>
 

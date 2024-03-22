@@ -6,7 +6,7 @@ altRoutes:
   - /docs/rpc/getBlockProduction
 ---
 
-返回当前或上一个纪元的最新块生产信息。
+返回当前或上一个 epoch 的最新块生产信息。
 
 <DocSideBySide>
 
@@ -30,7 +30,7 @@ altRoutes:
 </Field>
 
 <Field name="range" type="object" optional={true}>
-  返回区块生产的时隙范围。如果未提供参数，则默认为当前纪元。
+  返回区块生产的时隙范围。如果未提供参数，则默认为当前 epoch。
 
 - `firstSlot: <u64>` - 第一个返回区块生产信息的 slot（含）
 - (optional) `lastSlot: <u64>` - 返回块生产信息的最后一个槽（包含）。如果未提供

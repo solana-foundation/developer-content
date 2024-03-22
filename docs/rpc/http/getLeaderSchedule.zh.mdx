@@ -6,7 +6,7 @@ altRoutes:
   - /docs/rpc/getLeaderSchedule
 ---
 
-返回一个纪元的领导者时间表
+返回一个 epoch 的领导者时间表
 
 <DocSideBySide>
 
@@ -16,7 +16,7 @@ altRoutes:
 
 <Parameter type={"u64"} optional={true}>
 
-获取与所提供的 slot 相对应的纪元的领导者时间表。
+获取与所提供的 slot 相对应的 epoch 的领导者时间表。
 
 <Callout type={"info"}>如果未指定，则获取当前时期的领导者计划</Callout>
 
@@ -43,9 +43,9 @@ altRoutes:
 
 返回具有以下两个值之一的结果：
 
-- `<null>` - 如果未找到请求的纪元，或者
+- `<null>` - 如果未找到请求的 epoch，或者
 - `<object>` - 结果字段将是验证者身份的字典，作为 base-58 编码字符串，及其相应的
-  领导者槽索引作为值（索引相对于所请求的纪元中的第一个槽）
+  领导者槽索引作为值（索引相对于所请求的 epoch 中的第一个槽）
 
 </DocLeftSide>
 

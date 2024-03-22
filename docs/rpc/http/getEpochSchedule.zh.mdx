@@ -21,9 +21,9 @@ altRoutes:
 结果字段将是具有以下字段的对象：
 
 - `slotsPerEpoch: <u64>` - 每个时期的最大 slot 数量
-- `leaderScheduleSlotOffset: <u64>` - 纪元开始之前的 slot 编号，用于计算该纪元的领导者调度
-- `warmup: <bool>` - 纪元是否开始较短并逐渐增长
-- `firstNormalEpoch: <u64>` - 第一个正常长度的纪元，log2(slotsPerEpoch) - log2(MINIMUM_SLOTS_PER_EPOCH)
+- `leaderScheduleSlotOffset: <u64>` - epoch 开始之前的 slot 编号，用于计算该 epoch 的领导者调度
+- `warmup: <bool>` - epoch 是否开始较短并逐渐增长
+- `firstNormalEpoch: <u64>` - 第一个正常长度的 epoch，log2(slotsPerEpoch) - log2(MINIMUM_SLOTS_PER_EPOCH)
 - `firstNormalSlot: <u64>` - MINIMUM_SLOTS_PER_EPOCH \* (2.pow(firstNormalEpoch) - 1)
 
 </DocLeftSide>
