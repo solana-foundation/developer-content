@@ -41,7 +41,7 @@ Configuration object containing the following fields:
   defaultValue="finalized"
   optional={true}
   href="/docs/rpc/index.mdx#configuring-state-commitment"
-></Field>
+/>
 
 <Field name="limit" type="number" optional={true}>
   maximum transaction signatures to return (between 1 and 1,000, default:
@@ -83,7 +83,7 @@ fields:
 ### Code sample
 
 ```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,

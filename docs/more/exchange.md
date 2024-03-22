@@ -169,11 +169,11 @@ rent-exempt balance for your deposit accounts, query the
 [`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
 ```bash
-curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
   "method": "getMinimumBalanceForRentExemption",
-  "params":[0]
+  "params": [0]
 }'
 ```
 
@@ -384,7 +384,7 @@ time.
   request to the api node:
 
 ```bash
-curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
   "method": "getSignaturesForAddress",
@@ -597,7 +597,7 @@ transaction was processed. If `confirmations: null`, it is
 [finalized](/docs/terminology.md#finality).
 
 ```bash
-curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc":"2.0",
   "id":1,
   "method":"getSignatureStatuses",
@@ -751,7 +751,7 @@ holding no data), currently: 0.000890880 SOL
 Similarly, every deposit account must contain at least this balance.
 
 ```bash
-curl localhost:8899 -X POST -H "Content-Type: application/json" -d '{
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
   "jsonrpc": "2.0",
   "id": 1,
   "method": "getMinimumBalanceForRentExemption",

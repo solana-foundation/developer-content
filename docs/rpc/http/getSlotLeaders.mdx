@@ -37,7 +37,7 @@ If the current slot is `#99` - query the next `10` leaders with the following
 request:
 
 ```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc":"2.0", "id": 1,
     "method": "getSlotLeaders",
