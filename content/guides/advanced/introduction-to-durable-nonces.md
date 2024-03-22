@@ -511,7 +511,7 @@ tx.add(
     // NONCE_ACCOUNT_LENGTH is the space a nonce account takes
     SystemProgram.createAccount({
         fromPubkey: nonceAuthKP.publicKey,
-        newAccountPubkey: nonceKeypairs[j].publicKey,
+        newAccountPubkey: nonceKeypair.publicKey,
         lamports: 0.0015 * LAMPORTS_PER_SOL,
         space: NONCE_ACCOUNT_LENGTH,
         programId: SystemProgram.programId,
@@ -519,7 +519,7 @@ tx.add(
     // initialise nonce with the created nonceKeypair's pubkey as the noncePubkey
     // also specify the authority of the nonce account
     SystemProgram.nonceInitialize({
-        noncePubkey: nonceKeypairs[j].publicKey,
+        noncePubkey: nonceKeypair.publicKey,
         authorizedPubkey: nonceAuthKP.publicKey,
     })
 );
