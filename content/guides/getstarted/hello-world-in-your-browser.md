@@ -172,7 +172,7 @@ behalf to ensure your wallet has enough SOL to cover the cost of deployment.
 > Note: If you need more SOL, you can airdrop more by typing airdrop command in
 > the playground terminal:
 
-```sh
+```shell
 solana airdrop 2
 ```
 
@@ -212,7 +212,7 @@ to aid in our client application.
 We will be using Solana Playground for the client generation. Create a client
 folder by running `run` command in the playground terminal:
 
-```bash
+```shell
 run
 ```
 
@@ -278,7 +278,7 @@ command.
 
 Once your application completes, you will see output similar to this:
 
-```sh
+```shell
 Running client...
   client.ts:
     My address: GkxZRRNPfaUfL9XdYVfKF3rWjMcj5md6b6mpRoWpURwP
@@ -292,7 +292,7 @@ Running client...
 We will be using `solana-cli` directly in playground to get the information
 about any transaction:
 
-```sh
+```shell
 solana confirm -v <TRANSACTION_HASH>
 ```
 
