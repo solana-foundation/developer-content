@@ -998,7 +998,12 @@ spl-token create-account <TOKEN_MINT_ADDRESS>
 #### Example
 
 ```shell
-$ spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir
+spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir
+```
+
+Giving an output similar to:
+
+```
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5XxyJwS73Vi5WsZL88D7
 ```
@@ -1006,8 +1011,14 @@ Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5
 Or to create an SPL Token account with a specific keypair:
 
 ```shell
-$ solana-keygen new -o token-account.json
-$ spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir token-account.json
+solana-keygen new -o token-account.json
+
+spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir token-account.json
+```
+
+Giving an output similar to:
+
+```shell
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5XxyJwS73Vi5WsZL88D7
 ```
@@ -1023,7 +1034,12 @@ spl-token balance <TOKEN_ACCOUNT_ADDRESS>
 #### Example
 
 ```shell
-$ solana balance 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
+solana balance 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
+```
+
+Giving an output similar to:
+
+```
 0
 ```
 
@@ -1046,7 +1062,13 @@ spl-token transfer <SENDER_ACCOUNT_ADDRESS> <AMOUNT> <RECIPIENT_WALLET_ADDRESS> 
 #### Example
 
 ```shell
-$ spl-token transfer 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN 1 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
+spl-token transfer 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN 1
+```
+
+Giving an output similar to:
+
+```shell
+6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Transfer 1 tokens
   Sender: 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN
   Recipient: 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
@@ -1098,7 +1120,7 @@ SPL Token accounts, funding the withdrawal account will require 0.00203928 SOL
 Template `spl-token transfer` command for a withdrawal:
 
 ```shell
-$ spl-token transfer --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
+spl-token transfer --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
 ### Other Considerations
@@ -1152,7 +1174,7 @@ they handle tokens.
 It is possible to see all extensions on a mint or token account:
 
 ```shell
-$ spl-token display <account address>
+spl-token display <account address>
 ```
 
 #### Transfer Fee
@@ -1167,7 +1189,7 @@ It is possible to specify the expected fee during a transfer to avoid any
 surprises:
 
 ```shell
-$ spl-token transfer --expected-fee <fee amount> --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
+spl-token transfer --expected-fee <fee amount> --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
 #### Mint Close Authority
@@ -1181,7 +1203,7 @@ they will no longer be associated to a valid mint.
 It is safe to simply close these token accounts:
 
 ```shell
-$ spl-token close --address <account address>
+spl-token close --address <account address>
 ```
 
 #### Confidential Transfer
@@ -1197,13 +1219,13 @@ non-confidentially.
 To enable confidential transfers, the account must be configured for it:
 
 ```shell
-$ spl-token configure-confidential-transfer-account --address <account address>
+spl-token configure-confidential-transfer-account --address <account address>
 ```
 
 And to transfer:
 
 ```shell
-$ spl-token transfer --confidential <exchange token account> <withdrawal amount> <withdrawal address>
+spl-token transfer --confidential <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
 During a confidential transfer, the `preTokenBalance` and `postTokenBalance`
@@ -1211,8 +1233,8 @@ fields will show no change. In order to sweep deposit accounts, you must decrypt
 the new balance to withdraw the tokens:
 
 ```shell
-$ spl-token apply-pending-balance --address <account address>
-$ spl-token withdraw-confidential-tokens --address <account address> <amount or ALL>
+spl-token apply-pending-balance --address <account address>
+spl-token withdraw-confidential-tokens --address <account address> <amount or ALL>
 ```
 
 #### Default Account State
@@ -1251,7 +1273,7 @@ The CLI and instruction creators such as
 automatically, but the additional accounts may also be specified explicitly:
 
 ```shell
-$ spl-token transfer --transfer-hook-account <pubkey:role> --transfer-hook-account <pubkey:role> ...
+spl-token transfer --transfer-hook-account <pubkey:role> --transfer-hook-account <pubkey:role> ...
 ```
 
 #### Required Memo on Transfer
@@ -1263,7 +1285,7 @@ to users, or they may require users to prepend a memo instruction before sending
 to the exchange:
 
 ```shell
-$ spl-token transfer --with-memo <memo text> <exchange token account> <withdrawal amount> <withdrawal address>
+spl-token transfer --with-memo <memo text> <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
 ## Testing the Integration

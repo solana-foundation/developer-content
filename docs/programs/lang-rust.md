@@ -63,15 +63,15 @@ The normal cargo build is available for building programs against your host
 machine which can be used for unit testing:
 
 ```shell
-$ cargo build
+cargo build
 ```
 
 To build a specific program, such as SPL Token, for the Solana SBF target which
 can be deployed to the cluster:
 
 ```shell
-$ cd <the program directory>
-$ cargo build-bpf
+cd <the program directory>
+cargo build-bpf
 ```
 
 ## How to Test
@@ -373,8 +373,8 @@ instruction and its context.
 To create a dump file:
 
 ```shell
-$ cd <program directory>
-$ cargo build-bpf --dump
+cd <program directory>
+cargo build-bpf --dump
 ```
 
 ## Examples

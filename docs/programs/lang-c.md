@@ -181,8 +181,8 @@ instruction and its context.
 To create a dump file:
 
 ```shell
-$ cd <program directory>
-$ make dump_<program name>
+cd <program directory>
+make dump_<program name>
 ```
 
 ## Examples

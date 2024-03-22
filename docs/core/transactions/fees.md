@@ -40,7 +40,7 @@ transaction could contain as many as 12 signatures (not sure why you would do
 that). The fee per transaction signature can be fetched with the `solana` cli:
 
 ```shell
-$ solana fees
+solana fees
 Blockhash: 8eULQbYYp67o5tGF2gxACnBCKAE39TetbYYMGTx3iBFc
 Lamports per signature: 5000
 Last valid block height: 94236543
@@ -51,7 +51,7 @@ retrieve the above output information, so your application can call that method
 directly as well:
 
 ```shell
-$ curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" -d '
+curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" -d '
   {"jsonrpc":"2.0","id":1, "method":"getFees"}
 '
 ```
