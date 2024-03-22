@@ -33,7 +33,7 @@ Configuration object containing the following fields:
   type="string"
   optional={true}
   href="/docs/rpc/index.mdx#configuring-state-commitment"
-></Field>
+/>
 
 <Field name="identity" type="string" optional={true}>
   Only return results for this validator identity (base-58 encoded)
@@ -57,7 +57,7 @@ Returns a result with one of the two following values:
 ### Code sample
 
 ```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,

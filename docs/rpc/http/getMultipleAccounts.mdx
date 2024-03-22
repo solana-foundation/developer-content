@@ -28,7 +28,7 @@ Configuration object containing the following fields:
   type="string"
   optional={true}
   href="/docs/rpc/index.mdx#configuring-state-commitment"
-></Field>
+/>
 
 <Field name="minContextSlot" type="number" optional={true}>
   The minimum slot that the request can be evaluated at
@@ -102,7 +102,7 @@ The result will be a JSON object with `value` equal to an array of:
 ### Code sample
 
 ```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,
