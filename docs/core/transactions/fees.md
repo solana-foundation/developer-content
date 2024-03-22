@@ -39,8 +39,8 @@ max size of transaction itself. Each signature (64 bytes) in a transaction (max
 transaction could contain as many as 12 signatures (not sure why you would do
 that). The fee per transaction signature can be fetched with the `solana` cli:
 
-```bash
-$ solana fees
+```shell
+solana fees
 Blockhash: 8eULQbYYp67o5tGF2gxACnBCKAE39TetbYYMGTx3iBFc
 Lamports per signature: 5000
 Last valid block height: 94236543
@@ -50,8 +50,8 @@ The `solana` cli `fees` subcommand calls the `getFees` RPC API method to
 retrieve the above output information, so your application can call that method
 directly as well:
 
-```bash
-$ curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" -d '
+```shell
+curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" -d '
   {"jsonrpc":"2.0","id":1, "method":"getFees"}
 '
 ```

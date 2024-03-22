@@ -64,7 +64,7 @@ also find the required flags for each below.
 Now that you know what extensions are available, you can create your new token
 with token extensions with the following command:
 
-```bash
+```shell
 spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb \
   create-token <extension flags>
 ```
@@ -73,7 +73,7 @@ With token extensions, you can mix and match based on what you need for your
 project. For example, if you wanted a token with transfer fees and a custom
 metadata, you would just use the following command to combine the extensions:
 
-```bash
+```shell
 spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb \
   create-token --interest-rate 5 --enable-metadata
 ```

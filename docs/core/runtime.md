@@ -166,7 +166,7 @@ feature will be activated at the next epoch.
 To determine which features are activated use the
 [Solana command-line tools](https://docs.solanalabs.com/cli/install):
 
-```bash
+```shell
 solana feature status
 ```
 

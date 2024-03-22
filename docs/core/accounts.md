@@ -165,8 +165,8 @@ balance of 105,290,880 lamports (=~ 0.105 SOL) to be rent-exempt:
 Rent can also be estimated via the
 [`solana rent` CLI subcommand](https://docs.solanalabs.com/cli/usage#solana-rent)
 
-```text
-$ solana rent 15000
+```shell
+solana rent 15000
 Rent per byte-year: 0.00000348 SOL
 Rent per epoch: 0.000288276 SOL
 Rent-exempt minimum: 0.10529088 SOL

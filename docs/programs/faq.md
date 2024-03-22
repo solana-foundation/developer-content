@@ -112,7 +112,7 @@ might be mangled if it is a Rust or C++ symbol.
 
 The above warning came from a Rust program, so the demangled symbol name is:
 
-```bash
+```shell
 rustfilt _ZN16curve25519_dalek7edwards21EdwardsBasepointTable6create17h178b3d2411f7f082E
 curve25519_dalek::edwards::EdwardsBasepointTable::create
 ```

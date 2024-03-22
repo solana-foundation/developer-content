@@ -47,7 +47,7 @@ quickly get setup.
 To be able to compile Rust based Solana programs, install the Rust language and
 Cargo (the Rust package manager) using [Rustup](https://rustup.rs/):
 
-```bash
+```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
@@ -58,7 +58,7 @@ The Solana CLI comes with the
 This command line tool will allow you to run a full blockchain cluster on your
 machine.
 
-```bash
+```shell
 solana-test-validator
 ```
 
@@ -71,7 +71,7 @@ localhost validator to remain online and ready for action.
 Configure your Solana CLI to use your localhost validator for all your future
 terminal commands and Solana program deployment:
 
-```bash
+```shell
 solana config set --url localhost
 ```
 
@@ -83,14 +83,14 @@ and saved in the `.so` format.
 
 Initialize a new Rust library named `hello_world` via the Cargo command line:
 
-```bash
+```shell
 cargo init hello_world --lib
 cd hello_world
 ```
 
 Add the `solana-program` crate to your new Rust library:
 
-```bash
+```shell
 cargo add solana-program
 ```
 
@@ -175,7 +175,7 @@ of "_Hello, world!_" to the blockchain cluster, then gracefully exit with
 Inside a terminal window, you can build your Solana Rust program by running in
 the root of your project (i.e. the directory with your `Cargo.toml` file):
 
-```bash
+```shell
 cargo build-bpf
 ```
 
@@ -192,7 +192,7 @@ need to upgrade those tools if you encounter any version incompatibilities.
 Using the Solana CLI, you can deploy your program to your currently selected
 cluster:
 
-```bash
+```shell
 solana program deploy ./target/deploy/hello_world.so
 ```
 
@@ -200,7 +200,7 @@ Once your Solana program has been deployed (and the transaction
 [finalized](https://docs.solana.com/cluster/commitments)), the above command
 will output your program's public address (aka its "program id").
 
-```bash
+```shell
 # example output
 Program Id: EFH95fWg49vkFNbAdw9vy75tM7sWZ2hQbTTUmuACGip3
 ```
