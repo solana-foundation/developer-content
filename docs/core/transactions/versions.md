@@ -74,7 +74,7 @@ Using a standard JSON formatted POST request, you can set the
 `maxSupportedTransactionVersion` when retrieving a specific block:
 
 ```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d \
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d \
 '{"jsonrpc": "2.0", "id":1, "method": "getBlock", "params": [430, {
   "encoding":"json",
   "maxSupportedTransactionVersion":0,
@@ -165,8 +165,8 @@ can send it to the cluster and `await` the response:
 
 ```js
 // send our v0 transaction to the cluster
-const txid = await connection.sendTransaction(transaction);
-console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
+const txId = await connection.sendTransaction(transaction);
+console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
 ```
 
 > NOTE: Unlike `legacy` transactions, sending a `VersionedTransaction` via
