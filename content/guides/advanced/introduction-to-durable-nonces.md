@@ -314,13 +314,13 @@ replicate an IRL scenario.
 
 ```shell
 solana-keygen new -o sender.json
-// pubkey: H8BHbivzT4DtJxL4J4X53CgnqzTUAEJfptSaEHsCvg51
+# pubkey: H8BHbivzT4DtJxL4J4X53CgnqzTUAEJfptSaEHsCvg51
 
 solana-keygen new -o co-sender.json
-// pubkey: HDx43xY4piU3xMxNyRQkj89cqiF15hz5FVW9ergTtZ7S
+# pubkey: HDx43xY4piU3xMxNyRQkj89cqiF15hz5FVW9ergTtZ7S
 
 solana-keygen new -o receiver.json
-// pubkey: D3RAQxwQBhMLum2WK7eCn2MpRWgeLtDW7fqXTcqtx9uC
+# pubkey: D3RAQxwQBhMLum2WK7eCn2MpRWgeLtDW7fqXTcqtx9uC
 ```
 
 Let's add some SOL to the member wallets.
@@ -572,12 +572,12 @@ tx.sign(nonceAuthKP);
 
 // make the owner of the publicKey sign the transaction
 // this should open a wallet popup and let the user sign the tx
-const signedtx = await signTransaction(tx);
+const signedTx = await signTransaction(tx);
 
 // once you have the signed tx, you can serialize it and store it
 // in a database, or send it to another device. You can submit it
 // at a later point, without the tx having a mortality
-const serialisedTx = bs58.encode(signedtx.serialize({requireAllSignatures: false}));
+const serialisedTx = bs58.encode(signedTx.serialize({requireAllSignatures: false}));
 console.log("Signed Durable Transaction: ", serialisedTx);
 ```
 
