@@ -281,6 +281,10 @@ constraints to reallocate the space for the account on-chain:
 The `seeds` and `bump` constraints are still needed to be able to find the
 specific PDA we want to update.
 
+The `mut` constraints allows us to mutate/change the data within the account.
+Because how the Solana blockchain handles reading from accounts and writing to
+accounts differently, we must explicitly define which accounts will be mutable
+so the Solana runtime can correctly process them.
 ### Delete a journal entry
 
 Lastly, we will add a `delete_journal_entry` instruction handler with a context
