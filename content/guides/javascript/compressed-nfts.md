@@ -140,11 +140,11 @@ used to get the types and helper functions for our NFT's metadata
 Using your preferred package manager (e.g. npm, yarn, pnpm, etc), install these
 packages into your project:
 
-```sh
+```shell
 yarn add @solana/web3.js @solana/spl-token @solana/spl-account-compression
 ```
 
-```sh
+```shell
 yarn add @metaplex-foundation/mpl-bubblegum @metaplex-foundation/mpl-token-metadata
 ```
 

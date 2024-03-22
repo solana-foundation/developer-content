@@ -158,7 +158,7 @@ deployed you can run the test file by using the `test` command in the terminal.
 
 This will then give you the output similar to this:
 
-```bash
+```shell
   transfer-hook.test.ts:
   transfer-hook
     Transaction Signature: kB8Hkn8NEavK7xztEhQZXKSeidgEK81PZNmgSSodZFVyzM9o18GwNi4bDWD9Q3cbmh75Vn1jqyinYH3YdgJfnuJ
@@ -175,7 +175,7 @@ This will then give you the output similar to this:
 If you do not want to use javascript to create your token, you can also use the
 `spl-token` command from the Solana CLI after you deployed your program:
 
-```bash
+```shell
 spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb create-token --transfer-hook yourTransferHookProgramId
 ```
 
@@ -315,11 +315,11 @@ test file by typing `test` in the terminal.
 This will then give you the following output. In last transaction you will then
 able to see how often your token has been transferred:
 
-```bash
+```shell
 "This token has been transfered 1 times"
 ```
 
-```bash
+```shell
 Running tests...
   transfer-hook.test.ts:
   transfer-hook

@@ -23,9 +23,9 @@ transfer the tokens.
 
 First fetch the latest version of the example code:
 
-```bash
-$ git clone https://github.com/solana-labs/break.git
-$ cd break
+```shell
+git clone https://github.com/solana-labs/break.git
+cd break
 ```
 
 Next, follow the steps in the git repository's
