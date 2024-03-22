@@ -87,7 +87,7 @@ curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
 供负载均衡器或其他网络基础设施使用。此请求将始终返回 HTTP 200 OK 响应，其正文为
 “ok”、“behind”或“unknown”：
 
-- `ok`: 该节点位于 `HEALTH_CHECK_SLOT_DISTANCE` 最新集群确认槽位的槽位内
-- `behind { distance }`: 该节点 `distance` 位于最新集群确认插槽的插槽后面，其中
+- `ok`: 该节点位于 `HEALTH_CHECK_SLOT_DISTANCE` 最新集群确认 slot 的 slot 内
+- `behind { distance }`: 节点距离最新的集群确认 slot 落后`distance`个 slot，其中
   `distance > HEALTH_CHECK_SLOT_DISTANCE`
 - `unknown`: 节点无法确定它相对于集群的位置
