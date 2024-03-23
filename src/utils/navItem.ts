@@ -286,7 +286,7 @@ export function computeDetailsFromSlug(slug: string[]) {
   let href = slug
     .join("/")
     .toLowerCase()
-    .replaceAll(/\/index(.mdx?)?/gi, "")
+    .replaceAll(/(\/?index)?(.mdx?)?$/gi, "")
     .trim();
 
   if (group == "docs") {
