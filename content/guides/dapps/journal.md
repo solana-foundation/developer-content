@@ -115,9 +115,12 @@ program state.
 
 ```rust
 #[account]
+#[derive(InitSpace)]
 pub struct JournalEntryState {
     pub owner: Pubkey,
+    #[max_len(50)]
     pub title: String,
+     #[max_len(1000)]
     pub message: String,
 }
 ```
@@ -127,6 +130,11 @@ For this journal dApp, we will be storing:
 - the journal's owner
 - the title of each journal entry, and
 - the message of each journal entry
+
+Note: Space must be defined when initializing an account. The `InitSpace` macro
+used in the above code will help calculate the space needed when initializing an
+account. For more information on space, read
+[here](https://www.anchor-lang.com/docs/space#the-init-space-macro).
 
 ### Create a journal entry
 
@@ -182,7 +190,7 @@ pub struct CreateEntry<'info> {
         seeds = [title.as_bytes(), owner.key().as_ref()],
         bump,
         payer = owner,
-        space = 8 + 32 + 4 + title.len() + 4 + message.len()
+        space = 8 + JournalEntryState::INIT_SPACE
     )]
     pub journal_entry: Account<'info, JournalEntryState>,
     #[account(mut)]
@@ -211,8 +219,9 @@ With Anchor, a PDA is initialized with the `seeds`, `bumps`, and
 [rent](/docs/terminology.md#rent) to hold this account's data on-chain and how
 much space needs to be allocated for that data.
 
-Note: Calculating space is defined
-[here](https://book.anchor-lang.com/anchor_references/space.html).
+Note: By using the `InitSpace` macro in the `JournalEntryState`, we are able to
+calcualte space by using the `INIT_SPACE` constant and adding `8` to the space
+constraint for Anchor's internal discriminator.
 
 ### Updating a journal entry
 
@@ -285,6 +294,15 @@ The `mut` constraints allows us to mutate/change the data within the account.
 Because how the Solana blockchain handles reading from accounts and writing to
 accounts differently, we must explicitly define which accounts will be mutable
 so the Solana runtime can correctly process them.
+
+Note: In Solana, when you perform a reallocation, which changes the account's
+size, the transaction must cover the rent for the new account size. The
+realloc::payer = owner attribute indicates that the owner account will pay for
+the rent. For an account to be able to cover the rent, it typically needs to be
+a signer (to authorize the deduction of funds), and in Anchor, it also needs to
+be mutable so that the runtime can deduct the lamports to cover the rent from
+the account.
+
 ### Delete a journal entry
 
 Lastly, we will add a `delete_journal_entry` instruction handler with a context
