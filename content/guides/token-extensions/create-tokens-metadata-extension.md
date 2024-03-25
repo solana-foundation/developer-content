@@ -313,7 +313,8 @@ Token                                         Balance
 3FcEbPXsN2fTDNsrQq6STxrq9sNarfAi6h2n5o6T7fn1  100
 ```
 
-Try `spl-token accounts -v` for verbose details of all tokens with ATAs, balance and more.
+Try `spl-token accounts -v` for verbose details of all tokens with ATAs, balance
+and more.
 
 Also did you notice the associated token account owner and mint account address?
 Both are the same as the address we created with Solana-keygen.
