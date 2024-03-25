@@ -299,7 +299,7 @@ authority.
 >
 > ![Associated Token extension Account in Solana Explorer](/assets/guides/create-tokens-metadata-extension/TokensX---2-ATA-explorer.png)
 
-You can also check how many ATAs and balance we have by executing accounts
+You can also check how many tokens and balance we have by executing accounts
 subcommand.
 
 ```bash
@@ -312,6 +312,8 @@ Token                                         Balance
 -----------------------------------------------------
 3FcEbPXsN2fTDNsrQq6STxrq9sNarfAi6h2n5o6T7fn1  100
 ```
+
+Try `spl-token accounts -v` for verbose details of all tokens with ATAs, balance and more.
 
 Also did you notice the associated token account owner and mint account address?
 Both are the same as the address we created with Solana-keygen.
