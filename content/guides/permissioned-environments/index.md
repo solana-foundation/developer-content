@@ -3,7 +3,10 @@ date: Mar 25, 2024
 difficulty: intermediate
 title: "A Guide to Solana Permissioned Environments"
 description:
-  "Solana Permissioned Environments bring the speed and scalability of Solana with the regulatory and compliant control of a private blockchain. Learn how to deploy and integrate Solana Permissioned Environments for your organization."
+  "Solana Permissioned Environments bring the speed and scalability of Solana
+  with the regulatory and compliant control of a private blockchain. Learn how
+  to deploy and integrate Solana Permissioned Environments for your
+  organization."
 tags:
   - rust
 keywords:
