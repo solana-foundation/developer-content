@@ -31,11 +31,18 @@ original functionality provided by the
 [Token Program](https://spl.solana.com/token) at
 `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`.
 
+<Callout title="Prefer video tutorials?">
+
+You can find a dedicated video tutorial for each Token Extension on this
+[YouTube playlist for Token Extensions](https://www.youtube.com/playlist?list=PLilwLeBwGuK6imBuGLSLmzMEyj6yVHGDO).
+
+</Callout>
+
 ## How do I create a token with token extensions?
 
 To get started creating tokens with token extensions, you can use the
-[Solana Tool Suite](https://docs.solana.com/cli/install-solana-cli-tools) to
-create tokens with a CLI. Based on the extension you want to create, your
+[Solana Tool Suite](https://solana.com/developers/guides/getstarted/setup-local-development)
+to create tokens with a CLI. Based on the extension you want to create, your
 command flags may be different. Below are the flags to add to create tokens with
 each type of extension.
 
@@ -46,7 +53,7 @@ each type of extension.
 | [Non-Transferable](https://solana.com/developers/guides/token-extensions/non-transferable)         | --enable-non-transferable                 |
 | [Interest-Bearing](https://solana.com/developers/guides/token-extensions/interest-bearing-tokens)  | --interest-rate \<rate>                   |
 | [Permanent Delegate](https://solana.com/developers/guides/token-extensions/permanent-delegate)     | --enable-permanent-delegate               |
-| Transfer Hook                                                                                      | --transfer-hook \<programID>              |
+| [Transfer Hook](https://solana.com/developers/guides/token-extensions/transfer-hook)               | --transfer-hook \<programID>              |
 | [Metadata](https://solana.com/developers/guides/token-extensions/metadata-pointer)                 | --enable-metadata                         |
 | [Metadata Pointer](https://solana.com/developers/guides/token-extensions/metadata-pointer)         | --metadata-address \<accountId>           |
 | Confidential Transfers                                                                             | --enable-confidential-transfers auto      |
