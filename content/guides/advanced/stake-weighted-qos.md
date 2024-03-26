@@ -127,7 +127,7 @@ staked_map_id:
   pubkey2: 4000000000000000
 ```
 
-`stake_map` contains a map of identity public key to the stake amount in
+`staked_map_id` contains a map of identity public key to the stake amount in
 lamports to apply to each RPC. When set, the validator will prioritize QUIC
 connections with the RPC found at that identity publicKey, assigning an amount
 of stake to their transactions. The 80% of the leader’s TPU capacity will be
