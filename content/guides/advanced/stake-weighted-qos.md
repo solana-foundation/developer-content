@@ -122,7 +122,7 @@ unstaked peers virtual stake.
 The overrides file for `--staked-nodes-overrides` looks like this:
 
 ```yml
-stake_map:
+staked_map_id:
   pubkey1: 1000000000000000
   pubkey2: 4000000000000000
 ```
@@ -139,7 +139,7 @@ split proportionally based on the lamport amounts specified in the
 On the RPC you will have to use `--rpc-send-transaction-tpu-peer` to forward
 transactions to a specific leader. The exact usage would be
 `--rpc-send-transaction-tpu-peer HOST:PORT`, with the Host being of the leader
-you have the staked-nodes-overrides enabled on. The peering would looking like
+you have the `staked-nodes-overrides` enabled on. The peering would looking like
 the following:
 
 ![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs-guide.png)
