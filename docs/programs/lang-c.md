@@ -91,7 +91,7 @@ their own deserialization function they need to ensure that any modifications
 the program wishes to commit must be written back into the input byte array.
 
 Details on how the loader serializes the program inputs can be found in the
-[Input Parameter Serialization/docs/programs/faq#input-parameter-serialization)
+[Input Parameter Serialization](https://solana.com/docs/programs/faq#input-parameter-serialization)
 docs.
 
 ## Data Types
