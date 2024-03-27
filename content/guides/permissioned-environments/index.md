@@ -2,13 +2,15 @@
 date: Mar 25, 2024
 difficulty: intermediate
 title: "A Guide to Solana Permissioned Environments"
+seoTitle: "Solana Permissioned Environments"
 description:
   "Solana Permissioned Environments bring the speed and scalability of Solana
   with the regulatory and compliant control of a private blockchain. Learn how
   to deploy and integrate Solana Permissioned Environments for your
   organization."
 tags:
-  - rust
+  - permissioned environments
+  - SPE
 keywords:
   - tutorial
   - blockchain developer
@@ -38,12 +40,12 @@ SPEs deliver the following differences:
   define the network's validator set to ensure all network participants are
   known and meet necessary compliance standards.
 - **Infrastructure Sovereignty**: Operators of SPEs can host their own nodes for
-  direct control or strategically allocate node management responsibilityes to
+  direct control or strategically allocate node management responsibilities to
   specific partners. This enables a high degree of flexibility in shaping the
   network's physical infrastructure.
 - **Adaptable Consensus**: To match the needs of a particular use case, SPEs can
   be configured with a variety of consensus mechanisms or opt for an alternative
-  consensus algoritm. This adaptibility is ideal when working within strict
+  consensus algorithm. This adaptability is ideal when working within strict
   regulatory constraints or specific business logic.
 
 With Solana Permissioned Environments, organizations gain the ability to
@@ -179,9 +181,10 @@ the the `.env` file within the repository to adjust parameters such as ports,
 solana version, consensus mechanism, network permissions, and transaction
 processing limits.
 
-For more detailed customization, refer to the Solana documentation and the
-README file in the repository, which may provide insights into advanced
-configuration and optimization techniques suitable for enterprise applications.
+For more detailed customization, refer to the
+[Solana documentation](https://solana.com/docs) and the README file in the
+repository, which may provide insights into advanced configuration and
+optimization techniques suitable for enterprise applications.
 
 ## Conclusion
 
