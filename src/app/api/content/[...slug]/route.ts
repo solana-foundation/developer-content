@@ -5,7 +5,7 @@
 
 import { notFound } from "next/navigation";
 import type { BreadcrumbItem, NavItem, SupportedDocTypes } from "@/types";
-import { DEFAULT_LOCALE_EN } from "@/utils/constants";
+import { DEFAULT_LOCALE_EN, I18N_LOCALE_REGEX } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
   generateNavItemListing,
@@ -144,6 +144,14 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // @ts-ignore
     record.body = record.body.raw.trim();
   }
+
+  // remove the i18n prefixes
+  record._raw = {
+    ...record._raw,
+    sourceFilePath: record._raw.sourceFilePath.replace(I18N_LOCALE_REGEX, ""),
+    sourceFileDir: record._raw.sourceFileDir.replace(I18N_LOCALE_REGEX, ""),
+    flattenedPath: record._raw.flattenedPath.replace(I18N_LOCALE_REGEX, ""),
+  };
 
   // todo: preprocess the body content? (if desired in the future)
 
