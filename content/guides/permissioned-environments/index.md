@@ -25,9 +25,9 @@ This is where Solana Permissioned Environments (SPEs) come in.
 
 ## Why Should You Build With Solana Permissioned Environments?
 
-While Solana's high-speed blockchain offers exceptional performance, certain
+While Solana's high-speed network offers exceptional performance, certain
 sectors and use cases require more than a fully public, permissionless network
-like Solana Mainnet can provide. Solana Permissioned Environments provide a
+like Solana mainnet can provide. Solana Permissioned Environments provide a
 solution, allowing organizations to establish private or semi-private
 Solana-based Networks.
 
@@ -84,9 +84,9 @@ The second level of integration involves utilizing existing Solana programs to
 build custom solutions on top of your Solana Permissioned Environment. These
 existing programs can add complex functionality with your tokens such as escrow,
 vesting, or a decentralized exchange. These integrations can further enhance the
-tokenization found in level one, but does require a familiarity with Solana's
-current ecosystem and available programs. You can find many programs to use in
-the level in the [Solana Program Library](https://spl.solana.com/).
+tokenization found in level one, but does require a familiarity with the current
+ecosystem and available programs. You can find many programs to use in the level
+in the [Solana Program Library](https://spl.solana.com/).
 
 ### Level 3: Custom Programs
 
