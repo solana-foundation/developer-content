@@ -21,7 +21,7 @@ altRoutes:
 ### 参数
 
 <Parameter type={"u64"} required={true}>
-  插槽号，作为 u64 整数
+  slot 编号，作为 u64 整数
 </Parameter>
 
 <Parameter type={"object"} optional={true}>
@@ -84,7 +84,7 @@ altRoutes:
   - `previousBlockhash: <string>` - 该块的父块的块哈希，作为 base-58 编码字符
     串；如果由于账本清理导致父区块不可用，该字段将返回
     “11111111111111111111111111111111”
-  - `parentSlot: <u64>` - 该块的父块的槽索引
+  - `parentSlot: <u64>` - 该块的父块的 slot 索引
   - `transactions: <array>` - 如果需要“full(完整)”交易详细信息，请提供；JSON 对
     象数组，包含：
     - `transaction: <object|[string,encoding]>` -

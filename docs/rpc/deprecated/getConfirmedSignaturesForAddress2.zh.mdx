@@ -62,7 +62,7 @@ altRoutes:
 名信息：
 
 - `signature: <string>` - 交易签名为 base-58 编码字符串
-- `slot: <u64>` - T包含交易块的槽
+- `slot: <u64>` - 包含该交易的区块的 slot
 - `err: <object|null>` - 如果交易失败则返回错误，如果交易成功则返回 null。
   [交易错误定义](https://github.com/solana-labs/solana/blob/c0c60386544ec9a9ec7119229f37386d9f070523/sdk/src/transaction/error.rs#L13)
 - `memo: <string|null>` - 与交易相关的备忘录，如果不存在备忘录则为 null

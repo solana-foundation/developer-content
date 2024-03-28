@@ -6,9 +6,9 @@ altRoutes:
   - /docs/rpc/getHighestSnapshotSlot
 ---
 
-返回节点具有快照的最高槽位信息。
+返回节点具有快照的最高 slot 信息。
 
-这将找到最高的完整快照槽，以及基于完整快照槽的最高增量快照槽（如果有）。
+这将找到最高的完整快照 slot，以及基于完整快照 slot 的最高增量快照 slot（如果有）。
 
 <Callout type={"caution"} title={"版本限制"}>
   此方法仅在 v1.9 或更高版本中可用`solana-core`。v1.8及以下版本请使用
@@ -21,13 +21,13 @@ altRoutes:
 
 ### 参数
 
-**没有任何**
+**无参数**
 
 ### 结果
 
 当节点有快照时，这会返回一个包含以下字段的 JSON 对象：
 
-- `full: <u64>` - 最高的完整快照插槽
+- `full: <u64>` - 最高的完整快照 slot
 - `incremental: <u64|null>` - 最高增量快照槽基于 `full`
 
 </DocLeftSide>
