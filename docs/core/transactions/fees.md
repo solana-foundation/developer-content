@@ -1,9 +1,9 @@
 ---
 title: Transaction Fees
 description:
-  "Transaction fees are the small fees paid to process instructions on the
-  network. These fees are based on computation and an optional prioritization
-  fee."
+  "Explore the core Solana concepts and applications, from transactions to 
+  fees, including Transaction Fee Calculation, Determinism, Collection, & 
+  Distribution."
 keywords:
   - instruction fee
   - processing fee
