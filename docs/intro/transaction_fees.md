@@ -1,7 +1,9 @@
 ---
 title: Transaction Fees
 description:
-  "Your guide to transaction fees on Solana -- small fees paid to process instructions on the network, based on computation and an optional prioritization fee."
+  "Your guide to transaction fees on Solana -- small fees paid to process
+  instructions on the network, based on computation and an optional
+  prioritization fee."
 keywords:
   - instruction fee
   - processing fee
