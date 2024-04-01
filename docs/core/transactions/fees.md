@@ -1,9 +1,7 @@
 ---
 title: Transaction Fees
 description:
-  "Explore the core Solana concepts and applications, from transactions to 
-  fees, including Transaction Fee Calculation, Determinism, Collection, & 
-  Distribution."
+  "Explore the core Solana concepts and applications, from transactions to fees, including Transaction Fee Calculation, Determinism, Collection, & Distribution."
 keywords:
   - instruction fee
   - processing fee

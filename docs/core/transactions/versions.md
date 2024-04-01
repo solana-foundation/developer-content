@@ -1,8 +1,6 @@
 ---
 title: Versioned Transactions
-description: "Explore the core Solana concepts: transactions, versioned 
-transactions, enabling additional functionality in the Solana runtime, 
-address lookup tables, and more."
+description: "Explore the core Solana concepts: transactions, versioned transactions, enabling additional functionality in the Solana runtime, address lookup tables, and more."
 ---
 
 [Versioned Transactions](/docs/core/transactions/versions.md) are the new
