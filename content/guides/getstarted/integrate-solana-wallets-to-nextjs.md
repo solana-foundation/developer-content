@@ -1,27 +1,30 @@
 ---
-date: Mar 28, 2023
+date: Apr 01, 2024
 difficulty: intro
 title: "Integrate solana wallets to your NextJS webapp"
 description:
   "This guide will lead you through the process of integrating solana wallets
   with Next.js a React based framework"
 tags:
-  - quickstart
   - local
-  - rust
-  - native
+  - react
+  - nextjs
+  - next.js 
+  - javascript
+  - web
+  - app
+  - wallets
 keywords:
-  - rust
-  - cargo
-  - toml
-  - program
-  - tutorial
-  - intro to solana development
-  - blockchain developer
-  - blockchain tutorial
+  - reactjs
+  - javascript
+  - nextjs
+  - integrate
+  - solana
+  - wallets
+  - wallet adapter
   - web3 developer
 altRoutes:
-  - /developers/guides/local-rust-hello-world
+  - /developers/guides/integrate-solana-wallets-nextjs
 ---
 
 This guide will lead you through the process of integrating solana wallets with
