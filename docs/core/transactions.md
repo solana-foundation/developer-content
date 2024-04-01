@@ -1,235 +1,164 @@
 ---
-title: "Transactions"
-sidebarSortOrder: 4
-description:
-  "A Solana transaction consists of one or more instructions, an array of
-  accounts to read and write data from, and one or more signatures."
+title: "Transactions and Instructions"
+sidebarSortOrder: 2
 ---
 
-On the Solana blockchain, program execution begins with a
-[transaction](/docs/terminology.md#transaction) being submitted to the cluster.
-With each transaction consisting of one or many
-[instructions](/docs/terminology.md#instruction), the runtime will process each
-of the instructions contained within the transaction, in order, and atomically.
-If any part of an instruction fails, then the entire transaction will fail.
+On Solana, we send [transactions](/docs/core/transactions#transaction) made up
+of [instructions](/docs/core/transactions#instruction) to interact with the
+network.
 
-## Overview of a Transaction
+You can think of instructions as APIs that programs expose to the network, where
+each instruction on a program represents a specific API endpoint. Then imagine a
+transaction on Solana as bundling several API requests into a single, atomic
+operation that enables you to interact with multiple services simultaneously.
 
-On Solana, clients update the runtime (for example, debiting an account) by
-submitting a transaction to the cluster.
+- If a transaction includes multiple instructions, the instructions are
+  processed in the order they are added to the transaction.
+- If any instruction on a transaction fails, then the whole transaction fails
+  and none of the instructions get processed. This allows you to build complex
+  transaction that interact with multiple programs while providing guarantees
+  about the execution of the transaction.
 
-This transaction consists of three parts:
+## Transaction
 
-- one or more instructions
-- an array of accounts to read or write from
-- one or more signatures
+Let’s begin by expanding on the details that make up a transaction:
 
-An [instruction](/docs/terminology.md#instruction) is the smallest execution
-logic on Solana. Instructions are basically a call to update the global Solana
-state. Instructions invoke programs that make calls to the Solana runtime to
-update the state (for example, calling the token program to transfer tokens from
-your account to another account).
+1. **Message:** At its core, a transaction has a message. This message includes:
+   - **Instructions**: An array of instructions to be executed.
+   - **Recent Blockhash**: Acts as a timestamp for the transaction.
+2. **Signers:** An array of signers included on the transaction.
 
-[Programs](/docs/core/programs.md) on Solana don’t store data/state; rather,
-data/state is stored in accounts.
+<Embed url="https://whimsical.com/embed/QUx3U8LxTar3Kga6NGXY8C" />
 
-[Signatures](/docs/terminology.md#signature) verify that we have the authority
-to read or write data to the accounts that we list.
+For simplicity, a transaction can be thought of as a request to process one or
+multiple instructions.
 
-## Anatomy of a Transaction
+<Embed url="https://whimsical.com/embed/3USG84ATvYmuqyF26ocJRL" />
 
-This section covers the binary format of a transaction.
+Instructions in a transaction are processed sequentially, in the order they are
+added to a transaction.
 
-### Transaction Format
+Transactions are also processed "atomically", meaning that all instructions in a
+transaction either process successfully or, if one fails, the entire transaction
+is rejected.
 
-A transaction contains a [compact-array](#compact-array-format) of signatures,
-followed by a [message](#message-format). Each item in the signatures array is a
-[digital signature](#signature-format) of the given message. The Solana runtime
-verifies that the number of signatures matches the number in the first 8 bits of
-the [message header](#message-header-format). It also verifies that each
-signature was signed by the private key corresponding to the public key at the
-same index in the message's account addresses array.
+<Callout>
+  By default, the first signer on the transaction is set as the fee payer unless
+  otherwise specified.
+</Callout>
 
-#### Signature Format
+## Instruction
 
-Each digital signature is in the ed25519 binary format and consumes 64 bytes.
+An instruction is a request to process a specific action and is the smallest
+contiguous unit of execution logic in a program.
 
-### Message Format
+Each instruction on a transaction must include the following information:
 
-A message contains a [header](#message-header-format), followed by a
-compact-array of [account addresses](#account-addresses-format), followed by a
-recent [blockhash](#blockhash-format), followed by a compact-array of
-[instructions](#instruction-format).
+- **Program address**: Specifies the program being invoked
+- **Accounts**: Lists every account the instruction reads from or writes to,
+  including other programs
+- **Instruction Data**: Specifies which instruction on the program to invoke,
+  plus any additional data required by the instruction (function arguments)
 
-#### Message Header Format
+<Embed url="https://whimsical.com/embed/KnRNEdwELLen8KtSXcfGde" />
 
-The message header contains three unsigned 8-bit values. The first value is the
-number of required signatures in the containing transaction. The second value is
-the number of those corresponding account addresses that are read-only. The
-third value in the message header is the number of read-only account addresses
-not requiring signatures.
+### AccountMeta
 
-#### Account Addresses Format
+For every account required by an instruction, the following info must be
+specified:
 
-The addresses that require signatures appear at the beginning of the account
-address array, with addresses requesting read-write access first, and read-only
-accounts following. The addresses that do not require signatures follow the
-addresses that do, again with read-write accounts first and read-only accounts
-following.
+- **Account address**: The on-chain address of an account
+- **is_signer**: Specify if the account is required as a signer on the
+  transaction
+- **is_writable**: Specify if the account data will be modified
 
-#### Blockhash Format
+This information is referred to as the `AccountMeta`.
 
-A blockhash contains a 32-byte SHA-256 hash. It is used to indicate when a
-client last observed the ledger. Validators will reject transactions when the
-blockhash is too old.
+<Embed url="https://whimsical.com/embed/Jngt814x7AStpfFJf5XTGX" />
 
-### Instruction Format
+By specifying all accounts required by an instruction and whether each account
+is writable, transactions can be processed in parallel.
 
-An instruction contains a program id index, followed by a compact-array of
-account address indexes, followed by a compact-array of opaque 8-bit data. The
-program id index is used to identify an on-chain program that can interpret the
-opaque data. The program id index is an unsigned 8-bit index to an account
-address in the message's array of account addresses. The account address indexes
-are each an unsigned 8-bit index into that same array.
+For example, if two transactions do not include any accounts that write to the
+same state, then the transactions can be executed at the same time.
 
-### Compact-Array Format
+## Basic Examples
 
-A compact-array is serialized as the array length, followed by each array item.
-The array length is a special multi-byte encoding called compact-u16.
+Below is a diagram representing a transaction with a single instruction to
+transfer SOL from a sender to a receiver.
 
-#### Compact-u16 Format
+Individual "wallets" on Solana are accounts owned by the System Program.
+Transferring SOL from a "wallet" account requires sending a transaction to
+invoke the transfer instruction on the System Program.
 
-A compact-u16 is a multi-byte encoding of 16 bits. The first byte contains the
-lower 7 bits of the value in its lower 7 bits. If the value is above 0x7f, the
-high bit is set and the next 7 bits of the value are placed into the lower 7
-bits of a second byte. If the value is above 0x3fff, the high bit is set and the
-remaining 2 bits of the value are placed into the lower 2 bits of a third byte.
+<Embed url="https://whimsical.com/embed/psxqtLdrqGJ9LhhmRVDdc" />
 
-### Account Address Format
+Once the transaction is sent, the System Program is invoked to process the
+transfer instruction. The System Program then updates the lamport balances of
+both the sender and receiver accounts accordingly.
 
-An account address is 32-bytes of arbitrary data. When the address requires a
-digital signature, the runtime interprets it as the public key of an ed25519
-keypair.
+<Embed url="https://whimsical.com/embed/7zVcZqfN5YhWX9PTTSVACx" />
 
-## Instructions
+### Simple SOL Transfer
 
-Each [instruction](/docs/terminology.md#instruction) specifies a single program,
-a subset of the transaction's accounts that should be passed to the program, and
-a data byte array that is passed to the program. The program interprets the data
-array and operates on the accounts specified by the instructions. The program
-can return successfully, or with an error code. An error return causes the
-entire transaction to fail immediately.
+Here is [Solana Playground](https://beta.solpg.io/656a0ea7fb53fa325bfd0c3e)
+example of how to build a SOL transfer instruction using the
+`SystemProgram.transfer` method:
 
-Programs typically provide helper functions to construct instructions they
-support. For example, the system program provides the following Rust helper to
-construct a
-[`SystemInstruction::CreateAccount`](https://github.com/solana-labs/solana/blob/6606590b8132e56dab9e60b3f7d20ba7412a736c/sdk/program/src/system_instruction.rs#L63)
-instruction:
+```typescript
+// Define the amount to transfer
+const transferAmount = 0.01; // 0.01 SOL
 
-```rust
-pub fn create_account(
-    from_pubkey: &Pubkey,
-    to_pubkey: &Pubkey,
-    lamports: u64,
-    space: u64,
-    owner: &Pubkey,
-) -> Instruction {
-    let account_metas = vec![
-        AccountMeta::new(*from_pubkey, true),
-        AccountMeta::new(*to_pubkey, true),
-    ];
-    Instruction::new_with_bincode(
-        system_program::id(),
-        &SystemInstruction::CreateAccount {
-            lamports,
-            space,
-            owner: *owner,
-        },
-        account_metas,
-    )
-}
+// Create a transfer instruction for transferring SOL from wallet_1 to wallet_2
+const transferInstruction = SystemProgram.transfer({
+  fromPubkey: sender.publicKey,
+  toPubkey: receiver.publicKey,
+  lamports: transferAmount * LAMPORTS_PER_SOL, // Convert transferAmount to lamports
+});
+
+// Add the transfer instruction to a new transaction
+const transaction = new Transaction().add(transferInstruction);
 ```
 
-### Program Id
+### Manual SOL Transfer
 
-The instruction's [program id](/docs/terminology.md#program-id) specifies which
-program will process this instruction. The program's account's owner specifies
-which loader should be used to load and execute the program, and the data
-contains information about how the runtime should execute the program.
+Here is a [Solana Playground](https://beta.solpg.io/656a102efb53fa325bfd0c3f)
+example of how to manually build the same SOL transfer instruction:
 
-In the case of [on-chain SBF programs](/docs/programs.md), the owner is the SBF
-Loader and the account data holds the BPF bytecode. Program accounts are
-permanently marked as executable by the loader once they are successfully
-deployed. The runtime will reject transactions that specify programs that are
-not executable.
+```typescript
+// Define the amount to transfer
+const transferAmount = 0.01; // 0.01 SOL
 
-Unlike on-chain programs,
-[Native Programs](https://docs.solanalabs.com/runtime/programs) are handled
-differently in that they are built directly into the Solana runtime.
+// Instruction index for the SystemProgram transfer instruction
+const transferInstructionIndex = 2;
 
-### Accounts
+// Create a buffer for the data to be passed to the transfer instruction
+const instructionData = Buffer.alloc(4 + 8); // uint32 + uint64
+// Write the instruction index to the buffer
+instructionData.writeUInt32LE(transferInstructionIndex, 0);
+// Write the transfer amount to the buffer
+instructionData.writeBigUInt64LE(BigInt(transferAmount * LAMPORTS_PER_SOL), 4);
 
-The accounts referenced by an instruction represent on-chain state and serve as
-both the inputs and outputs of a program. More information about accounts can be
-found in the [Accounts](/docs/core/accounts.md) section.
+// Manually create a transfer instruction for transferring SOL from sender to receiver
+const transferInstruction = new TransactionInstruction({
+  keys: [
+    { pubkey: sender.publicKey, isSigner: true, isWritable: true },
+    { pubkey: receiver.publicKey, isSigner: false, isWritable: true },
+  ],
+  programId: SystemProgram.programId,
+  data: instructionData,
+});
 
-### Instruction data
+// Add the transfer instruction to a new transaction
+const transaction = new Transaction().add(transferInstruction);
+```
 
-Each instruction carries a general purpose byte array that is passed to the
-program along with the accounts. The contents of the instruction data is program
-specific and typically used to convey what operations the program should
-perform, and any additional information those operations may need above and
-beyond what the accounts contain.
+Under the hood, the `SystemProgram.transfer` method is functionally equivalent
+to the more verbose example above. The `SystemProgram.transfer` method simply
+abstracts away the details of creating the instruction data buffer and
+explicitly specifies the `AccountMeta` for each account required by the
+instruction.
 
-Programs are free to specify how information is encoded into the instruction
-data byte array. The choice of how data is encoded should consider the overhead
-of decoding, since that step is performed by the program on-chain. It's been
-observed that some common encodings (Rust's bincode for example) are very
-inefficient.
-
-The
-[Solana Program Library's Token program](https://github.com/solana-labs/solana-program-library/tree/master/token)
-gives one example of how instruction data can be encoded efficiently, but note
-that this method only supports fixed sized types. Token utilizes the
-[Pack](https://github.com/solana-labs/solana/blob/master/sdk/program/src/program_pack.rs)
-trait to encode/decode instruction data for both token instructions as well as
-token account states.
-
-### Multiple instructions in a single transaction
-
-A transaction can contain instructions in any order. This means a malicious user
-could craft transactions that may pose instructions in an order that the program
-has not been protected against. Programs should be hardened to properly and
-safely handle any possible instruction sequence.
-
-One not so obvious example is account deinitialization. Some programs may
-attempt to deinitialize an account by setting its lamports to zero, with the
-assumption that the runtime will delete the account. This assumption may be
-valid between transactions, but it is not between instructions or cross-program
-invocations. To harden against this, the program should also explicitly zero out
-the account's data.
-
-An example of where this could be a problem is if a token program, upon
-transferring the token out of an account, sets the account's lamports to zero,
-assuming it will be deleted by the runtime. If the program does not zero out the
-account's data, a malicious user could trail this instruction with another that
-transfers the tokens a second time.
-
-## Signatures
-
-Each transaction explicitly lists all account public keys referenced by the
-transaction's instructions. A subset of those public keys are each accompanied
-by a transaction signature. Those signatures signal on-chain programs that the
-account holder has authorized the transaction. Typically, the program uses the
-authorization to permit debiting the account or modifying its data. More
-information about how the authorization is communicated to a program can be
-found in [Accounts](/docs/core/accounts.md#signers)
-
-## Recent Blockhash
-
-A transaction includes a recent [blockhash](/docs/terminology.md#blockhash) to
-prevent duplication and to give transactions lifetimes. Any transaction that is
-completely identical to a previous one is rejected, so adding a newer blockhash
-allows multiple transactions to repeat the exact same action. Transactions also
-have lifetimes that are defined by the blockhash, as any transaction whose
-blockhash is too old will be rejected.
+The details for building program instructions are often abstracted away by
+client libraries. However, if one is not available, you can always fall back to
+manually building the instruction.
