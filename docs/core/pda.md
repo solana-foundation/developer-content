@@ -20,7 +20,7 @@ The benefit of this approach is that it eliminates the need to keep track of an
 exact address. Instead, you simply need to recall the specific inputs used for
 its derivation.
 
-<Embed url="https://whimsical.com/embed/MeSD27yqidxUAVA2PukFfA" />
+![Program Derived Address](/assets/docs/core/pda/pda.svg)
 
 This section will cover the details of deriving PDAs. The details on how
 programs use PDAs for signing will be addressed in the section on
@@ -40,14 +40,14 @@ cryptography) which have a public key and corresponding private key. We often
 use public keys as the unique IDs for new on-chain accounts and private keys for
 signing.
 
-<Embed url="https://whimsical.com/embed/AekSUwZnLy8jZKNTVJacQ7" />
+![On Curve Address](/assets/docs/core/pda/address-on-curve.svg)
 
 A PDA is a point that is intentionally derived to fall off the Ed25519 curve
 using a predefined set of inputs. A point that is not on the Ed25519 curve does
 not have a valid corresponding private key and cannot be used for cryptographic
 operations (signing).
 
-<Embed url="https://whimsical.com/embed/GUv4Y6V9xBHB9bzZH6Xi44" />
+![Off Curve Address](/assets/docs/core/pda/address-off-curve.svg)
 
 ## How to derive a PDA
 
@@ -63,7 +63,7 @@ The derivation of a PDA requires 3 inputs.
 - **Program ID**: The address of the program the PDA is derived from. This is
   also the program that can "sign" on behalf of the PDA
 
-<Embed url="https://whimsical.com/embed/4yz5dz3XjP5ekV9DkzmsBH" />
+![PDA Derivation](/assets/docs/core/pda/pda-derivation.svg)
 
 To derive a PDA, we can use the
 [`findProgramAddressSync`](https://github.com/solana-labs/solana-web3.js/blob/master/packages/library-legacy/src/publickey.ts#L212)

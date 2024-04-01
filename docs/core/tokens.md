@@ -44,7 +44,7 @@ stores all the instruction logic for interacting with tokens on the network
 You can find the full list of Token Program instructions
 [here](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/instruction.rs).
 
-<Embed url="https://whimsical.com/embed/AHn74Sp4pqkXHXNBtbjrTh" />
+![Token Program](/assets/docs/core/tokens/token-program.svg)
 
 A few commonly used instructions include:
 
@@ -70,9 +70,9 @@ specific token, and stores data such as:
 - Freeze authority: The account authorized to freeze tokens from being
   transferred from "token accounts"
 
-<Embed url="https://whimsical.com/embed/LmYb3G5V84gDB6vR6nRRcN" />
+![Mint Account](/assets/docs/core/tokens/mint-account.svg)
 
-The full details stored on each Mint Account includes the following
+The full details stored on each Mint Account include the following
 [data](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L18-L32):
 
 ```rust
@@ -108,7 +108,7 @@ following:
 - Owner: The account authorized to transfer tokens out of the Token Account
 - Amount: Units of the token the Token Account currently holds
 
-<Embed url="https://whimsical.com/embed/SmULNMKR24iH1Dmc6Q3qeF" />
+![Token Account](/assets/docs/core/tokens/token-account.svg)
 
 The full details stored on each Token Account includes the following
 [data](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L89-L110):
@@ -144,7 +144,7 @@ the token account. A wallet can create multiple token accounts for the same type
 of token, but each token account can only be owned by one wallet and hold units
 of one type of token.
 
-<Embed url="https://whimsical.com/embed/UAnKuHAUmNhyatCxejr3RB" />
+![Account Relationship](/assets/docs/core/tokens/token-account-relationship.svg)
 
 Note that each Token Account's data includes an “owner" field used to identify
 who has authority over that specific Token Account. This is separate from the
@@ -164,7 +164,7 @@ account for a specific mint and owner.
 It's important to understand that an Associated Token Account isn't a different
 type of token account. It's just a token account with a specific address.
 
-<Embed url="https://whimsical.com/embed/Bypk9To2npcpFoX6JF4Uwg" />
+![Associated Token Account](/assets/docs/core/tokens/associated-token-account.svg)
 
 This introduces a key concept in Solana development: Program Derived Address
 (PDA). Conceptually, a PDA provides a deterministic way to generate an address
@@ -203,9 +203,11 @@ const [PDA, bump] = PublicKey.findProgramAddressSync(
 For two wallets to hold units of the same type of token, each wallet needs its
 own token account for the specific mint account.
 
-<Embed url="https://whimsical.com/embed/21nYJfYxzfiKgJy7tcELD7" />
+![Accounts Relationship Expanded](/assets/docs/core/tokens/token-account-relationship-ata.svg)
 
 ## Metadata Account
+
+// TODO add token extensions metadata extensions
 
 Token metadata, such as name and image, are not directly supported by the Token
 Program. Instead, the

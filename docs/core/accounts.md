@@ -4,12 +4,11 @@ sidebarSortOrder: 1
 title: Solana Account Model
 ---
 
-On Solana, all data is stored in what are referred to as "accounts.”
+On Solana, all data is stored in what are referred to as "accounts”. The way
+data is organized on Solana resembles a key-value store, where each entry in the
+database is called an "account".
 
-The way data is organized on Solana resembles a key-value store, where each
-entry in the database is called an "account".
-
-<Embed url="https://whimsical.com/embed/Hh1J9AxMaHyKwo5Ee9BLnT" />
+![Accounts](/assets/docs/core/accounts/accounts.svg)
 
 ## Account
 
@@ -17,7 +16,7 @@ Each account is identifiable by its unique address, represented as 32 bytes in
 the format of an Ed25519 `PublicKey`. You can think of the address as the unique
 identifier for the account.
 
-<Embed url="https://whimsical.com/embed/5QaEehZZjqbaUXaAn2ofVK" />
+![Account Address](/assets/docs/core/accounts/account-address.svg)
 
 This relationship between the account and its address can be thought of a
 key-value pair, where the address serves as the key to locate the corresponding
@@ -27,7 +26,7 @@ on-chain data of the account.
 
 Every account on Solana has the following structure known as the `AccountInfo`.
 
-<Embed url="https://whimsical.com/embed/95BHPUm4gGCxuY8DYPD8JZ" />
+![AccountInfo](/assets/docs/core/accounts/accountinfo.svg)
 
 The `AccountInfo` for each account includes the following fields:
 
@@ -68,7 +67,7 @@ is one of Solana's "Native Programs", which performs several key tasks such as:
 On Solana, a "wallet" is simply an account owned by the System Program. The
 lamport balance of the "wallet" is the amount of SOL owned by the account.
 
-<Embed url="https://whimsical.com/embed/9UTXffQaM3TTHiKGA3uSA" />
+![System Account](/assets/docs/core/accounts/system-account.svg)
 
 // TODO: Add Playground example?
 
@@ -102,11 +101,11 @@ For example, here are links to Solana Explorer for the Token Extensions
 and its corresponding
 [Program Executable Data Account](https://explorer.solana.com/address/DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY).
 
-<Embed url="https://whimsical.com/embed/3DbQzPY3NuzHVLvJmC1njt" />
+![Program and Executable Data Accounts](/assets/docs/core/accounts/program-account-expanded.svg)
 
 For simplicity, you can think of the "Program Account" as the program itself.
 
-<Embed url="https://whimsical.com/embed/TbEvx51nJPgofewcYouEee" />
+![Program Account](/assets/docs/core/accounts/program-account-simple.svg)
 
 Program accounts are owned by the "BPF Loader" program, another one of Solana's
 “Native Programs”. There are multiple versions of the BPF Loader program, but at
@@ -122,7 +121,7 @@ accounts”.
 
 Data accounts can be used to store any data as defined by the owner program.
 
-<Embed url="https://whimsical.com/embed/PxVmNFCFA2s9rDy3bkcfLr" />
+![Data Account](/assets/docs/core/accounts/data-account.svg)
 
 Note that only the [System Program](/docs/core/accounts#system-program) can
 create new accounts. Once the System Program creates an account, it can then

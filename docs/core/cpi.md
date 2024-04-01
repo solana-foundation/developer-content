@@ -11,14 +11,14 @@ Solana programs.
 You can think of instructions as API endpoints that a program exposes to the
 network and a CPI as one API internally invoking another API.
 
-<Embed url="https://whimsical.com/embed/T838CxFXPYhjj5mEp26nmb" />
+![Cross Program Invocation](/assets/docs/core/cpi/cpi.svg)
 
 When one program makes a CPI to another program:
 
 - The signer privileges from the original transaction pass through to the callee
   program
 - The caller program can "sign" on behalf of the [PDAs](/docs/core/pda) derived
-  from its programId
+  from its program ID
 - The callee program can make further CPIs to other programs, up to a maximum
   depth of 4
 

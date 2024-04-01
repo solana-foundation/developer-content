@@ -28,12 +28,12 @@ Let’s begin by expanding on the details that make up a transaction:
    - **Recent Blockhash**: Acts as a timestamp for the transaction.
 2. **Signers:** An array of signers included on the transaction.
 
-<Embed url="https://whimsical.com/embed/QUx3U8LxTar3Kga6NGXY8C" />
+![Transaction](/assets/docs/core/transactions/transaction.svg)
 
 For simplicity, a transaction can be thought of as a request to process one or
 multiple instructions.
 
-<Embed url="https://whimsical.com/embed/3USG84ATvYmuqyF26ocJRL" />
+![Transaction Simplified](/assets/docs/core/transactions/transaction-simple.svg)
 
 Instructions in a transaction are processed sequentially, in the order they are
 added to a transaction.
@@ -60,7 +60,7 @@ Each instruction on a transaction must include the following information:
 - **Instruction Data**: Specifies which instruction on the program to invoke,
   plus any additional data required by the instruction (function arguments)
 
-<Embed url="https://whimsical.com/embed/KnRNEdwELLen8KtSXcfGde" />
+![Transaction Instruction](/assets/docs/core/transactions/instruction.svg)
 
 ### AccountMeta
 
@@ -74,7 +74,7 @@ specified:
 
 This information is referred to as the `AccountMeta`.
 
-<Embed url="https://whimsical.com/embed/Jngt814x7AStpfFJf5XTGX" />
+![AccountMeta](/assets/docs/core/transactions/accountmeta.svg)
 
 By specifying all accounts required by an instruction and whether each account
 is writable, transactions can be processed in parallel.
@@ -91,13 +91,13 @@ Individual "wallets" on Solana are accounts owned by the System Program.
 Transferring SOL from a "wallet" account requires sending a transaction to
 invoke the transfer instruction on the System Program.
 
-<Embed url="https://whimsical.com/embed/psxqtLdrqGJ9LhhmRVDdc" />
+![SOL Transfer](/assets/docs/core/transactions/sol-transfer.svg)
 
 Once the transaction is sent, the System Program is invoked to process the
 transfer instruction. The System Program then updates the lamport balances of
-both the sender and receiver accounts accordingly.
+both the sender and recipient accounts accordingly.
 
-<Embed url="https://whimsical.com/embed/7zVcZqfN5YhWX9PTTSVACx" />
+![SOL Transfer Process](/assets/docs/core/transactions/sol-transfer-process.svg)
 
 ### Simple SOL Transfer
 
