@@ -9,7 +9,7 @@ tags:
   - local
   - react
   - nextjs
-  - next.js 
+  - next.js
   - javascript
   - web
   - app
