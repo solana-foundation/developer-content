@@ -16,7 +16,7 @@ operation that enables you to interact with multiple services simultaneously.
   processed in the order they are added to the transaction.
 - If any instruction on a transaction fails, then the whole transaction fails
   and none of the instructions get processed. This allows you to build complex
-  transaction that interact with multiple programs while providing guarantees
+  transactions that interact with multiple programs while providing guarantees
   about the execution of the transaction.
 
 ## Transaction
@@ -87,9 +87,13 @@ same state, then the transactions can be executed at the same time.
 Below is a diagram representing a transaction with a single instruction to
 transfer SOL from a sender to a receiver.
 
-Individual "wallets" on Solana are accounts owned by the System Program.
-Transferring SOL from a "wallet" account requires sending a transaction to
-invoke the transfer instruction on the System Program.
+Individual "wallets" on Solana are accounts owned by the
+[System Program](/docs/core/accounts#system-program). As part of the
+[Solana Account Model](/docs/core/accounts), only the program that owns account
+is allowed to modify the data on the account.
+
+Therefore, transferring SOL from a "wallet" account requires sending a
+transaction to invoke the transfer instruction on the System Program.
 
 ![SOL Transfer](/assets/docs/core/transactions/sol-transfer.svg)
 
@@ -156,8 +160,7 @@ const transaction = new Transaction().add(transferInstruction);
 Under the hood, the `SystemProgram.transfer` method is functionally equivalent
 to the more verbose example above. The `SystemProgram.transfer` method simply
 abstracts away the details of creating the instruction data buffer and
-explicitly specifies the `AccountMeta` for each account required by the
-instruction.
+`AccountMeta` for each account required by the instruction.
 
 The details for building program instructions are often abstracted away by
 client libraries. However, if one is not available, you can always fall back to

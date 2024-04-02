@@ -77,7 +77,7 @@ The transaction details will show that the custom program was first invoked
 (instruction 1), which then invokes the System Program (instruction 1.1),
 resulting in a successful SOL transfer.
 
-<Embed url="https://whimsical.com/embed/5rwXi8AzWG9Z9ZK9nW5zHc" />
+![Transaction Details](/assets/docs/core/cpi/transaction-details.png)
 
 You can build, deploy, and run the test to view the transaction details on the
 SolanaFM.
@@ -126,8 +126,8 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 }
 ```
 
-The `cpi_context` variable specifies the programId (SystemProgram) and accounts
-(sender and recipient) required by the transfer instruction.
+The `cpi_context` variable specifies the program ID (System Program) and
+accounts (sender and recipient) required by the transfer instruction.
 
 ```rust
 let cpi_context = CpiContext::new(
@@ -181,8 +181,8 @@ You can also manually build the instruction to pass into the `invoke()`
 function. This is useful when there is not a crate available to help build the
 instruction you want to invoke.
 
-This approach requires you to manually specify the `AccountMetas` required by
-the instruction and correctly create the instruction data buffer.
+This approach requires you to manually specify the AccountMetas required by the
+instruction and correctly create the instruction data buffer.
 
 The `sol_transfer` instruction below is a fully expanded equivalent of the
 previous two examples.

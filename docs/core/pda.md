@@ -32,7 +32,7 @@ both concepts.
 PDAs are addresses that are deterministically derived and look like standard
 public keys, but have no associated private keys. This means that no external
 user can generate a valid signature for the address. However, the Solana runtime
-enables programs can programmatically "sign" for PDAs without needing a private
+enables programs to programmatically "sign" for PDAs without needing a private
 key.
 
 For context, Solana Keypairs are points on the Ed25519 curve (elliptic-curve
@@ -47,6 +47,9 @@ using a predefined set of inputs. A point that is not on the Ed25519 curve does
 not have a valid corresponding private key and cannot be used for cryptographic
 operations (signing).
 
+A PDA can then be used as the address (unique identifier) for an on-chain
+account, providing a method to easily store, map, and fetch program state.
+
 ![Off Curve Address](/assets/docs/core/pda/address-off-curve.svg)
 
 ## How to derive a PDA
@@ -57,9 +60,9 @@ The derivation of a PDA requires 3 inputs.
   addresses) used to derive a PDA. These inputs are converted to a buffer of
   bytes.
 - **Bump seed**: An additional input (with a value between 255-0) that is used
-  to guarantee that a valid PDA (falls off the curve) is generated. This bump
-  seed is appended to the optional seeds when generating a PDA to "bump" the
-  point off the Ed25519 curve. The bump seed is also referred to as a "nonce".
+  to guarantee that a valid PDA (off curve) is generated. This bump seed is
+  appended to the optional seeds when generating a PDA to "bump" the point off
+  the Ed25519 curve. The bump seed is also referred to as a "nonce".
 - **Program ID**: The address of the program the PDA is derived from. This is
   also the program that can "sign" on behalf of the PDA
 
@@ -311,8 +314,8 @@ You can build, deploy, and test the program directly in the browser.
 
 In the `lib.rs` file, you will find the following program which includes a
 single instruction to create a new account using a PDA as the address of the
-account. The account is used to store the address of the `user` account and the
-`bump` seed used to derive the PDA.
+account. The new account stores the address of the `user` and the `bump` seed
+used to derive the PDA.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -380,9 +383,9 @@ const [PDA] = PublicKey.findProgramAddressSync(
 );
 ```
 
-A transaction is then sent to invoke the `initialize` instruction. Once the
-transaction is sent, the PDA is used to fetch the on-chain account that was
-created at the address.
+A transaction is then sent to invoke the `initialize` instruction to create a
+new on-chain account using the PDA as the address. Once the transaction is sent,
+the PDA is used to fetch the on-chain account that was created at the address.
 
 ```ts
 it("Is initialized!", async () => {
@@ -403,6 +406,6 @@ it("Fetch Account", async () => {
 });
 ```
 
-If you run the test more than once using the same `user` address as a seed, then
-the transaction will fail. This is because an account will already exist at the
-address derived.
+Note that if you invoke the `initialize` instruction more than once using the
+same `user` address as a seed, then the transaction will fail. This is because
+an account will already exist at the derived address.

@@ -13,14 +13,14 @@ network and a CPI as one API internally invoking another API.
 
 ![Cross Program Invocation](/assets/docs/core/cpi/cpi.svg)
 
-When one program makes a CPI to another program:
+When a program initiates a Cross-Program Invocation (CPI) to another program:
 
-- The signer privileges from the original transaction pass through to the callee
-  program
-- The caller program can "sign" on behalf of the [PDAs](/docs/core/pda) derived
-  from its program ID
-- The callee program can make further CPIs to other programs, up to a maximum
-  depth of 4
+- The signer privileges from the initial transaction invoking the caller program
+  (A) extend to the callee (B) program
+- The callee (B) program can make further CPIs to other programs, up to a
+  maximum depth of 4 (ex. B->C, C->D)
+- The programs can "sign" on behalf of the [PDAs](/docs/core/pda) derived from
+  its program ID
 
 ## How to write a CPI
 
@@ -85,7 +85,7 @@ When the CPI is processed, the Solana runtime internally calls
 `create_program_address` using the `signers_seeds` and the `program_id` of the
 calling program. The resulting PDA is then compared to the addresses included in
 the instruction. If there's a match, the PDA is considered a valid signer on the
-instruction (`is_signer` is flipped to true).
+instruction (`is_signer` is set to true).
 
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)

@@ -18,7 +18,7 @@ identifier for the account.
 
 ![Account Address](/assets/docs/core/accounts/account-address.svg)
 
-This relationship between the account and its address can be thought of a
+This relationship between the account and its address can be thought of as a
 key-value pair, where the address serves as the key to locate the corresponding
 on-chain data of the account.
 
@@ -65,14 +65,14 @@ is one of Solana's "Native Programs", which performs several key tasks such as:
   Program.
 
 On Solana, a "wallet" is simply an account owned by the System Program. The
-lamport balance of the "wallet" is the amount of SOL owned by the account.
+lamport balance of the wallet is the amount of SOL owned by the account.
 
 ![System Account](/assets/docs/core/accounts/system-account.svg)
 
 // TODO: Add Playground example?
 
 <Callout>
-  Only System Program owned accounts can be used as transaction fee payers.
+  Only accounts owned by the System Program can be used as transaction fee payers.
 </Callout>
 
 ## Program Account
@@ -129,8 +129,8 @@ transfer ownership of the new account to another program.
 
 In other words, creating a data account for a custom program requires two steps:
 
-1. Invoke the System Program to create an account, which then transfer ownership
-   to a custom program
+1. Invoke the System Program to create an account, which then transfers
+   ownership to a custom program
 2. Invoke the custom program, which now owns the account, to then initialize the
    account data as defined in the program logic
 

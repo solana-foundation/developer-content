@@ -125,7 +125,7 @@ The transaction details will show that the custom program was first invoked
 (instruction 1), which then invokes the System Program (instruction 1.1),
 resulting in a successful SOL transfer.
 
-<Embed url="https://whimsical.com/embed/5rwXi8AzWG9Z9ZK9nW5zHc" />
+![Transaction Details](/assets/docs/core/cpi/transaction-details-pda.png)
 
 You can build, deploy, and run the test to view the transaction details on the
 SolanaFM.
@@ -225,7 +225,7 @@ When the CPI is processed, the Solana runtime will validate that the provided
 seeds and caller program ID derive a valid PDA. If the PDA matches one of the
 accounts specified in the CPI instruction, then the signer flag for that account
 is set to true. This mechanism allows for programs to programmatically sign for
-PDAs that are derived from its program ID.
+PDAs that are derived from their program ID.
 
 ### 2. Invoke() with Crate Helper
 
