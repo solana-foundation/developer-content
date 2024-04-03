@@ -20,15 +20,15 @@ keywords:
 This guide will walk you through building a full-stack Solana dApp using React
 and Anchor.
 
-> The final code for this guide can be found in
-> [this repository](https://github.com/AlmostEfficient/full-stack-solana-dev).
-
-If you've never used Solana and don't know what a blockchain is, I recommend
-[this crash course](https://www.youtube.com/watch?v=uH60e4gZBSY) to get you up
-to speed with the basics.
+If you've never used Solana and don't know what a blockchain is, you can also
+checkout [this crash course](https://www.youtube.com/watch?v=uH60e4gZBSY) to get
+you up to speed with the basics.
 
 If any words or terms in this guide are confusing you, check out the
 [terminology](/docs/terminology) page on the Solana docs, they're pretty good!
+
+> The final code for this guide can be found in
+> [this repository](https://github.com/AlmostEfficient/full-stack-solana-dev).
 
 ## Project overview
 
