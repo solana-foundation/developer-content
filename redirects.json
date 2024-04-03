@@ -440,10 +440,6 @@
     {
       "source": "/accepted-proposals/:path*",
       "destination": "/proposals/:path*"
-    },
-    {
-      "source": "/docs/intro/history",
-      "destination": "/docs/intro"
     }
   ]
 }
