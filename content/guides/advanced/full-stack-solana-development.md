@@ -388,8 +388,9 @@ The layout of this program is:
 
 - import necessary Rust libraries
 - declare the program's address
-- define program instructions (functional logic)
-- define structs for the instructions (the data format that will be passed in)
+- define program instruction handlers (functional logic)
+- define structs for the instruction handlers (the data format that will be
+  passed in)
 - define structs for the accounts this program needs (including the format of
   the data stored on-chain)
 
@@ -424,15 +425,15 @@ pub mod counter {
 }
 ```
 
-In the program module, we've got two instructions - these are like the endpoints
-of an API. Every time we call them via a transaction sent to an RPC, we pass in
-some context (`ctx`) - the state of the blockchain, which accounts are
-interacting with it, any data passed in, etc. Think of this like the body of a
-POST request.
+In the program module, we've got two instruction handlers - these are like the
+endpoints of an API. Every time we call them via a transaction sent to an RPC,
+we pass in some context (`ctx`) - the state of the blockchain, which accounts
+are interacting with it, any data passed in, etc. Think of this like the body of
+a POST request.
 
-Both of these instructions take in arguments that have specific formats which we
-define later on and they return a `Result` type, which is a way to handle
-responses/errors in Rust (kind of like a HTTP response code).
+Both of these instruction handlers take in arguments that have specific formats
+which we define later on and they return a `Result` type, which is a way to
+handle responses/errors in Rust (kind of like a HTTP response code).
 
 `let counter = &ctx.accounts.counter;` creates an immutable reference using the
 value `counter` passed in from the context. For this program, we'll be
@@ -442,12 +443,12 @@ will make more sense when we look at the test.
 The `msg!` is a print statement that we can see on the logs in our blockchain
 explorer.
 
-The `increment` instruction obtains a mutable reference to the counter account
-from the context passed in. After logging the current value with a `msg!`
-statement, it uses the `checked_add` method to increment the value by 1.
-`unwrap` gives us the result of the operation (this would fail the tx if the
-addition overflows the u64 type). We end with another `msg!` statement and then
-return an `Ok(())` result.
+The `increment` instruction handler obtains a mutable reference to the counter
+account from the context passed in. After logging the current value with a
+`msg!` statement, it uses the `checked_add` method to increment the value by 1.
+`unwrap` gives us the result of the operation (this would fail the transaction
+if the addition overflows the u64 type). We end with another `msg!` statement
+and then return an `Ok(())` result.
 
 Finally, let's take a look at the struct definitions:
 
@@ -485,10 +486,10 @@ pub struct Counter {
 
 Make sure you go over the comments!
 
-The `initialize` instruction does only one this: it creates a new account of the
-`Counter` type. To do this, we need to know who's paying, details of the account
-we're creating like the space and the address, and which program to use to
-create the account.
+The `initialize` instruction instruction does only one this: it creates a new
+account of the `Counter` type. To do this, we need to know who's paying, details
+of the account we're creating like the space and the address, and which program
+to use to create the account.
 
 Let's go line by line:
 
@@ -672,13 +673,13 @@ const counterAccount = new Keypair(); // You have to keep track of this value
 // security concern - if the keypair is leaked, anyone can change the value
 ```
 
-The final bit of a PDA is a `bump` seed. This is an extra item that is used to
+The final bit of a PDA is a `bump` number. This is an extra item that is used to
 make sure the generated address does not have a private key. So you find a PDA
 using:
 
 - program id
 - seed (your string)
-- bump seed (a number stored in the account)
+- bump (a number stored in the account)
 
 Here's what the updated code in your `lib.rs` for this is:
 
@@ -756,7 +757,7 @@ In the `Initialize` struct, we've updated the `#[account()]` attribute for the
 
 - `seeds = [b"counter"]` specifies the seed used to derive the PDA. In this
   case, it's just the string "counter" converted to a byte slice.
-- `bump` tells Anchor to use the canonical bump seed for the PDA.
+- `bump` tells Anchor to use the canonical bump number for the PDA.
 
 The `Increment` struct has also been updated with the same PDA seed and bump.
 Finally, the `Counter` struct now includes a `bump` field to store the bump
@@ -961,7 +962,9 @@ Copy the address and check it out on the
 You're off localhost! Anyone on the internet can now interact with your program.
 Let's give them a front-end to do that.
 
-Program deploy failed? Program code is temporarily stored in
+#### Program deploy failed?
+
+Program code is temporarily stored in
 [buffer accounts](docs/programs/deploying#state-accounts) while programs are
 being deployed. You can view and close these accounts with:
 
@@ -970,9 +973,11 @@ solana program show --buffers
 solana program close --buffers
 ```
 
-Running out of gas? If you've completely run out of gas, you can close programs
-you've previously deployed. This is **not reversible**. These programs will be
-deleted and can't be re-deployed. As a last resort:
+#### Running out of gas?
+
+If you've completely run out of gas, you can close programs you've previously
+deployed. This is **not reversible**. These programs will be deleted and can't
+be re-deployed. As a last resort:
 
 ```shell
 solana program close --programid <program id>
