@@ -150,7 +150,7 @@ Nonce Account. By default, the account that creates the Nonce Account is
 delegated as the Nonce Authority, but it's possible to transfer the authority
 onto a keypair account or a PDA.
 
----
+## Durable Nonces with Solana CLI
 
 Now that we know what Durable Nonces are, it's time to use them to send durable
 transactions.
@@ -158,8 +158,6 @@ transactions.
 > If you do not have the Solana CLI installed, please go through
 > [this](https://docs.solana.com/cli/install-solana-cli-tools) tutorial and set
 > up the CLI and a keypair with some airdropped SOL on devnet
-
-## Durable Nonces with Solana CLI
 
 ### Create Nonce Authority
 
@@ -488,14 +486,14 @@ send transactions using durable nonces.
 
 ### Create Nonce Authority
 
-```JS
+```ts
 const nonceAuthKP = Keypair.generate();
 // airdrop some SOL into this account from https://solfaucet.com/
 ```
 
 ### Create Nonce Accounts
 
-```JS
+```ts
 const nonceKeypair = Keypair.generate();
 const tx = new Transaction();
 
@@ -507,21 +505,21 @@ tx.feePayer = nonceAuthKP.publicKey;
 tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
 tx.add(
-    // create system account with the minimum amount needed for rent exemption.
-    // NONCE_ACCOUNT_LENGTH is the space a nonce account takes
-    SystemProgram.createAccount({
-        fromPubkey: nonceAuthKP.publicKey,
-        newAccountPubkey: nonceKeypair.publicKey,
-        lamports: 0.0015 * LAMPORTS_PER_SOL,
-        space: NONCE_ACCOUNT_LENGTH,
-        programId: SystemProgram.programId,
-    }),
-    // initialise nonce with the created nonceKeypair's pubkey as the noncePubkey
-    // also specify the authority of the nonce account
-    SystemProgram.nonceInitialize({
-        noncePubkey: nonceKeypair.publicKey,
-        authorizedPubkey: nonceAuthKP.publicKey,
-    })
+  // create system account with the minimum amount needed for rent exemption.
+  // NONCE_ACCOUNT_LENGTH is the space a nonce account takes
+  SystemProgram.createAccount({
+    fromPubkey: nonceAuthKP.publicKey,
+    newAccountPubkey: nonceKeypair.publicKey,
+    lamports: 0.0015 * LAMPORTS_PER_SOL,
+    space: NONCE_ACCOUNT_LENGTH,
+    programId: SystemProgram.programId,
+  }),
+  // initialise nonce with the created nonceKeypair's pubkey as the noncePubkey
+  // also specify the authority of the nonce account
+  SystemProgram.nonceInitialize({
+    noncePubkey: nonceKeypair.publicKey,
+    authorizedPubkey: nonceAuthKP.publicKey,
+  }),
 );
 
 // sign the transaction with both the nonce keypair and the authority keypair
@@ -529,34 +527,34 @@ tx.sign(nonceKeypair, nonceAuthKP);
 
 // send the transaction
 const sig = await sendAndConfirmRawTransaction(
-    connection,
-    tx.serialize({requireAllSignatures: false})
+  connection,
+  tx.serialize({ requireAllSignatures: false }),
 );
 console.log("Nonce initiated: ", sig);
 ```
 
 ### Fetch Initialised Nonce Account
 
-```JS
+```ts
 const accountInfo = await connection.getAccountInfo(nonceKeypair.publicKey);
 const nonceAccount = NonceAccount.fromAccountData(accountInfo.data);
 ```
 
 ### Sign Transaction using Durable Nonce
 
-```JS
+```ts
 // make a system transfer instruction
 const ix = SystemProgram.transfer({
-    fromPubkey: publicKey,
-    toPubkey: publicKey,
-    lamports: 100,
+  fromPubkey: publicKey,
+  toPubkey: publicKey,
+  lamports: 100,
 });
 
 // make a nonce advance instruction
 const advanceIX = SystemProgram.nonceAdvance({
-    authorizedPubkey: nonceAuthKP.publicKey,
-    noncePubkey: noncePubKey
-})
+  authorizedPubkey: nonceAuthKP.publicKey,
+  noncePubkey: noncePubKey,
+});
 
 // add them to a transaction
 const tx = new Transaction();
@@ -577,7 +575,9 @@ const signedTx = await signTransaction(tx);
 // once you have the signed tx, you can serialize it and store it
 // in a database, or send it to another device. You can submit it
 // at a later point, without the tx having a mortality
-const serialisedTx = bs58.encode(signedTx.serialize({requireAllSignatures: false}));
+const serialisedTx = bs58.encode(
+  signedTx.serialize({ requireAllSignatures: false }),
+);
 console.log("Signed Durable Transaction: ", serialisedTx);
 ```
 
