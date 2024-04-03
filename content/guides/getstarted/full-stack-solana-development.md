@@ -23,8 +23,6 @@ and Anchor.
 > The final code for this guide can be found in
 > [this repository](https://github.com/AlmostEfficient/full-stack-solana-dev).
 
-### Solana developer overview
-
 If you've never used Solana and don't know what a blockchain is, I recommend
 [this crash course](https://www.youtube.com/watch?v=uH60e4gZBSY) to get you up
 to speed with the basics.
