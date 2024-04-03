@@ -3,8 +3,6 @@ title: "Tokens on Solana"
 sidebarSortOrder: 6
 ---
 
-// TODO add example snippets
-
 This section will cover the basics of how tokens are represented on Solana. You
 can think of tokens as a counter in a database that also keeps track of the
 ownership for each unit of the count.
@@ -96,6 +94,80 @@ pub struct Mint {
 For reference, here is a Solana Explorer link to the USDC
 [Mint Account](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v).
 
+### Create Mint Account
+
+Creating a new Mint Account requires sending a transaction with two
+instructions. Here an example on
+[Solana Playground](https://beta.solpg.io/660ce32ecffcf4b13384d00f).
+
+1. Invoke the System Program to create a new account with enough space for the
+   Mint Account data and then transfer ownership to the Token Program.
+
+2. Invoke the Token Program to initialize the data of the new account as a Mint
+   Account
+
+First, generate a keypair to use as the address of the new account and calculate
+the amount of lamports needed for the Mint Account data.
+
+```ts
+// Generate keypair to use as address of mint account
+const mint = new Keypair();
+
+// Calculate minimum lamports for space required by mint account
+const rentLamports = await getMinimumBalanceForRentExemptMint(connection);
+```
+
+Next, create the instruction invoking the System Program to create a new
+account.
+
+```ts
+const createAccountInstruction = SystemProgram.createAccount({
+  fromPubkey: wallet.publicKey,
+  newAccountPubkey: mint.publicKey,
+  space: MINT_SIZE,
+  lamports: rentLamports,
+  programId: TOKEN_2022_PROGRAM_ID,
+});
+```
+
+Next, create the instruction invoking the Token Program to initialize the Mint
+Account data.
+
+```ts
+const initializeMintInstruction = createInitializeMint2Instruction(
+  mint.publicKey,
+  2, // decimals
+  wallet.publicKey, // mint authority
+  wallet.publicKey, // freeze authority
+  TOKEN_2022_PROGRAM_ID,
+);
+```
+
+Next, add both instructions to a new transaction.
+
+```ts
+const transaction = new Transaction().add(
+  createAccountInstruction,
+  initializeMintInstruction,
+);
+```
+
+Finally, send the transaction. The `wallet.keypair` is the transaction fee payer
+and account paying the lamports required by the new mint account. The `mint`
+keypair is also included as a signer on the transaction because we are using its
+publickey as the address of the new account.
+
+```ts
+const transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [
+    wallet.keypair, // payer
+    mint, // mint address keypair
+  ],
+);
+```
+
 ## Token Account
 
 To hold units of a specific token, another type of data account owned by the
@@ -151,6 +223,78 @@ who has authority over that specific Token Account. This is separate from the
 program owner specified in the AccountInfo, which is the Token Program for all
 Token Accounts.
 
+### Create Token Account
+
+Creating a new Token Account requires sending a transaction with two
+instructions. Here an example on
+[Solana Playground](https://beta.solpg.io/660ce716cffcf4b13384d010).
+
+1. Invoke the System Program to create a new account with enough space for the
+   Token Account data and then transfer ownership to the Token Program.
+
+2. Invoke the Token Program to initialize the data of the new account as a Token
+   Account
+
+First, generate a keypair to use as the address of the new account and calculate
+the amount of lamports needed for the Token Account data.
+
+```ts
+// Generate keypair to use as address of token account
+const token = Keypair.generate();
+
+// Calculate minimum lamports for space required by token account
+const rentLamports = await getMinimumBalanceForRentExemptAccount(connection);
+```
+
+Next, create the instruction invoking the System Program to create a new
+account.
+
+```ts
+const createAccountInstruction = SystemProgram.createAccount({
+  fromPubkey: wallet.publicKey,
+  newAccountPubkey: token.publicKey,
+  space: ACCOUNT_SIZE,
+  lamports: rentLamports,
+  programId: TOKEN_2022_PROGRAM_ID,
+});
+```
+
+Next, create the instruction invoking the Token Program to initialize the Token
+Account data.
+
+```ts
+const initializeAccountInstruction = createInitializeAccountInstruction(
+  token.publicKey, // token account address
+  mint, // mint address
+  wallet.publicKey, // token account owner
+);
+```
+
+Next, add both instructions to a new transaction.
+
+```ts
+const transaction = new Transaction().add(
+  createAccountInstruction,
+  initializeAccountInstruction,
+);
+```
+
+Finally, send the transaction. The `wallet.keypair` is the transaction fee payer
+and account paying the lamports required by the new mint account. The `token`
+keypair is also included as a signer on the transaction because we are using its
+publickey as the address of the new account.
+
+```ts
+const transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [
+    wallet.keypair, // payer
+    token, // token address keypair
+  ],
+);
+```
+
 ## Associated Token Account
 
 To simplify the process of locating a token account's address for a specific
@@ -166,10 +310,10 @@ type of token account. It's just a token account with a specific address.
 
 ![Associated Token Account](/assets/docs/core/tokens/associated-token-account.svg)
 
-This introduces a key concept in Solana development: Program Derived Address
-(PDA). Conceptually, a PDA provides a deterministic way to generate an address
-using some predefined inputs. This enables us to easily find the address of an
-account at a later time.
+This introduces a key concept in Solana development:
+[Program Derived Address (PDA)](/docs/core/pda). Conceptually, a PDA provides a
+deterministic way to generate an address using some predefined inputs. This
+enables us to easily find the address of an account at a later time.
 
 Here is a [Solana Playground](https://beta.solpg.io/656a2dd0fb53fa325bfd0c41)
 example that derives the USDC Associated Token Account address and owner. It
@@ -205,17 +349,146 @@ own token account for the specific mint account.
 
 ![Accounts Relationship Expanded](/assets/docs/core/tokens/token-account-relationship-ata.svg)
 
-## Metadata Account
+### Create Associated Token Account
 
-// TODO add token extensions metadata extensions
+Creating an Associated Token Account only requires a single instruction that
+invokes the Associated Token Program. Here an example on
+[Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
-Token metadata, such as name and image, are not directly supported by the Token
-Program. Instead, the
-[Metaplex Token Metadata Program](https://github.com/metaplex-foundation/mpl-token-metadata)
-is used to create an additional on-chain account called the "Token Metadata
-Account" to associate additional metadata to a Mint Account. You can refer to
-the
-[Metaplex documentation](https://docs.metaplex.com/programs/token-metadata/overview)
-to better understand the relationship between various accounts.
+The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi) to
+handle:
 
-// TODO, token extensions
+- Invoking the System Program to create a new account using the provided PDA as
+  the address of the new account
+- Invoking the Token Program to initialize the Token Account data for the new
+  account.
+
+First, derive the PDA for the Associated Token Account.
+
+```ts
+const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
+  mint, // mint address
+  wallet.publicKey, // token account owner
+  false, // allow owner off-curve (PDA)
+  TOKEN_2022_PROGRAM_ID,
+);
+```
+
+Next, create the instruction invoking the Associated Token Program.
+
+```ts
+const instruction = createAssociatedTokenAccountInstruction(
+  wallet.publicKey, // payer
+  associatedTokenAccountAddress, // token account address
+  wallet.publicKey, // owner
+  mint, // mint address
+  TOKEN_2022_PROGRAM_ID,
+);
+```
+
+Next, add the instruction to a new transaction.
+
+```ts
+const transaction = new Transaction().add(instruction);
+```
+
+Finally, send the transaction. The `wallet.keypair` is the transaction fee payer
+and account paying the lamports required by the new token account.
+
+```ts
+const transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [
+    wallet.keypair, // payer
+  ],
+);
+```
+
+## Mint Tokens
+
+To create new units of a token, invoke the `MintTo` instruction on the Token
+Program. This instruction must be signed by the mint authority. The instruction
+mints new units of the token to a Token Account and increases the total supply
+on the Mint Account. Here an example on
+[Solana Playground](https://beta.solpg.io/660cea45cffcf4b13384d012).
+
+First, create an instruction to invoke the Token Program.
+
+```ts
+const instruction = createMintToInstruction(
+  mint, // mint address
+  tokenAccount, // destination
+  wallet.publicKey, // mint authority
+  100, // amount
+  [],
+  TOKEN_2022_PROGRAM_ID,
+);
+```
+
+Next, add the instruction to a new transaction.
+
+```ts
+const transaction = new Transaction().add(instruction);
+```
+
+Finally, send the transaction. The mint authority for the mint account must be a
+signer on the transaction.
+
+```ts
+const transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [
+    wallet.keypair, // payer, mint authority
+  ],
+);
+```
+
+## Transfer Tokens
+
+To transfer tokens, invoke the `Transfer` instruction on the Token Program. This
+instruction must be signed by the owner of the Token Account. The instruction
+transfers units of a token from one Token Account to another Token Account. Here
+an example on
+[Solana Playground](https://beta.solpg.io/660ced84cffcf4b13384d013).
+
+First, create an instruction to invoke the Token Program.
+
+```ts
+const instruction = createTransferInstruction(
+  sourceTokenAccount.address, // transfer from
+  destinationTokenAccount.address, // transfer to
+  wallet.publicKey, // source token account owner
+  100, // amount
+  [],
+  TOKEN_2022_PROGRAM_ID,
+);
+```
+
+Next, add the instruction to a new transaction.
+
+```ts
+const transaction = new Transaction().add(instruction);
+```
+
+Finally, send the transaction. The mint authority for the mint account must be a
+signer on the transaction.
+
+```ts
+const transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [
+    wallet.keypair, // payer, owner
+  ],
+);
+```
+
+## Token Metadata
+
+The Token Extensions Program enables additional metadata to be stored directly
+on the Mint Account. Here an example on
+[Solana Playground](https://beta.solpg.io/65964e90cffcf4b13384ceca). You can
+learn more on the
+[Metadata Extension Guide](https://solana.com/developers/guides/token-extensions/metadata-pointer).
