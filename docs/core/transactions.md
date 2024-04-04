@@ -24,17 +24,21 @@ multiple instructions.
 
 ## Transaction
 
-A Solana transaction consists of:
+A Solana
+[transaction](https://github.com/solana-labs/solana/blob/master/sdk/src/transaction/mod.rs#L173)
+consists of:
 
-1. **Signers:** An array of signers included on the transaction.
-2. **Message:** List of instructions to be processed atomically.
+1. **[Signatures](https://github.com/solana-labs/solana/blob/master/sdk/src/signature.rs#L27):**
+   An array of signatures included on the transaction.
+2. **[Message](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L110):**
+   List of instructions to be processed atomically.
 
 ![Transaction Format](/assets/docs/core/transactions/tx_format.png)
 
 The structure of a transaction message comprises of:
 
-- **[Message Header](/docs/core/transactions#message-header)**: Specifies number
-  of signed and read-only account.
+- **[Message Header](/docs/core/transactions#message-header)**: Specifies the
+  number of signer and read-only account.
 - **[Account Addresses](/docs/core/transactions#array-of-account-addresses)**:
   An array of account addresses required by the instructions on the transaction.
 - **[Recent Blockhash](/docs/core/transactions#recent-blockhash)**: Acts as a
@@ -49,14 +53,20 @@ adherent to the [IPv6 MTU](https://en.wikipedia.org/wiki/IPv6_packet) size
 constraints to ensure speed and reliability. This leaves **1232 bytes** for
 packet data like serialized transactions.
 
+The total size of the signatures and message for a transaction is limited to
+1232 bytes.
+
 ![Transaction Format](/assets/docs/core/transactions/issues_with_legacy_txs.png)
 
 ### Message Header
 
-The message header is 3 bytes in length and contains 3 `u8` integers:
+The
+[message header](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/mod.rs#L96)
+specifies the permissions of accounts include in the transaction's account
+address array. It is comprised of three bytes, each containing a u8 integer,
+which collectively specify:
 
-1. The number of required signatures. The Solana runtime verifies this number
-   with the length of the compact array of signatures in the transaction.
+1. The number of required signatures for the transaction.
 2. The number of read-only account addresses that require signatures.
 3. The number of read-only account addresses that do not require signatures.
 
@@ -64,8 +74,9 @@ The message header is 3 bytes in length and contains 3 `u8` integers:
 
 ### Array of Account Addresses
 
-A transaction message includes an array of all account address required by the
-instructions on the transaction.
+A transaction message includes an array containing all the
+[account addresses](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L119)
+needed for the instructions within the transaction.
 
 This array starts with a [compact-u16](/docs/core/transactions#compact-u16)
 encoding of the number of account addresses, followed by the addresses ordered
@@ -80,9 +91,10 @@ by the permissions required of the accounts:
 
 ### Recent Blockhash
 
-All transactions includes a recent blockhash to act as a timestamp for the
-transaction. The blockhash is used to prevent duplications and eliminate stale
-transactions.
+All transactions includes a
+[recent blockhash](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L122)
+to act as a timestamp for the transaction. The blockhash is used to prevent
+duplications and eliminate stale transactions.
 
 The max age of a transaction's blockhash is 150 blocks (~1 minute assuming 400ms
 block times). If a transaction's blockhash is 150 blocks older than the latest
@@ -91,31 +103,75 @@ within a specific timeframe will never be executed.
 
 ### Array of Instructions
 
-A transaction message includes an array of all instructions requesting to be
-processed.
+A transaction message includes an array of all
+[instructions](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L128)
+requesting to be processed. Instructions within a transaction message are in the
+format of
+[CompiledInstruction](https://github.com/solana-labs/solana/blob/master/sdk/program/src/instruction.rs#L6330).
 
 Much like the array of account addresses, this compact array starts with a
 [compact-u16](/docs/core/transactions#compact-u16) encoding of the number of
 instructions, followed by an array of instructions. Each instruction in the
-array has the following components:
+array specifies the following information:
 
 1. **Program ID**: Identifies an on-chain program that will process the
-   instruction. This is represented as a u8 index to an address in the array of
-   account addresses.
-2. **Compact array of account address indexes**: Array of u8 indexes to the
-   subset of account addresses required by the instruction in the array of
-   account addresses.
-3. **Compact array of opaque u8 data**: A general purpose byte array that is
-   specific to the program invoked. This data specifies the instruction to
-   invoke on the program and any additional data that the instruction requires
-   (function arguments).
+   instruction. This is represented as a u8 index pointing to an account address
+   within the account addresses array.
+2. **Compact array of account address indexes**: Array of u8 indexes pointing to
+   the account addresses array for each account required by the instruction.
+3. **Compact array of opaque u8 data**: A u8 byte array specific to the program
+   invoked. This data specifies the instruction to invoke on the program along
+   with any additional data that the instruction requires (such as function
+   arguments).
 
 ![Compact array of Instructions](/assets/docs/core/transactions/compact_array_of_ixs.png)
 
+### Transaction Logs
+
+Below is an example of the structure of a transaction including a single
+[SOL transfer](/docs/core/transactions#basic-examples) instruction which shows
+its message details including the header, account keys, blockhash, and the
+instructions, along with the signature for the transaction.
+
+```
+"transaction": {
+    "message": {
+      "header": {
+        "numReadonlySignedAccounts": 0,
+        "numReadonlyUnsignedAccounts": 1,
+        "numRequiredSignatures": 1
+      },
+      "accountKeys": [
+        "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
+        "5snoUseZG8s8CDFHrXY2ZHaCrJYsW457piktDmhyb5Jd",
+        "11111111111111111111111111111111"
+      ],
+      "recentBlockhash": "DzfXchZJoLMG3cNftcf2sw7qatkkuwQf4xH15N5wkKAb",
+      "instructions": [
+        {
+          "accounts": [
+            0,
+            1
+          ],
+          "data": "3Bxs4NN8M2Yn4TLb",
+          "programIdIndex": 2,
+          "stackHeight": null
+        }
+      ],
+      "indexToProgramIds": {}
+    },
+    "signatures": [
+      "5LrcE2f6uvydKRquEJ8xp19heGxSvqsVbcqUeFoiWbXe8JNip7ftPQNTAVPyTK7ijVdpkzmKKaAQR7MWMmujAhXD"
+    ]
+  }
+```
+
 ## Instruction
 
-An instruction is a request to process a specific action and is the smallest
-contiguous unit of execution logic in a program.
+An
+[instruction](https://github.com/solana-labs/solana/blob/master/sdk/program/src/instruction.rs#L329)
+is a request to process a specific action and is the smallest contiguous unit of
+execution logic in a program.
 
 When building an instruction to add to a transaction, each instruction must
 include the following information:
@@ -123,8 +179,9 @@ include the following information:
 - **Program address**: Specifies the program being invoked
 - **Accounts**: Lists every account the instruction reads from or writes to,
   including other programs
-- **Instruction Data**: Specifies which instruction on the program to invoke,
-  plus any additional data required by the instruction (function arguments)
+- **Instruction Data**: A byte arrya that specifies which instruction on the
+  program to invoke, plus any additional data required by the instruction
+  (function arguments)
 
 ![Transaction Instruction](/assets/docs/core/transactions/instruction.svg)
 
@@ -138,7 +195,8 @@ specified:
   transaction
 - **is_writable**: Specify if the account data will be modified
 
-This information is referred to as the `AccountMeta`.
+This information is referred to as the
+[AccountMeta](https://github.com/solana-labs/solana/blob/master/sdk/program/src/instruction.rs#L539).
 
 ![AccountMeta](/assets/docs/core/transactions/accountmeta.svg)
 
@@ -147,6 +205,31 @@ is writable, transactions can be processed in parallel.
 
 For example, two transactions do not include any accounts that write to the same
 state can be executed at the same time.
+
+### Instruction Logs
+
+Below is an example of the structure of a
+[SOL transfer](/docs/core/transactions#basic-examples) instruction which details
+account keys, program ID, and data required by the instruction.
+
+```
+{
+  "keys": [
+    {
+      "pubkey": "3z9vL1zjN6qyAFHhHQdWYRTFAcy69pJydkZmSFBKHg1R",
+      "isSigner": true,
+      "isWritable": true
+    },
+    {
+      "pubkey": "BpvxsLYKQZTH42jjtWHZpsVSa7s6JVwLKwBptPSHXuZc",
+      "isSigner": false,
+      "isWritable": true
+    }
+  ],
+  "programId": "11111111111111111111111111111111",
+  "data": [2,0,0,0,128,150,152,0,0,0,0,0]
+}
+```
 
 ## Basic Examples
 
@@ -242,15 +325,17 @@ A compact array is an array serialized to in the following format:
 
 ![Compact array format](/assets/docs/core/transactions/compact_array_format.png)
 
-This encoding method is applied to both the
+This encoding method is used to specify the lengths of both the
 [Account Addresses](/docs/core/transactions#array-of-account-addresses) and
-[Instructions](/docs/core/transactions#array-of-instructions) Arrays within a
-transaction.
+[Instructions](/docs/core/transactions#array-of-instructions) arrays within a
+transaction message.
 
 ### Compact-u16
 
-A compact-u16 is a multi-byte encoding of 16 bits. The first byte contains the
-lower 7 bits of the value in its lower 7 bits. If the value is above 0x7f, the
-high bit is set and the next 7 bits of the value are placed into the lower 7
-bits of a second byte. If the value is above 0x3fff, the high bit is set and the
-remaining 2 bits of the value are placed into the lower 2 bits of a third byte.
+A
+[compact-u16](https://github.com/solana-labs/solana/blob/master/sdk/program/src/short_vec.rs)
+is a multi-byte encoding of 16 bits. The first byte contains the lower 7 bits of
+the value in its lower 7 bits. If the value is above 0x7f, the high bit is set
+and the next 7 bits of the value are placed into the lower 7 bits of a second
+byte. If the value is above 0x3fff, the high bit is set and the remaining 2 bits
+of the value are placed into the lower 2 bits of a third byte.

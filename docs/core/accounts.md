@@ -69,8 +69,6 @@ lamport balance of the wallet is the amount of SOL owned by the account.
 
 ![System Account](/assets/docs/core/accounts/system-account.svg)
 
-// TODO: Add Playground example?
-
 <Callout>
   Only accounts owned by the System Program can be used as transaction fee payers.
 </Callout>
