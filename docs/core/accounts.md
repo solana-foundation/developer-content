@@ -13,8 +13,10 @@ database is called an "account".
 ## Account
 
 Each account is identifiable by its unique address, represented as 32 bytes in
-the format of an Ed25519 `PublicKey`. You can think of the address as the unique
-identifier for the account.
+the format of an
+[Ed25519](https://github.com/solana-labs/solana/blob/master/sdk/src/signer/keypair.rs#L25)
+`PublicKey`. You can think of the address as the unique identifier for the
+account.
 
 ![Account Address](/assets/docs/core/accounts/account-address.svg)
 
@@ -24,7 +26,8 @@ on-chain data of the account.
 
 ## AccountInfo
 
-Every account on Solana has the following structure known as the `AccountInfo`.
+Every account on Solana has the following structure known as the
+[AccountInfo](https://github.com/solana-labs/solana/blob/master/sdk/program/src/account_info.rs#L19).
 
 ![AccountInfo](/assets/docs/core/accounts/accountinfo.svg)
 
@@ -53,8 +56,10 @@ lamport balance.
 
 ## System Program
 
-By default, all new accounts are owned by the System Program. The System Program
-is one of Solana's "Native Programs", which performs several key tasks such as:
+By default, all new accounts are owned by the
+[System Program](https://github.com/solana-labs/solana/tree/master/programs/system/src).
+The System Program is one of Solana's "Native Programs", which performs several
+key tasks such as:
 
 - **New Account Creation**: Only the System Program can create new accounts.
 - **Space Allocation**: Sets the byte capacity for the data field of each
@@ -105,10 +110,11 @@ For simplicity, you can think of the "Program Account" as the program itself.
 
 ![Program Account](/assets/docs/core/accounts/program-account-simple.svg)
 
-Program accounts are owned by the "BPF Loader" program, another one of Solana's
-“Native Programs”. There are multiple versions of the BPF Loader program, but at
-a high level, it's simply the program that owns other programs (with the
-exception of Native Programs).
+Program accounts are owned by the
+[BPF Loader](https://github.com/solana-labs/solana/tree/master/programs/bpf_loader/src)
+program, another one of Solana's “Native Programs”. There are multiple versions
+of the BPF Loader program, but at a high level, it's simply the program that
+owns other programs (with the exception of Native Programs).
 
 ## Data Account
 

@@ -41,9 +41,11 @@ execute CPIs using either the `invoke` or `invoke_signed` functions from the
 
 ### Basic CPI
 
-The `invoke` function is used when making a CPI that does not require PDA
-signers. When making CPIs, signers provided to the caller program can extend to
-the callee program.
+The
+[`invoke`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/program.rs#L132)
+function is used when making a CPI that does not require PDA signers. When
+making CPIs, signers provided to the caller program can extend to the callee
+program.
 
 ```rust
 pub fn invoke(
@@ -62,9 +64,11 @@ further details.
 
 ### CPI with PDA Signer
 
-The `invoke_signed` function is used when making a CPI that requires PDA
-signers. The seeds used to derive the signer PDAs are passed into the
-`invoke_signed` function as `signer_seeds`.
+The
+[`invoke_signed`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/program.rs#L247)
+function is used when making a CPI that requires PDA signers. The seeds used to
+derive the signer PDAs are passed into the `invoke_signed` function as
+`signer_seeds`.
 
 You can reference the [Program Derived Address](/docs/core/pda) page for details
 on how PDAs are derived.
@@ -81,11 +85,12 @@ While PDAs have no private keys, they can still act as a signer in an
 instruction via a CPI. To verify that a PDA is derived from the calling program,
 the seeds used to generate the PDA must be included as `signers_seeds`.
 
-When the CPI is processed, the Solana runtime internally calls
-`create_program_address` using the `signers_seeds` and the `program_id` of the
-calling program. The resulting PDA is then compared to the addresses included in
-the instruction. If there's a match, the PDA is considered a valid signer on the
-instruction (`is_signer` is set to true).
+When the CPI is processed, the Solana runtime
+[internally calls `create_program_address`](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/syscalls/cpi.rs#L550)
+using the `signers_seeds` and the `program_id` of the calling program. The
+resulting PDA is then compared to the addresses included in the instruction. If
+there's a match, the PDA is considered a valid signer on the instruction
+(`is_signer` is set to true).
 
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)

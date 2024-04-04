@@ -46,18 +46,21 @@ You can find the full list of Token Program instructions
 
 A few commonly used instructions include:
 
-- `InitializeMint`: Create a new mint account to represent a new type of token.
-- `InitializeAccount`: Create a new token account to hold units of a specific
-  type of token (mint).
-- `MintTo`: Create new units of a specific type of token and add them to a token
-  account. This increases the supply of the token and can only be done by the
-  mint authority of the mint account.
-- `Transfer`: Transfer units of a specific type of token from one token account
-  to another.
+- [`InitializeMint`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L29):
+  Create a new mint account to represent a new type of token.
+- [`InitializeAccount`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L84):
+  Create a new token account to hold units of a specific type of token (mint).
+- [`MintTo`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L522):
+  Create new units of a specific type of token and add them to a token account.
+  This increases the supply of the token and can only be done by the mint
+  authority of the mint account.
+- [`Transfer`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L228):
+  Transfer units of a specific type of token from one token account to another.
 
 ## Mint Account
 
-Tokens on Solana are uniquely identified by the address of a “Mint Account”
+Tokens on Solana are uniquely identified by the address of a
+[Mint Account](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L18-L32)
 owned by the Token Program. This account is effectively a global counter for a
 specific token, and stores data such as:
 
@@ -70,8 +73,7 @@ specific token, and stores data such as:
 
 ![Mint Account](/assets/docs/core/tokens/mint-account.svg)
 
-The full details stored on each Mint Account include the following
-[data](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L18-L32):
+The full details stored on each Mint Account include the following:
 
 ```rust
 pub struct Mint {
@@ -171,7 +173,8 @@ const transactionSignature = await sendAndConfirmTransaction(
 ## Token Account
 
 To hold units of a specific token, another type of data account owned by the
-Token Program must be created. This account is referred to as a "Token Account".
+Token Program must be created. This account is referred to as a
+[Token Account](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L89-L110).
 
 The most commonly referenced data stored on the Token Account include the
 following:
@@ -182,8 +185,7 @@ following:
 
 ![Token Account](/assets/docs/core/tokens/token-account.svg)
 
-The full details stored on each Token Account includes the following
-[data](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L89-L110):
+The full details stored on each Token Account includes the following:
 
 ```rust
 pub struct Account {
@@ -352,16 +354,19 @@ own token account for the specific mint account.
 ### Create Associated Token Account
 
 Creating an Associated Token Account only requires a single instruction that
-invokes the Associated Token Program. Here an example on
+invokes the
+[Associated Token Program](https://github.com/solana-labs/solana-program-library/tree/master/associated-token-account/program/src).
+Here an example on
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
 The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi) to
 handle:
 
-- Invoking the System Program to create a new account using the provided PDA as
-  the address of the new account
-- Invoking the Token Program to initialize the Token Account data for the new
-  account.
+- [Invoking the System Program](https://github.com/solana-labs/solana-program-library/blob/master/associated-token-account/program/src/tools/account.rs#L19)
+  to create a new account using the provided PDA as the address of the new
+  account
+- [Invoking the Token Program](https://github.com/solana-labs/solana-program-library/blob/master/associated-token-account/program/src/processor.rs#L138-L161)
+  to initialize the Token Account data for the new account.
 
 First, derive the PDA for the Associated Token Account.
 

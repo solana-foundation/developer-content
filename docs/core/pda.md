@@ -71,8 +71,9 @@ The derivation of a PDA requires 3 inputs.
 To derive a PDA, we can use the
 [`findProgramAddressSync`](https://github.com/solana-labs/solana-web3.js/blob/master/packages/library-legacy/src/publickey.ts#L212)
 method from `@solana/web3.js`. There are equivalents of this function in other
-programming languages (ex. Rust), but in this section, we will walk through
-examples using Javascript.
+programming languages (ex.
+[Rust](https://github.com/solana-labs/solana/blob/master/sdk/program/src/pubkey.rs#L484)),
+but in this section, we will walk through examples using Javascript.
 
 ```ts
   /**
