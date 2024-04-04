@@ -12,47 +12,113 @@ each instruction on a program represents a specific API endpoint. Then imagine a
 transaction on Solana as bundling several API requests into a single, atomic
 operation that enables you to interact with multiple services simultaneously.
 
-- If a transaction includes multiple instructions, the instructions are
-  processed in the order they are added to the transaction.
-- If any instruction on a transaction fails, then the whole transaction fails
-  and none of the instructions get processed. This allows you to build complex
-  transactions that interact with multiple programs while providing guarantees
-  about the execution of the transaction.
-
-## Transaction
-
-Let’s begin by expanding on the details that make up a transaction:
-
-1. **Message:** At its core, a transaction has a message. This message includes:
-   - **Instructions**: An array of instructions to be executed.
-   - **Recent Blockhash**: Acts as a timestamp for the transaction.
-2. **Signers:** An array of signers included on the transaction.
-
-![Transaction](/assets/docs/core/transactions/transaction.svg)
-
 For simplicity, a transaction can be thought of as a request to process one or
 multiple instructions.
 
 ![Transaction Simplified](/assets/docs/core/transactions/transaction-simple.svg)
 
-Instructions in a transaction are processed sequentially, in the order they are
-added to a transaction.
+- If a transaction includes multiple instructions, the instructions are
+  processed in the order they are added to the transaction.
+- If any instruction on a transaction fails, then the whole transaction fails
+  and none of the instructions get processed.
 
-Transactions are also processed "atomically", meaning that all instructions in a
-transaction either process successfully or, if one fails, the entire transaction
-is rejected.
+## Transaction
 
-<Callout>
-  By default, the first signer on the transaction is set as the fee payer unless
-  otherwise specified.
-</Callout>
+A Solana transaction consists of:
+
+1. **Signers:** An array of signers included on the transaction.
+2. **Message:** List of instructions to be processed atomically.
+
+![Transaction Format](/assets/docs/core/transactions/tx_format.png)
+
+The structure of a transaction message comprises of:
+
+- **[Message Header](/docs/core/transactions#message-header)**: Specifies number
+  of signed and read-only account.
+- **[Account Addresses](/docs/core/transactions#array-of-account-addresses)**:
+  An array of account addresses required by the instructions on the transaction.
+- **[Recent Blockhash](/docs/core/transactions#recent-blockhash)**: Acts as a
+  timestamp for the transaction.
+- **[Instructions](/docs/core/transactions#array-of-instructions)**: An array of
+  instructions to be executed.
+
+![Message](/assets/docs/core/transactions/legacy_message.png)
+
+The Solana network uses a maximum transactional unit (MTU) size of 1280 bytes,
+adherent to the [IPv6 MTU](https://en.wikipedia.org/wiki/IPv6_packet) size
+constraints to ensure speed and reliability. This leaves **1232 bytes** for
+packet data like serialized transactions.
+
+![Transaction Format](/assets/docs/core/transactions/issues_with_legacy_txs.png)
+
+### Message Header
+
+The message header is 3 bytes in length and contains 3 `u8` integers:
+
+1. The number of required signatures. The Solana runtime verifies this number
+   with the length of the compact array of signatures in the transaction.
+2. The number of read-only account addresses that require signatures.
+3. The number of read-only account addresses that do not require signatures.
+
+![Message Header](/assets/docs/core/transactions/message_header.png)
+
+### Array of Account Addresses
+
+A transaction message includes an array of all account address required by the
+instructions on the transaction.
+
+This array starts with a [compact-u16](/docs/core/transactions#compact-u16)
+encoding of the number of account addresses, followed by the addresses ordered
+by the permissions required of the accounts:
+
+- Accounts that are writable and signers
+- Accounts that are read-only and signers
+- Accounts that are writable and not signers
+- Accounts that are read-only and not signers
+
+![Compact array of account addresses](/assets/docs/core/transactions/compat_array_of_account_addresses.png)
+
+### Recent Blockhash
+
+All transactions includes a recent blockhash to act as a timestamp for the
+transaction. The blockhash is used to prevent duplications and eliminate stale
+transactions.
+
+The max age of a transaction's blockhash is 150 blocks (~1 minute assuming 400ms
+block times). If a transaction's blockhash is 150 blocks older than the latest
+blockhash, it is considered expired. This means that transactions not processed
+within a specific timeframe will never be executed.
+
+### Array of Instructions
+
+A transaction message includes an array of all instructions requesting to be
+processed.
+
+Much like the array of account addresses, this compact array starts with a
+[compact-u16](/docs/core/transactions#compact-u16) encoding of the number of
+instructions, followed by an array of instructions. Each instruction in the
+array has the following components:
+
+1. **Program ID**: Identifies an on-chain program that will process the
+   instruction. This is represented as a u8 index to an address in the array of
+   account addresses.
+2. **Compact array of account address indexes**: Array of u8 indexes to the
+   subset of account addresses required by the instruction in the array of
+   account addresses.
+3. **Compact array of opaque u8 data**: A general purpose byte array that is
+   specific to the program invoked. This data specifies the instruction to
+   invoke on the program and any additional data that the instruction requires
+   (function arguments).
+
+![Compact array of Instructions](/assets/docs/core/transactions/compact_array_of_ixs.png)
 
 ## Instruction
 
 An instruction is a request to process a specific action and is the smallest
 contiguous unit of execution logic in a program.
 
-Each instruction on a transaction must include the following information:
+When building an instruction to add to a transaction, each instruction must
+include the following information:
 
 - **Program address**: Specifies the program being invoked
 - **Accounts**: Lists every account the instruction reads from or writes to,
@@ -79,8 +145,8 @@ This information is referred to as the `AccountMeta`.
 By specifying all accounts required by an instruction and whether each account
 is writable, transactions can be processed in parallel.
 
-For example, if two transactions do not include any accounts that write to the
-same state, then the transactions can be executed at the same time.
+For example, two transactions do not include any accounts that write to the same
+state can be executed at the same time.
 
 ## Basic Examples
 
@@ -89,8 +155,8 @@ transfer SOL from a sender to a receiver.
 
 Individual "wallets" on Solana are accounts owned by the
 [System Program](/docs/core/accounts#system-program). As part of the
-[Solana Account Model](/docs/core/accounts), only the program that owns account
-is allowed to modify the data on the account.
+[Solana Account Model](/docs/core/accounts), only the program that owns an
+account is allowed to modify the data on the account.
 
 Therefore, transferring SOL from a "wallet" account requires sending a
 transaction to invoke the transfer instruction on the System Program.
@@ -165,3 +231,26 @@ abstracts away the details of creating the instruction data buffer and
 The details for building program instructions are often abstracted away by
 client libraries. However, if one is not available, you can always fall back to
 manually building the instruction.
+
+## Compact-Array Format
+
+A compact array is an array serialized to in the following format:
+
+1. The length of the array, encoded as
+   [compact-u16](/docs/core/transactions#compact-u16).
+2. The individual items of the array, listed sequentially after the length.
+
+![Compact array format](/assets/docs/core/transactions/compact_array_format.png)
+
+This encoding method is applied to both the
+[Account Addresses](/docs/core/transactions#array-of-account-addresses) and
+[Instructions](/docs/core/transactions#array-of-instructions) Arrays within a
+transaction.
+
+### Compact-u16
+
+A compact-u16 is a multi-byte encoding of 16 bits. The first byte contains the
+lower 7 bits of the value in its lower 7 bits. If the value is above 0x7f, the
+high bit is set and the next 7 bits of the value are placed into the lower 7
+bits of a second byte. If the value is above 0x3fff, the high bit is set and the
+remaining 2 bits of the value are placed into the lower 2 bits of a third byte.
