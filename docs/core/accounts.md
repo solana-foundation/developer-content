@@ -61,13 +61,14 @@ By default, all new accounts are owned by the
 The System Program is one of Solana's "Native Programs", which performs several
 key tasks such as:
 
-- **New Account Creation**: Only the System Program can create new accounts.
-- **Space Allocation**: Sets the byte capacity for the data field of each
-  account.
-- **Assign Program Ownership**: Once the System Program creates an account, it
-  can reassign the designated program owner to a different program account. This
-  is how custom programs take ownership of new accounts created by the System
-  Program.
+- [New Account Creation](https://github.com/solana-labs/solana/blob/master/programs/system/src/system_processor.rs#L145):
+  Only the System Program can create new accounts.
+- [Space Allocation](https://github.com/solana-labs/solana/blob/master/programs/system/src/system_processor.rs#L70):
+  Sets the byte capacity for the data field of each account.
+- [Assign Program Ownership](https://github.com/solana-labs/solana/blob/master/programs/system/src/system_processor.rs#L112):
+  Once the System Program creates an account, it can reassign the designated
+  program owner to a different program account. This is how custom programs take
+  ownership of new accounts created by the System Program.
 
 On Solana, a "wallet" is simply an account owned by the System Program. The
 lamport balance of the wallet is the amount of SOL owned by the account.
