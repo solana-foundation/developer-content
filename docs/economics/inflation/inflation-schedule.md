@@ -1,6 +1,8 @@
 ---
 sidebarLabel: Proposed Inflation Schedule
 title: Proposed Inflation Schedule
+altRoutes:
+  - /docs/economics/inflation/inflation_schedule
 ---
 
 As mentioned above, the network's _Inflation Schedule_ is uniquely described by
