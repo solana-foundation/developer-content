@@ -1,6 +1,8 @@
 ---
 title: Introduction
 sidebarSortOrder: 1
+altRoutes:
+  - /docs/intro/history
 ---
 
 ## What is Solana?

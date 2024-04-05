@@ -17,8 +17,8 @@ The Solana Labs organization operates a public RPC endpoint for each Cluster.
 Each of these public endpoints are subject to rate limits, but are available for
 users and developers to interact with the Solana blockchain.
 
-> > Note: Public endpoint rate limits are subject to change. The specific rate
-> > limits listed on this document are not guaranteed to be the most up-to-date.
+> Note: Public endpoint rate limits are subject to change. The specific rate
+> limits listed on this document are not guaranteed to be the most up-to-date.
 
 ### Using explorers with different Clusters
 
