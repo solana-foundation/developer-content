@@ -58,7 +58,7 @@
     },
     {
       "destination": "/docs/core/transactions/fees",
-      "source": "/developing/intro/transaction_fees"
+      "source": "/developing/intro/transaction-fees"
     },
     {
       "destination": "/docs/core/transactions/confirmation",
@@ -167,8 +167,8 @@
       "source": "/integrations/exchange"
     },
     {
-      "destination": "/docs/intro/transaction_fees",
-      "source": "/transaction_fees"
+      "destination": "/docs/intro/transaction-fees",
+      "source": "/transaction-fees"
     },
     {
       "destination": "/docs/intro/economics",
