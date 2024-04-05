@@ -5,8 +5,9 @@ title: Solana Account Model
 ---
 
 On Solana, all data is stored in what are referred to as "accounts”. The way
-data is organized on Solana resembles a key-value store, where each entry in the
-database is called an "account".
+data is organized on Solana resembles a
+[key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),
+where each entry in the database is called an "account".
 
 ![Accounts](/assets/docs/core/accounts/accounts.svg)
 
@@ -85,8 +86,9 @@ On Solana, “smart contracts” are referred to as programs. A program is an
 account that stores executable code and is indicated by an “executable” flag
 that is set to true.
 
-When new programs are deployed on Solana, technically two separate accounts are
-created.
+When new programs are
+[deployed](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/lib.rs#L498)
+on Solana, technically two separate accounts are created.
 
 - **Program Account**: The main account representing an on-chain program. This
   account stores the address of an executable data account (which stores the
