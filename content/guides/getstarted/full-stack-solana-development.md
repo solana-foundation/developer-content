@@ -963,7 +963,7 @@ Let's give them a front-end to do that.
 #### Program deploy failed?
 
 Program code is temporarily stored in
-[buffer accounts](docs/programs/deploying#state-accounts) while programs are
+[buffer accounts](/docs/programs/deploying#state-accounts) while programs are
 being deployed. You can view and close these accounts with:
 
 ```shell
