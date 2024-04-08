@@ -4,7 +4,8 @@ difficulty: intro
 title: "How to create a CRUD dApp on Solana"
 description:
   "Solana developer quickstart guide to learn how to create a basic CRUD dApp on
-  the Solana blockchain with a simple journal program and interact with the program via a UI."
+  the Solana blockchain with a simple journal program and interact with the
+  program via a UI."
 tags:
   - quickstart
   - dApp
