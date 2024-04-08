@@ -9,16 +9,19 @@ description:
 tags:
   - quickstart
   - dApp
+  - crud
   - anchor
   - rust
   - react
   - program
 keywords:
-  - playground
-  - solana pg
+  - solana dapp
   - on-chain
   - rust
   - anchor program
+  - crud dapp
+  - create dapp
+  - create solana dapp
   - tutorial
   - intro to solana development
   - blockchain developer
@@ -580,4 +583,5 @@ function JournalCard({ account }: { account: PublicKey }) {
 
 - Journal dApp:
   [solana-journal-eight.vercel.app](https://solana-journal-eight.vercel.app)
-- Program example code:
+- Example code:
+  [https://github.com/solana-foundation/CRUD-dApp](https://github.com/solana-foundation/CRUD-dApp)
