@@ -32,8 +32,8 @@ writing Solana programs. The main macros include:
   on-chain address
 - [`#[program]`](/docs/core/programs#program): Specifies the module containing
   the program’s instruction logic
-- [`#[derive(Accounts)]`](/docs/core/programs#program): Applied to structs to
-  indicate a list of accounts required for an instruction
+- [`#[derive(Accounts)]`](/docs/core/programs#derive-accounts): Applied to
+  structs to indicate a list of accounts required for an instruction
 - [`#[account]`](/docs/core/programs#account): Applied to structs to create
   custom account types specific to the program
 
@@ -221,7 +221,7 @@ and specifying appropriate account types:
 
 - **[Account Types](https://github.com/coral-xyz/anchor/tree/master/lang/src/accounts)**:
   Anchor provides various account types to help ensure that the account provided
-  by the client matches with what the program expects.
+  by the client matches what the program expects.
 
   ```rust /Account/2 /Signer/ /Program/
   #[derive(Accounts)]
@@ -629,6 +629,9 @@ Structs are used to define the format of a custom data account type for a
 program. Serialization and deserialization of account data is commonly done
 using [Borsh](https://borsh.io/).
 
+In this example, the `NewAccount` struct defines the structure of the data to
+store on a new account.
+
 ```rust
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct NewAccount {
@@ -640,6 +643,10 @@ All Solana accounts include a [`data`](/docs/core/accounts#accountinfo) field
 that can be used to store any arbitrary data as a byte array. This flexibility
 enables programs to create and store customized data structures within new
 accounts.
+
+In the `process_initialize` function, the data passed into the entrypoint is
+used to create an instance of the `NewAccount` struct. This instance is
+serialized and stored in the data field of the newly created account.
 
 ```rust /data: u64/1 /account_data/ /NewAccount { data }/ /NewAccount/
 pub fn process_initialize(
@@ -658,7 +665,6 @@ pub fn process_initialize(
     msg!("Changed data to: {:?}!", data);
     Ok(())
 }
-
 ...
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
@@ -666,8 +672,3 @@ pub struct NewAccount {
     pub data: u64,
 }
 ```
-
-In this example, the `NewAccount` struct defines the structure of the data to
-store on the new account created in the instruction. The value of the data
-stored on the account is the data passed into the program through the
-entrypoint.

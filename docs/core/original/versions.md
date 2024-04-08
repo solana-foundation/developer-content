@@ -1,6 +1,9 @@
 ---
 title: Versioned Transactions
-description: ""
+description:
+  "Explore the core Solana concepts: transactions, versioned transactions,
+  enabling additional functionality in the Solana runtime, address lookup
+  tables, and more."
 ---
 
 [Versioned Transactions](/docs/core/transactions/versions.md) are the new
@@ -73,8 +76,8 @@ const getTx = await connection.getTransaction(
 Using a standard JSON formatted POST request, you can set the
 `maxSupportedTransactionVersion` when retrieving a specific block:
 
-```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d \
+```shell
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d \
 '{"jsonrpc": "2.0", "id":1, "method": "getBlock", "params": [430, {
   "encoding":"json",
   "maxSupportedTransactionVersion":0,
@@ -165,8 +168,8 @@ can send it to the cluster and `await` the response:
 
 ```js
 // send our v0 transaction to the cluster
-const txid = await connection.sendTransaction(transaction);
-console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
+const txId = await connection.sendTransaction(transaction);
+console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
 ```
 
 > NOTE: Unlike `legacy` transactions, sending a `VersionedTransaction` via

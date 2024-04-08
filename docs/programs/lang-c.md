@@ -16,7 +16,7 @@ C projects are laid out as follows:
 
 The `makefile` should contain the following:
 
-```bash
+```shell
 OUT_DIR := <path to place to resulting shared object>
 include ~/.local/share/solana/install/active_release/bin/sdk/sbf/c/sbf.mk
 ```
@@ -34,7 +34,7 @@ First setup the environment:
 
 Then build using make:
 
-```bash
+```shell
 make -C <program directory>
 ```
 
@@ -91,7 +91,7 @@ their own deserialization function they need to ensure that any modifications
 the program wishes to commit must be written back into the input byte array.
 
 Details on how the loader serializes the program inputs can be found in the
-[Input Parameter Serialization/docs/programs/faq#input-parameter-serialization)
+[Input Parameter Serialization](https://solana.com/docs/programs/faq#input-parameter-serialization)
 docs.
 
 ## Data Types
@@ -180,9 +180,9 @@ instruction and its context.
 
 To create a dump file:
 
-```bash
-$ cd <program directory>
-$ make dump_<program name>
+```shell
+cd <program directory>
+make dump_<program name>
 ```
 
 ## Examples

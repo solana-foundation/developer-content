@@ -17,7 +17,7 @@ Here is a start program on
 The `lib.rs` file includes the following program with a single `sol_transfer`
 instruction.
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 use anchor_lang::system_program::{transfer, Transfer};
 
@@ -69,7 +69,7 @@ instruction and logs a link to the transaction details on SolanaFM.
 
 It shows how to derive the PDA using the seeds specified in the program.
 
-```ts
+```ts /pda/ /wallet.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("pda"), wallet.publicKey.toBuffer()],
   program.programId,
@@ -135,7 +135,7 @@ SolanaFM.
 In the starter code, the `SolTransfer` struct specifies the accounts required by
 the transfer instruction.
 
-```rust
+```rust /pda_account/ /recipient/2 /system_program/
 #[derive(Accounts)]
 pub struct SolTransfer<'info> {
     #[account(
@@ -156,7 +156,7 @@ for the `pda_account` is unique for each `recipient`.
 
 The Javascript equivalent to derive the PDA is included in the test file.
 
-```ts
+```ts /pda/ /wallet.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("pda"), wallet.publicKey.toBuffer()],
   program.programId,
@@ -172,7 +172,7 @@ This approach involves creating a `CpiContext`, which includes the `program_id`
 and accounts required for the instruction being called, followed by a helper
 function (`transfer`) to invoke a specific instruction.
 
-```rust
+```rust /cpi_context/ {19}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
     let from_pubkey = ctx.accounts.pda_account.to_account_info();
     let to_pubkey = ctx.accounts.recipient.to_account_info();
@@ -199,7 +199,7 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 When signing with PDAs, the optional seeds and bump seed are included in the
 `cpi_context` as `signer_seeds` using `with_signer()`.
 
-```rust
+```rust /signer_seeds/
 let seed = to_pubkey.key();
 let bump_seed = ctx.bumps.pda_account;
 let signer_seeds: &[&[&[u8]]] = &[&[b"pda", seed.as_ref(), &[bump_seed]]];
@@ -222,15 +222,16 @@ transfer(cpi_context, amount)?;
 ```
 
 When the CPI is processed, the Solana runtime will validate that the provided
-seeds and caller program ID derive a valid PDA. If the PDA matches one of the
-accounts specified in the CPI instruction, then the signer flag for that account
-is set to true. This mechanism allows for programs to programmatically sign for
-PDAs that are derived from their program ID.
+seeds and caller program ID derive a valid PDA. The PDA is then added as a
+signer on the invocation. This mechanism allows for programs to programmatically
+sign for PDAs that are derived from their program ID.
 
 ### 2. Invoke() with Crate Helper
 
 Under the hood, the example above is a wrapper around the `invoke_signed()`
-function which uses `system_instruction::transfer` to build the instruction.
+function which uses
+[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/system_instruction.rs#L881)
+to build the instruction.
 
 First, add these imports to the top of `lib.rs`:
 
@@ -240,7 +241,7 @@ use anchor_lang::solana_program::{program::invoke_signed, system_instruction};
 
 Next, modify the `sol_transfer` instruction with the following:
 
-```rust
+```rust /instruction/1,3 {13}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
     let from_pubkey = ctx.accounts.pda_account.to_account_info();
     let to_pubkey = ctx.accounts.recipient.to_account_info();

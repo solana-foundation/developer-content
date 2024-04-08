@@ -14,10 +14,8 @@ where each entry in the database is called an "account".
 ## Account
 
 Each account is identifiable by its unique address, represented as 32 bytes in
-the format of an
-[Ed25519](https://github.com/solana-labs/solana/blob/master/sdk/src/signer/keypair.rs#L25)
-`PublicKey`. You can think of the address as the unique identifier for the
-account.
+the format of an [Ed25519](https://ed25519.cr.yp.to/) `PublicKey`. You can think
+of the address as the unique identifier for the account.
 
 ![Account Address](/assets/docs/core/accounts/account-address.svg)
 
@@ -59,8 +57,8 @@ lamport balance.
 
 By default, all new accounts are owned by the
 [System Program](https://github.com/solana-labs/solana/tree/master/programs/system/src).
-The System Program is one of Solana's "Native Programs", which performs several
-key tasks such as:
+The System Program is one of Solana's "Native Programs", which comes "built-in"
+to the Solana runtime and performs several key tasks such as:
 
 - [New Account Creation](https://github.com/solana-labs/solana/blob/master/programs/system/src/system_processor.rs#L145):
   Only the System Program can create new accounts.

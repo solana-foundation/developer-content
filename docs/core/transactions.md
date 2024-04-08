@@ -78,9 +78,10 @@ A transaction message includes an array containing all the
 [account addresses](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L119)
 needed for the instructions within the transaction.
 
-This array starts with a [compact-u16](/docs/core/transactions#compact-u16)
-encoding of the number of account addresses, followed by the addresses ordered
-by the permissions required of the accounts:
+This array starts with a
+[compact-u16](/docs/core/transactions#compact-array-format) encoding of the
+number of account addresses, followed by the addresses ordered by the
+permissions required of the accounts:
 
 - Accounts that are writable and signers
 - Accounts that are read-only and signers
@@ -91,7 +92,7 @@ by the permissions required of the accounts:
 
 ### Recent Blockhash
 
-All transactions includes a
+All transactions include a
 [recent blockhash](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L122)
 to act as a timestamp for the transaction. The blockhash is used to prevent
 duplications and eliminate stale transactions.
@@ -107,16 +108,16 @@ A transaction message includes an array of all
 [instructions](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/legacy.rs#L128)
 requesting to be processed. Instructions within a transaction message are in the
 format of
-[CompiledInstruction](https://github.com/solana-labs/solana/blob/master/sdk/program/src/instruction.rs#L6330).
+[CompiledInstruction](https://github.com/solana-labs/solana/blob/master/sdk/program/src/instruction.rs#L633).
 
 Much like the array of account addresses, this compact array starts with a
-[compact-u16](/docs/core/transactions#compact-u16) encoding of the number of
-instructions, followed by an array of instructions. Each instruction in the
-array specifies the following information:
+[compact-u16](/docs/core/transactions#compact-array-format) encoding of the
+number of instructions, followed by an array of instructions. Each instruction
+in the array specifies the following information:
 
 1. **Program ID**: Identifies an on-chain program that will process the
-   instruction. This is represented as a u8 index pointing to an account address
-   within the account addresses array.
+   instruction. This is represented as an u8 index pointing to an account
+   address within the account addresses array.
 2. **Compact array of account address indexes**: Array of u8 indexes pointing to
    the account addresses array for each account required by the instruction.
 3. **Compact array of opaque u8 data**: A u8 byte array specific to the program
@@ -129,8 +130,8 @@ array specifies the following information:
 ### Transaction Logs
 
 Below is an example of the structure of a transaction including a single
-[SOL transfer](/docs/core/transactions#basic-examples) instruction which shows
-its message details including the header, account keys, blockhash, and the
+[SOL transfer](/docs/core/transactions#basic-examples) instruction. It shows the
+message details including the header, account keys, blockhash, and the
 instructions, along with the signature for the transaction.
 
 ```
@@ -171,7 +172,7 @@ instructions, along with the signature for the transaction.
 An
 [instruction](https://github.com/solana-labs/solana/blob/master/sdk/program/src/instruction.rs#L329)
 is a request to process a specific action and is the smallest contiguous unit of
-execution logic in a program.
+execution logic in a [program](/docs/core/accounts#program-account).
 
 When building an instruction to add to a transaction, each instruction must
 include the following information:
@@ -210,7 +211,7 @@ state can be executed at the same time.
 
 Below is an example of the structure of a
 [SOL transfer](/docs/core/transactions#basic-examples) instruction which details
-account keys, program ID, and data required by the instruction.
+the account keys, program ID, and data required by the instruction.
 
 ```
 {
@@ -317,10 +318,10 @@ manually building the instruction.
 
 ## Compact-Array Format
 
-A compact array is an array serialized to in the following format:
+A compact array is an array serialized in the following format:
 
 1. The length of the array, encoded as
-   [compact-u16](/docs/core/transactions#compact-u16).
+   [compact-u16](https://github.com/solana-labs/solana/blob/master/sdk/program/src/short_vec.rs).
 2. The individual items of the array, listed sequentially after the length.
 
 ![Compact array format](/assets/docs/core/transactions/compact_array_format.png)
@@ -329,13 +330,3 @@ This encoding method is used to specify the lengths of both the
 [Account Addresses](/docs/core/transactions#array-of-account-addresses) and
 [Instructions](/docs/core/transactions#array-of-instructions) arrays within a
 transaction message.
-
-### Compact-u16
-
-A
-[compact-u16](https://github.com/solana-labs/solana/blob/master/sdk/program/src/short_vec.rs)
-is a multi-byte encoding of 16 bits. The first byte contains the lower 7 bits of
-the value in its lower 7 bits. If the value is above 0x7f, the high bit is set
-and the next 7 bits of the value are placed into the lower 7 bits of a second
-byte. If the value is above 0x3fff, the high bit is set and the remaining 2 bits
-of the value are placed into the lower 2 bits of a third byte.

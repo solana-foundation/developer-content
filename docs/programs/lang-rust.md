@@ -62,16 +62,16 @@ First setup the environment:
 The normal cargo build is available for building programs against your host
 machine which can be used for unit testing:
 
-```bash
-$ cargo build
+```shell
+cargo build
 ```
 
 To build a specific program, such as SPL Token, for the Solana SBF target which
 can be deployed to the cluster:
 
-```bash
-$ cd <the program directory>
-$ cargo build-bpf
+```shell
+cd <the program directory>
+cargo build-bpf
 ```
 
 ## How to Test
@@ -236,7 +236,7 @@ available. Sometimes a program may depend on a crate that depends itself on
 If a program depends on `rand`, the compilation will fail because there is no
 `get-random` support for Solana. The error will typically look like this:
 
-```bash
+```shell
 error: target is not supported, for more information see: https://docs.rs/getrandom/#unsupported-targets
    --> /Users/jack/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.1.14/src/lib.rs:257:9
     |
@@ -295,7 +295,7 @@ contains a logging example.
 Rust's `panic!`, `assert!`, and internal panic results are printed to the
 [program logs](/docs/programs/debugging.md#logging) by default.
 
-```bash
+```shell
 INFO  solana_runtime::message_processor] Finalized account CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
 INFO  solana_runtime::message_processor] Call SBF program CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
 INFO  solana_runtime::message_processor] Program log: Panicked at: 'assertion failed: `(left == right)`
@@ -372,9 +372,9 @@ instruction and its context.
 
 To create a dump file:
 
-```bash
-$ cd <program directory>
-$ cargo build-bpf --dump
+```shell
+cd <program directory>
+cargo build-bpf --dump
 ```
 
 ## Examples

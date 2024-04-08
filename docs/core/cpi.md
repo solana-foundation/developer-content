@@ -87,10 +87,9 @@ the seeds used to generate the PDA must be included as `signers_seeds`.
 
 When the CPI is processed, the Solana runtime
 [internally calls `create_program_address`](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/syscalls/cpi.rs#L550)
-using the `signers_seeds` and the `program_id` of the calling program. The
-resulting PDA is then compared to the addresses included in the instruction. If
-there's a match, the PDA is considered a valid signer on the instruction
-(`is_signer` is set to true).
+using the `signers_seeds` and the `program_id` of the calling program. If a
+valid PDA is found, the address is
+[added as a valid signer](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/syscalls/cpi.rs#L552).
 
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)

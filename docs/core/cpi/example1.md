@@ -16,7 +16,7 @@ Here is a starter program on
 The `lib.rs` file includes the following program with a single `sol_transfer`
 instruction.
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 use anchor_lang::system_program::{transfer, Transfer};
 
@@ -87,7 +87,7 @@ SolanaFM.
 In the starter code, the `SolTransfer` struct specifies the accounts required by
 the transfer instruction.
 
-```rust
+```rust /sender/ /recipient/ /system_program/
 #[derive(Accounts)]
 pub struct SolTransfer<'info> {
     #[account(mut)]
@@ -107,7 +107,7 @@ This approach involves creating a `CpiContext`, which includes the `program_id`
 and accounts required for the instruction being called, followed by a helper
 function (`transfer`) to invoke a specific instruction.
 
-```rust
+```rust /cpi_context/ {14}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
     let from_pubkey = ctx.accounts.sender.to_account_info();
     let to_pubkey = ctx.accounts.recipient.to_account_info();
@@ -129,7 +129,7 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 The `cpi_context` variable specifies the program ID (System Program) and
 accounts (sender and recipient) required by the transfer instruction.
 
-```rust
+```rust /program_id/ /from_pubkey/ /to_pubkey/
 let cpi_context = CpiContext::new(
     program_id,
     Transfer {
@@ -149,7 +149,9 @@ transfer(cpi_context, amount)?;
 ### 2. Invoke() with Crate Helper
 
 Under the hood, the example above is a wrapper around the `invoke()` function
-which uses `system_instruction::transfer` to build the instruction.
+which uses
+[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/system_instruction.rs#L881)
+to build the instruction.
 
 First, add these imports to the top of `lib.rs`:
 
@@ -159,7 +161,7 @@ use anchor_lang::solana_program::{program::invoke, system_instruction};
 
 Next, modify the `sol_transfer` instruction with the following:
 
-```rust
+```rust /instruction/1,3 {9}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
     let from_pubkey = ctx.accounts.sender.to_account_info();
     let to_pubkey = ctx.accounts.recipient.to_account_info();
@@ -187,7 +189,7 @@ instruction and correctly create the instruction data buffer.
 The `sol_transfer` instruction below is a fully expanded equivalent of the
 previous two examples.
 
-```rust
+```rust /instruction/10,13 {28}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
     let from_pubkey = ctx.accounts.sender.to_account_info();
     let to_pubkey = ctx.accounts.recipient.to_account_info();

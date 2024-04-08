@@ -490,10 +490,15 @@ const transactionSignature = await sendAndConfirmTransaction(
 );
 ```
 
+It's important to understand that both the sender and recipient must have
+existing token accounts for the specific type of token being transferred. The
+sender can include instructions to create the recipient's token account, which
+generally is the Associated Token Account.
+
 ## Token Metadata
 
-The Token Extensions Program enables additional metadata to be stored directly
-on the Mint Account. Here an example on
+The Token Extensions Program enables additional metadata (such as name, symbol,
+link to image) to be stored directly on the Mint Account. Here an example on
 [Solana Playground](https://beta.solpg.io/65964e90cffcf4b13384ceca). You can
 learn more on the
 [Metadata Extension Guide](https://solana.com/developers/guides/token-extensions/metadata-pointer).

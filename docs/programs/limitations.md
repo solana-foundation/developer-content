@@ -58,7 +58,7 @@ The
 tests will report the performance of some math operations. To run the test, sync
 the repo and run:
 
-```sh
+```shell
 cargo test-sbf -- --nocapture --test-threads=1
 ```
 

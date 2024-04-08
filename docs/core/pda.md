@@ -35,10 +35,11 @@ user can generate a valid signature for the address. However, the Solana runtime
 enables programs to programmatically "sign" for PDAs without needing a private
 key.
 
-For context, Solana Keypairs are points on the Ed25519 curve (elliptic-curve
-cryptography) which have a public key and corresponding private key. We often
-use public keys as the unique IDs for new on-chain accounts and private keys for
-signing.
+For context, Solana
+[Keypairs](https://github.com/solana-labs/solana/blob/master/sdk/src/signer/keypair.rs#L25)
+are points on the Ed25519 curve (elliptic-curve cryptography) which have a
+public key and corresponding private key. We often use public keys as the unique
+IDs for new on-chain accounts and private keys for signing.
 
 ![On Curve Address](/assets/docs/core/pda/address-on-curve.svg)
 
@@ -168,7 +169,7 @@ examples in an in-browser editor.
 
 The example below derives a PDA without providing any optional seeds.
 
-```ts
+```ts /[]/
 import { PublicKey } from "@solana/web3.js";
 
 const programId = new PublicKey("11111111111111111111111111111111");
@@ -190,7 +191,7 @@ Bump: 255
 
 The next example below adds an optional seed "helloWorld".
 
-```ts
+```ts /string/
 import { PublicKey } from "@solana/web3.js";
 
 const programId = new PublicKey("11111111111111111111111111111111");
@@ -222,7 +223,7 @@ Ed25519 curve, and is not a valid PDA.
 You can replicate the previous example by using `createProgramAddressSync` and
 explicitly passing in the bump seed of 254.
 
-```ts
+```ts /bump/
 import { PublicKey } from "@solana/web3.js";
 
 const programId = new PublicKey("11111111111111111111111111111111");
@@ -318,7 +319,7 @@ single instruction to create a new account using a PDA as the address of the
 account. The new account stores the address of the `user` and the `bump` seed
 used to derive the PDA.
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 
 declare_id!("75GJVCJNhaukaa2vCCqhreY31gaphv7XTScBChmr1ueR");
@@ -363,7 +364,22 @@ The seeds used to derive the PDA include the hardcoded string `data` and the
 address of the `user` account provided to the instruction. The Anchor framework
 automatically derives the canonical `bump` seed.
 
-```rust
+```rust /data/ /user.key()/ /bump/
+#[account(
+    init,
+    seeds = [b"data", user.key().as_ref()],
+    bump,
+    payer = user,
+    space = 8 + DataAccount::INIT_SPACE
+)]
+pub pda_account: Account<'info, DataAccount>,
+```
+
+The `init` constraint instructs Anchor to invoke the System Program to create a
+new account using the PDA as the address. Under the hood, this is done through a
+[CPI](/docs/core/cpi).
+
+```rust /init/
 #[account(
     init,
     seeds = [b"data", user.key().as_ref()],
@@ -377,7 +393,7 @@ pub pda_account: Account<'info, DataAccount>,
 In the test file, you will find the Javascript equivalent to derive the PDA
 using the seeds specified in the program.
 
-```ts
+```ts /data/ /user.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("data"), user.publicKey.toBuffer()],
   program.programId,
@@ -388,7 +404,7 @@ A transaction is then sent to invoke the `initialize` instruction to create a
 new on-chain account using the PDA as the address. Once the transaction is sent,
 the PDA is used to fetch the on-chain account that was created at the address.
 
-```ts
+```ts /initialize()/ /PDA/  {14}
 it("Is initialized!", async () => {
   const transactionSignature = await program.methods
     .initialize()
