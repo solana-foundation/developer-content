@@ -447,6 +447,10 @@ that facilitates tasks such as creating and using tokens.
 Tokens forfeit to the [cluster](#cluster) if malicious [validator](#validator)
 behavior can be proven.
 
+## stake-weighted quality of service (SWQoS)
+
+SWQoS allows [preferential treatment for transactions that come from staked validators](https://solana.com/developers/guides/advanced/stake-weighted-qos). 
+
 ## supermajority
 
 2/3 of a [cluster](#cluster).
