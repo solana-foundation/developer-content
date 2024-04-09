@@ -139,8 +139,13 @@ split proportionally based on the lamport amounts specified in the
 On the RPC you will have to use `--rpc-send-transaction-tpu-peer` to forward
 transactions to a specific leader. The exact usage would be
 `--rpc-send-transaction-tpu-peer HOST:PORT`, with the Host being of the leader
-you have the `staked-nodes-overrides` enabled on. The peering would looking like
-the following:
+you have the `staked-nodes-overrides` enabled on. 
+
+**Note:** The QUIC TPU port is defined as base QUIC port (default: 8003)+6, so should be 
+8009 for validators not setting a custom --public-tpu-address. (For Jito: 11222+6, 
+so 11228)
+
+The peering would looking like the following:
 
 ![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs-guide.png)
 
