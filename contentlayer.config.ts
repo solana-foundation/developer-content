@@ -372,6 +372,24 @@ export const SolanaRPCDoc = defineDocumentType(() => ({
 }));
 
 /**
+ * Content record schema a single Solana cookbook record
+ */
+export const SolanaCookbook = defineDocumentType(() => ({
+  name: "SolanaCookbook",
+  filePathPattern: "{content/cookbook,/content/cookbook,i18n/**/content/cookbook}/**/*.{md,mdx}",
+  computedFields: standardComputedFields,
+  fields: {
+    // use the standard content fields
+    ...basicContentFields,
+
+    /**
+     * Custom fields for this specific content record type
+     */
+    // none
+  },
+}));
+
+/**
  * Simple record type to enable ignoring files in the contentlayer checks
  * Note: This should be used sparingly (and normally only for readme files)
  *
@@ -397,6 +415,7 @@ export default makeSource({
     "content/courses/**",
     "content/resources/**",
     "content/workshops/**",
+    "content/cookbook/**",
   ],
 
   /**
@@ -421,6 +440,9 @@ export default makeSource({
     // course specific content record types
     CourseMetadata,
     CourseLesson,
+
+    // Cookbook content
+    SolanaCookbook,
   ],
 
   // settings to force fail on bad data schema
