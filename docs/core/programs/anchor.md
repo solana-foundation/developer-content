@@ -79,7 +79,7 @@ macro specifies the module containing all of your program's instructions. Each
 public function in the module represents a separate instruction for the program.
 
 In every function, the first parameter is always a `Context` type. Subsequent
-parameters, which are optional, define instruction data required by the
+parameters, which are optional, define the instruction data required by the
 instruction.
 
 ```rust filename="lib.rs" {5, 8-12}
@@ -134,7 +134,7 @@ pub struct Context<'a, 'b, 'c, 'info, T> {
 
 `Context` is a generic type where `T` represents the set of accounts required by
 an instruction. When defining the instruction's `Context`, the `T` type is a
-struct that implements to the `Accounts` trait (`Context<Initialize>`).
+struct that implements the `Accounts` trait (`Context<Initialize>`).
 
 This context parameter allows the instruction to access:
 
@@ -149,7 +149,7 @@ This context parameter allows the instruction to access:
 
 The
 [`#[derive(Accounts)]`](https://github.com/coral-xyz/anchor/blob/master/lang/derive/accounts/src/lib.rs#L631)
-macro is applied a struct and implements the
+macro is applied to a struct and implements the
 [`Accounts`](https://github.com/coral-xyz/anchor/blob/master/lang/src/lib.rs#L104)
 trait. This is used to specify and validate a set of accounts required for a
 particular instruction.

@@ -361,7 +361,7 @@ pub struct DataAccount {
 ```
 
 The seeds used to derive the PDA include the hardcoded string `data` and the
-address of the `user` account provided to the instruction. The Anchor framework
+address of the `user` account provided in the instruction. The Anchor framework
 automatically derives the canonical `bump` seed.
 
 ```rust /data/ /user.key()/ /bump/

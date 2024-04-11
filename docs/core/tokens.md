@@ -16,9 +16,9 @@ Tokens.
   and non-fungible).
 
 - A [Mint Account](/docs/core/tokens#mint-account) is a global counter that
-  represents a specific type of token, and stores global metadata about the
-  token such as the total supply and mint authority (address authorized to
-  create new units of a token).
+  represents a specific type of token and stores global metadata about the token
+  such as the total supply and mint authority (address authorized to create new
+  units of a token).
 
 - A [Token Account](/docs/core/tokens#token-account) is an individual counter
   that keeps track of how many units of a specific type of token (mint account)
@@ -99,7 +99,7 @@ For reference, here is a Solana Explorer link to the USDC
 ### Create Mint Account
 
 Creating a new Mint Account requires sending a transaction with two
-instructions. Here an example on
+instructions. Here is an example on
 [Solana Playground](https://beta.solpg.io/660ce32ecffcf4b13384d00f).
 
 1. Invoke the System Program to create a new account with enough space for the
@@ -228,7 +228,7 @@ Token Accounts.
 ### Create Token Account
 
 Creating a new Token Account requires sending a transaction with two
-instructions. Here an example on
+instructions. Here is an example on
 [Solana Playground](https://beta.solpg.io/660ce716cffcf4b13384d010).
 
 1. Invoke the System Program to create a new account with enough space for the
@@ -356,7 +356,7 @@ own token account for the specific mint account.
 Creating an Associated Token Account only requires a single instruction that
 invokes the
 [Associated Token Program](https://github.com/solana-labs/solana-program-library/tree/master/associated-token-account/program/src).
-Here an example on
+Here is an example on
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
 The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi) to
@@ -415,7 +415,7 @@ const transactionSignature = await sendAndConfirmTransaction(
 To create new units of a token, invoke the `MintTo` instruction on the Token
 Program. This instruction must be signed by the mint authority. The instruction
 mints new units of the token to a Token Account and increases the total supply
-on the Mint Account. Here an example on
+on the Mint Account. Here is an example on
 [Solana Playground](https://beta.solpg.io/660cea45cffcf4b13384d012).
 
 First, create an instruction to invoke the Token Program.
@@ -455,7 +455,7 @@ const transactionSignature = await sendAndConfirmTransaction(
 To transfer tokens, invoke the `Transfer` instruction on the Token Program. This
 instruction must be signed by the owner of the Token Account. The instruction
 transfers units of a token from one Token Account to another Token Account. Here
-an example on
+is an example on
 [Solana Playground](https://beta.solpg.io/660ced84cffcf4b13384d013).
 
 First, create an instruction to invoke the Token Program.

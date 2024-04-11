@@ -255,7 +255,7 @@ program designated as the owner of an account is allowed to modify the data on
 the account.
 
 After the account has been successfully created, the final step is to serialize
-data into the new account's data field. This effective initializes the account
+data into the new account's data field. This effectively initializes the account
 data, storing the `data` passed into the program entrypoint.
 
 ```rust

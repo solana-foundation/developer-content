@@ -62,7 +62,7 @@ The total size of the signatures and message for a transaction is limited to
 
 The
 [message header](https://github.com/solana-labs/solana/blob/master/sdk/program/src/message/mod.rs#L96)
-specifies the permissions of accounts include in the transaction's account
+specifies the permissions of accounts included in the transaction's account
 address array. It is comprised of three bytes, each containing a u8 integer,
 which collectively specify:
 
@@ -97,10 +97,10 @@ All transactions include a
 to act as a timestamp for the transaction. The blockhash is used to prevent
 duplications and eliminate stale transactions.
 
-The max age of a transaction's blockhash is 150 blocks (~1 minute assuming 400ms
-block times). If a transaction's blockhash is 150 blocks older than the latest
-blockhash, it is considered expired. This means that transactions not processed
-within a specific timeframe will never be executed.
+The maximum age of a transaction's blockhash is 150 blocks (~1 minute assuming
+400ms block times). If a transaction's blockhash is 150 blocks older than the
+latest blockhash, it is considered expired. This means that transactions not
+processed within a specific timeframe will never be executed.
 
 ### Array of Instructions
 
@@ -180,7 +180,7 @@ include the following information:
 - **Program address**: Specifies the program being invoked
 - **Accounts**: Lists every account the instruction reads from or writes to,
   including other programs
-- **Instruction Data**: A byte arrya that specifies which instruction on the
+- **Instruction Data**: A byte array that specifies which instruction on the
   program to invoke, plus any additional data required by the instruction
   (function arguments)
 
@@ -204,8 +204,8 @@ This information is referred to as the
 By specifying all accounts required by an instruction and whether each account
 is writable, transactions can be processed in parallel.
 
-For example, two transactions do not include any accounts that write to the same
-state can be executed at the same time.
+For example, two transactions that do not include any accounts that write to the
+same state can be executed at the same time.
 
 ### Instruction Logs
 
@@ -322,7 +322,7 @@ A compact array is an array serialized in the following format:
 
 1. The length of the array, encoded as
    [compact-u16](https://github.com/solana-labs/solana/blob/master/sdk/program/src/short_vec.rs).
-2. The individual items of the array, listed sequentially after the length.
+2. The individual items of the array are listed sequentially after the length.
 
 ![Compact array format](/assets/docs/core/transactions/compact_array_format.png)
 
