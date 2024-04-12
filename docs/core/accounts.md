@@ -23,9 +23,10 @@ This relationship between the account and its address can be thought of as a
 key-value pair, where the address serves as the key to locate the corresponding
 on-chain data of the account.
 
-## AccountInfo
+### AccountInfo
 
-Every account on Solana has the following structure known as the
+Accounts have a max size of 10MB (10 Mega Bytes) and the data stored on every
+account on Solana has the following structure known as the
 [AccountInfo](https://github.com/solana-labs/solana/blob/master/sdk/program/src/account_info.rs#L19).
 
 ![AccountInfo](/assets/docs/core/accounts/accountinfo.svg)
@@ -38,13 +39,14 @@ The `AccountInfo` for each account includes the following fields:
 - **executable**: A boolean flag that indicates if the account is a program.
 - **lamports**: A numeric representation of the account's balance in lamports,
   the smallest unit of SOL (1 SOL = 1 billion Lamports).
-- **owner**: Specifies the public key (program ID) of the program (smart
-  contract) that owns the account.
+- **owner**: Specifies the public key (program ID) of the program that owns the
+  account.
 
 As a key part of the Solana Account Model, every account on Solana has a
 designated "owner", specifically a program. Only the program designated as the
 owner of an account can modify the data stored on the account or deduct the
-lamport balance.
+lamport balance. It's important to note that while only the owner may deduct the
+balance, anyone can credit.
 
 <Callout>
   To store data on-chain, a certain amount of SOL must be transferred to an
@@ -53,12 +55,21 @@ lamport balance.
   can be fully recovered when the account is closed.
 </Callout>
 
-## System Program
+## Native Programs
+
+Solana contains a small handful of native programs. The native programs are part
+of the validator implementation and provide various core functionalities for the
+network. You can find the full list of native programs
+[here](https://docs.solanalabs.com/runtime/programs).
+
+When developing programs on Solana, you will commonly interact with two native
+programs, the System Program and the BPF Loader.
+
+### System Program
 
 By default, all new accounts are owned by the
 [System Program](https://github.com/solana-labs/solana/tree/master/programs/system/src).
-The System Program is one of Solana's "Native Programs", which comes "built-in"
-to the Solana runtime and performs several key tasks such as:
+The System Program performs several key tasks such as:
 
 - [New Account Creation](https://github.com/solana-labs/solana/blob/master/programs/system/src/system_processor.rs#L145):
   Only the System Program can create new accounts.
@@ -78,15 +89,28 @@ lamport balance of the wallet is the amount of SOL owned by the account.
   Only accounts owned by the System Program can be used as transaction fee payers.
 </Callout>
 
-## Program Account
+### BPFLoader Program
+
+The
+[BPF Loader](https://github.com/solana-labs/solana/tree/master/programs/bpf_loader/src)
+is the program designated as the "owner" of all other programs on the network,
+excluding Native Programs. It is responsible for deploying, upgrading, and
+executing custom programs.
+
+## Custom Programs
 
 On Solana, “smart contracts” are referred to as programs. A program is an
 account that stores executable code and is indicated by an “executable” flag
 that is set to true.
 
+For a more detailed explanation of the program deployment process, refer to the
+[Deploying Programs](/docs/programs/deploying) page.
+
+### Program Account
+
 When new programs are
 [deployed](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/lib.rs#L498)
-on Solana, technically two separate accounts are created.
+on Solana, technically three separate accounts are created.
 
 - **Program Account**: The main account representing an on-chain program. This
   account stores the address of an executable data account (which stores the
@@ -94,11 +118,10 @@ on Solana, technically two separate accounts are created.
   authorized to make changes to the program).
 - **Program Executable Data Account**: An account that stores the executable
   byte code of the program.
-
-<Callout>
-  The address of the "Program Account" is commonly referred to as the “Program
-  ID”, which is used to invoke the program.
-</Callout>
+- **Buffer Account**: A temporary account that stores byte code while a program
+  is being actively deployed or upgraded. Once the process is complete, the data
+  is transferred to the Program Executable Data Account and the buffer account
+  is closed.
 
 For example, here are links to Solana Explorer for the Token Extensions
 [Program Account](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
@@ -111,13 +134,12 @@ For simplicity, you can think of the "Program Account" as the program itself.
 
 ![Program Account](/assets/docs/core/accounts/program-account-simple.svg)
 
-Program accounts are owned by the
-[BPF Loader](https://github.com/solana-labs/solana/tree/master/programs/bpf_loader/src)
-program, another one of Solana's “Native Programs”. There are multiple versions
-of the BPF Loader program, but at a high level, it's simply the program that
-owns other programs (with the exception of Native Programs).
+<Callout>
+  The address of the "Program Account" is commonly referred to as the “Program
+  ID”, which is used to invoke the program.
+</Callout>
 
-## Data Account
+### Data Account
 
 Solana programs are "stateless", meaning that program accounts only store the
 program's executable byte code. To store and modify additional data, new
@@ -141,3 +163,16 @@ In other words, creating a data account for a custom program requires two steps:
 
 This data account creation process is often abstracted as a single step, but
 it's helpful to understand the underlying process.
+
+## Summary
+
+- Each account on Solana is uniquely identified by a 32-byte address and can be
+  used to store state or executable code.
+- All accounts have a designated program owner, which can modify the data stored
+  on the account.
+- Native Programs are built-in programs that perform core functions on the
+  network.
+- Program Accounts represent custom programs that only store executable code and
+  are stateless.
+- Data Accounts are created by programs to store and manage state. The data on
+  these accounts can be modified by the designated program owner.
