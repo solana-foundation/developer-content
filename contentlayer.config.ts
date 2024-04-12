@@ -376,7 +376,8 @@ export const SolanaRPCDoc = defineDocumentType(() => ({
  */
 export const SolanaCookbook = defineDocumentType(() => ({
   name: "SolanaCookbook",
-  filePathPattern: "{content/cookbook,/content/cookbook,i18n/**/content/cookbook}/**/*.{md,mdx}",
+  filePathPattern:
+    "{content/cookbook,/content/cookbook,i18n/**/content/cookbook}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
   fields: {
     // use the standard content fields
