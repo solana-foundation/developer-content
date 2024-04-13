@@ -7,7 +7,6 @@ description:
   building on Solana"
 ---
 
-# Cooking with Solana
 
 The _Solana Cookbook_ is a developer resource that provides examples and
 references for building applications on Solana. Each example and reference will
