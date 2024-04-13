@@ -1,7 +1,7 @@
 ---
 sidebarSortOrder: 0
 title: Solana Cookbook
-seoTitle: Learn how the Solana blockchain works
+seoTitle: Code examples for Solana development
 description:
   "The Solana cookbook is a collection of useful examples and references for
   building on Solana"
