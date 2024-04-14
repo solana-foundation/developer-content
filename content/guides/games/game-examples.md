@@ -5,6 +5,24 @@ description: A list of open source games on Solana with tutorials to get you sta
 
 # Open source Solana games to reference for learning
 
+
+## Solana games preset
+
+A simple npx command that sets up a new Solana game project with a Unity client, Anchor program and a Next.js frontend. 
+
+```bash
+npx create-solana-game your-game-name
+```
+
+[Video](https://www.youtube.com/watch?v=_vQ3bSs3svs)
+
+[Live Version](https://solplay.de/TinyAdventure/index.html)
+
+[Playground](https://beta.solpg.io/tutorials/tiny-adventure)
+
+[Unity Client](https://github.com/Woody4618/SolPlay_Unity_SDK/tree/main/Assets/SolPlay/Examples/TinyAdventure)
+
+
 ## Interact with Anchor Program from Unity
 
 A simple example moving a player left and right using Anchor framework and Unity SD
@@ -47,9 +65,9 @@ A multiplayer game where an account is changed via Solana Pay qr codes which can
 
 [Tutorial](https://www.youtube.com/watch?v=_XBvEHwSqJc&ab_channel=SolPlay)
 
-[Example](https://tug-of-war.vercel.app/)
+[Example](https://tug-of-war-solana-pay.vercel.app/)
 
-[Source](https://github.com/solana-developers/workshops/tree/main/workshops/tug-of-war)
+[Source](https://github.com/Solana-Workshops/tug-of-war-solana-pay)
 
 
 

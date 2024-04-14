@@ -118,6 +118,14 @@ let image: Image = await asset.imageData.get(0) // fetches CesiumLogoFlat.png
 
 With the [Raindrops Boots program](https://docs.raindrops.xyz/services/boots) you can have an adventure character which owns a sword and a helmet. When the Character NFT would be sold on a market place the other NFTs it owns would be sold as well.
 
+## How to create NFTs in a program and add additional metadata
+
+With the new Token extensions it is possible to create NFTs in a program and also add additional dynamic traits that can be saved in the NFT mint itself. You can for example save experience and player level in the NFT itself. These NFTs could become more valuable the more the players play with them. A player 99 character maybe more desirable than a level 1 character. 
+
+[Guide](/docs/content/guides/nft-metadata-pointer.md)
+[Repository](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)
+[Video](https://www.youtube.com/watch?v=n-ym1utpzhk&ab_channel=Solana)
+
 ## How to create an NFT collection
 
 NFTs on Solana mostly follow the Metaplex standard. Metaplex is a company which takes care of the NFT most used standard on Solana. The most common way to create an NFT collection is to create a metaplex candy machine which lets the user mint predefined pairs of metadata and images.

@@ -10,10 +10,6 @@ Video Walkthrough:
 <iframe width="320" height="200" src="https://www.youtube.com/embed/gILXyWvXu7M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-Live Version. (use devnet)
-<iframe height='400' scrolling='no' title='OZXQWp' src='https://solplay.de/TinyAdventureTwo/index.html' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 80%;'>
-</iframe>
-
 ## Tiny Adventure Anchor Program - Part Two
 
 In this tutorial, we will rebuild the Tiny Adventure game and introduce a chest with a reward of 0.1 SOL. The chest will "spawn" at a specific position, and when the player reaches that position, they will receive the reward. The goal of this program is to demonstrate how to store SOL within a program account and distribute it to players.

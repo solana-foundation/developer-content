@@ -6,11 +6,24 @@ description: Build Energy Systems for Casual Games on Solana with these Easy Ste
 # Energy System
 
 Casual games commonly use energy systems, meaning that actions in the game cost energy which refills over time. In this guide we will walk through how to build one on Solana.
-It is recommended to start with the [Hello World Example](../gaming/hello-world) if you do not have any prior Solana knowledge.
+It is recommended to start with the [Hello World Example](/developers/guides/games/hello-world.md) if you do not have any prior Solana knowledge.
 
 Here is a complete example source code based on the Solana dapp scaffold with a react client:
 
-[Source](https://github.com/solana-developers/solana-game-starter-kits/tree/main/lumberjack)
+[Source](https://github.com/solana-developers/solana_game_preset)
+
+And you can easily set up a new game with an energy system in place using the command 
+
+```bash
+npx create-solana-game your-game-name
+```
+
+Here is a tutorial on how to setup the example: 
+[Video](https://youtu.be/fnhivg_pemI?si=6xIubFFYPOGiEjKY)
+
+And a video walkthrough of this example:
+[Video Walkthrough](https://youtu.be/YYQtRCXJBgs?si=fIZRFkIYJ9wYjEcI)
+
 
 ## Anchor program
 
@@ -231,4 +244,4 @@ useEffect(() => {
 
 With this you can now build any energy based game and even if someone builds a bot for the game the most he can do is play optimally, which maybe even easier to achieve when playing normally depending on the logic of your game.
 
-This game becomes even better when combined with the [Token example](../gaming/interact-with-tokens) and you actually drop some spl token to the players.
+This game becomes even better when combined with the [Token example](/developers/guides/games/interact-with-tokens) and you actually drop some spl token to the players.
