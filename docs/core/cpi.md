@@ -59,8 +59,8 @@ Here is an example program on
 that makes a CPI using the `invoke` function to call the transfer instruction on
 the System Program.
 
-You can also reference the [CPI Basic Example](/docs/core/cpi/example1) page for
-further details.
+You can also reference the [CPI Basic Example](/docs/core/cpi/how-to-cpi) page
+for further details.
 
 ### CPI with PDA Signer
 
@@ -91,10 +91,17 @@ using the `signers_seeds` and the `program_id` of the calling program. If a
 valid PDA is found, the address is
 [added as a valid signer](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/syscalls/cpi.rs#L552).
 
+The runtime uses the privileges granted to the caller program to determine what
+privileges can be extended to the callee. Privileges in this context refer to
+signers and writable accounts. For example, if the instruction the caller is
+processing contains a signer or writable account, then the caller can invoke an
+instruction that also contains that signer and/or writable account.
+
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)
 that makes a CPI using the `invoke_signed` function to call the transfer
 instruction on the System Program with a PDA signer.
 
-You can reference the [CPI with PDA Signer](/docs/core/cpi/example2) page for
-further details.
+You can reference the
+[CPI with PDA Signer](/docs/core/cpi/how-to-cpi-with-signer) page for further
+details.

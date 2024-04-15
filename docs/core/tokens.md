@@ -3,29 +3,33 @@ title: "Tokens on Solana"
 sidebarSortOrder: 6
 ---
 
-This section will cover the basics of how tokens are represented on Solana. You
-can think of tokens as a counter in a database that also keeps track of the
-ownership for each unit of the count.
+Tokens are digital assets that represent ownership over diverse categories of
+assets. Tokenization enables the digitalization of property rights, serving as a
+fundamental component for managing both fungible and non-fungible assets.
 
-On Solana, these are referred to as SPL
+- Fungible Tokens represent interchangeable and divisible assets of the same
+  type and value (ex. USDC).
+- Non-fungible Tokens (NFT) represent ownership of indivisible assets (ex. Art).
+
+This section will cover the basics of how tokens are represented on Solana.
+These are referred to as SPL
 ([Solana Program Library](https://github.com/solana-labs/solana-program-library))
 Tokens.
 
-- The [Token Program](/docs/core/tokens#token-program) stores all the
+- The [Token Program](/docs/core/tokens#token-program) contains all the
   instruction logic for interacting with tokens on the network (both fungible
   and non-fungible).
 
-- A [Mint Account](/docs/core/tokens#mint-account) is a global counter that
-  represents a specific type of token and stores global metadata about the token
-  such as the total supply and mint authority (address authorized to create new
-  units of a token).
+- A [Mint Account](/docs/core/tokens#mint-account) represents a specific type of
+  token and stores global metadata about the token such as the total supply and
+  mint authority (address authorized to create new units of a token).
 
-- A [Token Account](/docs/core/tokens#token-account) is an individual counter
-  that keeps track of how many units of a specific type of token (mint account)
-  are owned by a specific address.
+- A [Token Account](/docs/core/tokens#token-account) keeps track of individual
+  ownership of how many units of a specific type of token (mint account) are
+  owned by a specific address.
 
 <Callout>
-  There are currently two versions of the Token Program. The original [Token Program](https://github.com/solana-labs/solana-program-library/tree/master/token/program) and the [Token Extensions Program](https://github.com/solana-labs/solana-program-library/tree/master/token/program-2022) (Token2022). The Token Extensions
+  There are currently two versions of the Token Program. The original [Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program) and the [Token Extensions Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program-2022) (Token2022). The Token Extensions
   Program functions the same as the original Token Program, but with additional
   features and improvements. The Token Extensions Program is the recommended
   version to use for creating new tokens (mint accounts).
@@ -34,33 +38,33 @@ Tokens.
 ## Token Program
 
 The
-[Token Program](https://github.com/solana-labs/solana-program-library/tree/master/token/program)
-stores all the instruction logic for interacting with tokens on the network
+[Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program)
+contains all the instruction logic for interacting with tokens on the network
 (both fungible and non-fungible). All tokens on Solana are effectively
 [data accounts](/docs/core/accounts#data-account) owned by the Token Program.
 
 You can find the full list of Token Program instructions
-[here](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/instruction.rs).
+[here](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/instruction.rs).
 
 ![Token Program](/assets/docs/core/tokens/token-program.svg)
 
 A few commonly used instructions include:
 
-- [`InitializeMint`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L29):
+- [`InitializeMint`](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/processor.rs#L29):
   Create a new mint account to represent a new type of token.
-- [`InitializeAccount`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L84):
+- [`InitializeAccount`](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/processor.rs#L84):
   Create a new token account to hold units of a specific type of token (mint).
-- [`MintTo`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L522):
+- [`MintTo`](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/processor.rs#L522):
   Create new units of a specific type of token and add them to a token account.
   This increases the supply of the token and can only be done by the mint
   authority of the mint account.
-- [`Transfer`](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/processor.rs#L228):
+- [`Transfer`](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/processor.rs#L228):
   Transfer units of a specific type of token from one token account to another.
 
 ## Mint Account
 
 Tokens on Solana are uniquely identified by the address of a
-[Mint Account](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L18-L32)
+[Mint Account](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L18-L32)
 owned by the Token Program. This account is effectively a global counter for a
 specific token, and stores data such as:
 
@@ -174,7 +178,7 @@ const transactionSignature = await sendAndConfirmTransaction(
 
 To hold units of a specific token, another type of data account owned by the
 Token Program must be created. This account is referred to as a
-[Token Account](https://github.com/solana-labs/solana-program-library/blob/master/token/program/src/state.rs#L89-L110).
+[Token Account](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L89-L110).
 
 The most commonly referenced data stored on the Token Account include the
 following:
@@ -355,17 +359,17 @@ own token account for the specific mint account.
 
 Creating an Associated Token Account only requires a single instruction that
 invokes the
-[Associated Token Program](https://github.com/solana-labs/solana-program-library/tree/master/associated-token-account/program/src).
+[Associated Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src).
 Here is an example on
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
 The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi) to
 handle:
 
-- [Invoking the System Program](https://github.com/solana-labs/solana-program-library/blob/master/associated-token-account/program/src/tools/account.rs#L19)
+- [Invoking the System Program](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src/tools/account.rs#L19)
   to create a new account using the provided PDA as the address of the new
   account
-- [Invoking the Token Program](https://github.com/solana-labs/solana-program-library/blob/master/associated-token-account/program/src/processor.rs#L138-L161)
+- [Invoking the Token Program](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src/processor.rs#L138-L161)
   to initialize the Token Account data for the new account.
 
 First, derive the PDA for the Associated Token Account.

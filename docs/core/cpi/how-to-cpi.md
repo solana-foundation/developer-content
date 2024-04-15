@@ -1,12 +1,11 @@
 ---
-title: "CPI Basic Example"
+title: "How to use Cross Program Innovocation"
 ---
 
 This example demonstrates how to transfer SOL using a Cross Program Invocation
 (CPI). Included below are three different, but functionally equivalent
-implementations that you may come across when reading Solana programs.
-
-Here is a final reference program on
+implementations that you may come across when reading Solana programs. Here is a
+final reference program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi).
 
 ## Starter Code
@@ -80,7 +79,7 @@ resulting in a successful SOL transfer.
 ![Transaction Details](/assets/docs/core/cpi/transaction-details.png)
 
 You can build, deploy, and run the test to view the transaction details on the
-SolanaFM.
+[SolanaFM explorer](https://solana.fm/).
 
 ## Program Instruction
 
@@ -98,7 +97,7 @@ pub struct SolTransfer<'info> {
 }
 ```
 
-### 1. Anchor Format
+### 1. Anchor CpiContext
 
 The `sol_transfer` instruction included in the starter code shows a typical
 approach for constructing CPIs using the Anchor framework.
@@ -150,7 +149,7 @@ transfer(cpi_context, amount)?;
 
 Under the hood, the example above is a wrapper around the `invoke()` function
 which uses
-[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/system_instruction.rs#L881)
+[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881)
 to build the instruction.
 
 First, add these imports to the top of `lib.rs`:

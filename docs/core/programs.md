@@ -22,3 +22,6 @@ approaches for development:
 - [Native Rust](/docs/core/programs/rust): This approach involves writing Solana
   programs directly in Rust without leveraging any frameworks. It offers more
   flexibility but comes with increased complexity.
+
+For more details related to Solana Programs refer to the pages included under
+the [programs](/docs/programs) section.

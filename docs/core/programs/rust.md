@@ -90,9 +90,9 @@ pub struct NewAccount {
 ### Entrypoint
 
 Every Solana program includes a single
-[entrypoint](https://github.com/solana-labs/solana/blob/master/sdk/program/src/entrypoint.rs#L125)
+[entrypoint](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/entrypoint.rs#L125)
 used to invoke the program. The
-[process_instruction](https://github.com/solana-labs/solana/blob/master/sdk/program/src/entrypoint.rs#L28-L29)
+[process_instruction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/entrypoint.rs#L28-L29)
 function is then used to process the data passed into the entrypoint. This
 function requires the following parameters:
 
@@ -224,7 +224,7 @@ let system_program = next_account_info(accounts_iter)?;
 ```
 
 Creating a new account requires invoking the
-[`create_account`](https://github.com/solana-labs/solana/blob/master/programs/system/src/system_processor.rs#L145)
+[`create_account`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L145)
 instruction on the [System Program](/docs/core/accounts#system-program). When
 the System Program creates a new account, it can reassign the program owner of
 the new account.

@@ -1,6 +1,7 @@
 ---
 title: Address Lookup Tables
 description: ""
+sidebarSortOrder: 2
 ---
 
 Address Lookup Tables, commonly referred to as "_lookup tables_" or "_ALTs_" for

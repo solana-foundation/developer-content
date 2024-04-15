@@ -6,7 +6,14 @@ sidebarLabel: Anchor Framework
 [Anchor](https://www.anchor-lang.com/) uses
 [Rust macros](https://doc.rust-lang.org/book/ch19-06-macros.html) to reduce
 boilerplate code and simplify the implementation of common security checks
-required for writing Solana programs. The main macros include:
+required for writing Solana programs.
+
+Think of Anchor as a framework for Solana programs much like Next.js is for web
+development. Just as Next.js allows developers to create websites using React
+instead of relying solely on HTML and TypeScript, Anchor provides a set of tools
+and abstractions that make building Solana programs more intuitive and secure.
+
+The main macros found in an Anchor program include:
 
 - [`declare_id`](/docs/core/programs#declare_id): Specifies the program's
   on-chain address
@@ -57,7 +64,7 @@ pub struct NewAccount {
 ### declare_id!()
 
 The
-[`declare_id`](https://github.com/coral-xyz/anchor/blob/master/lang/attribute/account/src/lib.rs#L430)
+[`declare_id`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L430)
 macro is used to specify the on-chain address of the program (program ID).
 
 ```rust filename="lib.rs" {3}
@@ -71,10 +78,15 @@ new keypair used to deploy the program (unless specified otherwise). The public
 key from this keypair should be used as the program ID in the `declare_id`
 macro.
 
+- When using [Solana Playground](https://beta.solpg.io/), the program ID is
+  updated automatically for you and can be exported using the UI.
+- When building locally, the program keypair can be found in
+  `/target/deploy/your_program_name.json`
+
 ### #[program]
 
 The
-[`#[program]`](https://github.com/coral-xyz/anchor/blob/master/lang/attribute/program/src/lib.rs#L12)
+[`#[program]`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/program/src/lib.rs#L12)
 macro specifies the module containing all of your program's instructions. Each
 public function in the module represents a separate instruction for the program.
 
@@ -113,7 +125,7 @@ pub struct NewAccount {
 ```
 
 The
-[`Context`](https://github.com/coral-xyz/anchor/blob/master/lang/src/context.rs#L24)
+[`Context`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/src/context.rs#L24)
 type provides the instruction with access to the following non-argument inputs:
 
 ```rust
@@ -142,15 +154,16 @@ This context parameter allows the instruction to access:
 - `ctx.program_id`: The address of the program itself
 - `ctx.remaining_accounts`: All remaining accounts provided to the instruction
   but not specified in the `Accounts` struct
-- `ctx.bumps`: Bump seeds for any Program Derived Address (PDA) accounts
-  specified in the `Accounts` struct
+- `ctx.bumps`: Bump seeds for any
+  [Program Derived Address (PDA)](/docs/core/pda) accounts specified in the
+  `Accounts` struct
 
 ### #[derive(Accounts)]
 
 The
-[`#[derive(Accounts)]`](https://github.com/coral-xyz/anchor/blob/master/lang/derive/accounts/src/lib.rs#L631)
+[`#[derive(Accounts)]`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/derive/accounts/src/lib.rs#L630)
 macro is applied to a struct and implements the
-[`Accounts`](https://github.com/coral-xyz/anchor/blob/master/lang/src/lib.rs#L104)
+[`Accounts`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/src/lib.rs#L105)
 trait. This is used to specify and validate a set of accounts required for a
 particular instruction.
 
@@ -184,7 +197,7 @@ When building Solana programs, it's essential to validate the accounts provided
 by the client. This validation is achieved in Anchor through account constraints
 and specifying appropriate account types:
 
-- **[Account Constraints](https://github.com/coral-xyz/anchor/blob/master/lang/syn/src/parser/accounts/constraints.rs)**:
+- **[Account Constraints](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/syn/src/parser/accounts/constraints.rs)**:
   Constraints define additional conditions that an account must satisfy to be
   considered valid for the instruction. Constraints are applied using the
   `#[account(..)]` attribute, which is placed above an account field in the
@@ -201,7 +214,7 @@ and specifying appropriate account types:
   }
   ```
 
-- **[Account Types](https://github.com/coral-xyz/anchor/tree/master/lang/src/accounts)**:
+- **[Account Types](https://github.com/coral-xyz/anchor/tree/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/src/accounts)**:
   Anchor provides various account types to help ensure that the account provided
   by the client matches what the program expects.
 
@@ -271,7 +284,7 @@ Anchor documentation.
 ### #[account]
 
 The
-[`#[account]`](https://github.com/coral-xyz/anchor/blob/master/lang/attribute/account/src/lib.rs#L66)
+[`#[account]`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L66)
 macro is applied to structs to define the format of a custom data account type
 for a program. Each field in the struct represents a field that will be stored
 in the account data.
@@ -287,14 +300,14 @@ This macro implements various traits
 [detailed here](https://docs.rs/anchor-lang/latest/anchor_lang/attr.account.html).
 The key functionalities of the `#[account]` macro include:
 
-- [Assign Ownership](https://github.com/coral-xyz/anchor/blob/master/lang/attribute/account/src/lib.rs#L119-L132):
+- [Assign Ownership](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L119-L132):
   When creating an account, the ownership of the account is automatically
   assigned to the program specified in the `declare_id`.
-- [Set Discriminator](https://github.com/coral-xyz/anchor/blob/master/lang/attribute/account/src/lib.rs#L101-L117):
+- [Set Discriminator](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L101-L117):
   A unique 8-byte discriminator, specific to the account type, is added as the
   first 8 bytes of account data during its initialization. This helps in
   differentiating account types and account validation.
-- [Data Serialization and Deserialization](https://github.com/coral-xyz/anchor/blob/master/lang/attribute/account/src/lib.rs#L202-L246):
+- [Data Serialization and Deserialization](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L202-L246):
   The account data corresponding to the account type is automatically serialized
   and deserialized.
 
@@ -487,18 +500,18 @@ pub struct NewAccount {
 ## Client
 
 Anchor provides a Typescript client library
-([`@coral-xyz/anchor`](https://github.com/coral-xyz/anchor/tree/master/ts/packages/anchor))
+([`@coral-xyz/anchor`](https://github.com/coral-xyz/anchor/tree/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor))
 that simplifies the process of interacting with Solana programs from the client.
 
 To use the client library, you first need to set up an instance of a
-[`Program`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/index.ts#L58)
+[`Program`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/index.ts#L58)
 using the IDL file generated by Anchor.
 
 ### Client Program
 
 Creating an instance of the `Program` requires the program's IDL, its on-chain
 address (programId), and an
-[`AnchorProvider`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/provider.ts#L55).
+[`AnchorProvider`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/provider.ts#L55).
 An `AnchorProvider` combines two things:
 
 - `Connection` - the connection to a Solana cluster (i.e. localhost, devnet,
@@ -558,7 +571,7 @@ const program = new Program<HelloAnchor>(IDL, programId, {
 ### Invoke Instructions
 
 Once the `Program` is set up, you can use the Anchor
-[`MethodsBuilder`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/methods.ts#L155)
+[`MethodsBuilder`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/methods.ts#L155)
 to build an instruction, a transaction, or build and send a transaction. The
 basic format looks like this:
 
@@ -584,9 +597,9 @@ Below are examples of how to invoke an instruction using the methods builder.
 #### rpc()
 
 The
-[`rpc()`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/methods.ts#L283)
+[`rpc()`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/methods.ts#L283)
 method
-[sends a signed transaction](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/rpc.ts#L29)
+[sends a signed transaction](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/rpc.ts#L29)
 with the specified instruction and returns a `TransactionSignature`. When using
 `.rpc`, the `Wallet` from the `Provider` is automatically included as a signer.
 
@@ -609,9 +622,9 @@ const transactionSignature = await program.methods
 #### transaction()
 
 The
-[`transaction()`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/methods.ts#L382)
+[`transaction()`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/methods.ts#L382)
 method
-[builds a `Transaction`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/transaction.ts#L18-L26)
+[builds a `Transaction`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/transaction.ts#L18-L26)
 and adds the specified instruction to the transaction (without automatically
 sending).
 
@@ -638,9 +651,9 @@ const transactionSignature = await connection.sendTransaction(transaction, [
 #### instruction()
 
 The
-[`instruction()`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/methods.ts#L348)
+[`instruction()`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/methods.ts#L348)
 method
-[builds a `TransactionInstruction`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/instruction.ts#L57-L61)
+[builds a `TransactionInstruction`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/instruction.ts#L57-L61)
 using the specified instruction. This is useful if you want to manually add the
 instruction to a transaction and combine it with other instructions.
 
@@ -675,7 +688,7 @@ type on the IDL. Anchor then deserializes and returns all accounts as specified.
 #### all()
 
 Use
-[`all()`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/account.ts#L251)
+[`all()`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/account.ts#L251)
 to fetch all existing accounts for a specific account type.
 
 ```ts /all/
@@ -704,7 +717,7 @@ const accounts = await program.account.newAccount.all([
 #### fetch()
 
 Use
-[`fetch()`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/account.ts#L165)
+[`fetch()`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/account.ts#L165)
 to get the account data for a specific account by passing in the account address
 
 ```ts /fetch/
@@ -714,7 +727,7 @@ const account = await program.account.newAccount.fetch(ACCOUNT_ADDRESS);
 #### fetchMultiple()
 
 Use
-[`fetchMultiple()`](https://github.com/coral-xyz/anchor/blob/master/ts/packages/anchor/src/program/namespace/account.ts#L200)
+[`fetchMultiple()`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/program/namespace/account.ts#L200)
 to get the account data for multiple accounts by passing in an array of account
 addresses
 

@@ -1,13 +1,21 @@
 ---
-title: "CPI with PDA Signer"
+title: "How to use Cross Program Invocation with a Signer"
 ---
 
 This example demonstrates how to transfer SOL using a Cross-Program Invocation
-(CPI) where the sender is a PDA that the program must sign for. Included below
-are two different, but functionally equivalent implementations that you may come
-across when reading Solana programs.
+(CPI) where the sender is a PDA that the program must sign for.
 
-Here is the final reference program on
+A typical use case for this scenario is a program that manages token accounts on
+behalf of users. For instance, consider a scenario where a DeFi protocol pools
+user funds into a single account. The protocol needs to include security checks
+to automatically handle withdrawal requests. In such cases, the control over
+these pooled funds is not with a single user but rather with the program itself.
+This requires the use of PDAs as the owner of the protocol's token accounts to
+programmatically sign for withdrawals.
+
+Included below are two different, but functionally equivalent implementations
+that you may come across when reading Solana programs. Here is the final
+reference program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-pda).
 
 ## Starter Code
@@ -128,7 +136,7 @@ resulting in a successful SOL transfer.
 ![Transaction Details](/assets/docs/core/cpi/transaction-details-pda.png)
 
 You can build, deploy, and run the test to view the transaction details on the
-SolanaFM.
+[SolanaFM explorer](https://solana.fm/).
 
 ## Program Instruction
 
@@ -163,7 +171,7 @@ const [PDA] = PublicKey.findProgramAddressSync(
 );
 ```
 
-### 1. Anchor Format
+### 1. Anchor CpiContext
 
 The `sol_transfer` instruction included in the starter code shows a typical
 approach for constructing CPIs using the Anchor framework.
@@ -230,7 +238,7 @@ sign for PDAs that are derived from their program ID.
 
 Under the hood, the example above is a wrapper around the `invoke_signed()`
 function which uses
-[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/system_instruction.rs#L881)
+[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881)
 to build the instruction.
 
 First, add these imports to the top of `lib.rs`:
