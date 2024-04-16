@@ -182,7 +182,7 @@ console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
 - using
   [Versioned Transactions for Address Lookup Tables](/docs/advanced/lookup-tables.md#how-to-create-an-address-lookup-table)
 - view an
-  [example of a v0 transaction](https://explorer.solana.com/tx/3jpoANiFeVGisWRY5UP648xRXs3iQasCHABPWRWnoEjeA93nc79WrnGgpgazjq4K9m8g2NJoyKoWBV1Kx5VmtwHQ/?cluster=devnet)
+  [example of a v0 transaction](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
   on Solana Explorer
 - read the
   [accepted proposal](https://docs.solanalabs.com/proposals/versioned-transactions)
