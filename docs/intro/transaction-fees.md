@@ -13,6 +13,8 @@ keywords:
   - gwei
   - cheap network
   - affordable blockchain
+altRoutes:
+  - /docs/intro/transaction_fees
 ---
 
 The small fees paid to process [instructions](/docs/terminology.md#instruction)
