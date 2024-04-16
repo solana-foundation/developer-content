@@ -61,7 +61,7 @@ A few commonly used instructions include:
 - [`Transfer`](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/processor.rs#L228):
   Transfer units of a specific type of token from one token account to another.
 
-## Mint Account
+### Mint Account
 
 Tokens on Solana are uniquely identified by the address of a
 [Mint Account](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L18-L32)
@@ -100,84 +100,11 @@ pub struct Mint {
 For reference, here is a Solana Explorer link to the USDC
 [Mint Account](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v).
 
-### Create Mint Account
+### Token Account
 
-Creating a new Mint Account requires sending a transaction with two
-instructions. Here is an example on
-[Solana Playground](https://beta.solpg.io/660ce32ecffcf4b13384d00f).
-
-1. Invoke the System Program to create a new account with enough space for the
-   Mint Account data and then transfer ownership to the Token Program.
-
-2. Invoke the Token Program to initialize the data of the new account as a Mint
-   Account
-
-First, generate a keypair to use as the address of the new account and calculate
-the amount of lamports needed for the Mint Account data.
-
-```ts
-// Generate keypair to use as address of mint account
-const mint = new Keypair();
-
-// Calculate minimum lamports for space required by mint account
-const rentLamports = await getMinimumBalanceForRentExemptMint(connection);
-```
-
-Next, create the instruction invoking the System Program to create a new
-account.
-
-```ts
-const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: wallet.publicKey,
-  newAccountPubkey: mint.publicKey,
-  space: MINT_SIZE,
-  lamports: rentLamports,
-  programId: TOKEN_2022_PROGRAM_ID,
-});
-```
-
-Next, create the instruction invoking the Token Program to initialize the Mint
-Account data.
-
-```ts
-const initializeMintInstruction = createInitializeMint2Instruction(
-  mint.publicKey,
-  2, // decimals
-  wallet.publicKey, // mint authority
-  wallet.publicKey, // freeze authority
-  TOKEN_2022_PROGRAM_ID,
-);
-```
-
-Next, add both instructions to a new transaction.
-
-```ts
-const transaction = new Transaction().add(
-  createAccountInstruction,
-  initializeMintInstruction,
-);
-```
-
-Finally, send the transaction. The `wallet.keypair` is the transaction fee payer
-and account paying the lamports required by the new mint account. The `mint`
-keypair is also included as a signer on the transaction because we are using its
-publickey as the address of the new account.
-
-```ts
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [
-    wallet.keypair, // payer
-    mint, // mint address keypair
-  ],
-);
-```
-
-## Token Account
-
-To hold units of a specific token, another type of data account owned by the
-Token Program must be created. This account is referred to as a
+To track the individual ownership of each unit of a specific token, another type
+of data account owned by the Token Program must be created. This account is
+referred to as a
 [Token Account](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L89-L110).
 
 The most commonly referenced data stored on the Token Account include the
@@ -229,79 +156,7 @@ who has authority over that specific Token Account. This is separate from the
 program owner specified in the AccountInfo, which is the Token Program for all
 Token Accounts.
 
-### Create Token Account
-
-Creating a new Token Account requires sending a transaction with two
-instructions. Here is an example on
-[Solana Playground](https://beta.solpg.io/660ce716cffcf4b13384d010).
-
-1. Invoke the System Program to create a new account with enough space for the
-   Token Account data and then transfer ownership to the Token Program.
-
-2. Invoke the Token Program to initialize the data of the new account as a Token
-   Account
-
-First, generate a keypair to use as the address of the new account and calculate
-the amount of lamports needed for the Token Account data.
-
-```ts
-// Generate keypair to use as address of token account
-const token = Keypair.generate();
-
-// Calculate minimum lamports for space required by token account
-const rentLamports = await getMinimumBalanceForRentExemptAccount(connection);
-```
-
-Next, create the instruction invoking the System Program to create a new
-account.
-
-```ts
-const createAccountInstruction = SystemProgram.createAccount({
-  fromPubkey: wallet.publicKey,
-  newAccountPubkey: token.publicKey,
-  space: ACCOUNT_SIZE,
-  lamports: rentLamports,
-  programId: TOKEN_2022_PROGRAM_ID,
-});
-```
-
-Next, create the instruction invoking the Token Program to initialize the Token
-Account data.
-
-```ts
-const initializeAccountInstruction = createInitializeAccountInstruction(
-  token.publicKey, // token account address
-  mint, // mint address
-  wallet.publicKey, // token account owner
-);
-```
-
-Next, add both instructions to a new transaction.
-
-```ts
-const transaction = new Transaction().add(
-  createAccountInstruction,
-  initializeAccountInstruction,
-);
-```
-
-Finally, send the transaction. The `wallet.keypair` is the transaction fee payer
-and account paying the lamports required by the new mint account. The `token`
-keypair is also included as a signer on the transaction because we are using its
-publickey as the address of the new account.
-
-```ts
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [
-    wallet.keypair, // payer
-    token, // token address keypair
-  ],
-);
-```
-
-## Associated Token Account
+### Associated Token Account
 
 To simplify the process of locating a token account's address for a specific
 mint and owner, we often use Associated Token Accounts.
@@ -355,12 +210,145 @@ own token account for the specific mint account.
 
 ![Accounts Relationship Expanded](/assets/docs/core/tokens/token-account-relationship-ata.svg)
 
-### Create Associated Token Account
+## Token Examples
 
-Creating an Associated Token Account only requires a single instruction that
-invokes the
+The `spl-token` CLI can be used to experiment with SPL tokens. In the examples
+below, we'll use the [Solana Playground](https://beta.solpg.io/) terminal to run
+the CLI commands.
+
+Creating tokens and accounts requires SOL for account rent deposits and
+transaction fees. If it is your first time using Solana Playground, created a
+Playground wallet and run the `solana airdrop` command in the Playground
+terminal. You can also get devnet SOL using this
+[faucet](https://faucet.solana.com/).
+
+```sh
+solana airdrop 2
+```
+
+Run `spl-token --help` for a full description of available commands.
+
+```sh
+spl-token --help
+```
+
+Alternatively, you can install the spl-token CLI locally using the following
+command. This requires first installing [Rust](https://rustup.rs/).
+
+```sh
+cargo install spl-token-cli
+```
+
+### Create a New Token
+
+To create a new token ([mint account](/docs/core/tokens#mint-account)) run the
+following command in the Solana Playground terminal.
+
+```sh
+spl-token create-token
+```
+
+You should see an output similar to the following. You can inspect both the
+token and transaction details on
+[Solana Explorer](https://explorer.solana.com/?cluster=devnet) using the
+`Address` and `Signature`.
+
+The unique identifier of the new token is
+`99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg`.
+
+```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
+Creating token 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+
+Address:  99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+Decimals:  9
+
+Signature: 44fvKfT1ezBUwdzrCys3fvCdFxbLMnNvBstds76QZyE6cXag5NupBprSXwxPTzzjrC3cA6nvUZaLFTvmcKyzxrm1
+```
+
+New tokens initially have no supply. You can check the current supply of a token
+using the following command:
+
+```sh
+spl-token supply <TOKEN_ADDRESS>
+```
+
+Running the `supply` command for a newly created token will return a value of
+`0`.
+
+```sh /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
+spl-token supply 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+```
+
+Under the hood, creating a new Mint Account requires sending a transaction with
+two instructions. Here is a Javascript example on
+[Solana Playground](https://beta.solpg.io/660ce32ecffcf4b13384d00f).
+
+1. Invoke the System Program to create a new account with enough space for the
+   Mint Account data and then transfer ownership to the Token Program.
+
+2. Invoke the Token Program to initialize the data of the new account as a Mint
+   Account
+
+### Create Token Account
+
+To hold units of a particular token, you must first create a
+[token account](/docs/core/tokens#token-account). To create a new token account,
+use the following command:
+
+```sh
+spl-token create-account [OPTIONS] <TOKEN_ADDRESS>
+```
+
+For example, running the following command in the Solana Playground terminal:
+
+```sh /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
+spl-token create-account 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+```
+
+Returns the following output.
+
+- `AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9` is the address of the token
+  account created to hold units of the token specified in the `create-account`
+  command.
+
+```console filename="terminal" /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/
+Creating account AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9
+
+Signature: 2BtrynuCLX9CNofFiaw6Yzbx6hit66pup9Sk7aFjwU2NEbFz7NCHD9w9sWhrCfEd73XveAGK1DxFpJoQZPXU9tS1
+```
+
+By default the `create-account` command creates an
+[associated token account](/docs/core/tokens#associated-token-account) with your
+wallet address as the token account owner.
+
+You can create a token account for different owner using the following command:
+
+```sh
+spl-token create-account --owner <OWNER_ADDRESS> <TOKEN_ADDRESS>
+```
+
+For example, running the following command:
+
+```sh /2i3KvjDCZWxBsqcxBHpdEaZYQwQSYE6LXUMx5VjY5XrR/
+spl-token create-account --owner 2i3KvjDCZWxBsqcxBHpdEaZYQwQSYE6LXUMx5VjY5XrR 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+```
+
+Returns the following output.
+
+- `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
+  account created to hold units of the token specified in the `create-account`
+  command and owned by the address specified following the `--owner` flag.
+
+```console filename="terminal" /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+Creating account Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
+
+Signature: 44vqKdfzspT592REDPY4goaRJH3uJ3Ce13G4BCuUHg35dVUbHuGTHvqn4ZjYF9BGe9QrjMfe9GmuLkQhSZCBQuEt
+```
+
+Under the hood, creating an Associated Token Account requires a single
+instruction that invokes the
 [Associated Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src).
-Here is an example on
+Here is a Javascript example on
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
 The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi) to
@@ -372,137 +360,181 @@ handle:
 - [Invoking the Token Program](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src/processor.rs#L138-L161)
   to initialize the Token Account data for the new account.
 
-First, derive the PDA for the Associated Token Account.
+Alternatively, creating a new Token Account using a randomly generated keypair
+(not an Associated Token Account) requires sending a transaction with two
+instructions. Here is a Javascript example on
+[Solana Playground](https://beta.solpg.io/660ce716cffcf4b13384d010).
 
-```ts
-const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
-  mint, // mint address
-  wallet.publicKey, // token account owner
-  false, // allow owner off-curve (PDA)
-  TOKEN_2022_PROGRAM_ID,
-);
+1. Invoke the System Program to create a new account with enough space for the
+   Token Account data and then transfer ownership to the Token Program.
+
+2. Invoke the Token Program to initialize the data of the new account as a Token
+   Account
+
+### Mint Tokens
+
+To create new units of a token, use the following command:
+
+```sh
+spl-token mint [OPTIONS] <TOKEN_ADDRESS> <TOKEN_AMOUNT> [--] [RECIPIENT_TOKEN_ACCOUNT_ADDRESS]
 ```
 
-Next, create the instruction invoking the Associated Token Program.
+For example, running the following command:
 
-```ts
-const instruction = createAssociatedTokenAccountInstruction(
-  wallet.publicKey, // payer
-  associatedTokenAccountAddress, // token account address
-  wallet.publicKey, // owner
-  mint, // mint address
-  TOKEN_2022_PROGRAM_ID,
-);
+```sh
+spl-token mint 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg 100
 ```
 
-Next, add the instruction to a new transaction.
+Returns the following output.
 
-```ts
-const transaction = new Transaction().add(instruction);
+- `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg` is the address of the mint
+  account that tokens are being minted for (increasing total supply).
+
+- `AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9` is the address of your wallet's
+  token account that units of the token are being minted to (increasing amount).
+
+```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/ /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/
+Minting 100 tokens
+  Token: 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+  Recipient: AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9
+
+Signature: 2NJ1m7qCraPSBAVxbr2ssmWZmBU9Jc8pDtJAnyZsZJRcaYCYMqq1oRY1gqA4ddQno3g3xcnny5fzr1dvsnFKMEqG
 ```
 
-Finally, send the transaction. The `wallet.keypair` is the transaction fee payer
-and account paying the lamports required by the new token account.
+To mint tokens to a different token account, specify the address of the intended
+recipient token account. For example, running the following command:
 
-```ts
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [
-    wallet.keypair, // payer
-  ],
-);
+```sh /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+spl-token mint 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg 100 -- Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
 ```
 
-## Mint Tokens
+Returns the following output.
 
-To create new units of a token, invoke the `MintTo` instruction on the Token
-Program. This instruction must be signed by the mint authority. The instruction
-mints new units of the token to a Token Account and increases the total supply
-on the Mint Account. Here is an example on
+- `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg` is the address of the mint
+  account that tokens are being minted for (increasing total supply).
+
+- `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
+  account that units of the token are being minted to (increasing amount).
+
+```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/ /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+Minting 100 tokens
+  Token: 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
+  Recipient: Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
+
+Signature: 3SQvNM3o9DsTiLwcEkSPT1Edr14RgE2wC54TEjonEP2swyVCp2jPWYWdD6RwXUGpvDNUkKWzVBZVFShn5yntxVd7
+```
+
+Under the hood, creating new units of a token requires invoking the `MintTo`
+instruction on the Token Program. This instruction must be signed by the mint
+authority. The instruction mints new units of the token to a Token Account and
+increases the total supply on the Mint Account. Here is a Javascript example on
 [Solana Playground](https://beta.solpg.io/660cea45cffcf4b13384d012).
 
-First, create an instruction to invoke the Token Program.
+### Transfer Tokens
 
-```ts
-const instruction = createMintToInstruction(
-  mint, // mint address
-  tokenAccount, // destination
-  wallet.publicKey, // mint authority
-  100, // amount
-  [],
-  TOKEN_2022_PROGRAM_ID,
-);
+To transfer units of a token between two token accounts, use the following
+command:
+
+```sh
+spl-token transfer [OPTIONS] <TOKEN_ADDRESS> <TOKEN_AMOUNT> <RECIPIENT_ADDRESS
+or RECIPIENT_TOKEN_ACCOUNT_ADDRESS>
 ```
 
-Next, add the instruction to a new transaction.
+For example, running the following command:
 
-```ts
-const transaction = new Transaction().add(instruction);
+```sh
+spl-token transfer 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg 100 Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
 ```
 
-Finally, send the transaction. The mint authority for the mint account must be a
-signer on the transaction.
+Returns the following output.
 
-```ts
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [
-    wallet.keypair, // payer, mint authority
-  ],
-);
+- `AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9` is the address of the token
+  account that tokens are being transferred from. This would be the address of
+  your token account for the specified token being transferred.
+
+- `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
+  account that tokens are being transferred to.
+
+```console filename="terminal" /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/ /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+Transfer 100 tokens
+  Sender: AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9
+  Recipient: Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
+
+Signature: 5y6HVwV8V2hHGLTVmTmdySRiEUCZnWmkasAvJ7J6m7JR46obbGKCBqUFgLpZu5zQGwM4Xy6GZ4M5LKd1h6Padx3o
 ```
 
-## Transfer Tokens
-
-To transfer tokens, invoke the `Transfer` instruction on the Token Program. This
-instruction must be signed by the owner of the Token Account. The instruction
-transfers units of a token from one Token Account to another Token Account. Here
-is an example on
+Under the hood, transferring tokens requires invoking the `Transfer` instruction
+on the Token Program. This instruction must be signed by the owner of the
+sender's Token Account. The instruction transfers units of a token from one
+Token Account to another Token Account. Here is a Javascript example on
 [Solana Playground](https://beta.solpg.io/660ced84cffcf4b13384d013).
-
-First, create an instruction to invoke the Token Program.
-
-```ts
-const instruction = createTransferInstruction(
-  sourceTokenAccount.address, // transfer from
-  destinationTokenAccount.address, // transfer to
-  wallet.publicKey, // source token account owner
-  100, // amount
-  [],
-  TOKEN_2022_PROGRAM_ID,
-);
-```
-
-Next, add the instruction to a new transaction.
-
-```ts
-const transaction = new Transaction().add(instruction);
-```
-
-Finally, send the transaction. The mint authority for the mint account must be a
-signer on the transaction.
-
-```ts
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [
-    wallet.keypair, // payer, owner
-  ],
-);
-```
 
 It's important to understand that both the sender and recipient must have
 existing token accounts for the specific type of token being transferred. The
-sender can include instructions to create the recipient's token account, which
-generally is the Associated Token Account.
+sender can include additional instructions on the transaction to create the
+recipient's token account, which generally is the Associated Token Account.
 
-## Token Metadata
+### Create Token Metadata
 
 The Token Extensions Program enables additional metadata (such as name, symbol,
-link to image) to be stored directly on the Mint Account. Here an example on
-[Solana Playground](https://beta.solpg.io/65964e90cffcf4b13384ceca). You can
-learn more on the
+link to image) to be stored directly on the Mint Account.
+
+<Callout>
+   Using the Token Extensions CLI flags requires a local installation of the CLI:
+   
+   `cargo install --version 3.4.0 spl-token-cli`
+</Callout>
+
+To create a new token with the metadata extension enabled, using the following
+command:
+
+```sh
+spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+--enable-metadata
+```
+
+The command returns the following output.
+
+- `BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP` is the address of the new token
+  created with the metadata extension enabled.
+
+```console filename="terminal" /BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP/
+Creating token BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP under program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
+To initialize metadata inside the mint, please run `spl-token initialize-metadata BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP <YOUR_TOKEN_NAME> <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>`, and sign with the mint authority.
+
+Address:  BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP
+Decimals:  9
+
+Signature: 5iQofFeXdYhMi9uTzZghcq8stAaa6CY6saUwcdnELST13eNSifiuLbvR5DnRt311frkCTUh5oecj8YEvZSB3wfai
+```
+
+Once a new token is created with the metadata extension enabled, use the
+following command to initialize the metadata.
+
+```sh
+spl-token initialize-metadata <TOKEN_MINT_ADDRESS> <YOUR_TOKEN_NAME>
+<YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>
+```
+
+The token uri is a link to off-chain metadata you want to associate with the
+token. You can find an example of the JSON format
+[here](https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json).
+
+For example, running the following command will the additonal metadata directly
+on the specified mint account.
+
+```sh /BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP/
+spl-token initialize-metadata BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP "TokenName" "TokenSymbol" "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json"
+```
+
+You can then look up the address of the mint account on an explorer to inspect
+the metadata. For example, here is a token created with the metadata extension
+enabled on the
+[SolanaFm](https://solana.fm/address/BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP?cluster=devnet-solana)
+explorer.
+
+You can learn more on the
 [Metadata Extension Guide](https://solana.com/developers/guides/token-extensions/metadata-pointer).
+For more details related to various Token Extensions, refer to the
+[Getting Started Guide](https://solana.com/developers/guides/token-extensions/getting-started)
+and the [SPL documentation](https://spl.solana.com/token-2022/extensions).
