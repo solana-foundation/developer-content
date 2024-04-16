@@ -167,7 +167,7 @@
       "source": "/integrations/exchange"
     },
     {
-      "destination": "/docs/intro/transaction_fees",
+      "destination": "/docs/intro/transaction-fees",
       "source": "/transaction_fees"
     },
     {
