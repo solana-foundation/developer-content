@@ -97,7 +97,7 @@ reaching the "block boundary"), the final hash of the block is added to the
 `BlockhashQueue` which stores a maximum of the
 [300 most recent blockhashes](https://github.com/anza-xyz/agave/blob/e0b0bcc80380da34bb63364cc393801af1e1057f/sdk/program/src/clock.rs#L123-L126).
 During transaction processing, Solana Validators will check if each
-transaction's recent blockhash is recorded within this
+transaction's recent blockhash is recorded within the
 [150 most recent blockhashes](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L129-L131)
 (aka the max processing age) stored within the `BlockhashQueue`. If the
 transaction's recent blockhash is
