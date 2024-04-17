@@ -4,6 +4,24 @@ sidebarSortOrder: 1
 title: Solana Account Model
 ---
 
+## Key Points
+
+- Accounts store either executable code or program state, up to 10MB of data.
+
+- Accounts require a SOL rent deposit proportional to the amount of data stored,
+  which is fully refundable when the account is closed.
+
+- Each account has an "owner" program that can modify its data or deduct its
+  lamport balance. However, anyone can increase the balance.
+
+- Programs (smart contracts) are stateless accounts that store executable code.
+
+- Data accounts are created by programs to store and manage program state.
+
+- Native programs are built-in programs included with the Solana runtime.
+
+### Overview
+
 On Solana, all data is stored in what are referred to as "accounts”. The way
 data is organized on Solana resembles a
 [key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),

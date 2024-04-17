@@ -3,6 +3,25 @@ title: "Transactions and Instructions"
 sidebarSortOrder: 2
 ---
 
+## Key Points
+
+- Solana transactions consist of instructions that interact with various
+  programs on the network, where each instruction represents a specific
+  operation.
+
+- Each instruction specifies the program to execute the instruction, the
+  accounts required by the instruction, and the data required for the
+  instruction's execution.
+
+- Instructions within a transaction are processed in the order they are listed.
+
+- Transactions are atomic, meaning either all instructions process successfully,
+  or the entire transaction fails.
+
+- The maximum size of a transaction is 1232 bytes.
+
+### Overview
+
 On Solana, we send [transactions](/docs/core/transactions#transaction) to
 interactions with the network. Transactions include one or more
 [instructions](/docs/core/transactions#instruction), each representing a

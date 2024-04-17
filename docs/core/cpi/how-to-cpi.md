@@ -1,5 +1,6 @@
 ---
-title: "How to use Cross Program Innovocation"
+title: "How to use Cross Program Invocation"
+sidebarSortOrder: 1
 ---
 
 This example demonstrates how to transfer SOL using a Cross Program Invocation
@@ -81,7 +82,7 @@ resulting in a successful SOL transfer.
 You can build, deploy, and run the test to view the transaction details on the
 [SolanaFM explorer](https://solana.fm/).
 
-## Program Instruction
+## How to CPI with Anchor
 
 In the starter code, the `SolTransfer` struct specifies the accounts required by
 the transfer instruction.

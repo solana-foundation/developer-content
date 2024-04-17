@@ -4,6 +4,19 @@ sidebarLabel: Cross Program Invocation
 sidebarSortOrder: 5
 ---
 
+## Key Points
+
+- CPIs enable Solana programs to invoke instructions on another program.
+
+- Signer privileges from a caller program are extended to the callee.
+
+- Programs can "sign" CPIs using PDAs derived from their own program ID.
+
+- The callee program can make additional CPIs to other programs, up to a maximum
+  depth of 4.
+
+## Overview
+
 A Cross Program Invocation (CPI) refers to when one program invokes the
 instructions of another program. This mechanism allows for the composability of
 Solana programs.

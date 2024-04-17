@@ -4,6 +4,22 @@ sidebarLabel: Program Derived Address
 sidebarSortOrder: 4
 ---
 
+## Key Points
+
+- PDAs are addresses derived deterministically using a combination of
+  user-defined seeds, bump seed, and a program's ID.
+
+- PDAs are addresses that fall off the Ed25519 curve and have no corresponding
+  private key.
+
+- Solana programs can programmatically "sign" for PDAs that are derived using
+  its program ID.
+
+- Deriving a PDA does not automatically create an on-chain account. An account
+  must be explicitly created via a Solana program.
+
+### Overview
+
 Program Derived Addresses (PDAs) provide developers on Solana with two main use
 cases:
 

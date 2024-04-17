@@ -3,6 +3,28 @@ title: "Tokens on Solana"
 sidebarSortOrder: 6
 ---
 
+## Key Points
+
+- Tokens represent ownership over either fungible (interchangeable) or
+  non-fungible (unique) assets.
+
+- The Token Program contains all instruction for interacting with both fungible
+  and non-fungible tokens on the network.
+
+- The Token Extensions Program is a new version of the Token Program that
+  includes additional features while maintaining the same core functionalities.
+
+- A Mint Account represents a unique token on the network and stores global
+  metadata such as total supply.
+
+- A Token Account tracks individual ownership of tokens for a specific mint
+  account.
+
+- An Associated Token Account is a Token Account created with an address derived
+  from the owner's and mint account's addresses.
+
+### Overview
+
 Tokens are digital assets that represent ownership over diverse categories of
 assets. Tokenization enables the digitalization of property rights, serving as a
 fundamental component for managing both fungible and non-fungible assets.
