@@ -153,8 +153,8 @@ of one type of token.
 
 Note that each Token Account's data includes an “owner" field used to identify
 who has authority over that specific Token Account. This is separate from the
-program owner specified in the AccountInfo, which is the Token Program for all
-Token Accounts.
+program owner specified in the [AccountInfo](/docs/core/accounts#accountinfo),
+which is the Token Program for all Token Accounts.
 
 ### Associated Token Account
 
@@ -253,7 +253,7 @@ token and transaction details on
 [Solana Explorer](https://explorer.solana.com/?cluster=devnet) using the
 `Address` and `Signature`.
 
-The unique identifier of the new token is
+In the example below, the unique identifier (address) of the new token is
 `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg`.
 
 ```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
@@ -321,7 +321,8 @@ By default the `create-account` command creates an
 [associated token account](/docs/core/tokens#associated-token-account) with your
 wallet address as the token account owner.
 
-You can create a token account for different owner using the following command:
+You can create a token account with a different owner using the following
+command:
 
 ```sh
 spl-token create-account --owner <OWNER_ADDRESS> <TOKEN_ADDRESS>
@@ -337,7 +338,8 @@ Returns the following output.
 
 - `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
   account created to hold units of the token specified in the `create-account`
-  command and owned by the address specified following the `--owner` flag.
+  command and owned by the address specified following the `--owner` flag. This
+  is useful when you need to create a token account for another user.
 
 ```console filename="terminal" /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
 Creating account Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
@@ -516,12 +518,12 @@ spl-token initialize-metadata <TOKEN_MINT_ADDRESS> <YOUR_TOKEN_NAME>
 <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>
 ```
 
-The token uri is a link to off-chain metadata you want to associate with the
+The token URI is a link to off-chain metadata you want to associate with the
 token. You can find an example of the JSON format
 [here](https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json).
 
-For example, running the following command will the additonal metadata directly
-on the specified mint account.
+For example, running the following command will store the additional metadata
+directly on the specified mint account.
 
 ```sh /BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP/
 spl-token initialize-metadata BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP "TokenName" "TokenSymbol" "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json"
