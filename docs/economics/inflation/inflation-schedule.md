@@ -6,7 +6,7 @@ altRoutes:
 ---
 
 As mentioned above, the network's _Inflation Schedule_ is uniquely described by
-three parameters: _Initial Inflation Rate_, _Disinflation Rate_ and _Long-term
+three parameters: _Initial Inflation Rate_, _Deflation Rate_ and _Long-term
 Inflation Rate_. When considering these numbers, there are many factors to take
 into account:
 
@@ -29,7 +29,7 @@ into account:
   grant programs, but also should be tuned in consideration with expected token
   losses and burning over time.
 - The rate at which we expect network usage to grow, as a consideration to the
-  disinflationary rate. Over time, we plan for inflation to drop and expect that
+  deflationary rate. Over time, we plan for inflation to drop and expect that
   usage will grow.
 
 Based on these considerations and the community discussions following the
@@ -37,7 +37,7 @@ initial design, the Solana Foundation proposes the following Inflation Schedule
 parameters:
 
 - Initial Inflation Rate: 8%
-- Disinflation Rate: -15%
+- Deflation Rate: -15%
 - Long-term Inflation Rate: 1.5%
 
 These parameters define the proposed _Inflation Schedule_. Below we show
