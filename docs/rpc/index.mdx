@@ -39,8 +39,8 @@ safety, it's recommended to use `finalized` commitment.
 
 ### Default Commitment
 
-If commitment configuration is not provided, the node will default to
-`finalized` commitment
+If commitment configuration is not provided, the node will
+[default to `finalized` commitment](https://github.com/anza-xyz/agave/blob/aa0922d6845e119ba466f88497e8209d1c82febc/sdk/src/commitment_config.rs#L199-L203)
 
 Only methods that query bank state accept the commitment parameter. They are
 indicated in the API Reference below.
