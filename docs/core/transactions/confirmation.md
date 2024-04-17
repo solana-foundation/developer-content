@@ -102,7 +102,7 @@ transaction's recent blockhash is recorded within the
 (aka the max processing age) stored within the `BlockhashQueue`. If the
 transaction's recent blockhash is
 [older than this](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/runtime/src/bank.rs#L3570-L3571)
-max processing age, the transaction is rejected.
+max processing age, the transaction is not processed.
 
 Since [slots](/docs/terminology.md#slot) (aka the time period a validator can
 produce a block) are configured to last about
@@ -233,12 +233,13 @@ But feel free to consider the other options:
   to a dropped fork. Transactions that use blockhashes for abandoned blocks
   won’t ever be considered recent by any blocks that are in the finalized
   blockchain.
-- Using the default commitment level `finalized` will eliminate any risk that
-  the blockhash you choose will belong to a dropped fork. The tradeoff is that
-  there is typically at least a 32 slot difference between the most recent
-  confirmed block and the most recent finalized block. This tradeoff is pretty
-  severe and effectively reduces the expiration of your transactions by about 13
-  seconds but this could be even more during unstable cluster conditions.
+- Using the [default commitment](/docs/rpc#default-commitment) level `finalized`
+  will eliminate any risk that the blockhash you choose will belong to a dropped
+  fork. The tradeoff is that there is typically at least a 32 slot difference
+  between the most recent confirmed block and the most recent finalized block.
+  This tradeoff is pretty severe and effectively reduces the expiration of your
+  transactions by about 13 seconds but this could be even more during unstable
+  cluster conditions.
 
 ### Use an appropriate preflight commitment level
 
