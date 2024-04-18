@@ -444,8 +444,7 @@ that facilitates tasks such as creating and using tokens.
 
 ## stake
 
-Tokens forfeit to the 
-[cluster](#cluster) if malicious [validator](#validator)
+Tokens forfeit to the [cluster](#cluster) if malicious [validator](#validator)
 behavior can be proven.
 
 ## stake-weighted quality of service (SWQoS)
