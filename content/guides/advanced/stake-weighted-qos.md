@@ -138,9 +138,13 @@ split proportionally based on the lamport amounts specified in the
 
 On the RPC you will have to use `--rpc-send-transaction-tpu-peer` to forward
 transactions to a specific leader. The exact usage would be
-`--rpc-send-transaction-tpu-peer HOST:PORT`, with the Host being of the leader
-you have the `staked-nodes-overrides` enabled on. The peering would looking like
-the following:
+`--rpc-send-transaction-tpu-peer HOST:PORT`. The Host is the ip address of the
+leader you have the `staked-nodes-overrides` enabled on and the Port is the QUIC
+TPU port of that host. The QUIC TPU port number is the lowest value of your
+`--dynamic-port-range` plus 9. For example, if the flag is
+`--dynamic-port-range 8000-8100`, the QUIC TPU port is `8009`.
+
+The peering would looking like the following:
 
 ![Diagram of RPCs peering with Validator for Stake-weighted Qos](/assets/guides/stake-weighted-qos-guide/peered-RPCs-guide.png)
 
