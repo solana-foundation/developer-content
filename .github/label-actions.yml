@@ -1,8 +1,8 @@
 # Configuration for Label Actions - https://github.com/dessant/label-actions
 
 # The `prettier` label is added
-prettier:
-  prs:
-    # Post a comment
-    comment: >
-      Automatically running and applying the local prettier config
+# prettier:
+#   prs:
+#     # Post a comment
+#     comment: >
+#       Automatically running and applying the local prettier config
