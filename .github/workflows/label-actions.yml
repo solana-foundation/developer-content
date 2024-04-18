@@ -33,10 +33,11 @@ jobs:
         run:
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
           && sudo sysctl -p
-      - name: npm install
-        run: npm install
-      - name: run prettier:fix
-        run: npm run prettier:fix
+
+      - name: yarn install
+        run: yarn install
+      - name: yarn prettier:fix
+        run: yarn prettier:fix
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
