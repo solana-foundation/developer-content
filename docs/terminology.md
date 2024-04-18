@@ -449,7 +449,8 @@ behavior can be proven.
 
 ## stake-weighted quality of service (SWQoS)
 
-SWQoS allows [preferential treatment for transactions that come from staked validators](https://solana.com/developers/guides/advanced/stake-weighted-qos). 
+SWQoS allows
+[preferential treatment for transactions that come from staked validators](https://solana.com/developers/guides/advanced/stake-weighted-qos).
 
 ## supermajority
 
