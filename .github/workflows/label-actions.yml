@@ -31,8 +31,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
       - name: Use Node.js node
         uses: actions/setup-node@v2
         with:
