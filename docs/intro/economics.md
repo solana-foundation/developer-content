@@ -37,7 +37,7 @@ with defining and clarifying
 [Terminology](/docs/economics/inflation/terminology.md) commonly used
 subsequently in the discussion of inflation and the related components.
 Following that, we outline Solana's proposed
-[Inflation Schedule](/docs/economics/inflation/inflation_schedule.md), i.e. the
+[Inflation Schedule](/docs/economics/inflation/inflation-schedule.md), i.e. the
 specific parameters that uniquely parameterize the protocol-driven inflationary
 issuance over time. Next is a brief section on
 [Adjusted Staking Yield](/docs/economics/inflation/_adjusted_staking_yield.md),

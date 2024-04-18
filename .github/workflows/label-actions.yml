@@ -1,0 +1,52 @@
+name: "Label Actions"
+
+# env:
+#   GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+on:
+  pull_request_target:
+    types: [labeled, unlabeled]
+  # issues:
+  #   types: [labeled, unlabeled]
+  # discussion:
+  #   types: [labeled, unlabeled]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  discussions: write
+
+jobs:
+  # run the local prettier config on the PR
+  prettier:
+    if: contains(github.event.pull_request.labels.*.name, 'prettier')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: before_install
+        run:
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+          && sudo sysctl -p
+
+      - name: yarn install
+        run: yarn install
+      - name: yarn prettier:fix
+        run: yarn prettier:fix
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: prettier"
+
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dessant/label-actions@v4
+        with:
+          # github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          config-path: ".github/label-actions.yml"
