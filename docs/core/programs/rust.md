@@ -231,7 +231,9 @@ the new account.
 
 In this example, we use a [Cross Program Invocation](/docs/core/cpi) to invoke
 the System Program, creating a new account with the executing program as the
-owner.
+owner. As part of the [Solana Account Model](/docs/core/accounts#accountinfo),
+only the program designated as the owner of an account is allowed to modify the
+data on the account.
 
 ```rust
 let account_data = NewAccount { data };
@@ -249,10 +251,6 @@ invoke(
     &[signer.clone(), new_account.clone(), system_program.clone()],
 )?;
 ```
-
-As part of the [Solana Account Model](/docs/core/accounts#accountinfo), only the
-program designated as the owner of an account is allowed to modify the data on
-the account.
 
 After the account has been successfully created, the final step is to serialize
 data into the new account's data field. This effectively initializes the account
@@ -310,4 +308,239 @@ pub fn process_initialize(
 pub struct NewAccount {
     pub data: u64,
 }
+```
+
+## Client
+
+Interacting with Solana programs written in native Rust involves directly
+building the `TransactionInstruction`.
+
+Similarly, fetching and deserializing account data requires creating a schema
+compatible with the on-chain program's data structures.
+
+Below, we'll walk through an example demonstrating how to invoke the
+`initialize` instruction from the program above.
+
+```ts filename="native.test.ts"
+describe("Test", () => {
+  it("Initialize", async () => {
+    // Generate keypair for the new account
+    const newAccountKp = new web3.Keypair();
+
+    const instructionIndex = 0;
+    const data = 42;
+
+    // Create instruction data buffer
+    const instructionData = Buffer.alloc(1 + 8);
+    instructionData.writeUInt8(instructionIndex, 0);
+    instructionData.writeBigUInt64LE(BigInt(data), 1);
+
+    const instruction = new web3.TransactionInstruction({
+      keys: [
+        {
+          pubkey: newAccountKp.publicKey,
+          isSigner: true,
+          isWritable: true,
+        },
+        {
+          pubkey: pg.wallet.publicKey,
+          isSigner: true,
+          isWritable: true,
+        },
+        {
+          pubkey: web3.SystemProgram.programId,
+          isSigner: false,
+          isWritable: false,
+        },
+      ],
+      programId: pg.PROGRAM_ID,
+      data: instructionData,
+    });
+
+    const transaction = new web3.Transaction().add(instruction);
+
+    const txHash = await web3.sendAndConfirmTransaction(
+      pg.connection,
+      transaction,
+      [pg.wallet.keypair, newAccountKp],
+    );
+    console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
+
+    // Fetch Account
+    const newAccount = await pg.connection.getAccountInfo(
+      newAccountKp.publicKey,
+    );
+
+    // Deserialize Account Data
+    const deserializedAccountData = borsh.deserialize(
+      AccountDataSchema,
+      AccountData,
+      newAccount.data,
+    );
+
+    console.log(Number(deserializedAccountData.data));
+  });
+});
+
+class AccountData {
+  data = 0;
+  constructor(fields: { data: number }) {
+    if (fields) {
+      this.data = fields.data;
+    }
+  }
+}
+
+const AccountDataSchema = new Map([
+  [AccountData, { kind: "struct", fields: [["data", "u64"]] }],
+]);
+```
+
+### Invoke Instructions
+
+To invoke an instruction, you must manually construct a `TransactionInstruction`
+that corresponds with the on-chain program. This involves specifying:
+
+- The program ID for the program being invoked
+- The AccountMeta for each account required by the instruction
+- The instruction data buffer required by the instruction
+
+```ts
+// Generate keypair for the new account
+const newAccountKp = new web3.Keypair();
+
+const instructionIndex = 0;
+const data = 42;
+
+// Create instruction data buffer
+const instructionData = Buffer.alloc(1 + 8);
+instructionData.writeUInt8(instructionIndex, 0);
+instructionData.writeBigUInt64LE(BigInt(data), 1);
+
+const instruction = new web3.TransactionInstruction({
+  keys: [
+    {
+      pubkey: newAccountKp.publicKey,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: pg.wallet.publicKey,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: web3.SystemProgram.programId,
+      isSigner: false,
+      isWritable: false,
+    },
+  ],
+  programId: pg.PROGRAM_ID,
+  data: instructionData,
+});
+```
+
+First, create a new keypair. The publickey from this keypair will be used as the
+address for the new account created by the `initialize` instruction.
+
+```ts
+// Generate keypair for the new account
+const newAccountKp = new web3.Keypair();
+```
+
+Before building the instruction, prepare the instruction data buffer that the
+instruction expects. In this example, the buffer's first byte identifies the
+instruction to invoke on the program. The additional 8 bytes are allocated for
+the `u64` type data, which is required by the `initialize` instruction.
+
+```ts {5}
+const instructionIndex = 0;
+const data = 42;
+
+// Create instruction data buffer
+const instructionData = Buffer.alloc(1 + 8);
+instructionData.writeUInt8(instructionIndex, 0);
+instructionData.writeBigUInt64LE(BigInt(data), 1);
+```
+
+After creating the instruction data buffer, use it to construct the
+`TransactionInstruction`. This involves specifying the program ID and defining
+the AccountMeta for each account involved in the instruction. This means
+specifying whether each account is writable and if it is required as a signer on
+the transaction.
+
+```ts {4-6, 9-11, 14-16}
+const instruction = new web3.TransactionInstruction({
+  keys: [
+    {
+      pubkey: newAccountKp.publicKey,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: pg.wallet.publicKey,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: web3.SystemProgram.programId,
+      isSigner: false,
+      isWritable: false,
+    },
+  ],
+  programId: pg.PROGRAM_ID,
+  data: instructionData,
+});
+```
+
+Finally, add the instruction to a new transaction and send it to be processed by
+the network.
+
+```ts {1} /instruction/ /transaction/
+const transaction = new web3.Transaction().add(instruction);
+
+const txHash = await web3.sendAndConfirmTransaction(
+  pg.connection,
+  transaction,
+  [pg.wallet.keypair, newAccountKp],
+);
+console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
+```
+
+### Fetch Accounts
+
+To fetch and deserialize the account data, you need to first create a scheme to
+match the expected on-chain account data.
+
+```ts
+class AccountData {
+  data = 0;
+  constructor(fields: { data: number }) {
+    if (fields) {
+      this.data = fields.data;
+    }
+  }
+}
+
+const AccountDataSchema = new Map([
+  [AccountData, { kind: "struct", fields: [["data", "u64"]] }],
+]);
+```
+
+Then fetch the AccountInfo for the account using its address.
+
+```ts /newAccountKp.publicKey/
+const newAccount = await pg.connection.getAccountInfo(newAccountKp.publicKey);
+```
+
+Lastly, deserialize the AccountInfo's data field using the predefined schema.
+
+```ts /newAccount.data/ {2-4}
+const deserializedAccountData = borsh.deserialize(
+  AccountDataSchema,
+  AccountData,
+  newAccount.data,
+);
+
+console.log(Number(deserializedAccountData.data));
 ```
