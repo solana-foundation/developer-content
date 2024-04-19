@@ -1,17 +1,21 @@
 ---
-title: How to Send SOL
-sidebarSortOrder: 1
+title: How to Add a Memo to a Transaction
+sidebarSortOrder: 4
 ---
 
-To send SOL, you will need to interact with the [SystemProgram][1].
+Any transaction can add a message making use of the memo program. Currently the
+programID from the Memo Program has to be added manually
+`MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr`.
 
-```typescript filename="send-sol.ts" {28-38}
+```typescript filename="add-memo.ts" {38-46}
 import {
   Connection,
   Keypair,
   SystemProgram,
   LAMPORTS_PER_SOL,
+  PublicKey,
   Transaction,
+  TransactionInstruction,
   sendAndConfirmTransaction,
 } from "@solana/web3.js";
 
@@ -31,7 +35,7 @@ import {
 
   await connection.confirmTransaction(airdropSignature);
 
-  const lamportsToSend = 1_000_000;
+  const lamportsToSend = 10;
 
   const transferTransaction = new Transaction().add(
     SystemProgram.transfer({
@@ -41,11 +45,18 @@ import {
     }),
   );
 
+  await transferTransaction.add(
+    new TransactionInstruction({
+      keys: [
+        { pubkey: fromKeypair.publicKey, isSigner: true, isWritable: true },
+      ],
+      data: Buffer.from("Data to send in transaction", "utf-8"),
+      programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
+    }),
+  );
+
   await sendAndConfirmTransaction(connection, transferTransaction, [
     fromKeypair,
   ]);
 })();
 ```
-
-[1]:
-  https://docs.solana.com/developing/runtime-facilities/programs#system-program

@@ -1,5 +1,5 @@
 ---
 metaOnly: true
 title: Transactions
-sidebarSortOrder: 1
+sidebarSortOrder: 2
 ---
