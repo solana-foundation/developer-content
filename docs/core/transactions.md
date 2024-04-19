@@ -63,7 +63,7 @@ transaction to invoke the transfer instruction on the System Program.
 ![SOL Transfer](/assets/docs/core/transactions/sol-transfer.svg)
 
 The sender account must be included as a signer (is_signer) on the transaction
-to approve deduction of their lamport balance. Both the sender and recipient
+to approve the deduction of their lamport balance. Both the sender and recipient
 accounts must be mutable (is_writable) because the instruction modifies the
 lamport balance for both accounts.
 
@@ -138,7 +138,7 @@ The combination of the signatures and message cannot exceed this limit.
   vary, depending on the transaction's requirements.
 - Message: The message includes instructions, accounts, and additional metadata,
   with each account requiring 32 bytes. The combined size of the accounts plus
-  metadata can vary, depending on the instructions included in the transition.
+  metadata can vary, depending on the instructions included in the transaction.
 
 ![Transaction Format](/assets/docs/core/transactions/issues_with_legacy_txs.png)
 
@@ -236,7 +236,7 @@ in the array specifies the following information:
 ### Transaction Logs
 
 Below is an example of the structure of a transaction including a single
-[SOL transfer](/docs/core/transactions#basic-examples) instruction. It shows the
+[SOL transfer](/docs/core/transactions#basic-example) instruction. It shows the
 message details including the header, account keys, blockhash, and the
 instructions, along with the signature for the transaction.
 
