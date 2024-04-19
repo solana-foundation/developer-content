@@ -97,12 +97,17 @@ reaching the "block boundary"), the final hash of the block is added to the
 `BlockhashQueue` which stores a maximum of the
 [300 most recent blockhashes](https://github.com/anza-xyz/agave/blob/e0b0bcc80380da34bb63364cc393801af1e1057f/sdk/program/src/clock.rs#L123-L126).
 During transaction processing, Solana Validators will check if each
-transaction's recent blockhash is recorded within the
-[150 most recent blockhashes](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L129-L131)
-(aka the max processing age) stored within the `BlockhashQueue`. If the
-transaction's recent blockhash is
+transaction's recent blockhash is recorded within the most recent 151 stored
+hashes (aka "max processing age"). If the transaction's recent blockhash is
 [older than this](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/runtime/src/bank.rs#L3570-L3571)
 max processing age, the transaction is not processed.
+
+> Due to the current
+> [max processing age of 150](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L129-L131)
+> and the "age" of a blockhash in the queue being
+> [0-indexed](https://github.com/anza-xyz/agave/blob/992a398fe8ea29ec4f04d081ceef7664960206f4/accounts-db/src/blockhash_queue.rs#L248-L274),
+> there are actually 151 blockhashes that are considered "recent enough" and
+> valid for processing.
 
 Since [slots](/docs/terminology.md#slot) (aka the time period a validator can
 produce a block) are configured to last about
@@ -119,15 +124,15 @@ Let’s walk through a quick example:
 2. The validator receives a transaction from a user with the recent blockhash
    `abcd...`
 3. The validator checks this blockhash `abcd...` against the list of recent
-   blockhashes in the `BlockhashQueue` and discovers that it was created 150
+   blockhashes in the `BlockhashQueue` and discovers that it was created 151
    blocks ago
-4. Since it was created exactly 150 blocks ago, the transaction has not expired
-   yet and can still be processed!
+4. Since it is exactly 151 blocks old, the transaction has not expired yet and
+   can still be processed!
 5. But wait: before actually processing the transaction, the validator finished
    creating the next block and added it to the `BlockhashQueue`. The validator
    then starts producing the block for the next slot (validators get to produce
    blocks for 4 consecutive slots)
-6. The validator checks that same transaction again and finds it is now 151
+6. The validator checks that same transaction again and finds it is now 152
    blocks old and rejects it because it’s too old :(
 
 ## Why do transactions expire?
@@ -182,8 +187,7 @@ need to use more memory to track more transactions. If expiration time is
 decreased, users don’t have enough time to submit their transaction.
 
 Currently, Solana clusters require that transactions use blockhashes that are no
-more than
-[150 blocks old](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L129-L131).
+more than 151 blocks old.
 
 > This [Github issue](https://github.com/solana-labs/solana/issues/23582)
 > contains some calculations that estimate that mainnet-beta validators need
@@ -193,7 +197,7 @@ more than
 
 ## Transaction confirmation tips
 
-As mentioned before, blockhashes expire after a time period of only 150 blocks
+As mentioned before, blockhashes expire after a time period of only 151 blocks
 which can pass as quickly as **one minute** when slots are processed within the
 target time of 400ms.
 
