@@ -6,14 +6,14 @@ sidebarSortOrder: 3
 
 ## Key Points
 
-- Programs are on-chain accounts that contain executable code separated into
-  functions known as instructions.
+- Programs are on-chain accounts that contain executable code. This code is
+  organized into distinct functions known as instructions.
 
 - Programs are stateless but can include instructions to create new accounts,
   which are used to store and manage program state.
 
 - Programs can be updated by an upgrade authority. A program becomes immutable
-  once the upgrade authority is set to null.
+  when the upgrade authority is set to null.
 
 - Verifiable builds enable users to verify that on-chain programs match the
   publicly available source code.
@@ -46,11 +46,12 @@ approaches for development:
 
 ## Updating Solana Programs
 
-On-chain programs can be modified by an account designated as the "upgrade
-authority," typically the account that originally deployed the program.
+On-chain programs can be directly modified by an account designated as the
+"upgrade authority", which is typically the account that originally deployed the
+program.
 
-If the upgrade authority is set to null, the program becomes immutable and can
-no longer be updated.
+If the upgrade authority is revoked and set to null, the program becomes
+immutable and can no longer be updated.
 
 ## Verifiable Programs
 
@@ -60,13 +61,13 @@ independently verified to match its public source code by any third party. This
 process enhances transparency and trust, making it possible to detect
 discrepancies between the source code and the deployed program.
 
-The Solana developer community have introduced tools to support verifiable
+The Solana developer community has introduced tools to support verifiable
 builds, enabling both developers and users to verify that on-chain programs
 accurately reflect their publicly shared source code.
 
 - **Searching for Verified Programs**: To quickly check for verified programs,
   users can search for a program address on the [SolanaFM](https://solana.fm/)
-  explorer and navigate to the "Verification" tab. View an example of a verified
+  Explorer and navigate to the "Verification" tab. View an example of a verified
   program
   [here](https://solana.fm/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY).
 
@@ -76,18 +77,17 @@ accurately reflect their publicly shared source code.
   against published source code.
 
 - **Support for Verifiable Builds in Anchor**: Anchor provides built-in support
-  for verifiable builds, simplifying the process for developers to build
-  transparent and trustworthy programs. Details can be found in the
+  for verifiable builds. Details can be found in the
   [Anchor documentation](https://www.anchor-lang.com/docs/verifiable-builds).
 
 ## Berkeley Packet Filter (BPF)
 
 Solana leverages the [LLVM compiler infrastructure](https://llvm.org/) to
-compile on-chain programs into
+compile programs into
 [Executable and Linkable Format (ELF)](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
-files. These files include a variation of
-[Berkeley Packet Filter (BPF)](https://en.wikipedia.org/wiki/Berkeley_Packet_Filter)
-bytecode for Solana programs, known as sBPF.
+files. These files include a modified version of
+[Berkeley Packet Filter (eBPF)](https://en.wikipedia.org/wiki/EBPF) bytecode for
+Solana programs, known as "Solana Bytecode Format" (sBPF).
 
 The use of LLVM enables Solana to potentially support any programming language
 that can compile to LLVM's BPF backend. This significantly enhances the

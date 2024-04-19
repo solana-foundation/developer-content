@@ -146,7 +146,7 @@ The combination of the signatures and message cannot exceed this limit.
 
 The
 [message header](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/mod.rs#L96)
-specifies the permissions of accounts included in the transaction's account
+specifies the privileges of accounts included in the transaction's account
 address array. It is comprised of three bytes, each containing a u8 integer,
 which collectively specify:
 
@@ -181,8 +181,9 @@ needed for the instructions within the transaction.
 
 This array starts with a
 [compact-u16](/docs/core/transactions#compact-array-format) encoding of the
-number of account addresses, followed by the addresses ordered by the
-permissions required of the accounts:
+number of account addresses, followed by the addresses ordered by the privileges
+for the accounts. The metadata in the message header is used to determine the
+number of accounts in each section.
 
 - Accounts that are writable and signers
 - Accounts that are read-only and signers

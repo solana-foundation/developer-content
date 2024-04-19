@@ -6,16 +6,18 @@ sidebarSortOrder: 5
 
 ## Key Points
 
-- CPIs enable Solana programs to invoke instructions on another program.
+- CPIs enable Solana program instructions to directly invoke instructions on
+  another program.
 
-- Signer privileges from a caller program are extended to the callee.
+- Signer privileges from a caller program are extended to the callee program.
 
-- Programs can "sign" CPIs using PDAs derived from their own program ID.
+- When making a CPI, programs can "sign" on behalf of PDAs derived from their
+  own program ID.
 
 - The callee program can make additional CPIs to other programs, up to a maximum
   depth of 4.
 
-## Overview
+### Overview
 
 A Cross Program Invocation (CPI) refers to when one program invokes the
 instructions of another program. This mechanism allows for the composability of
@@ -55,7 +57,7 @@ execute CPIs using either the `invoke` or `invoke_signed` functions from the
 ### Basic CPI
 
 The
-[`invoke`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/program.rs#L132)
+[`invoke`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/program.rs#L132)
 function is used when making a CPI that does not require PDA signers. When
 making CPIs, signers provided to the caller program can extend to the callee
 program.
@@ -78,7 +80,7 @@ for further details.
 ### CPI with PDA Signer
 
 The
-[`invoke_signed`](https://github.com/solana-labs/solana/blob/master/sdk/program/src/program.rs#L247)
+[`invoke_signed`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/program.rs#L247)
 function is used when making a CPI that requires PDA signers. The seeds used to
 derive the signer PDAs are passed into the `invoke_signed` function as
 `signer_seeds`.
@@ -94,21 +96,21 @@ pub fn invoke_signed(
 ) -> Result<(), ProgramError>
 ```
 
-While PDAs have no private keys, they can still act as a signer in an
-instruction via a CPI. To verify that a PDA is derived from the calling program,
-the seeds used to generate the PDA must be included as `signers_seeds`.
-
-When the CPI is processed, the Solana runtime
-[internally calls `create_program_address`](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/syscalls/cpi.rs#L550)
-using the `signers_seeds` and the `program_id` of the calling program. If a
-valid PDA is found, the address is
-[added as a valid signer](https://github.com/solana-labs/solana/blob/master/programs/bpf_loader/src/syscalls/cpi.rs#L552).
-
 The runtime uses the privileges granted to the caller program to determine what
 privileges can be extended to the callee. Privileges in this context refer to
 signers and writable accounts. For example, if the instruction the caller is
 processing contains a signer or writable account, then the caller can invoke an
 instruction that also contains that signer and/or writable account.
+
+While PDAs have no private keys, they can still act as a signer in an
+instruction via a CPI. To verify that a PDA is derived from the calling program,
+the seeds used to generate the PDA must be included as `signers_seeds`.
+
+When the CPI is processed, the Solana runtime
+[internally calls `create_program_address`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/syscalls/cpi.rs#L550)
+using the `signers_seeds` and the `program_id` of the calling program. If a
+valid PDA is found, the address is
+[added as a valid signer](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/syscalls/cpi.rs#L552).
 
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)

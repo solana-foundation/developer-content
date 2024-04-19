@@ -6,13 +6,15 @@ title: Solana Account Model
 
 ## Key Points
 
-- Accounts store either executable code or program state, up to 10MB of data.
+- Accounts can store up to 10MB of data, which can consist of either executable
+  program code or program state.
 
-- Accounts require a SOL rent deposit proportional to the amount of data stored,
-  which is fully refundable when the account is closed.
+- Accounts require a rent deposit in SOL, proportional to the amount of data
+  stored, which is fully refundable when the account is closed.
 
-- Each account has an "owner" program that can modify its data or deduct its
-  lamport balance. However, anyone can increase the balance.
+- Every account has a program "owner". Only the program that owns an account can
+  modify it data or deduct its lamport balance. However, anyone can increase the
+  balance.
 
 - Programs (smart contracts) are stateless accounts that store executable code.
 
@@ -64,7 +66,7 @@ As a key part of the Solana Account Model, every account on Solana has a
 designated "owner", specifically a program. Only the program designated as the
 owner of an account can modify the data stored on the account or deduct the
 lamport balance. It's important to note that while only the owner may deduct the
-balance, anyone can credit.
+balance, anyone can increase the balance.
 
 <Callout>
   To store data on-chain, a certain amount of SOL must be transferred to an
@@ -118,7 +120,7 @@ executing custom programs.
 ## Custom Programs
 
 On Solana, “smart contracts” are referred to as [programs](/docs/core/programs).
-A program is an account that stores executable code and is indicated by an
+A program is an account that contains executable code and is indicated by an
 “executable” flag that is set to true.
 
 For a more detailed explanation of the program deployment process, refer to the
@@ -134,7 +136,7 @@ on Solana, technically three separate accounts are created.
   account stores the address of an executable data account (which stores the
   compiled program code) and the update authority for the program (address
   authorized to make changes to the program).
-- **Program Executable Data Account**: An account that stores the executable
+- **Program Executable Data Account**: An account that contains the executable
   byte code of the program.
 - **Buffer Account**: A temporary account that stores byte code while a program
   is being actively deployed or upgraded. Once the process is complete, the data
@@ -159,12 +161,13 @@ For simplicity, you can think of the "Program Account" as the program itself.
 
 ### Data Account
 
-Solana programs are "stateless", meaning that program accounts only store the
+Solana programs are "stateless", meaning that program accounts only contain the
 program's executable byte code. To store and modify additional data, new
 accounts must be created. These accounts are commonly referred to as “data
 accounts”.
 
-Data accounts can be used to store any data as defined by the owner program.
+Data accounts can store any arbitrary data as defined in the owner program's
+code.
 
 ![Data Account](/assets/docs/core/accounts/data-account.svg)
 
@@ -177,7 +180,7 @@ In other words, creating a data account for a custom program requires two steps:
 1. Invoke the System Program to create an account, which then transfers
    ownership to a custom program
 2. Invoke the custom program, which now owns the account, to then initialize the
-   account data as defined in the program logic
+   account data as defined in the program code
 
 This data account creation process is often abstracted as a single step, but
 it's helpful to understand the underlying process.

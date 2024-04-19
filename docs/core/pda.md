@@ -15,8 +15,10 @@ sidebarSortOrder: 4
 - Solana programs can programmatically "sign" for PDAs that are derived using
   its program ID.
 
-- Deriving a PDA does not automatically create an on-chain account. An account
-  must be explicitly created via a Solana program.
+- Deriving a PDA does not automatically create an on-chain account.
+
+- An account using a PDA as its address must be explicitly created through a
+  dedicated instruction within a Solana program.
 
 ### Overview
 
@@ -40,9 +42,10 @@ its derivation.
 
 It's important to understand that simply deriving a Program Derived Address
 (PDA) does not automatically create an on-chain account at that address.
-Accounts with a PDA as the on-chain address must be explicitly created through a
-Solana program. You can think of deriving a PDA as finding an address on a map.
-Just having an address does not mean there is anything built at that location.
+Accounts with a PDA as the on-chain address must be explicitly created through
+the program used to derive the address. You can think of deriving a PDA as
+finding an address on a map. Just having an address does not mean there is
+anything built at that location.
 
 This section will cover the details of deriving PDAs. The details on how
 programs use PDAs for signing will be addressed in the section on

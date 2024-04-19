@@ -275,7 +275,7 @@ token and transaction details on
 [Solana Explorer](https://explorer.solana.com/?cluster=devnet) using the
 `Address` and `Signature`.
 
-In the example below, the unique identifier (address) of the new token is
+In the example output below, the unique identifier (address) of the new token is
 `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg`.
 
 ```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
