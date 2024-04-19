@@ -126,14 +126,14 @@ Let’s walk through a quick example:
 3. The validator checks this blockhash `abcd...` against the list of recent
    blockhashes in the `BlockhashQueue` and discovers that it was created 151
    blocks ago
-4. Since it is exactly 151 blocks old, the transaction has not expired yet and
-   can still be processed!
+4. Since it is exactly 151 blockhashes old, the transaction has not expired yet
+   and can still be processed!
 5. But wait: before actually processing the transaction, the validator finished
    creating the next block and added it to the `BlockhashQueue`. The validator
    then starts producing the block for the next slot (validators get to produce
    blocks for 4 consecutive slots)
 6. The validator checks that same transaction again and finds it is now 152
-   blocks old and rejects it because it’s too old :(
+   blockhashes old and rejects it because it’s too old :(
 
 ## Why do transactions expire?
 
