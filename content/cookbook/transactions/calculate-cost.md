@@ -1,6 +1,9 @@
 ---
 title: How to Calculate Transaction Cost
 sidebarSortOrder: 3
+description:
+  "Every transaction costs an amount of fees to execute on Solana. Learn how to
+  calculate transaction fees on Solana."
 ---
 
 The number of signatures a transaction requires are used to calculate the

@@ -1,6 +1,9 @@
 ---
 title: How to Get Account Balance
 sidebarSortOrder: 6
+description:
+  "Every account on Solana has a balance of SOL stored. Learn how to retrieve
+  that account balance on Solana."
 ---
 
 ```typescript filename="get-account-balance.ts" {13}

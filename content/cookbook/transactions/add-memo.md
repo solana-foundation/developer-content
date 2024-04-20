@@ -1,6 +1,9 @@
 ---
 title: How to Add a Memo to a Transaction
 sidebarSortOrder: 4
+description:
+  "Transactions come with metadata information about what was transacted. Learn
+  how to add a memo to your transactions on Solana."
 ---
 
 Any transaction can add a message making use of the memo program. Currently the

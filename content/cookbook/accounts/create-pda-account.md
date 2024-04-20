@@ -1,6 +1,10 @@
 ---
 title: How to Create a PDA's Account
 sidebarSortOrder: 3
+description:
+  "Program Derived Addresses, also known as PDAs, enable developers to extend
+  their program's functionality with program-owned accounts. Learn how to create
+  accounts at PDAs on Solana."
 ---
 
 Accounts found at Program Derived Addresses(PDAs) can only be created on-chain.

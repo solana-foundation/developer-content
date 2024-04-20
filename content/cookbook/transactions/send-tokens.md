@@ -1,6 +1,9 @@
 ---
 title: How to Send Tokens
 sidebarSortOrder: 2
+description:
+  "Using tokens is common within any application on Solana. Learn how to send
+  tokens on Solana."
 ---
 
 Use the [Token Program][1] to transfer SPL Tokens. In order to send a SPL token,

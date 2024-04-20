@@ -1,6 +1,9 @@
 ---
 title: How to Validate a Public Key
 sidebarSortOrder: 4
+description:
+  "Public keys on Solana can be validated with a small amount of code. Learn how
+  to validate public keys on Solana."
 ---
 
 In certain special cases (e.g. a Program Derived Address), public keys may not

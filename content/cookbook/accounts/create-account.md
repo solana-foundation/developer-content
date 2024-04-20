@@ -1,6 +1,9 @@
 ---
 title: How to Create an Account
 sidebarSortOrder: 1
+description:
+  "Accounts are the basic building blocks of anything on Solana. Learn how to
+  create accounts on the Solana blockchain."
 ---
 
 Creating an account requires using the System Program `createAccount`

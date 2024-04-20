@@ -1,6 +1,9 @@
 ---
 title: How to Generate a Keypair with Mnemonics
 sidebarSortOrder: 4
+description:
+  "Mnemonics make is easy for users to store their keypair's secret. Learn how
+  to use mnemonics on Solana."
 ---
 
 One way to generate a Keypair is through the use of a Mnemonic. Mnemonics are

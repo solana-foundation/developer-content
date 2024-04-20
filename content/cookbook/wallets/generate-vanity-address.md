@@ -1,6 +1,9 @@
 ---
 title: How to Generate a Vanity Address
 sidebarSortOrder: 6
+description:
+  "Creating custom addresses on Solana is a fun way to make your public key
+  unique. Learn how to create vanity addresses on Solana."
 ---
 
 Vanity publickeys, or custom addresses are keys that have start with specific

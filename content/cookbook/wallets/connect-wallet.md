@@ -1,6 +1,9 @@
 ---
 title: How to Connect a Wallet
 sidebarSortOrder: 8
+description:
+  "Every application on Solana requires a connection with a user's wallet to
+  use. Learn how to connect to wallets on Solana."
 ---
 
 Solana's [wallet-adapter](https://github.com/anza-xyz/wallet-adapter) library

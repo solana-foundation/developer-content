@@ -1,6 +1,9 @@
 ---
 title: How to Add Priority Fees to a Transaction
 sidebarSortOrder: 5
+description:
+  "Transactions executed in order they are prioritized on Solana. Learn how to
+  increase your transaction priority with priority fees on Solana."
 ---
 
 Transaction (TX) priority is achieved by paying a Prioritization Fee in addition

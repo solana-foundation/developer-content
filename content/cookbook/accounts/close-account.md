@@ -1,6 +1,9 @@
 ---
 title: How to Close an Account
 sidebarSortOrder: 5
+description:
+  "When an account is no longer needed, you can close the account to reclaim the
+  rent. Learn how to close accounts efficiently on Solana."
 ---
 
 Closing accounts enables you to reclaim the SOL that was used to open the

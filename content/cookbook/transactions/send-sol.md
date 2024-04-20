@@ -1,6 +1,9 @@
 ---
 title: How to Send SOL
 sidebarSortOrder: 1
+description:
+  "The most common action on Solana is sending SOL. Learn how to send SOL on
+  Solana."
 ---
 
 To send SOL, you will need to interact with the [SystemProgram][1].

@@ -1,6 +1,7 @@
 ---
 title: How to Verify a Keypair
 sidebarSortOrder: 3
+description: "Learn how to verify keypairs on Solana."
 ---
 
 If you are given a keypair, you can verify whether or not the secret matches the

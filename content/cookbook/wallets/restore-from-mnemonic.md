@@ -1,6 +1,7 @@
 ---
-title: How to Restore a Keypair from a Mnemomic
+title: How to Restore a Keypair from a Mnemonic
 sidebarSortOrder: 5
+description: "Learn how to restore keypairs from a mnemonic on Solana"
 ---
 
 Many wallet extensions use mnemonics to represent their secret keys. You can

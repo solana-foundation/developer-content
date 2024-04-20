@@ -1,6 +1,7 @@
 ---
 title: How to Sign and Verify a Message
 sidebarSortOrder: 6
+description: "Learn how to sign messages on Solana."
 ---
 
 The primary function of a keypair is to sign messages and enable verification of

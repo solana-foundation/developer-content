@@ -1,6 +1,9 @@
 ---
 title: How to Create a Keypair
 sidebarSortOrder: 1
+description:
+  "Ever transaction requires a signature from a keypair on Solana. Learn how to
+  create Keypairs on Solana."
 ---
 
 Any transaction on the Solana blockchain requires a keypair or wallet. If you

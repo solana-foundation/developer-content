@@ -1,6 +1,9 @@
 ---
 title: How to Calculate Account Creation Cost
 sidebarSortOrder: 2
+description:
+  "Every time you create an account, that creation costs a small amount of SOL.
+  Learn how to calculate how much an account costs at creation."
 ---
 
 Keeping accounts alive on Solana incurs a storage cost called rent. For the

@@ -1,6 +1,7 @@
 ---
 title: How to Restore a Keypair
 sidebarSortOrder: 2
+description: "Learn how to restore keypairs from a secret on Solana."
 ---
 
 If you already have your secret, you can get your Keypair from the secret to

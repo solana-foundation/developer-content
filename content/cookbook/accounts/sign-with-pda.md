@@ -1,6 +1,10 @@
 ---
 title: How to Sign with a PDA's Account
 sidebarSortOrder: 4
+description:
+  "A main feature of accounts at Program Derived Addresses is the ability for
+  programs to sign using those accounts. Learn how to sign with PDA accounts on
+  Solana."
 ---
 
 Program derived addresses(PDA) can be used to have accounts owned by programs
