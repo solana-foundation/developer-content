@@ -1,5 +1,5 @@
 ---
-sidebarSortOrder: 1000
+sidebarSortOrder: 0
 title: Solana Documentation
 seoTitle: Learn how the Solana blockchain works
 description: "Solana is a high performance network that is utilized for a range

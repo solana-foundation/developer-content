@@ -15,14 +15,14 @@ and abstractions that make building Solana programs more intuitive and secure.
 
 The main macros found in an Anchor program include:
 
-- [`declare_id`](/docs/core/programs#declare_id): Specifies the program's
-  on-chain address
-- [`#[program]`](/docs/core/programs#program): Specifies the module containing
-  the program’s instruction logic
-- [`#[derive(Accounts)]`](/docs/core/programs#derive-accounts): Applied to
-  structs to indicate a list of accounts required for an instruction
-- [`#[account]`](/docs/core/programs#account): Applied to structs to create
-  custom account types specific to the program
+- [`declare_id`](/docs/core/programs/anchor#declare_id-macro): Specifies the
+  program's on-chain address
+- [`#[program]`](/docs/core/programs/anchor#program-macro): Specifies the module
+  containing the program’s instruction logic
+- [`#[derive(Accounts)]`](/docs/core/programs/anchor#derive-accounts-macro):
+  Applied to structs to indicate a list of accounts required for an instruction
+- [`#[account]`](/docs/core/programs/anchor#account-macro): Applied to structs
+  to create custom account types specific to the program
 
 ## Anchor Program
 
@@ -61,7 +61,7 @@ pub struct NewAccount {
 }
 ```
 
-### declare_id!()
+### declare_id macro
 
 The
 [`declare_id`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L430)
@@ -83,7 +83,7 @@ macro.
 - When building locally, the program keypair can be found in
   `/target/deploy/your_program_name.json`
 
-### #[program]
+### program macro
 
 The
 [`#[program]`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/program/src/lib.rs#L12)
@@ -91,7 +91,7 @@ macro specifies the module containing all of your program's instructions. Each
 public function in the module represents a separate instruction for the program.
 
 In every function, the first parameter is always a `Context` type. Subsequent
-parameters, which are optional, define the instruction data required by the
+parameters, which are optional, define any additional `data` required by the
 instruction.
 
 ```rust filename="lib.rs" {5, 8-12}
@@ -158,7 +158,7 @@ This context parameter allows the instruction to access:
   [Program Derived Address (PDA)](/docs/core/pda) accounts specified in the
   `Accounts` struct
 
-### #[derive(Accounts)]
+### derive(Accounts) macro
 
 The
 [`#[derive(Accounts)]`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/derive/accounts/src/lib.rs#L630)
@@ -197,7 +197,7 @@ When building Solana programs, it's essential to validate the accounts provided
 by the client. This validation is achieved in Anchor through account constraints
 and specifying appropriate account types:
 
-- **[Account Constraints](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/syn/src/parser/accounts/constraints.rs)**:
+- [Account Constraints](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/syn/src/parser/accounts/constraints.rs):
   Constraints define additional conditions that an account must satisfy to be
   considered valid for the instruction. Constraints are applied using the
   `#[account(..)]` attribute, which is placed above an account field in the
@@ -214,7 +214,7 @@ and specifying appropriate account types:
   }
   ```
 
-- **[Account Types](https://github.com/coral-xyz/anchor/tree/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/src/accounts)**:
+- [Account Types](https://github.com/coral-xyz/anchor/tree/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/src/accounts):
   Anchor provides various account types to help ensure that the account provided
   by the client matches what the program expects.
 
@@ -265,23 +265,23 @@ pub struct NewAccount {
 When an instruction in an Anchor program is invoked, the program performs the
 following checks as specified the in `Accounts` struct:
 
-- **Account Type Verification**: It verifies that the accounts passed into the
+- Account Type Verification: It verifies that the accounts passed into the
   instruction correspond to the account types defined in the instruction
   Context.
 
-- **Constraint Checks**: It checks the accounts against any additional
-  constraints specified.
+- Constraint Checks: It checks the accounts against any additional constraints
+  specified.
 
 This helps ensure that the accounts passed to the instruction from the client
 are valid. If any checks fail, then the instruction fails with an error before
-reaching the main logic of the function.
+reaching the main logic of the instruction handler function.
 
 For more detailed examples, refer to the
 [constraints](https://www.anchor-lang.com/docs/account-constraints) and
 [account types](https://www.anchor-lang.com/docs/account-types) sections in the
 Anchor documentation.
 
-### #[account]
+### account macro
 
 The
 [`#[account]`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/lang/attribute/account/src/lib.rs#L66)
@@ -366,8 +366,8 @@ programs, ensuring the correct and expected accounts are used.
 
 When an Anchor program is built, Anchor generates an interface description
 language (IDL) file representing the structure of the program. This IDL file
-provides a standardized format for building program instructions and fetching
-program accounts.
+provides a standardized JSON-based format for building program instructions and
+fetching program accounts.
 
 Below are examples of how an IDL file relates to the program code.
 
@@ -376,7 +376,7 @@ Below are examples of how an IDL file relates to the program code.
 The `instructions` array in the IDL corresponds with the instructions on the
 program and specifies the required accounts and parameters for each instruction.
 
-```json filename="IDL"  {6,8-10, 12}
+```json filename="IDL.json"  {6,8-10, 12}
 {
   "version": "0.1.0",
   "name": "hello_anchor",
@@ -439,7 +439,7 @@ The `accounts` array in the IDL corresponds with structs in the program
 annotated with the `#[account]` macro, which specifies the structure of the
 program's data accounts.
 
-```json filename="IDL"  {16-22}
+```json filename="IDL.json"  {16-22}
 {
   "version": "0.1.0",
   "name": "hello_anchor",
@@ -510,12 +510,12 @@ using the IDL file generated by Anchor.
 ### Client Program
 
 Creating an instance of the `Program` requires the program's IDL, its on-chain
-address (programId), and an
+address (`programId`), and an
 [`AnchorProvider`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/provider.ts#L55).
 An `AnchorProvider` combines two things:
 
-- `Connection` - the connection to a Solana cluster (i.e. localhost, devnet,
-  mainnet)
+- `Connection` - the connection to a [Solana cluster](/docs/core/clusters) (i.e.
+  localhost, devnet, mainnet)
 - `Wallet` - (optional) a default wallet used to pay and sign transactions
 
 When building an Anchor program locally, the setup for creating an instance of
@@ -532,8 +532,9 @@ anchor.setProvider(provider);
 const program = anchor.workspace.HelloAnchor as Program<HelloAnchor>;
 ```
 
-When integrating with a frontend using the wallet adapter, you'll need to
-manually set up the `AnchorProvider` and `Program`.
+When integrating with a frontend using
+the[wallet adapter](https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
+you'll need to manually set up the `AnchorProvider` and `Program`.
 
 ```ts {8-9, 12}
 import { Program, Idl, AnchorProvider, setProvider } from "@coral-xyz/anchor";
@@ -577,8 +578,8 @@ basic format looks like this:
 
 - `program.methods` - This is the builder API for creating instruction calls
   related to the program's IDL
-- `.instructionName` - Specific an instruction from the program IDL, passing in
-  any instruction data as comma-separated values
+- `.instructionName` - Specific instruction from the program IDL, passing in any
+  instruction data as comma-separated values
 - `.accounts` - Pass in the address of each account required by the instruction
   as specified in the IDL
 - `.signers` - Optionally pass in an array of keypairs required as additional
@@ -699,9 +700,9 @@ const accounts = await program.account.newAccount.all();
 
 Use `memcmp` to filter for accounts storing data that matches a specific value
 at a specific offset. When calculating the offset, remember that the first 8
-bytes are reserved for the account discriminator. Using `memcmp` requires you to
-understand the byte layout of the data field for the account type you are
-fetching.
+bytes are reserved for the account discriminator in accounts created through an
+Anchor program. Using `memcmp` requires you to understand the byte layout of the
+data field for the account type you are fetching.
 
 ```ts /memcmp/
 const accounts = await program.account.newAccount.all([

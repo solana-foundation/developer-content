@@ -3,35 +3,14 @@ title: "Tokens on Solana"
 sidebarSortOrder: 6
 ---
 
-## Key Points
-
-- Tokens represent ownership over either fungible (interchangeable) or
-  non-fungible (unique) assets.
-
-- The Token Program contains all instruction for interacting with both fungible
-  and non-fungible tokens on the network.
-
-- The Token Extensions Program is a new version of the Token Program that
-  includes additional features while maintaining the same core functionalities.
-
-- A Mint Account represents a unique token on the network and stores global
-  metadata such as total supply.
-
-- A Token Account tracks individual ownership of tokens for a specific mint
-  account.
-
-- An Associated Token Account is a Token Account created with an address derived
-  from the owner's and mint account's addresses.
-
-### Overview
-
 Tokens are digital assets that represent ownership over diverse categories of
 assets. Tokenization enables the digitalization of property rights, serving as a
 fundamental component for managing both fungible and non-fungible assets.
 
 - Fungible Tokens represent interchangeable and divisible assets of the same
   type and value (ex. USDC).
-- Non-fungible Tokens (NFT) represent ownership of indivisible assets (ex. Art).
+- Non-fungible Tokens (NFT) represent ownership of indivisible assets (e.g.
+  artwork).
 
 This section will cover the basics of how tokens are represented on Solana.
 These are referred to as SPL
@@ -56,6 +35,26 @@ Tokens.
   features and improvements. The Token Extensions Program is the recommended
   version to use for creating new tokens (mint accounts).
 </Callout>
+
+## Key Points
+
+- Tokens represent ownership over either fungible (interchangeable) or
+  non-fungible (unique) assets.
+
+- The Token Program contains all instruction for interacting with both fungible
+  and non-fungible tokens on the network.
+
+- The Token Extensions Program is a new version of the Token Program that
+  includes additional features while maintaining the same core functionalities.
+
+- A Mint Account represents a unique token on the network and stores global
+  metadata such as total supply.
+
+- A Token Account tracks individual ownership of tokens for a specific mint
+  account.
+
+- An Associated Token Account is a Token Account created with an address derived
+  from the owner's and mint account's addresses.
 
 ## Token Program
 
@@ -119,8 +118,8 @@ pub struct Mint {
 }
 ```
 
-For reference, here is a Solana Explorer link to the USDC
-[Mint Account](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v).
+For reference, here is a Solana Explorer link to the
+[USDC Mint Account](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v).
 
 ### Token Account
 
@@ -173,10 +172,12 @@ of one type of token.
 
 ![Account Relationship](/assets/docs/core/tokens/token-account-relationship.svg)
 
-Note that each Token Account's data includes an “owner" field used to identify
+<Callout>
+Note that each Token Account's data includes an `owner` field used to identify
 who has authority over that specific Token Account. This is separate from the
 program owner specified in the [AccountInfo](/docs/core/accounts#accountinfo),
 which is the Token Program for all Token Accounts.
+</Callout>
 
 ### Associated Token Account
 
@@ -205,6 +206,8 @@ will always generate the
 for the same mint and owner.
 
 ```ts
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+
 const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
   USDC_MINT_ADDRESS,
   OWNER_ADDRESS,
@@ -217,6 +220,8 @@ following inputs. Here is a
 generates the same address as the previous example.
 
 ```ts
+import { PublicKey } from "@solana/web3.js";
+
 const [PDA, bump] = PublicKey.findProgramAddressSync(
   [
     OWNER_ADDRESS.toBuffer(),
@@ -228,21 +233,23 @@ const [PDA, bump] = PublicKey.findProgramAddressSync(
 ```
 
 For two wallets to hold units of the same type of token, each wallet needs its
-own token account for the specific mint account.
+own token account for the specific mint account. The image below demonstrates
+what this account relationship looks like.
 
 ![Accounts Relationship Expanded](/assets/docs/core/tokens/token-account-relationship-ata.svg)
 
 ## Token Examples
 
-The `spl-token` CLI can be used to experiment with SPL tokens. In the examples
-below, we'll use the [Solana Playground](https://beta.solpg.io/) terminal to run
-the CLI commands.
+The [`spl-token` CLI](https://docs.solanalabs.com/cli) can be used to experiment
+with SPL tokens. In the examples below, we'll use the
+[Solana Playground](https://beta.solpg.io/) terminal to run the CLI commands
+directly in the browser without having to install the CLI locally.
 
 Creating tokens and accounts requires SOL for account rent deposits and
 transaction fees. If it is your first time using Solana Playground, created a
 Playground wallet and run the `solana airdrop` command in the Playground
-terminal. You can also get devnet SOL using this
-[faucet](https://faucet.solana.com/).
+terminal. You can also get devnet SOL using the public
+[web faucet](https://faucet.solana.com/).
 
 ```sh
 solana airdrop 2
@@ -255,11 +262,13 @@ spl-token --help
 ```
 
 Alternatively, you can install the spl-token CLI locally using the following
-command. This requires first installing [Rust](https://rustup.rs/).
+command. This requires first [installing Rust](https://rustup.rs/).
 
-```sh
-cargo install spl-token-cli
-```
+<Callout>
+In the following sections, the account addresses displayed when you run the CLI
+command will differ from the example output shown below. Please use the address shown in your Playground terminal when following along. For example, the 
+address output from the `create-token` is the mint account where your Playground wallet is set as the mint authority.
+</Callout>
 
 ### Create a New Token
 
@@ -270,15 +279,15 @@ following command in the Solana Playground terminal.
 spl-token create-token
 ```
 
-You should see an output similar to the following. You can inspect both the
-token and transaction details on
+You should see an output similar to the following below. You can inspect both
+the token and transaction details on
 [Solana Explorer](https://explorer.solana.com/?cluster=devnet) using the
 `Address` and `Signature`.
 
 In the example output below, the unique identifier (address) of the new token is
 `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg`.
 
-```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
+```console filename="Terminal Output" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
 Creating token 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
 
 Address:  99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
@@ -295,7 +304,7 @@ spl-token supply <TOKEN_ADDRESS>
 ```
 
 Running the `supply` command for a newly created token will return a value of
-`0`.
+`0`:
 
 ```sh /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/
 spl-token supply 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
@@ -327,13 +336,13 @@ For example, running the following command in the Solana Playground terminal:
 spl-token create-account 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
 ```
 
-Returns the following output.
+Returns the following output:
 
 - `AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9` is the address of the token
   account created to hold units of the token specified in the `create-account`
   command.
 
-```console filename="terminal" /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/
+```console filename="Terminal Output" /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/
 Creating account AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9
 
 Signature: 2BtrynuCLX9CNofFiaw6Yzbx6hit66pup9Sk7aFjwU2NEbFz7NCHD9w9sWhrCfEd73XveAGK1DxFpJoQZPXU9tS1
@@ -356,14 +365,16 @@ For example, running the following command:
 spl-token create-account --owner 2i3KvjDCZWxBsqcxBHpdEaZYQwQSYE6LXUMx5VjY5XrR 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
 ```
 
-Returns the following output.
+Returns the following output:
 
 - `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
   account created to hold units of the token specified in the `create-account`
-  command and owned by the address specified following the `--owner` flag. This
-  is useful when you need to create a token account for another user.
+  command (`99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg`) and owned by the
+  address specified following the `--owner` flag
+  (`2i3KvjDCZWxBsqcxBHpdEaZYQwQSYE6LXUMx5VjY5XrR`). This is useful when you need
+  to create a token account for another user.
 
-```console filename="terminal" /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+```console filename="Terminal Output" /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
 Creating account Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
 
 Signature: 44vqKdfzspT592REDPY4goaRJH3uJ3Ce13G4BCuUHg35dVUbHuGTHvqn4ZjYF9BGe9QrjMfe9GmuLkQhSZCBQuEt
@@ -409,7 +420,7 @@ For example, running the following command:
 spl-token mint 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg 100
 ```
 
-Returns the following output.
+Returns the following output:
 
 - `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg` is the address of the mint
   account that tokens are being minted for (increasing total supply).
@@ -417,7 +428,7 @@ Returns the following output.
 - `AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9` is the address of your wallet's
   token account that units of the token are being minted to (increasing amount).
 
-```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/ /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/
+```console filename="Terminal Output" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/ /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/
 Minting 100 tokens
   Token: 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
   Recipient: AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9
@@ -432,7 +443,7 @@ recipient token account. For example, running the following command:
 spl-token mint 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg 100 -- Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
 ```
 
-Returns the following output.
+Returns the following output:
 
 - `99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg` is the address of the mint
   account that tokens are being minted for (increasing total supply).
@@ -440,7 +451,7 @@ Returns the following output.
 - `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
   account that units of the token are being minted to (increasing amount).
 
-```console filename="terminal" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/ /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+```console filename="Terminal Output" /99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg/ /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
 Minting 100 tokens
   Token: 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg
   Recipient: Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
@@ -470,7 +481,7 @@ For example, running the following command:
 spl-token transfer 99zqUzQGohamfYxyo8ykTEbi91iom3CLmwCA75FK5zTg 100 Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
 ```
 
-Returns the following output.
+Returns the following output:
 
 - `AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9` is the address of the token
   account that tokens are being transferred from. This would be the address of
@@ -479,7 +490,7 @@ Returns the following output.
 - `Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt` is the address of the token
   account that tokens are being transferred to.
 
-```console filename="terminal" /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/ /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
+```console filename="Terminal Output" /AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9/ /Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt/
 Transfer 100 tokens
   Sender: AfB7uwBEsGtrrBqPTVqEgzWed5XdYfM1psPNLmf7EeX9
   Recipient: Hmyk3FSw4cfsuAes7sanp2oxSkE9ivaH6pMzDzbacqmt
@@ -500,11 +511,11 @@ recipient's token account, which generally is the Associated Token Account.
 
 ### Create Token Metadata
 
-The Token Extensions Program enables additional metadata (such as name, symbol,
-link to image) to be stored directly on the Mint Account.
+The Token Extensions Program enables additional customizable metadata (such as
+name, symbol, link to image) to be stored directly on the Mint Account.
 
 <Callout>
-   Using the Token Extensions CLI flags requires a local installation of the CLI:
+   To use the Token Extensions CLI flags, ensure you have a local installation of the CLI, version 3.4.0 or later:
    
    `cargo install --version 3.4.0 spl-token-cli`
 </Callout>
@@ -517,12 +528,12 @@ spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
 --enable-metadata
 ```
 
-The command returns the following output.
+The command returns the following output:
 
 - `BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP` is the address of the new token
   created with the metadata extension enabled.
 
-```console filename="terminal" /BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP/
+```console filename="Terminal Output" /BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP/
 Creating token BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP under program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
 To initialize metadata inside the mint, please run `spl-token initialize-metadata BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP <YOUR_TOKEN_NAME> <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>`, and sign with the mint authority.
 
@@ -540,12 +551,12 @@ spl-token initialize-metadata <TOKEN_MINT_ADDRESS> <YOUR_TOKEN_NAME>
 <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>
 ```
 
-The token URI is a link to off-chain metadata you want to associate with the
-token. You can find an example of the JSON format
+The token URI is normally a link to off-chain metadata you want to associate
+with the token. You can find an example of the JSON format
 [here](https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json).
 
 For example, running the following command will store the additional metadata
-directly on the specified mint account.
+directly on the specified mint account:
 
 ```sh /BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP/
 spl-token initialize-metadata BdhzpzhTD1MFqBiwNdrRy4jFo2FHFufw3n9e8sVjJczP "TokenName" "TokenSymbol" "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json"
@@ -559,6 +570,7 @@ explorer.
 
 You can learn more on the
 [Metadata Extension Guide](https://solana.com/developers/guides/token-extensions/metadata-pointer).
-For more details related to various Token Extensions, refer to the
+For more details related to various Token Extensions, refer to the Token
+Extensions
 [Getting Started Guide](https://solana.com/developers/guides/token-extensions/getting-started)
 and the [SPL documentation](https://spl.solana.com/token-2022/extensions).

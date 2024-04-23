@@ -4,6 +4,14 @@ sidebarLabel: Programs on Solana
 sidebarSortOrder: 3
 ---
 
+In the Solana ecosystem, "smart contracts" are called programs. Each
+[program](/docs/core/accounts#program-account) is an on-chain account that
+stores executable logic, organized into specific functions referred to as
+[instructions](/docs/core/transactions#instruction).
+
+For additional topics related to Solana programs, refer to the pages included
+under the [Deploying Programs](/docs/programs) section of this documentation.
+
 ## Key Points
 
 - Programs are on-chain accounts that contain executable code. This code is
@@ -18,17 +26,6 @@ sidebarSortOrder: 3
 - Verifiable builds enable users to verify that on-chain programs match the
   publicly available source code.
 
-### Overview
-
-In the Solana ecosystem, "smart contracts" are called programs. Each
-[program](http://localhost:3002/docs/core/accounts#program-account) is an
-on-chain account that stores executable logic, organized into specific functions
-referred to as
-[instructions](http://localhost:3002/docs/core/transactions#instruction).
-
-For additional topics related to Solana programs, refer to the pages included
-under the [programs](/docs/programs) section.
-
 ## Writing Solana Programs
 
 Solana programs are predominantly written in the
@@ -41,17 +38,20 @@ approaches for development:
   recommended to start with the Anchor framework.
 
 - [Native Rust](/docs/core/programs/rust): This approach involves writing Solana
-  programs directly in Rust without leveraging any frameworks. It offers more
-  flexibility but comes with increased complexity.
+  programs in Rust without leveraging any frameworks. It offers more flexibility
+  but comes with increased complexity.
 
 ## Updating Solana Programs
 
-On-chain programs can be directly modified by an account designated as the
-"upgrade authority", which is typically the account that originally deployed the
-program.
+On-chain programs can be
+[directly modified](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L675)
+by an account designated as the "upgrade authority", which is typically the
+account that originally deployed the program.
 
-If the upgrade authority is revoked and set to null, the program becomes
-immutable and can no longer be updated.
+If the
+[upgrade authority](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L865)
+is revoked and set to `None`, the program becomes immutable and can no longer be
+updated.
 
 ## Verifiable Programs
 

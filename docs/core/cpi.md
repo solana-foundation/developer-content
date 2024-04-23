@@ -4,6 +4,28 @@ sidebarLabel: Cross Program Invocation
 sidebarSortOrder: 5
 ---
 
+A Cross Program Invocation (CPI) refers to when one program invokes the
+instructions of another program. This mechanism allows for the composability of
+Solana programs.
+
+You can think of instructions as API endpoints that a program exposes to the
+network and a CPI as one API internally invoking another API.
+
+![Cross Program Invocation](/assets/docs/core/cpi/cpi.svg)
+
+When a program initiates a Cross Program Invocation (CPI) to another program:
+
+- The signer privileges from the initial transaction invoking the caller program
+  (A) extend to the callee (B) program
+- The callee (B) program can make further CPIs to other programs, up to a
+  maximum depth of 4 (ex. B->C, C->D)
+- The programs can "sign" on behalf of the [PDAs](/docs/core/pda) derived from
+  its program ID
+
+<Callout>
+  The Solana program runtime defines a constant called [`max_invoke_stack_height`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/program-runtime/src/compute_budget.rs#L31-L35), which is set to a value of [5](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/program-runtime/src/compute_budget.rs#L138). This represents the maximum height of the program instruction invocation stack. The stack height begins at 1 for transaction instructions, increases by 1 each time a program invokes another instruction. This setting effectively limits invocation depth for CPIs to 4.
+</Callout>
+
 ## Key Points
 
 - CPIs enable Solana program instructions to directly invoke instructions on
@@ -16,26 +38,6 @@ sidebarSortOrder: 5
 
 - The callee program can make additional CPIs to other programs, up to a maximum
   depth of 4.
-
-### Overview
-
-A Cross Program Invocation (CPI) refers to when one program invokes the
-instructions of another program. This mechanism allows for the composability of
-Solana programs.
-
-You can think of instructions as API endpoints that a program exposes to the
-network and a CPI as one API internally invoking another API.
-
-![Cross Program Invocation](/assets/docs/core/cpi/cpi.svg)
-
-When a program initiates a Cross-Program Invocation (CPI) to another program:
-
-- The signer privileges from the initial transaction invoking the caller program
-  (A) extend to the callee (B) program
-- The callee (B) program can make further CPIs to other programs, up to a
-  maximum depth of 4 (ex. B->C, C->D)
-- The programs can "sign" on behalf of the [PDAs](/docs/core/pda) derived from
-  its program ID
 
 ## How to write a CPI
 
@@ -51,16 +53,20 @@ Under the hood, each CPI instruction must specify the following information:
 
 Depending on the program you are making the call to, there may be crates
 available with helper functions for building the instruction. Programs then
-execute CPIs using either the `invoke` or `invoke_signed` functions from the
-`solana_program` crate.
+execute CPIs using either one of the following functions from the
+`solana_program` crate:
+
+- `invoke` - used when there are no PDA signers
+- `invoke_signed` - used when the caller program needs to sign with a PDA
+  derived from its program ID
 
 ### Basic CPI
 
 The
 [`invoke`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/program.rs#L132)
 function is used when making a CPI that does not require PDA signers. When
-making CPIs, signers provided to the caller program can extend to the callee
-program.
+making CPIs, signers provided to the caller program automatically extend to the
+callee program.
 
 ```rust
 pub fn invoke(
@@ -102,9 +108,10 @@ signers and writable accounts. For example, if the instruction the caller is
 processing contains a signer or writable account, then the caller can invoke an
 instruction that also contains that signer and/or writable account.
 
-While PDAs have no private keys, they can still act as a signer in an
-instruction via a CPI. To verify that a PDA is derived from the calling program,
-the seeds used to generate the PDA must be included as `signers_seeds`.
+While PDAs have [no private keys](/docs/core/pda#what-is-a-pda), they can still
+act as a signer in an instruction via a CPI. To verify that a PDA is derived
+from the calling program, the seeds used to generate the PDA must be included as
+`signers_seeds`.
 
 When the CPI is processed, the Solana runtime
 [internally calls `create_program_address`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/syscalls/cpi.rs#L550)

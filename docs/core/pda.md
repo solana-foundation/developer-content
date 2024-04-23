@@ -4,24 +4,6 @@ sidebarLabel: Program Derived Address
 sidebarSortOrder: 4
 ---
 
-## Key Points
-
-- PDAs are addresses derived deterministically using a combination of
-  user-defined seeds, bump seed, and a program's ID.
-
-- PDAs are addresses that fall off the Ed25519 curve and have no corresponding
-  private key.
-
-- Solana programs can programmatically "sign" for PDAs that are derived using
-  its program ID.
-
-- Deriving a PDA does not automatically create an on-chain account.
-
-- An account using a PDA as its address must be explicitly created through a
-  dedicated instruction within a Solana program.
-
-### Overview
-
 Program Derived Addresses (PDAs) provide developers on Solana with two main use
 cases:
 
@@ -32,7 +14,7 @@ cases:
   PDAs which are derived from its program ID.
 
 You can think of PDAs as a way to create hashmap-like structures on-chain from a
-predefined set of inputs (ex. strings, numbers, and other account addresses).
+predefined set of inputs (e.g. strings, numbers, and other account addresses).
 
 The benefit of this approach is that it eliminates the need to keep track of an
 exact address. Instead, you simply need to recall the specific inputs used for
@@ -47,10 +29,28 @@ the program used to derive the address. You can think of deriving a PDA as
 finding an address on a map. Just having an address does not mean there is
 anything built at that location.
 
+<Callout>
 This section will cover the details of deriving PDAs. The details on how
 programs use PDAs for signing will be addressed in the section on
 [Cross Program Invocations (CPIs)](/docs/core/cpi) as it requires context for
 both concepts.
+</Callout>
+
+## Key Points
+
+- PDAs are addresses derived deterministically using a combination of
+  user-defined seeds, a bump seed, and a program's ID.
+
+- PDAs are addresses that fall off the Ed25519 curve and have no corresponding
+  private key.
+
+- Solana programs can programmatically "sign" for PDAs that are derived using
+  its program ID.
+
+- Deriving a PDA does not automatically create an on-chain account.
+
+- An account using a PDA as its address must be explicitly created through a
+  dedicated instruction within a Solana program.
 
 ## What is a PDA
 
@@ -78,137 +78,18 @@ account, providing a method to easily store, map, and fetch program state.
 
 ![Off Curve Address](/assets/docs/core/pda/address-off-curve.svg)
 
-## Create PDA Accounts
-
-This example program on
-[Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/pda-account)
-demonstrates how to create an account using a PDA as the address of the new
-account. The example program is written using the Anchor framework.
-
-In the `lib.rs` file, you will find the following program which includes a
-single instruction to create a new account using a PDA as the address of the
-account. The new account stores the address of the `user` and the `bump` seed
-used to derive the PDA.
-
-```rust filename="lib.rs"
-use anchor_lang::prelude::*;
-
-declare_id!("75GJVCJNhaukaa2vCCqhreY31gaphv7XTScBChmr1ueR");
-
-#[program]
-pub mod pda_account {
-    use super::*;
-
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        let account_data = &mut ctx.accounts.pda_account;
-        account_data.user = *ctx.accounts.user.key;
-        account_data.bump = ctx.bumps.pda_account;
-        Ok(())
-    }
-}
-
-#[derive(Accounts)]
-pub struct Initialize<'info> {
-    #[account(mut)]
-    pub user: Signer<'info>,
-
-    #[account(
-        init,
-        seeds = [b"data", user.key().as_ref()],
-        bump,
-        payer = user,
-        space = 8 + DataAccount::INIT_SPACE
-    )]
-    pub pda_account: Account<'info, DataAccount>,
-    pub system_program: Program<'info, System>,
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct DataAccount {
-    pub user: Pubkey,
-    pub bump: u8,
-}
-```
-
-The seeds used to derive the PDA include the hardcoded string `data` and the
-address of the `user` account provided in the instruction. The Anchor framework
-automatically derives the canonical `bump` seed.
-
-```rust /data/ /user.key()/ /bump/
-#[account(
-    init,
-    seeds = [b"data", user.key().as_ref()],
-    bump,
-    payer = user,
-    space = 8 + DataAccount::INIT_SPACE
-)]
-pub pda_account: Account<'info, DataAccount>,
-```
-
-The `init` constraint instructs Anchor to invoke the System Program to create a
-new account using the PDA as the address. Under the hood, this is done through a
-[CPI](/docs/core/cpi).
-
-```rust /init/
-#[account(
-    init,
-    seeds = [b"data", user.key().as_ref()],
-    bump,
-    payer = user,
-    space = 8 + DataAccount::INIT_SPACE
-)]
-pub pda_account: Account<'info, DataAccount>,
-```
-
-In the test file, you will find the Javascript equivalent to derive the PDA
-using the seeds specified in the program.
-
-```ts /data/ /user.publicKey/
-const [PDA] = PublicKey.findProgramAddressSync(
-  [Buffer.from("data"), user.publicKey.toBuffer()],
-  program.programId,
-);
-```
-
-A transaction is then sent to invoke the `initialize` instruction to create a
-new on-chain account using the PDA as the address. Once the transaction is sent,
-the PDA is used to fetch the on-chain account that was created at the address.
-
-```ts /initialize()/ /PDA/  {14}
-it("Is initialized!", async () => {
-  const transactionSignature = await program.methods
-    .initialize()
-    .accounts({
-      user: user.publicKey,
-      pdaAccount: PDA,
-    })
-    .rpc();
-
-  console.log("Transaction Signature:", transactionSignature);
-});
-
-it("Fetch Account", async () => {
-  const pdaAccount = await program.account.dataAccount.fetch(PDA);
-  console.log(JSON.stringify(pdaAccount, null, 2));
-});
-```
-
-Note that if you invoke the `initialize` instruction more than once using the
-same `user` address as a seed, then the transaction will fail. This is because
-an account will already exist at the derived address.
-
 ## How to derive a PDA
 
 The derivation of a PDA requires 3 inputs.
 
-- **Optional seeds**: Predefined inputs (ex. string, number, other account
+- **Optional seeds**: Predefined inputs (e.g. string, number, other account
   addresses) used to derive a PDA. These inputs are converted to a buffer of
   bytes.
 - **Bump seed**: An additional input (with a value between 255-0) that is used
-  to guarantee that a valid PDA (off curve) is generated. This bump seed is
-  appended to the optional seeds when generating a PDA to "bump" the point off
-  the Ed25519 curve. The bump seed is also referred to as a "nonce".
+  to guarantee that a valid PDA (off curve) is generated. This bump seed
+  (starting with 255) is appended to the optional seeds when generating a PDA to
+  "bump" the point off the Ed25519 curve. The bump seed is sometimes referred to
+  as a "nonce".
 - **Program ID**: The address of the program the PDA is derived from. This is
   also the program that can "sign" on behalf of the PDA
 
@@ -221,15 +102,15 @@ examples in an in-browser editor.
 
 To derive a PDA, we can use the
 [`findProgramAddressSync`](https://github.com/solana-labs/solana-web3.js/blob/ca9da583a39cdf8fd874a2e03fccdc849e29de34/packages/library-legacy/src/publickey.ts#L212)
-method from `@solana/web3.js`. There are equivalents of this function in other
-programming languages (ex.
+method from [`@solana/web3.js`](https://www.npmjs.com/package/@solana/web3.js).
+There are equivalents of this function in other programming languages (e.g.
 [Rust](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/pubkey.rs#L484)),
 but in this section, we will walk through examples using Javascript.
 
-When using the `findProgramAddressSync` method, we pass in the:
+When using the `findProgramAddressSync` method, we pass in:
 
-- Predefined optional seeds converted to a buffer of bytes
-- The program ID (address) used to derive the PDA
+- the predefined optional seeds converted to a buffer of bytes, and
+- the program ID (address) used to derive the PDA
 
 Once a valid PDA is found, `findProgramAddressSync` returns both the address
 (PDA) and bump seed used to derive the PDA.
@@ -247,9 +128,9 @@ console.log(`PDA: ${PDA}`);
 console.log(`Bump: ${bump}`);
 ```
 
-Run the example on
+You can run this example on
 [Solana Playground](https://beta.solpg.io/66031e5acffcf4b13384cfef). The PDA and
-bump seed output will always be:
+bump seed output will always be the same:
 
 ```
 PDA: Cu7NwqCXSmsR5vgGA3Vw9uYVViPi3kQvkbKByVQ8nPY9
@@ -273,9 +154,9 @@ console.log(`PDA: ${PDA}`);
 console.log(`Bump: ${bump}`);
 ```
 
-Run the example on
+You can also run this example on
 [Solana Playground](https://beta.solpg.io/66031ee5cffcf4b13384cff0). The PDA and
-bump seed output will always be:
+bump seed output will always be the same:
 
 ```
 PDA: 46GZzzetjCURsdFPb7rcnspbEMnCBXe9kpjrsZAkKb6X
@@ -321,7 +202,7 @@ const PDA = PublicKey.createProgramAddressSync(
 console.log(`PDA: ${PDA}`);
 ```
 
-Run the example on
+Run this example above on
 [Solana Playground](https://beta.solpg.io/66031f8ecffcf4b13384cff1). Given the
 same seeds and program ID, the PDA output will match the previous one:
 
@@ -331,9 +212,9 @@ PDA: 46GZzzetjCURsdFPb7rcnspbEMnCBXe9kpjrsZAkKb6X
 
 ### Canonical Bump
 
-The first bump seed (255-0) that derives a valid PDA is referred to as the
-"canonical bump". For program security, it is recommended to only use PDAs
-derived from a canonical bump.
+The "canonical bump" refers to the first bump seed (starting from 255 and
+decrementing by 1) that derives a valid PDA. For program security, it is
+recommended to only use PDAs derived from a canonical bump.
 
 Using the previous example as a reference, the example below attempts to derive
 a PDA using every bump seed from 255-0.
@@ -377,10 +258,137 @@ As expected, the bump seed 255 throws an error and the first bump seed to derive
 a valid PDA is 254.
 
 However, note that bump seeds 253-251 all derive valid PDAs with different
-addresses. This means that given the same optional seeds and programId, a bump
+addresses. This means that given the same optional seeds and `programId`, a bump
 seed with a different value can still derive a valid PDA.
 
-When building Solana programs, it is recommended to include security checks that
-validate a PDA passed to the program is derived using the canonical bump.
-Failing to do so may introduce vulnerabilities that allow for unexpected
-accounts to be provided to a program.
+<Callout type="warning">
+  When building Solana programs, it is recommended to include security checks that
+  validate a PDA passed to the program is derived using the canonical bump.
+  Failing to do so may introduce vulnerabilities that allow for unexpected
+  accounts to be provided to a program.
+</Callout>
+
+## Create PDA Accounts
+
+This example program on
+[Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/pda-account)
+demonstrates how to create an account using a PDA as the address of the new
+account. The example program is written using the Anchor framework.
+
+In the `lib.rs` file, you will find the following program which includes a
+single instruction to create a new account using a PDA as the address of the
+account. The new account stores the address of the `user` and the `bump` seed
+used to derive the PDA.
+
+```rust filename="lib.rs" {11-14,26-29}
+use anchor_lang::prelude::*;
+
+declare_id!("75GJVCJNhaukaa2vCCqhreY31gaphv7XTScBChmr1ueR");
+
+#[program]
+pub mod pda_account {
+    use super::*;
+
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        let account_data = &mut ctx.accounts.pda_account;
+        // store the address of the `user`
+        account_data.user = *ctx.accounts.user.key;
+        // store the canonical bump
+        account_data.bump = ctx.bumps.pda_account;
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct Initialize<'info> {
+    #[account(mut)]
+    pub user: Signer<'info>,
+
+    #[account(
+        init,
+        // set the seeds to derive the PDA
+        seeds = [b"data", user.key().as_ref()],
+        // use the canonical bump
+        bump,
+        payer = user,
+        space = 8 + DataAccount::INIT_SPACE
+    )]
+    pub pda_account: Account<'info, DataAccount>,
+    pub system_program: Program<'info, System>,
+}
+
+#[account]
+
+#[derive(InitSpace)]
+pub struct DataAccount {
+    pub user: Pubkey,
+    pub bump: u8,
+}
+```
+
+The seeds used to derive the PDA include the hardcoded string `data` and the
+address of the `user` account provided in the instruction. The Anchor framework
+automatically derives the canonical `bump` seed.
+
+```rust /data/ /user.key()/ /bump/
+#[account(
+    init,
+    seeds = [b"data", user.key().as_ref()],
+    bump,
+    payer = user,
+    space = 8 + DataAccount::INIT_SPACE
+)]
+pub pda_account: Account<'info, DataAccount>,
+```
+
+The `init` constraint instructs Anchor to invoke the System Program to create a
+new account using the PDA as the address. Under the hood, this is done through a
+[CPI](/docs/core/cpi).
+
+```rust /init/
+#[account(
+    init,
+    seeds = [b"data", user.key().as_ref()],
+    bump,
+    payer = user,
+    space = 8 + DataAccount::INIT_SPACE
+)]
+pub pda_account: Account<'info, DataAccount>,
+```
+
+In the test file (`pda-account.test.ts`) located within the Solana Playground
+link provided above, you will find the Javascript equivalent to derive the PDA.
+
+```ts /data/ /user.publicKey/
+const [PDA] = PublicKey.findProgramAddressSync(
+  [Buffer.from("data"), user.publicKey.toBuffer()],
+  program.programId,
+);
+```
+
+A transaction is then sent to invoke the `initialize` instruction to create a
+new on-chain account using the PDA as the address. Once the transaction is sent,
+the PDA is used to fetch the on-chain account that was created at the address.
+
+```ts /initialize()/ /PDA/  {14}
+it("Is initialized!", async () => {
+  const transactionSignature = await program.methods
+    .initialize()
+    .accounts({
+      user: user.publicKey,
+      pdaAccount: PDA,
+    })
+    .rpc();
+
+  console.log("Transaction Signature:", transactionSignature);
+});
+
+it("Fetch Account", async () => {
+  const pdaAccount = await program.account.dataAccount.fetch(PDA);
+  console.log(JSON.stringify(pdaAccount, null, 2));
+});
+```
+
+Note that if you invoke the `initialize` instruction more than once using the
+same `user` address as a seed, then the transaction will fail. This is because
+an account will already exist at the derived address.

@@ -92,13 +92,13 @@ pub struct NewAccount {
 Every Solana program includes a single
 [entrypoint](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/entrypoint.rs#L125)
 used to invoke the program. The
-[process_instruction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/entrypoint.rs#L28-L29)
+[`process_instruction`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/entrypoint.rs#L28-L29)
 function is then used to process the data passed into the entrypoint. This
 function requires the following parameters:
 
-- program_id: Address of the currently executing program
-- accounts: Array of accounts needed to execute an instruction.
-- instruction_data: Serialized data specific to an instruction.
+- `program_id` - Address of the currently executing program
+- `accounts` - Array of accounts needed to execute an instruction.
+- `instruction_data` - Serialized data specific to an instruction.
 
 ```rust
 entrypoint!(process_instruction);
@@ -148,7 +148,8 @@ pub fn process_instruction(
 
 A [match](https://doc.rust-lang.org/book/ch06-02-match.html) statement is then
 used to invoke the function including the logic to process the identified
-instruction.
+instruction. These functions are often called
+[instruction handlers](/docs/terminology#instruction-handler).
 
 ```rust /process_initialize/
 pub fn process_instruction(
@@ -174,8 +175,8 @@ pub fn process_initialize(
 
 ### Process Instruction
 
-For every instruction on a program, there exists a specific function that
-implements the logic required to execute that instruction.
+For every instruction on a program, there exists a specific instruction handler
+function that implements the logic required to execute that instruction.
 
 ```rust
 pub fn process_initialize(
@@ -213,7 +214,9 @@ pub fn process_initialize(
 To access the accounts provided to the program, use an
 [iterator](https://doc.rust-lang.org/book/ch13-02-iterators.html) to iterate
 over the list of accounts passed into the entrypoint through the `accounts`
-argument.
+argument. The
+[`next_account_info`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L326)
+function is used to access the next item in the iterator.
 
 ```rust {1} /new_account/ /signer/ /system_program/
 let accounts_iter = &mut accounts.iter();
@@ -231,9 +234,9 @@ the new account.
 
 In this example, we use a [Cross Program Invocation](/docs/core/cpi) to invoke
 the System Program, creating a new account with the executing program as the
-owner. As part of the [Solana Account Model](/docs/core/accounts#accountinfo),
-only the program designated as the owner of an account is allowed to modify the
-data on the account.
+`owner`. As part of the [Solana Account Model](/docs/core/accounts#accountinfo),
+only the program designated as the `owner` of an account is allowed to modify
+the data on the account.
 
 ```rust
 let account_data = NewAccount { data };
@@ -253,8 +256,8 @@ invoke(
 ```
 
 After the account has been successfully created, the final step is to serialize
-data into the new account's data field. This effectively initializes the account
-data, storing the `data` passed into the program entrypoint.
+data into the new account's `data` field. This effectively initializes the
+account data, storing the `data` passed into the program entrypoint.
 
 ```rust
 account_data.serialize(&mut *new_account.data.borrow_mut())?;
@@ -267,7 +270,7 @@ program. Serialization and deserialization of account data is commonly done
 using [Borsh](https://borsh.io/).
 
 In this example, the `NewAccount` struct defines the structure of the data to
-store on a new account.
+store in a new account.
 
 ```rust
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
@@ -313,10 +316,15 @@ pub struct NewAccount {
 ## Client
 
 Interacting with Solana programs written in native Rust involves directly
-building the `TransactionInstruction`.
+building the
+[`TransactionInstruction`](https://solana-labs.github.io/solana-web3.js/classes/TransactionInstruction.html).
 
 Similarly, fetching and deserializing account data requires creating a schema
 compatible with the on-chain program's data structures.
+
+<Callout>
+  There are multiple client languages supported. You can find details for [Rust](docs/clients/rust) and [Javascript/Typescript](docs/clients/rust) under the Solana Clients of the documentation.
+</Callout>
 
 Below, we'll walk through an example demonstrating how to invoke the
 `initialize` instruction from the program above.
@@ -402,7 +410,7 @@ To invoke an instruction, you must manually construct a `TransactionInstruction`
 that corresponds with the on-chain program. This involves specifying:
 
 - The program ID for the program being invoked
-- The AccountMeta for each account required by the instruction
+- The `AccountMeta` for each account required by the instruction
 - The instruction data buffer required by the instruction
 
 ```ts
@@ -465,9 +473,9 @@ instructionData.writeBigUInt64LE(BigInt(data), 1);
 
 After creating the instruction data buffer, use it to construct the
 `TransactionInstruction`. This involves specifying the program ID and defining
-the AccountMeta for each account involved in the instruction. This means
-specifying whether each account is writable and if it is required as a signer on
-the transaction.
+the [`AccountMeta`](/docs/core/transactions#accountmeta) for each account
+involved in the instruction. This means specifying whether each account is
+writable and if it is required as a signer on the transaction.
 
 ```ts {4-6, 9-11, 14-16}
 const instruction = new web3.TransactionInstruction({
@@ -527,13 +535,14 @@ const AccountDataSchema = new Map([
 ]);
 ```
 
-Then fetch the AccountInfo for the account using its address.
+Then fetch the `AccountInfo` for the account using its address.
 
 ```ts /newAccountKp.publicKey/
 const newAccount = await pg.connection.getAccountInfo(newAccountKp.publicKey);
 ```
 
-Lastly, deserialize the AccountInfo's data field using the predefined schema.
+Lastly, deserialize the `AccountInfo`'s `data` field using the predefined
+schema.
 
 ```ts /newAccount.data/ {2-4}
 const deserializedAccountData = borsh.deserialize(

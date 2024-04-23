@@ -4,6 +4,13 @@ sidebarSortOrder: 1
 title: Solana Account Model
 ---
 
+On Solana, all data is stored in what are referred to as "accounts”. The way
+data is organized on Solana resembles a
+[key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),
+where each entry in the database is called an "account".
+
+![Accounts](/assets/docs/core/accounts/accounts.svg)
+
 ## Key Points
 
 - Accounts can store up to 10MB of data, which can consist of either executable
@@ -22,15 +29,6 @@ title: Solana Account Model
 
 - Native programs are built-in programs included with the Solana runtime.
 
-### Overview
-
-On Solana, all data is stored in what are referred to as "accounts”. The way
-data is organized on Solana resembles a
-[key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),
-where each entry in the database is called an "account".
-
-![Accounts](/assets/docs/core/accounts/accounts.svg)
-
 ## Account
 
 Each account is identifiable by its unique address, represented as 32 bytes in
@@ -45,21 +43,24 @@ on-chain data of the account.
 
 ### AccountInfo
 
-Accounts have a max size of 10MB (10 Mega Bytes) and the data stored on every
-account on Solana has the following structure known as the
+Accounts have a
+[max size of 10MB](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L85)
+(10 Mega Bytes) and the data stored on every account on Solana has the following
+structure known as the
 [AccountInfo](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L19).
 
 ![AccountInfo](/assets/docs/core/accounts/accountinfo.svg)
 
 The `AccountInfo` for each account includes the following fields:
 
-- **data**: A byte array that stores the state of an account. If the account is
-  a program (smart contract), this stores executable program code. This field is
+- `data`: A byte array that stores the state of an account. If the account is a
+  program (smart contract), this stores executable program code. This field is
   often referred to as the "account data".
-- **executable**: A boolean flag that indicates if the account is a program.
-- **lamports**: A numeric representation of the account's balance in lamports,
-  the smallest unit of SOL (1 SOL = 1 billion Lamports).
-- **owner**: Specifies the public key (program ID) of the program that owns the
+- `executable`: A boolean flag that indicates if the account is a program.
+- `lamports`: A numeric representation of the account's balance in
+  [lamports](/docs/terminology#lamport), the smallest unit of SOL (1 SOL = 1
+  billion lamports).
+- `owner`: Specifies the public key (program ID) of the program that owns the
   account.
 
 As a key part of the Solana Account Model, every account on Solana has a
@@ -77,13 +78,13 @@ balance, anyone can increase the balance.
 
 ## Native Programs
 
-Solana contains a small handful of native programs. The native programs are part
-of the validator implementation and provide various core functionalities for the
+Solana contains a small handful of native programs that are part of the
+validator implementation and provide various core functionalities for the
 network. You can find the full list of native programs
 [here](https://docs.solanalabs.com/runtime/programs).
 
-When developing programs on Solana, you will commonly interact with two native
-programs, the System Program and the BPF Loader.
+When developing custom programs on Solana, you will commonly interact with two
+native programs, the System Program and the BPF Loader.
 
 ### System Program
 
@@ -124,13 +125,13 @@ A program is an account that contains executable code and is indicated by an
 “executable” flag that is set to true.
 
 For a more detailed explanation of the program deployment process, refer to the
-[Deploying Programs](/docs/programs/deploying) page.
+[Deploying Programs](/docs/programs/deploying) page of this documentation.
 
 ### Program Account
 
 When new programs are
 [deployed](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L498)
-on Solana, technically three separate accounts are created.
+on Solana, technically three separate accounts are created:
 
 - **Program Account**: The main account representing an on-chain program. This
   account stores the address of an executable data account (which stores the
@@ -143,7 +144,7 @@ on Solana, technically three separate accounts are created.
   is transferred to the Program Executable Data Account and the buffer account
   is closed.
 
-For example, here are links to Solana Explorer for the Token Extensions
+For example, here are links to the Solana Explorer for the Token Extensions
 [Program Account](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
 and its corresponding
 [Program Executable Data Account](https://explorer.solana.com/address/DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY).

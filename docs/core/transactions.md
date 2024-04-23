@@ -3,25 +3,6 @@ title: "Transactions and Instructions"
 sidebarSortOrder: 2
 ---
 
-## Key Points
-
-- Solana transactions consist of instructions that interact with various
-  programs on the network, where each instruction represents a specific
-  operation.
-
-- Each instruction specifies the program to execute the instruction, the
-  accounts required by the instruction, and the data required for the
-  instruction's execution.
-
-- Instructions within a transaction are processed in the order they are listed.
-
-- Transactions are atomic, meaning either all instructions process successfully,
-  or the entire transaction fails.
-
-- The maximum size of a transaction is 1232 bytes.
-
-### Overview
-
 On Solana, we send [transactions](/docs/core/transactions#transaction) to
 interactions with the network. Transactions include one or more
 [instructions](/docs/core/transactions#instruction), each representing a
@@ -47,6 +28,23 @@ document that you fill out and place inside the envelope. We then mail out the
 envelope to process the documents, just like sending a transaction on the
 network to process our instructions.
 
+## Key Points
+
+- Solana transactions consist of instructions that interact with various
+  programs on the network, where each instruction represents a specific
+  operation.
+
+- Each instruction specifies the program to execute the instruction, the
+  accounts required by the instruction, and the data required for the
+  instruction's execution.
+
+- Instructions within a transaction are processed in the order they are listed.
+
+- Transactions are atomic, meaning either all instructions process successfully,
+  or the entire transaction fails.
+
+- The maximum size of a transaction is 1232 bytes.
+
 ## Basic Example
 
 Below is a diagram representing a transaction with a single instruction to
@@ -62,9 +60,9 @@ transaction to invoke the transfer instruction on the System Program.
 
 ![SOL Transfer](/assets/docs/core/transactions/sol-transfer.svg)
 
-The sender account must be included as a signer (is_signer) on the transaction
+The sender account must be included as a signer (`is_signer`) on the transaction
 to approve the deduction of their lamport balance. Both the sender and recipient
-accounts must be mutable (is_writable) because the instruction modifies the
+accounts must be mutable (`is_writable`) because the instruction modifies the
 lamport balance for both accounts.
 
 Once the transaction is sent, the System Program is invoked to process the
@@ -75,7 +73,7 @@ both the sender and recipient accounts accordingly.
 
 ### Simple SOL Transfer
 
-Here is [Solana Playground](https://beta.solpg.io/656a0ea7fb53fa325bfd0c3e)
+Here is a [Solana Playground](https://beta.solpg.io/656a0ea7fb53fa325bfd0c3e)
 example of how to build a SOL transfer instruction using the
 `SystemProgram.transfer` method:
 
@@ -104,35 +102,38 @@ A Solana
 [transaction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/transaction/mod.rs#L173)
 consists of:
 
-1. **[Signatures](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/signature.rs#L27):**
+1. [Signatures](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/signature.rs#L27):
    An array of signatures included on the transaction.
-2. **[Message](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L110):**
+2. [Message](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L110):
    List of instructions to be processed atomically.
 
 ![Transaction Format](/assets/docs/core/transactions/tx_format.png)
 
 The structure of a transaction message comprises of:
 
-- **[Message Header](/docs/core/transactions#message-header)**: Specifies the
-  number of signer and read-only account.
-- **[Account Addresses](/docs/core/transactions#array-of-account-addresses)**:
-  An array of account addresses required by the instructions on the transaction.
-- **[Recent Blockhash](/docs/core/transactions#recent-blockhash)**: Acts as a
+- [Message Header](/docs/core/transactions#message-header): Specifies the number
+  of signer and read-only account.
+- [Account Addresses](/docs/core/transactions#array-of-account-addresses): An
+  array of account addresses required by the instructions on the transaction.
+- [Recent Blockhash](/docs/core/transactions#recent-blockhash): Acts as a
   timestamp for the transaction.
-- **[Instructions](/docs/core/transactions#array-of-instructions)**: An array of
+- [Instructions](/docs/core/transactions#array-of-instructions): An array of
   instructions to be executed.
 
-![Message](/assets/docs/core/transactions/legacy_message.png)
+![Transaction Message](/assets/docs/core/transactions/legacy_message.png)
+
+### Transaction Size
 
 The Solana network adheres to a maximum transmission unit (MTU) size of 1280
 bytes, consistent with the [IPv6 MTU](https://en.wikipedia.org/wiki/IPv6_packet)
 size constraints to ensure fast and reliable transmission of cluster information
 over UDP. After accounting for the necessary headers (40 bytes for IPv6 and 8
-bytes for UDP), 1232 bytes remain available for packet data, such as serialized
-transactions.
+bytes for the fragment header),
+[1232 bytes remain available for packet data](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/packet.rs#L16-L21),
+such as serialized transactions.
 
 This means that the total size of a Solana transaction is limited to 1232 bytes.
-The combination of the signatures and message cannot exceed this limit.
+The combination of the signatures and the message cannot exceed this limit.
 
 - Signatures: Each signature requires 64 bytes. The number of signatures can
   vary, depending on the transaction's requirements.
@@ -234,7 +235,7 @@ in the array specifies the following information:
 
 ![Compact array of Instructions](/assets/docs/core/transactions/compact_array_of_ixs.png)
 
-### Transaction Logs
+### Example Transaction Structure
 
 Below is an example of the structure of a transaction including a single
 [SOL transfer](/docs/core/transactions#basic-example) instruction. It shows the
@@ -258,7 +259,7 @@ instructions, along with the signature for the transaction.
   by the instructions on the transaction. A signature is created by signing the
   transaction message using the corresponding private key for an account.
 
-```
+```json
 "transaction": {
     "message": {
       "header": {
@@ -295,18 +296,20 @@ instructions, along with the signature for the transaction.
 
 An
 [instruction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/instruction.rs#L329)
-is a request to process a specific action and is the smallest contiguous unit of
-execution logic in a [program](/docs/core/accounts#program-account).
+is a request to process a specific action on-chain and is the smallest
+contiguous unit of execution logic in a
+[program](/docs/core/accounts#program-account).
 
 When building an instruction to add to a transaction, each instruction must
 include the following information:
 
-- **Program address**: Specifies the program being invoked
+- **Program address**: Specifies the program being invoked.
 - **Accounts**: Lists every account the instruction reads from or writes to,
-  including other programs
-- **Instruction Data**: A byte array that specifies which instruction on the
-  program to invoke, plus any additional data required by the instruction
-  (function arguments)
+  including other programs, using the `AccountMeta` struct.
+- **Instruction Data**: A byte array that specifies which
+  [instruction handler](/docs/terminology#instruction-handler) on the program to
+  invoke, plus any additional data required by the instruction handler (function
+  arguments).
 
 ![Transaction Instruction](/assets/docs/core/transactions/instruction.svg)
 
@@ -315,29 +318,29 @@ include the following information:
 For every account required by an instruction, the following info must be
 specified:
 
-- **Account address**: The on-chain address of an account
-- **is_signer**: Specify if the account is required as a signer on the
-  transaction
-- **is_writable**: Specify if the account data will be modified
+- `pubkey`: The on-chain address of an account
+- `is_signer`: Specify if the account is required as a signer on the transaction
+- `is_writable`: Specify if the account data will be modified
 
 This information is referred to as the
 [AccountMeta](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/instruction.rs#L539).
 
 ![AccountMeta](/assets/docs/core/transactions/accountmeta.svg)
 
-By specifying all accounts required by an instruction and whether each account
+By specifying all accounts required by an instruction, and whether each account
 is writable, transactions can be processed in parallel.
 
 For example, two transactions that do not include any accounts that write to the
 same state can be executed at the same time.
 
-### Instruction Logs
+### Example Instruction Structure
 
 Below is an example of the structure of a
 [SOL transfer](/docs/core/transactions#basic-examples) instruction which details
 the account keys, program ID, and data required by the instruction.
 
-- `keys`: Includes the AccountMeta for each account required by an instruction.
+- `keys`: Includes the `AccountMeta` for each account required by an
+  instruction.
 - `programId`: The address of the program which contains the execution logic for
   the instruction invoked.
 - `data`: The instruction data for the instruction as a buffer of bytes

@@ -3,10 +3,10 @@ title: "How to use Cross Program Invocation"
 sidebarSortOrder: 1
 ---
 
-This example demonstrates how to transfer SOL using a Cross Program Invocation
-(CPI). Included below are three different, but functionally equivalent
-implementations that you may come across when reading Solana programs. Here is a
-final reference program on
+This example demonstrates how to transfer SOL using a
+[Cross Program Invocation (CPI)](/docs/core/cpi). Included below are three
+different, but functionally equivalent implementations that you may come across
+when reading or writing Solana programs. Here is a final reference program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi).
 
 ## Starter Code
@@ -54,10 +54,10 @@ pub struct SolTransfer<'info> {
 }
 ```
 
-The `test.ts` file demonstrates how to invoke the custom `sol_transfer`
+The `cpi.test.ts` file demonstrates how to invoke the custom `sol_transfer`
 instruction and logs a link to the transaction details on SolanaFM.
 
-```ts
+```ts filename="cpi.test.ts"
 it("SOL Transfer Anchor", async () => {
   const transactionSignature = await program.methods
     .solTransfer(new BN(transferAmount))
@@ -68,7 +68,8 @@ it("SOL Transfer Anchor", async () => {
     .rpc();
 
   console.log(
-    `\nTransaction Signature: https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `\nTransaction Signature:` +
+      `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
   );
 });
 ```
@@ -79,8 +80,8 @@ resulting in a successful SOL transfer.
 
 ![Transaction Details](/assets/docs/core/cpi/transaction-details.png)
 
-You can build, deploy, and run the test to view the transaction details on the
-[SolanaFM explorer](https://solana.fm/).
+You can build, deploy, and run the test of this example on Playground to view
+the transaction details on the [SolanaFM explorer](https://solana.fm/).
 
 ## How to CPI with Anchor
 
@@ -98,14 +99,21 @@ pub struct SolTransfer<'info> {
 }
 ```
 
-### 1. Anchor CpiContext
+### Anchor CpiContext
 
 The `sol_transfer` instruction included in the starter code shows a typical
-approach for constructing CPIs using the Anchor framework.
+approach for constructing CPIs using the
+[Anchor framework](https://www.anchor-lang.com/).
 
-This approach involves creating a `CpiContext`, which includes the `program_id`
-and accounts required for the instruction being called, followed by a helper
-function (`transfer`) to invoke a specific instruction.
+This approach involves creating a
+[`CpiContext`](https://docs.rs/anchor-lang/latest/anchor_lang/context/struct.CpiContext.html),
+which includes the `program_id` and accounts required for the instruction being
+called, followed by a helper function (`transfer`) to invoke a specific
+instruction.
+
+```rust
+use anchor_lang::system_program::{transfer, Transfer};
+```
 
 ```rust /cpi_context/ {14}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
@@ -146,12 +154,16 @@ execute the CPI.
 transfer(cpi_context, amount)?;
 ```
 
-### 2. Invoke() with Crate Helper
+### Invoke with Crate Helper
 
-Under the hood, the example above is a wrapper around the `invoke()` function
-which uses
+Under the hood, the `CpiContext` example above is a wrapper around the
+`solana_program` crate's `invoke` function which uses
 [`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881)
 to build the instruction.
+
+The example below demonstrates how to use the `invoke()` function to make a CPI
+to the transfer instruction of the System Program using the
+`system_instruction::transfer` method.
 
 First, add these imports to the top of `lib.rs`:
 
@@ -177,14 +189,14 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 
 This implementation is functionally equivalent to the previous example.
 
-### 3. Invoke() with Instruction
+### Invoke with Instruction
 
 You can also manually build the instruction to pass into the `invoke()`
 function. This is useful when there is not a crate available to help build the
 instruction you want to invoke.
 
-This approach requires you to manually specify the AccountMetas required by the
-instruction and correctly create the instruction data buffer.
+This approach requires you to manually specify the `AccountMeta`s required by
+the instruction and correctly create the instruction data buffer.
 
 The `sol_transfer` instruction below is a fully expanded equivalent of the
 previous two examples.

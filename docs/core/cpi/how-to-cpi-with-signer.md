@@ -3,25 +3,27 @@ title: "How to use Cross Program Invocation with a Signer"
 sidebarSortOrder: 2
 ---
 
-This example demonstrates how to transfer SOL using a Cross-Program Invocation
-(CPI) where the sender is a PDA that the program must sign for.
+This example demonstrates how to transfer SOL using a
+[Cross-Program Invocation (CPI)](/docs/core/cpi) where the sender is a PDA that
+the program must sign for.
 
-A typical use case for this scenario is a program that manages token accounts on
-behalf of users. For instance, consider a scenario where a DeFi protocol pools
-user funds into a single account. The protocol needs to include security checks
-to automatically handle withdrawal requests. In such cases, the control over
-these pooled funds is not with a single user but rather with the program itself.
-This requires the use of PDAs as the owner of the protocol's token accounts to
+A typical use case for this scenario is a program that manages
+[token accounts](/docs/core/tokens#token-account) on behalf of users. For
+instance, consider a scenario where a DeFi protocol pools user funds into a
+single account. The protocol needs to include security checks to automatically
+handle withdrawal requests. In such cases, the control over these pooled funds
+is not with a single user but rather with the program itself. This requires the
+[use of PDAs](/docs/core/pda) as the owner of the protocol's token accounts to
 programmatically sign for withdrawals.
 
 Included below are two different, but functionally equivalent implementations
-that you may come across when reading Solana programs. Here is the final
-reference program on
+that you may come across when reading or writing Solana programs. Here is the
+final reference program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-pda).
 
 ## Starter Code
 
-Here is a start program on
+Here is a starter program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-sol-transfer-pda-signer).
 The `lib.rs` file includes the following program with a single `sol_transfer`
 instruction.
@@ -73,10 +75,10 @@ pub struct SolTransfer<'info> {
 }
 ```
 
-The `test.ts` file demonstrates how to invoke the custom `sol_transfer`
+The `cpi.test.ts` file demonstrates how to invoke the custom `sol_transfer`
 instruction and logs a link to the transaction details on SolanaFM.
 
-It shows how to derive the PDA using the seeds specified in the program.
+It shows how to derive the PDA using the seeds specified in the program:
 
 ```ts /pda/ /wallet.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
@@ -86,9 +88,9 @@ const [PDA] = PublicKey.findProgramAddressSync(
 ```
 
 The first step in this example is to fund the PDA account with a basic SOL
-transfer.
+transfer from the Playground wallet.
 
-```ts
+```ts filename="cpi.test.ts"
 it("Fund PDA with SOL", async () => {
   const transferInstruction = SystemProgram.transfer({
     fromPubkey: wallet.publicKey,
@@ -105,7 +107,8 @@ it("Fund PDA with SOL", async () => {
   );
 
   console.log(
-    `\nTransaction Signature: https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `\nTransaction Signature:` +
+      `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
   );
 });
 ```
@@ -172,14 +175,16 @@ const [PDA] = PublicKey.findProgramAddressSync(
 );
 ```
 
-### 1. Anchor CpiContext
+### Anchor CpiContext
 
 The `sol_transfer` instruction included in the starter code shows a typical
 approach for constructing CPIs using the Anchor framework.
 
-This approach involves creating a `CpiContext`, which includes the `program_id`
-and accounts required for the instruction being called, followed by a helper
-function (`transfer`) to invoke a specific instruction.
+This approach involves creating a
+[`CpiContext`](https://docs.rs/anchor-lang/latest/anchor_lang/context/struct.CpiContext.html),
+which includes the `program_id` and accounts required for the instruction being
+called, followed by a helper function (`transfer`) to invoke a specific
+instruction.
 
 ```rust /cpi_context/ {19}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
@@ -235,12 +240,16 @@ seeds and caller program ID derive a valid PDA. The PDA is then added as a
 signer on the invocation. This mechanism allows for programs to programmatically
 sign for PDAs that are derived from their program ID.
 
-### 2. Invoke() with Crate Helper
+### Invoke with Crate Helper
 
 Under the hood, the example above is a wrapper around the `invoke_signed()`
 function which uses
 [`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881)
 to build the instruction.
+
+The example below demonstrates how to use the `invoke_signed()` function to make
+a CPI to the transfer instruction of the System Program using the
+`system_instruction::transfer` method and signed for by a PDA.
 
 First, add these imports to the top of `lib.rs`:
 
