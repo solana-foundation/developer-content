@@ -789,7 +789,12 @@ describe("counter", () => {
 
   it("Is initialized!", async () => {
     try {
-      const txSig = await program.methods.initialize().rpc();
+      const txSig = await program.methods
+        .initialize()
+        .accounts({
+           counter: counterPDA,
+        })
+        .rpc();
 
       const accountData = await program.account.counter.fetch(counterPDA);
       console.log(`Transaction Signature: ${txSig}`);
@@ -801,7 +806,12 @@ describe("counter", () => {
   });
 
   it("Increment", async () => {
-    const transactionSignature = await program.methods.increment().rpc();
+    const transactionSignature = await program.methods
+      .increment()
+      .accounts({
+        counter: counterPDA,
+      })
+      .rpc();
 
     const accountData = await program.account.counter.fetch(counterPDA);
 
