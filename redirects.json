@@ -443,10 +443,6 @@
     {
       "source": "/accepted-proposals/:path*",
       "destination": "/proposals/:path*"
-    },
-    {
-      "source": "/docs/intro/economics",
-      "destination": "/docs/economics/inflation/inflation-schedule"
     }
   ]
 }
