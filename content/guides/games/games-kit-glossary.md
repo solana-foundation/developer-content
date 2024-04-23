@@ -1,4 +1,7 @@
-# Solana Games Kit
+---
+title: Solana Games Kit 
+description: A list of Solana game ecosystem projects 
+---
 
 Creating games is hard, and creating web3 games brings additional challenges. Luckily, game builders on Solana aren’t alone; they benefit from numerous existing tools and services designed specifically to empower game builders.
 
@@ -16,8 +19,7 @@ The Games Kit has a few main buckets:
 
 Guides: [https://soldev.app/](https://soldev.app/)
 
-<details>
-<summary><h1>Solana Ecosystem Tools</h1></summary>  
+# Solana Ecosystem Tools
 
 ## Wallets
 
@@ -63,10 +65,10 @@ More in the **DeFi** section below:
 - [https://docs.streammoney.finance/](https://docs.streammoney.finance/) More on chain NFT utilities
 - [Ludex](https://ludex.gg/) - on-chain wagering and peer to peer protocol
 - [Laddercaster](https://laddercaster.com/) - gamified programs like breeding
-- [Raindrops](https://docs.raindropstudios.xyz/raindrops) - Avatar <--> Item relationships, matches, namespaces
+- [Raindrops](https://docs.raindropstudios.xyz/raindrops) - Avatar -- Item relationships, matches, namespaces
 - [https://grapes.network/](https://grapes.network/) - community, discord, DAO
 - [https://streamflow.finance/](https://streamflow.finance/) - token vesting, currency distribution, airdrops, ++
-- [https://cupcake.com/](https://cupcake.com/) - physical <--> digital
+- [https://cupcake.com/](https://cupcake.com/) - physical -- digital
 - https://github.com/JumpCrypto/sol-arc - entity component system
 - https://github.com/clockwork-xyz/examples - on chain triggers
 
@@ -216,19 +218,17 @@ Macro stats and trends:
 Visit: [https://solana.com/ecosystem](https://solana.com/ecosystem)
 
 [soldev.app](https://soldev.app/)
-</details>
 
-<details>
-<summary><h1>Games Backend</h1></summary>  
+
+# Games Backends
 
 - [Beamable](https://beamable.com/)
     - Beamable fights for the game makers of the world by enabling them to build faster and operate worry-free. The company’s full-stack LiveOps platform for live games is tightly integrated with the Unity 3D engine, enabling game developers to focus on the creativity and differentiation of their products.
 - [Pragma](https://pragma.gg/)
     - Pragma is a platform that helps scale and grow your game via supporting cross-platform accounts, game loop, matchmaking, player data, metrics, and more.
-</details>
 
-<details>
-<summary><h1>Marketing and Distribution</h1></summary>  
+
+# Marketing and Distribution
 
 - [Gamesight](https://gamesight.io/)
     - Gamesight is one of the top growth engines for PC, console, and soon mobile games.
@@ -242,15 +242,12 @@ Visit: [https://solana.com/ecosystem](https://solana.com/ecosystem)
   - [https://carv.io/home](https://carv.io/home)
     
   - [https://www.communitygaming.io/](https://www.communitygaming.io/)
-</details>
 
-<details>
-<summary><h1>Solana Mobile Stack</h1></summary>  
+# Solana Mobile Stack
 
 - [Solana Mobile Stack SDK](https://docs.solanamobile.com/getting-started/overview)
 - [Solana Unity SDK](https://docs.solanamobile.com/unity/unity_sdk)
 - [Solana Unreal SDK](https://docs.solanamobile.com/unreal/unreal_sdk)
-</details>
 
 > **Note:**
 >
@@ -259,4 +256,4 @@ Email games@solana.org with a description of what you’re building so we can ad
 
 ### Odds and Ends
 - This is a live and ever-evolving list, check back in from time-to-time
-- [Education videos on Unity](https://www.youtube.com/watch?v=v1MU7uhMAdw&ab_channel=SolPlay)
+- [Get Started with Building your game](/developers/guides/games/intro-to-game-dev.md)

@@ -9,6 +9,7 @@ The unity game engine is known for its beginner friendly approach and cross plat
 The Solana Unity SDK comes with NFT support, transactions, RPC functions, Phantom Deep lLinks, WebGL connector, WebSocket connection support, mobile wallet-adapter, sessions keys for auto approving transaction, anchor client code generation and more.
 
 [Docs](https://solana.unity-sdk.gg/)<br />
+[Source](https://github.com/magicblock-labs/Solana.Unity-SDK)<br />
 [Verified Unity Asset Store Listing](https://assetstore.unity.com/packages/decentralization/infrastructure/solana-sdk-for-unity-246931)<br />
 [Example Games](https://github.com/solana-developers/solana-game-examples)<br />
 
@@ -23,16 +24,18 @@ The Godot engine is an open source game engine which gained lots of support in t
 [Demo](https://github.com/ZenRepublic/GodotSolanaSDKDemoPackage)<br />
 [Tutorial](https://www.youtube.com/watch?v=tszFPInYmXQ)<br />
 [Maintainer](https://twitter.com/ZenRepublicNDM)<br />
-[Maintainer](https://twitter.com/ZenRepublicNDM)<br />
 
 
-### Solana game Shift 
+### Solana Game Shift 
 
 Solana game shift is an API solution to integrate Solana into your game and mint and change asset. It also supports USDC on ramps and in game market place. 
 You can onboard your player without creating key phrases and easily let them pay with credit card payments. 
 
 [Solana Game Shift](https://gameshift.solanalabs.com/)<br />
 [Docs](https://docs.gameshift.dev/)<br />
+[Example Game Live](https://solplay.de/cubeshift)<br />
+[Example Game Source](https://github.com/solana-developers/cube_shift)<br />
+[Example Game Devvlog](https://www.youtube.com/watch?v=hTCPXVn14TY)<br />
 
 
 ### Honeycomb Protocol  

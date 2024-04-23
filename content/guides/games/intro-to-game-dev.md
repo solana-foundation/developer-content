@@ -38,12 +38,12 @@ With all these benefits, Solana is quickly becoming the go-to platform for game 
 
 # Next Steps
 
-[Solana Gaming SDKs](/developers/guides/games/game-sdks.md)
-[Hello world on-chain game](/developers/guides/games/hello-world.md)
-[Learn by example](/developers/guides/games/game-examples.md)
-[Energy System](/developers/guides/games/energy-system.md)
-[NFTs in games](/developers/guides/games/nfts-in-games.md)
-[Dynamic meta data NFTs](/developers/guides/games/dynamic-meta-data.md)
-[Token in games](/developers/guides/games/interact-with-tokens.md)
-[Game distribution](/developers/guides/games/distribution.md)
+[Solana Gaming SDKs](/developers/guides/games/game-sdks.md) <br />
+[Hello world on-chain game](/developers/guides/games/hello-world.md) <br />
+[Learn by example](/developers/guides/games/game-examples.md) <br />
+[Energy System](/developers/guides/games/energy-system.md) <br />
+[NFTs in games](/developers/guides/games/nfts-in-games.md) <br />
+[Dynamic meta data NFTs](/developers/guides/games/dynamic-meta-data.md) <br />
+[Token in games](/developers/guides/games/interact-with-tokens.md) <br />
+[Game distribution](/developers/guides/games/distribution.md) <br />
 [Game eco system projects](/developers/guides/games/games-kit-glossary.md)
