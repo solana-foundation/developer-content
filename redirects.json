@@ -171,10 +171,13 @@
       "source": "/transaction_fees"
     },
     {
-      "destination": "/docs/intro/economics",
+      "destination": "/docs/economics/inflation/inflation-schedule",
       "source": "/storage_rent_economics"
     },
-    { "destination": "/docs/intro/economics", "source": "/economics_overview" },
+    {
+      "destination": "/docs/economics/inflation/inflation-schedule",
+      "source": "/economics_overview"
+    },
     { "destination": "/docs/intro/history", "source": "/history" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/support" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide" },
