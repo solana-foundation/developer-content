@@ -14,6 +14,7 @@ keywords:
   - cheap network
   - affordable blockchain
 altRoutes:
+  - /docs/intro/rent
   - /docs/intro/transaction_fees
   - /docs/intro/transaction-fees
 ---
