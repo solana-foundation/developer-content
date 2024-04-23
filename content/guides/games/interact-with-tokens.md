@@ -5,7 +5,7 @@ description: Learn how to use tokens in Solana games with an on-chain tutorial
 
 # Using tokens in games on Solana
 
-Tokens on Solana can serve various purposes, such as in-game rewards, incentives, or other applications. For example, you can create tokens and distribute them to players when they complete specific in-game actions.
+Tokens on Solana can serve various purposes, such as in-game rewards, incentives, or other applications. For example, you can create tokens and distribute them to players when they complete specific in-game actions. In this example we will learn how to setup an anchor program ti mint and burn tokens in a game. If you want to instead learn on how you can store tokens in a PDA you can check out the [Token Vault example](https://beta.solpg.io/tutorials/spl-token-vault) in Solana play ground.
 
 ## Create, Mint, and Burn Tokens with Anchor
 

@@ -3,9 +3,9 @@ title: Hello World example
 description: Get started building Solana games with a basic adventure game 
 ---
 
-# Building an on-chain game on Solana
+# Getting started with your first Solana on-chain game
 
-## Getting started with your first Solana game
+"On chain game" means that the whole state is saved on the blockchain. This means that the game is fully decentralized and can be played by anyone without the need of a central server. Every action in the game is a blockchain transaction and every move can have a valuable impact. 
 
 Video Walkthrough:
 <div class="video-block">
@@ -34,7 +34,7 @@ To start building the Tiny Adventure game, follow these steps:
 
 Visit [Solana Playground](https://beta.solpg.io/) and create a new Anchor project. If you're new to Solana Playground, you'll also need to create a Playground Wallet. Here is an example of how to use Solana Playground:
 
-![solpg.gif](./assets/hello-world/solpg.gif)
+![solpg.gif](/assets/guides/hello-world/solpg.gif)
 
 After creating a new project, replace the default starter code with the code below:
 
@@ -411,7 +411,15 @@ Congratulations! You have successfully built, deployed, and invoked the Tiny Adv
 With the basic game complete, unleash your creativity and practice building independently by implementing your own ideas to enrich the game experience. Here are a few suggestions:
 
 1. Modify the in-game texts to create an intriguing story. Invite a friend to play through your custom narrative and observe the on-chain transactions as they unfold!
-2. Add a chest that rewards players with [Sol Rewards](./store-sol-in-pda) or let the player collect coins [Interact with tokens](./interact-with-tokens) as they progress through the game.
+2. Add a chest that rewards players with [Sol Rewards](/developers/guides/games/store-sol-in-pda) or let the player collect coins [Interact with tokens](/developers/guides/games/interact-with-tokens) as they progress through the game.
 3. Create a grid that allows the player to move up, down, left, and right, and introduce multiple players for a more dynamic experience.
 
-In the next installment, [Tiny Adventure Two](./store-sol-in-pda), we'll learn how to store SOL in the program and distribute it to players as rewards.
+In the next installment, [Tiny Adventure Two](/developers/guides/games/store-sol-in-pda), we'll learn how to store SOL in the program and distribute it to players as rewards.
+
+Other next Steps: 
+
+[Solana Gaming SDKs](/developers/guides/games/game-sdks.md)
+[Learn by example](/developers/guides/games/game-examples.md)
+[Energy System](/developers/guides/games/energy-system.md)
+[NFTs in games](/developers/guides/games/nfts-in-games.md)
+[Token in games](/developers/guides/games/interact-with-tokens.md)

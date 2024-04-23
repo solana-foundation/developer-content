@@ -1,6 +1,6 @@
 ---
-title: Distribution
-description: How to do game distribution on Solana
+title: Game Distribution
+description: How you can do game distribution on Solana
 ---
 
 # Distribution
@@ -21,4 +21,4 @@ Platforms where you can host your games
 | [Apple App Store](https://www.apple.com/de/app-store/) | The Apple app store has a high reach and is trusted by its customers. The entrance barrier for crypto games is high though. The rules are very strict for everything that tries to circumvent the fees that Apple takes for in app purchases. A soon as an NFT provides benefits for the player for example Apple requires you for example to have them purchased via their in app purchase system.  |
 | [Google Play Store](https://play.google.com/store/games) | Google is much more crypto friendly and games with NFTs and wallet deep links for example have had a track record of being approved for the official play store.  |
 | [xNFT Backpack](https://www.backpack.app/) | Backpack is a Solana wallet which allows you to release apps as xNFTs. They appear in the users wallet as soon as they purchase them as applications. The Unity SDK has a xNFT export and any other web app can be published as xNFT as well. |
-|  |  |  |
+| [Elixir Games](https://elixir.games/) | Elixir Games is a platform that focuses on blockchain-based games. They support a variety of blockchain technologies and offer a platform for developers to publish their games. |

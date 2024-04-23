@@ -63,10 +63,10 @@ More in the **DeFi** section below:
 - [https://docs.streammoney.finance/](https://docs.streammoney.finance/) More on chain NFT utilities
 - [Ludex](https://ludex.gg/) - on-chain wagering and peer to peer protocol
 - [Laddercaster](https://laddercaster.com/) - gamified programs like breeding
-- [Raindrops](https://docs.raindropstudios.xyz/raindrops) - Avatar <> Item relationships, matches, namespaces
+- [Raindrops](https://docs.raindropstudios.xyz/raindrops) - Avatar <--> Item relationships, matches, namespaces
 - [https://grapes.network/](https://grapes.network/) - community, discord, DAO
 - [https://streamflow.finance/](https://streamflow.finance/) - token vesting, currency distribution, airdrops, ++
-- [https://cupcake.com/](https://cupcake.com/) - physical <> digital
+- [https://cupcake.com/](https://cupcake.com/) - physical <--> digital
 - https://github.com/JumpCrypto/sol-arc - entity component system
 - https://github.com/clockwork-xyz/examples - on chain triggers
 

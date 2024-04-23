@@ -21,5 +21,26 @@ Pages done:
 - Update all links in intro-in-game-dev
 
 
+
 Open for Discussion: 
 - add tiny spl and spl404? Too soon? 
+
+
+Pages missing:
+- game-examples.md
+- game-sdks.md
+- games-kit-glossary
+- nfts-in-games.md
+- porting-anchor-to-unity
+- saving-game-state.md
+- dynamic-meta-data.md
+
+
+Pages done: 
+- hello-world done 
+- intro-to-game-dev done
+- store-sol-in-pda.md
+- auto-approve.md
+- disctribution.md
+- energy-system
+- interact-with-tokens.md

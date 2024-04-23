@@ -35,3 +35,15 @@ However, not everything needs to be put on the blockchain. Smaller integrations 
     iv. Ledger verifiable activity for anti-cheat systems.
 
 With all these benefits, Solana is quickly becoming the go-to platform for game developers. Get started today!
+
+# Next Steps
+
+[Solana Gaming SDKs](/developers/guides/games/game-sdks.md)
+[Hello world on-chain game](/developers/guides/games/hello-world.md)
+[Learn by example](/developers/guides/games/game-examples.md)
+[Energy System](/developers/guides/games/energy-system.md)
+[NFTs in games](/developers/guides/games/nfts-in-games.md)
+[Dynamic meta data NFTs](/developers/guides/games/dynamic-meta-data.md)
+[Token in games](/developers/guides/games/interact-with-tokens.md)
+[Game distribution](/developers/guides/games/distribution.md)
+[Game eco system projects](/developers/guides/games/games-kit-glossary.md)
