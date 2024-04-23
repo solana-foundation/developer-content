@@ -1,5 +1,5 @@
 ---
-title: Fees and Compute
+title: Fees on Solana
 description:
   "Your guide to transaction fees on Solana -- small fees paid to process
   instructions on the network, based on computation and an optional
@@ -8,11 +8,8 @@ keywords:
   - instruction fee
   - processing fee
   - storage fee
-  - low fee blockchain
   - gas
   - gwei
-  - cheap network
-  - affordable blockchain
 altRoutes:
   - /docs/intro/rent
   - /docs/core/rent
@@ -21,7 +18,8 @@ altRoutes:
 ---
 
 The Solana blockchain has a few different types of fees and costs that are
-incurred to use the network. These can be segmented into a few specific types:
+incurred to use the permissionless network. These can be segmented into a few
+specific types:
 
 - transaction fees
 - prioritization fees
@@ -141,7 +139,7 @@ number of _compute units_. After the maximum number of _compute units_ has been
 consumed (aka compute budget exhaustion), the runtime will halt the transaction
 and return an error. This results in a failed transaction.
 
-> **Learn more:** compute units and the
+> Learn more: compute units and the
 > [Compute Budget](/docs/core/runtime.md#compute-budget) in the Runtime and
 > [requesting a fee estimate](/docs/rpc/http/getFeeForMessage.mdx) from the RPC.
 
@@ -160,10 +158,9 @@ When an Account no longer has enough LAMPORTS to pay its rent, it will be
 removed from the network in a process known as
 [Garbage Collection](#garbage-collection).
 
-> **Note:** Rent is different from
-> [transactions fees](/docs/core/transactions/fees.md). Rent is paid (or held in
-> an Account) to keep data stored on the Solana blockchain. Whereas transaction
-> fees are paid to process
+> Rent is different from [transactions fees](/docs/core/transactions/fees.md).
+> Rent is paid (or held in an Account) to keep data stored on the Solana
+> blockchain. Whereas transaction fees are paid to process
 > [instructions](/docs/core/transactions.md#instructions) on the network.
 
 ### Rent rate
@@ -209,6 +206,103 @@ documentation:
 - [Implemented Proposals - Rent](https://docs.solanalabs.com/implemented-proposals/rent)
 - [Implemented Proposals - Account Storage](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage)
 
+## Compute Budget
+
+To prevent abuse of computational resources, each transaction is allocated a
+compute budget. The budget specifies a maximum number of compute units that a
+transaction can consume, the costs associated with different types of operations
+the transaction may perform, and operational bounds the transaction must adhere
+to.
+
+As the transaction is processed compute units are consumed by its instruction's
+programs performing operations such as executing SBF instructions, calling
+syscalls, etc... When the transaction consumes its entire budget, or exceeds a
+bound such as attempting a call stack that is too deep, or loaded account data
+size exceeds limit, the runtime halts the transaction processing and returns an
+error.
+
+The following operations incur a compute cost:
+
+- Executing SBF instructions
+- Passing data between programs
+- Calling system calls
+  - logging
+  - creating program addresses
+  - cross-program invocations
+  - ...
+
+For cross-program invocations, the instructions invoked inherit the budget of
+their parent. If an invoked instruction consumes the transactions remaining
+budget, or exceeds a bound, the entire invocation chain and the top level
+transaction processing are halted.
+
+The current
+[compute budget](https://github.com/solana-labs/solana/blob/090e11210aa7222d8295610a6ccac4acda711bb9/program-runtime/src/compute_budget.rs#L26-L87)
+can be found in the Solana Program Runtime.
+
+#### Example Compute Budget
+
+For example, if the compute budget set in the Solana runtime is:
+
+```rust
+max_units: 1,400,000,
+log_u64_units: 100,
+create_program address units: 1500,
+invoke_units: 1000,
+max_invoke_stack_height: 5,
+max_instruction_trace_length: 64,
+max_call_depth: 64,
+stack_frame_size: 4096,
+log_pubkey_units: 100,
+...
+```
+
+Then any transaction:
+
+- Could execute 1,400,000 SBF instructions, if it did nothing else.
+- Cannot exceed 4k of stack usage.
+- Cannot exceed a SBF call depth of 64.
+- Cannot exceed invoke stack height of 5 (4 levels of cross-program
+  invocations).
+
+> Since the compute budget is consumed incrementally as the transaction
+> executes, the total budget consumption will be a combination of the various
+> costs of the operations it performs.
+
+At runtime a program may log how much of the compute budget remains. See
+[debugging](/docs/programs/debugging.md#monitoring-compute-budget-consumption)
+for more information.
+
+### Prioritization fees
+
+As part of the Compute Budget, the runtime supports transactions including an
+**optional** fee to prioritize itself against others known as a
+[prioritization fee](/docs/intro/transaction_fees.md#prioritization-fee).
+
+This _prioritization fee_ is calculated by multiplying the number of _compute
+units_ by the _compute unit price_ (measured in micro-lamports). These values
+may be set via the Compute Budget instructions `SetComputeUnitLimit` and
+`SetComputeUnitPrice` once per transaction.
+
+> You can learn more of the specifics of _how_ and _when_ to set a
+> prioritization fee on the
+> [transaction fees](/docs/intro/transaction_fees.md#prioritization-fee) page.
+
+### Accounts data size limit
+
+A transaction should request the maximum bytes of accounts data it is allowed to
+load by including a `SetLoadedAccountsDataSizeLimit` instruction, requested
+limit is capped by `MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`. If no
+`SetLoadedAccountsDataSizeLimit` is provided, the transaction is defaulted to
+have limit of `MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`.
+
+The `ComputeBudgetInstruction::set_loaded_accounts_data_size_limit` function can
+be used to create this instruction:
+
+```rust
+let instruction = ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(100_000);
+```
+
 ## Prioritization fee
 
 A Solana transaction can include an **optional** fee to prioritize itself
@@ -251,10 +345,14 @@ functions. Each of these instructions can then be included in the transaction
 and sent to the cluster like normal. See also the
 [best practices](#prioritization-fee-best-practices) below.
 
-> Caution: Transactions can only contain **one of each type** of compute budget
-> instruction. Duplicate types will result in an
-> [`TransactionError::DuplicateInstruction`](https://github.com/solana-labs/solana/blob/master/sdk/src/transaction/error.rs#L144-145)
-> error, and ultimately transaction failure.
+<Callout type="caution">
+
+Transactions can only contain **one of each type** of compute budget
+instruction. Duplicate types will result in an
+[`TransactionError::DuplicateInstruction`](https://github.com/solana-labs/solana/blob/master/sdk/src/transaction/error.rs#L144-145)
+error, and ultimately transaction failure.
+
+</Callout>
 
 #### Rust
 
