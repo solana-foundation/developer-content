@@ -1,5 +1,5 @@
 ---
-title: Transaction Fees
+title: Fees and Compute
 description:
   "Your guide to transaction fees on Solana -- small fees paid to process
   instructions on the network, based on computation and an optional
@@ -15,7 +15,17 @@ keywords:
   - affordable blockchain
 altRoutes:
   - /docs/intro/transaction_fees
+  - /docs/intro/transaction-fees
 ---
+
+The Solana blockchain has a few different types of fees and costs that are
+incurred to use the network. These can be segmented into a few specific types:
+
+- transaction fees
+- prioritization fees
+- rent (fee for on-chain data storage)
+
+## Transaction fees
 
 The small fees paid to process [instructions](/docs/terminology.md#instruction)
 on the Solana blockchain are known as "_transaction fees_".
@@ -26,16 +36,15 @@ confirmed as a global state transaction, this _transaction fee_ is paid to the
 network to help support the [economic design](#basic-economic-design) of the
 Solana blockchain.
 
-> **NOTE:** Transaction fees are different from
-> [account rent](/docs/terminology.md#rent)! While transaction fees are paid to
-> process instructions on the Solana network, rent is paid to store data on the
-> blockchain. You can learn more about rent here:
-> [What is rent?](/docs/core/rent.md)
+> Transaction fees are different from [account rent](/docs/terminology.md#rent)!
+> While transaction fees are paid to process instructions on the Solana network,
+> rent is paid to store data on the blockchain. You can learn more about rent
+> here: [What is rent?](/docs/core/rent.md)
 
-## Why pay transaction fees?
+### Why pay transaction fees?
 
 Transaction fees offer many benefits in the Solana
-[economic design](#basic-economic-design) described below. Mainly:
+[economic design](#basic-economic-design) described below, mainly:
 
 - they provide compensation to the validator network for the CPU/GPU resources
   necessary to process transactions,
@@ -43,10 +52,10 @@ Transaction fees offer many benefits in the Solana
 - and provide long-term economic stability to the network through a
   protocol-captured minimum fee amount per transaction
 
-> **NOTE:** Network consensus votes are sent as normal system transfers, which
-> means that validators pay transaction fees to participate in consensus.
+> Network consensus votes are sent as normal system transfers, which means that
+> validators pay transaction fees to participate in consensus.
 
-## Basic economic design
+### Basic economic design
 
 Many blockchain networks \(e.g. Bitcoin and Ethereum\), rely on inflationary
 _protocol-based rewards_ to secure the network in the short-term. Over the
@@ -61,6 +70,34 @@ The same is true on Solana. Specifically:
 - A scheduled global inflation rate provides a source for
   [rewards](https://docs.solanalabs.com/implemented-proposals/staking-rewards)
   distributed to [Solana Validators](https://docs.solanalabs.com/operations).
+
+### Fee Collection
+
+Transactions are required to have at least one account which has signed the
+transaction and is writable. Writable signer accounts are serialized first in
+the list of transaction accounts and the first of these accounts is always used
+as the "fee payer".
+
+Before any transaction instructions are processed, the fee payer account balance
+will be deducted to pay for transaction fees. If the fee payer balance is not
+sufficient to cover transaction fees, the transaction will be dropped by the
+cluster. If the balance was sufficient, the fees will be deducted whether the
+transaction is processed successfully or not. In fact, if any of the transaction
+instructions return an error or violate runtime restrictions, all account
+changes _except_ the transaction fee deduction will be rolled back.
+
+### Fee Distribution
+
+Transaction fees are partially burned and the remaining fees are collected by
+the validator that produced the block that the corresponding transactions were
+included in.
+
+The transaction fee burn rate was initialized as 50% when inflation rewards were
+enabled at the beginning of 2021 and has not changed so far. These fees
+incentivize a validator to process as many transactions as possible during its
+slots in the leader schedule. Collected fees are deposited in the validator's
+account (listed in the leader schedule for the current slot) after processing
+all of the transactions included in a block.
 
 ### Why burn some fees?
 
@@ -85,7 +122,7 @@ malicious, censoring leader:
   would have to replace the burnt fees on their fork themselves
 - thus potentially reducing the incentive to censor in the first place
 
-## Calculating transaction fees
+### Calculating transaction fees
 
 Transactions fees are calculated based on two main parts:
 
@@ -124,7 +161,7 @@ Each transaction can set the maximum number of compute units it is allowed to
 consume and the compute unit price by including a `SetComputeUnitLimit` and
 `SetComputeUnitPrice` compute budget instruction respectively.
 
-> Note: Unlike other instructions inside a Solana transaction,
+> Unlike other instructions inside a Solana transaction,
 > [Compute Budget instructions](https://github.com/solana-labs/solana/blob/master/sdk/src/compute_budget.rs)
 > do **NOT** require any accounts.
 
@@ -206,29 +243,3 @@ recent blocks processed by the node.
 You could then use this data to estimate an appropriate prioritization fee for
 your transaction to both (a) better ensure it gets processed by the cluster and
 (b) minimize the fees paid.
-
-## Fee Collection
-
-Transactions are required to have at least one account which has signed the
-transaction and is writable. Writable signer accounts are serialized first in
-the list of transaction accounts and the first of these accounts is always used
-as the "fee payer".
-
-Before any transaction instructions are processed, the fee payer account balance
-will be deducted to pay for transaction fees. If the fee payer balance is not
-sufficient to cover transaction fees, the transaction will be dropped by the
-cluster. If the balance was sufficient, the fees will be deducted whether the
-transaction is processed successfully or not. In fact, if any of the transaction
-instructions return an error or violate runtime restrictions, all account
-changes _except_ the transaction fee deduction will be rolled back.
-
-## Fee Distribution
-
-Transaction fees are partially burned and the remaining fees are collected by
-the validator that produced the block that the corresponding transactions were
-included in. The transaction fee burn rate was initialized as 50% when inflation
-rewards were enabled at the beginning of 2021 and has not changed so far. These
-fees incentivize a validator to process as many transactions as possible during
-its slots in the leader schedule. Collected fees are deposited in the
-validator's account (listed in the leader schedule for the current slot) after
-processing all of the transactions included in a block.
