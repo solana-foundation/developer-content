@@ -53,7 +53,7 @@ import {
       keys: [
         { pubkey: fromKeypair.publicKey, isSigner: true, isWritable: true },
       ],
-      data: Buffer.from("Data to send in transaction", "utf-8"),
+      data: Buffer.from("Memo message to send in this transaction", "utf-8"),
       programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
     }),
   );
