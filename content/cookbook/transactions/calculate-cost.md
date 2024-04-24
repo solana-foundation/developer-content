@@ -41,7 +41,7 @@ import bs58 from "bs58";
   const messageParams = {
     accountKeys: [
       payer.publicKey.toString(),
-      payee.publicKey.toString(),
+      recipient.publicKey.toString(),
       SystemProgram.programId.toString(),
     ],
     header: {
