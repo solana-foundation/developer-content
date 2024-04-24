@@ -11,6 +11,9 @@ to the Base Fee. By default the compute budget is the product of 200,000 Compute
 Units (CU) \* number of instructions, with a max of 1.4M CU. The Base Fee is
 5,000 Lamports per signature. A microLamport is 0.000001 Lamports.
 
+> You can find a detailed guide here on
+> [how to use priority fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees).
+
 The total compute budget or Prioritization Fee for a single TX can be changed by
 adding instructions from the ComputeBudgetProgram.
 
