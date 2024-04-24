@@ -29,7 +29,7 @@ import bs58 from "bs58";
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   const payer = Keypair.generate();
-  const payee = Keypair.generate();
+  const recipient = Keypair.generate();
 
   const type = SYSTEM_INSTRUCTION_LAYOUTS.Transfer;
   const data = Buffer.alloc(type.layout.span);
