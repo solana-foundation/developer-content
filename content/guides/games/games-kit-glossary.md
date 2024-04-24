@@ -8,78 +8,71 @@ Creating games is hard, and creating web3 games brings additional challenges. Lu
 The **Solana Games Kit is a collection of such tools and services being developed in the Solana ecosystem to empower game developers and accelerate the development of amazing web3 games on Solana**. We encourage game builders to check out the resources below to see if any might be a fit for you and your games!
 
 The Games Kit has a few main buckets:
-
-**Solana Ecosystem Tools:** let you integrate easily with Solana for common web3 gaming use-cases
-
-**Games Backend:** keep your web2 games back-end and Solana in sync
-
-**Marketing and Distribution:** acquire web3 users, at scale
-
-**Solana Mobile Stack:** build mobile crypto games with great web3 UX
-
-Guides: [https://soldev.app/](https://soldev.app/)
-
+|||
+|--:|-|
+|**Solana Ecosystem Tools:**|integrate easily with Solana for common web3 gaming use-cases.
+|**Games Backend:**|keep your web2 games back-end and Solana in sync.
+|**Marketing and Distribution:**|acquire web3 users, at scale.
+|**Solana Mobile Stack:**|build mobile crypto games with great web3 UX.  
+> **Note:**
+>
+> 💡 Building tools/resources that should be on this list but aren’t? Please let us know! 
+Email games@solana.org with a description of what you’re building so we can add you to the Games Kit!
 # Solana Ecosystem Tools
 
 ## Wallets
 
 ### In game non-custodial
 
-- [Magic Eden](https://magiceden.io/) (Web, Unity) (nothing public yet)
+- [Magic Eden](https://wallet.magiceden.io/) (Web, Unity)
 - [Phantom](https://phantom.app/) (Web, Mobile)
-- [Mirror world](https://docs.mirrorworld.fun/architecture/wallet-design) (web, Android, iOS, Unity)
-- [https://facewallet.xyz/](https://facewallet.xyz/)
+- [Facewallet](https://facewallet.xyz/)
 - [Gameshift](https://gameshift.solanalabs.com/)
 
-### Hybrid
+### In game custodial
+- [Mirror world](https://www.mirrorworld.fun/docs/solutions/smart-wallet) (web, Android, iOS, Unity)
 - [Stardust.gg](https://www.stardust.gg/)
+
+### Hybrid
+- Stardust (see above)
 
 ### Authentication web2-like flow
 - [web3auth](https://web3auth.io/)
 - [magic.link](https://magic.link/)
 
-In game custodial - Mirror world, Stardust, etc have some options
-
 ### Wallets for finances, royalties, multisig
 
 These are for the companies, teams and investors, not players:
-- [Realms](https://www.notion.so/Solana-Games-Kit-10da2edd41264c78b4aa410fb6616c16?pvs=21)
+- [Realms](https://docs.realms.today/)
 - [Cashmere Wallet](https://www.cashmere.finance/)
 - [Squads](https://squads.so/)
 - [Meanfi](https://meanfi.com/)
 - [Streamflow](https://streamflow.finance/)
-- [Zebec](https://www.notion.so/Solana-Games-Kit-10da2edd41264c78b4aa410fb6616c16?pvs=21)
-- [Magna](https://www.notion.so/Solana-Games-Kit-10da2edd41264c78b4aa410fb6616c16?pvs=21)
 
 ## On Chain Programs
 
-Solana Program Library Tokens - Fungible tokens
+### Tokens - payments, vesting, launching
+[Solana Program Library Tokens](https://spl.solana.com/token-2022) - Fungible tokens
 
 [Metaplex](https://www.metaplex.com/) - NFTs, Tokens, marketplace, SDKs to interact with on chain code 
 
-### Tokens - payments, vesting, launching
-
-[https://strataprotocol.com/](https://strataprotocol.com/) wrap tokens, bonding, launch
-
 More in the **DeFi** section below:
-- [https://docs.streammoney.finance/](https://docs.streammoney.finance/) More on chain NFT utilities
 - [Ludex](https://ludex.gg/) - on-chain wagering and peer to peer protocol
 - [Laddercaster](https://laddercaster.com/) - gamified programs like breeding
 - [Raindrops](https://docs.raindropstudios.xyz/raindrops) - Avatar -- Item relationships, matches, namespaces
-- [https://grapes.network/](https://grapes.network/) - community, discord, DAO
-- [https://streamflow.finance/](https://streamflow.finance/) - token vesting, currency distribution, airdrops, ++
-- [https://cupcake.com/](https://cupcake.com/) - physical -- digital
-- https://github.com/JumpCrypto/sol-arc - entity component system
-- https://github.com/clockwork-xyz/examples - on chain triggers
+- [Grapes Network](https://grapes.network/) - community, discord, DAO
+- [Streamflow Finance](https://streamflow.finance/) - token vesting, currency distribution, airdrops, ++
+- [Cupcake](https://cupcake.com/) - physical -- digital
+- [JumpCrypto's Sol-Arc](https://github.com/JumpCrypto/sol-arc) - entity component system
+- [Clockwork](https://github.com/clockwork-xyz/examples) - on chain triggers
 
 ## Marketplaces, trading and monetization
 
 - [Metaplex](https://www.metaplex.com/) 
-- [https://www.magiceden.io/](https://www.magiceden.io/) 
-- [https://www.fractal.is/](https://www.fractal.is/) 
-- [https://solana.neoswap.party/rooms](https://solana.neoswap.party/rooms)
+- [Magiceden](https://www.magiceden.io/) 
+- [Fractal](https://www.fractal.is/) 
 - [Gameshift](https://gameshift.solanalabs.com/)
-- MirorWorld (in app)
+- [MirrorWorld (in app)](https://www.mirrorworld.fun/docs/solutions/smart-marketplace)
 
 ## SDKs
 
@@ -87,6 +80,8 @@ More in the **DeFi** section below:
 - [Python](https://github.com/michaelhly/solana-py)
 - [C#](https://github.com/bmresearch/Solnet)
 - [Swift](https://github.com/ajamaica/Solana.Swift)
+- [Javascript](https://github.com/solana-labs/solana-web3.js)
+- [C++](https://github.com/mschneider/solcpp)
 
 ## Game Engine Integrations
 
@@ -106,7 +101,7 @@ More in the **DeFi** section below:
 
 - [Lakea](https://lakea.io/)
 - [Stardust](https://www.stardust.gg/)
-- [https://nefta.io/](https://nefta.io/)
+- [Nefta](https://nefta.io/)
 
 ## Governance/DAO/Guilds
 
@@ -116,56 +111,51 @@ Want to set up your own DAO?
 - [Squads](https://squads.so/)
 
 Want to work with guilds active on Solana?
+- [W3GG](https://w3gg.io/)
+- [KGeN DAO](https://kgen.io/gamer)
 
-- [YGG SEA](https://twitter.com/yggsea/status/1519686830471655425?lang=en)
-- [Ancient8](https://ancient8.gg/)
-- [Indi.gg](https://indi.gg/)
-
-tools
-
-- [https://grapes.network/](https://grapes.network/)
-- [https://matrica.io/](https://matrica.io/)
+Tools
+- [Matrica](https://matrica.io/)
 
 ## DeFi:
 
 - [Orca](https://www.orca.so/)
 - [Mango](https://mango.markets/)
-- [Openbook](https://www.openbook-solana.com/)
+- [Openbook](https://openbookdex.com/)
 - [Raydium](https://raydium.io/)
-- Jup.ag
+- [Jupiter](https://jup.ag/)
+- [Phoenix](https://www.phoenix.trade/)
 
 ## Analytics and Data:
 
-In game and on chain:
+In-game & on-chain:
 
-- [Datawisp.io](http://www.datawisp.io)
-- [https://www.footprint.network/](https://www.footprint.network/) (Sample game analytics case study - Walken: https://www.footprint.network/@0xLam/Walken)
+- [Datawisp](http://www.datawisp.io)
+- [Footprint Analytics](https://www.footprint.network/) (Sample game analytics case study - Walken: https://www.footprint.network/@0xLam/Walken)
 
-On chain:
+On-chain:
 
-- [https://www.theindex.io/](https://www.theindex.io/)
-- [https://dune.com/browse/dashboards](https://dune.com/browse/dashboards)
-- [https://aleph.im/](https://aleph.im/)
-- [https://www.flipsidecrypto.xyz/earn?project=Solana](https://www.flipsidecrypto.xyz/earn?project=Solana)
-- Vybenetwork.com
+- [Dune Dashboards](https://dune.com/browse/dashboards)
+- [Aleph.Im](https://aleph.im/)
+- [Flipside](https://www.flipsidecrypto.xyz/earn?project=Solana)
+- [Vybe Network](Vybenetwork.com)
 
 Macro stats and trends:
 
-- [https://www.gokustats.xyz/dashboar](https://www.gokustats.xyz/dashboard)d
-- Dappradar (incomplete)
+- [Artemis](https://app.artemis.xyz/chains)
 
 ## Fiat On and off ramps
 
-- [https://www.crossmint.io/](https://www.crossmint.io/)
-- [https://www.breeze.cash/](https://www.breeze.cash/)
-- [https://www.kado.money/](https://www.kado.money/) 
-- [https://stripe.com/en-sg/use-cases/crypto](https://stripe.com/en-sg/use-cases/crypto)
-- [https://www.moonpay.com/](https://www.moonpay.com/) 
-- [https://www.coinbase.com/cloud/products/pay-sdk](https://www.coinbase.com/cloud/products/pay-sdk)
-- [https://coinflow.cash/](https://coinflow.cash/)
+- [Crossmint](https://www.crossmint.io/)
+- [Breeze](https://www.breeze.cash/)
+- [Kado](https://www.kado.money/) 
+- [Stripe](https://stripe.com/en-sg/use-cases/crypto)
+- [Moonpay](https://www.moonpay.com/) 
+- [Coinbase Pay](https://www.coinbase.com/cloud/products/pay-sdk)
+- [Coinflow](https://coinflow.cash/)
 - [Gameshift](https://gameshift.solanalabs.com/)
-- [https://meso.network/](https://meso.network/)
-- [https://tiplink.io/](https://tiplink.io/)
+- [Meso](https://meso.network/)
+- [TipLink](https://tiplink.io/)
 
 ## Infrastructure
 
@@ -174,14 +164,13 @@ Macro stats and trends:
 [https://solana.com/rpc](https://solana.com/rpc)
 
 ### Asset Storage
-- Litprotocol.com
-- Arweave.org
-- Ipfs like filecoin
-- As normal, AWS/GCP/Azure, whatever standard Web2 version also works
+- [Lit](Litprotocol.com)
+- [Arweave](https://arweave.org)
+- [Filecoin](https://filecoin.io/)
 
 ### Randomnes and VRF
-- [https://switchboard.xyz/](https://switchboard.xyz/)
-- [https://orao.network/](https://orao.network/) (fairly centralized)
+- [Switchboard](https://switchboard.xyz/)
+- [Orao](https://orao.network/)
 
 ### Indexers
 - [Solana.fm](https://solana.fm/)
@@ -190,13 +179,12 @@ Macro stats and trends:
 - [SimpleHash](https://simplehash.com/)
 - [Holaplex](https://github.com/holaplex/indexer)
 - [Hyperspace](https://docs.hyperspace.xyz/hype/developer-guide/api-calls)
-- [Nakji](https://nakji.network/) (indexer on top of rpcs)
 
 ### Cross-Chain Bridges
 
 - [Wormhole](https://wormhole.com/)
 - [Allbridge](https://allbridge.io/)
-- Debridge
+- [Debridge](https://debridge.finance/)
 
 ### Social (e.g., Discord, Twitter)
 
@@ -205,20 +193,13 @@ Macro stats and trends:
 
 ### Payments (feeless txs to vesting to paymens)
 
-- Feeless transactions through [Octane](https://github.com/solana-labs/octane)
-- [https://solanapay.com/](https://solanapay.com/)
-- https://github.com/unboxed-software/anchor-subscriptions - subscriptions
+- [Octane](https://github.com/solana-labs/octane)
+- [Solana Pay](https://solanapay.com/)
+- [Pledge](https://github.com/unboxed-software/anchor-subscriptions) - subscriptions
 - Vesting
-    - [https://streamflow.finance/](https://streamflow.finance/)
-    - [Magna.so](http://Magna.so)
-    - [https://github.com/Bonfida/token-vesting](https://github.com/Bonfida/token-vesting)
-
-## Looking for even more?
-
-Visit: [https://solana.com/ecosystem](https://solana.com/ecosystem)
-
-[soldev.app](https://soldev.app/)
-
+    - [Streamflow Finance](https://streamflow.finance/)
+    - [Magna](http://Magna.so)
+    - [Bonfida Token Vesting Contract](https://github.com/Bonfida/token-vesting)
 
 # Games Backends
 
@@ -235,13 +216,13 @@ Visit: [https://solana.com/ecosystem](https://solana.com/ecosystem)
     - Has helped AAA studios with performance marketing, scaling + optimization
 - [Aggero.it](https://aggero.io/)
     - Build, Manage, Track, Measure-Sponsorship & Influencer Campaigns
-- [https://www.spindl.xyz/](https://www.spindl.xyz/)
+- [Spindl](https://www.spindl.xyz/)
 
 - **Other Media**
     
-  - [https://carv.io/home](https://carv.io/home)
+  - [https://play.carv.io/](https://carv.io/home)
     
-  - [https://www.communitygaming.io/](https://www.communitygaming.io/)
+  - [Community Gaming](https://www.communitygaming.io/)
 
 # Solana Mobile Stack
 
@@ -249,11 +230,12 @@ Visit: [https://solana.com/ecosystem](https://solana.com/ecosystem)
 - [Solana Unity SDK](https://docs.solanamobile.com/unity/unity_sdk)
 - [Solana Unreal SDK](https://docs.solanamobile.com/unreal/unreal_sdk)
 
-> **Note:**
->
-> 💡 Building tools/resources that should be on this list but aren’t? Please let us know! 
-Email games@solana.org with a description of what you’re building so we can add you to the Games Kit!
 
-### Odds and Ends
-- This is a live and ever-evolving list, check back in from time-to-time
-- [Get Started with Building your game](/developers/guides/games/intro-to-game-dev.md)
+# Looking for even more?
+This is a live and ever-evolving list, check back in from time-to-time.
+
+Explore the [ecosystem](https://solana.com/ecosystem) projects.
+
+Learn fundamentals with [tutorials](https://soldev.app/)
+
+[Get started on building your game today!](/developers/guides/games/intro-to-game-dev.md)
