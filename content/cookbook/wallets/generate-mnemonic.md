@@ -8,7 +8,8 @@ description:
 
 One way to generate a Keypair is through the use of a Mnemonic. Mnemonics are
 generally used to make the user experience within wallets better than a Keypair
-file.
+file by using a list of readable words (instead of a shorter string of random
+numbers and letters).
 
 ```typescript filename="generate-mnemonic.ts"
 import * as bip39 from "bip39";
