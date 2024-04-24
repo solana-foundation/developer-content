@@ -8,8 +8,8 @@ The primary function of a keypair is to sign messages and enable verification of
 the signature. Verification of a signature allows the recipient to be sure that
 the data was signed by the owner of a specific private key.
 
-To do so we will import the [TweetNaCl](https://www.npmjs.com/package/tweetnacl)
-crypto library.
+To do so, we can use the [TweetNaCl](https://www.npmjs.com/package/tweetnacl)
+crypto library:
 
 ```typescript filename="sign-message.ts"
 import { Keypair } from "@solana/web3.js";
