@@ -1,6 +1,12 @@
 ---
-title: Native Rust
-sidebarLabel: Native Rust
+date: Apr 24, 2024
+difficulty: beginner
+title: "How to write a Native Rust Program"
+description: "description"
+tags:
+  - rust
+keywords:
+  - tutorial
 ---
 
 To develop Solana programs, we use the

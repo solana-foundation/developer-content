@@ -1,7 +1,7 @@
 ---
 title: Cross Program Invocation (CPI)
 sidebarLabel: Cross Program Invocation
-sidebarSortOrder: 5
+sidebarSortOrder: 6
 ---
 
 A Cross Program Invocation (CPI) refers to when one program invokes the
@@ -78,10 +78,8 @@ pub fn invoke(
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke)
 that makes a CPI using the `invoke` function to call the transfer instruction on
-the System Program.
-
-You can also reference the [CPI Basic Example](/docs/core/cpi/how-to-cpi) page
-for further details.
+the System Program. You can also reference the
+[Basic CPI guide](/developers/guides/getstarted/how-to-cpi) for further details.
 
 ### CPI with PDA Signer
 
@@ -122,8 +120,6 @@ valid PDA is found, the address is
 Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)
 that makes a CPI using the `invoke_signed` function to call the transfer
-instruction on the System Program with a PDA signer.
-
-You can reference the
-[CPI with PDA Signer](/docs/core/cpi/how-to-cpi-with-signer) page for further
-details.
+instruction on the System Program with a PDA signer. You can reference the
+[CPI with PDA Signer guide](/developers/guides/getstarted/how-to-cpi-with-signer)
+for further details.

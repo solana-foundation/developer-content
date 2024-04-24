@@ -1,7 +1,7 @@
 ---
 sidebarLabel: Clusters & Endpoints
 title: Clusters and Public RPC Endpoints
-sidebarSortOrder: 7
+sidebarSortOrder: 8
 ---
 
 The Solana blockchain has several different groups of validators, known as

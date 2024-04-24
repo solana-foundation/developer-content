@@ -1,7 +1,7 @@
 ---
 title: Programs
 sidebarLabel: Programs on Solana
-sidebarSortOrder: 3
+sidebarSortOrder: 4
 ---
 
 In the Solana ecosystem, "smart contracts" are called programs. Each
@@ -32,14 +32,14 @@ Solana programs are predominantly written in the
 [Rust](https://doc.rust-lang.org/book/) programming language, with two common
 approaches for development:
 
-- [Anchor](/docs/core/programs/anchor): A framework designed for Solana program
-  development. It provides a faster and simpler way to write programs, using
-  Rust macros to significantly reduce boilerplate code. For beginners, it is
-  recommended to start with the Anchor framework.
+- [Anchor](/developers/guides/getstarted/intro-to-anchor): A framework designed
+  for Solana program development. It provides a faster and simpler way to write
+  programs, using Rust macros to significantly reduce boilerplate code. For
+  beginners, it is recommended to start with the Anchor framework.
 
-- [Native Rust](/docs/core/programs/rust): This approach involves writing Solana
-  programs in Rust without leveraging any frameworks. It offers more flexibility
-  but comes with increased complexity.
+- [Native Rust](/developers/guides/getstarted/intro-to-native-rust): This
+  approach involves writing Solana programs in Rust without leveraging any
+  frameworks. It offers more flexibility but comes with increased complexity.
 
 ## Updating Solana Programs
 

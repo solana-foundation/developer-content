@@ -773,9 +773,9 @@ transactions with higher economic value. Valid Transactions on Solana may be
 delayed or dropped if Prioritization Fees are not implemented properly.
 
 [Prioritization Fees](/docs/terminology#prioritization-fee) are additional fees
-that can be added on top of the
-[base Transaction Fee](/docs/intro/transaction_fees) to ensure transaction
-inclusion within blocks and in these situations and help ensure deliverability.
+that can be added on top of the [base Transaction Fee](/docs/core/fees) to
+ensure transaction inclusion within blocks and in these situations and help
+ensure deliverability.
 
 These priority fees are added to transaction by adding a special Compute Budget
 instruction that sets the desired priority fee to be paid.

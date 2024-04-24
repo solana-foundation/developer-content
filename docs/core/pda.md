@@ -1,7 +1,7 @@
 ---
 title: Program Derived Address (PDA)
 sidebarLabel: Program Derived Address
-sidebarSortOrder: 4
+sidebarSortOrder: 5
 ---
 
 Program Derived Addresses (PDAs) provide developers on Solana with two main use

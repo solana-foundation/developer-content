@@ -1,9 +1,19 @@
 ---
-title: Anchor Framework
-sidebarLabel: Anchor Framework
+date: Apr 24, 2024
+difficulty: beginner
+title: "Getting Started with the Anchor Framework"
+description:
+  "This guide provides a basic overview of the Anchor framework. Anchor is a
+  framework for Solana's Sealevel runtime providing several convenient developer
+  tools for writing smart contracts."
+tags:
+  - rust
+  - anchor
+keywords:
+  - tutorial
 ---
 
-[Anchor](https://www.anchor-lang.com/) uses
+The [Anchor framework](https://www.anchor-lang.com/) uses
 [Rust macros](https://doc.rust-lang.org/book/ch19-06-macros.html) to reduce
 boilerplate code and simplify the implementation of common security checks
 required for writing Solana programs.
@@ -532,8 +542,8 @@ anchor.setProvider(provider);
 const program = anchor.workspace.HelloAnchor as Program<HelloAnchor>;
 ```
 
-When integrating with a frontend using
-the [wallet adapter](https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
+When integrating with a frontend using the
+[wallet adapter](https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
 you'll need to manually set up the `AnchorProvider` and `Program`.
 
 ```ts {8-9, 12}

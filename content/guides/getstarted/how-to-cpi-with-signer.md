@@ -1,11 +1,25 @@
 ---
-title: "How to use Cross Program Invocation with a Signer"
-sidebarSortOrder: 2
+date: Apr 24, 2024
+difficulty: beginner
+title:
+  "How to implement Cross Program Invocations with a PDA Signer in a Solana
+  program"
+description:
+  "Learn to implement Cross Program Invocations (CPI) with a PDA Signer in
+  Solana programs using the Anchor framework"
+tags:
+  - rust
+  - anchor
+  - cpi
+  - pda
+keywords:
+  - tutorial
 ---
 
-This example demonstrates how to transfer SOL using a
-[Cross-Program Invocation (CPI)](/docs/core/cpi) where the sender is a PDA that
-the program must sign for.
+This guide uses the
+[Anchor framework](/developers/guides/getstarted/intro-to-anchor) to demonstrate
+how to transfer SOL using a [Cross-Program Invocation (CPI)](/docs/core/cpi)
+where the sender is a PDA that the program must sign for.
 
 A typical use case for this scenario is a program that manages
 [token accounts](/docs/core/tokens#token-account) on behalf of users. For

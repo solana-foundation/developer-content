@@ -145,7 +145,7 @@ Transactions fees are calculated based on two main parts:
 The more work a transaction requires, the more compute units it will use, and
 the more it will cost.
 
-You can read more about transaction fees [here](/docs/intro/transaction_fees).
+You can read more about transaction fees [here](/docs/core/fees).
 
 ## Accounts
 

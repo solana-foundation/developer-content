@@ -1,6 +1,6 @@
 ---
 title: "Tokens on Solana"
-sidebarSortOrder: 6
+sidebarSortOrder: 7
 ---
 
 Tokens are digital assets that represent ownership over diverse categories of

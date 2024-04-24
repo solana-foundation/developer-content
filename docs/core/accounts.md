@@ -29,6 +29,8 @@ where each entry in the database is called an "account".
 
 - Native programs are built-in programs included with the Solana runtime.
 
+- Sysvar accounts are special accounts that store network cluster state.
+
 ## Account
 
 Each account is identifiable by its unique address, represented as 32 bytes in
@@ -117,6 +119,13 @@ The
 is the program designated as the "owner" of all other programs on the network,
 excluding Native Programs. It is responsible for deploying, upgrading, and
 executing custom programs.
+
+## Sysvar Accounts
+
+Sysvar accounts are special accounts located at predefined addresses that
+provide access to cluster state data. These accounts are dynamically updated
+with data about the network cluster. You can find the full list of Sysvar
+Accounts [here](https://docs.solanalabs.com/runtime/sysvars).
 
 ## Custom Programs
 

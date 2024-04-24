@@ -273,7 +273,7 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](/docs/core/transactions#transaction)
+[message formatting inside of transactions](/docs/core/transactions#message-header)
 here.
 
 ## Nakamoto coefficient

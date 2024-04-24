@@ -60,9 +60,8 @@ manner.
 
 Once the entire program has been sent to the blockchain, a final transaction is
 sent to write all of the buffered byte-code to the program's data account. This
-either mark the new program as
-[`executable`](/docs/terminology#onchain-program), or complete the process to
-upgrade an existing program (if it already existed).
+either mark the new program as `executable`, or complete the process to upgrade
+an existing program (if it already existed).
 
 ## Support languages
 

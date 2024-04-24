@@ -1,12 +1,24 @@
 ---
-title: "How to use Cross Program Invocation"
-sidebarSortOrder: 1
+date: Apr 24, 2024
+difficulty: beginner
+title: "How to implement Cross Program Invocations in a Solana program"
+description:
+  "Learn to implement Cross Program Invocations (CPI) in Solana programs using
+  the Anchor framework"
+tags:
+  - rust
+  - anchor
+  - cpi
+keywords:
+  - tutorial
 ---
 
-This example demonstrates how to transfer SOL using a
-[Cross Program Invocation (CPI)](/docs/core/cpi). Included below are three
-different, but functionally equivalent implementations that you may come across
-when reading or writing Solana programs. Here is a final reference program on
+This guide uses the
+[Anchor framework](/developers/guides/getstarted/intro-to-anchor) to demonstrate
+how to transfer SOL using a [Cross Program Invocation (CPI)](/docs/core/cpi).
+Included below are three different, but functionally equivalent implementations
+that you may come across when reading or writing Solana programs. Here is a
+final reference program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi).
 
 ## Starter Code
