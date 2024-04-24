@@ -27,19 +27,22 @@ specific types:
 
 ## Transaction fees
 
-The small fees paid to process [instructions](/docs/terminology.md#instruction)
-on the Solana blockchain are known as "_transaction fees_".
+The small fee paid to process logic (instruction) within an on-chain program on
+the Solana blockchain is known as a "_transaction fee_".
 
-As each transaction (which contains one or more instructions) is sent through
-the network, it gets processed by the current leader validation-client. Once
+As each [transaction](/docs/core/transactions.md#transaction) (which contains
+one or more [instructions](/docs/core/transactions.md#instruction)) is sent
+through the network, it gets processed by the current validator leader. Once
 confirmed as a global state transaction, this _transaction fee_ is paid to the
-network to help support the [economic design](#basic-economic-design) of the
-Solana blockchain.
+network to help support the economic design of the Solana blockchain.
 
-> Transaction fees are different from [account rent](/docs/terminology.md#rent)!
+> Transaction fees are different from account data storage fee of [rent](#rent).
 > While transaction fees are paid to process instructions on the Solana network,
-> rent is paid to store data on the blockchain. You can learn more about rent
-> here: [What is rent?](/docs/core/rent.md)
+> rent is paid to store data on the blockchain.
+
+Currently, the base Solana transaction fee is set at a static value of
+[5k lamports per signature](#). On top of this base fee, any additional
+[prioritization fees](#prioritization-fee) can be added.
 
 ### Why pay transaction fees?
 
@@ -52,12 +55,9 @@ Transaction fees offer many benefits in the Solana
 - and provide long-term economic stability to the network through a
   protocol-captured minimum fee amount per transaction
 
-> Network consensus votes are sent as normal system transfers, which means that
-> validators pay transaction fees to participate in consensus.
-
 ### Basic economic design
 
-Many blockchain networks \(e.g. Bitcoin and Ethereum\), rely on inflationary
+Many blockchain networks (including Bitcoin and Ethereum), rely on inflationary
 _protocol-based rewards_ to secure the network in the short-term. Over the
 long-term, these networks will increasingly rely on _transaction fees_ to
 sustain security.
@@ -78,19 +78,23 @@ transaction and is writable. Writable signer accounts are serialized first in
 the list of transaction accounts and the first of these accounts is always used
 as the "fee payer".
 
-Before any transaction instructions are processed, the fee payer account balance
-will be deducted to pay for transaction fees. If the fee payer balance is not
-sufficient to cover transaction fees, the transaction will be dropped by the
-cluster. If the balance was sufficient, the fees will be deducted whether the
-transaction is processed successfully or not. In fact, if any of the transaction
-instructions return an error or violate runtime restrictions, all account
-changes _except_ the transaction fee deduction will be rolled back.
+Before any transaction instructions are processed, the fee payer account
+[balance will be deducted](#) to pay for transaction fees. If the fee payer
+balance is not sufficient to cover transaction fees, the transaction will be
+dropped by the cluster. If the balance was sufficient, the fees will be deducted
+whether the transaction is processed successfully or not.
+
+If any of the transaction instructions [return an error](#) or violate runtime
+restrictions, all account changes **_except_** the transaction fee deduction
+will be rolled back. This is because the validator network has already expended
+computational resources to collect transactions and begin the initial
+processing.
 
 ### Fee Distribution
 
-Transaction fees are partially burned and the remaining fees are collected by
-the validator that produced the block that the corresponding transactions were
-included in.
+Transaction fees are [partially burned](#) and the remaining fees are
+[collected by the validator](#) that produced the block that the corresponding
+transactions were included in.
 
 The transaction fee burn rate was initialized as 50% when inflation rewards were
 enabled at the beginning of 2021 and has not changed so far. These fees
@@ -145,66 +149,105 @@ and return an error. This results in a failed transaction.
 
 ## Rent
 
-The on-chain data storage fee for every Solana Account to keep data on the
-blockchain is called "_rent_". This _time and space_ based fee is required to
-keep an account, and therefore its data, available in the blockchain's global
-state.
+The fee deposited into every [Solana Account](/docs/core/accounts.md) to keep
+its associated data available on-chain is called "_rent_". This fee is withheld
+in the normal lamport balance on every account and reclaimable when the account
+is closed.
 
-All Solana Accounts (and therefore Programs) are required to maintain a high
-enough LAMPORT balance to become [rent exempt](#rent-exempt) and remain on the
-Solana blockchain.
-
-When an Account no longer has enough LAMPORTS to pay its rent, it will be
-removed from the network in a process known as
-[Garbage Collection](#garbage-collection).
-
-> Rent is different from [transactions fees](/docs/core/transactions/fees.md).
-> Rent is paid (or held in an Account) to keep data stored on the Solana
-> blockchain. Whereas transaction fees are paid to process
+> Rent is different from [transactions fees](#transaction-fees). Rent is paid
+> (withheld in an Account) to keep data stored on the Solana blockchain. Whereas
+> transaction fees are paid to process
 > [instructions](/docs/core/transactions.md#instructions) on the network.
+
+All accounts are required to maintain a high enough lamport balance (relative to
+its allocated space) to become [rent exempt](#rent-exempt) and remain on the
+Solana blockchain. Any transaction that attempts to reduce an account's balance
+below its respective minimum balance for rent exemption will fail (unless the
+balance is reduced to exactly zero).
+
+When an account's owner no longer desires to keep this data on-chain and
+available in the global state, the owner can close the account and reclaim the
+rent deposit.
+
+This is accomplished by withdrawing (transferring) the account's entire lamport
+balance to another account (i.e. your wallet). By reducing the account's balance
+to exactly `0`, the runtime will remove the account and its associated data from
+the network in the process of _"[garbage collection](#garbage-collection)"_.
 
 ### Rent rate
 
 The Solana rent rate is set on a network wide basis, primarily based on the set
-LAMPORTS _per_ byte _per_ year.
-
+[lamports _per_ byte _per_ year](https://github.com/anza-xyz/agave/blob/c164d6fa0fe03b4d272538e7d0901fec8f6832a9/sdk/program/src/rent.rs#L34).
 Currently, the rent rate is a static amount and stored in the
 [Rent sysvar](https://docs.solanalabs.com/runtime/sysvars#rent).
 
+This rent rate is used to calculate the exact amount of rent required to be
+withheld inside an account for the space allocated to the account (i.e. the
+amount of data that can be stored in the account). The more space an account
+allocates, the higher the withheld rent deposit will be.
+
 ### Rent exempt
 
-Accounts that maintain a minimum LAMPORT balance greater than 2 years worth of
-rent payments are considered "_rent exempt_" and will not incur a rent
-collection.
+Accounts must maintain a lamport balance greater the minimum required to store
+its respective data on-chain (i.e. account size). This is called "_rent exempt_"
+and that balance is called the "_minimum balance for rent exemption_".
 
-> At the time of writing this, new Accounts and Programs **are required** to be
-> initialized with enough LAMPORTS to become rent-exempt. The RPC endpoints have
-> the ability to calculate this
-> [estimated rent exempt balance](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx)
-> and is recommended to be used.
+> New accounts (and programs) on Solana are **REQUIRED** to be initialized with
+> enough lamports to become _rent exempt_. This was not always the case.
+> Previously, the runtime would periodically and automatically collect a fee
+> from each account below its _minimum balance for rent exemption_. Eventually
+> reducing those accounts to a balance of zero and garbage collecting them from
+> the global state (unless manually topped up).
 
-Every time an account's balance is reduced, a check is performed to see if the
-account is still rent exempt. Transactions that would cause an account's balance
-to drop below the rent exempt threshold will fail.
+In the process of creating a new account, you must ensure you deposit enough
+lamports to be above this minimum balance. Anything lower that this minimum
+threshold will result in a failed transaction.
+
+Every time an account's balance is reduced, the runtime performs a check to see
+if the account will still be above this minimum balance for rent exemption.
+Unless they reduce the final balance to exactly `0` (closing the account),
+transactions that would cause an account's balance to drop below the rent exempt
+threshold will fail.
+
+Since the specific minimum balance for an account to become rent exempt is
+dependant on the blockchain's current [rent rate](#rent-rate) and the desired
+amount of storage space an account wants to allocate (account size), it is
+recommended to use the
+[`getMinimumBalanceForRentExemption`](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx)
+RPC endpoint to calculate the specific balance for a given account size.
+
+The required rent deposit amount can also be estimated via the
+[`solana rent` CLI subcommand](https://docs.solanalabs.com/cli/usage#solana-rent):
+
+```shell
+solana rent 15000
+
+# output
+Rent per byte-year: 0.00000348 SOL
+Rent per epoch: 0.000288276 SOL
+Rent-exempt minimum: 0.10529088 SOL
+```
 
 ### Garbage collection
 
-Accounts that do not maintain their rent exempt status, or have a balance high
-enough to pay rent, are removed from the network in a process known as _garbage
-collection_. This process is done to help reduce the network wide storage of no
-longer used/maintained data.
+Accounts that do not maintain a lamport balance greater than zero are removed
+from the network in a process known as _garbage collection_. This process is
+done to help reduce the network wide storage of no longer used/maintained data.
 
-You can learn more about
-[garbage collection here](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage#garbage-collection)
-in this implemented proposal.
+After a transaction successfully reduces an accounts balance to exactly `0`,
+garbage collection happens automatically by the runtime. Any transaction that
+attempts to reduce an accounts balance lower that its minimum balance for rent
+exemption (that is not exactly zero) will fail.
 
-### Learn more about Rent
+> Even after an account has been removed from the network (via garbage
+> collection), it may still have transactions associated with it's address
+> (either past history or in the future). Even though a Solana block explorer
+> may display an "account not found" type of message, you may still be able to
+> view transaction history associated with that account.
 
-You can learn more about Solana Rent with the following articles and
-documentation:
-
-- [Implemented Proposals - Rent](https://docs.solanalabs.com/implemented-proposals/rent)
-- [Implemented Proposals - Account Storage](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage)
+You can read the validator
+[implemented proposal](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage#garbage-collection)
+for garbage collection to learn more.
 
 ## Compute Budget
 
