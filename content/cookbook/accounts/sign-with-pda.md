@@ -7,7 +7,7 @@ description:
   Solana."
 ---
 
-Program derived addresses(PDA) can be used to have accounts owned by programs
+Program derived addresses (PDA) can be used to have accounts owned by programs
 that can sign. This is useful if you want a program to own a token account and
 you want the program to transfer tokens from one account to another.
 

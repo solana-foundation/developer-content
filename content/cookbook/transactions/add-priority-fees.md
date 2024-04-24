@@ -26,7 +26,7 @@ compute budget. The value provided will replace the default value. Transactions
 should request the minimum amount of CU required for execution to maximize
 throughput, or minimize fees.
 
-```typescript filename="add-priority-fees.ts"
+```typescript filename="add-priority-fees.ts" {25-28, 30-33}
 import { BN } from "@coral-xyz/anchor";
 import {
   Keypair,
@@ -51,10 +51,12 @@ import {
 
   await connection.confirmTransaction(airdropSignature);
 
+  // request a specific compute unit budget
   const modifyComputeUnits = ComputeBudgetProgram.setComputeUnitLimit({
     units: 1000000,
   });
 
+  // set the desired priority fee
   const addPriorityFee = ComputeBudgetProgram.setComputeUnitPrice({
     microLamports: 1,
   });
@@ -75,6 +77,7 @@ import {
     payer,
   ]);
   console.log(signature);
+
   const result = await connection.getParsedTransaction(signature);
   console.log(result);
 })();

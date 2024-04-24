@@ -7,29 +7,27 @@ description:
   accounts at PDAs on Solana."
 ---
 
-Accounts found at Program Derived Addresses(PDAs) can only be created on-chain.
-The accounts have addresses that have an associated off-curve public key. To
-generate a PDA, use `findProgramAddress` with your required seeds. Generating
-with the same seeds will always generate the same PDA.
+Accounts found at Program Derived Addresses (PDAs) can only be created on-chain.
+The accounts have addresses that have an associated off-curve public key, but no
+secret key.
+
+To generate a PDA, use `findProgramAddressSync` with your required seeds.
+Generating with the same seeds will always generate the same PDA.
 
 ## Generating a PDA
 
 ```typescript filename="generate-pda.ts"
 import { PublicKey } from "@solana/web3.js";
 
-(async () => {
-  const programId = new PublicKey(
-    "G1DCNUQTSGHehwdLCAmRyAG8hf51eCHrLNUqkgGKYASj",
-  );
+const programId = new PublicKey("G1DCNUQTSGHehwdLCAmRyAG8hf51eCHrLNUqkgGKYASj");
 
-  let [pda, bump] = await PublicKey.findProgramAddress(
-    [Buffer.from("test")],
-    programId,
-  );
-  console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
-  // you will find the result is different from `createProgramAddress`.
-  // It is expected because the real seed we used to calculate is ["test" + bump]
-})();
+let [pda, bump] = PublicKey.findProgramAddressSync(
+  [Buffer.from("test")],
+  programId,
+);
+console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
+// you will find the result is different from `createProgramAddress`.
+// It is expected because the real seed we used to calculate is ["test" + bump]
 ```
 
 ## Create an Account at a PDA

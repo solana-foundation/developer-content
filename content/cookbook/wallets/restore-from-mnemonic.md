@@ -13,13 +13,16 @@ convert the mnemonic to Keypairs for local testing.
 import { Keypair } from "@solana/web3.js";
 import * as bip39 from "bip39";
 
-(async () => {
-  const mnemonic =
-    "pill tomorrow foster begin walnut borrow virtual kick shift mutual shoe scatter";
-  const seed = bip39.mnemonicToSeedSync(mnemonic, ""); // (mnemonic, password)
-  const keypair = Keypair.fromSeed(seed.slice(0, 32));
-  console.log(`${keypair.publicKey.toBase58()}`); // 5ZWj7a1f8tWkjBESHKgrLmXshuXxqeY9SYcfbshpAqPG
-})();
+const mnemonic =
+  "pill tomorrow foster begin walnut borrow virtual kick shift mutual shoe scatter";
+
+// arguments: (mnemonic, password)
+const seed = bip39.mnemonicToSeedSync(mnemonic, "");
+const keypair = Keypair.fromSeed(seed.slice(0, 32));
+
+console.log(`${keypair.publicKey.toBase58()}`);
+
+// output: 5ZWj7a1f8tWkjBESHKgrLmXshuXxqeY9SYcfbshpAqPG
 ```
 
 ## Restoring BIP44 formant mnemonics
@@ -29,15 +32,16 @@ import { Keypair } from "@solana/web3.js";
 import { HDKey } from "micro-ed25519-hdkey";
 import * as bip39 from "bip39";
 
-(async () => {
-  const mnemonic =
-    "neither lonely flavor argue grass remind eye tag avocado spot unusual intact";
-  const seed = bip39.mnemonicToSeedSync(mnemonic, ""); // (mnemonic, password)
-  const hd = HDKey.fromMasterSeed(seed.toString("hex"));
-  for (let i = 0; i < 10; i++) {
-    const path = `m/44'/501'/${i}'/0'`;
-    const keypair = Keypair.fromSeed(hd.derive(path).privateKey);
-    console.log(`${path} => ${keypair.publicKey.toBase58()}`);
-  }
-})();
+const mnemonic =
+  "neither lonely flavor argue grass remind eye tag avocado spot unusual intact";
+
+// arguments: (mnemonic, password)
+const seed = bip39.mnemonicToSeedSync(mnemonic, "");
+const hd = HDKey.fromMasterSeed(seed.toString("hex"));
+
+for (let i = 0; i < 10; i++) {
+  const path = `m/44'/501'/${i}'/0'`;
+  const keypair = Keypair.fromSeed(hd.derive(path).privateKey);
+  console.log(`${path} => ${keypair.publicKey.toBase58()}`);
+}
 ```

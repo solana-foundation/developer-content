@@ -50,5 +50,4 @@ import {
 })();
 ```
 
-[1]:
-  https://docs.solana.com/developing/runtime-facilities/programs#system-program
+[1]: https://docs.solanalabs.com/runtime/programs#system-program
