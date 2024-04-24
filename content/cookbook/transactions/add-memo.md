@@ -48,7 +48,7 @@ import {
     }),
   );
 
-  await transferTransaction.add(
+  transferTransaction.add(
     new TransactionInstruction({
       keys: [
         { pubkey: fromKeypair.publicKey, isSigner: true, isWritable: true },
