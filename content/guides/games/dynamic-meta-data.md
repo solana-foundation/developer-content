@@ -78,8 +78,8 @@ let space = ExtensionType::try_calculate_account_len::<Mint>(
 
 // This is the space required for the metadata account.
 // We put the meta data into the mint account at the end so we
-// don't need to create and additional account. Then the metadata pointer points back to the mint account. 
-// Like this only one account is needed. 
+// don't need to create and additional account. Then the metadata pointer points back to the mint account.
+// Like this only one account is needed.
 let meta_data_space = 250;
 
 let lamports_required = (Rent::get()?).minimum_balance(space + meta_data_space);

@@ -1,38 +1,48 @@
 ---
 title: Energy System
-description: Build Energy Systems for Casual Games on Solana with these Easy Steps
+description:
+  Build Energy Systems for Casual Games on Solana with these Easy Steps
 ---
 
-Casual games commonly use energy systems, meaning that actions in the game cost energy which refills over time. In this guide we will walk through how to build one on Solana.
-It is recommended to start with the [Hello World Example](/developers/guides/games/hello-world.md) if you do not have any prior Solana knowledge.
+Casual games commonly use energy systems, meaning that actions in the game cost
+energy which refills over time. In this guide we will walk through how to build
+one on Solana. It is recommended to start with the
+[Hello World Example](/developers/guides/games/hello-world.md) if you do not
+have any prior Solana knowledge.
 
-Here is a complete example source code based on the Solana dapp scaffold with a react client:
+Here is a complete example source code based on the Solana dapp scaffold with a
+react client:
 
 [Source](https://github.com/solana-developers/solana_game_preset)
 
-And you can easily set up a new game with an energy system in place using the command 
+And you can easily set up a new game with an energy system in place using the
+command
 
 ```bash
 npx create-solana-game your-game-name
 ```
 
-Here is a tutorial on how to setup the games preset: 
+Here is a tutorial on how to setup the games preset:
 [Video](https://youtu.be/fnhivg_pemI?si=6xIubFFYPOGiEjKY)
 
 And a video walkthrough of this example:
 [Video Walkthrough](https://youtu.be/YYQtRCXJBgs?si=fIZRFkIYJ9wYjEcI)
 
-
 ## Anchor program
 
-In this tutorial, we will guide you through the process of creating a program that gradually replenishes the player's energy reserves over time. This, in turn, will enable them to execute various actions within the game.
-In our example, a lumber jack will chops trees with every tree rewarding one wood and cost one energy.
+In this tutorial, we will guide you through the process of creating a program
+that gradually replenishes the player's energy reserves over time. This, in
+turn, will enable them to execute various actions within the game. In our
+example, a lumber jack will chops trees with every tree rewarding one wood and
+cost one energy.
 
 ### Creating the player account
 
-First the player needs to create an account which saves the state of our player. Notice the last_login time saves the current unix time stamp of the player he interacts with the program.
-With this state, we will be able to calculate how much energy the player has at a certain point in time.
-We also have a value for how much wood the lumber jack chucks in the game.
+First the player needs to create an account which saves the state of our player.
+Notice the last_login time saves the current unix time stamp of the player he
+interacts with the program. With this state, we will be able to calculate how
+much energy the player has at a certain point in time. We also have a value for
+how much wood the lumber jack chucks in the game.
 
 ```rust
 
@@ -72,7 +82,8 @@ pub struct PlayerData {
 
 ### Choping trees
 
-Then whenever the player calls the `chop_tree` instruction we will check if the player has enough energy and reward him with one wood.
+Then whenever the player calls the `chop_tree` instruction we will check if the
+player has enough energy and reward him with one wood.
 
 ```rust
     #[error_code]
@@ -98,9 +109,10 @@ Then whenever the player calls the `chop_tree` instruction we will check if the 
 
 ### Calculating the energy
 
-The interesting part happens in the `update_energy` function. We check how much time has passed and calculate the energy that the player will have at the given time.
-We will do the same in the client. We lazily update the energy instead of polling it all the time.
-The is a common technique in game development.
+The interesting part happens in the `update_energy` function. We check how much
+time has passed and calculate the energy that the player will have at the given
+time. We will do the same in the client. We lazily update the energy instead of
+polling it all the time. The is a common technique in game development.
 
 ```rust
 
@@ -131,9 +143,9 @@ pub fn update_energy(ctx: &mut ChopTree) -> Result<()> {
 
 ## Js client
 
-Here is a complete example based on the Solana dapp scaffold with a react client:
+Here is a complete example based on the Solana dapp scaffold with a react
+client:
 [Source](https://github.com/solana-developers/solana-game-starter-kits/tree/main/lumberjack)
-
 
 ### Create connection
 
@@ -141,21 +153,27 @@ In the Anchor.ts file we create a connection:
 
 ```js
 export const connection = new Connection(
-    "https://api.devnet.solana.com",
-    "confirmed"
+  "https://api.devnet.solana.com",
+  "confirmed",
 );
 ```
 
-Notice that the confirmation parameter is set to 'confirmed'. This means that we wait until the transactions are confirmed instead of finalized. This means that we wait until the super majority of the network said that the transaction is valid. This takes around 400ms and there was never a confirmed transaction which did not get finalized. So for games this is the perfect confirmation flag.
+Notice that the confirmation parameter is set to 'confirmed'. This means that we
+wait until the transactions are confirmed instead of finalized. This means that
+we wait until the super majority of the network said that the transaction is
+valid. This takes around 400ms and there was never a confirmed transaction which
+did not get finalized. So for games this is the perfect confirmation flag.
 
 ### Initialize player data
 
-First thing we do is find the program address for the player account using the seed string `player`and the player's public key. Then we call `initPlayer` to create the account.
+First thing we do is find the program address for the player account using the
+seed string `player`and the player's public key. Then we call `initPlayer` to
+create the account.
 
 ```js
 const [pda] = PublicKey.findProgramAddressSync(
   [Buffer.from("player", "utf8"), publicKey.toBuffer()],
-  new PublicKey(LUMBERJACK_PROGRAM_ID)
+  new PublicKey(LUMBERJACK_PROGRAM_ID),
 );
 
 const transaction = program.methods
@@ -173,40 +191,46 @@ const txSig = await sendTransaction(tx, connection, {
 });
 
 await connection.confirmTransaction(txSig, "confirmed");
-
 ```
 
 ### Subscribe to account updates
 
-Here you can see how to get account data in the js client and how to subscribe to an account. `connection.onAccountChange` creates a socket connection to the RPC node which will push any changes that happen to the account to the client.
-This is faster than fetching new account data after every change.
-We can then use the `program.coder` to decode the account data into the TS types and directly use it in the game.
+Here you can see how to get account data in the js client and how to subscribe
+to an account. `connection.onAccountChange` creates a socket connection to the
+RPC node which will push any changes that happen to the account to the client.
+This is faster than fetching new account data after every change. We can then
+use the `program.coder` to decode the account data into the TS types and
+directly use it in the game.
 
 ```js
 useEffect(() => {
-    if (!publicKey) {return;}
-    const [pda] = PublicKey.findProgramAddressSync(
-        [Buffer.from("player", "utf8"), publicKey.toBuffer()],
-        new PublicKey(LUMBERJACK_PROGRAM_ID)
-      );
-    try {
-      program.account.playerData.fetch(pda).then((data) => {
-        setGameState(data);
-      });
-    } catch (e) {
-      window.alert("No player data found, please init!");
-    }
-
-    connection.onAccountChange(pda, (account) => {
-        setGameState(program.coder.accounts.decode("playerData", account.data));
+  if (!publicKey) {
+    return;
+  }
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("player", "utf8"), publicKey.toBuffer()],
+    new PublicKey(LUMBERJACK_PROGRAM_ID),
+  );
+  try {
+    program.account.playerData.fetch(pda).then(data => {
+      setGameState(data);
     });
+  } catch (e) {
+    window.alert("No player data found, please init!");
+  }
 
-  }, [publicKey]);
+  connection.onAccountChange(pda, account => {
+    setGameState(program.coder.accounts.decode("playerData", account.data));
+  });
+}, [publicKey]);
 ```
 
 ### Calculate energy and show count down
 
-In the javascript client we can then perform the same logic as in the program to precalculate how much energy the player would have at this point in time and show a countdown timer for the player so that he knows when the next energy will be available:
+In the javascript client we can then perform the same logic as in the program to
+precalculate how much energy the player would have at this point in time and
+show a countdown timer for the player so that he knows when the next energy will
+be available:
 
 ```js
 useEffect(() => {
@@ -240,6 +264,10 @@ useEffect(() => {
 
 ```
 
-With this you can now build any energy based game and even if someone builds a bot for the game the most he can do is play optimally, which maybe even easier to achieve when playing normally depending on the logic of your game.
+With this you can now build any energy based game and even if someone builds a
+bot for the game the most he can do is play optimally, which maybe even easier
+to achieve when playing normally depending on the logic of your game.
 
-This game becomes even better when combined with the [Token example](/developers/guides/games/interact-with-tokens.md) and you actually drop some spl token to the players.
+This game becomes even better when combined with the
+[Token example](/developers/guides/games/interact-with-tokens.md) and you
+actually drop some spl token to the players.

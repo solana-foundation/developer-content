@@ -3,9 +3,15 @@ title: Saving game state
 description: How to save the state of a game in a Solana program
 ---
 
-You can use Solana block chain to save the state of your game in program accounts. These are accounts that are owned by your program and they are derived from the program Id and some seeds. These can be thought of as data base entries. 
-We can for example create a PlayerData account and use the players public key as a seed. This means every player can have one player account per wallet. These accounts can be up to 10Kb by default. If you need a bigger account look into [Manage big accounts](https://github.com/solana-developers/anchor-zero-copy-example)
-This can be done in a program like this: 
+You can use Solana block chain to save the state of your game in program
+accounts. These are accounts that are owned by your program and they are derived
+from the program Id and some seeds. These can be thought of as data base
+entries. We can for example create a PlayerData account and use the players
+public key as a seed. This means every player can have one player account per
+wallet. These accounts can be up to 10Kb by default. If you need a bigger
+account look into
+[Manage big accounts](https://github.com/solana-developers/anchor-zero-copy-example)
+This can be done in a program like this:
 
 ```rust
 pub fn init_player(ctx: Context<InitPlayer>) -> Result<()> {
@@ -17,8 +23,8 @@ pub fn init_player(ctx: Context<InitPlayer>) -> Result<()> {
 
 #[derive(Accounts)]
 pub struct InitPlayer <'info> {
-    #[account( 
-        init, 
+    #[account(
+        init,
         payer = signer,
         space = 1000,
         seeds = [b"player".as_ref(), signer.key().as_ref()],
@@ -43,7 +49,8 @@ pub struct PlayerData {
 
 ```
 
-You can then interact with this player data via transaction instructions. Lets say we want the player to get experience for killing a monster for example: 
+You can then interact with this player data via transaction instructions. Lets
+say we want the player to get experience for killing a monster for example:
 
 ```rust
     pub fn kill_enemy(mut ctx: Context<KillEnemy>, enemyId: u8) -> Result<()> {
@@ -61,22 +68,22 @@ You can then interact with this player data via transaction instructions. Lets s
         ctx.accounts.player.energy = ctx.accounts.player.energy - 1;
 
         ... handle level up
-        
+
         msg!("You killed enemy and got 1 xp. You have {} xp and {} energy left.", ctx.accounts.player.xp, ctx.accounts.player.energy);
         Ok(())
     }
 ```
 
-This is how this would look like from a js client: 
+This is how this would look like from a js client:
 
-```js 
+```js
 const wallet = useAnchorWallet();
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 const program = new Program(IDL, PROGRAM_ID, provider);
 
 const [pda] = PublicKey.findProgramAddressSync(
-  [Buffer.from("player", "utf8"), 
+  [Buffer.from("player", "utf8"),
   publicKey.toBuffer()],
   new PublicKey(PROGRAM_ID)
 );
@@ -96,8 +103,5 @@ try {
   await connection.confirmTransaction(txSig, "confirmed");
 ```
 
-How to actually build this energy system you can learn here: 
+How to actually build this energy system you can learn here:
 [Building an Energy system](/developers/guides/games/energy-system.md)
-
-
-

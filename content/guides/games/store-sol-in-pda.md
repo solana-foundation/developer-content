@@ -1,34 +1,56 @@
 ---
 title: Storing SOL in a PDA
-description: Using PDAs, you can reward SOL to players playing your game. Learn how to reward SOL from a PDA when players find chests in this game.
+description:
+  Using PDAs, you can reward SOL to players playing your game. Learn how to
+  reward SOL from a PDA when players find chests in this game.
 ---
 
-Here you will learn how to store SOL in a PDA and use it to reward players in a game. We will build a simple game where players can move right and collect a reward when they reach a specific position. The reward will be stored in a PDA, and players can claim it by interacting with the game.
+Here you will learn how to store SOL in a PDA and use it to reward players in a
+game. We will build a simple game where players can move right and collect a
+reward when they reach a specific position. The reward will be stored in a PDA,
+and players can claim it by interacting with the game.
 
 Video Walkthrough:
+
 <div class="video-block">
 <iframe width="320" height="200" src="https://www.youtube.com/embed/gILXyWvXu7M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
 ## Tiny Adventure Anchor Program - Part Two
 
-In this tutorial, we will rebuild the Tiny Adventure game and introduce a chest with a reward of 0.1 SOL. The chest will "spawn" at a specific position, and when the player reaches that position, they will receive the reward. The goal of this program is to demonstrate how to store SOL within a program account and distribute it to players.
+In this tutorial, we will rebuild the Tiny Adventure game and introduce a chest
+with a reward of 0.1 SOL. The chest will "spawn" at a specific position, and
+when the player reaches that position, they will receive the reward. The goal of
+this program is to demonstrate how to store SOL within a program account and
+distribute it to players.
 
 The Tiny Adventure Two Program consists of 3 instructions:
 
-- `initialize_level_one` - This instruction initializes two on-chain accounts: one for recording the player's position and another for holding the SOL reward that represents the “reward chest”.
-- `reset_level_and_spawn_chest` - This instruction resets the player's position to zero and "respawns" a reward chest by transferring SOL from the user invoking the instruction to the reward chest account.
-- `move_right` - This instruction allows the player to move their position to the right and collect the SOL in the reward chest once they reach a specific position.
+- `initialize_level_one` - This instruction initializes two on-chain accounts:
+  one for recording the player's position and another for holding the SOL reward
+  that represents the “reward chest”.
+- `reset_level_and_spawn_chest` - This instruction resets the player's position
+  to zero and "respawns" a reward chest by transferring SOL from the user
+  invoking the instruction to the reward chest account.
+- `move_right` - This instruction allows the player to move their position to
+  the right and collect the SOL in the reward chest once they reach a specific
+  position.
 
-In the following sections, we will guide you through building the program step by step. You can find the complete source code, which can be deployed directly from your browser using the Solana Playground, at this link:  [Open In Playground](https://beta.solpg.io/tutorials/tiny-adventure-two).
+In the following sections, we will guide you through building the program step
+by step. You can find the complete source code, which can be deployed directly
+from your browser using the Solana Playground, at this link:
+[Open In Playground](https://beta.solpg.io/tutorials/tiny-adventure-two).
 
 ### Getting Started
 
 To start building the Tiny Adventure game, follow these steps:
 
-Visit the [Solana Playground](https://beta.solpg.io/) and create a new Anchor project. If you're new to Solana Playground, you'll also need to create a Playground Wallet.
+Visit the [Solana Playground](https://beta.solpg.io/) and create a new Anchor
+project. If you're new to Solana Playground, you'll also need to create a
+Playground Wallet.
 
-After creating a new project, replace the default starter code with the code below:
+After creating a new project, replace the default starter code with the code
+below:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -58,13 +80,21 @@ fn print_player(player_position: u8) {
 }
 ```
 
-In this game, the player starts at position 0 and can only move right. To visualize the player's progress throughout the game, we'll use message logs to represent their journey towards the reward chest!
+In this game, the player starts at position 0 and can only move right. To
+visualize the player's progress throughout the game, we'll use message logs to
+represent their journey towards the reward chest!
 
 ### Defining the Chest Vault Account
 
-Add the `CHEST_REWARD` constant at the beginning of the program. The `CHEST_REWARD` represents the amount of lamports that will be put into the chest and given out as rewards. Lamports are the smallest fractions of a SOL, with 1 billion lamports being equal to 1 SOL.
+Add the `CHEST_REWARD` constant at the beginning of the program. The
+`CHEST_REWARD` represents the amount of lamports that will be put into the chest
+and given out as rewards. Lamports are the smallest fractions of a SOL, with 1
+billion lamports being equal to 1 SOL.
 
-To store the SOL reward, we will define a new `ChestVaultAccount` struct. This is an empty struct because we will be directly updating the lamports in the account. The account will hold the SOL reward and does not need to store any additional data.
+To store the SOL reward, we will define a new `ChestVaultAccount` struct. This
+is an empty struct because we will be directly updating the lamports in the
+account. The account will hold the SOL reward and does not need to store any
+additional data.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -90,9 +120,11 @@ pub struct ChestVaultAccount {}
 
 ### Defining the Game Data Account
 
-To keep track of the player's position within the game, we need to define a structure for the on-chain account that will store the player's position.
+To keep track of the player's position within the game, we need to define a
+structure for the on-chain account that will store the player's position.
 
-The `GameDataAccount` struct contains a single field, `player_position`, which stores the player's current position as an unsigned 8-bit integer.
+The `GameDataAccount` struct contains a single field, `player_position`, which
+stores the player's current position as an unsigned 8-bit integer.
 
 ```rust
 
@@ -118,16 +150,25 @@ pub struct GameDataAccount {
 }
 ```
 
-With the `GameDataAccount` struct defined, you can now use it to store and update the player's position as they interact with the game. As the player moves right and progresses through the game, their position will be updated within the `GameDataAccount`, allowing you to track their progress towards the chest containing the SOL reward.
+With the `GameDataAccount` struct defined, you can now use it to store and
+update the player's position as they interact with the game. As the player moves
+right and progresses through the game, their position will be updated within the
+`GameDataAccount`, allowing you to track their progress towards the chest
+containing the SOL reward.
 
 ### Initialize Level One Instruction
 
-With the `GameDataAccount` and `ChestVaultAccount` defined, let's implement the `initialize_level_one` instruction. This instruction initializes both the `GameDataAccount` and `ChestVaultAccount`, sets the player's position to 0, and displays the starting message.
+With the `GameDataAccount` and `ChestVaultAccount` defined, let's implement the
+`initialize_level_one` instruction. This instruction initializes both the
+`GameDataAccount` and `ChestVaultAccount`, sets the player's position to 0, and
+displays the starting message.
 
 The `initialize_level_one` instruction requires 4 accounts:
 
-- `new_game_data_account` - the `GameDataAccount` we are initializing to store the player’s position
-- `chest_vault` - the `ChestVaultAccount` we are initializing to store the SOL reward
+- `new_game_data_account` - the `GameDataAccount` we are initializing to store
+  the player’s position
+- `chest_vault` - the `ChestVaultAccount` we are initializing to store the SOL
+  reward
 - `signer` - the player paying for the initialization of the accounts
 - `system_program` - a required account when creating a new account
 
@@ -172,22 +213,35 @@ pub struct InitializeLevelOne<'info> {
 ...
 ```
 
-Both the `GameDataAccount` and `ChestVaultAccount` are created using a Program Derived Address (PDA) as the address of the account, allowing us to deterministically locate the address later. The `init_if_needed` constraint ensures that the accounts are only initialized if they don't already exist. Since the PDAs for both accounts in this instruction use a single fixed seed, our program can only create one of each type of account. In effect, the instruction would only ever need to be invoked one time.
+Both the `GameDataAccount` and `ChestVaultAccount` are created using a Program
+Derived Address (PDA) as the address of the account, allowing us to
+deterministically locate the address later. The `init_if_needed` constraint
+ensures that the accounts are only initialized if they don't already exist.
+Since the PDAs for both accounts in this instruction use a single fixed seed,
+our program can only create one of each type of account. In effect, the
+instruction would only ever need to be invoked one time.
 
-It's worth noting that the current implementation does not have any restrictions on who can modify the `GameDataAccount`, effectively turning the game into a multiplayer experience where everyone can control the player's movement.
+It's worth noting that the current implementation does not have any restrictions
+on who can modify the `GameDataAccount`, effectively turning the game into a
+multiplayer experience where everyone can control the player's movement.
 
-Alternatively, you can use the signer's address as an extra seed in the `initialize` instruction, allowing each player to create their own `GameDataAccount`.
+Alternatively, you can use the signer's address as an extra seed in the
+`initialize` instruction, allowing each player to create their own
+`GameDataAccount`.
 
 ### Reset Level and Spawn Chest Instruction
 
-Next, let's implement the `reset_level_and_spawn_chest` instruction, which resets the player's position to the start and fills up the chest with a reward of 0.1 SOL.
+Next, let's implement the `reset_level_and_spawn_chest` instruction, which
+resets the player's position to the start and fills up the chest with a reward
+of 0.1 SOL.
 
 The `reset_level_and_spawn_chest` instruction requires 4 accounts:
 
 - `new_game_data_account` - the `GameDataAccount` storing the player's position
 - `chest_vault` - the `ChestVaultAccount` storing the SOL reward
 - `signer` - the player providing the SOL reward for the chest
-- `system_program` - the program we'll be invoking to transfer SOL using a cross-program invocation (CPI), more on this shortly
+- `system_program` - the program we'll be invoking to transfer SOL using a
+  cross-program invocation (CPI), more on this shortly
 
 ```rust
 #[program]
@@ -230,21 +284,38 @@ pub struct SpawnChest<'info> {
 ...
 ```
 
-This instruction includes a cross-program invocation (CPI) to transfer SOL from the payer to the `ChestVaultAccount`. A cross-program invocation is when one program invokes an instruction on another program. In this case, we use a CPI to invoke the `Transfer` instruction from the `system_program` to transfer SOL from the payer to the `ChestVaultAccount`.
+This instruction includes a cross-program invocation (CPI) to transfer SOL from
+the payer to the `ChestVaultAccount`. A cross-program invocation is when one
+program invokes an instruction on another program. In this case, we use a CPI to
+invoke the `Transfer` instruction from the `system_program` to transfer SOL from
+the payer to the `ChestVaultAccount`.
 
-Cross-program invocations are a key concept in the Solana programming model, enabling programs to directly interact with instructions from other programs. For a deeper dive into of CPIs, feel free to explore the CPI lessons available in the [Solana Course](https://www.soldev.app/course).
+Cross-program invocations are a key concept in the Solana programming model,
+enabling programs to directly interact with instructions from other programs.
+For a deeper dive into of CPIs, feel free to explore the CPI lessons available
+in the [Solana Course](https://www.soldev.app/course).
 
 ### Move Right Instruction
 
-Finally, let's implement the `move_right` instruction which includes the logic for collecting the chest reward. When a player reaches position 3 and inputs the correct “password”, the reward is transferred from the **`ChestVaultAccount`** to the player's account. If an incorrect password is entered, a custom Anchor Error is returned. If the player is already at position 3, a message will be logged. Otherwise, the position will be incremented by 1 to represent moving to the right.
+Finally, let's implement the `move_right` instruction which includes the logic
+for collecting the chest reward. When a player reaches position 3 and inputs the
+correct “password”, the reward is transferred from the **`ChestVaultAccount`**
+to the player's account. If an incorrect password is entered, a custom Anchor
+Error is returned. If the player is already at position 3, a message will be
+logged. Otherwise, the position will be incremented by 1 to represent moving to
+the right.
 
-The main purpose of this "password" functionality is to demonstrate how to incorporate parameters into an instruction and the implementation of custom Anchor Errors for improved error handling. In this example, the correct password will be "gib".
+The main purpose of this "password" functionality is to demonstrate how to
+incorporate parameters into an instruction and the implementation of custom
+Anchor Errors for improved error handling. In this example, the correct password
+will be "gib".
 
 The `move_right` instruction requires 3 accounts:
 
 - `new_game_data_account` - the `GameDataAccount` storing the player's position
 - `chest_vault` - the `ChestVaultAccount` storing the SOL reward
-- `player_wallet` - the wallet of the player invoking the instruction and the potential recipient of SOL reward
+- `player_wallet` - the wallet of the player invoking the instruction and the
+  potential recipient of SOL reward
 
 ```rust
 #[program]
@@ -310,18 +381,26 @@ pub enum MyError {
 ...
 ```
 
-To transfer lamports from the reward chest to the player account, we can't use a Cross-Program Invocation (CPI) as we did previously, since the `ChestVaultAccount` isn't owned by the system program. Instead, we directly modify the lamports within the accounts by using `try_borrow_mut_lamports`.  Keep in mind that the account you deduct lamports from must be a signer, and the runtime always makes sure that the total account balances stay equal after a transaction.
+To transfer lamports from the reward chest to the player account, we can't use a
+Cross-Program Invocation (CPI) as we did previously, since the
+`ChestVaultAccount` isn't owned by the system program. Instead, we directly
+modify the lamports within the accounts by using `try_borrow_mut_lamports`. Keep
+in mind that the account you deduct lamports from must be a signer, and the
+runtime always makes sure that the total account balances stay equal after a
+transaction.
 
 Note that Program Derived Accounts (PDAs) offer two main features:
 
 1. Provide a deterministic way to find an account's address
 2. Allow the program from which a PDA is derived to "sign" for them
 
-This is the reason we are able to deduct lamports from the `ChestVaultAccount` without explicitly requiring an extra signer for the instruction.
+This is the reason we are able to deduct lamports from the `ChestVaultAccount`
+without explicitly requiring an extra signer for the instruction.
 
 ### Build and Deploy
 
-Great job! You've now completed part two of the Tiny Adventure program! Your final program should look like this:
+Great job! You've now completed part two of the Tiny Adventure program! Your
+final program should look like this:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -478,15 +557,25 @@ pub enum MyError {
 }
 ```
 
-Now that the program is complete, let's build and deploy it using the Solana Playground!
+Now that the program is complete, let's build and deploy it using the Solana
+Playground!
 
-If you're new to the Solana Playground, start by creating a Playground Wallet and make sure you're connected to a Devnet endpoint. Next, run `solana airdrop 2` until you have 6 SOL. Once you have enough SOL,  build and deploy the program.
+If you're new to the Solana Playground, start by creating a Playground Wallet
+and make sure you're connected to a Devnet endpoint. Next,
+run `solana airdrop 2` until you have 6 SOL. Once you have enough SOL, build and
+deploy the program.
 
 ### Get Started with the Client
 
-In this section, we'll walk through a simple client-side implementation for interacting with the game. We will break down the code and provide detailed explanations for each step. To get started, navigate to the `client.ts` file in Solana Playground, remove the placeholder code, and add the code snippets from the following sections.
+In this section, we'll walk through a simple client-side implementation for
+interacting with the game. We will break down the code and provide detailed
+explanations for each step. To get started, navigate to the `client.ts` file in
+Solana Playground, remove the placeholder code, and add the code snippets from
+the following sections.
 
-First, let's derive the PDAs (Program Derived Addresses) for the `GameDataAccount` and `ChestVaultAccount`. A PDA is a unique address in the format of a public key, derived using the program's ID and additional seeds.
+First, let's derive the PDAs (Program Derived Addresses) for the
+`GameDataAccount` and `ChestVaultAccount`. A PDA is a unique address in the
+format of a public key, derived using the program's ID and additional seeds.
 
 ```js
 // The PDA adress everyone will be able to control the character if the interact with your program
@@ -494,18 +583,19 @@ const [globalLevel1GameDataAccount, bump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("level1", "utf8")],
     //[pg.wallet.publicKey.toBuffer()], <- You could also add the player wallet as a seed, then you would have one instance per player. Need to also change the seed in the rust part
-    pg.program.programId
+    pg.program.programId,
   );
 
 // This is where the program will save the sol reward for the chests and from which the reward will be payed out again
 const [chestVaultAccount, chestBump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("chestVault", "utf8")],
-    pg.program.programId
+    pg.program.programId,
   );
 ```
 
-Next, we'll call the `initializeLevelOne` instruction to set up the `GameDataAccount` and `ChestVaultAccount`.
+Next, we'll call the `initializeLevelOne` instruction to set up the
+`GameDataAccount` and `ChestVaultAccount`.
 
 ```js
 // Initialize level
@@ -525,11 +615,12 @@ await pg.connection.confirmTransaction(txHash);
 
 let balance = await pg.connection.getBalance(pg.wallet.publicKey);
 console.log(
-  `My balance before spawning a chest: ${balance / web3.LAMPORTS_PER_SOL} SOL`
+  `My balance before spawning a chest: ${balance / web3.LAMPORTS_PER_SOL} SOL`,
 );
 ```
 
-After that, we'll use the `resetLevelAndSpawnChest` instruction to set the player's position to 0 and fill the `ChestVaultAccount` with 0.1 SOL.
+After that, we'll use the `resetLevelAndSpawnChest` instruction to set the
+player's position to 0 and fill the `ChestVaultAccount` with 0.1 SOL.
 
 ```js
 // Set the player position back to 0 and pay to fill up the chest with sol
@@ -551,10 +642,11 @@ console.log("Level reset and chest spawned 💎");
 console.log("o........💎");
 ```
 
-Now we can interact with the game by calling the `moveRight` instruction. In this example, we'll loop through this instruction until the player reaches the position to collect the reward from the `ChestVaultAccount`.
+Now we can interact with the game by calling the `moveRight` instruction. In
+this example, we'll loop through this instruction until the player reaches the
+position to collect the reward from the `ChestVaultAccount`.
 
 ```js
-
 // Here we move to the right three times and collect the chest at the end of the level
 for (let i = 0; i < 3; i++) {
   txHash = await pg.program.methods
@@ -573,7 +665,7 @@ for (let i = 0; i < 3; i++) {
   console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
   let gameDateAccount = await pg.program.account.gameDataAccount.fetch(
-    globalLevel1GameDataAccount
+    globalLevel1GameDataAccount,
   );
 
   console.log("Player position is:", gameDateAccount.playerPosition.toString());
@@ -597,13 +689,17 @@ for (let i = 0; i < 3; i++) {
 }
 ```
 
-Finally, press the "Run" button in the Solana Playground to execute the client. When you input anything other than "gib" as the password for the **`moveRight`** instruction, you should encounter the following error message upon reaching the position to claim the chest reward:
+Finally, press the "Run" button in the Solana Playground to execute the client.
+When you input anything other than "gib" as the password for the **`moveRight`**
+instruction, you should encounter the following error message upon reaching the
+position to claim the chest reward:
 
 ```
 Error Code: WrongPassword. Error Number: 6000. Error Message: Password was wrong.
 ```
 
-However, if you enter the correct password, the output should resemble the following:
+However, if you enter the correct password, the output should resemble the
+following:
 
 ```
 Running client...
@@ -628,6 +724,11 @@ Running client...
     ...........\o/
 ```
 
-Well done! You have successfully created, deployed, and interacted with Tiny Adventure Two from the client side. You've incorporated a new feature that allows players to collect rewards by reaching the chest at the end of the level. Moreover, you've learned how to transfer SOL within an Anchor program using cross-program invocations and by directly modifying lamports in accounts.
+Well done! You have successfully created, deployed, and interacted with Tiny
+Adventure Two from the client side. You've incorporated a new feature that
+allows players to collect rewards by reaching the chest at the end of the level.
+Moreover, you've learned how to transfer SOL within an Anchor program using
+cross-program invocations and by directly modifying lamports in accounts.
 
-Feel free to continue building independently and enhance the game with additional features like new levels or alternative rewards!
+Feel free to continue building independently and enhance the game with
+additional features like new levels or alternative rewards!

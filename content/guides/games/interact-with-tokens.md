@@ -3,28 +3,51 @@ title: How interact with tokens in programs
 description: Learn how to use tokens in Solana games with an on-chain tutorial
 ---
 
-Tokens on Solana can serve various purposes, such as in-game rewards, incentives, or other applications. For example, you can create tokens and distribute them to players when they complete specific in-game actions. In this example we will learn how to setup an anchor program ti mint and burn tokens in a game. If you want to instead learn on how you can store tokens in a PDA you can check out the [Token Vault example](https://beta.solpg.io/tutorials/spl-token-vault) in Solana play ground.
+Tokens on Solana can serve various purposes, such as in-game rewards,
+incentives, or other applications. For example, you can create tokens and
+distribute them to players when they complete specific in-game actions. In this
+example we will learn how to setup an anchor program ti mint and burn tokens in
+a game. If you want to instead learn on how you can store tokens in a PDA you
+can check out the
+[Token Vault example](https://beta.solpg.io/tutorials/spl-token-vault) in Solana
+play ground.
 
 ## Create, Mint, and Burn Tokens with Anchor
 
-In this tutorial, we will build a game using Anchor to introduce the basics of interacting with the Token Program on Solana. The game will be structured around four main actions: creating a new token mint, initializing player accounts, rewarding players for defeating enemies, and allowing players to heal by burning tokens.
+In this tutorial, we will build a game using Anchor to introduce the basics of
+interacting with the Token Program on Solana. The game will be structured around
+four main actions: creating a new token mint, initializing player accounts,
+rewarding players for defeating enemies, and allowing players to heal by burning
+tokens.
 
 The program consists of 4 instructions:
 
-- `create_mint` - This instruction creates a new token mint with a Program Derived Address (PDA) as the mint authority and creates the metadata account for the mint. We will add a constraint that allows only an "admin" to invoke this instruction
-- `init_player` - This instruction initializes a new player account with a starting health of 100
-- `kill_enemy` - This instruction deducts 10 health points from the player account upon “defeating an enemy” and mints 1 token as a reward for the player
-- `heal` - This instruction allows a player to burn 1 token to restore their health back to 100
+- `create_mint` - This instruction creates a new token mint with a Program
+  Derived Address (PDA) as the mint authority and creates the metadata account
+  for the mint. We will add a constraint that allows only an "admin" to invoke
+  this instruction
+- `init_player` - This instruction initializes a new player account with a
+  starting health of 100
+- `kill_enemy` - This instruction deducts 10 health points from the player
+  account upon “defeating an enemy” and mints 1 token as a reward for the player
+- `heal` - This instruction allows a player to burn 1 token to restore their
+  health back to 100
 
-For a high-level overview of the relationship among user wallets, token mints, token accounts, and token metadata accounts, consider exploring this portion of the [Metaplex documentation](https://docs.metaplex.com/programs/token-metadata/overview).
+For a high-level overview of the relationship among user wallets, token mints,
+token accounts, and token metadata accounts, consider exploring this portion of
+the
+[Metaplex documentation](https://docs.metaplex.com/programs/token-metadata/overview).
 
 ### Getting Started
 
 To start building the program, follow these steps:
 
-Visit the [Solana Playground](https://beta.solpg.io/) and create a new Anchor project. If you're new to Solana Playground, you'll also need to create a Playground Wallet.
+Visit the [Solana Playground](https://beta.solpg.io/) and create a new Anchor
+project. If you're new to Solana Playground, you'll also need to create a
+Playground Wallet.
 
-After creating a new project, replace the default starter code with the code below:
+After creating a new project, replace the default starter code with the code
+below:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -44,21 +67,33 @@ pub mod anchor_token {
 }
 ```
 
-Here we are simply bringing into scope the crates and corresponding modules we will be using for this program. We’ll be using the `anchor_spl` and `mpl_token_metadata` crates to help us interact with the Token program and the Token Metadata program.
+Here we are simply bringing into scope the crates and corresponding modules we
+will be using for this program. We’ll be using the `anchor_spl` and
+`mpl_token_metadata` crates to help us interact with the Token program and the
+Token Metadata program.
 
 ### Create Mint instruction
 
-First, let’s implement an instruction to create a new token mint and its metadata account. The on-chain token metadata, including the name, symbol, and URI, will be provided as parameters to the instruction.
+First, let’s implement an instruction to create a new token mint and its
+metadata account. The on-chain token metadata, including the name, symbol, and
+URI, will be provided as parameters to the instruction.
 
-Additionally, we'll only allow an "admin" to invoke this instruction by defining an `ADMIN_PUBKEY` constant and using it as a constraint. Be sure to replace the `ADMIN_PUBKEY` with your Solana Playground wallet public key.
+Additionally, we'll only allow an "admin" to invoke this instruction by defining
+an `ADMIN_PUBKEY` constant and using it as a constraint. Be sure to replace the
+`ADMIN_PUBKEY` with your Solana Playground wallet public key.
 
 The `create_mint` instruction requires the following accounts:
 
-- `admin` - the `ADMIN_PUBKEY` that signs the transaction and pays for the initialization of the accounts
-- `reward_token_mint` - the new token mint we are initializing, using a PDA as both the mint account’s address and its mint authority
-- `metadata_account` - the metadata account we are initializing for the token mint
-- `token_program` - required for interacting with instructions on the Token program
-- `token_metadata_program` - required account for interacting with instructions on the Token Metadata program
+- `admin` - the `ADMIN_PUBKEY` that signs the transaction and pays for the
+  initialization of the accounts
+- `reward_token_mint` - the new token mint we are initializing, using a PDA as
+  both the mint account’s address and its mint authority
+- `metadata_account` - the metadata account we are initializing for the token
+  mint
+- `token_program` - required for interacting with instructions on the Token
+  program
+- `token_metadata_program` - required account for interacting with instructions
+  on the Token Metadata program
 - `system_program`- a required account when creating a new account
 - `rent` - Sysvar Rent, a required account when creating the metadata account
 
@@ -154,13 +189,22 @@ pub struct CreateMint<'info> {
 }
 ```
 
-The `create_mint` instruction creates a new token mint, using a Program Derived Address (PDA) as both the address of the token mint and its mint authority. The instruction takes a URI (off-chain metadata), name, and symbol as parameters.
+The `create_mint` instruction creates a new token mint, using a Program Derived
+Address (PDA) as both the address of the token mint and its mint authority. The
+instruction takes a URI (off-chain metadata), name, and symbol as parameters.
 
-This instruction then creates a metadata account for the token mint through a Cross-Program Invocation (CPI) calling the `create_metadata_accounts_v3` instruction from the Token Metadata program.
+This instruction then creates a metadata account for the token mint through a
+Cross-Program Invocation (CPI) calling the `create_metadata_accounts_v3`
+instruction from the Token Metadata program.
 
-The PDA is used to "sign" the CPI since it is the mint authority, which is a required signer when creating the metadata account for a mint. The instruction data (URI, name, symbol) is included in the `DataV2` struct to specify the new token mint's metadata.
+The PDA is used to "sign" the CPI since it is the mint authority, which is a
+required signer when creating the metadata account for a mint. The instruction
+data (URI, name, symbol) is included in the `DataV2` struct to specify the new
+token mint's metadata.
 
-We also verify that the address of the `admin` account signing the transaction matches the value of the `ADMIN_PUBKEY` constant to ensure only the intended wallet can invoke this instruction.
+We also verify that the address of the `admin` account signing the transaction
+matches the value of the `ADMIN_PUBKEY` constant to ensure only the intended
+wallet can invoke this instruction.
 
 ```rust
 const ADMIN_PUBKEY: Pubkey = pubkey!("REPLACE_WITH_YOUR_WALLET_PUBKEY");
@@ -168,12 +212,16 @@ const ADMIN_PUBKEY: Pubkey = pubkey!("REPLACE_WITH_YOUR_WALLET_PUBKEY");
 
 ### Init Player Instruction
 
-Next, let's implement the `init_player` instruction which creates a new player account with an initial health of 100. The constant `MAX_HEALTH` is set to 100 to represent the starting health.
+Next, let's implement the `init_player` instruction which creates a new player
+account with an initial health of 100. The constant `MAX_HEALTH` is set to 100
+to represent the starting health.
 
 The `init_player` instruction requires the following accounts:
 
-- `player_data` - the new player account we are initializing, which will store the player's health
-- `player` - the user who signs the transaction and pays for the initialization of the account
+- `player_data` - the new player account we are initializing, which will store
+  the player's health
+- `player` - the user who signs the transaction and pays for the initialization
+  of the account
 - `system_program` - a required account when creating a new account
 
 ```rust
@@ -214,20 +262,28 @@ pub struct PlayerData {
 }
 ```
 
-The `player_data` account is initialized using a Program Derived Address (PDA) with the `player` public key as one of the seeds. This ensures that each `player_data` account is unique and associated with the `player`, allowing every player to create their own `player_data` account.
+The `player_data` account is initialized using a Program Derived Address (PDA)
+with the `player` public key as one of the seeds. This ensures that each
+`player_data` account is unique and associated with the `player`, allowing every
+player to create their own `player_data` account.
 
 ### Kill Enemy Instruction
 
-Next, let's implement the `kill_enemy` instruction which reduces the player's health by 10 and mints 1 token to the player's token account as a reward.
+Next, let's implement the `kill_enemy` instruction which reduces the player's
+health by 10 and mints 1 token to the player's token account as a reward.
 
 The `kill_enemy` instruction requires the following accounts:
 
 - `player` - the player receiving the token
 - `player_data` - the player data account storing the player’s current health
-- `player_token_account` - the player's associated token account where tokens will be minted
-- `reward_token_mint` - the token mint account, specifying the type of token that will be minted
-- `token_program` - required for interacting with instructions on the token program
-- `associated_token_program` - required when working with associated token accounts
+- `player_token_account` - the player's associated token account where tokens
+  will be minted
+- `reward_token_mint` - the token mint account, specifying the type of token
+  that will be minted
+- `token_program` - required for interacting with instructions on the token
+  program
+- `associated_token_program` - required when working with associated token
+  accounts
 - `system_program` - a required account when creating a new account
 
 ```rust
@@ -312,24 +368,36 @@ pub enum ErrorCode {
 }
 ```
 
-The player's health is reduced by 10 to represent the “battle with the enemy”. We’ll also check the player's current health and return a custom Anchor error if the player has 0 health.
+The player's health is reduced by 10 to represent the “battle with the enemy”.
+We’ll also check the player's current health and return a custom Anchor error if
+the player has 0 health.
 
-The instruction then uses a cross-program invocation (CPI) to call the `mint_to` instruction from the Token program and mints 1 token of the `reward_token_mint` to the `player_token_account` as a reward for killing the enemy.
+The instruction then uses a cross-program invocation (CPI) to call the `mint_to`
+instruction from the Token program and mints 1 token of the `reward_token_mint`
+to the `player_token_account` as a reward for killing the enemy.
 
-Since the mint authority for the token mint is a Program Derived Address (PDA), we can mint tokens directly by calling this instruction without additional signers. The program can "sign" on behalf of the PDA, allowing token minting without explicitly requiring extra signers.
+Since the mint authority for the token mint is a Program Derived Address (PDA),
+we can mint tokens directly by calling this instruction without additional
+signers. The program can "sign" on behalf of the PDA, allowing token minting
+without explicitly requiring extra signers.
 
 ### Heal Instruction
 
-Next, let's implement the `heal` instruction which allows a player to burn 1 token and restore their health to its maximum value.
+Next, let's implement the `heal` instruction which allows a player to burn 1
+token and restore their health to its maximum value.
 
 The `heal` instruction requires the following accounts:
 
 - `player` - the player executing the healing action
 - `player_data` - the player data account storing the player’s current health
-- `player_token_account` - the player's associated token account where the tokens will be burned
-- `reward_token_mint` - the token mint account, specifying the type of token that will be burned
-- `token_program` - required for interacting with instructions on the token program
-- `associated_token_program` - required when working with associated token accounts
+- `player_token_account` - the player's associated token account where the
+  tokens will be burned
+- `reward_token_mint` - the token mint account, specifying the type of token
+  that will be burned
+- `token_program` - required for interacting with instructions on the token
+  program
+- `associated_token_program` - required when working with associated token
+  accounts
 
 ```rust
 #[program]
@@ -393,11 +461,15 @@ pub struct Heal<'info> {
 }
 ```
 
-The player's health is restored to its maximum value using the `heal` instruction. The instruction then uses a cross-program invocation (CPI) to call the `burn` instruction from the Token program, which burns 1 token from the `player_token_account` to heal the player.
+The player's health is restored to its maximum value using the `heal`
+instruction. The instruction then uses a cross-program invocation (CPI) to call
+the `burn` instruction from the Token program, which burns 1 token from the
+`player_token_account` to heal the player.
 
 ### Build and Deploy
 
-Great job! You've now completed the program! Go ahead and build and deploy it using the Solana Playground. Your final program should look like this:
+Great job! You've now completed the program! Go ahead and build and deploy it
+using the Solana Playground. Your final program should look like this:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -656,7 +728,10 @@ pub enum ErrorCode {
 
 ### Get Started with the Client
 
-In this section, we'll walk you through a simple client-side implementation for interacting with the program. To get started, navigate to the `client.ts` file in Solana Playground, remove the placeholder code, and add the code snippets from the following sections.
+In this section, we'll walk you through a simple client-side implementation for
+interacting with the program. To get started, navigate to the `client.ts` file
+in Solana Playground, remove the placeholder code, and add the code snippets
+from the following sections.
 
 Start by adding the following code for the setup.
 
@@ -666,7 +741,7 @@ import { getMint, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 // metaplex token metadata program ID
 const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
-  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
 );
 
 // metaplex setup
@@ -682,13 +757,13 @@ const metadata = {
 // reward token mint PDA
 const [rewardTokenMintPda] = anchor.web3.PublicKey.findProgramAddressSync(
   [Buffer.from("reward")],
-  pg.PROGRAM_ID
+  pg.PROGRAM_ID,
 );
 
 // player data account PDA
 const [playerPDA] = anchor.web3.PublicKey.findProgramAddressSync(
   [Buffer.from("player"), pg.wallet.publicKey.toBuffer()],
-  pg.PROGRAM_ID
+  pg.PROGRAM_ID,
 );
 
 // reward token mint metadata account address
@@ -700,11 +775,12 @@ const rewardTokenMintMetadataPDA = await metaplex
 // player token account address
 const playerTokenAccount = getAssociatedTokenAddressSync(
   rewardTokenMintPda,
-  pg.wallet.publicKey
+  pg.wallet.publicKey,
 );
 ```
 
-Next, add the following two helper functions.  These functions will be used to confirm transactions and fetch account data.
+Next, add the following two helper functions. These functions will be used to
+confirm transactions and fetch account data.
 
 ```js
 async function logTransaction(txHash) {
@@ -731,7 +807,8 @@ async function fetchAccountData() {
 }
 ```
 
-Next, invoke the `createMint` instruction to create a new token mint if it does not already exist.
+Next, invoke the `createMint` instruction to create a new token mint if it does
+not already exist.
 
 ```js
 let txHash;
@@ -753,7 +830,8 @@ try {
 console.log("Token Mint: ", rewardTokenMintPda.toString());
 ```
 
-Next, call the `initPlayer` instruction to create a new player account if one does not already exist.
+Next, call the `initPlayer` instruction to create a new player account if one
+does not already exist.
 
 ```js
 try {
@@ -805,7 +883,10 @@ console.log("Player Healed");
 await fetchAccountData();
 ```
 
-Finally, run the client by clicking the “Run” button in Solana Playground. You can copy the Token Mint address printed to the console and verify on Solana Explorer that the token now has metadata. The output should be similar to the following:
+Finally, run the client by clicking the “Run” button in Solana Playground. You
+can copy the Token Mint address printed to the console and verify on Solana
+Explorer that the token now has metadata. The output should be similar to the
+following:
 
 ```
 Running client...

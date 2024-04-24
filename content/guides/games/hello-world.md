@@ -1,42 +1,56 @@
 ---
 title: Hello World example
-description: Get started building Solana games with a basic adventure game 
+description: Get started building Solana games with a basic adventure game
 ---
 
 # Getting started with your first Solana on-chain game
 
-"On chain game" means that the whole state is saved on the blockchain. This means that the game is fully decentralized and can be played by anyone without the need of a central server. Every action in the game is a blockchain transaction and every move can have a valuable impact. 
+"On chain game" means that the whole state is saved on the blockchain. This
+means that the game is fully decentralized and can be played by anyone without
+the need of a central server. Every action in the game is a blockchain
+transaction and every move can have a valuable impact.
 
 Video Walkthrough:
+
 <div class="video-block">
 <iframe width="320" height="200" src="https://www.youtube.com/embed/_vQ3bSs3svs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-
 ## Tiny Adventure
 
-Tiny Adventure is a beginner-friendly Solana program created using the Anchor framework. The goal of this program is to show you how to create a simple game that allows players to track their position and move left or right.
+Tiny Adventure is a beginner-friendly Solana program created using the Anchor
+framework. The goal of this program is to show you how to create a simple game
+that allows players to track their position and move left or right.
 
 The Tiny Adventure Program consists of only 3 instructions:
 
-- `initialize` - This instruction sets up an on-chain account to store the player's position
+- `initialize` - This instruction sets up an on-chain account to store the
+  player's position
 - `move_left` - This instruction lets the player move their position to the left
-- `move_right` - This instruction lets the player move their position to the right
+- `move_right` - This instruction lets the player move their position to the
+  right
 
-In the upcoming sections, we'll walk through the process of building this game step by step.
-You can find the complete source code, available to deploy from your browser, in this [Solana Playground example](https://beta.solpg.io/tutorials/tiny-adventure).
+In the upcoming sections, we'll walk through the process of building this game
+step by step. You can find the complete source code, available to deploy from
+your browser, in this
+[Solana Playground example](https://beta.solpg.io/tutorials/tiny-adventure).
 
-If need to familiarize yourself with the Anchor framework, feel free to check out the Anchor module of the [Solana Course](https://www.soldev.app/course) to get started.
+If need to familiarize yourself with the Anchor framework, feel free to check
+out the Anchor module of the [Solana Course](https://www.soldev.app/course) to
+get started.
 
 ### Getting Started
 
 To start building the Tiny Adventure game, follow these steps:
 
-Visit [Solana Playground](https://beta.solpg.io/) and create a new Anchor project. If you're new to Solana Playground, you'll also need to create a Playground Wallet. Here is an example of how to use Solana Playground:
+Visit [Solana Playground](https://beta.solpg.io/) and create a new Anchor
+project. If you're new to Solana Playground, you'll also need to create a
+Playground Wallet. Here is an example of how to use Solana Playground:
 
 ![solpg.gif](/assets/guides/hello-world/solpg.gif)
 
-After creating a new project, replace the default starter code with the code below:
+After creating a new project, replace the default starter code with the code
+below:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -63,13 +77,17 @@ fn print_player(player_position: u8) {
 }
 ```
 
-In this game, the player starts at position 0 and can move left or right. To show the player's progress throughout the game, we'll use message logs to display their journey.
+In this game, the player starts at position 0 and can move left or right. To
+show the player's progress throughout the game, we'll use message logs to
+display their journey.
 
 ### Defining the Game Data Account
 
-The first step in building the game is to define a structure for the on-chain account that will store the player's position.
+The first step in building the game is to define a structure for the on-chain
+account that will store the player's position.
 
-The `GameDataAccount` struct contains a single field, `player_position`, which stores the player's current position as an unsigned 8-bit integer.
+The `GameDataAccount` struct contains a single field, `player_position`, which
+stores the player's current position as an unsigned 8-bit integer.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -93,7 +111,9 @@ pub struct GameDataAccount {
 
 ### Initialize Instruction
 
-After defining the program account, let’s implement the `initialize` instruction. This instruction initializes the `GameDataAccount` if it doesn't already exist, sets the `player_position` to 0, and print some message logs.
+After defining the program account, let’s implement the `initialize`
+instruction. This instruction initializes the `GameDataAccount` if it doesn't
+already exist, sets the `player_position` to 0, and print some message logs.
 
 The `initialize` instruction requires 3 accounts:
 
@@ -134,15 +154,29 @@ pub struct Initialize<'info> {
 ...
 ```
 
-In this example, a Program Derived Address (PDA) is used for the `GameDataAccount` address. This enables us to deterministically locate the address later on. It is important to note that the PDA in this example is generated with a single fixed value as the seed (`level1`), limiting our program to creating only one `GameDataAccount`. The `init_if_needed` constraint then ensures that the `GameDataAccount` is initialized only if it doesn't already exist.
+In this example, a Program Derived Address (PDA) is used for the
+`GameDataAccount` address. This enables us to deterministically locate the
+address later on. It is important to note that the PDA in this example is
+generated with a single fixed value as the seed (`level1`), limiting our program
+to creating only one `GameDataAccount`. The `init_if_needed` constraint then
+ensures that the `GameDataAccount` is initialized only if it doesn't already
+exist.
 
-It is worth noting that the current implementation does not have any restrictions on who can modify the `GameDataAccount`. This effectively transforms the game into a multiplayer experience where everyone can control the player's movement.
+It is worth noting that the current implementation does not have any
+restrictions on who can modify the `GameDataAccount`. This effectively
+transforms the game into a multiplayer experience where everyone can control the
+player's movement.
 
-Alternatively, you can use the signer's address as an extra seed in the `initialize` instruction, which would enable each player to create their own `GameDataAccount`.
+Alternatively, you can use the signer's address as an extra seed in the
+`initialize` instruction, which would enable each player to create their own
+`GameDataAccount`.
 
 ### Move Left Instruction
 
-Now that we can initialize a `GameDataAccount` account, let’s implement the `move_left` instruction. This lets a player update their `player_position`. In this example, moving left simply means decrementing the `player_position` by 1. We'll also set the minimum position to 0.
+Now that we can initialize a `GameDataAccount` account, let’s implement the
+`move_left` instruction. This lets a player update their `player_position`. In
+this example, moving left simply means decrementing the `player_position` by 1.
+We'll also set the minimum position to 0.
 
 The only account needed for this instruction is the `GameDataAccount`.
 
@@ -177,9 +211,12 @@ pub struct MoveLeft<'info> {
 
 ### Move Right Instruction
 
-Lastly, let’s implement the `move_right` instruction. Similarly, moving right will simply mean incrementing the `player_position` by 1. We’ll also limit the maximum position to 3.
+Lastly, let’s implement the `move_right` instruction. Similarly, moving right
+will simply mean incrementing the `player_position` by 1. We’ll also limit the
+maximum position to 3.
 
-Just like before, the only account needed for this instruction is the `GameDataAccount`.
+Just like before, the only account needed for this instruction is the
+`GameDataAccount`.
 
 ```rust
 #[program]
@@ -212,7 +249,8 @@ pub struct MoveRight<'info> {
 
 ### Build and Deploy
 
-We've now completed the Tiny Adventure program! Your final program should resemble the following:
+We've now completed the Tiny Adventure program! Your final program should
+resemble the following:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -302,34 +340,45 @@ pub struct GameDataAccount {
 }
 ```
 
-With the program completed, it's time to build and deploy it on Solana Playground!
+With the program completed, it's time to build and deploy it on Solana
+Playground!
 
-If this is your first time using Solana Playground, create a Playground Wallet first and ensure that you're connected to a Devnet endpoint. Then, run `solana airdrop 2` until you have 6 SOL. Once you have enough SOL, build and deploy the program.
-
+If this is your first time using Solana Playground, create a Playground Wallet
+first and ensure that you're connected to a Devnet endpoint. Then, run
+`solana airdrop 2` until you have 6 SOL. Once you have enough SOL, build and
+deploy the program.
 
 ### Get Started with the Client
 
-This next section will guide you through a simple client-side implementation for interacting with the game. We'll break down the code and provide detailed explanations for each step. In Solana Playground, navigate to the `client.ts` file and add the code snippets from the following sections.
+This next section will guide you through a simple client-side implementation for
+interacting with the game. We'll break down the code and provide detailed
+explanations for each step. In Solana Playground, navigate to the `client.ts`
+file and add the code snippets from the following sections.
 
-First, let’s derive the PDA for the `GameDataAccount`. A PDA is a unique address in the format of a public key, derived using the program's ID and additional seeds. Feel free to check out the PDA lessons of the [Solana Course](https://www.soldev.app/course) for more details.
+First, let’s derive the PDA for the `GameDataAccount`. A PDA is a unique address
+in the format of a public key, derived using the program's ID and additional
+seeds. Feel free to check out the PDA lessons of the
+[Solana Course](https://www.soldev.app/course) for more details.
 
 ```js
 // The PDA adress everyone will be able to control the character if the interact with your program
 const [globalLevel1GameDataAccount, bump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("level1", "utf8")],
-    pg.program.programId
+    pg.program.programId,
   );
 ```
 
-Next, let’s try to fetch the game data account using the PDA from the previous step. If the account doesn't exist, we'll create it by invoking the `initialize` instruction from our program.
+Next, let’s try to fetch the game data account using the PDA from the previous
+step. If the account doesn't exist, we'll create it by invoking the `initialize`
+instruction from our program.
 
 ```js
 let txHash;
 let gameDateAccount;
 try {
   gameDateAccount = await pg.program.account.gameDataAccount.fetch(
-    globalLevel1GameDataAccount
+    globalLevel1GameDataAccount,
   );
 } catch {
   // Check if the account is already initialized, other wise initialize it
@@ -350,7 +399,10 @@ try {
 }
 ```
 
-Now we are ready to interact with the game by moving left or right. This is done by invoking the `moveLeft` or `moveRight` instructions from the program and submitting a transaction to the Solana network. You can repeat this step as many times as you'd like.
+Now we are ready to interact with the game by moving left or right. This is done
+by invoking the `moveLeft` or `moveRight` instructions from the program and
+submitting a transaction to the Solana network. You can repeat this step as many
+times as you'd like.
 
 ```js
 // Here you can play around now, move left and right
@@ -366,13 +418,15 @@ console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
 await pg.connection.confirmTransaction(txHash);
 
 gameDateAccount = await pg.program.account.gameDataAccount.fetch(
-  globalLevel1GameDataAccount
+  globalLevel1GameDataAccount,
 );
 
 console.log("Player position is:", gameDateAccount.playerPosition.toString());
 ```
 
-Lastly, let’s use a `switch` statement to log the character's position based on the `playerPosition` value stored in the `gameDateAccount`. We’ll use this as a visual representation of the character's movement in the game.
+Lastly, let’s use a `switch` statement to log the character's position based on
+the `playerPosition` value stored in the `gameDateAccount`. We’ll use this as a
+visual representation of the character's movement in the game.
 
 ```js
 switch (gameDateAccount.playerPosition) {
@@ -392,7 +446,8 @@ switch (gameDateAccount.playerPosition) {
 }
 ```
 
-Finally, run the client by clicking the “Run” button in Solana Playground. The output should be similar to the following:
+Finally, run the client by clicking the “Run” button in Solana Playground. The
+output should be similar to the following:
 
 ```
 Running client...
@@ -404,19 +459,33 @@ Running client...
     ....o....
 ```
 
-Congratulations! You have successfully built, deployed, and invoked the Tiny Adventure game from the client. To further illustrate the possibilities, check out this [demo](https://nextjs-tiny-adventure.vercel.app/) that demonstrates how to interact with the Tiny Adventure program through a Next.js frontend.
+Congratulations! You have successfully built, deployed, and invoked the Tiny
+Adventure game from the client. To further illustrate the possibilities, check
+out this [demo](https://nextjs-tiny-adventure.vercel.app/) that demonstrates how
+to interact with the Tiny Adventure program through a Next.js frontend.
 
 ### Where to Go from Here
 
-With the basic game complete, unleash your creativity and practice building independently by implementing your own ideas to enrich the game experience. Here are a few suggestions:
+With the basic game complete, unleash your creativity and practice building
+independently by implementing your own ideas to enrich the game experience. Here
+are a few suggestions:
 
-1. Modify the in-game texts to create an intriguing story. Invite a friend to play through your custom narrative and observe the on-chain transactions as they unfold!
-2. Add a chest that rewards players with [Sol Rewards](/developers/guides/games/store-sol-in-pda) or let the player collect coins [Interact with tokens](/developers/guides/games/interact-with-tokens) as they progress through the game.
-3. Create a grid that allows the player to move up, down, left, and right, and introduce multiple players for a more dynamic experience.
+1. Modify the in-game texts to create an intriguing story. Invite a friend to
+   play through your custom narrative and observe the on-chain transactions as
+   they unfold!
+2. Add a chest that rewards players with
+   [Sol Rewards](/developers/guides/games/store-sol-in-pda) or let the player
+   collect coins
+   [Interact with tokens](/developers/guides/games/interact-with-tokens) as they
+   progress through the game.
+3. Create a grid that allows the player to move up, down, left, and right, and
+   introduce multiple players for a more dynamic experience.
 
-In the next installment, [Tiny Adventure Two](/developers/guides/games/store-sol-in-pda), we'll learn how to store SOL in the program and distribute it to players as rewards.
+In the next installment,
+[Tiny Adventure Two](/developers/guides/games/store-sol-in-pda), we'll learn how
+to store SOL in the program and distribute it to players as rewards.
 
-Other next Steps: 
+Other next Steps:
 
 [Solana Gaming SDKs](/developers/guides/games/game-sdks.md)
 [Learn by example](/developers/guides/games/game-examples.md)
