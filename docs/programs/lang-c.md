@@ -132,8 +132,8 @@ deserialization function care should be taken to handle duplicate accounts
 appropriately.
 
 `data` is the general purpose byte array from the
-[instruction's instruction data](/docs/core/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions#instruction) being
+processed.
 
 `program_id` is the public key of the currently executing program.
 

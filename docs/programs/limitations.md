@@ -39,8 +39,8 @@ Cross-program invocations allow programs to invoke other programs directly, but
 the depth is constrained currently to `4`.
 
 When a program exceeds the allowed
-[cross-program invocation call depth](/docs/core/cpi.md#call-depth), it will
-receive a `CallDepth` error
+[cross-program invocation call depth](/docs/core/cpi), it will receive a
+`CallDepth` error
 
 ## Float Rust types support
 

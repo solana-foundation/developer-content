@@ -273,7 +273,7 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](/docs/core/transactions.md#message-format)
+[message formatting inside of transactions](/docs/core/transactions#transaction)
 here.
 
 ## Nakamoto coefficient
@@ -361,13 +361,14 @@ blockchain. When accounts do not have enough balance to pay rent, they may be
 Garbage Collected.
 
 See also [rent exempt](#rent-exempt) below. Learn more about rent here:
-[What is rent?](/docs/core/rent.md).
+[What is rent?](/docs/intro/rent).
 
 ## rent exempt
 
-Accounts that maintain more than 2 years with of rent payments in their account
-are considered "_rent exempt_" and will not incur the
-[collection of rent](/docs/core/rent.md#collecting-rent).
+Accounts that maintain a minimum lamport balance that is proportional to the
+amount of data stored on the account. All newly created accounts are stored
+on-chain permanently until the account is closed. It is not possible to create
+an account that falls below the rent exemption threshold.
 
 ## root
 

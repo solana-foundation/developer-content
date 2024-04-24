@@ -7,9 +7,9 @@ description:
 sidebarSortOrder: 1
 ---
 
-[Versioned Transactions](/docs/core/transactions/versions.md) are the new
-transaction format that allow for additional functionality in the Solana
-runtime, including [Address Lookup Tables](/docs/advanced/lookup-tables.md).
+Versioned Transactions are the new transaction format that allow for additional
+functionality in the Solana runtime, including
+[Address Lookup Tables](/docs/advanced/lookup-tables.md).
 
 While changes to [on chain](/docs/programs/index.md) programs are **NOT**
 required to support the new functionality of versioned transactions (or for
@@ -33,9 +33,8 @@ version of transactions they will support in their application using the
 [`getBlock`](/docs/rpc/http/getBlock.mdx) and
 [`getTransaction`](/docs/rpc/http/getTransaction.mdx).
 
-An RPC request will fail if a
-[Versioned Transaction](/docs/core/transactions/versions.md) is returned that is
-higher than the set `maxSupportedTransactionVersion`. (i.e. if a version `0`
+An RPC request will fail if a Versioned Transaction is returned that is higher
+than the set `maxSupportedTransactionVersion`. (i.e. if a version `0`
 transaction is returned when `legacy` is selected)
 
 > WARNING: If no `maxSupportedTransactionVersion` value is set, then only

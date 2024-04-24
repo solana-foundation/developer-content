@@ -28,7 +28,7 @@ Solana blockchain.
 > [account rent](/docs/terminology.md#rent)! While transaction fees are paid to
 > process instructions on the Solana network, rent is paid to store data on the
 > blockchain. You can learn more about rent here:
-> [What is rent?](/docs/core/rent.md)
+> [What is rent?](/docs/intro/rent)
 
 ## Why pay transaction fees?
 

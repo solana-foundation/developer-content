@@ -24,7 +24,7 @@ confirmed as a global state transaction, this _transaction fee_ is paid to the
 network to help support the economic design of the Solana blockchain.
 
 > NOTE: Transactions fees are different from the blockchain's data storage fee
-> called [rent](/docs/core/rent.md)
+> called [rent](/docs/intro/rent)
 
 ### Transaction Fee Calculation
 

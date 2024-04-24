@@ -30,8 +30,8 @@ Prioritization Fees are an optional fee, priced in
 [Compute Unit](/docs/terminology#compute-units) (e.g. small amounts of SOL),
 appended to transactions to make them economically compelling for validator
 nodes to include in blocks on the network. This additional fee will be on top of
-the base [Transaction Fee](/docs/core/transactions/fees) already set, which is
-5000 lamports per signature in your transaction.
+the base [Transaction Fee](/docs/advanced/fee) already set, which is 5000
+lamports per signature in your transaction.
 
 ## Why Should I Use Priority Fees?
 
