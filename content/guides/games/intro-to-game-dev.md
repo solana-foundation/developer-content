@@ -3,8 +3,6 @@ title: Introduction to Game development on Solana
 description: Learn how to build games on Solana. Solana is well built for web3 games of all genres utilizing speed, low fees, and more to create an amazing gaming experience
 ---
 
-# Intro into game development on Solana
-
 The gaming space in the Solana ecosystem is expanding rapidly. Integrating with Solana can provide numerous benefits for games, such as enabling players to own and trade their assets via NFTs in games, building a open and composable in-game economy, creating composable game programs, and allowing players to compete for valuable assets.
 
 Solana is purpose-built for games, with its 400ms block time and lightning-fast confirmations making it a real-time database that's free for all. It's perfect for genres like strategy games, city builders, turn-based games, and more.

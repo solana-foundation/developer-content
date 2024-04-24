@@ -3,13 +3,26 @@ title: Gaming with NFTs
 description: NFTs can be a powerful tool in blockchain games. Learn how to utilize NFTs in Solana games to their full potential.
 ---
 
-# NFTs In Games
 
 Non-fungible tokens (NFTs) are rapidly gaining popularity as a means of integrating Solana into games.
 These unique digital assets are stored on the Solana blockchain and come with a JSON metadata attached
 to them. The metadata allows developers to store important attributes and information about the NFT, such
 as its rarity or specific in-game capabilities. NFTs can be used in games to represent anything from weapons
-and armor to digital real estate and collectibles, providing a new level of ownership and scarcity for players.
+and armor to digital real estate and collectibles, providing a new level of ownership and scarcity for players. Furthermore NFTs can be representing land, houses, achievements or even characters in a game. The possibilities are endless.
+
+# Using Solana Game shift to create NFTs
+
+Solana game shift is a gaming API maintaned by [Solana Labs](https://solanalabs.com/) which lets you easily create NFTs and other assets for your game. Game Shift offers these features: 
+- A simple API to create NFTs
+- Buying assets via USD onramp
+- In game market place 
+- Updating meta data of NFTs
+
+[Docs](https://docs.gameshift.dev/)<br />
+[Example Game Live](https://solplay.de/cubeshift)<br />
+[Example Game Source](https://github.com/solana-developers/cube_shift)<br />
+[Example Game dev log](https://www.youtube.com/watch?v=hTCPXVn14TY)<br />
+
 
 ## Token gating with NFTs
 
@@ -37,13 +50,27 @@ for (let i = 0; i < nfts.length; i++) {
 }
 ```
 
+Another performant way to load NFTs is the [DAS asset API](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api). You can see an example of this in the solana games preset in the js client:
+[Code Example](https://github.com/solana-developers/solana_game_preset/blob/main/app/components/DisplayNfts.tsx)
+
+```js
+npx create-solana-game your-game-name
+```
+
 ## Bonus Effects with NFTs
 
 In addition to providing new revenue streams, NFTs can also be used to provide in-game benefits and bonuses to players. For instance, a player who owns a "coin doubler" NFT may receive double the amount of coins for as long as they hold the NFT in their wallet. Additionally, NFTs can be used as consumables, allowing players to use them to gain temporary effects such as potions or spells. Once consumed, the NFT is burned, and the effect is applied to the player's character. These innovative features of NFTs provide game developers with new opportunities to create unique gameplay experiences and reward players for their ownership of valuable assets on the Solana blockchain.
 
-[How to interact with tokens](../references/token#how-to-burn-tokens)
+[How to interact with tokens](/developers/guides/games/interact-with-tokens.md)
 
-[NFTs](../references/nfts)
+In the game Seven Seas there are for example three tokens. Pirate coins, which are used to upgrade ships, Rum which increases the health of ships and cannons which increase ships damage. 
+
+[Source](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas)<br />
+[Eight Hour video boot camp](https://www.youtube.com/playlist?list=PLilwLeBwGuK6NsYMPP_BlVkeQgff0NwvU)
+
+You can also use [Dynamic meta data](/developers/guides/games/interact-with-tokens.md) to save character level and experience or items in an NFT. Like this game NFTs could become more valuable the more the players play with them. 
+
+The same you can also do with Metaplex new [Core NFT standart](https://developers.metaplex.com/core).  
 
 
 ## Using NFT Metadata for Player Stats
@@ -82,6 +109,22 @@ nfts.forEach(async nft => {
 console.log("Player Physical Damage: " + physicalDamage)
 console.log("Player Magical Damage: " + magicalDamage)
 ````
+
+## Use NFTs to save a game state 
+
+You can also use the mint of an NFT to derive a PDA and use that PDA to save the game state of a player. This way you can save the game state of a player in a NFT and the player can take it with him and sell it for example.
+You can see how that can be done in the [Solana 2048 game](https://github.com/solana-developers/solana-2048) for example: 
+
+```rust
+    #[account( 
+        init,
+        payer = signer,
+        space = 800,
+        seeds = [b"player".as_ref(), nftMint.key().as_ref()],
+        bump,
+    )]
+    pub player: Account<'info, PlayerData>,
+```
 
 ## Fusing NFTs Together
 
@@ -122,16 +165,34 @@ With the [Raindrops Boots program](https://docs.raindrops.xyz/services/boots) yo
 
 With the new Token extensions it is possible to create NFTs in a program and also add additional dynamic traits that can be saved in the NFT mint itself. You can for example save experience and player level in the NFT itself. These NFTs could become more valuable the more the players play with them. A player 99 character maybe more desirable than a level 1 character. 
 
-[Guide](/docs/content/guides/nft-metadata-pointer.md)
-[Repository](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)
-[Video](https://www.youtube.com/watch?v=n-ym1utpzhk&ab_channel=Solana)
+[Guide](/docs/content/guides/nft-metadata-pointer.md)<br />
+[Repository](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)<br />
+[Video](https://www.youtube.com/watch?v=n-ym1utpzhk&ab_channel=Solana)<br />
 
 ## How to create an NFT collection
 
 NFTs on Solana mostly follow the Metaplex standard. Metaplex is a company which takes care of the NFT most used standard on Solana. The most common way to create an NFT collection is to create a metaplex candy machine which lets the user mint predefined pairs of metadata and images.
 
-[Metaplex Docs](https://docs.metaplex.com/programs/candy-machine/how-to-guides/my-first-candy-machine-part1)
+The most used NFT standart on Solana is [Metaplex](https://docs.metaplex.com/programs/candy-machine/how-to-guides/my-first-candy-machine-part1)
 
-[Setup a candy machine step by step](https://youtu.be/0KHv1dMV8zU)
+In the [Metaplex Community guides](https://developers.metaplex.com/community-guides) you can find help setting up your NFT collection.
 
-[NFTs](../references/nfts)
+But there is many more NFT standarts on Solana: 
+- DeezNuts
+- spNFTs
+- WNS 
+- Core 
+- SPL-22
+- SPL-404
+- nifty
+
+You can find some more information about these here: [Nft standards list](https://twitter.com/blessed_burgers/status/1776626530921206087)
+
+
+
+
+
+## Nft Staking and missions 
+
+You can stake NFTs to for example create in-game currency or send NFTs on missions to give the players rewards.
+[Honeycomb Protocol](https://docs.honeycombprotocol.com/) for example offers these functionality and more.

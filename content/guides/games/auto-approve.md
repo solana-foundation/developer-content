@@ -4,8 +4,6 @@ description: To have a fluent game play you may want to be able to auto approve 
 ---
 
 
-# How to auto approve transaction for fast game play and great ux
-
 To have a fluid game play for on-chain games it is beneficial to have an auto approve wallet.
 
 1. Wallet auto approve

@@ -3,7 +3,7 @@ title: Storing SOL in a PDA
 description: Using PDAs, you can reward SOL to players playing your game. Learn how to reward SOL from a PDA when players find chests in this game.
 ---
 
-# Storing SOL in PDAs for Game Rewards
+Here you will learn how to store SOL in a PDA and use it to reward players in a game. We will build a simple game where players can move right and collect a reward when they reach a specific position. The reward will be stored in a PDA, and players can claim it by interacting with the game.
 
 Video Walkthrough:
 <div class="video-block">

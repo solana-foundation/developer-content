@@ -138,7 +138,7 @@ On-chain:
 - [Dune Dashboards](https://dune.com/browse/dashboards)
 - [Aleph.Im](https://aleph.im/)
 - [Flipside](https://www.flipsidecrypto.xyz/earn?project=Solana)
-- [Vybe Network](Vybenetwork.com)
+- [Vybe Network](https://Vybenetwork.com)
 
 Macro stats and trends:
 
@@ -164,7 +164,7 @@ Macro stats and trends:
 [https://solana.com/rpc](https://solana.com/rpc)
 
 ### Asset Storage
-- [Lit](Litprotocol.com)
+- [Lit](https://Litprotocol.com)
 - [Arweave](https://arweave.org)
 - [Filecoin](https://filecoin.io/)
 
@@ -220,7 +220,7 @@ Macro stats and trends:
 
 - **Other Media**
     
-  - [https://play.carv.io/](https://carv.io/home)
+  - [https://play.carv.io/](https://carv.io/)
     
   - [Community Gaming](https://www.communitygaming.io/)
 
@@ -234,7 +234,7 @@ Macro stats and trends:
 # Looking for even more?
 This is a live and ever-evolving list, check back in from time-to-time.
 
-Explore the [ecosystem](https://solana.com/ecosystem) projects.
+Explore the [ecosystem](https://solana.com/ecosystem/explore) projects.
 
 Learn fundamentals with [tutorials](https://soldev.app/)
 

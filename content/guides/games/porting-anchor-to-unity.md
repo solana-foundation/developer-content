@@ -3,8 +3,6 @@ title: Port Anchor to Unity
 description: Using anchor idl you can interact with your program directly from unity
 ---
 
-# Porting a program to Unity
-
 When you have written a solana program you now maybe want to use it in the Unity Game engine. Fortunately there is a code generator which lets you port a anchor idl (a json representation of a solana program) to C#
 
 ## Generating the Client
@@ -34,7 +32,7 @@ We need to pass in this account to the transaction so that the Solana runtime kn
 6. Afterwards the transaction gets signed and then send to the RPC node for processing.
 Solana has different Commitment levels. If we set the commitment level to Confirmed we will be able to get the new state already within the next 500ms.
 
-7. [Full C# Source Code](https://github.com/Woody4618/SolPlay_Unity_SDK/tree/main/Assets/SolPlay/Examples/TinyAdventure)
+7. [Unity Client](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas/unity/Assets/SolPlay/Examples/TinyAdventure)
 
 ```c#
 public async void MoveRight()
@@ -66,3 +64,5 @@ public async void MoveRight()
         true, Commitment.Confirmed);
 }
 ```
+
+A full example of a Unity game that interacts with an Anchor program can be found in the Solana Game Preset which you can find [here](/developers/guides/games/game-examples.md).

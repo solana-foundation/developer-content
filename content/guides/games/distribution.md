@@ -3,8 +3,6 @@ title: Game Distribution
 description: How you can do game distribution on Solana
 ---
 
-# Distribution
-
 Distribution of your game depends highly on the platform you are using. With Solana, there are game SDKs you can build for IOS, Android, Web and Native Windows or Mac. Using the Unity SDK you could even connect Nintendo Switch or XBox to Solana theoretically. Many game companies are pivoting to a mobile first approach because there are so many people with mobile phones in the world. Mobile comes with its own complications though, so you should pick what fits best to your game.  
 
 Solana has a distinct edge over other blockchain platforms due to its offering of a crypto-native mobile phone, named Saga, that comes equipped with an innovative dApps store. This store enables the distribution of crypto games without the limitations imposed by conventional app stores such as Google or Apple.
