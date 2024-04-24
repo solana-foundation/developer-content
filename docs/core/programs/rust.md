@@ -323,7 +323,7 @@ Similarly, fetching and deserializing account data requires creating a schema
 compatible with the on-chain program's data structures.
 
 <Callout>
-  There are multiple client languages supported. You can find details for [Rust](docs/clients/rust) and [Javascript/Typescript](docs/clients/rust) under the Solana Clients of the documentation.
+  There are multiple client languages supported. You can find details for [Rust](/docs/clients/rust) and [Javascript/Typescript](/docs/clients/rust) under the Solana Clients of the documentation.
 </Callout>
 
 Below, we'll walk through an example demonstrating how to invoke the
