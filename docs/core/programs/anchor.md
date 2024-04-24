@@ -533,7 +533,7 @@ const program = anchor.workspace.HelloAnchor as Program<HelloAnchor>;
 ```
 
 When integrating with a frontend using
-the[wallet adapter](https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
+the [wallet adapter](https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
 you'll need to manually set up the `AnchorProvider` and `Program`.
 
 ```ts {8-9, 12}
