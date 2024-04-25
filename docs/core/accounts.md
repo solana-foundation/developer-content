@@ -60,7 +60,7 @@ The `AccountInfo` for each account includes the following fields:
   often referred to as the "account data".
 - `executable`: A boolean flag that indicates if the account is a program.
 - `lamports`: A numeric representation of the account's balance in
-  [lamports](/docs/terminology#lamport), the smallest unit of SOL (1 SOL = 1
+  [lamports](/docs/terminology.md#lamport), the smallest unit of SOL (1 SOL = 1
   billion lamports).
 - `owner`: Specifies the public key (program ID) of the program that owns the
   account.
@@ -71,12 +71,11 @@ owner of an account can modify the data stored on the account or deduct the
 lamport balance. It's important to note that while only the owner may deduct the
 balance, anyone can increase the balance.
 
-<Callout>
-  To store data on-chain, a certain amount of SOL must be transferred to an
-  account. The amount transferred is proportional to the size of the data stored on the account. This concept is commonly referred to as “rent”. However, you can
-  think of "rent" more like a "deposit" because the SOL allocated to an account
-  can be fully recovered when the account is closed.
-</Callout>
+> To store data on-chain, a certain amount of SOL must be transferred to an
+> account. The amount transferred is proportional to the size of the data stored
+> on the account. This concept is commonly referred to as “rent”. However, you
+> can think of "rent" more like a "deposit" because the SOL allocated to an
+> account can be fully recovered when the account is closed.
 
 ## Native Programs
 
@@ -108,9 +107,8 @@ lamport balance of the wallet is the amount of SOL owned by the account.
 
 ![System Account](/assets/docs/core/accounts/system-account.svg)
 
-<Callout>
-  Only accounts owned by the System Program can be used as transaction fee payers.
-</Callout>
+> Only accounts owned by the System Program can be used as transaction fee
+> payers.
 
 ### BPFLoader Program
 
@@ -129,12 +127,12 @@ Accounts [here](https://docs.solanalabs.com/runtime/sysvars).
 
 ## Custom Programs
 
-On Solana, “smart contracts” are referred to as [programs](/docs/core/programs).
-A program is an account that contains executable code and is indicated by an
-“executable” flag that is set to true.
+On Solana, “smart contracts” are referred to as
+[programs](/docs/core/programs.md). A program is an account that contains
+executable code and is indicated by an “executable” flag that is set to true.
 
 For a more detailed explanation of the program deployment process, refer to the
-[Deploying Programs](/docs/programs/deploying) page of this documentation.
+[Deploying Programs](/docs/programs/deploying.md) page of this documentation.
 
 ### Program Account
 
@@ -164,10 +162,8 @@ For simplicity, you can think of the "Program Account" as the program itself.
 
 ![Program Account](/assets/docs/core/accounts/program-account-simple.svg)
 
-<Callout>
-  The address of the "Program Account" is commonly referred to as the “Program
-  ID”, which is used to invoke the program.
-</Callout>
+> The address of the "Program Account" is commonly referred to as the “Program
+> ID”, which is used to invoke the program.
 
 ### Data Account
 
@@ -181,7 +177,7 @@ code.
 
 ![Data Account](/assets/docs/core/accounts/data-account.svg)
 
-Note that only the [System Program](/docs/core/accounts#system-program) can
+Note that only the [System Program](/docs/core/accounts.md#system-program) can
 create new accounts. Once the System Program creates an account, it can then
 transfer ownership of the new account to another program.
 

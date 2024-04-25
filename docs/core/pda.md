@@ -29,12 +29,10 @@ the program used to derive the address. You can think of deriving a PDA as
 finding an address on a map. Just having an address does not mean there is
 anything built at that location.
 
-<Callout>
-This section will cover the details of deriving PDAs. The details on how
-programs use PDAs for signing will be addressed in the section on
-[Cross Program Invocations (CPIs)](/docs/core/cpi) as it requires context for
-both concepts.
-</Callout>
+> This section will cover the details of deriving PDAs. The details on how
+> programs use PDAs for signing will be addressed in the section on
+> [Cross Program Invocations (CPIs)](/docs/core/cpi.md) as it requires context
+> for both concepts.
 
 ## Key Points
 
@@ -166,15 +164,13 @@ Bump: 254
 Note that the bump seed is 254. This means that 255 derived a point on the
 Ed25519 curve, and is not a valid PDA.
 
-<Callout>
-  The bump seed returned by `findProgramAddressSync` is the first value (between
-  255-0) for the given combination of optional seeds and program ID that derives a
-  valid PDA.
-  
-  This first valid bump seed is referred to as the "canonical bump". For program
-  security, it is recommended to only use the canonical bump when working
-  with PDAs. 
-</Callout>
+The bump seed returned by `findProgramAddressSync` is the first value (between
+255-0) for the given combination of optional seeds and program ID that derives a
+valid PDA.
+
+> This first valid bump seed is referred to as the "canonical bump". For program
+> security, it is recommended to only use the canonical bump when working with
+> PDAs.
 
 ### CreateProgramAddress
 
@@ -343,7 +339,7 @@ pub pda_account: Account<'info, DataAccount>,
 
 The `init` constraint instructs Anchor to invoke the System Program to create a
 new account using the PDA as the address. Under the hood, this is done through a
-[CPI](/docs/core/cpi).
+[CPI](/docs/core/cpi.md).
 
 ```rust /init/
 #[account(

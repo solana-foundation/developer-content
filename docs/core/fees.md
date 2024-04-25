@@ -15,7 +15,9 @@ keywords:
   - cheap network
   - affordable blockchain
 altRoutes:
+  - /docs/core/runtime
   - /docs/intro/transaction_fees
+  - /docs/intro/transaction-fees
 ---
 
 The small fees paid to process [instructions](/docs/terminology.md#instruction)
@@ -104,7 +106,7 @@ consumed (aka compute budget exhaustion), the runtime will halt the transaction
 and return an error. This results in a failed transaction.
 
 > **Learn more:** compute units and the
-> [Compute Budget](/docs/core/runtime.md#compute-budget) in the Runtime and
+> [Compute Budget](/docs/core/fees.md#compute-budget) in the Runtime and
 > [requesting a fee estimate](/docs/rpc/http/getFeeForMessage.mdx) from the RPC.
 
 ## Prioritization fee

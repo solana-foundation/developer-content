@@ -1,10 +1,10 @@
 ---
 date: Apr 24, 2024
 difficulty: beginner
-title: "How to implement Cross Program Invocations in a Solana program"
+title: "How to CPI in a Solana program"
 description:
-  "Learn to implement Cross Program Invocations (CPI) in Solana programs using
-  the Anchor framework"
+  "Learn how to implement Cross Program Invocations (CPI) in Solana programs
+  using the Anchor framework"
 tags:
   - rust
   - anchor
@@ -14,8 +14,8 @@ keywords:
 ---
 
 This guide uses the
-[Anchor framework](/developers/guides/getstarted/intro-to-anchor) to demonstrate
-how to transfer SOL using a [Cross Program Invocation (CPI)](/docs/core/cpi).
+[Anchor framework](/content/guides/getstarted/intro-to-anchor.md) to demonstrate
+how to transfer SOL using a [Cross Program Invocation (CPI)](/docs/core/cpi.md).
 Included below are three different, but functionally equivalent implementations
 that you may come across when reading or writing Solana programs. Here is a
 final reference program on
@@ -247,9 +247,9 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 ```
 
 The `sol_transfer` instruction above replicates this
-[example](/docs/core/transactions#manual-sol-transfer) of manually building a
+[example](/docs/core/transactions.md#manual-sol-transfer) of manually building a
 SOL transfer instruction. It follows the same pattern as building an
-[instruction](/docs/core/transactions#instruction) to add to a transaction.
+[instruction](/docs/core/transactions.md#instruction) to add to a transaction.
 
 When building an instruction in Rust, use the following syntax to specify the
 `AccountMeta` for each account:

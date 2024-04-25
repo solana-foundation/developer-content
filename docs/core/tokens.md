@@ -17,24 +17,25 @@ These are referred to as SPL
 ([Solana Program Library](https://github.com/solana-labs/solana-program-library))
 Tokens.
 
-- The [Token Program](/docs/core/tokens#token-program) contains all the
-  instruction logic for interacting with tokens on the network (both fungible
-  and non-fungible).
+- The [Token Program](#token-program) contains all the instruction logic for
+  interacting with tokens on the network (both fungible and non-fungible).
 
-- A [Mint Account](/docs/core/tokens#mint-account) represents a specific type of
-  token and stores global metadata about the token such as the total supply and
-  mint authority (address authorized to create new units of a token).
+- A [Mint Account](#mint-account) represents a specific type of token and stores
+  global metadata about the token such as the total supply and mint authority
+  (address authorized to create new units of a token).
 
-- A [Token Account](/docs/core/tokens#token-account) keeps track of individual
-  ownership of how many units of a specific type of token (mint account) are
-  owned by a specific address.
+- A [Token Account](#token-account) keeps track of individual ownership of how
+  many units of a specific type of token (mint account) are owned by a specific
+  address.
 
-<Callout>
-  There are currently two versions of the Token Program. The original [Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program) and the [Token Extensions Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program-2022) (Token2022). The Token Extensions
-  Program functions the same as the original Token Program, but with additional
-  features and improvements. The Token Extensions Program is the recommended
-  version to use for creating new tokens (mint accounts).
-</Callout>
+> There are currently two versions of the Token Program. The original
+> [Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program)
+> and the
+> [Token Extensions Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program-2022)
+> (Token2022). The Token Extensions Program functions the same as the original
+> Token Program, but with additional features and improvements. The Token
+> Extensions Program is the recommended version to use for creating new tokens
+> (mint accounts).
 
 ## Key Points
 
@@ -62,7 +63,7 @@ The
 [Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program)
 contains all the instruction logic for interacting with tokens on the network
 (both fungible and non-fungible). All tokens on Solana are effectively
-[data accounts](/docs/core/accounts#data-account) owned by the Token Program.
+[data accounts](/docs/core/accounts.md#data-account) owned by the Token Program.
 
 You can find the full list of Token Program instructions
 [here](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/instruction.rs).
@@ -172,12 +173,11 @@ of one type of token.
 
 ![Account Relationship](/assets/docs/core/tokens/token-account-relationship.svg)
 
-<Callout>
-Note that each Token Account's data includes an `owner` field used to identify
-who has authority over that specific Token Account. This is separate from the
-program owner specified in the [AccountInfo](/docs/core/accounts#accountinfo),
-which is the Token Program for all Token Accounts.
-</Callout>
+> Note that each Token Account's data includes an `owner` field used to identify
+> who has authority over that specific Token Account. This is separate from the
+> program owner specified in the
+> [AccountInfo](/docs/core/accounts.md#accountinfo), which is the Token Program
+> for all Token Accounts.
 
 ### Associated Token Account
 
@@ -195,8 +195,8 @@ type of token account. It's just a token account with a specific address.
 ![Associated Token Account](/assets/docs/core/tokens/associated-token-account.svg)
 
 This introduces a key concept in Solana development:
-[Program Derived Address (PDA)](/docs/core/pda). Conceptually, a PDA provides a
-deterministic way to generate an address using some predefined inputs. This
+[Program Derived Address (PDA)](/docs/core/pda.md). Conceptually, a PDA provides
+a deterministic way to generate an address using some predefined inputs. This
 enables us to easily find the address of an account at a later time.
 
 Here is a [Solana Playground](https://beta.solpg.io/656a2dd0fb53fa325bfd0c41)
@@ -264,16 +264,16 @@ spl-token --help
 Alternatively, you can install the spl-token CLI locally using the following
 command. This requires first [installing Rust](https://rustup.rs/).
 
-<Callout>
-In the following sections, the account addresses displayed when you run the CLI
-command will differ from the example output shown below. Please use the address shown in your Playground terminal when following along. For example, the 
-address output from the `create-token` is the mint account where your Playground wallet is set as the mint authority.
-</Callout>
+> In the following sections, the account addresses displayed when you run the
+> CLI command will differ from the example output shown below. Please use the
+> address shown in your Playground terminal when following along. For example,
+> the address output from the `create-token` is the mint account where your
+> Playground wallet is set as the mint authority.
 
 ### Create a New Token
 
-To create a new token ([mint account](/docs/core/tokens#mint-account)) run the
-following command in the Solana Playground terminal.
+To create a new token ([mint account](#mint-account)) run the following command
+in the Solana Playground terminal.
 
 ```sh
 spl-token create-token
@@ -323,8 +323,8 @@ two instructions. Here is a Javascript example on
 ### Create Token Account
 
 To hold units of a particular token, you must first create a
-[token account](/docs/core/tokens#token-account). To create a new token account,
-use the following command:
+[token account](#token-account). To create a new token account, use the
+following command:
 
 ```sh
 spl-token create-account [OPTIONS] <TOKEN_ADDRESS>
@@ -349,8 +349,8 @@ Signature: 2BtrynuCLX9CNofFiaw6Yzbx6hit66pup9Sk7aFjwU2NEbFz7NCHD9w9sWhrCfEd73Xve
 ```
 
 By default the `create-account` command creates an
-[associated token account](/docs/core/tokens#associated-token-account) with your
-wallet address as the token account owner.
+[associated token account](#associated-token-account) with your wallet address
+as the token account owner.
 
 You can create a token account with a different owner using the following
 command:
@@ -386,8 +386,8 @@ instruction that invokes the
 Here is a Javascript example on
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
-The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi) to
-handle:
+The Associated Token Program uses [Cross Program Invocations](/docs/core/cpi.md)
+to handle:
 
 - [Invoking the System Program](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src/tools/account.rs#L19)
   to create a new account using the provided PDA as the address of the new

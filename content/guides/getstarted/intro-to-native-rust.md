@@ -16,7 +16,7 @@ To write Solana programs without leveraging the Anchor framework, we use the
 This is the base library for writing on-chain programs in Rust.
 
 For beginners, it is recommended to start with the
-[Anchor framework](/developers/guides/getstarted/intro-to-anchor).
+[Anchor framework](/content/guides/getstarted/intro-to-anchor.md).
 
 ## Program
 
@@ -121,7 +121,7 @@ pub fn process_instruction(
 ```
 
 These parameters correspond to the details required for every
-[instruction](/docs/core/transactions#instruction) on a transaction.
+[instruction](/docs/core/transactions.md#instruction) on a transaction.
 
 ### Instructions
 
@@ -157,7 +157,7 @@ pub fn process_instruction(
 A [match](https://doc.rust-lang.org/book/ch06-02-match.html) statement is then
 used to invoke the function including the logic to process the identified
 instruction. These functions are often called
-[instruction handlers](/docs/terminology#instruction-handler).
+[instruction handlers](/docs/terminology.md#instruction-handler).
 
 ```rust /process_initialize/
 pub fn process_instruction(
@@ -236,15 +236,16 @@ let system_program = next_account_info(accounts_iter)?;
 
 Creating a new account requires invoking the
 [`create_account`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L145)
-instruction on the [System Program](/docs/core/accounts#system-program). When
+instruction on the [System Program](/docs/core/accounts.md#system-program). When
 the System Program creates a new account, it can reassign the program owner of
 the new account.
 
-In this example, we use a [Cross Program Invocation](/docs/core/cpi) to invoke
-the System Program, creating a new account with the executing program as the
-`owner`. As part of the [Solana Account Model](/docs/core/accounts#accountinfo),
-only the program designated as the `owner` of an account is allowed to modify
-the data on the account.
+In this example, we use a [Cross Program Invocation](/docs/core/cpi.md) to
+invoke the System Program, creating a new account with the executing program as
+the `owner`. As part of the
+[Solana Account Model](/docs/core/accounts.md#accountinfo), only the program
+designated as the `owner` of an account is allowed to modify the data on the
+account.
 
 ```rust
 let account_data = NewAccount { data };
@@ -287,7 +288,7 @@ pub struct NewAccount {
 }
 ```
 
-All Solana accounts include a [`data`](/docs/core/accounts#accountinfo) field
+All Solana accounts include a [`data`](/docs/core/accounts.md#accountinfo) field
 that can be used to store any arbitrary data as a byte array. This flexibility
 enables programs to create and store customized data structures within new
 accounts.
@@ -330,9 +331,10 @@ building the
 Similarly, fetching and deserializing account data requires creating a schema
 compatible with the on-chain program's data structures.
 
-<Callout>
-  There are multiple client languages supported. You can find details for [Rust](/docs/clients/rust) and [Javascript/Typescript](/docs/clients/rust) under the Solana Clients of the documentation.
-</Callout>
+> There are multiple client languages supported. You can find details for
+> [Rust](/docs/clients/rust.md) and
+> [Javascript/Typescript](/docs/clients/rust.md) under the Solana Clients of the
+> documentation.
 
 Below, we'll walk through an example demonstrating how to invoke the
 `initialize` instruction from the program above.
@@ -481,7 +483,7 @@ instructionData.writeBigUInt64LE(BigInt(data), 1);
 
 After creating the instruction data buffer, use it to construct the
 `TransactionInstruction`. This involves specifying the program ID and defining
-the [`AccountMeta`](/docs/core/transactions#accountmeta) for each account
+the [`AccountMeta`](/docs/core/transactions.md#accountmeta) for each account
 involved in the instruction. This means specifying whether each account is
 writable and if it is required as a signer on the transaction.
 

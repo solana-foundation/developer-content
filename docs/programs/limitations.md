@@ -22,8 +22,8 @@ To prevent abuse of the blockchain's computational resources, each transaction
 is allocated a [compute budget](/docs/terminology.md#compute-budget). Exceeding
 this compute budget will result in the transaction failing.
 
-See [computational constraints](/docs/core/runtime.md#compute-budget) in the
-Runtime for more specific details.
+See the [computational constraints](/docs/core/fees.md#compute-budget)
+documentation for more specific details.
 
 ## Call stack depth - `CallDepthExceeded` error
 
@@ -39,7 +39,7 @@ Cross-program invocations allow programs to invoke other programs directly, but
 the depth is constrained currently to `4`.
 
 When a program exceeds the allowed
-[cross-program invocation call depth](/docs/core/cpi), it will receive a
+[cross-program invocation call depth](/docs/core/cpi.md), it will receive a
 `CallDepth` error
 
 ## Float Rust types support

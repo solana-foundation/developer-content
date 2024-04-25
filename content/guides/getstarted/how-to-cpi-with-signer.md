@@ -1,9 +1,7 @@
 ---
 date: Apr 24, 2024
 difficulty: beginner
-title:
-  "How to implement Cross Program Invocations with a PDA Signer in a Solana
-  program"
+title: "How to CPI with a PDA Signer in a Solana program"
 description:
   "Learn to implement Cross Program Invocations (CPI) with a PDA Signer in
   Solana programs using the Anchor framework"
@@ -17,18 +15,18 @@ keywords:
 ---
 
 This guide uses the
-[Anchor framework](/developers/guides/getstarted/intro-to-anchor) to demonstrate
-how to transfer SOL using a [Cross-Program Invocation (CPI)](/docs/core/cpi)
+[Anchor framework](/content/guides/getstarted/intro-to-anchor.md) to demonstrate
+how to transfer SOL using a [Cross-Program Invocation (CPI)](/docs/core/cpi.md)
 where the sender is a PDA that the program must sign for.
 
 A typical use case for this scenario is a program that manages
-[token accounts](/docs/core/tokens#token-account) on behalf of users. For
+[token accounts](/docs/core/tokens.md#token-account) on behalf of users. For
 instance, consider a scenario where a DeFi protocol pools user funds into a
 single account. The protocol needs to include security checks to automatically
 handle withdrawal requests. In such cases, the control over these pooled funds
 is not with a single user but rather with the program itself. This requires the
-[use of PDAs](/docs/core/pda) as the owner of the protocol's token accounts to
-programmatically sign for withdrawals.
+[use of PDAs](/docs/core/pda.md) as the owner of the protocol's token accounts
+to programmatically sign for withdrawals.
 
 Included below are two different, but functionally equivalent implementations
 that you may come across when reading or writing Solana programs. Here is the

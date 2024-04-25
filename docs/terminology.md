@@ -273,7 +273,7 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](/docs/core/transactions#message-header)
+[message formatting inside of transactions](/docs/core/transactions.md#message-header)
 here.
 
 ## Nakamoto coefficient
@@ -361,7 +361,7 @@ blockchain. When accounts do not have enough balance to pay rent, they may be
 Garbage Collected.
 
 See also [rent exempt](#rent-exempt) below. Learn more about rent here:
-[What is rent?](/docs/intro/rent).
+[What is rent?](/docs/intro/rent.md).
 
 ## rent exempt
 

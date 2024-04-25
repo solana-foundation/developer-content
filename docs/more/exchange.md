@@ -164,7 +164,7 @@ generate a Solana keypair using any of our
 We recommend using a unique deposit account for each of your users.
 
 Solana accounts must be made rent-exempt by containing 2-years worth of
-[rent](/docs/terminology#rent) in SOL. In order to find the minimum rent-exempt
+[rent](/docs/core/fees.md#rent) in SOL. In order to find the minimum rent-exempt
 balance for your deposit accounts, query the
 [`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
@@ -562,7 +562,7 @@ these cases, it is your responsibility to verify that the transaction succeeded
 and was finalized by the cluster.
 
 **Note:** Each transaction contains a
-[recent blockhash](/docs/core/transactions#recent-blockhash) to indicate its
+[recent blockhash](/docs/core/transactions.md#recent-blockhash) to indicate its
 liveness. It is **critical** to wait until this blockhash expires before
 retrying a withdrawal transfer that does not appear to have been confirmed or
 finalized by the cluster. Otherwise, you risk a double spend. See more on
@@ -772,10 +772,11 @@ validator has included such transactions in their block because they chose other
 transactions with higher economic value. Valid Transactions on Solana may be
 delayed or dropped if Prioritization Fees are not implemented properly.
 
-[Prioritization Fees](/docs/terminology#prioritization-fee) are additional fees
-that can be added on top of the [base Transaction Fee](/docs/core/fees) to
-ensure transaction inclusion within blocks and in these situations and help
-ensure deliverability.
+[Prioritization Fees](/docs/terminology.md#prioritization-fee) are additional
+fees that can be added on top of the
+[base Transaction Fee](/docs/core/fees.md#transaction-fees) to ensure
+transaction inclusion within blocks and in these situations and help ensure
+deliverability.
 
 These priority fees are added to transaction by adding a special Compute Budget
 instruction that sets the desired priority fee to be paid.
@@ -978,7 +979,7 @@ accounts do not:
    deposited. Token accounts can be created explicitly with the
    `spl-token create-account` command, or implicitly by the
    `spl-token transfer --fund-recipient ...` command.
-1. SPL Token accounts must remain [rent-exempt](/docs/terminology#rent-exempt)
+1. SPL Token accounts must remain [rent-exempt](/docs/core/fees.md#rent-exempt)
    for the duration of their existence and therefore require a small amount of
    native SOL tokens be deposited at account creation. For SPL Token accounts,
    this amount is 0.00203928 SOL (2,039,280 lamports).

@@ -43,7 +43,7 @@ issuance over time. Next is a brief section on
 [Adjusted Staking Yield](/docs/economics/inflation/_adjusted_staking_yield.md),
 and how token dilution might influence staking behavior.
 
-An overview of [Transaction Fees](/docs/core/fees) on Solana is followed by a
-discussion of [Storage Rent Economics](/docs/intro/economics.md) in which we
-describe an implementation of storage rent to account for the externality costs
-of maintaining the active state of the ledger.
+An overview of [Transaction Fees](/docs/core/fees.md#transaction-fees) on Solana
+is followed by a discussion of [Storage Rent Economics](/docs/core/fees.md#rent)
+in which we describe an implementation of storage rent to account for the
+externality costs of maintaining the active state of the ledger.

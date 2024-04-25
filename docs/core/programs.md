@@ -5,12 +5,13 @@ sidebarSortOrder: 4
 ---
 
 In the Solana ecosystem, "smart contracts" are called programs. Each
-[program](/docs/core/accounts#program-account) is an on-chain account that
+[program](/docs/core/accounts.md#program-account) is an on-chain account that
 stores executable logic, organized into specific functions referred to as
-[instructions](/docs/core/transactions#instruction).
+[instructions](/docs/core/transactions.md#instruction).
 
 For additional topics related to Solana programs, refer to the pages included
-under the [Deploying Programs](/docs/programs) section of this documentation.
+under the [Deploying Programs](/docs/programs/index.md) section of this
+documentation.
 
 ## Key Points
 
@@ -32,12 +33,12 @@ Solana programs are predominantly written in the
 [Rust](https://doc.rust-lang.org/book/) programming language, with two common
 approaches for development:
 
-- [Anchor](/developers/guides/getstarted/intro-to-anchor): A framework designed
+- [Anchor](/content/guides/getstarted/intro-to-anchor.md): A framework designed
   for Solana program development. It provides a faster and simpler way to write
   programs, using Rust macros to significantly reduce boilerplate code. For
   beginners, it is recommended to start with the Anchor framework.
 
-- [Native Rust](/developers/guides/getstarted/intro-to-native-rust): This
+- [Native Rust](/content/guides/getstarted/intro-to-native-rust.md): This
   approach involves writing Solana programs in Rust without leveraging any
   frameworks. It offers more flexibility but comes with increased complexity.
 

@@ -19,12 +19,17 @@ When a program initiates a Cross Program Invocation (CPI) to another program:
   (A) extend to the callee (B) program
 - The callee (B) program can make further CPIs to other programs, up to a
   maximum depth of 4 (ex. B->C, C->D)
-- The programs can "sign" on behalf of the [PDAs](/docs/core/pda) derived from
-  its program ID
+- The programs can "sign" on behalf of the [PDAs](/docs/core/pda.md) derived
+  from its program ID
 
-<Callout>
-  The Solana program runtime defines a constant called [`max_invoke_stack_height`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/program-runtime/src/compute_budget.rs#L31-L35), which is set to a value of [5](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/program-runtime/src/compute_budget.rs#L138). This represents the maximum height of the program instruction invocation stack. The stack height begins at 1 for transaction instructions, increases by 1 each time a program invokes another instruction. This setting effectively limits invocation depth for CPIs to 4.
-</Callout>
+> The Solana program runtime defines a constant called
+> [`max_invoke_stack_height`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/program-runtime/src/compute_budget.rs#L31-L35),
+> which is set to a
+> [value of 5](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/program-runtime/src/compute_budget.rs#L138).
+> This represents the maximum height of the program instruction invocation
+> stack. The stack height begins at 1 for transaction instructions, increases by
+> 1 each time a program invokes another instruction. This setting effectively
+> limits invocation depth for CPIs to 4.
 
 ## Key Points
 
@@ -42,7 +47,7 @@ When a program initiates a Cross Program Invocation (CPI) to another program:
 ## How to write a CPI
 
 Writing an instruction for a CPI follows the same pattern as building an
-[instruction](/docs/core/transactions#instruction) to add to a transaction.
+[instruction](/docs/core/transactions.md#instruction) to add to a transaction.
 Under the hood, each CPI instruction must specify the following information:
 
 - **Program address**: Specifies the program being invoked
@@ -79,7 +84,7 @@ Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke)
 that makes a CPI using the `invoke` function to call the transfer instruction on
 the System Program. You can also reference the
-[Basic CPI guide](/developers/guides/getstarted/how-to-cpi) for further details.
+[Basic CPI guide](/content/guides/getstarted/how-to-cpi.md) for further details.
 
 ### CPI with PDA Signer
 
@@ -89,8 +94,8 @@ function is used when making a CPI that requires PDA signers. The seeds used to
 derive the signer PDAs are passed into the `invoke_signed` function as
 `signer_seeds`.
 
-You can reference the [Program Derived Address](/docs/core/pda) page for details
-on how PDAs are derived.
+You can reference the [Program Derived Address](/docs/core/pda.md) page for
+details on how PDAs are derived.
 
 ```rust
 pub fn invoke_signed(
@@ -106,10 +111,10 @@ signers and writable accounts. For example, if the instruction the caller is
 processing contains a signer or writable account, then the caller can invoke an
 instruction that also contains that signer and/or writable account.
 
-While PDAs have [no private keys](/docs/core/pda#what-is-a-pda), they can still
-act as a signer in an instruction via a CPI. To verify that a PDA is derived
-from the calling program, the seeds used to generate the PDA must be included as
-`signers_seeds`.
+While PDAs have [no private keys](/docs/core/pda.md#what-is-a-pda), they can
+still act as a signer in an instruction via a CPI. To verify that a PDA is
+derived from the calling program, the seeds used to generate the PDA must be
+included as `signers_seeds`.
 
 When the CPI is processed, the Solana runtime
 [internally calls `create_program_address`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/syscalls/cpi.rs#L550)
@@ -121,5 +126,5 @@ Here is an example program on
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/cpi-invoke-signed)
 that makes a CPI using the `invoke_signed` function to call the transfer
 instruction on the System Program with a PDA signer. You can reference the
-[CPI with PDA Signer guide](/developers/guides/getstarted/how-to-cpi-with-signer)
+[CPI with PDA Signer guide](/content/guides/getstarted/how-to-cpi-with-signer.md)
 for further details.

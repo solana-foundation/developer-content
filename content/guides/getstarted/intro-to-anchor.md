@@ -25,14 +25,13 @@ and abstractions that make building Solana programs more intuitive and secure.
 
 The main macros found in an Anchor program include:
 
-- [`declare_id`](/docs/core/programs/anchor#declare_id-macro): Specifies the
-  program's on-chain address
-- [`#[program]`](/docs/core/programs/anchor#program-macro): Specifies the module
-  containing the program’s instruction logic
-- [`#[derive(Accounts)]`](/docs/core/programs/anchor#derive-accounts-macro):
-  Applied to structs to indicate a list of accounts required for an instruction
-- [`#[account]`](/docs/core/programs/anchor#account-macro): Applied to structs
-  to create custom account types specific to the program
+- [`declare_id`](#declare_id-macro): Specifies the program's on-chain address
+- [`#[program]`](#program-macro): Specifies the module containing the program’s
+  instruction logic
+- [`#[derive(Accounts)]`](#derive-accounts-macro): Applied to structs to
+  indicate a list of accounts required for an instruction
+- [`#[account]`](#account-macro): Applied to structs to create custom account
+  types specific to the program
 
 ## Anchor Program
 
@@ -165,7 +164,7 @@ This context parameter allows the instruction to access:
 - `ctx.remaining_accounts`: All remaining accounts provided to the instruction
   but not specified in the `Accounts` struct
 - `ctx.bumps`: Bump seeds for any
-  [Program Derived Address (PDA)](/docs/core/pda) accounts specified in the
+  [Program Derived Address (PDA)](/docs/core/pda.md) accounts specified in the
   `Accounts` struct
 
 ### derive(Accounts) macro
@@ -524,8 +523,8 @@ address (`programId`), and an
 [`AnchorProvider`](https://github.com/coral-xyz/anchor/blob/852fcc77beb6302474a11e0f8e6f1e688021be36/ts/packages/anchor/src/provider.ts#L55).
 An `AnchorProvider` combines two things:
 
-- `Connection` - the connection to a [Solana cluster](/docs/core/clusters) (i.e.
-  localhost, devnet, mainnet)
+- `Connection` - the connection to a [Solana cluster](/docs/core/clusters.md)
+  (i.e. localhost, devnet, mainnet)
 - `Wallet` - (optional) a default wallet used to pay and sign transactions
 
 When building an Anchor program locally, the setup for creating an instance of

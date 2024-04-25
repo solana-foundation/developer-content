@@ -125,7 +125,7 @@ Here's what an instruction looks like:
 | `Data`       | Input data provided to the program as additional information or parameters in the format of a byte array |
 
 You can read more about instructions
-[here](/docs/core/transactions#instruction).
+[here](/docs/core/transactions.md#instruction).
 
 ### Transaction Fees
 
@@ -145,7 +145,8 @@ Transactions fees are calculated based on two main parts:
 The more work a transaction requires, the more compute units it will use, and
 the more it will cost.
 
-You can read more about transaction fees [here](/docs/core/fees).
+You can read more about transaction fees
+[here](/docs/core/fees.md#transaction-fees).
 
 ## Accounts
 
