@@ -6,14 +6,15 @@ description:
 
 When you have written a solana program you now maybe want to use it in the Unity
 Game engine. Fortunately there is a code generator which lets you port a anchor
-idl (a json representation of a solana program) to C#
+idl (a json representation of a solana program) to C#.
 
 ## Generating the Client
 
 When using Anchor you will be able to generate an IDL file which is a JSON
 representation of your program. With this IDL you can then generate different
-clients. For example JS or C# to Unity. <br />
-[IDL to C# Converter](https://github.com/magicblock-labs/Solana.Unity.Anchor)<br />
+clients. For example JS or C# to Unity.
+
+[IDL to C# Converter](https://github.com/magicblock-labs/Solana.Unity.Anchor)
 
 These two lines will generate a C# client for the game.
 

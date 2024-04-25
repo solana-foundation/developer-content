@@ -44,7 +44,8 @@ To start building the program, follow these steps:
 
 Visit the [Solana Playground](https://beta.solpg.io/) and create a new Anchor
 project. If you're new to Solana Playground, you'll also need to create a
-Playground Wallet.
+Playground Wallet. You can also find the final example here:
+[Battle coins](https://beta.solpg.io/tutorials/battle-coins)
 
 After creating a new project, replace the default starter code with the code
 below:

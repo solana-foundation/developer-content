@@ -5,15 +5,19 @@ description:
   like, level and xp directly in the mint of an NFT.
 ---
 
-## Token Extension MetaData Pointer NFT
+This is an example of an anchor program that creates a NFT using the
+[new token extension](https://solana.com/developers/guides/token-extensions/getting-started)
+program and facilitating the token
+[meta data pointer](https://solana.com/developers/guides/token-extensions/metadata-pointer)
+extension.
 
-This is an example of an anchor program that creates a NFT using the new token
-extension program and facilitating the token extension meta data pointer.
+The extension allows you to save additional meta data directly in the mint of
+the NFT.
 
 The cool thing about this especially for games is that we can now have
 additional metadata fields on chain as a key value store which can be used to
-save the state of the game character. In this example we save the level and the
-collected wood of the player.
+save the state of fore example a game character. In this example we save the
+level and the collected resources of the player.
 
 This opens all kind of interesting possibilities for games. You can for example
 save the level and xp of the player, the current weapon and armor, the current
@@ -26,15 +30,15 @@ js client. The name, uri and symbol are saved in the meta data extension which
 is pointed to the mint.
 
 The nft will have a name, symbol and a uri. The uri is a link to a json file
-which contains the meta data of the nft.
+which contains the off chain meta data of the nft.
 
 There is a video walkthrough of this example on the Solana Foundation Youtube
 channel.
 
-[Video Walkthrough](https://www.youtube.com/watch?v=n-ym1utpzhk)<br />
-[Full Source Code](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)
+- [Video Walkthrough](https://www.youtube.com/watch?v=n-ym1utpzhk)
+- [Full Source Code](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)
 
-# How to run this example
+## How to run this example
 
 Running the tests
 
@@ -47,7 +51,7 @@ Then you can set your https://solana.explorer.com url to local net an look at
 the transactions.
 
 The program is also already deployed to dev net so you can try it out on dev
-net. Starting the js client
+net. The js client also has a button to mint the NFT. Starting the js client:
 
 ```shell
 cd app
@@ -55,7 +59,7 @@ yarn install
 yarn dev
 ```
 
-# Minting the NFT
+## Minting the NFT
 
 For the creating of the NFT we perform the following steps:
 
@@ -79,7 +83,7 @@ let space = ExtensionType::try_calculate_account_len::<Mint>(
 // This is the space required for the metadata account.
 // We put the meta data into the mint account at the end so we
 // don't need to create and additional account. Then the metadata pointer points back to the mint account.
-// Like this only one account is needed.
+// Like this only one account that is needed.
 let meta_data_space = 250;
 
 let lamports_required = (Rent::get()?).minimum_balance(space + meta_data_space);
@@ -236,22 +240,22 @@ Calling mint NFT from the client is very easy:
 
 ```js
 const nftAuthority = await PublicKey.findProgramAddress(
-    [Buffer.from("nft_authority")],
-    program.programId
+  [Buffer.from("nft_authority")],
+  program.programId,
 );
 
 const mint = new Keypair();
 
 const destinationTokenAccount = getAssociatedTokenAddressSync(
-    mint.publicKey,
-    publicKey,
-    false,
-    TOKEN_2022_PROGRAM_ID,
+  mint.publicKey,
+  publicKey,
+  false,
+  TOKEN_2022_PROGRAM_ID,
 );
 
 const transaction = await program.methods
-.mintNft()
-.accounts({
+  .mintNft()
+  .accounts({
     signer: publicKey,
     systemProgram: SystemProgram.programId,
     tokenProgram: TOKEN_2022_PROGRAM_ID,
@@ -260,19 +264,18 @@ const transaction = await program.methods
     rent: web3.SYSVAR_RENT_PUBKEY,
     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
     nftAuthority: nftAuthority[0],
-})
-.signers([mint])
-.transaction();
+  })
+  .signers([mint])
+  .transaction();
 
 console.log("transaction", transaction);
 
-const txSig = await sendTransaction(transaction, connection,{
-    signers: [mint],
-    skipPreflight: true
+const txSig = await sendTransaction(transaction, connection, {
+  signers: [mint],
+  skipPreflight: true,
 });
 
 console.log(`https://explorer.solana.com/tx/${txSig}?cluster=devnet`);
-}
 ```
 
 The example is based on the Solana Games Preset.
@@ -281,29 +284,20 @@ The example is based on the Solana Games Preset.
 npx create-solana-game gameName
 ```
 
-# Solana Game Preset
+There is a js and a unity client for this game and both interacting with a
+Solana anchor program.
 
-This game is ment as a starter game for on chain games. There is a js and a
-unity client for this game and both are talking to a solana anchor program.
+## How to run this example
 
-This game uses gum session keys for auto approval of transactions. Note that
-neither the program nor session keys are audited. Use at your own risk.
-
-# How to run this example
-
-## Quickstart
-
-The unity client and the js client are both connected to the same program and
-should work out of the box connecting to the already deployed program.
-
-### Unity
+#### Unity
 
 Open the Unity project with Unity Version 2021.3.32.f1 (or similar), open the
 GameScene or LoginScene and hit play. Use the editor login button in the bottom
-left. If you cant get devnet sol you can copy your address from the console and
-use the faucet here: https://faucet.solana.com/ to request some sol.
+left. If you can't get devnet sol you can copy your address from the console and
+follow the instructions on this guide:
+[How to get Devnet Sol](https://solana.com/developers/guides/getstarted/solana-token-airdrop-and-faucets)
 
-### Js Client
+#### Js Client
 
 To start the js client open the project in visual studio code and run:
 
@@ -319,8 +313,7 @@ steps below.
 ## Installing Solana dependencies
 
 Follow the installation here: https://www.anchor-lang.com/docs/installation
-Install the latest 1.16 solana version (1.17 is not supported yet) sh -c "$(curl
--sSfL https://release.solana.com/v1.16.18/install)"
+Install the latest 1.18 solana version. Tested with 1.18.11.
 
 Anchor program
 
@@ -348,15 +341,14 @@ Next js client
 ## Connect to local host (optional)
 
 To connect to local host from Unity add these links on the wallet holder game
-object: http://localhost:8899 ws://localhost:8900
+object:
 
-## Video walkthroughs
+```bash
+http://localhost:8899
+ws://localhost:8900
+```
 
-Here are two videos explaining the energy logic and session keys:
-[Session keys](https://www.youtube.com/watch?v=oKvWZoybv7Y&t=17s&ab_channel=Solana)
-[Energy system](https://www.youtube.com/watch?v=YYQtRCXJBgs&t=4s&ab_channel=Solana)
-
-# Project structure
+## Project structure
 
 The anchor project is structured like this:
 
@@ -367,6 +359,8 @@ is defined in the state folder.
 So the calls arrive in the lib.rs file and are then forwarded to the
 instructions. The instructions then call the state to get the data and update
 it.
+
+You can find the mint nft instruction in the instructions folder.
 
 ```shell
 ├── src

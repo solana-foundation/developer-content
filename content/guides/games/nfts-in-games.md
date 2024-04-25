@@ -15,7 +15,7 @@ collectibles, providing a new level of ownership and scarcity for players.
 Furthermore NFTs can be representing land, houses, achievements or even
 characters in a game. The possibilities are endless.
 
-# Using Solana Game shift to create NFTs
+## Using Solana Game shift to create NFTs
 
 Solana game shift is a gaming API maintaned by
 [Solana Labs](https://solanalabs.com/) which lets you easily create NFTs and
@@ -26,10 +26,10 @@ other assets for your game. Game Shift offers these features:
 - In game market place
 - Updating meta data of NFTs
 
-[Docs](https://docs.gameshift.dev/)<br />
-[Example Game Live](https://solplay.de/cubeshift)<br />
-[Example Game Source](https://github.com/solana-developers/cube_shift)<br />
-[Example Game dev log](https://www.youtube.com/watch?v=hTCPXVn14TY)<br />
+- [Docs](https://docs.gameshift.dev/)
+- [Example Game Live](https://solplay.de/cubeshift)
+- [Example Game Source](https://github.com/solana-developers/cube_shift)
+- [Example Game dev log](https://www.youtube.com/watch?v=hTCPXVn14TY)
 
 ## Token gating with NFTs
 
@@ -41,7 +41,7 @@ like this:
 
 ```js
 JSON.parse(
-  // For example '.config/solana/devnet.json'
+  // For example '~/.config/solana/devnet.json'
   fs.readFileSync("yourKeyPair.json").toString())
 );
 let keyPair = Keypair.fromSecretKey(decodedKey);
@@ -87,8 +87,8 @@ In the game Seven Seas there are for example three tokens. Pirate coins, which
 are used to upgrade ships, Rum which increases the health of ships and cannons
 which increase ships damage.
 
-[Source](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas)<br />
-[Eight Hour video boot camp](https://www.youtube.com/playlist?list=PLilwLeBwGuK6NsYMPP_BlVkeQgff0NwvU)
+- [Source](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas)
+- [Eight Hour video boot camp](https://www.youtube.com/playlist?list=PLilwLeBwGuK6NsYMPP_BlVkeQgff0NwvU)
 
 You can also use
 [Dynamic meta data](/developers/guides/games/interact-with-tokens.md) to save
@@ -212,9 +212,9 @@ can for example save experience and player level in the NFT itself. These NFTs
 could become more valuable the more the players play with them. A player 99
 character maybe more desirable than a level 1 character.
 
-[Guide](/docs/content/guides/nft-metadata-pointer.md)<br />
-[Repository](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)<br />
-[Video](https://www.youtube.com/watch?v=n-ym1utpzhk&ab_channel=Solana)<br />
+- [Guide](/docs/content/guides/nft-metadata-pointer.md)
+- [Repository](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022/nft-meta-data-pointer/anchor)
+- [Video](https://www.youtube.com/watch?v=n-ym1utpzhk&ab_channel=Solana)
 
 ## How to create an NFT collection
 
@@ -230,7 +230,7 @@ In the
 [Metaplex Community guides](https://developers.metaplex.com/community-guides)
 you can find help setting up your NFT collection.
 
-But there is many more NFT standarts on Solana:
+But there is many more NFT standards on Solana:
 
 - DeezNuts
 - spNFTs

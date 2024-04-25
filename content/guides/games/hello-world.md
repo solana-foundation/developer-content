@@ -3,7 +3,7 @@ title: Hello World example
 description: Get started building Solana games with a basic adventure game
 ---
 
-# Getting started with your first Solana on-chain game
+Here you can find a simple example of an on chain game on Solana.
 
 "On chain game" means that the whole state is saved on the blockchain. This
 means that the game is fully decentralized and can be played by anyone without
@@ -12,9 +12,7 @@ transaction and every move can have a valuable impact.
 
 Video Walkthrough:
 
-<div class="video-block">
-<iframe width="320" height="200" src="https://www.youtube.com/embed/_vQ3bSs3svs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
+<Embed url="https://www.youtube.com/embed/_vQ3bSs3svs"/>
 
 ## Tiny Adventure
 
@@ -345,8 +343,9 @@ Playground!
 
 If this is your first time using Solana Playground, create a Playground Wallet
 first and ensure that you're connected to a Devnet endpoint. Then, run
-`solana airdrop 2` until you have 6 SOL. Once you have enough SOL, build and
-deploy the program.
+`solana airdrop 5`. Once you have enough SOL, build and deploy the program. If
+the command failes you there are other ways on how to get dev net sol here:
+[How to get dev net sol](https://solana.com/developers/guides/getstarted/solana-token-airdrop-and-faucets)
 
 ### Get Started with the Client
 
@@ -361,7 +360,7 @@ seeds. Feel free to check out the PDA lessons of the
 [Solana Course](https://www.soldev.app/course) for more details.
 
 ```js
-// The PDA adress everyone will be able to control the character if the interact with your program
+// The PDA address everyone will be able to control the character if the interact with your program
 const [globalLevel1GameDataAccount, bump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("level1", "utf8")],
@@ -462,7 +461,8 @@ Running client...
 Congratulations! You have successfully built, deployed, and invoked the Tiny
 Adventure game from the client. To further illustrate the possibilities, check
 out this [demo](https://nextjs-tiny-adventure.vercel.app/) that demonstrates how
-to interact with the Tiny Adventure program through a Next.js frontend.
+to interact with the Tiny Adventure program through a Next.js frontend
+[Source Code](https://github.com/solana-developers/solana-game-examples/tree/main/tiny-adventure).
 
 ### Where to Go from Here
 
@@ -487,6 +487,7 @@ to store SOL in the program and distribute it to players as rewards.
 
 Other next Steps:
 
+[Getting Started Guide](/developers/guides/games/getting-started-with-game-development.md)
 [Solana Gaming SDKs](/developers/guides/games/game-sdks.md)
 [Learn by example](/developers/guides/games/game-examples.md)
 [Energy System](/developers/guides/games/energy-system.md)

@@ -19,8 +19,6 @@ Backend:**|keep your web2 games back-end and Solana in sync. |**Marketing and
 Distribution:**|acquire web3 users, at scale. |**Solana Mobile Stack:**|build
 mobile crypto games with great web3 UX.
 
-> **Note:**
->
 > 💡 Building tools/resources that should be on this list but aren’t? Please let
 > us know! Email games@solana.org with a description of what you’re building so
 > we can add you to the Games Kit!

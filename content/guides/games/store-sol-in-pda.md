@@ -5,16 +5,14 @@ description:
   reward SOL from a PDA when players find chests in this game.
 ---
 
-Here you will learn how to store SOL in a PDA and use it to reward players in a
-game. We will build a simple game where players can move right and collect a
-reward when they reach a specific position. The reward will be stored in a PDA,
-and players can claim it by interacting with the game.
+Here you will learn how to store SOL in a PDA. In the example we will use it to
+reward players in a game. We will build a simple game where players can move
+right and collect a reward when they reach a specific position. The reward will
+be stored in a PDA, and players can claim it by interacting with the game.
 
 Video Walkthrough:
 
-<div class="video-block">
-<iframe width="320" height="200" src="https://www.youtube.com/embed/gILXyWvXu7M" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
+<Embed url="https://www.youtube.com/watch?v=gILXyWvXu7M" />
 
 ## Tiny Adventure Anchor Program - Part Two
 
@@ -732,3 +730,6 @@ cross-program invocations and by directly modifying lamports in accounts.
 
 Feel free to continue building independently and enhance the game with
 additional features like new levels or alternative rewards!
+
+For more advanced examples you can check out the
+[Solana Game Examples](/developers/guides/games/game-examples.md)
