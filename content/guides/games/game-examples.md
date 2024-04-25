@@ -5,7 +5,7 @@ title: Solana game development examples
 description:
   A list of open source games and examples on Solana with tutorials to get you
   started.
-  tags:
+tags:
   - games
   - anchor
   - program
