@@ -25,7 +25,8 @@ checkout [this crash course](https://www.youtube.com/watch?v=uH60e4gZBSY) to get
 you up to speed with the basics.
 
 If any words or terms in this guide are confusing you, check out the
-[terminology](/docs/terminology) page on the Solana docs, they're pretty good!
+[terminology](/docs/terminology.md) page on the Solana docs, they're pretty
+good!
 
 > The final code for this guide can be found in
 > [this repository](https://github.com/AlmostEfficient/full-stack-solana-dev).
@@ -59,17 +60,17 @@ Here's a list of the tools you'll need to have installed:
 - [Node.js](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Solana CLI](/developers/guides/getstarted/setup-local-development#3-install-solana-cli)
+- [Solana CLI](/content/guides/getstarted/setup-local-development.md#3-install-solana-cli)
 - [Anchor](https://www.anchor-lang.com/docs/installation)
 
 You can download Node and Yarn from their setup pages which I've linked above.
 For the rest, check out the
-[Solana Local development guide](/developers/guides/getstarted/setup-local-development)
+[Solana Local development guide](/content/guides/getstarted/setup-local-development.md)
 which has detailed instructions for different operating systems.
 
 Once you have everything installed, run this command:
 
-```
+```shell
 solana --version; node -v; yarn --version; anchor --version
 ```
 
@@ -84,7 +85,7 @@ need to install the missing tool.
 
 If you haven't set up a Solana wallet yet, you can do that with:
 
-```
+```shell
 solana-keygen new
 ```
 
@@ -216,7 +217,7 @@ here.
 Open up `programs/counter/src/lib.rs` and take a look at the code you just
 built:
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 
 declare_id!("Bims5KmWhFne1m1UT4bfSknBEoECeYfztoKrsR2jTnrA");
@@ -250,7 +251,7 @@ done, it exits. It doesn't do anything in the initialization step here.
 
 You'll find the included test for this program in `tests/counter.ts`:
 
-```ts
+```ts filename="tests/counter.ts"
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Counter } from "../target/types/counter";
@@ -319,7 +320,7 @@ okay).
 We're ready, let's make a counter! Open up `programs/counter/src/lib.rs` and
 replace it with this:
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 
 // Specify the program address
@@ -395,7 +396,7 @@ The layout of this program is:
 The code here is simpler than it looks. Let's go block by block through the new
 stuff.
 
-```rust
+```rust filename="lib.rs"
 // Instructions defined in program module
 #[program]
 pub mod counter {
@@ -450,7 +451,7 @@ and then return an `Ok(())` result.
 
 Finally, let's take a look at the struct definitions:
 
-```rust
+```rust filename="lib.rs"
 // Accounts required by the initialize instruction
 #[derive(Accounts)]
 pub struct Initialize<'info> {
@@ -538,7 +539,7 @@ Next time, you can skip building and testing the template.
 Next up, let's test this program we just wrote. Open up `tests/counter.ts` and
 replace it with this:
 
-```ts
+```ts filename="tests/counter.ts"
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Counter } from "../target/types/counter";
@@ -681,7 +682,7 @@ using:
 
 Here's what the updated code in your `lib.rs` for this is:
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 
 declare_id!("C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm");
@@ -767,7 +768,7 @@ account itself, making it easy to retrieve when needed.
 
 Let's test this! Here is what the new test in `tests/counter.ts` will look like:
 
-```ts
+```ts filename="tests/counter.ts"
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Counter } from "../target/types/counter";
@@ -848,19 +849,19 @@ Let's go with the first option since we have millions in SOL. First, let's get
 the size of the old program account:
 
 ```shell
-solana program show --program-id C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm
+solana program show C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm
 ```
 
-You'll see the output in bytes:
+You'll see the output look something like this:
 
 ```shell
 Program Id: C87Mkt2suddDsb6Y15hJyGQzu9itMhU7RGxTQw17mTm
 Owner: BPFLoaderUpgradeab1e11111111111111111111111
-ProgramData Address: GmNw1kazPye54vg3U56V6uU6XwYUheQYBGiDb5pZRuq6
+ProgramData Address: 22D5oHo5q8LtdvYePrSBwy6D58z2K9KKwdn6W1UiEQEz
 Authority: FmpP9UGJUBoYUDFpBYALDGudAZtTTmK46tBpC6TkcXry
-Last Deployed In Slot: 17666
-Data Length: 199448 (0x30b18) bytes
-Balance: 1.38936216 SOL
+Last Deployed In Slot: 283249128
+Data Length: 204080 (0x31d30) bytes
+Balance: 1.42160088 SOL
 ```
 
 To find out the size of the new program, run this:
@@ -973,7 +974,7 @@ Let's give them a front-end to do that.
 #### Program deploy failed?
 
 Program code is temporarily stored in
-[buffer accounts](/docs/programs/deploying#state-accounts) while programs are
+[buffer accounts](/docs/programs/deploying.md#state-accounts) while programs are
 being deployed. You can view and close these accounts with:
 
 ```shell
@@ -1077,7 +1078,7 @@ yarn add react @solana/web3.js \
 Ready to see some magic happen? Open up your `front-end/src/App.tsx` file and
 replace the code in there with this:
 
-```tsx
+```tsx filename="App.tsx"
 import { useMemo } from "react";
 import {
   ConnectionProvider,
@@ -1161,7 +1162,7 @@ yarn add @coral-xyz/anchor
 Now for the "connection layer" code. Create a `setup.ts` file in the
 `front-end/src/anchor` folder and add this to it:
 
-```ts
+```ts filename="setup.ts"
 import { IdlAccounts, Program } from "@coral-xyz/anchor";
 import { IDL, Counter } from "./idl";
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
@@ -1212,7 +1213,7 @@ blockchain!
 Create a new directory named `components` in `front-end/src` and add a
 `counter-state.tsx` file in it with this code:
 
-```tsx
+```tsx filename="counter-state.tsx"
 import { useEffect, useState } from "react";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { program, counterPDA, CounterData } from "../anchor/setup";
@@ -1259,7 +1260,7 @@ as the second value. The callback decodes the data we get back and sets it.
 The final step is to add the `CounterState` component to our `App.tsx` file. Add
 this to the bottom of the file:
 
-```tsx
+```tsx filename="App.tsx"
 // ... previous imports
 // Import the component we just created
 import CounterState from "./components/counter-state";
@@ -1308,7 +1309,7 @@ Now to add increment functionality. We're going to put it all in a button
 component. Create a new file `components/increment-button.tsx` and add this
 code:
 
-```tsx
+```tsx filename="increment-button.tsx"
 import { useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { program, mintPDA } from "../anchor/setup";
@@ -1359,7 +1360,7 @@ in are the user's wallet and the associated token account for the user's wallet.
 
 Add our new `IncrementButton` component into the `App.tsx` to see the button:
 
-```tsx
+```tsx filename="App.tsx"
 // ... previous imports
 // Import the component we just created
 import IncrementButton from "./components/increment-button";
