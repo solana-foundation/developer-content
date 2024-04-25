@@ -1,6 +1,8 @@
 ---
 sidebarLabel: Rent
 title: Storage Rent Economics
+altRoutes:
+  - /docs/core/rent
 ---
 
 Each transaction that is submitted to the Solana ledger imposes costs.

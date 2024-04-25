@@ -123,17 +123,16 @@ source and the second as the destination.
 
 The members of the `SolAccountInfo` structure are read-only except for
 `lamports` and `data`. Both may be modified by the program in accordance with
-the [runtime enforcement policy](/docs/core/runtime.md#policy). When an
-instruction reference the same account multiple times there may be duplicate
-`SolAccountInfo` entries in the array but they both point back to the original
-input byte array. A program should handle these cases delicately to avoid
-overlapping read/writes to the same buffer. If a program implements their own
-deserialization function care should be taken to handle duplicate accounts
-appropriately.
+the "runtime enforcement policy". When an instruction reference the same account
+multiple times there may be duplicate `SolAccountInfo` entries in the array but
+they both point back to the original input byte array. A program should handle
+these cases delicately to avoid overlapping read/writes to the same buffer. If a
+program implements their own deserialization function care should be taken to
+handle duplicate accounts appropriately.
 
 `data` is the general purpose byte array from the
-[instruction's instruction data](/docs/core/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions.md#instruction) being
+processed.
 
 `program_id` is the public key of the currently executing program.
 
@@ -166,7 +165,8 @@ Use the system call
 to log a message containing the remaining number of compute units the program
 may consume before execution is halted
 
-See [compute budget](/docs/core/runtime.md#compute-budget) for more information.
+See the [Compute Budget](/docs/core/fees.md#compute-budget) documentation for
+more information.
 
 ## ELF Dump
 
