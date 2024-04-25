@@ -1,8 +1,28 @@
 ---
+date: Apr 25, 2024
+difficulty: Intro
 title: Gaming with NFTs
 description:
   NFTs can be a powerful tool in blockchain games. Learn how to utilize NFTs in
   Solana games to their full potential.
+tags:
+  - games
+  - anchor
+  - program
+  - web3js
+  - token extensions
+  - token 2022
+  - nfts
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
+  - nfts
+  - meta data
 ---
 
 Non-fungible tokens (NFTs) are rapidly gaining popularity as a means of

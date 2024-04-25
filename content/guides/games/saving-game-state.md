@@ -1,6 +1,24 @@
 ---
+date: Apr 25, 2024
+difficulty: Beginner
 title: Saving game state
 description: How to save the state of a game in a Solana program
+tags:
+  - games
+  - anchor
+  - program
+  - solana playground
+  - web3js
+  - native
+  - rust
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 You can use Solana block chain to save the state of your game in program

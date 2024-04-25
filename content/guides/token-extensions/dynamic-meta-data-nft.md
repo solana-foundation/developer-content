@@ -1,8 +1,33 @@
 ---
+date: Apr 25, 2024
+difficulty: Intermediate
 title: Dynamic meta data NFTs
 description:
   Using the meta data token extension it is possible to save dynamic meta data
   like, level and xp directly in the mint of an NFT.
+tags:
+  - games
+  - anchor
+  - program
+  - web3js
+  - token extensions
+  - token 2022
+  - nfts
+  - dapp
+  - javascript
+  - rust
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
+  - nfts
+  - meta data
+  - token extensions
+  - token 2022
 ---
 
 This is an example of an anchor program that creates a NFT using the

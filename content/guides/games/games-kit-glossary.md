@@ -1,6 +1,22 @@
 ---
+date: Apr 25, 2024
+difficulty: Intro
 title: Solana Games Kit
 description: A list of Solana game ecosystem projects
+tags:
+  - games
+  - anchor
+  - program
+  - infrastructure
+  - unity
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 Creating games is hard, and creating web3 games brings additional challenges.

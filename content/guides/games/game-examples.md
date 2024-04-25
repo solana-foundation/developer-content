@@ -1,8 +1,27 @@
 ---
+date: Apr 25, 2024
+difficulty: Intro
 title: Solana game development examples
 description:
   A list of open source games and examples on Solana with tutorials to get you
   started.
+  tags:
+  - games
+  - anchor
+  - program
+  - react
+  - web3js
+  - infrastructure
+  - unity
+  - rust
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 Here you can find a list of open source game examples and tools as reference for

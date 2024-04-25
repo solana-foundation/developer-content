@@ -1,8 +1,22 @@
 ---
+date: Apr 25, 2024
+difficulty: Beginner
 title: How to auto approve transactions
 description:
-  To have a fluent game play you may want to be able to auto approve
-  transactions
+  By auto approving transactions dapps can create a more fluent user experience.
+  This is especially interesting for on chain games.
+tags:
+  - games
+  - wallets
+  - transactions
+  - unity
+keywords:
+  - tutorial
+  - auto approve
+  - transactions
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
 ---
 
 Auto approve means that the user does not have to confirm every transaction.

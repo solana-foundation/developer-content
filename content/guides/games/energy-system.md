@@ -1,7 +1,30 @@
 ---
+date: Apr 25, 2024
+difficulty: Intermediate
 title: Energy System
 description:
   Build Energy Systems for Casual Games on Solana with these Easy Steps
+tags:
+  - games
+  - anchor
+  - transactions
+  - program
+  - react
+  - web3js
+  - unity
+  - rust
+keywords:
+  - tutorial
+  - transactions
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - energy system
+  - time based
+  - on chain timer
+  - example
 ---
 
 Casual games commonly use energy systems, meaning that actions in the game cost

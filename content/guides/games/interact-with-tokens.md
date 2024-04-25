@@ -1,6 +1,24 @@
 ---
+date: Apr 25, 2024
+difficulty: Intermediate
 title: How interact with tokens in programs
 description: Learn how to use tokens in Solana games with an on-chain tutorial
+tags:
+  - games
+  - anchor
+  - program
+  - web3js
+  - token extensions
+  - token 2022
+  - rust
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 Tokens on Solana can serve various purposes, such as in-game rewards,

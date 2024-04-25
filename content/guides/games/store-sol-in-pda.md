@@ -1,8 +1,25 @@
 ---
+date: Apr 25, 2024
+difficulty: Intermediate
 title: Storing SOL in a PDA
 description:
   Using PDAs, you can reward SOL to players playing your game. Learn how to
   reward SOL from a PDA when players find chests in this game.
+tags:
+  - games
+  - anchor
+  - program
+  - solana playground
+  - web3js
+  - rust
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 Here you will learn how to store SOL in a PDA. In the example we will use it to

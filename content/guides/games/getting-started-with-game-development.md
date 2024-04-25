@@ -1,9 +1,28 @@
 ---
+date: Apr 25, 2024
+difficulty: Intro
 title: Getting started with game development on Solana
 description:
   Learn how to build games on Solana. Solana is well built for web3 games of all
   genres utilizing speed, low fees, and more to create an amazing gaming
   experience
+tags:
+  - games
+  - anchor
+  - program
+  - unity
+  - web3js
+  - native
+  - quickstart
+  - dapp
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 The gaming space in the Solana ecosystem is expanding rapidly. Integrating with

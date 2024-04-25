@@ -1,6 +1,26 @@
 ---
+date: Apr 25, 2024
+difficulty: Beginner
 title: Hello World example
 description: Get started building Solana games with a basic adventure game
+tags:
+  - games
+  - anchor
+  - program
+  - solana playground
+  - web3js
+  - native
+  - quickstart
+  - dapp
+  - rust
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 Here you can find a simple example of an on chain game on Solana.

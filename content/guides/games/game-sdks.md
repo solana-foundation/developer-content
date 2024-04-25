@@ -1,8 +1,24 @@
 ---
+date: Apr 25, 2024
+difficulty: Intro
 title: Solana Gaming SDKs
 description:
   A list of Solana Gaming SDKs to get you started creating your first Solana
   Game
+tags:
+  - games
+  - anchor
+  - program
+  - infrastructure
+  - unity
+keywords:
+  - tutorial
+  - blockchain developer
+  - blockchain tutorial
+  - web3 developer
+  - anchor
+  - games
+  - example
 ---
 
 Here you can find a list of all the Solana game development SKDs. Solana is a
