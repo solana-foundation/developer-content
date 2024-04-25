@@ -1,6 +1,9 @@
 ---
 sidebarLabel: Proposed Inflation Schedule
 title: Proposed Inflation Schedule
+altRoutes:
+  - /docs/economics/inflation/inflation_schedule
+  - /docs/intro/economics
 ---
 
 As mentioned above, the network's _Inflation Schedule_ is uniquely described by
@@ -60,7 +63,7 @@ inflation starting from that day).
 
 Setting aside validator uptime and commissions, the expected Staking Yield and
 Adjusted Staking Yield metrics are then primarily a function of the % of total
-SOL staked on the network. Therefore we can we can model _Staking Yield_, if we
+SOL staked on the network. Therefore we can model _Staking Yield_, if we
 introduce an additional parameter _% of Staked SOL_:
 
 <!-- $$
