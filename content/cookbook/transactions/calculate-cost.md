@@ -8,7 +8,7 @@ description:
 
 The number of signatures a transaction requires are used to calculate the
 transaction cost. As long as you are not creating an account, this will be the
-final transaction cost. To find out more about costs to create an account, check
+base transaction cost. To find out more about costs to create an account, check
 out
 [calculating rent costs](solana.com/developers/cookbook/accounts/calculate-rent.md).
 

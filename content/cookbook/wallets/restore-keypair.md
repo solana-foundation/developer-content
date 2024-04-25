@@ -4,8 +4,8 @@ sidebarSortOrder: 2
 description: "Learn how to restore keypairs from a secret on Solana."
 ---
 
-If you already have your secret, you can get your Keypair from the secret to
-test out your dApp.
+If you already have your secret key or bytes, you can get your Keypair from the
+secret to test out your dApp.
 
 ## From Bytes
 

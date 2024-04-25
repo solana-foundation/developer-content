@@ -1,5 +1,5 @@
 ---
-title: How to Generate a Keypair with Mnemonics
+title: How to Generate Mnemonics for Keypairs
 sidebarSortOrder: 4
 description:
   "Mnemonics make is easy for users to store their keypair's secret. Learn how

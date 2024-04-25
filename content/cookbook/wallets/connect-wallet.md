@@ -1,5 +1,5 @@
 ---
-title: How to Connect a Wallet
+title: How to Connect a Wallet with React
 sidebarSortOrder: 8
 description:
   "Every application on Solana requires a connection with a user's wallet to
@@ -7,14 +7,16 @@ description:
 ---
 
 Solana's [wallet-adapter](https://github.com/anza-xyz/wallet-adapter) library
-make it easy to manage wallet connections client-side.
+make it easy to manage wallet connections client-side. For a full length guide,
+check out
+[how to add wallet-adapter to nextjs](https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs).
 
 ## How to Connect to a Wallet with React
 
 For quick setup with React use:
 
 ```bash
-
+npx create-solana-dapp <app-name>
 ```
 
 For manual setup, run the following command to install the required
