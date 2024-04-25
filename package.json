@@ -18,7 +18,9 @@
     "prettier": "prettier -c \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "crowdin:download": "crowdin download",
-    "crowdin:upload": "crowdin upload sources"
+    "crowdin:upload": "crowdin upload sources",
+    "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
+    "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)"
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
