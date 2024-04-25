@@ -173,20 +173,19 @@ when transferring lamports an instruction may define the first account as the
 source and the second as the destination.
 
 The members of the `AccountInfo` structure are read-only except for `lamports`
-and `data`. Both may be modified by the program in accordance with the
-[runtime enforcement policy](/docs/core/runtime.md#policy). Both of these
-members are protected by the Rust `RefCell` construct, so they must be borrowed
-to read or write to them. The reason for this is they both point back to the
-original input byte array, but there may be multiple entries in the accounts
-slice that point to the same account. Using `RefCell` ensures that the program
-does not accidentally perform overlapping read/writes to the same underlying
-data via multiple `AccountInfo` structures. If a program implements their own
-deserialization function care should be taken to handle duplicate accounts
-appropriately.
+and `data`. Both may be modified by the program in accordance with the "runtime
+enforcement policy". Both of these members are protected by the Rust `RefCell`
+construct, so they must be borrowed to read or write to them. The reason for
+this is they both point back to the original input byte array, but there may be
+multiple entries in the accounts slice that point to the same account. Using
+`RefCell` ensures that the program does not accidentally perform overlapping
+read/writes to the same underlying data via multiple `AccountInfo` structures.
+If a program implements their own deserialization function care should be taken
+to handle duplicate accounts appropriately.
 
 The instruction data is the general purpose byte array from the
-[instruction's instruction data](/docs/core/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions.md#instruction) being
+processed.
 
 ## Heap
 
@@ -225,8 +224,7 @@ single-threaded environment, as well as being deterministic:
   should be used instead.
 - The runtime enforces a limit on the number of instructions a program can
   execute during the processing of one instruction. See
-  [computation budget](/docs/core/runtime.md#compute-budget) for more
-  information.
+  [computation budget](/docs/core/fees.md#compute-budget) for more information.
 
 ## Depending on Rand
 
@@ -358,7 +356,8 @@ Use the system call
 to log a message containing the remaining number of compute units the program
 may consume before execution is halted
 
-See [compute budget](/docs/core/runtime.md#compute-budget) for more information.
+See the [Compute Budget](/docs/core/fees.md#compute-budget) documentation for
+more information.
 
 ## ELF Dump
 

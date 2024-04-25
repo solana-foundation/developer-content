@@ -1,6 +1,7 @@
 ---
 title: Address Lookup Tables
 description: ""
+sidebarSortOrder: 2
 ---
 
 Address Lookup Tables, commonly referred to as "_lookup tables_" or "_ALTs_" for
@@ -27,7 +28,7 @@ table for use inside any given transaction.
 
 To utilize an Address Lookup Table inside a transaction, developers must use v0
 transactions that were introduced with the new
-[Versioned Transaction format](/docs/core/transactions/versions.md).
+[Versioned Transaction format](/docs/advanced/versions.md).
 
 ## How to create an address lookup table
 
@@ -65,7 +66,7 @@ console.log("lookup table address:", lookupTableAddress.toBase58());
 > NOTE: Address lookup tables can be **created** with either a `v0` transaction
 > or a `legacy` transaction. But the Solana runtime can only retrieve and handle
 > the additional addresses within a lookup table while using
-> [v0 Versioned Transactions](/docs/core/transactions/versions.md#current-transaction-versions).
+> [v0 Versioned Transactions](/docs/advanced/versions.md#current-transaction-versions).
 
 ## Add addresses to a lookup table
 
