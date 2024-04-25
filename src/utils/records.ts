@@ -6,6 +6,7 @@ import {
   allDeveloperGuides,
   allDeveloperResources,
   allDeveloperWorkshops,
+  allSolanaCookbooks,
 } from "contentlayer/generated";
 
 /**
@@ -44,6 +45,10 @@ export function getRecordsForGroup(
     }
     case "workshops": {
       records = allDeveloperWorkshops;
+      break;
+    }
+    case "cookbook": {
+      records = allSolanaCookbooks;
       break;
     }
   }
