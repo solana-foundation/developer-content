@@ -792,7 +792,7 @@ describe("counter", () => {
       const txSig = await program.methods
         .initialize()
         .accounts({
-           counter: counterPDA,
+          counter: counterPDA,
         })
         .rpc();
 
