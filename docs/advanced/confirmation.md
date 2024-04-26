@@ -5,6 +5,8 @@ seoTitle: "Transaction Confirmation & Expiration"
 description:
   "Understand how Solana transaction confirmation and when a transaction expires
   (including recent blockhash checks)."
+altRoutes:
+  - /docs/core/transactions/confirmation
 ---
 
 Problems relating to
