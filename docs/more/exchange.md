@@ -843,13 +843,9 @@ instructions on a given transaction:
 - one to set the compute unit price, and
 - another to set the compute unit limit
 
-<Callout>
-
-Here, you can also find a more detailed developer
-[guide on how to use priority fees](/developers/guides/advanced/how-to-use-priority-fees)
-which includes more information about implementing priority fees.
-
-</Callout>
+> Here, you can also find a more detailed developer
+> [guide on how to use priority fees](/content/guides/advanced/how-to-use-priority-fees.md)
+> which includes more information about implementing priority fees.
 
 Create a `setComputeUnitPrice` instruction to add a Prioritization Fee above the
 Base Transaction Fee (5,000 Lamports).
@@ -923,7 +919,7 @@ instruction MUST be specified FIRST in the instructions list, even when the
 compute budget instructions are used to specify priority fees.
 
 You can find a specific code example
-[using durable nonces and priority fees together](/developers/guides/advanced/how-to-use-priority-fees#special-considerations)
+[using durable nonces and priority fees together](/content/guides/advanced/how-to-use-priority-fees.md#special-considerations)
 in this developer guide.
 
 ## Supporting the SPL Token Standard

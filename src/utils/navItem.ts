@@ -3,7 +3,7 @@ import type {
   SimpleRecordGroupName,
   SupportedDocTypes,
 } from "@/types";
-import { type SolanaDoc } from "contentlayer/generated";
+import { type CoreDocsRecord } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
 import {
   DEFAULT_LOCALE_EN,
@@ -221,7 +221,7 @@ export function shouldIgnoreRecord({
  * Compute a standard NavItem record for use with site navigation
  */
 export function computeNavItem(
-  doc: SupportedDocTypes & Partial<SolanaDoc>,
+  doc: SupportedDocTypes & Partial<CoreDocsRecord>,
 ): NavItem {
   const computedPathAndId = computeRecordPathAndId(doc._raw.flattenedPath);
 
