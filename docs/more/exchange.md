@@ -843,13 +843,9 @@ instructions on a given transaction:
 - one to set the compute unit price, and
 - another to set the compute unit limit
 
-<Callout>
-
-Here, you can also find a more detailed developer
-[guide on how to use priority fees](/developers/guides/advanced/how-to-use-priority-fees)
-which includes more information about implementing priority fees.
-
-</Callout>
+> Here, you can also find a more detailed developer
+> [guide on how to use priority fees](/content/guides/advanced/how-to-use-priority-fees.md)
+> which includes more information about implementing priority fees.
 
 Create a `setComputeUnitPrice` instruction to add a Prioritization Fee above the
 Base Transaction Fee (5,000 Lamports).
