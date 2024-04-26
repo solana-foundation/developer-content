@@ -339,11 +339,9 @@ Next, add the instructions to a new transaction and send it to the network. This
 will create a Mint Account with the `MetadataPointer` and `TokenMetadata`
 extensions enabled and store the metadata on the Mint Account.
 
-<Callout>
-Some token extension instructions are required to be atomically ordered before
-initializing the mint. While others must be after. Having these instructions
-"out of order" may result in your transaction failing.
-</Callout>
+> Some token extension instructions are required to be atomically ordered before
+> initializing the mint. While others must be after. Having these instructions
+> "out of order" may result in your transaction failing.
 
 ```javascript
 // Add instructions to new transaction
