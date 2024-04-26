@@ -75,14 +75,10 @@ _Available for Devnet_
 
 RPC Providers can opt in to distributing devnet SOL via their devnet Validators.
 
-<Callout>
+> If you are an RPC Provider and want to distribute SOL please
+> [get in touch here](https://c852ena8x5c.typeform.com/to/cUj1iRhS).
 
-If you are an RPC Provider and want to distribute SOL please
-[get in touch here](https://c852ena8x5c.typeform.com/to/cUj1iRhS).
-
-</Callout>
-
-Currently Supported:
+Currently supported:
 
 1. [Helius](https://www.helius.dev/)
 2. [QuickNode](https://faucet.quicknode.com/solana/devnet)
@@ -91,14 +87,14 @@ Currently Supported:
 ### Using the Solana CLI
 
 Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC
-provider's URL.
+provider's URL:
 
 ```shell
 solana config set --url <your RPC url>
 ```
 
 Then you can request an airdrop like you would in the first option in this
-guide.
+guide:
 
 ```shell
 solana airdrop 2

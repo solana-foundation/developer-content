@@ -39,13 +39,9 @@ deploying Solana programs to the blockchain.
 - how to create a Solana wallet for developing
 - how to airdrop SOL tokens for your wallet
 
-<Callout>
-
-If you are very new to development in general, or have only tried EVM-based
-blockchain development, your machine is likely not yet ready to help you code on
-Solana.
-
-</Callout>
+> If you are very new to development in general, or have only tried EVM-based
+> blockchain development, your machine is likely not yet ready to help you code
+> on Solana.
 
 This guide will mainly cover three operating systems: Windows (using WSL), Linux
 and MacOS. Between each of these operating systems, the broad steps to get setup
