@@ -18,6 +18,7 @@ altRoutes:
   - /docs/core/runtime
   - /docs/intro/transaction_fees
   - /docs/intro/transaction-fees
+  - /docs/core/transactions/fees
 ---
 
 The small fees paid to process [instructions](/docs/terminology.md#instruction)
