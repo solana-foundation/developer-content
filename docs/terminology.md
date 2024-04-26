@@ -396,10 +396,10 @@ A fraction of a [block](#block); the smallest unit sent between
 
 A 64-byte ed25519 signature of R (32-bytes) and S (32-bytes). With the
 requirement that R is a packed Edwards point not of small order and S is a
-scalar in the range of 0 <= S < L. This requirement ensures no signature
+scalar in the range of `0 <= S < L`. This requirement ensures no signature
 malleability. Each transaction must have at least one signature for
-[fee account](terminology#fee-account). Thus, the first signature in transaction
-can be treated as [transaction id](#transaction-id)
+[fee account](#fee-account). Thus, the first signature in transaction can be
+treated as [transaction id](#transaction-id)
 
 ## skip rate
 
@@ -414,9 +414,8 @@ identifying node misconfigurations at times.
 A past [slot](#slot) that did not produce a [block](#block), because the leader
 was offline or the [fork](#fork) containing the slot was abandoned for a better
 alternative by cluster consensus. A skipped slot will not appear as an ancestor
-for blocks at subsequent slots, nor increment the
-[block height](terminology#block-height), nor expire the oldest
-`recent_blockhash`.
+for blocks at subsequent slots, nor increment the [block height](#block-height),
+nor expire the oldest `recent_blockhash`.
 
 Whether a slot has been skipped can only be determined when it becomes older
 than the latest [rooted](#root) (thus not-skipped) slot.
