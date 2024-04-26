@@ -127,7 +127,7 @@ analysis should be used before choosing a path forward.
 ## Special Considerations
 
 If you use priority fees with a
-[Durable Nonce](/developers/guides/advanced/introduction-to-durable-nonces)
+[Durable Nonce](/content/guides/advanced/introduction-to-durable-nonces.md)
 Transaction, you must ensure the `AdvanceNonce` instruction is your
 transaction's first instruction. This is critical to ensure your transaction is
 successful; otherwise, it will fail.

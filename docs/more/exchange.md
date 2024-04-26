@@ -919,7 +919,7 @@ instruction MUST be specified FIRST in the instructions list, even when the
 compute budget instructions are used to specify priority fees.
 
 You can find a specific code example
-[using durable nonces and priority fees together](/developers/guides/advanced/how-to-use-priority-fees#special-considerations)
+[using durable nonces and priority fees together](/content/guides/advanced/how-to-use-priority-fees.md#special-considerations)
 in this developer guide.
 
 ## Supporting the SPL Token Standard
