@@ -5,6 +5,8 @@ description:
   enabling additional functionality in the Solana runtime, address lookup
   tables, and more."
 sidebarSortOrder: 1
+altRoutes:
+  - /docs/core/transactions/versions
 ---
 
 Versioned Transactions are the new transaction format that allow for additional
