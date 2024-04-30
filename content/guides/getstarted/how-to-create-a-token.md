@@ -51,9 +51,13 @@ This will generate a key pair for you where the public address starts with
 the key. Four is still ok, but five will already take a long time.
 
 For me it created this key pair:
-keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json you will need to replace this
-with your own key pair in the following steps. Then we set our solana config to
-use the keypair we just created:
+
+```bash
+keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
+```
+
+you will need to replace this with your own key pair in the following steps.
+Then we set our solana config to use the keypair we just created:
 
 ```bash
 solana config set --keypair keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
