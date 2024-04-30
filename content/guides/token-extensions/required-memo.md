@@ -61,8 +61,8 @@ run the starter code.
 
 ## Add Dependencies
 
-Let's start by setting up our script. We'll be using the `@solana/web3.js` and
-`@solana/spl-token` libraries.
+Let's start by setting up our script. We'll be using the `@solana/web3.js`,
+`@solana/spl-token`, and `@solana/spl-memo` libraries.
 
 Replace the starter code with the following:
 
@@ -90,6 +90,7 @@ import {
   mintTo,
   createTransferInstruction,
 } from "@solana/spl-token";
+import { createMemoInstruction } from "@solana/spl-memo";
 
 // Playground wallet
 const payer = pg.wallet.keypair;
@@ -305,6 +306,16 @@ const memoInstruction = new TransactionInstruction({
   data: Buffer.from(message, "utf-8"),
   programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
 });
+```
+
+Alternatively, you can create the instruction using the `@solana/spl-memo`
+library:
+
+```javascript
+// Message for the memo
+const message = "Hello, Solana";
+// Instruction to add memo
+const memoInstruction = createMemoInstruction(message, [payer.publicKey]);
 ```
 
 ## Attempt Transfer without Memo
