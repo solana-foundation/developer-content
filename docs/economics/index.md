@@ -1,6 +1,8 @@
 ---
 sidebarLabel: Economics
 title: Solana Economics Overview
+altRoutes:
+  - /docs/intro/economics
 ---
 
 **Subject to change.**
