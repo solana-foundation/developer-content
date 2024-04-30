@@ -22,7 +22,7 @@ network continues to be optimized with user experience in mind.
 
 Building the best user experience in an application is a top priority for
 developers. With blockchains, the user experience is often limited by the
-underlying technology, causing slow response times and high fees. The low fees
+underlying technology, causing slow response times and high fees. Solana's low fees
 and 400ms confirmation times enable developers to build applications that are
 user friendly and accessible to everyone.
 
