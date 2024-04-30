@@ -12,7 +12,7 @@ import {
 const basicContentFields: FieldDefs = {
   title: {
     type: "string",
-    description: "The primary title of the post",
+    description: "The primary title of the individual piece of content",
     required: true,
   },
   description: {
@@ -178,8 +178,8 @@ const standardComputedFields: ComputedFields = {
 /**
  * Content record schema for Developer Resources
  */
-export const DeveloperResource = defineDocumentType(() => ({
-  name: "DeveloperResource",
+export const ResourceRecord = defineDocumentType(() => ({
+  name: "ResourceRecord",
   filePathPattern:
     "{content/resources,/content/resources,i18n/**/content/resources}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
@@ -187,7 +187,7 @@ export const DeveloperResource = defineDocumentType(() => ({
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     repoUrl: {
       type: "string",
       description: "Repository URL for the developer resources",
@@ -205,29 +205,19 @@ export const DeveloperResource = defineDocumentType(() => ({
 /**
  * Content record schema for Developer Guides
  */
-export const DeveloperGuide = defineDocumentType(() => ({
-  name: "DeveloperGuide",
+export const GuideRecord = defineDocumentType(() => ({
+  name: "GuideRecord",
   filePathPattern:
     "{content/guides,/content/guides,i18n/**/content/guides}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
-  fields: {
-    // use the standard content fields
-    ...basicContentFields,
-
-    // define custom fields for this specific content...
-    // category: {
-    //   type: "string",
-    //   description: "",
-    //   required: false,
-    // },
-  },
+  fields: basicContentFields,
 }));
 
 /**
  * Content record schema for Developer Workshops
  */
-export const DeveloperWorkshop = defineDocumentType(() => ({
-  name: "DeveloperWorkshop",
+export const WorkshopRecord = defineDocumentType(() => ({
+  name: "WorkshopRecord",
   filePathPattern:
     "{content/workshops,/content/workshops,i18n/**/content/workshops}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
@@ -235,7 +225,7 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     repoUrl: {
       type: "string",
       description: "Repository URL for this developer workshop",
@@ -294,8 +284,8 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
  *
  * File: `courses/{course-name}/metadata.json`
  */
-export const CourseMetadata = defineDocumentType(() => ({
-  name: "CourseMetadata",
+export const CourseMetadataRecord = defineDocumentType(() => ({
+  name: "CourseMetadataRecord",
   filePathPattern:
     "{content/courses,/content/courses,i18n/**/content/courses}/**/metadata.json",
   computedFields: standardComputedFields,
@@ -303,7 +293,7 @@ export const CourseMetadata = defineDocumentType(() => ({
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     structure: {
       type: "list",
       of: { type: "json" },
@@ -321,8 +311,8 @@ export const CourseMetadata = defineDocumentType(() => ({
 /**
  * Content record schema a single Course Lesson
  */
-export const CourseLesson = defineDocumentType(() => ({
-  name: "CourseLesson",
+export const CourseLessonRecord = defineDocumentType(() => ({
+  name: "CourseLessonRecord",
   filePathPattern:
     "{content/courses/**/lessons,/content/courses/**/lessons,i18n/**/content/courses/**/lessons}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
@@ -330,7 +320,7 @@ export const CourseLesson = defineDocumentType(() => ({
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     objectives: {
       type: "list",
       of: { type: "string" },
@@ -343,32 +333,32 @@ export const CourseLesson = defineDocumentType(() => ({
 /**
  * Content record schema a single Solana documentation record
  */
-export const SolanaDoc = defineDocumentType(() => ({
-  name: "SolanaDoc",
+export const CoreDocsRecord = defineDocumentType(() => ({
+  name: "CoreDocsRecord",
   filePathPattern: "{docs,/docs,i18n/**/docs}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
-  fields: {
-    // use the standard content fields
-    ...basicContentFields,
-
-    /**
-     * Custom fields for this specific content record type
-     */
-    // none
-  },
+  fields: basicContentFields,
 }));
 
 /**
  * Content record schema a single Solana RPC documentation record
  */
-export const SolanaRPCDoc = defineDocumentType(() => ({
-  name: "SolanaRPCDoc",
+export const CoreRPCDocsRecord = defineDocumentType(() => ({
+  name: "CoreRPCDocsRecord",
   filePathPattern: "{docs,/docs,i18n/**/docs}/rpc/**/*.{md,mdx}",
   computedFields: standardComputedFields,
-  fields: {
-    // use the standard content fields
-    ...basicContentFields,
-  },
+  fields: basicContentFields,
+}));
+
+/**
+ * Content record schema a single Solana cookbook record
+ */
+export const CookbookRecord = defineDocumentType(() => ({
+  name: "CookbookRecord",
+  filePathPattern:
+    "{content/cookbook,/content/cookbook,i18n/**/content/cookbook}/**/*.{md,mdx}",
+  computedFields: standardComputedFields,
+  fields: basicContentFields,
 }));
 
 /**
@@ -379,8 +369,8 @@ export const SolanaRPCDoc = defineDocumentType(() => ({
  *  - readme.md
  *  - README.md
  */
-export const IgnoredDoc = defineDocumentType(() => ({
-  name: "IgnoredDoc",
+export const IgnoredRecord = defineDocumentType(() => ({
+  name: "IgnoredRecord",
   filePathPattern: `**/+(README|readme).md`,
 }));
 
@@ -397,6 +387,7 @@ export default makeSource({
     "content/courses/**",
     "content/resources/**",
     "content/workshops/**",
+    "content/cookbook/**",
   ],
 
   /**
@@ -406,21 +397,24 @@ export default makeSource({
    * the `SimpleRecordGroupName` is updated accordingly
    */
   documentTypes: [
-    IgnoredDoc,
+    IgnoredRecord,
 
-    // solana docs
-    SolanaRPCDoc,
+    // core solana docs (including rpc docs)
+    CoreRPCDocsRecord,
     // !note: rpc doc must be before regular docs
-    SolanaDoc,
+    CoreDocsRecord,
 
     // developer specific content
-    DeveloperGuide,
-    DeveloperResource,
-    DeveloperWorkshop,
+    GuideRecord,
+    ResourceRecord,
+    WorkshopRecord,
 
     // course specific content record types
-    CourseMetadata,
-    CourseLesson,
+    CourseMetadataRecord,
+    CourseLessonRecord,
+
+    // Cookbook content
+    CookbookRecord,
   ],
 
   // settings to force fail on bad data schema

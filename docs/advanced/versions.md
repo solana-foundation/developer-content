@@ -1,11 +1,17 @@
 ---
 title: Versioned Transactions
-description: ""
+description:
+  "Explore the core Solana concepts: transactions, versioned transactions,
+  enabling additional functionality in the Solana runtime, address lookup
+  tables, and more."
+sidebarSortOrder: 1
+altRoutes:
+  - /docs/core/transactions/versions
 ---
 
-[Versioned Transactions](/docs/core/transactions/versions.md) are the new
-transaction format that allow for additional functionality in the Solana
-runtime, including [Address Lookup Tables](/docs/advanced/lookup-tables.md).
+Versioned Transactions are the new transaction format that allow for additional
+functionality in the Solana runtime, including
+[Address Lookup Tables](/docs/advanced/lookup-tables.md).
 
 While changes to [on chain](/docs/programs/index.md) programs are **NOT**
 required to support the new functionality of versioned transactions (or for
@@ -29,9 +35,8 @@ version of transactions they will support in their application using the
 [`getBlock`](/docs/rpc/http/getBlock.mdx) and
 [`getTransaction`](/docs/rpc/http/getTransaction.mdx).
 
-An RPC request will fail if a
-[Versioned Transaction](/docs/core/transactions/versions.md) is returned that is
-higher than the set `maxSupportedTransactionVersion`. (i.e. if a version `0`
+An RPC request will fail if a Versioned Transaction is returned that is higher
+than the set `maxSupportedTransactionVersion`. (i.e. if a version `0`
 transaction is returned when `legacy` is selected)
 
 > WARNING: If no `maxSupportedTransactionVersion` value is set, then only
@@ -179,7 +184,7 @@ console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
 - using
   [Versioned Transactions for Address Lookup Tables](/docs/advanced/lookup-tables.md#how-to-create-an-address-lookup-table)
 - view an
-  [example of a v0 transaction](https://explorer.solana.com/tx/3jpoANiFeVGisWRY5UP648xRXs3iQasCHABPWRWnoEjeA93nc79WrnGgpgazjq4K9m8g2NJoyKoWBV1Kx5VmtwHQ/?cluster=devnet)
+  [example of a v0 transaction](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
   on Solana Explorer
 - read the
   [accepted proposal](https://docs.solanalabs.com/proposals/versioned-transactions)

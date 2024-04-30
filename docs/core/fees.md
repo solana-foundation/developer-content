@@ -1,9 +1,10 @@
 ---
 title: Transaction Fees
+sidebarSortOrder: 3
 description:
-  "Transaction fees are the small fees paid to process instructions on the
-  network. These fees are based on computation and an optional prioritization
-  fee."
+  "Your guide to transaction fees on Solana -- small fees paid to process
+  instructions on the network, based on computation and an optional
+  prioritization fee."
 keywords:
   - instruction fee
   - processing fee
@@ -13,6 +14,11 @@ keywords:
   - gwei
   - cheap network
   - affordable blockchain
+altRoutes:
+  - /docs/core/runtime
+  - /docs/intro/transaction_fees
+  - /docs/intro/transaction-fees
+  - /docs/core/transactions/fees
 ---
 
 The small fees paid to process [instructions](/docs/terminology.md#instruction)
@@ -28,7 +34,7 @@ Solana blockchain.
 > [account rent](/docs/terminology.md#rent)! While transaction fees are paid to
 > process instructions on the Solana network, rent is paid to store data on the
 > blockchain. You can learn more about rent here:
-> [What is rent?](/docs/core/rent.md)
+> [What is rent?](/docs/intro/rent)
 
 ## Why pay transaction fees?
 
@@ -101,7 +107,7 @@ consumed (aka compute budget exhaustion), the runtime will halt the transaction
 and return an error. This results in a failed transaction.
 
 > **Learn more:** compute units and the
-> [Compute Budget](/docs/core/runtime.md#compute-budget) in the Runtime and
+> [Compute Budget](/docs/core/fees.md#compute-budget) in the Runtime and
 > [requesting a fee estimate](/docs/rpc/http/getFeeForMessage.mdx) from the RPC.
 
 ## Prioritization fee

@@ -5,7 +5,7 @@ This repo is the open source home of content for developers looking to
 
 These markdown based content posts are gathered from contributors from around
 the Solana ecosystem and displayed on
-[solana.com/developers](solana.com/developers) for all to learn from.
+[solana.com/developers](https://solana.com/developers) for all to learn from.
 
 Currently, there are a few primary types of Solana Developer content within this
 repo:

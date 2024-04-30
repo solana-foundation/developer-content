@@ -1,5 +1,5 @@
 ---
 metaOnly: true
 title: Solana Clients
-# sidebarSortOrder: 3
+sidebarSortOrder: 4
 ---
