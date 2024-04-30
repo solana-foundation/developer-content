@@ -1,9 +1,9 @@
 ---
 date: Apr 25, 2024
-difficulty: Beginner
+difficulty: beginner
 title: Port Anchor to Unity
 description:
-  Using anchor idl you can interact with your program directly from unity
+  Using Anchor IDL you can interact with your program directly from unity
 tags:
   - games
   - anchor
@@ -22,7 +22,7 @@ keywords:
 
 When you have written a solana program you now maybe want to use it in the Unity
 Game engine. Fortunately there is a code generator which lets you port a anchor
-idl (a json representation of a solana program) to C#.
+IDL (a json representation of a solana program) to C#.
 
 ## Generating the Client
 
@@ -48,7 +48,7 @@ Within Unity game engine we can then use the
 [Solana Unity SDK](https://assetstore.unity.com/packages/decentralization/infrastructure/solana-sdk-for-unity-246931)
 to interact with the program.
 
-1. First we find the on chain adress of the game data account with
+1. First we find the on chain address of the game data account with
    TryFindProgramAddress. We need to pass in this account to the transaction so
    that the Solana runtime knows that we want to change this account.
 2. Next we use the generated client to create a MoveRight instruction.
@@ -97,4 +97,4 @@ public async void MoveRight()
 
 A full example of a Unity game that interacts with an Anchor program can be
 found in the Solana Game Preset which you can find
-[here](/developers/guides/games/game-examples.md).
+[here](/content/guides/games/game-examples.md).

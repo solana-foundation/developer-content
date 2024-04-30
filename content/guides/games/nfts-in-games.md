@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Intro
+difficulty: intro
 title: Gaming with NFTs
 description:
   NFTs can be a powerful tool in blockchain games. Learn how to utilize NFTs in
@@ -37,7 +37,7 @@ characters in a game. The possibilities are endless.
 
 ## Using Solana Game shift to create NFTs
 
-Solana game shift is a gaming API maintaned by
+Solana game shift is a gaming API maintained by
 [Solana Labs](https://solanalabs.com/) which lets you easily create NFTs and
 other assets for your game. Game Shift offers these features:
 
@@ -101,7 +101,7 @@ character. These innovative features of NFTs provide game developers with new
 opportunities to create unique gameplay experiences and reward players for their
 ownership of valuable assets on the Solana blockchain.
 
-[How to interact with tokens](/developers/guides/games/interact-with-tokens.md)
+[How to interact with tokens](/content/guides/games/interact-with-tokens.md)
 
 In the game Seven Seas there are for example three tokens. Pirate coins, which
 are used to upgrade ships, Rum which increases the health of ships and cannons
@@ -111,12 +111,12 @@ which increase ships damage.
 - [Eight Hour video boot camp](https://www.youtube.com/playlist?list=PLilwLeBwGuK6NsYMPP_BlVkeQgff0NwvU)
 
 You can also use
-[Dynamic meta data](/developers/guides/games/interact-with-tokens.md) to save
+[Dynamic meta data](/content/guides/games/interact-with-tokens.md) to save
 character level and experience or items in an NFT. Like this game NFTs could
 become more valuable the more the players play with them.
 
 The same you can also do with Metaplex new
-[Core NFT standart](https://developers.metaplex.com/core).
+[Core NFT standard](https://developers.metaplex.com/core).
 
 ## Using NFT Metadata for Player Stats
 
@@ -186,7 +186,7 @@ allows you to have NFTs own other NFTs. For example you could create a plant
 plot NFT and then use to combine it with a water NFT and a seed NFT to create a
 Tomato NFT.
 
-## Use 3D Nfts in a game
+## Use 3D NFTs in a game
 
 Every NFT metadata can also have a animation url. This url can contain a video,
 gif or a 3d file. These 3d files usually use the format .glb or .gltf and can
@@ -243,7 +243,7 @@ takes care of the NFT most used standard on Solana. The most common way to
 create an NFT collection is to create a metaplex candy machine which lets the
 user mint predefined pairs of metadata and images.
 
-The most used NFT standart on Solana is
+The most used NFT standard on Solana is
 [Metaplex](https://docs.metaplex.com/programs/candy-machine/how-to-guides/my-first-candy-machine-part1)
 
 In the
@@ -252,7 +252,6 @@ you can find help setting up your NFT collection.
 
 But there is many more NFT standards on Solana:
 
-- DeezNuts
 - spNFTs
 - WNS
 - Core
@@ -261,9 +260,9 @@ But there is many more NFT standards on Solana:
 - nifty
 
 You can find some more information about these here:
-[Nft standards list](https://twitter.com/blessed_burgers/status/1776626530921206087)
+[NFT standards list](https://twitter.com/blessed_burgers/status/1776626530921206087)
 
-## Nft Staking and missions
+## NFT Staking and missions
 
 You can stake NFTs to for example create in-game currency or send NFTs on
 missions to give the players rewards.

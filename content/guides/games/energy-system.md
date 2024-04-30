@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Intermediate
+difficulty: intermediate
 title: Energy System
 description:
   Build Energy Systems for Casual Games on Solana with these Easy Steps
@@ -30,11 +30,11 @@ keywords:
 Casual games commonly use energy systems, meaning that actions in the game cost
 energy which refills over time. In this guide we will walk through how to build
 one on Solana. It is recommended to start with the
-[Hello World Example](/developers/guides/games/hello-world.md) if you do not
-have any prior Solana knowledge.
+[Hello World Example](/content/guides/games/hello-world.md) if you do not have
+any prior Solana knowledge.
 
-Here is a complete example source code based on the Solana dapp scaffold with a
-react client:
+Here is a complete example source code based on the Solana Game scaffold with a
+React client:
 
 [Source](https://github.com/solana-developers/solana_game_preset)
 
@@ -103,7 +103,7 @@ pub struct PlayerData {
 }
 ```
 
-### Choping trees
+### Chopping trees
 
 Then whenever the player calls the `chop_tree` instruction we will check if the
 player has enough energy and reward him with one wood.
@@ -166,7 +166,7 @@ pub fn update_energy(ctx: &mut ChopTree) -> Result<()> {
 
 ## Js client
 
-Here is a complete example based on the Solana dapp scaffold with a react
+Here is a complete example based on the Solana Game scaffold with a react
 client:
 [Source](https://github.com/solana-developers/solana-game-starter-kits/tree/main/lumberjack)
 
@@ -292,5 +292,5 @@ bot for the game the most he can do is play optimally, which maybe even easier
 to achieve when playing normally depending on the logic of your game.
 
 This game becomes even better when combined with the
-[Token example](/developers/guides/games/interact-with-tokens.md) and you
-actually drop some spl token to the players.
+[Token example](/content/guides/games/interact-with-tokens.md) and you actually
+drop some spl token to the players.

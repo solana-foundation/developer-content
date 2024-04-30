@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Intermediate
+difficulty: intermediate
 title: How interact with tokens in programs
 description: Learn how to use tokens in Solana games with an on-chain tutorial
 tags:

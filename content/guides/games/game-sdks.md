@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Intro
+difficulty: intro
 title: Solana Gaming SDKs
 description:
   A list of Solana Gaming SDKs to get you started creating your first Solana
@@ -57,7 +57,7 @@ the last years. [Godot Engine](https://godotengine.org/) is the official website
 of the engine. The Solana SDK for Godot is maintained by
 [ZenRepublic](https://twitter.com/ZenRepublicNDM) and
 [Virus-Axel](https://twitter.com/AxelBenjam). It comes with a wallet adapter
-integration, transactions, RPC functions and anchor client code generation. And
+integration, transactions, RPC functions and Anchor client code generation. And
 fully functional Metaplex
 [candy machine integration](https://zenwiki.gitbook.io/solana-godot-sdk-docs/guides/setup-candy-machine).
 
@@ -110,7 +110,7 @@ There are multiple Solana sdks maintained by different companies.
 ### Bitfrost Unreal SDK
 
 Bitfrost is working on an Unreal SDK which was already used in multiple game jam
-games. It comes with C# solnet support in C++ and Blueprints, minting of
+games. It comes with C# `solnet` support in C++ and Blueprints, minting of
 metaplex NFTs, payment processor examples in game wallet and more.
 
 - [Solana Unreal SDK by Bitfrost](https://github.com/Bifrost-Technologies/Solana-Unreal-SDK)
@@ -121,7 +121,7 @@ metaplex NFTs, payment processor examples in game wallet and more.
 
 Thugs is a game studio and NFT projects which is also maintaining on open source
 a Unreal SDK for Solana. It comes with lots of NFT functionality and has already
-released the plubin in the Unreal marketplace.
+released the plugin in the Unreal marketplace.
 
 - [Thugs Unreal plugin](https://www.unrealengine.com/marketplace/en-US/product/thugz-blockchain-plugin)
 - [Repository](https://github.com/ThugzLabs/Thugz-BC-Plugin-Packaged-for-UE5.0)
@@ -147,7 +147,7 @@ npx create-solana-game your-game-name
 ```
 
 This will generate a great starting application with wallet-adapter support an
-anchor program, a js react app and a unity client. It will also rename all
+Anchor program, a js react app and a unity client. It will also rename all
 mentions of the project to your game name. A benefit of using Next.js is that
 you can use the same code in the backend and in the frontend, speeding up
 development.
@@ -190,6 +190,6 @@ in beta.
 ## Native C#
 
 The original port of Web3js to C#. It comes with a bunch of functionality like
-transactions, RPC functions and anchor client code generation.
+transactions, RPC functions and Anchor client code generation.
 
 [Source and Docs](https://github.com/bmresearch/Solnet/blob/master/docs/articles/getting_started.md)

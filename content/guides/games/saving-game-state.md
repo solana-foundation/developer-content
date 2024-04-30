@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Beginner
+difficulty: beginner
 title: Saving game state
 description: How to save the state of a game in a Solana program
 tags:

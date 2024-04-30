@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Intro
+difficulty: intro
 title: Solana game development examples
 description:
   A list of open source games and examples on Solana with tutorials to get you
@@ -62,7 +62,7 @@ Here you can learn how it works:
 Tiny adventure is a simple example moving a player left and right on chain using
 Anchor framework and Unity SDK.
 
-- [Tutorial Guide](/developers/guides/games/hello-world.md)
+- [Tutorial Guide](/content/guides/games/hello-world.md)
 - [Video](https://www.youtube.com/watch?v=_vQ3bSs3svs)
 - [Live Version](https://solplay.de/TinyAdventure/index.html)
 - [Playground](https://beta.solpg.io/tutorials/tiny-adventure)
@@ -73,7 +73,7 @@ Anchor framework and Unity SDK.
 Learn how to save sol in a PDA seed vault and send it back to a player. Backend
 is written in Anchor and the frontend is using the Unity SDK.
 
-- [Tutorial Guide](/developers/guides/games/store-sol-in-pda.md)
+- [Tutorial Guide](/content/guides/games/store-sol-in-pda.md)
 - [Video](https://www.youtube.com/watch?v=gILXyWvXu7M)
 - [Live Version](https://solplay.de/TinyAdventureTwo/index.html)
 - [Source](https://beta.solpg.io/tutorials/tiny-adventure-two)
@@ -88,7 +88,7 @@ Anchor and the frontend is Js React and Next13. The rewards will be payed out to
 the team that manages to pull completely to one side.
 
 - [Tutorial](https://www.youtube.com/watch?v=_XBvEHwSqJc&ab_channel=SolPlay)
-- [Live version dev net](https://tug-of-war-solana-pay.vercel.app/?network=devnet)
+- [Live version on devnet](https://tug-of-war-solana-pay.vercel.app/?network=devnet)
 - [Source](https://github.com/Solana-Workshops/tug-of-war-solana-pay)
 
 ## How to build a round based multiplayer game

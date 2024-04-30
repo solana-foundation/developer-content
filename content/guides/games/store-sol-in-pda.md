@@ -1,6 +1,6 @@
 ---
 date: Apr 25, 2024
-difficulty: Intermediate
+difficulty: intermediate
 title: Storing SOL in a PDA
 description:
   Using PDAs, you can reward SOL to players playing your game. Learn how to
@@ -9,7 +9,6 @@ tags:
   - games
   - anchor
   - program
-  - solana playground
   - web3js
   - rust
 keywords:
@@ -593,7 +592,7 @@ First, let's derive the PDAs (Program Derived Addresses) for the
 format of a public key, derived using the program's ID and additional seeds.
 
 ```js
-// The PDA adress everyone will be able to control the character if the interact with your program
+// The PDA address everyone will be able to control the character if the interact with your program
 const [globalLevel1GameDataAccount, bump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("level1", "utf8")],
@@ -749,4 +748,4 @@ Feel free to continue building independently and enhance the game with
 additional features like new levels or alternative rewards!
 
 For more advanced examples you can check out the
-[Solana Game Examples](/developers/guides/games/game-examples.md)
+[Solana Game Examples](/content/guides/games/game-examples.md)
