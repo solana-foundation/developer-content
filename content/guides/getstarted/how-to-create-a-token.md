@@ -2,7 +2,7 @@
 date: Apr 30, 2024
 difficulty: intro
 title: "How to create a token on Solana"
-description: "Learn how to create a SPL token on Solana with meta data."
+description: "Learn how to create a SPL token on Solana with metadata."
 tags:
   - quickstart
   - web3js
@@ -23,15 +23,15 @@ keywords:
 ---
 
 In this guide you will learn step by step how to create a new SPL token on
-Solana with token extension meta data. If you want to use metaplex meta data
-instead you can find the metaplex documentation
-[here](https://developers.metaplex.com/token-metadata).
+Solana with token extension meta data. If you want to use Metaplex metadata
+instead instead see the
+[Metaplex documentation](https://developers.metaplex.com/token-metadata).
 
 ## Installing Solana Tools
 
-First we need to download Solana tools to our system. Follow this guide to
-install the Solana CLI:
-[Install Solana CLI](https://docs.solanalabs.com/de/cli/install#use-solanas-install-tool)
+First we need to download Solana tools to our system. Follow this Follow this
+[guide to  
+install the Solana CLI](https://docs.solanalabs.com/de/cli/install#use-solanas-install-tool).
 
 ## Create folder and key pairs
 
@@ -59,7 +59,7 @@ keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
 ```
 
 you will need to replace this with your own key pair in the following steps.
-Then we set our solana config to use the keypair we just created:
+Then we configure the Solana config to use the keypair we just created:
 
 ```bash
 solana config set --keypair keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
@@ -86,31 +86,33 @@ niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun.json
 
 Make sure to replace this with your own key pair in the following steps.
 
-We will also set the solana config to work on dev net for this example.
+We will also set Solana to work on devnet for this example:
 
 ```bash
 solana config set -ud
 ```
 
-This will set the default RPC cluster to solana devnet
-"https://api.devnet.solana.com". From not on all commands will be executed on
+This will set the default RPC cluster to Solana devnet
+"https://api.devnet.solana.com". From now on all commands will be executed on
 the dev net. To release your token on mainnet you will need to perform all step
 from here again but set the cluster to mainnet using -um instead of -ud.
 
 ## Fund the account
 
-For solana dev net we will just be able to get some free SOL from the faucet or
-from one of these
-[other methods](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets):
+For solana dev net we will just be able to get some free SOL from the faucet. If
+you get rate limited you can follow this
+[guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
+to get devnet SOL.
 
 ```bash
 solana airdrop 2
 ```
 
-For mainnet you will need to fund the account with SOL. You can buy SOL token in
-many places like centralized exchanges or decentralized exchanges. You can find
-the address of your account by looking at the file name of the keypair that
-starts with "key" in your nice-token folder or by running:
+For mainnet you will need to fund the account with SOL. You can buy SOL with
+regular currency in places like centralized exchanges, crypto onramps, or swap
+other tokens for SOL on decentralized exchanges. You can find the address of
+your account by looking at the file name of the keypair that starts with "key"
+in your nice-token folder or by running:
 
 ```bash
 solana address
@@ -124,14 +126,14 @@ bites called a u64. The maximum number results to 2^64 – 1
 = 18446744073709551615. You can however set a decimal point for the token. For
 example
 [USDC](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v)
-has 6 decimals which means that each USDC can be split into one millions of a
+has 6 decimals which means that each USDC can be split into one millionth of a
 USDC.
 
 Depending on your needs you can configure different decimals for your token by
 adding the `--decimals 6` flag to the command. If you do not set it the default
 is 9.
 
-Now we will create the token mint with additional meta data extension. By adding
+Now we will create the token mint with the metadata extension enabled. By adding
 our grinded keypair at the end we will actually use that address as the mint for
 our new token.
 
@@ -148,14 +150,14 @@ you created it.
 
 ## Create and upload meta data
 
-Next we will create the off chain meta data for our token. This is usually a
+Next we will create the off chain metadata for our token. This is usually a
 .json file containing name, symbol and uri in the following format.
 
 ```json
 {
   "name": "",
   "symbol": "",
-  "uri": ""
+  "image": ""
 }
 ```
 
@@ -164,7 +166,7 @@ The meta data we will save in a decentralized storage solution.
 First we need to create an icon for the token. I used ChatGPT to generate an
 image and then uploaded it to a decentralized storage solution.
 
-There are many ways on how you can store the off chain meta data. You can for
+There are many ways on how you can store the offchain meta data. You can for
 examples just upload it to github, or any other cloud storage provider. It just
 needs to be publicly accessible.
 
@@ -181,27 +183,27 @@ Following I will show you different options in no particular order.
 | Amazon               | [Amazon](https://aws.amazon.com/)                        | -                                                                                                   |
 
 (If you are a provider of decentralized storage solutions and want to be listed
-here please just open a PR.)
+here please just open a PR using the edit page button)
 
 For this example we will use Web3 Storage. It requires to sign up for a free
 plan though but the first 5Gb are free and its very easy to use.
 
 - [web3.storage](web3.storage)
 
-Once we generated and uploaded the icon to a decentralized storage solution we
-end up with a link to that icon. We will use that link in the meta data file.
+Once we have generated and uploaded the icon to a decentralized storage solution
+we end up with a link to that icon. We will use that link in the meta data file.
 
 You will end up with some link similar to this one which should directly open
 your icon: https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo
 
-Create a new file called metadata.json in the nice-token folder and add the
+Create a new file called `metadata.json` in the `nice-token` folder and add the
 following:
 
 ```json
 {
   "name": "Nice Token",
   "symbol": "NICE",
-  "uri": "https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo"
+  "image": "https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo"
 }
 ```
 
@@ -226,7 +228,7 @@ spl-token initialize-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun \
 'https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json'
 ```
 
-Congratulation you created a token with meta data! You can look at your token in
+Congratulation you created a token with metadata! You can look at your token in
 one of the Solana block explorers:
 
 - [SolanaFm](https://solana.fm/address/niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun)
@@ -234,13 +236,14 @@ one of the Solana block explorers:
 - [Solana Explorer](https://explorer.solana.com/address/niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun?cluster=devnet)
   etc.
 
-Make sure your explorer is set to devnet if you are working on dev net and
-replace the address to your mint address starting with "nic".
+Make sure your explorer is set to devnet (if you are working on devnet) if you
+are working on dev net and replace the address to your mint address starting
+with "nic".
 
 ## Update meta data
 
 At any point as long as you do not set the update authority to null you will
-still be able to do changes the meta data of this token.
+still be able to do changes to the onchain metadata of this token.
 
 Let's say you want for example update the uri field of the token. You can do
 this by running the following command:
@@ -250,7 +253,7 @@ spl-token update-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun \
 uri https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json
 ```
 
-You can also add additional meta data to your token as a key-value pair like
+You can also add additional metadata to your token as a key-value pair like
 this:
 
 ```bash
@@ -279,7 +282,7 @@ And now we can finally mint some tokens into that token account:
 spl-token mint niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun 100
 ```
 
-Now you can also send the token to your friends like so for example:
+Now you can also send the token to your friends, for example:
 
 ```bash
 spl-token transfer niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun 10 \
@@ -301,23 +304,22 @@ for your token. Here are some possible solutions:
 - [Mango Markets](https://docs.mango.markets/)
 - [Jupiter](https://station.jup.ag/docs/get-your-token-onto-jup)
 
-If you have your own token market platform feel free to open a PR to add it
-here.
+If you have your own token market platform feel free to open a PR to add it here
+using the edit page button.
 
 ## Community tools to create tokens
 
-Use these at your own risk. In general it is recommended to never give out any
-private keys and using external tools may expose you to security risks and give
-the tool creators control over your token. These make it easy to create token,
-but can also come with fees.
+Use these at your own risk. These tools make it easy to create tokens, but may
+also expose you to security risks, add additional fees, and could potentially
+give the tool creators control over your token.
 
 - [Smithii](https://smithii.io/)
-- [Smithii Tutorial](https://smithii.io/en/create-liquidity-pool-solana/)
+- [Smithii Tutorial](https://smithii.io/en/create-meme-coin-solana/)
 - [Fluxbeam](https://fluxbeam.xyz/)
 - [Fluxbeam Tutorial](https://medium.com/@Fluxbeam/how-to-create-a-token-using-fluxbeam-and-solana-token-extensions-9d1aaa8d98ea)
 
 If you have your own token launch platform feel free to open a PR to add it
-here.
+using the edit page button.
 
 ## Further reads about tokens
 
