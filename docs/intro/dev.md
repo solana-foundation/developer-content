@@ -38,7 +38,7 @@ global permissionless blockchain. This means that anyone can interact with your
 on-chain program without the need of issuing API keys or any other form of
 permission.
 
-![A view of how clients work with the Solana blockchain](/assets/guides/intro/developer_flow.png)
+![A view of how clients work with the Solana blockchain](/assets/docs/intro/developer_flow.png)
 
 Solana development is a bit different from other blockchains because of its
 highly composable on-chain programs. This means you can build on top of any
