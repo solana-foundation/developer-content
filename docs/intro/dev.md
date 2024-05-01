@@ -80,7 +80,7 @@ favorite languages SDK here:
 | Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana) |
 
 You'll also need a connection with a RPC to interact with the network. You can
-find either work with a [RPC infrastructure provider](https://solana.com/rpc) or
+either work with a [RPC infrastructure provider](https://solana.com/rpc) or
 [run your own RPC node](https://docs.solanalabs.com/operations/setup-an-rpc-node).
 
 To quickly get started with a front-end for your application, you can generate a
