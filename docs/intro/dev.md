@@ -21,7 +21,7 @@ development works, and the tools you'll need to get started.
 
 Development on Solana can be broken down into two main parts:
 
-1. **On-chain Program Development**: This is where you create and deploy custom
+1. **Onchain Program Development**: This is where you create and deploy custom
    programs directly to the blockchain. Once deployed, anyone who knows how to
    communicate with them can use them. You can write these programs in Rust, C,
    or C++.
