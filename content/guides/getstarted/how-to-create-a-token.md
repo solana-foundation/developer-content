@@ -168,7 +168,7 @@ Following I will show you different options in no particular order.
 
 | Service              | URL                                                      | Details                                                                                             |
 | -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Web3 Storage         | [web3.storage](web3.storage)                             | Requires signing up for a free plan; first 5Gb are free; easy to use.                               |
+| Web3 Storage         | [web3.storage](https://web3.storage)                     | Requires signing up for a free plan; first 5Gb are free; easy to use.                               |
 | Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without signup for 100Mb; uploads can take a while.                        |
 | GitHub               | [GitHub](https://github.com)                             | Create a new repo, upload files, use the RAW URL format: https://raw.githubusercontent.com/xxxxxxx. |
 | ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a solana native storage solution. Did not work at the time of writing.                      |
