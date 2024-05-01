@@ -32,12 +32,12 @@ are user friendly and accessible to everyone.
 
 ## Solana Features
 
-| Feature                      | Description                                                                                                                                                                                                                   |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Onchain Program Development | The ability to develop and deploy programs onchain. Users can interact with these programs permissionlessly, removing the need for middleman servers to build applications.                                                  |
-| 400ms Slot Times             | Every transaction sent by users on Solana is confirmed in a block. With a target slot time of 400ms for each block, interactions by users do not have to wait, providing the best in class user experience of any blockchain. |
-| Low Fees                     | Fees on Solana are well known to be low. With a median fee of 0.00064 SOL per transaction, Solana enables building for users across the world regardless of background.                                                       |
-| High Throughput              | Scaling to thousands of transactions per second, Solana is built to scale with your application's user needs.                                                                                                                 |
+| Feature                     | Description                                                                                                                                                                                                                   |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Onchain Program Development | The ability to develop and deploy programs onchain. Users can interact with these programs permissionlessly, removing the need for middleman servers to build applications.                                                   |
+| 400ms Slot Times            | Every transaction sent by users on Solana is confirmed in a block. With a target slot time of 400ms for each block, interactions by users do not have to wait, providing the best in class user experience of any blockchain. |
+| Low Fees                    | Fees on Solana are well known to be low. With a median fee of 0.00064 SOL per transaction, Solana enables building for users across the world regardless of background.                                                       |
+| High Throughput             | Scaling to thousands of transactions per second, Solana is built to scale with your application's user needs.                                                                                                                 |
 
 ## How to Use These Docs
 
