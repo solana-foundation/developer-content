@@ -1,238 +1,178 @@
 ---
 sidebarLabel: Intro to Development
-title: "Introduction to Solana Development"
-description:
-  "Learn about the basic development concepts of the Solana blockchain."
-# sort order is set really high to ensure this doc is listed last
+title: "Getting Started with Solana Development"
+description: "Learn how to get started building on Solana"
 sidebarSortOrder: 9999
 keywords:
-  - accounts
-  - transactions
-  - nft
   - solana basics
   - tutorial
   - intro to solana development
   - blockchain developer
-  - blockchain tutorial
   - web3 developer
 ---
 
 Welcome to the Solana developer docs!
 
-This guide contains step-by-step instructions on how to get started. Before the
-hands-on part of the guide, we'll cover basic concepts that all developers need
-to be familiar with to build on Solana:
+This page will include everything you need to know to get started with Solana
+development. We'll cover basic requirements, give an overview of how Solana
+development works, and provide the critical tools you'll need to get started.
 
-- Transactions
-- Accounts
-- Programs
+## High Level Developer Overview
 
-## What you will learn
+Development on Solana can be broken down into two main parts:
 
-- What the developer workflows look like
-- What transactions, accounts, and programs are
-- Test networks and other tools
+1. **On-chain Program Development**: This is where you create and deploy custom
+   programs directly to the blockchain. Once deployed, anyone who knows how to
+   communicate with them can use them. You can write these programs in Rust, C,
+   or C++.
+2. **Client Development**: This is where you write dApps that communicate with
+   on-chain programs. Your apps can submit transactions to perform actions
+   on-chain. Client development can be written in any programming language.
 
-## An overview of Solana developer workflows
+The "glue" between working on the client-side and the on-chain side is the
+[JSON RPC API](https://solana.com/docs/rpc). Developers working on the
+client-side send RPC requests to the Solana network to interact with on-chain
+programs. This is very similar to normal development between a frontend and
+backend. The major difference with working on Solana is that the backend is a
+global permissionless blockchain. This means that anyone can interact with your
+on-chain program without the need of issuing API keys or any other form of
+permission.
 
-The Solana network can be thought of as one massive global computer where anyone
-can store and execute code for a fee. Deployed code is called a program, often
-referred to as a "smart contract" on other blockchains. To interact with a
-program, you need to send a transaction on the blockchain from a client.
+![A view of how clients work with the Solana blockchain](/assets/guides/intro/developer_flow.png)
 
-Here's a high level representation of this. It’s important to note that this is
-an oversimplification of the Solana network for the purposes of learning in an
-easy-to-understand way.
+Solana development is a bit different from other blockchains because of its
+highly composable on-chain programs. This means you can build on top of any
+program already deployed, and often you can do so without needing to do any
+on-chain development. For example, if you wanted to work with tokens, you could
+use the Token Program that is already deployed on the network. All development
+on your application would be client-side in your language of choice.
 
-![Solana developer workflows program-client model](/assets/docs/quickstarts/solana-overview-client-program.png)
+Developers looking to build on Solana will find that the development stack is
+very similar to any other development stack. The main difference is that you'll
+be working with a blockchain and have to think about how users potentially
+interact with your application on-chain instead of just on the frontend.
+Developing on Solana still has CICD pipelines, testing, debugging tools, a
+frontend and backend, and anything you'd find in a normal development flow.
 
-### Program development
+## What You'll Need Get Started
 
-The first development workflow allows you to create and deploy custom Rust, C
-and C++ programs directly to the blockchain. Once these programs are deployed,
-anyone who knows how to communicate with them can use them.
+To get started with Solana development, you'll need different tools based on
+whether you're working client-side or with on-chain programs.
 
-You can communicate with these programs by writing dApps with any of the
-available client SDKs (or the [CLI](https://docs.solanalabs.com/cli)), all of
-which use the [JSON RPC API](/docs/rpc/index.mdx) under the hood.
+### Client-side Development
 
-### Client development
+If you're working on the client-side, you can work with any programming language
+you're comfortable with. If you're working on the on-chain side, you'll need to
+know Rust, C, or C++. Solana has community contributed SDKs in the majority of
+languages to help developers interact with the Solana network. You can find your
+favorite languages SDK here:
 
-The second development workflow is the dApp side where you can write dApps that
-communicate with deployed programs. Your apps can submit transactions with
-instructions to these programs via a client SDK to create a wide variety of
-applications such as wallets, exchanges and more. The most popular apps are
-browser extension wallets and web apps, but you can build mobile/desktop apps or
-anything that can communicate with the [JSON RPC API](/docs/rpc/index.mdx).
+| Language   | SDK                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------- |
+| RUST       | [solana_sdk](https://docs.rs/solana-sdk/latest/solana_sdk/)                                 |
+| Typescript | [@solana/web3.js](https://github.com/solana-labs/solana-web3.js)                            |
+| Python     | [solders](https://github.com/kevinheavey/solders)                                           |
+| Java       | [solanaj](https://github.com/skynetcap/solanaj)                                             |
+| C++        | [solcpp](https://github.com/mschneider/solcpp)                                              |
+| GoLang     | [solana-go](https://github.com/gagliardetto/solana-go)                                      |
+| Kotlin     | [solanaKT](https://github.com/metaplex-foundation/SolanaKT)                                 |
+| Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana) |
 
-These two pieces work together to create a network of dApps and programs that
-can communicate with each other to update the state and query the blockchain.
+You'll also need a connection with a RPC to interact with the network. You can
+find either work with a [RPC infrastructure provider](https://solana.com/rpc) or
+[run your own RPC node](https://docs.solanalabs.com/operations/setup-an-rpc-node).
 
-## Wallets
+To quickly get started with a front-end for your application, you can use the
+Solana scaffold by typing the following into your CLI:
 
-A wallet is a pair of public and private keys that are used to verify actions on
-the blockchain. The public key is used to identify the account and the private
-key is used to sign transactions.
+```bash
+npx create-solana-dapp <project-name>
+```
 
-## Transactions
+This will create a new project with all the necessary files to get started
+building on Solana. The scaffold will include both an example frontend and an
+on-chain program template. You can read the
+[docs on create-solana-dapp](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp)
+to learn more.
 
-A transaction is the fundamental unit of activity on the Solana blockchain: it's
-a signed data structure that contains instructions for the network to perform a
-particular operation like transferring tokens.
+### On-chain Program Development
 
-You need a transaction to create, update or delete data on-chain. You can read
-data without a transaction.
+On-chain program development consists of either writing programs in Rust, C, or
+C++. You'll need to have the
+[Solana Toolsuite installed](https://docs.solanalabs.com/cli/install) to compile
+and deploy your programs. You can install the Solana toolsuite by running the
+following command:
 
-All transactions interact with programs on the network - these can be system
-programs or user built programs. Transactions tell the program what they want to
-do with a bunch of instructions, and if they're valid, the program will execute
-them and update the state of the blockchain. Think of it like a write command
-that can be rejected if certain conditions aren't met.
+```bash
+sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+```
 
-Here's a visual representation of what a transaction contains:
-![Visual layout of a transaction](/assets/docs/transaction.svg)
+Using the Solana Toolsuite, it is recommended to run a local validator for
+testing your program. To run a local validator after installing the Solana
+Toolsuite, run the following command:
 
-- Signatures: An array of digital signatures from the transaction's signers.
-- Message: The actual instructions that the transaction is issuing to the
-  network.
-  - Message header: 3 `uint8s` describing how many accounts will sign the
-    payload, how many won’t, and how many are read-only.
-  - Account addresses: an array of addresses of the accounts that will be used
-    in the transaction.
-  - Recent blockhash: a unique value that identifies a recent block - this
-    ensures the transaction is not too old and is not re-processed.
-  - Instructions: which program to call, which accounts to use, and any
-    additional data needed for the program to execute the instruction.
+```bash
+solana-test-validator
+```
 
-Transactions can be created and signed using clients via SDKs, or even on-chain
-programs.
+This will start a local validator on your machine that you can use to test your
+programs. You can read more about
+[local development](https://solana.com/developers/guides/getstarted/setup-local-development)
+under the guides section.
 
-You can learn more about transactions [here](/docs/core/transactions.md).
+When building on-chain programs, you have a choice to either build with Native
+Rust or use the Anchor framework. Anchor is a framework that makes it easier to
+build on Solana by providing a higher-level API for developers. Think of Anchor
+like building with React for your websites instead of raw Typescript and HTML.
+While Typescript and HTML give you more control over your website, React
+accelerates your development and makes developing easy. You can read more about
+[Anchor](https://www.anchor-lang.com/) on their website.
 
-### Instructions
+You'll need a way to test your program. There are a few different ways to test
+your program based on your language preference:
 
-Instructions are the most basic operational unit on Solana. A transaction can
-contain one or more instructions. Instructions are executed sequentially in the
-order they are provided in the transaction by programs on the blockchain. If any
-part of an instruction fails, the entire transaction will fail.
+- [solana-program-test](https://docs.rs/solana-program-test/latest/solana_program_test/) -
+  Testing framework built in Rust
+- [solana-bankrun](https://kevinheavey.github.io/solana-bankrun/) - Testing
+  framework built in Python or Typescript
 
-Here's what an instruction looks like:
+If you do not want to develop your programs locally, there's also the
+[online IDE Solana Playground](https://beta.solpg.io). Solana Playground allows
+you to write, deploy, and test programs on Solana. You can get started with
+Solana Playground by
+[following our guide](https://solana.com/developers/guides/getstarted/hello-world-in-your-browser).
 
-| Item         | Description                                                                                              |
-| ------------ | -------------------------------------------------------------------------------------------------------- |
-| `Program ID` | The ID of the program being called                                                                       |
-| `Accounts`   | The accounts that the instruction wants to read or modify                                                |
-| `Data`       | Input data provided to the program as additional information or parameters in the format of a byte array |
+### Developer Environments
 
-You can read more about instructions
-[here](/docs/core/transactions.md#instruction).
+Choosing the right environment based on your work is very important. On Solana,
+there are a few different environments to facilitate mature testing and CICD
+practices:
 
-### Transaction Fees
-
-Every time you submit a transaction, somebody on the network is providing space
-and processing power to make it happen. To facilitate this, transactions on
-Solana require a fee to be paid in Lamports, which are the smallest units of SOL
-(like cents to a dollar or paise to a rupee). One SOL is equal to 1,000,000,000
-Lamports, and one Lamport has a value of 0.000000001 SOL. This fee is paid to
-the validators who process the transaction.
-
-Transactions fees are calculated based on two main parts:
-
-- a statically set base fee per signature, and
-- the computational resources used during the transaction, measured in
-  "[_compute units_](/docs/terminology.md#compute-units)"
-
-The more work a transaction requires, the more compute units it will use, and
-the more it will cost.
-
-You can read more about transaction fees
-[here](/docs/core/fees.md#transaction-fees).
-
-## Accounts
-
-Accounts on Solana are storage spaces that can hold arbitrary data up to 10MB.
-They're used to store data, user programs, and native system programs.
-
-If a program needs to store state between transactions, it does so using
-accounts. This means that all programs on Solana are stateless - they don't
-store any state data, only code. If an account stores program code, it's marked
-"executable" and can process instructions.
-
-The easiest way to think of an account is like a file. Users can have many
-different files. Developers can write programs that can "talk" to these files.
-In the same way that a Linux user uses a path to look up a file, a Solana client
-uses an address to look up an account. The address is a 256-bit public key. Also
-like a file, an account includes metadata that tells the runtime who is allowed
-to access the data and how. This prevents unauthorized changes to the data in
-the account.
-
-Unlike a file, the account includes metadata for the lifetime of the file.
-Solana accounts have a unique lifecycle. When an account is created, it needs to
-be assigned some space, and tokens are required to rent this space. If an
-account doesn't have enough tokens to cover the rent, it will be removed.
-However, if the account does hold enough tokens to cover the rent for two years,
-it's considered "rent-exempt" and won't be deleted.
-
-You can read more about accounts [here](/docs/core/accounts.md).
-
-## Programs
-
-Programs are the foundation of the Solana blockchain. They're responsible for
-everything that happens on the network: creating accounts, processing
-transactions, collecting fees, and more.
-
-Programs process instructions from both end users and other programs. All
-programs are stateless: any data they interact with is stored in separate
-accounts that are passed in via instructions.
-
-There are two sets of programs that are maintained by the Solana Labs team:
-[Native Programs](https://docs.solanalabs.com/runtime/programs) and the
-[Solana Program Library (SPL)](https://spl.solana.com/). These serve as core
-building blocks for on-chain interactions. Native programs are used for core
-blockchain functionality like creating new accounts, assigning ownership,
-transferring SOL, and more. SPL programs are used for creating, swapping, and
-lending tokens, as well as generating stake pools and maintaining an on-chain
-name service.
-
-You can interact with both native programs and SPL programs easily using the
-Solana CLI and the SDKs, allowing you to create complete dApps without writing
-Rust. You can also build on top of any user programs that have been deployed to
-the network - all you need is the program's address and how it works: the
-account structures, instructions, and error codes.
-
-Developers most commonly write programs in Rust using frameworks such as Anchor.
-However, programs can be written in any language that compiles to BPF, including
-C++ and Move.
-
-You can learn more about programs [here](/docs/core/programs.md).
-
-## Testing and developing environments
-
-When developing on Solana you have a few options for environments.
-
-The easiest and quickest way to get started is the
-[Solana Playground](https://beta.solpg.io) - a browser based IDE that allows you
-to write, deploy, and test programs.
-
-The most popular setup is
-[local development](/content/guides/getstarted/setup-local-development.md) with
-a local validator that you run on your machine - this allows you to test your
-programs locally before deploying them to any network.
-
-In each environment, you'll be using one of three networks:
-
-- Mainnet Beta - the "production" network where all the action happens.
+- **Mainnet Beta**: The production network where all the action happens.
   Transactions cost real money here.
-- Testnet - used for stress testing recent releases. Focused on network
-  performance, stability, and validator behavior.
-- Devnet - the primary network for development. Most closely resembles Mainnet
-  Beta, but tokens are not real.
+- **Devnet**: The quality assurance network were you deploy your programs to
+  test before deploying to production.
+- **Local**: The local network that you run on your machine using
+  `solana-test-validator` to test your programs. This should be your first
+  choice when developing programs.
 
-Devnet has a faucet that allows you to get free SOL to test with. It costs $0 to
-do development on Solana.
+## Build by Example
 
-Check out the [clusters page](/docs/core/clusters.md) for more information on
-these.
+While you get started building on Solana, there's a few more resources to
+available to help accelerate your journey.
+
+- [Solana Cookbook](https://solana.com/developers/cookbook): A collection of
+  references and code snippets to help you build on Solana.
+- [Solana Program Examples](https://github.com/solana-developers/program-examples):
+  A repository of example programs providing building blocks for different
+  actions on your programs.
+- [Guides](https://solana.com/developers/guides): Tutorials and guides to walk
+  you through building on Solana.
+
+## Getting Support
+
+The best support you can find is by asking your question on the
+[Solana StackExchange](https://solana.stackexchange.com/).
 
 ## Next steps
 
