@@ -46,8 +46,8 @@ should make their best attempt to list multiple options that meet similar use
 cases. As a general rule of thumb, try to share at least 3-4 options of similar
 products or services, not just a single named one. For example, when talking
 about wallet providers, a writer could list Phantom, Solflare, Backpack, and
-Ultimate. When talking about RPC providers, a writer could list Triton, Helius,
-and QuickNode.
+Ultimate. When talking about RPC providers, a writer should link to
+[solana.com/rpc](https://solana.com/rpc) instead of listing specific names.
 
 ### Use up-to-date code snippets
 
@@ -62,7 +62,8 @@ To aid in keeping both consistent content and a high quality experience, all
 code/content maintained within this repo shall use the style guidelines set
 forth here.
 
-Failure to adhere to these style guidelines will slow down the review process.
+Failure to adhere to these style guidelines will slow down the review process
+and block approval/merging.
 
 ### Prettier
 
@@ -89,6 +90,63 @@ prettier formatting guidelines.
 yarn prettier
 ```
 
+### Heading styles
+
+The content within a document should not start with a heading. It should start
+with a paragraph of text. After each heading, should be non-heading content
+(i.e. do not stack headings without putting a sentence/paragraph between them).
+
+Content should NOT include a `h1` tag within it since solana.com will
+automatically render a specific h1 based on the frontmatter's `title`. As such,
+all markdown `h1` will be auto converted to a `h2`.
+
+The text within a heading should NOT include inline code blocks (i.e. single
+backtick). They should also NOT end with any special characters (i.e.
+`:;!@#$%^&*`). Ending in a question mark is allowed.
+
+All h2-h4 headings will be auto anchored, allowing anyone to directly link to
+the specific section of content. A clickable anchor link will be rendered aside
+the heading's text.
+
+```md
+## Simple, valid heading
+
+The heading above is valid! Yay :)
+
+## This is an `invalid` header
+
+The heading above is invalid since it contains single backticks, aka this
+character: `
+
+### This is also invalid:
+
+The heading above is invalid since it ends with a colon.
+
+# this will become an h2
+
+The heading above will be converted to a `h2` element
+
+## This is okay?
+
+The heading above is valid! Yay :)
+
+#### this in not okay since it does not increment by only 1
+
+The heading above is invalid since it skips the `h3` heading (`###`)
+```
+
+### Table of contents
+
+When a content page is rendered on solana.com, a table of contents will be auto
+generated based on the markdown headings within the document's content.
+Specifically: all `h2`, `h3`, and `h4` (aka h2-h4) tags will be include in the
+table of contents. All headings greater than `h4` will be ignored from the table
+of contents.
+
+The exact text within the heading will be rendered as a line item in the table
+of contents. As such, thought should be put into the text within a heading,
+especially for accessibility.
+
 ## Content types
 
 This repo contains multiple different types of developer content records. Each
@@ -101,9 +159,14 @@ corresponding path within this repo and webpage for viewing on solana.com:
 | Content Type | Repo Path                                   | Webpage URL                                               |
 | ------------ | ------------------------------------------- | --------------------------------------------------------- |
 | `docs`       | [`/docs`](/docs/)                           | [View Docs](https://solana.com/docs)                      |
+| `rpc`        | [`/docs/rpc`](/docs/rpc/)                   | [View Docs](https://solana.com/docs/rpc)                  |
 | `guides`     | [`/content/guides`](/content/guides/)       | [View Guides](https://solana.com/developers/guides)       |
 | `resources`  | [`/content/resources`](/content/resources/) | [View Resources](https://solana.com/developers/resources) |
 | `cookbook`   | [`/content/cookbook`](/content/cookbook)    | [View Cookbook](https://solana.com/developers/cookbook)   |
+
+> Note: Even though `rpc` is technically a different record type, it is treated
+> effectively the same as the `docs` type. More details in the
+> ["Frontmatter for Docs"](#frontmatter-for-docs) section.
 
 ## Written in markdown
 
@@ -121,6 +184,10 @@ of content. Each content type has specifically supported frontmatter fields,
 some required and some optional. All available frontmatter fields are enforced
 via [Contentlayer](#why-contentlayer) (see more below).
 
+Here is an
+[example of the frontmatter](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L1-L25)
+within a piece of content within this repo.
+
 ### Why Contentlayer?
 
 [Contentlayer](https://contentlayer.dev/) offers yaml frontmatter structure
@@ -132,7 +199,7 @@ schema for the frontmatter. You can view the current Contentlayer schema here:
 [`contentlayer.config.ts`](/contentlayer.config.ts)
 
 If any content records contains unsupported or misspelled fields in the
-frontmatter, Contentlayer will throw an error. Preventing misconfigured content
+frontmatter, Contentlayer will throw an error, preventing misconfigured content
 from being shipped to production.
 
 ### Default frontmatter fields
@@ -146,7 +213,9 @@ following are default supported by all content groups:
 - [`title`](#title)
 - [`description`](#description)
 - [`tags`](#tags)
+- [`keywords`](#keywords)
 - [`date`](#date)
+- [`updatedDate`](#updateddate)
 
 #### title
 
@@ -156,6 +225,13 @@ The primary title of the individual piece of content
 - type: `string`
 - required: `true`
 
+Example:
+[this line of text](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L4)
+
+The `title` field will be used in auto-generating the social share card images
+(aka OpenGraph images) that people will see when linking to the content page on
+solana.com.
+
 #### description
 
 Brief description of the content (also used in the SEO metadata)
@@ -164,10 +240,13 @@ Brief description of the content (also used in the SEO metadata)
 - type: `string`
 - required: `false`
 
+Example:
+[these lines of text](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L5-L7)
+
 > This field will be used when a short description is needed to be displayed,
 > like in typical blog style "overview cards" and for SEO related metadata.
 
-#### `tags`
+#### tags
 
 List of filterable tags for content
 
@@ -175,20 +254,38 @@ List of filterable tags for content
 - type: `string`
 - required: `false`
 
+Example:
+[these lines of text](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L8-L12)
+
+#### keywords
+
+List of keywords for the content, primarily used for SEO metadata when
+generating the website.
+
+- name: `keywords`
+- type: `list` of `string`s
+- required: `false`
+
+Example:
+[these lines of text](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L13-L22)
+
 #### date
 
-The date this content was published.
+The date this content was published
 
 - name: `date`
-- type: `string`
+- type: `date` string in the format of `MMM DD, YYYY`
 - required: `false`
+
+Example:
+[this line of text](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L2)
 
 #### updatedDate
 
-The date this content was last updated.
+The date this content was last updated
 
 - name: `updatedDate`
-- type: `date`
+- type: `date` string in the format of `MMM DD, YYYY`
 - required: `false`
 
 ### Frontmatter for Docs
@@ -243,13 +340,68 @@ a list of available components
 > avoided within this developer content repo. See more in the
 > [Style Guidelines](#style) section.
 
+- [html tags](#html-tags) - generally not to be used, with a few exceptions
+- [headings](#headings) - details about how to include headings in a piece of
+  content
+- [images](#images) - details about how to include images in a piece of content
 - [code blocks](#code-blocks) - additional functionality on top of standard
   markdown code blocks
 - [blockquote](#blockquote) - additional functionality on top of the standard
   HTML `blockquote` element
-- [Callout](#callout) -
+- [Callout](#callout) - custom component used to render message to the reader in
+  a more visually distinctive way (i.e. error messages, warnings, etc)
 - [Embed](#embed) - embedding specific types of external content (i.e. YouTube
   videos)
+
+### HTML tags
+
+Since the content files in this repo use markdown, using HTML tags within should
+be avoided. The markdown content render/parser will handle converting the text
+blocks into the associated HTML code blocks when rendered on page.
+
+A few HTML elements are acceptable to use, the rest will normally be rejected:
+
+- `details` - see
+  [this example](https://github.com/solana-foundation/developer-content/blob/7937bbfbff8c5d33991d7edfd147ab192402760e/docs/rpc/deprecated/getConfirmedBlock.mdx?plain=1#L65-L74)
+
+### Headings
+
+Headings (i.e. standard HTML tags of h1, h2, h3, etc) can be added into content
+using standard markdown based headings.
+
+Example:
+
+```md
+# this gives an h1 (and should not be used)
+
+## this gives an h2
+
+### this gives an h3
+
+#### this gives an h4
+
+##### this gives an h5
+```
+
+> Note: All markdown `h1`s will be auto converted to an `h2` tag.
+
+See more details above about the [Heading styles](#heading-styles).
+
+### Images
+
+Images can be embedded directly within markdown using standard markdown
+formatting. Each image should use the absolute path of the image file located
+within this repo (i.e. `/public/assets/*`) and have a descriptive label
+attached. This label will be rendered on the page with the image.
+
+All images should be uploaded via a PR to this repo and stored within the
+`/public/assets/` directory.
+
+Embedding external images within markdown is generally not allowed.
+
+```md
+![descriptive label here](/public/assets/docs/transaction.svg)
+```
 
 ### Code blocks
 
@@ -264,6 +416,29 @@ functionality on top of code blocks.
 > additional functionality supported.
 
 #### Meta strings
+
+Fenced code blocks support including additional metadata within their first
+line, called "meta strings". These meta strings allow the markdown processor to
+handle different logic of this user defined metadata.
+
+While most are familiar with language meta string, which enables syntax
+highlighting. The following example has a the language meta string of
+`typescript`:
+
+````md
+```typescript
+const example: string = "'typescript' is the language meta string";
+```
+````
+
+This repo supports other meta strings as well:
+
+- the standard syntax for the language value, which enables
+  [syntax highlighting](#syntax-highlighting)
+- [file names](#file-names)
+- [line highlighting](#highlight-lines)
+- [character/word highlighting](#highlight-characters)
+- [diff lines](#diff-lines)
 
 #### Syntax highlighting
 
@@ -393,18 +568,94 @@ const didNotChange = "this line did not change";
 ### blockquote
 
 Standard markdown quote blocks are rendered with our custom
-[Callout component](#callout).
+[`Callout` component](#callout).
+
+Nested blockquotes are not allowed.
 
 ```md
-> This will be the Callout component with it's default styles
+> This will be the `Callout` component with its default styles
+```
+
+Multiline blockquotes are allowed and will still be rendered as the default
+`Callout`.
+
+```md
+> This blockquote will also be rendered as the `Callout` component with default
+> styles. But since the text is much longer (and we enforce a Prettier
+> configuration with a max line width) it should be wrapped to multiple lines.
+```
+
+```md
+> > This is a nested blockquote and is not allowed
 ```
 
 ### Callout
 
+The custom `Callout` component can be used to render message to the reader in a
+more visually distinctive way (i.e. error messages, warnings, etc). Allowing a
+write to draw more focus to a specific statement.
+
+> Note: All standard [markdown blockquotes](#blockquote) will be auto converted
+> to a `Callout` component with default styles.
+
+The contents within the `Callout` (aka `children` in React land) will be
+processed just like any other markdown. So you can put code blocks, lists, or
+what ever inside.
+
+```md
+<Callout>
+This will be the default "info" type callout
+</Callout>
+```
+
+#### Callout props
+
+The `Callout` component has the following props:
+
+- name: `type`
+  - required: `false`
+  - type: `enum`
+  - default: `info`
+  - values:
+    - `info` - a blue callout block (equivalent values: `note`, `blue`)
+    - `warning` - a red callout block (equivalent values: `yellow`)
+    - `caution` - a yellow callout block (equivalent values: `yellow`)
+    - `success` - a green callout block (equivalent values: `green`)
+- name: `title` - override the default title that is the `type`
+  - required: `false`
+  - type: `string`
+  - default: the same text as the `type`'s enum variant
+
+```md
+<Callout type="caution">
+  this will render as a yellow callout with a title of "Caution"
+</Callout>
+```
+
+```md
+<Callout type="success" title="You did it!">
+  this will render as a green callout with a title of "You did it!"
+</Callout>
+```
+
+Callouts can also render other markdown content within it, just like you might
+expect. See this
+[example here](https://github.com/solana-foundation/developer-content/blob/7937bbfbff8c5d33991d7edfd147ab192402760e/content/guides/getstarted/setup-local-development.md?plain=1#L242-L247)
+or the one below:
+
+```md
+<Callout type="success" title="You did it!">
+  
+  - list item 1
+  - list item 2
+
+</Callout>
+```
+
 ### Embed
 
-The `Embed` component can be used to handle custom rendering of specifically
-supported external content.
+The custom `Embed` component can be used to handle custom rendering of
+specifically supported external content.
 
 Currently supported external content:
 
@@ -433,6 +684,10 @@ To embed a Whimsical diagram:
 <Embed url="https://whimsical.com/embed/PjBVAREV3DMyW5722tFKJ8" />
 ```
 
+> Note: The preferred way to display a Whimsical diagram is to export the
+> diagram as an SVG and directly [embed the image](#images) within a specific
+> piece of content.
+
 ## Translations
 
 Content translations are supported via the Crowdin platform.
@@ -454,6 +709,10 @@ based content as REST api for solana.com to consume. Think of it like a
 microservice for content.
 
 We call this microservice the "developer content api", or content api for short.
+
+With this repo being only a "content api", there is no web app frontend to view
+the content within this repo. The frontend UI that will render all the markdown
+content within this repo is actually solana.com (which is a different repo).
 
 ### Setup locally
 
