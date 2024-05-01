@@ -58,7 +58,7 @@ frontend and backend, and anything you'd find in a normal development flow.
 ## What You'll Need Get Started
 
 To get started with Solana development, you'll need different tools based on
-whether you're working client-side or with on-chain programs.
+whether you are developing for client-side, on-chain programs, or both.
 
 ### Client-side Development
 
