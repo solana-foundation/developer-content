@@ -13,7 +13,7 @@ keywords:
 
 Welcome to the Solana developer docs!
 
-This page will include everything you need to know to get started with Solana
+This page has everything you need to know to get started with Solana
 development. We'll cover basic requirements, give an overview of how Solana
 development works, and provide the critical tools you'll need to get started.
 
