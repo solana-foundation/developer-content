@@ -43,9 +43,10 @@ permission.
 Solana development is a bit different from other blockchains because of its
 highly composable on-chain programs. This means you can build on top of any
 program already deployed, and often you can do so without needing to do any
-on-chain development. For example, if you wanted to work with tokens, you could
-use the Token Program that is already deployed on the network. All development
-on your application would be client-side in your language of choice.
+custom on-chain program development. For example, if you wanted to work with
+tokens, you could use the [Token Program](/docs/core/tokens.md) that is already
+deployed on the network. All development on your application would be
+client-side in your language of choice.
 
 Developers looking to build on Solana will find that the development stack is
 very similar to any other development stack. The main difference is that you'll
