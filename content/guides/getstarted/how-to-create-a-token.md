@@ -22,8 +22,10 @@ keywords:
   - spl token
 ---
 
-In this guide you will learn step by step how to create a new token on Solana
-with meta data.
+In this guide you will learn step by step how to create a new SPL token on
+Solana with token extension meta data. If you want to use metaplex meta data
+instead you can find the metaplex documentation
+[here](https://developers.metaplex.com/token-metadata).
 
 ## Installing Solana Tools
 
@@ -63,8 +65,11 @@ Then we set our solana config to use the keypair we just created:
 solana config set --keypair keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
 ```
 
-From now on all commands you run in the CLI will use this keypair by default.
-You can see the current configuration by running:
+Make sure to keep the contents of the keypair file safe. Whoever owns the key
+will be able to control the token mint and be able to mint tokens, update
+metadata and potentially freeze token accounts. From now on all commands you run
+in the CLI will use this keypair by default. You can see the current
+configuration by running:
 
 ```bash
 solana config get
@@ -144,8 +149,7 @@ you created it.
 ## Create and upload meta data
 
 Next we will create the off chain meta data for our token. This is usually a
-.json file in the following format. We will follow the meta plex meta data
-standard here. But there are also other standards out there.
+.json file containing name, symbol and uri in the following format.
 
 ```json
 {
@@ -172,7 +176,7 @@ Following I will show you different options in no particular order.
 | Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without signup for 100Mb; uploads can take a while.                        |
 | GitHub               | [GitHub](https://github.com)                             | Create a new repo, upload files, use the RAW URL format: https://raw.githubusercontent.com/xxxxxxx. |
 | ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a solana native storage solution. Did not work at the time of writing.                      |
-| Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | -                                                                                                   |
+| Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | [Meta boss docs](https://metaboss.rs/)-                                                             |
 | Google Cloud Storage | [Google Cloud Storage](https://cloud.google.com/storage) | -                                                                                                   |
 | Amazon               | [Amazon](https://aws.amazon.com/)                        | -                                                                                                   |
 
@@ -197,7 +201,6 @@ following:
 {
   "name": "Nice Token",
   "symbol": "NICE",
-  "description": "Just a nice token.",
   "uri": "https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo"
 }
 ```
@@ -289,13 +292,14 @@ friend.
 ## Creating token markets
 
 Now that your token is created you probably want to create a market and a pool
-for it. There are many ways to create a market for your token. Here are some
-possible solutions:
+for it and have it listed on exchanges. There are many ways to create a market
+for your token. Here are some possible solutions:
 
 - [Radium](https://docs.raydium.io/raydium/pool-creation/creating-a-standard-amm-pool)
 - [Orca](https://docs.orca.so/orca-for-liquidity-providers/classic-community-listing/creating-a-pool-tutorial)
 - [Meteora](https://docs.meteora.ag/liquidity-primitives/dynamic-amm-pools/permissionless-dynamic-pools)
 - [Mango Markets](https://docs.mango.markets/)
+- [Jupiter](https://station.jup.ag/docs/get-your-token-onto-jup)
 
 If you have your own token market platform feel free to open a PR to add it
 here.
