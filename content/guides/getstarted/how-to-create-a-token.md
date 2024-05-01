@@ -114,7 +114,7 @@ solana address
 ## Creating the token mint
 
 Solana does not work with floating point numbers internally. This is why every
-token has an actually max supply represented by an unsigned integer of size 64
+token has an actual max supply represented by an unsigned integer of size 64
 bites called a u64. The maximum number results to 2^64 – 1
 = 18446744073709551615. You can however set a decimal point for the token. For
 example
@@ -138,8 +138,8 @@ spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 
 This is also where you would be able to add additional
 [token extensions](https://solana.com/developers/guides/token-extensions/getting-started)
 to your token to have extra functionality. Things like transfer fees for
-example.You will not be able to add more extensions to your token mint after you
-created it.
+example. You will not be able to add more extensions to your token mint after
+you created it.
 
 ## Create and upload meta data
 
@@ -210,7 +210,7 @@ You should end up with a link similar to this one:
 
 https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json
 
-Now we are ready to add this meta data for our token.
+Now we are ready to add this meta data to our token.
 
 ## Add meta data
 
@@ -298,6 +298,7 @@ possible solutions:
 - [Mango Markets](https://docs.mango.markets/)
 
 If you have your own token market platform feel free to open a PR to add it
+here.
 
 ## Community tools to create tokens
 
