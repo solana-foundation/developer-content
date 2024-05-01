@@ -140,7 +140,7 @@ your program based on your language preference:
 
 If you do not want to develop your programs locally, there's also the
 [online IDE Solana Playground](https://beta.solpg.io). Solana Playground allows
-you to write, deploy, and test programs on Solana. You can get started with
+you to write, test, and deploy programs on Solana. You can get started with
 Solana Playground by
 [following our guide](https://solana.com/developers/guides/getstarted/hello-world-in-your-browser).
 
