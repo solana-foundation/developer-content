@@ -147,8 +147,8 @@ Solana Playground by
 ### Developer Environments
 
 Choosing the right environment based on your work is very important. On Solana,
-there are a few different environments to facilitate mature testing and CICD
-practices:
+there are a few different segmented network environments (called clusters) to
+facilitate mature testing and CI/CD practices:
 
 - **Mainnet Beta**: The production network where all the action happens.
   Transactions cost real money here.
