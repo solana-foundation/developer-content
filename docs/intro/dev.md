@@ -125,8 +125,8 @@ under the guides section.
 When building on-chain programs, you have a choice to either build with Native
 Rust or use the Anchor framework. Anchor is a framework that makes it easier to
 build on Solana by providing a higher-level API for developers. Think of Anchor
-like building with React for your websites instead of raw Typescript and HTML.
-While Typescript and HTML give you more control over your website, React
+like building with React for your websites instead of raw Javascript and HTML.
+While Javascript and HTML give you more control over your website, React
 accelerates your development and makes developing easy. You can read more about
 [Anchor](https://www.anchor-lang.com/) on their website.
 
