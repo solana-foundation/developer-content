@@ -90,10 +90,11 @@ customizable Solana scaffold by typing the following into your CLI:
 npx create-solana-dapp <project-name>
 ```
 
-This will create a new project with all the necessary files to get started
-building on Solana. The scaffold will include both an example frontend and an
-on-chain program template. You can read the
-[docs on create-solana-dapp](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp)
+This will create a new project with all the necessary files and basic
+configuration to get started building on Solana. The scaffold will include both
+an example frontend and an on-chain program template (if you selected one). You
+can read the
+[docs on `create-solana-dapp`](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp)
 to learn more.
 
 ### On-chain Program Development
