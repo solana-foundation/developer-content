@@ -23,7 +23,7 @@ keywords:
 ---
 
 In this guide you will learn step by step how to create a new SPL token on
-Solana with token extension meta data. If you want to use Metaplex metadata
+Solana with token extension metadata. If you want to use Metaplex metadata
 instead instead see the
 [Metaplex documentation](https://developers.metaplex.com/token-metadata).
 
