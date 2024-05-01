@@ -83,8 +83,8 @@ You'll also need a connection with a RPC to interact with the network. You can
 find either work with a [RPC infrastructure provider](https://solana.com/rpc) or
 [run your own RPC node](https://docs.solanalabs.com/operations/setup-an-rpc-node).
 
-To quickly get started with a front-end for your application, you can use the
-Solana scaffold by typing the following into your CLI:
+To quickly get started with a front-end for your application, you can generate a
+customizable Solana scaffold by typing the following into your CLI:
 
 ```bash
 npx create-solana-dapp <project-name>
