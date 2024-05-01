@@ -16,7 +16,7 @@ C projects are laid out as follows:
 
 The `makefile` should contain the following:
 
-```bash
+```shell
 OUT_DIR := <path to place to resulting shared object>
 include ~/.local/share/solana/install/active_release/bin/sdk/sbf/c/sbf.mk
 ```
@@ -34,7 +34,7 @@ First setup the environment:
 
 Then build using make:
 
-```bash
+```shell
 make -C <program directory>
 ```
 
@@ -91,7 +91,7 @@ their own deserialization function they need to ensure that any modifications
 the program wishes to commit must be written back into the input byte array.
 
 Details on how the loader serializes the program inputs can be found in the
-[Input Parameter Serialization/docs/programs/faq#input-parameter-serialization)
+[Input Parameter Serialization](https://solana.com/docs/programs/faq#input-parameter-serialization)
 docs.
 
 ## Data Types
@@ -123,17 +123,16 @@ source and the second as the destination.
 
 The members of the `SolAccountInfo` structure are read-only except for
 `lamports` and `data`. Both may be modified by the program in accordance with
-the [runtime enforcement policy](/docs/core/runtime.md#policy). When an
-instruction reference the same account multiple times there may be duplicate
-`SolAccountInfo` entries in the array but they both point back to the original
-input byte array. A program should handle these cases delicately to avoid
-overlapping read/writes to the same buffer. If a program implements their own
-deserialization function care should be taken to handle duplicate accounts
-appropriately.
+the "runtime enforcement policy". When an instruction reference the same account
+multiple times there may be duplicate `SolAccountInfo` entries in the array but
+they both point back to the original input byte array. A program should handle
+these cases delicately to avoid overlapping read/writes to the same buffer. If a
+program implements their own deserialization function care should be taken to
+handle duplicate accounts appropriately.
 
 `data` is the general purpose byte array from the
-[instruction's instruction data](/docs/core/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions.md#instruction) being
+processed.
 
 `program_id` is the public key of the currently executing program.
 
@@ -166,7 +165,8 @@ Use the system call
 to log a message containing the remaining number of compute units the program
 may consume before execution is halted
 
-See [compute budget](/docs/core/runtime.md#compute-budget) for more information.
+See the [Compute Budget](/docs/core/fees.md#compute-budget) documentation for
+more information.
 
 ## ELF Dump
 
@@ -180,9 +180,9 @@ instruction and its context.
 
 To create a dump file:
 
-```bash
-$ cd <program directory>
-$ make dump_<program name>
+```shell
+cd <program directory>
+make dump_<program name>
 ```
 
 ## Examples

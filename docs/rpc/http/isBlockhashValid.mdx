@@ -21,7 +21,7 @@ Returns whether a blockhash is still valid or not
 ### Parameters
 
 <Parameter type={"string"} required={true}>
-  the blockhash of the block to evauluate, as base-58 encoded string
+  the blockhash of the block to evaluate, as base-58 encoded string
 </Parameter>
 
 <Parameter type={"object"} optional={true}>
@@ -33,7 +33,7 @@ Configuration object containing the following fields:
   type="string"
   optional={true}
   href="/docs/rpc/index.mdx#configuring-state-commitment"
-></Field>
+/>
 
 <Field name="minContextSlot" type="number" optional={true}>
   The minimum slot that the request can be evaluated at
@@ -51,8 +51,8 @@ Configuration object containing the following fields:
 
 ### Code sample
 
-```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+```shell
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "id":45,
     "jsonrpc":"2.0",

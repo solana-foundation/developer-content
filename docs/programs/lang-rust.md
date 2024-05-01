@@ -62,16 +62,16 @@ First setup the environment:
 The normal cargo build is available for building programs against your host
 machine which can be used for unit testing:
 
-```bash
-$ cargo build
+```shell
+cargo build
 ```
 
 To build a specific program, such as SPL Token, for the Solana SBF target which
 can be deployed to the cluster:
 
-```bash
-$ cd <the program directory>
-$ cargo build-bpf
+```shell
+cd <the program directory>
+cargo build-bpf
 ```
 
 ## How to Test
@@ -173,20 +173,19 @@ when transferring lamports an instruction may define the first account as the
 source and the second as the destination.
 
 The members of the `AccountInfo` structure are read-only except for `lamports`
-and `data`. Both may be modified by the program in accordance with the
-[runtime enforcement policy](/docs/core/runtime.md#policy). Both of these
-members are protected by the Rust `RefCell` construct, so they must be borrowed
-to read or write to them. The reason for this is they both point back to the
-original input byte array, but there may be multiple entries in the accounts
-slice that point to the same account. Using `RefCell` ensures that the program
-does not accidentally perform overlapping read/writes to the same underlying
-data via multiple `AccountInfo` structures. If a program implements their own
-deserialization function care should be taken to handle duplicate accounts
-appropriately.
+and `data`. Both may be modified by the program in accordance with the "runtime
+enforcement policy". Both of these members are protected by the Rust `RefCell`
+construct, so they must be borrowed to read or write to them. The reason for
+this is they both point back to the original input byte array, but there may be
+multiple entries in the accounts slice that point to the same account. Using
+`RefCell` ensures that the program does not accidentally perform overlapping
+read/writes to the same underlying data via multiple `AccountInfo` structures.
+If a program implements their own deserialization function care should be taken
+to handle duplicate accounts appropriately.
 
 The instruction data is the general purpose byte array from the
-[instruction's instruction data](/docs/core/transactions.md#instruction-data)
-being processed.
+[instruction's instruction data](/docs/core/transactions.md#instruction) being
+processed.
 
 ## Heap
 
@@ -225,8 +224,7 @@ single-threaded environment, as well as being deterministic:
   should be used instead.
 - The runtime enforces a limit on the number of instructions a program can
   execute during the processing of one instruction. See
-  [computation budget](/docs/core/runtime.md#compute-budget) for more
-  information.
+  [computation budget](/docs/core/fees.md#compute-budget) for more information.
 
 ## Depending on Rand
 
@@ -236,7 +234,7 @@ available. Sometimes a program may depend on a crate that depends itself on
 If a program depends on `rand`, the compilation will fail because there is no
 `get-random` support for Solana. The error will typically look like this:
 
-```bash
+```shell
 error: target is not supported, for more information see: https://docs.rs/getrandom/#unsupported-targets
    --> /Users/jack/.cargo/registry/src/github.com-1ecc6299db9ec823/getrandom-0.1.14/src/lib.rs:257:9
     |
@@ -295,7 +293,7 @@ contains a logging example.
 Rust's `panic!`, `assert!`, and internal panic results are printed to the
 [program logs](/docs/programs/debugging.md#logging) by default.
 
-```bash
+```shell
 INFO  solana_runtime::message_processor] Finalized account CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
 INFO  solana_runtime::message_processor] Call SBF program CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
 INFO  solana_runtime::message_processor] Program log: Panicked at: 'assertion failed: `(left == right)`
@@ -358,7 +356,8 @@ Use the system call
 to log a message containing the remaining number of compute units the program
 may consume before execution is halted
 
-See [compute budget](/docs/core/runtime.md#compute-budget) for more information.
+See the [Compute Budget](/docs/core/fees.md#compute-budget) documentation for
+more information.
 
 ## ELF Dump
 
@@ -372,9 +371,9 @@ instruction and its context.
 
 To create a dump file:
 
-```bash
-$ cd <program directory>
-$ cargo build-bpf --dump
+```shell
+cd <program directory>
+cargo build-bpf --dump
 ```
 
 ## Examples

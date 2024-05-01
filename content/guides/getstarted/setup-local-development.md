@@ -39,13 +39,9 @@ deploying Solana programs to the blockchain.
 - how to create a Solana wallet for developing
 - how to airdrop SOL tokens for your wallet
 
-<Callout>
-
-If you are very new to development in general, or have only tried EVM-based
-blockchain development, your machine is likely not yet ready to help you code on
-Solana.
-
-</Callout>
+> If you are very new to development in general, or have only tried EVM-based
+> blockchain development, your machine is likely not yet ready to help you code
+> on Solana.
 
 This guide will mainly cover three operating systems: Windows (using WSL), Linux
 and MacOS. Between each of these operating systems, the broad steps to get setup
@@ -78,14 +74,14 @@ First start with
 system. Be sure to restart your computer when installation is done, then
 continue this guide.
 
-```bash
+```shell
 wsl --install
 ```
 
 After installing WSL and restarting your computer, open a new Linux terminal
 session using WSL:
 
-```bash
+```shell
 wsl
 ```
 
@@ -109,16 +105,16 @@ Except where otherwise noted.
 Inside your Linux/WSL terminal session, continue to setup your local Solana
 development environment using the "Linux" steps below.
 
-WSL can sometimes be a little slow due to it's file system write speed
+WSL can sometimes be a little slow due to its file system write speed
 limitations. You can also try dual booting your computer, installing a Linux
-operating system natively on the same machine, or use the fully web browser
+operating system natively on the same machine, or using the full web browser
 based Solana IDE called [Solana Playground](https://beta.solpg.io).
 
 ### Dependencies for Linux
 
 Install the following dependencies on your Linux system:
 
-```bash
+```shell
 sudo apt-get install -y \
     build-essential \
     pkg-config \
@@ -135,7 +131,7 @@ your Apple ID to download.
 
 You can check if the Xcode CLI is installed via this command:
 
-```bash
+```shell
 xcode-select -p
 ```
 
@@ -145,7 +141,7 @@ If you don't see a path returned, you need to install the CLI tools.
 
 1. Installing via your terminal using the following command:
 
-```bash
+```shell
 xcode-select --install
 ```
 
@@ -154,7 +150,7 @@ xcode-select --install
 
    ![Xcode CLI from Apple](/assets/guides/setup-local-environment/setup-xcode.png)
 
-3. Installing via homebrew: we the following guide to
+3. Installing via homebrew: we have the following guide to
    [install Xcode Command Line Tools with Homebrew](https://mac.install.guide/commandlinetools/3)
 
 <Callout type="success" title="Congrats">
@@ -179,7 +175,7 @@ Using the following command, we can install and configure the Rust tooling on
 your local system. The following command will automatically download the correct
 binaries needed for your specific operating system:
 
-```bash
+```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ```
 
@@ -190,7 +186,7 @@ After the installation is complete, restart your terminal or run the following
 command to manually refresh your new `PATH` settings to make the rust tooling
 (like `cargo`) available:
 
-```bash
+```shell
 source ~/.bashrc
 ```
 
@@ -210,7 +206,7 @@ tasks, like:
 
 1.  Install the Solana CLI tool suite using the official install command:
 
-    ```bash
+    ```shell
     sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
     ```
 
@@ -220,19 +216,19 @@ tasks, like:
 3.  Depending on your specific operating system, the Solana CLI installer
     messaging may prompt you to update the `PATH` environment.
 
-    ```bash
+    ```shell
     Please update your PATH environment variable to include the Solana programs:
     ```
 
     If you get the above message, simply copy and paste the command recommended
-    by the Solana CLI installer to update your your `PATH` environment variable.
+    by the Solana CLI installer to update your `PATH` environment variable.
 
     After running this command. restart your terminal to make sure your Solana
     binaries are accessible in all the terminal sessions you open afterwards.
 
 4.  To check if your installation was successful, check the Solana CLI version:
 
-    ```bash
+    ```shell
     solana --version
     ```
 
@@ -262,7 +258,7 @@ We can then use `avm` to install the desired version of the Anchor framework.
 
 #### Install avm
 
-```bash
+```shell
 cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
 ```
 
@@ -270,7 +266,7 @@ cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
 
 To install the `latest` version of anchor using `avm`:
 
-```bash
+```shell
 avm install latest
 avm use latest
 ```
@@ -278,7 +274,7 @@ avm use latest
 After the anchor installation is complete, you can verify anchor was installed
 by checking the installed version:
 
-```bash
+```shell
 anchor --version
 ```
 
@@ -292,7 +288,7 @@ The Solana CLI comes with the
 built-in. This command line tool will allow you to run a full blockchain cluster
 on your machine:
 
-```bash
+```shell
 solana-test-validator
 ```
 
@@ -308,13 +304,13 @@ programs).
 Configure your Solana CLI to use your localhost validator for all your future
 terminal commands:
 
-```bash
+```shell
 solana config set --url localhost
 ```
 
 At any time, you can view your current Solana CLI configuration settings:
 
-```bash
+```shell
 solana config get
 ```
 
@@ -325,7 +321,7 @@ tokens to pay for the cost of transactions and data storage on the blockchain.
 
 Let's create a simple file system wallet to use during local development:
 
-```bash
+```shell
 solana-keygen new
 ```
 
@@ -346,7 +342,7 @@ command will **NOT** override it unless you explicitly force override using the
 With your new file system wallet created, you must tell the Solana CLI to use
 this wallet to deploy and take ownership of your on-chain program:
 
-```bash
+```shell
 solana config set -k ~/.config/solana/id.json
 ```
 
@@ -355,7 +351,7 @@ solana config set -k ~/.config/solana/id.json
 Once your new wallet is set as the default, you can request a free airdrop of
 SOL tokens to it:
 
-```bash
+```shell
 solana airdrop 2
 ```
 
@@ -369,7 +365,7 @@ fails, lower your airdrop request quantity and try again.
 
 You can check your current wallet's SOL balance any time:
 
-```bash
+```shell
 solana balance
 ```
 

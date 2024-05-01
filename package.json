@@ -12,14 +12,19 @@
     "contentlayer:build": "npx contentlayer build --clearCache",
     "dev": "yarn contentlayer:build && next dev -p 3001",
     "build": "yarn contentlayer:build && next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "test": "yarn contentlayer:build",
     "lint": "next lint",
     "prettier": "prettier -c \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
-    "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\""
+    "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
+    "crowdin:download": "crowdin download",
+    "crowdin:upload": "crowdin upload sources",
+    "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
+    "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)"
   },
   "dependencies": {
-    "@types/node": "20.4.2",
+    "@crowdin/cli": "^3.18.0",
+    "@types/node": "20.11.17",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",

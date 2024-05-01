@@ -150,7 +150,7 @@ Nonce Account. By default, the account that creates the Nonce Account is
 delegated as the Nonce Authority, but it's possible to transfer the authority
 onto a keypair account or a PDA.
 
----
+## Durable Nonces with Solana CLI
 
 Now that we know what Durable Nonces are, it's time to use them to send durable
 transactions.
@@ -159,22 +159,20 @@ transactions.
 > [this](https://docs.solana.com/cli/install-solana-cli-tools) tutorial and set
 > up the CLI and a keypair with some airdropped SOL on devnet
 
-## Durable Nonces with Solana CLI
-
 ### Create Nonce Authority
 
 Let's start with creating a new keypair which we will use as our Nonce
 authority. We can use the keypair currently configured in our Solana CLI, but
 it's better to make a fresh one (make sure you're on devnet).
 
-```console
+```shell
 solana-keygen new -o nonce-authority.json
 ```
 
 Set the current Solana CLI keypair to `nonce-authority.json` and airdrop some
 SOL in it.
 
-```console
+```shell
 solana config set -k ~/<path>/nonce-authority.json
 solana airdrop 2
 ```
@@ -188,14 +186,14 @@ instruction to delegate this keypair as the Nonce Account. We will also transfer
 0.0015 SOL to the Nonce Account from the Nonce Authority, which is usually just
 above the minimum quantity needed for rent exemption.
 
-```console
+```shell
 solana-keygen new -o nonce-account.json
 solana create-nonce-account nonce-account.json 0.0015
 ```
 
 Output
 
-```console
+```shell
 Signature: skkfzUQrZF2rcmrhAQV6SuLa7Hj3jPFu7cfXAHvkVep3Lk3fNSVypwULhqMRinsa6Zj5xjj8zKZBQ1agMxwuABZ
 ```
 
@@ -208,13 +206,13 @@ on the explorer, we can see that the Nonce Account was created and the
 
 We can query the value of the stored Nonce as follows.
 
-```console
+```shell
 solana nonce nonce-account.json
 ```
 
 Output
 
-```console
+```shell
 AkrQn5QWLACSP5EMT2R1ZHyKaGWVFrDHJ6NL89HKtwjQ
 ```
 
@@ -225,13 +223,13 @@ while signing a transaction.
 
 We can inspect the details of a Nonce Account in a prettier formatted version
 
-```console
+```shell
 solana nonce-account nonce-account.json
 ```
 
 Output
 
-```console
+```shell
 Balance: 0.0015 SOL
 Minimum Balance Required: 0.00144768 SOL
 Nonce blockhash: AkrQn5QWLACSP5EMT2R1ZHyKaGWVFrDHJ6NL89HKtwjQ
@@ -245,25 +243,25 @@ As discussed before, advancing the Nonce or changing the value of the nonce is
 an important step for making subsequent transactions unique. The Nonce Authority
 needs to sign the transaction with the `nonceAdvance` instruction.
 
-```console
+```shell
 solana new-nonce nonce-account.json
 ```
 
 Output
 
-```console
+```shell
 Signature: 4nMHnedguiEtHshuMEm3NsuTQaeV8AdcDL6QSndTZLK7jcLUag6HCiLtUq6kv21yNSVQLoFj44aJ5sZrTXoYYeyS
 ```
 
 If we check the nonce again, the value of the nonce has changed or advanced.
 
-```console
+```shell
 solana nonce nonce-account.json
 ```
 
 Output
 
-```console
+```shell
 DA8ynAQTGctqQXNS2RNTGpag6s5p5RcrBm2DdHhvpRJ8
 ```
 
@@ -272,26 +270,26 @@ DA8ynAQTGctqQXNS2RNTGpag6s5p5RcrBm2DdHhvpRJ8
 We transferred 0.0015 SOL when creating the Nonce Account. The Nonce Authority
 can transfer these funds back to itself or some other account.
 
-```console
+```shell
 solana withdraw-from-nonce-account nonce-account.json nonce-authority.json 0.0000001
 ```
 
 Output
 
-```console
+```shell
 Signature: 5zuBmrUpqnubdePHVgzSNThbocruJZLJK5Dut7DM6WyoqW4Qbrc26uCw3nq6jRocR9XLMwZZ79U54HDnGhDJVNfF
 ```
 
 We can check the status of the Nonce Account after the withdrawal; the balance
 should have changed.
 
-```console
+```shell
 solana nonce-account nonce-account.json
 ```
 
 Output
 
-```console
+```shell
 Balance: 0.0014999 SOL
 Minimum Balance Required: 0.00144768 SOL
 Nonce blockhash: DA8ynAQTGctqQXNS2RNTGpag6s5p5RcrBm2DdHhvpRJ8
@@ -312,20 +310,20 @@ and the receiver. Although, for this example, we are creating the keypairs in
 the same system, we will assume that these accounts are on different systems to
 replicate an IRL scenario.
 
-```console
+```shell
 solana-keygen new -o sender.json
-// pubkey: H8BHbivzT4DtJxL4J4X53CgnqzTUAEJfptSaEHsCvg51
+# pubkey: H8BHbivzT4DtJxL4J4X53CgnqzTUAEJfptSaEHsCvg51
 
 solana-keygen new -o co-sender.json
-// pubkey: HDx43xY4piU3xMxNyRQkj89cqiF15hz5FVW9ergTtZ7S
+# pubkey: HDx43xY4piU3xMxNyRQkj89cqiF15hz5FVW9ergTtZ7S
 
 solana-keygen new -o receiver.json
-// pubkey: D3RAQxwQBhMLum2WK7eCn2MpRWgeLtDW7fqXTcqtx9uC
+# pubkey: D3RAQxwQBhMLum2WK7eCn2MpRWgeLtDW7fqXTcqtx9uC
 ```
 
 Let's add some SOL to the member wallets.
 
-```console
+```shell
 solana airdrop -k sender.json 0.5
 solana airdrop -k co-sender.json 0.5
 ```
@@ -356,7 +354,7 @@ To sign an offline transaction, we need to use:
 - You can even turn off your internet when you sign this transaction using the
   `co-sender`'s wallet :).
 
-```console
+```shell
 solana transfer receiver.json 0.1 \
   --sign-only \
   --blockhash F13BkBgNTyyuruUQFSgUkXPMJCfPvKhhrr217eiqGfVE \
@@ -367,7 +365,7 @@ solana transfer receiver.json 0.1 \
 
 Output
 
-```console
+```shell
 Blockhash: F13BkBgNTyyuruUQFSgUkXPMJCfPvKhhrr217eiqGfVE
 Signers (Pubkey=Signature):
  HDx43xY4piU3xMxNyRQkj89cqiF15hz5FVW9ergTtZ7S=2gUmcb4Xwm3Dy9xH3a3bePsWVKCRMtUghqDS9pnGZDmX6hqtWMfpubEbgcai5twncoAJzyr9FRn3yuXVeSvYD4Ni
@@ -384,7 +382,7 @@ with the `sender` who will need this sign and submit the transaction. This share
 may take more than a minute to happen. Once the `sender` receives this pair,
 they can initiate the transfer.
 
-```console
+```shell
 solana transfer receiver.json 0.1 \
   --allow-unfunded-recipient \
   --blockhash F13BkBgNTyyuruUQFSgUkXPMJCfPvKhhrr217eiqGfVE \
@@ -395,7 +393,7 @@ solana transfer receiver.json 0.1 \
 
 Output
 
-```console
+```shell
 Error: Hash has expired F13BkBgNTyyuruUQFSgUkXPMJCfPvKhhrr217eiqGfVE
 ```
 
@@ -409,14 +407,14 @@ created earlier. We already have a nonce initialized in the `nonce-account`.
 Let's advance it to get a new one first, just to be sure that the `nonce` isn't
 already used.
 
-```console
+```shell
 solana new-nonce nonce-account.json
 solana nonce-account nonce-account.json
 ```
 
 Output
 
-```console
+```shell
 Signature: 3z1sSU7fmdRoBZynVLiJEqa97Ja481nb3r1mLu8buAgwMnaKdF4ZaiBkzrLjPRzn1HV2rh4AHQTJHAQ3DsDiYVpF
 
 Balance: 0.0014999 SOL
@@ -431,7 +429,7 @@ Perfect, now let's start with offline co-signing the transaction with
 above, which is basically the `nonce` stored in the `nonce-account` as the
 blockhash for the transfer transaction.
 
-```console
+```shell
 solana transfer receiver.json 0.1 \
   --sign-only \
   --nonce nonce-account.json \
@@ -443,7 +441,7 @@ solana transfer receiver.json 0.1 \
 
 Output
 
-```console
+```shell
 Blockhash: HNUi6La2QpGJdfcAR6yFFmdgYoCvFZREkve2haMBxXVz
 Signers (Pubkey=Signature):
  HDx43xY4piU3xMxNyRQkj89cqiF15hz5FVW9ergTtZ7S=5tfuPxsXchbVFU745658nsQr5Gqhb5nRnZKLnnovJ2PZBHbqUbe7oB5kDbnq7tjeJ2V8Mywa4gujUjT4BWKRcAdi
@@ -454,7 +452,7 @@ Absent Signers (Pubkey):
 This is very similar to the one we signed using the recent blockhash. Now we'll
 sign and send the transaction with the `sender`'s wallet.
 
-```console
+```shell
 solana transfer receiver.json 0.1 \
   --nonce nonce-account.json \
   --nonce-authority nonce-authority.json \
@@ -466,7 +464,7 @@ solana transfer receiver.json 0.1 \
 
 Output
 
-```console
+```shell
 Signature: anQ8VtQgeSMoKTnQCubTenq1J7WKxAa1dbFMDLsbDWgV6GGL135G1Ydv4QTNd6GptP3TxDQ2ZWi3Y5qnEtjM7yg
 ```
 
@@ -488,14 +486,14 @@ send transactions using durable nonces.
 
 ### Create Nonce Authority
 
-```JS
+```ts
 const nonceAuthKP = Keypair.generate();
 // airdrop some SOL into this account from https://solfaucet.com/
 ```
 
 ### Create Nonce Accounts
 
-```JS
+```ts
 const nonceKeypair = Keypair.generate();
 const tx = new Transaction();
 
@@ -507,21 +505,21 @@ tx.feePayer = nonceAuthKP.publicKey;
 tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
 
 tx.add(
-    // create system account with the minimum amount needed for rent exemption.
-    // NONCE_ACCOUNT_LENGTH is the space a nonce account takes
-    SystemProgram.createAccount({
-        fromPubkey: nonceAuthKP.publicKey,
-        newAccountPubkey: nonceKeypairs[j].publicKey,
-        lamports: 0.0015 * LAMPORTS_PER_SOL,
-        space: NONCE_ACCOUNT_LENGTH,
-        programId: SystemProgram.programId,
-    }),
-    // initialise nonce with the created nonceKeypair's pubkey as the noncePubkey
-    // also specify the authority of the nonce account
-    SystemProgram.nonceInitialize({
-        noncePubkey: nonceKeypairs[j].publicKey,
-        authorizedPubkey: nonceAuthKP.publicKey,
-    })
+  // create system account with the minimum amount needed for rent exemption.
+  // NONCE_ACCOUNT_LENGTH is the space a nonce account takes
+  SystemProgram.createAccount({
+    fromPubkey: nonceAuthKP.publicKey,
+    newAccountPubkey: nonceKeypair.publicKey,
+    lamports: 0.0015 * LAMPORTS_PER_SOL,
+    space: NONCE_ACCOUNT_LENGTH,
+    programId: SystemProgram.programId,
+  }),
+  // initialise nonce with the created nonceKeypair's pubkey as the noncePubkey
+  // also specify the authority of the nonce account
+  SystemProgram.nonceInitialize({
+    noncePubkey: nonceKeypair.publicKey,
+    authorizedPubkey: nonceAuthKP.publicKey,
+  }),
 );
 
 // sign the transaction with both the nonce keypair and the authority keypair
@@ -529,34 +527,34 @@ tx.sign(nonceKeypair, nonceAuthKP);
 
 // send the transaction
 const sig = await sendAndConfirmRawTransaction(
-    connection,
-    tx.serialize({requireAllSignatures: false})
+  connection,
+  tx.serialize({ requireAllSignatures: false }),
 );
 console.log("Nonce initiated: ", sig);
 ```
 
 ### Fetch Initialised Nonce Account
 
-```JS
+```ts
 const accountInfo = await connection.getAccountInfo(nonceKeypair.publicKey);
 const nonceAccount = NonceAccount.fromAccountData(accountInfo.data);
 ```
 
 ### Sign Transaction using Durable Nonce
 
-```JS
+```ts
 // make a system transfer instruction
 const ix = SystemProgram.transfer({
-    fromPubkey: publicKey,
-    toPubkey: publicKey,
-    lamports: 100,
+  fromPubkey: publicKey,
+  toPubkey: publicKey,
+  lamports: 100,
 });
 
 // make a nonce advance instruction
 const advanceIX = SystemProgram.nonceAdvance({
-    authorizedPubkey: nonceAuthKP.publicKey,
-    noncePubkey: noncePubKey
-})
+  authorizedPubkey: nonceAuthKP.publicKey,
+  noncePubkey: noncePubKey,
+});
 
 // add them to a transaction
 const tx = new Transaction();
@@ -572,12 +570,14 @@ tx.sign(nonceAuthKP);
 
 // make the owner of the publicKey sign the transaction
 // this should open a wallet popup and let the user sign the tx
-const signedtx = await signTransaction(tx);
+const signedTx = await signTransaction(tx);
 
 // once you have the signed tx, you can serialize it and store it
 // in a database, or send it to another device. You can submit it
 // at a later point, without the tx having a mortality
-const serialisedTx = bs58.encode(signedtx.serialize({requireAllSignatures: false}));
+const serialisedTx = bs58.encode(
+  signedTx.serialize({ requireAllSignatures: false }),
+);
 console.log("Signed Durable Transaction: ", serialisedTx);
 ```
 

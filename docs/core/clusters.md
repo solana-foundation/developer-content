@@ -1,12 +1,13 @@
 ---
 sidebarLabel: Clusters & Endpoints
 title: Clusters and Public RPC Endpoints
+sidebarSortOrder: 8
 ---
 
 The Solana blockchain has several different groups of validators, known as
 [Clusters](/docs/core/clusters.md). Each serving different purposes within the
 overall ecosystem and containing dedicated api nodes to fulfill
-[JSON-RPC](/docs/rpc) requests for their respective Cluster.
+[JSON-RPC](/docs/rpc/index.mdx) requests for their respective Cluster.
 
 The individual nodes within a Cluster are owned and operated by third parties,
 with a public endpoint available for each.
@@ -17,8 +18,8 @@ The Solana Labs organization operates a public RPC endpoint for each Cluster.
 Each of these public endpoints are subject to rate limits, but are available for
 users and developers to interact with the Solana blockchain.
 
-> > Note: Public endpoint rate limits are subject to change. The specific rate
-> > limits listed on this document are not guaranteed to be the most up-to-date.
+> Public endpoint rate limits are subject to change. The specific rate limits
+> listed on this document are not guaranteed to be the most up-to-date.
 
 ### Using explorers with different Clusters
 
@@ -58,7 +59,7 @@ drive, as a user, token holder, app developer, or validator.
 
 To connect to the `devnet` Cluster using the Solana CLI:
 
-```bash
+```shell
 solana config set --url https://api.devnet.solana.com
 ```
 
@@ -91,7 +92,7 @@ stability and validator behavior.
 
 To connect to the `testnet` Cluster using the Solana CLI:
 
-```bash
+```shell
 solana config set --url https://api.testnet.solana.com
 ```
 
@@ -120,7 +121,7 @@ token holders.
 
 To connect to the `mainnet-beta` Cluster using the Solana CLI:
 
-```bash
+```shell
 solana config set --url https://api.mainnet-beta.solana.com
 ```
 

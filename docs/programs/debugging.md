@@ -29,7 +29,7 @@ it is helpful to focus on just the runtime and program logs and not the rest of
 the cluster logs. To focus in on program specific information the following log
 mask is recommended:
 
-```bash
+```shell
 export RUST_LOG=solana_runtime::system_instruction_processor=trace,solana_runtime::message_processor=info,solana_bpf_loader=debug,solana_rbpf=debug
 ```
 
@@ -85,7 +85,7 @@ operations they wish to profile.
 - [Log the remaining compute units from a Rust program](/docs/programs/lang-rust.md#compute-budget)
 - [Log the remaining compute units from a C program](/docs/programs/lang-c.md#compute-budget)
 
-See [compute budget](/docs/core/runtime.md#compute-budget) for more information.
+See [compute budget](/docs/core/fees.md#compute-budget) for more information.
 
 ## ELF Dump
 
@@ -137,7 +137,7 @@ should be three files in that directory
 - helloworld.so -- an executable file loadable into the virtual machine. The
   command line for running `solana-ledger-tool` would be something like this
 
-```bash
+```shell
 solana-ledger-tool program run -l test-ledger -e debugger target/deploy/helloworld.so
 ```
 
@@ -159,7 +159,7 @@ debugging rust programs it may be beneficial to run solana-lldb wrapper to lldb,
 i.e. at a new shell prompt (other than the one used to start
 `solana-ledger-tool`) run the command:
 
-```bash
+```shell
 solana-lldb
 ```
 

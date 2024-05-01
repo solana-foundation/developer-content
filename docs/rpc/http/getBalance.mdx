@@ -1,7 +1,6 @@
 ---
 sidebarLabel: getBalance
 title: getBalance RPC Method
-sidebarSortOrder: 10
 hideTableOfContents: true
 altRoutes:
   - /docs/rpc/getBalance
@@ -28,7 +27,7 @@ Configuration object containing the following fields:
   type="string"
   optional={true}
   href="/docs/rpc/index.mdx#configuring-state-commitment"
-></Field>
+/>
 
 <Field name="minContextSlot" type="number" optional={true}>
   The minimum slot that the request can be evaluated at
@@ -47,8 +46,8 @@ balance
 
 ### Code sample
 
-```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+```shell
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0", "id": 1,
     "method": "getBalance",

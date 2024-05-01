@@ -1,7 +1,6 @@
 ---
 sidebarLabel: getTransaction
 title: getTransaction RPC Method
-sidebarSortOrder: 10
 hideTableOfContents: true
 altRoutes:
   - /docs/rpc/getTransaction
@@ -132,7 +131,7 @@ Encoding for the returned Transaction
       - `data: <[string, encoding]>` - the return data itself, as base-64
         encoded binary data
     - `computeUnitsConsumed: <u64|undefined>` - number of
-      [compute units](/docs/core/runtime.md#compute-budget) consumed by the
+      [compute units](/docs/core/fees.md#compute-budget) consumed by the
       transaction
   - `version: <"legacy"|number|undefined>` - Transaction version. Undefined if
     `maxSupportedTransactionVersion` is not set in request params.
@@ -143,8 +142,8 @@ Encoding for the returned Transaction
 
 ### Code sample
 
-```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+```shell
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,

@@ -2,6 +2,7 @@ name: Deploy to Production
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 on:
   push:
     branches: [master, main]
@@ -15,12 +16,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Install Vercel CLI and Yarn
+        run: npm install --global vercel@latest yarn
       - name: Pull Vercel Environment Information
         run:
           vercel pull --yes --environment=production
           --token=${{secrets.VERCEL_TOKEN }}
+      - name: Install dependencies via yarn
+        run: yarn install
+      # todo: if not content files changed, skip uploading
+      # todo: only upload the changed files
+      - name: Upload latest content to crowdin
+        run: npm run crowdin:upload --no-progress
+      - name: Download latest translations from crowdin
+        run: npm run crowdin:download --no-progress
+      - name: Current translation completion status
+        run: npx crowdin status
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy Project Artifacts to Vercel

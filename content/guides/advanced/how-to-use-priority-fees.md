@@ -30,8 +30,8 @@ Prioritization Fees are an optional fee, priced in
 [Compute Unit](/docs/terminology#compute-units) (e.g. small amounts of SOL),
 appended to transactions to make them economically compelling for validator
 nodes to include in blocks on the network. This additional fee will be on top of
-the base [Transaction Fee](/docs/core/transactions/fees) already set, which is
-5000 lamports per signature in your transaction.
+the base [Transaction Fee](/docs/core/fees) already set, which is 5000 lamports
+per signature in your transaction.
 
 ## Why Should I Use Priority Fees?
 
@@ -127,7 +127,7 @@ analysis should be used before choosing a path forward.
 ## Special Considerations
 
 If you use priority fees with a
-[Durable Nonce](/developers/guides/advanced/introduction-to-durable-nonces)
+[Durable Nonce](/content/guides/advanced/introduction-to-durable-nonces.md)
 Transaction, you must ensure the `AdvanceNonce` instruction is your
 transaction's first instruction. This is critical to ensure your transaction is
 successful; otherwise, it will fail.

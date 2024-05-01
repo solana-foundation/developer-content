@@ -80,7 +80,7 @@ An implementation of a program might also cause this error when performing a
 cross-program invocation that requires a signed program address, but the passed
 signer seeds passed to [`invoke_signed`](/docs/core/cpi.md) don't match the
 signer seeds used to create the program address
-[`create_program_address`](/docs/core/cpi.md#program-derived-addresses).
+[`create_program_address`](/docs/core/pda.md#createprogramaddress).
 
 ## `rand` Rust dependency causes compilation failure
 
@@ -112,7 +112,7 @@ might be mangled if it is a Rust or C++ symbol.
 
 The above warning came from a Rust program, so the demangled symbol name is:
 
-```bash
+```shell
 rustfilt _ZN16curve25519_dalek7edwards21EdwardsBasepointTable6create17h178b3d2411f7f082E
 curve25519_dalek::edwards::EdwardsBasepointTable::create
 ```

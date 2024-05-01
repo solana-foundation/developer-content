@@ -1,177 +1,192 @@
 ---
-sidebarLabel: Accounts
+sidebarLabel: Solana Account Model
 sidebarSortOrder: 1
-title: Accounts and Storing State
+title: Solana Account Model
 ---
 
-## Storing State between Transactions
+On Solana, all data is stored in what are referred to as "accounts”. The way
+data is organized on Solana resembles a
+[key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),
+where each entry in the database is called an "account".
 
-If the program needs to store state between transactions, it does so using
-_accounts_. Accounts are similar to files in operating systems such as Linux in
-that they may hold arbitrary data that persists beyond the lifetime of a
-program. Also like a file, an account includes metadata that tells the runtime
-who is allowed to access the data and how.
+![Accounts](/assets/docs/core/accounts/accounts.svg)
 
-Unlike a file, the account includes metadata for the lifetime of the file. That
-lifetime is expressed by a number of fractional native tokens called _lamports_.
-Accounts are held in validator memory and pay ["rent"](#rent) to stay there.
-Each validator periodically scans all accounts and collects rent. Any account
-that drops to zero lamports is purged. Accounts can also be marked
-[rent-exempt](#rent-exemption) if they contain a sufficient number of lamports.
+## Key Points
 
-In the same way that a Linux user uses a path to look up a file, a Solana client
-uses an _address_ to look up an account. The address is a 256-bit public key.
+- Accounts can store up to 10MB of data, which can consist of either executable
+  program code or program state.
 
-## Signers
+- Accounts require a rent deposit in SOL, proportional to the amount of data
+  stored, which is fully refundable when the account is closed.
 
-Transactions include one or more digital
-[signatures](/docs/terminology.md#signature) each corresponding to an account
-address referenced by the transaction. Each of these addresses must be the
-public key of an ed25519 keypair, and the signature signifies that the holder of
-the matching private key signed, and thus, "authorized" the transaction. In this
-case, the account is referred to as a _signer_. Whether an account is a signer
-or not is communicated to the program as part of the account's metadata.
-Programs can then use that information to make authority decisions.
+- Every account has a program "owner". Only the program that owns an account can
+  modify it data or deduct its lamport balance. However, anyone can increase the
+  balance.
 
-## Read-only
+- Programs (smart contracts) are stateless accounts that store executable code.
 
-Transactions can [indicate](/docs/core/transactions.md#message-header-format)
-that some of the accounts it references be treated as _read-only accounts_ in
-order to enable parallel account processing between transactions. The runtime
-permits read-only accounts to be read concurrently by multiple programs. If a
-program attempts to modify a read-only account, the transaction is rejected by
-the runtime.
+- Data accounts are created by programs to store and manage program state.
 
-## Executable
+- Native programs are built-in programs included with the Solana runtime.
 
-If an account is marked "executable" in its metadata, then it is considered a
-program which can be executed by including the account's public key in an
-instruction's [program id](/docs/core/transactions.md#program-id). Accounts are
-marked as executable during a successful program deployment process by the
-loader that owns the account. When a program is deployed to the execution engine
-(SBF deployment), the loader determines that the bytecode in the account's data
-is valid. If so, the loader permanently marks the program account as executable.
+- Sysvar accounts are special accounts that store network cluster state.
 
-If a program is marked as final (non-upgradeable), the runtime enforces that the
-account's data (the program) is immutable. Through the upgradeable loader, it is
-possible to upload a totally new program to an existing program address.
+## Account
 
-## Creating
+Each account is identifiable by its unique address, represented as 32 bytes in
+the format of an [Ed25519](https://ed25519.cr.yp.to/) `PublicKey`. You can think
+of the address as the unique identifier for the account.
 
-To create an account, a client generates a _keypair_ and registers its public
-key using the `SystemProgram::CreateAccount` instruction with a fixed storage
-size in bytes preallocated. The current maximum size of an account's data is 10
-MiB, which can be changed (increased or decreased) at a rate over all accounts
-of 20 MiB per transaction, and the size can be increased by 10 KiB per account
-and per instruction.
+![Account Address](/assets/docs/core/accounts/account-address.svg)
 
-An account address can be any arbitrary 256 bit value, and there are mechanisms
-for advanced users to create derived addresses
-(`SystemProgram::CreateAccountWithSeed`,
-[`Pubkey::CreateProgramAddress`](/docs/core/cpi.md#program-derived-addresses)).
+This relationship between the account and its address can be thought of as a
+key-value pair, where the address serves as the key to locate the corresponding
+on-chain data of the account.
 
-Accounts that have never been created via the system program can also be passed
-to programs. When an instruction references an account that hasn't been
-previously created, the program will be passed an account with no data and zero
-lamports that is owned by the system program.
+### AccountInfo
 
-Such newly created accounts reflect whether they sign the transaction, and
-therefore, can be used as an authority. Authorities in this context convey to
-the program that the holder of the private key associated with the account's
-public key signed the transaction. The account's public key may be known to the
-program or recorded in another account, signifying some kind of ownership or
-authority over an asset or operation the program controls or performs.
+Accounts have a
+[max size of 10MB](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L85)
+(10 Mega Bytes) and the data stored on every account on Solana has the following
+structure known as the
+[AccountInfo](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L19).
 
-## Ownership and Assignment to Programs
+![AccountInfo](/assets/docs/core/accounts/accountinfo.svg)
 
-A created account is initialized to be _owned_ by a built-in program called the
-System program and is called a _system account_ aptly. An account includes
-"owner" metadata. The owner is a program id. The runtime grants the program
-write access to the account if its id matches the owner. For the case of the
-System program, the runtime allows clients to transfer lamports and importantly
-_assign_ account ownership, meaning changing the owner to a different program
-id. If an account is not owned by a program, the program is only permitted to
-read its data and credit the account.
+The `AccountInfo` for each account includes the following fields:
 
-## Verifying validity of unmodified, reference-only accounts
+- `data`: A byte array that stores the state of an account. If the account is a
+  program (smart contract), this stores executable program code. This field is
+  often referred to as the "account data".
+- `executable`: A boolean flag that indicates if the account is a program.
+- `lamports`: A numeric representation of the account's balance in
+  [lamports](/docs/terminology.md#lamport), the smallest unit of SOL (1 SOL = 1
+  billion lamports).
+- `owner`: Specifies the public key (program ID) of the program that owns the
+  account.
 
-For security purposes, it is recommended that programs check the validity of any
-account it reads, but does not modify.
+As a key part of the Solana Account Model, every account on Solana has a
+designated "owner", specifically a program. Only the program designated as the
+owner of an account can modify the data stored on the account or deduct the
+lamport balance. It's important to note that while only the owner may deduct the
+balance, anyone can increase the balance.
 
-This is because a malicious user could create accounts with arbitrary data and
-then pass these accounts to the program in place of valid accounts. The
-arbitrary data could be crafted in a way that leads to unexpected or harmful
-program behavior.
+> To store data on-chain, a certain amount of SOL must be transferred to an
+> account. The amount transferred is proportional to the size of the data stored
+> on the account. This concept is commonly referred to as “rent”. However, you
+> can think of "rent" more like a "deposit" because the SOL allocated to an
+> account can be fully recovered when the account is closed.
 
-The security model enforces that an account's data can only be modified by the
-account's `Owner` program. This allows the program to trust that the data is
-passed to them via accounts they own. The runtime enforces this by rejecting any
-transaction containing a program that attempts to write to an account it does
-not own.
+## Native Programs
 
-If a program were to not check account validity, it might read an account it
-thinks it owns, but doesn't. Anyone can issue instructions to a program, and the
-runtime does not know that those accounts are expected to be owned by the
-program.
+Solana contains a small handful of native programs that are part of the
+validator implementation and provide various core functionalities for the
+network. You can find the full list of native programs
+[here](https://docs.solanalabs.com/runtime/programs).
 
-To check an account's validity, the program should either check the account's
-address against a known value, or check that the account is indeed owned
-correctly (usually owned by the program itself).
+When developing custom programs on Solana, you will commonly interact with two
+native programs, the System Program and the BPF Loader.
 
-One example is when programs use a sysvar account. Unless the program checks the
-account's address or owner, it's impossible to be sure whether it's a real and
-valid sysvar account merely by successful deserialization of the account's data.
+### System Program
 
-Accordingly, the Solana SDK
-[checks the sysvar account's validity during deserialization](https://github.com/solana-labs/solana/blob/a95675a7ce1651f7b59443eb146b356bc4b3f374/sdk/program/src/sysvar/mod.rs#L65).
-An alternative and safer way to read a sysvar is via the sysvar's
-[`get()` function](https://github.com/solana-labs/solana/blob/64bfc14a75671e4ec3fe969ded01a599645080eb/sdk/program/src/sysvar/mod.rs#L73)
-which doesn't require these checks.
+By default, all new accounts are owned by the
+[System Program](https://github.com/solana-labs/solana/tree/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src).
+The System Program performs several key tasks such as:
 
-If the program always modifies the account in question, the address/owner check
-isn't required because modifying an unowned account will be rejected by the
-runtime, and the containing transaction will be thrown out.
+- [New Account Creation](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L145):
+  Only the System Program can create new accounts.
+- [Space Allocation](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L70):
+  Sets the byte capacity for the data field of each account.
+- [Assign Program Ownership](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L112):
+  Once the System Program creates an account, it can reassign the designated
+  program owner to a different program account. This is how custom programs take
+  ownership of new accounts created by the System Program.
 
-## Rent
+On Solana, a "wallet" is simply an account owned by the System Program. The
+lamport balance of the wallet is the amount of SOL owned by the account.
 
-Keeping accounts alive on Solana incurs a storage cost called _rent_ because the
-blockchain cluster must actively maintain the data to process any future
-transactions. This is different from Bitcoin and Ethereum, where storing
-accounts doesn't incur any costs.
+![System Account](/assets/docs/core/accounts/system-account.svg)
 
-Currently, all new accounts are required to be rent-exempt.
+> Only accounts owned by the System Program can be used as transaction fee
+> payers.
 
-### Rent exemption
+### BPFLoader Program
 
-An account is considered rent-exempt if it holds at least 2 years worth of rent.
-This is checked every time an account's balance is reduced, and transactions
-that would reduce the balance to below the minimum amount will fail.
+The
+[BPF Loader](https://github.com/solana-labs/solana/tree/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src)
+is the program designated as the "owner" of all other programs on the network,
+excluding Native Programs. It is responsible for deploying, upgrading, and
+executing custom programs.
 
-Program executable accounts are required by the runtime to be rent-exempt to
-avoid being purged.
+## Sysvar Accounts
 
-> Note: Use the
-> [`getMinimumBalanceForRentExemption`](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx)
-> RPC endpoint to calculate the minimum balance for a particular account size.
-> The following calculation is illustrative only.
+Sysvar accounts are special accounts located at predefined addresses that
+provide access to cluster state data. These accounts are dynamically updated
+with data about the network cluster. You can find the full list of Sysvar
+Accounts [here](https://docs.solanalabs.com/runtime/sysvars).
 
-For example, a program executable with the size of 15,000 bytes requires a
-balance of 105,290,880 lamports (=~ 0.105 SOL) to be rent-exempt:
+## Custom Programs
 
-```text
-105,290,880 = 19.055441478439427 (fee rate) * (128 + 15_000)(account size including metadata) * ((365.25/2) * 2)(epochs in 2 years)
-```
+On Solana, “smart contracts” are referred to as
+[programs](/docs/core/programs.md). A program is an account that contains
+executable code and is indicated by an “executable” flag that is set to true.
 
-Rent can also be estimated via the
-[`solana rent` CLI subcommand](https://docs.solanalabs.com/cli/usage#solana-rent)
+For a more detailed explanation of the program deployment process, refer to the
+[Deploying Programs](/docs/programs/deploying.md) page of this documentation.
 
-```text
-$ solana rent 15000
-Rent per byte-year: 0.00000348 SOL
-Rent per epoch: 0.000288276 SOL
-Rent-exempt minimum: 0.10529088 SOL
-```
+### Program Account
 
-Note: Rest assured that, should the storage rent rate need to be increased at
-some point in the future, steps will be taken to ensure that accounts that are
-rent-exempt before the increase will remain rent-exempt afterwards
+When new programs are
+[deployed](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L498)
+on Solana, technically three separate accounts are created:
+
+- **Program Account**: The main account representing an on-chain program. This
+  account stores the address of an executable data account (which stores the
+  compiled program code) and the update authority for the program (address
+  authorized to make changes to the program).
+- **Program Executable Data Account**: An account that contains the executable
+  byte code of the program.
+- **Buffer Account**: A temporary account that stores byte code while a program
+  is being actively deployed or upgraded. Once the process is complete, the data
+  is transferred to the Program Executable Data Account and the buffer account
+  is closed.
+
+For example, here are links to the Solana Explorer for the Token Extensions
+[Program Account](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
+and its corresponding
+[Program Executable Data Account](https://explorer.solana.com/address/DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY).
+
+![Program and Executable Data Accounts](/assets/docs/core/accounts/program-account-expanded.svg)
+
+For simplicity, you can think of the "Program Account" as the program itself.
+
+![Program Account](/assets/docs/core/accounts/program-account-simple.svg)
+
+> The address of the "Program Account" is commonly referred to as the “Program
+> ID”, which is used to invoke the program.
+
+### Data Account
+
+Solana programs are "stateless", meaning that program accounts only contain the
+program's executable byte code. To store and modify additional data, new
+accounts must be created. These accounts are commonly referred to as “data
+accounts”.
+
+Data accounts can store any arbitrary data as defined in the owner program's
+code.
+
+![Data Account](/assets/docs/core/accounts/data-account.svg)
+
+Note that only the [System Program](/docs/core/accounts.md#system-program) can
+create new accounts. Once the System Program creates an account, it can then
+transfer ownership of the new account to another program.
+
+In other words, creating a data account for a custom program requires two steps:
+
+1. Invoke the System Program to create an account, which then transfers
+   ownership to a custom program
+2. Invoke the custom program, which now owns the account, to then initialize the
+   account data as defined in the program code
+
+This data account creation process is often abstracted as a single step, but
+it's helpful to understand the underlying process.

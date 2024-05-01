@@ -1,0 +1,62 @@
+project_id: "6"
+api_token_env: "CROWDIN_PERSONAL_TOKEN"
+base_url: "https://solana.crowdin.com"
+preserve_hierarchy: true
+files: [
+    # Docs (including general docs and rpc docs) files
+    {
+      source: "/docs/**/*.*",
+      translation: "/i18n/%two_letters_code%/docs/**/%original_file_name%",
+      ignore: [
+          # ignore certain files
+          "**/readme.md",
+          "**/*.json",
+          "**/*.txt",
+        ],
+    },
+    # Guides files
+    {
+      source: "/content/guides/**/*.*",
+      translation: "/i18n/%two_letters_code%/content/guides/**/%original_file_name%",
+      ignore: [
+          # ignore certain files
+          "**/readme.md",
+          "**/*.json",
+          "**/*.txt",
+        ],
+    },
+    # Resources files
+    {
+      source: "/content/resources/**/*.*",
+      translation: "/i18n/%two_letters_code%/content/resources/**/%original_file_name%",
+      ignore: [
+          # ignore certain files
+          "**/readme.md",
+          "**/*.json",
+          "**/*.txt",
+        ],
+    },
+    # Cookbook files
+    {
+      source: "/content/cookbook/**/*.*",
+      translation: "/i18n/%two_letters_code%/content/cookbook/**/%original_file_name%",
+      ignore: [
+          # ignore certain files
+          "**/readme.md",
+          "**/*.json",
+          "**/*.txt",
+        ],
+    },
+    # Workshop files
+    {
+      source: "/content/workshops/**/*.*",
+      translation: "/i18n/%two_letters_code%/content/workshops/**/%original_file_name%",
+      ignore: [
+          # ignore certain files
+          "**/readme.md",
+          "**/*.json",
+          "**/*.txt",
+        ],
+    },
+    # todo: courses
+  ]

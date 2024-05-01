@@ -114,15 +114,15 @@ following 3 phases:
 ## Reclaim rent from program accounts
 
 The storage of data on the Solana blockchain requires the payment of
-[rent](/docs/core/rent.md), including for the byte-code for on-chain programs.
+[rent](/docs/intro/rent.md), including for the byte-code for on-chain programs.
 Therefore as you deploy more or larger programs, the amount of rent paid to
 remain rent-exempt will also become larger.
 
 Using the current rent cost model configuration, a rent-exempt account requires
 a deposit of ~0.7 SOL per 100KB stored. These costs can have an outsized impact
 on developers who deploy their own programs since
-[program accounts](/docs/core/accounts.md#executable) are among the largest we
-typically see on Solana.
+[program accounts](/docs/core/accounts.md#custom-programs) are among the largest
+we typically see on Solana.
 
 #### Example of how much data is used for programs
 
@@ -155,7 +155,7 @@ an earlier deploy.
 Developers can check if they own any abandoned buffer accounts by using the
 Solana CLI:
 
-```bash
+```shell
 solana program show --buffers --keypair ~/.config/solana/MY_KEYPAIR.json
 
 Buffer Address                               | Authority                                    | Balance
@@ -165,7 +165,7 @@ Buffer Address                               | Authority                        
 And they can close those buffers to reclaim the SOL balance with the following
 command:
 
-```bash
+```shell
 solana program close --buffers --keypair ~/.config/solana/MY_KEYPAIR.json
 ```
 
@@ -174,7 +174,7 @@ solana program close --buffers --keypair ~/.config/solana/MY_KEYPAIR.json
 The owners of all abandoned program deploy buffer accounts can be fetched via
 the RPC API:
 
-```bash
+```shell
 curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" \
 --data-binary @- << EOF | jq --raw-output '.result | .[] | .account.data[0]'
 {
@@ -194,7 +194,7 @@ EOF
 After re-encoding the base64 encoded keys into base58 and grouping by key, we
 see some accounts have over 10 buffer accounts they could close, yikes!
 
-```bash
+```shell
 'BE3G2F5jKygsSNbPFKHHTxvKpuFXSumASeGweLcei6G3' => 10 buffer accounts
 'EsQ179Q8ESroBnnmTDmWEV4rZLkRc3yck32PqMxypE5z' => 10 buffer accounts
 '6KXtB89kAgzW7ApFzqhBg5tgnVinzP4NSXVqMAWnXcHs' => 12 buffer accounts
@@ -228,7 +228,7 @@ wrong cluster.
 
 To view the programs which are owned by your wallet address, you can run:
 
-```bash
+```shell
 solana -V # must be 1.7.11 or higher!
 solana program show --programs --keypair ~/.config/solana/MY_KEYPAIR.json
 
@@ -238,7 +238,7 @@ CN5x9WEusU6pNH66G22SnspVx4cogWLqMfmb85Z3GW7N | 53796672  | 2nr1bHFT86W9tGnyvmYW4
 
 To close those program data accounts and reclaim their SOL balance, you can run:
 
-```bash
+```shell
 solana program close --programs --keypair ~/.config/solana/MY_KEYPAIR.json
 ```
 

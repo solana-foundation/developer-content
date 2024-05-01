@@ -1,6 +1,6 @@
 ---
 title: JSON RPC Methods
-sidebarSortOrder: 0
+sidebarSortOrder: 1
 ---
 
 This file should not be edited since it is not intended to be displayed. This

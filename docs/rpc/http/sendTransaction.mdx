@@ -1,7 +1,6 @@
 ---
 sidebarLabel: sendTransaction
 title: sendTransaction RPC Method
-sidebarSortOrder: 0
 hideTableOfContents: true
 altRoutes:
   - /docs/rpc/sendTransaction
@@ -99,8 +98,8 @@ encoded string ([transaction id](/docs/terminology.md#transaction-id))
 
 ### Code sample
 
-```bash
-curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+```shell
+curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,

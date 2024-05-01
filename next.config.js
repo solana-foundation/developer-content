@@ -21,14 +21,14 @@ module.exports = withContentlayer({
 
     return config;
   },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
-  },
+  // images: {
+  //   remotePatterns: [
+  //     {
+  //       protocol: "https",
+  //       hostname: "**",
+  //     },
+  //   ],
+  // },
   async redirects() {
     return [
       // handle language based routes

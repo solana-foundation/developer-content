@@ -4,20 +4,14 @@
  */
 
 import { notFound } from "next/navigation";
-import { NavItem, SimpleRecordGroupName } from "@/types";
-import { DEFAULT_LOCALE_EN, LOCALE_REGEX } from "@/utils/constants";
+import type { BreadcrumbItem, NavItem, SupportedDocTypes } from "@/types";
+import { DEFAULT_LOCALE_EN, I18N_LOCALE_REGEX } from "@/utils/constants";
 import {
   generateFlatNavItemListing,
   generateNavItemListing,
+  computeDetailsFromSlug,
 } from "@/utils/navItem";
-import {
-  allDeveloperGuides,
-  allDeveloperResources,
-  allSolanaDocs,
-  allDeveloperWorkshops,
-  allSolanaRPCDocs,
-  DocumentTypes,
-} from "contentlayer/generated";
+import { getRecordsForGroup } from "@/utils/records";
 
 type RouteProps = {
   params: {
@@ -31,52 +25,21 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     notFound();
   }
 
-  // initialize and default the content locale to english
-  let locale = DEFAULT_LOCALE_EN;
+  const { group, locale, href } = computeDetailsFromSlug(slug);
 
-  // extract the requested locale from the url (when provided)
-  if (new RegExp(LOCALE_REGEX).test(slug[0])) {
-    locale = slug.shift() || DEFAULT_LOCALE_EN;
-  }
+  if (!group) return notFound();
 
-  // determine the correct group based on the route prefix
-  const group = slug[0] as SimpleRecordGroupName;
-
-  // retrieve the correct group's records by its simple group name
-  const records = ((group: SimpleRecordGroupName) => {
-    switch (group) {
-      case "docs": {
-        if (slug[1] == "rpc") return allSolanaRPCDocs;
-        return allSolanaDocs;
-      }
-      case "guides":
-        return allDeveloperGuides;
-      case "resources":
-        return allDeveloperResources;
-      case "workshops":
-        return allDeveloperWorkshops;
-    }
-  })(group);
-
-  if (!records) return notFound();
-
-  // define the formatted href value to search for
-  // note: this effectively enforces that only href's that start with "/developers" are supported
-  const href = `${
-    slug[0].toLocaleLowerCase() == "docs" ||
-    slug[0].toLocaleLowerCase() == "rpc"
-      ? ""
-      : "/developers"
-  }/${slug.join("/")}`
-    .toLowerCase()
-    .replaceAll(/\/index(.mdx?)?/gi, "");
-
-  console.log("href:", href);
+  // get the base locale's record to serve as the default content
+  const baseLocalRecords = getRecordsForGroup(group, {
+    locale: DEFAULT_LOCALE_EN,
+  }) as SupportedDocTypes[];
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
-  const flatNavItems = generateFlatNavItemListing(
-    generateNavItemListing(records),
+  let flatNavItems = generateFlatNavItemListing(
+    generateNavItemListing(baseLocalRecords),
   );
+
+  if (!flatNavItems || flatNavItems.length <= 0) return notFound();
 
   // initialize the NavItem record trackers
   let current: NavItem | null = null;
@@ -101,7 +64,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // get the "previous" record link to display (that is an actual link)
     if (flatNavItems.length >= i - 1) {
       for (let j = i; j > 0; j--) {
-        if (!flatNavItems[j - 1]?.metaOnly) {
+        if (!!flatNavItems[j - 1]?.href) {
           prev = flatNavItems[j - 1];
           break;
         }
@@ -111,7 +74,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // get the "next" record link to display (that is an actual link)
     if (flatNavItems.length >= i + 1) {
       for (let j = i; j < flatNavItems.length; j++) {
-        if (!flatNavItems[j + 1]?.metaOnly) {
+        if (!!flatNavItems[j + 1]?.href) {
           next = flatNavItems[j + 1];
           break;
         }
@@ -124,13 +87,57 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!current) return notFound();
 
-  // locate full content record
-  let record = (records as DocumentTypes[]).filter(
-    (item: DocumentTypes) =>
-      item._raw.sourceFilePath.toLowerCase() == current?.path?.toLowerCase(),
-  )?.[0];
+  // locate full content record for the base locale
+  let record = baseLocalRecords.find(
+    (item: SupportedDocTypes) =>
+      item.href.toLowerCase() == current?.href?.toLowerCase(),
+  );
 
   if (!record) notFound();
+
+  /**
+   * with the base locale record and data in hand, we can attempt to
+   * locate the desired locale's record data
+   */
+  if (locale !== DEFAULT_LOCALE_EN) {
+    const localeRecords = getRecordsForGroup(group, {
+      locale,
+    }) as SupportedDocTypes[];
+
+    const localRecord = localeRecords.find(
+      (item: SupportedDocTypes) =>
+        item.href.toLowerCase() == current?.href?.toLowerCase(),
+    );
+    if (localRecord) {
+      record = localRecord;
+    }
+
+    flatNavItems = generateFlatNavItemListing(
+      generateNavItemListing(localeRecords),
+    );
+
+    // get the locale specific next/prev info
+    if (!!next) next = flatNavItems.find(item => item.id == next!.id) || next;
+    if (!!prev) prev = flatNavItems.find(item => item.id == prev!.id) || prev;
+  }
+
+  if (!record) notFound();
+
+  const breadcrumbs: BreadcrumbItem[] = [];
+  let parentId = current.id.substring(0, current.id.lastIndexOf("-"));
+
+  for (let i = 0; i <= parentId.split("-").length + 2; i++) {
+    const item = flatNavItems.find(item => item.id == parentId);
+
+    if (item) {
+      breadcrumbs.unshift({
+        href: item.href,
+        label: item.label,
+      });
+    }
+
+    parentId = parentId.substring(0, parentId.lastIndexOf("-"));
+  }
 
   // remove the html formatted content (since it is undesired data to send over the wire)
   if (typeof record.body.raw !== "undefined") {
@@ -138,10 +145,20 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     record.body = record.body.raw.trim();
   }
 
+  // remove the i18n prefixes
+  record._raw = {
+    ...record._raw,
+    sourceFilePath: record._raw.sourceFilePath.replace(I18N_LOCALE_REGEX, ""),
+    sourceFileDir: record._raw.sourceFileDir.replace(I18N_LOCALE_REGEX, ""),
+    flattenedPath: record._raw.flattenedPath.replace(I18N_LOCALE_REGEX, ""),
+  };
+
   // todo: preprocess the body content? (if desired in the future)
 
   // todo: support sending related content records back to the client
 
   // finally, return the json formatted listing of NavItems (with the next and prev records)
-  return Response.json(Object.assign(current, record, { next, prev }));
+  return Response.json(
+    Object.assign(current, record, { breadcrumbs, next, prev }),
+  );
 }
