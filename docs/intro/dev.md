@@ -52,7 +52,7 @@ Developers looking to build on Solana will find that the development stack is
 very similar to any other development stack. The main difference is that you'll
 be working with a blockchain and have to think about how users potentially
 interact with your application on-chain instead of just on the frontend.
-Developing on Solana still has CICD pipelines, testing, debugging tools, a
+Developing on Solana still has CI/CD pipelines, testing, debugging tools, a
 frontend and backend, and anything you'd find in a normal development flow.
 
 ## What You'll Need Get Started
