@@ -160,8 +160,8 @@ facilitate mature testing and CI/CD practices:
 
 ## Build by Example
 
-While you get started building on Solana, there's a few more resources to
-available to help accelerate your journey.
+While you get started building on Solana, there's a few more resources available
+to help accelerate your journey:
 
 - [Solana Cookbook](https://solana.com/developers/cookbook): A collection of
   references and code snippets to help you build on Solana.
