@@ -25,20 +25,20 @@ Development on Solana can be broken down into two main parts:
    programs directly to the blockchain. Once deployed, anyone who knows how to
    communicate with them can use them. You can write these programs in Rust, C,
    or C++.
-2. **Client Development**: This is where you write dApps that communicate with
+2. **Client Development**: This is where you write software (called decentralized applications, or dApps) that communicates with
    on-chain programs. Your apps can submit transactions to perform actions
    on-chain. Client development can be written in any programming language.
 
-The "glue" between working on the client-side and the on-chain side is the
-[JSON RPC API](https://solana.com/docs/rpc). Developers working on the
-client-side send RPC requests to the Solana network to interact with on-chain
+The "glue" between the client side and the onchain side is the
+[Solana JSON RPC API](https://solana.com/docs/rpc). The
+client-side sends RPC requests to the Solana network to interact with onchain
 programs. This is very similar to normal development between a frontend and
 backend. The major difference with working on Solana is that the backend is a
 global permissionless blockchain. This means that anyone can interact with your
 on-chain program without the need of issuing API keys or any other form of
 permission.
 
-![A view of how clients work with the Solana blockchain](/assets/docs/intro/developer_flow.png)
+![How clients work with the Solana blockchain](/assets/docs/intro/developer_flow.png)
 
 Solana development is a bit different from other blockchains because of its
 highly composable on-chain programs. This means you can build on top of any
@@ -62,11 +62,10 @@ whether you are developing for client-side, on-chain programs, or both.
 
 ### Client-side Development
 
-If you're developing on the client-side, you can work with any programming language
-you're comfortable with. If you're working on the on-chain side, you'll need to
-know Rust, C, or C++. Solana has community contributed SDKs in the majority of
-languages to help developers interact with the Solana network. You can find your
-favorite languages SDK here:
+If you're developing onchain apps, you should
+know Rust. 
+
+If you're developing on the client-side, you can work with any programming language you're comfortable with. Solana has community-contributed SDKs to help developers interact with the Solana network in most popular languages :
 
 | Language   | SDK                                                                                         |
 | ---------- | ------------------------------------------------------------------------------------------- |
@@ -75,11 +74,11 @@ favorite languages SDK here:
 | Python     | [solders](https://github.com/kevinheavey/solders)                                           |
 | Java       | [solanaj](https://github.com/skynetcap/solanaj)                                             |
 | C++        | [solcpp](https://github.com/mschneider/solcpp)                                              |
-| GoLang     | [solana-go](https://github.com/gagliardetto/solana-go)                                      |
+| Go     | [solana-go](https://github.com/gagliardetto/solana-go)                                      |
 | Kotlin     | [solanaKT](https://github.com/metaplex-foundation/SolanaKT)                                 |
 | Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana) |
 
-You'll also need a connection with a RPC to interact with the network. You can
+You'll also need a connection with an RPC to interact with the network. You can
 either work with a [RPC infrastructure provider](https://solana.com/rpc) or
 [run your own RPC node](https://docs.solanalabs.com/operations/setup-an-rpc-node).
 
@@ -94,15 +93,15 @@ This will create a new project with all the necessary files and basic
 configuration to get started building on Solana. The scaffold will include both
 an example frontend and an on-chain program template (if you selected one). You
 can read the
-[docs on `create-solana-dapp`](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp)
+[`create-solana-dapp` docs](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp)
 to learn more.
 
 ### On-chain Program Development
 
 On-chain program development consists of either writing programs in Rust, C, or
 C++. You'll need to have the
-[Solana Toolsuite installed](https://docs.solanalabs.com/cli/install) to compile
-and deploy your programs. You can install the Solana toolsuite by running the
+[Solana CLI installed](https://docs.solanalabs.com/cli/install) to compile
+and deploy your programs. You can install the Solana CLI by running the
 following command:
 
 ```bash
@@ -118,12 +117,11 @@ solana-test-validator
 ```
 
 This will start a local validator on your machine that you can use to test your
-programs. You can read more about
-[local development](https://solana.com/developers/guides/getstarted/setup-local-development)
-under the guides section.
+programs. You can [read more about
+local development in this guide](https://solana.com/developers/guides/getstarted/setup-local-development).
 
-When building on-chain programs, you have a choice to either build with Native
-Rust or use the Anchor framework. Anchor is a framework that makes it easier to
+When building on-chain programs, you have a choice to either build with native
+Rust (ie, without a framework) or use the Anchor framework. Anchor is a framework that makes it easier to
 build on Solana by providing a higher-level API for developers. Think of Anchor
 like building with React for your websites instead of raw Javascript and HTML.
 While Javascript and HTML give you more control over your website, React
@@ -147,7 +145,7 @@ Solana Playground by
 ### Developer Environments
 
 Choosing the right environment based on your work is very important. On Solana,
-there are a few different segmented network environments (called clusters) to
+there are a few different network environments (called clusters) to
 facilitate mature testing and CI/CD practices:
 
 - **Mainnet Beta**: The production network where all the action happens.
@@ -173,8 +171,7 @@ to help accelerate your journey:
 
 ## Getting Support
 
-The best support you can find is by asking your question on the
-[Solana StackExchange](https://solana.stackexchange.com/).
+The best support you can find is on [Solana StackExchange](https://solana.stackexchange.com/). Search for your question there first - there's a good chance there will already be a question asked by someone else, with an answer. If it's not there, add a new question! Remember to include as much detail as you can in your question, and please use text (not screenshots) to show error messages, so other people with the same problem can find your question!
 
 ## Next steps
 
