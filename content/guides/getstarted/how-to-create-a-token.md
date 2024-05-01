@@ -82,7 +82,7 @@ solana-keygen grind --starts-with nic:1
 ```
 
 In my case it created this key pair:
-nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr.json
+niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun.json
 
 Make sure to replace this with your own key pair in the following steps.
 
@@ -137,7 +137,7 @@ our new token.
 
 ```bash
 spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb \
- --enable-metadata nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr.json
+ --enable-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun.json
 ```
 
 This is also where you would be able to add additional
@@ -221,17 +221,17 @@ Now we will initialize the meta data for our token with the meta data we just
 created and uploaded.
 
 ```bash
-spl-token initialize-metadata nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr \
-'Nice Token‘ NICE \
-https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json
+spl-token initialize-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun \
+'Nice Token' 'NICE' \
+'https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json'
 ```
 
 Congratulation you created a token with meta data! You can look at your token in
 one of the Solana block explorers:
 
-- [SolanaFm](https://solana.fm/address/nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr)
-- [SolScan](https://solscan.io/token/nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr)
-- [Solana Explorer](https://explorer.solana.com/address/nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr?cluster=devnet)
+- [SolanaFm](https://solana.fm/address/niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun)
+- [SolScan](https://solscan.io/token/niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun)
+- [Solana Explorer](https://explorer.solana.com/address/niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun?cluster=devnet)
   etc.
 
 Make sure your explorer is set to devnet if you are working on dev net and
@@ -246,7 +246,7 @@ Let's say you want for example update the uri field of the token. You can do
 this by running the following command:
 
 ```bash
-spl-token update-metadata nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr \
+spl-token update-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun \
 uri https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json
 ```
 
@@ -254,7 +254,7 @@ You can also add additional meta data to your token as a key-value pair like
 this:
 
 ```bash
-spl-token update-metadata nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr niceness 100%
+spl-token update-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun niceness 100%
 ```
 
 This is more useful for NFTs but you can also use it for fungible tokens.
@@ -266,7 +266,7 @@ Now that the token is completely set up we can mint some tokens. Let's mint 100.
 First we need to create a token account to hold the tokens for our token mint:
 
 ```bash
-spl-token create-account nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr
+spl-token create-account niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun
 ```
 
 This will create a new token account for the account that is currently set in
@@ -276,13 +276,13 @@ address at the end of the command.
 And now we can finally mint some tokens into that token account:
 
 ```bash
-spl-token mint nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr 100
+spl-token mint niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun 100
 ```
 
 Now you can also send the token to your friends like so for example:
 
 ```bash
-spl-token transfer nicypxn7W5XRdG3jsNopVTgUvNHHmppUZbr7YHG9nfr 10 \
+spl-token transfer niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun 10 \
 friendAddress --fund-recipient
 ```
 
