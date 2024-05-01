@@ -62,7 +62,7 @@ whether you are developing for client-side, on-chain programs, or both.
 
 ### Client-side Development
 
-If you're working on the client-side, you can work with any programming language
+If you're developing on the client-side, you can work with any programming language
 you're comfortable with. If you're working on the on-chain side, you'll need to
 know Rust, C, or C++. Solana has community contributed SDKs in the majority of
 languages to help developers interact with the Solana network. You can find your
