@@ -100,15 +100,14 @@ to learn more.
 ### Onchain Program Development
 
 Onchain program development consists of either writing programs in Rust, C, or
-C++. First you'll need to make sure you have Rust intalled on your machine. You
+C++. First you'll need to make sure you have Rust installed on your machine. You
 can do this with the following command:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
 ```
 
-You'll need to have the
+You'll then need to have the
 [Solana CLI installed](https://docs.solanalabs.com/cli/install) to compile and
 deploy your programs. You can install the Solana CLI by running the following
 command:
