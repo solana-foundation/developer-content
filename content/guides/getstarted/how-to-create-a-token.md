@@ -312,22 +312,16 @@ Congratulations!
 ## Further reads about tokens
 
 - [Token extensions](https://solana.com/developers/guides/token-extensions/getting-started)
-
+  Learn how to add additional functionality to your token.
 - [External from a16z: 5 rules for token launches](https://a16zcrypto.com/posts/article/5-rules-for-token-launches/)
-  This article outlines essential guidelines for launching a token. It addresses
-  strategic considerations such as regulatory compliance, market conditions, and
-  community engagement. It aims to provide founders and crypto-entrepreneurs
-  with a foundational understanding of the best practices to follow during the
-  initial offering and distribution phases of a new token.
+  This article outlines key guidelines for launching a token, including
+  regulatory compliance, market conditions, and community engagement, providing
+  a foundation for crypto-entrepreneurs.
 - [External from a16z: How to navigate token launch risks](https://a16zcrypto.com/posts/article/navigating-token-launch-risks/)
-  This piece focuses on identifying and managing the risks associated with token
-  launches. It likely covers common pitfalls like legal issues, market
-  volatility, and technological challenges. Understanding these risks is crucial
-  for anyone looking to successfully launch a token, ensuring they are prepared
-  for potential obstacles.
+  This piece discusses how to manage risks associated with token launches,
+  covering issues like legal challenges, market volatility, and technological
+  hurdles, essential for a successful launch.
 - [External from a16z: Getting ready to launch a token](https://a16zcrypto.com/posts/article/getting-ready-to-launch-a-token/)
-  This article serves as a preparatory guide for entities about to launch a
-  token. It might include steps for technical setup, team alignment, regulatory
-  considerations, and engagement strategies to prime the project for a
-  successful launch. This guide could be particularly helpful in the final
-  stages before going public with a new token.
+  A preparatory guide for launching a token, covering technical setup, team
+  alignment, regulatory considerations, and engagement strategies, aimed at
+  ensuring a successful public debut.
