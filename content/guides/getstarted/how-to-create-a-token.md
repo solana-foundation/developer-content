@@ -30,12 +30,11 @@ instead instead see the
 ## Installing Solana Tools
 
 First we need to download Solana tools to our system. Follow this Follow this
-[guide to  
-install the Solana CLI](https://docs.solanalabs.com/de/cli/install#use-solanas-install-tool).
+[guide to install the Solana CLI](https://docs.solanalabs.com/cli/install).
 
-## Create folder and key pairs
+## Create folder and keypairs
 
-Open a new terminal and create a new folder:
+Open a new terminal and create a new folder: ›
 
 ```bash
 mkdir nice-token
@@ -48,18 +47,18 @@ First we create a new keypair that will be the owner of our token:
 solana-keygen grind --starts-with key:1
 ```
 
-This will generate a key pair for you where the public address starts with
-"key". Note that the more letters you add the longer it will take to generate
-the key. Four is still ok, but five will already take a long time.
+This will generate a keypair for you where the public address starts with "key".
+Note that the more letters you add the longer it will take to generate the key.
+Four is still ok, but five will already take a long time.
 
-For me it created this key pair:
+For me it created this keypair:
 
 ```bash
 keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
 ```
 
-you will need to replace this with your own key pair in the following steps.
-Then we configure the Solana config to use the keypair we just created:
+You will need to replace this with your own keypair in the following steps Then
+we configure the Solana config to use the keypair we just created:
 
 ```bash
 solana config set --keypair keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
@@ -67,8 +66,8 @@ solana config set --keypair keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
 
 Make sure to keep the contents of the keypair file safe. Whoever owns the key
 will be able to control the token mint and be able to mint tokens, update
-metadata and potentially freeze token accounts. From now on all commands you run
-in the CLI will use this keypair by default. You can see the current
+metadata and potentially freeze token accounts. From now on, all commands you
+run in the CLI will use this keypair by default. You can see the current
 configuration by running:
 
 ```bash
@@ -81,12 +80,12 @@ Then we create a nice account address where our token mint will be saved:
 solana-keygen grind --starts-with nic:1
 ```
 
-In my case it created this key pair:
+In my case it created this keypair:
 niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun.json
 
-Make sure to replace this with your own key pair in the following steps.
+Make sure to replace this with your own keypair in the following steps.
 
-We will also set Solana to work on devnet for this example:
+We will also set the Solana CLI to use devnet for this example:
 
 ```bash
 solana config set -ud
@@ -94,25 +93,26 @@ solana config set -ud
 
 This will set the default RPC cluster to Solana devnet
 "https://api.devnet.solana.com". From now on all commands will be executed on
-the dev net. To release your token on mainnet you will need to perform all step
-from here again but set the cluster to mainnet using -um instead of -ud.
+the devnet. To release your token on mainnet you will need to perform all step
+from here again but set the cluster to mainnet using `-um` flag instead of
+`-ud`.
 
 ## Fund the account
 
-For solana dev net we will just be able to get some free SOL from the faucet. If
+For Solana devnet we will just be able to get some free SOL from the faucet. If
 you get rate limited you can follow this
-[guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
-to get devnet SOL.
+[guide](/content/guides/getstarted/solana-token-airdrop-and-faucets.md) to get
+devnet SOL.
 
 ```bash
 solana airdrop 2
 ```
 
 For mainnet you will need to fund the account with SOL. You can buy SOL with
-regular currency in places like centralized exchanges, crypto onramps, or swap
+regular currency in places like centralized exchanges, crypto on-ramps, or swap
 other tokens for SOL on decentralized exchanges. You can find the address of
 your account by looking at the file name of the keypair that starts with "key"
-in your nice-token folder or by running:
+in your `nice-token` folder or by running:
 
 ```bash
 solana address
@@ -120,22 +120,22 @@ solana address
 
 ## Creating the token mint
 
-Solana does not work with floating point numbers internally. This is why every
-token has an actual max supply represented by an unsigned integer of size 64
-bites called a u64. The maximum number results to 2^64 – 1
-= 18446744073709551615. You can however set a decimal point for the token. For
-example
+Solana does not use floating point numbers internally. This is why every token
+has an actual max supply represented by an unsigned integer of size 64 bytes
+called a `u64`. The maximum number results to 2^64 – 1 = 18446744073709551615.
+You can however set a decimal point for the token. For example
 [USDC](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v)
 has 6 decimals which means that each USDC can be split into one millionth of a
 USDC.
 
-Depending on your needs you can configure different decimals for your token by
+Depending on your needs, you can configure different decimals for your token by
 adding the `--decimals 6` flag to the command. If you do not set it the default
 is 9.
 
 Now we will create the token mint with the metadata extension enabled. By adding
-our grinded keypair at the end we will actually use that address as the mint for
-our new token.
+our grinded keypair (`nice...4Gun`) at the end, the Solana CLI will actually use
+that address as the [mint account](/docs/core/tokens.md#mint-account) for our  
+new token:
 
 ```bash
 spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb \
@@ -143,15 +143,20 @@ spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 
 ```
 
 This is also where you would be able to add additional
-[token extensions](https://solana.com/developers/guides/token-extensions/getting-started)
-to your token to have extra functionality. Things like transfer fees for
-example. You will not be able to add more extensions to your token mint after
-you created it.
+[token extensions](/content/guides/token-extensions/getting-started.md) to your
+token to have extra functionality, like
+[transfer fees](/content/guides/token-extensions/transfer-fee.md) for example.  
+You will not be able to add more extensions to your token mint after you created
+it.
 
 ## Create and upload meta data
 
-Next we will create the off chain metadata for our token. This is usually a
-.json file containing name, symbol and uri in the following format.
+Next we will create the off-chain metadata for our token and upload it
+somewhere  
+accessible on the rest of the internet (like a decentralized storage
+provider).  
+This off-chain metadata is usually a `.json` file containing name, symbol, and  
+uri in the following format:
 
 ```json
 {
@@ -166,32 +171,41 @@ The meta data we will save in a decentralized storage solution.
 First we need to create an icon for the token. I used ChatGPT to generate an
 image and then uploaded it to a decentralized storage solution.
 
-There are many ways on how you can store the offchain meta data. You can for
-examples just upload it to github, or any other cloud storage provider. It just
-needs to be publicly accessible.
+### Where to upload metadata
 
-Following I will show you different options in no particular order.
+There are several places you could upload your off-chain metadata. While some  
+may opt for more centralized storage solutions (like AWS, GCP, or GitHub),  
+others may chose a decentralized provider (like Arweave or IPFS). The important
+thing is that the metadata file should be upload to a place that is accessible  
+to others on the internet and meets your tokens needs.
+
+Listed below are some different options and tools to upload your files (in no  
+particular order):
 
 | Service              | URL                                                      | Details                                                                                             |
 | -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | Web3 Storage         | [web3.storage](https://web3.storage)                     | Requires signing up for a free plan; first 5Gb are free; easy to use.                               |
-| Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without signup for 100Mb; uploads can take a while.                        |
+| Pinata               | [Pinata](https://app.pinata.cloud/)                      | Uploads to IPFS; free with sign up for 1Gb;                                                         |
+| Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without sign up for 100Mb; uploads can take a while.                       |
 | GitHub               | [GitHub](https://github.com)                             | Create a new repo, upload files, use the RAW URL format: https://raw.githubusercontent.com/xxxxxxx. |
-| ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a solana native storage solution. Did not work at the time of writing.                      |
-| Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | [Meta boss docs](https://metaboss.rs/)-                                                             |
+| ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a Solana native storage solution. Did not work at the time of writing.                      |
+| Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | [Meta boss docs](https://metaboss.rs/)                                                              |
 | Google Cloud Storage | [Google Cloud Storage](https://cloud.google.com/storage) | -                                                                                                   |
 | Amazon               | [Amazon](https://aws.amazon.com/)                        | -                                                                                                   |
 
-(If you are a provider of decentralized storage solutions and want to be listed
-here please just open a PR using the edit page button)
+> If you are a provider of decentralized storage solutions and want to be
+> listed  
+> here please just open a PR using the edit page button
 
-For this example we will use Web3 Storage. It requires to sign up for a free
-plan though but the first 5Gb are free and its very easy to use.
+For this example, we will use [Web3 Storage](https://web3.storage). While it  
+requires to sign up for an account to use, they offer a free plan with the
+first  
+5Gb free and its very easy to use.
 
-- [web3.storage](web3.storage)
-
-Once we have generated and uploaded the icon to a decentralized storage solution
-we end up with a link to that icon. We will use that link in the meta data file.
+For this example, we generated an icon for our token using ChatGPT. After you  
+have your image/icon, upload it to your desired online storage solution and get
+the link to it. We will need to put this link within our `metadata.json` file so
+we can then upload that.
 
 You will end up with some link similar to this one which should directly open
 your icon: https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo
@@ -199,7 +213,7 @@ your icon: https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo
 Create a new file called `metadata.json` in the `nice-token` folder and add the
 following:
 
-```json
+```json filename="metadata.json"
 {
   "name": "Nice Token",
   "symbol": "NICE",
@@ -217,7 +231,7 @@ https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.lin
 
 Now we are ready to add this meta data to our token.
 
-## Add meta data
+## Add metadata to a token
 
 Now we will initialize the meta data for our token with the meta data we just
 created and uploaded.
@@ -237,8 +251,8 @@ one of the Solana block explorers:
   etc.
 
 Make sure your explorer is set to devnet (if you are working on devnet) if you
-are working on dev net and replace the address to your mint address starting
-with "nic".
+are working on devnet and replace the address to your mint address starting with
+"nic".
 
 ## Update meta data
 
@@ -273,7 +287,7 @@ spl-token create-account niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun
 ```
 
 This will create a new token account for the account that is currently set in
-the solana config. You can also specify a different account by adding the
+the Solana config. You can also specify a different account by adding the
 address at the end of the command.
 
 And now we can finally mint some tokens into that token account:
@@ -292,38 +306,28 @@ friendAddress --fund-recipient
 "--fund-recipient" means that you will pay to create the token account for your
 friend.
 
-## Creating token markets
-
-Now that your token is created you probably want to create a market and a pool
-for it and have it listed on exchanges. There are many ways to create a market
-for your token. Here are some possible solutions:
-
-- [Radium](https://docs.raydium.io/raydium/pool-creation/creating-a-standard-amm-pool)
-- [Orca](https://docs.orca.so/orca-for-liquidity-providers/classic-community-listing/creating-a-pool-tutorial)
-- [Meteora](https://docs.meteora.ag/liquidity-primitives/dynamic-amm-pools/permissionless-dynamic-pools)
-- [Mango Markets](https://docs.mango.markets/)
-- [Jupiter](https://station.jup.ag/docs/get-your-token-onto-jup)
-
-If you have your own token market platform feel free to open a PR to add it here
-using the edit page button.
-
-## Community tools to create tokens
-
-Use these at your own risk. These tools make it easy to create tokens, but may
-also expose you to security risks, add additional fees, and could potentially
-give the tool creators control over your token.
-
-- [Smithii](https://smithii.io/)
-- [Smithii Tutorial](https://smithii.io/en/create-meme-coin-solana/)
-- [Fluxbeam](https://fluxbeam.xyz/)
-- [Fluxbeam Tutorial](https://medium.com/@Fluxbeam/how-to-create-a-token-using-fluxbeam-and-solana-token-extensions-9d1aaa8d98ea)
-
-If you have your own token launch platform feel free to open a PR to add it
-using the edit page button.
+Now we are done! You created a token with metadata and minted some tokens.
+Congratulations!
 
 ## Further reads about tokens
 
 - [Token extensions](https://solana.com/developers/guides/token-extensions/getting-started)
-- [External: a16z Rules on Token Launches](https://a16zcrypto.com/posts/article/5-rules-for-token-launches/)
-- [External: a16z Risks](https://a16zcrypto.com/posts/article/navigating-token-launch-risks/)
-- [External: a16z Getting Ready](https://a16zcrypto.com/posts/article/getting-ready-to-launch-a-token/)
+
+- [External from a16z: 5 rules for token launches](https://a16zcrypto.com/posts/article/5-rules-for-token-launches/)
+  This article outlines essential guidelines for launching a token. It addresses
+  strategic considerations such as regulatory compliance, market conditions, and
+  community engagement. It aims to provide founders and crypto-entrepreneurs
+  with a foundational understanding of the best practices to follow during the
+  initial offering and distribution phases of a new token.
+- [External from a16z: How to navigate token launch risks](https://a16zcrypto.com/posts/article/navigating-token-launch-risks/)
+  This piece focuses on identifying and managing the risks associated with token
+  launches. It likely covers common pitfalls like legal issues, market
+  volatility, and technological challenges. Understanding these risks is crucial
+  for anyone looking to successfully launch a token, ensuring they are prepared
+  for potential obstacles.
+- [External from a16z: Getting ready to launch a token](https://a16zcrypto.com/posts/article/getting-ready-to-launch-a-token/)
+  This article serves as a preparatory guide for entities about to launch a
+  token. It might include steps for technical setup, team alignment, regulatory
+  considerations, and engagement strategies to prime the project for a
+  successful launch. This guide could be particularly helpful in the final
+  stages before going public with a new token.
