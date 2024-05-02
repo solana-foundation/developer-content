@@ -23,7 +23,7 @@ keywords:
 ---
 
 In this guide you will learn step by step how to create a new SPL token on
-Solana with token extension metadata. If you want to use Metaplex metadata
+Solana with the token metadata extension. If you want to use Metaplex metadata
 instead instead see the
 [Metaplex documentation](https://developers.metaplex.com/token-metadata).
 
@@ -58,7 +58,7 @@ keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
 ```
 
 You will need to replace this with your own keypair in the following steps Then
-we configure the Solana config to use the keypair we just created:
+we configure the the Solana CLI to use to use the keypair we just created:
 
 ```bash
 solana config set --keypair keyH23FC3gG4miLPCTTDWuD9PDX6E6V9kBk681ZnvQm.json
