@@ -688,6 +688,15 @@ To embed a Whimsical diagram:
 > diagram as an SVG and directly [embed the image](#images) within a specific
 > piece of content.
 
+## Run a Grammar check before creating a PR
+
+Please run a grammar check (not just a spell check) prior to creating a PR. 
+We recommend [the Grammarly Extension for VScode](https://marketplace.visualstudio.com/items?itemName=znck.grammarly).
+
+## Use US English rather than British English
+
+For consistency, we use US English.
+
 ## Translations
 
 Content translations are supported via the Crowdin platform.
@@ -738,3 +747,5 @@ yarn dev
 ```
 
 > Note: The developer content api normally runs locally on port `3001`
+
+
