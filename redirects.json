@@ -13,7 +13,7 @@
       "destination": "/docs/clients/javascript"
     },
     { "source": "/apps/programming-faq", "destination": "/docs/programs/faq" },
-    { "source": "/apps/rent", "destination": "/docs/core/rent" },
+    { "source": "/apps/rent", "destination": "/docs/intro/rent" },
     { "source": "/apps/webwallet", "destination": "/docs/intro/wallets" },
     {
       "source": "/implemented-proposals/cross-program-invocation",
@@ -21,7 +21,7 @@
     },
     {
       "source": "/implemented-proposals/program-derived-addresses",
-      "destination": "/docs/core/cpi#program-derived-addresses"
+      "destination": "/docs/core/pda"
     },
     { "destination": "/docs/rpc/http:path*", "source": "/api/http/:path*" },
     { "destination": "/docs/rpc", "source": "/api" },
@@ -35,7 +35,7 @@
     },
     { "destination": "/docs/rpc", "source": "/apps/jsonrpc-api" },
     { "destination": "/docs/terminology", "source": "/terminology" },
-    { "destination": "/docs/core/rent", "source": "/developing/intro/rent" },
+    { "destination": "/docs/intro/rent", "source": "/developing/intro/rent" },
     {
       "destination": "/docs/core/programs",
       "source": "/developing/intro/programs"
@@ -57,19 +57,19 @@
       "source": "/developing/programming-model/transactions"
     },
     {
-      "destination": "/docs/core/transactions/fees",
+      "destination": "/docs/core/fees",
       "source": "/developing/intro/transaction_fees"
     },
     {
-      "destination": "/docs/core/transactions/confirmation",
+      "destination": "/docs/advanced/confirmation",
       "source": "/developing/transaction_confirmation"
     },
     {
-      "destination": "/docs/core/transactions/versions",
+      "destination": "/docs/advanced/versions",
       "source": "/developing/versioned-transactions"
     },
     {
-      "destination": "/docs/core/transactions/retry",
+      "destination": "/docs/advanced/retry",
       "source": "/integrations/retrying-transactions"
     },
     {
@@ -167,17 +167,14 @@
       "source": "/integrations/exchange"
     },
     {
-      "destination": "/docs/intro/transaction-fees",
+      "destination": "/docs/core/fees",
       "source": "/transaction_fees"
     },
     {
-      "destination": "/docs/economics/inflation/inflation-schedule",
+      "destination": "/docs/intro/economics",
       "source": "/storage_rent_economics"
     },
-    {
-      "destination": "/docs/economics/inflation/inflation-schedule",
-      "source": "/economics_overview"
-    },
+    { "destination": "/docs/intro/economics", "source": "/economics_overview" },
     { "destination": "/docs/intro/history", "source": "/history" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/support" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide" },

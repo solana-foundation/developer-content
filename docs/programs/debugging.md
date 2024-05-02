@@ -85,7 +85,7 @@ operations they wish to profile.
 - [Log the remaining compute units from a Rust program](/docs/programs/lang-rust.md#compute-budget)
 - [Log the remaining compute units from a C program](/docs/programs/lang-c.md#compute-budget)
 
-See [compute budget](/docs/core/runtime.md#compute-budget) for more information.
+See [compute budget](/docs/core/fees.md#compute-budget) for more information.
 
 ## ELF Dump
 

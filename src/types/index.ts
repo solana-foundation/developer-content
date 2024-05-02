@@ -2,12 +2,12 @@
  *
  */
 
-import type { DocumentTypes, IgnoredDoc } from "contentlayer/generated";
+import type { DocumentTypes, IgnoredRecord } from "contentlayer/generated";
 
 /**
  * Short hand for removing any ignored documents
  */
-export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredDoc> &
+export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredRecord> &
   ComputedFieldsTypeHack;
 
 /**
@@ -34,7 +34,8 @@ export type SimpleRecordGroupName =
   | "docs,rpc" // note: this is to support stringify-ing the route via the url
   | "guides"
   | "resources"
-  | "workshops";
+  | "workshops"
+  | "cookbook";
 
 type NavItemBase = {
   id: string;

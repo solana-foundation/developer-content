@@ -1,5 +1,7 @@
 ---
 title: Retrying Transactions
+altRoutes:
+  - /docs/core/transactions/retry
 ---
 
 # Retrying Transactions

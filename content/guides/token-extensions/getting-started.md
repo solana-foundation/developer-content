@@ -85,10 +85,9 @@ spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb \
   create-token --interest-rate 5 --enable-metadata
 ```
 
-<Callout>
-While you can mix and match extensions, most extensions cannot be added
-after the token mint is created. Including non-transferrable, the various "pointer" extensions, and several others.
-</Callout>
+> While you can mix and match extensions, most extensions cannot be added after
+> the token mint is created. Including non-transferrable, the various "pointer"
+> extensions, and several others.
 
 ## What extensions are compatible with each other?
 

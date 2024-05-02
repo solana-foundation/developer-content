@@ -80,7 +80,7 @@ An implementation of a program might also cause this error when performing a
 cross-program invocation that requires a signed program address, but the passed
 signer seeds passed to [`invoke_signed`](/docs/core/cpi.md) don't match the
 signer seeds used to create the program address
-[`create_program_address`](/docs/core/cpi.md#program-derived-addresses).
+[`create_program_address`](/docs/core/pda.md#createprogramaddress).
 
 ## `rand` Rust dependency causes compilation failure
 
