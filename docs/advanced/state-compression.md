@@ -37,7 +37,7 @@ These _trees_ are created in this "_deterministic_" process by:
 - continually climbing the tree and hashing adjacent branches together
 - once at the top of the tree, a final `root hash` is produced
 
-This `root hash` is then stored on chain, as a verifiable **_proof_** of all of
+This `root hash` is then stored onchain, as a verifiable **_proof_** of all of
 the data within every leaf. Allowing anyone to cryptographically verify all the
 off-chain data within the tree, while only actually storing a **minimal** amount
 of data on-chain. Therefore, significantly reducing the cost to store/prove
@@ -225,7 +225,7 @@ per update transaction.
 
 The `canopyDepth` value is also a primary factor of cost when creating a tree
 since you will pay this cost upfront at tree creation. The higher the canopy
-depth, the more data proof nodes are stored on chain, the higher the cost.
+depth, the more data proof nodes are stored onchain, the higher the cost.
 
 #### Smaller canopy limits composability
 
@@ -250,7 +250,7 @@ transfers. And not be able to support an on-chain bidding system.
 The cost of creating a concurrent merkle tree is based on the tree's size
 parameters: `maxDepth`, `maxBufferSize`, and `canopyDepth`. These values are all
 used to calculate the on-chain storage (in bytes) required for a tree to exist
-on chain.
+onchain.
 
 Once the required space (in bytes) has been calculated, and using the
 [`getMinimumBalanceForRentExemption`](/docs/rpc/http/getminimumbalanceforrentexemption)

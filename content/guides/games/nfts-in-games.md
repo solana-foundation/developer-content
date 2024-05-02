@@ -22,7 +22,7 @@ keywords:
   - games
   - example
   - nfts
-  - meta data
+  - metadata
 ---
 
 Non-fungible tokens (NFTs) are rapidly gaining popularity as a means of
@@ -35,16 +35,16 @@ collectibles, providing a new level of ownership and scarcity for players.
 Furthermore NFTs can be representing land, houses, achievements or even
 characters in a game. The possibilities are endless.
 
-## Using Solana Game shift to create NFTs
+## Using Solana GameShift to create NFTs
 
-Solana game shift is a gaming API maintained by
+Solana GameShift is a gaming API maintained by
 [Solana Labs](https://solanalabs.com/) which lets you easily create NFTs and
-other assets for your game. Game Shift offers these features:
+other assets for your game. GameShift offers these features:
 
 - A simple API to create NFTs
 - Buying assets via USD onramp
 - In game market place
-- Updating meta data of NFTs
+- Updating metadata of NFTs
 
 - [Docs](https://docs.gameshift.dev/)
 - [Example Game Live](https://solplay.de/cubeshift)
@@ -55,8 +55,8 @@ other assets for your game. Game Shift offers these features:
 
 Using NFTs, you can gate access to a particular part of a game based on owning
 the NFT. This can form a more tight-knit community within your game. In
-[js](https://docs.solana.com/de/developing/clients/javascript-api) using the
-[Metaplex sdk](https://github.com/metaplex-foundation/js#readme) this would look
+[JS](https://docs.solana.com/de/developing/clients/javascript-api) using the
+[Metaplex SDK](https://github.com/metaplex-foundation/js#readme) this would look
 like this:
 
 ```js
@@ -85,7 +85,7 @@ Another performant way to load NFTs is the
 You can see an example of this in the solana games preset in the js client:
 [Code Example](https://github.com/solana-developers/solana_game_preset/blob/main/app/components/DisplayNfts.tsx)
 
-```js
+```bash
 npx create-solana-game your-game-name
 ```
 
@@ -104,27 +104,27 @@ ownership of valuable assets on the Solana blockchain.
 [How to interact with tokens](/content/guides/games/interact-with-tokens.md)
 
 In the game Seven Seas there are for example three tokens. Pirate coins, which
-are used to upgrade ships, Rum which increases the health of ships and cannons
+are used to upgrade ships, rum which increases the health of ships and cannons
 which increase ships damage.
 
 - [Source](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas)
 - [Eight Hour video boot camp](https://www.youtube.com/playlist?list=PLilwLeBwGuK6NsYMPP_BlVkeQgff0NwvU)
 
 You can also use
-[Dynamic meta data](/content/guides/games/interact-with-tokens.md) to save
+[Dynamic metadata](/content/guides/games/interact-with-tokens.md) to save
 character level and experience or items in an NFT. Like this game NFTs could
 become more valuable the more the players play with them.
 
-The same you can also do with Metaplex new
+You can also do this with Metaplex's new
 [Core NFT standard](https://developers.metaplex.com/core).
 
 ## Using NFT Metadata for Player Stats
 
 NFTs also have Metadata, which can be used for all kind of traits for game
-objects. For example an NFT could represent a game character and his traits
-Strength/Intelligence/Agility could directly influence how strong the character
-is in the game. You can load NFT metadata and their attributes using the
-Metaplex SDK:
+objects. For example an NFT could represent a game character and their traits
+(Strength, Intelligence, Agility, etc) could directly influence how strong the
+character is in the game. You can load NFT metadata and their attributes using
+the Metaplex SDK:
 
 ```js
 import { Metaplex, keypairIdentity } from "@metaplex-foundation/js";
@@ -168,14 +168,14 @@ that can be done in the
 example:
 
 ```rust
-    #[account(
-        init,
-        payer = signer,
-        space = 800,
-        seeds = [b"player".as_ref(), nftMint.key().as_ref()],
-        bump,
-    )]
-    pub player: Account<'info, PlayerData>,
+#[account(
+    init,
+    payer = signer,
+    space = 800,
+    seeds = [b"player".as_ref(), nftMint.key().as_ref()],
+    bump,
+)]
+pub player: Account<'info, PlayerData>,
 ```
 
 ## Fusing NFTs Together
@@ -189,16 +189,16 @@ Tomato NFT.
 ## Use 3D NFTs in a game
 
 Every NFT metadata can also have a animation url. This url can contain a video,
-gif or a 3d file. These 3d files usually use the format .glb or .gltf and can
-dynamically be loaded into a game. For unity you can use the
-[GLTFast](https://github.com/atteneder/glTFast) package and in js the
+GIF or a 3D file. These 3D files usually use the format `.glb` or `.gltf` and
+can dynamically be loaded into a game. For unity you can use the
+[GLTFast](https://github.com/atteneder/glTFast) package and in JS the
 [GLTFast JS](https://discoverthreejs.com/book/first-steps/load-models/). For
 reference a
 [NFT metadata with glb model](https://solscan.io/token/DzHPvbGzrHK4UcyeDurw2nuBFKNvt4Kb7K8Bx9dtsfn#metadata)
 
 ```c#
-  var gltf = gameObject.AddComponent<GLTFast.GltfAsset>();
-  gltf.url = nft.metadata.animationUrl;
+var gltf = gameObject.AddComponent<GLTFast.GltfAsset>();
+gltf.url = nft.metadata.animationUrl;
 ```
 
 ```js
@@ -238,9 +238,9 @@ character maybe more desirable than a level 1 character.
 
 ## How to create an NFT collection
 
-NFTs on Solana mostly follow the Metaplex standard. Metaplex is a company which
-takes care of the NFT most used standard on Solana. The most common way to
-create an NFT collection is to create a metaplex candy machine which lets the
+NFTs on Solana mostly follow the Metaplex standard. Metaplex is a company that
+takes care of the most-used NFT standard on Solana. The most common way to
+create an NFT collection is to create a Metaplex candy machine which lets the
 user mint predefined pairs of metadata and images.
 
 The most used NFT standard on Solana is
@@ -250,7 +250,7 @@ In the
 [Metaplex Community guides](https://developers.metaplex.com/community-guides)
 you can find help setting up your NFT collection.
 
-But there is many more NFT standards on Solana:
+But there are many more NFT standards on Solana:
 
 - spNFTs
 - WNS

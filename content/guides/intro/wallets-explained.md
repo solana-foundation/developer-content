@@ -273,7 +273,7 @@ Do you want to start building on Solana?
   [https://solana.com/news/solana-scaffold-part-1-wallet-adapter](https://solana.com/news/solana-scaffold-part-1-wallet-adapter)
 - Tutorials: [https://soldev.app/](https://soldev.app/)
 
-### Blockchain and block chain
+### Blockchain and blockchain
 
 - At 10000 feet, blockchain in the macro term is a swarm of servers, validators
   nodes.

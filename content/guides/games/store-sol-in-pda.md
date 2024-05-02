@@ -26,7 +26,7 @@ reward players in a game. We will build a simple game where players can move
 right and collect a reward when they reach a specific position. The reward will
 be stored in a PDA, and players can claim it by interacting with the game.
 
-Video Walkthrough:
+Video walkthrough:
 
 <Embed url="https://www.youtube.com/watch?v=gILXyWvXu7M" />
 
@@ -574,7 +574,7 @@ pub enum MyError {
 Now that the program is complete, let's build and deploy it using the Solana
 Playground!
 
-If you're new to the Solana Playground, start by creating a Playground Wallet
+If you're new to the Solana Playground, start by creating a Playground wallet
 and make sure you're connected to a Devnet endpoint. Next,
 run `solana airdrop 2` until you have 6 SOL. Once you have enough SOL, build and
 deploy the program.

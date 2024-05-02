@@ -23,49 +23,43 @@ keywords:
   - games
   - energy system
   - time based
-  - on chain timer
+  - onchain timer
   - example
 ---
 
 Casual games commonly use energy systems, meaning that actions in the game cost
 energy which refills over time. In this guide we will walk through how to build
-one on Solana. It is recommended to start with the
-[Hello World Example](/content/guides/games/hello-world.md) if you do not have
-any prior Solana knowledge.
+one on Solana. If you don't have any prior Solana knowledge, start with the
+[Hello World Example](/content/guides/games/hello-world.md) instead.
 
-Here is a complete example source code based on the Solana Game scaffold with a
-React client:
-
-[Source](https://github.com/solana-developers/solana_game_preset)
-
-And you can easily set up a new game with an energy system in place using the
-command
+You can easily set up a new game with an energy system and a React client using
+[Create Solana Game](https://github.com/solana-developers/solana_game_preset).
+Just run the command:
 
 ```bash
 npx create-solana-game your-game-name
 ```
 
-Here is a tutorial on how to setup the games preset:
-[Video](https://youtu.be/fnhivg_pemI?si=6xIubFFYPOGiEjKY)
+Here is a
+[tutorial on how to use `create-solana-game`](https://youtu.be/fnhivg_pemI?si=6xIubFFYPOGiEjKY)
 
-And a video walkthrough of this example:
-[Video Walkthrough](https://youtu.be/YYQtRCXJBgs?si=fIZRFkIYJ9wYjEcI)
+There's also a
+[video walkthrough of this example](https://youtu.be/YYQtRCXJBgs?si=fIZRFkIYJ9wYjEcI).
 
 ## Anchor program
 
-In this tutorial, we will guide you through the process of creating a program
-that gradually replenishes the player's energy reserves over time. This, in
-turn, will enable them to execute various actions within the game. In our
-example, a lumber jack will chops trees with every tree rewarding one wood and
-cost one energy.
+In this tutorial, we will guide you through creating a program that gradually
+replenishes the player's energy reserves over time. The energy will enable them
+to execute various actions within the game. In our example, a lumberjack will
+chop trees with every tree rewarding one wood and costing one energy point.
 
 ### Creating the player account
 
 First the player needs to create an account which saves the state of our player.
-Notice the last_login time saves the current unix time stamp of the player he
-interacts with the program. With this state, we will be able to calculate how
+Notice the `last_login` time saves the Unix time stamp of the player's last
+interaction with the program. With this state, we will be able to calculate how
 much energy the player has at a certain point in time. We also have a value for
-how much wood the lumber jack chucks in the game.
+how much wood the lumberjack cuts in the game.
 
 ```rust
 
@@ -164,11 +158,11 @@ pub fn update_energy(ctx: &mut ChopTree) -> Result<()> {
 }
 ```
 
-## Js client
+## JS client
 
-Here is a complete example based on the Solana Game scaffold with a react
-client:
-[Source](https://github.com/solana-developers/solana-game-starter-kits/tree/main/lumberjack)
+Here is a
+[complete example](https://github.com/solana-developers/solana-game-starter-kits/tree/main/lumberjack)
+using `create-solana-game`, with a React client.
 
 ### Create connection
 
@@ -181,11 +175,12 @@ export const connection = new Connection(
 );
 ```
 
-Notice that the confirmation parameter is set to 'confirmed'. This means that we
+Notice that the confirmation parameter is set to `confirmed`. This means that we
 wait until the transactions are confirmed instead of finalized. This means that
 we wait until the super majority of the network said that the transaction is
 valid. This takes around 400ms and there was never a confirmed transaction which
-did not get finalized. So for games this is the perfect confirmation flag.
+did not get finalized. So for games `confirmed` is the perfect confirmation
+flag.
 
 ### Initialize player data
 
@@ -218,7 +213,7 @@ await connection.confirmTransaction(txSig, "confirmed");
 
 ### Subscribe to account updates
 
-Here you can see how to get account data in the js client and how to subscribe
+Here you can see how to get account data in the JS client and how to subscribe
 to an account. `connection.onAccountChange` creates a socket connection to the
 RPC node which will push any changes that happen to the account to the client.
 This is faster than fetching new account data after every change. We can then
@@ -250,7 +245,7 @@ useEffect(() => {
 
 ### Calculate energy and show count down
 
-In the javascript client we can then perform the same logic as in the program to
+In the JavaScript client we can then perform the same logic as in the program to
 precalculate how much energy the player would have at this point in time and
 show a countdown timer for the player so that he knows when the next energy will
 be available:
@@ -288,9 +283,9 @@ useEffect(() => {
 ```
 
 With this you can now build any energy based game and even if someone builds a
-bot for the game the most he can do is play optimally, which maybe even easier
-to achieve when playing normally depending on the logic of your game.
+bot for the game the most they can do is play optimally, which may be even
+easier to achieve when playing normally depending on the logic of your game.
 
 This game becomes even better when combined with the
-[Token example](/content/guides/games/interact-with-tokens.md) and you actually
-drop some spl token to the players.
+[Token example](/content/guides/games/interact-with-tokens.md), dropping some
+SPL token to the players.

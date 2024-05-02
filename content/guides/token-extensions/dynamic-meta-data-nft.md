@@ -3,8 +3,8 @@ date: Apr 25, 2024
 difficulty: intermediate
 title: Dynamic metadata NFTs using Token Extensions
 description:
-  Using the metadata token extension it is possible to save dynamic metadata
-  like, level and xp directly in the mint of an NFT.
+  Using the metadata token extension it is possible to save dynamic metadata,
+  like level and XP, directly in the mint of an NFT.
 tags:
   - games
   - anchor
@@ -34,7 +34,7 @@ you can create NFTs and digital assets using the metadata extensions. Together,
 these extensions
 ([metadata pointer and token metadata](https://solana.com/developers/guides/token-extensions/metadata-pointer))
 allow you to put any desired metadata natively on-chain. All within a
-customizable key-value data store directly on the token's mint account. Reducing
+customizable key-value data store directly on the token's mint account, reducing
 costs and complexity.
 
 These can be especially great for
@@ -51,7 +51,7 @@ based NFTs and custom metadata using an
 will save the level and the collected resources of a game player within an NFT.
 
 This NFT will be created by the Anchor program so it is very easy to mint from
-the Javascript client. Each NFT will have some basic structure provided via the
+the JavaScript client. Each NFT will have some basic structure provided via the
 Token Metadata interface:
 
 - default on-chain fields - `name`, `symbol` and `uri`
@@ -81,7 +81,7 @@ directly interacted with or managed by an
 
 Some of these gaming related use cases include:
 
-- save the level and xp of the player
+- save the level and XP of the player
 - the current weapon and armor
 - the current quest
 - the list goes on!
@@ -112,8 +112,11 @@ let space = ExtensionType::try_calculate_account_len::<Mint>(
 
 // This is the space required for the metadata account.
 // We put the metadata into the mint account at the end so we
-// don't need to create and additional account. Then the metadata pointer points back to the mint account.
-// Like this only one account that is needed.
+// don't need to create and additional account.
+// Then the metadata pointer points back to the mint account.
+// Using this technique, only one account is needed for both the mint
+// information and the metadata.
+
 let meta_data_space = 250;
 
 let lamports_required = (Rent::get()?).minimum_balance(space + meta_data_space);
@@ -266,7 +269,7 @@ token_2022::set_authority(
 )?;
 ```
 
-### Javascript client code
+### JavaScript client code
 
 Calling mint NFT from the client is very easy:
 
@@ -313,7 +316,7 @@ console.log(`https://explorer.solana.com/tx/${txSig}?cluster=devnet`);
 ## Quickstart example
 
 The example above is based on the Solana Games Preset, which generates you a
-scaffold that includes a Javascript and Unity client for this game, including
+scaffold that includes a JavaScript and Unity client for this game, including
 the configuration for interacting with the Solana Anchor program.
 
 You can run it yourself with the following command:
@@ -369,7 +372,7 @@ tool:
 2. Run `anchor build` to build the program
 3. Run `anchor deploy` to deploy the program
 4. Copy the program id from the terminal into the `lib.rs`, `anchor.toml` and
-   within the Unity project in the `AnchorService` and if you use Javascript in
+   within the Unity project in the `AnchorService` and if you use JavaScript in
    the `anchor.ts` file
 5. Build and deploy again
 
@@ -406,7 +409,7 @@ https://explorer.solana.com/?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8
 ```
 
 The program is also already deployed to net so you can try it out on `devnet`.
-The Javascript client also has a button to mint the NFT. Starting the Javascript
+The JavaScript client also has a button to mint the NFT. Starting the JavaScript
 client:
 
 ```shell
@@ -436,9 +439,9 @@ http://localhost:8899
 ws://localhost:8900
 ```
 
-### Run the Javascript client
+### Run the JavaScript client
 
-To start the Javascript client and be able to interact with the game and program
+To start the JavaScript client and be able to interact with the game and program
 using your web browser:
 
 - open the `app` directory within the repo

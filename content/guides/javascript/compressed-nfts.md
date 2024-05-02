@@ -214,7 +214,7 @@ Your tree size is set by 3 values, each serving a very specific purpose:
 1. `maxDepth` - used to determine how many NFTs we can have in the tree
 2. `maxBufferSize` - used to determine how many updates to your tree are
    possible in the same block
-3. `canopyDepth` - used to store a portion of the proof on chain, and as such is
+3. `canopyDepth` - used to store a portion of the proof onchain, and as such is
    a large of cost and composability of your compressed NFT collection
 
 > Read more about the details about
@@ -285,7 +285,7 @@ Using the
 helper function, we allocate enough space on-chain for our tree.
 
 ```ts
-// allocate the tree's account on chain with the `space`
+// allocate the tree's account onchain with the `space`
 const allocTreeIx = await createAllocTreeIx(
   connection,
   treeKeypair.publicKey,
@@ -309,7 +309,7 @@ const createTreeIx = createCreateTreeInstruction(
     treeAuthority,
     merkleTree: treeKeypair.publicKey,
     compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    // NOTE: this is used for some on chain logging
+    // NOTE: this is used for some onchain logging
     logWrapper: SPL_NOOP_PROGRAM_ID,
   },
   {
@@ -604,7 +604,7 @@ The response fields to pay special attention to are:
   delegated authority to another address)
 - `compression` - tells you if this NFT is actually using compression or not.
   For compressed NFTs, this will also give you the tree address that is storing
-  the compressed NFT on chain.
+  the compressed NFT onchain.
 
 > Some of the returned values may be empty if the NFT is **not** a compressed
 > NFT, such as many of the `compression` fields. This is expected.

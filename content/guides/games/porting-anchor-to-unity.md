@@ -20,15 +20,15 @@ keywords:
   - example
 ---
 
-When you have written a solana program you now maybe want to use it in the Unity
-Game engine. Fortunately there is a code generator which lets you port a anchor
-IDL (a json representation of a solana program) to C#.
+If you have written a Solana program, you can use it in the Unity game engine
+using a code generator that lets you port an Anchor IDL (a JSON representation
+of a Solana program) to C#.
 
 ## Generating the Client
 
 When using Anchor you will be able to generate an IDL file which is a JSON
 representation of your program. With this IDL you can then generate different
-clients. For example JS or C# to Unity.
+clients. For example JS or C# for Unity.
 
 [IDL to C# Converter](https://github.com/magicblock-labs/Solana.Unity.Anchor)
 
@@ -48,14 +48,14 @@ Within Unity game engine we can then use the
 [Solana Unity SDK](https://assetstore.unity.com/packages/decentralization/infrastructure/solana-sdk-for-unity-246931)
 to interact with the program.
 
-1. First we find the on chain address of the game data account with
+1. First we find the onchain address of the game data account with
    TryFindProgramAddress. We need to pass in this account to the transaction so
    that the Solana runtime knows that we want to change this account.
 2. Next we use the generated client to create a MoveRight instruction.
 3. Then we request a block hash from an RPC node. This is needed so that Solana
    knows how long the transaction will be valid.
 4. Next we set the fee payer to be the players wallet.
-5. Then we add the move right instruction to the Transaction. We can also add
+5. Then we add the move right instruction to the transaction. We can also add
    multiple instructions to a singe transaction if needed.
 6. Afterwards the transaction gets signed and then send to the RPC node for
    processing. Solana has different Commitment levels. If we set the commitment

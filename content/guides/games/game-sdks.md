@@ -25,14 +25,14 @@ With Solana being a high performance blockchain with low fees and fast
 transactions, a great game developer community has formed around it.
 
 Here you can find details about the Solana game development SDKs available
-within the ecosystem. All the SDKs, except [Game Shift](#solana-game-shift), are
+within the ecosystem. All the SDKs, except [GameShift](#solana-game-shift), are
 open source and community built. If you are working on a SDK yourself feel free
 to open a PR to this page and add it.
 
 ## Unity SDK
 
 The Unity game engine is known for its beginner friendly approach and cross
-platform support including WebGL, iOS, and Android. Build once export
+platform support including WebGL, iOS, and Android. Build once, export
 everywhere.
 
 - [Docs](https://docs.magicblock.gg/introduction)
@@ -41,14 +41,14 @@ everywhere.
 - [Example Games](https://github.com/solana-developers/solana-game-examples)
 - [Tic Tac Toe](https://blog.magicblock.gg/bolt-tic-tac-toe/)
 
-The Solana Unity SDK is maintained by [MagicBlock](https://www.magicblock.gg/)
+The Solana Unity SDK is maintained by [Magicblock](https://www.magicblock.gg/)
 and comes with:
 
 - NFT support
 - Candy machine integration
 - Transactions
 - RPC functions
-- Phantom Deep links
+- Phantom deep links
 - WebGL connector
 - Reliable WebSocket connection support
 - Mobile wallet-adapter
@@ -57,10 +57,9 @@ and comes with:
 
 ## Godot SDK
 
-The Godot engine is an open source game engine which gained lots of support in
-the last few years. [Godot Engine](https://godotengine.org/) is the official
-website of the engine. The Solana SDK for Godot is maintained by
-[ZenRepublic](https://twitter.com/ZenRepublicNDM) and
+The [Godot Engine](https://godotengine.org/) is an open source game engine which
+gained lots of support in the last few years. The Solana SDK for Godot is
+maintained by [ZenRepublic](https://twitter.com/ZenRepublicNDM) and
 [Virus-Axel](https://twitter.com/AxelBenjam). It comes with a wallet adapter
 integration, transactions, RPC functions, and Anchor client code generation.
 Even a fully functional Metaplex
@@ -72,16 +71,16 @@ Even a fully functional Metaplex
 - [Tutorial](https://www.youtube.com/watch?v=tszFPInYmXQ)
 - [Maintainer](https://twitter.com/ZenRepublicNDM)
 
-## Solana Game Shift
+## Solana GameShift
 
-Solana Game Shift is an API solution, developed by
+Solana GameShift is an API solution, developed by
 [Solana Labs](https://solanalabs.com), to integrate Solana into your game,
 including the ability to easily mint and change assets. It also supports USDC
 on-ramps and in-game marketplaces. You can onboard your players without creating
 or managing blockchain key phrases and easily let them pay with credit card
 payments.
 
-- [Solana Game Shift](https://gameshift.solanalabs.com/)
+- [Solana GameShift](https://gameshift.solanalabs.com/)
 - [Docs](https://docs.gameshift.dev/)
 - [Example Game Live](https://solplay.de/cubeshift)
 - [Example Game Source](https://github.com/solana-developers/cube_shift)
@@ -147,7 +146,7 @@ starting point for your project.
 
 ## Next.js/React + Anchor
 
-One of the easiest way to build on Solana is using the Web3js Javascript
+One of the easiest way to build on Solana is using the Web3js JavaScript
 framework in combination with the Solana Anchor framework. For more complex
 games, we recommend looking into using a Game Engine like [Unity](#unity-sdk) or
 [Unreal](#unreal-sdks) though.

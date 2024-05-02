@@ -24,14 +24,13 @@ keywords:
   - example
 ---
 
-Here you can find a list of open source game examples and tools as reference for
-you game development. Looking at examples and seeing how certain features are
-implemented can vastly improve your development speed. If you have other
-examples games feel free to submit a PR.
-
 [Solana Game Examples](https://github.com/solana-developers/solana-game-examples)
+includes many open source game examples and tools for game development. Looking
+at these examples and seeing how certain features are implemented can vastly
+improve your development speed. If you have other example games feel free to
+[submit a PR](https://github.com/solana-developers/solana-game-examples/pulls).
 
-## Solana games preset
+## Using create-solana-game
 
 A simple npx command that sets up a new Solana game project with a Unity client,
 Anchor program and a Next.js frontend. Supported features are:
@@ -40,7 +39,7 @@ Anchor program and a Next.js frontend. Supported features are:
 - Anchor program
 - Unity client
 - Next.js frontend
-- Rename all mentions of the project to your game name
+- Renaming all mentions of the project to your own game's name
 - NFT and compressed NFT support
 - [Session keys](https://docs.magicblock.gg/Onboarding/Session%20Keys/how-do-session-keys-work)
   for auto approving transactions
@@ -57,9 +56,9 @@ Here you can learn how it works:
 - [Video](https://www.youtube.com/watch?v=fnhivg_pemI)
 - [Source and docs](https://github.com/solana-developers/solana_game_preset)
 
-## Interact with Anchor Program from Unity
+## Interacting with Anchor Programs from Unity
 
-Tiny adventure is a simple example moving a player left and right on chain using
+Tiny adventure is a simple example moving a player left and right onchain using
 Anchor framework and Unity SDK.
 
 - [Tutorial Guide](/content/guides/games/hello-world.md)
@@ -68,30 +67,31 @@ Anchor framework and Unity SDK.
 - [Playground](https://beta.solpg.io/tutorials/tiny-adventure)
 - [Unity Client](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas/unity/Assets/SolPlay/Examples/TinyAdventure)
 
-## Saving Sol in a PDA
+## Saving SOL in a PDA
 
-Learn how to save sol in a PDA seed vault and send it back to a player. Backend
-is written in Anchor and the frontend is using the Unity SDK.
+Learn how to save SOL in a PDA seed vault and send it back to a player. This
+backend is written in Anchor and the frontend is using the Unity SDK.
 
 - [Tutorial Guide](/content/guides/games/store-sol-in-pda.md)
 - [Video](https://www.youtube.com/watch?v=gILXyWvXu7M)
 - [Live Version](https://solplay.de/TinyAdventureTwo/index.html)
 - [Source](https://beta.solpg.io/tutorials/tiny-adventure-two)
 
-## Use Solana Pay Qr codes to control a game
+## Use Solana Pay QR codes to control a game
 
-Solana pay transaction requests can not only be used for payments but for
-signing any transactions on a phone wallet or a link. This can also be used for
-games. Tug of war is a multiplayer game where an account is changed via Solana
-Pay qr codes which can be player with many people on a big screen. Backend
-Anchor and the frontend is Js React and Next13. The rewards will be payed out to
-the team that manages to pull completely to one side.
+Solana Pay transaction requests can not only be used for payments but for
+signing any transactions on a phone wallet or a link, including for games. Tug
+of war is a multiplayer game which can be player with many people on a big
+screen, using Solana Pay QR codes to pull the rope one way or the other, which
+in turn changes data in an account. The rewards will be payed out to the team
+that manages to the rope pull completely to one side. The backend is Anchor and
+the frontend is React.js and Next.js 13.
 
 - [Tutorial](https://www.youtube.com/watch?v=_XBvEHwSqJc&ab_channel=SolPlay)
 - [Live version on devnet](https://tug-of-war-solana-pay.vercel.app/?network=devnet)
 - [Source](https://github.com/Solana-Workshops/tug-of-war-solana-pay)
 
-## How to build a round based multiplayer game
+## How to build a round-based multiplayer game
 
 A simple multiplayer tic tac toe game written in Anchor
 
@@ -99,72 +99,73 @@ A simple multiplayer tic tac toe game written in Anchor
 - [Source](https://github.com/coral-xyz/anchor-book/tree/master/programs/tic-tac-toe)
 - [Magic Block Bolt Tic Tac Toe](https://github.com/magicblock-labs/bolt-tic-tac-toe)
 
-## On Chain Chess
+## Onchain Chess
 
-Complete on chain playable chess game written in Anchor with a 3D Unity
+Complete onchain playable chess game written in Anchor with a 3D Unity
 implementation. Send someone a link to start a game.
 
 [Source](https://github.com/magicblock-labs/Solana-Unity-Chess/)
 
 ## Multiplayer Game using voting system
 
-Pokemon voting system A game where collectively people vote on moves in a game
-boy game. Every move is recorded and each move can be minted as an NFTs.
+A Pokemon-style game where people collectively vote on moves. Every move is
+recorded and each move can be minted as an NFTs.
 
 - [Live Version](https://solana.playspokemon.xyz/)
 - [Source](https://github.com/nelsontky/web3-plays-pokemon)
 
 ## Entity component system examples
 
-### Magic Block Bolt
+### Magicblock Bolt
 
-Magic block Bolt is an on chain entity component system. Magic block is also
+Magicblock Bolt is an onchain entity component system. Magicblock is also  
 working on an ephemeral rollup system for super fast transactions.
 
 [Bolt](https://github.com/magicblock-labs/bolt)
 
 ### Arc Framework
 
-Kyoudai Clash is an on chain realtime strategy game using the jump crypto
-[Arc framework](https://github.com/JumpCrypto/sol-arc) which is an on chain
-entity component system for Solana. (Not maintained anymore)
+Kyoudai Clash is an on chain realtime strategy game using the Jump Crypto
+[Arc framework](https://github.com/JumpCrypto/sol-arc) which is an onchain
+entity component system for Solana (not maintained anymore).
 
 - [xNFT Version](https://www.xnft.gg/app/D2i3cz9juUPLwbpi8rV2XvAnB5nEe3f8fM5YUpgVprbT)
 - [Source](https://github.com/spacemandev-git/dominari-arc)
 
 ## Hide game state from other players
 
-Hiding data on chain is difficult because all account and data on Solana is
-public and can be red by anyone. There are some solutions to the problem though.
+Hiding data on chain is difficult because all accounts, including data accounts,
+are public and can be read by anyone. There are some solutions to the problem
+though.
 
 ### Light protocol
 
-Light protocol is a Zk layer solution on solana that lets you built on Solana
-introducing ZK compression, a new primitive that enables the secure scaling of
-state directly on the L1.
+Light protocol is a ZK layer solution on Solana that lets you built on Solana  
+with ZK compression, a new primitive that enables the secure scaling of state
+directly on the L1.
 
 - [Source](https://github.com/Lightprotocol/light-protocol)
 - [Website](https://lightprotocol.com/)
 
 ### Race Protocol
 
-Race protocol is building an on chain poker game and have two solutions for
-hiding data. One is server based and one relies on players sending encrypted
+Race protocol is building an on chain poker game and have two solutions for  
+hiding data. One is server-based and one relies on players sending encrypted  
 data to each other.
 
 [Source](https://github.com/RACE-Game)
 
 ### Stone paper scissors
 
-A game where on chain data is hidden by saving a hash in the client until
-reveal. SPL Tokens as price for the winner.
+A game where onchain data is hidden by saving a hash in the client until reveal.
+SPL Tokens are given as prizes for the winner.
 
 [Source](https://github.com/kevinrodriguez-io/bonk-paper-scissors)
 
 ### Tilted Fish Games
 
-Another example submitted for grizzlython which encrypts entries and send it to
-the next player with an additional encryption:
+Another example submitted for the Grizzlython hackathon, which encrypts entries
+and sends them to the next player with an additional encryption:
 
 [Source](https://github.com/solanaGames)
 
@@ -176,14 +177,14 @@ adventure game.
 - [xNFT Version](https://www.xnft.gg/app/D2i3cz9juUPLwbpi8rV2XvAnB5nEe3f8fM5YUpgVprbT)
 - [Source](https://github.com/spacemandev-git/dominari-arc)
 
-## Real-time pvp on chain game
+## Real-time pvp onchain game
 
 ### Solana Civ
 
-A civilization game where you can build cities, trade with other players and
-fight wars. Progress through the ages by unlocking new technologies, conquer
+A Civilization-style game where you can build cities, trade with other players
+and fight wars. Progress through the ages by unlocking new technologies, conquer
 lands and build a civilization that will stand the test of time. All open source
-and crowd build using the Solana community facilitating gib.work.
+and crowd-built by the Solana community, through gib.work.
 
 - [Source](https://github.com/proxycapital/solana-civ)
 - [Website](https://solana-civ.com/)
@@ -191,27 +192,26 @@ and crowd build using the Solana community facilitating gib.work.
 
 ### Seven Seas
 
-Seven Seas is a Real-time Solana Battle Royal Game. Using Anchor program,
-UnitySDK, WebSocket account subscription. Players can spawn their ships
-represented as one of their NFTs on a grid and move around. If a player hits
-another player or chest he collect its Sol and some Pirate Coin SPL tokens. The
-grid is implemented as a two dimensional array where every tile saves the
-players wallet key and the NFT public key. There is also a QR code in the top
-left corner that triggers a Solana Pay transaction request which players can
-sign on their phones to let Chutuluh shoot at the closest ship.
+Seven Seas is a real-time Solana Battle Royale game. Using an Anchor program,
+the UnitySDK, and WebSocket account subscriptions. Players can spawn their ships
+represented as NFTs on a grid and move around. If a player hits another player
+or chest he collect its SOL and some Pirate Coin SPL tokens. The grid is
+implemented as a two dimensional array where every tile saves the players wallet
+key and the NFT public key. There is also a QR code in the top left corner that
+triggers a Solana Pay transaction request, which players can sign on their
+phones, to let Cthulhu shoot at the closest ship.
 
 - [Example](https://solplay.de/sevenseas)
 - [Source](https://github.com/solana-developers/solana-game-examples/tree/main/seven-seas)
 - [Eight Hour video boot camp](https://www.youtube.com/playlist?list=PLilwLeBwGuK6NsYMPP_BlVkeQgff0NwvU)
 
-### Blob Wars On Chain strategy game ala Dark Forest
+### Blob Wars onchain strategy game ala Dark Forest
 
-This example shows you how you can build a strategy game like Dark Forest or
-Tribal wars, but without the zk features. It is called blobs and every players
-spawn its home blob with a color that is derived from their public key. These
-blobs can then be used to attack other blobs and conquer them. Blob regenerate
-color for time, so there is lots of tactics involved on where to spawn blobs and
-how to combine attacks.
+Blob Wars shows you how you can build a strategy game like Dark Forest or Tribal
+Wars, but without the ZK features. Every player spawns their home blob with a
+color that is derived from their public key. These blobs can then be used to
+attack other blobs and conquer them. Blobs regenerate color over time, so there
+are lots of tactics involved on where to spawn blobs and how to combine attacks.
 
 [Source](https://github.com/Woody4618/colosseum_2024)
 [Demo Video](https://www.youtube.com/watch?v=XNHxqdd6pz8)
@@ -219,7 +219,7 @@ how to combine attacks.
 ## Tale of Kentridge
 
 This is a game built with the Turbo game engine.
-[Turbo](https://turbo.computer/) is a from the ground up freshly written rust
+[Turbo](https://turbo.computer/) is a from the ground up freshly written Rust
 game engine which focuses on lightweight architecture and fast iteration times
 always with Solana in mind. It is beginner friendly and comes with full Solana
 RPC support. You can even use its AI tools to generate complete games.
@@ -227,7 +227,7 @@ RPC support. You can even use its AI tools to generate complete games.
 - [Example game](https://github.com/super-turbo-society/turbo-demos/tree/main/solana-lumberjack)
 - [Docs](https://turbo.computer/docs/intro/)
 
-## Rogue like game
+## Roguelike game
 
 A game where you can explore a cave and find treasures. The game is written in
 Anchor and the frontend is a Unity client. You progress through a cave from
@@ -242,10 +242,11 @@ fight that player or pay a little fee to be able to pass.
 
 ## On-chain city builder example
 
-This example shows you how you can build an on chain city builder. The special
+This example shows you how you can build an onchain city builder. The special
 feature is that it is a competitive but also cooperative city builder since all
-the resources are shared between the players, but depending if you build your
-building on the left or the right you either support the goblins or the humans.
+resources are shared between the players, but depending if you build your
+
+buildings on the left or the right you either support the goblins or the humans.
 
 - [Dev net example](https://solplay.de/humansandgoblins/)
 - [Source](https://github.com/solana-developers/solana-game-examples/tree/main/city-builder)
@@ -260,7 +261,7 @@ was the winner of the second [Solana Speedrun](https://solanaspeedrun.com/).
 - [Source](https://github.com/kimo-do/Speedrun2)
 - [xNFT version](https://www.xnft.gg/app/8iGi6rMEPbjTHofEwU8MNsy5MTPfhorj9QXCfH8dKBme)
 
-## On chain matchmaking
+## onchain matchmaking
 
 A multiplayer match three game which uses NFT stats for the character stats in
 the game and has an interesting onchain matchmaking system.
@@ -276,5 +277,5 @@ the game and has an interesting onchain matchmaking system.
 - [Session Keys](https://www.youtube.com/watch?v=oKvWZoybv7Y)
 - [Clockwork](https://www.youtube.com/watch?v=ax0Si3Vkvbo&t=252s)
 - [Memory on Solana](https://www.youtube.com/watch?v=zs_yU0IuJxc)
-- [Dynamic Meta Data NFTs](https://www.youtube.com/watch?v=n-ym1utpzhk)
+- [Dynamic Metadata NFTs](https://www.youtube.com/watch?v=n-ym1utpzhk)
 - [Advanced Topics](https://www.youtube.com/watch?v=jW8ep_bmaIw)
