@@ -36,8 +36,8 @@ developers learn and experiment with Solana blockchain development.
 
 You can find the examples in the `solana-developers/program-examples` together
 with README files that explain you how to run the different examples. Most
-examples are self-contained and are available in Native rust,
-[Anchor](https://www.anchor-lang.com/docs/installation),
+examples are self-contained and are available in native Rust (ie, with no
+framework), [Anchor](https://www.anchor-lang.com/docs/installation),
 [Seahorse](https://seahorse-lang.org/) and it also contains a list of examples
 that we would love to
 [see as contributions](https://github.com/solana-developers/program-examples?tab=readme-ov-file#examples-wed-love-to-see).  
