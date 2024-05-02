@@ -112,8 +112,8 @@ which increase ships damage.
 
 You can also use
 [Dynamic metadata](/content/guides/games/interact-with-tokens.md) to save
-character level and experience or items in an NFT. Like this game NFTs could
-become more valuable the more the players play with them.
+character level and experience or items in an NFT. For example, NFTs in your
+game could become more valuable the more the players play with them.
 
 You can also do this with Metaplex's new
 [Core NFT standard](https://developers.metaplex.com/core).
