@@ -11,7 +11,6 @@ tags:
   - javascript
   - native
   - rust
-  - solang
   - token22
   - token extensions
 keywords:
@@ -25,7 +24,6 @@ keywords:
   - blockchain tutorial
   - web3 developer
   - anchor
-  - solang
 ---
 
 The
@@ -58,22 +56,22 @@ Contains a series of examples that demonstrate the foundational steps for
 building Solana programs using native Rust libraries. These examples are
 designed to help developers understand the core concepts of Solana programming.
 
-| Example Name                                                                                                                  | Description                                                                                      | Language                                    |
-| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------- |
-| [Create Account](https://github.com/solana-developers/program-examples/tree/main/basics/account-data)                         | Saving an address with name, house number, street and city in an account.                        | Native, Anchor, Solang                      |
-| [Checking Accounts](https://github.com/solana-developers/program-examples/tree/main/basics/checking-accounts)                 | Security lessons that shows how to do account checks                                             | Native, Anchor, Solang                      |
-| [Close Account](https://github.com/solana-developers/program-examples/tree/main/basics/close-account)                         | Show you how to close accounts to get its rent back.                                             | Native, Anchor                              |
-| [Counter](https://github.com/solana-developers/program-examples/tree/main/basics/counter)                                     | A simple counter program in all the different architectures.                                     | Native, Anchor, Solang, Seahorse, mpl-stack |
-| [Create Account](https://github.com/solana-developers/program-examples/tree/main/basics/create-account)                       | How to create a system account within a program.                                                 | Native, Anchor, Solang                      |
-| [Cross Program Invocation](https://github.com/solana-developers/program-examples/tree/main/basics/cross-program-invocation)   | Using a hand and lever analogy this shows you how to call another program from within a program. | Native, Anchor, Solang                      |
-| [hello solana](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana)                           | Hello world example which just prints hello world in the transaction logs.                       | Native, Anchor, Solang                      |
-| [Pda Rent payer](https://github.com/solana-developers/program-examples/tree/main/basics/pda-rent-payer)                       | Shows you how you can use the lamports from a PDA to pay for a new account.                      | Native, Anchor, Solang                      |
-| [Processing Instructions](https://github.com/solana-developers/program-examples/tree/main/basics/processing-instructions)     | Shows you how to handle instruction data string and u32.                                         | Native, Anchor, Solang                      |
-| [Program Derived Addresses](https://github.com/solana-developers/program-examples/tree/main/basics/program-derived-addresses) | Shows how to use seeds to refer to a PDA and save data in it.                                    | Native, Anchor, Solang                      |
-| [Realloc](https://github.com/solana-developers/program-examples/tree/main/basics/realloc)                                     | Shows you how to increase and decrease the size of an existing account.                          | Native, Anchor                              |
-| [Rent](https://github.com/solana-developers/program-examples/tree/main/basics/rent)                                           | Here you will learn how to calculate rent requirements within a program.                         | Native, Anchor, Solang                      |
-| [Repository Layout](https://github.com/solana-developers/program-examples/tree/main/basics/repository-layout)                 | Recommendations on how to structure your program layout.                                         | Native, Anchor                              |
-| [Transfer SOL](https://github.com/solana-developers/program-examples/tree/main/basics/transfer-sol)                           | Different methods of transferring SOL for system accounts and PDAs.                              | Native, Anchor, Solang, Seahorse            |
+| Example Name                                                                                                                  | Description                                                                                      | Language                            |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------- |
+| [Create Account](https://github.com/solana-developers/program-examples/tree/main/basics/account-data)                         | Saving an address with name, house number, street and city in an account.                        | Native, Anchor                      |
+| [Checking Accounts](https://github.com/solana-developers/program-examples/tree/main/basics/checking-accounts)                 | Security lessons that shows how to do account checks                                             | Native, Anchor                      |
+| [Close Account](https://github.com/solana-developers/program-examples/tree/main/basics/close-account)                         | Show you how to close accounts to get its rent back.                                             | Native, Anchor                      |
+| [Counter](https://github.com/solana-developers/program-examples/tree/main/basics/counter)                                     | A simple counter program in all the different architectures.                                     | Native, Anchor, Seahorse, mpl-stack |
+| [Create Account](https://github.com/solana-developers/program-examples/tree/main/basics/create-account)                       | How to create a system account within a program.                                                 | Native, Anchor                      |
+| [Cross Program Invocation](https://github.com/solana-developers/program-examples/tree/main/basics/cross-program-invocation)   | Using a hand and lever analogy this shows you how to call another program from within a program. | Native, Anchor                      |
+| [hello solana](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana)                           | Hello world example which just prints hello world in the transaction logs.                       | Native, Anchor                      |
+| [Pda Rent payer](https://github.com/solana-developers/program-examples/tree/main/basics/pda-rent-payer)                       | Shows you how you can use the lamports from a PDA to pay for a new account.                      | Native, Anchor                      |
+| [Processing Instructions](https://github.com/solana-developers/program-examples/tree/main/basics/processing-instructions)     | Shows you how to handle instruction data string and u32.                                         | Native, Anchor                      |
+| [Program Derived Addresses](https://github.com/solana-developers/program-examples/tree/main/basics/program-derived-addresses) | Shows how to use seeds to refer to a PDA and save data in it.                                    | Native, Anchor                      |
+| [Realloc](https://github.com/solana-developers/program-examples/tree/main/basics/realloc)                                     | Shows you how to increase and decrease the size of an existing account.                          | Native, Anchor                      |
+| [Rent](https://github.com/solana-developers/program-examples/tree/main/basics/rent)                                           | Here you will learn how to calculate rent requirements within a program.                         | Native, Anchor                      |
+| [Repository Layout](https://github.com/solana-developers/program-examples/tree/main/basics/repository-layout)                 | Recommendations on how to structure your program layout.                                         | Native, Anchor                      |
+| [Transfer SOL](https://github.com/solana-developers/program-examples/tree/main/basics/transfer-sol)                           | Different methods of transferring SOL for system accounts and PDAs.                              | Native, Anchor, Seahorse            |
 
 ## Compression
 
@@ -84,7 +82,6 @@ focused on compressed NFTs (cNFTs).
 | Example Name                                                                                                | Description                                                                         | Language |
 | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | -------- |
 | [cNFT-burn](https://github.com/solana-developers/program-examples/tree/main/compression/cnft-burn)          | To destroy a cNFT it can be burnt. This examples shows how to do that in a program. | Anchor   |
-| [cNFT-solang](https://github.com/solana-developers/program-examples/tree/main/compression/cnft-solang)      | How to ming a cNFT in Solang                                                        | Solang   |
 | [cNFT-Vault](https://github.com/solana-developers/program-examples/tree/main/compression/cnft-vault/anchor) | How to custody a cNFT in a program and send it out again.                           | Anchor   |
 | [cutils](https://github.com/solana-developers/program-examples/tree/main/compression/cutils)                | A suite utils to for example mint and verify cNFTs in a program.                    | Anchor   |
 
@@ -102,15 +99,15 @@ Most tokens on Solana use the Solana Program Library (SPL) token standard. Here
 you can find many examples on how to mint, transfer, burn tokens and even how to
 interact with them in programs.
 
-| Example Name                                                                                                    | Description                                                                                       | Language                         |
-| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------- |
-| [Create Token](https://github.com/solana-developers/program-examples/tree/main/tokens/create-token)             | How to create a token and add metaplex metadata to it.                                            | Anchor, Native, Solang           |
-| [NFT Minter](https://github.com/solana-developers/program-examples/tree/main/tokens/nft-minter)                 | Minting only one amount of a token and then removing the mint authority.                          | Anchor, Native, Solang           |
-| [PDA Mint Authority](https://github.com/solana-developers/program-examples/tree/main/tokens/pda-mint-authority) | Shows you how to change the mint authority of a mint, to mint tokens from within a program.       | Anchor, Native, Solang           |
-| [SPL Token Minter](https://github.com/solana-developers/program-examples/tree/main/tokens/spl-token-minter)     | Explains how to use Associated Token Accounts to be able to keep track of token accounts.         | Anchor, Native, Solang           |
-| [Token Swap](https://github.com/solana-developers/program-examples/tree/main/tokens/token-swap)                 | Extensive example that shows you how to build a AMM (automated market maker) pool for SPL tokens. | Anchor                           |
-| [Transfer Tokens](https://github.com/solana-developers/program-examples/tree/main/tokens/transfer-tokens)       | Shows how to transfer SPL token using CPIs into the token program.                                | Anchor, Native, Solang, Seahorse |
-| [Token-2022](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022)                 | See Token 2022 (Token extensions).                                                                | Anchor, Native, Solang           |
+| Example Name                                                                                                    | Description                                                                                       | Language                 |
+| --------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------ |
+| [Create Token](https://github.com/solana-developers/program-examples/tree/main/tokens/create-token)             | How to create a token and add metaplex metadata to it.                                            | Anchor, Native           |
+| [NFT Minter](https://github.com/solana-developers/program-examples/tree/main/tokens/nft-minter)                 | Minting only one amount of a token and then removing the mint authority.                          | Anchor, Native           |
+| [PDA Mint Authority](https://github.com/solana-developers/program-examples/tree/main/tokens/pda-mint-authority) | Shows you how to change the mint authority of a mint, to mint tokens from within a program.       | Anchor, Native           |
+| [SPL Token Minter](https://github.com/solana-developers/program-examples/tree/main/tokens/spl-token-minter)     | Explains how to use Associated Token Accounts to be able to keep track of token accounts.         | Anchor, Native           |
+| [Token Swap](https://github.com/solana-developers/program-examples/tree/main/tokens/token-swap)                 | Extensive example that shows you how to build a AMM (automated market maker) pool for SPL tokens. | Anchor                   |
+| [Transfer Tokens](https://github.com/solana-developers/program-examples/tree/main/tokens/transfer-tokens)       | Shows how to transfer SPL token using CPIs into the token program.                                | Anchor, Native, Seahorse |
+| [Token-2022](https://github.com/solana-developers/program-examples/tree/main/tokens/token-2022)                 | See Token 2022 (Token extensions).                                                                | Anchor, Native           |
 
 ## Token 2022 (Token Extensions)
 
