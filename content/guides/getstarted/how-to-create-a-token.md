@@ -17,7 +17,7 @@ keywords:
   - blockchain tutorial
   - web3 developer
   - token
-  - meta data
+  - metadata
   - spl
   - spl token
 ---
@@ -34,7 +34,7 @@ First we need to download Solana tools to our system. Follow this Follow this
 
 ## Create folder and keypairs
 
-Open a new terminal and create a new folder: ›
+Open a new terminal and create a new folder:
 
 ```bash
 mkdir nice-token
@@ -81,7 +81,7 @@ solana-keygen grind --starts-with nic:1
 ```
 
 In my case it created this keypair:
-niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun.json
+`niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun.json`
 
 Make sure to replace this with your own keypair in the following steps.
 
@@ -92,7 +92,7 @@ solana config set -ud
 ```
 
 This will set the default RPC cluster to Solana devnet
-"https://api.devnet.solana.com". From now on all commands will be executed on
+`https://api.devnet.solana.com`. From now on all commands will be executed on
 the devnet. To release your token on mainnet you will need to perform all step
 from here again but set the cluster to mainnet using `-um` flag instead of
 `-ud`.
@@ -134,7 +134,7 @@ is 9.
 
 Now we will create the token mint with the metadata extension enabled. By adding
 our grinded keypair (`nice...4Gun`) at the end, the Solana CLI will actually use
-that address as the [mint account](/docs/core/tokens.md#mint-account) for our  
+that address as the [mint account](/docs/core/tokens.md#mint-account) for our
 new token:
 
 ```bash
@@ -145,17 +145,15 @@ spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 
 This is also where you would be able to add additional
 [token extensions](/content/guides/token-extensions/getting-started.md) to your
 token to have extra functionality, like
-[transfer fees](/content/guides/token-extensions/transfer-fee.md) for example.  
+[transfer fees](/content/guides/token-extensions/transfer-fee.md) for example.
 You will not be able to add more extensions to your token mint after you created
 it.
 
-## Create and upload meta data
+## Create and upload metadata
 
-Next we will create the off-chain metadata for our token and upload it
-somewhere  
-accessible on the rest of the internet (like a decentralized storage
-provider).  
-This off-chain metadata is usually a `.json` file containing name, symbol, and  
+Next we will create the off-chain metadata for our token and upload it somewhere
+accessible on the rest of the internet (like a decentralized storage provider).
+This off-chain metadata is usually a `.json` file containing name, symbol, and
 uri in the following format:
 
 ```json
@@ -166,49 +164,51 @@ uri in the following format:
 }
 ```
 
-The meta data we will save in a decentralized storage solution.
+The metadata we will save in a decentralized storage solution.
 
 First we need to create an icon for the token. I used ChatGPT to generate an
 image and then uploaded it to a decentralized storage solution.
 
 ### Where to upload metadata
 
-There are several places you could upload your off-chain metadata. While some  
-may opt for more centralized storage solutions (like AWS, GCP, or GitHub),  
+There are several places you could upload your off-chain metadata. While some
+may opt for more centralized storage solutions (like AWS, GCP, or GitHub),
 others may chose a decentralized provider (like Arweave or IPFS). The important
-thing is that the metadata file should be upload to a place that is accessible  
+thing is that the metadata file should be upload to a place that is accessible
 to others on the internet and meets your tokens needs.
 
-Listed below are some different options and tools to upload your files (in no  
+Listed below are some different options and tools to upload your files (in no
 particular order):
 
-| Service              | URL                                                      | Details                                                                                             |
-| -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| Web3 Storage         | [web3.storage](https://web3.storage)                     | Requires signing up for a free plan; first 5Gb are free; easy to use.                               |
-| Pinata               | [Pinata](https://app.pinata.cloud/)                      | Uploads to IPFS; free with sign up for 1Gb;                                                         |
-| Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without sign up for 100Mb; uploads can take a while.                       |
-| GitHub               | [GitHub](https://github.com)                             | Create a new repo, upload files, use the RAW URL format: https://raw.githubusercontent.com/xxxxxxx. |
-| ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a Solana native storage solution. Did not work at the time of writing.                      |
-| Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | [Meta boss docs](https://metaboss.rs/)                                                              |
-| Google Cloud Storage | [Google Cloud Storage](https://cloud.google.com/storage) | -                                                                                                   |
-| Amazon               | [Amazon](https://aws.amazon.com/)                        | -                                                                                                   |
+| Service              | URL                                                      | Details                                                                                                  |
+| -------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Web3 Storage         | [web3.storage](https://web3.storage)                     | Requires signing up for a free plan; first 5Gb are free; easy to use.                                    |
+| Pinata               | [Pinata](https://app.pinata.cloud/)                      | Uploads to IPFS; free with sign up for 1Gb;                                                              |
+| Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without sign up for 100Mb; uploads can take a while.                            |
+| GitHub               | [GitHub](https://github.com)                             | Create a new repo, upload files, and use the RAW URL format: `https://raw.githubusercontent.com/xxxxxxx` |
+| ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a Solana native storage solution. Did not work at the time of writing.                           |
+| Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | [Meta boss docs](https://metaboss.rs/)                                                                   |
+| Google Cloud Storage | [Google Cloud Storage](https://cloud.google.com/storage) | -                                                                                                        |
+| Amazon               | [Amazon](https://aws.amazon.com/)                        | -                                                                                                        |
 
-> If you are a provider of decentralized storage solutions and want to be
-> listed  
+> If you are a provider of decentralized storage solutions and want to be listed
 > here please just open a PR using the edit page button
 
-For this example, we will use [Web3 Storage](https://web3.storage). While it  
-requires to sign up for an account to use, they offer a free plan with the
-first  
+For this example, we will use [Web3 Storage](https://web3.storage). While it
+requires to sign up for an account to use, they offer a free plan with the first
 5Gb free and its very easy to use.
 
-For this example, we generated an icon for our token using ChatGPT. After you  
+For this example, we generated an icon for our token using ChatGPT. After you
 have your image/icon, upload it to your desired online storage solution and get
 the link to it. We will need to put this link within our `metadata.json` file so
 we can then upload that.
 
 You will end up with some link similar to this one which should directly open
-your icon: https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo
+your icon:
+
+```text
+https://arweave.net/itK2SKyCDAdBl-t9sHDQzeP4Roh3UgMaqnKImRXSrvo
+```
 
 Create a new file called `metadata.json` in the `nice-token` folder and add the
 following:
@@ -222,24 +222,26 @@ following:
 ```
 
 Then also upload this file to the storage provider of your choice. You will end
-up with a new link that now represents the meta data of your token. Make sure
-you copy the link directly to the file and not to the folder or a preview page.
+up with a new link that now represents the metadata of your token. Make sure you
+copy the link directly to the file and not to the folder or a preview page.
 
 You should end up with a link similar to this one:
 
+```text
 https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json
+```
 
-Now we are ready to add this meta data to our token.
+Now we are ready to add this metadata to our token.
 
 ## Add metadata to a token
 
-Now we will initialize the meta data for our token with the meta data we just
+Now we will initialize the metadata for our token with the metadata we just
 created and uploaded.
 
 ```bash
 spl-token initialize-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun \
-'Nice Token' 'NICE' \
-'https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json'
+  'Nice Token' 'NICE' \
+  'https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json'
 ```
 
 Congratulation you created a token with metadata! You can look at your token in
@@ -254,7 +256,7 @@ Make sure your explorer is set to devnet (if you are working on devnet) if you
 are working on devnet and replace the address to your mint address starting with
 "nic".
 
-## Update meta data
+## Update metadata
 
 At any point as long as you do not set the update authority to null you will
 still be able to do changes to the onchain metadata of this token.
@@ -296,32 +298,32 @@ And now we can finally mint some tokens into that token account:
 spl-token mint niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun 100
 ```
 
-Now you can also send the token to your friends, for example:
+Now you can also send the token to another owner of the tokens, for example:
 
 ```bash
 spl-token transfer niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun 10 \
-friendAddress --fund-recipient
+<other-owner> --fund-recipient
 ```
 
-"--fund-recipient" means that you will pay to create the token account for your
-friend.
+The `--fund-recipient` flag allows you to pay to create the token account (i.e.
+the account rent) for the other owner.
 
 Now we are done! You created a token with metadata and minted some tokens.
 Congratulations!
 
 ## Further reads about tokens
 
-- [Token extensions](https://solana.com/developers/guides/token-extensions/getting-started)
+- [Token extensions](https://solana.com/developers/guides/token-extensions/getting-started) -
   Learn how to add additional functionality to your token.
-- [External from a16z: 5 rules for token launches](https://a16zcrypto.com/posts/article/5-rules-for-token-launches/)
+- [External from a16z: 5 rules for token launches](https://a16zcrypto.com/posts/article/5-rules-for-token-launches/) -
   This article outlines key guidelines for launching a token, including
   regulatory compliance, market conditions, and community engagement, providing
   a foundation for crypto-entrepreneurs.
-- [External from a16z: How to navigate token launch risks](https://a16zcrypto.com/posts/article/navigating-token-launch-risks/)
+- [External from a16z: How to navigate token launch risks](https://a16zcrypto.com/posts/article/navigating-token-launch-risks/) -
   This piece discusses how to manage risks associated with token launches,
   covering issues like legal challenges, market volatility, and technological
   hurdles, essential for a successful launch.
-- [External from a16z: Getting ready to launch a token](https://a16zcrypto.com/posts/article/getting-ready-to-launch-a-token/)
+- [External from a16z: Getting ready to launch a token](https://a16zcrypto.com/posts/article/getting-ready-to-launch-a-token/) -
   A preparatory guide for launching a token, covering technical setup, team
   alignment, regulatory considerations, and engagement strategies, aimed at
   ensuring a successful public debut.
