@@ -1,11 +1,10 @@
 ---
 date: Mar 22, 2024
 difficulty: intro
-title: "Scaffolding your Web and Anchor project on Solana"
-seoTitle: "Scaffold Web and Anchor Project"
+title: "Scaffolding your web and Anchor project on Solana"
+seoTitle: "Scaffold web and Anchor Project"
 description:
-  "Solana developer quickstart guide to scaffold, generate boilerplate, or
-  hackathon starter for reactjs nextjs or anchor"
+  "A quickstart guide to scaffolding projects using React/NextJS and Anchor - useful for hackathons!"
 tags:
   - quickstart
   - scaffold
@@ -28,9 +27,8 @@ keywords:
 ---
 
 If you have an idea to build on Solana or you want to participate in a Solana
-hackathon, this scaffolding guide can help you get a boilerplate codebase. So
-you can get started faster with important things like the Solana wallet adapter,
-web3.js, anchor etc., integrated and built-in, saving time and resources and
+hackathon, this scaffolding guide can help you get a boilerplate codebase with important things like the Solana wallet adapter,
+web3.js, and Anchor, saving time and resources and
 providing a great foundation in further development.
 
 This guide has four sections
@@ -44,16 +42,12 @@ This guide has four sections
 
 ### NodeJS and npm
 
-NodeJS and NPM with npx can help you generate a scaffold for your development
-environment. Install NodeJS to get node (Javascript runner), npm (package
-manager) and npx (node package executor) all at once.
-[Install NodeJS here.](https://nodejs.org/en/download)
+[Install NodeJS](https://nodejs.org/en/download), to get node (Javascript runner), npm (package manager) and npx (node package executor) all at once.
+
 
 ### Code editor
 
-We only use VSCode to open the scaffold-generated folder, but if you use a
-different editor, know how to open the folder inside it.
-[Here’s a link to Install VSCode](https://code.visualstudio.com/#alt-downloads).
+We recommend [installing VSCode](https://code.visualstudio.com/#alt-downloads), but you're also welcome to use your own preferred editor.
 
 ### Solana development environment
 
@@ -61,12 +55,11 @@ If you haven't installed Solana CLI, Rust, or Anchor before, you can easily do
 so by
 [following our helpful installation guide](https://solana.com/developers/guides/getstarted/setup-local-development)
 
-> Scaffolds only supports coding in typescript for now, but don’t worry, it’s
-> more helpful and extends on the basic javascript you already know.
+> This scaffolds only supports TypeScript for now, but don’t worry, TypeScript simply extends on the JavaScript you already know to add helpful type definitions.
 
 ## 2. Scaffolding
 
-The command to scaffold your boilerplate for your is simple as
+To create your boilerplate, run:
 
 ```bash
 npx create-solana-dapp@latest
@@ -91,8 +84,7 @@ hello_solana for now.
 Then you will be asked for a preset to use, could be Next.JS or React + React
 Router DOM
 
-I prefer nextJS as it has file based routing and app routing. You can go ahead
-with React + React Router DOM if you prefer that.
+This document uses Next.js because Next.js has file based routing and app routing, but you can also use React + React Router DOM if you prefer that.
 
 ```
 ◆  Select a preset
@@ -117,7 +109,7 @@ have your preferred one.
 ### Anchor Template
 
 Next this scaffold CLI asks which template for anchor you want to use. Anchor is
-a sealevel framework for writing solana programs.
+a framework for writing onchain Solana programs.
 
 ```
 ◆  Select an Anchor template
@@ -127,14 +119,13 @@ a sealevel framework for writing solana programs.
 └
 ```
 
-After waiting for some time, you can make some popcorn so that you can eat those
-when the scaffolding is ready (Installing takes ~3 mins).
+Then make some popcorn to eat while the scaffolding installs - it should take ~3 minutes.
 
 ```
 ◓  Creating new workspace with npm...
 ```
 
-When you are done you can change the terminal directory to your project.
+When it's finished, change directory into your project:
 
 ```
 ◇  Successfully installed preset @solana-developers/preset-next@2.0.1.
@@ -181,7 +172,7 @@ you make. Here is what our directory tree looks like at the root of our project.
     ├── anchor
     │   ├── migrations
     │   ├── programs
-		|   |   └── hello_world
+    |   |   └── hello_world
     │   └── tests
     ├── web
     │   ├── app
@@ -192,11 +183,8 @@ you make. Here is what our directory tree looks like at the root of our project.
 Inside `anchor > programs > hello-world > src > lib.rs` , we can start writing
 our instructions.
 
-To build this program execute `npm run anchor-build`; your IDL generated in the
-target folder. IDL is a spec similar to ABI in EVM environments. It describes
-how the JSON file will interact with a solana program. copy the address inside
-metadata from your `hello_world.json` to your anchor program
-`[lib.rs](http://lib.rs)` line 3 and paste your address there.
+To build this program execute `npm run anchor-build`. Your Anchor project will be built, and an IDL generated in the target folder. IDL is a spec that describes the instruction handler in your program and their arguments. Copy the address inside
+metadata from your `hello_world.json` to the `program_id` section in your Anchor program's `lib.rs`.
 
 You can now run anchor tests and check if your program is running successfully.
 
@@ -290,7 +278,7 @@ airdrop for testnet devnet, making Error messages by solana more readable and
 [a lot more](https://github.com/solana-developers/helpers?tab=readme-ov-file#what-can-i-do-with-this-module).
 
 [Solana Wallet Names by Portal Payments](https://github.com/portalpayments/solana-wallet-names)
-can help you get solana wallet names liek .sol, .backpack and .abc etc.
+can help you use Solana wallet names like `.sol`, `.backpack`, `.abc` etc.
 
 [Amman by Metaplex](https://github.com/metaplex-foundation/amman) are a set of
 tools to help test solana SDK libraries and apps on a locally running validator.
