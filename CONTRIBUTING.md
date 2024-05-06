@@ -11,9 +11,9 @@ transparent as possible, whether it's:
 
 ## Key points
 
-- called the "developer content" repo or "developer content api"
-- written in markdown with yaml frontmatter
-- used yaml frontmatter, with structure enforced with Contentlayer
+- called the "developer content" repo or "developer content API"
+- written in markdown with YAML frontmatter
+- used YAML frontmatter, with structure enforced with Contentlayer
 - all pages are grouped into "content types"
 - supports some select custom components
 - publicly displayed via the UI of [solana.com](https://solana.com) (located in
@@ -22,7 +22,7 @@ transparent as possible, whether it's:
 
 ## Content guidelines
 
-Since this content within this repo is meant to be publicly displayed on
+Since the content within this repo is meant to be publicly displayed on
 `solana.com`, we have very specific guidelines for the content that can be
 merged into this repo (and eventually displayed on solana.com). If you would
 like to submit changes to existing content or add new content, all of these
@@ -31,12 +31,12 @@ guidelines should be observed:
 ### Avoid official recommendations
 
 Avoid any language around making "official recommendations" such as "I recommend
-product X" or "product Y is the best". The content within this repo will be
+product X" or "Product Y is the best". The content within this repo will be
 publicly published on solana.com which is maintained by the
 [Solana Foundation](https://solana.org). As such, any "product recommendations"
-may appear as if coming directly the Solana Foundation. The Solana Foundation
-does not make official recommendations for products, but rather help share what
-options are available in the broader Solana ecosystem.
+may appear as if coming directly from the Solana Foundation. The Solana
+Foundation does not make official recommendations for products but rather helps
+share what options are available in the broader Solana ecosystem.
 
 ### Avoid "picking favorites"
 
@@ -52,13 +52,13 @@ Ultimate. When talking about RPC providers, a writer should link to
 ### Use up-to-date code snippets
 
 Write content that uses up-to-date code. Code bases change, functions get
-deprecated, methods get removed. When submitting code snippets within content
-here, use the most up-to-date code available for the given functionality being
-used. Especially net new content, like adding a new guide.
+deprecated, and methods get removed. When submitting code snippets within the
+content here, use the most up-to-date code available for the given functionality
+being used. Especially net new content, like adding a new guide.
 
 ## Style guidelines
 
-To aid in keeping both consistent content and a high quality experience, all
+To aid in keeping both consistent content and a high-quality experience, all
 code/content maintained within this repo shall use the style guidelines set
 forth here.
 
@@ -72,12 +72,12 @@ content within. There is a master
 [prettier configuration file](https://github.com/solana-foundation/developer-content/blob/main/.prettierrc)
 (`.prettierrc`) in the root of this repo.
 
-On all commits and PRs, their is a GitHub action that checks if your PR follows
+On all commits and PRs, there is a GitHub action that checks if your PR follows
 the master prettier formatting. If your branch/code does NOT meet the prettier
 formatting requirements, it will not be merged and it will delay its review.
 
-If your editor is not configured to auto format on save using prettier, then you
-can run the following command to auto format all files in your local repo/PR:
+If your editor is not configured to auto-format on save using prettier, then you
+can run the following command to auto-format all files in your local repo/PR:
 
 ```shell
 yarn prettier:fix
@@ -93,20 +93,20 @@ yarn prettier
 ### Heading styles
 
 The content within a document should not start with a heading. It should start
-with a paragraph of text. After each heading, should be non-heading content
-(i.e. do not stack headings without putting a sentence/paragraph between them).
+with a paragraph of text. After each heading should be non-heading content (i.e.
+do not stack headings without putting a sentence/paragraph between them).
 
 Content should NOT include a `h1` tag within it since solana.com will
 automatically render a specific h1 based on the frontmatter's `title`. As such,
-all markdown `h1` will be auto converted to a `h2`.
+all markdown `h1` will be auto-converted to a `h2`.
 
 The text within a heading should NOT include inline code blocks (i.e. single
 backtick). They should also NOT end with any special characters (i.e.
 `:;!@#$%^&*`). Ending in a question mark is allowed.
 
-All h2-h4 headings will be auto anchored, allowing anyone to directly link to
+All h2-h4 headings will be auto-anchored, allowing anyone to directly link to
 the specific section of content. A clickable anchor link will be rendered aside
-the heading's text.
+from the heading's text.
 
 ```md
 ## Simple, valid heading
@@ -137,9 +137,9 @@ The heading above is invalid since it skips the `h3` heading (`###`)
 
 ### Table of contents
 
-When a content page is rendered on solana.com, a table of contents will be auto
-generated based on the markdown headings within the document's content.
-Specifically: all `h2`, `h3`, and `h4` (aka h2-h4) tags will be include in the
+When a content page is rendered on solana.com, a table of contents will be
+auto-generated based on the markdown headings within the document's content.
+Specifically: all `h2`, `h3`, and `h4` (aka h2-h4) tags will be included in the
 table of contents. All headings greater than `h4` will be ignored from the table
 of contents.
 
@@ -150,7 +150,7 @@ especially for accessibility.
 ## Content types
 
 This repo contains multiple different types of developer content records. Each
-grouping of records (called a "content type") serve a different purpose and are
+grouping of records (called a "content type") serves a different purpose and is
 handled differently when displayed in the UI of `solana.com`.
 
 Below is a table describing each active content type group, including the
@@ -171,7 +171,7 @@ corresponding path within this repo and webpage for viewing on solana.com:
 ## Written in markdown
 
 Every piece of content within this repo is normally written in markdown with
-yaml frontmatter. With some support for specific
+YAML frontmatter. With some support for specific
 [custom components](#components) using React and MDX.
 
 We typically use GitHub flavor markdown (GFM) which you can
@@ -179,7 +179,7 @@ We typically use GitHub flavor markdown (GFM) which you can
 
 ## Frontmatter
 
-The yaml frontmatter is used to provide additional metadata about a given piece
+The YAML frontmatter is used to provide additional metadata about a given piece
 of content. Each content type has specifically supported frontmatter fields,
 some required and some optional. All available frontmatter fields are enforced
 via [Contentlayer](#why-contentlayer) (see more below).
@@ -190,7 +190,7 @@ within a piece of content within this repo.
 
 ### Why Contentlayer?
 
-[Contentlayer](https://contentlayer.dev/) offers yaml frontmatter structure
+[Contentlayer](https://contentlayer.dev/) offers YAML frontmatter structure
 enforcement and type safety for the frontmatter fields on every content record,
 including generating TypeScript types for each content type's grouping.
 
@@ -198,14 +198,14 @@ Contentlayer does this code generation by enabling us to define a custom data
 schema for the frontmatter. You can view the current Contentlayer schema here:
 [`contentlayer.config.ts`](/contentlayer.config.ts)
 
-If any content records contains unsupported or misspelled fields in the
+If any content records contain unsupported or misspelled fields in the
 frontmatter, Contentlayer will throw an error, preventing misconfigured content
 from being shipped to production.
 
 ### Default frontmatter fields
 
 Each content type (i.e. `docs`, `guides`, `resources`, etc) has the ability to
-support different custom metadata fields within the yaml frontmatter.
+support different custom metadata fields within the YAML frontmatter.
 
 While each content group may support additional frontmatter fields, the
 following are default supported by all content groups:
@@ -366,8 +366,8 @@ A few HTML elements are acceptable to use, the rest will normally be rejected:
 
 ### Headings
 
-Headings (i.e. standard HTML tags of h1, h2, h3, etc) can be added into content
-using standard markdown based headings.
+Headings (i.e. standard HTML tags of h1, h2, h3, etc) can be added to content
+using standard markdown-based headings.
 
 Example:
 
@@ -419,10 +419,10 @@ functionality on top of code blocks.
 
 Fenced code blocks support including additional metadata within their first
 line, called "meta strings". These meta strings allow the markdown processor to
-handle different logic of this user defined metadata.
+handle different logic of this user-defined metadata.
 
 While most are familiar with language meta string, which enables syntax
-highlighting. The following example has a the language meta string of
+highlighting. The following example has the language meta string of
 `typescript`:
 
 ````md
@@ -448,7 +448,7 @@ the language used immediately following the triple backticks.
 Most code languages are supported including these commonly used ones: `rust`,
 `ts` or `typescript`, `js` or `javascript`, `toml`, `shell`
 
-The code block's language should be in all lower case and have no space between
+The code block's language should be in all lowercase and have no space between
 the language name and the backticks.
 
 Examples:
@@ -467,7 +467,7 @@ solana airdrop 2
 
 #### File names
 
-Code blocks can be have an optional header displayed on top the code block
+Code blocks can have an optional header displayed on top of the code block
 element itself. This is commonly used to display the "file name" in which a code
 snippet comes from.
 
@@ -492,7 +492,7 @@ declare_id!("Bims5KmWhFne1m1UT4bfSknBEoECeYfztoKrsR2jTnrA");
 
 #### Highlight lines
 
-Code block can highlight lines using the
+Code blocks can highlight lines using the
 [syntax provided via `rehype-pretty-code`](https://rehype-pretty.pages.dev/#highlight-lines).
 
 In the meta string, place a numeric range inside `{}`.
@@ -516,7 +516,7 @@ Examples:
 
 #### Highlight characters
 
-Code block can highlight characters using the
+Code blocks can highlight characters using the
 [syntax provided via `rehype-pretty-code`](https://rehype-pretty.pages.dev/#highlight-chars).
 
 In the meta string, place character segments between two `/` symbols. You can
@@ -548,8 +548,8 @@ Examples:
 
 #### Diff lines
 
-Within a code block you can create a "diff" style line (i.e. a line was added or
-a line was removed) using the
+Within a code block, you can create a "diff" style line (i.e. a line was added
+or a line was removed) using the
 
 At the end of a line, add one of the following notations to the end of a line:
 
@@ -591,16 +591,16 @@ Multiline blockquotes are allowed and will still be rendered as the default
 
 ### Callout
 
-The custom `Callout` component can be used to render message to the reader in a
-more visually distinctive way (i.e. error messages, warnings, etc). Allowing a
-write to draw more focus to a specific statement.
+The custom `Callout` component can be used to render a message to the reader in
+a more visually distinctive way (i.e. error messages, warnings, etc). Allowing a
+writer to draw more focus to a specific statement.
 
 > Note: All standard [markdown blockquotes](#blockquote) will be auto converted
 > to a `Callout` component with default styles.
 
 The contents within the `Callout` (aka `children` in React land) will be
 processed just like any other markdown. So you can put code blocks, lists, or
-what ever inside.
+whatever else inside.
 
 ```md
 <Callout>
@@ -699,24 +699,24 @@ locales.
 
 During production deployments of the developer content api, all the currently
 translated content is downloaded from Crowdin and deployed for solana.com to
-correctly render the user requested locale of content. Falling back to the base
+correctly render the user-requested locale of content. Falling back to the base
 language when no translated content was found.
 
 ## Local development
 
-This developer content repo is a NextJS application that serves the markdown
-based content as REST api for solana.com to consume. Think of it like a
-microservice for content.
+This developer content repo is a NextJS application that serves markdown-based
+content as REST API for solana.com to consume. Think of it like a microservice
+for content.
 
-We call this microservice the "developer content api", or content api for short.
+We call this microservice the "developer content API", or content API for short.
 
-With this repo being only a "content api", there is no web app frontend to view
+With this repo being only a "content API", there is no web app frontend to view
 the content within this repo. The frontend UI that will render all the markdown
 content within this repo is actually solana.com (which is a different repo).
 
 ### Setup locally
 
-To setup the developer content api:
+To set up the developer content API:
 
 1. Clone the repo to your local machine:
 
@@ -731,10 +731,10 @@ cd developer-content
 yarn install
 ```
 
-3. Run the developer content api locally:
+3. Run the developer content API locally:
 
 ```shell
 yarn dev
 ```
 
-> Note: The developer content api normally runs locally on port `3001`
+> Note: The developer content API normally runs locally on port `3001`
