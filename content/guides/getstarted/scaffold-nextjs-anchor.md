@@ -4,7 +4,8 @@ difficulty: intro
 title: "Scaffolding your web and Anchor project on Solana"
 seoTitle: "Scaffold web and Anchor Project"
 description:
-  "A quickstart guide to scaffolding projects using React/NextJS and Anchor - useful for hackathons!"
+  "A quickstart guide to scaffolding projects using React/NextJS and Anchor -
+  useful for hackathons!"
 tags:
   - quickstart
   - scaffold
@@ -27,9 +28,9 @@ keywords:
 ---
 
 If you have an idea to build on Solana or you want to participate in a Solana
-hackathon, this scaffolding guide can help you get a boilerplate codebase with important things like the Solana wallet adapter,
-web3.js, and Anchor, saving time and resources and
-providing a great foundation in further development.
+hackathon, this scaffolding guide can help you get a boilerplate codebase with
+important things like the Solana wallet adapter, web3.js, and Anchor, saving
+time and resources and providing a great foundation in further development.
 
 This guide has four sections
 
@@ -42,12 +43,13 @@ This guide has four sections
 
 ### NodeJS and npm
 
-[Install NodeJS](https://nodejs.org/en/download), to get node (Javascript runner), npm (package manager) and npx (node package executor) all at once.
+[Install NodeJS](https://nodejs.org/en/download), to get node (Javascript
+runner), npm (package manager) and npx (node package executor) all at once.
 
+### Code Editor
 
-### Code editor
-
-We recommend [installing VSCode](https://code.visualstudio.com/#alt-downloads), but you're also welcome to use your own preferred editor.
+We recommend [installing VSCode](https://code.visualstudio.com/#alt-downloads),
+but you're also welcome to use your preferred editor.
 
 ### Solana development environment
 
@@ -55,7 +57,9 @@ If you haven't installed Solana CLI, Rust, or Anchor before, you can easily do
 so by
 [following our helpful installation guide](https://solana.com/developers/guides/getstarted/setup-local-development)
 
-> This scaffolds only supports TypeScript for now, but don’t worry, TypeScript simply extends on the JavaScript you already know to add helpful type definitions.
+> This scaffolds only supports TypeScript for now, but don’t worry, TypeScript
+> simply extends on the JavaScript you already know to add helpful type
+> definitions.
 
 ## 2. Scaffolding
 
@@ -67,9 +71,9 @@ npx create-solana-dapp@latest
 
 ### Project name
 
-I suggest you do this in the root folder where you want to create your project.
-First, you will be asked to enter your awesome project name. I am using
-hello_solana for now.
+To create your boilerplate, run: I suggest you do this in the root folder where
+you want to create your project. First, you will be asked to enter your awesome
+project name. I am using hello_solana for now.
 
 ```
 ┌  create-solana-dapp 2.0.1
@@ -81,10 +85,11 @@ hello_solana for now.
 
 ### Web preset
 
-Then you will be asked for a preset to use, could be Next.JS or React + React
-Router DOM
+Then you will be asked for a preset to use, which could be Next.js or React +
+React Router DOM
 
-This document uses Next.js because Next.js has file based routing and app routing, but you can also use React + React Router DOM if you prefer that.
+This document uses Next.js because Next.js has file-based routing and app
+routing, but you can also use React + React Router DOM if you prefer that.
 
 ```
 ◆  Select a preset
@@ -103,13 +108,13 @@ After you pick a framework, you'll be prompted to select a styling library.
 └
 ```
 
-We use tailwindCSS and Daisy UI here, but you can choose none if you already
+We use Tailwind CSS and Daisy UI here, but you can choose none if you already
 have your preferred one.
 
 ### Anchor Template
 
-Next this scaffold CLI asks which template for anchor you want to use. Anchor is
-a framework for writing onchain Solana programs.
+Next, this scaffold CLI asks which template for anchor you want to use. Anchor
+is a framework for writing on-chain Solana programs.
 
 ```
 ◆  Select an Anchor template
@@ -119,13 +124,14 @@ a framework for writing onchain Solana programs.
 └
 ```
 
-Then make some popcorn to eat while the scaffolding installs - it should take ~3 minutes.
+Then make some popcorn to eat while the scaffolding installs - it should take ~3
+minutes.
 
 ```
 ◓  Creating new workspace with npm...
 ```
 
-When it's finished, change directory into your project:
+When it's finished, change the directory into your project:
 
 ```
 ◇  Successfully installed preset @solana-developers/preset-next@2.0.1.
@@ -136,8 +142,8 @@ When it's finished, change directory into your project:
 type `pwd` to check if your path is correct, then type `code .` to open VSCode
 inside the scaffolded project.
 
-In your scaffold, five commands are waiting for you to execute whenever you
-like. Type `npm run` to see all the commands available.
+In your scaffold, five scripts are waiting for you to execute whenever you like.
+Type `npm run` to see all the scripts available.
 
 ```
 Scripts available in @counter-app/source@0.0.0 via `npm run-script`:
@@ -155,9 +161,9 @@ Scripts available in @counter-app/source@0.0.0 via `npm run-script`:
     nx serve web
 ```
 
-To run any of these commands, type `npm run <SCRIPT_COMMAND>` , for example,
-`npm run dev` to start the development server of your website or
-`npm run anchor-test` to run tests on your scaffolded solana program.
+To run any of these scripts, type `npm run <SCRIPT>`, for example, `npm run dev`
+to start the development server of your website or `npm run anchor-test` to run
+tests on your scaffolded Solana program.
 
 ## 3. Experience hands-on with scaffolds
 
@@ -180,13 +186,16 @@ you make. Here is what our directory tree looks like at the root of our project.
         └── public
 ```
 
-Inside `anchor > programs > hello-world > src > lib.rs` , we can start writing
+Inside `anchor > programs > hello-world > src > lib.rs`, we can start writing
 our instructions.
 
-To build this program execute `npm run anchor-build`. Your Anchor project will be built, and an IDL generated in the target folder. IDL is a spec that describes the instruction handler in your program and their arguments. Copy the address inside
-metadata from your `hello_world.json` to the `program_id` section in your Anchor program's `lib.rs`.
+To build this program execute `npm run anchor-build`. Your Anchor project will
+be built, and an IDL generated in the target folder. IDL is a spec that
+describes the instruction handler in your program and their arguments. Copy the
+address inside metadata from your `hello_world.json` to the `program_id` section
+in your Anchor program's `lib.rs`.
 
-You can now run anchor tests and check if your program is running successfully.
+You can now run Anchor tests and check if your program is running successfully.
 
 ![Anchor Hello World Code Screenshot](/assets/guides/scaffolds/scaffolds---1-anchor-view.png)
 
@@ -226,8 +235,8 @@ Ran all test suites.
 
 ![NextJS Starter view](/assets/guides/scaffolds/scaffolds---1-anchor-view.png)
 
-Our NextJS Scaffold is using App Router introduced in version 13, which supports
-shared layouts, nested routing, loading states, and error handling.
+Our NextJS Scaffold uses using App Router introduced in version 13, which
+supports shared layouts, nested routing, loading states, and error handling.
 
 ```
     hello_solana
@@ -244,51 +253,50 @@ shared layouts, nested routing, loading states, and error handling.
 ```
 
 The `solana-provider.tsx` already has all the wallet features you need, It
-handles auto connects of solana wallet easily, you can move to multiple
+handles auto connects of Solana wallet easily, and you can move to multiple
 components of your web application with the wallet states managed. This NextJS
-app is using `[@tanstack/react-query](https://tanstack.com/query/latest)` for
+app is using `[@tanstack/react-query](`https://tanstack.com/query/latest)` to
 fetch, cache, synchronize, and update server state in your web applications
-easily. React-Query here is being used here for all the data fetching needs,
-like hook for `useGetBalance` to get the balance of your wallet,
-`useTransferSol` to transfer sol. Similarly, you can implement features you want
-to fetch from RPCs. You can see react-query getting used here in the Account nav
-as well.
+easily. React-Query here is used for all the data fetching needs, like a hook
+for `useGetBalance` to get the balance of your wallet, `useTransferSol` to
+transfer sol. Similarly, you can implement features you want to fetch from RPCs.
+You can see react-query getting used here in the Account nav as well.
 
 ![NextJS web Accounts view](/assets/guides/scaffolds/scaffolds---3-web-accounts-view.png)
 
-This app also uses [`Jotai`](https://jotai.org), is used for global React state
-management in your NextJS app. Our component stores the cluster and rpc
-information, you can fetch it anywhere in your app and manage where the
-transaction needs to be submitted.
+This app also uses `Jotai`, which is used for global React state management in
+your NextJS app. Our component stores the cluster and RPC information, you can
+fetch it anywhere in your app and manage where the transaction needs to be
+submitted.
 
 ![NextJS web Clusters view](/assets/guides/scaffolds/scaffolds---4-web-cluster-view.png)
 
-Ideally, copy your generated IDL file or Types from the target folder after the
-anchor build and import it to use inside components to call instructions.
+Copy your generated IDL file and/or Types from the target folder after the
+`anchor build` and import it to use inside components to call instructions.
 
 ## 4. Bonus Solana tools
 
-This is just a bonus section if you want to use more tools built by the solana
-community to ease your solana development, just be careful those might not be
+This is just a bonus section if you want to use more tools built by the Solana
+community to ease your Solana development, just be careful those might not be
 audited and/or maintained.
 [Checkout Solana Tools Library](https://github.com/solana-developers/solana-tools)
 
 Helpers by Solana Developers contains helper functions that can help you get an
-airdrop for testnet devnet, making Error messages by solana more readable and
+airdrop for testnet devnet, making Error messages by Solana more readable and
 [a lot more](https://github.com/solana-developers/helpers?tab=readme-ov-file#what-can-i-do-with-this-module).
 
 [Solana Wallet Names by Portal Payments](https://github.com/portalpayments/solana-wallet-names)
 can help you use Solana wallet names like `.sol`, `.backpack`, `.abc` etc.
 
-[Amman by Metaplex](https://github.com/metaplex-foundation/amman) are a set of
-tools to help test solana SDK libraries and apps on a locally running validator.
+[Amman [by Metaplex](https://github.com/metaplex-foundation/amman) is a set of
+tools to help test Solana SDK libraries and apps on a locally running validator.
 
 [Solita by Metaplex](https://github.com/metaplex-foundation/solita) Solita
-generates a low level TypeScript SDK for your Solana Rust programs from the IDL
-extracted by anchor or shank.
+generates a low-level TypeScript SDK for your Solana Rust programs from the IDL
+extracted by Anchor or Shank.
 
 ---
 
 Congratulations! You have reached the stage where you can finally bring your
 project to life just the way you want it. We're excited to see what amazing
-things you'll create! Have fun building on solana.
+things you'll create! Have fun building on Solana.
