@@ -31,12 +31,12 @@ guidelines should be observed:
 ### Avoid official recommendations
 
 Avoid any language around making "official recommendations" such as "I recommend
-product X" or "product Y is the best". The content within this repo will be
+product X" or "Product Y is the best". The content within this repo will be
 publicly published on solana.com which is maintained by the
 [Solana Foundation](https://solana.org). As such, any "product recommendations"
-may appear as if coming directly from the Solana Foundation. The Solana Foundation
-does not make official recommendations for products but rather helps share what
-options are available in the broader Solana ecosystem.
+may appear as if coming directly from the Solana Foundation. The Solana
+Foundation does not make official recommendations for products but rather helps
+share what options are available in the broader Solana ecosystem.
 
 ### Avoid "picking favorites"
 
@@ -52,9 +52,9 @@ Ultimate. When talking about RPC providers, a writer should link to
 ### Use up-to-date code snippets
 
 Write content that uses up-to-date code. Code bases change, functions get
-deprecated, methods get removed. When submitting code snippets within the content
-here, use the most up-to-date code available for the given functionality being
-used. Especially net new content, like adding a new guide.
+deprecated, and methods get removed. When submitting code snippets within the
+content here, use the most up-to-date code available for the given functionality
+being used. Especially net new content, like adding a new guide.
 
 ## Style guidelines
 
@@ -93,19 +93,20 @@ yarn prettier
 ### Heading styles
 
 The content within a document should not start with a heading. It should start
-with a paragraph of text. After each heading should be non-heading content
-(i.e. do not stack headings without putting a sentence/paragraph between them).
+with a paragraph of text. After each heading should be non-heading content (i.e.
+do not stack headings without putting a sentence/paragraph between them).
 
 Content should NOT include a `h1` tag within it since solana.com will
 automatically render a specific h1 based on the frontmatter's `title`. As such,
 all markdown `h1` will be auto-converted to a `h2`.
 
 The text within a heading should NOT include inline code blocks (i.e. single
-backtick). They should also NOT end with any special characters (i.e. 
+backtick). They should also NOT end with any special characters (i.e.
 `:;!@#$%^&*`). Ending in a question mark is allowed.
 
 All h2-h4 headings will be auto-anchored, allowing anyone to directly link to
-the specific section of content. A clickable anchor link will be rendered aside from the heading's text.
+the specific section of content. A clickable anchor link will be rendered aside
+from the heading's text.
 
 ```md
 ## Simple, valid heading
@@ -136,7 +137,8 @@ The heading above is invalid since it skips the `h3` heading (`###`)
 
 ### Table of contents
 
-When a content page is rendered on solana.com, a table of contents will be auto-generated based on the markdown headings within the document's content.
+When a content page is rendered on solana.com, a table of contents will be
+auto-generated based on the markdown headings within the document's content.
 Specifically: all `h2`, `h3`, and `h4` (aka h2-h4) tags will be included in the
 table of contents. All headings greater than `h4` will be ignored from the table
 of contents.
@@ -148,7 +150,8 @@ especially for accessibility.
 ## Content types
 
 This repo contains multiple different types of developer content records. Each
-grouping of records (called a "content type") serves a different purpose and is handled differently when displayed in the UI of `solana.com`.
+grouping of records (called a "content type") serves a different purpose and is
+handled differently when displayed in the UI of `solana.com`.
 
 Below is a table describing each active content type group, including the
 corresponding path within this repo and webpage for viewing on solana.com:
@@ -363,8 +366,8 @@ A few HTML elements are acceptable to use, the rest will normally be rejected:
 
 ### Headings
 
-Headings (i.e. standard HTML tags of h1, h2, h3, etc) can be added into content
-using standard markdown based headings.
+Headings (i.e. standard HTML tags of h1, h2, h3, etc) can be added to content
+using standard markdown-based headings.
 
 Example:
 
@@ -416,10 +419,10 @@ functionality on top of code blocks.
 
 Fenced code blocks support including additional metadata within their first
 line, called "meta strings". These meta strings allow the markdown processor to
-handle different logic of this user defined metadata.
+handle different logic of this user-defined metadata.
 
 While most are familiar with language meta string, which enables syntax
-highlighting. The following example has a the language meta string of
+highlighting. The following example has the language meta string of
 `typescript`:
 
 ````md
@@ -445,7 +448,7 @@ the language used immediately following the triple backticks.
 Most code languages are supported including these commonly used ones: `rust`,
 `ts` or `typescript`, `js` or `javascript`, `toml`, `shell`
 
-The code block's language should be in all lower case and have no space between
+The code block's language should be in all lowercase and have no space between
 the language name and the backticks.
 
 Examples:
@@ -464,7 +467,7 @@ solana airdrop 2
 
 #### File names
 
-Code blocks can be have an optional header displayed on top the code block
+Code blocks can have an optional header displayed on top of the code block
 element itself. This is commonly used to display the "file name" in which a code
 snippet comes from.
 
@@ -489,7 +492,7 @@ declare_id!("Bims5KmWhFne1m1UT4bfSknBEoECeYfztoKrsR2jTnrA");
 
 #### Highlight lines
 
-Code block can highlight lines using the
+Code blocks can highlight lines using the
 [syntax provided via `rehype-pretty-code`](https://rehype-pretty.pages.dev/#highlight-lines).
 
 In the meta string, place a numeric range inside `{}`.
@@ -513,7 +516,7 @@ Examples:
 
 #### Highlight characters
 
-Code block can highlight characters using the
+Code blocks can highlight characters using the
 [syntax provided via `rehype-pretty-code`](https://rehype-pretty.pages.dev/#highlight-chars).
 
 In the meta string, place character segments between two `/` symbols. You can
@@ -545,8 +548,8 @@ Examples:
 
 #### Diff lines
 
-Within a code block you can create a "diff" style line (i.e. a line was added or
-a line was removed) using the
+Within a code block, you can create a "diff" style line (i.e. a line was added
+or a line was removed) using the
 
 At the end of a line, add one of the following notations to the end of a line:
 
@@ -588,8 +591,8 @@ Multiline blockquotes are allowed and will still be rendered as the default
 
 ### Callout
 
-The custom `Callout` component can be used to render message to the reader in a
-more visually distinctive way (i.e. error messages, warnings, etc). Allowing a
+The custom `Callout` component can be used to render a message to the reader in
+a more visually distinctive way (i.e. error messages, warnings, etc). Allowing a
 writer to draw more focus to a specific statement.
 
 > Note: All standard [markdown blockquotes](#blockquote) will be auto converted
@@ -701,8 +704,9 @@ language when no translated content was found.
 
 ## Local development
 
-This developer content repo is a NextJS application that serves markdown-based content as REST API for solana.com to consume. Think of it like a
-microservice for content.
+This developer content repo is a NextJS application that serves markdown-based
+content as REST API for solana.com to consume. Think of it like a microservice
+for content.
 
 We call this microservice the "developer content API", or content API for short.
 
@@ -712,7 +716,7 @@ content within this repo is actually solana.com (which is a different repo).
 
 ### Setup locally
 
-To setup the developer content api:
+To set up the developer content API:
 
 1. Clone the repo to your local machine:
 
