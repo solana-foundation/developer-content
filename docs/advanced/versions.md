@@ -13,7 +13,7 @@ Versioned Transactions are the new transaction format that allow for additional
 functionality in the Solana runtime, including
 [Address Lookup Tables](/docs/advanced/lookup-tables.md).
 
-While changes to [on chain](/docs/programs/index.md) programs are **NOT**
+While changes to [onchain](/docs/programs/index.md) programs are **NOT**
 required to support the new functionality of versioned transactions (or for
 backwards compatibility), developers **WILL** need update their client side code
 to prevent
