@@ -28,7 +28,7 @@ of a Solana program) to C#.
 
 When using Anchor you will be able to generate an IDL file which is a JSON
 representation of your program. With this IDL you can then generate different
-clients. For example JS or C# for Unity.
+clients. For example JavaScript or C# for Unity.
 
 [IDL to C# Converter](https://github.com/magicblock-labs/Solana.Unity.Anchor)
 

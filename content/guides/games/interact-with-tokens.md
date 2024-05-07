@@ -25,50 +25,51 @@ Tokens on Solana can serve various purposes, such as in-game rewards,
 incentives, or other applications. For example, you can create tokens and
 distribute them to players when they complete specific in-game actions. In this
 example we will learn how to setup an Anchor program to mint and burn tokens in
-a game. If you want to instead learn on how you can store tokens in a PDA you
-can check out the
+a game. If you want to instead learn how you can store tokens in a PDA you can
+check out the
 [Token Vault example](https://beta.solpg.io/tutorials/spl-token-vault) in Solana
 Playground.
 
-## Create, Mint, and Burn Tokens with Anchor
+## Overview
 
 In this tutorial, we will build a game using Anchor to introduce the basics of
-interacting with the Token Program on Solana. The game will be structured around
-four main actions: creating a new token mint, initializing player accounts,
-rewarding players for defeating enemies, and allowing players to heal by burning
-tokens.
+interacting with the [Token Program](/docs/core/tokens.md) on Solana. The game
+will be structured around four main actions: creating a new token mint,
+initializing player accounts, rewarding players for defeating enemies, and
+allowing players to heal by burning tokens.
 
-The program consists of 4 instructions:
+The program consists of 4
+[instructions](/docs/core/transactions.md#instruction):
 
-- `create_mint` - This instruction creates a new token mint with a Program
-  Derived Address (PDA) as the mint authority and creates the metadata account
-  for the mint. We will add a constraint that allows only an "admin" to invoke
-  this instruction
-- `init_player` - This instruction initializes a new player account with a
+- `create_mint` - this instruction creates a new token mint with a
+  [Program Derived Address (PDA)](/docs/core/pda.md) as the mint authority and
+  creates the metadata account for the mint. We will add a constraint that
+  allows only an "admin" to invoke this instruction
+- `init_player` - this instruction initializes a new player account with a
   starting health of 100
-- `kill_enemy` - This instruction deducts 10 health points from the player
+- `kill_enemy` - this instruction deducts 10 health points from the player
   account upon “defeating an enemy” and mints 1 token as a reward for the player
-- `heal` - This instruction allows a player to burn 1 token to restore their
+- `heal` - this instruction allows a player to burn 1 token to restore their
   health back to 100
 
-For a high-level overview of the relationship among user wallets, token mints,
-token accounts, and token metadata accounts, consider exploring this portion of
-the
-[Metaplex documentation](https://docs.metaplex.com/programs/token-metadata/overview).
+> This example uses some external tools and program, created by Metaplex, for
+> working with tokens. For a high-level overview of the relationship among user
+> wallets, token mints, token accounts, and token metadata accounts, consider
+> exploring this portion of the
+> [Metaplex documentation](https://docs.metaplex.com/programs/token-metadata/overview).
 
-### Getting Started
+## Getting Started
 
-To start building the program, follow these steps:
-
-Visit the [Solana Playground](https://beta.solpg.io/) and create a new Anchor
-project. If you're new to Solana Playground, you'll also need to create a
-Playground Wallet. You can also find the final example here:
+To start building the program, visit the
+[Solana Playground](https://beta.solpg.io/) and create a new Anchor project. If
+you're new to Solana Playground, you'll also need to create a Playground Wallet.
+You can also find the final example here called
 [Battle coins](https://beta.solpg.io/tutorials/battle-coins)
 
 After creating a new project, replace the default starter code with the code
 below:
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
@@ -88,10 +89,10 @@ pub mod anchor_token {
 
 Here we are simply bringing into scope the crates and corresponding modules we
 will be using for this program. We’ll be using the `anchor_spl` and
-`mpl_token_metadata` crates to help us interact with the Token program and the
-Token Metadata program.
+`mpl_token_metadata` crates to help us interact with the SPL Token program and
+Metaplex's Token Metadata program.
 
-### Create Mint instruction
+## Create Mint instruction
 
 First, let’s implement an instruction to create a new token mint and its
 metadata account. The on-chain token metadata, including the name, symbol, and
@@ -99,7 +100,7 @@ URI, will be provided as parameters to the instruction.
 
 Additionally, we'll only allow an "admin" to invoke this instruction by defining
 an `ADMIN_PUBKEY` constant and using it as a constraint. Be sure to replace the
-`ADMIN_PUBKEY` with your Solana Playground wallet public key.
+`ADMIN_PUBKEY` with your Solana Playground wallet's public key.
 
 The `create_mint` instruction requires the following accounts:
 
@@ -116,7 +117,7 @@ The `create_mint` instruction requires the following accounts:
 - `system_program`- a required account when creating a new account
 - `rent` - Sysvar Rent, a required account when creating the metadata account
 
-```rust
+```rust filename="lib.rs" {2}
 // Only this public key can call this instruction
 const ADMIN_PUBKEY: Pubkey = pubkey!("REPLACE_WITH_YOUR_WALLET_PUBKEY");
 
@@ -213,8 +214,8 @@ Address (PDA) as both the address of the token mint and its mint authority. The
 instruction takes a URI (off-chain metadata), name, and symbol as parameters.
 
 This instruction then creates a metadata account for the token mint through a
-Cross-Program Invocation (CPI) calling the `create_metadata_accounts_v3`
-instruction from the Token Metadata program.
+[Cross-Program Invocation (CPI)](/docs/core/cpi.md) calling the
+`create_metadata_accounts_v3` instruction from the Token Metadata program.
 
 The PDA is used to "sign" the CPI since it is the mint authority, which is a
 required signer when creating the metadata account for a mint. The instruction
@@ -229,7 +230,7 @@ wallet can invoke this instruction.
 const ADMIN_PUBKEY: Pubkey = pubkey!("REPLACE_WITH_YOUR_WALLET_PUBKEY");
 ```
 
-### Init Player Instruction
+## Init Player Instruction
 
 Next, let's implement the `init_player` instruction which creates a new player
 account with an initial health of 100. The constant `MAX_HEALTH` is set to 100
@@ -243,7 +244,7 @@ The `init_player` instruction requires the following accounts:
   of the account
 - `system_program` - a required account when creating a new account
 
-```rust
+```rust filename="lib.rs"
 // Player max health
 const MAX_HEALTH: u8 = 100;
 
@@ -286,7 +287,7 @@ with the `player` public key as one of the seeds. This ensures that each
 `player_data` account is unique and associated with the `player`, allowing every
 player to create their own `player_data` account.
 
-### Kill Enemy Instruction
+## Kill Enemy Instruction
 
 Next, let's implement the `kill_enemy` instruction which reduces the player's
 health by 10 and mints 1 token to the player's token account as a reward.
@@ -305,7 +306,7 @@ The `kill_enemy` instruction requires the following accounts:
   accounts
 - `system_program` - a required account when creating a new account
 
-```rust
+```rust filename="lib.rs"
 #[program]
 pub mod anchor_token {
     use super::*;
@@ -400,7 +401,7 @@ we can mint tokens directly by calling this instruction without additional
 signers. The program can "sign" on behalf of the PDA, allowing token minting
 without explicitly requiring extra signers.
 
-### Heal Instruction
+## Heal Instruction
 
 Next, let's implement the `heal` instruction which allows a player to burn 1
 token and restore their health to its maximum value.
@@ -418,7 +419,7 @@ The `heal` instruction requires the following accounts:
 - `associated_token_program` - required when working with associated token
   accounts
 
-```rust
+```rust filename="lib.rs"
 #[program]
 pub mod anchor_token {
     use super::*;
@@ -485,12 +486,12 @@ instruction. The instruction then uses a cross-program invocation (CPI) to call
 the `burn` instruction from the Token program, which burns 1 token from the
 `player_token_account` to heal the player.
 
-### Build and Deploy
+## Build and Deploy
 
 Great job! You've now completed the program! Go ahead and build and deploy it
 using the Solana Playground. Your final program should look like this:
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
 use anchor_spl::{
     associated_token::AssociatedToken,
@@ -745,7 +746,7 @@ pub enum ErrorCode {
 }
 ```
 
-### Get Started with the Client
+## Get Started with the Client
 
 In this section, we'll walk you through a simple client-side implementation for
 interacting with the program. To get started, navigate to the `client.ts` file
@@ -754,7 +755,7 @@ from the following sections.
 
 Start by adding the following code for the setup.
 
-```js
+```js filename="client.ts"
 import { Metaplex } from "@metaplex-foundation/js";
 import { getMint, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
@@ -827,7 +828,7 @@ async function fetchAccountData() {
 ```
 
 Next, invoke the `createMint` instruction to create a new token mint if it does
-not already exist.
+not already exist:
 
 ```js
 let txHash;
@@ -870,7 +871,7 @@ try {
 }
 ```
 
-Next, invoke the `killEnemy` instruction.
+Next, invoke the `killEnemy` instruction:
 
 ```js
 txHash = await pg.program.methods
@@ -886,7 +887,7 @@ console.log("Enemy Defeated");
 await fetchAccountData();
 ```
 
-Next, invoke the `heal` instruction.
+Next, invoke the `heal` instruction:
 
 ```js
 txHash = await pg.program.methods

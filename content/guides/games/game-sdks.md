@@ -167,7 +167,7 @@ backend and in the frontend, speeding up development.
 
 > If you are working on a Solana SDK and want to add your preset to the preset
 > you can open a PR here:
-> [Solana games preset](https://github.com/solana-developers/solana_game_preset)
+> [Solana games preset](https://github.com/solana-developers/solana-game-preset)
 
 ## Phaser
 

@@ -376,9 +376,9 @@ tool:
    the `anchor.ts` file
 5. Build and deploy again
 
-### Next js client
+### NextJS client
 
-To finish setting up the Next js client generated from the `create-solana-game`
+To finish setting up the NextJS client generated from the `create-solana-game`
 tool:
 
 1. Copy the `programId` into `app/utils/anchor.ts`

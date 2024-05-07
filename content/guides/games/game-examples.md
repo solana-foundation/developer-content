@@ -1,7 +1,7 @@
 ---
 date: Apr 25, 2024
 difficulty: intro
-title: Solana game development examples
+title: Solana Game Development Examples
 description:
   A list of open source games and examples on Solana with tutorials to get you
   started.
@@ -11,7 +11,6 @@ tags:
   - program
   - react
   - web3js
-  - infrastructure
   - unity
   - rust
 keywords:
@@ -54,7 +53,7 @@ npx create-solana-game your-game-name
 Here you can learn how it works:
 
 - [Video](https://www.youtube.com/watch?v=fnhivg_pemI)
-- [Source and docs](https://github.com/solana-developers/solana_game_preset)
+- [Source and docs](https://github.com/solana-developers/solana-game-preset)
 
 ## Interacting with Anchor Programs from Unity
 
@@ -116,9 +115,9 @@ recorded and each move can be minted as an NFTs.
 
 ## Entity component system examples
 
-### Magicblock Bolt
+### MagicBlock Bolt
 
-Magicblock Bolt is an onchain entity component system. Magicblock is also  
+MagicBlock Bolt is an onchain entity component system. MagicBlock is also  
 working on an ephemeral rollup system for super fast transactions.
 
 [Bolt](https://github.com/magicblock-labs/bolt)
@@ -237,7 +236,7 @@ blue chests can be kept for the next run. A special feature is that a floor can
 be owned by a certain player and when you pass that floor you either need to
 fight that player or pay a little fee to be able to pass.
 
-- [Dev net example](https://solplay.de/ancientcave/)
+- [Devnet example](https://solplay.de/ancientcave/)
 - [Source](https://github.com/Woody4618/speedrun2)
 
 ## On-chain city builder example
@@ -248,7 +247,7 @@ resources are shared between the players, but depending if you build your
 
 buildings on the left or the right you either support the goblins or the humans.
 
-- [Dev net example](https://solplay.de/humansandgoblins/)
+- [Devnet example](https://solplay.de/humansandgoblins/)
 - [Source](https://github.com/solana-developers/solana-game-examples/tree/main/city-builder)
 
 ## Rebirth rumble PVP battler

@@ -91,7 +91,7 @@ say we want the player to get experience for killing a monster for example:
     }
 ```
 
-This is how this would look like from a JS client:
+This is how this would look like from a JavaScript client:
 
 ```js
 const wallet = useAnchorWallet();
