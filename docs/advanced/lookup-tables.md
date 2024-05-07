@@ -14,9 +14,9 @@ effectively be capped at 32 addresses per transaction. With the help of
 [Address Lookup Tables](/docs/advanced/lookup-tables.md), a transaction would
 now be able to raise that limit to 256 addresses per transaction.
 
-## Compressing on chain addresses
+## Compressing onchain addresses
 
-After all the desired addresses have been stored on chain in an Address Lookup
+After all the desired addresses have been stored onchain in an Address Lookup
 Table, each address can be referenced inside a transaction by its 1-byte index
 within the table (instead of their full 32-byte address). This lookup method
 effectively "_compresses_" a 32-byte address into a 1-byte index value.
@@ -59,7 +59,7 @@ const [lookupTableInst, lookupTableAddress] =
 
 console.log("lookup table address:", lookupTableAddress.toBase58());
 
-// To create the Address Lookup Table on chain:
+// To create the Address Lookup Table onchain:
 // send the `lookupTableInst` instruction in a transaction
 ```
 
@@ -98,7 +98,7 @@ const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
 > transactions to _extend_ any table with more addresses (~20) that can fit
 > within a single transaction's memory limits.
 
-Once these addresses have been inserted into the table, and stored on chain, you
+Once these addresses have been inserted into the table, and stored onchain, you
 will be able to utilize the Address Lookup Table in future transactions.
 Enabling up to 256 addresses in those future transactions.
 
@@ -139,11 +139,11 @@ for (let i = 0; i < lookupTableAccount.state.addresses.length; i++) {
 
 After you have created your lookup table, and stored your needed address on
 chain (via extending the lookup table), you can create a `v0` transaction to
-utilize the on chain lookup capabilities.
+utilize the onchain lookup capabilities.
 
 Just like older `legacy` transactions, you can create all the
 [instructions](/docs/terminology.md#instruction) your transaction will execute
-on chain. You can then provide an array of these instructions to the
+onchain. You can then provide an array of these instructions to the
 [Message](/docs/terminology.md#message) used in the `v0 transaction.
 
 > NOTE: The instructions used inside a `v0` transaction can be constructed using

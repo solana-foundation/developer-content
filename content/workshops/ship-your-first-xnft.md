@@ -41,7 +41,7 @@ able to try it out yourself.
 
 To follow along in this workshop, you are going to need:
 
-- Basic knowledge of Javascript and React
+- Basic knowledge of JavaScript and React
 - Node JS
 - NPM/Yarn
 - A web browser, which you probably have if you're reading this. Now that this
