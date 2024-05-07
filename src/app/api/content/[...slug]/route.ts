@@ -140,7 +140,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   }
 
   // remove the html formatted content (since it is undesired data to send over the wire)
-  if (typeof record.body.raw !== "undefined") {
+  if (!!record?.body?.raw && typeof record.body.raw !== "undefined") {
     // @ts-ignore
     record.body = record.body.raw.trim();
   }

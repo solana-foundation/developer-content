@@ -196,7 +196,7 @@ export function sortNavItems(navItems: NavItem[]) {
  */
 export function shouldIgnoreRecord({
   fileName,
-  allowedExtensions = ["md", "mdx"],
+  allowedExtensions = ["md", "mdx", "yml"],
 }: {
   fileName: string;
   allowedExtensions?: Array<string>;
@@ -293,6 +293,8 @@ export function computeDetailsFromSlug(slug: string[]) {
     href = `/docs/${href}`;
   } else if (group == "rpc" || group == "docs,rpc") {
     href = `/docs/rpc/${href}`;
+  } else if (group == "lessons") {
+    href = `/developers/courses/lesson/${href}`;
   } else {
     href = `/developers/${group}/${href}`;
   }

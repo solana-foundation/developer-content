@@ -5,6 +5,8 @@ import {
   type FieldDefs,
   type ComputedFields,
 } from "contentlayer/source-files";
+import { getAllContentFiles } from "./src/utils/helpers";
+import path from "path";
 
 /**
  * Standard content record fields
@@ -284,26 +286,105 @@ export const WorkshopRecord = defineDocumentType(() => ({
  *
  * File: `courses/{course-name}/metadata.json`
  */
-export const CourseMetadataRecord = defineDocumentType(() => ({
-  name: "CourseMetadataRecord",
+export const CourseCreatorRecord = defineDocumentType(() => ({
+  name: "CourseCreatorRecord",
   filePathPattern:
-    "{content/courses,/content/courses,i18n/**/content/courses}/**/metadata.json",
-  computedFields: standardComputedFields,
+    "{content/courses,/content/courses,i18n/**/content/courses}/**/metadata.yml",
+  computedFields: {
+    ...standardComputedFields,
+  },
+  fields: {
+    ...basicContentFields,
+    title: {
+      type: "string",
+      description: "The primary title of the individual piece of content",
+      required: true,
+    },
+    slug: {
+      type: "string",
+      description: "The primary title of the individual piece of content",
+      required: true,
+    },
+    description: {
+      type: "string",
+      description: "Brief description of the course creator",
+      required: true,
+    },
+    website: {
+      type: "string",
+      description: "Optional URL for the website of the course creator",
+      required: false,
+    },
+  },
+}));
+
+/**
+ * Content record schema for the Course metadata file
+ *
+ * File: `courses/{course-name}/metadata.json`
+ */
+export const CourseRecord = defineDocumentType(() => ({
+  name: "CourseRecord",
+  filePathPattern:
+    "{content/courses,/content/courses,i18n/**/content/courses}/**/**.yml",
+  computedFields: {
+    ...standardComputedFields,
+
+    // validate all lessons listed exist
+    lessons: {
+      description: "List of lesson 'slugs' for this course",
+      type: "list",
+      of: { type: "string" },
+      resolve: record => {
+        // get the course creator slug from the format: `content/courses/slug`
+        const creatorSlug = record._raw.sourceFileDir.match(
+          /^\/?((content|developers)\/courses)\/(.*)/i,
+        )?.[3];
+
+        if (!creatorSlug) throw Error("Unable to parse creator slug");
+
+        const lessonsDir = path.join(
+          path.resolve(),
+          "content/courses",
+          creatorSlug,
+          "lessons",
+        );
+
+        const availableLessons: string[] = getAllContentFiles(
+          lessonsDir, // base search directory
+          false, // recursive search the directory
+          ".md", // file extension
+          true, // remove the extension from each returned item in the array
+        );
+
+        for (const lesson of record.lessons) {
+          if (!availableLessons.includes(path.join(lessonsDir, lesson))) {
+            throw Error(
+              `Unable to locate lesson: '${lesson}' from '${creatorSlug}'`,
+            );
+          }
+        }
+
+        return record.lessons;
+      },
+    },
+  },
   fields: {
     // use the standard content fields
     ...basicContentFields,
 
     // define custom fields for this specific content
-    structure: {
+    objectives: {
       type: "list",
-      of: { type: "json" },
-      description: "",
+      of: { type: "string" },
+      description: "List of objectives for the course",
       required: false,
     },
-
     lessons: {
-      type: "number",
-      description: "Number of lessons contained within this course",
+      type: "list",
+      of: { type: "string" },
+      description: "List of lesson 'slugs' to be included in this course",
+      required: true,
     },
   },
 }));
@@ -314,8 +395,29 @@ export const CourseMetadataRecord = defineDocumentType(() => ({
 export const CourseLessonRecord = defineDocumentType(() => ({
   name: "CourseLessonRecord",
   filePathPattern:
-    "{content/courses/**/lessons,/content/courses/**/lessons,i18n/**/content/courses/**/lessons}/**/*.{md,mdx}",
-  computedFields: standardComputedFields,
+    "{content/courses/**/lessons,/content/courses/**/lessons,i18n/**/content/courses/**/lessons}/**/*.md",
+  computedFields: {
+    ...standardComputedFields,
+
+    // lessons get a custom href
+    href: {
+      description: "Computed href for a lesson",
+      type: "string",
+      resolve: record => {
+        const hrefBase = record._raw.flattenedPath.replace(
+          I18N_LOCALE_REGEX,
+          "",
+        );
+
+        return hrefBase
+          .replace(
+            /^(?:(?:content\/?)?(?:developers\/?)?(?:\/courses\/))(.*)\/lessons\//gm,
+            "/developers/courses/lesson/$1/",
+          )
+          .toLowerCase();
+      },
+    },
+  },
   fields: {
     // use the standard content fields
     ...basicContentFields,
@@ -410,7 +512,8 @@ export default makeSource({
     WorkshopRecord,
 
     // course specific content record types
-    CourseMetadataRecord,
+    CourseCreatorRecord, // !note: course creator must be before course records
+    CourseRecord,
     CourseLessonRecord,
 
     // Cookbook content

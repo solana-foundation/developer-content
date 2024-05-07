@@ -33,6 +33,8 @@ export type SimpleRecordGroupName =
   | "rpc"
   | "docs,rpc" // note: this is to support stringify-ing the route via the url
   | "guides"
+  | "courses"
+  | "lessons"
   | "resources"
   | "workshops"
   | "cookbook";

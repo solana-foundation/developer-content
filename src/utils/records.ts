@@ -7,6 +7,8 @@ import {
   allWorkshopRecords,
   allCoreDocsRecords,
   allCoreRPCDocsRecords,
+  allCourseLessonRecords,
+  allCourseRecords,
 } from "contentlayer/generated";
 
 /**
@@ -49,6 +51,14 @@ export function getRecordsForGroup(
     }
     case "cookbook": {
       records = allCookbookRecords;
+      break;
+    }
+    case "courses": {
+      records = allCourseRecords;
+      break;
+    }
+    case "lessons": {
+      records = allCourseLessonRecords;
       break;
     }
   }
