@@ -17,7 +17,7 @@ tags:
 keywords:
   - playground
   - solana pg
-  - on chain
+  - onchain
   - rust
   - native program
   - tutorial
@@ -42,12 +42,12 @@ choice, and you are ready to write and deploy Solana programs.
 - how to create a Solana wallet on Playground
 - how to program a basic Solana program in Rust
 - how to build and deploy a Solana Rust program
-- how to interact with your on chain program using JavaScript
+- how to interact with your onchain program using JavaScript
 
 ## Using Solana Playground
 
 [Solana Playground](https://beta.solpg.io) is browser based application that
-will let you write, build, and deploy on chain Solana programs. All from your
+will let you write, build, and deploy onchain Solana programs. All from your
 browser. No installation needed.
 
 It is a great developer resource for getting started with Solana development,
@@ -115,7 +115,7 @@ use solana_program::{
 ### Write your program logic
 
 Every Solana program must define an `entrypoint` that tells the Solana runtime
-where to start executing your on chain code. Your program's
+where to start executing your onchain code. Your program's
 [entrypoint](/docs/programs/lang-rust.md#program-entrypoint) should provide a
 public function named `process_instruction`:
 
@@ -137,7 +137,7 @@ pub fn process_instruction(
 }
 ```
 
-Every on chain program should return the `Ok`
+Every onchain program should return the `Ok`
 [result enum](https://doc.rust-lang.org/std/result/) with a value of `()`. This
 tells the Solana runtime that your program executed successfully without errors.
 
@@ -191,9 +191,9 @@ Inside Solana Playground's **Build & Deploy** sidebar, you can find your
 
 You have successfully setup, built, and deployed a Solana program using the Rust
 language directly in your browser. Next, we will demonstrate how to interact
-with your on chain program.
+with your onchain program.
 
-## Interact with your on chain program
+## Interact with your onchain program
 
 Once you have successfully deployed a Solana program to the blockchain, you will
 want to be able to interact with that program.
@@ -231,7 +231,7 @@ Playground utilities.
 
 ### Call the program
 
-To execute your on chain program, you must send a
+To execute your onchain program, you must send a
 [transaction](/docs/core/transactions.md) to it. Each transaction submitted to
 the Solana blockchain contains a listing of instructions (and the program's that
 instruction will interact with).
@@ -303,7 +303,7 @@ You should see `Hello, world!` in the **Log Messages** section of the output. ðŸ
 
 #### Congratulations!!!
 
-You have now written a client application for your on chain program. You are now
+You have now written a client application for your onchain program. You are now
 a Solana developer!
 
 PS: Try to update your program's message then re-build, re-deploy, and
@@ -317,4 +317,4 @@ your local development environment:
 - [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
 - [Overview of writing Solana programs](/docs/programs/index.md)
 - [Learn more about developing Solana programs with Rust](/docs/programs/lang-rust.md)
-- [Debugging on chain programs](/docs/programs/debugging.md)
+- [Debugging onchain programs](/docs/programs/debugging.md)

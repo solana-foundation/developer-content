@@ -139,7 +139,7 @@ use solana_program::{
 ```
 
 Every Solana program must define an `entrypoint` that tells the Solana runtime
-where to start executing your on chain code. Your program's
+where to start executing your onchain code. Your program's
 [entrypoint](https://docs.solana.com/developing/on-chain-programs/developing-rust#program-entrypoint)
 should provide a public function named `process_instruction`:
 
@@ -161,7 +161,7 @@ pub fn process_instruction(
 }
 ```
 
-Every on chain program should return the `Ok`
+Every onchain program should return the `Ok`
 [result enum](https://doc.rust-lang.org/std/result/) with a value of `()`. This
 tells the Solana runtime that your program executed successfully without errors.
 
@@ -219,4 +219,4 @@ See the links below to learn more about writing Rust based Solana programs:
 
 - [Overview of writing Solana programs](https://docs.solana.com/developing/on-chain-programs/overview)
 - [Learn more about developing Solana programs with Rust](https://docs.solana.com/developing/on-chain-programs/developing-rust)
-- [Debugging on chain programs](https://docs.solana.com/developing/on-chain-programs/debugging)
+- [Debugging onchain programs](https://docs.solana.com/developing/on-chain-programs/debugging)

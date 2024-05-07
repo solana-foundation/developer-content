@@ -1073,7 +1073,7 @@ Signature: 3R6tsog17QM8KfzbcbdP4aoMfwgo6hBggJDVy7dZPVmH2xbCWjEj31JKD53NzMrf25ChF
 
 ### Depositing
 
-Since each `(wallet, mint)` pair requires a separate account on chain. It is
+Since each `(wallet, mint)` pair requires a separate account onchain. It is
 recommended that the addresses for these accounts be derived from SOL deposit
 wallets using the
 [Associated Token Account](https://spl.solana.com/associated-token-account)
