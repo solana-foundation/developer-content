@@ -293,7 +293,7 @@ export function computeDetailsFromSlug(slug: string[]) {
     href = `/docs/${href}`;
   } else if (group == "rpc" || group == "docs,rpc") {
     href = `/docs/rpc/${href}`;
-  } else if (group == "lessons") {
+  } else if (group == "lesson") {
     href = `/developers/courses/lesson/${href}`;
   } else {
     href = `/developers/${group}/${href}`;

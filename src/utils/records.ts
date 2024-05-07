@@ -53,12 +53,12 @@ export function getRecordsForGroup(
       records = allCookbookRecords;
       break;
     }
-    case "courses": {
-      records = allCourseRecords;
+    case "lesson": {
+      records = allCourseLessonRecords;
       break;
     }
-    case "lessons": {
-      records = allCourseLessonRecords;
+    case "courses": {
+      records = allCourseRecords;
       break;
     }
   }
