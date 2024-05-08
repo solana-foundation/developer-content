@@ -431,7 +431,7 @@ export const CourseLessonRecord = defineDocumentType(() => ({
         return hrefBase
           .replace(
             /^(?:(?:content\/?)?(?:developers\/?)?(?:\/courses\/))(.*)\/lessons\//gm,
-            "/developers/courses/lesson/$1/",
+            "/developers/courses/lesson/$1-",
           )
           .toLowerCase();
       },
