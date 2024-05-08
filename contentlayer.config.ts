@@ -330,6 +330,25 @@ export const CourseRecord = defineDocumentType(() => ({
   computedFields: {
     ...standardComputedFields,
 
+    // courses get a custom href
+    href: {
+      description: "Computed href for a course",
+      type: "string",
+      resolve: record => {
+        const hrefBase = record._raw.flattenedPath.replace(
+          I18N_LOCALE_REGEX,
+          "",
+        );
+
+        return hrefBase
+          .replace(
+            /^(?:(?:content\/?)?(?:developers\/?)?(?:\/courses\/))(.*)\//gm,
+            "/developers/courses/$1-",
+          )
+          .toLowerCase();
+      },
+    },
+
     // validate all lessons listed exist
     lessons: {
       description: "List of lesson 'slugs' for this course",
