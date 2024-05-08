@@ -93,20 +93,31 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
   // handle the special cases for lessons
   if (group == "lesson") {
     try {
+      const lessonSlug = current.path!.match(/.*\/(.*)$/i)?.[1];
+      if (!lessonSlug) return notFound();
+
       const url = new URL(req.url);
       const courseSlug = url.searchParams.get("course");
-      const lessonSlug = current.path!.match(/.*\/(.*)$/i)?.[1];
-      if (!courseSlug || !lessonSlug) return notFound();
+      // if (!courseSlug) return notFound();
 
       // locate the course for all lessons
       course =
         group == "lesson"
-          ? (getRecordsForGroup("courses", {
-              locale: DEFAULT_LOCALE_EN,
-            }).find(
-              item => item.href!.match(/.*\/(.*)$/i)?.[1] == courseSlug,
-            ) as CourseRecord)
+          ? (
+              getRecordsForGroup("courses", {
+                locale: DEFAULT_LOCALE_EN,
+              }) as CourseRecord[]
+            ).find(item => {
+              if (!!courseSlug) {
+                return item.href!.match(/.*\/(.*)$/i)?.[1] == courseSlug;
+              } else {
+                console.log();
+                return !!item.lessons.includes(lessonSlug);
+              }
+            })
           : undefined;
+
+      // console.log("course:", course);
 
       if (!course) throw `Course '${courseSlug}' not found`;
 
@@ -130,6 +141,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
         "[api content]",
         "an error occurred while getting the course details for a lesson",
       );
+      console.warn(err);
       return notFound();
     }
   }
