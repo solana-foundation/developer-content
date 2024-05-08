@@ -34,8 +34,8 @@ implementation, consult their respective documentation:
 
 | Validator Client         | Repo                                                               | Website                                                |
 | ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------ |
-| Anza's Agave             | [Repo](https://github.com/anza-xyz/agave/blob/master/docs]         | [Website](https://docs.solanalabs.com/)                |
-| Jump Crypto's Firedancer | [Repo](https://github.com/firedancer-io/firedancer/tree/main/book] | [Website](https://firedancer-io.github.io/firedancer/) |
+| Anza's Agave             | [Repo](https://github.com/anza-xyz/agave/blob/master/docs)         | [Website](https://docs.solanalabs.com/)                |
+| Jump Crypto's Firedancer | [Repo](https://github.com/firedancer-io/firedancer/tree/main/book) | [Website](https://firedancer-io.github.io/firedancer/) |
 
 ### Developer Guides
 
