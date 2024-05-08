@@ -12,6 +12,7 @@ import {
   computeDetailsFromSlug,
 } from "@/utils/navItem";
 import { getRecordsForGroup } from "@/utils/records";
+import type { CourseRecord } from "contentlayer/generated";
 
 type RouteProps = {
   params: {
@@ -19,10 +20,10 @@ type RouteProps = {
   };
 };
 
-export function GET(_req: Request, { params: { slug } }: RouteProps) {
+export function GET(req: Request, { params: { slug } }: RouteProps) {
   // dummy check on the url params
   if (!slug || !Array.isArray(slug) || slug.length <= 0) {
-    notFound();
+    return notFound();
   }
 
   const { group, locale, href } = computeDetailsFromSlug(slug);
@@ -87,13 +88,59 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!current) return notFound();
 
+  let course: CourseRecord | undefined = undefined;
+
+  // handle the special cases for lessons
+  if (group == "lesson") {
+    try {
+      const url = new URL(req.url);
+      const courseSlug = url.searchParams.get("course");
+      const lessonSlug = current.path!.match(/.*\/(.*)$/i)?.[1];
+      if (!courseSlug || !lessonSlug) return notFound();
+
+      // locate the course for all lessons
+      course =
+        group == "lesson"
+          ? (getRecordsForGroup("courses", {
+              locale: DEFAULT_LOCALE_EN,
+            }).find(
+              item => item.href!.match(/.*\/(.*)$/i)?.[1] == courseSlug,
+            ) as CourseRecord)
+          : undefined;
+
+      if (!course) throw `Course '${courseSlug}' not found`;
+
+      const lessonIndex = course.lessons.findIndex(item => item == lessonSlug);
+
+      next =
+        course.lessons.length > lessonIndex
+          ? flatNavItems.find(item =>
+              item.path?.endsWith(course!.lessons[lessonIndex + 1]),
+            ) || null
+          : null;
+
+      prev =
+        lessonIndex > 0
+          ? flatNavItems.find(item =>
+              item.path?.endsWith(course!.lessons[lessonIndex - 1]),
+            ) || null
+          : null;
+    } catch (err) {
+      console.warn(
+        "[api content]",
+        "an error occurred while getting the course details for a lesson",
+      );
+      return notFound();
+    }
+  }
+
   // locate full content record for the base locale
   let record = baseLocalRecords.find(
     (item: SupportedDocTypes) =>
       item.href.toLowerCase() == current?.href?.toLowerCase(),
   );
 
-  if (!record) notFound();
+  if (!record) return notFound();
 
   /**
    * with the base locale record and data in hand, we can attempt to
@@ -121,7 +168,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     if (!!prev) prev = flatNavItems.find(item => item.id == prev!.id) || prev;
   }
 
-  if (!record) notFound();
+  if (!record) return notFound();
 
   const breadcrumbs: BreadcrumbItem[] = [];
   let parentId = current.id.substring(0, current.id.lastIndexOf("-"));
@@ -152,6 +199,12 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     sourceFileDir: record._raw.sourceFileDir.replace(I18N_LOCALE_REGEX, ""),
     flattenedPath: record._raw.flattenedPath.replace(I18N_LOCALE_REGEX, ""),
   };
+
+  // force put the course details into the lesson
+  if (group == "lesson") {
+    // @ts-expect-error
+    current.course = course;
+  }
 
   // todo: preprocess the body content? (if desired in the future)
 
