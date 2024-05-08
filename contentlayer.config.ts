@@ -330,6 +330,24 @@ export const CourseRecord = defineDocumentType(() => ({
   computedFields: {
     ...standardComputedFields,
 
+    // courses get a custom slug
+    slug: {
+      description: "Computed slug for a course",
+      type: "string",
+      resolve: record => {
+        const hrefBase = record._raw.flattenedPath.replace(
+          I18N_LOCALE_REGEX,
+          "",
+        );
+
+        return hrefBase
+          .replace(
+            /^(?:(?:content\/?)?(?:developers\/?)?(?:\/courses\/))(.*)\//gm,
+            "$1-",
+          )
+          .toLowerCase();
+      },
+    },
     // courses get a custom href
     href: {
       description: "Computed href for a course",
@@ -417,6 +435,25 @@ export const CourseLessonRecord = defineDocumentType(() => ({
     "{content/courses/**/lessons,/content/courses/**/lessons,i18n/**/content/courses/**/lessons}/**/*.md",
   computedFields: {
     ...standardComputedFields,
+
+    // lessons get a custom href
+    slug: {
+      description: "Computed slug for a lesson",
+      type: "string",
+      resolve: record => {
+        const hrefBase = record._raw.flattenedPath.replace(
+          I18N_LOCALE_REGEX,
+          "",
+        );
+
+        return hrefBase
+          .replace(
+            /^(?:(?:content\/?)?(?:developers\/?)?(?:\/courses\/))(.*)\/lessons\//gm,
+            "$1-",
+          )
+          .toLowerCase();
+      },
+    },
 
     // lessons get a custom href
     href: {
