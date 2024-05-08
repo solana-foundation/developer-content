@@ -7,6 +7,7 @@ import type { SupportedDocTypes } from "@/types";
 import { simplifyRecords } from "@/utils/parsers";
 import { getRecordsForGroup } from "@/utils/records";
 import { computeDetailsFromSlug } from "@/utils/navItem";
+import { CourseLessonRecord, CourseRecord } from "contentlayer/generated";
 
 type RouteProps = {
   params: {
@@ -20,14 +21,41 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     return notFound();
   }
 
-  const { group, locale } = computeDetailsFromSlug(slug);
+  let { group, locale, appendix } = computeDetailsFromSlug(slug);
 
   if (!group) return notFound();
 
+  let course: CourseRecord | undefined = undefined;
+  let courseCreator = "";
+
+  if (group == "courses" && !!appendix) {
+    group = "lesson";
+    course =
+      (
+        getRecordsForGroup("courses", {
+          locale,
+        }) as CourseRecord[]
+      ).find(
+        item =>
+          `${item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1]}-${item._raw.sourceFileName.split(".")[0]}` ==
+          appendix,
+      ) || undefined;
+    courseCreator = course?.slug.split("-").shift() || "";
+  }
+
   // retrieve the correct group's records by its simple group name
-  const records = getRecordsForGroup(group, {
+  let records = getRecordsForGroup(group, {
     locale,
   });
+
+  // handle the special case of a course becoming a record group
+  if (group == "lesson" && !!appendix) {
+    records = records.filter(item =>
+      course?.lessons.includes(
+        (item as CourseLessonRecord).slug.replace(`${courseCreator}-`, ""),
+      ),
+    );
+  }
 
   /**
    * note: we intentionally only return a 404 if there was an error with `records`

@@ -282,6 +282,8 @@ export function computeDetailsFromSlug(slug: string[]) {
     group = slug.shift() as SimpleRecordGroupName;
   }
 
+  let appendix = slug.join("/");
+
   // formatted the `href` value to search for
   let href = slug
     .join("/")
@@ -309,5 +311,6 @@ export function computeDetailsFromSlug(slug: string[]) {
     group,
     slug,
     href,
+    appendix,
   };
 }
