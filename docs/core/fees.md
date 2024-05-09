@@ -384,7 +384,7 @@ its associated data available on-chain is called "_rent_". This fee is withheld
 in the normal lamport balance on every account and reclaimable when the account
 is closed.
 
-> Rent is different from [transactions fees](#transaction-fees). Rent is "paid"
+> Rent is different from [transaction fees](#transaction-fees). Rent is "paid"
 > (withheld in an Account) to keep data stored on the Solana blockchain and can
 > be reclaimed. Whereas transaction fees are paid to process
 > [instructions](/docs/core/transactions.md#instructions) on the network.
