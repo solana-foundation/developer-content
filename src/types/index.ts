@@ -33,7 +33,7 @@ export type SimpleRecordGroupName =
   | "rpc"
   | "docs,rpc" // note: this is to support stringify-ing the route via the url
   | "guides"
-  | "lesson"
+  | "lessons"
   | "courses"
   | "resources"
   | "workshops"
@@ -41,6 +41,7 @@ export type SimpleRecordGroupName =
 
 type NavItemBase = {
   id: string;
+  slug: string;
   label: string;
   locale?: string;
   path?: string;

@@ -149,6 +149,7 @@ export function computeDetailsFromKey(key: string) {
   return {
     label: ucFirst(key.split(GROUPING_KEY_SEPARATOR).reverse()[0]),
     id: computeRecordPathAndId(key).id,
+    slug: "",
   };
 }
 
@@ -229,6 +230,7 @@ export function computeNavItem(
   const navItem: NavItem = {
     /** i18n locale */
     locale: doc.locale,
+    slug: doc.slug,
     /** unique identifier for each record, including any i18n info */
     id: computedPathAndId.id,
     /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
@@ -295,9 +297,11 @@ export function computeDetailsFromSlug(slug: string[]) {
     href = `/docs/${href}`;
   } else if (group == "rpc" || group == "docs,rpc") {
     href = `/docs/rpc/${href}`;
-  } else if (group == "lesson") {
-    href = `/developers/courses/lesson/${href}`;
-  } else {
+  }
+  //  else if (group == "courses") {
+  //   href = `/developers/courses/lesson/${href}`;
+  // }
+  else {
     href = `/developers/${group}/${href}`;
   }
 

@@ -26,9 +26,14 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     return notFound();
   }
 
-  const { group, locale, href } = computeDetailsFromSlug(slug);
+  let { group, locale, href, appendix } = computeDetailsFromSlug(slug);
 
   if (!group) return notFound();
+
+  // `lessons` are nested under `courses`
+  if (group == "courses" && appendix.split("/").length == 2) {
+    group = "lessons";
+  }
 
   // get the base locale's record to serve as the default content
   const baseLocalRecords = getRecordsForGroup(group, {
@@ -91,37 +96,21 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
   let course: CourseRecord | undefined = undefined;
 
   // handle the special cases for lessons
-  if (group == "lesson") {
+  if (group == "lessons" && !!current.slug) {
     try {
-      const lessonSlug = current.path!.match(/.*\/(.*)$/i)?.[1];
-      if (!lessonSlug) return notFound();
+      const courseSlug = appendix.split("/")[0];
 
-      const url = new URL(req.url);
-      const courseSlug = url.searchParams.get("course");
-      // if (!courseSlug) return notFound();
-
-      // locate the course for all lessons
-      course =
-        group == "lesson"
-          ? (
-              getRecordsForGroup("courses", {
-                locale: DEFAULT_LOCALE_EN,
-              }) as CourseRecord[]
-            ).find(item => {
-              if (!!courseSlug) {
-                return item.href!.match(/.*\/(.*)$/i)?.[1] == courseSlug;
-              } else {
-                console.log();
-                return !!item.lessons.includes(lessonSlug);
-              }
-            })
-          : undefined;
-
-      // console.log("course:", course);
+      course = (
+        getRecordsForGroup("courses", {
+          locale: DEFAULT_LOCALE_EN,
+        }) as CourseRecord[]
+      ).find(item => item.slug == courseSlug);
 
       if (!course) throw `Course '${courseSlug}' not found`;
 
-      const lessonIndex = course.lessons.findIndex(item => item == lessonSlug);
+      const lessonIndex = course.lessons.findIndex(
+        item => item == current!.slug,
+      );
 
       next =
         course.lessons.length > lessonIndex
@@ -213,7 +202,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
   };
 
   // force put the course details into the lesson
-  if (group == "lesson") {
+  if (group == "lessons") {
     // @ts-expect-error
     current.course = course;
   }

@@ -7,7 +7,7 @@ import type { SupportedDocTypes } from "@/types";
 import { simplifyRecords } from "@/utils/parsers";
 import { getRecordsForGroup } from "@/utils/records";
 import { computeDetailsFromSlug } from "@/utils/navItem";
-import { CourseLessonRecord, CourseRecord } from "contentlayer/generated";
+import { CourseRecord } from "contentlayer/generated";
 
 type RouteProps = {
   params: {
@@ -25,36 +25,33 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!group) return notFound();
 
-  let course: CourseRecord | undefined = undefined;
-  let courseCreator = "";
-
-  if (group == "courses" && !!appendix) {
-    group = "lesson";
-    course =
-      (
-        getRecordsForGroup("courses", {
-          locale,
-        }) as CourseRecord[]
-      ).find(
-        item =>
-          `${item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1]}-${item._raw.sourceFileName.split(".")[0]}` ==
-          appendix,
-      ) || undefined;
-    courseCreator = course?.slug.split("-").shift() || "";
-  }
-
   // retrieve the correct group's records by its simple group name
   let records = getRecordsForGroup(group, {
     locale,
   });
 
-  // handle the special case of a course becoming a record group
-  if (group == "lesson" && !!appendix) {
-    records = records.filter(item =>
-      course?.lessons.includes(
-        (item as CourseLessonRecord).slug.replace(`${courseCreator}-`, ""),
-      ),
+  // handle the special case for lessons
+  if (group == "lessons" && appendix) {
+    const course = (
+      getRecordsForGroup("courses", {
+        locale,
+      }) as CourseRecord[]
+    ).find(item => item.slug == appendix);
+
+    if (!course) return notFound();
+
+    const unsortedLessons = records.filter(
+      item => item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1] == course.slug,
     );
+
+    if (unsortedLessons.length !== course.lessons.length) return notFound();
+
+    // presort the lessons in their desired order
+    records = new Array(unsortedLessons.length);
+    unsortedLessons.map(item => {
+      const index = course.lessons.findIndex(el => el == item.slug);
+      records[index] = item;
+    });
   }
 
   /**

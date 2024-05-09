@@ -1,3 +1,4 @@
+import { RawDocumentData } from "contentlayer/core";
 import { readdirSync, statSync } from "fs";
 import { extname, join } from "path";
 
@@ -36,4 +37,15 @@ export function getAllContentFiles(
   });
 
   return files;
+}
+
+/**
+ * Compute a standard slug from a given document's "raw" fields
+ */
+export function computeSlugFromRawDocumentData(raw: RawDocumentData) {
+  if (raw.sourceFileName == "metadata.yml") {
+    return raw.sourceFileDir.match(/.*\/(.*)/)![1];
+  }
+
+  return raw.sourceFileName.split(".")[0];
 }
