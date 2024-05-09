@@ -23,7 +23,7 @@ The Solana blockchain has a few different types of fees and costs that are
 incurred to use the permissionless network. These can be segmented into a few
 specific types:
 
-- transaction fees - fee to have validators process transactions/instructions
+- Transaction Fees - A fee to have validators process transactions/instructions
 - prioritization fees - optional fee to boost transactions processing order
 - rent - withheld balance to keep data stored on-chain
 
