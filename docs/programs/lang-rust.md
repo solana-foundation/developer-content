@@ -5,6 +5,19 @@ title: "Developing with Rust"
 Solana supports writing on-chain programs using the
 [Rust](https://www.rust-lang.org/) programming language.
 
+<Callout type="success" title="Hello World: Get started with Rust development">
+
+To quickly get started with Rust development on Solana and build your first
+program, take a look at these detailed quick start guides:
+
+- [Build and deploy your first Solana program](/content/guides/getstarted/hello-world-in-your-browser.md)
+  with only your browser
+- Full guide on
+  [how to setup your local environment](/content/guides/getstarted/setup-local-development.md)
+- [Setup, build, and deploy a Solana program locally in Rust](/content/guides/getstarted/local-rust-hello-world.md)
+
+</Callout>
+
 ## Project Layout
 
 Solana Rust programs follow the typical
