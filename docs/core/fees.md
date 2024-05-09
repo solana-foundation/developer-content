@@ -25,7 +25,7 @@ specific types:
 
 - Transaction Fees - A fee to have validators process transactions/instructions
 - Prioritization Fees - An optional fee to boost transactions processing order
-- rent - withheld balance to keep data stored on-chain
+- Rent - A withheld balance to keep data stored on-chain
 
 ## Transaction Fees
 
