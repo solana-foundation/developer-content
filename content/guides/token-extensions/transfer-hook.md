@@ -316,7 +316,7 @@ This will then give you the following output. In last transaction you will then
 able to see how often your token has been transferred:
 
 ```shell
-"This token has been transfered 1 times"
+"This token has been transferred 1 times"
 ```
 
 ```shell

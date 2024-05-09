@@ -184,7 +184,7 @@ const transaction = new Transaction().add(
   enableRequiredMemoTransfersInstruction,
 );
 
-// Send Transactoin
+// Send Transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
