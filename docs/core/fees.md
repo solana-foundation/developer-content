@@ -239,7 +239,7 @@ including a single `SetComputeUnitLimit` instruction. Either a higher or lower
 limit. But it may never request higher than the absolute max limit per
 transaction.
 
-While a transaction's default compute unit limit will work is most cases for
+While a transaction's default compute unit limit will work in most cases for
 simple transactions, they are often less than optimal (both for the runtime and
 the user). For more complex transactions, like invoking programs that perform
 multiple CPIs, you may need to request a higher compute unit limit for the
