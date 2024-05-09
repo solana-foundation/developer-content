@@ -224,7 +224,7 @@ With Anchor, a PDA is initialized with the `seeds`, `bumps`, and
 much space needs to be allocated for that data.
 
 Note: By using the `InitSpace` macro in the `JournalEntryState`, we are able to
-calcualte space by using the `INIT_SPACE` constant and adding `8` to the space
+calculate space by using the `INIT_SPACE` constant and adding `8` to the space
 constraint for Anchor's internal discriminator.
 
 ### Updating a journal entry
