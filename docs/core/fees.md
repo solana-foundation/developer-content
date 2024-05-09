@@ -24,7 +24,7 @@ incurred to use the permissionless network. These can be segmented into a few
 specific types:
 
 - Transaction Fees - A fee to have validators process transactions/instructions
-- prioritization fees - optional fee to boost transactions processing order
+- Prioritization Fees - An optional fee to boost transactions processing order
 - rent - withheld balance to keep data stored on-chain
 
 ## Transaction Fees
