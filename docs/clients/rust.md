@@ -4,13 +4,27 @@ title: Rust Client for Solana
 sidebarSortOrder: 1
 ---
 
-Solana's Rust crates are [published to crates.io][crates.io] and can be found
-[on docs.rs with the "solana-" prefix][docs.rs].
+Solana's Rust crates are [published to
+crates.io][crates.io](https://crates.io/search?q=solana-)] and can be found
+[on docs.rs with the "solana-" prefix](https://docs.rs/releases/search?query=solana-).
 
-[crates.io]: https://crates.io/search?q=solana-
-[docs.rs]: https://docs.rs/releases/search?query=solana-
+<Callout title="Hello World: Get started with Rust development on Solana">
 
-Some important crates:
+To quickly get started with Solana development and build your first Rust
+program, take a look at these detailed quick start guides:
+
+- [Build and deploy your first Solana program](/content/guides/getstarted/hello-world-in-your-browser.md)
+  with only your browser
+- Full guide on
+  [how to setup your local environment](/content/guides/getstarted/setup-local-development.md)
+- [Setup, build, and deploy a Solana program locally in Rust](/content/guides/getstarted/local-rust-hello-world.md)
+
+</Callout>
+
+## Rust Crates
+
+The following are the most important and commonly used Rust crates for Solana
+development:
 
 - [`solana-program`] &mdash; Imported by programs running on Solana, compiled to
   SBF. This crate contains many fundamental data types and is re-exported from
