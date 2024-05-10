@@ -43,8 +43,8 @@ network to help support the economic design of the Solana blockchain.
 > Solana network, a rent deposit is withheld in an account to store its data on
 > the blockchain and reclaimable.
 
-Currently, the base Solana transaction fee is set at a static value of
-[5k lamports per signature](#). On top of this base fee, any additional
+Currently, the base Solana transaction fee is set at a static value of 5k
+lamports per signature. On top of this base fee, any additional
 [prioritization fees](#prioritization-fee) can be added.
 
 ### Why pay transaction fees?
@@ -77,35 +77,37 @@ The same is true on Solana. Specifically:
 ### Fee collection
 
 Transactions are required to have at least one account which has signed the
-transaction and is writable. Writable signer accounts are serialized first in
-the list of transaction accounts and the first of these accounts is always used
-as the "_fee payer_".
+transaction and is writable. These _writable signer accounts_ are serialized
+first in the list of accounts and the first of these is always used as the "_fee
+payer_".
 
 Before any transaction instructions are processed, the fee payer account
-[balance will be deducted](#) to pay for transaction fees. If the fee payer
-balance is not sufficient to cover transaction fees, the transaction will be
-dropped by the cluster. If the balance was sufficient, the fees will be deducted
-whether the transaction is processed successfully or not (i.e. if the
-transaction is wholly successful or not).
+[balance will be deducted](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/runtime/src/bank.rs#L4045-L4064)
+to pay for transaction fees. If the fee payer balance is not sufficient to cover
+transaction fees, the transaction processing will halt and result in a failed
+transaction.
 
-If any of the transaction instructions [return an error](#) or violate runtime
-restrictions, all account changes **_except_** the transaction fee deduction
-will be rolled back. This is because the validator network has already expended
-computational resources to collect transactions and begin the initial
-processing.
+If the balance was sufficient, the fees will be deducted and the transaction's
+instructions will begin execution. Should any of the instructions result in an
+error, transaction processing will halt and ultimately be recorded as a failed
+transaction in the Solana ledger. The fee is still collected by the runtime for
+these failed transactions.
+
+Should any of the instructions return an error or violate runtime restrictions,
+all account changes **_except_** the transaction fee deduction will be rolled
+back. This is because the validator network has already expended computational
+resources to collect transactions and begin the initial processing.
 
 ### Fee distribution
 
-Transaction fees are [partially burned](#) and the remaining fees are
-[collected by the validator](#) that produced the block that the corresponding
-transactions were included in.
-
-The transaction fee burn rate was initialized as 50% when inflation rewards were
-enabled at the beginning of 2021 and has not changed so far. These fees
-incentivize a validator to process as many transactions as possible during its
-slots in the leader schedule. Collected fees are deposited in the validator's
-account (listed in the leader schedule for the current slot) after processing
-all of the transactions included in a block.
+Transaction fees are
+[partially burned](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/runtime/src/bank/fee_distribution.rs#L55-L64)
+and the remaining fees are collected by the validator that produced the block
+that the corresponding transactions were included in. Specifically,
+[50% are burned](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/fee_calculator.rs#L79)
+and
+[50% percent are distributed](https://github.com/anza-xyz/agave/blob/e621336acad4f5d6e5b860eaa1b074b01c99253c/runtime/src/bank/fee_distribution.rs#L58-L62)
+to the validator that produced the block.
 
 ### Why burn some fees?
 
@@ -165,11 +167,12 @@ transaction and no state changes (aside from the transaction fee being
 
 ### Accounts data size limit
 
-A transaction should request the maximum bytes of accounts data it is allowed to
-load by including a `SetLoadedAccountsDataSizeLimit` instruction, requested
-limit is capped by `MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`. If no
-`SetLoadedAccountsDataSizeLimit` is provided, the transaction is defaulted to
-have limit of `MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`.
+A transaction may specify the maximum bytes of account data it is allowed to
+load by including a `SetLoadedAccountsDataSizeLimit` instruction (not to exceed
+the runtime's absolute max). If no `SetLoadedAccountsDataSizeLimit` is provided,
+the transaction defaults to use the runtime's
+[`MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L137-L139)
+value.
 
 The `ComputeBudgetInstruction::set_loaded_accounts_data_size_limit` function can
 be used to create this instruction:
@@ -470,11 +473,23 @@ garbage collection happens automatically by the runtime. Any transaction that
 attempts to reduce an accounts balance lower that its minimum balance for rent
 exemption (that is not exactly zero) will fail.
 
-> Even after an account has been removed from the network (via garbage
-> collection), it may still have transactions associated with it's address
-> (either past history or in the future). Even though a Solana block explorer
-> may display an "account not found" type of message, you may still be able to
-> view transaction history associated with that account.
+<Callout type="warning">
+
+It's important to note that garbage collection happens **after** the transaction
+execution is completed. If there is an instruction to "close" an account by
+reducing the account balance to zero, the account can be "reopened" within the
+same transaction via a later instruction. If the account state was not cleared
+in the "close" instruction, the later "reopen" instruction will have the same
+account state. It's a security concern, so it's good to know the exact timing
+garbage collection takes effect.
+
+</Callout>
+
+Even after an account has been removed from the network (via garbage
+collection), it may still have transactions associated with it's address (either
+past history or in the future). Even though a Solana block explorer may display
+an "account not found" type of message, you may still be able to view
+transaction history associated with that account.
 
 You can read the validator
 [implemented proposal](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage#garbage-collection)
