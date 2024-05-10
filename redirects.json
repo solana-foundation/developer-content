@@ -3,7 +3,7 @@
     { "source": "/apps", "destination": "/developers" },
     {
       "source": "/developing/programming-model/overview",
-      "destination": "/docs/programs"
+      "destination": "/docs/programs/overview"
     },
     { "source": "/apps/break", "destination": "/docs/programs/examples" },
     { "source": "/apps/drones", "destination": "/docs/programs/examples" },
@@ -89,7 +89,7 @@
       "source": "/developing/guides/compressed-nfts"
     },
     {
-      "destination": "/docs/programs",
+      "destination": "/docs/programs/overview",
       "source": "/developing/on-chain-programs/overview"
     },
     {
