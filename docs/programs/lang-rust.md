@@ -5,16 +5,15 @@ title: "Developing with Rust"
 Solana supports writing on-chain programs using the
 [Rust](https://www.rust-lang.org/) programming language.
 
-<Callout type="success" title="Hello World: Get started with Rust development">
+<Callout title="Hello World: Get started with Solana development">
 
-To quickly get started with Rust development on Solana and build your first
+To quickly get started with Solana development and build your first Rust
 program, take a look at these detailed quick start guides:
 
-- [Build and deploy your first Solana program](/content/guides/getstarted/hello-world-in-your-browser.md)
-  with only your browser
-- Full guide on
-  [how to setup your local environment](/content/guides/getstarted/setup-local-development.md)
-- [Setup, build, and deploy a Solana program locally in Rust](/content/guides/getstarted/local-rust-hello-world.md)
+- [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
+  No installation needed.
+- [Setup your local environment](/content/guides/getstarted/setup-local-development.md)
+  and use the local test validator.
 
 </Callout>
 
@@ -47,7 +46,7 @@ using the `no-entrypoint` feature.
 ## Project Dependencies
 
 At a minimum, Solana Rust programs must pull in the
-[solana-program](https://crates.io/crates/solana-program) crate.
+[`solana-program`](https://crates.io/crates/solana-program) crate.
 
 Solana SBF programs have some [restrictions](#restrictions) that may prevent the
 inclusion of some crates as dependencies or require special handling.

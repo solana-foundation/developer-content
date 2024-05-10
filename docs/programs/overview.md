@@ -7,19 +7,17 @@ altRoutes:
 ---
 
 Developers can write and deploy their own programs to the Solana blockchain.
-While developing these "on-chain" programs can seem cumbersome, the entire
-process can be broadly summarized into a few key steps.
+This process can be broadly summarized into a few key steps.
 
-<Callout type="success" title="Hello World: Get started with Solana development">
+<Callout title="Hello World: Get started with Solana development">
 
-To quickly get started with Solana development and build your first program,
-take a look at these detailed quick start guides:
+To quickly get started with Solana development and build your first Rust
+program, take a look at these detailed quick start guides:
 
-- [Build and deploy your first Solana program](/content/guides/getstarted/hello-world-in-your-browser.md)
-  with only your browser
-- Full guide on
-  [how to setup your local environment](/content/guides/getstarted/setup-local-development.md)
-- [Setup, build, and deploy a Solana program locally in Rust](/content/guides/getstarted/local-rust-hello-world.md)
+- [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
+  No installation needed.
+- [Setup your local environment](/content/guides/getstarted/setup-local-development.md)
+  and use the local test validator.
 
 </Callout>
 
