@@ -1,6 +1,9 @@
 ---
-title: Developing On-chain Programs
-sidebarLabel: Developing Programs
+title: Overview of Developing On-chain Programs
+sidebarLabel: Overview
+sidebarSortOrder: 0
+altRoutes:
+  - /docs/programs
 ---
 
 Developers can write and deploy their own programs to the Solana blockchain.
