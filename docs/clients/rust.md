@@ -4,20 +4,20 @@ title: Rust Client for Solana
 sidebarSortOrder: 1
 ---
 
-Solana's Rust crates are [published to
-crates.io][crates.io](https://crates.io/search?q=solana-)] and can be found
-[on docs.rs with the "solana-" prefix](https://docs.rs/releases/search?query=solana-).
+Solana's Rust crates are
+[published to crates.io](https://crates.io/search?q=solana-) and can be found
+[on docs.rs](https://docs.rs/releases/search?query=solana-) with the `solana-`
+prefix.
 
-<Callout title="Hello World: Get started with Rust development on Solana">
+<Callout title="Hello World: Get started with Solana development">
 
 To quickly get started with Solana development and build your first Rust
 program, take a look at these detailed quick start guides:
 
-- [Build and deploy your first Solana program](/content/guides/getstarted/hello-world-in-your-browser.md)
-  with only your browser
-- Full guide on
-  [how to setup your local environment](/content/guides/getstarted/setup-local-development.md)
-- [Setup, build, and deploy a Solana program locally in Rust](/content/guides/getstarted/local-rust-hello-world.md)
+- [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
+  No installation needed.
+- [Setup your local environment](/content/guides/getstarted/setup-local-development.md)
+  and use the local test validator.
 
 </Callout>
 
