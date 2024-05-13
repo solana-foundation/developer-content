@@ -4,10 +4,10 @@ difficulty: Intermediate
 title: "Cash App on Solana"
 description:
   "Solana developer quickstart guide to learn how to create a react-native
-  mobile app that is both android and ios compatible. This app will mimic a cash
+  mobile app that is both Android and iOS compatible. This app will mimic a cash
   app experience but run on the Solana blockchian, showcasing that web3 products
   can have the same user experience as web2 products. To build this, we will
-  need to write an anchor program, integrate the Solana Name Service sdk, and
+  need to write an Anchor program, integrate the Solana Name Service sdk, and
   integrate Solana pay."
 tags:
   - quickstart
@@ -33,15 +33,15 @@ keywords:
 ---
 
 In this guide, you will learn how to create a react-native mobile app that is
-both android and ios compatible. This app will mimic a cash app experience but
-run on the solana blockchain, showcasing that web3 products can have the same
-user experience as web2 products. To build this, we will need to write an anchor
-program, integrate the solana name service sdk, and integrate solana pay.
+both Android and iOS compatible. This app will mimic a cash app experience but
+run on the Solana blockchain, showcasing that web3 products can have the same
+user experience as web2 products. To build this, we will need to write an Anchor
+program, integrate the Solana Name Service SDK, and integrate Solana Pay.
 
 ## What You Will Learn
 
 - Setting up your environment
-- Creating a solana mobile dApp
+- Creating a Solana mobile dApp
 - Anchor program development
 - Anchor PDAs and accounts
 - Deploying a Solana program
@@ -96,12 +96,12 @@ with a few tools:
 - [React Native Setup](https://reactnative.dev/docs/environment-setup?platform=android)
 - [EAS CLI and Account Setup](https://docs.expo.dev/build/setup/)
 
-For an introduction to solana program development with the anchor framework,
+For an introduction to Solana program development with the Anchor framework,
 review this guide:
 
 - [Basic CRUD dApp on Solana](https://github.com/solana-foundation/developer-content/blob/main/content/guides/dapps/journal.md#writing-a-solana-program-with-anchor)
 
-For an introduction to solana mobile development, review the solana mobile docs:
+For an introduction to Solana mobile development, review the Solana mobile docs:
 
 - [Solana Mobile Introduction](https://docs.solanamobile.com/getting-started/intro)
 
@@ -120,12 +120,12 @@ cash app, we want to have the following functionalities:
 
 To enable these functionalities, we will do the following:
 
-1. Write a solana program that allows for users to initialize a new account
+1. Write a Solana program that allows for users to initialize a new account
    on-chain and set up a user name _(similar to $Cashtag)_ with
    [Solana Name Service](https://sns.guide/). With the username being set via
    SNS, you can then get public key information directly from an account's
    username.
-2. Add instructions to the solana program for a user to be able to deposit funds
+2. Add instructions to the Solana program for a user to be able to deposit funds
    from their wallet into their cash account and withdrawal funds from their
    cash account into their wallet.
 3. Add instructions for a user to be able to directly send funds from their own
@@ -145,7 +145,7 @@ To enable these functionalities, we will do the following:
 
 ## Solana Mobile App Template Set Up
 
-Since this project will be a mobile app, we can get started with the solana
+Since this project will be a mobile app, we can get started with the Solana
 mobile expo app template:
 
 ```shell
@@ -167,9 +167,9 @@ your code.
 
 Reminder: You must have
 [fake wallet](https://github.com/solana-mobile/mobile-wallet-adapter/tree/main/android/fakewallet)
-running on the same android emulator to be able to test out transactions, as
+running on the same Android emulator to be able to test out transactions, as
 explained in the
-[solana mobile development set up docs](https://docs.solanamobile.com/getting-started/development-setup)
+[Solana mobile development set up docs](https://docs.solanamobile.com/getting-started/development-setup)
 or you must have a real wallet app, like Phantom or Solflare, installed and set
 up on your emulator.
 
@@ -177,7 +177,7 @@ up on your emulator.
 
 ### Initialize the Anchor Workspace
 
-An anchor workspace needs to be initialized to enable solana program
+An Anchor workspace needs to be initialized to enable Solana program
 development, deployment, and testing within this repository.
 
 ```shell
@@ -186,13 +186,13 @@ cd cash-app-clone
 anchor init cash-app
 ```
 
-Note: You must have the [anchor CLI](https://www.anchor-lang.com/docs/cli)
+Note: You must have the [Anchor CLI](https://www.anchor-lang.com/docs/cli)
 installed to run this command.
 
-Once the anchor workspace has been initialized, navigate to to
+Once the Anchor workspace has been initialized, navigate to to
 `cash-app/programs/cash-app/src/lib.rs` to start writing the program code.
 
-Your anchor program should already be defined by initializing the anchor work
+Your Anchor program should already be defined by initializing the Anchor work
 space and should look as follows:
 
 ```rust
@@ -415,7 +415,7 @@ that only the owner can call this instruction. This is why the following
 validation check was implemented:
 `require!(cash_account.owner = ctx.accounts.signer, ErrorCode::InvalidSigner)`.
 
-For error handling. the `#[error_code]` anchor macro is used, which generates
+For error handling. the `#[error_code]` Anchor macro is used, which generates
 `Error` and `type Result<T> = Result<T, Error> ` types to be used as return
 types from Anchor instruction handlers. Importantly, the attribute implements
 `From` on the `ErrorCode` to support converting from the user defined error enum
@@ -810,22 +810,22 @@ pub mod cash_app {
 }
 ```
 
-Now your solana program should match the final version here: /// FIX ME: Add
+Now your Solana program should match the final version here: /// FIX ME: Add
 link to github code in program examples
 
 ### Additional Solana Program Development Information
 
-If there is any confusion on the above anchor macros, structs, or functions
+If there is any confusion on the above Anchor macros, structs, or functions
 defined, please refer to the
 [Basic CRUD dApp on Solana Guide](https://github.com/solana-foundation/developer-content/blob/main/content/guides/dapps/journal.md#writing-a-solana-program-with-anchor)
 for a guide with a more granular explanation.
 
-For more in-depth understanding of the anchor framework, review
+For more in-depth understanding of the Anchor framework, review
 [The Anchor Book](https://book.anchor-lang.com/).
 
 ### Build and Deploy an Anchor Program
 
-First, we need to deploy the anchor program. For testing purposes, you can
+First, we need to deploy the Anchor program. For testing purposes, you can
 either deploy to your localnet or to devnet.
 
 - `Devnet` is a public test network provided by Solana that more closely
@@ -836,7 +836,7 @@ either deploy to your localnet or to devnet.
   completely mimic real-world conditions of the blockchain.
 
 In the next section of this guide, you'll need the program deployed to localnet
-to run the anchor test suite, so deploy to localnet now.
+to run the Anchor test suite, so deploy to localnet now.
 
 Navigate to `cash-app-clone/cash-app` in your terminal.
 
@@ -844,7 +844,7 @@ Navigate to `cash-app-clone/cash-app` in your terminal.
 solana-test-validator
 ```
 
-This runs a local test validator to simulate the solana blockchain environment
+This runs a local test validator to simulate the Solana blockchain environment
 on your own machine. Note: You cannot deploy to localnet unless your test
 validator is running.
 
@@ -874,7 +874,7 @@ It specifically updates the `lib.rs` and `Anchor.toml` files.
 
 ### Testing an Anchor Program
 
-Testing Solana Anchor programs involves simulating the behavior of the solana
+Testing Solana Anchor programs involves simulating the behavior of the Solana
 program and ensuring it operates as expected. For the below test, we'll cover
 the following:
 
@@ -888,7 +888,7 @@ the following:
 - User A requests funds again from User B
 - User B declines the request
 
-When initializing an anchor workspace, a file for typescript tests is generated.
+When initializing an Anchor workspace, a file for typescript tests is generated.
 Navigate to `cash-app-clone/cash-app/tests/cash-app.ts` to find the testing
 template, which will already have the required modules imported.
 
@@ -911,7 +911,7 @@ program's data. It simplifies interacting with the Solana blockchain by
 abstracting many of the lower-level details.
 
 Next, we need to define the wallet accounts that will be interacting with the
-solana program as well as their `cash_account` PDAs. `myWallet` is the
+Solana program as well as their `cash_account` PDAs. `myWallet` is the
 provider's wallet, meaning that it is already integrated with the
 `AnchorProvider` and is configured when the `provider` is initialized. Since
 `yourWallet` is a new wallet being generated, it will need to be funded with SOL
@@ -946,7 +946,7 @@ it("A to B user flow", async () => {
 });
 ```
 
-Now we can interact with the solana program. First we need to initialize each
+Now we can interact with the Solana program. First we need to initialize each
 user's `cash_account`.
 
 ```typescript
@@ -992,7 +992,7 @@ Since any other instruction call is handled exactly as described above, you can
 complete this test example independently. To review your work, you can see the
 completed test file here.
 
-/// FIXME: Add github link to anchor tests from program examples
+/// FIXME: Add github link to Anchor tests once code is merged
 
 Lastly, run your test suite against your localnet.
 
@@ -1002,12 +1002,12 @@ anchor test
 
 ## Connecting a Solana Program to a React-Native Expo App
 
-Now that we have a working solana program, we need to integrate this with the UI
+Now that we have a working Solana program, we need to integrate this with the UI
 of the dApp.
 
 ### Android Emulator
 
-Lets get the android emulator running so we can see in real time the UI updates
+Lets get the Android emulator running so we can see in real time the UI updates
 that we will make throughout this guide.
 
 You must have an EAS account and be logged into your account in the EAS cli, to
@@ -1025,16 +1025,16 @@ Then in a new terminal window run:
 npx expo start --dev-client
 ```
 
-Install the build on your android emulator and keep it running in a separate
+Install the build on your Android emulator and keep it running in a separate
 window. Every time you save a file, the emulator will refresh.
 
 ### Initial Program Connection
 
 We can create a custom hook that accepts the public key of the user as a
-parameter that is designed to interact with our deployed solana program. By
+parameter that is designed to interact with our deployed Solana program. By
 providing the program ID, the rpc endpoint that the program was deployed to, the
 IDL of the program, and the PDA of a specified user, we can create the logic
-required to manage interactions with the solana program. Create a new file under
+required to manage interactions with the Solana program. Create a new file under
 `utils/useCashAppProgram.tsx`, to implement this function.
 
 Since we want this app to be publicly available, deploy your program to devnet
@@ -1086,7 +1086,7 @@ This function returns:
 
 - `cashAppPDA` - The connect user's Program Derived Address (PDA) for their cash
   account
-- `cashAppProgramID` - The public key of the deployed solana program on devnet
+- `cashAppProgramID` - The public key of the deployed Solana program on devnet
 - `cashAppProgram` - The cash app program which provides the IDL deserialized
   client representation of an Anchor program.
 
@@ -1322,7 +1322,7 @@ and a button to withdraw funds from your account.
 
 In the expo template we are using, there is already similar functionality.
 However, this code is for your connected wallet balance rather than the cash
-account's balance. So we need to connect this feature to our deployed solana
+account's balance. So we need to connect this feature to our deployed Solana
 program and query the balance of the user's `cash_account` instead.
 
 First simplify the home screen to just:
@@ -1419,7 +1419,7 @@ export function AccountBalance({ address }: { address: PublicKey }) {
 Next, we need to update the buttons to deposit and withdraw funds. Go to the
 `AccountButtonGroup` function.
 
-To be able to call and execute an instruction from the deployed solana program,
+To be able to call and execute an instruction from the deployed Solana program,
 we can use the program namespaces which map one-to-one to program methods and
 accounts.
 
@@ -1482,7 +1482,7 @@ const depositFunds = useCallback(
 
 This function uses React's useCallback hook to create a memoized callback
 function that handles the process of depositing funds within the connected
-solana program. It accepts a `Program` parameter which is an Anchor program
+Solana program. It accepts a `Program` parameter which is an Anchor program
 interface for the `CashApp` dApp.
 
 Since the `namespace` is generally used as follows:
@@ -1702,7 +1702,7 @@ from one user to another.
 #### Pay Component
 
 For the pay page, we'll need to call the `transferFunds` function from the cash
-app solana program. To do this, we'll be using the same process that was
+app Solana program. To do this, we'll be using the same process that was
 described for `depositFunds`. However, the `TransferFunds` struct described in
 the CashApp Solana Program requires 2 `cash_account` accounts rather than the
 one account that is required for `depositFunds`. So what needs to change is
@@ -1732,7 +1732,7 @@ amount to transfer and the public key of the signer.
 #### Request Component
 
 For the request page, we'll need to call the `newRequest` function from the cash
-app solana program. This function also requires multiple accounts. Here you'll
+app Solana program. This function also requires multiple accounts. Here you'll
 need the `pending_request` account and the `cash_account` of the signer.
 
 ```typescript
@@ -2303,7 +2303,7 @@ button, we'll want to generate a new Solana Pay URL and send that value outside
 of the modal to the Scan Screen so that the screen will render and display the
 new QR code.
 
-We can do this with the solana pay api, state handling, conditional rendering,
+We can do this with the Solana Pay API, state handling, conditional rendering,
 and data submission between the two components, as shown below:
 
 ```typescript
