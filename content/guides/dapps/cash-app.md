@@ -177,8 +177,8 @@ up on your emulator.
 
 ### Initialize the Anchor Workspace
 
-An anchor workspace needs to be initialized to enable solana program development,
-deployment, and testing within this repository.
+An anchor workspace needs to be initialized to enable solana program
+development, deployment, and testing within this repository.
 
 ```shell
 cd cash-app-clone
@@ -489,11 +489,11 @@ there.
 
 To be able to send funds to another user, similar to Cash App, both users must
 have created an account. We're sending funds to the user's `cash_account` PDA,
-not the user's wallet. So each user needs to initialize a cash account by calling
-the `initialize_account` instruction to create their unique PDA derived from
-their wallet public key. We'll need to keep this in mind when designing the UI/UX
-of the onboarding process for this dApp later on to ensure every user calls the
-`initialize_account` instruction when signing up for an account.
+not the user's wallet. So each user needs to initialize a cash account by
+calling the `initialize_account` instruction to create their unique PDA derived
+from their wallet public key. We'll need to keep this in mind when designing the
+UI/UX of the onboarding process for this dApp later on to ensure every user
+calls the `initialize_account` instruction when signing up for an account.
 
 Now that the basic payment functionality is enabled, we want to be able to
 interact with friends. So we need to add instructions for adding friends,
