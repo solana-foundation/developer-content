@@ -46,7 +46,7 @@ program, integrate the Solana Name Service SDK, and integrate Solana Pay.
 - Anchor PDAs and accounts
 - Deploying a Solana program
 - Testing a Solana program
-- Connecting an on-chain program to a mobile react-native UI
+- Connecting an onchain program to a mobile React Native UI
 - Solana Pay
 - Solana Name Service
 
