@@ -7,7 +7,7 @@ description:
   mobile app that is both Android and iOS compatible. This app will mimic a cash
   app experience but run on the Solana blockchian, showcasing that web3 products
   can have the same user experience as web2 products. To build this, we will
-  need to write an Anchor program, integrate the Solana Name Service sdk, and
+  need to write an Anchor program, integrate the Solana Name Service SDK, and
   integrate Solana pay."
 tags:
   - quickstart
