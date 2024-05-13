@@ -97,14 +97,14 @@ cargo add solana-program
 <Callout title="Pro Tip">
 It is highly recommended to keep your `solana-program` and other
 Solana Rust dependencies in-line with your installed version of the Solana
-CLI. For example, if you are running Solana CLI `1.17.17`, you can instead
+CLI. For example, if you are running Solana CLI `1.18.12 `, you can instead
 run:
 
 ```
-cargo add solana-program@"=1.17.17"
+cargo add solana-program@"=1.18.12"
 ```
 
-This will ensure your crate uses only `1.17.17` and nothing else. If you
+This will ensure your crate uses only `1.18.12` and nothing else. If you
 experience compatibility issues with Solana dependencies, check out the
 [Solana Stack Exchange](https://solana.stackexchange.com/questions/9798/error-building-program-with-solana-program-v1-18-and-cli-v1-17/9799)
 
