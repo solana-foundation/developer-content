@@ -43,6 +43,35 @@ In this guide, you will learn how to create a react-native mobile app that is bo
 
 ## What You Will Build
 
+### Home Screen 
+<div align="center">
+    <img src="./cash-app-images/HomeScreen.png" alt="Cash Balance" width="200"/>
+    <span style="display: inline-block; width: 20px;"></span> 
+    <img src="./cash-app-images/CashOutModal.png" alt="Cash Out Modal" width="200"/>
+</div>
+
+### Payment Screen 
+
+<div align="center">
+    <img src="./cash-app-images/PaymentScreen.png" alt="Payment Screen" width="200"/>
+    <span style="display: inline-block; width: 20px;"></span> 
+    <img src="./cash-app-images/RequestScreen.png" alt="Request Screen" width="200"/>
+</div>
+
+### QR Screen
+<div align="center">
+    <img src="./cash-app-images/QRScreen.png" alt="Request Screen" width="200"/>
+    <span style="display: inline-block; width: 20px;"></span> 
+    <img src="./cash-app-images/QRModal.png" alt="QR Modal" width="200"/>
+    <span style="display: inline-block; width: 20px;"></span> 
+    <img src="./cash-app-images/QRGenerated.png" alt="QR Generated" width="200"/>
+</div>
+
+### Activity Screen 
+<div align="center">
+    <img src="./cash-app-images/ActivityScreen.png" alt="Activity Screen" width="200"/>
+</div>
+
 ## Prerequisites
 
 For this guide, you will need to have your local development environment setup
