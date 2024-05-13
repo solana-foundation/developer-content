@@ -101,7 +101,7 @@ review this guide:
 
 - [Basic CRUD dApp on Solana](https://github.com/solana-foundation/developer-content/blob/main/content/guides/dapps/journal.md#writing-a-solana-program-with-anchor)
 
-For an introduction to Solana mobile development, review the Solana mobile docs:
+For an introduction to Solana Mobile development, review the Solana Mobile docs:
 
 - [Solana Mobile Introduction](https://docs.solanamobile.com/getting-started/intro)
 
