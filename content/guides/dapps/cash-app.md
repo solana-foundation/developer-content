@@ -1480,7 +1480,7 @@ const depositFunds = useCallback(
 );
 ```
 
-This function uses React's useCallback hook to create a memoized callback
+This function uses React's `useCallback` hook to create a memoized callback
 function that handles the process of depositing funds within the connected
 Solana program. It accepts a `Program` parameter which is an Anchor program
 interface for the `CashApp` dApp.
