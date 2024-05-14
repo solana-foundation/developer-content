@@ -112,38 +112,41 @@ resets the state by deleting all existing data and starting fresh.
 ## Runtime Features
 
 Solana has a feature set mechanism that allows you to enable or disable certain
-blockchain features when running the test validator. By default, the test validator runs with all runtime features activated.
+blockchain features when running the test validator. By default, the test
+validator runs with all runtime features activated.
 
-To query the runtime feature status: 
+To query the runtime feature status:
 
-```shell 
-solana feature status <ADDRESS> 
-``` 
+```shell
+solana feature status <ADDRESS>
+```
+
 - `ADDRESS` is the feature status to query [default: all known features]
 
-To activate a specific feature: 
+To activate a specific feature:
 
 ```shell
 solana feature activate <FEATURE_KEYPAIR> <CLUSTER>
 ```
+
 - `FEATURE_KEYPAIR` is the signer for the feature to activate
-- `CLUSTER` is the cluster to activate the feature on 
+- `CLUSTER` is the cluster to activate the feature on
 
-To deactivate specific features in genesis: 
+To deactivate specific features in genesis:
 
-```shell 
+```shell
 solana-test-validator --deactivate-feature <FEATURE_PUBKEY>
 ```
 
 ## Changing Versions
 
-To check your current `solana-test-validator` version: 
+To check your current `solana-test-validator` version:
 
-```shell 
-solana-test-validator --version 
+```shell
+solana-test-validator --version
 ```
 
-Your `solana-test-validator` runs on the same version as the solana CLI version. 
+Your `solana-test-validator` runs on the same version as the solana CLI version.
 
 To test your programs against different versions of the Solana runtime, you can
 install multiple versions of the Solana CLI and switch between them using the
@@ -152,24 +155,26 @@ solana-install set command:
 ```shell
 solana-install init <VERSION>
 ```
-- `VERSION` is the desired CLI version to install 
+
+- `VERSION` is the desired CLI version to install
 
 Make sure to restart your solana-test-validator after changing versions to
 ensure it runs the correct version.
 
 ## Cloning Programs
 
-To add existing on-chain programs to your local environment, you can clone the program. 
+To add existing on-chain programs to your local environment, you can clone the
+program.
 
-To copy an account from the cluster:  
+To copy an account from the cluster:
 
 ```shell
 solana-test-validator --clone PROGRAM_ADDRESS
 ```
 
-This is useful for testing interactions with standard programs. 
+This is useful for testing interactions with standard programs.
 
-To copy an upgradeable program and its executable data from the cluster: 
+To copy an upgradeable program and its executable data from the cluster:
 
 ```shell
 solana-test-validator --clone-upgradeable-program PROGRAM_ADDRESS
@@ -177,14 +182,15 @@ solana-test-validator --clone-upgradeable-program PROGRAM_ADDRESS
 
 ## Resetting State on Accounts at Startup
 
-### Reset to Genesis 
+### Reset to Genesis
 
-To reset the ledger to the genesis state: 
+To reset the ledger to the genesis state:
 
 ```shell
-solana-test-validator --reset 
+solana-test-validator --reset
 ```
-By default the validator will resume an existing ledger *(if present)*
+
+By default the validator will resume an existing ledger _(if present)_
 
 To reset the state of specific accounts every time you start the validator, you
 can use a combination of account snapshots and the `--account` flag. First, save
@@ -213,7 +219,7 @@ Before interacting with the test validator, it's useful to confirm its status
 and ensure it is running correctly.
 
 ```shell
-solana ping 
+solana ping
 ```
 
 This command pings the local test validator and returns the current blockhash
@@ -224,7 +230,7 @@ and latency, verifying that it is active.
 To create a new keypair (account), use:
 
 ```shell
-solana-keygen new 
+solana-keygen new
 ```
 
 This command creates a new keypair and saves it to the specified file.
@@ -248,7 +254,7 @@ This command sends 10 SOL to the specified account address.
 To deploy a compiled program (BPF) to the test validator:
 
 ```shell
-solana program deploy /path/to/compiled_program
+solana program deploy <PROGRAM_FILE_PATH>
 ```
 
 This uploads and deploys a program to the blockchain.
@@ -256,7 +262,7 @@ This uploads and deploys a program to the blockchain.
 To check the details of a deployed program:
 
 ```shell
-solana program show <PROGRAM_ID>
+solana program show <ACCOUNT_ADDRESS>
 ```
 
 ### Sending Transactions
@@ -264,10 +270,10 @@ solana program show <PROGRAM_ID>
 To transfer SOL from one account to another:
 
 ```shell
-solana transfer --from /path/to/source/keypair.json <RECIPIENT_ADDRESS> 5
+solana transfer --from /path/to/keypair.json <RECIPIENT_ADDRESS> <AMOUNT>
 ```
 
-This sends 5 SOL from the source account to the recipient address.
+This sends `AMOUNT` of SOL from the source account to the `RECIPIENT_ADDRESS`.
 
 ### Simulating and Confirming Transactions
 
@@ -275,7 +281,7 @@ Before actually sending a transaction, you can simulate it to see if it would
 succeed:
 
 ```shell
-solana transfer <RECIPIENT_ADDRESS> 1 --from /path/to/keypair.json --simulate
+solana transfer --from /path/to/keypair.json --simulate <RECIPIENT_ADDRESS> <AMOUNT>
 ```
 
 To confirm the details and status of a transaction:
@@ -284,34 +290,40 @@ To confirm the details and status of a transaction:
 solana confirm <TRANSACTION_SIGNATURE>
 ```
 
-### Viewing Recent Block Production 
-To see information about recent block production, which can be useful for debugging performance issues:
+### Viewing Recent Block Production
+
+To see information about recent block production, which can be useful for
+debugging performance issues:
 
 ```shell
 solana block-production
 ```
+
 ### Adjusting Logs
 
 For debugging, you might want more detailed logs:
 
 ```shell
-solana logs 
+solana logs
 ```
 
 This streams log messages from the validator.
 
-Useful Tips Logging: 
-- Increase log verbosity with the `-v` flag if you need more detailed output for debugging. 
-- Use the `--rpc-port` and `--rpc-bind-address` options to customize the RPC server settings. 
-- Adjust the number of CPU cores used by the validator with the `--gossip-host` option to simulate network conditions more realistically.
+Useful Tips Logging:
 
+- Increase log verbosity with the `-v` flag if you need more detailed output for
+  debugging.
+- Use the `--rpc-port` and `--rpc-bind-address` options to customize the RPC
+  server settings.
+- Adjust the number of CPU cores used by the validator with the `--gossip-host`
+  option to simulate network conditions more realistically.
 
-### Solana CLI Commands 
+### Solana CLI Commands
 
-To view all CLI commands and see other ways to interact with the test validator: 
+To view all CLI commands and see other ways to interact with the test validator:
 
-```shell 
+```shell
 solana --help
 ```
 
-This command list all flags, options, and subcommands available. 
+This command list all flags, options, and subcommands available.
