@@ -1,5 +1,5 @@
 ---
-date: Jul 29, 2023
+date: May 14, 2023
 difficulty: intro
 title: "Solana Test Validator Guide"
 seoTitle: "Solana Test Validator Guide"
