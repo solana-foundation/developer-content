@@ -109,50 +109,82 @@ solana-test-validator --reset
 If the ledger exists, this command will reset the ledger to genesis, which
 resets the state by deleting all existing data and starting fresh.
 
-## Feature Flags
+## Runtime Features
 
 Solana has a feature set mechanism that allows you to enable or disable certain
-blockchain features when running your localnet. You can check the currently
-active features with:
+blockchain features when running the test validator. By default, the test validator runs with all runtime features activated.
+
+To query the runtime feature status: 
+
+```shell 
+solana feature status <ADDRESS> 
+``` 
+- `ADDRESS` is the feature status to query [default: all known features]
+
+To activate a specific feature: 
 
 ```shell
-solana feature status 
+solana feature activate <FEATURE_KEYPAIR> <CLUSTER>
+```
+- `FEATURE_KEYPAIR` is the signer for the feature to activate
+- `CLUSTER` is the cluster to activate the feature on 
+
+To deactivate specific features in genesis: 
+
+```shell 
+solana-test-validator --deactivate-feature <FEATURE_PUBKEY>
 ```
 
-To enable a specific feature, you need to know its feature ID, which you can
-find in the (Solana feature proposal)[https://spl.solana.com/feature-proposal]
-repository. To enable a feature, use:
+## Changing Versions
 
-```shell
-solana feature activate <FEATURE_ID> 
+To check your current `solana-test-validator` version: 
+
+```shell 
+solana-test-validator --version 
 ```
 
-## Changing Solana Versions
+Your `solana-test-validator` runs on the same version as the solana CLI version. 
 
 To test your programs against different versions of the Solana runtime, you can
 install multiple versions of the Solana CLI and switch between them using the
 solana-install set command:
 
 ```shell
-solana-install set 1.10.32
+solana-install init <VERSION>
 ```
+- `VERSION` is the desired CLI version to install 
 
 Make sure to restart your solana-test-validator after changing versions to
 ensure it runs the correct version.
 
 ## Cloning Programs
 
-To add existing on-chain programs to your local environment, use the --clone
-flag followed by the program's address:
+To add existing on-chain programs to your local environment, you can clone the program. 
+
+To copy an account from the cluster:  
 
 ```shell
 solana-test-validator --clone PROGRAM_ADDRESS
 ```
 
-This is useful for testing interactions with standard programs like Token
-Extensions.
+This is useful for testing interactions with standard programs. 
+
+To copy an upgradeable program and its executable data from the cluster: 
+
+```shell
+solana-test-validator --clone-upgradeable-program PROGRAM_ADDRESS
+```
 
 ## Resetting State on Accounts at Startup
+
+### Reset to Genesis 
+
+To reset the ledger to the genesis state: 
+
+```shell
+solana-test-validator --reset 
+```
+By default the validator will resume an existing ledger *(if present)*
 
 To reset the state of specific accounts every time you start the validator, you
 can use a combination of account snapshots and the `--account` flag. First, save
@@ -162,7 +194,7 @@ the desired state of an account as a JSON file:
 solana account PROGRAM_ADDRESS --output json > account_state.json
 ```
 
-Then load this state each time you start the validator:
+Then load this state each time you reset the validator:
 
 ```shell
 solana-test-validator --reset --account PROGRAM_ADDRESS account_state.json
@@ -272,3 +304,14 @@ Useful Tips Logging:
 - Increase log verbosity with the `-v` flag if you need more detailed output for debugging. 
 - Use the `--rpc-port` and `--rpc-bind-address` options to customize the RPC server settings. 
 - Adjust the number of CPU cores used by the validator with the `--gossip-host` option to simulate network conditions more realistically.
+
+
+### Solana CLI Commands 
+
+To view all CLI commands and see other ways to interact with the test validator: 
+
+```shell 
+solana --help
+```
+
+This command list all flags, options, and subcommands available. 
