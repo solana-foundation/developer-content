@@ -51,7 +51,7 @@ program in Solana, such as:
   the network that contain instructions, signatures, and more.
 
 For more information on those core concepts, check out the
-[Solana developer documentation](https://solana.com/developers).
+[Solana developer documentation](https://solana.com/docs).
 
 Let’s now look at the differences in **project setup**.
 
@@ -85,7 +85,7 @@ instruction_data: &[u8], ) -> ProgramResult {
     }
 ```
 
-These three parameters are passed to every onchain program.
+These three parameters are passed to every onchain program:
 
 1. The `program_id` is the public key of the current program.
 2. The `accounts` are all accounts that are required to process the instruction.
@@ -212,18 +212,14 @@ compute units with `sol_log_compute_units`.
 While the Solana CLI and the `solana_program` crate are all that is needed to
 get started, there are a couple of helpful tools which can accelerate learning.
 
-<div align="center">
-    <img src="../../../public/assets/guides/rust-to-solana/network-diagram.png" alt="Network Diagram" style="max-width: 80%; height: auto;"/>
-</div>
+![Network Diagram](../../../public/assets/guides/rust-to-solana/network-diagram.png)
 
 ### Solana Playground
 
 The [Solana Playground](https://beta.solpg.io/) is a browser-based IDE that
 allows developers to develop and deploy Solana programs.
 
-<div align="center">
-    <img src="../../../public/assets/guides/rust-to-solana/solana-playground.png" alt="Solana Playground" style="max-width: 80%; height: auto;"/>
-</div>
+![Solana Playground](../../../public/assets/guides/rust-to-solana/solana-playground.png)
 
 It’s the easiest way to begin developing with Solana, and it supports building,
 testing, and deploying Solana Rust programs. Additionally, a number of built-in
@@ -268,6 +264,9 @@ This guide has covered the basics of developing for Solana with Rust, from setup
 details and restrictions to development environments and frameworks.
 
 For more Rust-related Solana resources, check out the
-[Developing with Rust page](https://solana.com/docs/programs/lang-rust). And for
-other Solana program examples written with Rust, check out these
+[Developing with Rust page](https://solana.com/docs/programs/lang-rust). 
+
+For other Solana program examples written with Rust, check out these
 [examples on GitHub](https://github.com/solana-labs/solana-program-library/tree/master/examples/rust).
+
+To view several example solana programs, check out the [Solana Program Examples on Github](https://solana.com/docs/programs/examples).
