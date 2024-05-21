@@ -1,7 +1,7 @@
 ---
 date: May 21, 2024
 difficulty: Intro
-title: "Moving from Rust to Solana Guide"
+title: "Getting started with Solana with Rust Experience"
 description: "Learn how to start building on Solana as a Rust Engineer"
 tags:
   - rust
@@ -128,8 +128,9 @@ are the differences to be aware of:
 
 ### Package Limitations
 
-The following packages are unavailable: rand
+The following packages are unavailable:
 
+- rand
 - std::fs
 - std::net
 - std::future
@@ -166,21 +167,42 @@ of. First, the `println!` has been replaced with the computationally simpler
 as follows:
 
 ```rust
-msg!(“Your message”);
+msg!("Your message");
 msg!(0_64, 1_64, 2_64);
-msg!(“Your variable: {:?}”, variable);
+msg!("Your variable: {:?}", variable);
 ```
 
 The `panic!`, `assert!`, and any internal panics are also output to the program
 logs by default. However, this can be modified with a custom panic handler.
 
+As a better alternative to `panic!`, error handling should be used:
+
+```rust
+#[error_code]
+pub enum MyErrors {
+    CustomError,
+}
+
+#[program]
+pub mod anchor_error_test {
+    use super::*;
+
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        //panic!("PANIC");
+        return Err(MyErrors::CustomError.into());
+
+        Ok(())
+    }
+}
+```
+
 ## Compute Budget
 
 As a Rust developer, efficient computing is nothing new. What may be different
 is that in Solana, each transaction has a fixed
-[compute budget](https://solana.com/docs/core/runtime#compute-budget) that it
-must not surpass. When transactions exceed the compute budget, they are halted
-and return an error.
+[compute budget](https://solana.com/developers/guides/advanced/how-to-request-optimal-compute)
+that it must not surpass. When transactions exceed the compute budget, they are
+halted and return an error.
 
 Programs can access the number of remaining compute units via the
 `sol_remaining_compute_units` system call, and can log the remaining number of
@@ -221,8 +243,9 @@ some security checks by default, making Solana programs more secure.
 To create a new program, simply create a new Anchor project in the Solana
 playground.
 
-Alternatively, install the Anchor CLI locally, and then use
-`anchor init <project-name>` to create a new Anchor project.
+Alternatively,
+[install the Anchor CLI](https://www.anchor-lang.com/docs/installation) locally,
+and then use `anchor init <project-name>` to create a new Anchor project.
 
 ## Creating Off-chain Programs
 
@@ -231,7 +254,8 @@ programs** in Rust. However, it’s also possible to develop **off-chain Solana
 clients** in Rust. This can be done by using the
 [solana_sdk crate](https://docs.rs/solana-sdk/latest/solana_sdk/). This contains
 the [solana_client crate](https://docs.rs/solana-client/latest/solana_client/)
-that allows Rust programs to interact with a Solana node via the JSON RPC API.
+that allows Rust programs to interact with a Solana node via the
+[JSON RPC API](https://solana.com/docs/rpc).
 
 Another option is to use the
 [anchor_client crate](https://docs.rs/anchor-client/latest/anchor_client/) which
