@@ -214,7 +214,7 @@ While the Solana CLI and the `solana_program` crate are all that is needed to
 get started, there are a couple of helpful tools which can accelerate learning.
 
 <div align="center">
-    <img src="./rust-to-solana-img/network-diagram.png" alt="Network Diagram" style="max-width: 80%; height: auto;"/>
+    <img src="../../../public/assets/guides/rust-to-solana/network-diagram.png" alt="Network Diagram" style="max-width: 80%; height: auto;"/>
 </div>
 
 ### Solana Playground
@@ -223,7 +223,7 @@ The [Solana Playground](https://beta.solpg.io/) is a browser-based IDE that
 allows developers to develop and deploy Solana programs.
 
 <div align="center">
-    <img src="./rust-to-solana-img/solana-playground.png" alt="Solana Playground" style="max-width: 80%; height: auto;"/>
+    <img src="../../../public/assets/guides/rust-to-solana/solana-playground.png" alt="Solana Playground" style="max-width: 80%; height: auto;"/>
 </div>
 
 It’s the easiest way to begin developing with Solana, and it supports building,
