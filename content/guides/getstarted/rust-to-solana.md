@@ -239,7 +239,7 @@ the building of secure Solana programs. It can help by handling standard
 boilerplate code, speeding up the development cycle. Additionally, it provides
 some security checks by default, making Solana programs more secure.
 
-To create a new program, simply create a new Anchor project in the Solana
+To create a new program, simply [create a new Anchor project](https://solana.com/developers/guides/getstarted/intro-to-anchor) in the Solana
 playground.
 
 Alternatively,
