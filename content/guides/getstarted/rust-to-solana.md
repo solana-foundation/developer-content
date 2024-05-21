@@ -100,8 +100,9 @@ entrypoint!(process_instruction);
 
 ### Building and Testing
 
-After [installing the Solana command-line tools](https://solana.com/developers/guides/getstarted/setup-local-development#3-install-the-solana-cli), projects can be built to target
-host machines as normal with `cargo build`.
+After
+[installing the Solana command-line tools](https://solana.com/developers/guides/getstarted/setup-local-development#3-install-the-solana-cli),
+projects can be built to target host machines as normal with `cargo build`.
 
 However, to target the Solana runtime, use `cargo build-bpf` or
 `cargo build-spf` which will compile the program to the bytecode necessary to
@@ -235,8 +236,9 @@ the building of secure Solana programs. It can help by handling standard
 boilerplate code, speeding up the development cycle. Additionally, it provides
 some security checks by default, making Solana programs more secure.
 
-To create a new program, simply [create a new Anchor project](https://solana.com/developers/guides/getstarted/intro-to-anchor) in the Solana
-playground.
+To create a new program, simply
+[create a new Anchor project](https://solana.com/developers/guides/getstarted/intro-to-anchor)
+in the Solana playground.
 
 Alternatively,
 [install the Anchor CLI](https://www.anchor-lang.com/docs/installation) locally,
@@ -264,9 +266,10 @@ This guide has covered the basics of developing for Solana with Rust, from setup
 details and restrictions to development environments and frameworks.
 
 For more Rust-related Solana resources, check out the
-[Developing with Rust page](https://solana.com/docs/programs/lang-rust). 
+[Developing with Rust page](https://solana.com/docs/programs/lang-rust).
 
 For other Solana program examples written with Rust, check out these
 [examples on GitHub](https://github.com/solana-labs/solana-program-library/tree/master/examples/rust).
 
-To view several example solana programs, check out the [Solana Program Examples on Github](https://solana.com/docs/programs/examples).
+To view several example solana programs, check out the
+[Solana Program Examples on Github](https://solana.com/docs/programs/examples).
