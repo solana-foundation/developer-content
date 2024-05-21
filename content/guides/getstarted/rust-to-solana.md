@@ -213,7 +213,7 @@ compute units with `sol_log_compute_units`.
 While the Solana CLI and the `solana_program` crate are all that is needed to
 get started, there are a couple of helpful tools which can accelerate learning.
 
-![Network Diagram](../../../public/assets/guides/rust-to-solana/network-diagram.png)
+![Network Diagram](/public/assets/guides/rust-to-solana/network-diagram.png)
 
 ### Solana Playground
 
