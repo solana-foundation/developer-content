@@ -57,18 +57,17 @@ Let’s now look at the differences in **project setup**.
 
 ## Key Setup Details
 
-Onchain programs for Solana in Rust are still Rust programs at heart. They
-still follow the standard Rust project with a `/src` folder and `Cargo.toml`
-file in the root. That said, there are several key differences.
+Onchain programs for Solana in Rust are still Rust programs at heart. They still
+follow the standard Rust project with a `/src` folder and `Cargo.toml` file in
+the root. That said, there are several key differences.
 
 ### Project Dependencies
 
 To get started, the
 [solana-program crate](https://crates.io/crates/solana-program) is required for
-every onchain Solana program written with Rust. This is the base library for
-all onchain Rust programs. The library defines macros for the required
-**program entrypoint** _(see below)_, **core data types**, **logging macros**,
-and more.
+every onchain Solana program written with Rust. This is the base library for all
+onchain Rust programs. The library defines macros for the required **program
+entrypoint** _(see below)_, **core data types**, **logging macros**, and more.
 
 ### Program Entrypoint
 
@@ -260,7 +259,8 @@ that allows Rust programs to interact with a Solana node via the
 Another option is to use the
 [anchor_client crate](https://docs.rs/anchor-client/latest/anchor_client/) which
 interacts with Solana programs written in Anchor via RPC. Alternatively,
-consider writing onchain programs in Rust, and off-chain [clients in JS/TS](https://solana.com/de/docs/clients/javascript-reference).
+consider writing onchain programs in Rust, and off-chain
+[clients in JS/TS](https://solana.com/de/docs/clients/javascript-reference).
 
 ## Wrap Up
 
