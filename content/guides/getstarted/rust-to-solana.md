@@ -20,7 +20,7 @@ keywords:
 ---
 
 Developers looking to get into Solana development who already know Rust have a
-great head start. Rust is an officially supported language for writing on-chain
+great head start. Rust is an officially supported language for writing onchain
 programs for the Solana Blockchain. However, several key differences in the
 language's usage could otherwise be confusing.
 
@@ -57,7 +57,7 @@ Let’s now look at the differences in **project setup**.
 
 ## Key Setup Details
 
-On-chain programs for Solana in Rust are still Rust programs at heart. They
+Onchain programs for Solana in Rust are still Rust programs at heart. They
 still follow the standard Rust project with a `/src` folder and `Cargo.toml`
 file in the root. That said, there are several key differences.
 
@@ -65,8 +65,8 @@ file in the root. That said, there are several key differences.
 
 To get started, the
 [solana-program crate](https://crates.io/crates/solana-program) is required for
-every on-chain Solana program written with Rust. This is the base library for
-all on-chain Rust programs. The library defines macros for the required
+every onchain Solana program written with Rust. This is the base library for
+all onchain Rust programs. The library defines macros for the required
 **program entrypoint** _(see below)_, **core data types**, **logging macros**,
 and more.
 
@@ -86,7 +86,7 @@ instruction_data: &[u8], ) -> ProgramResult {
     }
 ```
 
-These three parameters are passed to every on-chain program.
+These three parameters are passed to every onchain program.
 
 1. The `program_id` is the public key of the current program.
 2. The `accounts` are all accounts that are required to process the instruction.
@@ -249,7 +249,7 @@ and then use `anchor init <project-name>` to create a new Anchor project.
 
 ## Creating Off-chain Programs
 
-So far, this guide has covered the key details of developing **on-chain Solana
+So far, this guide has covered the key details of developing **onchain Solana
 programs** in Rust. However, it’s also possible to develop **off-chain Solana
 clients** in Rust. This can be done by using the
 [solana_sdk crate](https://docs.rs/solana-sdk/latest/solana_sdk/). This contains
@@ -260,7 +260,7 @@ that allows Rust programs to interact with a Solana node via the
 Another option is to use the
 [anchor_client crate](https://docs.rs/anchor-client/latest/anchor_client/) which
 interacts with Solana programs written in Anchor via RPC. Alternatively,
-consider writing on-chain programs in Rust, and off-chain clients in JS/TS.
+consider writing onchain programs in Rust, and off-chain [clients in JS/TS](https://solana.com/de/docs/clients/javascript-reference).
 
 ## Wrap Up
 
