@@ -108,6 +108,8 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
 
       if (!course) throw `Course '${courseSlug}' not found`;
 
+      if (!course.lessons) course.lessons = [];
+
       const lessonIndex = course.lessons.findIndex(
         item => item == current!.slug,
       );
@@ -115,14 +117,14 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
       next =
         course.lessons.length > lessonIndex
           ? flatNavItems.find(item =>
-              item.path?.endsWith(course!.lessons[lessonIndex + 1]),
+              item.path?.endsWith(course!.lessons![lessonIndex + 1]),
             ) || null
           : null;
 
       prev =
         lessonIndex > 0
           ? flatNavItems.find(item =>
-              item.path?.endsWith(course!.lessons[lessonIndex - 1]),
+              item.path?.endsWith(course!.lessons![lessonIndex - 1]),
             ) || null
           : null;
     } catch (err) {

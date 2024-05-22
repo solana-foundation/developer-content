@@ -39,6 +39,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     ).find(item => item.slug == appendix);
 
     if (!course) return notFound();
+    if (!course.lessons) course.lessons = [];
 
     const unsortedLessons = records.filter(
       item => item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1] == course.slug,
@@ -49,7 +50,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     // presort the lessons in their desired order
     records = new Array(unsortedLessons.length);
     unsortedLessons.map(item => {
-      const index = course.lessons.findIndex(el => el == item.slug);
+      const index = course.lessons!.findIndex(el => el == item.slug);
       records[index] = item;
     });
   }
