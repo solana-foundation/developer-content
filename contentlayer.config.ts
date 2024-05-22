@@ -310,16 +310,16 @@ export const CourseRecord = defineDocumentType(() => ({
 
     // validate all lessons listed exist
     lessons: {
-      description: "List of lesson 'slugs' for this course",
+      description: "List of lesson 'slug's for this course",
       type: "list",
       of: { type: "string" },
       resolve: record => {
-        // get the course creator slug from the format: `content/courses/slug`
+        // get the course slug from the format: `content/courses/{slug}`
         const courseSlug = record._raw.sourceFileDir.match(
           /^\/?((content|developers)\/courses)\/(.*)/i,
         )?.[3];
 
-        if (!courseSlug) throw Error("Unable to parse creator slug");
+        if (!courseSlug) throw Error("Unable to parse course slug");
 
         const lessonsDir = path.join(
           path.resolve(),
@@ -373,28 +373,7 @@ export const CourseLessonRecord = defineDocumentType(() => ({
   name: "CourseLessonRecord",
   filePathPattern:
     "{content/courses/**,/content/courses/**,i18n/**/content/courses/**}/**/*.md",
-  computedFields: {
-    ...standardComputedFields,
-
-    // lessons get a custom href
-    // href: {
-    //   description: "Computed href for a lesson",
-    //   type: "string",
-    //   resolve: record => {
-    //     const hrefBase = record._raw.flattenedPath.replace(
-    //       I18N_LOCALE_REGEX,
-    //       "",
-    //     );
-
-    //     return hrefBase
-    //       .replace(
-    //         /^(?:(?:content\/?)?(?:developers\/?)?(?:\/courses\/))(.*)\/lessons\//gm,
-    //         "/developers/courses/lesson/$1-",
-    //       )
-    //       .toLowerCase();
-    //   },
-    // },
-  },
+  computedFields: standardComputedFields,
   fields: {
     // use the standard content fields
     ...basicContentFields,
