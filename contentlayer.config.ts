@@ -302,7 +302,7 @@ export const WorkshopRecord = defineDocumentType(() => ({
 /**
  * Content record schema for the Course metadata file
  *
- * File: `courses/{course-name}/metadata.json`
+ * File: `courses/{course-name}/metadata.yml`
  */
 export const CourseRecord = defineDocumentType(() => ({
   name: "CourseRecord",
