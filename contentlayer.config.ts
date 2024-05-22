@@ -161,6 +161,16 @@ const standardComputedFields: ComputedFields = {
     type: "string",
     resolve: record => computeSlugFromRawDocumentData(record._raw),
   },
+  isExternal: {
+    description: "Is this content just a link to external content?",
+    type: "boolean",
+    resolve: record => {
+      if (!!record.href && record.href.startsWith("http")) {
+        return true;
+      }
+      return false;
+    },
+  },
   href: {
     description: "Computed href for the content",
     type: "string",
@@ -304,8 +314,13 @@ export const CourseRecord = defineDocumentType(() => ({
     href: {
       description: "Computed href for a course",
       type: "string",
-      resolve: record =>
-        `/developers/courses/${computeSlugFromRawDocumentData(record._raw)}`,
+      resolve: record => {
+        if (!!record.href) {
+          return record.href.toString().toLowerCase();
+        }
+
+        return `/developers/courses/${computeSlugFromRawDocumentData(record._raw)}`;
+      },
     },
 
     // validate all lessons listed exist
@@ -314,6 +329,8 @@ export const CourseRecord = defineDocumentType(() => ({
       type: "list",
       of: { type: "string" },
       resolve: record => {
+        if (!record?.lessons) return [];
+
         // get the course slug from the format: `content/courses/{slug}`
         const courseSlug = record._raw.sourceFileDir.match(
           /^\/?((content|developers)\/courses)\/(.*)/i,
@@ -361,7 +378,7 @@ export const CourseRecord = defineDocumentType(() => ({
       type: "list",
       of: { type: "string" },
       description: "List of lesson 'slugs' to be included in this course",
-      required: true,
+      required: false,
     },
   },
 }));
