@@ -229,6 +229,23 @@ export const AuthorRecord = defineDocumentType(() => ({
     slug: standardComputedFields["slug"],
     href: standardComputedFields["href"],
     organization: standardComputedFields["organization"],
+    // set the default values to satisfy types
+    metaOnly: {
+      type: "boolean",
+      resolve: () => true,
+    },
+    isExternal: {
+      type: "boolean",
+      resolve: () => false,
+    },
+    featured: {
+      type: "boolean",
+      resolve: () => false,
+    },
+    featuredPriority: {
+      type: "number",
+      resolve: () => 9999,
+    },
   },
   fields: {
     title: basicContentFields["title"],
@@ -342,11 +359,6 @@ export const WorkshopRecord = defineDocumentType(() => ({
     /**
      * Author specific details
      */
-    author: {
-      type: "string",
-      description: "The name of the original author of this content",
-      required: false,
-    },
     authorDescription: {
       type: "string",
       description: "Brief description of the original author of this content",

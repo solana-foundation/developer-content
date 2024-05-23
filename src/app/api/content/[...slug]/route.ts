@@ -212,11 +212,12 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
   let author: AuthorRecord | undefined = undefined;
 
   // add the author details into the record
-  if (!!record.author) {
+  if (!!record?.author) {
     const allAuthors = getRecordsForGroup("authors", {
       locale: DEFAULT_LOCALE_EN,
     }) as AuthorRecord[];
 
+    // @ts-ignore
     author = allAuthors.find(node => node.slug == record.author);
     // @ts-expect-error
     delete author._raw;
