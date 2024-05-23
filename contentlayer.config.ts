@@ -8,6 +8,8 @@ import {
 import {
   computeSlugFromRawDocumentData,
   getAllContentFiles,
+  throwIfAuthorDoesNotExist,
+  validatedImagePath,
 } from "./src/utils/helpers";
 import path from "path";
 
@@ -24,6 +26,11 @@ const basicContentFields: FieldDefs = {
     type: "string",
     description:
       "Brief description of the content (also used in the SEO metadata)",
+    required: false,
+  },
+  author: {
+    type: "string",
+    description: "Slug of the author that created this content",
     required: false,
   },
   tags: {
@@ -189,7 +196,92 @@ const standardComputedFields: ComputedFields = {
         .toLowerCase();
     },
   },
+  author: {
+    description: "Validated slug of the author that created this content",
+    type: "string",
+    resolve: record => {
+      if (!record?.author) return undefined;
+      throwIfAuthorDoesNotExist(record.author, "Author");
+      return record.author;
+    },
+  },
+  organization: {
+    description: "Validated slug of the organization the author is a member of",
+    type: "string",
+    resolve: record => {
+      if (!record?.organization) return undefined;
+      throwIfAuthorDoesNotExist(record.organization, "Organization");
+      return record.organization;
+    },
+  },
 };
+
+/**
+ * Content record schema for the Author metadata file
+ *
+ * File: `authors/{slug}.yml`
+ */
+export const AuthorRecord = defineDocumentType(() => ({
+  name: "AuthorRecord",
+  filePathPattern:
+    "{content/authors,/content/authors,i18n/**/content/authors}/*.yml",
+  computedFields: {
+    locale: standardComputedFields["locale"],
+    slug: standardComputedFields["slug"],
+    href: standardComputedFields["href"],
+    organization: standardComputedFields["organization"],
+    image: {
+      type: "string",
+      resolve: record => {
+        if (!record?.image) return undefined;
+        return validatedImagePath(record.image, "authors");
+      },
+    },
+    // set the default values to satisfy types
+    metaOnly: {
+      type: "boolean",
+      resolve: () => true,
+    },
+    isExternal: {
+      type: "boolean",
+      resolve: () => false,
+    },
+    featured: {
+      type: "boolean",
+      resolve: () => false,
+    },
+    featuredPriority: {
+      type: "number",
+      resolve: () => 9999,
+    },
+  },
+  fields: {
+    title: basicContentFields["title"],
+    image: basicContentFields["image"],
+    description: basicContentFields["description"],
+    website: {
+      type: "string",
+      description: "Website for this person",
+      required: false,
+    },
+    organization: {
+      type: "string",
+      description:
+        "Author slug of the organization the author is a member of (note: this is a nested author)",
+      required: false,
+    },
+    github: {
+      type: "string",
+      description: "GitHub username",
+      required: false,
+    },
+    twitter: {
+      type: "string",
+      description: "GitHub username",
+      required: false,
+    },
+  },
+}));
 
 /**
  *
@@ -276,11 +368,6 @@ export const WorkshopRecord = defineDocumentType(() => ({
     /**
      * Author specific details
      */
-    author: {
-      type: "string",
-      description: "The name of the original author of this content",
-      required: false,
-    },
     authorDescription: {
       type: "string",
       description: "Brief description of the original author of this content",
@@ -458,6 +545,7 @@ export default makeSource({
   contentDirInclude: [
     "i18n/**",
     "docs/**",
+    "content/authors/**",
     "content/guides/**",
     "content/courses/**",
     "content/resources/**",
@@ -474,6 +562,7 @@ export default makeSource({
   documentTypes: [
     IgnoredRecord,
 
+    AuthorRecord,
     // core solana docs (including rpc docs)
     CoreRPCDocsRecord,
     // !note: rpc doc must be before regular docs

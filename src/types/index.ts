@@ -20,6 +20,8 @@ export type SupportedDocTypes = Exclude<DocumentTypes, IgnoredRecord> &
 export type ComputedFieldsTypeHack = {
   locale: string;
   href: string;
+  slug: string;
+  author: string;
 };
 
 /**
@@ -29,6 +31,7 @@ export type ComputedFieldsTypeHack = {
  * other places the type `SimpleRecordGroupName` is used (e.g. api routes)
  */
 export type SimpleRecordGroupName =
+  | "authors"
   | "docs"
   | "rpc"
   | "docs,rpc" // note: this is to support stringify-ing the route via the url

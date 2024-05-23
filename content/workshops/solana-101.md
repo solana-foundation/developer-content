@@ -17,7 +17,7 @@ tags:
 video: "https://www.youtube.com/watch?v=56Erql9229E"
 presentation: "https://docs.google.com/presentation/u/1/d/1e62b2hRbfREidLsVEnDNDKjXCRQDW2cyQOesy9Ozsbs/"
 # author details
-author: Joe Caulfield
+# author: Joe Caulfield
 authorDescription: DevRel at Solana Foundation
 authorTwitterHandle: realbuffalojoe
 authorGithubUsername: buffalojoec
