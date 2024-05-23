@@ -8,6 +8,7 @@ import {
 import {
   computeSlugFromRawDocumentData,
   getAllContentFiles,
+  throwIfAuthorDoesNotExist,
 } from "./src/utils/helpers";
 import path from "path";
 
@@ -24,6 +25,11 @@ const basicContentFields: FieldDefs = {
     type: "string",
     description:
       "Brief description of the content (also used in the SEO metadata)",
+    required: false,
+  },
+  author: {
+    type: "string",
+    description: "Slug of the author that created this content",
     required: false,
   },
   tags: {
@@ -189,7 +195,67 @@ const standardComputedFields: ComputedFields = {
         .toLowerCase();
     },
   },
+  author: {
+    description: "Validated slug of the author that created this content",
+    type: "string",
+    resolve: record => {
+      if (!record?.author) return "";
+      throwIfAuthorDoesNotExist(record.author, "Author");
+      return record.author;
+    },
+  },
+  organization: {
+    description: "Validated slug of the organization the author is a member of",
+    type: "string",
+    resolve: record => {
+      if (!record?.organization) return "";
+      throwIfAuthorDoesNotExist(record.organization, "Organization");
+      return record.organization;
+    },
+  },
 };
+
+/**
+ * Content record schema for the Author metadata file
+ *
+ * File: `authors/{slug}.yml`
+ */
+export const AuthorRecord = defineDocumentType(() => ({
+  name: "AuthorRecord",
+  filePathPattern:
+    "{content/authors,/content/authors,i18n/**/content/authors}/*.yml",
+  computedFields: {
+    locale: standardComputedFields["locale"],
+    slug: standardComputedFields["slug"],
+    href: standardComputedFields["href"],
+    organization: standardComputedFields["organization"],
+  },
+  fields: {
+    title: basicContentFields["title"],
+    description: basicContentFields["description"],
+    website: {
+      type: "string",
+      description: "Website for this person",
+      required: false,
+    },
+    organization: {
+      type: "string",
+      description:
+        "Author slug of the organization the author is a member of (note: this is a nested author)",
+      required: false,
+    },
+    github: {
+      type: "string",
+      description: "GitHub username",
+      required: false,
+    },
+    twitter: {
+      type: "string",
+      description: "GitHub username",
+      required: false,
+    },
+  },
+}));
 
 /**
  *
@@ -458,6 +524,7 @@ export default makeSource({
   contentDirInclude: [
     "i18n/**",
     "docs/**",
+    "content/authors/**",
     "content/guides/**",
     "content/courses/**",
     "content/resources/**",
@@ -474,6 +541,7 @@ export default makeSource({
   documentTypes: [
     IgnoredRecord,
 
+    AuthorRecord,
     // core solana docs (including rpc docs)
     CoreRPCDocsRecord,
     // !note: rpc doc must be before regular docs

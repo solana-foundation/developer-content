@@ -12,7 +12,7 @@ import {
   computeDetailsFromSlug,
 } from "@/utils/navItem";
 import { getRecordsForGroup } from "@/utils/records";
-import type { CourseRecord } from "contentlayer/generated";
+import type { AuthorRecord, CourseRecord } from "contentlayer/generated";
 
 type RouteProps = {
   params: {
@@ -209,12 +209,34 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     current.course = course;
   }
 
+  let author: AuthorRecord | undefined = undefined;
+
+  // add the author details into the record
+  if (!!record.author) {
+    const allAuthors = getRecordsForGroup("authors", {
+      locale: DEFAULT_LOCALE_EN,
+    }) as AuthorRecord[];
+
+    author = allAuthors.find(node => node.slug == record.author);
+    // @ts-expect-error
+    delete author._raw;
+
+    if (!!author?.organization) {
+      // @ts-expect-error - we are forcing in the organization's record on purpose
+      author.organization = allAuthors.find(
+        node => node.slug == author!.organization,
+      );
+      // @ts-expect-error
+      delete author.organization._raw;
+    }
+  }
+
   // todo: preprocess the body content? (if desired in the future)
 
   // todo: support sending related content records back to the client
 
   // finally, return the json formatted listing of NavItems (with the next and prev records)
   return Response.json(
-    Object.assign(current, record, { breadcrumbs, next, prev }),
+    Object.assign(current, record, { breadcrumbs, next, prev, author }),
   );
 }
