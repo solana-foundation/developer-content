@@ -12,6 +12,7 @@ import {
   computeDetailsFromSlug,
 } from "@/utils/navItem";
 import { getRecordsForGroup } from "@/utils/records";
+import type { CourseRecord } from "contentlayer/generated";
 
 type RouteProps = {
   params: {
@@ -19,15 +20,20 @@ type RouteProps = {
   };
 };
 
-export function GET(_req: Request, { params: { slug } }: RouteProps) {
+export function GET(req: Request, { params: { slug } }: RouteProps) {
   // dummy check on the url params
   if (!slug || !Array.isArray(slug) || slug.length <= 0) {
-    notFound();
+    return notFound();
   }
 
-  const { group, locale, href } = computeDetailsFromSlug(slug);
+  let { group, locale, href, appendix } = computeDetailsFromSlug(slug);
 
   if (!group) return notFound();
+
+  // `lessons` are nested under `courses`
+  if (group == "courses" && appendix.split("/").length == 2) {
+    group = "lessons";
+  }
 
   // get the base locale's record to serve as the default content
   const baseLocalRecords = getRecordsForGroup(group, {
@@ -87,13 +93,57 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
 
   if (!current) return notFound();
 
+  let course: CourseRecord | undefined = undefined;
+
+  // handle the special cases for lessons
+  if (group == "lessons" && !!current.slug) {
+    try {
+      const courseSlug = appendix.split("/")[0];
+
+      course = (
+        getRecordsForGroup("courses", {
+          locale: DEFAULT_LOCALE_EN,
+        }) as CourseRecord[]
+      ).find(item => item.slug == courseSlug);
+
+      if (!course) throw `Course '${courseSlug}' not found`;
+
+      if (!course.lessons) course.lessons = [];
+
+      const lessonIndex = course.lessons.findIndex(
+        item => item == current!.slug,
+      );
+
+      next =
+        course.lessons.length > lessonIndex
+          ? flatNavItems.find(item =>
+              item.path?.endsWith(course!.lessons![lessonIndex + 1]),
+            ) || null
+          : null;
+
+      prev =
+        lessonIndex > 0
+          ? flatNavItems.find(item =>
+              item.path?.endsWith(course!.lessons![lessonIndex - 1]),
+            ) || null
+          : null;
+    } catch (err) {
+      console.warn(
+        "[api content]",
+        "an error occurred while getting the course details for a lesson",
+      );
+      console.warn(err);
+      return notFound();
+    }
+  }
+
   // locate full content record for the base locale
   let record = baseLocalRecords.find(
     (item: SupportedDocTypes) =>
       item.href.toLowerCase() == current?.href?.toLowerCase(),
   );
 
-  if (!record) notFound();
+  if (!record) return notFound();
 
   /**
    * with the base locale record and data in hand, we can attempt to
@@ -121,7 +171,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     if (!!prev) prev = flatNavItems.find(item => item.id == prev!.id) || prev;
   }
 
-  if (!record) notFound();
+  if (!record) return notFound();
 
   const breadcrumbs: BreadcrumbItem[] = [];
   let parentId = current.id.substring(0, current.id.lastIndexOf("-"));
@@ -140,7 +190,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   }
 
   // remove the html formatted content (since it is undesired data to send over the wire)
-  if (typeof record.body.raw !== "undefined") {
+  if (!!record?.body?.raw && typeof record.body.raw !== "undefined") {
     // @ts-ignore
     record.body = record.body.raw.trim();
   }
@@ -152,6 +202,12 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     sourceFileDir: record._raw.sourceFileDir.replace(I18N_LOCALE_REGEX, ""),
     flattenedPath: record._raw.flattenedPath.replace(I18N_LOCALE_REGEX, ""),
   };
+
+  // force put the course details into the lesson
+  if (group == "lessons") {
+    // @ts-expect-error
+    current.course = course;
+  }
 
   // todo: preprocess the body content? (if desired in the future)
 
