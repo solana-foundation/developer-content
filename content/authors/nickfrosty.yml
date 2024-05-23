@@ -1,0 +1,12 @@
+# (optional) organization association
+organization: solana-foundation
+# display name or actual name
+title: Nick Frostbutter
+# github username
+github: nickfrosty
+# twitter / x username
+twitter: nickfrosty
+# website
+website: https://nick.af
+# brief description of this author (normally < 50 characters)
+description: Developer Advocate at the Solana Foundation
