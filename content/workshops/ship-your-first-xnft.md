@@ -16,7 +16,7 @@ tags:
   - Backpack
   - Beginner
 # author details
-author: Valentin Madrid
+# author: Valentin Madrid
 authorDescription: "External Developer Advocate at Solana Foundation"
 authorTwitterHandle: valentinmadrid_
 authorGithubUsername: valentinmadrid
