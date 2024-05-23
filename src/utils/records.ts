@@ -9,6 +9,7 @@ import {
   allCoreRPCDocsRecords,
   allCourseLessonRecords,
   allCourseRecords,
+  allAuthorRecords,
 } from "contentlayer/generated";
 
 /**
@@ -27,6 +28,10 @@ export function getRecordsForGroup(
   let records = [];
 
   switch (simpleGroupName) {
+    case "authors": {
+      records = allAuthorRecords;
+      break;
+    }
     case "rpc":
     case "docs,rpc": {
       simpleGroupName = "rpc";
