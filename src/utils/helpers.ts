@@ -47,12 +47,29 @@ export function throwIfAuthorDoesNotExist(
   type: "Author" | "Organization",
 ) {
   try {
-    const authorPath = join(resolve(), "content/authors", `${author}.yml`);
-    const stat = statSync(authorPath);
+    const filePath = join(resolve(), "content/authors", `${author}.yml`);
+    const stat = statSync(filePath);
     if (!stat.isFile()) throw "Not found";
   } catch (err) {
     throw `${type} not found: ${author}`;
   }
+}
+
+/**
+ * Ensure the provided `image` exists as a file in the system
+ and return is url route
+ */
+export function validatedImagePath(image: string, type: "authors") {
+  try {
+    const filePath = join(resolve(), "public/assets", type, image);
+    const stat = statSync(filePath);
+    if (!stat.isFile()) throw "Not found";
+    return `/assets/${type}/${image}`;
+  } catch (err) {
+    throw `Image not found: ${image}`;
+  }
+
+  return "";
 }
 
 /**

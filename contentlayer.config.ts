@@ -9,6 +9,7 @@ import {
   computeSlugFromRawDocumentData,
   getAllContentFiles,
   throwIfAuthorDoesNotExist,
+  validatedImagePath,
 } from "./src/utils/helpers";
 import path from "path";
 
@@ -199,7 +200,7 @@ const standardComputedFields: ComputedFields = {
     description: "Validated slug of the author that created this content",
     type: "string",
     resolve: record => {
-      if (!record?.author) return "";
+      if (!record?.author) return undefined;
       throwIfAuthorDoesNotExist(record.author, "Author");
       return record.author;
     },
@@ -208,7 +209,7 @@ const standardComputedFields: ComputedFields = {
     description: "Validated slug of the organization the author is a member of",
     type: "string",
     resolve: record => {
-      if (!record?.organization) return "";
+      if (!record?.organization) return undefined;
       throwIfAuthorDoesNotExist(record.organization, "Organization");
       return record.organization;
     },
@@ -229,6 +230,13 @@ export const AuthorRecord = defineDocumentType(() => ({
     slug: standardComputedFields["slug"],
     href: standardComputedFields["href"],
     organization: standardComputedFields["organization"],
+    image: {
+      type: "string",
+      resolve: record => {
+        if (!record?.image) return undefined;
+        return validatedImagePath(record.image, "authors");
+      },
+    },
     // set the default values to satisfy types
     metaOnly: {
       type: "boolean",
@@ -249,6 +257,7 @@ export const AuthorRecord = defineDocumentType(() => ({
   },
   fields: {
     title: basicContentFields["title"],
+    image: basicContentFields["image"],
     description: basicContentFields["description"],
     website: {
       type: "string",
