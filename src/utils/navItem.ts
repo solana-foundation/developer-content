@@ -149,6 +149,7 @@ export function computeDetailsFromKey(key: string) {
   return {
     label: ucFirst(key.split(GROUPING_KEY_SEPARATOR).reverse()[0]),
     id: computeRecordPathAndId(key).id,
+    slug: "",
   };
 }
 
@@ -196,7 +197,7 @@ export function sortNavItems(navItems: NavItem[]) {
  */
 export function shouldIgnoreRecord({
   fileName,
-  allowedExtensions = ["md", "mdx"],
+  allowedExtensions = ["md", "mdx", "yml"],
 }: {
   fileName: string;
   allowedExtensions?: Array<string>;
@@ -229,6 +230,7 @@ export function computeNavItem(
   const navItem: NavItem = {
     /** i18n locale */
     locale: doc.locale,
+    slug: doc.slug,
     /** unique identifier for each record, including any i18n info */
     id: computedPathAndId.id,
     /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
@@ -282,6 +284,8 @@ export function computeDetailsFromSlug(slug: string[]) {
     group = slug.shift() as SimpleRecordGroupName;
   }
 
+  let appendix = slug.join("/");
+
   // formatted the `href` value to search for
   let href = slug
     .join("/")
@@ -307,5 +311,6 @@ export function computeDetailsFromSlug(slug: string[]) {
     group,
     slug,
     href,
+    appendix,
   };
 }
