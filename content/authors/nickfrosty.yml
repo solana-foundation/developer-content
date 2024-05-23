@@ -2,6 +2,8 @@
 organization: solana-foundation
 # display name or actual name
 title: Nick Frostbutter
+# avatar image for this user (inside the `/public/assets/authors` folder)
+image: nickfrosty.jpg
 # github username
 github: nickfrosty
 # twitter / x username
