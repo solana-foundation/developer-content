@@ -1,0 +1,13 @@
+author: unboxed
+title: Introduction to cryptography and Solana clients
+description:
+  Learn the basics of how to interact with the Solana blockchain, including the
+  basics of cryptography.
+lessons:
+  - intro-to-cryptography
+  - intro-to-reading-data
+  - intro-to-writing-data
+  - token-program
+  - nfts-with-metaplex
+  - intro-to-custom-on-chain-programs
+  - interact-with-wallets
