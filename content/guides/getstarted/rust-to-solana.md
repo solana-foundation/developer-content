@@ -213,14 +213,14 @@ compute units with `sol_log_compute_units`.
 While the Solana CLI and the `solana_program` crate are all that is needed to
 get started, there are a couple of helpful tools which can accelerate learning.
 
-![Network Diagram](/public/assets/guides/rust-to-solana/network-diagram.png)
+![Network Diagram](/assets/guides/rust-to-solana/network-diagram.png)
 
 ### Solana Playground
 
 The [Solana Playground](https://beta.solpg.io/) is a browser-based IDE that
 allows developers to develop and deploy Solana programs.
 
-![Solana Playground](/public/assets/guides/rust-to-solana/solana-playground.png)
+![Solana Playground](/assets/guides/rust-to-solana/solana-playground.png)
 
 It’s the easiest way to begin developing with Solana, and it supports building,
 testing, and deploying Solana Rust programs. Additionally, a number of built-in
