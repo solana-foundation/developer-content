@@ -20,7 +20,7 @@ where each entry in the database is called an "account".
   stored, which is fully refundable when the account is closed.
 
 - Every account has a program "owner". Only the program that owns an account can
-  modify it data or deduct its lamport balance. However, anyone can increase the
+  modify its data or deduct its lamport balance. However, anyone can increase the
   balance.
 
 - Programs (smart contracts) are stateless accounts that store executable code.
