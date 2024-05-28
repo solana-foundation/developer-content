@@ -153,7 +153,7 @@ To check your current `solana-test-validator` version:
 solana-test-validator --version
 ```
 
-Your `solana-test-validator` runs on the same version as the solana CLI version.
+Your `solana-test-validator` runs on the same version as the Solana CLI version.
 
 To test your programs against different versions of the Solana runtime, you can
 install multiple versions of the Solana CLI and switch between them using the
