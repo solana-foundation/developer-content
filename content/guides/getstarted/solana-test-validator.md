@@ -165,7 +165,7 @@ solana-install init <VERSION>
 
 - `VERSION` is the desired CLI version to install
 
-Make sure to restart your solana-test-validator after changing versions to
+Make sure to restart your Solana test validator after changing versions to
 ensure it runs the correct version.
 
 ## Cloning Programs
