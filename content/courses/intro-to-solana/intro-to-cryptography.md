@@ -7,7 +7,7 @@ objectives:
   - Load a keypair from an env file
 ---
 
-# Summary
+## Summary
 
 - A **keypair** is a matching pair of **public key** and **secret key**.
 - The **public key** is used as an “address” that points to an account on the
@@ -17,9 +17,9 @@ objectives:
 - `@solana/web3.js` provides helper functions for creating a brand new keypair,
   or for constructing a keypair using an existing secret key.
 
-# Lesson
+## Lesson
 
-## Symmetric and Asymmetric Cryptography
+### Symmetric and Asymmetric Cryptography
 
 'Cryptography' is literally the study of hiding information. There are two main
 types of cryptography you'll encounter day to day:
@@ -75,7 +75,7 @@ Asymmetric encryption is very popular:
 In short, cryptography is all around us. Solana, as well as other blockchains,
 are but one use of cryptography.
 
-## Solana uses public keys as addresses
+### Solana uses public keys as addresses
 
 <!-- ![Solana wallet addresses](/public/assets/courses/unboxed/wallet-addresses.svg) -->
 
@@ -90,14 +90,14 @@ People participating in the Solana network have at least one keypair. In Solana:
   this reason, as the name suggests, you should always keep secret keys
   _secret_.
 
-## Using @solana/web3.js to make a keypair
+### Using @solana/web3.js to make a keypair
 
 You can use the Solana blockchain from either the browser or node.js with the
 `@solana/web3.js` npm module. Set up a project how you normally would, then
 [use `npm`](https://nodesource.com/blog/an-absolute-beginners-guide-to-using-npm/)
 to install `@solana/web3.js`
 
-```
+```shell
 npm i @solana/web3.js
 ```
 
@@ -119,7 +119,7 @@ console.log(`The public key is: `, keypair.publicKey.toBase58());
 console.log(`The secret key is: `, keypair.secretKey);
 ```
 
-## ⚠️ Don't include secret keys in your source code
+<Callout type="warning" title="Do not include secret keys in your source code">
 
 Since the keypair can be regenerated from the secret key, we usually only store
 the secret key, and restore the keypair from the secret key.
@@ -130,7 +130,9 @@ store secret keys in source code. Instead, we:
 - Put secret keys in a `.env` file
 - Add `.env` to `.gitignore` so the `.env` file is not committed.
 
-## Loading an existing keypair
+</Callout>
+
+### Loading an existing keypair
 
 If you already have a keypair you’d like to use, you can load a `Keypair` from
 an existing secret key stored in the filesystem or an `.env` file. In node.js,
@@ -152,7 +154,7 @@ const keypair = getKeypairFromEnvironment("SECRET_KEY");
 
 You know how to make and load keypairs! Let’s practice what we’ve learned.
 
-# Lab
+## Lab
 
 ### Installation
 

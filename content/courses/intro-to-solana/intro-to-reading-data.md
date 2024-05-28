@@ -123,12 +123,12 @@ The balance of the account at CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN is 0.
 
 ...and just like that, we are reading data from the Solana blockchain!
 
-# Lab
+## Lab
 
 Let’s practice what we’ve learned, and check the balance at a particular
 address.
 
-## Load a keypair
+### Load a keypair
 
 Remember the public key from the previous chapter.
 
@@ -160,7 +160,7 @@ like:
 💰 Finished! The balance for the wallet at address 31ZdXAvhRQyzLC2L97PC6Lnf2yWgHhQUKKYoUo9MLQF5 is 0!
 ```
 
-## Get Devnet Sol
+### Get Devnet SOL
 
 In Devnet you can get free SOL to develop with. Think of Devnet SOL like board
 game money - it looks like it has value, but it doesn't have value.
@@ -170,7 +170,7 @@ keypair as the address.
 
 Pick any amount of SOL you like.
 
-## Check your balance
+### Check your balance
 
 Re-run the script. You should see your balance updated:
 
@@ -178,7 +178,7 @@ Re-run the script. You should see your balance updated:
 💰 Finished! The balance for the wallet at address 31ZdXAvhRQyzLC2L97PC6Lnf2yWgHhQUKKYoUo9MLQF5 is 0.5!
 ```
 
-## Check other student's balances
+### Check other student's balances
 
 You can modify the script to check balances on any wallet.
 
@@ -212,7 +212,7 @@ Swap wallet addresses with your classmates in the chat and check their balances.
 
 And check a few of your classmate's balances.
 
-# Challenge
+## Challenge
 
 Modify the script as follows:
 
@@ -222,7 +222,7 @@ Modify the script as follows:
 
 We'll transfer SOL in the next lesson!
 
-## Completed the lab?
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=8bbbfd93-1cdc-4ce3-9c83-637e7aa57454)!
