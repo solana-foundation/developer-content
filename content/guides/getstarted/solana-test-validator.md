@@ -23,7 +23,12 @@ The Solana test validator is a local emulator for the Solana blockchain,
 designed to provide developers with a private and controlled environment for
 building and testing Solana programs without the need to connect to a public
 testnet or mainnet.
+If you have the Solana CLI tool suite
+[already installed](http://localhost:3000/developers/guides/getstarted/setup-local-development#3-install-the-solana-cli),
+you can run the test validator with the following command:
 
+```shell
+solana-test-validator
 ## Advantages
 
 - Ability to reset the blockchain state at any moment
