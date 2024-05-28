@@ -76,7 +76,7 @@ console.log(`✅ Success! Transaction signature is: ${signature}`);
 
 ### Solana Explorer
 
-![Solana Explorer set to Devnet](../assets/solana-explorer-devnet.png)
+![Solana Explorer set to Devnet](/public/assets/courses/unboxed/solana-explorer-devnet.png)
 
 All transactions on the blockchain are publicly viewable on
 [Solana Explorer](http://explorer.solana.com). For example, you could take the
@@ -88,7 +88,7 @@ for that signature in Solana Explorer, then see:
 - the transaction fee
 - and more!
 
-![Solana Explorer with details about a transaction](../assets/solana-explorer-transaction-overview.png)
+![Solana Explorer with details about a transaction](/public/assets/courses/unboxed/solana-explorer-transaction-overview.png)
 
 # Lab
 
@@ -100,12 +100,12 @@ at address `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa`. The program stores
 its data in a specific account at the address
 `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
-![Solana stores programs and data in separate accounts](../assets/pdas-global-state.svg)
+<!-- ![Solana stores programs and data in separate accounts](/public/assets/courses/unboxed/pdas-global-state.svg) -->
 
 ### 1. Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Writing Data](./intro-to-writing-data).
+[Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data.md).
 
 Name the file `send-ping-transaction.ts`:
 
@@ -226,7 +226,7 @@ enter. You should see all the details about the transaction. If you scroll all
 the way to the bottom, then you will see `Program Logs`, which show how many
 times the program has been pinged including your ping.
 
-![Solana Explorer with logs from calling the Ping program](../assets/solana-explorer-ping-result.png)
+![Solana Explorer with logs from calling the Ping program](/public/assets/courses/unboxed/solana-explorer-ping-result.png)
 
 Scroll around the explorer and look at what you're seeing:
 

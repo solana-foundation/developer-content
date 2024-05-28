@@ -57,7 +57,7 @@ With the explorer, we can see the particular details about USDC's Token Mint
 such as the current supply of tokens, the addresses of the mint and freeze
 authorities, and the decimal precision of the token:
 
-![USDC Token Mint](../assets/token-program-usdc-mint.png)
+![USDC Token Mint](/public/assets/courses/unboxed/token-program-usdc-mint.png)
 
 To create a new Token Mint, you need to send the right transaction instructions
 to the Token Program. To do this, we'll use the `createMint` function from
@@ -273,7 +273,7 @@ want it to be an Associated Token Account. Even if the user doesn't already have
 an ATA for that token, you can simply find the address and make the account for
 them.
 
-![ATAs are PDAs](../assets/atas-are-pda.svg)
+<!-- ![ATAs are PDAs](/public/assets/courses/unboxed/atas-are-pda.svg) -->
 
 You can create an associated token account using the `spl-token` library's
 `createAssociatedTokenAccount` function.
@@ -458,7 +458,7 @@ Associated Token Account, mint tokens, approve a delegate, transfer tokens, and
 burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
-[Cryptography fundamentals](./intro-to-cryptography).
+[Cryptography fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 ```bash
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
@@ -763,8 +763,8 @@ account!
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
-[add a second account on devnet](./intro-to-cryptography) if you like, or find a
-friend who has a devnet account and send them your token!
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
+if you like, or find a friend who has a devnet account and send them your token!
 
 As you saw in Explorer, the tokens currently reside in an Associated Token
 Account attached to our wallet. We don't have to remember the address for our
@@ -843,13 +843,14 @@ in the lab. To interact with the Token Program using the Phantom wallet adapter,
 you will have to build each transaction manually and submit the transaction to
 Phantom for approval.
 
-![Token Program Challenge Frontend](../assets/token-program-frontend.png)
+![Token Program Challenge Frontend](/public/assets/courses/unboxed/token-program-frontend.png)
 
 1. You can build this from scratch or you can
    [download the starter code](https://github.com/Unboxed-Software/solana-token-frontend/tree/starter).
 2. Create a new Token Mint in the `CreateMint` component. If you need a
    refresher on how to send transactions to a wallet for approval, have a look
-   at the [Wallets lesson](./interact-with-wallets).
+   at the
+   [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
 
 When creating a new mint, the newly generated `Keypair` will also have to sign
 the transaction. When additional signers are required in addition to the
