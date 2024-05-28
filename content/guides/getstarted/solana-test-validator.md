@@ -332,7 +332,7 @@ Useful Tips Logging:
 - Adjust the number of CPU cores used by the validator with the `--gossip-host`
   option to simulate network conditions more realistically.
 
-### Solana CLI Commands
+## Solana CLI Commands
 
 To view all CLI commands and see other ways to interact with the test validator:
 
