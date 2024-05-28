@@ -4,7 +4,7 @@ difficulty: intro
 title: "Solana Test Validator Guide"
 seoTitle: "Solana Test Validator Guide"
 description:
-  "How to run localnet on your computer by using the solana test validator for
+  "How to run localnet on your computer by using the Solana test validator for
   local development."
 tags:
   - validator
