@@ -56,7 +56,7 @@ Token Program, the associated metadata requires some additional functionality.
 Typically, an NFT’s metadata has both an onchain and off-chain component. See
 the diagram below:
 
-![Metadata](../assets/solana-nft-metaplex-metadata.png)
+![Metadata](/public/assets/courses/unboxed/solana-nft-metaplex-metadata.png)
 
 - The **onchain metadata** is stored in an account associated with the token
   mint. The onchain metadata contains a URI field that points to an off-chain

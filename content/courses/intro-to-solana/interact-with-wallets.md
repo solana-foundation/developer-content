@@ -142,7 +142,7 @@ point, you can connect with `wallet.connect()`, which will instruct the wallet
 to prompt the user for permission to view their public key and request approval
 for transactions.
 
-![wallet connection prompt](../assets/wallet-connect-prompt.png)
+![wallet connection prompt](/public/assets/courses/unboxed/wallet-connect-prompt.png)
 
 While you could do this in a `useEffect` hook, you’ll usually want to provide
 more sophisticated functionality. For example, you may want users to be able to
@@ -191,13 +191,13 @@ The `WalletModalProvider` adds functionality for presenting a modal screen for
 users to select which wallet they’d like to use. The `WalletMultiButton` changes
 behavior to match the connection status:
 
-![multi button select wallet option](../assets/multi-button-select-wallet.png)
+![multi button select wallet option](/public/assets/courses/unboxed/multi-button-select-wallet.png)
 
-![connect wallet modal](../assets/connect-wallet-modal.png)
+![connect wallet modal](/public/assets/courses/unboxed/connect-wallet-modal.png)
 
-![multi button connect options](../assets/multi-button-connect.png)
+![multi button connect options](/public/assets/courses/unboxed/multi-button-connect.png)
 
-![multi button connected state](../assets/multi-button-connected.png)
+![multi button connected state](/public/assets/courses/unboxed/multi-button-connected.png)
 
 You can also use more granular components if you need more specific
 functionality:
@@ -287,7 +287,7 @@ const sendSol = event => {
 When this function is called, the connected wallet will display the transaction
 for the user’s approval. If approved, then the transaction will be sent.
 
-![wallet transaction approval prompt](../assets/wallet-transaction-approval-prompt.png)
+![wallet transaction approval prompt](/public/assets/courses/unboxed/wallet-transaction-approval-prompt.png)
 
 # Lab
 
@@ -296,7 +296,7 @@ users approve a transaction that pings the program. As a reminder, the program�
 public key is `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa` and the public key
 for the data account is `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
-![Solana Ping App](../assets/solana-ping-app.png)
+![Solana Ping App](/public/assets/courses/unboxed/solana-ping-app.png)
 
 ### 1. Download the Phantom browser extension and set it to Devnet
 
@@ -607,7 +607,7 @@ to understand all of this in context.
 Now it’s your turn to build something independently. Create an application that
 lets a user connect their Phantom wallet and send SOL to another account.
 
-![Send SOL App](../assets/solana-send-sol-app.png)
+![Send SOL App](/public/assets/courses/unboxed/solana-send-sol-app.png)
 
 1. You can build this from scratch or you can
    [download the starter code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/starter).

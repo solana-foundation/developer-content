@@ -140,7 +140,7 @@ in your account when testing, whether locally or on devnet.
 
 ## Solana Explorer
 
-![Solana Explorer set to Devnet](../assets/solana-explorer-devnet.png)
+![Solana Explorer set to Devnet](/public/assets/courses/unboxed/solana-explorer-devnet.png)
 
 All transactions on the blockchain are publicly viewable on the
 [Solana Explorer](http://explorer.solana.com). For example, you could take the
@@ -152,7 +152,7 @@ for that signature in the Solana Explorer, then see:
 - the transaction fee
 - and more!
 
-![Solana Explorer with details about a transaction](../assets/solana-explorer-transaction-overview.png)
+![Solana Explorer with details about a transaction](/public/assets/courses/unboxed/solana-explorer-transaction-overview.png)
 
 # Lab
 
@@ -161,7 +161,7 @@ We’re going to create a script to send SOL to other students.
 ### 1. Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Cryptography](./intro-to-cryptography).
+[Intro to Cryptography](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 Create a file called `transfer.ts`:
 
