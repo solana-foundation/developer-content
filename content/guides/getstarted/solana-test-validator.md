@@ -173,7 +173,7 @@ ensure it runs the correct version.
 To add existing on-chain programs to your local environment, you can clone the
 program.
 
-To copy an account from the cluster:
+To clone an account from the cluster:
 
 ```shell
 solana-test-validator --clone PROGRAM_ADDRESS
