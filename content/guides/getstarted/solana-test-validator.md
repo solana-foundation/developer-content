@@ -19,7 +19,7 @@ keywords:
 ---
 
 
-The solana-test-validator is a local emulator for the Solana blockchain,
+The Solana test validator is a local emulator for the Solana blockchain,
 designed to provide developers with a private and controlled environment for
 building and testing Solana programs without the need to connect to a public
 testnet or mainnet.
