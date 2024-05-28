@@ -18,7 +18,6 @@ keywords:
   - local-development
 ---
 
-# Solana Test Validator
 
 The solana-test-validator is a local emulator for the Solana blockchain,
 designed to provide developers with a private and controlled environment for
