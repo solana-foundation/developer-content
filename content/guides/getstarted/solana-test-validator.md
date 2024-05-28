@@ -201,7 +201,7 @@ To reset the ledger to the genesis state:
 solana-test-validator --reset
 ```
 
-By default the validator will resume an existing ledger _(if present)_
+### Reset to Specific Accounts
 
 To reset the state of specific accounts every time you start the validator, you
 can use a combination of account snapshots and the `--account` flag. First, save
