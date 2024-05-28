@@ -96,8 +96,8 @@ current working directory.
 
 ### Specifying Ledger Location
 
-You can specify a different directory for the ledger data using the --ledger
-option:
+When starting the test validator, you can specify a different directory for the
+ledger data using the `--ledger` option:
 
 ```shell
 solana-test-validator --ledger /path/to/custom/ledger
