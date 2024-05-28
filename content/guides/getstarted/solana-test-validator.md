@@ -181,7 +181,7 @@ solana-test-validator --clone PROGRAM_ADDRESS
 
 This is useful for testing interactions with standard programs.
 
-To copy an upgradeable program and its executable data from the cluster:
+To clone an upgradeable program and its executable data from the cluster:
 
 ```shell
 solana-test-validator --clone-upgradeable-program PROGRAM_ADDRESS
