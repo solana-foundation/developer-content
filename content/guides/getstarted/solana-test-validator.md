@@ -9,7 +9,6 @@ description:
 tags:
   - validator
   - localnet
-  - solana-test-validator
 keywords:
   - localnet
   - blockchain
