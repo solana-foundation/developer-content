@@ -189,6 +189,10 @@ solana-test-validator --clone-upgradeable-program PROGRAM_ADDRESS
 
 ## Resetting State on Accounts at Startup
 
+By default the validator will resume an existing ledger _(if present)_. But
+during startup, you can reset the ledger either to genesis or to specific
+account state that you provide.
+
 ### Reset to Genesis
 
 To reset the ledger to the genesis state:
