@@ -71,7 +71,7 @@ This command initializes a new ledger and starts the validator.
 
 ## Configuration
 
-Configure the CLI Tool Suite to target a local cluster by default:
+Configure the CLI Tool Suite to target your local cluster by default:
 
 ```shell
 solana config set --url http://127.0.0.1:8899
