@@ -53,7 +53,7 @@ sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
 
 You can replace `stable` with the release tag matching the software version of
 your desired release (i.e. `v1.18.1`), or use one of the three symbolic channel
-names: stable, beta, or edge.
+names: `stable`, `beta`, or `edge`.
 
 ## Starting the Test Validator
 
