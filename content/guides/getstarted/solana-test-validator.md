@@ -43,7 +43,7 @@ solana-test-validator
 
 ## Installation
 
-Since the solana-test-validator is part of the Solana CLI tool suite, ensure you
+Since the `solana-test-validator` is part of the Solana CLI tool suite, ensure you
 have Solana's command-line tools installed. You can install them using the
 following command:
 
