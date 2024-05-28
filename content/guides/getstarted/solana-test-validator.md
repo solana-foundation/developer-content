@@ -54,6 +54,10 @@ sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
 You can replace `stable` with the release tag matching the software version of
 your desired release (i.e. `v1.18.1`), or use one of the three symbolic channel
 names: `stable`, `beta`, or `edge`.
+> For more detailed instructions, checkout this guide on
+> [setting up your local environment](/content/guides/getstarted/setup-local-development.md)
+> for Solana development. It includes installing the Solana CLI, Anchor, getting
+> a local keypair, and more.
 
 ## Starting the Test Validator
 
