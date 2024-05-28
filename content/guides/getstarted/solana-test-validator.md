@@ -204,8 +204,9 @@ solana-test-validator --reset
 ### Reset to Specific Accounts
 
 To reset the state of specific accounts every time you start the validator, you
-can use a combination of account snapshots and the `--account` flag. First, save
-the desired state of an account as a JSON file:
+can use a combination of account snapshots and the `--account` flag.
+
+First, save the desired state of an account as a JSON file:
 
 ```shell
 solana account PROGRAM_ADDRESS --output json > account_state.json
