@@ -9,7 +9,7 @@ objectives:
     NFTs on Solana
 ---
 
-# Summary
+## Summary
 
 - **Non-Fungible Tokens (NFTs)** are represented on Solana as SPL Tokens with an
   associated metadata account, 0 decimals, and a maximum supply of 1
@@ -24,7 +24,7 @@ objectives:
 - **Sugar CLI** is a tool that simplifies the process of uploading
   media/metadata files and creating a Candy Machine for a collection
 
-# Lesson
+## Lesson
 
 Solana Non-Fungible Tokens (NFTs) are SPL tokens created using the Token
 program. These tokens, however, also have an additional metadata account
@@ -36,7 +36,7 @@ how to create and update them using the Metaplex SDK, and provide a brief
 introduction to tools that can assist you in creating and distributing NFTs on
 Solana at scale.
 
-## NFTs on Solana
+### NFTs on Solana
 
 A Solana NFT is a non-divisible token with associated metadata. Further, the
 token's mint has a maximum supply of 1.
@@ -68,7 +68,7 @@ the diagram below:
   Permanent data storage systems such as Arweave are often used to store the
   off-chain component of NFT metadata.
 
-## **Metaplex**
+### Metaplex
 
 [Metaplex](https://www.metaplex.com/) is an organization that provides a suite
 of tools, like the [Metaplex SDK](https://docs.metaplex.com/sdks/js/), that
@@ -323,14 +323,14 @@ To explore the full range of tools offered by Metaplex, you can view the
 [Metaplex repository](https://github.com/metaplex-foundation/metaplex) on
 GitHub.
 
-# Lab
+## Lab
 
 In this lab, we'll go through the steps to create an NFT using the Metaplex SDK,
 update the NFT's metadata after the fact, and then associate the NFT with a
 collection. By the end, you will have a basic understanding of how to use the
 Metaplex SDK to interact with NFTs on Solana.
 
-### 1. Starter
+### Starter
 
 To begin, download the starter code from the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-metaplex/tree/starter).
@@ -394,7 +394,7 @@ To install the necessary dependencies, run `npm install` in the command line.
 Next, execute the code by running `npm start`. This will create a new keypair,
 write it to the `.env` file, and airdrop devnet SOL to the keypair.
 
-```
+```shell
 Current balance is 0
 Airdropping 1 SOL...
 New balance is 1
@@ -430,7 +430,7 @@ async function main() {
 }
 ```
 
-### 3. `uploadMetadata` helper function
+### uploadMetadata helper function
 
 Next, let's create a helper function to handle the process of uploading an image
 and metadata, and returning the metadata URI. This function will take in the
@@ -471,7 +471,7 @@ symbol, description, and image URI, and get a metadata URI. This URI is the
 off-chain metadata. This function will also log the image URI and metadata URI
 for reference.
 
-### 5. `createNft` helper function
+### createNft helper function
 
 Next, let's create a helper function to handle creating the NFT. This function
 takes in the Metaplex instance, metadata URI and NFT data as inputs. It uses the
@@ -508,7 +508,7 @@ containing information about the newly created NFT. The NFT will be minted to
 the public key corresponding to the `user` used as the Identity Driver when
 setting up the Metaplex instance.
 
-### 6. Create NFT
+### Create NFT
 
 Now that we have set up the Metaplex instance and created helper functions for
 uploading metadata and creating NFTs, we can test these functions by creating an
@@ -543,7 +543,7 @@ Finished successfully
 Feel free to inspect the generated URIs for the image and metadata, as well as
 view the NFT on the Solana Explorer by visiting the URL provided in the output.
 
-### 7. `updateNftUri` helper function
+### updateNftUri helper function
 
 Next, let's create a helper function to handle updating an existing NFT's URI.
 This function will take in the Metaplex instance, metadata URI, and mint address
@@ -581,7 +581,7 @@ async function updateNftUri(
 }
 ```
 
-### 8. Update NFT
+### Update NFT
 
 To update an existing NFT, we first need to upload new metadata for the NFT and
 get the new URI. In the `main()` function, call the `uploadMetadata` function
@@ -615,7 +615,7 @@ Finished successfully
 You can also view the NFTs in Phantom wallet by importing the `PRIVATE_KEY` from
 the .env file.
 
-### 9. Create an NFT collection
+### Create an NFT collection
 
 Awesome, you now know how to create a single NFT and update it on the Solana
 blockchain! But, how do you add it to a collection?
@@ -687,7 +687,7 @@ async function main() {
 This will return our collection's mint address so we can use it to assign NFTs
 to the collection.
 
-### 10. Assign an NFT to a collection
+### Assign an NFT to a collection
 
 Now that we have a collection, let's change our existing code so that newly
 created NFTs get added to the collection. First, let's modify our `createNft`
@@ -741,7 +741,7 @@ If you want to take a look at the final solution code you can find it on the
 solution branch of the same
 [repository](https://github.com/Unboxed-Software/solana-metaplex/tree/solution).
 
-# Challenge
+## Challenge
 
 To deepen your understanding of the Metaplex tools, dive into the Metaplex
 documentation and familiarize yourself with the various programs and tools
@@ -760,7 +760,7 @@ process! Feel free to
 [share some quick feedback](https://airtable.com/shrOsyopqYlzvmXSC?prefill_Module=Module%202)
 so that we can continue to improve the course!
 
-## Completed the lab?
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=296745ac-503c-4b14-b3a6-b51c5004c165)!

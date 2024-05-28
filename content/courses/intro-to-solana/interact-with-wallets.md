@@ -7,7 +7,7 @@ objectives:
   - Use Wallet Adapter to have users sign transactions
 ---
 
-# Summary
+## Summary
 
 - **Wallets** store your secret key and handle secure transaction signing
 - **Hardware wallets** store your secret key on a separate device
@@ -18,9 +18,9 @@ objectives:
   extensions, allowing you to build websites that can request a user’s wallet
   address and propose transactions for them to sign
 
-# Lesson
+## Lesson
 
-## Wallets
+### Wallets
 
 In the previous two lessons, we discussed keypairs. Keypairs are used to locate
 accounts and sign transactions. While the public key of a keypair is perfectly
@@ -53,14 +53,6 @@ the secret key with the wallet application.
 Unless you’re creating a wallet application yourself, your code should never
 need to ask a user for their secret key. Instead, you can ask users to connect
 to your site using a reputable wallet.
-
-## Phantom Wallet
-
-One of the most widely used software wallets in the Solana ecosystem is
-[Phantom](https://phantom.app). Phantom supports a few of the most popular
-browsers and has a mobile app for connecting on the go. You’ll likely want your
-decentralized applications to support multiple wallets, but this course will
-focus on Phantom.
 
 ## Solana’s WalletAdapter
 
@@ -149,7 +141,7 @@ more sophisticated functionality. For example, you may want users to be able to
 choose from a list of supported wallet applications or disconnect after they’ve
 already connected.
 
-### `@solana/wallet-adapter-react-ui`
+### @solana/wallet-adapter-react-ui
 
 You can create custom components for this, or you can leverage components
 provided by `@solana/wallet-adapter-react-ui`. The simplest way to provide
@@ -289,7 +281,7 @@ for the user’s approval. If approved, then the transaction will be sent.
 
 ![wallet transaction approval prompt](/public/assets/courses/unboxed/wallet-transaction-approval-prompt.png)
 
-# Lab
+## Lab
 
 Let’s take the Ping program from the last lesson and build a frontend that lets
 users approve a transaction that pings the program. As a reminder, the program’s
@@ -298,7 +290,7 @@ for the data account is `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
 ![Solana Ping App](/public/assets/courses/unboxed/solana-ping-app.png)
 
-### 1. Download the Phantom browser extension and set it to Devnet
+### Download a Solana wallet
 
 If you don’t already have it, download the
 [Phantom browser extension](https://phantom.app/download). At the time of
@@ -311,7 +303,7 @@ Phantom UI. Scroll down and click on the line item “Change Network” and sele
 “Devnet.” This ensures that Phantom will be connected to the same network we’ll
 be using in this lab.
 
-### 2. Download the starter code
+### Download the starter code
 
 Download the
 [starter code for this project](https://github.com/Unboxed-Software/solana-ping-frontend/tree/starter).
@@ -320,7 +312,7 @@ This project is a simple Next.js application. It’s mostly empty except for the
 
 You can see its current state with the command `npm run dev` in the console.
 
-### 3. Wrap the app in context providers
+### Wrap the app in context providers
 
 To start, we’re going to create a new component to contain the various
 Wallet-Adapter providers that we’ll be using. Create a new file inside the
@@ -415,7 +407,7 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 export default WalletContextProvider;
 ```
 
-### 4. Add wallet multi-button
+### Add wallet multi-button
 
 Next, let’s set up the Connect button. The current button is just a placeholder
 because rather than using a standard button or creating a custom component,
@@ -484,7 +476,7 @@ multi-button at the top-right of the screen. It should now read, "Select
 Wallet." If you have the Phantom extension and are signed in, you should be able
 to connect your Phantom wallet to the site using this new button.
 
-### 5. Create button to ping program
+### Create button to ping program
 
 Now that our app can connect to the Phantom wallet, let’s make the “Ping!”
 button actually do something.
@@ -589,7 +581,7 @@ const onClick = () => {
 And that’s it! If you refresh the page, connect your wallet, and click the ping
 button, Phantom should present you with a popup to confirm the transaction.
 
-### 6. Add some polish around the edges
+### Add some polish around the edges
 
 There’s a lot you could do to make the user experience here even better. For
 example, you could change the UI to only show you the Ping button when a wallet
@@ -602,7 +594,7 @@ You can also download the
 [full source code from this lab](https://github.com/Unboxed-Software/solana-ping-frontend)
 to understand all of this in context.
 
-# Challenge
+## Challenge
 
 Now it’s your turn to build something independently. Create an application that
 lets a user connect their Phantom wallet and send SOL to another account.
@@ -620,7 +612,7 @@ lets a user connect their Phantom wallet and send SOL to another account.
 If you get really stumped, feel free to
 [check out the solution code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/main).
 
-## Completed the lab?
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=69c5aac6-8a9f-4e23-a7f5-28ae2845dfe1)!

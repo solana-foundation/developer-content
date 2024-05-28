@@ -8,7 +8,7 @@ objectives:
   - Transfer tokens
 ---
 
-# Summary
+## Summary
 
 - You may recall SOL is the 'native token' of Solana. All other tokens, fungible
   and non-fungible tokens (NFTs), are called **SPL Tokens**
@@ -26,7 +26,7 @@ objectives:
   The rent for a Token Account can be refunded when the account is closed,
   however, Token Mints currently cannot be closed.
 
-# Lesson
+## Lesson
 
 The Token Program is one of many programs made available by the Solana Program
 Library (SPL). It contains instructions for creating and interacting with SPL
@@ -45,7 +45,7 @@ using the Token Program:
 We'll be approaching this from the client side of the development process using
 the `@solana/spl-token` Javascript library.
 
-## Token Mint
+### Token Mint
 
 To create a new SPL Token you first have to create a Token Mint. A Token Mint is
 an account that holds data about a specific token.
@@ -162,7 +162,7 @@ However, this concept applies to all accounts and you can use the more generic
 `getMinimumBalanceForRentExemption` method on `Connection` for other accounts
 you may need to create.
 
-## Token Account
+### Token Account
 
 Before you can mint tokens (issue new supply), you need a Token Account to hold
 the newly issued tokens.
@@ -335,7 +335,7 @@ async function buildCreateAssociatedTokenAccountTransaction(
 }
 ```
 
-## Mint Tokens
+### Mint Tokens
 
 Minting tokens is the process of issuing new tokens into circulation. When you
 mint tokens, you increase the supply of the token mint and deposit the newly
@@ -394,7 +394,7 @@ async function buildMintToTransaction(
 }
 ```
 
-## Transfer Tokens
+### Transfer Tokens
 
 SPL Token transfers require both the sender and receiver to have token accounts
 for the mint of the tokens being transferred. The tokens are transferred from
@@ -451,7 +451,7 @@ async function buildTransferTransaction(
 }
 ```
 
-# Lab
+## Lab
 
 We’re going to use the Token Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, approve a delegate, transfer tokens, and
@@ -464,7 +464,7 @@ Assuming you already have a `.env` file with a `SECRET_KEY` setup per
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
 ```
 
-### 1. Create the Token Mint
+### Create the Token Mint
 
 Create an empty file called `create-token-mint.ts`. After loading our keypairs,
 we'll call `createMint()`, setting our `user` as the `payer`, `mintAuthority`,
@@ -511,7 +511,7 @@ Open up Solana Explorer and look at your new token!
 
 Remember the address of the mint! We'll use this later.
 
-### 2. Make some token metadata
+### Make some token metadata
 
 You'll notice our token account does not have a pretty symbol and shows up as
 'Unknown Token' in Explorer. That's because our token has no metadata! Let's add
@@ -639,7 +639,7 @@ name they like. However for your reference, if you are making an original token
 that becomes very well known, Solana Explorer uses a whitelist based on the
 [Unified Token List API](https://github.com/solflare-wallet/utl-api).
 
-### 3. Create an Associated Token Account to store the tokens
+### Create an Associated Token Account to store the tokens
 
 Now that we've created the mint, let's create a new Associated Token Account so
 that someone can store our tokens. This Associated Token Account could be for
@@ -704,7 +704,7 @@ Open the token account in Solana Explorer. Look at the owner - it's the account
 you made the ATA for! The balance will be zero, as we haven't sent any tokens
 there yet. Let's mint some tokens there and fix that!
 
-### 4. Mint Tokens
+### Mint Tokens
 
 Now that we have a token mint and a token account, let's mint tokens to the
 token account. Recall that we set the `user` as the `mintAuthority` for the
@@ -759,7 +759,7 @@ Run the script using `npx esrun mint-tokens.ts`. You should see:
 Open Explorer, and see the transaction and the new tokens in the recipient's
 account!
 
-### 5. Transfer Tokens
+### Transfer Tokens
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
@@ -833,7 +833,7 @@ console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}!`);
 Open the Explorer link. You see your balance go down, and the recipient's
 balance go up!
 
-# Challenge
+## Challenge
 
 Now it’s your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
@@ -870,7 +870,7 @@ If you get stumped, feel free to reference the
 
 And remember, get creative with these challenges and make them your own!
 
-## Completed the lab?
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!

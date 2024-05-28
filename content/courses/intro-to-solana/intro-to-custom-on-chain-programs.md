@@ -4,12 +4,12 @@ objectives:
   - Create transactions for custom onchain programs
 ---
 
-# Summary
+## Summary
 
 Solana has multiple onchain programs you can use. Instructions that use these
 programs need to have data in a custom format determined by the program.
 
-# Lesson
+## Lesson
 
 ### Instructions
 
@@ -90,7 +90,7 @@ for that signature in Solana Explorer, then see:
 
 ![Solana Explorer with details about a transaction](/public/assets/courses/unboxed/solana-explorer-transaction-overview.png)
 
-# Lab
+## Lab
 
 ### Writing transactions for the ping counter program
 
@@ -102,7 +102,7 @@ its data in a specific account at the address
 
 <!-- ![Solana stores programs and data in separate accounts](/public/assets/courses/unboxed/pdas-global-state.svg) -->
 
-### 1. Basic scaffolding
+### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
 [Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data.md).
@@ -130,7 +130,7 @@ const newBalance = await airdropIfRequired(
 
 This will connect to Solana Devnet and request some test Lamports if needed.
 
-### 2. Ping program
+### Ping program
 
 Now let's talk to the Ping program! To do this, we need to:
 
@@ -202,7 +202,7 @@ const signature = await web3.sendAndConfirmTransaction(
 console.log(`✅ Transaction completed! Signature is ${signature}`);
 ```
 
-### 3. Run the ping client and check Solana Explorer
+### Run the ping client and check Solana Explorer
 
 Now run the code with the following command:
 
@@ -238,10 +238,6 @@ Scroll around the explorer and look at what you're seeing:
   the ping program is a pretty simple program, so it doesn't need any data.
 - The **Program Instruction Logs** show the logs from the ping program.
 
-[//]:
-  #
-  "TODO: these would make a good question-and-answer interactive once we have this content hosted on solana.com, and can support adding more interactive content easily."
-
 If you want to make it easier to look at Solana Explorer for transactions in the
 future, simply change your `console.log` to the following:
 
@@ -260,7 +256,7 @@ In the next few lessons, you’ll learn how to
 2. Add custom data to your instructions
 3. Deserialize data from the chain
 
-# Challenge
+## Challenge
 
 Go ahead and create a script from scratch that will allow you to transfer SOL
 from one account to another on Devnet. Be sure to print out the transaction
@@ -269,7 +265,7 @@ signature so you can look at it on Solana Explorer.
 If you get stuck feel free to glance at the
 [solution code](https://github.com/Unboxed-Software/solana-ping-client).
 
-## Completed the lab?
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e969d07e-ae85-48c3-976f-261a22f02e52)!

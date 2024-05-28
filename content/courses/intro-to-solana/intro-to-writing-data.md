@@ -8,16 +8,16 @@ objectives:
   - Use Solana Explorer to view transactions
 ---
 
-# Summary
+## Summary
 
 All modifications to onchain data happen through **transactions**. Transactions
 are mostly a set of instructions that invoke Solana programs. Transactions are
 atomic, meaning they either succeed - if all the instructions have been executed
 properly - or fail as if the transaction hasn't been run at all.
 
-# Lesson
+## Lesson
 
-## Transactions are atomic
+### Transactions are atomic
 
 Any modification to onchain data happens through transactions sent to programs.
 
@@ -36,7 +36,7 @@ and not debit your account, or debit the account but not pay the merchant.
 Atomic means either the transaction happens - meaning all the individual steps
 succeed - or the entire transaction fails.
 
-## Transactions contain instructions
+### Transactions contain instructions
 
 The steps within a transaction on Solana are called **instructions**.
 
@@ -103,7 +103,7 @@ The `sendAndConfirmTransaction()` function takes the following parameters:
 - an array of keypairs that will act as signers on the transaction - in this
   example, we only have one signer: the sender.
 
-## Transactions have fees
+### Transactions have fees
 
 Transaction fees are built into the Solana economy as compensation to the
 validator network for the CPU and GPU resources required in processing
@@ -138,7 +138,7 @@ for testing locally and on Devnet.
 You can also use the Solana CLI command `solana airdrop 1` to get free test SOL
 in your account when testing, whether locally or on devnet.
 
-## Solana Explorer
+### Solana Explorer
 
 ![Solana Explorer set to Devnet](/public/assets/courses/unboxed/solana-explorer-devnet.png)
 
@@ -154,11 +154,11 @@ for that signature in the Solana Explorer, then see:
 
 ![Solana Explorer with details about a transaction](/public/assets/courses/unboxed/solana-explorer-transaction-overview.png)
 
-# Lab
+## Lab
 
 We’re going to create a script to send SOL to other students.
 
-### 1. Basic scaffolding
+### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
 [Intro to Cryptography](/content/courses/intro-to-solana/intro-to-cryptography.md).
@@ -241,7 +241,7 @@ Send SOL to other students in the class.
 npx esrun transfer.ts (destination wallet address)
 ```
 
-# Challenge
+## Challenge
 
 Answer the following questions:
 
@@ -254,7 +254,7 @@ Answer the following questions:
 
 - What do you think "confirmed" means?
 
-## Completed the lab?
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=dda6b8de-9ed8-4ed2-b1a5-29d7a8a8b415)!
