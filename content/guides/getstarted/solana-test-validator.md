@@ -83,7 +83,7 @@ Check CLI Tool Suite configuration:
 solana genesis-hash
 ```
 
-View all configuration options:
+View all the configuration options available for the Solana test validator:
 
 ```shell
 solana-test-validator --help
