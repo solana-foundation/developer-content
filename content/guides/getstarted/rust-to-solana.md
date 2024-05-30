@@ -77,12 +77,9 @@ The entrypoint macro calls a given function, which must have the following type
 signature:
 
 ```rust
-pub fn process_instruction( program_id: &Pubkey, accounts: &[AccountInfo],
-instruction_data: &[u8], ) -> ProgramResult {
-
-        //program code goes here
-
-    }
+pub fn process_instruction(program_id: &Pubkey, accounts: &[AccountInfo], instruction_data: &[u8]) -> ProgramResult {
+  //program code goes here
+}
 ```
 
 These three parameters are passed to every onchain program:
