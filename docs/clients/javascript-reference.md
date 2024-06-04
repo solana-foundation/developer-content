@@ -109,7 +109,7 @@ transaction.add(
 await web3.sendAndConfirmTransaction(connection, transaction, [payer]);
 
 // Alternatively, manually construct the transaction
-let recentBlockhash = await connection.getRecentBlockhash();
+let recentBlockhash = await connection.getLatestBlockhash();
 let manualTransaction = new web3.Transaction({
   recentBlockhash: recentBlockhash.blockhash,
   feePayer: payer.publicKey,
