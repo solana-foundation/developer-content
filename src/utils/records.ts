@@ -85,5 +85,10 @@ export function getRecordsForGroup(
     }
   }
 
+  // default the records to the base language if no records for the provided locale were found
+  if (records.findIndex(record => record.locale == options.locale) < 0) {
+    options.locale = DEFAULT_LOCALE_EN;
+  }
+
   return records.filter(record => record.locale == options.locale);
 }
