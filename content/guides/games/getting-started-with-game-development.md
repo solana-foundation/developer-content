@@ -101,7 +101,7 @@ developers. Get started today by first picking your favorite gaming SDK:
 | [Honeycomb Protocol](/content/guides/games/game-sdks.md#honeycomb-protocol)          | Rust and JavaScript                 |
 | [Unreal SDKs](/content/guides/games/game-sdks.md#unreal-sdks)                        | C++, C#, Blueprints                 |
 | [Next js, React, Anchor](/content/guides/games/game-sdks.md#next-js-react-anchor)    | Rust/Anchor, JavaScript, C#, NextJS |
-| [Flutter](/content/guides/games/game-sdks.md#flutter)                                | JavaScript                          |
+| [Flutter](/content/guides/games/game-sdks.md#flutter)                                | Dart                                |
 | [Phaser](/content/guides/games/game-sdks.md#phaser)                                  | HTML5, JavaScript                   |
 | [Python](/content/guides/games/game-sdks.md#python)                                  | Python                              |
 | [Native C#](/content/guides/games/game-sdks.md#native-c)                             | C#                                  |
