@@ -23,9 +23,14 @@ keywords:
 ---
 
 In this guide you will learn step by step how to create a new SPL token on
-Solana with the token metadata extension. If you want to use Metaplex metadata
-instead instead see the
+Solana with the Token Extensions program and its token metadata extension. If
+you want to use the base SPL Token program and Metaplex metadata instead see the
 [Metaplex documentation](https://developers.metaplex.com/token-metadata).
+
+NOTE: The steps in this guide only apply to SPL Token Extensions, ie. program id
+`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`, and not SPL Token, ie. program id
+`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`. The token metadata extension is
+not available in SPL Token.
 
 ## Installing Solana Tools
 
@@ -235,6 +240,10 @@ Now we are ready to add this metadata to our token.
 
 ## Add metadata to a token
 
+NOTE: This step only works for tokens using SPL Token Extensions, ie. program id
+`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`, and not SPL Token, program id
+`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`.
+
 Now we will initialize the metadata for our token with the metadata we just
 created and uploaded.
 
@@ -244,7 +253,7 @@ spl-token initialize-metadata niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun \
   'https://bafybeidfm65jzvz4zeesxp6ybinkitvpd27klk6yspstrtw5fuy5w27lkq.ipfs.w3s.link/metadata.json'
 ```
 
-Congratulation you created a token with metadata! You can look at your token in
+Congratulations you created a token with metadata! You can look at your token in
 one of the Solana block explorers:
 
 - [SolanaFm](https://solana.fm/address/niceG6oxHmPcXVdNaUoECzWXn8Jz8fA5Q99QauJ4Gun)
