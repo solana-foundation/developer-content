@@ -15,7 +15,6 @@ There are two ways to test programs on Solana:
 1. [solana-test-validator](https://docs.solanalabs.com/cli/examples/test-validator):
    That spins up a local emulator of the Solana Blockchain on your local machine
    which receives the transactions to be processed by the validator.
-   
 2. BanksClient-based test framework for SBF(Solana Bytecode Format) programs:
    Bankrun is a framework that simulates a Solana bank’s operations, enabling
    developers to deploy, interact with, and assess the behaviour of programs
@@ -130,6 +129,7 @@ test("testing program instruction", async () => {
   required to build a transaction to be submitted, for example, SystemProgram
   creates account instruction. You can also do that using BanksClient. Code
   below
+
   ```tsx
   const rent = await client.getRent();
 
@@ -139,6 +139,7 @@ test("testing program instruction", async () => {
     //....
   });
   ```
+
 - You can read account data from BanksClient using `getAccount` function
   ```tsx
   AccountInfo = await client.getAccount(counter);
