@@ -227,7 +227,7 @@ Since we are able to directly query the SOL balance of PDA accounts, we don't ha
 
 Now that the state is defined, we need to create an instruction to initialize an
 account when a new user signs up for cash app. This will initialize a new
-`cash_account` and the PDA of this account will be derived from the public key
+`cash_account` and the PDA of this account will be derived from the string `"cash-account"` and the public key
 of the user's wallet.
 
 ```rust
