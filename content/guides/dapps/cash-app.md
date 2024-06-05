@@ -2365,7 +2365,7 @@ export function SolanaPayButton({ address }: { address: PublicKey }) {
           )}
           <Text style={styles.text}> Scan to Pay </Text>
         </View>
-        <SolPayModal
+        <SolanaPayModal
           hide={() => setShowPayModal(false)}
           show={showPayModal}
           address={address}
