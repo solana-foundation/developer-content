@@ -2441,7 +2441,7 @@ export function SolPayModal({
 
 ## Connecting User Names with Public Keys via Solana Name Service
 
-Solana Name Service _(SNS)_ enables a human-readable name to be mapped to a SOL
+Solana Name Service _(SNS)_ enables a human-readable name to be mapped to a Solana
 address. By implementing SNS, we can easily prompt a user to create a user name
 _(which will become their SNS name behind the scenes)_ and that name will
 directly map to the users wallet address.
