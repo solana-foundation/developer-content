@@ -464,7 +464,7 @@ pub struct TransferFunds<'info> {
 ```
 
 In the above instruction, the `TransferFunds` Context data structure consists of
-an additional account. The `Context` is a macro-generated struct that includes
+an additional account. The `Context` is a struct that includes
 references to all the accounts needed for the operation. Since we need
 information from both the sender and recipient accounts for this instruction, we
 need to include both accounts in the `Context`.
