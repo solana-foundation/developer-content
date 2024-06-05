@@ -221,8 +221,7 @@ pub struct CashAccount {
 }
 ```
 
-Since we are able to directly query the SOL balance of PDA accounts, we don't
-won't have to keep track of the user's account balance here.
+Since we are able to directly query the SOL balance of PDA accounts, we don't have to keep track of the user's account balance here.
 
 ### Write Instructions
 
