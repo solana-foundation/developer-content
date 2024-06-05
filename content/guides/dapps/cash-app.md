@@ -90,7 +90,7 @@ For this guide, you will need to have your local development environment setup
 with a few tools:
 
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Node JS](https://nodejs.org/en/download)
+- [Node.js](https://nodejs.org/en/download)
 - [Solana CLI & Anchor](https://solana.com/developers/guides/getstarted/setup-local-development)
 - [Android Studio and emulator set up](https://docs.solanamobile.com/getting-started/development-setup)
 - [React Native Setup](https://reactnative.dev/docs/environment-setup?platform=android)
