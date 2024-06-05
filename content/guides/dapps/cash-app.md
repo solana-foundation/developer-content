@@ -394,10 +394,9 @@ transfer of funds can be done without the overhead of a CPI because the `cash_ac
 by the same program executing the function. This is 
 more efficient but requires careful handling to ensure security.
 
-A Solana Program can transfer lamports from an account that is owned by the
-program to another without 'invoking' the System program. The sender account
+When Solana Program transfers lamports from an account that it owns, the sender account
 must be owned by the program but the recipient account does not have to be owned
-by the program. However, since lamports can not be created or destroyed when
+by the program. Since lamports can not be created or destroyed when
 changing account balances, any decrement performed needs to be balanced with an
 equal increment somewhere else, otherwise you will get an error. In the above
 `withdraw_funds` instruction, the program is transferring the exact same amount
