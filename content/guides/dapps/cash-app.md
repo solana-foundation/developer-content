@@ -86,8 +86,7 @@ program, integrate the Solana Name Service SDK, and integrate Solana Pay.
 
 ## Prerequisites
 
-For this guide, you will need to have your local development environment setup
-with a few tools:
+Setup the following tools on your local development environment:
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Node.js](https://nodejs.org/en/download)
