@@ -807,15 +807,6 @@ pub mod cash_app {
 Now your Solana program should match the final version here: /// FIX ME: Add
 link to github code in program examples
 
-### Additional Solana Program Development Information
-
-If there is any confusion on the above Anchor macros, structs, or functions
-defined, please refer to the
-[Basic CRUD dApp on Solana Guide](https://github.com/solana-foundation/developer-content/blob/main/content/guides/dapps/journal.md#writing-a-solana-program-with-anchor)
-for a guide with a more granular explanation.
-
-For more in-depth understanding of the Anchor framework, review
-[The Anchor Book](https://book.anchor-lang.com/).
 
 ### Build and Deploy an Anchor Program
 
