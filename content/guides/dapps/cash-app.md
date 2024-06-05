@@ -388,7 +388,7 @@ pub enum ErrorCode {
 ```
 
 Unlike the `deposit_funds` instruction, the `withdraw_funds` instruction
-directly adjusts the lamports _(the smallest unit of SOL)_ in the user's
+directly adjusts the [Lamports](https://solana.com/docs/terminology#lamport)
 `cash_account` and the user's wallet by using `try_borrow_mut_lamports()`. This
 transfer of funds can be done without a CPI because the `cash_account` is owned
 by the same program executing the function. By directly manipulating lamports,
