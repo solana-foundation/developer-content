@@ -54,35 +54,22 @@ program, integrate the Solana Name Service SDK, and integrate Solana Pay.
 
 ### Home Screen
 
-<div align="center">
-    <img src="./cash-app-images/HomeScreen.png" alt="Cash Balance" width="200"/>
-    <span style="display: inline-block; width: 20px;"></span> 
-    <img src="./cash-app-images/CashOutModal.png" alt="Cash Out Modal" width="200"/>
-</div>
+![Cash Balance](/assets/guides/cash-app/HomeScreen.png)
+![Cash Out Modal](/assets/guides/cash-app/CashOutModal.png)
 
 ### Payment Screen
 
-<div align="center">
-    <img src="./cash-app-images/PaymentScreen.png" alt="Payment Screen" width="200"/>
-    <span style="display: inline-block; width: 20px;"></span> 
-    <img src="./cash-app-images/RequestScreen.png" alt="Request Screen" width="200"/>
-</div>
+![Payment Screen](/assets/guides/cash-app/PaymentScreen.png)
+![Request Screen](/assets/guides/cash-app/RequestScreen.png)
 
 ### QR Screen
 
-<div align="center">
-    <img src="./cash-app-images/QRScreen.png" alt="Request Screen" width="200"/>
-    <span style="display: inline-block; width: 20px;"></span> 
-    <img src="./cash-app-images/QRModal.png" alt="QR Modal" width="200"/>
-    <span style="display: inline-block; width: 20px;"></span> 
-    <img src="./cash-app-images/QRGenerated.png" alt="QR Generated" width="200"/>
-</div>
+![QR Screen](/assets/guides/cash-app/QRScreen.png)
+![QR Modal](/assets/guides/cash-app/QRModal.png)
 
 ### Activity Screen
 
-<div align="center">
-    <img src="./cash-app-images/ActivityScreen.png" alt="Activity Screen" width="200"/>
-</div>
+![Activity Screen](/assets/guides/cash-app/ActivityScreen.png)
 
 ## Prerequisites
 
