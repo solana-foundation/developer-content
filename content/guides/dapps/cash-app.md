@@ -1004,7 +1004,7 @@ of the dApp.
 Lets get the Android emulator running so we can see in real time the UI updates
 that we will make throughout this guide.
 
-You must have an EAS account and be logged into your account in the EAS cli, to
+You must have an EAS account and be logged into your account in the EAS CLI, to
 set this up follow [the expo documentation](https://docs.expo.dev/build/setup/).
 
 Navigate to the `cash-app-clone` directory in your terminal and run:
