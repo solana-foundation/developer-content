@@ -5,7 +5,7 @@ title: "Cash App on Solana"
 description:
   "Solana developer quickstart guide to learn how to create a react-native
   mobile app that is both Android and iOS compatible. This app will mimic a cash
-  app experience but run on the Solana blockchian, showcasing that web3 products
+  app experience but run on the Solana blockchain, showcasing that web3 products
   can have the same user experience as web2 products. To build this, we will
   need to write an Anchor program, integrate the Solana Name Service SDK, and
   integrate Solana pay."
@@ -894,7 +894,7 @@ template, which will already have the required modules imported.
 
 First we need to set up our environment to interact with the Solana blockchain.
 
-```typescript
+```tsx
 describe("cash-app", () => {
   const provider = anchor.AnchorProvider.env();
   const program = anchor.workspace.CashApp as Program<CashApp>;
@@ -917,7 +917,7 @@ provider's wallet, meaning that it is already integrated with the
 `yourWallet` is a new wallet being generated, it will need to be funded with SOL
 by requesting an airdrop.
 
-```typescript
+```tsx
 it("A to B user flow", async () => {
   const myWallet = provider.wallet as anchor.Wallet;
   const yourWallet = new anchor.web3.Keypair();
@@ -949,7 +949,7 @@ it("A to B user flow", async () => {
 Now we can interact with the Solana program. First we need to initialize each
 user's `cash_account`.
 
-```typescript
+```tsx
 const initMe = await program.methods
   .initializeAccount()
   .accounts({
@@ -1040,7 +1040,7 @@ required to manage interactions with the Solana program. Create a new file under
 Since we want this app to be publicly available, deploy your program to devnet
 and use that public key instead of `11111111111111111111111111111111`.
 
-```typescript
+```tsx
 export function UseCashAppProgramAccount(user: PublicKey) {
   const cashAppProgramId = new PublicKey("11111111111111111111111111111111");
 
@@ -1105,7 +1105,7 @@ To get information for specific `pending_request` accounts associated with a
 specific public key, we'll need a to take in the pending request ID as a
 parameter.
 
-```typescript
+```tsx
 export function UsePendingRequestAccount(
   user: PublicKey,
   count: number,
@@ -1245,7 +1245,7 @@ Scan, and Activity.
 Navigate to `HomeNavigator.tsx` and update the `<Tab.Navigator>` to include the
 following screens:
 
-```typescript
+```tsx
 <PaperProvider theme={theme}>
   <Tab.Navigator
     screenOptions={({ route }) => ({
@@ -1303,7 +1303,7 @@ Navigate to `src/screens` and create a file for `PayScreen.tsx`,
 Each file needs to have a function correlating to the screen name that follows
 the same format as the HomeScreen in this template.
 
-```typescript
+```tsx
 export function HomeScreen() {
   return <View style={styles.screenContainer}></View>;
 }
@@ -1327,7 +1327,7 @@ program and query the balance of the user's `cash_account` instead.
 
 First simplify the home screen to just:
 
-```typescript
+```tsx
 export function HomeScreen() {
   const { selectedAccount } = useAuthorization();
 
@@ -1356,7 +1356,7 @@ Then click into `AccountDetailFeature` and update the styling to use
 `cardContainer`, add in a "Cash Balance" label for the card container, and
 delete the `AccountTokens` component, as shown below:
 
-```typescript
+```tsx
 export function AccountDetailFeature() {
   const { selectedAccount } = useAuthorization();
 
@@ -1388,7 +1388,7 @@ need to change the public key that is being passed through the `useGetBalance`
 function. We can grab the `cashAppPDA` from the `UseCashAppProgram` function we
 created earlier.
 
-```typescript
+```tsx
 export function AccountBalance({ address }: { address: PublicKey }) {
   const { cashAppPDA } = UseCashAppProgram(address);
 
@@ -1423,7 +1423,7 @@ To be able to call and execute an instruction from the deployed Solana program,
 we can use the program namespaces which map one-to-one to program methods and
 accounts.
 
-```typescript
+```tsx
 const [connection] = useState(
   () => new Connection("https://api.devnet.solana.com"),
 );
@@ -1502,7 +1502,7 @@ Now that we have the function for `depositFunds`, you'll need to do follow the
 same formate to create a `withdrawFunds` function using the program namespace
 for the withdrawFunds instruction.
 
-```typescript
+```tsx
 const withdrawInstruction = await program.methods
   .withdrawFunds(pubkey, newDepositAmount)
   .accounts({
@@ -1537,7 +1537,7 @@ buttons, we'll have a withdraw and deposit modal. We'll also need to take in a
 user input value for the amount to be deposited or withdrawn. Lastly, we'll need
 to call the `depositFunds` and `withdrawFunds` functions we just created.
 
-```typescript
+```tsx
 export function AccountButtonGroup({ address }: { address: PublicKey }) {
   const [showWithdrawModal, setShowWithdrawModal] = useState(false);
   const [showDepositModal, setShowDepositModal] = useState(false);
@@ -1550,7 +1550,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
   const { cashAppProgram } = UseCashAppProgram(address);
 
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com")
+    () => new Connection("https://api.devnet.solana.com"),
   );
 
   const DepositModal = () => (
@@ -1590,7 +1590,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
               try {
                 if (!cashAppProgram || !selectedAccount) {
                   console.warn(
-                    "Program/wallet is not initialized yet. Try connecting a wallet first."
+                    "Program/wallet is not initialized yet. Try connecting a wallet first.",
                   );
                   return;
                 }
@@ -1598,7 +1598,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
 
                 alertAndLog(
                   "Funds deposited into cash account ",
-                  "See console for logged transaction."
+                  "See console for logged transaction.",
                 );
                 console.log(deposit);
               } finally {
@@ -1656,7 +1656,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
               try {
                 if (!cashAppProgram || !selectedAccount) {
                   console.warn(
-                    "Program/wallet is not initialized yet. Try connecting a wallet first."
+                    "Program/wallet is not initialized yet. Try connecting a wallet first.",
                   );
                   return;
                 }
@@ -1664,7 +1664,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
 
                 alertAndLog(
                   "Funds withdrawn from cash account ",
-                  "See console for logged transaction."
+                  "See console for logged transaction.",
                 );
                 console.log(deposit);
               } finally {
@@ -1709,7 +1709,7 @@ one account that is required for `depositFunds`. So what needs to change is
 simply to add calculations of the PDAs of both the sender account and the
 recipient's account, as shown below:
 
-```typescript
+```tsx
 const [recipientPDA] = useMemo(() => {
   const recipientSeed = [Buffer.from("cash-account"), recipient.toBuffer()];
   return PublicKey.findProgramAddressSync([recipientSeed], cashAppProgramId);
@@ -1735,7 +1735,7 @@ For the request page, we'll need to call the `newRequest` function from the cash
 app Solana program. This function also requires multiple accounts. Here you'll
 need the `pending_request` account and the `cash_account` of the signer.
 
-```typescript
+```tsx
 const [pendingRequestPDA] = useMemo(() => {
   const pendingRequestSeed = [
     Buffer.from("pending-request"),
@@ -1761,7 +1761,7 @@ const requestInstruction = await program.methods
 
 A user will interact with their pending payment requests on the activity page.
 
-```typescript
+```tsx
 const acceptInstruction = await program.methods
   .acceptRequest()
   .accounts({
@@ -1793,7 +1793,7 @@ numerical value via a keyboard, handle the input value, select currency via a
 small modal, and navigate to the request and pay pages via buttons. Here is the
 code below:
 
-```typescript
+```tsx
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   "Home"
@@ -1895,17 +1895,17 @@ const App: React.FC<Props> = ({ navigation }) => {
       </View>
       <View style={styles.keypad}>
         <View style={styles.row}>
-          {[1, 2, 3].map((number) => (
+          {[1, 2, 3].map(number => (
             <NumberButton key={number} number={number.toString()} />
           ))}
         </View>
         <View style={styles.row}>
-          {[4, 5, 6].map((number) => (
+          {[4, 5, 6].map(number => (
             <NumberButton key={number} number={number.toString()} />
           ))}
         </View>
         <View style={styles.row}>
-          {[7, 8, 9].map((number) => (
+          {[7, 8, 9].map(number => (
             <NumberButton key={number} number={number.toString()} />
           ))}
         </View>
@@ -1947,7 +1947,7 @@ The `Request` and `Pay` Screens need to take in your input value from the
 previous Payment screen and use it to execute the `transferFunds` and
 `newPaymentRequest` instructions.
 
-```typescript
+```tsx
 const PayScreen: React.FC<Props> = ({ route, navigation }) => {
   const [reason, setReason] = useState("");
   const { inputValue } = route.params;
@@ -1956,7 +1956,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
   const newAmount = new anchor.BN(inputValue);
 
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com")
+    () => new Connection("https://api.devnet.solana.com"),
   );
   const { authorizeSession, selectedAccount } = useAuthorization();
   const user = selectedAccount.publicKey;
@@ -1993,19 +1993,19 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
           });
 
           return signedTransactions[0];
-        }
+        },
       );
 
       let txSignature = await connection.sendRawTransaction(
         signedTransactions.serialize(),
         {
           skipPreflight: true,
-        }
+        },
       );
 
       const confirmationResult = await connection.confirmTransaction(
         txSignature,
-        "confirmed"
+        "confirmed",
       );
 
       if (confirmationResult.value.err) {
@@ -2014,7 +2014,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
         console.log("Transaction successfully submitted!");
       }
     },
-    [authorizeSession, connection, cashAppPDA]
+    [authorizeSession, connection, cashAppPDA],
   );
 
   return (
@@ -2034,7 +2034,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
             try {
               if (!cashAppProgram || !selectedAccount) {
                 console.warn(
-                  "Program/wallet is not initialized yet. Try connecting a wallet first."
+                  "Program/wallet is not initialized yet. Try connecting a wallet first.",
                 );
                 return;
               }
@@ -2042,7 +2042,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
 
               alertAndLog(
                 "Funds deposited into cash account ",
-                "See console for logged transaction."
+                "See console for logged transaction.",
               );
               console.log(deposit);
             } finally {
@@ -2105,12 +2105,12 @@ For the Add Friend Feature, you'll want a text box for a user to input the
 pubkey of the friend they want to add and a button that calls the add friend
 instruction.
 
-```typescript
+```tsx
 export function AddFriend({ address }: { address: PublicKey }) {
   const [pubkey, setPubkey] = useState("");
   const [signingInProgress, setSigningInProgress] = useState(false);
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com")
+    () => new Connection("https://api.devnet.solana.com"),
   );
   const { authorizeSession, selectedAccount } = useAuthorization();
   const { cashAppProgram, cashAppPDA, friends } = UseCashAppProgram(address);
@@ -2143,19 +2143,19 @@ export function AddFriend({ address }: { address: PublicKey }) {
           });
 
           return signedTransactions[0];
-        }
+        },
       );
 
       let txSignature = await connection.sendRawTransaction(
         signedTransactions.serialize(),
         {
           skipPreflight: true,
-        }
+        },
       );
 
       const confirmationResult = await connection.confirmTransaction(
         txSignature,
-        "confirmed"
+        "confirmed",
       );
 
       if (confirmationResult.value.err) {
@@ -2164,7 +2164,7 @@ export function AddFriend({ address }: { address: PublicKey }) {
         console.log("Transaction successfully submitted!");
       }
     },
-    [authorizeSession, connection, cashAppPDA]
+    [authorizeSession, connection, cashAppPDA],
   );
 
   return (
@@ -2219,13 +2219,13 @@ export function AddFriend({ address }: { address: PublicKey }) {
               const signedTransaction = await addFriend(cashAppProgram);
               alertAndLog(
                 "Transaction signed",
-                "View recent transactions for more information."
+                "View recent transactions for more information.",
               );
               console.log(signedTransaction);
             } catch (err: any) {
               alertAndLog(
                 "Error during signing",
-                err instanceof Error ? err.message : err
+                err instanceof Error ? err.message : err,
               );
             } finally {
               setSigningInProgress(false);
@@ -2266,7 +2266,7 @@ For simplicity, this functionality will live on its own screen, which we already
 defined earlier as the Scan Screen. Similarly to the home screen, navigate to
 `ScanScreen.tsx` and set up the following function:
 
-```typescript
+```tsx
 export function ScanScreen() {
   const { selectedAccount } = useAuthorization();
 
@@ -2306,7 +2306,7 @@ new QR code.
 We can do this with the Solana Pay API, state handling, conditional rendering,
 and data submission between the two components, as shown below:
 
-```typescript
+```tsx
 export function SolanaPayButton({ address }: { address: PublicKey }) {
   const [showPayModal, setShowPayModal] = useState(false);
 
@@ -2464,7 +2464,7 @@ to simplify a lot of the front end:
 To showcase this, lets update the transfers funds function to now accept a user
 name as a parameter rather than a public key and integrate the SNS API.
 
-```typescript
+```tsx
 const transferFunds = useCallback(
   async (program: Program<CashApp>) => {
     let signedTransactions = await transact(
