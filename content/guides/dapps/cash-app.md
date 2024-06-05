@@ -185,9 +185,6 @@ cd cash-app-clone
 anchor init cash-app
 ```
 
-Note: You must have the [Anchor CLI](https://www.anchor-lang.com/docs/cli)
-installed to run this command.
-
 Once the Anchor workspace has been initialized, navigate to to
 `cash-app/programs/cash-app/src/lib.rs` to start writing the program code.
 
