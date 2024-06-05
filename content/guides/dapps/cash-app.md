@@ -412,9 +412,9 @@ For error handling. the `#[error_code]` Anchor macro is used, which generates
 `Error` and `type Result<T> = Result<T, Error> ` types to be used as return
 types from Anchor instruction handlers. Importantly, the attribute implements
 `From` on the `ErrorCode` to support converting from the user defined error enum
-into the generated `Error`
+into the generated `Error`.
 
-Now lets create an instruction for transferring funds from one user to another.
+Now let's create an instruction for transferring funds from one user to another.
 
 ```rust
 #[program]
