@@ -3,7 +3,7 @@ date: March 18, 2024
 difficulty: Intermediate
 title: "Cash App on Solana"
 description:
-  "Solana developer quickstart guide to learn how to create a react-native
+  "Solana developer quickstart guide to learn how to create a React Native
   mobile app that is both Android and iOS compatible. This app will mimic a cash
   app experience but run on the Solana blockchian, showcasing that web3 products
   can have the same user experience as web2 products. To build this, we will
