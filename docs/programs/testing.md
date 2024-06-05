@@ -217,7 +217,7 @@ describe("hello-solana", async () => {
 This is how the output looks like after running the tests for
 [hello world program](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/native).
 
-```json
+```text
 [2024-06-04T12:57:36.188822000Z INFO  solana_program_test] "hello_solana_program" SBF program from tests/fixtures/hello_solana_program.so, modified 3 seconds, 20 ms, 687 µs and 246 ns ago
 [2024-06-04T12:57:36.246838000Z DEBUG solana_runtime::message_processor::stable_log] Program 11111111111111111111111111111112 invoke [1]
 [2024-06-04T12:57:36.246892000Z DEBUG solana_runtime::message_processor::stable_log] Program log: Hello, Solana!
