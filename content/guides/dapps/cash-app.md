@@ -321,7 +321,7 @@ pub enum ErrorCode {
 The `deposit_funds` function constructs a system instruction to transfer SOL
 from the user's wallet to the user's cash account PDA. Solana programs are
 designed to be isolated for security reasons; they don't have direct access to
-each other's state or functions. If one program needs to execute functionality
+each other's state or functions. If one program needs to run an instruction handler
 that is part of another program, it must do so through a cross-program
 invocation (CPI). Since the funds are coming from the signer's wallet, which is
 an account owned by the signer not the program, the function has to interact
