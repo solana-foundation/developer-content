@@ -390,9 +390,8 @@ pub enum ErrorCode {
 Unlike the `deposit_funds` instruction, the `withdraw_funds` instruction
 directly adjusts the [Lamports](https://solana.com/docs/terminology#lamport)
 `cash_account` and the user's wallet by using `try_borrow_mut_lamports()`. This
-transfer of funds can be done without a CPI because the `cash_account` is owned
-by the same program executing the function. By directly manipulating lamports,
-the function avoids the overhead of setting up and executing a CPI. This can be
+transfer of funds can be done without the overhead of a CPI because the `cash_account` is owned
+by the same program executing the function. This is 
 more efficient but requires careful handling to ensure security.
 
 A Solana Program can transfer lamports from an account that is owned by the
