@@ -18,16 +18,14 @@ keywords:
   - local-development
 ---
 
-
 The Solana test validator is a local emulator for the Solana blockchain,
 designed to provide developers with a private and controlled environment for
 building and testing Solana programs without the need to connect to a public
-testnet or mainnet.
-If you have the Solana CLI tool suite
+testnet or mainnet. If you have the Solana CLI tool suite
 [already installed](http://localhost:3000/developers/guides/getstarted/setup-local-development#3-install-the-solana-cli),
 you can run the test validator with the following command:
 
-```shell
+````shell
 solana-test-validator
 ## Advantages
 
@@ -49,11 +47,12 @@ following command:
 
 ```shell
 sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
-```
+````
 
 You can replace `stable` with the release tag matching the software version of
 your desired release (i.e. `v1.18.1`), or use one of the three symbolic channel
 names: `stable`, `beta`, or `edge`.
+
 > For more detailed instructions, checkout this guide on
 > [setting up your local environment](/content/guides/getstarted/setup-local-development.md)
 > for Solana development. It includes installing the Solana CLI, Anchor, getting
@@ -220,9 +219,9 @@ solana-test-validator --reset --account PROGRAM_ADDRESS account_state.json
 
 ## Interacting with a Running Test Validator
 
-Once you have the `solana-test-validator` up and running, you can interact with it
-using various Solana CLI (Command Line Interface) commands. These commands let
-you [deploy programs](/docs/programs/deploying.md), manage
+Once you have the `solana-test-validator` up and running, you can interact with
+it using various Solana CLI (Command Line Interface) commands. These commands
+let you [deploy programs](/docs/programs/deploying.md), manage
 [accounts](/docs/core/accounts.md), send
 [transactions](/docs/core/transactions.md), and much more. Here’s a detailed
 guide on the key commands you will use.
