@@ -23,9 +23,9 @@ Learn the difference between CosmWasm and Solana smart contracts.
 - Execution Environment: Runs on the Cosmos SDK, designed for interoperability
   between blockchains.
 - State Management: Uses `cosmwasm_storage` for storing and retrieving state.
+- Entry Points: Separate entry points for instantiate, execute, and query.
 - Messages: Uses `InstantiateMsg`, `ExecuteMsg`, and `QueryMsg` for contract
   operations.
-- Entry Points: Separate entry points for instantiate, execute, and query.
 
 **Solana**
 
@@ -33,40 +33,9 @@ Learn the difference between CosmWasm and Solana smart contracts.
   throughput and low latency.
 - State Management: Uses `Borsh` for serialization and deserialization of state
   stored in accounts.
-- Instructions: Uses custom-defined instructions for all operations.
 - Entry Point: A single entry point (process_instruction) handles all
   instructions.
-
-## Project Setup
-
-1. Initialize a new Solana project:
-
-```shell
-cargo new solana_counter --lib
-cd solana_counter
-```
-
-2. Update Cargo.toml
-
-```toml
-[package]
-name = "solana_counter"
-version = "0.1.0"
-edition = "2018"
-
-[dependencies]
-solana-program = "1.9.3"
-borsh = "0.9.1"
-
-[lib]
-crate-type = ["cdylib", "rlib"]
-```
-
-3. Create source files
-
-```shell
-touch src/instruction.rs src/processor.rs src/state.rs src/lib.rs
-```
+- Instructions: Uses custom-defined instructions for all operations.
 
 ## State Management
 
@@ -82,6 +51,10 @@ In contrast, Solana programs manage state by directly reading from and writing
 to the data of accounts passed into the program. The state is serialized and
 deserialized using libraries like `Borsh`. State is read from and written to
 account data in the program logic.
+
+The core concept of accounts on Solana is crucial to understanding state
+management and designing Solana Programs. Read about the Solana Account Model
+[here](https://solana.com/docs/core/accounts).
 
 ### Key Differences
 
@@ -105,26 +78,36 @@ account data in the program logic.
    - **Solana**: State is accessed by directly manipulating the data of
      accounts.
 
-Note understanding the core concept of Accounts on Solana is crucial to
-designing Solana Programs. Read about the Solana Account Model
-[here](https://solana.com/docs/core/accounts).
+### Converting CosmWasm State Management to Solana
 
-### Example of Solana State Management
+#### Step 1: Define Account State
 
-1. Defining State Structure
+In Solana, state is stored in accounts. Define the state structure and manage
+serialization using Borsh.
+
+**CosmWasm State Definition**
+
+```rust
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct State {
+    pub count: u32,
+}
+```
+
+**Solana State Definition**
 
 ```rust
 use borsh::{BorshDeserialize, BorshSerialize};
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
-pub struct Counter {
+pub struct CounterState {
     pub count: u32,
 }
 ```
 
-2. Reading and Writing State
+#### Step 2: Reading and Writing State
 
-State is read from and written to account data in the program logic.
+In Solana, State is read from and written to account data in the program logic.
 
 ```rust
 use solana_program::{
@@ -149,10 +132,285 @@ pub fn process_increment(accounts: &[AccountInfo], program_id: &Pubkey) -> Progr
 }
 ```
 
+## Entry Points
+
+CosmWasm provides a modular approach with separate entry points (instantiate,
+execute, query) for different types of operations. Solana uses a single entry
+point (process_instruction) for all instruction types, which offers fine-grained
+control.
+
+### Key Differences
+
+1. Entry point structure
+   - In CosmWasm, each entry point is defined as a separate function, often
+     using the `#[entry_point]` attribute in Rust.
+   - In Solana, the program internally dispatches the instruction to the
+     appropriate handler based on teh instruction data.
+2. Serialization and Deserialization
+   - CosmWasm contracts use JSON for message serialization and deserialization,
+     which makes it easier to understand and debug but can introduce overhead
+   - Solana Programs use Binary Serialization for instructions, which is more
+     efficient in terms of performance and storage.
+3. Error Handling
+   - CosmWasm typically uses standard Rust error handling methods and the errors
+     are returned as part of the result
+   - Solana has a specific set of program errors and error handling is closely
+     tied to instruction processing. Errors must be propagated correctly to
+     ensure proper transaction behavior.
+
+### Converting CosmWasm Entry Points to Solana
+
+**CosmWasm EntryPoint Example**
+
+```rust
+use cosmwasm_std::{entry_point, DepsMut, Env, MessageInfo, Response, StdResult};
+
+#[entry_point]
+pub fn instantiate(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    msg: InstantiateMsg,
+) -> StdResult<Response> {
+    // Initialization logic
+}
+
+#[entry_point]
+pub fn execute(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    msg: ExecuteMsg,
+) -> StdResult<Response> {
+    match msg {
+        ExecuteMsg::Increment {} => execute_increment(deps, env, info),
+        ExecuteMsg::Reset { count } => execute_reset(deps, env, info, count),
+    }
+}
+
+#[entry_point]
+pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::GetCount {} => query_count(deps),
+    }
+}
+```
+
+**Solana Entry Point Example**
+
+```rust
+use solana_program::{
+    account_info::AccountInfo,
+    entrypoint,
+    entrypoint::ProgramResult,
+    pubkey::Pubkey,
+    program_error::ProgramError,
+};
+use borsh::BorshDeserialize;
+
+entrypoint!(process_instruction);
+
+fn process_instruction(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    instruction_data: &[u8],
+) -> ProgramResult {
+    let instruction = CounterInstruction::try_from_slice(instruction_data)
+        .map_err(|_| ProgramError::InvalidInstructionData)?;
+
+    match instruction {
+        CounterInstruction::Initialize { count } => {
+            process_initialize(accounts, count, program_id)
+        }
+        CounterInstruction::Increment => process_increment(accounts, program_id),
+        CounterInstruction::Reset { count } => process_reset(accounts, count, program_id),
+    }
+}
+```
+
 ## Messages vs. Instruction Handling
 
 Understanding the key differences between CosmWasm messages and Solana program
 instruction handling is crucial for developers transitioning between these two
-ecosystems. Here’s a detailed comparison:
+ecosystems
 
-### Advantages of the Instruction-Based Approach in Solana
+### Key Differences
+
+CosmWasm smart contracts use a message-based architecture to handle different
+types of interactions. These messages define the inputs and operations that a
+contract can perform.
+
+1. Message Types:
+
+   - InstantiateMsg: Defines parameters for contract instantiation.
+   - ExecuteMsg: Defines parameters for executing various contract functions.
+   - QueryMsg: Defines parameters for querying the contract state without
+     changing it.
+
+2. Handling Messages:
+
+   - Separate entry points for different message types: instantiate, execute,
+     and query.
+   - Each entry point processes its specific message type and performs the
+     corresponding logic.
+
+Solana programs use instructions to define operations that an on-chain program
+can perform. These instructions are more granular and low-level compared to
+CosmWasm messages.
+
+1. Instruction Definition:
+
+   - Instructions are defined using custom data structures.
+   - Typically serialized and deserialized using Borsh.
+
+2. Account Handling:
+
+   - Instructions include references to accounts that the program will read from
+     or write to.
+   - Ensures the program has the necessary access to operate on the blockchain
+     state.
+
+### Converting Messages to Instructions
+
+#### Step 1: Define Messages as Instructions
+
+In CosmWasm, messages are defined using structs and enums. In Solana, similar
+structs and enums will be used to define instructions.
+
+**CosmWasm Message Definition:**
+
+```rust
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct InstantiateMsg {
+    pub count: u32,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub enum ExecuteMsg {
+    Increment {},
+    Reset { count: u32 },
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
+pub struct QueryMsg {
+    pub get_count: {},
+}
+```
+
+**Solana Instruction Definitions:**
+
+```rust
+use borsh::{BorshDeserialize, BorshSerialize};
+
+#[derive(BorshSerialize, BorshDeserialize, Debug)]
+pub enum CounterInstruction {
+    Initialize { count: u32 },
+    Increment,
+    Reset { count: u32 },
+}
+```
+
+#### Step 2: Implement Instruction Handling
+
+Create handlers for each instruction in Solana. This involves writing the logic
+to process each instruction and update the account state accordingly. This is
+very similar to handling Execute and Query messages in a CosmWasm smart
+contract.
+
+**Solana Instruction Handling:**
+
+```rust
+use solana_program::{
+    account_info::AccountInfo, entrypoint::ProgramResult, program_error::ProgramError,
+    pubkey::Pubkey,
+};
+use borsh::{BorshDeserialize, BorshSerialize};
+use crate::state::CounterState;
+
+pub fn process_initialize(
+    accounts: &[AccountInfo],
+    count: u32,
+    program_id: &Pubkey,
+) -> ProgramResult {
+    let account_info_iter = &mut accounts.iter();
+    let counter_account = next_account_info(account_info_iter)?;
+
+    // Ensure the account is owned by the program
+    if counter_account.owner != program_id {
+        return Err(ProgramError::IncorrectProgramId);
+    }
+
+    let mut counter_data = CounterState { count };
+
+    // Serialize the state into the account
+    counter_data.serialize(&mut &mut counter_account.data.borrow_mut()[..])?;
+
+    Ok(())
+}
+
+pub fn process_increment(accounts: &[AccountInfo], program_id: &Pubkey) -> ProgramResult {
+    let account_info_iter = &mut accounts.iter();
+    let counter_account = next_account_info(account_info_iter)?;
+
+    if counter_account.owner != program_id {
+        return Err(ProgramError::IncorrectProgramId);
+    }
+
+    // Deserialize the state
+    let mut counter_data = CounterState::try_from_slice(&counter_account.data.borrow())?;
+
+    // Update the count
+    counter_data.count += 1;
+
+    // Serialize the updated state back into the account
+    counter_data.serialize(&mut &mut counter_account.data.borrow_mut()[..])?;
+
+    Ok(())
+}
+
+pub fn process_reset(
+    accounts: &[AccountInfo],
+    count: u32,
+    program_id: &Pubkey,
+) -> ProgramResult {
+    let account_info_iter = &mut accounts.iter();
+    let counter_account = next_account_info(account_info_iter)?;
+
+    if counter_account.owner != program_id {
+        return Err(ProgramError::IncorrectProgramId);
+    }
+
+    let mut counter_data = CounterState::try_from_slice(&counter_account.data.borrow())?;
+
+    counter_data.count = count;
+
+    counter_data.serialize(&mut &mut counter_account.data.borrow_mut()[..])?;
+
+    Ok(())
+}
+```
+
+## Solana Program Advantages
+
+1. Performance Efficiency:
+   - Solana’s binary instruction data and direct account manipulation provide
+     high performance and low latency.
+   - This is critical for high-throughput applications like decentralized
+     exchanges (DEXes) and other performance-sensitive use cases.
+2. Fine-Grained Control:
+   - The instruction-based approach offers fine-grained control over program
+     execution and state management.
+   - Developers can optimize their programs at a low level, potentially leading
+     to more efficient implementations.
+3. Flexibility:
+   - Custom instructions can be designed to fit any specific use case, providing
+     flexibility for advanced and complex operations.
+   - This makes it suitable for developers who need to implement highly
+     specialized logic.
+
+In conclusion, Solana is ideal for applications that require high performance,
+low latency, and fine-grained control over execution. It’s better suited for
+developers comfortable with lower-level programming and those who need to
+optimize for specific use cases.
