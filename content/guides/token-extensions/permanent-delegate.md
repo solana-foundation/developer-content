@@ -1,5 +1,5 @@
 ---
-date: Dec 06, 2023
+date: 2023-12-06T00:00:00Z
 seoTitle: "Token Extensions: Permanent Delegate"
 title: How to use the Permanent Delegate extension
 description:

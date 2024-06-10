@@ -1,5 +1,5 @@
 ---
-date: Mar 19, 2024
+date: 2024-03-19T00:00:00Z
 difficulty: intermediate
 title: How to Request Optimal Compute Budget
 description:

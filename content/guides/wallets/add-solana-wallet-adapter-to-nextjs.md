@@ -1,5 +1,5 @@
 ---
-date: Apr 01, 2024
+date: 2024-04-01T00:00:00Z
 difficulty: intro
 title: "Add Solana Wallet Adapter to a NextJS application"
 description:

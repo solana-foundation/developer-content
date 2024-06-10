@@ -1,5 +1,5 @@
 ---
-date: Jan 18, 2023
+date: 2023-01-18T00:00:00Z
 difficulty: intro
 featured: true
 featuredPriority: 0

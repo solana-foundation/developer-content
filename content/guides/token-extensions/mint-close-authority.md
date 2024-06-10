@@ -1,5 +1,5 @@
 ---
-date: Dec 05, 2023
+date: 2023-12-05T00:00:00Z
 seoTitle: "Token Extensions: Mint Close Authority"
 title: How to use the Mint Close Authority extension
 description:

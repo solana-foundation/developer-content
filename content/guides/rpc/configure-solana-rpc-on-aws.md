@@ -1,5 +1,5 @@
 ---
-date: Oct 26, 2023
+date: 2023-10-26T00:00:00Z
 difficulty: intermediate
 title: "Configure and run a Solana RPC on AWS"
 description:

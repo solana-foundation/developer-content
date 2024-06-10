@@ -1,5 +1,5 @@
 ---
-date: Jun 29, 2023
+date: 2024-06-29T00:00:00Z
 difficulty: intermediate
 title: "Durable & Offline Transaction Signing using Nonces"
 description:

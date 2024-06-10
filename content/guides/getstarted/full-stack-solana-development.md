@@ -1,5 +1,5 @@
 ---
-date: Feb 29, 2024
+date: 2024-02-29T00:00:00Z
 difficulty: intermediate
 title: "Full-stack Solana development with React and Anchor"
 description: "Learn how to build a full-stack Solana dApp with React and Anchor"

@@ -1,5 +1,5 @@
 ---
-date: Apr 30, 2024
+date: 2024-04-30T00:00:00Z
 difficulty: intro
 title: "How to create a token on Solana"
 description: "Learn how to create a SPL token on Solana with metadata."

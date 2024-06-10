@@ -1,5 +1,5 @@
 ---
-date: March 18, 2024
+date: 2024-03-18T00:00:00Z
 difficulty: intro
 title: "How to create a CRUD dApp on Solana"
 description:

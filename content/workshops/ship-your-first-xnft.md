@@ -1,7 +1,7 @@
 ---
 featured: true
-date: 10 Dec 2022
-updatedDate: 10 Dec 2023
+date: 2022-12-10T00:00:00Z
+updatedDate: 2022-12-10T00:00:00Z
 title: Ship your first xNFT
 description: Ship your first xNFT with Backpack!
 repoUrl: https://github.com/Solana-Workshops/ship-an-xnft

@@ -1,5 +1,5 @@
 ---
-date: Jul 29, 2023
+date: 2023-07-29T00:00:00Z
 difficulty: intro
 title: "How to get Solana devnet SOL (including airdrops and faucets)"
 seoTitle: "Faucets: How to get Solana devnet SOL"

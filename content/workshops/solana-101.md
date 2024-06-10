@@ -1,7 +1,7 @@
 ---
 featured: true
-date: 04 Jan 2023
-updatedDate: 04 Jan 2023
+date: 2023-01-04T00:00:00Z
+updatedDate: 2023-01-04T00:00:00Z
 title: Solana 101
 description:
   Introduction to building on & interacting with the Solana blockchain
