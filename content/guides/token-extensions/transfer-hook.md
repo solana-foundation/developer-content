@@ -1,5 +1,5 @@
 ---
-date: Feb 01, 2023
+date: 2023-02-01T00:00:00Z
 seoTitle: "Token Extensions: Transfer Hook"
 title: How to use the Transfer Hook extension
 description:

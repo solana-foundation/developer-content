@@ -1,5 +1,5 @@
 ---
-date: May 21, 2024
+date: 2024-05-21T00:00:00Z
 difficulty: Intro
 title: "Getting started with Solana with Rust Experience"
 description: "Learn how to start building on Solana as a Rust Engineer"

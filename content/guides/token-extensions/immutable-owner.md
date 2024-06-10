@@ -1,5 +1,5 @@
 ---
-date: Dec 6, 2023
+date: 2023-12-06T00:00:00Z
 difficulty: beginner
 seoTitle: "Token Extensions: Immutable Owner"
 title: "How to use the Immutable Owner extension"

@@ -1,5 +1,5 @@
 ---
-date: Mar 7, 2024
+date: 2024-04-07T00:00:00Z
 difficulty: intermediate
 title: "How to use Priority Fees on Solana"
 description:

@@ -1,6 +1,6 @@
 ---
 featured: true
-date: Mar 15, 2024
+date: 2024-03-15T00:00:00Z
 difficulty: intermediate
 title: "How to Optimize Compute Usage on Solana"
 description:

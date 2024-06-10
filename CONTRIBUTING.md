@@ -274,11 +274,9 @@ Example:
 The date this content was published
 
 - name: `date`
-- type: `date` string in the format of `MMM DD, YYYY`
+- type: `date` as an [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
+  formatted date (i.e. `2023-12-06T00:00:00Z`)
 - required: `false`
-
-Example:
-[this line of text](https://github.com/solana-foundation/developer-content/blob/9bf2b82d684ad487c9282c529cd998f3a6249bd9/content/guides/getstarted/local-rust-hello-world.md?plain=1#L2)
 
 #### updatedDate
 

@@ -1,7 +1,7 @@
 ---
 featured: true
 featuredPriority: 1
-date: Jan 19, 2024
+date: 2024-01-19T00:00:00Z
 difficulty: beginner
 seoTitle: "Getting Started with Token Extensions"
 title: "Getting Started with Token Extensions"

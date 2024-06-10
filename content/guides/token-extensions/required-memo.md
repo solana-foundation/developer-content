@@ -1,5 +1,5 @@
 ---
-date: Dec 7, 2023
+date: 2023-12-07T00:00:00Z
 seoTitle: "Token Extensions: Required Memo"
 title: How to use the Required Memo token extension
 description:

@@ -1,5 +1,5 @@
 ---
-date: Dec 21, 2023
+date: 2023-12-21T00:00:00Z
 seoTitle: "Token Extensions: Metadata Pointer and Token Metadata"
 title: How to use the Metadata Pointer extension
 description:

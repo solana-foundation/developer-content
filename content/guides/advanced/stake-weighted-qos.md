@@ -1,6 +1,6 @@
 ---
 featured: false
-date: Mar 20, 2024
+date: 2024-03-20T00:00:00Z
 difficulty: intermediate
 seoTitle: "Stake-weighted Quality of Service on Solana"
 title: "A Guide to Stake-weighted Quality of Service on Solana"

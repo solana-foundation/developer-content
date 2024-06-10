@@ -1,5 +1,5 @@
 ---
-date: Dec 06, 2023
+date: 2023-12-06T00:00:00Z
 seoTitle: "Token Extensions: Transfer Fees"
 title: How to use the Transfer Fee extension
 description:
