@@ -1,5 +1,5 @@
 ---
-date: 2024-04-26
+date: 2024-04-26T00:00:00Z
 title: "Program Examples"
 description:
   "A list of Solana program examples in different languages and frameworks,
