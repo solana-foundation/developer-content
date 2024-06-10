@@ -1,5 +1,5 @@
 ---
-date: Mar 25, 2024
+date: 2024-03-25T00:00:00Z
 difficulty: intermediate
 title: "A Guide to Solana Permissioned Environments"
 seoTitle: "Solana Permissioned Environments"

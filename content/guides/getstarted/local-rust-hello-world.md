@@ -1,5 +1,5 @@
 ---
-date: Mar 28, 2023
+date: 2023-03-28T00:00:00Z
 difficulty: intro
 title: "Setup, build, and deploy a Solana program locally in Rust"
 description:

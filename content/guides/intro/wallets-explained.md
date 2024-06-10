@@ -1,5 +1,5 @@
 ---
-date: Jun 15, 2022
+date: 2022-06-15T00:00:00Z
 difficulty: intro
 title: "Wallets Explained"
 description:

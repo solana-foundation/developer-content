@@ -1,5 +1,5 @@
 ---
-date: Apr 22, 2023
+date: 2023-04-22T00:00:00Z
 title: Creating Compressed NFTs with JavaScript
 description:
   "Compressed NFTs use the Bubblegum program from Metaplex to cheaply and

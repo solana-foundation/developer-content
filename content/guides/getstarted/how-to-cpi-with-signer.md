@@ -1,5 +1,5 @@
 ---
-date: Apr 24, 2024
+date: 2024-04-24T00:00:00Z
 difficulty: beginner
 title: "How to CPI with a PDA Signer in a Solana program"
 description:

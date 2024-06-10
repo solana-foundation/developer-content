@@ -1,5 +1,5 @@
 ---
-date: Apr 25, 2024
+date: 2024-04-25T00:00:00Z
 difficulty: intermediate
 title: Build an Energy System for Casual Games on Solana
 description:

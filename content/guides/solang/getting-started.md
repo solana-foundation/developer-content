@@ -1,6 +1,6 @@
 ---
 featured: false
-date: Jul 17, 2023
+date: 2023-07-17T00:00:00Z
 difficulty: intro
 title: "Getting started with Solang"
 description:
