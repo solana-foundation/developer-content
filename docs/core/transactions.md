@@ -4,7 +4,7 @@ sidebarSortOrder: 2
 ---
 
 On Solana, we send [transactions](/docs/core/transactions#transaction) to
-interactions with the network. Transactions include one or more
+interact with the network. Transactions include one or more
 [instructions](/docs/core/transactions#instruction), each representing a
 specific operation to be processed. The execution logic for instructions is
 stored on [programs](/docs/core/programs) deployed to the Solana network, where
