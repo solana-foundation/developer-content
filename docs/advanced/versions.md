@@ -1,10 +1,10 @@
 ---
+sidebarSortOrder: 3
 title: Versioned Transactions
 description:
   "Explore the core Solana concepts: transactions, versioned transactions,
   enabling additional functionality in the Solana runtime, address lookup
   tables, and more."
-sidebarSortOrder: 1
 altRoutes:
   - /docs/core/transactions/versions
 ---

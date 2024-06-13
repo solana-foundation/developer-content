@@ -1,4 +1,5 @@
 ---
+sidebarSortOrder: 1
 sidebarLabel: "Confirmation & Expiration"
 title: "Transaction Confirmation & Expiration"
 seoTitle: "Transaction Confirmation & Expiration"
@@ -6,6 +7,7 @@ description:
   "Understand how Solana transaction confirmation and when a transaction expires
   (including recent blockhash checks)."
 altRoutes:
+  - /docs/advanced
   - /docs/core/transactions/confirmation
 ---
 
