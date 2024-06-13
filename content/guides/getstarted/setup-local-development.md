@@ -1,6 +1,6 @@
 ---
-featured: true
 date: 2024-02-26T00:00:00Z
+featured: true
 difficulty: intro
 title: "Setup local development and install the Solana CLI"
 description:
