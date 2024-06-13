@@ -32,21 +32,16 @@ rewards earned. This fee is known as a _commission_. Since validators earn more
 rewards the more stake is delegated to them, they may compete with one another
 to offer the lowest commission for their services.
 
-You risk losing tokens when staking through a process known as _slashing_.
-Slashing involves the removal and destruction of a portion of a validator's
-delegated stake in response to intentional malicious behavior, such as creating
+Although this is not implemented in the Solana protocol today, in the future,
+delegators could risk losing tokens when staking through a process known as
+_slashing_. Slashing involves the removal and destruction of a portion of a
+validator's sol in response to intentional malicious behavior, such as creating
 invalid transactions or censoring certain types of transactions or network
 participants.
 
-When a validator is slashed, all token holders who have delegated stake to that
-validator lose a portion of their delegation. While this means an immediate loss
-for the token holder, it also is a loss of future rewards for the validator due
-to their reduced total delegation. More details on the slashing roadmap can be
-found
-[here](https://docs.solanalabs.com/proposals/optimistic-confirmation-and-slashing#slashing-roadmap).
-
-Rewards and slashing align validator and token holder interests which helps keep
-the network secure, robust and performant.
+There is no in protocol implementation of slashing currently. For more
+information on slashing see the
+[slashing roadmap](https://docs.solanalabs.com/proposals/optimistic-confirmation-and-slashing#slashing-roadmap).
 
 ## How do I stake my SOL tokens?
 
