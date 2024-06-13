@@ -342,7 +342,7 @@ Running tests...
 Since here we are increasing a counter whenever the token is transferred we need
 to make sure that the transfer hook instruction can only be called during a
 transfer, otherwise someone could just call the transfer hook instruction
-directly and mess up our counter. This is a check you should probably add to any
+directly and mess up our counter. This is a check you should add to any
 of your transfer hooks just to be sure.
 
 </Callout>
