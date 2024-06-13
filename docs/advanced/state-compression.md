@@ -1,4 +1,5 @@
 ---
+sidebarSortOrder: 4
 title: State Compression
 description:
   'State Compression is the method of cheaply and securely storing

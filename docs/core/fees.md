@@ -17,6 +17,7 @@ altRoutes:
   - /docs/intro/rent
   - /docs/intro/transaction_fees
   - /docs/intro/transaction-fees
+  - /docs/core/runtime
 ---
 
 The Solana blockchain has a few different types of fees and costs that are

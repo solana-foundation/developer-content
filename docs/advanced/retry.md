@@ -1,4 +1,5 @@
 ---
+sidebarSortOrder: 2
 title: Retrying Transactions
 altRoutes:
   - /docs/core/transactions/retry
