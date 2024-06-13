@@ -1,5 +1,5 @@
 ---
-date: 2024-06-138T00:00:00Z
+date: 2024-06-13T00:00:00Z
 difficulty: intro
 title: "Solana Test Validator Guide"
 seoTitle: "Solana Test Validator Guide"
