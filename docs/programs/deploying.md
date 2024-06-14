@@ -111,6 +111,22 @@ following 3 phases:
    In either case, the byte-code written to the buffer account will be copied
    into a program data account and verified.
 
+<Callout type="info">
+
+During times of congestion it is helpful to add priority fees and increase the
+max sign attempts. Using a rpc url which has
+[stake weighted quality of service](https://solana.com/de/developers/guides/advanced/stake-weighted-qos)
+enabled can also help to make program deploys more reliable. Using Solana
+version ^1.18.15 is recommended.
+
+Example command deploying a program with the Solana CLI:
+
+```shell
+program deploy target/deploy/your_program.so --with-compute-unit-price 10000 --max-sign-attempts 1000 --use-rpc
+```
+
+</Callout>
+
 ## Reclaim rent from program accounts
 
 The storage of data on the Solana blockchain requires the payment of
