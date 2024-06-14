@@ -68,6 +68,8 @@ typical REST API:
 - the wallet facilitates the user signing the transaction and ultimately sends
   the transaction to the blockchain for confirmation
 
+![Solana Actions Execution and Lifecycle](/public/assets/docs/action-execution-and-lifecycle.png)
+
 When receiving transactions from an Actions URL, clients should handle
 submission of these transactions to the blockchain and manage their state
 lifecycle.
