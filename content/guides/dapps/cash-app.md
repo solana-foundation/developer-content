@@ -159,6 +159,7 @@ explained in the
 [Solana mobile development set up docs](https://docs.solanamobile.com/getting-started/development-setup)
 or you must have a real wallet app, like Phantom or Solflare, installed and set
 up on your emulator.
+</Callout>
 
 ## Writing a Solana Program with Cash App Functionalities
 
