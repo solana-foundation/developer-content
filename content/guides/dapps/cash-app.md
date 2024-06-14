@@ -138,7 +138,7 @@ mobile expo app template:
 yarn create expo-app --template @solana-mobile/solana-mobile-expo-template
 ```
 
-THis initializing a new project using the Expo framework that is specifically
+This is initializing a new project using the Expo framework that is specifically
 designed for creating mobile applications that interact with the Solana
 blockchain.
 
