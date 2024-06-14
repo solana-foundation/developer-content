@@ -151,7 +151,8 @@ your Android emulator. Once you have built the program and are running a dev
 client with expo, the emulator will automatically update every time you save
 your code.
 
-Reminder: You must have
+<Callout title="Reminder">
+You must have
 [fake wallet](https://github.com/solana-mobile/mobile-wallet-adapter/tree/main/android/fakewallet)
 running on the same Android emulator to be able to test out transactions, as
 explained in the
