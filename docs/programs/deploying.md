@@ -115,7 +115,7 @@ following 3 phases:
 
 During times of congestion it is helpful to add priority fees and increase the
 max sign attempts. Using a rpc url which has
-[stake weighted quality of service](https://solana.com/de/developers/guides/advanced/stake-weighted-qos)
+[stake weighted quality of service](https://solana.com/developers/guides/advanced/stake-weighted-qos)
 enabled can also help to make program deploys more reliable. Using Solana
 version ^1.18.15 is recommended.
 
