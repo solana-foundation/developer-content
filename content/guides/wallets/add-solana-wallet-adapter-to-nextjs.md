@@ -510,7 +510,7 @@ home page.
   experience for your users.
 
 If you are creating a brand new application or project, you can also use the
-`create-solana-dapp` CLI took to generate a scaffold with the built-in Solana
+`create-solana-dapp` CLI tool to generate a scaffold with the built-in Solana
 wallet adapter. To scaffold a new application, run the CLI tool in your
 terminal:
 
