@@ -350,7 +350,7 @@ transfer hooks.
 You can add the check like this:
 
 ```rust
-fn check_is_transferring(ctx: &Context<TransferHook>) -> Result<()> {
+fn assert_is_transferring(ctx: &Context<TransferHook>) -> Result<()> {
     let source_token_info = ctx.accounts.source_token.to_account_info();
     let mut account_data_ref: RefMut<&mut [u8]> = source_token_info.try_borrow_mut_data()?;
     let mut account = PodStateWithExtensionsMut::<PodAccount>::unpack(*account_data_ref)?;
