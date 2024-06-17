@@ -337,6 +337,54 @@ Running tests...
   4 passing (2s)
 ```
 
+<Callout type="warning">
+
+Since here we are increasing a counter whenever the token is transferred we need
+to make sure that the transfer hook instruction can only be called during a
+transfer, otherwise someone could just call the transfer hook instruction
+directly and mess up our counter. This is a check you should add to any of your
+transfer hooks.
+
+</Callout>
+
+You can add the check like this:
+
+```rust
+fn assert_is_transferring(ctx: &Context<TransferHook>) -> Result<()> {
+    let source_token_info = ctx.accounts.source_token.to_account_info();
+    let mut account_data_ref: RefMut<&mut [u8]> = source_token_info.try_borrow_mut_data()?;
+    let mut account = PodStateWithExtensionsMut::<PodAccount>::unpack(*account_data_ref)?;
+    let account_extension = account.get_extension_mut::<TransferHookAccount>()?;
+
+    if !bool::from(account_extension.transferring) {
+        return err!(TransferError::IsNotCurrentlyTransferring);
+    }
+
+    Ok(())
+}
+```
+
+And then call it at the start of your `transfer_hook` function:
+
+```rust
+    #[error_code]
+    pub enum TransferError {
+        #[msg("The token is not currently transferring")]
+        IsNotCurrentlyTransferring,
+    }
+
+    #[interface(spl_transfer_hook_interface::execute)]
+    pub fn transfer_hook(ctx: Context<TransferHook>, _amount: u64) -> Result<()> {
+        // Fail this instruction if it is not called from within a transfer hook
+        assert_is_transferring(&ctx)?;
+
+        ctx.accounts.counter_account.counter.checked_add(1).unwrap();
+        msg!("This token has been transferred {0} times", ctx.accounts.counter_account.counter);
+
+        Ok(())
+    }
+```
+
 ## Transfer Hook with wSOl Transfer fee (advanced example)
 
 In the next part of this guide, we will build a more advanced Transfer Hook
