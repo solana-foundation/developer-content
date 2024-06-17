@@ -376,7 +376,7 @@ And then call it at the start of your `transfer_hook` function:
     #[interface(spl_transfer_hook_interface::execute)]
     pub fn transfer_hook(ctx: Context<TransferHook>, _amount: u64) -> Result<()> {
         // Fail this instruction if it is not called from within a transfer hook
-        check_is_transferring(&ctx)?;
+        assert_is_transferring(&ctx)?;
 
         ctx.accounts.counter_account.counter.checked_add(1).unwrap();
         msg!("This token has been transferred {0} times", ctx.accounts.counter_account.counter);
