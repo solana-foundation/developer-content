@@ -29,10 +29,12 @@ quickstart guide will demonstrate how to quickly setup, build, and deploy your
 first Rust based Solana program to the blockchain.
 
 <Callout type="caution" title="Do you have the Solana CLI installed?">
-This guide uses the Solana CLI and assumes you have setup your
-local development environment. Checkout our
-[local development quickstart guide](./setup-local-development.md) here to
-quickly get setup.
+
+This guide uses the Solana CLI and assumes you have setup your local development
+environment. Checkout our
+[local development quickstart guide](/content/guides/getstarted/setup-local-development.md)
+here to quickly get setup.
+
 </Callout>
 
 ## What you will learn

@@ -373,5 +373,5 @@ solana balance
 
 See the links below to learn more about writing Rust based Solana programs:
 
-- [Create and deploy a Solana Rust program](./local-rust-hello-world.md)
+- [Create and deploy a Solana Rust program](/content/guides/getstarted/local-rust-hello-world.md)
 - [Overview of writing Solana programs](/docs/programs/index.md)
