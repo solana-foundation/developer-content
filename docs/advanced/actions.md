@@ -318,6 +318,14 @@ export interface ActionError {
   perform one. For example, a governance vote action endpoint may return three
   options for the user: "Vote Yes", "Vote No", and "Abstain from Vote".
 
+  - If no `links.actions` is provided, the client should render a single button
+    using the root `label` string and make the POST request to the same action
+    URL endpoint as the initial GET request.
+
+  - If any `links.actions` are provided, the client should only render buttons
+    and input fields based on the items listed in the `links.actions` field. The
+    client should not render a button for the contents of the root `label`.
+
 ```ts filename="LinkedAction"
 export interface LinkedAction {
   /** URL endpoint for an action */
@@ -338,14 +346,6 @@ export interface ActionParameter {
   required?: boolean;
 }
 ```
-
-If no `links.actions` is provided, the client should render a single button
-using the root `label` string and make the POST request to the same action URL
-endpoint as the initial GET request.
-
-If any `links.actions` are provided, the client should only render buttons and
-input fields based on the items listed in the `links.actions` field. The client
-should not render a button for the contents of the root `label`.
 
 #### Example GET Response
 
@@ -420,7 +420,7 @@ will be sent to the Action API:
         // no `parameters` therefore not a text input field
       },
       {
-        "label": "Amount to stake", // text input placeholder text
+        "label": "Stake", // button text
         "href": "/api/stake?amount={amount}",
         "parameters": [
           {
@@ -478,7 +478,7 @@ payload of:
 
 The client should make the request with an
 [Accept-Encoding header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Encoding)
-and the application should respond with a
+and the application may respond with a
 [Content-Encoding header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding)
 for HTTP compression.
 
@@ -534,18 +534,8 @@ export interface ActionPostResponse {
 
 If the transaction
 [`signatures`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#signatures)
-are empty:
+are empty or the transaction has NOT been partially signed:
 
-- The client should set the
-  [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
-  to the `account` in the request, or the zero value (`new PublicKey(0)` or
-  `new PublicKey("11111111111111111111111111111111")`).
-- The client should set the
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
-  to the
-  [latest blockhash](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getLatestBlockhash),
-  or the zero value (`new PublicKey(0).toBase58()` or
-  `"11111111111111111111111111111111"`).
 - The wallet must ignore the
   [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
   in the transaction and set the `feePayer` to the `account` in the request.
@@ -553,28 +543,19 @@ are empty:
   [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
   in the transaction and set the `recentBlockhash` to the
   [latest blockhash](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getLatestBlockhash).
-
-If the transaction
-[`signatures`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#signatures)
-are not empty:
-
-- The client must set the
-  [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
-  to the
-  [public key of the first signature](https://solana-labs.github.io/solana-web3.js/modules.html#SignaturePubkeyPair).
-- The client must set the
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
-  to the
-  [latest blockhash](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getLatestBlockhash).
 - The client must serialize and deserialize the transaction before signing it.
   This ensures consistent ordering of the account keys, as a workaround for
   [this issue](https://github.com/solana-labs/solana/issues/21722).
-- The wallet must not set the
+
+If the transaction has been partially signed:
+
+- The client/wallet must NOT alter the
   [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
-  and
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash).
-- The wallet must verify the signatures, and if any are invalid, the wallet must
-  reject the transaction as **malformed**.
+  or
+  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
+  as this would invalidate any existing signatures.
+- The wallet must verify existing signatures, and if any are invalid, the wallet
+  must reject the transaction as **malformed**.
 
 The wallet must only sign the transaction with the `account` in the request, and
 must do so only if a signature for the `account` in the request is expected.
@@ -646,6 +627,7 @@ pathname or an external URL.
 - Example: `/api/exact-path`
 - Example: `https://api.example.com/v1/donate/*`
 - Example: `/api/category/*/item/*`
+- Example: `/api/swap/**`
 
 #### Rules - Query Parameters
 
@@ -680,7 +662,7 @@ site's root:
 ```
 
 The following example uses wildcard path matching to map requests to any path
-(including subdirectories) under `/actions/` from your site's root to a
+(excluding subdirectories) under `/actions/` from your site's root to a
 corresponding path under `/api/actions/` relative to your site's root:
 
 ```json filename="actions.json"
@@ -695,7 +677,7 @@ corresponding path under `/api/actions/` relative to your site's root:
 ```
 
 The following example uses wildcard path matching to map requests to any path
-(including subdirectories) under `/donate/` from your site's root to a
+(excluding subdirectories) under `/donate/` from your site's root to a
 corresponding absolute path `https://api.dialect.com/api/v1/donate/` on an
 external site:
 
@@ -722,8 +704,8 @@ site's root to itself:
 {
   "rules": [
     {
-      "pathPattern": "/api/actions/*",
-      "apiPath": "/api/actions/*"
+      "pathPattern": "/api/actions/**",
+      "apiPath": "/api/actions/**"
     }
   ]
 }
