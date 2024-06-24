@@ -21,7 +21,7 @@ details
 
 ## Berkeley Packet Filter (BPF)
 
-Solana on-chain programs are compiled via the
+Solana onchain programs are compiled via the
 [LLVM compiler infrastructure](https://llvm.org/) to an
 [Executable and Linkable Format (ELF)](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
 containing a variation of the

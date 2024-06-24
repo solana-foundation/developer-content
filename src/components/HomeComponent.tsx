@@ -103,7 +103,7 @@ export const HomeViewComponent = () => {
           , <Link href={"https://solana.com/docs/rpc"}>Solana RPC methods</Link>
           , and{" "}
           <Link href={"https://solana.com/docs/rpc"}>
-            writing on-chain programs
+            writing onchain programs
           </Link>
           .
         </p>

@@ -286,7 +286,7 @@ ensure it runs the correct version.
 
 ## Cloning Programs
 
-To add existing on-chain programs to your local environment, you can clone the
+To add existing onchain programs to your local environment, you can clone the
 program with a new ledger.
 
 To clone an account from the cluster:

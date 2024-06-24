@@ -1413,7 +1413,7 @@ Solana.
 
 - Check out the
   [Program examples](https://github.com/solana-developers/program-examples) repo
-  for more examples of on-chain programs.
+  for more examples of onchain programs.
 - Join a Hackathon and get your hands dirty - https://solana.com/hackathon
 - Pick a bounty and get some money - https://earn.superteam.fun/
 - Build more advanced Solana apps - https://www.soldev.app/course

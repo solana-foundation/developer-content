@@ -2,7 +2,7 @@
 category: documentation
 title: Solana Program Library
 description:
-  "The Solana Program Library (SPL) is a collection of on-chain programs
+  "The Solana Program Library (SPL) is a collection of onchain programs
   targeting the Sealevel parallel runtime."
 tags:
   - docs

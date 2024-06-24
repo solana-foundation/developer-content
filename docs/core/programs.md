@@ -24,7 +24,7 @@ documentation.
 - Programs can be updated by an upgrade authority. A program becomes immutable
   when the upgrade authority is set to null.
 
-- Verifiable builds enable users to verify that on-chain programs match the
+- Verifiable builds enable users to verify that onchain programs match the
   publicly available source code.
 
 ## Writing Solana Programs
@@ -63,7 +63,7 @@ process enhances transparency and trust, making it possible to detect
 discrepancies between the source code and the deployed program.
 
 The Solana developer community has introduced tools to support verifiable
-builds, enabling both developers and users to verify that on-chain programs
+builds, enabling both developers and users to verify that onchain programs
 accurately reflect their publicly shared source code.
 
 - **Searching for Verified Programs**: To quickly check for verified programs,
@@ -74,7 +74,7 @@ accurately reflect their publicly shared source code.
 
 - **Verification Tools**: The
   [Solana Verifiable Build CLI](https://github.com/Ellipsis-Labs/solana-verifiable-build)
-  by Ellipsis Labs enables users to independently verify on-chain programs
+  by Ellipsis Labs enables users to independently verify onchain programs
   against published source code.
 
 - **Support for Verifiable Builds in Anchor**: Anchor provides built-in support

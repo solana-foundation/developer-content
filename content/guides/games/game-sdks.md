@@ -100,7 +100,7 @@ complete games.
 
 # Honeycomb Protocol
 
-Honeycomb provides a suite of on-chain programs and state-compression tools that
+Honeycomb provides a suite of onchain programs and state-compression tools that
 handle all crucial game lifecycle functions and composability within the Solana
 Virtual Machine (SVM). It supports lots of NFT functionality like staking,
 missions, loot boxes, player profiles, state compression, auto approving

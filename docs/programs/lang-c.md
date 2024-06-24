@@ -2,7 +2,7 @@
 title: "Developing with C"
 ---
 
-Solana supports writing on-chain programs using the C and C++ programming
+Solana supports writing onchain programs using the C and C++ programming
 languages.
 
 ## Project Layout

@@ -111,7 +111,7 @@ To turn on SBF interpreter trace messages in a local cluster configure the
 
 ## Source level debugging
 
-Source level debugging of on-chain programs written in Rust or C can be done
+Source level debugging of onchain programs written in Rust or C can be done
 using the `program run` subcommand of `solana-ledger-tool`, and lldb,
 distributed with Solana Rust and Clang compiler binary package platform-tools.
 
@@ -198,7 +198,7 @@ program being debugged.
 
 ### Debugging in an IDE
 
-To debug on-chain programs in Visual Studio IDE, install the CodeLLDB extension.
+To debug onchain programs in Visual Studio IDE, install the CodeLLDB extension.
 Open CodeLLDB Extension Settings. In Advanced settings change the value of
 `Lldb: Library` field to the path of `liblldb.so` (or liblldb.dylib on macOS).
 For example on Linux a possible path to Solana customized lldb can be
