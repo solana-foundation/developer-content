@@ -41,7 +41,7 @@ implementation, consult their respective documentation:
 
 The [Solana Developer guides](https://solana.com/developers/guides) teach new
 and experienced developers how to build on Solana. They teach various
-programming concepts on Solana and often dive into popular sdks and provide code
+programming concepts on Solana and often dive into popular SDKs and provide code
 examples to build dApps.
 
 Each developer guide is typically focused on a specific topic or concept.
@@ -53,11 +53,11 @@ contributing guide section for
 ### Developer Resources
 
 The [Solana Developer resources](https://solana.com/developers/resources) within
-this repo are meant to be a public directory of resources. Our gaol is to help
+this repo are meant to be a public directory of resources. Our goal is to help
 anyone discover the various developer tools, sdks, tooling, and frameworks that
 exist within the Solana ecosystem.
 
-The developer resources withing this directory are not normally maintained by
+The developer resources within this directory are not normally maintained by
 the same maintainers of this repo.
 
 If you are having issues with a specific resource, content their maintainers. Do
