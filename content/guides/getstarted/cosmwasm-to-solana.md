@@ -76,9 +76,11 @@ the Solana documentation [here](https://solana.com/docs/core/accounts).
    - **Solana**: Directly reads from and writes to account data, which is part
      of the account's state on the Solana blockchain.
 2. Serialization:
-   - **CosmWasm**: Typically uses `serde` for serialization of state structures.
-   - **Solana**: Uses `Borsh` for serialization and deserialization of account
-     data.
+   - **CosmWasm**: Uses a mix of JSON for interoperability and human
+     readability, and binary formats like bincode for state storage.
+   - **Solana**: Typically uses Borsh for all serialization purposes to ensure
+     speed and consistency in a high throughput environment, but have the option
+     to roll your own if you choose to.
 3. State Location:
    - **CosmWasm**: State is stored in the contract's storage, managed by the
      Cosmos SDK.
