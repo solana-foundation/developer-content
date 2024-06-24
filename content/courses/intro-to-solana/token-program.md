@@ -273,7 +273,7 @@ want it to be an Associated Token Account. Even if the user doesn't already have
 an ATA for that token, you can simply find the address and make the account for
 them.
 
-<!-- ![ATAs are PDAs](/public/assets/courses/unboxed/atas-are-pda.svg) -->
+![ATAs are PDAs](/public/assets/courses/unboxed/atas-are-pda.svg)
 
 You can create an associated token account using the `spl-token` library's
 `createAssociatedTokenAccount` function.
