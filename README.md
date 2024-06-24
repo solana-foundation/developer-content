@@ -57,8 +57,8 @@ this repo are meant to be a public directory of resources. Our goal is to help
 anyone discover the various developer tools, sdks, tooling, and frameworks that
 exist within the Solana ecosystem.
 
-The developer resources within this directory are not normally maintained by
-the same maintainers of this repo.
+The developer resources within this directory are not normally maintained by the
+same maintainers of this repo.
 
 If you are having issues with a specific resource, content their maintainers. Do
 not open an issue on this repo, unless to update, add, or remove a resource's
