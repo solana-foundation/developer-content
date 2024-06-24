@@ -92,10 +92,10 @@ npm install @solana/wallet-adapter-base \
     @solana/wallet-adapter-react-ui
 ```
 
-> [!TIP] We're learning doing this manually to learn about Wallet Adapter, but
-> you can also use
-> [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp)
-> to create a brand new React or NextJS app that supports Solana wallets!
+<Callout type="note">We're learning doing this manually to learn about Wallet
+Adapter, but you can also use
+[create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) to
+create a brand new React or NextJS app that supports Solana wallets! </Callout>
 
 ### Connect To Wallets
 
