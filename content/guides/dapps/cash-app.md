@@ -52,6 +52,8 @@ program, integrate the Solana Name Service SDK, and integrate Solana Pay.
 
 ## What You Will Build
 
+You will learn to build a finance application similar to Cash App. This will be a web3 mobile app with a wallet adaptor, devnet deployed anchor program, and custom UI to interact with the anchor program. 
+
 ### Home Screen
 
 ![Cash Balance](/assets/guides/cash-app/HomeScreen.png)
@@ -263,7 +265,7 @@ deposit funds into their cash account:
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn deposit_funds(ctx: Context<DepositFunds>, amount: u64) -> Result<()> {
         require!(amount > 0, ErrorCode::InvalidAmount);
@@ -337,7 +339,7 @@ their cash account:
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn withdraw_funds(ctx: Context<WithdrawFunds>, amount: u64) -> Result<()> {
         require!(amount > 0, ErrorCode::InvalidAmount);
@@ -411,7 +413,7 @@ Now let's create an instruction for transferring funds from one user to another.
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn transfer_funds(
         ctx: Context<TransferFunds>,
@@ -491,7 +493,7 @@ vector in the `CashAccount` state.
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
     pub fn add_friend(ctx: Context<AddFriend>, pubkey: Pubkey) -> Result<()> {
         let cash_account = &mut ctx.accounts.cash_account;
         cash_account.friends.push(pubkey);
@@ -513,6 +515,8 @@ pub struct AddFriend<'info> {
     pub system_program: Program<'info, System>,
 }
 ```
+
+In the `add_friend` function, there is a design limitation. The `vec` of friends has a limit to how many friends a user to can add. To enhance this program to allow limitless friends, the way that friends are stored must be changed. 
 
 ### Multiple Accounts Types in One Program
 
@@ -558,7 +562,7 @@ pub struct InitializeRequest<'info> {
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn new_request(ctx: Context<InitializeRequest>, sender: Pubkey, amount: u64) -> Result<()> {
         let pending_request = &mut ctx.accounts.pending_request;
@@ -578,7 +582,7 @@ decline those payments. So let's add in those instructions now.
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn decline_request(_ctx: Context<DeclineRequest>) -> Result<()> {
         Ok(())
@@ -614,7 +618,7 @@ recipient first.
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn accept_request(ctx: Context<AcceptRequest>) -> Result<()> {
         let amount = ctx.accounts.pending_request.amount;
@@ -771,7 +775,7 @@ sent from that specific cash account.
 pub mod cash_app {
     use super::*;
 
-    ...
+    //...
 
     pub fn initialize_account(ctx: Context<InitializeAccount>) -> Result<()> {
         let cash_account = &mut ctx.accounts.cash_account;
@@ -794,8 +798,7 @@ pub mod cash_app {
 }
 ```
 
-Now your Solana program should match the final version here: /// FIX ME: Add
-link to github code in program examples
+Now your Solana program should match the final version [here](https://github.com/solana-developers/cash-app-clone/blob/main/cash-app/anchor/cash-app/src/lib.rs):
 
 ### Build and Deploy the Program
 
@@ -963,10 +966,7 @@ inherently assumed to be a signer through the provider's configuration. However,
 transaction where it's required.
 
 Since any other instruction call is handled exactly as described above, you can
-complete this test example independently. To review your work, you can see the
-completed test file here.
-
-/// FIXME: Add github link to Anchor tests once code is merged
+complete this test example independently. 
 
 Lastly, run your test suite against your localnet.
 
@@ -2068,8 +2068,6 @@ For the RequestScreen, you'll follow the same process except you will use the
 
 Try this out, then check your work here:
 
-/// FIXME: Add github link
-
 #### Activity Screen
 
 The Activity Screen will allow you to add friends, see pending payment requests,
@@ -2215,9 +2213,7 @@ export function AddFriend({ address }: { address: PublicKey }) {
 ```
 
 To accept and decline requests, you'll follow a very similar method. Try this
-out yourself and then check the code here to review your work:
-
-///FIXME: Add github link
+out yourself and then check the code here to review your work [here](https://github.com/solana-developers/cash-app-clone/blob/main/cash-app/src/components/solana-pay/solana-pay-ui.tsx):
 
 ## Enabling QR Code functionality with Solana Pay
 
@@ -2505,3 +2501,12 @@ const transferFunds = useCallback(
 This implementation can be integrated everywhere in the application where an
 input requires a public key, enabling the user experience to be identical to
 that of a web2 application.
+
+## Final thoughts 
+
+Congrats on completing a a web3 mobile application! By completing this tutorial you have learned how to build an expo mobile app with a wallet adapter, write and deploy an anchor solana program, and connect a mobile UI to a deployed solana program. 
+
+To build on this knowledge here are a few more resources to look into: 
+- [The Anchor Book](https://book.anchor-lang.com/)
+- [Solana Guides](https://solana.com/developers/guides) 
+- [Program Examples](https://github.com/solana-developers/program-examples)
