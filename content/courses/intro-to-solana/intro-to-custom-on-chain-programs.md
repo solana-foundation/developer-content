@@ -11,7 +11,7 @@ description:
 ## Summary
 
 Solana has multiple onchain programs you can use. Instructions that use these
-programs need to have data in a custom format determined by the program.
+programs have data in a custom format determined by the specific function being invoked in the onchain program.
 
 ## Lesson
 
@@ -61,10 +61,10 @@ const instruction = new TransactionInstruction({
     to during the transaction's execution
 
 - an optional `Buffer` containing data to pass to the program. We’ll be ignoring
-  the `data` field for now, but will revisit it in a future lesson.
+  the `data` field for now, but we will revisit it in a future lesson.
 
-After making our instruction, we add it to a transaction, send it to our RPC to
-be processed and confirmed, and look at the transaction signature.
+After making our instruction, we add it to a transaction, send the tramsaction to our RPC to
+be processed and confirmed, then look at the transaction signature.
 
 ```typescript
 const transaction = new web3.Transaction().add(instruction);

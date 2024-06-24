@@ -7,7 +7,7 @@ objectives:
   - Use `@solana/web3.js` to sign transactions
   - Use Solana Explorer to view transactions
 description:
-  "Solana has onchain programs. Each instructions in a Solana transaction is
+  "Solana has onchain programs. Each instruction in a Solana transaction is
   sent to a function in the onchain program. The function runs, and if all the
   instructions in a transaction complete successfully, the new state is written
   to the Blockchain."
@@ -58,8 +58,8 @@ instructions included in the transaction.
 
 As you might expect, `@solana/web3.js` provides helper functions for creating
 transactions and instructions. You can create a new transaction with the
-constructor, `new Transaction()`. Once created, then you can add instructions to
-the transaction with the `add()` method.
+constructor, `new Transaction()`. Once created, you can add instructions to
+the transaction using the `add()` method.
 
 One of those helper functions is `SystemProgram.transfer()`, which makes an
 instruction for the `SystemProgram` to transfer some SOL:
@@ -85,7 +85,7 @@ The `SystemProgram.transfer()` function requires:
 `SystemProgram.transfer()` returns the instruction for sending SOL from the
 sender to the recipient.
 
-The program used in this instruction will be the `system` program (at address
+The program used in this instruction will be the `system` program (at the address
 `11111111111111111111111111111111`), the data will be the amount of SOL to
 transfer (in Lamports) and the accounts will be based on the sender and
 recipient.

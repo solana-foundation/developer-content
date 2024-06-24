@@ -769,7 +769,7 @@ if you like, or find a friend who has a devnet account and send them your token!
 As you saw in Explorer, the tokens currently reside in an Associated Token
 Account attached to our wallet. We don't have to remember the address for our
 associated token account - we can just look it up using
-`getOrCreateAssociatedTokenAccount()` and providing our address and the mint of
+`getOrCreateAssociatedTokenAccount()` and provide our wallet address and the mint of
 the token we want to send. Likewise, we can find (or make) an ATA for our
 recipient to hold this token too.
 
@@ -838,9 +838,8 @@ balance go up!
 Now it’s your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
-Note that you will not be able to directly use the helper functions we went over
-in the lab. To interact with the Token Program using the Phantom wallet adapter,
-you will have to build each transaction manually and submit the transaction to
+To interact with the Token Program using the Phantom wallet adapter,
+you will have to build each transaction and then submit the transaction to
 Phantom for approval.
 
 ![Token Program Challenge Frontend](/public/assets/courses/unboxed/token-program-frontend.png)

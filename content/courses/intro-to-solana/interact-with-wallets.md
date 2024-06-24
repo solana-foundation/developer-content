@@ -15,11 +15,11 @@ description:
 
 - **Wallets** store your secret key and allow users to sign transactions
 - **Hardware wallets** store your secret key on a separate device
-- **Software wallets** use your computer for secure storage. On desktop,
+- **Software wallets** use your computer for secure storage. On desktops,
   software wallets are often **browser extensions** that add the ability to
   connect to a wallet from a website. On mobile, wallet apps have their own
   browsers.
-- Solana’s **Wallet-Adapter** allows you to build websites that can request a
+- Solana’s **Wallet Adapter** allows you to build websites that can request a
   user’s wallet address and propose transactions for them to sign
 
 ## Lesson
@@ -67,7 +67,7 @@ Adapter is a suite of modular packages:
 - The core functionality is found in `@solana/wallet-adapter-base`.
 - React support is added by `@solana/wallet-adapter-react`.
 - Additional packages provide components for common UI frameworks. In this
-  lesson and throughout this course, we’ll be using components from
+  lesson, and throughout this course, we’ll be using components from
   `@solana/wallet-adapter-react-ui`.
 
 Finally, some packages are adapters for specific wallet apps. These are now no
@@ -95,7 +95,7 @@ npm install @solana/wallet-adapter-base \
 > [!TIP] We're learning doing this manually to learn about Wallet Adapter, but
 > you can also use
 > [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp)
-> to create a brand new React or NextJS app with support for Solana wallets!
+> to create a brand new React or NextJS app that supports Solana wallets!
 
 ### Connect To Wallets
 
@@ -153,8 +153,9 @@ already connected.
 ### @solana/wallet-adapter-react-ui
 
 You can create custom components for this, or you can leverage components
-provided by `@solana/wallet-adapter-react-ui`. The simplest way to provide
-extensive options is to use `WalletModalProvider` and `WalletMultiButton`:
+provided by `@solana/wallet-adapter-react-ui`. The simplest way to provide a
+full-featured wallet experience is to use `WalletModalProvider` and
+`WalletMultiButton`:
 
 ```tsx
 import { NextPage } from "next";

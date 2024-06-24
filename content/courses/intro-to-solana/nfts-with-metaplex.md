@@ -28,8 +28,8 @@ objectives:
 
 Solana Non-Fungible Tokens (NFTs) are SPL tokens created using the Token
 program. These tokens, however, also have an additional metadata account
-associated with each token mint. This allows for a wide variety of use cases for
-tokens. You can effectively tokenize anything, from game inventory to art.
+associated with each token mint. This allows for a wide variety of token use
+cases. You can effectively tokenize anything, from game inventory to art.
 
 In this lesson, we'll cover the basics of how NFTs are represented on Solana,
 how to create and update them using the Metaplex SDK, and provide a brief
@@ -44,8 +44,9 @@ token's mint has a maximum supply of 1.
 In other words, an NFT is a standard token from the Token Program but differs
 from what you might think of as "standard tokens" in that it:
 
-1. Has 0 decimals so it cannot be divided into parts
-2. Comes from a token mint with the supply of 1 so only 1 of these tokens exists
+1. Has 0 decimals, so it cannot be divided into parts
+2. Comes from a token mint with the supply of 1, so only 1 of these tokens
+   exists
 3. Comes from a token mint whose authority is set to `null` (to ensure that the
    supply never changes)
 4. Has an associated account that stores metadata
@@ -77,10 +78,10 @@ tools cater to a wide range of use cases and allow you to easily manage the
 entire NFT process of creating and minting an NFT collection.
 
 More specifically, the Metaplex SDK is designed to assist developers in
-utilizing the onchain tools offered by Metaplex. It offers a user-friendly API
-that focuses on popular use cases and allows for easy integration with
-third-party plugins. To learn more about the capabilities of the Metaplex SDK,
-you can refer to the [README](https://github.com/metaplex-foundation/js#readme).
+utilizing the onchain tools Metaplex offers. It offers a user-friendly API that
+focuses on popular use cases and allows for easy integration with third-party
+plugins. To learn more about the capabilities of the Metaplex SDK, you can refer
+to the [README](https://github.com/metaplex-foundation/js#readme).
 
 One of the essential programs offered by Metaplex is the Token Metadata program.
 The Token Metadata program standardizes the process of attaching metadata to SPL
@@ -105,8 +106,8 @@ Additionally, developers can customize the SDK's interactions by specifying an
 The Identity Driver is effectively a keypair that can be used to sign
 transactions, a requirement when creating an NFT. The Storage Driver is used to
 specify the storage service you want to use for uploading assets. The
-`bundlrStorage` driver is the default option and it uploads assets to Arweave, a
-permanent and decentralized storage service.
+`bundlrStorage` driver is the default option, and it uploads assets to Arweave,
+a permanent and decentralized storage service.
 
 Below is an example of how you can set up the `Metaplex` instance for devnet.
 
@@ -134,9 +135,9 @@ const metaplex = Metaplex.make(connection)
 
 ### Upload assets
 
-Before you can create an NFT, you need to prepare and upload any assets you plan
-to associate with the NFT. While this doesn't have to be an image, most NFTs
-have an image associated with them.
+Before creating an NFT, you must prepare and upload any assets you plan to
+associate with the NFT. While this doesn't have to be an image, most NFTs have
+an image associated with them.
 
 Preparing and uploading an image involves converting the image to a buffer,
 converting it to the Metaplex format using the `toMetaplexFile` function, and
@@ -306,7 +307,7 @@ await metaplex.nfts().verifyCollection({
 
 When creating and distributing a bulk supply of NFTs, Metaplex makes it easy
 with its
-[Candy Machine](https://docs.metaplex.com/programs/candy-machine/overview)](https://docs.metaplex.com/programs/candy-machine/overview)
+[Candy Machine](https://docs.metaplex.com/programs/candy-machine/overview)
 program and [Sugar CLI](https://docs.metaplex.com/developer-tools/sugar/).
 
 Candy Machine is effectively a minting and distribution program to help launch
@@ -452,7 +453,7 @@ async function uploadMetadata(
   const imageUri = await metaplex.storage().upload(file);
   console.log("image uri:", imageUri);
 
-  // upload metadata and get metadata uri (off chain metadata)
+  // upload metadata and get metadata uri (offchain metadata)
   const { uri } = await metaplex.nfts().uploadMetadata({
     name: nftData.name,
     symbol: nftData.symbol,
@@ -758,7 +759,7 @@ Have some fun with this! This will be your first independently created NFT
 collection! With this, you'll complete Module 2. Hope you're feeling the
 process! Feel free to
 [share some quick feedback](https://airtable.com/shrOsyopqYlzvmXSC?prefill_Module=Module%202)
-so that we can continue to improve the course!
+so we can continue improving the course!
 
 ### Completed the lab?
 
