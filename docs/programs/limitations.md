@@ -8,7 +8,7 @@ into.
 
 ## Rust libraries
 
-Since Rust based on-chain programs must run be deterministic while running in a
+Since Rust based onchain programs must run be deterministic while running in a
 resource-constrained, single-threaded environment, they have some limitations on
 various libraries.
 

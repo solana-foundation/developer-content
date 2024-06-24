@@ -38,7 +38,7 @@ environment.
 
 Some developers may also opt for using
 [Solana Playground](https://beta.solpg.io/), a browser based IDE. It will let
-you write, build, and deploy on-chain programs. All from your browser. No
+you write, build, and deploy onchain programs. All from your browser. No
 installation needed.
 
 ### 2. Write your program
@@ -92,12 +92,12 @@ programs using other languages, including:
 ## Example programs
 
 You can also explore the [Program Examples](/docs/programs/examples.md) for
-examples of on-chain programs.
+examples of onchain programs.
 
 ## Limitations
 
 As you dive deeper into program development, it is important to understand some
-of the important limitations associated with on-chain programs.
+of the important limitations associated with onchain programs.
 
 Read more details on the [Limitations](/docs/programs/limitations.md) page
 

@@ -149,7 +149,7 @@ An important distinction between EVM smart contracts and Solana programs is how
 each stores "state" variables/data:
 
 - EVM smart contracts can directly store state variables.
-- Solana on-chain programs, on the other hand, create separate accounts to hold
+- Solana onchain programs, on the other hand, create separate accounts to hold
   state data. These are often referred to as "data accounts" and are "owned" by
   a program.
 

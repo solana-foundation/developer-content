@@ -111,7 +111,7 @@ pub mod journal {
 ### Define your program state
 
 The state is the data structure used to define the information you want to save
-to the account. Since Solana on-chain programs do not have storage, the data is
+to the account. Since Solana onchain programs do not have storage, the data is
 stored in accounts that live on the blockchain.
 
 When using Anchor, the `#[account]` attribute macro is used to define your

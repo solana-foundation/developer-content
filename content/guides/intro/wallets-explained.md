@@ -119,7 +119,7 @@ other people's data or cheating the system:
 Let's take the example of a wallet balance, this time we gonna zoom inside a
 blockchain node:
 
-![An image showing a simplified version of a transactions stored on a ledger](/assets/guides/wallets-explained/Wallets---8-A-node-s-Dairy.png)
+![A simplified version of a transaction stored on a ledger](/assets/guides/wallets-explained/Wallets---8-A-node-s-Dairy.png)
 
 Let's say we have 3 protagonists, Claire, Jay, and Brian. Claire happily sends 5
 SOL to both Jay and Brian. But Brian (the evil guy in my story) wants more than
@@ -140,7 +140,7 @@ indeed the user; there are two problems:
 
 **Enough teasing. What's the solution?**
 
-![An image showing a simplified version of a transactions stored on a ledger](/assets/guides/wallets-explained/Wallets---8.1-A-node-s-dairy.png)
+![A simplified version of a transaction stored on a ledger](/assets/guides/wallets-explained/Wallets---8.1-A-node-s-dairy.png)
 
 Yes! The key is signing using the secret key! We can "password protect our data"
 without communicating the password, thanks to asymmetric cryptography magic.

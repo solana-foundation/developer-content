@@ -1,12 +1,12 @@
 ---
 title: "Deploying Programs"
 description:
-  "Deploying on-chain programs can be done using the Solana CLI using the
+  "Deploying onchain programs can be done using the Solana CLI using the
   Upgradable BPF loader to upload the compiled byte-code to the Solana
   blockchain."
 ---
 
-Solana on-chain programs (otherwise known as "smart contracts") are stored in
+Solana onchain programs (otherwise known as "smart contracts") are stored in
 "executable" accounts on Solana. These accounts are identical to any other
 account but with the exception of:
 
@@ -130,7 +130,7 @@ program deploy target/deploy/your_program.so --with-compute-unit-price 10000 --m
 ## Reclaim rent from program accounts
 
 The storage of data on the Solana blockchain requires the payment of
-[rent](/docs/intro/rent.md), including for the byte-code for on-chain programs.
+[rent](/docs/intro/rent.md), including for the byte-code for onchain programs.
 Therefore as you deploy more or larger programs, the amount of rent paid to
 remain rent-exempt will also become larger.
 
