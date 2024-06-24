@@ -4,8 +4,7 @@ difficulty: beginner
 title: "Getting Started with the Anchor Framework"
 description:
   "This guide provides a basic overview of the Anchor framework. Anchor is a
-  framework for Solana's Sealevel runtime providing several convenient developer
-  tools for writing smart contracts."
+  very popular Rust framework for building Solana programs (known as 'smart contracts' on other chains) that removes boilerplate, provides secure defaults, and builds client programs automatically."
 tags:
   - rust
   - anchor
