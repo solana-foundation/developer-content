@@ -2,6 +2,10 @@
 title: Using custom onchain programs
 objectives:
   - Create transactions for custom onchain programs
+description:
+  "As well as popular programs like the 'system' and 'memo' programs, there are
+  many other Solana programs. We can make instructions for arbitrary programs
+  using web3.js 'TransactionInstruction' constructor."
 ---
 
 ## Summary

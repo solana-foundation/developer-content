@@ -6,6 +6,11 @@ objectives:
   - Use `@solana/web3.js` to send SOL
   - Use `@solana/web3.js` to sign transactions
   - Use Solana Explorer to view transactions
+description:
+  "Solana has onchain programs. Each instructions in a Solana transaction is
+  sent to a function in the onchain program. The function runs, and if all the
+  instructions in a transaction complete successfully, the new state is written
+  to the Blockchain."
 ---
 
 ## Summary

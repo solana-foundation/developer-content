@@ -2,9 +2,13 @@
 title: Interact With Wallets
 objectives:
   - Explain wallets
-  - Install a Solana browser extension wallet app
-  - Set your wallet to [Devnet](https://api.devnet.solana.com/)
-  - Use Wallet Adapter to have users sign transactions
+  - Install a Solana wallet app and set your wallet app to
+    [Devnet](https://api.devnet.solana.com/)
+  - Create a React app that uses Wallet Adapter to have users sign transactions
+description:
+  "Solana wallets store your secret key and allow you to sign transactions. You
+  can make websites communicate with wallet apps using the Solana Wallet
+  Adapter."
 ---
 
 ## Summary

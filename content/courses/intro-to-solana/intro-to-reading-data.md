@@ -4,6 +4,10 @@ objectives:
   - Understand accounts and their addresses
   - Understand SOL and lamports
   - Use web3.js to connect to Solana and read an account balance
+description:
+  "In Solana we use public keys as a form of address. We can interact with other
+  users by sending tokens etc to their public key, which we also refer to as
+  their wallet address. "
 ---
 
 ## Summary
