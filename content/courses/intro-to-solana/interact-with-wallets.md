@@ -2,21 +2,21 @@
 title: Interact With Wallets
 objectives:
   - Explain wallets
-  - Install Phantom extension
-  - Set Phantom wallet to [Devnet](https://api.devnet.solana.com/)
+  - Install a Solana browser extension wallet app
+  - Set your wallet to [Devnet](https://api.devnet.solana.com/)
   - Use Wallet Adapter to have users sign transactions
 ---
 
 ## Summary
 
-- **Wallets** store your secret key and handle secure transaction signing
+- **Wallets** store your secret key and allow users to sign transactions
 - **Hardware wallets** store your secret key on a separate device
-- **Software wallets** use your computer for secure storage
-- Software wallets are often **browser extensions** that facilitate connecting
-  to websites
-- Solana’s **Wallet-Adapter library** simplifies the support of wallet browser
-  extensions, allowing you to build websites that can request a user’s wallet
-  address and propose transactions for them to sign
+- **Software wallets** use your computer for secure storage. On desktop,
+  software wallets are often **browser extensions** that add the ability to
+  connect to a wallet from a website. On mobile, wallet apps have their own
+  browsers.
+- Solana’s **Wallet-Adapter** allows you to build websites that can request a
+  user’s wallet address and propose transactions for them to sign
 
 ## Lesson
 
@@ -25,8 +25,9 @@ objectives:
 In the previous two lessons, we discussed keypairs. Keypairs are used to locate
 accounts and sign transactions. While the public key of a keypair is perfectly
 safe to share, the secret key should always be kept in a secure location. If a
-user’s secret key is exposed, then a malicious actor could drain their account
-of all assets and execute transactions with the authority of that user.
+user’s secret key is exposed, then a malicious actor could execute transactions
+with the authority of that user, allowing them to transfer all the assets
+inside.
 
 A “wallet” refers to anything that stores a secret key to keep it secure. These
 secure storage options can generally be described as either “hardware” or
@@ -34,16 +35,15 @@ secure storage options can generally be described as either “hardware” or
 your computer. Software wallets are applications you can install on your
 existing device(s).
 
-Software wallets often come in the form of a browser extension. This makes it
-possible for websites to interact easily with the wallet. Such interactions are
-usually limited to:
+- On mobile, software wallets are typically mobile apps, installed through the
+  iOS App Store or Google Play. These include their own web browsers.
+- On desktop, software wallets often come in the form of a browser extension.
 
-1. Seeing the wallet’s public key (address)
-2. Submitting transactions for a user's approval
-3. Sending an approved transaction to the network
+Both techniques allow websites to interact easily with the wallet, for example:
 
-Once a transaction is submitted, the end user can “confirm” the transaction and
-send it to the network with their “signature.”
+1. Seeing the wallet’s wallet address (their public key)
+2. Submitting transactions for a user's approval to sign
+3. Sending signed transactions to the network
 
 Signing transactions requires using your secret key. By letting a site submit a
 transaction to your wallet and having the wallet handle the signing, you ensure
@@ -54,26 +54,26 @@ Unless you’re creating a wallet application yourself, your code should never
 need to ask a user for their secret key. Instead, you can ask users to connect
 to your site using a reputable wallet.
 
-## Solana’s WalletAdapter
+## Solana’s Wallet Adapter
 
-Solana’s Wallet Adapter is a suite of modular packages you can use to simplify
-the process of supporting wallet browser extensions.
+If you build web apps, and need users to be able to connect to their wallets and
+sign transactions through your apps, you'll want Solana’s Wallet Adapter. Wallet
+Adapter is a suite of modular packages:
 
-The core functionality is found in `@solana/wallet-adapter-base` and
-`@solana/wallet-adapter-react`.
-
-Additional packages provide components for common UI frameworks. In this lesson
-and throughout this course, we’ll be using components from
-`@solana/wallet-adapter-react-ui`.
+- The core functionality is found in `@solana/wallet-adapter-base`.
+- React support is added by `@solana/wallet-adapter-react`.
+- Additional packages provide components for common UI frameworks. In this
+  lesson and throughout this course, we’ll be using components from
+  `@solana/wallet-adapter-react-ui`.
 
 Finally, some packages are adapters for specific wallet apps. These are now no
 longer necessary in most cases - see below.
 
-### Install Wallet-Adapter Libraries
+### Install Wallet-Adapter Libraries for React
 
 When adding wallet support to an existing React app, you start by installing the
 appropriate packages. You’ll need `@solana/wallet-adapter-base`,
-`@solana/wallet-adapter-react`. If you plan to use the provided react
+`@solana/wallet-adapter-react`. If you plan to use the provided React
 components, you'll also need to add `@solana/wallet-adapter-react-ui`.
 
 All wallets that support the
@@ -87,6 +87,11 @@ npm install @solana/wallet-adapter-base \
     @solana/wallet-adapter-react \
     @solana/wallet-adapter-react-ui
 ```
+
+> [!TIP] We're learning doing this manually to learn about Wallet Adapter, but
+> you can also use
+> [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp)
+> to create a brand new React or NextJS app with support for Solana wallets!
 
 ### Connect To Wallets
 
@@ -257,7 +262,7 @@ to submit transactions for approval.
 const { publicKey, sendTransaction } = useWallet();
 const { connection } = useConnection();
 
-const sendSol = event => {
+const sendSol = async event => {
   event.preventDefault();
 
   const transaction = new web3.Transaction();
@@ -266,13 +271,12 @@ const sendSol = event => {
   const sendSolInstruction = web3.SystemProgram.transfer({
     fromPubkey: publicKey,
     toPubkey: recipientPubKey,
-    lamports: LAMPORTS_PER_SOL * 0.1,
+    lamports: 0.1 * LAMPORTS_PER_SOL,
   });
 
   transaction.add(sendSolInstruction);
-  sendTransaction(transaction, connection).then(sig => {
-    console.log(sig);
-  });
+  const signature = sendTransaction(transaction, connection);
+  console.log(signature);
 };
 ```
 
@@ -292,16 +296,21 @@ for the data account is `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
 ### Download a Solana wallet
 
-If you don’t already have it, download the
-[Phantom browser extension](https://phantom.app/download). At the time of
-writing, it supports Chrome, Brave, Firefox, and Edge browsers, so you’ll also
-need to have one of those browsers installed. Follow Phantom’s instructions for
-creating a new account and a new wallet.
+You'll need a Solana wallet app. There's a wide variety of
+[Solana wallets](https://solana.com/docs/intro/wallets) available. We're going
+to use a browser-extension wallet in this case, since they're more likely to
+support Solana devnet.
 
-Once you have a wallet, click the settings gear on the bottom right in the
-Phantom UI. Scroll down and click on the line item “Change Network” and select
-“Devnet.” This ensures that Phantom will be connected to the same network we’ll
-be using in this lab.
+Follow the wallets instructions for creating a new account and a new wallet.
+
+Then set your wallet to use Devnet, for example:
+
+- In Phantom, click **Settings** -> **Developer Settings** -> **Testnet mode**.
+  'Testnet mode' sets Solana to Devnet by default.
+- In Solflare, click **Settings** -> **General** -> **Network** -> **DevNet**
+
+This ensures that your wallet app will be connected to the same network we’ll be
+using in this lab.
 
 ### Download the starter code
 
