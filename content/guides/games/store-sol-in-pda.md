@@ -600,7 +600,7 @@ const [globalLevel1GameDataAccount, bump] =
     pg.program.programId,
   );
 
-// This is where the program will save the sol reward for the chests and from which the reward will be payed out again
+// This is where the program will save the SOL reward for the chests and from which the reward will be payed out again
 const [chestVaultAccount, chestBump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("chestVault", "utf8")],
