@@ -103,7 +103,7 @@ full [lifecycle of executing an Action](#action-execution-and-lifecycle),
 including signing with their wallet.
 
 ```text
-https://blink.to/?action=<action_url>
+https://example.domain/?action=<action_url>
 ```
 
 For any client application to become a blink:
@@ -130,10 +130,10 @@ The following example demonstrates a valid blink URL with an `action` value of
 `solana-action:https://actions.alice.com/donate` that is URL encoded:
 
 ```text
-https://blink.to/?action=solana-action%3Ahttps%3A%2F%2Factions.alice.com%2Fdonate
+https://example.domain/?action=solana-action%3Ahttps%3A%2F%2Factions.alice.com%2Fdonate
 ```
 
-### Rendering Blinks
+### Detecting Actions via Blinks
 
 Blinks may be linked to Actions in at least 3 ways:
 
@@ -156,7 +156,7 @@ Blinks may be linked to Actions in at least 3 ways:
    parse Actions.
 
    ```text
-   https://blink.to/?action=<action_url>
+   https://example.domain/?action=<action_url>
    ```
 
 Clients that support blinks should be able to take any of the above formats and
@@ -169,12 +169,48 @@ For clients that do not support blinks, there should be an underlying website
 If a user taps anywhere on a client that is not an action button or text input
 field, they should be taken to the underlying site.
 
+### Blink Testing and Verification
+
+While Solana Actions and blinks are a permissionless protocol/specification,
+client applications and wallets are still required to ultimately facilitate
+users to sign the transaction.
+
+Each of these client applications or wallets may have different requirements on
+which Action endpoints their clients will automatically unfurl and immediately
+display to their users on social media platforms.
+
+For example, some clients may operate on an "allow list" approach that may
+require verification prior to their client unfurling an Action for users such as
+Dialect's Actions Registry (detailed below).
+
+All blinks will still render and allow for signing on Dialect's
+[dial.to](https://dial.to) blinks Interstitial site, with their registry status
+displayed in the blink.
+
+### Dialect's Actions Registry
+
+As a public good for the Solana ecosystem, [Dialect](https://dialect.to)
+maintains a public registry — together with the help of Solana Foundation and
+other community members — of blockchain links that have are from pre-verified
+from known sources. As of launch, only Actions that have been registered in the
+Dialect registry will unfurl in the Twitter feed when posted.
+
+Client applications and wallets can freely choose to use this public registry or
+another solution to help ensure user security and safety. If not verified
+through the Dialect registry, the blockchain link will not be touched by the
+blink client, and will be rendered as a typical URL.
+
+Developers can apply to be verified by Dialect here:
+[dial.to/register](https://dial.to/register)
+
 ## Specification
 
 The Solana Actions specification consists of key sections that are part of a
 request/response interaction flow:
 
 - Solana Action [URL scheme](#url-scheme) providing an Action URL
+- [OPTIONS response](#options-response) to an Action URL to pass CORS
+  requirements
 - [GET request](#get-request) to an Action URL
 - [GET response](#get-response) from the server
 - [POST request](#post-request) to an Action URL
@@ -219,6 +255,35 @@ In either case, clients must
 the value. This has no effect if the value isn't URL-encoded. If the decoded
 value is not an absolute HTTPS URL, the wallet must reject it as **malformed**.
 
+### OPTIONS response
+
+In order to allow Cross-Origin Resource Sharing
+([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)) within Actions
+clients (including blinks), all Action endpoints should respond to HTTP requests
+for the `OPTIONS` method with valid headers that will allow clients to pass CORS
+checks for all subsequent requests from their same origin domain.
+
+An Actions client may perform
+"[preflight](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#preflighted_requests)"
+requests to the Action URL endpoint in order check if the subsequent GET request
+to the Action URL will pass all CORS checks. These CORS preflight checks are
+made using the `OPTIONS` HTTP method and should respond with all required HTTP
+headers that will allow Action clients (like blinks) to properly make all
+subsequent requests from their origin domain.
+
+At a minimum, the required HTTP headers include:
+
+- `Access-Control-Allow-Origin` with a value of `*`
+  - this ensures all Action clients can safely pass CORS checks in order to make
+    all required requests
+- `Access-Control-Allow-Methods` with a value of `GET,POST,PUT,OPTIONS`
+  - ensures all required HTTP request methods are supported for Actions
+- `Access-Control-Allow-Headers` with a minimum value of
+  `Content-Type, Authorization, Content-Encoding, Accept-Encoding`
+
+For simplicity, developers should consider returning the same response and
+headers to `OPTIONS` requests as their [`GET` response](#get-response).
+
 ### GET Request
 
 The Action client (e.g. wallet, browser extension, etc) should make an HTTP
@@ -247,10 +312,10 @@ appropriate HTTP error.
   [`Content-Type` header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type)
   of `application/json`.
 
-- The wallet should not cache the response except as instructed by
+- The client should not cache the response except as instructed by
   [HTTP caching](https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching)
   response headers.
-- The wallet should display the `title` and render the `icon` image to user.
+- The client should display the `title` and render the `icon` image to user.
 
 #### GET Response Body
 
@@ -516,11 +581,11 @@ export interface ActionPostResponse {
 
 - `transaction` - The value must be a base64-encoded
   [serialized transaction](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#serialize).
-  The wallet must base64-decode the transaction and
+  The client must base64-decode the transaction and
   [deserialize it](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#from).
 
 - `message` - The value must be a UTF-8 string that describes the nature of the
-  transaction included in the response. The wallet should display this value to
+  transaction included in the response. The client should display this value to
   the user. For example, this might be the name of an item being purchased, a
   discount applied to a purchase, or a thank you note.
 
@@ -528,7 +593,7 @@ export interface ActionPostResponse {
   and response body, which may be added by future specification updates.
 
 > The application may respond with a partially or fully signed transaction. The
-> wallet must validate the transaction as **untrusted**.
+> client and wallet must validate the transaction as **untrusted**.
 
 #### POST Response - Transaction
 
@@ -536,10 +601,10 @@ If the transaction
 [`signatures`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#signatures)
 are empty or the transaction has NOT been partially signed:
 
-- The wallet must ignore the
+- The client must ignore the
   [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
   in the transaction and set the `feePayer` to the `account` in the request.
-- The wallet must ignore the
+- The client must ignore the
   [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
   in the transaction and set the `recentBlockhash` to the
   [latest blockhash](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getLatestBlockhash).
@@ -549,19 +614,19 @@ are empty or the transaction has NOT been partially signed:
 
 If the transaction has been partially signed:
 
-- The client/wallet must NOT alter the
+- The client must NOT alter the
   [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
   or
   [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
   as this would invalidate any existing signatures.
-- The wallet must verify existing signatures, and if any are invalid, the wallet
+- The client must verify existing signatures, and if any are invalid, the client
   must reject the transaction as **malformed**.
 
-The wallet must only sign the transaction with the `account` in the request, and
+The client must only sign the transaction with the `account` in the request, and
 must do so only if a signature for the `account` in the request is expected.
 
 If any signature except a signature for the `account` in the request is
-expected, the wallet must reject the transaction as **malicious**.
+expected, the client must reject the transaction as **malicious**.
 
 ## actions.json
 
