@@ -259,7 +259,7 @@ A type of [client](#client) that can verify it's pointing to a valid
 ## loader
 
 A [program](#program) with the ability to interpret the binary encoding of other
-on-chain programs.
+onchain programs.
 
 ## lockout
 

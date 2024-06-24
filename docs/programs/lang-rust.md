@@ -2,7 +2,7 @@
 title: "Developing with Rust"
 ---
 
-Solana supports writing on-chain programs using the
+Solana supports writing onchain programs using the
 [Rust](https://www.rust-lang.org/) programming language.
 
 <Callout title="Hello World: Get started with Solana development">

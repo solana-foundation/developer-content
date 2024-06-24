@@ -35,7 +35,7 @@ to offer the lowest commission for their services.
 Although this is not implemented in the Solana protocol today, in the future,
 delegators could risk losing tokens when staking through a process known as
 _slashing_. Slashing involves the removal and destruction of a portion of a
-validator's sol in response to intentional malicious behavior, such as creating
+validator's SOL in response to intentional malicious behavior, such as creating
 invalid transactions or censoring certain types of transactions or network
 participants.
 

@@ -3,8 +3,8 @@ date: 2024-04-24T00:00:00Z
 difficulty: beginner
 title: "How to write a Native Rust Program"
 description:
-  "This guide provides a basic overview on how to develop on-chain programs
-  using the Rust programming language."
+  "This guide provides a basic overview on how to develop onchain programs using
+  the Rust programming language."
 tags:
   - rust
 keywords:
@@ -13,7 +13,7 @@ keywords:
 
 To write Solana programs without leveraging the Anchor framework, we use the
 [`solana_program`](https://docs.rs/solana-program/latest/solana_program/) crate.
-This is the base library for writing on-chain programs in Rust.
+This is the base library for writing onchain programs in Rust.
 
 For beginners, it is recommended to start with the
 [Anchor framework](/content/guides/getstarted/intro-to-anchor.md).

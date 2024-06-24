@@ -423,7 +423,7 @@ useEffect(() => {
 
 With functions like these and the ones provided within the wallet adapter
 packages, you can detect whether the user's wallet is connected or not, create a
-button to get an airdrop of devnet or sol in the network defined, and more.
+button to get an airdrop of devnet or SOL in the network defined, and more.
 
 Let’s make another page now to demonstrate how we can use each of these hooks to
 access actually access the `connection` object and your user's wallet state to

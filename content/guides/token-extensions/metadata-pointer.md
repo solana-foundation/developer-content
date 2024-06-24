@@ -48,9 +48,9 @@ The Token Metadata Interface can be implemented by any program. This allows
 developers the flexibility to create custom Metadata Programs while reducing the
 challenges related to ecosystem integration for their program.
 
-With this common interface, wallets, dApps, and on-chain programs can
-universally access token metadata, and tools for creating or modifying metadata
-become universally compatible.
+With this common interface, wallets, dApps, and onchain programs can universally
+access token metadata, and tools for creating or modifying metadata become
+universally compatible.
 
 ### Metadata Interface Fields
 
