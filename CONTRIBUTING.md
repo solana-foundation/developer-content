@@ -13,7 +13,7 @@ transparent as possible, whether it's:
 
 - called the "developer content" repo or "developer content API"
 - written in markdown with YAML frontmatter
-- used YAML frontmatter, with structure enforced with Contentlayer
+- uses [YAML frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter), with structure enforced with Contentlayer
 - all pages are grouped into "content types"
 - supports some select custom components
 - publicly displayed via the UI of [solana.com](https://solana.com) (located in
