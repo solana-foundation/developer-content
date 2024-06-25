@@ -106,7 +106,7 @@ at address `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa`. The program stores
 its data in a specific account at the address
 `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
-<!-- ![Solana stores programs and data in separate accounts](/public/assets/courses/unboxed/pdas-global-state.svg) -->
+![Solana stores programs and data in separate accounts](/public/assets/courses/unboxed/pdas-global-state.svg)
 
 ### Basic scaffolding
 

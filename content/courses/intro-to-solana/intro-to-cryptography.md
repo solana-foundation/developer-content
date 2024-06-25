@@ -82,7 +82,7 @@ are but one use of cryptography.
 
 ### Solana uses public keys as addresses
 
-<!-- ![Solana wallet addresses](/public/assets/courses/unboxed/wallet-addresses.svg) -->
+![Solana wallet addresses](/public/assets/courses/unboxed/wallet-addresses.svg)
 
 People participating in the Solana network have at least one keypair. In Solana:
 
