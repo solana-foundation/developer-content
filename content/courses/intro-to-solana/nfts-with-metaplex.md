@@ -207,8 +207,7 @@ same, by design.
 
 ### Add NFT to Collection
 
-A
-[Certified Collection](https://docs.metaplex.com/programs/token-metadata/certified-collections#introduction)
+A [Certified Collection](https://www.metaplex.com/posts/certified-collections)
 is an NFT that individual NFTs can belong to. Think of a large NFT collection
 like Solana Monkey Business. If you look at an individual NFT's
 [Metadata](https://explorer.solana.com/address/C18YQWbfwjpCMeCm2MPGTgfcxGeEDPvNaGpVjwYv33q1/metadata)
