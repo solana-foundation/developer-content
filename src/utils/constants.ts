@@ -17,6 +17,13 @@ export const SUPPORTED_LOCALES: string[] = [
   "es",
   "ru",
   "zh",
+  "uk",
+  "fr",
+  "it",
+  "ja",
+  "ko",
+  "pt",
+  "vi",
 ];
 
 /**
