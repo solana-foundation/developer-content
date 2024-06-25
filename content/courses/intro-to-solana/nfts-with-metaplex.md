@@ -74,6 +74,12 @@ collection. For more information on `metaplex-foundation/js` see the
 the
 [Metaplex JS SDK Examples](https://github.com/metaplex-foundation/js-examples).
 
+<Callout type="note">The Metaplex Foundation do have newer mechanisms to create
+NFTs, including
+[MPL Core](https://github.com/metaplex-foundation/mpl-core/blob/main/clients/js/README.md)
+but [Metaplex JavaScript SDK](https://github.com/metaplex-foundation/js) remains
+the most popular and is widely supported by wallet software.</Callout>
+
 ### Metaplex instance
 
 A `Metaplex` instance serves as the entry point for accessing the Metaplex SDK
