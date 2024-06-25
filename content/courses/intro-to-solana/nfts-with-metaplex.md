@@ -273,14 +273,6 @@ await metaplex.nfts().verifyCollection({
 });
 ```
 
-### Fair launch tools
-
-The steps covered above for creating an NFT would be incredibly tedious to
-execute for thousands of NFTs in one go. Many providers, including Metaplex,
-Magic Eden, and Tensor have so-called 'fair launch' tools that take care of
-minting large quantities of NFTs and ensuring they are sold within the
-parameters set by their creators.
-
 ## Lab
 
 In this lab, we'll go through the steps to create an NFT using the Metaplex SDK,
@@ -695,7 +687,11 @@ If you want to take a look at the final solution code you can find it on the
 
 ## Challenge
 
-To deepen your understanding of NFTs, dive into fair launch platforms on the
+The steps covered above for creating an NFT would be incredibly tedious to
+execute for thousands of NFTs in one go. Many providers, including Metaplex,
+Magic Eden, and Tensor have so-called 'fair launch' tools that take care of
+minting large quantities of NFTs and ensuring they are sold within the
+parameters set by their creators. Dive into fair launch platforms on the
 [Digital Collectables](https://solana.com/ecosystem/explore?categories=digital%20collectibles)
 page. This hands-on experience will not only reinforce your understanding of the
 tools but also boost your confidence in your ability to use them effectively in
