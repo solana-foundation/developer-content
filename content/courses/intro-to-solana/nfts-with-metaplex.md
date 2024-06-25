@@ -280,24 +280,18 @@ update the NFT's metadata after the fact, and then associate the NFT with a
 collection. By the end, you will have a basic understanding of how to use the
 Metaplex SDK to interact with NFTs on Solana.
 
-### Starter
+### Part 1: Creating an NFT collection
 
-To begin, make a new folder and install the relevant depndencies:
+To begin, make a new folder and install the relevant dependencies:
 
 ```
 npm i "@solana/web3.js" "@solana-developers/helpers "@metaplex-foundation/js"
 ```
 
-Then create a file called `create-metaplex-nft.ts`, and add our imports:
+Then create a file called `create-metaplex-collection.ts`, and add our imports:
 
-```
-import {
-  Connection,
-  clusterApiUrl,
-  PublicKey,
-  Signer,
-  LAMPORTS_PER_SOL,
-} from "@solana/web3.js";
+```typescript
+import { Connection, clusterApiUrl, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import {
   getKeypairFromFile,
   airdropIfRequired,
@@ -307,75 +301,33 @@ import {
   keypairIdentity,
   irysStorage,
   toMetaplexFile,
-  Nft,
 } from "@metaplex-foundation/js";
 import { readFileSync } from "fs";
 ```
 
-Add the data we want in our NFT:
+Connect to devnet, load a user and Airdrop some SOL if needed:
 
 ```typescript
-interface NftData {
-  name: string;
-  symbol: string;
-  description: string;
-  sellerFeeBasisPoints: number;
-  imageFile: string;
-}
-
-interface CollectionNftData {
-  name: string;
-  symbol: string;
-  description: string;
-  sellerFeeBasisPoints: number;
-  imageFile: string;
-  isCollection: boolean;
-  collectionAuthority: Signer;
-}
-
-// example data for a new NFT
-const nftData = {
-  name: "Name",
-  symbol: "SYMBOL",
-  description: "Description",
-  sellerFeeBasisPoints: 0,
-  imageFile: "solana.png",
-};
-
-// example data for updating an existing NFT
-const updateNftData = {
-  name: "Update",
-  symbol: "UPDATE",
-  description: "Update Description",
-  sellerFeeBasisPoints: 100,
-  imageFile: "success.png",
-};
-```
-
-Then connect to devnet, and get some SOL:
-
-```
 // create a new connection to the cluster's API
 const connection = new Connection(clusterApiUrl("devnet"));
 
 // initialize a keypair for the user
 const user = await getKeypairFromFile();
+
 await airdropIfRequired(
   connection,
   user.publicKey,
   1 * LAMPORTS_PER_SOL,
-  1 * LAMPORTS_PER_SOL
+  0.1 * LAMPORTS_PER_SOL,
 );
 
-console.log("PublicKey:", user.publicKey.toBase58());
+console.log("Loaded user:", user.publicKey.toBase58());
 ```
 
-### 2. Set up Metaplex
-
-Before we start creating and updating NFTs, we need to set up the Metaplex
-instance. Add the following after the airdrop:
+Connect to Metaplex and Irys:
 
 ```typescript
+// metaplex set up
 const metaplex = Metaplex.make(connection)
   .use(keypairIdentity(user))
   .use(
@@ -387,217 +339,7 @@ const metaplex = Metaplex.make(connection)
   );
 ```
 
-### Add the uploadMetadata() helper function
-
-Next, let's create a helper function to handle the process of uploading an image
-and metadata, and returning the metadata URI. This function will take in the
-Metaplex instance and NFT data as input, and return the metadata URI as output.
-
-```typescript
-// Upload the image and metadata
-async function uploadMetadata(
-  metaplex: Metaplex,
-  nftData: NftData,
-): Promise<string> {
-  // file to buffer
-  const buffer = readFileSync("src/" + nftData.imageFile);
-
-  // buffer to metaplex file
-  const file = toMetaplexFile(buffer, nftData.imageFile);
-
-  // upload image and get image uri
-  const imageUri = await metaplex.storage().upload(file);
-  console.log("image uri:", imageUri);
-
-  // upload metadata and get metadata uri (off chain metadata)
-  const { uri } = await metaplex.nfts().uploadMetadata({
-    name: nftData.name,
-    symbol: nftData.symbol,
-    description: nftData.description,
-    image: imageUri,
-  });
-
-  console.log("metadata uri:", uri);
-  return uri;
-}
-```
-
-This function will read an image file, convert it to a buffer, then upload it to
-get an image URI. It will then upload the NFT metadata, which includes the name,
-symbol, description, and image URI, and get a metadata URI. This URI is the
-offchain metadata. This function will also log the image URI and metadata URI
-for reference.
-
-### Add the createNft() helper function
-
-Next, let's create a helper function to handle creating the NFT. This function
-takes in the Metaplex instance, metadata URI and NFT data as inputs. It uses the
-`create` method of the SDK to create the NFT, passing in the metadata URI, name,
-seller fee, and symbol as parameters.
-
-```typescript
-async function createNft(
-  metaplex: Metaplex,
-  uri: string,
-  nftData: NftData,
-  collectionMint: PublicKey,
-): Promise<Nft> {
-  const { nft } = await metaplex.nfts().create(
-    {
-      uri: uri, // metadata URI
-      name: nftData.name,
-      sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
-      symbol: nftData.symbol,
-      collection: collectionMint,
-    },
-    { commitment: "finalized" },
-  );
-
-  console.log(
-    `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
-  );
-
-  return nft;
-}
-```
-
-`createNft()` logs the token mint URL and returns the an `nft` object containing
-information about the newly created NFT. The NFT will be minted to the public
-key corresponding to the `user` used as the Identity Driver when setting up the
-Metaplex instance.
-
-### Create the NFT
-
-Now that we have set up the Metaplex instance and created helper functions for
-uploading metadata and creating NFTs, we can test these functions by creating an
-NFT. Just after setting up Metaplex, add the `uploadMetadata` function to upload
-the NFT data and get the URI for the metadata. Then, use the `createNft`
-function and metadata URI to create an NFT.
-
-```typescript
-// upload the NFT data and get the URI for the metadata
-const uri = await uploadMetadata(metaplex, nftData);
-
-// create an NFT using the helper function and the URI from the metadata
-const nft = await createNft(metaplex, uri, nftData, collectionNft.mint.address);
-```
-
-Run `npx esrun create-metaplex-nft.ts` in the command line. You should see
-output similar to the following:
-
-```typescript
-image uri: https://arweave.net/j5HcSX8qttSgJ_ZDLmbuKA7VGUo7ZLX-xODFU4LFYew
-metadata uri: https://arweave.net/ac5fwNfRckuVMXiQW_EAHc-xKFCv_9zXJ-1caY08GFE
-Token Mint: https://explorer.solana.com/address/QdK4oCUZ1zMroCd4vqndnTH7aPAsr8ApFkVeGYbvsFj?cluster=devnet
-✅ Finished successfully!
-```
-
-Feel free to inspect the generated URIs for the image and metadata, as well as
-view the NFT on the Solana Explorer by visiting the URL provided in the output.
-
-### Add the updateNftUri() helper function
-
-Next, let's create a helper function to handle updating an existing NFT's URI.
-This function will take in the Metaplex instance, metadata URI, and mint address
-of the NFT. It uses the `findByMint()` method of the SDK to fetch the existing
-NFT data using the mint address and then uses the `update()` method to update
-the metadata with the new URI. Finally, it will log the token mint URL and
-transaction signature for reference.
-
-```typescript
-// helper function update NFT
-async function updateNftUri(
-  metaplex: Metaplex,
-  uri: string,
-  mintAddress: PublicKey,
-) {
-  // fetch NFT data using mint address
-  const nft = await metaplex.nfts().findByMint({ mintAddress });
-
-  // update the NFT metadata
-  const { response } = await metaplex.nfts().update(
-    {
-      nftOrSft: nft,
-      uri: uri,
-    },
-    { commitment: "finalized" },
-  );
-
-  console.log(
-    `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
-  );
-
-  console.log(
-    `Transaction: https://explorer.solana.com/tx/${response.signature}?cluster=devnet`,
-  );
-}
-```
-
-### Update NFT
-
-To update an existing NFT, we first need to upload new metadata for the NFT and
-get the new URI. Al the bottom of the file, call `uploadMetadata()` again to
-upload the updated NFT data and get the new URI for the metadata. Then use the
-`updateNftUri()`, passing in the Metaplex instance, the new URI from the
-metadata, and the mint address of the NFT. The `nft.address` is from the output
-of the `createNft` function.
-
-```typescript
-// upload updated NFT data and get the new URI for the metadata
-const updatedUri = await uploadMetadata(metaplex, updateNftData);
-
-// update the NFT using the helper function and the new URI from the metadata
-await updateNftUri(metaplex, updatedUri, nft.address);
-```
-
-Run `npx esrun create-metaplex-nft.ts` in the command line. You should see
-additional output similar to the following:
-
-```typescript
-Token Mint: https://explorer.solana.com/address/6R9egtNxbzHr5ksnGqGNHXzKuKSgeXAbcrdRUsR1fkRM?cluster=devnet
-Transaction: https://explorer.solana.com/tx/5VkG47iGmECrqD11zbF7psaVqFkA4tz3iZar21cWWbeySd66fTkKg7ni7jiFkLqmeiBM6GzhL1LvNbLh4Jh6ozpU?cluster=devnet
-✅ Finished successfully!
-```
-
-You can also view the NFTs in your wallet by importing the `PRIVATE_KEY` from
-the `.env` file.
-
-### Create an NFT collection
-
-Awesome, you now know how to create a single NFT and update it on the Solana
-blockchain! But, how do you add it to a collection?
-
-First, let's create a helper function called `createCollectionNft`. Note that
-it's very similar to `createNft`, but ensures that `isCollection` is set to true
-and that the data matches the requirements for a collection.
-
-```typescript
-async function createCollectionNft(
-  metaplex: Metaplex,
-  uri: string,
-  data: CollectionNftData,
-): Promise<Nft> {
-  const { nft } = await metaplex.nfts().create(
-    {
-      uri: uri,
-      name: data.name,
-      sellerFeeBasisPoints: data.sellerFeeBasisPoints,
-      symbol: data.symbol,
-      isCollection: true,
-    },
-    { commitment: "finalized" },
-  );
-
-  console.log(
-    `Collection Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
-  );
-
-  return nft;
-}
-```
-
-Next, we need to create the offchain data for the collection. Just _before_ the
-existing calls to `createNft`, add the following `collectionNftData`:
+Add the data we want in for our Collection:
 
 ```typescript
 const collectionNftData = {
@@ -611,69 +353,352 @@ const collectionNftData = {
 };
 ```
 
-Now, let's call `uploadMetadata` with the `collectionNftData` and then call
-`createCollectionNft`. Again, do this _before_ the code that creates an NFT.
+Upload the off-chain metadata to irys:
 
 ```typescript
-// upload data for the collection NFT and get the URI for the metadata
-const collectionUri = await uploadMetadata(metaplex, collectionNftData);
+// Load file into Metaplex
+const buffer = readFileSync(collectionNftData.imageFile);
+const file = toMetaplexFile(buffer, collectionNftData.imageFile);
 
-// create a collection NFT using the helper function and the URI from the metadata
-const collectionNft = await createCollectionNft(
-  metaplex,
-  collectionUri,
-  collectionNftData,
+// upload image and get image uri
+const imageUri = await metaplex.storage().upload(file);
+console.log("image uri:", imageUri);
+
+// upload metadata and get metadata uri (off chain metadata)
+const uploadMetadataOutput = await metaplex.nfts().uploadMetadata({
+  name: collectionNftData.name,
+  symbol: collectionNftData.symbol,
+  description: collectionNftData.description,
+  image: imageUri,
+});
+
+const collectionUri = uploadMetadataOutput.uri;
+console.log("Collection off-chain metadata URI:", collectionUri);
+```
+
+Then actually make the collection:
+
+```
+// create a collection NFT using the URI from the metadata
+const createNftOutput = await metaplex.nfts().create(
+  {
+    uri: collectionUri,
+    name: collectionNftData.name,
+    sellerFeeBasisPoints: collectionNftData.sellerFeeBasisPoints,
+    symbol: collectionNftData.symbol,
+    isCollection: true,
+  },
+  { commitment: "finalized" }
+);
+
+const collectionNft = createNftOutput.nft;
+
+console.log(
+  `Collection NFT: https://explorer.solana.com/address/${collectionNft.address.toString()}?cluster=devnet`
+);
+
+console.log(`Collection NFT address is`, collectionNft.address.toString());
+
+console.log("✅ Finished successfully!");
+```
+
+Run the file with:
+
+```
+npx esrun create-metaplex-nft-collection.ts
+```
+
+The output should look like this:
+
+```
+% npx esrun create-metaplex-nft-collection.ts
+Loaded user: 4DRi8LxWhAWf9LwUuyb3Rz4Y4USEKzjdvQBWTyrkJtwg
+image uri: https://arweave.net/_3vbKzFO7zcfMkFaVdhorntkPHDqz4YNTyf_9lrGw1c
+Collection off-chain metadata URI: https://arweave.net/Jw29lMkHp-PIxddEuLFkavdOTP1bJ9MeXTu-QqY3qTM
+Collection NFT: https://explorer.solana.com/address/8dP75EWHnYAc6pgeiToXtE66qEaHx1PcoetZpmnAQeAp?cluster=devnet
+Collection NFT address is 8dP75EWHnYAc6pgeiToXtE66qEaHx1PcoetZpmnAQeAp
+✅ Finished successfully!
+```
+
+Congratulations! You've created a Metaplex Verified Collection. Check this out
+on Solana Explorer using the URL above. If you have any trouble, try and fix it
+yourself, but if you need to you can also check out the
+[solution code](https://github.com/solana-developers/professional-education/blob/main/labs/create-metaplex-nft-collection.ts).
+
+We'll use the collection NFT address in the next step.
+
+### 2. Creating a Metaplex NFT inside the collection
+
+We'll now make a Metaplex NFT that's a member of the collection we just made.
+Make a new file called `create-metaplex-nft.ts`. The setup for this will look
+the same as previous, with slightly different imports:
+
+```typescript
+import {
+  Connection,
+  clusterApiUrl,
+  PublicKey,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import {
+  getKeypairFromFile,
+  airdropIfRequired,
+} from "@solana-developers/helpers";
+import {
+  Metaplex,
+  keypairIdentity,
+  irysStorage,
+  toMetaplexFile,
+} from "@metaplex-foundation/js";
+import { readFileSync } from "fs";
+
+// create a new connection to the cluster's API
+const connection = new Connection(clusterApiUrl("devnet"));
+
+// initialize a keypair for the user
+const user = await getKeypairFromFile();
+
+await airdropIfRequired(
+  connection,
+  user.publicKey,
+  1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL,
+);
+
+console.log("Loaded user:", user.publicKey.toBase58());
+
+// metaplex set up
+const metaplex = Metaplex.make(connection)
+  .use(keypairIdentity(user))
+  .use(
+    irysStorage({
+      address: "https://devnet.irys.xyz",
+      providerUrl: "https://api.devnet.solana.com",
+      timeout: 60000,
+    }),
+  );
+```
+
+Now let's tell Metaplex our collection, and the NFT we want to make:
+
+```typescript
+// Substitute in your collection NFT address from create-metaplex-nft-collection.ts
+const collectionNftAddress = new PublicKey("YOUR_COLLECTION_NFT_ADDRESS_HERE");
+
+// example data for a new NFT
+const nftData = {
+  name: "Name",
+  symbol: "SYMBOL",
+  description: "Description",
+  sellerFeeBasisPoints: 0,
+  imageFile: "solana.png",
+};
+```
+
+We can then put out files into Irys:
+
+```typescript
+// Load the file into Metaplex
+const buffer = readFileSync(nftData.imageFile);
+const file = toMetaplexFile(buffer, nftData.imageFile);
+
+// upload image and get image uri
+const imageUri = await metaplex.storage().upload(file);
+console.log("image uri:", imageUri);
+
+// upload metadata and get metadata uri (off chain metadata)
+const uploadMetadataOutput = await metaplex.nfts().uploadMetadata({
+  name: nftData.name,
+  symbol: nftData.symbol,
+  description: nftData.description,
+  image: imageUri,
+});
+
+const metadataUri = uploadMetadataOutput.uri;
+```
+
+And then create an NFT using the URI from the metadata:
+
+```typescript
+const createNftOutput = await metaplex.nfts().create(
+  {
+    uri: metadataUri, // metadata URI
+    name: nftData.name,
+    sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
+    symbol: nftData.symbol,
+    collection: collectionNftAddress,
+  },
+  { commitment: "finalized" },
+);
+const nft = createNftOutput.nft;
+
+console.log(
+  `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
 );
 ```
 
-This will return our collection's mint address so we can use it to assign NFTs
-to the collection.
-
-### Assign an NFT to a collection
-
-Now that we have a collection, let's change our existing code so that newly
-created NFTs get added to the collection. First, let's modify our `createNft`
-function so that the call to `nfts().create` includes the `collection` field.
-Then, add code that calls `verifyCollection` to make it so the `verified` field
-in the onchain metadata is set to true. This is how consuming programs and apps
-can know for sure that the NFT in fact belongs to the collection.
+Finally let's verify our mint as being part of our collection. This makes it so
+the `verified` field in the onchain metadata is set to `true`, so consuming
+programs and apps can know for sure that the NFT in fact belongs to the
+collection:
 
 ```typescript
-async function createNft(
-  metaplex: Metaplex,
-  uri: string,
-  nftData: NftData,
-  collectionMint: PublicKey,
-): Promise<Nft> {
-  const { nft } = await metaplex.nfts().create(
-    {
-      uri: uri, // metadata URI
-      name: nftData.name,
-      sellerFeeBasisPoints: nftData.sellerFeeBasisPoints,
-      symbol: nftData.symbol,
-      collection: collectionMint,
-    },
-    { commitment: "finalized" },
-  );
+await metaplex.nfts().verifyCollection({
+  // Verify our collection as a Certified Collection
+  // See https://developers.metaplex.com/token-metadata/collections
+  mintAddress: nft.mint.address,
+  collectionMintAddress: collectionNftAddress,
+  isSizedCollection: true,
+});
 
-  console.log(
-    `Token Mint: https://explorer.solana.com/address/${nft.address.toString()}?cluster=devnet`,
-  );
+console.log(`Created NFT address is`, nft.address.toString());
 
-  await metaplex.nfts().verifyCollection({
-    //this is what verifies our collection as a Certified Collection
-    mintAddress: nft.mint.address,
-    collectionMintAddress: collectionMint,
-    isSizedCollection: true,
-  });
-
-  return nft;
-}
+console.log("✅ Finished successfully!");
 ```
 
-Now, run `npm start` and voila! If you follow the new NFT link and look at the
-Metadata tab you will see a `collection` field with your collection's mint
-address listed.
+Run `npx esrun create-metaplex-nft.ts`. If all goes well, you will see the
+following:
+
+```
+% npx esrun create-metaplex-nft.ts
+Loaded user: 4DRi8LxWhAWf9LwUuyb3Rz4Y4USEKzjdvQBWTyrkJtwg
+image uri: https://arweave.net/Z2JoDr7W4A3mWE9aTq8ex13IoPx1v1QewjVqPKPItuE
+Token Mint: https://explorer.solana.com/address/HCq8ERk1PSLCuBJeWx7du4dom3YbyfKpaCWDQ3Eft6aM?cluster=devnet
+Created NFT address is HCq8ERk1PSLCuBJeWx7du4dom3YbyfKpaCWDQ3Eft6aM
+✅ Finished successfully!
+```
+
+Inspect your NFT at the address given! If you have any trouble, try and fix it
+yourself, but if you need to you can also check out the
+[solution code](https://github.com/solana-developers/professional-education/blob/main/labs/create-metaplex-nft.ts).
+
+Remember the NFT address, we'll use it in the next step.
+
+### 3. Update the NFT
+
+Create a new file, called `update-metaplex-nft.ts`. The imports will be simila
+to our previous files:
+
+```typescript
+import {
+  Connection,
+  clusterApiUrl,
+  PublicKey,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import {
+  getKeypairFromFile,
+  airdropIfRequired,
+  getExplorerLink,
+} from "@solana-developers/helpers";
+import {
+  Metaplex,
+  keypairIdentity,
+  irysStorage,
+  toMetaplexFile,
+} from "@metaplex-foundation/js";
+import { readFileSync } from "fs";
+
+// create a new connection to the cluster's API
+const connection = new Connection(clusterApiUrl("devnet"));
+
+// initialize a keypair for the user
+const user = await getKeypairFromFile();
+
+await airdropIfRequired(
+  connection,
+  user.publicKey,
+  1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL,
+);
+
+console.log("Loaded user:", user.publicKey.toBase58());
+
+// metaplex set up
+const metaplex = Metaplex.make(connection)
+  .use(keypairIdentity(user))
+  .use(
+    irysStorage({
+      address: "https://devnet.irys.xyz",
+      providerUrl: "https://api.devnet.solana.com",
+      timeout: 60000,
+    }),
+  );
+```
+
+Let's load our NFT, specifying the address from the previous example, and set up
+what we'd like to update:
+
+```typescript
+// Load the NFT using the mint address
+const nftAddress: PublicKey = new PublicKey("YOUR_NFT_ADDRESS_HERE");
+const nft = await metaplex.nfts().findByMint({ mintAddress: nftAddress });
+
+// example data for updating an existing NFT
+const updatedNftData = {
+  name: "Updated",
+  symbol: "UPDATED",
+  description: "Updated Description",
+  sellerFeeBasisPoints: 100,
+  imageFile: "success.png",
+};
+```
+
+We can then use Metaplex to update our NFT:
+
+```typescript
+// Load the image file into Metaplex
+const buffer = readFileSync(updatedNftData.imageFile);
+const file = toMetaplexFile(buffer, updatedNftData.imageFile);
+
+// Upload the new image and get image URI
+const imageUri = await metaplex.storage().upload(file);
+console.log("image uri:", imageUri);
+
+// Upload new off-chain metadata
+const uploadMetadataOutput = await metaplex.nfts().uploadMetadata({
+  name: updatedNftData.name,
+  symbol: updatedNftData.symbol,
+  description: updatedNftData.description,
+  image: imageUri,
+});
+
+const updatedUri = uploadMetadataOutput.uri;
+
+// update the NFT metadata
+const { response } = await metaplex.nfts().update(
+  {
+    nftOrSft: nft,
+    uri: updatedUri,
+  },
+  { commitment: "finalized" },
+);
+
+console.log(
+  `NFT updated with new metadata URI: ${getExplorerLink(
+    "transaction",
+    response.signature,
+    "devnet",
+  )}`,
+);
+
+console.log("✅ Finished successfully!");
+```
+
+Run `npx esrun create-metaplex-nft.ts`. You should see something like:
+
+```typescript
+% npx esrun create-metaplex-nft.ts
+Loaded user: 4DRi8LxWhAWf9LwUuyb3Rz4Y4USEKzjdvQBWTyrkJtwg
+image uri: https://arweave.net/Z2JoDr7W4A3mWE9aTq8ex13IoPx1v1QewjVqPKPItuE
+Token Mint: https://explorer.solana.com/address/HCq8ERk1PSLCuBJeWx7du4dom3YbyfKpaCWDQ3Eft6aM?cluster=devnet
+Created NFT address is HCq8ERk1PSLCuBJeWx7du4dom3YbyfKpaCWDQ3Eft6aM
+```
+
+Inspect the updated NFT on Solana Explorer! Just like previously, if you have
+any issues you should fix them yourself, but if needed the
+[solution code](https://github.com/solana-developers/professional-education/blob/main/labs/update-metaplex-nft.ts)
+is available.
 
 Congratulations! You've successfully learned how to use the Metaplex SDK to
 create, update, and verify NFTs as part of a collection. That's everything you
@@ -681,9 +706,6 @@ need to build out your own collection for just about any use case. You could
 build a new event ticketing platform, revamp a retail businesses membership
 Ppogram, or even digitize your school's student ID system. The possibilities are
 endless!
-
-If you want to take a look at the final solution code you can find it on the
-[solution branch of the repository](https://github.com/Unboxed-Software/solana-metaplex/tree/solution).
 
 ## Challenge
 
