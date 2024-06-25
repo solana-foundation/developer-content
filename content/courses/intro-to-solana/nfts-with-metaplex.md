@@ -205,7 +205,7 @@ const { response } = await metaplex.nfts().update(
 Note that any fields you don't include in the call to `update` will stay the
 same, by design.
 
-### Add NFT to Collection
+### Add the NFT to a collection
 
 A [Certified Collection](https://www.metaplex.com/posts/certified-collections)
 is an NFT that individual NFTs can belong to. Think of a large NFT collection
@@ -287,7 +287,7 @@ To begin, make a new folder and install the relevant depndencies:
 npm i "@solana/web3.js" "@solana-developers/helpers "@metaplex-foundation/js"
 ```
 
-Then create a file called `make-nft-collection.ts`, and add our imports:
+Then create a file called `create-metaplex-nft.ts`, and add our imports:
 
 ```
 import {
@@ -481,8 +481,8 @@ const uri = await uploadMetadata(metaplex, nftData);
 const nft = await createNft(metaplex, uri, nftData, collectionNft.mint.address);
 ```
 
-Run `npx esrun create-nft.ts` in the command line. You should see output similar
-to the following:
+Run `npx esrun create-metaplex-nft.ts` in the command line. You should see
+output similar to the following:
 
 ```typescript
 image uri: https://arweave.net/j5HcSX8qttSgJ_ZDLmbuKA7VGUo7ZLX-xODFU4LFYew
@@ -549,8 +549,8 @@ const updatedUri = await uploadMetadata(metaplex, updateNftData);
 await updateNftUri(metaplex, updatedUri, nft.address);
 ```
 
-Run `npx esrun create-nft.ts` in the command line. You should see additional
-output similar to the following:
+Run `npx esrun create-metaplex-nft.ts` in the command line. You should see
+additional output similar to the following:
 
 ```typescript
 Token Mint: https://explorer.solana.com/address/6R9egtNxbzHr5ksnGqGNHXzKuKSgeXAbcrdRUsR1fkRM?cluster=devnet
