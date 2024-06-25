@@ -303,8 +303,8 @@ for the data account is `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
 You'll need a Solana wallet app. There's a wide variety of
 [Solana wallets](https://solana.com/docs/intro/wallets) available. We're going
-to use a browser-extension wallet in this case, since they're more likely to
-support Solana devnet.
+to use a browser-extension wallet in this case, since you probably code on a
+laptop or desktop!
 
 Follow the wallets instructions for creating a new account and a new wallet.
 
@@ -313,6 +313,7 @@ Then set your wallet to use Devnet, for example:
 - In Phantom, click **Settings** -> **Developer Settings** -> **Testnet mode**.
   'Testnet mode' sets Solana to Devnet by default.
 - In Solflare, click **Settings** -> **General** -> **Network** -> **DevNet**
+- In Backpack, click **Preferences** -> **Developer Mode**
 
 This ensures that your wallet app will be connected to the same network we’ll be
 using in this lab.
@@ -487,17 +488,17 @@ export const AppBar: FC = () => {
 
 At this point, you should be able to run the app and interact with the
 multi-button at the top-right of the screen. It should now read, "Select
-Wallet." If you have the Phantom extension and are signed in, you should be able
-to connect your Phantom wallet to the site using this new button.
+Wallet." If you have the a wallet installed, you should be able to use this
+button to connect your wallet to the site.
 
 ### Create button to ping program
 
-Now that our app can connect to the Phantom wallet, let’s make the “Ping!”
-button actually do something.
+Now that our app can connect to our wallet, let’s make the “Ping!” button
+actually do something.
 
 Start by opening the `PingButton.tsx` file. We’re going to replace the
 `console.log` inside of `onClick` with code that will create a transaction and
-submit it to the Phantom extension for the end user’s approval.
+submit it to the wallet app for the end user’s approval.
 
 First, we need a connection, the wallet’s public key, and Wallet-Adapter’s
 `sendTransaction` function. To get this, we need to import `useConnection` and
@@ -592,9 +593,9 @@ const onClick = async () => {
 ```
 
 And that’s it! If you refresh the page, connect your wallet, and click the ping
-button, Phantom should present you with a popup to confirm the transaction.
+button, your wallet should present you with a popup to confirm the transaction.
 
-### Add some polish around the edges
+### Add some polish
 
 There’s a lot you could do to make the user experience here even better. For
 example, you could change the UI to only show you the Ping button when a wallet
@@ -610,7 +611,7 @@ to understand all of this in context.
 ## Challenge
 
 Now it’s your turn to build something independently. Create an application that
-lets a user connect their Phantom wallet and send SOL to another account.
+lets a user connect their wallet and send SOL to another account.
 
 ![Send SOL App](/public/assets/courses/unboxed/solana-send-sol-app.png)
 

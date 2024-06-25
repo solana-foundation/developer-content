@@ -491,8 +491,8 @@ console.log(
 );
 
 // This is a shortcut that runs:
-// SystemProgram.createAccount
-// token.createInitializeMintInstruction
+// SystemProgram.createAccount()
+// token.createInitializeMintInstruction()
 // See https://www.soldev.app/course/token-program
 const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
 
@@ -561,7 +561,7 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 const metadataData = {
   name: "Solana Training Token",
   symbol: "TRAINING",
-  // Arweave / IPFS / Pinata etc link using metaplex standard for off-chain data
+  // Arweave / IPFS / Pinata etc link using metaplex standard for offchain data
   uri: "https://arweave.net/1234",
   sellerFeeBasisPoints: 0,
   creators: null,
@@ -769,9 +769,9 @@ if you like, or find a friend who has a devnet account and send them your token!
 As you saw in Explorer, the tokens currently reside in an Associated Token
 Account attached to our wallet. We don't have to remember the address for our
 associated token account - we can just look it up using
-`getOrCreateAssociatedTokenAccount()` and provide our wallet address and the mint of
-the token we want to send. Likewise, we can find (or make) an ATA for our
-recipient to hold this token too.
+`getOrCreateAssociatedTokenAccount()` and provide our wallet address and the
+mint of the token we want to send. Likewise, we can find (or make) an ATA for
+our recipient to hold this token too.
 
 ```typescript
 import "dotenv/config";
@@ -838,9 +838,9 @@ balance go up!
 Now it’s your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
-To interact with the Token Program using the Phantom wallet adapter,
-you will have to build each transaction and then submit the transaction to
-Phantom for approval.
+To interact with the Token Program using the wallet adapter, you will have to
+build each transaction and then submit the transaction to the wallet app for
+approval.
 
 ![Token Program Challenge Frontend](/public/assets/courses/unboxed/token-program-frontend.png)
 
