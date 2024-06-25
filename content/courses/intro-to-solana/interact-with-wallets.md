@@ -565,7 +565,7 @@ Next, add this instruction to the transaction.
 Finally, call `sendTransaction`.
 
 ```tsx
-const onClick = () => {
+const onClick = async () => {
   if (!connection || !publicKey) {
     return;
   }
@@ -586,9 +586,8 @@ const onClick = () => {
   });
 
   transaction.add(instruction);
-  sendTransaction(transaction, connection).then(sig => {
+  const signature = await sendTransaction(transaction, connection);
     console.log(sig);
-  });
 };
 ```
 
