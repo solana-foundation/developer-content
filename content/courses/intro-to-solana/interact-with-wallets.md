@@ -588,7 +588,7 @@ const onClick = async () => {
 
   transaction.add(instruction);
   const signature = await sendTransaction(transaction, connection);
-    console.log(sig);
+  console.log(sig);
 };
 ```
 

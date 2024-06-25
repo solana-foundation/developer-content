@@ -6,8 +6,8 @@ objectives:
   - Use web3.js to connect to Solana and read an account balance
 description:
   "In Solana we use public keys as a form of address. We can interact with other
-  users by sending tokens to their public key, which we also refer to as
-  their wallet address. "
+  users by sending tokens to their public key, which we also refer to as their
+  wallet address. "
 ---
 
 ## Summary
@@ -33,9 +33,9 @@ All data stored on Solana is stored in accounts. Accounts can store:
 
 ### SOL
 
-SOL is Solana's 'native token' - this means SOL is used to pay transaction fees, rent for
-accounts, and other common. SOL is sometimes shown with the `◎` symbol. Each SOL is made
-from 1 billion **Lamports**.
+SOL is Solana's 'native token' - this means SOL is used to pay transaction fees,
+rent for accounts, and other common. SOL is sometimes shown with the `◎` symbol.
+Each SOL is made from 1 billion **Lamports**.
 
 In the same way that finance apps typically do math in cents (for USD) and pence
 (for GBP), Solana apps typically transfer, spend, store, and handle SOL as
