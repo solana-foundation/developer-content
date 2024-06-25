@@ -137,7 +137,7 @@ Remember, the offchain portion of the metadata includes things like the image
 URI as well as additional information like the name and description of the NFT.
 While you can technically include anything you'd like in this JSON object, in
 most cases, you should follow the
-[NFT standard](https://docs.metaplex.com/programs/token-metadata/token-standard#the-non-fungible-standard)
+[NFT standard](https://developers.metaplex.com/token-metadata/token-standard#the-non-fungible-standard)
 to ensure compatibility with wallets, programs, and applications.
 
 To create the metadata, use the `uploadMetadata` method provided by the SDK.
