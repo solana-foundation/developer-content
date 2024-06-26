@@ -1,0 +1,9 @@
+author: unboxed
+title: Using the Token Extensions program
+description:
+  Understand the new Token Extensions program, how it differers from the
+  original Token Program, and how to use it.
+lessons:
+  - intro-to-token-extensions-program
+  - token-extensions-in-the-client
+  - token-extensions-onchain

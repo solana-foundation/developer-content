@@ -1,0 +1,7 @@
+author: unboxed
+title: Tokens on Solana
+description: Create both fungible tokens and NFTs on Solana
+lessons:
+  - token-program
+  - token-program-advanced
+  - nfts-with-metaplex

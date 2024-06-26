@@ -107,9 +107,9 @@ npm i @solana/web3.js
 ```
 
 We’ll cover a lot of
-[web3.js](https://docs.solana.com/developing/clients/javascript-reference)
-gradually throughout this course, but you can also check out the
-[official web3.js documentation](https://docs.solana.com/developing/clients/javascript-reference).
+[web3.js](https://solana.com/docs/clients/javascript-reference) gradually
+throughout this course, but you can also check out the
+[official web3.js documentation](https://solana.com/docs/clients/javascript-reference).
 
 To send tokens, send NFTS, or read and write data Solana, you'll need your own
 keypair. To make a new keypair, use the `Keypair.generate()` function from

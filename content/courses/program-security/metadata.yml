@@ -1,0 +1,17 @@
+author: unboxed
+title: Program Security
+description:
+  "Learn how to write secure Solana programs, and how to avoid common security
+  pitfalls."
+lessons:
+  - security-intro
+  - signer-auth
+  - owner-checks
+  - account-data-matching
+  - reinitialization-attacks
+  - duplicate-mutable-accounts
+  - type-cosplay
+  - arbitrary-cpi
+  - bump-seed-canonicalization
+  - closing-accounts
+  - pda-sharing

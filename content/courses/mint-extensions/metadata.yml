@@ -1,0 +1,11 @@
+author: unboxed
+title: Token Extensions for Mints
+description:
+  Create tokens with exciting features like not-transferrability, transfer fees,
+  metadata directly inside the mint account, and more.
+lessons:
+  - token-extensions-metadata
+  - non-transferable-token
+  - transfer-fee
+  - close-mint
+  - default-account-state

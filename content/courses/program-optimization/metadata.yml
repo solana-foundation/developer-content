@@ -1,0 +1,11 @@
+author: unboxed
+title: Program Optimization
+description:
+  Request payments and initiate transactions using links and QR codes.
+lessons:
+  - program-architecture
+  # Renamed! Was env-variables
+  - program-configuration
+  - rust-macros
+  # Renamed! Was versioned-transaction
+  - lookup-tables
