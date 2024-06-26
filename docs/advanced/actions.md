@@ -28,6 +28,44 @@ without going to a decentralized app; in Discord, a bot might expand the blink
 into an interactive set of buttons. This pushes the ability to interact on-chain
 to any web surface capable of displaying a URL.
 
+## Get Started
+
+To quickly get started with creating custom Solana Actions:
+
+```shell
+npm install @solana/actions
+```
+
+- install the
+  [Solana Actions SDK](https://www.npmjs.com/package/@solana/actions) in your
+  application
+- build an API endpoint for the [GET request](#get-request) that returns the
+  metadata about your Action
+- create an API endpoint that accepts the [POST request](#post-request) and
+  returns the signable transaction for the user
+
+> Checkout this video tutorial on
+> [how to build a Solana Action](https://www.youtube.com/watch?v=kCht01Ycif0)
+> using the `@solana/actions` SDK.
+>
+> You can also find the
+> [source code for an Action](https://github.com/solana-developers/solana-actions/blob/main/examples/next-js/src/app/api/actions/transfer-sol/route.ts)
+> that performs a native SOL transfer here and several other example Actions in
+> [this repo](https://github.com/solana-developers/solana-actions/tree/main/examples).
+
+When deploying your custom Solana Actions to production:
+
+- ensure your application has a valid [actions.json file](#actionsjson) at the
+  root of your domain
+- ensure your application responds with the
+  [required Cross-Origin headers](#options-response) on all Action endpoints,
+  including the `actions.json` file
+
+If you are looking for inspiration around building Actions and blinks, checkout
+the [Awesome Blinks](https://github.com/solana-developers/awesome-blinks)
+repository for some community creations and even
+[ideas for new ones](https://github.com/solana-developers/awesome-blinks/discussions/categories/ideas-for-blinks).
+
 ## Actions
 
 The Solana Actions specification uses a set of standard APIs to deliver signable
@@ -283,6 +321,16 @@ At a minimum, the required HTTP headers include:
 
 For simplicity, developers should consider returning the same response and
 headers to `OPTIONS` requests as their [`GET` response](#get-response).
+
+<Callout type="caution" title="Cross-Origin headers for actions.json">
+
+The `actions.json` file response must also return valid Cross-Origin headers for
+`GET` and `OPTIONS` requests, specifically the `Access-Control-Allow-Origin`
+header value of `*`.
+
+See [actions.json](#actionsjson) below for more details.
+
+</Callout>
 
 ### GET Request
 
@@ -635,11 +683,23 @@ instruct clients on what website URLs support Solana Actions and provide a
 mapping that can be used to perform [GET requests](#get-request) to an Actions
 API server.
 
+<Callout type="caution" title="Cross-Origin headers are required">
+
+The `actions.json` file response must also return valid Cross-Origin headers for
+`GET` and `OPTIONS` requests, specifically the `Access-Control-Allow-Origin`
+header value of `*`.
+
+See [OPTIONS response](#options-response) above for more details.
+
+</Callout>
+
 The `actions.json` file should be stored and universally accessible at the root
 of the domain.
 
 For example, if your web application is deployed to `my-site.com` then the
 `actions.json` file should be accessible at `https://my-site.com/actions.json`.
+This file should also be Cross-Origin accessible via any browser by having a
+`Access-Control-Allow-Origin` header value of `*`.
 
 ### Rules
 
