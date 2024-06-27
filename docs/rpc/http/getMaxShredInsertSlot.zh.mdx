@@ -1,0 +1,42 @@
+---
+sidebarLabel: 获取 shred 插入后看到的最大 slot
+title: 获取 shred 插入后看到的最大 slot RPC 方法
+hideTableOfContents: true
+altRoutes:
+  - /docs/rpc/getMaxShredInsertSlot
+---
+
+获取 shred 插入后看到的最大 slot。
+
+<DocSideBySide>
+
+<DocLeftSide>
+
+### 参数
+
+**无参数**
+
+### 结果
+
+`<u64>` - slot 编号
+
+</DocLeftSide>
+
+<DocRightSide>
+
+### 代码示例
+
+```bash
+curl http://localhost:8899 -X POST -H "Content-Type: application/json" -d '
+  {"jsonrpc":"2.0","id":1, "method":"getMaxShredInsertSlot"}
+'
+```
+
+### 响应
+
+```json
+{ "jsonrpc": "2.0", "result": 1234, "id": 1 }
+```
+
+</DocRightSide>
+</DocSideBySide>
