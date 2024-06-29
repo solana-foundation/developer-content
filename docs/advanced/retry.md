@@ -246,12 +246,12 @@ const sleep = async (ms: number) => {
 
   await connection.confirmTransaction({ signature: airdropSignature });
 
-  const blockhashResponse = await connection.getLatestBlockhashAndContext();
-  const lastValidBlockHeight = blockhashResponse.context.slot + 150;
+  const blockhashResponse = await connection.getLatestBlockhash();
+  const lastValidBlockHeight = blockhashResponse.lastValidBlockHeight - 150;
 
   const transaction = new Transaction({
     feePayer: payer.publicKey,
-    blockhash: blockhashResponse.value.blockhash,
+    blockhash: blockhashResponse.blockhash,
     lastValidBlockHeight: lastValidBlockHeight,
   }).add(
     SystemProgram.transfer({
