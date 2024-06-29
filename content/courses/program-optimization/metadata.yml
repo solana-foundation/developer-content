@@ -1,7 +1,6 @@
 author: unboxed
 title: Program Optimization
-description:
-  Request payments and initiate transactions using links and QR codes.
+description: Learn how to efficinet design and optimize your programs.
 lessons:
   - program-architecture
   # Renamed! Was env-variables
