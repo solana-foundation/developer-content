@@ -6,3 +6,5 @@ github: Unboxed-Software
 twitter: unboxedsoftware
 # website
 website: https://www.beunboxed.com/
+# avatar image for this user (inside the `/public/assets/authors` folder)
+image: unboxed.png
