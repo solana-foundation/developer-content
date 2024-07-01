@@ -10,4 +10,7 @@ lessons:
   - program-security
   - pda
   - cpi
-priority: 99
+  - serialize-instruction-data-frontend
+  - deserialize-custom-data-frontend
+  - paging-ordering-filtering-data-frontend
+priority: 20
