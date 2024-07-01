@@ -10,3 +10,4 @@ lessons:
   - intro-to-writing-data
   - intro-to-custom-onchain-programs
   - interact-with-wallets
+priority: 1

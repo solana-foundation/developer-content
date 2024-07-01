@@ -7,3 +7,4 @@ description:
 lessons:
   - compressed-nfts
   - generalized-state-compression
+priority: 99

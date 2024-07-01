@@ -9,3 +9,4 @@ lessons:
   - transfer-fee
   - close-mint
   - default-account-state
+priority: 99

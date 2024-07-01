@@ -8,3 +8,4 @@ lessons:
   - rust-macros
   # Renamed! Was versioned-transaction
   - lookup-tables
+priority: 99

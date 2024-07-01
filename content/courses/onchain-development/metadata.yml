@@ -1,5 +1,5 @@
 author: unboxed
-title: Introduction to onchain program development
+title: Onchain program development
 description:
   Learn how to build onchain programs (sometimes called 'smart contracts') on
   Solana
@@ -10,3 +10,4 @@ lessons:
   - intro-to-anchor-frontend
   - anchor-pdas
   - anchor-cpi
+priority: 15

@@ -7,3 +7,4 @@ lessons:
   - intro-to-token-extensions-program
   - token-extensions-in-the-client
   - token-extensions-onchain
+priority: 99

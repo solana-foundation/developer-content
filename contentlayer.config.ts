@@ -13,6 +13,8 @@ import {
 } from "./src/utils/helpers";
 import path from "path";
 
+const DEFAULT_PRIORITY = 9999;
+
 /**
  * Standard content record fields
  */
@@ -252,7 +254,7 @@ export const AuthorRecord = defineDocumentType(() => ({
     },
     featuredPriority: {
       type: "number",
-      resolve: () => 9999,
+      resolve: () => DEFAULT_PRIORITY,
     },
   },
   fields: {
@@ -466,6 +468,13 @@ export const CourseRecord = defineDocumentType(() => ({
       of: { type: "string" },
       description: "List of lesson 'slugs' to be included in this course",
       required: false,
+    },
+
+    // We want to order courses putting the most widely relevant ones first
+    // Like featuredPriority, but doesn't require featuring
+    priority: {
+      type: "number",
+      resolve: () => DEFAULT_PRIORITY,
     },
   },
 }));

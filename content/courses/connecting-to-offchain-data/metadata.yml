@@ -6,3 +6,4 @@ description:
 lessons:
   - oracles
   - verifiable-randomness-functions
+priority: 99

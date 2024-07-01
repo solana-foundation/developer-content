@@ -4,3 +4,4 @@ description:
   Request payments and initiate transactions using links and QR codes.
 lessons:
   - solana-pay
+priority: 99
