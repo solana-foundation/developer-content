@@ -1,7 +1,7 @@
 // @ts-check
 /** @type {import('next').NextConfig} */
 
-const { withContentlayer } = require("next-contentlayer");
+const { withContentlayer } = require("next-contentlayer2");
 const redirectsJson = require("./redirects.json");
 
 module.exports = withContentlayer({
