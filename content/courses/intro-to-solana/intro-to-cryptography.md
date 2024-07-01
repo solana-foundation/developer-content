@@ -26,7 +26,7 @@ description:
 
 ### Symmetric and Asymmetric Cryptography
 
-'Cryptography' is literally the study of hiding information. There are two main
+'Cryptography' the study of hiding information. There are two main
 types of cryptography you'll encounter day to day:
 
 **Symmetric Cryptography** is where the same key is used to encrypt and decrypt.
