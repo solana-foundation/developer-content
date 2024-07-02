@@ -1129,8 +1129,9 @@ pub struct Withdraw<'info> {
 And that’s it for the program! At this point, you should be able to run
 `anchor build` without any errors.
 
-<Callout type="note">If you see an error like the one presented below, you can
-safely ignore it.
+<Callout type="note">
+
+If you see an error like the one presented below, you can safely ignore it.
 
 ```bash
 Compiling switchboard-v2 v0.4.0
