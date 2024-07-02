@@ -6,8 +6,7 @@ objectives:
   - Use the `realloc` constraint to reallocate space on an existing account
   - Use the `close` constraint to close an existing account
 description:
-  "Learn how to store arbitrry data on Solana, using PDAs, an inbuilt key-value
-  store."
+  "Store arbitrary data on Solana, using PDAs, an inbuilt key-value store."
 ---
 
 ## Summary

@@ -5,10 +5,7 @@ objectives:
   - Install a Solana wallet app and set your wallet app to
     [Devnet](https://api.devnet.solana.com/)
   - Create a React app that uses Wallet Adapter to have users sign transactions
-description:
-  "Solana wallets store your secret key and allow you to sign transactions. You
-  can make websites communicate with wallet apps using the Solana Wallet
-  Adapter."
+description: "Connect with installed browser wallets from your React apps."
 ---
 
 ## Summary

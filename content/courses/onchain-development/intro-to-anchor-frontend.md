@@ -8,8 +8,7 @@ objectives:
   - Use Anchor to fetch accounts
   - Set up a frontend to invoke instructions using Anchor and an IDL
 description:
-  "Learn how to develop onchain Solana programs (sometimes called 'smart
-  contracts') using Rust and the Anchor framework"
+  "Use Anchor's automatic JS/TS clients to send instructions to your program."
 ---
 
 ## Summary

@@ -5,8 +5,7 @@ objectives:
   - Describe the structure and operation of onchain programs
   - Build a basic program
 description:
-  "Learn how to build onchain programs (often called 'smart contracts') on
-  Solana"
+  "How onchain programs (often called 'smart contracts') work on Solana".
 ---
 
 ## Summary

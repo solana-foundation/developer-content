@@ -5,7 +5,7 @@ objectives:
   - Describe the basic structure of an Anchor program
   - Explain how to implement basic account validation and security checks with
     Anchor
-description: "Create your first Solana onchain program in Anchor"
+description: "Create your first Solana onchain program in Anchor."
 ---
 
 ## Summary

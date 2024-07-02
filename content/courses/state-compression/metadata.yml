@@ -1,10 +1,8 @@
 author: unboxed
 title: State Compression
 description:
-  "Understand the cost benefits of state compression, both for use in large
-  scale NFT collections and in other cases where large amounts of data need to
-  be accessible onchain."
+  "Use state compression for large NFT collections and other large-data cases."
 lessons:
   - compressed-nfts
   - generalized-state-compression
-priority: 99
+priority: 65

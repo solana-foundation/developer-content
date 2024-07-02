@@ -1,9 +1,7 @@
 author: unboxed
 title: Connecting to offchain data
-description:
-  Connect to offchain data from inside your Anchor programs using oracles and
-  VRFs
+description: Connect to offchain data from inside your Anchor programs.
 lessons:
   - oracles
   - verifiable-randomness-functions
-priority: 99
+priority: 20

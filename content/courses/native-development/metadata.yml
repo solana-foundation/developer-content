@@ -1,8 +1,6 @@
 author: unboxed
 title: Native onchain program development
-description:
-  "Learn how to build Solana programs using the Solana SDK and Rust, without
-  using the Anchor framework."
+description: "Learn how to build Solana programs using without using Anchor."
 lessons:
   - hello-world-program
   - deserialize-instruction-data
@@ -13,4 +11,4 @@ lessons:
   - serialize-instruction-data-frontend
   - deserialize-custom-data-frontend
   - paging-ordering-filtering-data-frontend
-priority: 20
+priority: 50

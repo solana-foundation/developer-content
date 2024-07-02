@@ -1,8 +1,7 @@
 author: unboxed
 title: Onchain program development
 description:
-  Learn how to build onchain programs (sometimes called 'smart contracts') on
-  Solana
+  Learn how to build onchain programs (sometimes called 'smart contracts').
 lessons:
   - intro-to-onchain
   - local-setup

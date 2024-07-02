@@ -5,11 +5,7 @@ objectives:
   - Explain keypairs
   - Generate a new keypair
   - Load a keypair from an env file
-description:
-  "Solana is an example of asymmetric cryptography. Everyone has a keypair,
-  consisting of a secret key and a public key. They use the secret key sign
-  transactions, which mathematically proves the keyholder authorised the
-  transaction."
+description: "Understand asymmetric cryptography and how Solana uses it."
 ---
 
 ## Summary

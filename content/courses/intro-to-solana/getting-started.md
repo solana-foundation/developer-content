@@ -5,10 +5,7 @@ objectives:
   - understand what Solana is
   - learn how this course is structured
   - know how to get the most from this course
-description:
-  "Learn what web3 and Solana are. Understand how web3 allows users to transact
-  with each other directly, the benefits of Solana over older blockchains, and
-  what you need to complete the course."
+description: "Understand what web3, blockchains, and Solana are."
 ---
 
 ## Welcome!
