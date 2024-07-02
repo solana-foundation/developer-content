@@ -9,7 +9,7 @@
   },
   "scripts": {
     "runner": "npx ts-node -r tsconfig-paths/register",
-    "contentlayer:build": "npx contentlayer build --clearCache",
+    "contentlayer:build": "npx contentlayer2 build --clearCache",
     "dev": "yarn contentlayer:build && next dev -p 3001",
     "build": "yarn prettier:i18n && yarn contentlayer:build && next build",
     "start": "next start -p 3001",
@@ -32,7 +32,7 @@
     "eslint": "8.45.0",
     "eslint-config-next": "14.1.0",
     "next": "14.1.0",
-    "next-contentlayer": "0.3.4",
+    "next-contentlayer2": "^0.4.6",
     "postcss": "8.4.26",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -40,7 +40,7 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
-    "contentlayer": "0.3.4",
+    "contentlayer2": "^0.4.6",
     "prettier": "^3.2.4"
   }
 }

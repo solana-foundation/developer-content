@@ -111,7 +111,7 @@ its data in a specific account at the address
 ### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data.md).
+[Intro to Writing Data](./intro-to-writing-data).
 
 Name the file `send-ping-transaction.ts`:
 
@@ -223,14 +223,13 @@ console, like the following:
 ✅ Transaction completed! Signature is 55S47uwMJprFMLhRSewkoUuzUs5V6BpNfRx21MpngRUQG3AswCzCSxvQmS3WEPWDJM7bhHm3bYBrqRshj672cUSG
 ```
 
-Copy the transaction signature. Open a browser and go to
-[https://explorer.solana.com/?cluster=devnet](https://explorer.solana.com/?cluster=devnet)
-(the query parameter at the end of the URL will ensure that you’ll explore
-transactions on Devnet instead of Mainnet). Paste the signature into the search
-bar at the top of Solana Explorer (make sure you're connected to Devnet) and hit
-enter. You should see all the details about the transaction. If you scroll all
-the way to the bottom, then you will see `Program Logs`, which show how many
-times the program has been pinged including your ping.
+Copy the transaction signature. Then visit
+[Solana explorer on devnet](https://explorer.solana.com/?cluster=devnet). Paste
+the signature into the search bar at the top of Solana Explorer (make sure
+you're connected to Devnet) and hit enter. You should see all the details about
+the transaction. If you scroll all the way to the bottom, then you will see
+`Program Logs`, which show how many times the program has been pinged including
+your ping.
 
 ![Solana Explorer with logs from calling the Ping program](/public/assets/courses/unboxed/solana-explorer-ping-result.png)
 

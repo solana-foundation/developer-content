@@ -23,7 +23,7 @@ description:
 
 ### Accounts
 
-All data stored on Solana is stored in accounts. Accounts can store:
+All data on Solana is stored in accounts. Accounts can store:
 
 - SOL
 - Other tokens, like USDC
@@ -141,7 +141,7 @@ Make a new file called `check-balance.ts`, substituting your public key for
 
 The script loads the public key, connects to DevNet, and checks the balance:
 
-```tsx
+```typescript
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 const publicKey = new PublicKey("<your public key>");
@@ -186,7 +186,7 @@ Re-run the script. You should see your balance updated:
 
 You can modify the script to check balances on any wallet.
 
-```tsx
+```typescript
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 const suppliedPublicKey = process.argv[2];

@@ -93,10 +93,12 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
 
   if (!current) return notFound();
 
+  // TODO: you wouldn't normally use undefined explicitly
+  // that's what null is for.
   let course: CourseRecord | undefined = undefined;
 
   // handle the special cases for lessons
-  if (group == "lessons" && !!current.slug) {
+  if (group == "lessons" && Boolean(current.slug)) {
     try {
       const courseSlug = appendix.split("/")[0];
 

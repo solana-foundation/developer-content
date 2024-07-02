@@ -166,7 +166,7 @@ We’re going to create a script to send SOL to other students.
 ### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Cryptography](/content/courses/intro-to-solana/intro-to-cryptography.md).
+[Intro to Cryptography](./intro-to-cryptography).
 
 Create a file called `transfer.ts`:
 
