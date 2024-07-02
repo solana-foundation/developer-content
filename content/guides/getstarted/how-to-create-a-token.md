@@ -191,7 +191,7 @@ particular order):
 | Pinata               | [Pinata](https://app.pinata.cloud/)                      | Uploads to IPFS; free with sign up for 1Gb;                                                              |
 | Akord                | [Akord](https://akord.com/)                              | Uploads to arweave; free without sign up for 100Mb; uploads can take a while.                            |
 | GitHub               | [GitHub](https://github.com)                             | Create a new repo, upload files, and use the RAW URL format: `https://raw.githubusercontent.com/xxxxxxx` |
-| ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a Solana native storage solution. Did not work at the time of writing.                           |
+| ShadowDrive          | [ShadowDrive](https://www.shdwdrive.com/)                | This is a Solana native storage solution.                                                                |
 | Metaplex Metaboss    | [Metaplex Metaboss](https://metaplex.com/)               | [Meta boss docs](https://metaboss.rs/)                                                                   |
 | Google Cloud Storage | [Google Cloud Storage](https://cloud.google.com/storage) | -                                                                                                        |
 | Amazon               | [Amazon](https://aws.amazon.com/)                        | -                                                                                                        |
