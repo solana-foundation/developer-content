@@ -112,8 +112,8 @@ verified, the Switchboard program will execute a onchain callback defined by the
 VRF Account during account creation. From there the program can consume the
 random data.
 
-You might be wondering how they get paid. In switchboard’s VRF implementation,
-you actually pay per request. // NEEDS more data
+You might be wondering how they get paid. In Switchboard’s VRF implementation,
+you actually pay per request.
 
 ### Requesting and Consuming VRF
 
