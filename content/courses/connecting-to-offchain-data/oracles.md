@@ -14,17 +14,19 @@ description:
 ## Summary
 
 - Oracles are services that provide external data to a blockchain network
-- There are two main Oracle providers on Solana: **Switchboard** and **Pyth**
+- There are many
+  [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
 - You can build your own Oracle to create a custom data feed
 - You have to be careful when choosing your data feed providers
 
 ## Lesson
 
-Oracles are services that provide external data to a blockchain network.
-Blockchains by nature are siloed environments that do not know the outside
-world. This constraint inherently puts a limit on the use cases for
-decentralized applications (dApps). Oracles provide a solution to this
-limitation by creating a decentralized way to get real-world data onchain.
+[Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
+that provide external data to a blockchain network. Blockchains by nature are
+siloed environments that do not know the outside world. This constraint
+inherently puts a limit on the use cases for decentralized applications (dApps).
+Oracles provide a solution to this limitation by creating a decentralized way to
+get real-world data onchain.
 
 Oracles can provide just about any type of data onchain. Examples include:
 
@@ -38,8 +40,9 @@ While the exact implementation may differ from blockchain to blockchain,
 generally Oracles work as follows:
 
 1. Data is sourced off-chain.
-2. That data is published onchain in a transaction and stored in an account.
-3. Programs can read the data stored in the account and use it in its logic.
+2. That data is published onchain via a transaction, and stored in an account.
+3. Programs can read the data stored in the account and use that data in the
+   program's logic.
 
 This lesson will go over the basics of how oracles work, the state of oracles on
 Solana, and how to effectively use oracles in your Solana development.
@@ -102,9 +105,11 @@ functions and worst-case scenarios should be accounted for.
 
 ### Oracles on Solana
 
-[Pyth](https://pyth.network) and [Switchboard](https://switchboard.xyz) are the
-two main oracle providers on Solana today. They’re each unique and follow
-slightly different design choices.
+There are many
+[Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+Two of the most well known are [Pyth](https://pyth.network) and
+[Switchboard](https://switchboard.xyz). They’re each unique and follow slightly
+different design choices.
 
 **Pyth** is primarily focused on financial data published from top-tier
 financial institutions. Pyth’s data providers publish the market data updates.
