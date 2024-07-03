@@ -1,8 +1,7 @@
 author: unboxed
 title: Program Security
 description:
-  "Learn how to write secure Solana programs, and how to avoid common security
-  pitfalls."
+  "Understand common security pitfalls and how to build secure programs."
 lessons:
   - security-intro
   - signer-auth

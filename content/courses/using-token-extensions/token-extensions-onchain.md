@@ -5,7 +5,7 @@ objectives:
   - Explain the differences between the Token Program and Token Extension
     programs
   - Explain how to use Anchor Interfaces
-description: "Learn how to use token extensions in onchain programs."
+description: "Use token extensions in onchain programs."
 ---
 
 ## Summary

@@ -5,9 +5,7 @@ objectives:
   - Make better PDA design decisions
   - Future-proof your programs
   - Deal with concurrency issues
-description:
-  "Efficently design your Solana programs to work with large quantities of
-  onchain data, order the fields in your accounts smartly, and more."
+description: "Design your Solana programs efficiently."
 ---
 
 ## Summary

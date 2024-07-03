@@ -1,8 +1,7 @@
 author: unboxed
 title: Using the Token Extensions program
 description:
-  Understand the new Token Extensions program, how it differers from the
-  original Token Program, and how to use it.
+  Understand the new Token Extensions program and mint tokens that use it.
 lessons:
   - intro-to-token-extensions-program
   - token-extensions-in-the-client

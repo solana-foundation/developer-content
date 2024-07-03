@@ -5,9 +5,7 @@ objectives:
   - Create lookup tables
   - Extend lookup tables
   - Use lookup tables with versioned transactions
-description:
-  "Overcome transaction size limits by using lookup tables to efficiently refer
-  to large amounts of accounts."
+description: "Use large amounts of accounts by using lookup tables."
 ---
 
 ## Summary

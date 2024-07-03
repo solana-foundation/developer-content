@@ -5,9 +5,7 @@ objectives:
   - Explain the use cases of default account state
   - Experiment with the rules of the extension
 description:
-  "Use the 'default account state' Token Extension to set new token accounts for
-  a mint with this extension to be frozen by default, requiring interaction with
-  a specific service to unfreeze and utilize the tokens"
+  "Create token that requires interaction with a specific service to use."
 ---
 
 ## Summary

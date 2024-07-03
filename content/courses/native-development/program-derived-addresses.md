@@ -1,10 +1,11 @@
 ---
-title: PDAs
+title: Program Derived Addresses (PDAs)
 objectives:
   - Explain Program Derived Addresses (PDAs)
   - Explain various use cases of PDAs
   - Describe how PDAs are derived
   - Use PDA derivations to locate and retrieve data
+description: "Get a deeper understanding of PDAs."
 ---
 
 ## Summary

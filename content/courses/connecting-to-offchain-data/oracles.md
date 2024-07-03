@@ -7,8 +7,7 @@ objectives:
   - Explain how incentivized oracle networks make data more trustworthy
   - Effectively weigh the tradeoffs between using various types of oracles
   - Use oracles from an onchain program to access real-world data
-description:
-  Learn how to access real-world, offchain data inside a Solana program
+description: Access real-world data inside a Solana program.
 ---
 
 ## Summary

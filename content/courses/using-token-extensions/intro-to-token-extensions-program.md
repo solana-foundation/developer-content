@@ -7,9 +7,8 @@ objectives:
   - Learn about the wide variuety of token extensions
   - Use token extensions from the Solana CLI
 description:
-  "Token Extensions add powerful capabolities to Solana tokens. Understand how
-  to create token mints that use the token exrtensions program and have these
-  new features."
+  "Learn what token extensions are, and how to create tokens that use their
+  features."
 ---
 
 ## Summary

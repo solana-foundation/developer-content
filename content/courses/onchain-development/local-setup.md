@@ -5,7 +5,7 @@ objectives:
     tools, Rust and Anchor.
   - Ensure Anchor works out of the box with no errors or warnings
 description:
-  "Setup a local Solana development environment for building onchain programs."
+  "Setup a local development environment for building onchain programs."
 ---
 
 ## Summary

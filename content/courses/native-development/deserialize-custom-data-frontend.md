@@ -6,8 +6,7 @@ objectives:
   - Fetch a program’s accounts
   - Use Borsh to deserialize custom data
 description:
-  Understand how Solana uses PDAs to create an onchain key-value store that can
-  be used to store, and deterministically retrieve, data for your programs.
+  Deserialize instructions in JS/TS clients to send to your native program.
 ---
 
 ## Summary

@@ -9,6 +9,8 @@ objectives:
   - Use a Cross Program Invocation (CPI) to initialize an account with a PDA as
     the address of the new account
   - Explain how to update the data stored on a new account
+description:
+  "Learn how programs store data, using Solana's inbuilt -key-value store."
 ---
 
 ## Summary

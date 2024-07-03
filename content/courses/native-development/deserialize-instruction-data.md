@@ -9,8 +9,7 @@ objectives:
   - Execute different program logic for different types of instructions
   - Explain the structure of a smart contract on Solana
 description:
-  "Learn how native programs can distinguish instructions mant for different
-  instruction handling functions."
+  "Learn how native programs distinguish instructions for different functions."
 ---
 
 ## Summary

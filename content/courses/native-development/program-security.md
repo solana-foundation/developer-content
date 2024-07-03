@@ -7,6 +7,7 @@ objectives:
   - Perform signer checks
   - Validate accounts passed into the program
   - Perform basic data validation
+description: "How to implement account checks and validate instruction data."
 ---
 
 ## Summary

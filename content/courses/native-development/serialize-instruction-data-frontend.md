@@ -6,15 +6,12 @@ objectives:
   - Explain the basics of Solana's runtime optimizations
   - Explain Borsh
   - Use Borsh to serialize program data for native programs
-description:
-  Native Solana development requires manually serializing and deserializing
-  instruction data to be processed by your Solana program's instruction
-  handlers.
+description: How to deserialize data fetched from Solana accounts.
 ---
 
 ## Summary
 
-- Native (non-Anchor) Solana development required manual serialization and
+- Native (non-Anchor) Solana development requires manual serialization and
   deserialization of data.
 - Transactions are made up of an array of instructions, a single transaction can
   have any number of instructions in it, each targeting different programs. When

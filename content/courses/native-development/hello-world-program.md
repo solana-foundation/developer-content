@@ -8,8 +8,7 @@ objectives:
   - Build and deploy a basic Solana program
   - Submit a transaction to invoke our “Hello, world!” program
 description:
-  "Create an onchain program for Solana using native Rust, without the Anchor
-  framework."
+  "Create an onchain program for Solana using native Rust, without Anchor."
 ---
 
 ## Summary

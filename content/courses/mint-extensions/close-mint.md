@@ -3,9 +3,7 @@ title: Close Mint Extension
 objectives:
   - Create a mint that is closable
   - Describe all of the prerequisites needed to close a mint
-description:
-  "Use the 'close mint' Token Extension to create a mint that be closed once the
-  tokens are burnt."
+description: "Create a mint that can be closed once the tokens are burnt."
 ---
 
 ## Summary

@@ -5,9 +5,8 @@ objectives:
   - Mint a non-transferable token
   - Attempt to transfer the non-transferable token
 description:
-  "Non-transferrable tokens are useful for things like certificates of
-  achievement, digiital identity, ticketing and more. Learn how to create a
-  non-transferrable token with the Token Extensions program."
+  "Create tokens that can't be transferred. Certificates, identity, ticketing
+  and more."
 ---
 
 ## Summary

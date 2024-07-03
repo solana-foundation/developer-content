@@ -4,7 +4,7 @@ objectives:
   - Create and use **Procedural Macros** in Rust
   - Explain and work with a Rust Abstract Syntax Tree (AST)
   - Describe how procedural macros are used in the Anchor framework
-description: "How to use Rust macros to generate code at compile time."
+description: "Use Rust macros to generate code at compile time."
 ---
 
 ## Summary

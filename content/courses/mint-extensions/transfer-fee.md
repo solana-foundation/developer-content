@@ -5,8 +5,7 @@ objectives:
   - Transfer tokens of that mint
   - Collect fees for the transfer
 description:
-  "The 'transfer fee' token extension allows a token to be created that allows a
-  fee to be charged each time the token is traded."
+  "Create a token that allows a fee to be charged each time the token is traded."
 ---
 
 ## Summary

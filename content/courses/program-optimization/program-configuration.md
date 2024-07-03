@@ -9,8 +9,7 @@ objectives:
   - Create an admin-only instruction to set up a program account that can be
     used to store program configuration values
 description:
-  "How to create distinct environments, feature flags and admin-only
-  instructions in your Solana programs."
+  "Create distinct environments, feature flags and admin-only instructions."
 ---
 
 ## Summary

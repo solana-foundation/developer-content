@@ -5,6 +5,7 @@ objectives:
     Extensions Program Mints
   - Create an NFT with metadata embedded in the mint account itself
   - Create an NFT with the metadata pointer extension
+description: "Include token metadata directly inside the token mint account."
 ---
 
 ## Summary

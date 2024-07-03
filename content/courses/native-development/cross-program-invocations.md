@@ -5,6 +5,7 @@ objectives:
   - Describe how to construct and use CPIs
   - Explain how a program provides a signature for a PDA
   - Avoid common pitfalls and troubleshoot common errors associated with CPIs
+description: "How to invoke functions in other Solana programs."
 ---
 
 ## Summary
