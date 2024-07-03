@@ -84,30 +84,28 @@ without becoming so expensive that your users don’t want to pay to open the da
 account.
 
 The first thing you need to know before you can start optimizing for space in
-your program is the size of each of your structs.. Below is a very helpful list
+your program is the size of each of your structs. Below is a very helpful list
 from the
 [Anchor Book](https://book.anchor-lang.com/anchor_references/space.html).
 
-| Types              | Space in bytes                | Details/Example                                                                                 |
-| ------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| bool               | 1                             | would only require 1 bit but still uses 1 byte                                                  |
-| u8/i8              | 1                             |                                                                                                 |
-| u16/i16            | 2                             |                                                                                                 |
-| u32/i32            | 4                             |                                                                                                 |
-| u64/i64            | 8                             |                                                                                                 |
-| u128/i128          | 16                            |                                                                                                 |
-| [T;amount]         | space(T) \* amount            | e.g. space([u16;32]) = 2 \* 32 = 64                                                             |
-| Pubkey             | 32                            |                                                                                                 |
-| Vec<T>             | 4 + (space(T) \* amount)      | Account size is fixed so account should be initialized with sufficient space from the beginning |
-| String             | 4 + length of string in bytes | Account size is fixed so account should be initialized with sufficient space from the beginning |
-| Option<T>          | 1 + (space(T))                |                                                                                                 |
-| Enum               | 1 + Largest Variant Size      | e.g. Enum { A, B { val: u8 }, C { val: u16 } } -> 1 + space(u16) = 3                            |
-| f32                | 4                             | serialization will fail for NaN                                                                 |
-| f64                | 8                             | serialization will fail for NaN                                                                 |
-| Accounts           | 8 + space(T)                  | #[account()]                                                                                    |
-| pub struct T { …   |
-| Data Structs       | space(T)                      | #[derive(Clone, AnchorSerialize, AnchorDeserialize)]                                            |
-| pub struct T { … } |
+<!-- Edits note: this very wide table looks awful unless you made your window very wide -->
+
+| Types       | Space in bytes                | Details/Example                                                                                 |
+| ----------- | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| bool        | 1                             | would only require 1 bit but still uses 1 byte                                                  |
+| u8/i8       | 1                             |                                                                                                 |
+| u16/i16     | 2                             |                                                                                                 |
+| u32/i32     | 4                             |                                                                                                 |
+| u64/i64     | 8                             |                                                                                                 |
+| u128/i128   | 16                            |                                                                                                 |
+| [T;amount]  | space(T) \* amount            | e.g. space([u16;32]) = 2 \* 32 = 64                                                             |
+| Pubkey      | 32                            |                                                                                                 |
+| Vec\<T\>    | 4 + (space(T) \* amount)      | Account size is fixed so account should be initialized with sufficient space from the beginning |
+| String      | 4 + length of string in bytes | Account size is fixed so account should be initialized with sufficient space from the beginning |
+| Option\<T\> | 1 + (space(T))                |                                                                                                 |
+| Enum        | 1 + Largest Variant Size      | e.g. Enum \{ A, B \{ val: u8 \}, C \{ val: u16 \} \} -> 1 + space(u16) = 3                      |
+| f32         | 4                             | serialization will fail for NaN                                                                 |
+| f64         | 8                             | serialization will fail for NaN                                                                 |
 
 Knowing these, start thinking about little optimizations you might take in a
 program. For example, if you have an integer field that will only ever reach
