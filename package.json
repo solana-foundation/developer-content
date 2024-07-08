@@ -18,7 +18,7 @@
     "prettier:i18n": "prettier -cw \"i18n/**/*.{js,jsx,ts,tsx,md,css,md,mdx}\" --ignore-path \"[]\"",
     "prettier": "prettier -c \"./**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
-    "crowdin:download": "crowdin download && prettier:i18n",
+    "crowdin:download": "crowdin download && npm run prettier:i18n",
     "crowdin:upload": "crowdin upload sources",
     "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
     "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)"
