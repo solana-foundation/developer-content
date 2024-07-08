@@ -13,6 +13,7 @@ import {
 } from "@/utils/navItem";
 import { getRecordsForGroup } from "@/utils/records";
 import type { AuthorRecord, CourseRecord } from "contentlayer/generated";
+import { preProcessContent } from "@/utils/parsers";
 
 type RouteProps = {
   params: {
@@ -191,8 +192,8 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
 
   // remove the html formatted content (since it is undesired data to send over the wire)
   if (!!record?.body?.raw && typeof record.body.raw !== "undefined") {
-    // @ts-ignore
-    record.body = record.body.raw.trim();
+    // @ts-ignore - preprocess the body content and simplify the content returned
+    record.body = preProcessContent(record.body.raw.trim());
   }
 
   // remove the i18n prefixes
@@ -231,8 +232,6 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
       delete author.organization._raw;
     }
   }
-
-  // todo: preprocess the body content? (if desired in the future)
 
   // todo: support sending related content records back to the client
 
