@@ -1,4 +1,9 @@
 /**
+ * Regex for parsing markdown links
+ */
+export const REGEX_MARKDOWN_LINKS = /\[([^\[]+)\]\((.*?)\)/gim;
+
+/**
  * Default language locale to use for the content
  */
 export const DEFAULT_LOCALE_EN: string = "en";
