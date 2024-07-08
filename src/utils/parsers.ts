@@ -120,7 +120,9 @@ export function preProcessContent(content: string = ""): string {
     .replaceAll(/ <= /gm, " {'<='} ")
     .replaceAll(/ >= /gm, " {'>='} ")
     .replaceAll(/ > /gm, " {'>'} ")
-    .replaceAll(/ < /gm, " {'>'} ");
+    .replaceAll(/ < /gm, " {'>'} ")
+    // some translators replace quotes with a different symbol `«`
+    .replaceAll(/\«(.*)\»/gm, '"$1"');
 
   // process all markdown links (e.g. remove ".md" and handle relative links)
   content = processMarkdownLinks(content);
