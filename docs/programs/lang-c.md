@@ -78,8 +78,8 @@ parameters each loader contains its own [helper function](#serialization).
 Each loader provides a helper function that deserializes the program's input
 parameters into C types:
 
-- [SBF Loader deserialization](https://github.com/solana-labs/solana/blob/d2ee9db2143859fa5dc26b15ee6da9c25cc0429c/sdk/sbf/c/inc/solana_sdk.h#L304)
-- [SBF Loader deprecated deserialization](https://github.com/solana-labs/solana/blob/8415c22b593f164020adc7afe782e8041d756ddf/sdk/sbf/c/inc/deserialize_deprecated.h#L25)
+- [SBF Loader deserialization](https://github.com/solana-labs/solana/blob/d2ee9db2143859fa5dc26b15ee6da9c25cc0429c/sdk/bpf/c/inc/solana_sdk.h#L304)
+- [SBF Loader deprecated deserialization](https://github.com/solana-labs/solana/blob/8415c22b593f164020adc7afe782e8041d756ddf/sdk/bpf/c/inc/deserialize_deprecated.h#L25)
 
 Some programs may want to perform deserialization themselves, and they can by
 providing their own implementation of the [raw entrypoint](#program-entrypoint).
