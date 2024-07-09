@@ -60,6 +60,8 @@ When deploying your custom Solana Actions to production:
 - ensure your application responds with the
   [required Cross-Origin headers](#options-response) on all Action endpoints,
   including the `actions.json` file
+- test and debug your blinks/actions using the
+  [Blinks Inspector](https://www.blinks.xyz/inspector)
 
 If you are looking for inspiration around building Actions and blinks, checkout
 the [Awesome Blinks](https://github.com/solana-developers/awesome-blinks)
