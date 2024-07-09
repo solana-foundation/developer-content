@@ -60,6 +60,8 @@ When deploying your custom Solana Actions to production:
 - ensure your application responds with the
   [required Cross-Origin headers](#options-response) on all Action endpoints,
   including the `actions.json` file
+- test and debug your blinks/actions using the
+  [Blinks Inspector](https://www.blinks.xyz/inspector)
 
 If you are looking for inspiration around building Actions and blinks, checkout
 the [Awesome Blinks](https://github.com/solana-developers/awesome-blinks)
@@ -213,9 +215,14 @@ While Solana Actions and blinks are a permissionless protocol/specification,
 client applications and wallets are still required to ultimately facilitate
 users to sign the transaction.
 
-Each of these client applications or wallets may have different requirements on
-which Action endpoints their clients will automatically unfurl and immediately
-display to their users on social media platforms.
+> Use the [Blinks Inspector](https://www.blinks.xyz/inspector) tool to inspect,
+> debug, and test your blinks and actions directly in your browser. You can view
+> the GET and POST response payloads, response headers, and test all inputs to
+> each of your linked Actions.
+
+Each client application or wallets may have different requirements on which
+Action endpoints their clients will automatically unfurl and immediately display
+to their users on social media platforms.
 
 For example, some clients may operate on an "allow list" approach that may
 require verification prior to their client unfurling an Action for users such as
