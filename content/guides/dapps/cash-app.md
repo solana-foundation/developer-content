@@ -52,7 +52,9 @@ program, integrate the Solana Name Service SDK, and integrate Solana Pay.
 
 ## What You Will Build
 
-You will learn to build a finance application similar to Cash App. This will be a web3 mobile app with a wallet adaptor, devnet deployed anchor program, and custom UI to interact with the anchor program. 
+You will learn to build a finance application similar to Cash App. This will be
+a web3 mobile app with a wallet adaptor, devnet deployed anchor program, and
+custom UI to interact with the anchor program.
 
 ### Home Screen
 
@@ -516,7 +518,9 @@ pub struct AddFriend<'info> {
 }
 ```
 
-In the `add_friend` function, there is a design limitation. The `vec` of friends has a limit to how many friends a user to can add. To enhance this program to allow limitless friends, the way that friends are stored must be changed. 
+In the `add_friend` function, there is a design limitation. The `vec` of friends
+has a limit to how many friends a user to can add. To enhance this program to
+allow limitless friends, the way that friends are stored must be changed.
 
 ### Multiple Accounts Types in One Program
 
@@ -798,7 +802,8 @@ pub mod cash_app {
 }
 ```
 
-Now your Solana program should match the final version [here](https://github.com/solana-developers/cash-app-clone/blob/main/cash-app/anchor/cash-app/src/lib.rs):
+Now your Solana program should match the final version
+[here](https://github.com/solana-developers/cash-app-clone/blob/main/cash-app/anchor/cash-app/src/lib.rs):
 
 ### Build and Deploy the Program
 
@@ -966,7 +971,7 @@ inherently assumed to be a signer through the provider's configuration. However,
 transaction where it's required.
 
 Since any other instruction call is handled exactly as described above, you can
-complete this test example independently. 
+complete this test example independently.
 
 Lastly, run your test suite against your localnet.
 
@@ -2213,7 +2218,8 @@ export function AddFriend({ address }: { address: PublicKey }) {
 ```
 
 To accept and decline requests, you'll follow a very similar method. Try this
-out yourself and then check the code here to review your work [here](https://github.com/solana-developers/cash-app-clone/blob/main/cash-app/src/components/solana-pay/solana-pay-ui.tsx):
+out yourself and then check the code here to review your work
+[here](https://github.com/solana-developers/cash-app-clone/blob/main/cash-app/src/components/solana-pay/solana-pay-ui.tsx):
 
 ## Enabling QR Code functionality with Solana Pay
 
@@ -2502,11 +2508,15 @@ This implementation can be integrated everywhere in the application where an
 input requires a public key, enabling the user experience to be identical to
 that of a web2 application.
 
-## Final thoughts 
+## Final thoughts
 
-Congrats on completing a a web3 mobile application! By completing this tutorial you have learned how to build an expo mobile app with a wallet adapter, write and deploy an anchor solana program, and connect a mobile UI to a deployed solana program. 
+Congrats on completing a a web3 mobile application! By completing this tutorial
+you have learned how to build an expo mobile app with a wallet adapter, write
+and deploy an anchor solana program, and connect a mobile UI to a deployed
+solana program.
 
-To build on this knowledge here are a few more resources to look into: 
+To build on this knowledge here are a few more resources to look into:
+
 - [The Anchor Book](https://book.anchor-lang.com/)
-- [Solana Guides](https://solana.com/developers/guides) 
+- [Solana Guides](https://solana.com/developers/guides)
 - [Program Examples](https://github.com/solana-developers/program-examples)
