@@ -161,7 +161,7 @@ mature testing and CI/CD practices:
 
 - **Mainnet Beta**: The production network where all the action happens.
   Transactions cost real money here.
-- **Devnet**: The quality assurance network were you deploy your programs to
+- **Devnet**: The quality assurance network where you deploy your programs to
   test before deploying to production. Think "staging environment".
 - **Local**: The local network that you run on your machine using
   `solana-test-validator` to test your programs. This should be your first
