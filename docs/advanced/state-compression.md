@@ -91,7 +91,7 @@ performed in series.
 ### What is a Concurrent merkle tree?
 
 In high throughput applications, like within the
-[Solana runtime](/docs/core/runtime.md), requests to change an on-chain
+Solana runtime, requests to change an on-chain
 _traditional merkle tree_ could be received by validators in relatively rapid
 succession (e.g. within the same slot). Each leaf data change would still be
 required to performed in series. Resulting in each subsequent request for change
