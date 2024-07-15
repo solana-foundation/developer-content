@@ -154,9 +154,8 @@ users.
 You can learn more about the Compute Budget and related topics with these
 resources:
 
-- documentation for the
-  [Compute Budget](https://solana.com/docs/core/runtime#compute-budget)
+- documentation for the [Compute Budget](/docs/core/fees.md#compute-budget)
 - Guide on
-  [how to use priority fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees)
+  [how to use priority fees](/content/guides/advanced/how-to-use-priority-fees.md)
 - Guide on
-  [how to optimize compute units in programs](https://solana.com/developers/guides/advanced/how-to-optimize-compute)
+  [how to optimize compute units in programs](/content/guides/advanced/how-to-optimize-compute)
