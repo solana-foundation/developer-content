@@ -67,7 +67,7 @@ You should now see your wallet's address, SOL balance, and connected cluster
   your browser cache will remove your saved wallet.
 </Callout>
 
-### 2. Get Devnet Sol
+### 2. Get Devnet SOL
 
 Before we start building, we first need some devnet SOL.
 
@@ -76,7 +76,7 @@ From a developer's perspective, SOL is required for two main use cases:
 - To create accounts where we can store data or deploy programs
 - To pay for transaction fees when we interact with the network
 
-Below are two methods to fund your wallet with Devnet SOL:
+Below are two methods to fund your wallet with devnet SOL:
 
 #### Option 1: Using the Playground Terminal
 
@@ -89,7 +89,7 @@ solana airdrop 5
 #### Option 2: Using the Devnet Faucet
 
 If the airdrop command doesn't work (due to rate limits or errors), you can use
-the [Devnet Faucet](https://faucet.solana.com/).
+the [Web Faucet](https://faucet.solana.com/).
 
 - Enter your wallet address (found at the bottom of the Playground screen) and
   select an amount
@@ -102,18 +102,14 @@ the [Devnet Faucet](https://faucet.solana.com/).
 Now, let's explore how to read data from the Solana network. We'll fetch a few
 different accounts to understand the structure of a Solana account.
 
----
-
 On Solana, all data is contained in what we call "accounts". You can think of
 data on Solana as a public database with a single "Accounts" table, where each
 entry in this table is an individual account.
 
 Accounts on Solana can store "state" or "executable" programs, all of which can
 be thought of as entries in the same "Accounts" table. Each account has an
-"address" (publickey) that serves as its unique ID used to locate its
+"address" (public key) that serves as its unique ID used to locate its
 corresponding on-chain data.
-
----
 
 Solana accounts contain either:
 
@@ -125,8 +121,6 @@ Solana accounts contain either:
 
 This separation of program code and program state is a key feature of Solana's
 Account Model.
-
----
 
 ### 1. Fetch Playground Wallet
 
@@ -157,13 +151,13 @@ This code does three simple things:
   const address = pg.wallet.publicKey;
   ```
 
-- Fetches the AccountInfo for the account at that address
+- Fetches the `AccountInfo` for the account at that address
 
   ```ts
   const accountInfo = await pg.connection.getAccountInfo(address);
   ```
 
-- Prints out the AccountInfo to the Playground terminal
+- Prints out the `AccountInfo` to the Playground terminal
 
   ```ts
   console.log(JSON.stringify(accountInfo, null, 2));
@@ -209,29 +203,31 @@ Running client...
 
 Your wallet is actually just an account owned by the System Program, where the
 main purpose of the wallet account is to store your SOL balance (amount in the
-lamports field).
+`lamports` field).
 
 ---
 
 At its core, all Solana accounts are represented in a standard format called the
-AccountInfo. The
+`AccountInfo`. The
 [AccountInfo](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L19-L36)
 data type is the base data structure for all Solana Accounts.
 
 Let's break down the fields in the output:
 
-- data: This field contains what we generally refer to as the account "data".
+- `data` - This field contains what we generally refer to as the account "data".
   For a wallet, it's empty (0 bytes), but other accounts use this field to store
   any arbitrary data as a serialized buffer of bytes.
-- executable: A flag that indicates whether the account is an executable
-  program. For wallets and any accounts that store state, this is false.
-- owner: This field shows which program controls the account. For wallets, it's
-  always the System Program, with the address 11111111111111111111111111111111.
-- lamports: The account's balance in lamports (1 SOL = 1,000,000,000 lamports).
-- rentEpoch: A legacy field related to Solana's deprecated rent collection
+- `executable` - A flag that indicates whether the account is an executable
+  program. For wallets and any accounts that store state, this is `false`.
+- `owner` - This field shows which program controls the account. For wallets,
+  it's always the System Program, with the address
+  `11111111111111111111111111111111`.
+- `lamports` - The account's balance in lamports (1 SOL = 1,000,000,000
+  lamports).
+- `rentEpoch` - A legacy field related to Solana's deprecated rent collection
   mechanism (currently not in use).
-- space: Indicates byte capacity (length) of the data field, but is not a field
-  in the AccountInfo type
+- `space` - Indicates byte capacity (length) of the `data` field, but is not a
+  field in the `AccountInfo` type
 
 </details>
 
@@ -300,18 +296,18 @@ Running client...
 {<summary>Explanation</summary>}
 
 The Token Extensions program is an executable program account, but note that it
-has the same AccountInfo structure.
+has the same `AccountInfo` structure.
 
-Key differences in the AccountInfo:
+Key differences in the `AccountInfo`:
 
-- executable: Set to true, indicating this account represents an executable
+- `executable` - Set to `true`, indicating this account represents an executable
   program.
-- data: Contains serialized data (unlike the empty data in a wallet account).
+- `data` - Contains serialized data (unlike the empty data in a wallet account).
   The data for a program account stores the address of another account (Program
   Executable Data Account) that contains the program's bytecode.
-- owner: The account is owned by the Upgradable BPF Loader
-  (BPFLoaderUpgradeab1e11111111111111111111111), a special program that manages
-  executable accounts.
+- `owner` - The account is owned by the Upgradable BPF Loader
+  (`BPFLoaderUpgradeab1e11111111111111111111111`), a special program that
+  manages executable accounts.
 
 ---
 
@@ -386,13 +382,13 @@ Running client...
 <details>
 {<summary>Explanation</summary>}
 
-Key differences in the AccountInfo:
+Key differences in the `AccountInfo`:
 
-- owner: The mint account is owned by the Token Extensions program
-  (TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb).
-- executable: Set to false, as this account stores state rather than executable
-  code.
-- data: Contains serialized data about the token (mint authority, supply,
+- `owner` - The mint account is owned by the Token Extensions program
+  (`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`).
+- `executable` - Set to `false`, as this account stores state rather than
+  executable code.
+- `data`: Contains serialized data about the token (mint authority, supply,
   decimals, etc.).
 
 </details>
@@ -456,13 +452,13 @@ The `getMint` function deserializes the account data into the
 [Mint](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L18-L32)
 data type defined in the Token Extensions program source code.
 
-- address: The Mint account's address
-- mintAuthority: The authority allowed to mint new tokens
-- supply: The total supply of tokens
-- decimals: The number of decimal places for the token
-- isInitialized: Whether the Mint data has been initialized
-- freezeAuthority: The authority allowed to freeze token accounts
-- tlvData: Additional data for Token Extensions (requires further
+- `address` - The Mint account's address
+- `mintAuthority` - The authority allowed to mint new tokens
+- `supply` - The total supply of tokens
+- `decimals` - The number of decimal places for the token
+- `isInitialized` - Whether the Mint data has been initialized
+- `freezeAuthority` - The authority allowed to freeze token accounts
+- `tlvData` - Additional data for Token Extensions (requires further
   deserialization)
 
 You can view the fully deserialized
@@ -481,7 +477,7 @@ programs, which contain the business logic for how accounts should be updated.
 Let's walk through two common operations, transferring SOL and creating a token,
 to demonstrate how to build and send transactions.
 
-### 1. Transfer Sol
+### 1. Transfer SOL
 
 We'll start with a simple SOL transfer from your wallet to another account. This
 requires invoking the transfer instruction on the System Program.
@@ -707,7 +703,7 @@ This script performs the following steps:
   ```
 
 - Creates an instruction to create a new account for the mint, specifying the
-  Token Extensions program (TOKEN_2022_PROGRAM_ID) as the owner of the new
+  Token Extensions program (`TOKEN_2022_PROGRAM_ID`) as the owner of the new
   account
 
   ```ts
@@ -894,9 +890,9 @@ For now, we'll only cover the high-level overview of the program code:
 
   In this example, the `initialize` instruction takes two parameters:
 
-  1. `ctx: Context<Initialize>`: Provides access to the accounts required for
+  1. `ctx: Context<Initialize>` - Provides access to the accounts required for
      this instruction, as specified in the `Initialize` struct.
-  2. `data: u64`: An instruction parameter that will be passed in when the
+  2. `data: u64` - An instruction parameter that will be passed in when the
      instruction is invoked.
 
   The function body sets the `data` field of `new_account` to the provided
@@ -961,7 +957,7 @@ the on-chain account that stores the program.
 
 Before deployment, ensure you have enough SOL. You can get devnet SOL by either
 running `solana airdrop 5` in the Playground terminal or using the
-[devnet faucet](https://faucet.solana.com/).
+[Web Faucet](https://faucet.solana.com/).
 
 ```shell filename="Terminal" copy
 deploy
@@ -1122,7 +1118,7 @@ the transaction signature (hash).
 
 <Callout>
   Reminder to update the cluster (network) connection on the Explorer you are
-  using to match Solana Playground. The default cluster is devnet.
+  using to match Solana Playground. Solana Playground's default cluster is devnet.
 </Callout>
 
 ### 4. Close Program
@@ -1282,7 +1278,12 @@ created by users that contains three fields:
 - `bump`: A u8 storing the "bump" seed used in deriving the program derived
   address (PDA). Storing this value saves compute by eliminating the need to
   rederive it for each use in subsequent instructions.
-
+- `user` - A Pubkey representing the user who created the message account.
+- `message` - A String containing the user's message.
+- `bump` - A u8 storing the ["bump" seed](/docs/core/pda#canonical-bump) used in
+  deriving the program derived address (PDA). Storing this value saves compute
+  by eliminating the need to rederive it for each use in subsequent
+  instructions.
 When an account is created, the `MessageAccount` data will be serialized and
 stored in the new account's data field.
 
@@ -1416,8 +1417,8 @@ bump,
 
 The `seeds` constraint defines the optional inputs used to derive the PDA.
 
-- `b"message"`: A hardcoded string as the first seed.
-- `user.key().as_ref()`: The public key of the `user` account as the second
+- `b"message"` - A hardcoded string as the first seed.
+- `user.key().as_ref()` - The public key of the `user` account as the second
   seed.
 
 The `bump` constraint tells Anchor to automatically find and use the correct
@@ -1491,11 +1492,11 @@ pub fn create(ctx: Context<Create>, message: String) -> Result<()> {
 The `create` function implements the logic for initializing a new message
 account's data. It takes two parameters:
 
-1. `ctx: Context<Create>`: Provides access to the accounts specified in the
+1. `ctx: Context<Create>` - Provides access to the accounts specified in the
    `Create` struct.
-2. `message: String`: The user's message to be stored.
+2. `message: String` - The user's message to be stored.
 
-The body of the function then:
+The body of the function then performs the following logic:
 
 1. Print a message to program logs using the `msg!()` macro.
 
@@ -1667,9 +1668,9 @@ pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
 The `update` function implements the logic for modifying an existing message
 account. It takes two parameters:
 
-1. `ctx: Context<Update>`: Provides access to the accounts specified in the
+1. `ctx: Context<Update>` - Provides access to the accounts specified in the
    `Update` struct.
-2. `message: String`: The new message to replace the existing one.
+2. `message: String` - The new message to replace the existing one.
 
 The body of the function then:
 
@@ -1786,7 +1787,7 @@ pub fn delete(_ctx: Context<Delete>) -> Result<()> {
 
 The `delete` function takes one parameter:
 
-1. `_ctx: Context<Delete>`: Provides access to the accounts specified in the
+1. `_ctx: Context<Delete>` - Provides access to the accounts specified in the
    `Delete` struct. The `_ctx` syntax indicates we won't be using the Context in
    the body of the function.
 
@@ -1999,7 +2000,7 @@ const transactionSignature = await program.methods
 ```
 
 Once the transaction is sent and the account is created, we then fetch the
-account using its address (messagePda).
+account using its address (`messagePda`).
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetch(
@@ -2094,7 +2095,7 @@ const transactionSignature = await program.methods
 ```
 
 Once the transaction is sent and the account is updated, we then fetch the
-account using its address (messagePda).
+account using its address (`messagePda`).
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetch(
@@ -2186,7 +2187,7 @@ const transactionSignature = await program.methods
 ```
 
 Once the transaction is sent and the account is closed, we attempt to fetch the
-account using its address (messagePda) using `fetchNullable` since we expect the
+account using its address (`messagePda`) using `fetchNullable` since we expect the
 return value to be to be null because the account is closed.
 
 ```ts filename="anchor.test.ts"
@@ -2406,8 +2407,8 @@ programs.
 The `Transfer` struct specifies the required accounts for the System Program's
 transfer instruction:
 
-- `from`: The user's account (source of funds)
-- `to`: The vault account (destination of funds)
+- `from` - The user's account (source of funds)
+- `to` - The vault account (destination of funds)
 
   ```rs filename="lib.ts"
   let transfer_accounts = Transfer {
@@ -2536,7 +2537,7 @@ let cpi_context = CpiContext::new(
 transfer(cpi_context, ctx.accounts.vault_account.lamports())?;
 ```
 
-Note to update `_ctx: Context<Delete>` to `ctx: Context<Delete>` as we'll be
+Note that we updated `_ctx: Context<Delete>` to `ctx: Context<Delete>` as we'll be
 using the context in the body of the function.
 
 <details>
@@ -2595,7 +2596,7 @@ transfer instruction:
   };
   ```
 
-The CpiContext specifies:
+The `CpiContext` specifies:
 
 - The program to be invoked (System Program)
 - The accounts involved in the transfer (defined in the Transfer struct)
@@ -2611,7 +2612,7 @@ The CpiContext specifies:
 The transfer function then invokes the transfer instruction on the System
 Program, passing:
 
-- The cpi_context (program, accounts, and PDA signer)
+- The `cpi_context` (program, accounts, and PDA signer)
 - The amount to transfer (the entire balance of the vault account)
 
   ```rs filename="lib.ts"
