@@ -49,7 +49,7 @@ When adding priority fees to a transaction, keep in mind the amount of compute
 units (CU) used for your transaction. The higher the CU required for the
 transaction, the more fees you will pay when adding priority fees.
 
-Using the [Compute Budget Program](/docs/core/runtime#compute-budget), you can
+Using the [Compute Budget Program](/docs/core/fees.md#compute-budget), you can
 change the CU requested for your transaction and add any additional priority fee
 required. Do note that your CU request must be equal to or greater than the CU
 needed for the transaction; otherwise, the transaction will fail.
