@@ -1012,7 +1012,7 @@ three accounts.
   Switchboard network.
 
 ```rust
-// insde consume_randomness.rs
+// inside consume_randomness.rs
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
