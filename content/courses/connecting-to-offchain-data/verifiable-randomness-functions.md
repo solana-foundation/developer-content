@@ -83,7 +83,7 @@ There are three key properties of a VRF:
    random value. Given the same secret key and nonce, the VRF will always
    produce the same output. This property ensures that the random value can be
    reproduced and verified by anyone.
-2. **Unpredicatability** - The output of a VRF appears indistinguishable from
+2. **Unpredictability** - The output of a VRF appears indistinguishable from
    true randomness to anyone without access to the secret key. This property
    ensures that even though the VRF is deterministic, you cannot predict the
    result ahead of time without knowledge of the inputs.
@@ -499,7 +499,7 @@ today. The functions are as follows:
   consume the randomness.
 - `get_out_of_jail` - Requests the randomness from the VRF, effectively rolling
   the dice.
-- `consume_randomess` - The callback function for the VRF where we will check
+- `consume_randomness` - The callback function for the VRF where we will check
   for the dice rolls.
 
 ```rust
@@ -838,7 +838,7 @@ Programs:
 - `token_program`
 - `system_program`
 
-Buisness Logic Accounts:
+Business Logic Accounts:
 
 - `user` - The user account who has escrowed the funds.
 - `escrow_account` - The burry escrow state account for user.
@@ -1012,7 +1012,7 @@ three accounts.
   Switchboard network.
 
 ```rust
-// insde consume_randomness.rs
+// inside consume_randomness.rs
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;

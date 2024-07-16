@@ -1,7 +1,7 @@
 author: unboxed
 title: Token Extensions for Mints
 description:
-  Create tokens with features like non-transferrability, transfer hooks, and
+  Create tokens with features like non-transferability, transfer hooks, and
   more.
 lessons:
   - token-extensions-metadata
