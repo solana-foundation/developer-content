@@ -182,7 +182,7 @@ System Program to create non-PDA accounts and use those to store data as well,
 PDAs tend to be the way to go.
 
 If you need a refresher on how to store data in PDAs, have a look at the
-[Create a Basic Program, Part 2 - State Management lesson](./program-state-management).
+[State Management lesson](/content/courses/native-development/program-state-management).
 
 ### Map to data stored in PDA accounts
 

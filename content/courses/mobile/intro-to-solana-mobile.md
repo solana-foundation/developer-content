@@ -34,8 +34,8 @@ Most relevant to your development journey is the Mobile Wallet Adapter (MWA).
 The simplest way to get started is to use the Mobile Wallet Adapter with React
 Native to create a simple Android app. This lesson assumes you're familiar with
 React and Solana programming. If that's not the case,
-[start our course from the beginning](./intro-to-cryptography) and come back
-here when you feel ready!
+[start our course from the beginning](/content/courses/intro-to-solana/intro-to-cryptography)
+and come back here when you feel ready!
 
 ### Intro To Solana Mobile
 
@@ -87,10 +87,10 @@ application to another. The Mobile Wallet Adapter exists to enable any app,
 written in any language, to connect to a native wallet app.
 
 We'll dig into the specifics of the Mobile Wallet Adapter in a
-[later lesson](./mwa-deep-dive), but it effectively opens a WebSocket between
-applications to facilitate communication. That way a separate app can provide
-the wallet app with the transaction to be signed and sent, and the wallet app
-can respond with appropriate status updates.
+[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
+a WebSocket between applications to facilitate communication. That way a
+separate app can provide the wallet app with the transaction to be signed and
+sent, and the wallet app can respond with appropriate status updates.
 
 #### Supported Operating Systems
 
@@ -205,7 +205,7 @@ const account = await connection.getAccountInfo(account);
 ```
 
 If you need a refresher on this, check out our
-[lesson on reading data from the blockchain](./intro-to-reading-data).
+[lesson on reading data from the blockchain](/content/courses/intro-to-solana/intro-to-reading-data).
 
 #### Connecting to a wallet
 

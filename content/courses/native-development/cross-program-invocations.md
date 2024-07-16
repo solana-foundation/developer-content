@@ -350,8 +350,9 @@ the reviewer or commenter anytime a review or comment is submitted.
 
 To implement this, we'll have to invoke the SPL Token Program's `MintTo`
 instruction using a CPI. If you need a refresher on tokens, token mints, and
-minting new tokens, have a look at the [Token Program lesson](./token-program)
-before moving forward with this lab.
+minting new tokens, have a look at the
+[Token Program lesson](/content/courses/tokens/token-program) before moving
+forward with this lab.
 
 #### 1. Get starter code and add dependencies
 
@@ -722,7 +723,7 @@ mint account, and then initialize the token mint. We won't explain all of this
 in detail, but it's worth reading through the code, especially given that the
 creation and initialization of the token mint both involve CPIs. Again, if you
 need a refresher on tokens and mints, have a look at the
-[Token Program lesson](./token-program).
+[Token Program lesson](/content/courses/tokens/token-program).
 
 ```rust
 pub fn initialize_token_mint(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {

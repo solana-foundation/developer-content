@@ -193,9 +193,10 @@ to request randomness on this `vrf` account. That way, only that program can
 provide the signature needed for the vrf request. The `oracle_queue` field
 allows you to specify which specific oracle queue you’d like to service the vrf
 requests made with this account. If you aren’t familiar with oracle queues on
-Switchboard, checkout the [Oracles lesson in this unit](./oracles)! Lastly, the
-`callback` field is where you define the callback instruction the Switchboard
-program should invoke once the randomness result has be verified.
+Switchboard, checkout the
+[Oracles lesson in the Connecting to Offchain Data course](/content/courses/connecting-to-offchain-data/oracles)!
+Lastly, the `callback` field is where you define the callback instruction the
+Switchboard program should invoke once the randomness result has be verified.
 
 The `callback` field is of type
 `[CallbackZC](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L25)`.
@@ -440,9 +441,10 @@ the steps involved in a VRF request, review this diagram.
 ## Lab
 
 For this lesson’s lab, we will be picking up where we left off in the
-[Oracle lesson](./oracles). If you haven't completed the Oracle lesson and demo,
-we strongly recommend you do as there are a lot of overlapping concepts and
-we’ll be starting from the Oracle lesson’s codebase.
+[Oracle lesson](/content/courses/connecting-to-offchain-data/oracles). If you
+haven't completed the Oracle lesson and demo, we strongly recommend you do as
+there are a lot of overlapping concepts and we’ll be starting from the Oracle
+lesson’s codebase.
 
 If you don't want to complete the Oracle lesson, the starter code for this lab
 is provided for you in

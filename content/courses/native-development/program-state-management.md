@@ -591,7 +591,7 @@ taking a name a short message as instruction data, the program should:
 You can test your program by building the
 [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend)
 we created in the
-[Page, Order, and Filter Program Data lesson](./paging-ordering-filtering-data).
+[Page, Order, and Filter Program Data lesson](/content/courses/native-development/paging-ordering-filtering-data-frontend).
 Remember to replace the program ID in the frontend code with the one you've
 deployed.
 

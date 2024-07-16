@@ -128,13 +128,16 @@ const address = findProgramAddressSync(["seed", "another seed"], PROGRAM_ID);
 
 You currently have two options for onchain program development:
 
-- We recommend new onchain programmers [start with Anchor](./intro-to-anchor).
+- We recommend new onchain programmers
+  [start with Anchor](/content/courses/onchain-development/intro-to-anchorintro-to-anchor).
   Anchor's defaults make it easy to create safe programs.
-- This course also covers
-  [native onchain program development](./hello-world-program).
+- There's also a separate
+  [native onchain program development](/content/courses/native-development)
+  course.
 
 Whichever way you pick, Solana Foundation maintains
 [examples in both languages](https://github.com/solana-developers/program-examples),
 and [Solana Stack Exchange](https://solana.stackexchange.com/) is there to help.
 
-For now, let's [set up your computer](./local-setup)!
+For now, let's
+[set up your computer](/content/courses/onchain-development/local-setup)!

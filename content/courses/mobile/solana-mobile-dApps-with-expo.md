@@ -71,8 +71,8 @@ speakers. The libraries are intuitive and the documentation is phenomenal.
 #### How to create an Expo app
 
 To get started with Expo, you first need the prerequisite setup described in the
-[Introduction to Solana Mobile lesson](./intro-to-solana-mobile). After that,
-you'll want to sign up for an
+[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile).
+After that, you'll want to sign up for an
 [Expo Application Services (EAS) account](https://expo.dev/).
 
 Once you have an EAS account, you can install the EAS CLI and log in:
@@ -280,7 +280,7 @@ You'll need React Native installed on your machine as well as a running emulator
 or physical device.
 [You can accomplish this all with the React Native quickstart](https://reactnative.dev/docs/environment-setup?guide=native).
 There are also more details about this setup in the
-[Introduction to Solana Mobile lesson](./basic-solana-mobile.md#0-prerequisites)
+[Introduction to Solana Mobile lesson](/content/courses/mobile//basic-solana-mobile.md#0-prerequisites)
 
 <Callout type="note">Even though we are using Expo, you'll need to follow the
 React Native cli guide for initial setup.</Callout>
@@ -388,8 +388,9 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 #### 0. Install a Devnet-enabled Solana wallet
 
 You'll need a wallet that supports Devnet to test with. In
-[our Mobile Wallet Adapter lesson](./mwa-deep-dive) we created one of these.
-Let's install it from the solution branch in a different directory from our app:
+[our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
+created one of these. Let's install it from the solution branch in a different
+directory from our app:
 
 ```bash
 cd ..
@@ -433,10 +434,10 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](./basic-solana-mobile). We will be copying over
-`components/AuthProvider.tsx` and `components/ConnectionProvider.tsx`. These
-files provide us with a `Connection` object as well as some helper functions
-that authorize our dapp.
+[first Mobile lesson](/content/courses/mobile/basic-solana-mobile). We will be
+copying over `components/AuthProvider.tsx` and
+`components/ConnectionProvider.tsx`. These files provide us with a `Connection`
+object as well as some helper functions that authorize our dapp.
 
 Create file `components/AuthProvider.tsx` and copy the contents
 [of our existing Auth Provider from Github](https://raw.githubusercontent.com/Unboxed-Software/solana-advance-mobile/main/components/AuthProvider.tsx)

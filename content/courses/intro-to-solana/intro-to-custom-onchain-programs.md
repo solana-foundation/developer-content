@@ -110,7 +110,7 @@ its data in a specific account at the address
 ### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Writing Data](./intro-to-writing-data).
+[Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data).
 
 Name the file `send-ping-transaction.ts`:
 

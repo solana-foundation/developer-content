@@ -647,7 +647,7 @@ To get started, download the starter code from the `starter` branch of
 
 The starter code includes a simple Anchor program that allows you to initialize
 and update a `Config` account. This is similar to what we did with the
-[Environment Variables lesson](./env-variables).
+[Program Configuration lesson](/content/courses/program-optimization/program-configuration).
 
 The account in question is structured as follows:
 
