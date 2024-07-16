@@ -527,7 +527,9 @@ are in place to avoid security exploits.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=a107787e-ad33-42bb-96b3-0592efc1b92f)!
+</Callout>

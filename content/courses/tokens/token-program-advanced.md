@@ -323,7 +323,10 @@ console.log(
 
 Well done! You've now
 
-#### Completed the lab?
+<Callout type="success">
+
+### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!
+</Callout>

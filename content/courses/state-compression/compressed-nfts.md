@@ -1654,7 +1654,9 @@ be overly prescriptive at this point, but here are some ideas:
 3. See if you can replicate some of the lab script’s functionality in an onchain
    program, i.e. write a program that can mint cNFTs
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=db156789-2400-4972-904f-40375582384a)!
+</Callout>

@@ -883,7 +883,9 @@ reference the
 Note that the solution code is on the `solution-add-replies` branch and that
 your code may look slightly different.
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=89d367b4-5102-4237-a7f4-4f96050fe57e)!
+</Callout>

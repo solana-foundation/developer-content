@@ -237,7 +237,9 @@ Run `npx esrun generate-keypair.ts`. You should see the following result:
 We've now learned about keypairs, and how to store secret keys securely on
 Solana. In the next chapter, we'll use them!
 
+<Callout type="success">
 ## Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ee06a213-5d74-4954-846e-cba883bc6db1)!
+</Callout>

@@ -563,7 +563,9 @@ online) and audit it for signer checks. If you find a bug in somebody else's
 program, please alert them! If you find a bug in your own program, be sure to
 patch it right away.
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=26b3f41e-8241-416b-9cfa-05c5ab519d80)!
+</Callout>
