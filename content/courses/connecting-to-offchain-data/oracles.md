@@ -391,7 +391,7 @@ let val: f64 = feed.get_result()?.try_into()?;
 
 The `get_result()` method defined on the `AggregatorAccountData` struct is safer
 than fetching the data with `latest_confirmed_round.result` because Switchboard
-has implemeted some nifty safety checks.
+has implemented some nifty safety checks.
 
 ```rust
 // from switchboard program
