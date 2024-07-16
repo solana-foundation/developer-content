@@ -838,7 +838,7 @@ Programs:
 - `token_program`
 - `system_program`
 
-Buisness Logic Accounts:
+Business Logic Accounts:
 
 - `user` - The user account who has escrowed the funds.
 - `escrow_account` - The burry escrow state account for user.
