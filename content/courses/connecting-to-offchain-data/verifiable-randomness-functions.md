@@ -499,7 +499,7 @@ today. The functions are as follows:
   consume the randomness.
 - `get_out_of_jail` - Requests the randomness from the VRF, effectively rolling
   the dice.
-- `consume_randomess` - The callback function for the VRF where we will check
+- `consume_randomness` - The callback function for the VRF where we will check
   for the dice rolls.
 
 ```rust
