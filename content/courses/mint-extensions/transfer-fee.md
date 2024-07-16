@@ -55,7 +55,9 @@ point is equivalent to 0.01% or 0.0001 in decimal form.
 
 To get the fee we must calculate it as follows:
 
-$$ Fee = {token_amount \* fee_basis_points \over 10000} $$
+```
+Fee = (token_amount * fee_basis_points) / 10000
+```
 
 The constant 10,000 is used to convert the fee basis point percentage to the
 equivalent amount.

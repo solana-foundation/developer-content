@@ -714,7 +714,7 @@ but feel free to make up your own.
 - `description` = This is a cat
 - `symbol` = EMB
 - `externalUrl` = https://solana.com/
-- `attributes` = { species: 'Cat' breed: 'Cool' }
+- `attributes` = `{ species: 'Cat' breed: 'Cool' }`
 
 Lastly we just need to format all of this data and send it to our helper
 function `uploadOffChainMetadata` to get the uploaded metadata uri.
