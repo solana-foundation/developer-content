@@ -132,7 +132,7 @@ You currently have two options for onchain program development:
   [start with Anchor](/content/courses/onchain-development/intro-to-anchorintro-to-anchor).
   Anchor's defaults make it easy to create safe programs.
 - There's also a separate
-  [native onchain program development](/content/courses/native-development)
+  [native onchain program development](/content/courses/native-onchain-development)
   course.
 
 Whichever way you pick, Solana Foundation maintains
