@@ -112,28 +112,35 @@ export function preProcessContent(content: string = ""): string {
   // manually correct some of the markdown formatting that `mdx.serialize` does not lik:
   content = content
     .trim()
-    // remove html/markdown comments (since they break mdx-remote's serialize)
-    .replaceAll(/<!--[^>]*-->/gm, "")
     // convert `tsx` and `jsx` codeblocks to `typescript` for better syntax highlighting
     .replaceAll(/```(tsx|jsx)/gm, "```typescript")
-    // correct math symbols that break the mdx parser
-    .replaceAll(/ <= /gm, " {'<='} ")
-    .replaceAll(/ >= /gm, " {'>='} ")
-    .replaceAll(/ > /gm, " {'>'} ")
-    .replaceAll(/ < /gm, " {'>'} ")
     // some translators replace quotes with a different symbol `«`
     .replaceAll(/\«(.*)\»/gm, '"$1"');
 
   // process all markdown links (e.g. remove ".md" and handle relative links)
-  content = processMarkdownLinks(content);
+  content = processMarkdownLinks(content.trim());
 
-  // fix formatting issues for mdx component ending tags
-  // note: this seems to be common after content is processed by crowdin...
-  content = content
-    .replaceAll(/\<\/(.*)\>$/gm, "\n</$1>")
-    .replaceAll(/^\<(.*)\>/gm, "\n<$1>\n");
+  // process all text to not alter the internals of code blocks
+  const parts = content.split(/(```[\s\S]*?```)/);
+  for (let i = 0; i < parts.length; i++) {
+    if (!parts[i].startsWith("```")) {
+      parts[i] = parts[i]
+        // remove html/markdown comments (since they break mdx-remote's serialize)
+        .replaceAll(/<!--[^>]*-->/gm, "")
+        // correct math symbols that break the mdx parser
+        .replaceAll(/ <= /gm, " {'<='} ")
+        .replaceAll(/ >= /gm, " {'>='} ")
+        .replaceAll(/ > /gm, " {'>'} ")
+        .replaceAll(/ < /gm, " {'>'} ")
+        // fix formatting issues for mdx component ending tags
+        // note: this seems to be common after content is processed by crowdin...
+        .replaceAll(/\<\/(.*)\>$/gm, "\n</$1>")
+        .replaceAll(/^\<(.*)\>/gm, "\n<$1>\n");
+    }
+  }
 
-  return content;
+  // join the parts back together
+  return parts.join("");
 }
 
 /**
