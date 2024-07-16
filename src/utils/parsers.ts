@@ -1,6 +1,6 @@
 import { SupportedDocTypes } from "@/types";
 import { computeNavItem, shouldIgnoreRecord } from "./navItem";
-import { REGEX_MARKDOWN_LINKS } from "./constants";
+import { CONTENT_API_URL, REGEX_MARKDOWN_LINKS } from "./constants";
 
 /**
  * Props for the `extractFeaturedRecords` function
@@ -188,11 +188,8 @@ export function processSingleLink(url: string = ""): string {
     // removed specific file extensions (".md", ".mdx", etc) and index.*
     url = url.replace(/((index)?.mdx?|.html?)/gi, "");
 
-    // // format urls to assets stored within the content repo
-    // url = url.replace(
-    //   /^\/(public\/)?assets\//,
-    //   `${this.CONTENT_API_URL}/assets/`,
-    // );
+    // format urls to assets stored within the content repo
+    url = url.replace(/^\/(public\/)?assets\//, `${CONTENT_API_URL}/assets/`);
 
     // format urls to developer "content" stored within the content repo
     url = url.replace(/^\/content\//, `/developers/`);
