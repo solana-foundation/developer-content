@@ -82,7 +82,7 @@ Below are two methods to fund your wallet with devnet SOL:
 
 To fund your Playground wallet with devnet SOL. In the Playground terminal, run:
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 solana airdrop 5
 ```
 
@@ -120,7 +120,8 @@ Solana accounts contain either:
   programs. They contain the instructions that can be executed on the network.
 
 This separation of program code and program state is a key feature of Solana's
-Account Model.
+Account Model. For more details, refer to the
+[Solana Account Model](/docs/core/accounts) page.
 
 ### 1. Fetch Playground Wallet
 
@@ -475,7 +476,9 @@ transactions made up of instructions. These instructions are defined by
 programs, which contain the business logic for how accounts should be updated.
 
 Let's walk through two common operations, transferring SOL and creating a token,
-to demonstrate how to build and send transactions.
+to demonstrate how to build and send transactions. For more details, refer to
+the [Transactions and Instructions](/docs/core/transactions) and
+[Fees on Solana](/docs/core/fees) pages.
 
 ### 1. Transfer SOL
 
@@ -810,7 +813,8 @@ Anchor framework. By the end, you'll have deployed your first program to the
 Solana blockchain!
 
 The purpose of this section is to familiarize you with the Solana Playground.
-We'll walk through a more detailed example in the PDA and CPI sections.
+We'll walk through a more detailed example in the PDA and CPI sections. For more
+details, refer to the [Programs on Solana](/docs/core/programs) page.
 
 ### 1. Create Anchor Project
 
@@ -933,7 +937,7 @@ For now, we'll only cover the high-level overview of the program code:
 
 To build the program, simply run `build` in the terminal.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -959,7 +963,7 @@ Before deployment, ensure you have enough SOL. You can get devnet SOL by either
 running `solana airdrop 5` in the Playground terminal or using the
 [Web Faucet](https://faucet.solana.com/).
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 deploy
 ```
 
@@ -1027,7 +1031,7 @@ describe("Test", () => {
 
 To run the test file once the program is deployed, run `test` in the terminal.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 test
 ```
 
@@ -1056,13 +1060,13 @@ You can also use the `Test` button on the left-side panel.
 You can then view the transaction logs by running the `solana confirm -v`
 command and specifying the transaction hash (signature) from the test output:
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 solana confirm -v [TxHash]
 ```
 
 For example:
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 solana confirm -v 3TewJtiUz1EgtT88pLJHvKFzqrzDNuHVi8CfD2mWmHEBAaMfC5NAaHdmr19qQYfTiBace6XUmADvR4Qrhe8gH5uc
 ```
 
@@ -1129,13 +1133,13 @@ closing the program.
 You can close a program by running the following command and specifying the
 program address found in `declare_id!()`:
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 solana program close [ProgramID]
 ```
 
 For example:
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 solana program close 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r
 ```
 
@@ -1146,6 +1150,19 @@ solana program close 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r
 $ solana program close 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r
 Closed Program Id 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r, 2.79511512 SOL reclaimed
 ```
+
+</details>
+
+<details>
+{<summary>Explanation</summary>}
+
+Only the upgrade authority of the program can close it. The upgrade authority is
+set when the program is deployed, and it's the only account with permission to
+modify or close the program. If the upgrade authority is revoked, then the
+program becomes immutable and can never be closed or upgraded.
+
+When deploying programs on Solana Playground, your Playground wallet is the
+upgrade authority for all your programs.
 
 </details>
 
@@ -1160,7 +1177,8 @@ Derived Address (PDA) as the account's address.
 
 The purpose of this section is to guide you through the steps for building and
 testing a Solana program using the Anchor framework and demonstrating how to use
-PDAs within a program.
+PDAs within a program. For more details, refer to the
+[Programs Derived Address](/docs/core/pda) page.
 
 For reference, here is the
 [final code](https://beta.solpg.io/668304cfcffcf4b13384d20a) after completing
@@ -1178,7 +1196,7 @@ your list of projects on Solana Playground.
 In the `lib.rs` file, you'll find a program scaffolded with the `create`,
 `update`, and `delete` instructions we'll implement in the following steps.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 use anchor_lang::prelude::*;
 
 declare_id!("8KPzbM2Cwn4Yjak7QYAEH9wyoQh86NcBicaLuzPaejdw");
@@ -1216,7 +1234,7 @@ pub struct MessageAccount {}
 Before we begin, run `build` in the Playground terminal to check the starter
 program builds successfully.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -1238,7 +1256,7 @@ create. This is the data that we'll store in the account created by the program.
 
 In `lib.rs`, update the `MessageAccount` struct with the following:
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 #[account]
 pub struct MessageAccount {
     pub user: Pubkey,
@@ -1283,9 +1301,8 @@ created by users that contains three fields:
 - `bump` - A u8 storing the ["bump" seed](/docs/core/pda#canonical-bump) used in
   deriving the program derived address (PDA). Storing this value saves compute
   by eliminating the need to rederive it for each use in subsequent
-  instructions.
-When an account is created, the `MessageAccount` data will be serialized and
-stored in the new account's data field.
+  instructions. When an account is created, the `MessageAccount` data will be
+  serialized and stored in the new account's data field.
 
 Later, when reading from the account, this data can be deserialized back into
 the `MessageAccount` data type. The process of creating and reading the account
@@ -1295,7 +1312,7 @@ data will be demonstrated in the testing section.
 
 Build the program again by running `build` in the terminal.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -1310,7 +1327,7 @@ Now, let's implement the `create` instruction to create and initialize the
 Start by defining the accounts required for the instruction by updating the
 `Create` struct with the following:
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 #[derive(Accounts)]
 #[instruction(message: String)]
 pub struct Create<'info> {
@@ -1410,7 +1427,7 @@ access the `message` parameter from the `create` instruction.
 The `seeds` and `bump` constraints are used together to specify that an
 account's address is a Program Derived Address (PDA).
 
-```rs filename="lib.ts"
+```rs filename="lib.rs"
 seeds = [b"message", user.key().as_ref()],
 bump,
 ```
@@ -1434,7 +1451,7 @@ The `space` calculation (8 + 32 + 4 + message.len() + 1) allocates space for
 - User Message (String): 4 bytes for length + variable message length
 - PDA Bump seed (u8): 1 byte
 
-```rs filename="lib.ts"
+```rs filename="lib.rs"
 #[account]
 pub struct MessageAccount {
     pub user: Pubkey,
@@ -1455,7 +1472,7 @@ remaining length is the actual data.
 Next, implement the business logic for the `create` instruction by updating the
 `create` function with the following:
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 pub fn create(ctx: Context<Create>, message: String) -> Result<()> {
     msg!("Create Message: {}", message);
     let account_data = &mut ctx.accounts.message_account;
@@ -1535,7 +1552,7 @@ The body of the function then performs the following logic:
 
 Rebuild the program.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -1549,7 +1566,7 @@ Just as before, the first step is to specify the accounts required by the
 
 Update the `Update` struct with the following:
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 #[derive(Accounts)]
 #[instruction(message: String)]
 pub struct Update<'info> {
@@ -1635,7 +1652,7 @@ access the `message` parameter from the `update` instruction.
 
 Next, implement the logic for the `update` instruction.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
     msg!("Update Message: {}", message);
     let account_data = &mut ctx.accounts.message_account;
@@ -1684,7 +1701,7 @@ The body of the function then:
 
 Rebuld the program
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -1694,7 +1711,7 @@ Next, implement the `delete` instruction to close the `MessageAccount`.
 
 Update the `Delete` struct with the following:
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 #[derive(Accounts)]
 pub struct Delete<'info> {
     #[account(mut)]
@@ -1759,7 +1776,7 @@ The `Delete` struct defines the accounts required for the `delete` instruction:
 
 Next, implement the logic for the `update` instruction.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 pub fn delete(_ctx: Context<Delete>) -> Result<()> {
     msg!("Delete Message");
     Ok(())
@@ -1800,7 +1817,7 @@ actual closing of the account is handled by the `close` constraint in the
 
 Rebuild the program.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -1809,7 +1826,7 @@ build
 The basic CRUD program is now complete. Deploy the program by running `deploy`
 in the Playground terminal.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 deploy
 ```
 
@@ -1828,7 +1845,7 @@ Deployment successful. Completed in 17s.
 
 Included with the starter code is also a test file in `anchor.test.ts`.
 
-```ts filename="anchor.test.ts" copy
+```ts filename="anchor.test.ts"
 import { PublicKey } from "@solana/web3.js";
 
 describe("pda", () => {
@@ -1842,7 +1859,7 @@ describe("pda", () => {
 
 Add the code below inside `describe`, but before the `it` sections.
 
-```ts filename="anchor.test.ts" copy
+```ts filename="anchor.test.ts"
 const program = pg.program;
 const wallet = pg.wallet;
 
@@ -1906,7 +1923,7 @@ const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
 Run the test file by running `test` in the Playground terminal to check the file
 runs as expected. We will implement the tests in the following steps.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 test
 ```
 
@@ -1930,7 +1947,7 @@ Running tests...
 
 Update the first test with the following:
 
-```ts filename="anchor.test.ts" copy
+```ts filename="anchor.test.ts"
 it("Create Message Account", async () => {
   const message = "Hello, World!";
   const transactionSignature = await program.methods
@@ -2025,7 +2042,7 @@ console.log(
 
 Update the second test with the following:
 
-```ts filename="anchor.test.ts" copy
+```ts filename="anchor.test.ts"
 it("Update Message Account", async () => {
   const message = "Hello, Solana!";
   const transactionSignature = await program.methods
@@ -2120,7 +2137,7 @@ console.log(
 
 Update the third test with the following:
 
-```ts filename="anchor.test.ts" copy
+```ts filename="anchor.test.ts"
 it("Delete Message Account", async () => {
   const transactionSignature = await program.methods
     .delete()
@@ -2187,8 +2204,8 @@ const transactionSignature = await program.methods
 ```
 
 Once the transaction is sent and the account is closed, we attempt to fetch the
-account using its address (`messagePda`) using `fetchNullable` since we expect the
-return value to be to be null because the account is closed.
+account using its address (`messagePda`) using `fetchNullable` since we expect
+the return value to be to be null because the account is closed.
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetchNullable(
@@ -2215,7 +2232,7 @@ console.log(
 Once the tests are set up, run the test file by running `test` in the Playground
 terminal.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 test
 ```
 
@@ -2258,12 +2275,13 @@ programs (in this case, the System Program) from within our program.
 
 The purpose of this section is to walk through the process of implementing CPIs
 in a Solana program using the Anchor framework, building upon the PDA concepts
-we explored in the previous section.
+we explored in the previous section. For more details, refer to the
+[Cross Program Invocation](/docs/core/cpi) page.
 
 Begin by updating the `lib.rs` file to bring into scope items from the
 `system_program` module.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 use anchor_lang::system_program::{transfer, Transfer};
 ```
 
@@ -2286,7 +2304,7 @@ Begin by updating the `Update` struct to include an additional account called
 `vault_account`. This account, controlled by our program, will receive SOL from
 a user when they update their message account.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 #[account(
     mut,
     seeds = [b"vault", user.key().as_ref()],
@@ -2360,7 +2378,7 @@ this PDA in a CPI.
 Next, implement the CPI logic in the `update` instruction to transfer 0.001 SOL
 from the user's account to the vault account.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 let transfer_accounts = Transfer {
     from: ctx.accounts.user.to_account_info(),
     to: ctx.accounts.vault_account.to_account_info(),
@@ -2410,7 +2428,7 @@ transfer instruction:
 - `from` - The user's account (source of funds)
 - `to` - The vault account (destination of funds)
 
-  ```rs filename="lib.ts"
+  ```rs filename="lib.rs"
   let transfer_accounts = Transfer {
       from: ctx.accounts.user.to_account_info(),
       to: ctx.accounts.vault_account.to_account_info(),
@@ -2422,7 +2440,7 @@ The `CpiContext` specifies:
 - The program to be invoked (System Program)
 - The accounts required in the CPI (defined in the `Transfer` struct)
 
-  ```rs filename="lib.ts"
+  ```rs filename="lib.rs"
   let cpi_context = CpiContext::new(
       ctx.accounts.system_program.to_account_info(),
       transfer_accounts,
@@ -2435,7 +2453,7 @@ Program, passing in the:
 - The `cpi_context` (program and accounts)
 - The `amount` to transfer (1,000,000 lamports, equivalent to 0.001 SOL)
 
-  ```rs filename="lib.ts"
+  ```rs filename="lib.rs"
   transfer(cpi_context, 1_000_000)?;
   ```
 
@@ -2450,7 +2468,7 @@ invokes the System Program's transfer instruction.
 
 Rebuild the program.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -2463,7 +2481,7 @@ First, update the `Delete` struct to include the `vault_account`. This allows us
 to transfer any SOL in the vault back to the user when they close their message
 account.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 #[account(
     mut,
     seeds = [b"vault", user.key().as_ref()],
@@ -2475,7 +2493,7 @@ pub vault_account: SystemAccount<'info>,
 Also add the `system_program` as the CPI for the transfer requires invoking the
 System Program.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 pub system_program: Program<'info, System>,
 ```
 
@@ -2521,7 +2539,7 @@ SOL back to the user.
 Next, implement the CPI logic in the `delete` instruction to transfer SOL from
 the vault account back to the user's account.
 
-```rs filename="lib.ts" copy
+```rs filename="lib.rs"
 let user_key = ctx.accounts.user.key();
 let signer_seeds: &[&[&[u8]]] =
     &[&[b"vault", user_key.as_ref(), &[ctx.bumps.vault_account]]];
@@ -2537,8 +2555,8 @@ let cpi_context = CpiContext::new(
 transfer(cpi_context, ctx.accounts.vault_account.lamports())?;
 ```
 
-Note that we updated `_ctx: Context<Delete>` to `ctx: Context<Delete>` as we'll be
-using the context in the body of the function.
+Note that we updated `_ctx: Context<Delete>` to `ctx: Context<Delete>` as we'll
+be using the context in the body of the function.
 
 <details>
 {<summary>Diff</summary>}
@@ -2577,7 +2595,7 @@ to make a transfer that requires a Program Derived Address (PDA) signer.
 
 First, we define the signer seeds for the vault PDA:
 
-```rs filename="lib.ts"
+```rs filename="lib.rs"
 let user_key = ctx.accounts.user.key();
 let signer_seeds: &[&[&[u8]]] =
     &[&[b"vault", user_key.as_ref(), &[ctx.bumps.vault_account]]];
@@ -2589,7 +2607,7 @@ transfer instruction:
 - from: The vault account (source of funds)
 - to: The user's account (destination of funds)
 
-  ```rs filename="lib.ts"
+  ```rs filename="lib.rs"
   let transfer_accounts = Transfer {
       from: ctx.accounts.vault_account.to_account_info(),
       to: ctx.accounts.user.to_account_info(),
@@ -2602,7 +2620,7 @@ The `CpiContext` specifies:
 - The accounts involved in the transfer (defined in the Transfer struct)
 - The signer seeds for the PDA
 
-  ```rs filename="lib.ts"
+  ```rs filename="lib.rs"
   let cpi_context = CpiContext::new(
       ctx.accounts.system_program.to_account_info(),
       transfer_accounts,
@@ -2615,7 +2633,7 @@ Program, passing:
 - The `cpi_context` (program, accounts, and PDA signer)
 - The amount to transfer (the entire balance of the vault account)
 
-  ```rs filename="lib.ts"
+  ```rs filename="lib.rs"
   transfer(cpi_context, ctx.accounts.vault_account.lamports())?;
   ```
 
@@ -2628,7 +2646,7 @@ transfer of all funds from the vault back to the user.
 
 Rebuild the program.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 build
 ```
 
@@ -2638,7 +2656,7 @@ After making these changes, we need to redeploy our updated program. This
 ensures that our modified program is available for testing. On Solana, updating
 a program simply requires deploying the compiled program at the same program ID.
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 deploy
 ```
 
@@ -2653,6 +2671,19 @@ Deployment successful. Completed in 17s.
 
 </details>
 
+<details>
+{<summary>Explanation</summary>}
+
+Only the upgrade authority of the program can update it. The upgrade authority
+is set when the program is deployed, and it's the only account with permission
+to modify or close the program. If the upgrade authority is revoked, then the
+program becomes immutable and can never be closed or upgraded.
+
+When deploying programs on Solana Playground, your Playground wallet is the
+upgrade authority for all your programs.
+
+</details>
+
 ### 4. Update Test File
 
 Next, we'll update our `anchor.test.ts` file to include the new vault account in
@@ -2663,7 +2694,7 @@ update and delete instruction calls.
 
 First, add the vault PDA derivation:
 
-```ts filename="anchor.test.ts" copy
+```ts filename="anchor.test.ts"
 const [vaultPda, vaultBump] = PublicKey.findProgramAddressSync(
   [Buffer.from("vault"), wallet.publicKey.toBuffer()],
   program.programId,
@@ -2698,7 +2729,7 @@ describe("pda", () => {
 
 Then, update the update instruction to include the `vaultAccount`.
 
-```ts filename="anchor.test.ts" copy {5}
+```ts filename="anchor.test.ts"  {5}
 const transactionSignature = await program.methods
   .update(message)
   .accounts({
@@ -2727,7 +2758,7 @@ const transactionSignature = await program.methods
 
 Then, update the delete instruction to include the `vaultAccount`.
 
-```ts filename="anchor.test.ts" copy {5}
+```ts filename="anchor.test.ts"  {5}
 const transactionSignature = await program.methods
   .delete()
   .accounts({
@@ -2757,7 +2788,7 @@ const transactionSignature = await program.methods
 After making these changes, run the tests to ensure everything is working as
 expected:
 
-```shell filename="Terminal" copy
+```shell filename="Terminal"
 test
 ```
 
