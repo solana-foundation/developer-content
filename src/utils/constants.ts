@@ -1,4 +1,9 @@
 /**
+ *
+ */
+export const CONTENT_API_URL = "https://solana-developer-content.vercel.app";
+
+/**
  * Regex for parsing markdown links
  */
 export const REGEX_MARKDOWN_LINKS = /\[([^\[]+)\]\((.*?)\)/gim;
