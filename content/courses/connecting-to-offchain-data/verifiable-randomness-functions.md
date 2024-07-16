@@ -83,7 +83,7 @@ There are three key properties of a VRF:
    random value. Given the same secret key and nonce, the VRF will always
    produce the same output. This property ensures that the random value can be
    reproduced and verified by anyone.
-2. **Unpredicatability** - The output of a VRF appears indistinguishable from
+2. **Unpredictability** - The output of a VRF appears indistinguishable from
    true randomness to anyone without access to the secret key. This property
    ensures that even though the VRF is deterministic, you cannot predict the
    result ahead of time without knowledge of the inputs.
