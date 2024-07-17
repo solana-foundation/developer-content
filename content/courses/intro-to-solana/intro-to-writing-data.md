@@ -7,10 +7,7 @@ objectives:
   - Use `@solana/web3.js` to sign transactions
   - Use Solana Explorer to view transactions
 description:
-  "Solana has onchain programs. Each instruction in a Solana transaction is sent
-  to a function in the onchain program. The function runs, and if all the
-  instructions in a transaction complete successfully, the new state is written
-  to the Blockchain."
+  "Make your first transactions on DevNet, using the System and memo programs!"
 ---
 
 ## Summary
@@ -166,7 +163,7 @@ We’re going to create a script to send SOL to other students.
 ### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Cryptography](/content/courses/intro-to-solana/intro-to-cryptography.md).
+[Intro to Cryptography](/content/courses/intro-to-solana/intro-to-cryptography).
 
 Create a file called `transfer.ts`:
 
@@ -259,7 +256,9 @@ Answer the following questions:
 
 - What do you think "confirmed" means?
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=dda6b8de-9ed8-4ed2-b1a5-29d7a8a8b415)!
+</Callout>

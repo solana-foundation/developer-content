@@ -5,11 +5,7 @@ objectives:
   - Explain keypairs
   - Generate a new keypair
   - Load a keypair from an env file
-description:
-  "Solana is an example of asymmetric cryptography. Everyone has a keypair,
-  consisting of a secret key and a public key. They use the secret key sign
-  transactions, which mathematically proves the keyholder authorised the
-  transaction."
+description: "Understand asymmetric cryptography and how Solana uses it."
 ---
 
 ## Summary
@@ -26,8 +22,8 @@ description:
 
 ### Symmetric and Asymmetric Cryptography
 
-'Cryptography' is literally the study of hiding information. There are two main
-types of cryptography you'll encounter day to day:
+'Cryptography' the study of hiding information. There are two main types of
+cryptography you'll encounter day to day:
 
 **Symmetric Cryptography** is where the same key is used to encrypt and decrypt.
 It's hundreds of years old and has been used by everyone from the ancient
@@ -107,9 +103,9 @@ npm i @solana/web3.js
 ```
 
 We’ll cover a lot of
-[web3.js](https://docs.solana.com/developing/clients/javascript-reference)
-gradually throughout this course, but you can also check out the
-[official web3.js documentation](https://docs.solana.com/developing/clients/javascript-reference).
+[web3.js](https://solana.com/docs/clients/javascript-reference) gradually
+throughout this course, but you can also check out the
+[official web3.js documentation](https://solana.com/docs/clients/javascript-reference).
 
 To send tokens, send NFTS, or read and write data Solana, you'll need your own
 keypair. To make a new keypair, use the `Keypair.generate()` function from
@@ -241,7 +237,9 @@ Run `npx esrun generate-keypair.ts`. You should see the following result:
 We've now learned about keypairs, and how to store secret keys securely on
 Solana. In the next chapter, we'll use them!
 
+<Callout type="success">
 ## Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ee06a213-5d74-4954-846e-cba883bc6db1)!
+</Callout>

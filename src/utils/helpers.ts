@@ -1,4 +1,4 @@
-import { RawDocumentData } from "contentlayer/core";
+import { RawDocumentData } from "contentlayer2/core";
 import { readdirSync, statSync } from "fs";
 import { extname, join, resolve } from "path";
 

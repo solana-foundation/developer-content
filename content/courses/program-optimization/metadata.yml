@@ -1,0 +1,11 @@
+author: unboxed
+title: Program Optimization
+description: Learn how to efficiently design and optimize your programs.
+lessons:
+  - program-architecture
+  # Renamed! Was env-variables
+  - program-configuration
+  - rust-macros
+  # Renamed! Was versioned-transaction
+  - lookup-tables
+priority: 60

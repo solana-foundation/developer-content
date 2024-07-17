@@ -3,9 +3,8 @@ title: Using custom onchain programs
 objectives:
   - Create transactions for custom onchain programs
 description:
-  "As well as popular programs like the 'system' and 'memo' programs, there are
-  many other Solana programs. We can make instructions for arbitrary programs
-  using web3.js 'TransactionInstruction' constructor."
+  "Make instructions for arbitrary programs using the 'TransactionInstruction'
+  constructor."
 ---
 
 ## Summary
@@ -111,7 +110,7 @@ its data in a specific account at the address
 ### Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data.md).
+[Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data).
 
 Name the file `send-ping-transaction.ts`:
 
@@ -223,14 +222,13 @@ console, like the following:
 ✅ Transaction completed! Signature is 55S47uwMJprFMLhRSewkoUuzUs5V6BpNfRx21MpngRUQG3AswCzCSxvQmS3WEPWDJM7bhHm3bYBrqRshj672cUSG
 ```
 
-Copy the transaction signature. Open a browser and go to
-[https://explorer.solana.com/?cluster=devnet](https://explorer.solana.com/?cluster=devnet)
-(the query parameter at the end of the URL will ensure that you’ll explore
-transactions on Devnet instead of Mainnet). Paste the signature into the search
-bar at the top of Solana Explorer (make sure you're connected to Devnet) and hit
-enter. You should see all the details about the transaction. If you scroll all
-the way to the bottom, then you will see `Program Logs`, which show how many
-times the program has been pinged including your ping.
+Copy the transaction signature. Then visit
+[Solana explorer on devnet](https://explorer.solana.com/?cluster=devnet). Paste
+the signature into the search bar at the top of Solana Explorer (make sure
+you're connected to Devnet) and hit enter. You should see all the details about
+the transaction. If you scroll all the way to the bottom, then you will see
+`Program Logs`, which show how many times the program has been pinged including
+your ping.
 
 ![Solana Explorer with logs from calling the Ping program](/public/assets/courses/unboxed/solana-explorer-ping-result.png)
 
@@ -271,7 +269,9 @@ signature so you can look at it on Solana Explorer.
 If you get stuck feel free to glance at the
 [solution code](https://github.com/Unboxed-Software/solana-ping-client).
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e969d07e-ae85-48c3-976f-261a22f02e52)!
+</Callout>
