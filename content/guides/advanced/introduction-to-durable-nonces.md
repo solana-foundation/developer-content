@@ -148,7 +148,7 @@ Nonce authority is the account that controls the Nonce Account. It has the
 authority to generate a new nonce, advance the nonce or withdraw SOL from the
 Nonce Account. By default, the account that creates the Nonce Account is
 delegated as the Nonce Authority, but it's possible to transfer the authority
-onto a keypair account or a PDA.
+onto a different keypair account.
 
 ## Durable Nonces with Solana CLI
 
