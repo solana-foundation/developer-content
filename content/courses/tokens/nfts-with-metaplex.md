@@ -4,14 +4,17 @@ objectives:
   - Explain NFTs and how they're represented on the Solana network
   - Explain the role of the Metaplex Token Metadata program
   - Create and update NFTs using the Metaplex JS SDK
+description:
+  "How to create NFTs in TypeScript with Metaplex Metdadat program and Irys
+  permanent storage service."
 ---
 
-## Summary
+### Summary
 
 - **Non-Fungible Tokens (NFTs)** are SPL Tokens with an associated metadata
   account, 0 decimals, and a maximum supply of 1
 - **Metadata** attaches additional properties to token mints (both NFTs and
-  regular tokens). For NFTs, metadata includes the token name and a link to a
+  regular tokens). For NFTs, metadata includes the token name and a link to an
   offchain JSON file. This JSON file includes links to artwork and other media
   files, any special traits the NFT has, and more.
 - The **Metaplex Token Metadata** program is an onchain program that attaches
@@ -19,7 +22,7 @@ objectives:
   using the `metaplex-foundation/js` npm module, also known as the
   [Metaplex JavaScript SDK](https://github.com/metaplex-foundation/js).
 
-## Lesson
+### Lesson
 
 Solana Non-Fungible Tokens (NFTs) are SPL tokens created using the Token
 program. These tokens, however, also have an additional metadata account
@@ -28,14 +31,13 @@ associated with each token mint.
 In this lesson, we'll cover the basics of how NFTs are represented on Solana,
 how to create and update them using the `mpl-token-metadata` npm module.
 
-### NFTs on Solana
+#### NFTs on Solana
 
 An NFT is a standard token from the Token Program with the following
 characteristics:
 
 1. Has 0 decimals, so it cannot be divided into parts
-2. Comes from a token mint with the supply of 1, so only 1 of these tokens
-   exists
+2. Comes from a token mint with a supply of 1, so only 1 of these tokens exists
 3. Comes from a token mint whose authority is set to `null` (to ensure that the
    supply never changes)
 4. Has an associated account that stores **metadata** - things like a name,
@@ -45,7 +47,7 @@ While the first three points can be achieved with the SPL Token Program, the
 associated metadata requires an additional program. This is the **Metadata
 program**.
 
-### The Metaplex Token Metadata program
+#### The Metaplex Token Metadata program
 
 The most popular way Solana NFTs have been created is using the
 [Metaplex Token Metadata](https://developers.metaplex.com/token-metadata)
@@ -53,18 +55,18 @@ program.
 
 ![Metadata](/public/assets/courses/unboxed/solana-nft-metaplex-metadata.png)
 
-- When creating an NFT, the Token Metadata program creates a **onchain
+- When creating an NFT, the Token Metadata program creates an **onchain
   metadata** account using a Program Derived Address (PDA) with the token mint
   as a seed. This allows the metadata account for any NFT to be located
   deterministically using the address of the token mint. The onchain metadata
-  contains a URI field that points to an off-chain `.json` file.
+  contains a URI field that points to an offchain `.json` file.
 
-- The **off-chain metadata** in the JSON file stores the link to the media
+- The **offchain metadata** in the JSON file stores the link to the media
   (images, videos, 3D files) of the NFT, any traits the NFT may have, and
   additional metadata (see
   [this example JSON file](https://lsc6xffbdvalb5dvymf5gwjpeou7rr2btkoltutn5ij5irlpg3wa.arweave.net/XIXrlKEdQLD0dcML01kvI6n4x0GanLnSbeoT1EVvNuw)).
   Permanent data storage systems such as Arweave are often used to store the
-  off-chain component of NFT metadata.
+  offchain component of NFT metadata.
 
 In the following sections, we'll cover the basics of using the
 `metaplex-foundation/js` npm module (also known as the Metaplex JavaScript SDK)
@@ -74,21 +76,22 @@ collection. For more information on `metaplex-foundation/js` see the
 the
 [Metaplex JS SDK Examples](https://github.com/metaplex-foundation/js-examples).
 
-<Callout type="note">The Metaplex Foundation do have newer mechanisms to create
-NFTs, including
+<Callout type="note">The Metaplex Foundation has newer mechanisms to create
+NFTs, including [Umi](https://github.com/metaplex-foundation/umi) and
 [MPL Core](https://github.com/metaplex-foundation/mpl-core/blob/main/clients/js/README.md)
 but [Metaplex JavaScript SDK](https://github.com/metaplex-foundation/js) remains
-the most popular and is widely supported by wallet software.</Callout>
+the simplest and most popular JS/TS client to create NFTs with broad wallet
+support.</Callout>
 
-### Metaplex instance
+#### Metaplex instance
 
-A `Metaplex` instance serves as the entry point for accessing the Metaplex SDK
-APIs. This instance accepts a connection used to communicate with the cluster.
+A `Metaplex` instance serves as the entry point for accessing the Metaplex SDK.
+This instance accepts a connection used to communicate with the cluster.
 Additionally, developers can customize the SDK's interactions by specifying an
 "Identity Driver" and a "Storage Driver".
 
-The Identity Driver is a keypair that can be used to sign transactions, a
-requirement when creating an NFT. The Storage Driver is used to specify the
+The Identity Driver is a keypair that can be used to sign transactions, which is
+a requirement when creating an NFT. The Storage Driver is used to specify the
 storage service you want to use for uploading assets. The `irysStorage` driver
 is the default option, and it uploads assets to Irys, a permanent and
 decentralized storage service.
@@ -107,7 +110,7 @@ const metaplex = Metaplex.make(connection)
   );
 ```
 
-### Upload assets
+#### Upload assets
 
 Before creating an NFT, you must prepare and upload any assets you plan to
 associate with the NFT. While this doesn't have to be an image, most NFTs have
@@ -119,10 +122,10 @@ finally uploading it to the designated Storage Driver.
 
 The Metaplex SDK supports the creation of a new Metaplex file from either files
 present on your local computer or those uploaded by a user through a browser.
-You can do the former by using `readFile()` to read the image file, then convert
-it into a Metaplex file using `toMetaplexFile()`. Finally, use your `Metaplex`
-instance to call `storage().upload(file)` to upload the file. The function's
-return value will be the URI where the image was stored.
+You can do the former using `readFileSync()` to read the image file, then
+convert it into a Metaplex file using `toMetaplexFile()`. Finally, use your
+`Metaplex` instance to call `storage().upload(file)` to upload the file. The
+function's return value will be the URI where the image was stored.
 
 ```typescript
 const buffer = readFileSync("src/" + nftData.imageFile);
@@ -130,7 +133,7 @@ const file = toMetaplexFile(buffer, nftData.imageFile);
 const imageUri = await metaplex.storage().upload(file);
 ```
 
-### Upload metadata
+#### Upload metadata
 
 After uploading an image, it's time to upload the offchain JSON metadata using
 the `nfts().uploadMetadata()` function. This will return a URI where the JSON
@@ -155,15 +158,15 @@ const { uri } = await metaplex.nfts().uploadMetadata({
 });
 ```
 
-### Create the NFT
+#### Create the NFT
 
 After uploading the NFT's metadata, you can finally create the NFT on the
 network. The Metaplex SDK's `create()` method allows you to create a new NFT
-with minimal configuration. This method will handle the creation of the mint
-account, token account, metadata account, and master edition account for you.
-The data provided to this method will represent the onchain portion of the NFT
-metadata. You can explore the SDK to see all the other input that can be
-optionally provided to this method.
+with minimal configuration. This method will handle creating the mint account,
+token account, metadata account, and master edition account for you. The data
+provided to this method will represent the onchain portion of the NFT metadata.
+You can explore the SDK to see all the other input optionally supplied to this
+method.
 
 ```typescript
 const { nft } = await metaplex.nfts().create(
@@ -181,7 +184,7 @@ NFT. By default, the SDK sets the `isMutable` property to true, allowing for
 updates to be made to the NFT's metadata. However, you can choose to set
 `isMutable` to false, making the NFT's metadata immutable.
 
-### Update the NFT
+#### Update the NFT
 
 If you've left `isMutable` as true, you may end up having a reason to update
 your NFT's metadata. The SDK's `update` method allows you to update both the
@@ -208,7 +211,7 @@ const { response } = await metaplex.nfts().update(
 Note that any fields you don't include in the call to `update` will stay the
 same, by design.
 
-### Add the NFT to a collection
+#### Add the NFT to a collection
 
 A
 [Certified Collection](https://developers.metaplex.com/token-metadata/collections)
@@ -220,6 +223,9 @@ you will see a `collection` field with a `key` that points to the
 [NFT](https://explorer.solana.com/address/SMBH3wF6baUj6JWtzYvqcKuj2XCKWDqQxzspY12xPND/).
 Simply put, NFTs that are part of a collection are associated with another NFT
 that represents the collection itself.
+
+Certified collections are important because they mean the collection owner has
+verified that each NFT actually belongs to the collection!
 
 To add an NFT to a collection, first, the Collection NFT has to be created. The
 process is the same as before, except you'll include one additional field on our
@@ -276,14 +282,14 @@ await metaplex.nfts().verifyCollection({
 });
 ```
 
-## Lab
+### Lab
 
 In this lab, we'll go through the steps to create an NFT using the Metaplex SDK,
 update the NFT's metadata after the fact, and then associate the NFT with a
 collection. By the end, you will have a basic understanding of how to use the
 Metaplex SDK to interact with NFTs on Solana.
 
-### Part 1: Creating an NFT collection
+#### Part 1: Creating an NFT collection
 
 To begin, make a new folder and install the relevant dependencies:
 
@@ -356,7 +362,7 @@ const collectionNftData = {
 };
 ```
 
-Upload the off-chain metadata to irys:
+Upload the offchain metadata to irys:
 
 ```typescript
 // Load file into Metaplex
@@ -376,7 +382,7 @@ const uploadMetadataOutput = await metaplex.nfts().uploadMetadata({
 });
 
 const collectionUri = uploadMetadataOutput.uri;
-console.log("Collection off-chain metadata URI:", collectionUri);
+console.log("Collection offchain metadata URI:", collectionUri);
 ```
 
 Then actually make the collection:
@@ -417,7 +423,7 @@ The output should look like this:
 % npx esrun create-metaplex-nft-collection.ts
 Loaded user: 4DRi8LxWhAWf9LwUuyb3Rz4Y4USEKzjdvQBWTyrkJtwg
 image uri: https://arweave.net/_3vbKzFO7zcfMkFaVdhorntkPHDqz4YNTyf_9lrGw1c
-Collection off-chain metadata URI: https://arweave.net/Jw29lMkHp-PIxddEuLFkavdOTP1bJ9MeXTu-QqY3qTM
+Collection offchain metadata URI: https://arweave.net/Jw29lMkHp-PIxddEuLFkavdOTP1bJ9MeXTu-QqY3qTM
 Collection NFT: https://explorer.solana.com/address/8dP75EWHnYAc6pgeiToXtE66qEaHx1PcoetZpmnAQeAp?cluster=devnet
 Collection NFT address is 8dP75EWHnYAc6pgeiToXtE66qEaHx1PcoetZpmnAQeAp
 ✅ Finished successfully!
@@ -430,11 +436,11 @@ yourself, but if you need to you can also check out the
 
 We'll use the collection NFT address in the next step.
 
-### 2. Creating a Metaplex NFT inside the collection
+#### 2. Creating a Metaplex NFT inside the collection
 
 We'll now make a Metaplex NFT that's a member of the collection we just made.
 Make a new file called `create-metaplex-nft.ts`. The setup for this will look
-the same as previous, with slightly different imports:
+the same as the previous file, with slightly different imports:
 
 ```typescript
 import {
@@ -577,7 +583,7 @@ yourself, but if you need to you can also check out the
 
 Remember the NFT address, we'll use it in the next step.
 
-### 3. Update the NFT
+#### 3. Update the NFT
 
 Create a new file, called `update-metaplex-nft.ts`. The imports will be simila
 to our previous files:
@@ -658,7 +664,7 @@ const file = toMetaplexFile(buffer, updatedNftData.imageFile);
 const imageUri = await metaplex.storage().upload(file);
 console.log("image uri:", imageUri);
 
-// Upload new off-chain metadata
+// Upload new offchain metadata
 const uploadMetadataOutput = await metaplex.nfts().uploadMetadata({
   name: updatedNftData.name,
   symbol: updatedNftData.symbol,
@@ -688,14 +694,14 @@ console.log(
 console.log("✅ Finished successfully!");
 ```
 
-Run `npx esrun create-metaplex-nft.ts`. You should see something like:
+Run `npx esrun update-metaplex-nft.ts`. You should see something like:
 
 ```typescript
-% npx esrun create-metaplex-nft.ts
+% npx esrun update-metaplex-nft.ts
 Loaded user: 4DRi8LxWhAWf9LwUuyb3Rz4Y4USEKzjdvQBWTyrkJtwg
-image uri: https://arweave.net/Z2JoDr7W4A3mWE9aTq8ex13IoPx1v1QewjVqPKPItuE
-Token Mint: https://explorer.solana.com/address/HCq8ERk1PSLCuBJeWx7du4dom3YbyfKpaCWDQ3Eft6aM?cluster=devnet
-Created NFT address is HCq8ERk1PSLCuBJeWx7du4dom3YbyfKpaCWDQ3Eft6aM
+image uri: https://arweave.net/nd6rxpoGfPmB2gTutEgnH5B76CFlDxgM6cZ7BcUmFis
+NFT updated with new metadata URI: https://explorer.solana.com/tx/4eiuMFLeku7ArV5xkRTPKxBXjfjQsSVGFZimMkMaMxK1d21qptQE5kgKiuob6J852m4GuoMqcjz1ee4oy7fXVEWU?cluster=devnet
+✅ Finished successfully!
 ```
 
 Inspect the updated NFT on Solana Explorer! Just like previously, if you have
@@ -710,7 +716,7 @@ build a new event ticketing platform, revamp a retail businesses membership
 Ppogram, or even digitize your school's student ID system. The possibilities are
 endless!
 
-## Challenge
+### Challenge
 
 The steps covered above for creating an NFT would be incredibly tedious to
 execute for thousands of NFTs in one go. Many providers, including Metaplex,
@@ -722,7 +728,9 @@ page. This hands-on experience will not only reinforce your understanding of the
 tools but also boost your confidence in your ability to use them effectively in
 the future.
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=296745ac-503c-4b14-b3a6-b51c5004c165)!
+</Callout>

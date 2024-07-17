@@ -5,9 +5,7 @@ objectives:
   - Understand SOL and lamports
   - Use web3.js to connect to Solana and read an account balance
 description:
-  "In Solana we use public keys as a form of address. We can interact with other
-  users by sending tokens to their public key, which we also refer to as their
-  wallet address. "
+  "Connect to Solana DevNet from TypeScript and read data from the blockchain!"
 ---
 
 ## Summary
@@ -23,7 +21,7 @@ description:
 
 ### Accounts
 
-All data stored on Solana is stored in accounts. Accounts can store:
+All data on Solana is stored in accounts. Accounts can store:
 
 - SOL
 - Other tokens, like USDC
@@ -141,7 +139,7 @@ Make a new file called `check-balance.ts`, substituting your public key for
 
 The script loads the public key, connects to DevNet, and checks the balance:
 
-```tsx
+```typescript
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 const publicKey = new PublicKey("<your public key>");
@@ -186,7 +184,7 @@ Re-run the script. You should see your balance updated:
 
 You can modify the script to check balances on any wallet.
 
-```tsx
+```typescript
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 const suppliedPublicKey = process.argv[2];
@@ -226,7 +224,9 @@ Modify the script as follows:
 
 We'll transfer SOL in the next lesson!
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=8bbbfd93-1cdc-4ce3-9c83-637e7aa57454)!
+</Callout>

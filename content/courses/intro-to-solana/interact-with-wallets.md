@@ -5,10 +5,7 @@ objectives:
   - Install a Solana wallet app and set your wallet app to
     [Devnet](https://api.devnet.solana.com/)
   - Create a React app that uses Wallet Adapter to have users sign transactions
-description:
-  "Solana wallets store your secret key and allow you to sign transactions. You
-  can make websites communicate with wallet apps using the Solana Wallet
-  Adapter."
+description: "Connect with installed browser wallets from your React apps."
 ---
 
 ## Summary
@@ -92,10 +89,12 @@ npm install @solana/wallet-adapter-base \
     @solana/wallet-adapter-react-ui
 ```
 
-<Callout type="note">We're learning doing this manually to learn about Wallet
+<Callout type="note">
+We're learning doing this manually to learn about Wallet
 Adapter, but you can also use
 [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) to
-create a brand new React or NextJS app that supports Solana wallets! </Callout>
+create a brand new React or NextJS app that supports Solana wallets. 
+</Callout>
 
 ### Connect To Wallets
 
@@ -626,7 +625,9 @@ lets a user connect their wallet and send SOL to another account.
 If you get really stumped, feel free to
 [check out the solution code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/main).
 
+<Callout type="success">
 ### Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=69c5aac6-8a9f-4e23-a7f5-28ae2845dfe1)!
+</Callout>
