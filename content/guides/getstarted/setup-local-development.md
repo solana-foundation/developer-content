@@ -207,7 +207,7 @@ tasks, like:
 1.  Install the Solana CLI tool suite using the official install command:
 
     ```shell
-    sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+    sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
     ```
 
 2.  You can replace `stable` with the release tag matching the software version
