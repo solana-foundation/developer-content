@@ -113,7 +113,7 @@ deploy your programs. You can install the Solana CLI by running the following
 command:
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
 Using the Solana CLI, it is recommended to run a local validator for testing
