@@ -12,7 +12,7 @@ Since each transaction on the Solana blockchain requires a listing of every
 address that is interacted with as part of the transaction, this listing would
 effectively be capped at 32 addresses per transaction. With the help of
 [Address Lookup Tables](/docs/advanced/lookup-tables.md), a transaction would
-now be able to raise that limit to 256 addresses per transaction.
+now be able to raise that limit to 64 addresses per transaction.
 
 ## Compressing onchain addresses
 
@@ -100,7 +100,7 @@ const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
 
 Once these addresses have been inserted into the table, and stored onchain, you
 will be able to utilize the Address Lookup Table in future transactions.
-Enabling up to 256 addresses in those future transactions.
+Enabling up to 64 addresses in those future transactions.
 
 ## Fetch an Address Lookup Table
 
