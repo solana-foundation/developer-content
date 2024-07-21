@@ -89,7 +89,7 @@ npm install @solana/web3.js \
     @solana/wallet-adapter-base \
     @solana/wallet-adapter-react \
     @solana/wallet-adapter-react-ui \
-    @solana/wallet-adapter-wallets \
+    @solana/wallet-adapter-wallets
 ```
 
 ## 3. Setting up Wallet Adapter in your Next.js app
