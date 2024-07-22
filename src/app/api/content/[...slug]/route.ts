@@ -79,10 +79,15 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     }
 
     // get the "next" record link to display (that is an actual link)
+    // skip "/docs/rpc" and "/docs/terminology" when setting next page
     if (flatNavItems.length >= i + 1) {
-      for (let j = i; j < flatNavItems.length; j++) {
-        if (!!flatNavItems[j + 1]?.href) {
-          next = flatNavItems[j + 1];
+      for (let j = i + 1; j < flatNavItems.length; j++) {
+        if (
+          !!flatNavItems[j]?.href &&
+          flatNavItems[j].href !== "/docs/rpc" &&
+          flatNavItems[j].href !== "/docs/terminology"
+        ) {
+          next = flatNavItems[j];
           break;
         }
       }
