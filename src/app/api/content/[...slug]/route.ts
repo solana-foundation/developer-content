@@ -71,7 +71,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     // get the "previous" record link to display (that is an actual link)
     if (i > 0) {
       for (let j = i - 1; j >= 0; j--) {
-        if (!!flatNavItems[j]?.href && !flatNavItems[j].isSkippedInNav) {
+        if (Boolean(flatNavItems[j]?.href) && !flatNavItems[j].isSkippedInNav) {
           prev = flatNavItems[j];
           break;
         }
@@ -80,7 +80,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     // get the "next" record link to display (that is an actual link)
     if (flatNavItems.length >= i + 1) {
       for (let j = i + 1; j < flatNavItems.length; j++) {
-        if (!!flatNavItems[j]?.href && !flatNavItems[j].isSkippedInNav) {
+        if (Boolean(flatNavItems[j]?.href) && !flatNavItems[j].isSkippedInNav) {
           next = flatNavItems[j];
           break;
         }
