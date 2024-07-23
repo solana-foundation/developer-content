@@ -31,10 +31,11 @@ altRoutes:
 ---
 
 For this "hello world" quickstart guide, we will use
-[Solana Playground](https://beta.solpg.io), a browser based IDE to develop and
-deploy our Solana program. To use it, you do **NOT** have to install any
-software on your computer. Simply open Solana Playground in your browser of
-choice, and you are ready to write and deploy Solana programs.
+[Solana Playground](https://beta.solpg.io/https://github.com/solana-developers/hello_world_pg),
+a browser based IDE to develop and deploy our Solana program. To use it, you do
+**NOT** have to install any software on your computer. Simply open Solana
+Playground in your browser of choice, and you are ready to write and deploy
+Solana programs.
 
 ## What you will learn
 
@@ -46,9 +47,9 @@ choice, and you are ready to write and deploy Solana programs.
 
 ## Using Solana Playground
 
-[Solana Playground](https://beta.solpg.io) is browser based application that
-will let you write, build, and deploy onchain Solana programs. All from your
-browser. No installation needed.
+[Solana Playground](https://beta.solpg.io/https://github.com/solana-developers/hello_world_pg)
+is browser based application that will let you write, build, and deploy onchain
+Solana programs. All from your browser. No installation needed.
 
 It is a great developer resource for getting started with Solana development,
 especially on Windows.
@@ -56,12 +57,12 @@ especially on Windows.
 ### Import our example project
 
 In a new tab in your browser, open our example "_Hello World_"
-[project on Solana Playground](https://beta.solpg.io/6314a69688a7fca897ad7d1d)
+[project on Solana Playground](https://beta.solpg.io/https://github.com/solana-developers/hello_world_pg)
 
 Next, import the project into your local workspace by clicking the "**Import**"
 icon and naming your project `hello_world`.
 
-<!-- ![Import the get started Solana program on Solana Playground](/img/quickstarts/solana-get-started-import-on-playground.png) -->
+![Import Hello World project](/assets/guides/hello-world-pg/pg-import.png)
 
 > If you do **not** import the program into **your** Solana Playground, then you
 > will **not** be able to make changes to the code. But you **will** still be
@@ -83,6 +84,8 @@ based wallet.
 Click on the red status indicator button at the bottom left of the screen,
 (optionally) save your wallet's keypair file to your computer for backup, then
 click "**Continue**".
+
+![Connect your playground wallet](/assets/guides/hello-world-pg/pg-connect-wallet.png)
 
 After your Playground Wallet is created, you will notice the bottom of the
 window now states your wallet's address, your SOL balance, and the Solana
@@ -147,18 +150,12 @@ blockchain cluster, then gracefully exit with `Ok(())`.
 
 ### Build your program
 
-On the left sidebar, select the "**Build & Deploy**" tab. Next, click the
-"Build" button.
+On the left sidebar above the `lib.rs`file click the `Build` button.
 
 If you look at the Playground's terminal, you should see your Solana program
 begin to compile. Once complete, you will see a success message.
 
-<!-- ![Viewing a successful build of your Rust based program](/img/quickstarts/solana-get-started-successful-build.png) -->
-
-> You may receive _warning_ when your program is compiled due to unused
-> variables. Don't worry, these warning will not affect your build. They are due
-> to our very simple program not using all the variables we declared in the
-> `process_instruction` function.
+![Build and Deploy](/assets/guides/hello-world-pg/pg-build-and-deploy.png)
 
 ### Deploy your program
 
@@ -176,22 +173,21 @@ behalf to ensure your wallet has enough SOL to cover the cost of deployment.
 solana airdrop 2
 ```
 
-<!-- ![Build and deploy your Solana program to the blockchain](/img/quickstarts/solana-get-started-build-and-deploy.png) -->
+> Note: If you get a rate limit error when requesting devnet SOL you can also
+> use the public [web faucet](https://faucet.solana.com/) to airdrop SOL to your
+> wallet. You can find your address at the bottom of the playground. If you need
+> more devnet SOL there are other options in this
+> [Guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
 
-### Find your program id
-
-When executing a program using [web3.js](/docs/clients/javascript-reference.md)
-or from [another Solana program](/docs/core/cpi.md), you will need to provide
-the `program id` (aka public address of your program).
-
-Inside Solana Playground's **Build & Deploy** sidebar, you can find your
-`program id` under the **Program Credentials** dropdown.
+> Info: Instead of using the buttons in playground you can also type 'build' and
+> 'deploy' in the terminal as well. For a list of all commands you can use in
+> the terminal you can type 'help'.
 
 #### Congratulations!
 
 You have successfully setup, built, and deployed a Solana program using the Rust
 language directly in your browser. Next, we will demonstrate how to interact
-with your onchain program.
+with your onchain program to actually see our 'Hello World'.
 
 ## Interact with your onchain program
 
@@ -207,34 +203,17 @@ to aid in our client application.
 > [JSON RPC API](/docs/rpc.md) that reduced the need for rewriting common
 > boilerplate, helping to simplify your client side application code.
 
-### Initialize client
+### The JS client
 
-We will be using Solana Playground for the client generation. Create a client
-folder by running `run` command in the playground terminal:
-
-```shell
-run
-```
-
-We have created `client` folder and a default `client.ts`. This is where we will
-work for the rest of our `hello world` program.
-
-### Playground globals
-
-In playground, there are many utilities that are globally available for us to
-use without installing or setting up anything. Most important ones for our
-`hello world` program are `web3` for `@solana/web3.js` and `pg` for Solana
-Playground utilities.
-
-> You can go over all of the available globals by pressing `CTRL+SPACE` (or
-> `CMD+SPACE` on macOS) inside the editor.
+Now lets have a look at how to actually call our program. The example comes with
+a JS client which will call our hello world program. You can find the
+`client.ts` file one the left hand side of the playground.
 
 ### Call the program
 
 To execute your onchain program, you must send a
-[transaction](/docs/core/transactions.md) to it. Each transaction submitted to
-the Solana blockchain contains a listing of instructions (and the program's that
-instruction will interact with).
+[transaction](/docs/core/transactions.md) to the network. Each transaction
+submitted to the Solana blockchain contains a list of instructions.
 
 Here we create a new transaction and add a single `instruction` to it:
 
@@ -273,48 +252,73 @@ console.log("Transaction sent with hash:", txHash);
 
 ### Run the application
 
-With the client application written, you can run the code via the same `run`
-command.
+Now that you know how the client works, you can run the code via the `run`
+command. Just type it in the playground terminal and press enter.
+
+```shell
+run
+```
 
 Once your application completes, you will see output similar to this:
 
 ```shell
+$ run
 Running client...
   client.ts:
-    My address: GkxZRRNPfaUfL9XdYVfKF3rWjMcj5md6b6mpRoWpURwP
-    My balance: 5.7254472 SOL
-    Sending transaction...
-    Transaction sent with hash: 2Ra7D9JoqeNsax9HmNq6MB4qWtKPGcLwoqQ27mPYsPFh3h8wignvKB2mWZVvdzCyTnp7CEZhfg2cEpbavib9mCcq
+    ProgramID:  C7JcX81YDaDJ9Bf8ebifLgBSqfKJxETek6qyTuPGJE1f
+    Transaction sent with hash: m7f7dszzdNshMZo5u2gRKjbyURk1tQHj7Hmeh3AbH7wUdnmDXmCJhA8cXJjYwVN7foJaLQiPYhEFTn6F5mWSeCb
+    Congratulations! Look at your transaction in the Solana Explorer:
+  https://explorer.solana.com/tx/m7f7dszzdNshMZo5u2gRKjbyURk1tQHj7Hmeh3AbH7wUdnmDXmCJhA8cXJjYwVN7foJaLQiPYhEFTn6F5mWSeCb?cluster=devnet
 ```
 
-### Get transaction logs
-
-We will be using `solana-cli` directly in playground to get the information
-about any transaction:
-
-```shell
-solana confirm -v <TRANSACTION_HASH>
-```
-
-Change `<TRANSACTION_HASH>` with the hash you received from calling
-`hello world` program.
-
-You should see `Hello, world!` in the **Log Messages** section of the output. 🎉
+You can now click on the link provided to view your transaction in the Solana
+Explorer. If you scroll to the bottom you should see `Hello, world!` in the
+**Log Messages** section of the program output. 🎉
 
 #### Congratulations!!!
 
-You have now written a client application for your onchain program. You are now
-a Solana developer!
+You have now written a Solana program, deployed it to devnet and called the
+program. You are now a Solana developer!
 
 PS: Try to update your program's message then re-build, re-deploy, and
 re-execute your program.
+
+### Look at the deployed program
+
+Now that we called out program lets have a look at the account where the program
+is actually saved.
+
+When executing a program using [web3.js](/docs/clients/javascript-reference.md)
+or from [another Solana program](/docs/core/cpi.md), you will need to provide
+the `program id` (aka public address of your program).
+
+Inside Solana Playground's **Build & Deploy** sidebar, you can find your
+`program id` under the **Program Credentials** dropdown.
+
+![Find Program Id](/assets/guides/hello-world-pg/pg-find-program-id.png)
+
+You can copy this program id and look at your program in the
+[solana explorer](https://explorer.solana.com/?cluster=devnet). Just paste in
+your program id in the search bar.
+
+### Playground globals
+
+In playground, there are many utilities that are globally available for us to
+use without installing or setting up anything. Most important ones for our
+`hello world` program are `web3` for `@solana/web3.js` and `pg` for Solana
+Playground utilities.
+
+> You can go over all of the available globals by pressing `CTRL+SPACE` (or
+> `CMD+SPACE` on macOS) inside the editor.
 
 ## Next steps
 
 See the links below to learn more about writing Solana programs, and setting up
 your local development environment:
 
-- [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
-- [Overview of writing Solana programs](/docs/programs/index.md)
+- [Solana Quick Start Guide](/docs/intro/quick-start.md)
+- [Setup your local development environment](/developers/guides/getstarted/setup-local-development.md)
+- [Interacting with Tokens and NFTs](/developers/courses/tokens.md)
+- [Developing Games](/content/guides/games/getting-started-with-game-development.md)
+- [Developer Guides](/developers/guides/)
 - [Learn more about developing Solana programs with Rust](/docs/programs/lang-rust.md)
-- [Debugging onchain programs](/docs/programs/debugging.md)
