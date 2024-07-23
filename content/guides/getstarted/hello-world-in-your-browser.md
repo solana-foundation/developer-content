@@ -174,10 +174,13 @@ solana airdrop 2
 ```
 
 > Note: If you get a rate limit error when requesting devnet SOL you can also
-> use the public [web faucet](https://faucet.solana.com/) to airdrop SOL to your
-> wallet. You can find your address at the bottom of the playground. If you need
-> more devnet SOL there are other options in this
-> [Guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
+> you can just type `run` in the terminal and you will get a link to a
+> [web faucet](https://faucet.solana.com/). You can also find your wallet
+> address at the bottom of the playground window.
+
+You should see a `Deployment successful` message similar to this:
+
+![Deploy Success](/assets/guides/hello-world-pg/pg-deploy-success.png)
 
 > Info: Instead of using the buttons in playground you can also type 'build' and
 > 'deploy' in the terminal as well. For a list of all commands you can use in
@@ -319,6 +322,6 @@ your local development environment:
 - [Solana Quick Start Guide](/docs/intro/quick-start.md)
 - [Setup your local development environment](/developers/guides/getstarted/setup-local-development.md)
 - [Interacting with Tokens and NFTs](/developers/courses/tokens.md)
-- [Developing Games](/content/guides/games/getting-started-with-game-development.md)
 - [Developer Guides](/developers/guides/)
+- [Developing Games](/content/guides/games/getting-started-with-game-development.md)
 - [Learn more about developing Solana programs with Rust](/docs/programs/lang-rust.md)
