@@ -5,6 +5,7 @@ seoTitle: Learn how the Solana blockchain works
 description: "Solana is a high performance network that is utilized for a range
   of use cases, \
   including finance, NFTs, payments, and gaming."
+isHiddenInNavSidebar: true
 ---
 
 Solana is a blockchain built for mass adoption. It's a high performance network
