@@ -1,6 +1,6 @@
 ---
 title: How to Create a Token
-sidebarSortOrder: 2
+sidebarSortOrder: 1
 description: "Learn how to create tokens on Solana."
 ---
 

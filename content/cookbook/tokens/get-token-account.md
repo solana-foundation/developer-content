@@ -1,6 +1,6 @@
 ---
 title: How to Get a Token Account
-sidebarSortOrder: 5
+sidebarSortOrder: 4
 description:
   "Learn how to retrieve Solana token account details, including owner, mint,
   and balance"

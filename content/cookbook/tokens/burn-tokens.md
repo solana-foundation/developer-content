@@ -1,6 +1,6 @@
 ---
 title: How to Burn Tokens
-sidebarSortOrder: 9
+sidebarSortOrder: 8
 description: "Learn how to burn Tokens on Solana"
 ---
 

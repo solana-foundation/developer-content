@@ -1,6 +1,6 @@
 ---
 title: How to Set Authority on Token Accounts or Mints
-sidebarSortOrder: 11
+sidebarSortOrder: 10
 description:
   "Learn how to set authorities on Solana token accounts and mints. Crucial for
   controlling who can modify or manage tokens."

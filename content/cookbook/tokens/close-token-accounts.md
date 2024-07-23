@@ -1,6 +1,6 @@
 ---
 title: How to Close Token Accounts
-sidebarSortOrder: 10
+sidebarSortOrder: 9
 description:
   "Learn how to close token accounts on Solana, including cases such as Wrapped
   SOL and empty accounts."

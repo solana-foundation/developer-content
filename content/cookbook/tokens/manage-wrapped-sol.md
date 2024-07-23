@@ -1,6 +1,6 @@
 ---
 title: How to Use Wrapped SOL
-sidebarSortOrder: 14
+sidebarSortOrder: 13
 description:
   "Learn how to use wrapped SOL on Solana, including creating token accounts and
   adding balance through SOL transfers or token transfers."

@@ -1,6 +1,6 @@
 ---
 title: How to Get a Token Mint
-sidebarSortOrder: 3
+sidebarSortOrder: 2
 description:
   "Learn how to retrieve Solana token mint information, including supply,
   authority, and decimals."

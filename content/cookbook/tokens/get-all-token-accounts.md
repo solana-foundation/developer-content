@@ -1,6 +1,6 @@
 ---
 title: How to Get All Token Accounts by Authority
-sidebarSortOrder: 15
+sidebarSortOrder: 14
 description:
   "Learn how to retrieve Solana token accounts by owner, including all accounts
   or filtered by mint."

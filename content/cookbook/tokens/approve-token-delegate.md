@@ -1,6 +1,6 @@
 ---
 title: How to Delegate Token Accounts
-sidebarSortOrder: 12
+sidebarSortOrder: 11
 description: "Learn how to delegate authority of tokens to someone else"
 ---
 

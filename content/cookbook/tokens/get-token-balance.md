@@ -1,6 +1,6 @@
 ---
 title: How to get a token account's balance
-sidebarSortOrder: 6
+sidebarSortOrder: 5
 description:
   "Learn how to quickly retrieve a Solana token account's balance with a single
   call. Includes code examples in both TypeScript and Rust."

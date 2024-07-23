@@ -1,6 +1,6 @@
 ---
 title: How to Transfer Tokens
-sidebarSortOrder: 8
+sidebarSortOrder: 7
 description: "Transfer tokens between Solana accounts"
 ---
 
