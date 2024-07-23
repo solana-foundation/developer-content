@@ -12,33 +12,35 @@ altRoutes:
 isHiddenInNavSidebar: true
 ---
 
-Solana is a blockchain built for mass adoption. It's a high performance network
+Solana is a blockchain built for mass adoption. It's a high-performance network
 that is utilized for a range of use cases, including finance, NFTs, payments,
-and gaming. Solana operates as a single global state machine, and is open,
+and gaming. Solana operates as a single global state machine and is open,
 interoperable and decentralized.
 
 ## Getting started
 
-Dive right into Solana to start building or setup your tooling.
+Dive right into Solana to start building or setting up your local environment.
 
-- [Setup local environment](/content/guides/getstarted/setup-local-development.md) -
+- [Quick Start](/docs/intro/quick-start) - Build and deploy your first on-chain
+  Solana program, directly in your browser using Solana Playground
+- [Setup Local Environment](/content/guides/getstarted/setup-local-development) -
   Install the Solana CLI to get your local development environment setup
-- [Hello World in your browser](/content/guides/getstarted/hello-world-in-your-browser.md) -
-  Build and deploy your first on-chain Solana program, directly in your browser
-  using Solana Playground
 
 ## Start learning
 
 Build a strong understanding of the core concepts that make Solana different
 from other blockchains.
 
-- [Transactions](/docs/core/transactions.md) - Collection of instructions for
-  the blockchain to execute
-- [Accounts](/docs/core/accounts.md) - Data and state storage mechanism for
-  Solana
-- [Programs](/docs/core/programs.md) - The executable code used to perform
-  actions on the blockchain
-- [Cross-Program Invocation](/docs/core/cpi.md) - Core of the "composability" of
+- [Accounts](/docs/core/accounts) - Data and state storage mechanism for Solana
+- [Fees on Solana](/docs/core/fees) - Various costs associated with using the
+  network.
+- [Transactions](/docs/core/transactions) - Collection of instructions for the
+  blockchain to execute
+- [Programs](/docs/core/programs) - The executable code used to perform actions
+  on the blockchain
+- [Programs Derived Address](/docs/core/pda) - Deterministically generated
+  addresses that allow Solana programs to programmatically "sign" transactions.
+- [Cross Program Invocation](/docs/core/cpi) - Core of the "composability" of
   Solana, this is how programs can "call" each other.
 
 ## Understanding the architecture
@@ -48,29 +50,24 @@ works.
 
 - [Validators](https://docs.solanalabs.com/validator/anatomy) - the individual
   nodes that are the backbone of the network
-- [Clusters](/docs/core/clusters.md) - a collection of validators that work
+- [Clusters](/docs/core/clusters) - a collection of validators that work
   together for consensus
 
 ## Running a validator
 
 Explore what it takes to operate a Solana validator and help secure the network.
 
-- [System requirements](https://docs.solanalabs.com/operations/requirements) -
+- [System Requirements](https://docs.solanalabs.com/operations/requirements) -
   Recommended hardware requirements and expected SOL needed to operate a
   validator
-- [Quick start guide](https://docs.solanalabs.com/operations/setup-a-validator) -
+- [Quick Start](https://docs.solanalabs.com/operations/setup-a-validator) -
   Setup a validator and get connected to a cluster for the first time
-
-Solana is a blockchain built for mass adoption. It's a high performance network
-that is utilized for a range of use cases, including finance, payments, and
-gaming. Solana operates as a single global state machine, and is open,
-interoperable, and decentralized.
 
 ## Why Solana?
 
-Designed to scale, Solana is purpose built for blockchain applications to reach
+Designed to scale, Solana is purpose-built for blockchain applications to reach
 millions of users. Instead of worrying about optimizing for the blockchain
-layer, developers can focus on building their application to reach product
+layer, developers can focus on building their applications to reach product
 market fit. Not only can it scale now for blockchain application needs, but the
 network continues to be optimized with user experience in mind.
 
@@ -78,7 +75,7 @@ Building the best user experience in an application is a top priority for
 developers. With blockchains, the user experience is often limited by the
 underlying technology, causing slow response times and high fees. Solana's low
 fees and 400ms confirmation times enable developers to build applications that
-are user friendly and accessible to everyone.
+are user-friendly and accessible to everyone.
 
 ## Solana Features
 
@@ -91,14 +88,13 @@ are user friendly and accessible to everyone.
 
 ## How to Use These Docs
 
-On the left you will find the docs sidebar. This lists the documentation in
+On the left, you will find the docs sidebar. This lists the documentation in
 order from basic to more advanced information. If you are new to Solana, we
 recommend starting from the top and working your way down. However, you're
 welcome to read them in any order that you like.
 
-Once you're ready to start building, checkout the
-[Getting Started section](https://solana.com/docs/intro/dev) and a guide to
-[build your first Solana application](https://solana.com/developers/guides/getstarted/local-rust-hello-world).
+Once you're ready to start building, check out the
+[Quick Start](/docs/intro/quick-start) guide.
 
 ## Need Help?
 
