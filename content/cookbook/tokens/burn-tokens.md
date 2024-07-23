@@ -1,11 +1,10 @@
 ---
 title: How to Burn Tokens
 sidebarSortOrder: 9
-description:
-  "Learn how to burn Tokens on Solana"
+description: "Learn how to burn Tokens on Solana"
 ---
 
-You can burn tokens if you are the token account authority. 
+You can burn tokens if you are the token account authority.
 
 ```typescript filename="burn-token.ts"
 import {

@@ -1,8 +1,7 @@
 ---
 title: How to Create a Token
 sidebarSortOrder: 2
-description:
-  "Learn how to create tokens on Solana."
+description: "Learn how to create tokens on Solana."
 ---
 
 Creating tokens is done by creating what is called a "mint account". This mint

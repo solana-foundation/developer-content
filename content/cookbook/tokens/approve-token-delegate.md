@@ -1,8 +1,7 @@
 ---
-title: How to Delegate Token Accounts 
+title: How to Delegate Token Accounts
 sidebarSortOrder: 12
-description:
-  "Learn how to delegate authority of tokens to someone else"
+description: "Learn how to delegate authority of tokens to someone else"
 ---
 
 You can set a delegate with an allowed amount. After you setting, the delegate

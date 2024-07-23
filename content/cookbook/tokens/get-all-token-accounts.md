@@ -1,5 +1,5 @@
 ---
-title: How to Get All Token Accounts by Authority  
+title: How to Get All Token Accounts by Authority
 sidebarSortOrder: 15
 description:
   "Learn how to retrieve Solana token accounts by owner, including all accounts

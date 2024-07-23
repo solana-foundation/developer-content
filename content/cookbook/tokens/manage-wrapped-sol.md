@@ -2,8 +2,8 @@
 title: How to Use Wrapped SOL
 sidebarSortOrder: 14
 description:
-  "Learn how to use wrapped SOL on Solana, including creating token accounts  
-  and adding balance through SOL transfers or token transfers."
+  "Learn how to use wrapped SOL on Solana, including creating token accounts and
+  adding balance through SOL transfers or token transfers."
 ---
 
 Wrapped SOL just like any other token mint. The difference is using `syncNative`
