@@ -1,10 +1,9 @@
 ---
-title: How to get a token mint
+title: How to Get a Token Mint
 sidebarSortOrder: 3
 description:
   "Learn how to retrieve Solana token mint information, including supply,
-  authority, and decimals. Essential for token management and analysis in your
-  dApps."
+  authority, and decimals."
 ---
 
 In order to get the current supply, authority, or decimals a token has, you will

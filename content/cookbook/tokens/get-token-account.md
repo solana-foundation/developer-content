@@ -1,9 +1,9 @@
 ---
-title: How to get a token account
+title: How to Get a Token Account
 sidebarSortOrder: 5
 description:
   "Learn how to retrieve Solana token account details, including owner, mint,
-  and balance. Essential for checking user token holdings in your applications."
+  and balance"
 ---
 
 Every token account has information on the token such as the owner, mint,

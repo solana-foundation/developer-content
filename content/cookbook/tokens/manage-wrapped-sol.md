@@ -1,8 +1,8 @@
 ---
-title: How to manage wrapped SOL
+title: How to Use Wrapped SOL
 sidebarSortOrder: 14
 description:
-  "Learn how to manage wrapped SOL on Solana, including creating token accounts
+  "Learn how to use wrapped SOL on Solana, including creating token accounts  
   and adding balance through SOL transfers or token transfers."
 ---
 

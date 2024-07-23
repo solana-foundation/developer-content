@@ -1,16 +1,15 @@
 ---
-title: How to approve a token delegate
+title: How to Delegate Token Accounts 
 sidebarSortOrder: 12
 description:
-  "Set a another owner of your token. Learn how to set and approve token
-  delegate"
+  "Learn how to delegate authority of tokens to someone else"
 ---
 
 You can set a delegate with an allowed amount. After you setting, the delegate
 is like an another owner of your token account.
 
 <Callout type="info">
-  A token account can only delegate to one account at the same time
+  A token account can only delegate to one account at a time.
 </Callout>
 
 ```typescript filename="token-approve.ts"

@@ -1,5 +1,5 @@
 ---
-title: How to mint tokens
+title: How to Mint Tokens
 sidebarSortOrder: 7
 description:
   "Learn how to mint tokens on Solana, increasing supply and transferring new

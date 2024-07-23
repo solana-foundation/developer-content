@@ -1,12 +1,11 @@
 ---
-title: How to burn tokens
+title: How to Burn Tokens
 sidebarSortOrder: 9
 description:
-  "Explore token burning on Solana: Learn how to reduce token supply as a token
-  owner."
+  "Learn how to burn Tokens on Solana"
 ---
 
-You can burn token if you are the token owner.
+You can burn tokens if you are the token account authority. 
 
 ```typescript filename="burn-token.ts"
 import {

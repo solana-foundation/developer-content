@@ -1,5 +1,5 @@
 ---
-title: How to create a token account
+title: How to Create a Token Account
 sidebarSortOrder: 4
 description:
   "Learn to create Solana token accounts, which hold tokens for users."

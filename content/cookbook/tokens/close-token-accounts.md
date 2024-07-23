@@ -1,9 +1,8 @@
 ---
-title: How to close token accounts
+title: How to Close Token Accounts
 sidebarSortOrder: 10
 description:
-  "Learn how to close Solana token accounts, including Wrapped SOL and
-  zero-balance accounts. Includes code examples for different scenarios."
+  "Learn how to close token accounts on Solana, including cases such as Wrapped SOL and empty accounts."
 ---
 
 You can close a token account if you don't want to use it anymore. There are two
