@@ -1,7 +1,7 @@
 ---
-sidebarSortOrder: 2
 sidebarLabel: Quick Start
 title: Solana Quick Start Guide
+sidebarSortOrder: 1
 ---
 
 Welcome to the Solana Quick Start Guide! This hands-on guide will introduce you
