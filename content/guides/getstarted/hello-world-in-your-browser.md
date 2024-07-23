@@ -6,7 +6,7 @@ featuredPriority: 0
 title: "Intro to Solana development (using only your browser)"
 seoTitle: "Introduction to Solana development"
 description:
-  "Solana developer quickstart guide to learn how to setup, build, and deploy
+  "Solana developer quickstart guide to learn how to set up, build, and deploy
   your first Solana program using only your browser with Solana Playground."
 tags:
   - quickstart
@@ -32,7 +32,7 @@ altRoutes:
 
 For this "hello world" quickstart guide, we will use
 [Solana Playground](https://beta.solpg.io/https://github.com/solana-developers/hello_world_pg),
-a browser based IDE to develop and deploy our Solana program. To use it, you do
+a browser-based IDE to develop and deploy our Solana program. To use it, you do
 **NOT** have to install any software on your computer. Simply open Solana
 Playground in your browser of choice, and you are ready to write and deploy
 Solana programs.
@@ -48,7 +48,7 @@ Solana programs.
 ## Using Solana Playground
 
 [Solana Playground](https://beta.solpg.io/https://github.com/solana-developers/hello_world_pg)
-is browser based application that will let you write, build, and deploy onchain
+is browser-based application that will let you write, build, and deploy onchain
 Solana programs. All from your browser. No installation needed.
 
 It is a great developer resource for getting started with Solana development,
@@ -73,8 +73,8 @@ icon and naming your project `hello_world`.
 Normally with
 [local development](/content/guides/getstarted/setup-local-development.md), you
 will need to create a file system wallet for use with the Solana CLI. But with
-the Solana Playground, you only need to click a few buttons to create a browser
-based wallet.
+the Solana Playground, you only need to click a few buttons to create a
+browser-based wallet.
 
 > Your _Playground Wallet_ will be saved in your browser's local storage.
 > Clearing your browser cache will remove your saved wallet. When creating a new
@@ -205,9 +205,9 @@ to aid in our client application.
 
 ### The JS client
 
-Now lets have a look at how to actually call our program. The example comes with
-a JS client which will call our hello world program. You can find the
-`client.ts` file one the left hand side of the playground.
+Now let's take a look at how to actually call our program. The example comes
+with a JS client that will call our hello world program. You can find the
+`client.ts` file on the left-hand side of the playground.
 
 ### Call the program
 
@@ -285,8 +285,8 @@ re-execute your program.
 
 ### Look at the deployed program
 
-Now that we called out program lets have a look at the account where the program
-is actually saved.
+Now that we called our program let's have a look at the account where the
+program is actually saved.
 
 When executing a program using [web3.js](/docs/clients/javascript-reference.md)
 or from [another Solana program](/docs/core/cpi.md), you will need to provide
@@ -308,8 +308,8 @@ use without installing or setting up anything. Most important ones for our
 `hello world` program are `web3` for `@solana/web3.js` and `pg` for Solana
 Playground utilities.
 
-> You can go over all of the available globals by pressing `CTRL+SPACE` (or
-> `CMD+SPACE` on macOS) inside the editor.
+> You can go over all of the available globals by pressing `Ctrl+Space` (or
+> `Cmd+Space` on macOS) inside the editor.
 
 ## Next steps
 
