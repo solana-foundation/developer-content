@@ -5,7 +5,7 @@ objectives:
   - Explain the role of the Metaplex Token Metadata program
   - Create and update NFTs using the Metaplex JS SDK
 description:
-  "How to create NFTs in TypeScript with Metaplex Metdadat program and Irys
+  "How to create NFTs in TypeScript with Metaplex Metadata program and Irys
   permanent storage service."
 ---
 
@@ -15,7 +15,7 @@ description:
   account, 0 decimals, and a maximum supply of 1
 - **Metadata** attaches additional properties to token mints (both NFTs and
   regular tokens). For NFTs, metadata includes the token name and a link to an
-  offchain JSON file. This JSON file includes links to artwork and other media
+  offchain JSON file. This JSON file contains links to artwork and other media
   files, any special traits the NFT has, and more.
 - The **Metaplex Token Metadata** program is an onchain program that attaches
   metadata to a token mint. We can interact with the Token Metadata program
@@ -49,7 +49,7 @@ program**.
 
 #### The Metaplex Token Metadata program
 
-The most popular way Solana NFTs have been created is using the
+The most popular way Solana NFTs have been created is by using the
 [Metaplex Token Metadata](https://developers.metaplex.com/token-metadata)
 program.
 
@@ -162,11 +162,10 @@ const { uri } = await metaplex.nfts().uploadMetadata({
 
 After uploading the NFT's metadata, you can finally create the NFT on the
 network. The Metaplex SDK's `create()` method allows you to create a new NFT
-with minimal configuration. This method will handle creating the mint account,
-token account, metadata account, and master edition account for you. The data
-provided to this method will represent the onchain portion of the NFT metadata.
-You can explore the SDK to see all the other input optionally supplied to this
-method.
+with minimal configuration. This method will create the mint account, token
+account, metadata account, and master edition account for you. The data provided
+to this method will represent the onchain portion of the NFT metadata. You can
+explore the SDK to see all the other input optionally supplied to this method.
 
 ```typescript
 const { nft } = await metaplex.nfts().create(
@@ -186,13 +185,13 @@ updates to be made to the NFT's metadata. However, you can choose to set
 
 #### Update the NFT
 
-If you've left `isMutable` as true, you may end up having a reason to update
-your NFT's metadata. The SDK's `update` method allows you to update both the
-onchain and offchain portions of the NFT's metadata. To update the offchain
-metadata, you'll need to repeat the steps of uploading a new image and metadata
-URI as outlined in the previous steps, then provide the new metadata URI to this
-method. This will change the URI that the onchain metadata points to,
-effectively updating the offchain metadata as well.
+If you've left `isMutable` as true, you may update your NFT's metadata. The
+SDK's `update` method allows you to update both the onchain and offchain
+portions of the NFT's metadata. To update the offchain metadata, you'll need to
+repeat the steps of uploading a new image and metadata URI (as outlined in the
+previous steps), then provide the new metadata URI to this method. This will
+change the URI that the onchain metadata points to, effectively updating the
+offchain metadata as well.
 
 ```typescript
 const nft = await metaplex.nfts().findByMint({ mintAddress });
@@ -705,15 +704,15 @@ NFT updated with new metadata URI: https://explorer.solana.com/tx/4eiuMFLeku7ArV
 ```
 
 Inspect the updated NFT on Solana Explorer! Just like previously, if you have
-any issues you should fix them yourself, but if needed the
+any issues, you should fix them yourself, but if needed the
 [solution code](https://github.com/solana-developers/professional-education/blob/main/labs/update-metaplex-nft.ts)
 is available.
 
 Congratulations! You've successfully learned how to use the Metaplex SDK to
 create, update, and verify NFTs as part of a collection. That's everything you
 need to build out your own collection for just about any use case. You could
-build a new event ticketing platform, revamp a retail businesses membership
-Ppogram, or even digitize your school's student ID system. The possibilities are
+build a new event ticketing platform, revamp a retail business membership
+program, or even digitize your school's student ID system. The possibilities are
 endless!
 
 ### Challenge
