@@ -8,7 +8,7 @@ description:
   blockchain applications."
 altRoutes:
   - /docs/intro/history
-  - /docs/intro 
+  - /docs/intro
   - /docs/intro/overview
 isHiddenInNavSidebar: true
 ---
