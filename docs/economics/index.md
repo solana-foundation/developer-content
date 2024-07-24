@@ -3,6 +3,7 @@ sidebarLabel: Economics
 title: Solana Economics Overview
 altRoutes:
   - /docs/intro/economics
+sidebarSortOrder: 5
 ---
 
 **Subject to change.**

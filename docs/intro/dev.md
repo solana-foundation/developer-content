@@ -2,7 +2,7 @@
 sidebarLabel: Intro to Development
 title: "Getting Started with Solana Development"
 description: "Learn how to get started building on Solana"
-sidebarSortOrder: 9999
+sidebarSortOrder: 3
 keywords:
   - solana basics
   - tutorial
