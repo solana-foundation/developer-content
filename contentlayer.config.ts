@@ -134,6 +134,20 @@ const basicContentFields: FieldDefs = {
     description: "Force hide the table of contents displayed on page",
     required: false,
   },
+  isSkippedInNav: {
+    type: "boolean",
+    description:
+      "Whether or not to skip this page when generating previous/next page routes on docs",
+    required: false,
+    default: false,
+  },
+  isHiddenInNavSidebar: {
+    type: "boolean",
+    description:
+      "Whether or not to hide this section in the DocNavSidebar (left-hand side) on docs",
+    required: false,
+    default: false,
+  },
 
   /**
    * Custom SEO specific details

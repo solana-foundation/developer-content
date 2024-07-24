@@ -9,6 +9,7 @@ keywords:
   - definitions
   - define
   - programming models
+isSkippedInNav: true
 ---
 
 The following terms are used throughout the Solana documentation and development

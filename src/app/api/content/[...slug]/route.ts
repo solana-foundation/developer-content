@@ -69,20 +69,19 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     current = flatNavItems[i];
 
     // get the "previous" record link to display (that is an actual link)
-    if (flatNavItems.length >= i - 1) {
-      for (let j = i; j > 0; j--) {
-        if (!!flatNavItems[j - 1]?.href) {
-          prev = flatNavItems[j - 1];
+    if (i > 0) {
+      for (let j = i - 1; j >= 0; j--) {
+        if (Boolean(flatNavItems[j]?.href) && !flatNavItems[j].isSkippedInNav) {
+          prev = flatNavItems[j];
           break;
         }
       }
     }
-
     // get the "next" record link to display (that is an actual link)
     if (flatNavItems.length >= i + 1) {
-      for (let j = i; j < flatNavItems.length; j++) {
-        if (!!flatNavItems[j + 1]?.href) {
-          next = flatNavItems[j + 1];
+      for (let j = i + 1; j < flatNavItems.length; j++) {
+        if (Boolean(flatNavItems[j]?.href) && !flatNavItems[j].isSkippedInNav) {
+          next = flatNavItems[j];
           break;
         }
       }
