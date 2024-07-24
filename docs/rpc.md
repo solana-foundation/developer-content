@@ -1,6 +1,7 @@
 ---
 title: JSON RPC Methods
 sidebarSortOrder: 1
+isSkippedInNav: true
 ---
 
 This file should not be edited since it is not intended to be displayed. This

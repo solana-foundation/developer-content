@@ -240,6 +240,8 @@ export function computeNavItem(
     sidebarSortOrder: doc?.sidebarSortOrder,
     metaOnly: doc?.metaOnly,
     altRoutes: doc.altRoutes,
+    isSkippedInNav: doc?.isSkippedInNav,
+    isHiddenInNavSidebar: doc?.isHiddenInNavSidebar,
   };
 
   // compute a label based on the doc's file name

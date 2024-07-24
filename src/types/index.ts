@@ -56,6 +56,8 @@ type NavItemBase = {
    */
   items?: Array<any>;
   altRoutes?: string[] | undefined;
+  isSkippedInNav?: boolean;
+  isHiddenInNavSidebar?: boolean;
 };
 
 export type NavItem = NavItemBase & {
