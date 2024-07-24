@@ -129,7 +129,7 @@ const address = findProgramAddressSync(["seed", "another seed"], PROGRAM_ID);
 You currently have two options for onchain program development:
 
 - We recommend new onchain programmers
-  [start with Anchor](/content/courses/onchain-development/intro-to-anchorintro-to-anchor).
+  [start with Anchor](/content/courses/onchain-development/intro-to-anchor).
   Anchor's defaults make it easy to create safe programs.
 - There's also a separate
   [native onchain program development](/content/courses/native-onchain-development)
