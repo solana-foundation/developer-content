@@ -482,20 +482,19 @@ pub mod anchor_counter {
 }
 ```
 
-#### 2. Add the `initialize` instruction
+#### 2. Implement `Counter`
 
-First, let’s implement the `initialize` instruction within `#[program]`. This
-instruction requires a `Context` of type `Initialize` and takes no additional
-instruction data. In the instruction logic, we are simply setting the `counter`
-account’s `count` field to `0`.
+First, let's use the `#[account]` attribute to define a new `Counter` account
+type. The `Counter` struct defines one `count` field of type `u64`. This means
+that we can expect any new accounts initialized as a `Counter` type to have a
+matching data structure. The `#[account]` attribute also automatically sets the
+discriminator for a new account and sets the owner of the account as the
+`programId` from the `declare_id!` macro.
 
 ```rust
-pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-    let counter = &mut ctx.accounts.counter;
-    counter.count = 0;
-    msg!("Counter Account Created");
-    msg!("Current Count: { }", counter.count);
-    Ok(())
+#[account]
+pub struct Counter {
+    pub count: u64,
 }
 ```
 
@@ -521,45 +520,29 @@ pub struct Initialize<'info> {
 }
 ```
 
-#### 4. Implement `Counter`
+#### 4. Add the `initialize` instruction
 
-Next, use the `#[account]` attribute to define a new `Counter` account type. The
-`Counter` struct defines one `count` field of type `u64`. This means that we can
-expect any new accounts initialized as a `Counter` type to have a matching data
-structure. The `#[account]` attribute also automatically sets the discriminator
-for a new account and sets the owner of the account as the `programId` from the
-`declare_id!` macro.
-
-```rust
-#[account]
-pub struct Counter {
-    pub count: u64,
-}
-```
-
-#### 5. Add `increment` instruction
-
-Within `#[program]`, let’s implement an `increment` instruction to increment the
-`count` once a `counter` account is initialized by the first instruction. This
-instruction requires a `Context` of type `Update` (implemented in the next step)
-and takes no additional instruction data. In the instruction logic, we are
-simply incrementing an existing `counter` account’s `count` field by `1`.
+Now that we have our `Counter` account and `Initialize` type , let’s implement
+the `initialize` instruction within `#[program]`. This instruction requires a
+`Context` of type `Initialize` and takes no additional instruction data. In the
+instruction logic, we are simply setting the `counter` account’s `count` field
+to `0`.
 
 ```rust
-pub fn increment(ctx: Context<Update>) -> Result<()> {
+pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
     let counter = &mut ctx.accounts.counter;
-    msg!("Previous counter: {}", counter.count);
-    counter.count = counter.count.checked_add(1).unwrap();
-    msg!("Counter incremented. Current count: {}", counter.count);
+    counter.count = 0;
+    msg!("Counter Account Created");
+    msg!("Current Count: { }", counter.count);
     Ok(())
 }
 ```
 
-#### 6. Implement `Context` type `Update`
+#### 5. Implement `Context` type `Update`
 
-Lastly, using the `#[derive(Accounts)]` macro again, let’s create the `Update`
-type that lists the accounts that the `increment` instruction requires. It'll
-need the following accounts:
+Now, using the `#[derive(Accounts)]` macro again, let’s create the `Update` type
+that lists the accounts that the `increment` instruction requires. It'll need
+the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
@@ -573,6 +556,25 @@ pub struct Update<'info> {
     #[account(mut)]
     pub counter: Account<'info, Counter>,
     pub user: Signer<'info>,
+}
+```
+
+#### 6. Add `increment` instruction
+
+Lastly, within `#[program]`, let’s implement an `increment` instruction to
+increment the `count` once a `counter` account is initialized by the first
+instruction. This instruction requires a `Context` of type `Update` (implemented
+in the next step) and takes no additional instruction data. In the instruction
+logic, we are simply incrementing an existing `counter` account’s `count` field
+by `1`.
+
+```rust
+pub fn increment(ctx: Context<Update>) -> Result<()> {
+    let counter = &mut ctx.accounts.counter;
+    msg!("Previous counter: {}", counter.count);
+    counter.count = counter.count.checked_add(1).unwrap();
+    msg!("Counter incremented. Current count: {}", counter.count);
+    Ok(())
 }
 ```
 
