@@ -38,7 +38,9 @@ you to quickly develop, deploy, and test Solana programs!
 
 Open a new tab in your web browser and navigate to https://beta.solpg.io/.
 
-### 1. Create Playground Wallet
+<Steps>
+
+### Create Playground Wallet
 
 If you're new to Solana Playground, the first step is to create your Playground
 Wallet. This wallet will allow you to interact with the Solana network right
@@ -67,7 +69,7 @@ You should now see your wallet's address, SOL balance, and connected cluster
   your browser cache will remove your saved wallet.
 </Callout>
 
-### 2. Get Devnet SOL
+### Get Devnet SOL
 
 Before we start building, we first need some devnet SOL.
 
@@ -97,6 +99,8 @@ the [Web Faucet](https://faucet.solana.com/).
 
 ![Faucet Airdrop](/assets/docs/intro/quickstart/faucet-airdrop.gif)
 
+</Steps>
+
 ## Reading from network
 
 Now, let's explore how to read data from the Solana network. We'll fetch a few
@@ -123,7 +127,9 @@ This separation of program code and program state is a key feature of Solana's
 Account Model. For more details, refer to the
 [Solana Account Model](/docs/core/accounts) page.
 
-### 1. Fetch Playground Wallet
+<Steps>
+
+### Fetch Playground Wallet
 
 Let's start by looking at a familiar account - your own Playground Wallet! We'll
 fetch this account and examine its structure to understand what a basic Solana
@@ -232,7 +238,7 @@ Let's break down the fields in the output:
 
 </details>
 
-### 2. Fetch Token Program
+### Fetch Token Program
 
 Next, we'll examine the Token Extensions program, an executable program for
 interacting with tokens on Solana.
@@ -323,7 +329,7 @@ Extensions Program
 
 </details>
 
-### 3. Fetch Mint Account
+### Fetch Mint Account
 
 In this step, we'll examine a Mint account, which represents a unique token on
 the Solana network.
@@ -394,7 +400,7 @@ Key differences in the `AccountInfo`:
 
 </details>
 
-#### 3. Deserialize Mint Account Data
+#### Step 3: Deserialize Mint Account Data
 
 To read the `data` field from any account, you need to deserialize the data
 buffer into the expected data type. This is often done using helper functions
@@ -468,6 +474,8 @@ data, including enabled Token Extensions, on the Solana Explorer.
 
 </details>
 
+</Steps>
+
 ## Writing to network
 
 Now that we've explored reading from the Solana network, let's learn how to
@@ -480,7 +488,9 @@ to demonstrate how to build and send transactions. For more details, refer to
 the [Transactions and Instructions](/docs/core/transactions) and
 [Fees on Solana](/docs/core/fees) pages.
 
-### 1. Transfer SOL
+<Steps>
+
+### Transfer SOL
 
 We'll start with a simple SOL transfer from your wallet to another account. This
 requires invoking the transfer instruction on the System Program.
@@ -525,7 +535,7 @@ console.log(
 
 This script does the following:
 
-- Sets your Playground wallet as the sender
+- Set your Playground wallet as the sender
 
   ```ts
   const sender = pg.wallet.keypair;
@@ -601,7 +611,7 @@ You've just sent your first transaction on Solana! Notice how we created an
 instruction, added it to a transaction, and then sent that transaction to the
 network. This is the basic process for building any transaction.
 
-### 2. Create a Token
+### Create a Token
 
 Now, let's create a new token by creating and initializing a Mint account. This
 requires two instructions:
@@ -806,6 +816,8 @@ created a new account and then initialized its data as a mint. This is how you
 build more complex transactions that involve instructions from multiple
 programs.
 
+</Steps>
+
 ## Deploying Your First Solana Program
 
 In this section, we'll build, deploy, and test a simple Solana program using the
@@ -816,7 +828,9 @@ The purpose of this section is to familiarize you with the Solana Playground.
 We'll walk through a more detailed example in the PDA and CPI sections. For more
 details, refer to the [Programs on Solana](/docs/core/programs) page.
 
-### 1. Create Anchor Project
+<Steps>
+
+### Create Anchor Project
 
 First, open https://beta.solpg.io in a new browser tab.
 
@@ -933,7 +947,7 @@ For now, we'll only cover the high-level overview of the program code:
 
 </details>
 
-### 2. Build and Deploy Program
+### Build and Deploy Program
 
 To build the program, simply run `build` in the terminal.
 
@@ -986,7 +1000,7 @@ left-side panel.
 
 Once the program is deployed, you can now invoke its instructions.
 
-### 3. Test Program
+### Test Program
 
 Included with the starter code is a test file found in `tests/anchor.test.ts`.
 This file demonstrates how to invoke the `initialize` instruction on the starter
@@ -1125,7 +1139,7 @@ the transaction signature (hash).
   using to match Solana Playground. Solana Playground's default cluster is devnet.
 </Callout>
 
-### 4. Close Program
+### Close Program
 
 Lastly, the SOL allocated to the on-chain program can be fully recovered by
 closing the program.
@@ -1169,6 +1183,8 @@ upgrade authority for all your programs.
 Congratulations! You've just built and deployed your first Solana program using
 the Anchor framework!
 
+</Steps>
+
 ## Program Derived Address
 
 In this section, we'll walk through how to build a basic CRUD (Create, Read,
@@ -1182,9 +1198,11 @@ PDAs within a program. For more details, refer to the
 
 For reference, here is the
 [final code](https://beta.solpg.io/668304cfcffcf4b13384d20a) after completing
-both PDA and CPI sections.
+both the PDA and CPI sections.
 
-### 1. Starter Code
+<Steps>
+
+### Starter Code
 
 Begin by opening this
 [Solana Playground link](https://beta.solpg.io/66734b7bcffcf4b13384d1ad) with
@@ -1249,7 +1267,7 @@ Build successful. Completed in 3.50s.
 
 </details>
 
-### 2. Define Message Account Type
+### Define Message Account Type
 
 First, let's define the structure for the message account that our program will
 create. This is the data that we'll store in the account created by the program.
@@ -1319,7 +1337,7 @@ build
 We've defined what our message account will look like. Next, we'll implement the
 program instructions.
 
-### 3. Implement Create Instruction
+### Implement Create Instruction
 
 Now, let's implement the `create` instruction to create and initialize the
 `MessageAccount`.
@@ -1401,7 +1419,7 @@ The `Create` struct defines the accounts required for the `create` instruction.
 
 2. `message_account: Account<'info, MessageAccount>`
 
-   - The new account being created to store the user's message
+   - The new account created to store the user's message
    - `init` constraint indicates the account will be created in the instruction
    - `seeds` and `bump` constraints indicate the address of the account is a
      Program Derived Address (PDA)
@@ -1464,7 +1482,7 @@ All accounts created through an Anchor program require 8 bytes for an account
 discriminator, which is an identifier for the account type that is automatically
 generated when the account is created.
 
-A `String` type requires 4 bytes to store the length of the string, and
+A `String` type requires 4 bytes to store the length of the string, and the
 remaining length is the actual data.
 
 </details>
@@ -1556,7 +1574,7 @@ Rebuild the program.
 build
 ```
 
-### 4. Implement Update Instruction
+### Implement Update Instruction
 
 Next, implement the `update` instruction to update the `MessageAccount` with a
 new message.
@@ -1705,7 +1723,7 @@ Rebuld the program
 build
 ```
 
-### 5. Implement Delete Instruction
+### Implement Delete Instruction
 
 Next, implement the `delete` instruction to close the `MessageAccount`.
 
@@ -1821,7 +1839,7 @@ Rebuild the program.
 build
 ```
 
-### 6. Deploy Program
+### Deploy Program
 
 The basic CRUD program is now complete. Deploy the program by running `deploy`
 in the Playground terminal.
@@ -1841,7 +1859,7 @@ Deployment successful. Completed in 17s.
 
 </details>
 
-### 7. Set Up Test File
+### Set Up Test File
 
 Included with the starter code is also a test file in `anchor.test.ts`.
 
@@ -1943,7 +1961,7 @@ Running tests...
 
 </details>
 
-### 8. Invoke Create Instruction
+### Invoke Create Instruction
 
 Update the first test with the following:
 
@@ -2038,7 +2056,7 @@ console.log(
 
 </details>
 
-### 9. Invoke Update Instruction
+### Invoke Update Instruction
 
 Update the second test with the following:
 
@@ -2133,7 +2151,7 @@ console.log(
 
 </details>
 
-### 10. Invoke Delete Instruction
+### Invoke Delete Instruction
 
 Update the third test with the following:
 
@@ -2205,7 +2223,7 @@ const transactionSignature = await program.methods
 
 Once the transaction is sent and the account is closed, we attempt to fetch the
 account using its address (`messagePda`) using `fetchNullable` since we expect
-the return value to be to be null because the account is closed.
+the return value to be null because the account is closed.
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetchNullable(
@@ -2227,7 +2245,7 @@ console.log(
 
 </details>
 
-### 11. Run Test
+### Run Test
 
 Once the tests are set up, run the test file by running `test` in the Playground
 terminal.
@@ -2266,6 +2284,8 @@ Running tests...
 
 </details>
 
+</Steps>
+
 ## Cross Program Invocation
 
 In this section, we'll update our existing CRUD program to include Cross Program
@@ -2277,6 +2297,13 @@ The purpose of this section is to walk through the process of implementing CPIs
 in a Solana program using the Anchor framework, building upon the PDA concepts
 we explored in the previous section. For more details, refer to the
 [Cross Program Invocation](/docs/core/cpi) page.
+
+<Steps>
+
+### Modify Update Instruction
+
+First, we'll implement a simple "pay-to-update" mechanism by modifying the
+`Update` struct and `update` function.
 
 Begin by updating the `lib.rs` file to bring into scope items from the
 `system_program` module.
@@ -2295,12 +2322,7 @@ use anchor_lang::system_program::{transfer, Transfer};
 
 </details>
 
-### 1. Modify Update Instruction
-
-First, we'll implement a simple "pay-to-update" mechanism by modifying the
-`Update` struct and `update` function.
-
-Begin by updating the `Update` struct to include an additional account called
+Next, update the `Update` struct to include an additional account called
 `vault_account`. This account, controlled by our program, will receive SOL from
 a user when they update their message account.
 
@@ -2472,7 +2494,7 @@ Rebuild the program.
 build
 ```
 
-### 2. Modify Delete Instruction
+### Modify Delete Instruction
 
 We'll now implement a "refund on delete" mechanism by modifying the `Delete`
 struct and `delete` function.
@@ -2650,7 +2672,7 @@ Rebuild the program.
 build
 ```
 
-### 3. Redeploy Program
+### Redeploy Program
 
 After making these changes, we need to redeploy our updated program. This
 ensures that our modified program is available for testing. On Solana, updating
@@ -2684,7 +2706,7 @@ upgrade authority for all your programs.
 
 </details>
 
-### 4. Update Test File
+### Update Test File
 
 Next, we'll update our `anchor.test.ts` file to include the new vault account in
 our instructions. This requires deriving the vault PDA and including it in our
@@ -2783,7 +2805,7 @@ const transactionSignature = await program.methods
 
 </details>
 
-### 8. Rerun Test
+### Rerun Test
 
 After making these changes, run the tests to ensure everything is working as
 expected:
@@ -2833,6 +2855,8 @@ instructions.
 If you encounter any errors, you can reference the
 [final code](https://beta.solpg.io/668304cfcffcf4b13384d20a).
 
+</Steps>
+
 ## Next Steps
 
 You've completed the Solana Quickstart guide! You've learned about accounts,
@@ -2840,6 +2864,9 @@ transactions, PDAs, CPIs, and deployed your own programs.
 
 Visit the [Core Concepts](/docs/core/accounts) pages for more comprehensive
 explanations of the topics covered in this guide.
+
+Additional learning resources can be found on the
+[Developer Resources](/developers) page.
 
 ### Explore More Examples
 
