@@ -484,12 +484,12 @@ pub mod anchor_counter {
 
 #### 2. Implement `Counter`
 
-First, let's use the `#[account]` attribute to define a new `Counter` account 
-type. The `Counter` struct defines one `count` field of type `u64`. This means 
-that we can expect any new accounts initialized as a `Counter` type to have a 
-matching data structure. The `#[account]` attribute also automatically sets the 
-discriminator for a new account and sets the owner of the account as the `programId` 
-from the `declare_id!` macro.
+First, let's use the `#[account]` attribute to define a new `Counter` account
+type. The `Counter` struct defines one `count` field of type `u64`. This means
+that we can expect any new accounts initialized as a `Counter` type to have a
+matching data structure. The `#[account]` attribute also automatically sets the
+discriminator for a new account and sets the owner of the account as the
+`programId` from the `declare_id!` macro.
 
 ```rust
 #[account]
@@ -522,10 +522,10 @@ pub struct Initialize<'info> {
 
 #### 4. Add the `initialize` instruction
 
-Now that we have our `Counter` account and `Initialize` type , let’s implement 
-the `initialize` instruction within `#[program]`. This instruction requires a 
-`Context` of type `Initialize` and takes no additional instruction data. In the 
-instruction logic, we are simply setting the `counter` account’s `count` field 
+Now that we have our `Counter` account and `Initialize` type , let’s implement
+the `initialize` instruction within `#[program]`. This instruction requires a
+`Context` of type `Initialize` and takes no additional instruction data. In the
+instruction logic, we are simply setting the `counter` account’s `count` field
 to `0`.
 
 ```rust
@@ -540,9 +540,9 @@ pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
 
 #### 5. Implement `Context` type `Update`
 
-Now, using the `#[derive(Accounts)]` macro again, let’s create the `Update`
-type that lists the accounts that the `increment` instruction requires. It'll
-need the following accounts:
+Now, using the `#[derive(Accounts)]` macro again, let’s create the `Update` type
+that lists the accounts that the `increment` instruction requires. It'll need
+the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
@@ -561,11 +561,12 @@ pub struct Update<'info> {
 
 #### 6. Add `increment` instruction
 
-Lastly, within `#[program]`, let’s implement an `increment` instruction to increment the
-`count` once a `counter` account is initialized by the first instruction. This
-instruction requires a `Context` of type `Update` (implemented in the next step)
-and takes no additional instruction data. In the instruction logic, we are
-simply incrementing an existing `counter` account’s `count` field by `1`.
+Lastly, within `#[program]`, let’s implement an `increment` instruction to
+increment the `count` once a `counter` account is initialized by the first
+instruction. This instruction requires a `Context` of type `Update` (implemented
+in the next step) and takes no additional instruction data. In the instruction
+logic, we are simply incrementing an existing `counter` account’s `count` field
+by `1`.
 
 ```rust
 pub fn increment(ctx: Context<Update>) -> Result<()> {
