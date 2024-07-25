@@ -42,10 +42,9 @@ In particular:
 - Please run a grammar check (not just a spell check) before creating a PR -
   this will catch many of the small errors that occur from your editing process,
   and save the person reviewing your PR some time. We recommend
-  [Grammarly](https://grammarly.com/). If you use VScode, there's also a
-  [Grammarly Extension for VScode](https://marketplace.visualstudio.com/items?itemName=znck.grammarly).
-  In [your Grammarly dictionary](https://account.grammarly.com/customize), you
-  may wish to add Solana-specific words like `lamport`, `blockhash`, etc.
+  [Grammarly](https://grammarly.com/). In
+  [your Grammarly dictionary](https://account.grammarly.com/customize), you may
+  wish to add Solana-specific words like `lamport`, `blockhash`, etc.
 - Use US English rather than British English. Grammarly will catch this for you.
 - Use 'onchain' (not on-chain, definitely not smart contract) when referring to
   onchain apps. This comes from the Solana Foundation style guide, and is
