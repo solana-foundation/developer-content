@@ -454,7 +454,42 @@ pub struct MovieAccountState {
 }
 ```
 
-#### 3. Add Movie Review
+For this account struct, we will be implementing the space trait:
+
+```rust
+/*
+    For the MovieAccountState account, since it is dynamic, we implement the Space trait to calculate the space required for the account.
+    We add the STRING_LENGTH_PREFIX twice to the space to account for the title and description string prefix.
+    We need to add the length of the title and description to the space upon initialization.
+ */
+impl Space for MovieAccountState {
+    const INIT_SPACE: usize = ANCHOR_DISCRIMINATOR + PUBKEY_SIZE + U8_SIZE + STRING_LENGTH_PREFIX + STRING_LENGTH_PREFIX;
+}
+```
+
+This allows us to declare the space required by this account by defining the INIT_SPACE constant (required by the Space trait)
+
+#### 3. Custom error codes
+
+During our implementation, we will be doing some checks and throwing some custom errors in case those checks are bot successful.
+
+For, that let's go ahead and create an enum that will contain the different type of errors as well the messages associated which type of error:
+
+```rust
+#[error_code]
+enum MovieReviewError {
+    #[msg("Rating must be between 1 and 5")]
+    InvalidRating,
+    #[msg("Movie Title too long")]
+    TitleTooLong,
+    #[msg("Movie Description too long")]
+    DescriptionTooLong,
+}
+```
+
+The `#[error_code]` macro will generate error types to be used as return types from our instruction handlers
+
+#### 4. Add Movie Review
 
 Next, let’s implement the `add_movie_review` instruction. The `add_movie_review`
 instruction will require a `Context` of type `AddMovieReview` that we’ll
@@ -471,6 +506,14 @@ Within the instruction logic, we’ll populate the data of the new `movie_review
 account with the instruction data. We’ll also set the `reviewer` field as the
 `initializer` account from the instruction context.
 
+We will also perform some checks, using the `require!` macro, to make sure that:
+
+- The rating is between 1 and 5
+- The title is no longer than 20 characters
+- The description is no longer than 50 characters
+
+The `require!` macro will perform a check and throw a custom error in case that check is not successful
+
 ```rust
 #[program]
 pub mod anchor_movie_review_program{
@@ -482,6 +525,15 @@ pub mod anchor_movie_review_program{
         description: String,
         rating: u8,
     ) -> Result<()> {
+	// We require that the rating is between 1 and 5
+        require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+
+        // We require that the title is not longer than 20 characters
+        require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
+
+        // We require that the description is not longer than 50 characters
+        require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+
         msg!("Movie Review Account Created");
         msg!("Title: {}", title);
         msg!("Description: {}", description);
@@ -513,6 +565,7 @@ Remember, you'll need the following macros:
 The `movie_review` account is a PDA that needs to be initialized, so we'll add
 the `seeds` and `bump` constraints as well as the `init` constraint with its
 required `payer` and `space` constraints.
+Regarding the required space, we will be using the `INIT_SPACE` constant that we defined in the account struct, and we will add the String length of the both the title and the description
 
 For the PDA seeds, we'll use the movie title and the reviewer's public key. The
 payer for the initialization should be the reviewer, and the space allocated on
@@ -528,7 +581,7 @@ pub struct AddMovieReview<'info> {
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = 8 + 32 + 1 + 4 + title.len() + 4 + description.len()
+        space = MovieAccountState::INIT_SPACE + title.len() + description.len() // We add the length of the title and description to the init space
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
@@ -537,7 +590,7 @@ pub struct AddMovieReview<'info> {
 }
 ```
 
-#### 4. Update Movie Review
+#### 5. Update Movie Review
 
 Next, let’s implement the `update_movie_review` instruction with a context whose
 generic type is `UpdateMovieReview`.
@@ -603,7 +656,7 @@ pub struct UpdateMovieReview<'info> {
         mut,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
-        realloc = 8 + 32 + 1 + 4 + title.len() + 4 + description.len(),
+        realloc = MovieAccountState::INIT_SPACE + title.len() + description.len(), // We add the length of the title and description to the init space
         realloc::payer = initializer,
         realloc::zero = true,
     )]
@@ -625,7 +678,7 @@ Finally, we set the `realloc::zero` constraint to `true` because the
 `movie_review` account may be updated multiple times either shrinking or
 expanding the space allocated to the account.
 
-#### 5. Delete Movie Review
+#### 6. Delete Movie Review
 
 Lastly, let’s implement the `delete_movie_review` instruction to close an
 existing `movie_review` account.
@@ -676,7 +729,7 @@ also include the `seeds` and `bump` constraints for the `movie_review` account
 for validation. Anchor then handles the additional logic required to securely
 close the account.
 
-#### 6. Testing
+#### 7. Testing
 
 The program should be good to go! Now let's test it out. Navigate to
 `anchor-movie-review-program.ts` and replace the default test code with the
@@ -740,13 +793,11 @@ it("Movie review is added`", async () => {
     .addMovieReview(movie.title, movie.description, movie.rating)
     .rpc();
 
-  const account = await program.account.movieAccountState.fetch(moviePda);
-  expect(account.title).to.equal(movie.title);
-  expect(account.rating).to.equal(movie.rating);
-  expect(account.description).to.equal(movie.description);
-  expect(account.reviewer.toBase58()).to.equal(
-    provider.wallet.publicKey.toBase58(),
-  );
+  const account = await program.account.movieAccountState.fetch(moviePda)
+    expect(movie.title === account.title)
+    expect(movie.rating === account.rating)
+    expect(movie.description === account.description)
+    expect(account.reviewer === provider.wallet.publicKey)
 });
 ```
 
@@ -762,13 +813,11 @@ it("Movie review is updated`", async () => {
     .updateMovieReview(movie.title, newDescription, newRating)
     .rpc();
 
-  const account = await program.account.movieAccountState.fetch(moviePda);
-  expect(account.title).to.equal(movie.title);
-  expect(account.rating).to.equal(newRating);
-  expect(account.description).to.equal(newDescription);
-  expect(account.reviewer.toBase58()).to.equal(
-    provider.wallet.publicKey.toBase58(),
-  );
+  const account = await program.account.movieAccountState.fetch(moviePda)
+  expect(movie.title === account.title)
+  expect(newRating === account.rating)
+  expect(newDescription === account.description)
+  expect(account.reviewer === provider.wallet.publicKey)
 });
 ```
 
