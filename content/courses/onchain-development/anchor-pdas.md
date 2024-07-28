@@ -467,13 +467,16 @@ impl Space for MovieAccountState {
 }
 ```
 
-This allows us to declare the space required by this account by defining the INIT_SPACE constant (required by the Space trait)
+This allows us to declare the space required by this account by defining the
+INIT_SPACE constant (required by the Space trait)
 
 #### 3. Custom error codes
 
-During our implementation, we will be doing some checks and throwing some custom errors in case those checks are bot successful.
+During our implementation, we will be doing some checks and throwing some custom
+errors in case those checks are bot successful.
 
-For, that let's go ahead and create an enum that will contain the different type of errors as well the messages associated which type of error:
+For, that let's go ahead and create an enum that will contain the different type
+of errors as well as the error messages associated:
 
 ```rust
 #[error_code]
@@ -487,7 +490,8 @@ enum MovieReviewError {
 }
 ```
 
-The `#[error_code]` macro will generate error types to be used as return types from our instruction handlers
+The `#[error_code]` macro will generate error types to be used as return types
+from our instruction handlers
 
 #### 4. Add Movie Review
 
@@ -512,7 +516,8 @@ We will also perform some checks, using the `require!` macro, to make sure that:
 - The title is no longer than 20 characters
 - The description is no longer than 50 characters
 
-The `require!` macro will perform a check and throw a custom error in case that check is not successful
+The `require!` macro will perform a check and throw a custom error in case that
+check is not successful
 
 ```rust
 #[program]
@@ -564,8 +569,9 @@ Remember, you'll need the following macros:
 
 The `movie_review` account is a PDA that needs to be initialized, so we'll add
 the `seeds` and `bump` constraints as well as the `init` constraint with its
-required `payer` and `space` constraints.
-Regarding the required space, we will be using the `INIT_SPACE` constant that we defined in the account struct, and we will add the String length of the both the title and the description
+required `payer` and `space` constraints. Regarding the required space, we will
+be using the `INIT_SPACE` constant that we defined in the account struct, and we
+will add the String length of the both the title and the description
 
 For the PDA seeds, we'll use the movie title and the reviewer's public key. The
 payer for the initialization should be the reviewer, and the space allocated on
@@ -793,11 +799,11 @@ it("Movie review is added`", async () => {
     .addMovieReview(movie.title, movie.description, movie.rating)
     .rpc();
 
-  const account = await program.account.movieAccountState.fetch(moviePda)
-    expect(movie.title === account.title)
-    expect(movie.rating === account.rating)
-    expect(movie.description === account.description)
-    expect(account.reviewer === provider.wallet.publicKey)
+  const account = await program.account.movieAccountState.fetch(moviePda);
+  expect(movie.title === account.title);
+  expect(movie.rating === account.rating);
+  expect(movie.description === account.description);
+  expect(account.reviewer === provider.wallet.publicKey);
 });
 ```
 
@@ -813,11 +819,11 @@ it("Movie review is updated`", async () => {
     .updateMovieReview(movie.title, newDescription, newRating)
     .rpc();
 
-  const account = await program.account.movieAccountState.fetch(moviePda)
-  expect(movie.title === account.title)
-  expect(newRating === account.rating)
-  expect(newDescription === account.description)
-  expect(account.reviewer === provider.wallet.publicKey)
+  const account = await program.account.movieAccountState.fetch(moviePda);
+  expect(movie.title === account.title);
+  expect(newRating === account.rating);
+  expect(newDescription === account.description);
+  expect(account.reviewer === provider.wallet.publicKey);
 });
 ```
 
