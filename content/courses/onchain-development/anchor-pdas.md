@@ -474,14 +474,14 @@ initialization, by defining the `INIT_SPACE` constant. This constant can then be
 used during the account initalization.
 
 Note that, in this case, since the account state is dynamic (`title` and
-`description` are Strings without a fixed size), we will add
+`description` are strings without a fixed size), we will add
 `STRING_LENGTH_PREFIX` that represents 4 bytes (required to store their length)
-but we still need to add the length of the actual context of both Strings during
+but we still need to add the length of the actual context of both strings during
 our account initialization (You will see that in the following steps).
 
 In sum, our `INIT_SPACE` constant will be 8 bytes for the anchor discriminator +
 32 bytes for the reviewer Pubkey + 1 byte rating + 4 bytes for the title length
-storage + 4 bytes for the discription length storage.
+storage + 4 bytes for the description length storage.
 
 ### Custom error codes
 
