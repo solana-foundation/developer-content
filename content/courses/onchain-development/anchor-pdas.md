@@ -468,7 +468,7 @@ impl Space for MovieAccountState {
 ```
 
 This allows us to declare the space required by this account by defining the
-INIT_SPACE constant (required by the Space trait)
+`INIT_SPACE` constant (required by the `Space` trait).
 
 #### 3. Custom error codes
 
