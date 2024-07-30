@@ -520,7 +520,7 @@ We will also perform some checks, using the `require!` macro, to make sure that:
 - The description is no longer than 50 characters
 
 The `require!` macro will perform a check and throw a custom error in case that
-check is not successful
+check is not successful.
 
 ```rust
 #[program]
