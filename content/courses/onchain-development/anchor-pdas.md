@@ -587,7 +587,7 @@ The `movie_review` account is a PDA that needs to be initialized, so we'll add
 the `seeds` and `bump` constraints as well as the `init` constraint with its
 required `payer` and `space` constraints. Regarding the required space, we will
 be using the `INIT_SPACE` constant that we defined in the account struct, and we
-will add the String length of the both the title and the description
+will add the string length of the both the title and the description.
 
 For the PDA seeds, we'll use the movie title and the reviewer's public key. The
 payer for the initialization should be the reviewer, and the space allocated on
