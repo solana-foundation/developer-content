@@ -494,7 +494,7 @@ The `#[error_code]` macro will generate error types to be used as return types
 from our instruction handlers.
 
 Don't worry too much about custom errors for now, as they will be covered with
-more detail in the next chapter
+more detail in the next chapter.
 
 #### 4. Add Movie Review
 
