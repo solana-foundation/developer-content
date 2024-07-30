@@ -480,8 +480,8 @@ but we still need to add the length of the actual context of both strings during
 our account initialization (You will see that in the following steps).
 
 In sum, our `INIT_SPACE` constant will be 8 bytes for the anchor discriminator +
-32 bytes for the reviewer Pubkey + 1 byte rating + 4 bytes for the title length
-storage + 4 bytes for the description length storage.
+32 bytes for the reviewer Pubkey + 1 byte for the rating + 4 bytes for the title
+length storage + 4 bytes for the description length storage.
 
 ### Custom error codes
 
