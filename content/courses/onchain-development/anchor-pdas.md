@@ -375,7 +375,9 @@ This program will allow users to:
 - Update the content of an existing movie review account
 - Close an existing movie review account
 
-#### 1. Create a new Anchor project
+<Steps>
+
+### Create a new Anchor project
 
 To begin, let’s create a new project using `anchor init`.
 
@@ -418,7 +420,7 @@ pub mod anchor_movie_review_program {
 }
 ```
 
-#### 2. `MovieAccountState`
+### MovieAccountState
 
 First, let’s use the `#[account]` attribute macro to define the
 `MovieAccountState` that will represent the data structure of the movie review
@@ -467,10 +469,21 @@ impl Space for MovieAccountState {
 }
 ```
 
-This allows us to declare the space required by this account by defining the
-`INIT_SPACE` constant (required by the `Space` trait).
+The `Space` trait will force us to define the space of our account for
+initialization, by defining the `INIT_SPACE` constant. This constant can then be
+used during the account initalization.
 
-#### 3. Custom error codes
+Note that, in this case, since the account state is dynamic (`title` and
+`description` are Strings without a fixed size), we will add
+`STRING_LENGTH_PREFIX` that represents 4 bytes (required to store their length)
+but we still need to add the length of the actual context of both Strings during
+our account initialization (You will see that in the following steps).
+
+In sum, our `INIT_SPACE` constant will be 8 bytes for the anchor discriminator +
+32 bytes for the reviewer Pubkey + 1 byte rating + 4 bytes for the title length
+storage + 4 bytes for the discription length storage
+
+### Custom error codes
 
 During our implementation, we will be doing some checks and throwing some custom
 errors in case those checks are bot successful.
@@ -496,7 +509,7 @@ from our instruction handlers.
 Don't worry too much about custom errors for now, as they will be covered with
 more detail in the next chapter.
 
-#### 4. Add Movie Review
+### Add Movie Review
 
 Next, let’s implement the `add_movie_review` instruction. The `add_movie_review`
 instruction will require a `Context` of type `AddMovieReview` that we’ll
@@ -599,7 +612,7 @@ pub struct AddMovieReview<'info> {
 }
 ```
 
-#### 5. Update Movie Review
+### Update Movie Review
 
 Next, let’s implement the `update_movie_review` instruction with a context whose
 generic type is `UpdateMovieReview`.
@@ -687,7 +700,7 @@ Finally, we set the `realloc::zero` constraint to `true` because the
 `movie_review` account may be updated multiple times either shrinking or
 expanding the space allocated to the account.
 
-#### 6. Delete Movie Review
+### Delete Movie Review
 
 Lastly, let’s implement the `delete_movie_review` instruction to close an
 existing `movie_review` account.
@@ -738,7 +751,7 @@ also include the `seeds` and `bump` constraints for the `movie_review` account
 for validation. Anchor then handles the additional logic required to securely
 close the account.
 
-#### 7. Testing
+### Testing
 
 The program should be good to go! Now let's test it out. Navigate to
 `anchor-movie-review-program.ts` and replace the default test code with the
@@ -855,6 +868,8 @@ If you need more time with this project to feel comfortable with these concepts,
 feel free to have a look at
 the [solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas) before
 continuing.
+
+</Steps>
 
 ## Challenge
 
