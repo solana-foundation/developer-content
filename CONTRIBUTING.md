@@ -137,6 +137,46 @@ The heading above is valid! Yay :)
 The heading above is invalid since it skips the `h3` heading (`###`)
 ```
 
+### Links
+
+When linking to other developer content pages (i.e. docs, guides, etc) or
+images, the markdown link should be use the absolute path to the file relative
+to the repo root. Including the file extension.
+
+For example: `/docs/index.md` (good) vs `https://solana.com/docs` (bad)
+
+> By linking to files this way, code editors will get better auto-complete for
+> files and subheadings within those files. Ultimately providing a better
+> experience when editing/maintaining the content.
+>
+> It will also allow GitHub to provide correct links to view the markdown files
+> within GitHub itself.
+
+Using relative paths and directory climbing is not allowed. Including "single
+dot" and "double dot" (i.e. `./file.md` and `../../another.md`).
+
+```md
+This is a good link to the [Accounts](/docs/core/accounts.md) document
+
+This [linking without](/docs/core/accounts) the `.md` file extension should be
+avoided.
+
+This is a good link to the
+[Instructions](/docs/core/transactions.md#instruction) section of the
+Transaction document.
+
+This is a another good link to the
+[Hello World in your browser](/content/guides/getstarted/hello-world-in-your-browser.md)
+document.
+
+For images, you can use the path starting with `/public` like this:
+![this is the image caption](/public/assets/guides/hello-world/solpg.gif)
+```
+
+> Note: When the content pages are generated and deployed on solana.com, the
+> links will be automatically adjusted to function on the website. Including
+> making the images viewable and removing `.md` file extensions.
+
 ### Table of contents
 
 When a content page is rendered on solana.com, a table of contents will be
