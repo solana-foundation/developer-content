@@ -598,9 +598,7 @@ deployed.
 Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62b11ce4f6273245aca4f5b2).
 
-<Callout type="success">
-### Completed the lab?
-
+<Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=8320fc87-2b6d-4b3a-8b1a-54b55afed781)!
 </Callout>

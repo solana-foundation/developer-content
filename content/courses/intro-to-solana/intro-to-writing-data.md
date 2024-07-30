@@ -256,9 +256,7 @@ Answer the following questions:
 
 - What do you think "confirmed" means?
 
-<Callout type="success">
-### Completed the lab?
-
+<Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=dda6b8de-9ed8-4ed2-b1a5-29d7a8a8b415)!
 </Callout>

@@ -1362,9 +1362,7 @@ luck!
 If you'd like a very simple example of a delete function, check out the
 [`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
 
-<Callout type="success">
-### Completed the lab?
-
+<Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
 </Callout>
