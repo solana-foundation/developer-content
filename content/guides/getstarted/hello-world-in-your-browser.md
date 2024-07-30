@@ -150,7 +150,7 @@ blockchain cluster, then gracefully exit with `Ok(())`.
 
 ### Build your program
 
-On the left sidebar above the `lib.rs`file click the `Build` button.
+On the left sidebar above the `lib.rs` file click the `Build` button.  
 
 If you look at the Playground's terminal, you should see your Solana program
 begin to compile. Once complete, you will see a success message.
@@ -173,8 +173,8 @@ more by typing the airdrop command in the playground terminal:
 solana airdrop 2
 ```
 
-> Note: If you get a rate limit error when requesting devnet SOL you can also
-> you can just type `run` in the terminal and you will get a link to a
+> If you get a rate limit error when requesting devnet SOL you can also you can
+> just type `run` in the terminal and you will get a link to a
 > [web faucet](https://faucet.solana.com/). You can also find your wallet
 > address at the bottom of the playground window.
 
@@ -182,9 +182,9 @@ You should see a `Deployment successful` message similar to this:
 
 ![Deploy Success](/assets/guides/hello-world-pg/pg-deploy-success.png)
 
-> Info: Instead of using the buttons in playground you can also type 'build' and
-> 'deploy' in the terminal as well. For a list of all commands you can use in
-> the terminal you can type 'help'.
+> Instead of using the buttons in playground you can also type `build` and
+> `deploy` in the terminal as well. For a list of all commands you can use in
+> the terminal you can type `help`.
 
 #### Congratulations!
 
@@ -206,17 +206,18 @@ to aid in our client application.
 > [JSON RPC API](/docs/rpc.md) that reduced the need for rewriting common
 > boilerplate, helping to simplify your client side application code.
 
-### The JS client
+### The JavaScript client
 
 Now let's take a look at how to actually call our program. The example comes
-with a JS client that will call our hello world program. You can find the
-`client.ts` file on the left-hand side of the playground.
+with a JavaScript client that will call our hello world program. You can find 
+the `client.ts` file on the left-hand side of the playground.
 
 ### Call the program
 
 To execute your onchain program, you must send a
 [transaction](/docs/core/transactions.md) to the network. Each transaction
-submitted to the Solana blockchain contains a list of instructions.
+submitted to the Solana blockchain contains a list of
+[instructions](/docs/core/transactions.md#instruction).
 
 Here we create a new transaction and add a single `instruction` to it:
 
@@ -301,8 +302,8 @@ Inside Solana Playground's **Build & Deploy** sidebar, you can find your
 ![Find Program Id](/assets/guides/hello-world-pg/pg-find-program-id.png)
 
 You can copy this program id and look at your program in the
-[solana explorer](https://explorer.solana.com/?cluster=devnet). Just paste in
-your program id in the search bar.
+[solana explorer](https://explorer.solana.com/?cluster=devnet) by pasting
+the address into the search bar.
 
 ### Playground globals
 
