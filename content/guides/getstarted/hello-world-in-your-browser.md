@@ -150,7 +150,7 @@ blockchain cluster, then gracefully exit with `Ok(())`.
 
 ### Build your program
 
-On the left sidebar above the `lib.rs` file click the `Build` button.  
+On the left sidebar above the `lib.rs` file click the `Build` button.
 
 If you look at the Playground's terminal, you should see your Solana program
 begin to compile. Once complete, you will see a success message.
@@ -209,7 +209,7 @@ to aid in our client application.
 ### The JavaScript client
 
 Now let's take a look at how to actually call our program. The example comes
-with a JavaScript client that will call our hello world program. You can find 
+with a JavaScript client that will call our hello world program. You can find
 the `client.ts` file on the left-hand side of the playground.
 
 ### Call the program
@@ -302,8 +302,8 @@ Inside Solana Playground's **Build & Deploy** sidebar, you can find your
 ![Find Program Id](/assets/guides/hello-world-pg/pg-find-program-id.png)
 
 You can copy this program id and look at your program in the
-[solana explorer](https://explorer.solana.com/?cluster=devnet) by pasting
-the address into the search bar.
+[solana explorer](https://explorer.solana.com/?cluster=devnet) by pasting the
+address into the search bar.
 
 ### Playground globals
 
