@@ -1,7 +1,10 @@
 /**
  *
  */
-export const CONTENT_API_URL = "https://solana-developer-content.vercel.app";
+export const CONTENT_API_URL =
+  process.env?.NODE_ENV != "development"
+    ? "https://solana-developer-content.vercel.app"
+    : "http://localhost:3001";
 
 /**
  * Regex for parsing markdown links
