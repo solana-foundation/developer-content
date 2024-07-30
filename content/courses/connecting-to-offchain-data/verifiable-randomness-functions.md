@@ -1634,8 +1634,7 @@ funds, just like getting out of jail in Monopoly.
 If you get stuck, we have the solution in the
 [`vrf-challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/vrf-challenge-solution).
 
-<Callout type="success">
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5af49eda-f3e7-407d-8cd7-78d0653ee17c)!

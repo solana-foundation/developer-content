@@ -852,8 +852,7 @@ is already on a pre-determined list, etc.).
 Get creative with this! The Solana pay spec opens up a lot of doors for unique
 use cases.
 
-<Callout type="success">
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=3c7e5796-c433-4575-93e1-1429f718aa10)!

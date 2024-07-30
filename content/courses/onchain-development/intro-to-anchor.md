@@ -731,8 +731,7 @@ Try to do this independently if you can! But if you get stuck, feel free to
 reference
 the [solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-decrement).
 
-<Callout type="success">
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!

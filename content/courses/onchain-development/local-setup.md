@@ -111,8 +111,7 @@ on preferences
 Ensure `anchor test` completes successfully - with no warnings and no errors -
 before continuing.
 
-<Callout type="success">
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=aa0b56d6-02a9-4b36-95c0-a817e2c5b19d)!

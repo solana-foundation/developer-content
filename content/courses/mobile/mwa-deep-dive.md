@@ -1605,8 +1605,7 @@ Try to do this without help as it's great practice, but if you get stuck, check
 out the
 [solution code on the `solution` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet/tree/solution).
 
-<Callout type="success">
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5a3d0f62-c5fc-4e03-b8a3-323c2c7b8f4f)!

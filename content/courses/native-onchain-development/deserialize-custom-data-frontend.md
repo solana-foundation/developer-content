@@ -377,8 +377,7 @@ If you get really stumped, feel free to
 As always, get creative with these challenges and take them beyond the
 instructions if you want!
 
-<Callout type="success">
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9cb89e09-2c97-4185-93b0-c89f7aca7677)!
