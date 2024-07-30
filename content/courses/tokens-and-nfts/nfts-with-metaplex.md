@@ -728,7 +728,6 @@ tools but also boost your confidence in your ability to use them effectively in
 the future.
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=296745ac-503c-4b14-b3a6-b51c5004c165)!
 </Callout>

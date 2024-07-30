@@ -1224,7 +1224,6 @@ After you give it a try on your own, feel free to take a look at the
 [solution code on the `solution` branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution).
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)!
 </Callout>

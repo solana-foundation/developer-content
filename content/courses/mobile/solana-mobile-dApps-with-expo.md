@@ -1549,7 +1549,6 @@ welcome to choose your own, or you can select from the following ideas:
   from `expo-sensors`
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=19cf8d3a-89a0-465e-95da-908cf8f45409)!
 </Callout>

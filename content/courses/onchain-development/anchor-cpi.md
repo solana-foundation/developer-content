@@ -681,7 +681,6 @@ Note that your code may look slightly different than the solution code depending
 on your implementation.
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=21375c76-b6f1-4fb6-8cc1-9ef151bc5b0a)!
 </Callout>

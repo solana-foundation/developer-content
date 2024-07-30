@@ -815,7 +815,6 @@ and waiting for the lookup table to activate/deactivate. Feel free to reference
 this [solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=b58fdd00-2b23-4e0d-be55-e62677d351ef)!
 </Callout>

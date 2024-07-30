@@ -820,7 +820,6 @@ Try to do this independently if you can! But if you get stuck, feel free to
 reference
 the [solution code](https://github.com/Unboxed-Software/anchor-student-intro-program).
 
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
+<Callout type="success" title="Completed the lab?">Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=f58108e9-94a0-45b2-b0d5-44ada1909105)!
 </Callout>

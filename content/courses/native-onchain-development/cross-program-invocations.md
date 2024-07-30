@@ -841,7 +841,6 @@ that is possible and you now have the skills and knowledge to go and build
 something like it on your own!
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ade5d386-809f-42c2-80eb-a6c04c471f53)!
 </Callout>

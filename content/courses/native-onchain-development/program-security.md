@@ -933,7 +933,6 @@ Note that your code may look slightly different than the solution code depending
 on the checks you implement and the errors you write.
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=3dfb98cc-7ba9-463d-8065-7bdb1c841d43)!
 </Callout>

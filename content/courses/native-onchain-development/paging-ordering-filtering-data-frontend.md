@@ -535,7 +535,6 @@ As always, get creative with these challenges and take them beyond the
 instructions if you want!
 
 <Callout type="success" title="Completed the lab?">
-
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9342ad0a-1741-41a5-9f68-662642c8ec93)!
 </Callout>
