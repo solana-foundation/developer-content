@@ -269,9 +269,7 @@ signature so you can look at it on Solana Explorer.
 If you get stuck feel free to glance at the
 [solution code](https://github.com/Unboxed-Software/solana-ping-client).
 
-<Callout type="success">
-### Completed the lab?
-
+<Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e969d07e-ae85-48c3-976f-261a22f02e52)!
 </Callout>
