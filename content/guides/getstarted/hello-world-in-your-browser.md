@@ -166,8 +166,8 @@ After each deployment, you will see your Playground Wallet balance change. By
 default, Solana Playground will automatically request SOL airdrops on your
 behalf to ensure your wallet has enough SOL to cover the cost of deployment.
 
-> Note: If you need more SOL, you can airdrop more by typing airdrop command in
-> the playground terminal:
+If you need more devnet SOL in order to deploy your program, you can airdrop
+more by typing the airdrop command in the playground terminal:
 
 ```shell
 solana airdrop 2
