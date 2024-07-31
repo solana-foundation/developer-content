@@ -36,8 +36,8 @@ The steps in this guide are for the Token Extensions Program, i.e. program ID
 The older Token Program, i.e. program ID
 `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` required storing metadata in an
 additional account outside our mint. Tokens using the metadata extension have
-wide support in Solana Wallets and Explorers, but if you can also [use the older
-token program and Metaplex](https://developers.metaplex.com/token-metadata)
+wide support in Solana Wallets and Explorers, but if you can also
+[use the older token program and Metaplex](https://developers.metaplex.com/token-metadata)
 instead. </Callout>
 
 ## Installing Solana Tools
