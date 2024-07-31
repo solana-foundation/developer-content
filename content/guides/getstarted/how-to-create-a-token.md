@@ -117,7 +117,7 @@ For Solana devnet we will just be able to get some free SOL,
 this
 [guide to get devnet SOL](/content/guides/getstarted/solana-token-airdrop-and-faucets.md).
 Remember to fund your mint authority account - i.e. the keypair that starts with
-`bos` in your `new-token` folder. You can also just run:
+`bos` in your `new-token` folder. To get your address, you can also just run:
 
 ```bash
 solana address
