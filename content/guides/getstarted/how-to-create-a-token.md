@@ -170,7 +170,7 @@ spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb 
 ```
 
 <Callout type="note">
-This is also time time to add additional
+This is also time to add additional
 [token extensions](/content/guides/token-extensions/getting-started.md) to your
 token to have extra functionality, for example
 [transfer fees](/content/guides/token-extensions/transfer-fee.md).
