@@ -127,7 +127,7 @@ For mainnet you will need to fund the account with actual SOL. You can buy SOL
 with regular currency in places like centralized exchanges, crypto on-ramps, or
 swap other tokens for SOL on decentralized exchanges.
 
-## Make a Mint Address (`mnt`)
+## Make a Mint Address
 
 Let's create one more address that we will use for our **Mint Account** - the
 factory that makes our specific token. We'll make it start with `mnt` to help us
