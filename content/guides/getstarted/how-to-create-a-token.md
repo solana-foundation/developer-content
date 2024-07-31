@@ -30,7 +30,7 @@ and the
 which allows us to simplify the process a little.
 
 <Callout type="note">
-The steps in this guide are for Token Extensions Program, i.e. program ID
+The steps in this guide are for the Token Extensions Program, i.e. program ID
 `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`. This Token Extensions program simplified making tokens because metadata - like the token name, symbol and the URI for the file that describes images - can be [stored directly on the token mint](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet).
 
 The older Token Program, i.e. program ID
