@@ -184,6 +184,9 @@ Next, we will create the offchain metadata for our token. This data is displayed
 on sites like [Solana Explorer](https://explorer.solana.com) when people look at
 our token mint address.
 
+The image should be square, and either 512x512 or 1024x1024 pixels, and less
+than 100kb if possible.
+
 Metadata and media referenced inside (like the `image` ) must be saved somewhere
 publicly accessible online.
 
