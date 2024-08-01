@@ -280,7 +280,7 @@ You'll need React Native installed on your machine as well as a running emulator
 or physical device.
 [You can accomplish this all with the React Native quickstart](https://reactnative.dev/docs/environment-setup?guide=native).
 There are also more details about this setup in the
-[Introduction to Solana Mobile lesson](/content/courses/mobile//basic-solana-mobile.md#0-prerequisites)
+[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md#0-prerequisites)
 
 <Callout type="note">Even though we are using Expo, you'll need to follow the
 React Native cli guide for initial setup.</Callout>
