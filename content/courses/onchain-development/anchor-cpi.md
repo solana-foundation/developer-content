@@ -362,11 +362,12 @@ anchor-spl = "0.30.1"
 
 ### Initialize reward token
 
-Next, navigate to `lib.rs` and implement the `InitializeMint` context type and list the accounts and
-constraints the instruction requires. Here we initialize a new `Mint` account
-using a PDA with the string "mint" as a seed. Note that we can use the same PDA
-for both the address of the `Mint` account and the mint authority. Using a PDA
-as the mint authority enables our program to sign for the minting of the tokens.
+Next, navigate to `lib.rs` and implement the `InitializeMint` context type and
+list the accounts and constraints the instruction requires. Here we initialize a
+new `Mint` account using a PDA with the string "mint" as a seed. Note that we
+can use the same PDA for both the address of the `Mint` account and the mint
+authority. Using a PDA as the mint authority enables our program to sign for the
+minting of the tokens.
 
 To initialize the `Mint` account, we'll need to include the `token_program`,
 `rent`, and `system_program` in the list of accounts.
@@ -396,10 +397,10 @@ There may be some constraints above that you haven't seen yet. Adding
 account is initialized as a new token mint with the appropriate decimals and
 mint authority set.
 
-Now, create an instruction to initialize a new token
-mint. This will be the token that is minted each time a user leaves a review.
-Note that we don't need to include any custom instruction logic since the
-initialization can be handled entirely through Anchor constraints.
+Now, create an instruction to initialize a new token mint. This will be the
+token that is minted each time a user leaves a review. Note that we don't need
+to include any custom instruction logic since the initialization can be handled
+entirely through Anchor constraints.
 
 ```rust
 pub fn initialize_token_mint(_ctx: Context<InitializeMint>) -> Result<()> {
@@ -411,9 +412,12 @@ pub fn initialize_token_mint(_ctx: Context<InitializeMint>) -> Result<()> {
 ### Anchor Error
 
 Next, let’s create an Anchor Error that we’ll use to validate the following:
-- The `rating` passed to either the `add_movie_review` or `update_movie_review` instruction.
+
+- The `rating` passed to either the `add_movie_review` or `update_movie_review`
+  instruction.
 - The `title` passed to the `add_movie_revie` instruction.
-- The `description` passed to either the `add_movie_review` or `update_movie_review` instruction.
+- The `description` passed to either the `add_movie_review` or
+  `update_movie_review` instruction.
 
 ```rust
 #[error_code]
@@ -479,12 +483,13 @@ Again, some of the above constraints may be unfamiliar to you. The
 `associated_token::mint` and `associated_token::authority` constraints along
 with the `init_if_needed` constraint ensures that if the account has not already
 been initialized, it will be initialized as an associated token account for the
-specified mint and authority. 
-Also, the payer for the costs related with the account initialiaziation will be set under the constraint `payer`.
+specified mint and authority. Also, the payer for the costs related with the
+account initialiaziation will be set under the constraint `payer`.
 
-If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review` account space allocation,
-please refer to the `solution-pdas` branch that is being used as our starting point. In there, we discuss the inmplementation of the 
-`Space` trait and the `INIT_SPACE` constant.
+If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review`
+account space allocation, please refer to the `solution-pdas` branch that is
+being used as our starting point. In there, we discuss the inmplementation of
+the `Space` trait and the `INIT_SPACE` constant.
 
 Next, let’s update the `add_movie_review` instruction to do the following:
 
@@ -492,8 +497,8 @@ Next, let’s update the `add_movie_review` instruction to do the following:
   `InvalidRating` error.
 - Check that `title` length is valid. If it is not a valid length, return the
   `TitleTooLong` error.
-- Check that `description` length is valid. If it is not a valid length, return the
-  `DescriptionTooLong` error.
+- Check that `description` length is valid. If it is not a valid length, return
+  the `DescriptionTooLong` error.
 - Make a CPI to the token program’s `mint_to` instruction using the mint
   authority PDA as a signer. Note that we'll mint 10 tokens to the user but need
   to adjust for the mint decimals by making it `10*10^6`.
@@ -528,7 +533,7 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
     msg!("Title: {}", title);
     msg!("Description: {}", description);
     msg!("Rating: {}", rating);
-        
+
     let movie_review = &mut ctx.accounts.movie_review;
     movie_review.reviewer = ctx.accounts.initializer.key();
     movie_review.title = title;
@@ -538,8 +543,8 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
     mint_to(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
-            MintTo { 
-                authority: ctx.accounts.mint.to_account_info(), 
+            MintTo {
+                authority: ctx.accounts.mint.to_account_info(),
                 to: ctx.accounts.token_account.to_account_info(),
                 mint: ctx.accounts.mint.to_account_info()
             },
@@ -573,11 +578,11 @@ pub fn update_movie_review(ctx: Context<UpdateMovieReview>, title: String, descr
     msg!("Title: {}", title);
     msg!("Description: {}", description);
     msg!("Rating: {}", rating);
-        
+
     let movie_review = &mut ctx.accounts.movie_review;
     movie_review.description = description;
     movie_review.rating = rating;
-        
+
     Ok(())
 }
 ```
