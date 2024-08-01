@@ -233,7 +233,7 @@ you just uploaded:
 {
   "name": "Example Token",
   "symbol": "EXMPL",
-  "description": "Example token for Solana Foundation Bootcamp.",
+  "description": "Example token from Solana Making a Token guide.",
   "image": "https://github.com/solana-developers/opos-asset/blob/7e9408bccd7611bc7a4c4e6847edd10308b92b5f/assets/CompressedNFT/image.png"
 }
 ```
