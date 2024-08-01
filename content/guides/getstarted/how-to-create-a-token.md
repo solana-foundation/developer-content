@@ -30,15 +30,21 @@ and the
 which allows us to simplify the process a little.
 
 <Callout type="note">
+
 The steps in this guide are for the Token Extensions Program, i.e. program ID
-`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`. This Token Extensions program simplified making tokens because metadata - like the token name, symbol and the URI for the file that describes images - can be [stored directly on the token mint](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet).
+`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`. This Token Extensions program
+simplified making tokens because metadata - like the token name, symbol and the
+URI for the file that describes images - can be
+[stored directly on the token mint](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet).
 
 The older Token Program, i.e. program ID
 `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` required storing metadata in an
 additional account outside our mint. Tokens using the metadata extension have
 wide support in Solana Wallets and Explorers, but if you can also
 [use the older token program and Metaplex](https://developers.metaplex.com/token-metadata)
-instead. </Callout>
+instead.
+
+</Callout>
 
 ## Installing Solana Tools
 
@@ -77,9 +83,8 @@ This will save the keypair into a JSON file, named after the public key:
 bosy1VC2BH2gh5fdXA3oKn53EuATLwapLWC4VR2sGHJ.json
 ```
 
-<Callout type="note">
-Replace the `bos` public key above with your mint authority public key in the following steps!
-</Callout>
+> Replace the `bos` public key above with your mint authority public key in the
+> following steps!
 
 Keep the contents of the mint authority keypair file safe. Whoever owns the key
 will be able to mint tokens, update metadata, and potentially freeze token
@@ -138,11 +143,10 @@ solana-keygen grind --starts-with mnt:1
 ```
 
 It will save a new keypair named after the public key:
-`mntDh6s9hd2wbbS6ZWaYTCC9GXxhXGvbWpUgLt5qYgv.json`
+`mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ.json`
 
-<Callout type="note">
-Replace the `mnt` address with your token mint account's address in the following steps!
-</Callout>
+> Replace the `mnt` address with your token mint account's address in the
+> following steps!
 
 ## Creating the token mint account
 
@@ -169,13 +173,16 @@ We will use our `mnt...` address as the
 spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ.json
 ```
 
-<Callout type="note">
-This is also time to add additional
+If desired, this is also the time to add additional
 [token extensions](/content/guides/token-extensions/getting-started.md) to your
 token to have extra functionality, for example
 [transfer fees](/content/guides/token-extensions/transfer-fee.md).
-You cannot add more extensions to your token mint after you create
-the token mint account.
+
+<Callout type="caution">
+
+You CANNOT add more extensions to your token mint after you create the token
+mint account.
+
 </Callout>
 
 ## Create and upload image and offchain metadata
@@ -204,12 +211,8 @@ is considered more appropriate:
 - [web3.storage](https://web3.storage) - requires signing up for a free plan -
   first 5Gb are free, easy to use
 
-<Callout type="note">
-
-If you are a provider of decentralized storage solutions and want to be listed
-here, please open a PR using the 'edit page' button.
-
-</Callout>
+> If you are a provider of decentralized storage solutions and want to be listed
+> here, please open a PR using the 'edit page' button.
 
 For a test token, a centralized storage solution like AWS S3, GCP, or GitHub
 (using the 'raw' URL format `https://raw.githubusercontent.com/...` ) is fine.
@@ -250,13 +253,9 @@ Now, we can add this metadata to our token.
 
 ## Add the metadata to the token
 
-<Callout type="note">
-
-As mentioned earlier, this step only works for tokens using the Token Extensions
-program ( `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`), and not the older
-Token Program (`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`).
-
-</Callout>
+> As mentioned earlier, this step only works for tokens using the Token
+> Extensions program ( `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`), and not
+> the older Token Program (`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`).
 
 Now we will initialize the metadata for our token with the metadata we just
 created and uploaded.
