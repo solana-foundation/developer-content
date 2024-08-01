@@ -488,8 +488,8 @@ account initialiaziation will be set under the constraint `payer`.
 
 If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review`
 account space allocation, please refer to the `solution-pdas` branch that is
-being used as our starting point. In there, we discuss the implementation of
-the `Space` trait and the `INIT_SPACE` constant.
+being used as our starting point. In there, we discuss the implementation of the
+`Space` trait and the `INIT_SPACE` constant.
 
 Next, let’s update the `add_movie_review` instruction to do the following:
 
