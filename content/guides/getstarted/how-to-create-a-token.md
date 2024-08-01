@@ -166,7 +166,7 @@ We will use our `mnt...` address as the
 [token mint account](/docs/core/tokens.md#mint-account) for our new token:
 
 ```bash
-spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntsBJFZE48XnQteT1vekH35UXDfamtdpFv6Xh8A7Gy.json
+spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ.json
 ```
 
 <Callout type="note">
@@ -184,6 +184,9 @@ Next, we will create the offchain metadata for our token. This data is displayed
 on sites like [Solana Explorer](https://explorer.solana.com) when people look at
 our token mint address.
 
+The image should be square, and either 512x512 or 1024x1024 pixels, and less
+than 100kb if possible.
+
 Metadata and media referenced inside (like the `image` ) must be saved somewhere
 publicly accessible online.
 
@@ -191,19 +194,15 @@ For production tokens, a decentralized storage service like one of the following
 is considered more appropriate:
 
 - [Akord](https://akord.com/) - uploads to Arweave; free without sign up for
-  100Mb; uploads can take a while.
-- [NFT Storage](https://nft.storage/) - popular
-- [Irys](https://irys.xyz/) - formerly known as Bundlr, uploads to Arweave.
-
+  100Mb; uploads can take a while
+- [Irys](https://irys.xyz/) - formerly known as Bundlr, uploads to Arweave
 - [Metaboss](https://metaboss.rs/) - by Metaplex
-
+- [NFT Storage](https://nft.storage/) - used by many popular projects
 - [Pinata](https://app.pinata.cloud/) - uploads to IPFS; free with sign up for
-  1Gb;
-
-- [ShadowDrive](https://www.shdwdrive.com/) - a Solana native storage solution.
-
-- [web3.storage](https://web3.storage) - requires signing up for a free plan;
-  first 5Gb are free; easy to use.
+  1Gb
+- [ShadowDrive](https://www.shdwdrive.com/) - a Solana native storage solution
+- [web3.storage](https://web3.storage) - requires signing up for a free plan -
+  first 5Gb are free, easy to use
 
 <Callout type="note">
 
@@ -221,7 +220,7 @@ First, upload your image file to your desired online storage solution and get
 the link. **Ensure that the link directly opens your image file!**
 
 ```text
-https://github.com/mikemaccana/token-command-line/blob/main/lights.png
+https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/image.png
 ```
 
 #### Create and Upload the offchain metadata file
@@ -233,8 +232,8 @@ you just uploaded:
 {
   "name": "Example Token",
   "symbol": "EXMPL",
-  "description": "Example token for Solana Foundation Bootcamp.",
-  "image": "https://github.com/mikemaccana/token-command-line/blob/main/lights.png"
+  "description": "Example token from Solana Making a Token guide.",
+  "image": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/image.png"
 }
 ```
 
@@ -242,7 +241,7 @@ Then upload the `metadata.json` to the storage provider of your choice. You will
 end up with a link similar to this:
 
 ```text
-https://raw.githubusercontent.com/mikemaccana/token-command-line/main/metadata.json
+https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
 **Ensure that the link directly opens your metadata file!**
@@ -263,7 +262,7 @@ Now we will initialize the metadata for our token with the metadata we just
 created and uploaded.
 
 ```bash
-spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/mikemaccana/token-command-line/main/metadata.json
+spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
 Congratulations, you created a token with metadata! Look at your token in one of
@@ -271,7 +270,7 @@ the Solana block explorers:
 
 - [Solana Explorer](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
 - [SolanaFM](https://solana.fm/?cluster=devnet-solana)
-- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ)
+- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
 
 Make sure your explorer is set to devnet (if you are working on devnet) and
 replace the address to your mint address starting with `mnt`.
