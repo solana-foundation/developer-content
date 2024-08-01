@@ -381,7 +381,7 @@ This program will allow users to:
 
 To begin, let’s create a new project using `anchor init`.
 
-```console
+```shell
 anchor init anchor-movie-review-program
 ```
 
@@ -854,7 +854,7 @@ it("Deletes a movie review", async () => {
 Lastly, run `anchor test` and you should see the following output in the
 console.
 
-```console
+```shell
   anchor-movie-review-program
     ✔ Movie review is added` (139ms)
     ✔ Movie review is updated` (404ms)
