@@ -274,7 +274,7 @@ the Solana block explorers:
 
 - [Solana Explorer](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
 - [SolanaFM](https://solana.fm/?cluster=devnet-solana)
-- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ)
+- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
 
 Make sure your explorer is set to devnet (if you are working on devnet) and
 replace the address to your mint address starting with `mnt`.
