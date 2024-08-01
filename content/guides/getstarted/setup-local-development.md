@@ -1,5 +1,5 @@
 ---
-date: 2024-02-26T00:00:00Z
+date: 2024-07-31T00:00:00Z
 featured: true
 difficulty: intro
 title: "Setup local development and install the Solana CLI"
@@ -24,6 +24,7 @@ keywords:
   - blockchain developer
   - blockchain tutorial
   - web3 developer
+  - windows
 altRoutes:
   - /developers/guides/setup-local-development
 ---
@@ -71,19 +72,24 @@ lightweight VM that instantly starts when you need it.
 
 First start with
 [installing WSL](https://learn.microsoft.com/en-us/windows/wsl/install) on your
-system. Be sure to restart your computer when installation is done, then
-continue this guide.
+system. Type the following command in your Windows power shell:
 
 ```shell
 wsl --install
 ```
 
-After installing WSL and restarting your computer, open a new Linux terminal
-session using WSL:
+Be sure to restart your computer when installation is done, then continue this
+guide. After installing WSL and restarting your computer, open a new Linux
+terminal session using WSL:
 
 ```shell
 wsl
 ```
+
+> You will probably also need to enable the Windows Subsystem for Linux feature.
+> You can do this typing `feature` in the windows search bar open the windows
+> features and then enable the features: `Windows Subsystem for Linux` and
+> `Windows PowerShell 2.0`.
 
 For the remainder of this guide and your Solana development using WSL, you will
 run all your commands, Solana builds, and program deployments inside this Linux
@@ -92,7 +98,10 @@ terminal (except where otherwise noted in this guide).
 If you are using VS Code as your code editor of choice, we recommend you
 [follow this tutorial](https://code.visualstudio.com/docs/remote/wsl-tutorial)
 on the VS Code website to properly configure VS Code and WSL together. This will
-give you the best developer experience.
+give you the best developer experience. A big help in rust development is also
+the
+[Rust Analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer),
+which you can install as a VS Code extension.
 
 <Callout type="caution" title="Notice">
 
@@ -102,13 +111,17 @@ Except where otherwise noted.
 
 </Callout>
 
-Inside your Linux/WSL terminal session, continue to setup your local Solana
-development environment using the "Linux" steps below.
-
 WSL can sometimes be a little slow due to its file system write speed
 limitations. You can also try dual booting your computer, installing a Linux
 operating system natively on the same machine, or using the full web browser
-based Solana IDE called [Solana Playground](https://beta.solpg.io).
+based Solana IDE called [Solana Playground](https://beta.solpg.io). There is
+also a
+[Hello World Playground Guide](/content/guides/getstarted/hello-world-in-your-browser.md)
+
+> If you have no experience in using Linux/WSL it probably makes sense to make
+> yourself familiar with it first. This
+> [video](https://www.youtube.com/watch?v=-atblwgc63E) gives you an overview on
+> linux systems under windows.
 
 ### Dependencies for Linux
 
@@ -121,6 +134,13 @@ sudo apt-get install -y \
     libudev-dev llvm libclang-dev \
     protobuf-compiler libssl-dev
 ```
+
+> In case you are getting a protobuff error you may need to update apt-get
+> before:
+>
+> ```shell
+> sudo apt-get update
+> ```
 
 ### Dependencies for macOS
 
@@ -211,19 +231,21 @@ tasks, like:
     ```
 
 2.  You can replace `stable` with the release tag matching the software version
-    of your desired release (i.e. `v1.18.1`), or use one of the three symbolic
+    of your desired release (i.e. `v2.0.3`), or use one of the three symbolic
     channel names: `stable`, `beta`, or `edge`.
 3.  Depending on your specific operating system, the Solana CLI installer
-    messaging may prompt you to update the `PATH` environment.
+    messaging may prompt you to update the `PATH` environment. It may look
+    similar to this:
 
     ```shell
     Please update your PATH environment variable to include the Solana programs:
+    export PATH="/home/userName/.local/share/solana/install/active_release/bin:$PATH"
     ```
 
     If you get the above message, simply copy and paste the command recommended
     by the Solana CLI installer to update your `PATH` environment variable.
 
-    After running this command. restart your terminal to make sure your Solana
+    After running this command restart your terminal to make sure your Solana
     binaries are accessible in all the terminal sessions you open afterwards.
 
 4.  To check if your installation was successful, check the Solana CLI version:
@@ -238,7 +260,10 @@ You can see more versions and releases according to the target
 <Callout title="Updating the Solana CLI">
 
 In the future, you can use the Solana CLI to update itself based on which latest
-version is available: `solana-install update`
+version is available: `agave-install update`
+
+> Agave is the validator client from [Anza](https://www.anza.xyz/), formerly
+> known as Solana Labs validator client.
 
 </Callout>
 
@@ -278,8 +303,14 @@ by checking the installed version:
 anchor --version
 ```
 
-If you do not see an output or receive an error, you may need to restart your
-terminal.
+> If you do not see an output or receive an error, you may need to restart your
+> terminal. If you are still running into errors, for example `Box<> error`from
+> the `times` package you can also install the latest version directly without
+> locking in the dependencies:
+>
+> ```shell
+> cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.1 anchor-cli --force
+> ```
 
 ## 5. Setup a localhost blockchain cluster
 
@@ -291,6 +322,17 @@ on your machine:
 ```shell
 solana-test-validator
 ```
+
+> In WSL you may need to first navigate to a folder where you have default write
+> access:
+>
+> ```shell
+> cd home
+> cd <your username>
+> mkdir validator
+> cd validator
+> solana-test-validator
+> ```
 
 <Callout type="success" title="Pro Tip">
 
@@ -359,7 +401,11 @@ solana airdrop 2
 
 The `solana airdrop` command has a limit on how many SOL tokens can be requested
 _per airdrop_ for each cluster (testnet or devnet). If your airdrop transaction
-fails, lower your airdrop request quantity and try again.
+fails, lower your airdrop request quantity and try again. You can also get your
+wallet address using `solana address` and request testing sol on the
+[solana web faucet](https://faucet.solana.com). If you ever need bigger amounts
+you can find ways to do so in this
+[guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
 
 </Callout>
 
@@ -369,9 +415,12 @@ You can check your current wallet's SOL balance any time:
 solana balance
 ```
 
+Congratulations! You are now ready to write your first Solana program. Go ahead
+and check out the next steps below.
+
 ## Next steps
 
 See the links below to learn more about writing Rust based Solana programs:
 
-- [Create and deploy a Solana Rust program](/content/guides/getstarted/local-rust-hello-world.md)
+- [Hello World Solana Rust program](/content/guides/getstarted/local-rust-hello-world.md)
 - [Overview of writing Solana programs](/docs/programs/index.md)
