@@ -194,19 +194,15 @@ For production tokens, a decentralized storage service like one of the following
 is considered more appropriate:
 
 - [Akord](https://akord.com/) - uploads to Arweave; free without sign up for
-  100Mb; uploads can take a while.
-- [NFT Storage](https://nft.storage/) - popular
-- [Irys](https://irys.xyz/) - formerly known as Bundlr, uploads to Arweave.
-
+  100Mb; uploads can take a while
+- [Irys](https://irys.xyz/) - formerly known as Bundlr, uploads to Arweave
 - [Metaboss](https://metaboss.rs/) - by Metaplex
-
+- [NFT Storage](https://nft.storage/) - used by many popular projects
 - [Pinata](https://app.pinata.cloud/) - uploads to IPFS; free with sign up for
-  1Gb;
-
-- [ShadowDrive](https://www.shdwdrive.com/) - a Solana native storage solution.
-
-- [web3.storage](https://web3.storage) - requires signing up for a free plan;
-  first 5Gb are free; easy to use.
+  1Gb
+- [ShadowDrive](https://www.shdwdrive.com/) - a Solana native storage solution
+- [web3.storage](https://web3.storage) - requires signing up for a free plan -
+  first 5Gb are free, easy to use
 
 <Callout type="note">
 
