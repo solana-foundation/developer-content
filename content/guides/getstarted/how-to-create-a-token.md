@@ -166,7 +166,7 @@ We will use our `mnt...` address as the
 [token mint account](/docs/core/tokens.md#mint-account) for our new token:
 
 ```bash
-spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntsBJFZE48XnQteT1vekH35UXDfamtdpFv6Xh8A7Gy.json
+spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntDh6s9hd2wbbS6ZWaYTCC9GXxhXGvbWpUgLt5qYgv.json
 ```
 
 <Callout type="note">
