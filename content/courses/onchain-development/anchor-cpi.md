@@ -337,7 +337,9 @@ the Movie Review program from previous lessons.
 In this lab we’ll update the program to mint tokens to users when they submit a
 new movie review.
 
-#### 1. Starter
+<Steps>
+
+### Starter
 
 To get started, we will be using the final state of the Anchor Movie Review
 program from the previous lesson. So, if you just completed that lesson then
@@ -345,7 +347,7 @@ you’re all set and ready to go. If you are just jumping in here, no worries, y
 can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
 
-#### 2. Add dependencies to `Cargo.toml`
+### Add dependencies to `Cargo.toml`
 
 Before we get started we need enable the `init-if-needed` feature and add the
 `anchor-spl` crate to the dependencies in `Cargo.toml`. If you need to brush up
@@ -354,25 +356,13 @@ on the `init-if-needed` feature take a look at the
 
 ```rust
 [dependencies]
-anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
-anchor-spl = "0.25.0"
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
+anchor-spl = "0.30.1"
 ```
 
-#### 3. Initialize reward token
+### Initialize reward token
 
-Next, navigate to `lib.rs` and create an instruction to initialize a new token
-mint. This will be the token that is minted each time a user leaves a review.
-Note that we don't need to include any custom instruction logic since the
-initialization can be handled entirely through Anchor constraints.
-
-```rust
-pub fn initialize_token_mint(_ctx: Context<InitializeMint>) -> Result<()> {
-    msg!("Token mint initialized");
-    Ok(())
-}
-```
-
-Now, implement the `InitializeMint` context type and list the accounts and
+Next, navigate to `lib.rs` and implement the `InitializeMint` context type and list the accounts and
 constraints the instruction requires. Here we initialize a new `Mint` account
 using a PDA with the string "mint" as a seed. Note that we can use the same PDA
 for both the address of the `Mint` account and the mint authority. Using a PDA
@@ -406,20 +396,38 @@ There may be some constraints above that you haven't seen yet. Adding
 account is initialized as a new token mint with the appropriate decimals and
 mint authority set.
 
-#### 4. Anchor Error
+Now, create an instruction to initialize a new token
+mint. This will be the token that is minted each time a user leaves a review.
+Note that we don't need to include any custom instruction logic since the
+initialization can be handled entirely through Anchor constraints.
 
-Next, let’s create an Anchor Error that we’ll use when validating the `rating`
-passed to either the `add_movie_review` or `update_movie_review` instruction.
+```rust
+pub fn initialize_token_mint(_ctx: Context<InitializeMint>) -> Result<()> {
+    msg!("Token mint initialized");
+    Ok(())
+}
+```
+
+### Anchor Error
+
+Next, let’s create an Anchor Error that we’ll use to validate the following:
+- The `rating` passed to either the `add_movie_review` or `update_movie_review` instruction.
+- The `title` passed to the `add_movie_revie` instruction.
+- The `description` passed to either the `add_movie_review` or `update_movie_review` instruction.
 
 ```rust
 #[error_code]
 enum MovieReviewError {
     #[msg("Rating must be between 1 and 5")]
-    InvalidRating
+    InvalidRating,
+    #[msg("Movie Title too long")]
+    TitleTooLong,
+    #[msg("Movie Description too long")]
+    DescriptionTooLong,
 }
 ```
 
-#### 5. Update `add_movie_review` instruction
+### Update `add_movie_review` instruction
 
 Now that we've done some setup, let’s update the `add_movie_review` instruction
 and `AddMovieReview` context type to mint tokens to the reviewer.
@@ -433,8 +441,6 @@ Next, update the `AddMovieReview` context type to add the following accounts:
   and reviewer
 - `associated_token_program` - required because we'll be using the
   `associated_token` constraint on the `token_account`
-- `rent` - required because we are using the `init-if-needed` constraint on the
-  `token_account`
 
 ```rust
 #[derive(Accounts)]
@@ -445,13 +451,12 @@ pub struct AddMovieReview<'info> {
         seeds=[title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = 8 + 32 + 1 + 4 + title.len() + 4 + description.len()
+        space = MovieAccountState::INIT_SPACE + title.len() + description.len()
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
     pub initializer: Signer<'info>,
     pub system_program: Program<'info, System>,
-    // ADDED ACCOUNTS BELOW
     pub token_program: Program<'info, Token>,
     #[account(
         seeds = ["mint".as_bytes()],
@@ -467,7 +472,6 @@ pub struct AddMovieReview<'info> {
     )]
     pub token_account: Account<'info, TokenAccount>,
     pub associated_token_program: Program<'info, AssociatedToken>,
-    pub rent: Sysvar<'info, Rent>
 }
 ```
 
@@ -475,12 +479,21 @@ Again, some of the above constraints may be unfamiliar to you. The
 `associated_token::mint` and `associated_token::authority` constraints along
 with the `init_if_needed` constraint ensures that if the account has not already
 been initialized, it will be initialized as an associated token account for the
-specified mint and authority.
+specified mint and authority. 
+Also, the payer for the costs related with the account initialiaziation will be set under the constraint `payer`.
+
+If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review` account space allocation,
+please refer to the `solution-pdas` branch that is being used as our starting point. In there, we discuss the inmplementation of the 
+`Space` trait and the `INIT_SPACE` constant.
 
 Next, let’s update the `add_movie_review` instruction to do the following:
 
 - Check that `rating` is valid. If it is not a valid rating, return the
   `InvalidRating` error.
+- Check that `title` length is valid. If it is not a valid length, return the
+  `TitleTooLong` error.
+- Check that `description` length is valid. If it is not a valid length, return the
+  `DescriptionTooLong` error.
 - Make a CPI to the token program’s `mint_to` instruction using the mint
   authority PDA as a signer. Note that we'll mint 10 tokens to the user but need
   to adjust for the mint decimals by making it `10*10^6`.
@@ -502,13 +515,20 @@ Next, update the `add_movie_review` function to:
 
 ```rust
 pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description: String, rating: u8) -> Result<()> {
+    // We require that the rating is between 1 and 5
+    require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+
+    // We require that the title is not longer than 20 characters
+    require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
+
+    // We require that the description is not longer than 50 characters
+    require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+
     msg!("Movie review account created");
     msg!("Title: {}", title);
     msg!("Description: {}", description);
     msg!("Rating: {}", rating);
-
-    require!(rating >= 1 && rating <= 5, MovieReviewError::InvalidRating);
-
+        
     let movie_review = &mut ctx.accounts.movie_review;
     movie_review.reviewer = ctx.accounts.initializer.key();
     movie_review.title = title;
@@ -518,8 +538,8 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
     mint_to(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
-            MintTo {
-                authority: ctx.accounts.mint.to_account_info(),
+            MintTo { 
+                authority: ctx.accounts.mint.to_account_info(), 
                 to: ctx.accounts.token_account.to_account_info(),
                 mint: ctx.accounts.mint.to_account_info()
             },
@@ -537,28 +557,32 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
 }
 ```
 
-#### 6. Update `update_movie_review` instruction
+### Update `update_movie_review` instruction
 
-Here we are only adding the check that `rating` is valid.
+Here we are only adding the check that `rating` and `description` are valid.
 
 ```rust
 pub fn update_movie_review(ctx: Context<UpdateMovieReview>, title: String, description: String, rating: u8) -> Result<()> {
+    // We require that the rating is between 1 and 5
+    require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+
+    // We require that the description is not longer than 50 characters
+    require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+
     msg!("Movie review account space reallocated");
     msg!("Title: {}", title);
     msg!("Description: {}", description);
     msg!("Rating: {}", rating);
-
-    require!(rating >= 1 && rating <= 5, MovieReviewError::InvalidRating);
-
+        
     let movie_review = &mut ctx.accounts.movie_review;
     movie_review.description = description;
     movie_review.rating = rating;
-
+        
     Ok(())
 }
 ```
 
-#### 7. Test
+### Test
 
 Those are all of the changes we need to make to the program! Now, let’s update
 our tests.
@@ -661,6 +685,8 @@ anchor-movie-review-program
 
   5 passing (2s)
 ```
+
+</Steps>
 
 If you need more time with the concepts from this lesson or got stuck along the
 way, feel free to take a look at the
