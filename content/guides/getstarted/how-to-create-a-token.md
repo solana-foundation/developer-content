@@ -221,7 +221,7 @@ First, upload your image file to your desired online storage solution and get
 the link. **Ensure that the link directly opens your image file!**
 
 ```text
-https://github.com/mikemaccana/token-command-line/blob/main/lights.png
+https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/image.png
 ```
 
 #### Create and Upload the offchain metadata file
@@ -234,7 +234,7 @@ you just uploaded:
   "name": "Example Token",
   "symbol": "EXMPL",
   "description": "Example token for Solana Foundation Bootcamp.",
-  "image": "https://github.com/mikemaccana/token-command-line/blob/main/lights.png"
+  "image": "https://github.com/solana-developers/opos-asset/blob/7e9408bccd7611bc7a4c4e6847edd10308b92b5f/assets/CompressedNFT/image.png"
 }
 ```
 
@@ -242,7 +242,7 @@ Then upload the `metadata.json` to the storage provider of your choice. You will
 end up with a link similar to this:
 
 ```text
-https://raw.githubusercontent.com/mikemaccana/token-command-line/main/metadata.json
+https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
 **Ensure that the link directly opens your metadata file!**
@@ -263,7 +263,7 @@ Now we will initialize the metadata for our token with the metadata we just
 created and uploaded.
 
 ```bash
-spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/mikemaccana/token-command-line/main/metadata.json
+spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
 Congratulations, you created a token with metadata! Look at your token in one of
