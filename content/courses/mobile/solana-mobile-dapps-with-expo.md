@@ -669,7 +669,7 @@ export const useMetaplex = (
 
 We're also making a higher-level NFT provider that helps with NFT state
 management. It combines all three of our previous providers:
-`ConnectionProvider`, `AuthProvider,` and `MetaplexProvider` to allow us to
+`ConnectionProvider`, `AuthProvider`, and `MetaplexProvider` to allow us to
 create our `Metaplex` object. We will fill this out at a later step; for now, it
 makes for a good boilerplate.
 
