@@ -415,7 +415,7 @@ Next, let’s create an Anchor Error that we’ll use to validate the following:
 
 - The `rating` passed to either the `add_movie_review` or `update_movie_review`
   instruction.
-- The `title` passed to the `add_movie_revie` instruction.
+- The `title` passed to the `add_movie_review` instruction.
 - The `description` passed to either the `add_movie_review` or
   `update_movie_review` instruction.
 
