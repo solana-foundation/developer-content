@@ -484,7 +484,7 @@ Again, some of the above constraints may be unfamiliar to you. The
 with the `init_if_needed` constraint ensures that if the account has not already
 been initialized, it will be initialized as an associated token account for the
 specified mint and authority. Also, the payer for the costs related with the
-account initialiaziation will be set under the constraint `payer`.
+account initialization will be set under the constraint `payer`.
 
 If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review`
 account space allocation, please refer to the `solution-pdas` branch that is
