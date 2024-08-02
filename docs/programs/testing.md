@@ -32,8 +32,9 @@ There are two ways to test programs on Solana:
    (Python) are examples of the BanksClient-based testing framework.
 
 
-> [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program) can help you generate JS and Rust clients including tests.
-> Anchor is not yet supported.
+> [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program)
+> can help you generate JS and Rust clients including tests. Anchor is not yet
+> supported.
 
 In this guide, we are using Solana Bankrun. `Bankrun` is a superfast, powerful,
 and lightweight framework for testing Solana programs in Node.js.
