@@ -431,7 +431,7 @@ enum MovieReviewError {
 }
 ```
 
-### Update `add_movie_review` instruction
+### Update add_movie_review instruction
 
 Now that we've done some setup, let’s update the `add_movie_review` instruction
 and `AddMovieReview` context type to mint tokens to the reviewer.
