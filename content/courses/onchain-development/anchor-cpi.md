@@ -682,7 +682,7 @@ After that, neither the test for `updateMovieReview` nor the test for
 
 At this point, run `anchor test` and you should see the following output
 
-```typescript
+```shell
 anchor-movie-review-program
     ✔ Initializes the reward token (458ms)
     ✔ Movie review is added (410ms)
