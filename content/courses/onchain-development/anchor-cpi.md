@@ -347,7 +347,7 @@ you’re all set and ready to go. If you are just jumping in here, no worries, y
 can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
 
-### Add dependencies to `Cargo.toml`
+### Add dependencies to Cargo.toml
 
 Before we get started we need enable the `init-if-needed` feature and add the
 `anchor-spl` crate to the dependencies in `Cargo.toml`. If you need to brush up
