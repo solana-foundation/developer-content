@@ -19,7 +19,7 @@ There are two ways to test programs on Solana:
    [BanksClient-based](https://docs.rs/solana-banks-client/latest/solana_banks_client/)
    test frameworks for SBF (Solana Bytecode Format) programs: Bankrun is a
    framework that simulates a Solana bank’s operations, enabling developers to
-   deploy, interact with, and assess the behaviour of programs under test
+   deploy, interact with, and assess the behavior of programs under test
    conditions that mimic the mainnet. It helps set up the test environment and
    offers tools for detailed transaction insights, enhancing debugging and
    verification. With the client, we can load programs, and simulate and process
@@ -31,11 +31,9 @@ There are two ways to test programs on Solana:
    [solders.bankrun](https://kevinheavey.github.io/solders/api_reference/bankrun.html)
    (Python) are examples of the BanksClient-based testing framework.
 
-   ```
-   Note:
-    > [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program) can help you generate JS and Rust clients including tests.
-    > Anchor is not yet supported.
-   ```
+> [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program)
+> can help you generate JS and Rust clients including tests. Anchor is not yet
+> supported.
 
 In this guide, we are using Solana Bankrun. `Bankrun` is a superfast, powerful,
 and lightweight framework for testing Solana programs in Node.js.
