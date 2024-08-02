@@ -4,9 +4,9 @@ description: "Testing native solana programs written with rust using NodeJS"
 ---
 
 When developing programs on Solana, ensuring their correctness and reliability
-is crucial. Until now devs have been using solana-test-validator for testing.
-This document covers testing your Solana program with NodeJS
-using `solana-bankrun`.
+is crucial. Until now devs have been using `solana-test-validator` for testing.
+This document covers testing your Solana program with Node.js  
+using `solana-bankrun`.
 
 ## Overview
 
@@ -15,7 +15,7 @@ There are two ways to test programs on Solana:
 1. [solana-test-validator](https://docs.solanalabs.com/cli/examples/test-validator):
    That spins up a local emulator of the Solana Blockchain on your local machine
    which receives the transactions to be processed by the validator.
-2. The various BanksClient-based test frameworks for SBF(Solana Bytecode Format)
+2. The various [BanksClient-based](https://docs.rs/solana-banks-client/latest/solana_banks_client/) test  frameworks for SBF (Solana Bytecode Format)
    programs: Bankrun is a framework that simulates a Solana bank’s operations,
    enabling developers to deploy, interact with, and assess the behaviour of
    programs under test conditions that mimic the mainnet. It helps set up the
@@ -31,20 +31,19 @@ There are two ways to test programs on Solana:
 
    ```
    Note:
-
-   [pnpm create solana-program](https://github.com/solana-program/create-solana-program) can help you generate JS and Rust clients including tests.
-   Anchor is not yet supported.
+    > [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program) can help you generate JS and Rust clients including tests.  
+    > Anchor is not yet supported.  
    ```
 
 In this guide, we are using Solana Bankrun. `Bankrun` is a superfast, powerful,
 and lightweight framework for testing Solana programs in Node.js.
 
-- The biggest advantage of using Solana Bankrun is that you don’t have to set up
-  an environment to test programs like you’d have to do while using the
-  solana-test-validator. Instead, you can do that with a piece of code, inside
-  the tests.
-- It also dynamically sets time and account data, which isn’t possible with
-  solana-test-validator
+- The biggest advantage of using Solana Bankrun is that you don’t have to set up  
+  an environment to test programs like you’d have to do while using the  
+  `solana-test-validator`. Instead, you can do that with a piece of code, inside  
+  the tests.  
+- It also dynamically sets time and account data, which isn’t possible with  
+  `solana-test-validator`
 
 ## Installation
 
@@ -73,10 +72,10 @@ directories:
 ### Testing Framework
 
 solana-bankrun is used in JavaScript or TypeScript with testing frameworks
-like [ts-mocha](https://www.npmjs.com/package/ts-mocha), [ava,](https://github.com/avajs/ava) [Jest](https://jestjs.io/),
-etc. Make sure to get started with any of the above.
+like [ts-mocha](https://www.npmjs.com/package/ts-mocha), [ava](https://github.com/avajs/ava), [Jest](https://jestjs.io/),  
+etc. Make sure to get started with any of the above.  
 
-Add a [npm script](https://docs.npmjs.com/cli/v9/using-npm/scripts) to test your
+Add an [npm script](https://docs.npmjs.com/cli/v9/using-npm/scripts) to test your
 program and create your `test.ts` file inside `tests` folder.
 
 ```json
@@ -120,7 +119,7 @@ test("testing program instruction", async () => {
   [Rent](https://solana.com/docs/terminology#rent) (in lamports) is  
   required to build a transaction to be submitted, for example, when using the
   SystemProgram's  
-  creates account instruction. You can do that using BanksClient:
+  createAccount() instruction. You can do that using BanksClient:  
 
   ```typescript
   const rent = await client.getRent();
@@ -139,8 +138,8 @@ test("testing program instruction", async () => {
 
 ### Process Transaction
 
-`processTransaction` function executes the transaction with the loaded programs
-and accounts from the start function and will return a transaction object.
+The `processTransaction()` function executes the transaction with the loaded programs  
+and accounts from the start function and will return a transaction.
 
 ```typescript
 let transaction = await client.processTransaction(tx);
