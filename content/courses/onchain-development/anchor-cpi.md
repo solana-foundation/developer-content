@@ -347,7 +347,7 @@ you’re all set and ready to go. If you are just jumping in here, no worries, y
 can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
 
-### Add dependencies to `Cargo.toml`
+### Add dependencies to Cargo.toml
 
 Before we get started we need enable the `init-if-needed` feature and add the
 `anchor-spl` crate to the dependencies in `Cargo.toml`. If you need to brush up
@@ -415,7 +415,7 @@ Next, let’s create an Anchor Error that we’ll use to validate the following:
 
 - The `rating` passed to either the `add_movie_review` or `update_movie_review`
   instruction.
-- The `title` passed to the `add_movie_revie` instruction.
+- The `title` passed to the `add_movie_review` instruction.
 - The `description` passed to either the `add_movie_review` or
   `update_movie_review` instruction.
 
@@ -431,7 +431,7 @@ enum MovieReviewError {
 }
 ```
 
-### Update `add_movie_review` instruction
+### Update add_movie_review instruction
 
 Now that we've done some setup, let’s update the `add_movie_review` instruction
 and `AddMovieReview` context type to mint tokens to the reviewer.
@@ -484,7 +484,7 @@ Again, some of the above constraints may be unfamiliar to you. The
 with the `init_if_needed` constraint ensures that if the account has not already
 been initialized, it will be initialized as an associated token account for the
 specified mint and authority. Also, the payer for the costs related with the
-account initialiaziation will be set under the constraint `payer`.
+account initialization will be set under the constraint `payer`.
 
 If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review`
 account space allocation, please refer to the
@@ -682,7 +682,7 @@ After that, neither the test for `updateMovieReview` nor the test for
 
 At this point, run `anchor test` and you should see the following output
 
-```console
+```shell
 anchor-movie-review-program
     ✔ Initializes the reward token (458ms)
     ✔ Movie review is added (410ms)
