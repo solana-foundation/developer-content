@@ -487,9 +487,10 @@ specified mint and authority. Also, the payer for the costs related with the
 account initialiaziation will be set under the constraint `payer`.
 
 If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review`
-account space allocation, please refer to the `solution-pdas` branch that is
-being used as our starting point. In there, we discuss the implementation of the
-`Space` trait and the `INIT_SPACE` constant.
+account space allocation, please refer to the
+[`solution-pdas`](https://github.com/solana-foundation/developer-content/blob/4c8eada3053061e66b907c9b49701b064544681d/content/courses/onchain-development/anchor-pdas.md?plain=1#L467)
+branch that is being used as our starting point. In there, we discuss the
+implementation of the `Space` trait and the `INIT_SPACE` constant.
 
 Next, let’s update the `add_movie_review` instruction to do the following:
 
