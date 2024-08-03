@@ -72,7 +72,7 @@ lightweight VM that instantly starts when you need it.
 
 First start with
 [installing WSL](https://learn.microsoft.com/en-us/windows/wsl/install) on your
-system. Type the following command in your Windows power shell:
+system. Type the following command in Windows PowerShell:
 
 ```shell
 wsl --install
@@ -327,8 +327,7 @@ solana-test-validator
 > access:
 >
 > ```shell
-> cd home
-> cd <your username>
+> cd ~
 > mkdir validator
 > cd validator
 > solana-test-validator
@@ -403,9 +402,9 @@ The `solana airdrop` command has a limit on how many SOL tokens can be requested
 _per airdrop_ for each cluster (testnet or devnet). If your airdrop transaction
 fails, lower your airdrop request quantity and try again. You can also get your
 wallet address using `solana address` and request testing sol on the
-[solana web faucet](https://faucet.solana.com). If you ever need bigger amounts
+[Solana Web Faucet](https://faucet.solana.com). If you ever need bigger amounts
 you can find ways to do so in this
-[guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
+[airdrop guide](https://solana.com/de/developers/guides/getstarted/solana-token-airdrop-and-faucets)
 
 </Callout>
 

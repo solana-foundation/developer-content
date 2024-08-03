@@ -189,8 +189,8 @@ cargo build-sbf
 > upgrade those tools if you encounter any version incompatibilities. In case
 > you get an error like:
 > `error while loading shared libraries: librustc_driver-278a6e01e221f788.so`you
-> may need to go to `~/.cache/solana/` and `rm -rf` the plattform tools there
-> and then run `cargo build-sbf` again.
+> may need to go to `~/.cache/solana/` and `rm -rf` the platform tools there and
+> then run `cargo build-sbf` again.
 
 ## Deploy your Solana program
 
@@ -226,11 +226,11 @@ Now that the program is deployed we want to call it to see the actual "Hello
 World" on chain. For that we will use Javascript and the `Solana web3.js`
 library.
 
-### Install node
+### Install Node.js
 
-For WSL on windows please follow this
-[guide](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl)
-to install node.
+To use node in WSL2 on Windows, please follow this  
+[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl) to
+install node.
 
 ```shell
 sudo apt-get install curl
@@ -244,16 +244,15 @@ nvm install --lts
 node --version
 ```
 
-For MacOS you can follow this
-[guide](https://nodejs.org/en/download/package-manager)
+For macOS you can
+[install node.js via package manager](https://nodejs.org/en/download/package-manager)
 
 ### Create the client file
 
 Install the Solana web3.js library and the Solana helpers library:
 
 ```shell
-npm install @solana/web3.js
-npm install @solana-developers/helpers
+npm install @solana/web3.js @solana-developers/helpers
 ```
 
 Create a new file called `client.mjs` and add the following code:
@@ -313,7 +312,7 @@ console.log(
 );
 ```
 
-> Don't forget to replace `YOUR_PROGRAM_ID` with the program id you got from the
+> Don't forget to replace `YOUR_PROGRAM_ID` with the program ID you got from the
 > deployment step.
 
 ### Run the client
@@ -335,7 +334,7 @@ Congratulations! Look at your ‘Hello World’ transaction in the Solana Explor
 If you follow the link you should be able to see your 'Hello World' transaction on the Solana explorer.
 </Callout>
 
-## Deploy to solana devnet
+## Deploy to Solana devnet
 
 Now you have successfully deployed your program to your local cluster. If you
 want to deploy it to the public devnet to show your program to your friends you
@@ -345,7 +344,7 @@ can do so by running the following command:
 solana program deploy ./target/deploy/hello_world.so --url https://api.devnet.solana.com
 ```
 
-and then change the connections url in your `client.mjs` also to
+Then change the connections url in your `client.mjs` also to
 `https://api.devnet.solana.com` and run the client again.
 
 ```shell
