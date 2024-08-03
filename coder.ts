@@ -65,7 +65,7 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
         const res = path.resolve(dir, entry.name);
         const relativePath = path.relative(directory, res);
 
-        if (ig.ignores(relativePath)) {
+        if (ig.ignores(relativePath) || entry.name === ".gitignore") {
           debug(`Ignoring file: ${relativePath}`);
           return [];
         }
@@ -165,7 +165,12 @@ const processInChunks = async <T>(
 
 const watchFiles = async (directory: string): Promise<void> => {
   const watcher = chokidar.watch(["**/*.md", "**/*.mdx"], {
-    ignored: /(^|[\/\\])\../, // ignore dotfiles
+    ignored: [
+      /(^|[\/\\])\../,
+      "**/node_modules/**",
+      "**/.git/**",
+      ".gitignore",
+    ], // ignore dotfiles, node_modules, .git, and .gitignore
     persistent: true,
     cwd: directory,
   });
