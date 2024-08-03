@@ -1,4 +1,5 @@
 // remark-code-import
+// code-import.ts
 // https://github.com/kevin940726/remark-code-import
 import fs from "node:fs";
 import path from "node:path";
@@ -55,7 +56,6 @@ function codeImport(options: CodeImportOptions = {}) {
 
     for (const [node] of codes) {
       const fileMeta = (node.meta || "")
-        // Allow escaping spaces
         .split(/(?<!\\) /g)
         .find(meta => meta.startsWith("file="));
 
@@ -67,6 +67,7 @@ function codeImport(options: CodeImportOptions = {}) {
       //   throw new Error('"file" should be an instance of VFile');
       // }
 
+      // regex to get group of code from line number to line number
       const res =
         /^file=(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
           fileMeta,
@@ -82,15 +83,19 @@ function codeImport(options: CodeImportOptions = {}) {
       const toLine = res.groups.to
         ? Number.parseInt(res.groups.to, 10)
         : undefined;
-      const normalizedFilePath = filePath
-        .replace(/^<rootDir>/, rootDir)
-        .replace(/\\ /g, " ");
+
+      // Ensure the file path starts with a '/'
+      if (!filePath.startsWith("/")) {
+        throw new Error(`File path must start with '/': ${filePath}`);
+      }
+
+      // Remove the leading '/' and resolve the path relative to rootDir
+      const normalizedFilePath = path.join(rootDir, filePath.slice(1));
       const fileAbsPath = path.resolve(normalizedFilePath);
 
       if (!options.allowImportingFromOutside) {
         const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
         if (
-          !rootDir ||
           relativePathFromRootDir.startsWith(`..${path.sep}`) ||
           path.isAbsolute(relativePathFromRootDir)
         ) {

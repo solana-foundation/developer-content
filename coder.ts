@@ -47,7 +47,7 @@ const getIgnore = async (directory: string): Promise<Ignore> => {
   return ig;
 };
 
-const getMarkdownFiles = async (directory: string): Promise<string[]> => {
+const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
   const ig = await getIgnore(directory);
 
   const walkDir = async (dir: string): Promise<string[]> => {
@@ -65,7 +65,10 @@ const getMarkdownFiles = async (directory: string): Promise<string[]> => {
           return walkDir(res);
         }
 
-        if (entry.isFile() && entry.name.endsWith(".md")) {
+        if (
+          entry.isFile() &&
+          (entry.name.endsWith(".md") || entry.name.endsWith(".mdx"))
+        ) {
           if (await hasCodeComponentWithFileMeta(res)) {
             return res;
           }
@@ -152,7 +155,7 @@ const processInChunks = async <T>(
 };
 
 const watchFiles = async (directory: string): Promise<void> => {
-  const watcher = chokidar.watch("**/*.md", {
+  const watcher = chokidar.watch(["**/*.md", "**/*.mdx"], {
     ignored: /(^|[\/\\])\../, // ignore dotfiles
     persistent: true,
     cwd: directory,
@@ -181,7 +184,7 @@ const main = async (): Promise<void> => {
     await watchFiles(process.cwd());
   } else {
     // Process all files
-    const files = await getMarkdownFiles(process.cwd());
+    const files = await getMarkdownAndMDXFiles(process.cwd());
     const chunkSize = Math.max(1, Math.ceil(files.length / os.cpus().length));
 
     console.log(`Processing ${files.length} files...`);
