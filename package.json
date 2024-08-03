@@ -24,7 +24,7 @@
     "crowdin:upload": "crowdin upload sources",
     "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
     "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)",
-    "prepare": "husky install"
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install"
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
@@ -47,6 +47,7 @@
     "chokidar": "^3.6.0",
     "concurrently": "^8.2.2",
     "contentlayer2": "^0.4.6",
+    "husky": "^9.1.4",
     "ignore": "^5.3.1",
     "lint-staged": "^15.2.7",
     "mdast": "^3.0.0",
