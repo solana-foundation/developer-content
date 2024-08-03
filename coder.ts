@@ -10,6 +10,14 @@ import ignore, { type Ignore } from "ignore";
 import codeImport from "./src/utils/code-import";
 import chokidar from "chokidar";
 
+let debugMode = false;
+
+const debug = (...args: string[]) => {
+  if (debugMode) {
+    console.log("[DEBUG]", ...args);
+  }
+};
+
 const hasCodeComponentWithFileMeta = async (
   filePath: string,
 ): Promise<boolean> => {
@@ -58,6 +66,7 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
         const relativePath = path.relative(directory, res);
 
         if (ig.ignores(relativePath)) {
+          debug(`Ignoring file: ${relativePath}`);
           return [];
         }
 
@@ -70,8 +79,12 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
           (entry.name.endsWith(".md") || entry.name.endsWith(".mdx"))
         ) {
           if (await hasCodeComponentWithFileMeta(res)) {
+            debug(`Found file with code component: ${relativePath}`);
             return res;
           }
+          debug(
+            `Skipping file (no code component with file meta): ${relativePath}`,
+          );
         }
 
         return [];
@@ -122,9 +135,7 @@ const processContent = async (
 const processFile = async (filePath: string): Promise<void> => {
   try {
     if (!(await hasCodeComponentWithFileMeta(filePath))) {
-      console.log(
-        `Skipping ${filePath}:\n No code component with file meta found.`,
-      );
+      debug(`Skipping ${filePath}: No code component with file meta found.`);
       return;
     }
 
@@ -132,14 +143,12 @@ const processFile = async (filePath: string): Promise<void> => {
     const processedContent = await processContent(originalContent, filePath);
     if (originalContent !== processedContent) {
       await fs.writeFile(filePath, processedContent);
-      console.log(`Updated:\n ${filePath}`);
+      console.log(`Updated: ${filePath}`);
     } else {
-      console.log(`No changes needed for:\n ${filePath}`);
+      debug(`No changes needed for: ${filePath}`);
     }
   } catch (error) {
-    console.error(
-      `Error processing ${filePath}:\n ${(error as Error).message}`,
-    );
+    console.error(`Error processing ${filePath}: ${(error as Error).message}`);
   }
 };
 
@@ -173,6 +182,11 @@ const main = async (): Promise<void> => {
   const filePath = process.argv[2];
   const watchMode =
     process.argv.includes("--watch") || process.argv.includes("-w");
+  debugMode = process.argv.includes("--debug") || process.argv.includes("-d");
+
+  if (debugMode) {
+    console.log("Debug mode enabled");
+  }
 
   if (filePath && !watchMode) {
     // Process single file
