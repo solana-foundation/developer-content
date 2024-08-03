@@ -105,3 +105,6 @@ package-lock.json
 
 # translations are stored in the `i18n` via crowdin
 i18n
+
+# code-import
+code/node_modules

@@ -10,7 +10,9 @@
   "scripts": {
     "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer2 build --clearCache",
-    "dev": "yarn contentlayer:build && next dev -p 3001",
+    "code-import": "npx esrun coder.ts",
+    "dev": "concurrently -p \"[{name}]\" -n \"code import,Contentlayer,next dev\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" \"yarn code-import --watch\" \"yarn contentlayer:build\" \"next dev -p 3001\"",
+    "prebuild": "yarn code-import",
     "build": "yarn prettier:i18n && yarn contentlayer:build && next build",
     "start": "next start -p 3001",
     "test": "yarn contentlayer:build",
@@ -21,7 +23,8 @@
     "crowdin:download": "crowdin download && npm run prettier:i18n",
     "crowdin:upload": "crowdin upload sources",
     "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
-    "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)"
+    "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
@@ -40,7 +43,24 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
+    "@types/mdast": "^4.0.4",
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2",
     "contentlayer2": "^0.4.6",
-    "prettier": "^3.2.4"
+    "ignore": "^5.3.1",
+    "lint-staged": "^15.2.7",
+    "mdast": "^3.0.0",
+    "prettier": "^3.2.4",
+    "remark": "^15.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "strip-indent": "^4.0.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
+    "vfile": "^6.0.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,md,css,md,mdx}": "yarn prettier:fix"
   }
 }
