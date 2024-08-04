@@ -424,13 +424,13 @@ For this lab we'll create a simple counter program with two instructions:
 
 Create a new project called `anchor-counter` by running `anchor init`:
 
-```console
+```shell
 anchor init anchor-counter
 ```
 
 Change into the new directory, then run `anchor build`
 
-```console
+```shell
 cd anchor-counter
 anchor build
 ```
@@ -446,7 +446,7 @@ declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
 
 Run `anchor keys sync`
 
-```console
+```shell
 anchor keys sync
 ```
 
@@ -457,7 +457,7 @@ You'll see the Anchor updates both:
 
 To match the key generated during `anchor build`:
 
-```console
+```shell
 Found incorrect program id declaration in "anchor-counter/programs/anchor-counter/src/lib.rs"
 Updated to BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr
 
@@ -693,7 +693,7 @@ it("Incremented the count", async () => {
 
 Lastly, run `anchor test` and you should see the following output:
 
-```console
+```shell
 anchor-counter
 ✔ Is initialized! (290ms)
 ✔ Incremented the count (403ms)

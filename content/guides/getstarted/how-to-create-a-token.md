@@ -30,15 +30,21 @@ and the
 which allows us to simplify the process a little.
 
 <Callout type="note">
+
 The steps in this guide are for the Token Extensions Program, i.e. program ID
-`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`. This Token Extensions program simplified making tokens because metadata - like the token name, symbol and the URI for the file that describes images - can be [stored directly on the token mint](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet).
+`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`. This Token Extensions program
+simplified making tokens because metadata - like the token name, symbol and the
+URI for the file that describes images - can be
+[stored directly on the token mint](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet).
 
 The older Token Program, i.e. program ID
 `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA` required storing metadata in an
 additional account outside our mint. Tokens using the metadata extension have
 wide support in Solana Wallets and Explorers, but if you can also
 [use the older token program and Metaplex](https://developers.metaplex.com/token-metadata)
-instead. </Callout>
+instead.
+
+</Callout>
 
 ## Installing Solana Tools
 
@@ -77,9 +83,8 @@ This will save the keypair into a JSON file, named after the public key:
 bosy1VC2BH2gh5fdXA3oKn53EuATLwapLWC4VR2sGHJ.json
 ```
 
-<Callout type="note">
-Replace the `bos` public key above with your mint authority public key in the following steps!
-</Callout>
+> Replace the `bos` public key above with your mint authority public key in the
+> following steps!
 
 Keep the contents of the mint authority keypair file safe. Whoever owns the key
 will be able to mint tokens, update metadata, and potentially freeze token
@@ -138,11 +143,10 @@ solana-keygen grind --starts-with mnt:1
 ```
 
 It will save a new keypair named after the public key:
-`mntDh6s9hd2wbbS6ZWaYTCC9GXxhXGvbWpUgLt5qYgv.json`
+`mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ.json`
 
-<Callout type="note">
-Replace the `mnt` address with your token mint account's address in the following steps!
-</Callout>
+> Replace the `mnt` address with your token mint account's address in the
+> following steps!
 
 ## Creating the token mint account
 
@@ -166,16 +170,19 @@ We will use our `mnt...` address as the
 [token mint account](/docs/core/tokens.md#mint-account) for our new token:
 
 ```bash
-spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntsBJFZE48XnQteT1vekH35UXDfamtdpFv6Xh8A7Gy.json
+spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb --enable-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ.json
 ```
 
-<Callout type="note">
-This is also time to add additional
+If desired, this is also the time to add additional
 [token extensions](/content/guides/token-extensions/getting-started.md) to your
 token to have extra functionality, for example
 [transfer fees](/content/guides/token-extensions/transfer-fee.md).
-You cannot add more extensions to your token mint after you create
-the token mint account.
+
+<Callout type="caution">
+
+You CANNOT add more extensions to your token mint after you create the token
+mint account.
+
 </Callout>
 
 ## Create and upload image and offchain metadata
@@ -184,6 +191,9 @@ Next, we will create the offchain metadata for our token. This data is displayed
 on sites like [Solana Explorer](https://explorer.solana.com) when people look at
 our token mint address.
 
+The image should be square, and either 512x512 or 1024x1024 pixels, and less
+than 100kb if possible.
+
 Metadata and media referenced inside (like the `image` ) must be saved somewhere
 publicly accessible online.
 
@@ -191,26 +201,18 @@ For production tokens, a decentralized storage service like one of the following
 is considered more appropriate:
 
 - [Akord](https://akord.com/) - uploads to Arweave; free without sign up for
-  100Mb; uploads can take a while.
-- [NFT Storage](https://nft.storage/) - popular
-- [Irys](https://irys.xyz/) - formerly known as Bundlr, uploads to Arweave.
-
+  100Mb; uploads can take a while
+- [Irys](https://irys.xyz/) - formerly known as Bundlr, uploads to Arweave
 - [Metaboss](https://metaboss.rs/) - by Metaplex
-
+- [NFT Storage](https://nft.storage/) - used by many popular projects
 - [Pinata](https://app.pinata.cloud/) - uploads to IPFS; free with sign up for
-  1Gb;
+  1Gb
+- [ShadowDrive](https://www.shdwdrive.com/) - a Solana native storage solution
+- [web3.storage](https://web3.storage) - requires signing up for a free plan -
+  first 5Gb are free, easy to use
 
-- [ShadowDrive](https://www.shdwdrive.com/) - a Solana native storage solution.
-
-- [web3.storage](https://web3.storage) - requires signing up for a free plan;
-  first 5Gb are free; easy to use.
-
-<Callout type="note">
-
-If you are a provider of decentralized storage solutions and want to be listed
-here, please open a PR using the 'edit page' button.
-
-</Callout>
+> If you are a provider of decentralized storage solutions and want to be listed
+> here, please open a PR using the 'edit page' button.
 
 For a test token, a centralized storage solution like AWS S3, GCP, or GitHub
 (using the 'raw' URL format `https://raw.githubusercontent.com/...` ) is fine.
@@ -221,7 +223,7 @@ First, upload your image file to your desired online storage solution and get
 the link. **Ensure that the link directly opens your image file!**
 
 ```text
-https://github.com/mikemaccana/token-command-line/blob/main/lights.png
+https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/image.png
 ```
 
 #### Create and Upload the offchain metadata file
@@ -233,8 +235,8 @@ you just uploaded:
 {
   "name": "Example Token",
   "symbol": "EXMPL",
-  "description": "Example token for Solana Foundation Bootcamp.",
-  "image": "https://github.com/mikemaccana/token-command-line/blob/main/lights.png"
+  "description": "Example token from Solana Making a Token guide.",
+  "image": "https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/image.png"
 }
 ```
 
@@ -242,7 +244,7 @@ Then upload the `metadata.json` to the storage provider of your choice. You will
 end up with a link similar to this:
 
 ```text
-https://raw.githubusercontent.com/mikemaccana/token-command-line/main/metadata.json
+https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
 **Ensure that the link directly opens your metadata file!**
@@ -251,19 +253,15 @@ Now, we can add this metadata to our token.
 
 ## Add the metadata to the token
 
-<Callout type="note">
-
-As mentioned earlier, this step only works for tokens using the Token Extensions
-program ( `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`), and not the older
-Token Program (`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`).
-
-</Callout>
+> As mentioned earlier, this step only works for tokens using the Token
+> Extensions program ( `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`), and not
+> the older Token Program (`TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`).
 
 Now we will initialize the metadata for our token with the metadata we just
 created and uploaded.
 
 ```bash
-spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/mikemaccana/token-command-line/main/metadata.json
+spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
 Congratulations, you created a token with metadata! Look at your token in one of
@@ -271,7 +269,7 @@ the Solana block explorers:
 
 - [Solana Explorer](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
 - [SolanaFM](https://solana.fm/?cluster=devnet-solana)
-- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ)
+- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
 
 Make sure your explorer is set to devnet (if you are working on devnet) and
 replace the address to your mint address starting with `mnt`.
