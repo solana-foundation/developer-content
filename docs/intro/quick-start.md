@@ -147,8 +147,8 @@ const accountInfo = await pg.connection.getAccountInfo(address);
 console.log(JSON.stringify(accountInfo, null, 2));
 ```
 
-<details>
-{<summary>Explanation</summary>}
+<Accordion>
+<AccordionItem title="Explanation">
 
 This code does three simple things:
 
@@ -170,7 +170,8 @@ This code does three simple things:
   console.log(JSON.stringify(accountInfo, null, 2));
   ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 #### Step 2: Run the Code
 
@@ -183,8 +184,8 @@ run
 You should see details about your wallet account, including its balance in
 lamports, with output similar to the following:
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 $ run
@@ -203,10 +204,8 @@ Running client...
 }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 Your wallet is actually just an account owned by the System Program, where the
 main purpose of the wallet account is to store your SOL balance (amount in the
@@ -236,7 +235,8 @@ Let's break down the fields in the output:
 - `space` - Indicates byte capacity (length) of the `data` field, but is not a
   field in the `AccountInfo` type
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Fetch Token Program
 
@@ -271,8 +271,8 @@ run
 Examine the output and how this program account differs from your wallet
 account.
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal" {15, 17}
 $ run
@@ -297,10 +297,8 @@ Running client...
 }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The Token Extensions program is an executable program account, but note that it
 has the same `AccountInfo` structure.
@@ -327,7 +325,8 @@ The Program Executable Data Account contains the compiled bytecode for the Token
 Extensions Program
 [source code](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program-2022/src).
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Fetch Mint Account
 
@@ -358,8 +357,8 @@ Run the code using the `run` command.
 run
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal" {17}
 $ run
@@ -384,10 +383,8 @@ Running client...
 }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 Key differences in the `AccountInfo`:
 
@@ -398,7 +395,8 @@ Key differences in the `AccountInfo`:
 - `data`: Contains serialized data about the token (mint authority, supply,
   decimals, etc.).
 
-</details>
+</AccordionItem>
+</Accordion>
 
 #### Step 3: Deserialize Mint Account Data
 
@@ -435,8 +433,8 @@ run
 
 You should see the following deserialized Mint account data.
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 Running client...
@@ -450,10 +448,8 @@ Running client...
   tlvData: <Buffer 12 00 40 00 2c 5b 90 b2 42 0c 89 a8 fc 3b 2f d6 15 a8 9d 1e 54 4f 59 49 e8 9e 35 8f ab 88 64 9f 5b db 9c 74 a3 f6 ee 9f 21 a9 76 43 8a ee c4 46 43 3d ... > }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `getMint` function deserializes the account data into the
 [Mint](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L18-L32)
@@ -472,7 +468,8 @@ You can view the fully deserialized
 [Mint Account](https://explorer.solana.com/address/C33qt1dZGZSsqTrHdtLKXPZNoxs6U1ZBfyDkzmj6mXeR?cluster=devnet)
 data, including enabled Token Extensions, on the Solana Explorer.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 </Steps>
 
@@ -530,8 +527,8 @@ console.log(
 );
 ```
 
-<details>
-{<summary>Explanation</summary>}
+<Accordion>
+<AccordionItem title="Explanation">
 
 This script does the following:
 
@@ -583,7 +580,8 @@ This script does the following:
   );
   ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Run the code using the `run` command.
 
@@ -594,8 +592,8 @@ run
 Click on the output link to view the transaction details on the SolanaFM
 explorer.
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 Running client...
@@ -603,7 +601,8 @@ Running client...
     Transaction Signature: https://solana.fm/tx/he9dBwrEPhrfrx2BaX4cUmUbY22DEyqZ837zrGrFRnYEBmKhCb5SvoaUeRKSeLFXiGxC8hFY5eDbHqSJ7NYYo42?cluster=devnet-solana
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ![Transfer SOL](/assets/docs/intro/quickstart/transfer-sol.png)
 
@@ -691,8 +690,8 @@ console.log(
 );
 ```
 
-<details>
-{<summary>Explanation</summary>}
+<Accordion>
+<AccordionItem title="Explanation">
 
 This script performs the following steps:
 
@@ -777,7 +776,8 @@ This script performs the following steps:
   );
   ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Run the code using the `run` command.
 
@@ -793,8 +793,8 @@ You'll see two links printed to the Playground terminal:
 Click the links to inspect the transaction details and the newly created mint
 account on SolanaFM.
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 Running client...
@@ -805,7 +805,8 @@ Transaction Signature: https://solana.fm/tx/3BEjFxqyGwHXWSrEBnc7vTSaXUGDJFY1Zr6L
 Mint Account: https://solana.fm/address/CoZ3Nz488rmATDhy1hPk5fvwSZaipCngvf8rYBYVc4jN?cluster=devnet-solana
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ![Create Token](/assets/docs/intro/quickstart/create-token.png)
 
@@ -879,8 +880,8 @@ pub struct NewAccount {
 }
 ```
 
-<details>
-{<summary>Explanation</summary>}
+<Accordion>
+<AccordionItem title="Explanation">
 
 For now, we'll only cover the high-level overview of the program code:
 
@@ -945,7 +946,8 @@ For now, we'll only cover the high-level overview of the program code:
   }
   ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Build and Deploy Program
 
@@ -958,8 +960,8 @@ build
 Notice that the address in `declare_id!()` has been updated. This is your
 program's on-chain address.
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 $ build
@@ -967,7 +969,8 @@ Building...
 Build successful. Completed in 1.46s.
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Once the program is built, run `deploy` in the terminal to deploy the program to
 the network (devnet by default). To deploy a program, SOL must be allocated to
@@ -981,8 +984,8 @@ running `solana airdrop 5` in the Playground terminal or using the
 deploy
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 $ deploy
@@ -991,7 +994,8 @@ Warning: 1 transaction not confirmed, retrying...
 Deployment successful. Completed in 19s.
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Alternatively, you can also use the `Build` and `Deploy` buttons on the
 left-side panel.
@@ -1051,8 +1055,8 @@ test
 
 You should see an output indicating that the test passed successfully.
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 $ test
@@ -1065,7 +1069,8 @@ Running tests...
   1 passing (963ms)
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 You can also use the `Test` button on the left-side panel.
 
@@ -1084,8 +1089,8 @@ For example:
 solana confirm -v 3TewJtiUz1EgtT88pLJHvKFzqrzDNuHVi8CfD2mWmHEBAaMfC5NAaHdmr19qQYfTiBace6XUmADvR4Qrhe8gH5uc
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal" {29-35}
 $ solana confirm -v 3TewJtiUz1EgtT88pLJHvKFzqrzDNuHVi8CfD2mWmHEBAaMfC5NAaHdmr19qQYfTiBace6XUmADvR4Qrhe8gH5uc
@@ -1127,7 +1132,8 @@ Transaction executed in slot 308150984:
 Confirmed
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Alternatively, you can view the transaction details on
 [SolanaFM](https://solana.fm/) or
@@ -1157,18 +1163,16 @@ For example:
 solana program close 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 $ solana program close 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r
 Closed Program Id 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r, 2.79511512 SOL reclaimed
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 Only the upgrade authority of the program can close it. The upgrade authority is
 set when the program is deployed, and it's the only account with permission to
@@ -1178,7 +1182,8 @@ program becomes immutable and can never be closed or upgraded.
 When deploying programs on Solana Playground, your Playground wallet is the
 upgrade authority for all your programs.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Congratulations! You've just built and deployed your first Solana program using
 the Anchor framework!
@@ -1256,8 +1261,8 @@ program builds successfully.
 build
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```shell filename="Terminal"
 $ build
@@ -1265,7 +1270,8 @@ Building...
 Build successful. Completed in 3.50s.
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Define Message Account Type
 
@@ -1283,8 +1289,8 @@ pub struct MessageAccount {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - #[account]
@@ -1298,10 +1304,8 @@ pub struct MessageAccount {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `#[account]` macro in an Anchor program is used to annotate structs that
 represent account data (data type to store in the AccountInfo's data field).
@@ -1326,7 +1330,8 @@ Later, when reading from the account, this data can be deserialized back into
 the `MessageAccount` data type. The process of creating and reading the account
 data will be demonstrated in the testing section.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Build the program again by running `build` in the terminal.
 
@@ -1364,8 +1369,8 @@ pub struct Create<'info> {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - #[derive(Accounts)]
@@ -1389,10 +1394,8 @@ pub struct Create<'info> {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `#[derive(Accounts)]` macro in an Anchor program is used to annotate structs
 that represent a list of accounts required by an instruction where each field in
@@ -1485,7 +1488,8 @@ generated when the account is created.
 A `String` type requires 4 bytes to store the length of the string, and the
 remaining length is the actual data.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Next, implement the business logic for the `create` instruction by updating the
 `create` function with the following:
@@ -1501,8 +1505,8 @@ pub fn create(ctx: Context<Create>, message: String) -> Result<()> {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - pub fn create(_ctx: Context<Create>) -> Result<()> {
@@ -1519,10 +1523,8 @@ pub fn create(ctx: Context<Create>, message: String) -> Result<()> {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `create` function implements the logic for initializing a new message
 account's data. It takes two parameters:
@@ -1566,7 +1568,8 @@ The body of the function then performs the following logic:
    account_data.bump = ctx.bumps.message_account;
    ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Rebuild the program.
 
@@ -1604,8 +1607,8 @@ pub struct Update<'info> {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - #[derive(Accounts)]
@@ -1630,10 +1633,8 @@ pub struct Update<'info> {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `Update` struct defines the accounts required for the `update` instruction.
 
@@ -1666,7 +1667,8 @@ on the `mesesage_account`, rather than having Anchor recalculate it.
 `#[instruction(message: String)]` annotation enables the `Update` struct to
 access the `message` parameter from the `update` instruction.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Next, implement the logic for the `update` instruction.
 
@@ -1679,8 +1681,8 @@ pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - pub fn update(_ctx: Context<Update>) -> Result<()> {
@@ -1695,10 +1697,8 @@ pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `update` function implements the logic for modifying an existing message
 account. It takes two parameters:
@@ -1715,7 +1715,8 @@ The body of the function then:
    - Accesses the `message_account` from the context.
    - Sets the `message` field to the new `message` from the function argument.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Rebuld the program
 
@@ -1745,8 +1746,8 @@ pub struct Delete<'info> {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - #[derive(Accounts)]
@@ -1767,10 +1768,8 @@ pub struct Delete<'info> {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `Delete` struct defines the accounts required for the `delete` instruction:
 
@@ -1790,7 +1789,8 @@ The `Delete` struct defines the accounts required for the `delete` instruction:
    - `close = user` constraint specifies that this account will be closed and
      its lamports transferred to the `user` account
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Next, implement the logic for the `update` instruction.
 
@@ -1801,8 +1801,8 @@ pub fn delete(_ctx: Context<Delete>) -> Result<()> {
 }
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - pub fn delete(_ctx: Context<Delete>) -> Result<()> {
@@ -1815,10 +1815,8 @@ pub fn delete(_ctx: Context<Delete>) -> Result<()> {
 + }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `delete` function takes one parameter:
 
@@ -1831,7 +1829,8 @@ The body of the function only prints a message to program logs using the
 actual closing of the account is handled by the `close` constraint in the
 `Delete` struct.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Rebuild the program.
 
@@ -1848,8 +1847,8 @@ in the Playground terminal.
 deploy
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```bash
 $ deploy
@@ -1857,7 +1856,8 @@ Deploying... This could take a while depending on the program size and network c
 Deployment successful. Completed in 17s.
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Set Up Test File
 
@@ -1887,8 +1887,8 @@ const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
 );
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
   import { PublicKey } from "@solana/web3.js";
@@ -1910,10 +1910,8 @@ const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
   });
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 In this section, we are simply setting up the test file.
 
@@ -1936,7 +1934,8 @@ const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
 );
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Run the test file by running `test` in the Playground terminal to check the file
 runs as expected. We will implement the tests in the following steps.
@@ -1945,8 +1944,8 @@ runs as expected. We will implement the tests in the following steps.
 test
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```bash
 $ test
@@ -1959,7 +1958,8 @@ Running tests...
   3 passing (4ms)
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Invoke Create Instruction
 
@@ -1988,8 +1988,8 @@ it("Create Message Account", async () => {
 });
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - it("Create Message Account", async () => {});
@@ -2016,10 +2016,8 @@ it("Create Message Account", async () => {
 + });
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 First, we send a transaction that invokes the `create` instruction, passing in
 "Hello, World!" as the message.
@@ -2054,7 +2052,8 @@ console.log(
 );
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Invoke Update Instruction
 
@@ -2083,8 +2082,8 @@ it("Update Message Account", async () => {
 });
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - it("Update Message Account", async () => {});
@@ -2111,10 +2110,8 @@ it("Update Message Account", async () => {
 + });
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 First, we send a transaction that invokes the `update` instruction, passing in
 "Hello, Solana!" as the new message.
@@ -2149,7 +2146,8 @@ console.log(
 );
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Invoke Delete Instruction
 
@@ -2177,8 +2175,8 @@ it("Delete Message Account", async () => {
 });
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 - it("Delete Message Account", async () => {});
@@ -2204,10 +2202,8 @@ it("Delete Message Account", async () => {
 + });
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 First, we send a transaction that invokes the `delete` instruction to close the
 message account.
@@ -2243,7 +2239,8 @@ console.log(
 );
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Run Test
 
@@ -2254,8 +2251,8 @@ terminal.
 test
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```bash
 $ test
@@ -2282,7 +2279,8 @@ Running tests...
   3 passing (3s)
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 </Steps>
 
@@ -2312,15 +2310,16 @@ Begin by updating the `lib.rs` file to bring into scope items from the
 use anchor_lang::system_program::{transfer, Transfer};
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
   use anchor_lang::prelude::*;
 + use anchor_lang::system_program::{transfer, Transfer};
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Next, update the `Update` struct to include an additional account called
 `vault_account`. This account, controlled by our program, will receive SOL from
@@ -2335,8 +2334,8 @@ a user when they update their message account.
 pub vault_account: SystemAccount<'info>,
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 #[derive(Accounts)]
@@ -2364,10 +2363,8 @@ pub struct Update<'info> {
 }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 We're adding a new account called `vault_account` to our `Update` struct. This
 account serves as a program-controlled "vault" that will receive SOL from users
@@ -2395,7 +2392,8 @@ This setup allows our program to:
 In the `delete` instruction, we'll demonstrate how our program can "sign" for
 this PDA in a CPI.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Next, implement the CPI logic in the `update` instruction to transfer 0.001 SOL
 from the user's account to the vault account.
@@ -2412,8 +2410,8 @@ let cpi_context = CpiContext::new(
 transfer(cpi_context, 1_000_000)?;
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
     pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
@@ -2434,10 +2432,8 @@ transfer(cpi_context, 1_000_000)?;
     }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 In the `update` instruction, we implement a Cross Program Invocation (CPI) to
 invoke the System Program's `transfer` instruction. This demonstrates how to
@@ -2486,7 +2482,8 @@ specify the program, accounts, and instruction data for a particular instruction
 to invoke. When our program's `update` instruction is invoked, it internally
 invokes the System Program's transfer instruction.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Rebuild the program.
 
@@ -2519,8 +2516,8 @@ System Program.
 pub system_program: Program<'info, System>,
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 #[derive(Accounts)]
@@ -2545,10 +2542,8 @@ pub struct Delete<'info> {
 }
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 The `vault_account` uses the same PDA derivation as in the Update struct.
 
@@ -2556,7 +2551,8 @@ Add the `vault_account` to the Delete struct enables our program to access the
 user's vault account during the delete instruction to transfer any accumulated
 SOL back to the user.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Next, implement the CPI logic in the `delete` instruction to transfer SOL from
 the vault account back to the user's account.
@@ -2580,8 +2576,8 @@ transfer(cpi_context, ctx.accounts.vault_account.lamports())?;
 Note that we updated `_ctx: Context<Delete>` to `ctx: Context<Delete>` as we'll
 be using the context in the body of the function.
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 -    pub fn delete(_ctx: Context<Delete>) -> Result<()> {
@@ -2606,10 +2602,8 @@ be using the context in the body of the function.
 
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 In the delete instruction, we implement another Cross Program Invocation (CPI)
 to invoke the System Program's transfer instruction. This CPI demonstrates how
@@ -2664,7 +2658,8 @@ funds. When our program's delete instruction is invoked, it internally calls the
 System Program's transfer instruction, signing for the PDA to authorize the
 transfer of all funds from the vault back to the user.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 Rebuild the program.
 
@@ -2682,8 +2677,8 @@ a program simply requires deploying the compiled program at the same program ID.
 deploy
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```bash
 $ deploy
@@ -2691,10 +2686,8 @@ Deploying... This could take a while depending on the program size and network c
 Deployment successful. Completed in 17s.
 ```
 
-</details>
-
-<details>
-{<summary>Explanation</summary>}
+</AccordionItem>
+<AccordionItem title="Explanation">
 
 Only the upgrade authority of the program can update it. The upgrade authority
 is set when the program is deployed, and it's the only account with permission
@@ -2704,7 +2697,8 @@ program becomes immutable and can never be closed or upgraded.
 When deploying programs on Solana Playground, your Playground wallet is the
 upgrade authority for all your programs.
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Update Test File
 
@@ -2723,8 +2717,8 @@ const [vaultPda, vaultBump] = PublicKey.findProgramAddressSync(
 );
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
 describe("pda", () => {
@@ -2745,7 +2739,8 @@ describe("pda", () => {
   });
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 #### Modify Update Test
 
@@ -2761,8 +2756,8 @@ const transactionSignature = await program.methods
   .rpc({ commitment: "confirmed" });
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
     const transactionSignature = await program.methods
@@ -2774,7 +2769,8 @@ const transactionSignature = await program.methods
       .rpc({ commitment: "confirmed" });
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 #### Modify Delete Test
 
@@ -2790,8 +2786,8 @@ const transactionSignature = await program.methods
   .rpc({ commitment: "confirmed" });
 ```
 
-<details>
-{<summary>Diff</summary>}
+<Accordion>
+<AccordionItem title="Diff">
 
 ```diff
     const transactionSignature = await program.methods
@@ -2803,7 +2799,8 @@ const transactionSignature = await program.methods
       .rpc({ commitment: "confirmed" });
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 ### Rerun Test
 
@@ -2814,8 +2811,8 @@ expected:
 test
 ```
 
-<details>
-{<summary>Output</summary>}
+<Accordion>
+<AccordionItem title="Output">
 
 ```bash
 $ test
@@ -2842,7 +2839,8 @@ Running tests...
   3 passing (3s)
 ```
 
-</details>
+</AccordionItem>
+</Accordion>
 
 You can then inspect the SolanFM links to view the transaction details, where
 you’ll find the CPIs for the transfer instructions within the update and delete
