@@ -202,6 +202,7 @@ corresponding path within this repo and webpage for viewing on solana.com:
 | ------------ | ------------------------------------------- | --------------------------------------------------------- |
 | `docs`       | [`/docs`](/docs/)                           | [View Docs](https://solana.com/docs)                      |
 | `rpc`        | [`/docs/rpc`](/docs/rpc/)                   | [View Docs](https://solana.com/docs/rpc)                  |
+| `courses`    | [`/content/courses`](/content/courses/)     | [View Courses](https://solana.com/developers/courses)     |
 | `guides`     | [`/content/guides`](/content/guides/)       | [View Guides](https://solana.com/developers/guides)       |
 | `resources`  | [`/content/resources`](/content/resources/) | [View Resources](https://solana.com/developers/resources) |
 | `cookbook`   | [`/content/cookbook`](/content/cookbook)    | [View Cookbook](https://solana.com/developers/cookbook)   |
