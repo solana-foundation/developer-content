@@ -7,11 +7,9 @@ objectives:
   - Use the Anchor `MethodsBuilder` to build instructions and transactions
   - Use Anchor to fetch accounts
   - Set up a frontend to invoke instructions using Anchor and an IDL
-description:
-  "Use Anchor's automatic JS/TS clients to send instructions to your program."
 ---
 
-## Summary
+# Summary
 
 - An **IDL** is a file representing the structure of a Solana program. Programs
   written and built using Anchor automatically generate a corresponding IDL. IDL
@@ -26,7 +24,7 @@ description:
 - The **Anchor `MethodsBuilder`** provides a simple interface through `Program`
   for building instructions and transactions
 
-## Lesson
+# Lesson
 
 Anchor simplifies the process of interacting with Solana programs from the
 client by providing an Interface Description Language (IDL) file that reflects
@@ -34,7 +32,7 @@ the structure of a program. Using the IDL in conjunction with Anchor's
 Typescript library (`@coral-xyz/anchor`) provides a simplified format for
 building instructions and transactions.
 
-```typescript
+```tsx
 // sends transaction
 await program.methods
   .instructionName(instructionDataInputs)
@@ -47,7 +45,7 @@ This works from any Typescript client, whether it's a frontend or integration
 tests. In this lesson we'll go over how to use `@coral-xyz/anchor` to simplify
 your client-side program interaction.
 
-### Anchor client-side structure
+## Anchor client-side structure
 
 Let's start by going over the basic structure of Anchor's Typescript library.
 The primary object you'll be using is the `Program` object. A `Program` instance
@@ -62,13 +60,13 @@ To create an instance of `Program`, you'll need the following:
 - `Provider` - encapsulates the `Connection` to a Solana cluster and a `Wallet`
 - `ProgramId` - the program’s onchain address
 
-![Anchor structure](/public/assets/courses/unboxed/anchor-client-structure.png)
+![Anchor structure](../assets/anchor-client-structure.png)
 
 The above image shows how each of these pieces are combined to create a
 `Program` instance. We'll go over each of them individually to get a better idea
 of how everything ties together.
 
-#### Interface Description Language (IDL)
+### Interface Description Language (IDL)
 
 When you build an Anchor program, Anchor generates both a JSON and Typescript
 file representing your program's IDL. The IDL represents the structure of the
@@ -150,11 +148,11 @@ Regardless of how you get it, you _need_ an IDL file to interact with a program
 using the `@coral-xyz/anchor` package. To use the IDL, you'll need to include
 the IDL file in your project and then import the file.
 
-```typescript
+```tsx
 import idl from "./idl.json";
 ```
 
-#### Provider
+### Provider
 
 Before you can create a `Program` object using the IDL, you first need to create
 an Anchor `Provider` object.
@@ -173,7 +171,7 @@ extension.
 
 Setting up the `Wallet` and `Connection` would look something like this:
 
-```typescript
+```tsx
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 
 const { connection } = useConnection();
@@ -190,7 +188,7 @@ provides a `useAnchorWallet` hook.
 
 For comparison, here is the `AnchorWallet` from `useAnchorWallet`:
 
-```typescript
+```tsx
 export interface AnchorWallet {
   publicKey: PublicKey;
   signTransaction(transaction: Transaction): Promise<Transaction>;
@@ -200,7 +198,7 @@ export interface AnchorWallet {
 
 And the `WalletContextState` from `useWallet`:
 
-```typescript
+```tsx
 export interface WalletContextState {
   autoConnect: boolean;
   wallets: Wallet[];
@@ -242,7 +240,7 @@ The `AnchorProvider` constructor takes three parameters:
 Once you’ve created the `Provider` object, you then set it as the default
 provider using `setProvider`.
 
-```typescript
+```tsx
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { AnchorProvider, setProvider } from "@coral-xyz/anchor";
 
@@ -252,7 +250,7 @@ const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 ```
 
-#### Program
+### Program
 
 Once you have the IDL and a provider, you can create an instance of `Program`.
 The constructor requires three parameters:
@@ -279,7 +277,7 @@ explicitly specified.
 
 All together, the final setup looks something like this:
 
-```typescript
+```tsx
 import idl from "./idl.json";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { Program, Idl, AnchorProvider, setProvider } from "@coral-xyz/anchor";
@@ -294,7 +292,7 @@ const programId = new PublicKey("JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n");
 const program = new Program(idl as Idl, programId);
 ```
 
-### Anchor `MethodsBuilder`
+## Anchor `MethodsBuilder`
 
 Once the `Program` object is set up, you can use the Anchor Methods Builder to
 build instructions and transactions related to the program. The `MethodsBuilder`
@@ -307,7 +305,7 @@ the writing the program in rust.
 
 The basic `MethodsBuilder` format looks like this:
 
-```typescript
+```tsx
 // sends transaction
 await program.methods
   .instructionName(instructionDataInputs)
@@ -340,7 +338,7 @@ You can also build the transaction directly by changing `.rpc()` to
 `.transaction()`. This builds a `Transaction` object using the instruction
 specified.
 
-```typescript
+```tsx
 // creates transaction
 const transaction = await program.methods
   .instructionName(instructionDataInputs)
@@ -354,7 +352,7 @@ Similarly, you can use the same format to build an instruction using
 `.instruction()` and then manually add the instructions to a new transaction.
 This builds a `TransactionInstruction` object using the instruction specified.
 
-```typescript
+```tsx
 // creates first instruction
 const instructionOne = await program.methods
   .instructionOneName(instructionOneDataInputs)
@@ -380,7 +378,7 @@ transaction, or build and send a transaction using basically the same format
 without having to manually serialize or deserialize the accounts or instruction
 data.
 
-### Fetch program accounts
+## Fetch program accounts
 
 The `Program` object also allows you to easily fetch and filter program
 accounts. Simply call `account` on `program` and then specify the name of the
@@ -390,7 +388,7 @@ accounts as specified.
 The example below shows how you can fetch all existing `counter` accounts for
 the Counter program.
 
-```typescript
+```tsx
 const accounts = await program.account.counter.all();
 ```
 
@@ -404,7 +402,7 @@ the IDL to see that the next byte stores the `count` field of type `u64`. Anchor
 then filters for and returns all accounts with matching bytes in the same
 position.
 
-```typescript
+```tsx
 const accounts = await program.account.counter.all([
   {
     memcmp: {
@@ -418,20 +416,20 @@ const accounts = await program.account.counter.all([
 Alternatively, you can also get the deserialized account data for a specific
 account using `fetch` if you know the address of the account you're looking for.
 
-```typescript
+```tsx
 const account = await program.account.counter.fetch(ACCOUNT_ADDRESS);
 ```
 
 Similarly, you can fetch multiple accounts using `fetchMultiple`.
 
-```typescript
+```tsx
 const accounts = await program.account.counter.fetchMultiple([
   ACCOUNT_ADDRESS_ONE,
   ACCOUNT_ADDRESS_TWO,
 ]);
 ```
 
-## Lab
+# Lab
 
 Let’s practice this together by building a frontend for the Counter program from
 last lesson. As a reminder, the Counter program has two instructions:
@@ -439,7 +437,7 @@ last lesson. As a reminder, the Counter program has two instructions:
 - `initialize` - initializes a new `Counter` account and sets the `count` to `0`
 - `increment` - increments the `count` on an existing `Counter` account
 
-#### 1. Download the starter code
+### 1. Download the starter code
 
 Download
 [the starter code for this project](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/starter).
@@ -453,7 +451,7 @@ the `idl.json` file for the Counter program, and the `Initialize` and
 `Increment` components we’ll be building throughout this lab. The `programId` of
 the program we’ll be invoking is also included in the starter code.
 
-#### 2. `Initialize`
+### 2. `Initialize`
 
 To begin, let’s complete the setup to create the `Program` object in
 `Initialize.tsx` component.
@@ -464,7 +462,7 @@ and a connection, which we can get from the `useAnchorWallet` and
 `useConnection` hooks. Let's also create a `useState` to capture the program
 instance.
 
-```typescript
+```tsx
 export const Initialize: FC<Props> = ({ setCounter }) => {
   const [program, setProgram] = useState("")
 
@@ -485,7 +483,7 @@ need to create one.
 
 Once we have a provider, we can construct a `Program` instance.
 
-```typescript
+```tsx
 useEffect(() => {
   let provider: anchor.Provider;
 
@@ -517,7 +515,7 @@ Lastly, you can use `.rpc()` to submit the transaction to the user's wallet.
 Once the transaction goes through, call `setUrl` with the explorer URL and then
 call `setCounter`, passing in the counter account.
 
-```typescript
+```tsx
 const onClick = async () => {
   const sig = await program.methods
     .initialize()
@@ -534,7 +532,7 @@ const onClick = async () => {
 };
 ```
 
-#### 3. `Increment`
+### 3. `Increment`
 
 Next, let’s move on the the `Increment.tsx` component. Just as before, complete
 the setup to create the `Program` object. In addition to calling `setProgram`,
@@ -542,7 +540,7 @@ the `useEffect` should call `refreshCount`.
 
 Add the following code for the initial set up:
 
-```typescript
+```tsx
 export const Increment: FC<Props> = ({ counter, setTransactionUrl }) => {
   const [count, setCount] = useState(0)
   const [program, setProgram] = useState<anchor.Program>()
@@ -571,7 +569,7 @@ Next, let’s use the Anchor `MethodsBuilder` to build a new instruction to invo
 the `increment` instruction. Again, Anchor can infer the `user` account from the
 wallet so we only need to include the `counter` account.
 
-```typescript
+```tsx
 const incrementCount = async () => {
   const sig = await program.methods
     .increment()
@@ -585,7 +583,7 @@ const incrementCount = async () => {
 };
 ```
 
-#### 4. Display the correct count
+### 4. Display the correct count
 
 Now that we can initialize the counter program and increment the count, we need
 to get our UI to show the count stored in the counter account.
@@ -597,7 +595,7 @@ count after each `increment` invocation.
 Inside `refreshCount`, let's use `program` to fetch the counter account, then
 use `setCount` to set the count to the number stored on the program:
 
-```typescript
+```tsx
 const refreshCount = async program => {
   const counterAccount = await program.account.counter.fetch(counter);
   setCount(counterAccount.count.toNumber());
@@ -606,7 +604,7 @@ const refreshCount = async program => {
 
 Super simple with Anchor!
 
-#### 5. Test the frontend
+### 5. Test the frontend
 
 At this point, everything should work! You can test the frontend by running
 `npm run dev`.
@@ -620,13 +618,13 @@ At this point, everything should work! You can test the frontend by running
 5. Wait a few seconds and click `Refresh Count`. The count should increment on
    the screen.
 
-![Anchor Frontend Demo](/public/assets/courses/unboxed/anchor-frontend-demo.gif)
+![Gif of Anchor Frontend Demo](../assets/anchor-frontend-demo.gif)
 
 Feel free to click the links to inspect the program logs from each transaction!
 
-![Initialize Program Log](/public/assets/courses/unboxed/anchor-frontend-initialize.png)
+![Initialize Program Log](../assets/anchor-frontend-initialize.png)
 
-![Increment Program Log](/public/assets/courses/unboxed/anchor-frontend-increment.png)
+![Increment Program Log](../assets/anchor-frontend-increment.png)
 
 Congratulations, you now know how to set up a frontend to invoke a Solana
 program using an Anchor IDL.
@@ -636,7 +634,7 @@ feel free to have a look at
 the [solution code on the `solution-increment` branch](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/solution-increment) before
 continuing.
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Building on top of what
 we’ve done in the lab, try to create a new component in the frontend that
@@ -655,7 +653,7 @@ Try to do this independently if you can! But if you get stuck, feel free to
 reference
 the [solution code](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/solution-decrement).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=774a4023-646d-4394-af6d-19724a6db3db)!
-</Callout>

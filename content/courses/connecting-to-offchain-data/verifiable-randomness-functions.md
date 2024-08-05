@@ -5,10 +5,9 @@ objectives:
   - Explain how Verifiable Randomness works
   - Use Switchboard's VRF oracle queue to generate and consume randomness from
     an onchain program
-description: "Use proper cryptographic randomness in your onchain programs."
 ---
 
-## Summary
+# Summary
 
 - Attempts at generating randomness within your program are likely to be
   guessable by users given there's no true randomness onchain.
@@ -18,9 +17,9 @@ description: "Use proper cryptographic randomness in your onchain programs."
   outputs were calculated correctly.
 - Switchboard offers a developer-friendly VRF for the Solana ecosystem.
 
-## Lesson
+# Lesson
 
-### Randomness onchain
+## Randomness On-Chain
 
 Random numbers are **_not_** natively allowed onchain. This is because Solana is
 deterministic, every validator runs your code and needs to have the same result.
@@ -29,7 +28,7 @@ blockchain for your randomness. This is where Verifiable Random Functions (VRFs)
 come in. VRFs offer developers a secure means of integrating randomness onchain
 in a decentralized fashion.
 
-### Types of Randomness
+## Types of Randomness
 
 Before we dive into how random numbers can be generated for a blockchain, we
 must first understand how they are generated on traditional computer systems.
@@ -59,10 +58,11 @@ Unfortunately, neither type of randomness is natively available in Solana
 programs, because these programs have to be deterministic. All validators need
 to come to the same conclusion. There is no way they’d all draw the same random
 number, and if they used a seed, it’d be prone to attacks. See the
-[Solana FAQs](https://solana.com/docs/programs/lang-rust#depending-on-rand) for
-more. So we’ll have to look outside of the blockchain for randomness with VRFs.
+[Solana FAQs](https://docs.solana.com/developing/onchain-programs/developing-rust#depending-on-rand)
+for more. So we’ll have to look outside of the blockchain for randomness with
+VRFs.
 
-### What is Verifiable Randomness?
+## What is Verifiable Randomness?
 
 A Verifiable Random Function (VRF) is a public-key pseudorandom function that
 provides proofs that its outputs were calculated correctly. This means we can
@@ -83,7 +83,7 @@ There are three key properties of a VRF:
    random value. Given the same secret key and nonce, the VRF will always
    produce the same output. This property ensures that the random value can be
    reproduced and verified by anyone.
-2. **Unpredictability** - The output of a VRF appears indistinguishable from
+2. **Unpredicatability** - The output of a VRF appears indistinguishable from
    true randomness to anyone without access to the secret key. This property
    ensures that even though the VRF is deterministic, you cannot predict the
    result ahead of time without knowledge of the inputs.
@@ -94,15 +94,14 @@ VRFs are not specific to Solana and have been utilized on other blockchains to
 generate pseudorandom numbers. Fortunately switchboard offers their
 implementation of VRF to Solana.
 
-### Switchboard VRF Implementation
+## Switchboard VRF Implementation
 
 Switchboard is a decentralized Oracle network that offers VRFs on Solana.
 Oracles are services that provide external data to a blockchain, allowing them
 to interact with and respond to real-world events. The Switchboard network is
 made up of many different individual oracles run by third parties to provide
 external data and service requests onchain. To learn more about Switchboard’s
-Oracle network, please refer to our
-[Oracle lesson](/developers/courses/connecting-to-offchain-data/oracles).
+Oracle network, please refer to our [Oracle lesson](./oracles).
 
 Switchboard's VRF allows users to request an oracle to produce a randomness
 output onchain. Once an oracle has been assigned the request, the proof of the
@@ -112,10 +111,10 @@ verified, the Switchboard program will execute a onchain callback defined by the
 VRF Account during account creation. From there the program can consume the
 random data.
 
-You might be wondering how they get paid. In Switchboard’s VRF implementation,
-you actually pay per request.
+You might be wondering how they get paid. In switchboard’s VRF implementation,
+you actually pay per request. // NEEDS more data
 
-### Requesting and Consuming VRF
+## Requesting and Consuming VRF
 
 Now that we know what a VRF is and how it fits into the Switchboard Oracle
 network, let’s take a closer look at how to actually request and consume
@@ -146,7 +145,7 @@ request randomness, specifically the `authority` and `vrf` accounts. The
 randomness. So the PDA we create will have our own seeds for our own needs. For
 now, we'll simply set them at `VRFAUTH`.
 
-```typescript
+```tsx
 // derive PDA
 [vrfAuthorityKey, vrfAuthoritySecret] =
   anchor.web3.PublicKey.findProgramAddressSync(
@@ -193,10 +192,9 @@ to request randomness on this `vrf` account. That way, only that program can
 provide the signature needed for the vrf request. The `oracle_queue` field
 allows you to specify which specific oracle queue you’d like to service the vrf
 requests made with this account. If you aren’t familiar with oracle queues on
-Switchboard, checkout the
-[Oracles lesson in the Connecting to Offchain Data course](/content/courses/connecting-to-offchain-data/oracles)!
-Lastly, the `callback` field is where you define the callback instruction the
-Switchboard program should invoke once the randomness result has be verified.
+Switchboard, checkout the [Oracles lesson in this unit](./oracles)! Lastly, the
+`callback` field is where you define the callback instruction the Switchboard
+program should invoke once the randomness result has be verified.
 
 The `callback` field is of type
 `[CallbackZC](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L25)`.
@@ -220,7 +218,7 @@ pub struct CallbackZC {
 
 This is how you define the Callback struct client side.
 
-```typescript
+```tsx
 // example
 import Callback from '@switchboard-xyz/solana.js'
 ...
@@ -241,7 +239,7 @@ const vrfCallback: Callback = {
 
 Now, you can create the `vrf` account.
 
-```typescript
+```tsx
 // Create Switchboard VRF
 [vrfAccount] = await switchboard.queue.createVrf({
   callback: vrfCallback,
@@ -436,15 +434,14 @@ What you do with the random values from there is completely up to you!
 That is the essence of requesting randomness with a Switchboard VRF. To recap
 the steps involved in a VRF request, review this diagram.
 
-![VRF Diagram](/public/assets/courses/unboxed/vrf-diagram.png)
+![VRF Diagram](../assets/vrf-diagram.png)
 
-## Lab
+# Lab
 
 For this lesson’s lab, we will be picking up where we left off in the
-[Oracle lesson](/content/courses/connecting-to-offchain-data/oracles). If you
-haven't completed the Oracle lesson and demo, we strongly recommend you do as
-there are a lot of overlapping concepts and we’ll be starting from the Oracle
-lesson’s codebase.
+[Oracle lesson](./oracle). If you have'nt completed the Oracle lesson and demo,
+we strongly recommend you do as there are a lot of overlapping concepts and
+we’ll be starting from the Oracle lesson’s codebase.
 
 If you don't want to complete the Oracle lesson, the starter code for this lab
 is provided for you in
@@ -458,12 +455,12 @@ by rolling doubles. Our demo today will allow the user to roll two virtual dice,
 if they roll doubles (the two dice match), the user can withdraw their funds
 from escrow regardless of the SOL price.
 
-#### 1. Program Setup
+### 1. Program Setup
 
 If you are cloning the repo from the previous lesson make sure to do the
 following:
 
-1. `git clone https://github.com/Unboxed-Software/michael-burry-escrow`
+1. `git clone [https://github.com/Unboxed-Software/michael-burry-escrow](https://github.com/Unboxed-Software/michael-burry-escrow)`
 2. `cd michael-burry-escrow`
 3. `anchor build`
 4. `anchor keys list`
@@ -478,19 +475,19 @@ following:
 When all tests pass we’re ready to begin. We will start by filling in some
 boilerplate stuff, then we’ll implement the functions.
 
-#### 2. Cargo.toml
+### 2. Cargo.toml
 
 First, since VRF uses SPL tokens for their fees we need to import `anchor-spl`
 in our `Cargo.toml` file.
 
-```typescript
+```tsx
 [dependencies]
 anchor-lang = "0.28.0"
 anchor-spl = "0.28.0"
 switchboard-v2 = "0.4.0"
 ```
 
-#### 3. Lib.rs
+### 3. Lib.rs
 
 Next, let's edit `lib.rs` and add the additional functions we'll be building
 today. The functions are as follows:
@@ -499,7 +496,7 @@ today. The functions are as follows:
   consume the randomness.
 - `get_out_of_jail` - Requests the randomness from the VRF, effectively rolling
   the dice.
-- `consume_randomness` - The callback function for the VRF where we will check
+- `consume_randomess` - The callback function for the VRF where we will check
   for the dice rolls.
 
 ```rust
@@ -547,7 +544,7 @@ mod burry_escrow {
 
 Make sure you replace `YOUR_KEY_HERE` with your own program key.
 
-#### 4. State.rs
+### 4. State.rs
 
 Next, in `state.rs`, add an `out_of_jail` flag to `EscrowState`. When we finally
 roll two matching die, we'll flip this flag. When the `withdraw` function is
@@ -581,7 +578,7 @@ means that we will initialize it with `load_init()` and pass it into accounts
 with `AccountLoader`. We do this because VRF functions are very account
 intensive and we need to be mindful of the stack. If you'd like to learn more
 about `zero_copy`, take a look at our
-[Program Architecture lesson](/developers/courses/program-optimization/program-architecture).
+[Program Architecture lesson](./program-architecture).
 
 ```rust
 // state.rs
@@ -638,7 +635,7 @@ pub struct VrfClientState {
 }
 ```
 
-#### 5. Errors.rs
+### 5. Errors.rs
 
 Next, let's take a quick pit stop and add one last error
 `InvalidVrfAuthorityError` to `errors.rs`. We'll use this when the VRF authority
@@ -663,7 +660,7 @@ pub enum EscrowErrorCode {
 }
 ```
 
-#### 6. Mod.rs
+### 6. Mod.rs
 
 Now, let's modify our `mod.rs` file to include our new functions we'll be
 writing.
@@ -676,7 +673,7 @@ pub mod get_out_of_jail;
 pub mod consume_randomness;
 ```
 
-#### 7. Deposit.rs and Withdraw.rs
+### 7. Deposit.rs and Withdraw.rs
 
 Lastly, let's update our `deposit.rs` and `withdraw.rs` files to reflect our
 soon-to-be new powers.
@@ -718,7 +715,7 @@ if !escrow_state.out_of_jail {
 If `out_of_jail` is true, then we get out of jail free and can skip the price
 check, going straight to our withdrawal.
 
-#### 8. Using VRF
+### 8. Using VRF
 
 Now that we have the boilerplate out of the way, let’s move on to our first
 addition: initializing our VRF Client. Let’s create a new file called
@@ -807,7 +804,7 @@ pub fn init_vrf_client_handler(ctx: Context<InitVrfClient>) -> Result<()> {
 }
 ```
 
-#### 9. Get Out of Jail
+### 9. Get Out of Jail
 
 Now that we have the `VrfClientState` account initialized, we can use it in the
 `get_out_jail` instruction. Create a new file called `get_out_of_jail.rs` in the
@@ -838,7 +835,7 @@ Programs:
 - `token_program`
 - `system_program`
 
-Business Logic Accounts:
+Buisness Logic Accounts:
 
 - `user` - The user account who has escrowed the funds.
 - `escrow_account` - The burry escrow state account for user.
@@ -993,7 +990,7 @@ pub fn get_out_of_jail_handler(ctx: Context<RequestRandomness>, params: RequestR
 }
 ```
 
-#### 10. Consume Randomness
+### 10. Consume Randomness
 
 Now that we've built the logic to request a VRF from Switchboard, we must build
 the callback instruction the Switchboard program will call once the VRF has been
@@ -1012,7 +1009,7 @@ three accounts.
   Switchboard network.
 
 ```rust
-// inside consume_randomness.rs
+// insde consume_randomness.rs
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
@@ -1199,7 +1196,7 @@ And that's it for the get-out-of-jail functionality! Congrats, you have just
 built a program that can consume Switchboard data feeds and submit VRF requests.
 Please make sure your program builds successfully by running `anchor build`.
 
-#### 11. Testing
+### 11. Testing
 
 Alright, let’s test our program. Historically, we'd need to test the VRF on
 Devnet. Fortunately, the folks at Switchboard have created some really nice
@@ -1210,14 +1207,14 @@ The first thing we’ll do is pull in some more accounts in our `Anchor.toml`
 file:
 
 ```rust
-## VRF ACCOUNTS
-[[test.validator.clone]] ## sbv2 attestation programID
+# VRF ACCOUNTS
+[[test.validator.clone]] # sbv2 attestation programID
 address = "sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx"
 
-[[test.validator.clone]] ## sbv2 attestation IDL
+[[test.validator.clone]] # sbv2 attestation IDL
 address = "5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz"
 
-[[test.validator.clone]] ## sbv2 SbState
+[[test.validator.clone]] # sbv2 SbState
 address = "CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd"
 ```
 
@@ -1225,7 +1222,7 @@ Then we create a new test file called `vrf-test.ts` and copy and paste the code
 below. It copies over the last two tests from the oracle lesson, adds some
 imports, and adds a new function called `delay`.
 
-```typescript
+```tsx
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { BurryEscrow } from "../target/types/burry_escrow";
@@ -1356,11 +1353,13 @@ describe("burry-escrow-vrf", () => {
 });
 ```
 
-<Callout type="note">
-If you only want to run the vrf tests, change
-`describe("burry-escrow-vrf", () => {` to: 
-`describe.only("burry-escrow-vrf", () => {`
-</Callout>
+> Quick note: if you only want to run the vrf tests, change
+>
+> `describe("burry-escrow-vrf", () => {`
+>
+> — to —
+>
+> `describe.only("burry-escrow-vrf", () => {`
 
 Now, we are going to set up our local VRF Oracle server using
 `SwitchboardTestContext`. This will give us a `switchboard` context and an
@@ -1368,7 +1367,7 @@ Now, we are going to set up our local VRF Oracle server using
 This will run and complete before any tests begin. Lastly, let's add
 `oracle?.stop()` to the `after()` function to clean everything up.
 
-```typescript
+```tsx
 describe.only("burry-escrow-vrf", () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env());
@@ -1442,7 +1441,7 @@ First, we'll gather all of the accounts we need. The `switchboard` test context
 gives us most of these. Then we'll need to call our `initVrfClient` function.
 Finally, we'll roll our dice in a loop and check for doubles.
 
-```typescript
+```tsx
 it("Roll till you can withdraw", async () => {
   // derive escrow address
   const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
@@ -1623,7 +1622,7 @@ Alternatively feel free to try out the
 Remember to update your program keys and wallet path like we did in the
 [the Setup step](#1-program-setup).
 
-## Challenge
+# Challenge
 
 Now it's time to work on something independently. Let's add some
 [Monopoly rules](<https://en.wikipedia.org/wiki/Monopoly_(game)#Rules>) to our
@@ -1634,7 +1633,7 @@ funds, just like getting out of jail in Monopoly.
 If you get stuck, we have the solution in the
 [`vrf-challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/vrf-challenge-solution).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5af49eda-f3e7-407d-8cd7-78d0653ee17c)!
-</Callout>

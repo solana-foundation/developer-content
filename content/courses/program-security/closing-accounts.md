@@ -6,11 +6,9 @@ objectives:
   - Close program accounts safely and securely using native Rust
   - Close program accounts safely and securely using the Anchor `close`
     constraint
-description:
-  "How to close program accounts safely and securely in Anchor and native Rust."
 ---
 
-## Summary
+# Summary
 
 - **Closing an account** improperly creates an opportunity for
   reinitialization/revival attacks
@@ -27,7 +25,7 @@ description:
   pub receiver: SystemAccount<'info>
   ```
 
-## Lesson
+# Lesson
 
 While it sounds simple, closing accounts properly can be tricky. There are a
 number of ways an attacker could circumvent having the account closed if you
@@ -36,7 +34,7 @@ don't follow specific steps.
 To get a better understanding of these attack vectors, let’s explore each of
 these scenarios in depth.
 
-### Insecure account closing
+## Insecure account closing
 
 At its core, closing an account involves transferring its lamports to a separate
 account, thus triggering the Solana runtime to garbage collect the first
@@ -94,7 +92,7 @@ exemption lamports. The result is that the account _will not_ be garbage
 collected, opening up a path for the attacker to cause unintended behavior in
 the program and even drain a protocol.
 
-### Secure account closing
+## Secure account closing
 
 The two most important things you can do to close this loophole are to zero out
 the account data and add an account discriminator that represents the account
@@ -172,7 +170,7 @@ account validation checks that return errors any time an account with this
 discriminator is passed to an instruction, you'll stop your program from
 unintentionally processing an instruction with a closed account.
 
-#### Manual Force Defund
+### Manual Force Defund
 
 There is still one small issue. While the practice of zeroing out account data
 and adding a "closed" account discriminator will stop your program from being
@@ -232,7 +230,7 @@ anyone else can claim the lamports in a refunded account for themselves.
 While not necessary, this can help eliminate the waste of space and lamports
 associated with these "limbo" accounts.
 
-### Use the Anchor `close` constraint
+## Use the Anchor `close` constraint
 
 Fortunately, Anchor makes all of this much simpler with the
 `#[account(close = <target_account>)]` constraint. This constraint handles
@@ -261,13 +259,13 @@ pub struct CloseAccount {
 The `force_defund` instruction is an optional addition that you’ll have to
 implement on your own if you’d like to utilize it.
 
-## Lab
+# Lab
 
 To clarify how an attacker might take advantage of a revival attack, let's work
 with a simple lottery program that uses program account state to manage a user's
 participation in the lottery.
 
-### 1. Setup
+## 1. Setup
 
 Start by getting the code on the `starter` branch from the
 [following repo](https://github.com/Unboxed-Software/solana-closing-accounts/tree/starter).
@@ -300,7 +298,7 @@ account by removing its lamports.
 However, notice the `redeem_rewards_insecure` instruction _only_ transfers out
 the account's lamports, leaving the account open to revival attacks.
 
-### 2. Test Insecure Program
+## 2. Test Insecure Program
 
 An attacker that successfully keeps their account from closing can then call
 `redeem_rewards_insecure` multiple times, claiming more rewards than they are
@@ -375,7 +373,7 @@ has no more rewards to give or b) someone notices and patches the exploit. This
 would obviously be a severe problem in any real program as it allows a malicious
 attacker to drain an entire rewards pool.
 
-### 3. Create a `redeem_rewards_secure` instruction
+## 3. Create a `redeem_rewards_secure` instruction
 
 To prevent this from happening we're going to create a new instruction that
 closes the lottery account seucrely using the Anchor `close` constraint. Feel
@@ -469,7 +467,7 @@ This logic simply calculates the rewards for the claiming user and transfers the
 rewards. However, because of the `close` constraint in the account validation
 struct, the attacker shouldn't be able to call this instruction multiple times.
 
-### 4. Test the Program
+## 4. Test the Program
 
 To test our new secure instruction, let's create a new test that trys to call
 `redeemingWinningsSecure` twice. We expect the second call to throw an error.
@@ -552,7 +550,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the same repository](https://github.com/Unboxed-Software/solana-closing-accounts/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -563,7 +561,7 @@ closed they're not susceptible to revival attacks.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e6b99d4b-35ed-4fb2-b9cd-73eefc875a0f)!
-</Callout>

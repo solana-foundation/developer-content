@@ -1,5 +1,5 @@
 ---
-title: Program Configuration
+title: Environment Variables in Solana Programs
 objectives:
   - Define program features in the `Cargo.toml` file
   - Use the Rust `cfg` attribute to conditionally compile code based on which
@@ -8,11 +8,9 @@ objectives:
     features are or are not enabled
   - Create an admin-only instruction to set up a program account that can be
     used to store program configuration values
-description:
-  "Create distinct environments, feature flags and admin-only instructions."
 ---
 
-## Summary
+# Summary
 
 - There are no "out of the box" solutions for creating distinct environments in
   an onchain program, but you can achieve something similar to environment
@@ -22,15 +20,15 @@ description:
   values based on the Rust feature provided. _This happens at compile-time and
   doesn't allow you to swap values after a program has been deployed_.
 - Similarly, you can use the `cfg!` **macro** to compile different code paths
-  based on the features that are enabled.
+  based on the enabled features.
 - Alternatively, you can achieve something similar to environment variables that
-  can be modified after deployment by creating accounts and instructions that
-  are only accessible by the program’s upgrade authority.
+  can be modified after deployment by creating accounts and instructions only
+  accessible by the program’s upgrade authority.
 
-## Lesson
+# Lesson
 
 One of the difficulties engineers face across all types of software development
-is that of writing testable code and creating distinct environments for local
+is writing testable code and creating distinct environments for local
 development, testing, production, etc.
 
 This can be particularly difficult in Solana program development. For example,
@@ -41,8 +39,8 @@ run in a few hundred milliseconds, not nearly long enough to earn rewards?
 Traditional web development solves some of this with environment variables whose
 values can differ in each distinct "environment." Currently, there's no formal
 concept of environment variables in a Solana program. If there were, you could
-just make it so that rewards in your test environment are 10,000,000 tokens per
-day and it would be easier to test the ability to claim rewards.
+make it so that rewards in your test environment are 10,000,000 tokens daily.
+Then it would be easier to test the ability to claim rewards.
 
 Fortunately, you can achieve similar functionality if you get creative. The best
 approach is probably a combination of two things:
@@ -53,7 +51,7 @@ approach is probably a combination of two things:
 2. Program "admin-only" accounts and instructions that are only accessible by
    the program's upgrade authority
 
-### Rust feature flags
+## Rust feature flags
 
 One of the simplest ways to create environments is to use Rust features.
 Features are defined in the `[features]` table of the program’s `Cargo.toml`
@@ -79,7 +77,7 @@ You can also specify multiple features by separating them with a comma.
 anchor test -- --features "feature-one", "feature-two"
 ```
 
-#### Make code conditional using the `cfg` attribute
+### Make code conditional using the `cfg` attribute
 
 With a feature defined, you can then use the `cfg` attribute within your code to
 conditionally compile code based on whether or not a given feature is enabled.
@@ -167,7 +165,7 @@ different implementations of the `constants` module. This allows the program to
 use different values for the `USDC_MINT_PUBKEY` constant depending on whether or
 not the `local-testing` feature is enabled.
 
-#### Make code conditional using the `cfg!` macro
+### Make code conditional using the `cfg!` macro
 
 Similar to the `cfg` attribute, the `cfg!` **macro** in Rust allows you to check
 the values of certain configuration flags at runtime. This can be useful if you
@@ -207,27 +205,27 @@ the `local-testing` feature at runtime. If the `local-testing` feature is
 enabled, the first code path is executed. If the `local-testing` feature is not
 enabled, the second code path is executed instead.
 
-### Admin-only instructions
+## Admin-only instructions
 
 Feature flags are great for adjusting values and code paths at compilation, but
-they don't help much if you end up needing to adjust something after you've
-already deployed your program.
+they don't help much if you need to adjust something after you've already
+deployed your program.
 
 For example, if your NFT staking program has to pivot and use a different
 rewards token, there'd be no way to update the program without redeploying. If
 only there were a way for program admins to update certain program values...
 Well, it's possible!
 
-First, you need to structure your program to store the values you anticipate
+First, you must structure your program to store the values you anticipate
 changing in an account rather than hard-coding them into the program code.
 
 Next, you need to ensure that this account can only be updated by some known
-program authority, or what we're calling an admin. That means any instructions
+program authority or what we're calling an admin. That means any instructions
 that modify the data on this account need to have constraints limiting who can
 sign for the instruction. This sounds fairly straightforward in theory, but
 there is one main issue: how does the program know who is an authorized admin?
 
-Well, there are a few solutions, each with their own benefits and drawbacks:
+There are a few solutions, each with their benefits and drawbacks:
 
 1. Hard-code an admin public key that can be used in the admin-only instruction
    constraints.
@@ -235,12 +233,12 @@ Well, there are a few solutions, each with their own benefits and drawbacks:
 3. Store the admin in the config account and set the first admin in an
    `initialize` instruction.
 
-#### Create the config account
+### Create the config account
 
 The first step is adding what we'll call a "config" account to your program. You
-can customize this to best suit your needs, but we suggest a single global PDA.
-In Anchor, that simply means creating an account struct and using a single seed
-to derive the account's address.
+can customize this to suit your needs, but we suggest a single global PDA. In
+Anchor, that simply means creating an account struct and using a single seed to
+derive the account's address.
 
 ```rust
 pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
@@ -257,17 +255,17 @@ program example we've referenced throughout the lesson. It stores data
 representing the token that should be used for rewards and the amount of tokens
 to give out for each day of staking.
 
-With the config account defined, simply ensure that the rest of your code
-references this account when using these values. That way, if the data in the
-account changes, the program adapts accordingly.
+With the config account defined, ensure that the rest of your code references
+this account when using these values. That way, if the data in the account
+changes, the program adapts accordingly.
 
-#### Constrain config updates to hard-coded admins
+### Constrain config updates to hard-coded admins
 
 You'll need a way to initialize and update the config account data. That means
 you need to have one or more instructions that only an admin can invoke. The
-simplest way to do this is to hard-code an admin's public key in your code and
-then add a simple signer check into your instruction's account validation
-comparing the signer to this public key.
+simplest way to do this is to hard-code an admin's public key in your code. You
+can then add a simple signer check into your instruction's account validation
+that compares the signer to this public key.
 
 In Anchor, constraining an `update_program_config` instruction to only be usable
 by a hard-coded admin might look like this:
@@ -313,16 +311,16 @@ code, you could simply restrict an instruction to only be callable by the
 upgrade authority. The only tricky part is getting a program's upgrade authority
 to compare against.
 
-#### Constrain config updates to the program's upgrade authority
+### Constrain config updates to the program's upgrade authority
 
 Fortunately, every program has a program data account that translates to the
 Anchor `ProgramData` account type and has the `upgrade_authority_address` field.
 The program itself stores this account's address in its data in the field
 `programdata_address`.
 
-So in addition to the two accounts required by the instruction in the hard-coded
-admin example, this instruction requires the `program` and the `program_data`
-accounts.
+So, in addition to the two accounts required by the instruction in the
+hard-coded admin example, this instruction requires the `program` and the
+`program_data` accounts.
 
 The accounts then need the following constraints:
 
@@ -358,7 +356,7 @@ worth reading through
 [this Notion doc](https://www.notion.so/29780c48794c47308d5f138074dd9838) about
 program deploys.
 
-#### Constrain config updates to a provided admin
+### Constrain config updates to a provided admin
 
 Both of the previous options are fairly secure but also inflexible. What if you
 want to update the admin to be someone else? For that, you can store the admin
@@ -393,7 +391,7 @@ pub struct UpdateProgramConfig<'info> {
 ```
 
 There's one catch here: in the time between deploying a program and initializing
-the config account, _there is no admin_. Which means that the instruction for
+the config account, _there is no admin_. This means that the instruction for
 initializing the config account can't be constrained to only allow admins as
 callers. That means it could be called by an attacker looking to set themselves
 as the admin.
@@ -402,24 +400,24 @@ While this sounds bad, it really just means that you shouldn't treat your
 program as "initialized" until you've initialized the config account yourself
 and verified that the admin listed on the account is who you expect. If your
 deploy script deploys and then immediately calls `initialize`, it's very
-unlikely that an attacker is even aware of your program's existence much less
-trying to make themselves the admin. If by some crazy stroke of bad luck someone
-"intercepts" your program, you can close the program with the upgrade authority
-and redeploy.
+unlikely that an attacker is even aware of your program's existence, much less
+trying to make themselves the admin. If, by some crazy stroke of bad luck,
+someone "intercepts" your program, you can close the program with the upgrade
+authority and redeploy.
 
-## Lab
+# Lab
 
-Now let's go ahead and try this out together. For this lab, we'll be working
-with a simple program that enables USDC payments. The program collects a small
-fee for facilitating the transfer. Note that this is somewhat contrived since
-you can do direct transfers without an intermediary contract, but it simulates
-how some complex DeFi programs work.
+Now, let's go ahead and try this out together. For this lab, we'll work with a
+simple program enabling USDC payments. The program collects a small fee to
+facilitate the transfer. Note that this is somewhat contrived since you can do
+direct transfers without an intermediary contract, but it simulates how some
+complex DeFi programs work.
 
 We'll quickly learn while testing our program that it could benefit from the
 flexibility provided by an admin-controlled configuration account and some
 feature flags.
 
-#### 1. Starter
+### 1. Starter
 
 Download the starter code from the `starter` branch
 of [this repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/starter).
@@ -439,22 +437,21 @@ required by the `payment` instruction. The `payment_handler` function calculates
 a 1% fee from the payment amount, transfers the fee to a designated token
 account, and transfers the remaining amount to the payment recipient.
 
-Finally, the `tests` directory has a single test file, `config.ts` that simply
+Finally, the `tests` directory has a single test file, `config.ts`, that simply
 invokes the `payment` instruction and asserts that the corresponding token
 account balances have been debited and credited accordingly.
 
 Before we continue, take a few minutes to familiarize yourself with these files
 and their contents.
 
-#### 2. Run the existing test
+### 2. Run the existing test
 
 Let's start by running the existing test.
 
-Make sure you use `yarn` or `npm install` to install the dependencies laid out
-in the `package.json` file. Then be sure to run `anchor keys list` to get the
-public key for your program printed to the console. This differs based on the
-keypair you have locally, so you need to update `lib.rs` and `Anchor.toml` to
-use _your_ key.
+Ensure you use `yarn` or `npm install` to install the dependencies in the
+`package.json` file. Then, be sure to run `anchor keys list` to get the public
+key for your program printed to the console. This differs based on your local
+keypair, so you need to update `lib.rs` and `Anchor.toml` to use _your_ key.
 
 Finally, run `anchor test` to start the test. It should fail with the following
 output:
@@ -463,20 +460,20 @@ output:
 Error: failed to send transaction: Transaction simulation failed: Error processing Instruction 0: incorrect program id for instruction
 ```
 
-The reason for this error is that we're attempting to use the mainnet USDC mint
-address (as hard-coded in the `lib.rs` file of the program), but that mint
-doesn't exist in the local environment.
+This error is because we're attempting to use the mainnet USDC mint address (as
+hard-coded in the `lib.rs` file of the program), but that mint doesn't exist in
+the local environment.
 
-#### 3. Adding a `local-testing` feature
+### 3. Adding a `local-testing` feature
 
-To fix this, we need a mint we can use locally _and_ hard-code into the program.
+We need a mint we can use locally _and_ hard-code into the program to fix this.
 Since the local environment is reset often during testing, you'll need to store
 a keypair that you can use to recreate the same mint address every time.
 
-Additionally, you don't want to have to change the hard-coded address between
-local and mainnet builds since that could introduce human error (and is just
-annoying). So we'll create a `local-testing` feature that, when enabled, will
-make the program use our local mint but otherwise use the production USDC mint.
+Additionally, you don't want to change the hard-coded address between local and
+mainnet builds since that could introduce human error (and is just annoying). So
+we'll create a `local-testing` feature that, when enabled, will make the program
+use our local mint but otherwise use the production USDC mint.
 
 Generate a new keypair by running `solana-keygen grind`. Run the following
 command to generate a keypair with a public key that begins with "env".
@@ -588,7 +585,7 @@ config
 Boom. Just like that, you've used features to run two different code paths for
 different environments.
 
-#### 4. Program Config
+### 4. Program Config
 
 Features are great for setting different values at compilation, but what if you
 wanted to be able to dynamically update the fee percentage used by the program?
@@ -650,7 +647,7 @@ pub mod config {
 }
 ```
 
-#### 5. Program Config State
+### 5. Program Config State
 
 Next, let's define the structure for the `ProgramConfig` state. This account
 will store the admin, the token account where fees are sent, and the fee rate.
@@ -674,7 +671,7 @@ impl ProgramConfig {
 }
 ```
 
-#### 6. Add Initialize Program Config Account Instruction
+### 6. Add Initialize Program Config Account Instruction
 
 Now let's create the instruction logic for initializing the program config
 account. It should only be callable by a transaction signed by the `ADMIN` key
@@ -714,7 +711,7 @@ pub fn initialize_program_config_handler(ctx: Context<InitializeProgramConfig>) 
 }
 ```
 
-#### 7. Add Update Program Config Fee Instruction
+### 7. Add Update Program Config Fee Instruction
 
 Next, implement the instruction logic for updating the config account. The
 instruction should require that the signer match the `admin` stored in the
@@ -756,7 +753,7 @@ pub fn update_program_config_handler(
 }
 ```
 
-#### 8. Add mod.rs and update instructions.rs
+### 8. Add mod.rs and update instructions.rs
 
 Next, let's expose the instruction handlers we created so that the call from
 `lib.rs` doesn't show an error. Start by adding a file `mod.rs` in the
@@ -782,7 +779,7 @@ mod payment;
 pub use payment::*;
 ```
 
-#### 9. Update Payment Instruction
+### 9. Update Payment Instruction
 
 Lastly, let's update the payment instruction to check that the `fee_destination`
 account in the instruction matches the `fee_destination` stored in the program
@@ -864,7 +861,7 @@ pub fn payment_handler(ctx: Context<Payment>, amount: u64) -> Result<()> {
 }
 ```
 
-#### 10. Test
+### 10. Test
 
 Now that we're done implementing our new program configuration struct and
 instructions, let's move on to testing our updated program. To begin, add the
@@ -1021,27 +1018,27 @@ config
 ```
 
 And that's it! You've made the program a lot easier to work with moving forward.
-If you want to take a look at the final solution code you can find it on
+If you want to take a look at the final solution code, you can find it on
 the `solution` branch
 of [the same repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/solution).
 
-## Challenge
+# Challenge
 
-Now it's time for you to do some of this on your own. We mentioned being able to
-use the program's upgrade authority as the initial admin. Go ahead and update
+Now, it's time for you to do some of this on your own. We mentioned being able
+to use the program's upgrade authority as the initial admin. Go ahead and update
 the lab's `initialize_program_config` so that only the upgrade authority can
 call it rather than having a hardcoded `ADMIN`.
 
-Note that the `anchor test` command, when run on a local network, starts a new
+Note that when run on a local network, the anchor test' command starts a new
 test validator using `solana-test-validator`. This test validator uses a
 non-upgradeable loader. The non-upgradeable loader makes it so the program's
 `program_data` account isn't initialized when the validator starts. You'll
-recall from the lesson that this account is how we access the upgrade authority
-from the program.
+remember from the lesson that this account is how we can access the upgrade
+authority from the program.
 
 To work around this, you can add a `deploy` function to the test file that runs
 the deploy command for the program with an upgradeable loader. To use it, run
-`anchor test --skip-deploy`, and call the `deploy` function within the test to
+`anchor test --skip-deploy` and call the `deploy` function within the test to
 run the deploy command after the test validator has started.
 
 ```typescript
@@ -1073,7 +1070,7 @@ Try doing this on your own, but if you get stuck, feel free to reference the
 [the same repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/challenge)
 to see one possible solution.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=02a7dab7-d9c1-495b-928c-a4412006ec20)!
-</Callout>

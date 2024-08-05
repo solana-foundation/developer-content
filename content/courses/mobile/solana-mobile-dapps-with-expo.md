@@ -4,20 +4,19 @@ objectives:
   - Create Solana dApps with Expo
   - Use mobile-specific peripherals and capabilities
   - Integrate ecosystem libraries into your mobile dApps
-description: "How to use Solana in your Expo apps."
 ---
 
-## Summary
+# Summary
 
 - Expo is an open-source collection of tools and libraries that wrap around
   React Native, much like Next.js is a framework built on top of React.
 - In addition to simplifying the build/deploy process, Expo provides packages
-  that give you access to mobile devices' peripherals and capabilities.
+  that give you access to mobile devices' peripherals and capabilities
 - A lot of Solana ecosystem libraries don't support React native out of the box,
   but you can typically use them with the right
-  [polyfills](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill).
+  [polyfills](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill)
 
-## Lesson
+# Lesson
 
 So far in exploring Solana Mobile, we've used vanilla React Native to build very
 simple mobile dApps. Just like many web developers opt to use frameworks built
@@ -35,7 +34,7 @@ This lesson will explore two primary topics:
 These topics are best explored in a hands-on manner, so the majority of this
 lesson will be spent in the lab.
 
-### React Native Expo
+## React Native Expo
 
 Expo is an open-source collection of tools and libraries that wrap around React
 Native, much like Next.js is a framework built on top of React.
@@ -68,10 +67,10 @@ Lastly, and most importantly, Expo does an amazing job providing
 access to the device's onboard peripherals, such as camera, battery, and
 speakers. The libraries are intuitive and the documentation is phenomenal.
 
-#### How to create an Expo app
+### How to create an Expo app
 
 To get started with Expo, you first need the prerequisite setup described in the
-[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile).
+[Introduction to Solana Mobile lesson](./basic-solana-mobile.md#0-prerequisites).
 After that, you'll want to sign up for an
 [Expo Application Services (EAS) account](https://expo.dev/).
 
@@ -88,7 +87,7 @@ Finally, you can scaffold a new Expo app using the `create-expo-app` command:
 npx create-expo-app
 ```
 
-#### How to build and run an Expo app
+### How to build and run an Expo app
 
 For some apps, Expo makes building really easy with the Expo Go App. The Expo Go
 App builds the project on a remote server and deploys to whatever emulator or
@@ -146,7 +145,7 @@ need to start the development server:
 npx expo start --dev-client --android
 ```
 
-#### How to add Expo SDK packages to your app
+### How to add Expo SDK packages to your app
 
 The Expo SDK contains packages to simplify all kinds of things related to React
 Native development, from UI elements to using device peripherals. You can see
@@ -172,7 +171,7 @@ Depending on the package, there may be additional setup required. Be sure to
 read the [docs](https://docs.expo.dev/versions/latest/) when working with a new
 package.
 
-### Integrate ecosystem libraries into your Expo app
+## Integrate ecosystem libraries into your Expo app
 
 Not all React and Node libraries work with React Native out of the box. You
 either need to find libraries that are specifically created to work with React
@@ -192,7 +191,7 @@ overflow. If it doesn't build, it's normally a polyfill problem.
 Fortunately, we've compiled a list of polyfills you'll need for not only some of
 the standard Solana libraries but also for Metaplex.
 
-#### Solana Polyfills
+### Solana Polyfills
 
 For a Solana + Expo app, you'll need the following:
 
@@ -208,7 +207,7 @@ For a Solana + Expo app, you'll need the following:
   for `web3.js` underlying Crypto library on React Native.
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
 
-#### Metaplex Polyfills
+### Metaplex Polyfills
 
 If you want to use the Metaplex SDK, you'll need to add the Metaplex library
 plus a few additional polyfills:
@@ -246,7 +245,7 @@ defaultConfig.resolver.extraNodeModules = {
 module.exports = defaultConfig;
 ```
 
-### Putting it all together
+## Putting it all together
 
 As with most new tools or frameworks, initial setup can be challenging. The good
 news is that once you have the application compiling and running, there are very
@@ -254,7 +253,7 @@ few differences in the code you write for a web vs mobile app, and there are
 virtually no differences when comparing the code you write for a React Native vs
 Expo app.
 
-## Lab
+# Lab
 
 Let's practice this together by building the Mint-A-Day app, where users will
 able to mint a single NFT snapshot of their lives daily, creating a permanent
@@ -268,27 +267,26 @@ The first half of this lab is cobbling together the needed components to make
 Expo, Solana, and Metaplex all work together. We'll do this modularly so you'll
 know what aspects of the boilerplate align with which section.
 
-### 1. Scaffold, build, and run a local Expo app
+## 1. Scaffold, build, and run a local Expo app
 
-This first section will get a typescript Expo app running on an emulator. If you
-already have a React Native dev environment, skip step 0.
+In this first section, we will simply get a typescript Expo app running on an
+emulator. If you already have a React Native dev environment set up, skip
+step 0.
 
-#### 0. Set up React Native dev environment
+### 0. Set up React Native dev environment
 
 You'll need React Native installed on your machine as well as a running emulator
 or physical device.
 [You can accomplish this all with the React Native quickstart](https://reactnative.dev/docs/environment-setup?guide=native).
 There are also more details about this setup in the
-[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md#0-prerequisites)
+[Introduction to Solana Mobile lesson](./basic-solana-mobile.md#0-prerequisites)
 
-<Callout type="note">Even though we are using Expo, you'll need to follow the
-React Native CLI guide for initial setup.</Callout>
+> Note: Even though we are using Expo, you'll need to follow the React Native
+> cli guide for initial setup. Note: If you are running an emulator, it is
+> highly recommend to use a newer phone version to emulate along with providing
+> several GB of RAM for it to run. We use 5GB of ram on our side.
 
-<Callout type="note">If you are running an emulator, it is highly recommend to
-use a newer phone version to emulate along with providing several GB of RAM for
-it to run. We use 5GB of ram on our side.</Callout>
-
-#### 1. Sign up for Expo EAS CLI
+### 1. Sign up for Expo EAS CLI
 
 To simplify the Expo process, you'll want an Expo Application Services (EAS)
 account. This will help you build and run the application.
@@ -302,7 +300,7 @@ npm install --global eas-cli
 eas login
 ```
 
-#### 2. Create the app scaffold
+### 2. Create the app scaffold
 
 Let’s create our app with the following:
 
@@ -315,7 +313,7 @@ This uses `create-expo-app` to generate a new scaffold for us based on the
 `expo-template-blank-typescript` template. This is just an empty Typescript
 React Native app.
 
-#### 3. Local build config
+### 3. Local build config
 
 Expo defaults to building on a remote server but we need to build locally for
 Solana Mobile to work correctly. We'll need to add an new config file that lets
@@ -349,7 +347,7 @@ Copy and paste the following into the newly created `eas.json`:
 }
 ```
 
-#### 4. Build and emulate
+### 4. Build and emulate
 
 Now let's build the project. You will choose `y` for every answer. This will
 take a while to complete.
@@ -360,9 +358,10 @@ npx eas build --profile development --platform android --local
 
 When the command is done, you will get an output file at the root of your
 directory. This file will have a naming format of `build-XXXXXXXXXXX.apk`.
-Locate this file in your file explorer and **_drag it_** into your emulator. The
-emulator should show a message that it is installing the new APK. When it
-finishes installing, you should see the APK as an app icon in the emulator.
+Locate this file in your file explorer and **_drag it_** into your emulator. A
+message should show on the emulator saying that it is installing the new APK.
+When it finishes installing, you should see the APK as an app icon in the
+emulator.
 
 The app that was installed is just a scaffold app from Expo. The last thing
 you'll need to do is run the following command to run the development server:
@@ -377,18 +376,17 @@ This should open and run the app in your Android emulator.
 re-install the app. Anything visual or logic-based should be captured by the
 hot-reloader.
 
-### 2. Configure your Expo app to work with Solana
+## 2. Configure your Expo app to work with Solana
 
 Now that we have an Expo app up and running, we need to add our Solana
 dependencies, including installing a wallet we can use in the emulator. If you
 already have a Devnet-enabled wallet installed you can skip step 0.
 
-#### 0. Install a Devnet-enabled Solana wallet
+### 0. Install a Devnet-enabled Solana wallet
 
 You'll need a wallet that supports Devnet to test with. In
-[our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
-created one of these. Let's install it from the solution branch in a different
-directory from our app:
+[our Mobile Wallet Adapter lesson](./mwa-deep-dive) we created one of these.
+Let's install it from the solution branch in a different directory from our app:
 
 ```bash
 cd ..
@@ -409,11 +407,11 @@ cd ..
 cd solana-expo
 ```
 
-#### 1. Install Solana dependencies
+### 1. Install Solana dependencies
 
-We will install some basic Solana dependencies that are likely to be needed by
-all Solana mobile apps. This will include some polyfills that allow otherwise
-incompatible packages to work with React native:
+We are going to install some basic Solana dependencies that are likely to be
+needed by all Solana mobile apps. This will include some polyfills that allow
+otherwise incompatible packages to work with React native:
 
 ```bash
 npm install \
@@ -424,7 +422,7 @@ npm install \
   buffer
 ```
 
-#### 3. Add Solana boilerplate providers
+### 3. Add Solana boilerplate providers
 
 Next, let's add some Solana boilerplate that can springboard you into most
 Solana-based apps.
@@ -432,10 +430,10 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](/content/courses/mobile/basic-solana-mobile). We will be
-copying over `components/AuthProvider.tsx` and
-`components/ConnectionProvider.tsx`. These files provide us with a `Connection`
-object as well as some helper functions that authorize our dapp.
+[first Mobile lesson](./basic-solana-mobile). We will be copying over
+`components/AuthProvider.tsx` and `components/ConnectionProvider.tsx`. These
+files provide us with a `Connection` object as well as some helper functions
+that authorize our dapp.
 
 Create file `components/AuthProvider.tsx` and copy the contents
 [of our existing Auth Provider from Github](https://raw.githubusercontent.com/Unboxed-Software/solana-advance-mobile/main/components/AuthProvider.tsx)
@@ -495,7 +493,7 @@ Notice we've added two polyfills above: `buffer` and
 `react-native-get-random-values`. These are necessary for the Solana
 dependencies to run correctly.
 
-#### 4. Build and run Solana boilerplate
+### 4. Build and run Solana boilerplate
 
 Let's make sure everything is working and compiling correctly. In Expo, anytime
 you change the dependencies, you'll need to rebuild and re-install the app.
@@ -519,14 +517,14 @@ npx expo start --dev-client --android
 
 Everything should compile and you should have a boilerplate Solana Expo app.
 
-### 3. Configure your Expo app to work with Metaplex
+## 3. Configure your Expo app to work with Metaplex
 
 Metaplex is your one-stop-shop for all of your NFT API needs. However, it
 requires a little more setup. The good news is if you ever want to fetch, mint
 or edit NFTs in your future apps, you'll have another boilerplate to here that
 you can reference.
 
-#### 1. Install Metaplex dependencies
+### 1. Install Metaplex dependencies
 
 The Metaplex SDK abstracts away a lot of the minutia of working with NFTs,
 however it was written largely for Node.js, so we'll need several more polyfills
@@ -544,7 +542,7 @@ npm install assert \
   @metaplex-foundation/js@0.19.4
 ```
 
-#### 2. Polyfill config
+### 2. Polyfill config
 
 We won't be importing any of the above polyfills in our code directly, so we
 need to add them to a `metro.config.js` file to ensure that Metaplex uses them:
@@ -575,7 +573,7 @@ defaultConfig.resolver.extraNodeModules = {
 module.exports = defaultConfig;
 ```
 
-#### 3. Metaplex provider
+### 3. Metaplex provider
 
 We're going to create a Metaplex provider file that will help us access a
 `Metaplex` object. This `Metaplex` object is what gives us access to all of the
@@ -665,12 +663,12 @@ export const useMetaplex = (
 };
 ```
 
-#### 4. NFT Provider
+### 4. NFT Provider
 
 We're also making a higher-level NFT provider that helps with NFT state
 management. It combines all three of our previous providers:
-`ConnectionProvider`, `AuthProvider`, and `MetaplexProvider` to allow us to
-create our `Metaplex` object. We will fill this out at a later step; for now, it
+`ConnectionProvider`, `AuthProvider` and `MetaplexProvider` to allow us to
+create our `Metaplex` object. We will fill this out in a later step, for now, it
 makes for a good boilerplate.
 
 Let's create the new file `components/NFTProvider.tsx`:
@@ -711,7 +709,7 @@ export const useNFT = (): NFTContextState => useContext(NFTContext);
 Notice we've added yet another polyfill to the top
 `import "react-native-url-polyfill/auto";`
 
-#### 5. Wrap provider
+### 5. Wrap provider
 
 Now, let's wrap our new `NFTProvider` around `MainScreen` in `App.tsx`:
 
@@ -744,7 +742,7 @@ export default function App() {
 }
 ```
 
-#### 6. Build and run
+### 6. Build and run
 
 Lastly, let's build and re-install the app to make sure things are still
 working.
@@ -765,18 +763,18 @@ Run:
 npx expo start --dev-client --android
 ```
 
-### 4. Configure your Expo app to take and upload photos
+## 4. Configure your Expo app to take and upload photos
 
-Everything we've done to this point is effectively boilerplate. We need to add
-the functionality we intend for our Mint-A-Day app to have. Mint-A-day is a
-daily snapshot app. It lets users take a snapshot of their life daily in the
-form of minting an NFT.
+Everything we've done to this point is effectively boilerplate we needed to
+start adding the functionality we intend our Mint-A-Day app to have. Mint-A-day
+is a daily snapshot app. It lets users take a snapshot of their life daily in
+the form of minting an NFT.
 
 The app will need access to the device's camera and a place to remotely store
 the captured images. Fortunately, Expo SDK can provide access to the camera and
-[NFT.Storage](https://nft.storage) can store your NFT files for free.
+(NFT.Storage)[https://nft.storage] can store your NFT files for free.
 
-#### 1. Camera setup
+### 1. Camera setup
 
 Let's start by setting up the Expo-specific dependency we'll be using:
 `expo-image-picker`. This lets us use the device's camera to take pictures that
@@ -821,7 +819,7 @@ const result = await ImagePicker.launchCameraAsync({
 
 No need to add this anywhere yet - we'll get to it in a few steps.
 
-#### 2. NFT.Storage setup
+### 2. NFT.Storage setup
 
 The last thing we need to do is set up our access to
 [nft.storage](https://nft.storage). We'll need to get an API key and add it as
@@ -854,7 +852,7 @@ Install it with the following:
 npm i rn-fetch-blob
 ```
 
-#### 3. Final build
+### 3. Final build
 
 Build and reinstall if you want to make sure it's all working. This is the last
 time we'll have to do this for this lab. Everything else should be hot-loadable.
@@ -875,7 +873,7 @@ Run:
 npx expo start --dev-client --android
 ```
 
-### 5. Add functionality to complete your Expo app
+## 5. Add functionality to complete your Expo app
 
 We're through the setup! Let's create the actual functionality for our
 Mint-A-Day app. Fortunately, there are only two files we have to focus on now:
@@ -892,7 +890,7 @@ The app itself is relatively straightforward. The general flow is:
 3. If an NFT has not been created for the current day, allow the user to take a
    picture, upload it, and mint it as an NFT
 
-#### 1. NFT Provider
+### 1. NFT Provider
 
 `NFTProvider.tsx` will control the state with our custom `NFTProviderContext`.
 This should have the following fields:
@@ -1274,7 +1272,7 @@ export function NFTProvider(props: NFTProviderProps) {
 export const useNFT = (): NFTContextState => useContext(NFTContext);
 ```
 
-#### 2. Main Screen
+### 2. Main Screen
 
 Our main screen will consist of three parts: The image of the day, our action
 button, and the carousel of previous snapshots.
@@ -1523,7 +1521,7 @@ export function MainScreen() {
 }
 ```
 
-#### 3. Test
+### 3. Test
 
 Now it's time to create our first snapshot! First, open up your Devnet-enabled
 wallet and make sure you have some SOL. Next, tap on `Connect Wallet` and
@@ -1531,11 +1529,11 @@ approve the app. Fetch all of the NFTs by tapping `Fetch NFTs`. Lastly, tap
 `Create Snapshot` to upload and mint.
 
 Congratulations! That was not an easy or quick lab. You're doing great if you've
-made it this far. If you run into any issues, please go back through the lab
-and/or reference the final solution code on the
+made it this far. If you run into any issues, feel free to go back through the
+lab and/or reference the final solution code on the
 [`main` branch in Github](https://github.com/Unboxed-Software/solana-advance-mobile).
 
-## Challenge
+# Challenge
 
 Now it's your turn. Create your own Expo application from scratch. You're
 welcome to choose your own, or you can select from the following ideas:
@@ -1546,7 +1544,7 @@ welcome to choose your own, or you can select from the following ideas:
 - Make a simplified clone of [Stepn](https://stepn.com/) using the pedometer
   from `expo-sensors`
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=19cf8d3a-89a0-465e-95da-908cf8f45409)!
-</Callout>

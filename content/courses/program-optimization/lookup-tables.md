@@ -5,10 +5,9 @@ objectives:
   - Create lookup tables
   - Extend lookup tables
   - Use lookup tables with versioned transactions
-description: "Use large amounts of accounts by using lookup tables."
 ---
 
-## Summary
+# Summary
 
 - **Versioned Transactions** refers to a way to support both legacy versions and
   newer versions of transaction formats. The original transaction format is
@@ -21,7 +20,7 @@ description: "Use large amounts of accounts by using lookup tables."
   of more complex transactions than what was possible prior to the introduction
   of LUTs.
 
-## Lesson
+# Lesson
 
 By design, Solana transactions are limited to 1232 bytes. Transactions exceeding
 this size will fail. While this enables a number of network optimizations, it
@@ -45,7 +44,7 @@ versioned transactions and how to use them, including:
 - Creating and managing lookup tables
 - Using lookup tables in versioned transactions
 
-### Versioned Transactions
+## Versioned Transactions
 
 One of the items taking up the most space in Solana transactions is the
 inclusion of full account addresses. At 32 bytes each, 39 accounts will render a
@@ -65,7 +64,7 @@ versioned transactions in your client-side code. Fortunately, everything you
 need to work with versioned transactions and lookup tables is included in the
 `@solana/web3.js` library.
 
-#### Create versioned transactions
+### Create versioned transactions
 
 To create a versioned transaction, you simply create a `TransactionMessage` with
 the following parameters:
@@ -115,7 +114,7 @@ transaction.sign([payer]);
 const transactionSignature = await connection.sendTransaction(transaction);
 ```
 
-### Address Lookup Table
+## Address Lookup Table
 
 Address Lookup Tables (also called lookup tables or LUTs) are accounts that
 store a lookup table of other account addresses. These LUT accounts are owned by
@@ -138,7 +137,7 @@ create instructions for managing LUTs. These methods include:
   be closed
 - `closeLookupTable` - permanently closes an LUT account
 
-#### Create a lookup table
+### Create a lookup table
 
 You use the `createLookupTable` method to construct the instruction that creates
 a lookup table. The function requires the following parameters:
@@ -185,7 +184,7 @@ an error when sending the transaction, you can try resending the transaction.
 "Program AddressLookupTab1e1111111111111111111111111 failed: invalid instruction data";
 ```
 
-#### Extend a lookup table
+### Extend a lookup table
 
 You use the `extendLookupTable` method to create an instruction that adds
 addresses to an existing lookup table. It takes the following parameters:
@@ -220,7 +219,7 @@ bytes. This means you can add 30 addresses to a lookup table at a time. If you
 need to add more than that, you'll need to send multiple transactions. Each
 lookup table can store a maximum of 256 addresses.
 
-#### Send Transaction
+### Send Transaction
 
 After creating the instructions, you can add them to a transaction and sent it
 to the network.
@@ -261,7 +260,7 @@ access the lookup table or a specific address prior to the end of the warm up
 period. To avoid this issue, add a delay after extending the lookup table before
 sending a transaction that references the table.
 
-#### Deactivate a lookup table
+### Deactivate a lookup table
 
 When a lookup table is no longer needed, you can deactivate and close it to
 reclaim its rent balance. Address lookup tables can be deactivated at any time,
@@ -284,7 +283,7 @@ const deactivateInstruction =
   });
 ```
 
-#### Close a lookup table
+### Close a lookup table
 
 To close a lookup table after its deactivation period, use the
 `closeLookupTable` method. This method creates an instruction to close a
@@ -312,7 +311,7 @@ result in an error.
 "Program AddressLookupTab1e1111111111111111111111111 failed: invalid program argument";
 ```
 
-#### Freeze a lookup table
+### Freeze a lookup table
 
 In addition to standard CRUD operations, you can "freeze" a lookup table. This
 makes it immutable so that it can no longer be extended, deactivated, or closed.
@@ -339,7 +338,7 @@ error.
 "Program AddressLookupTab1e1111111111111111111111111 failed: Account is immutable";
 ```
 
-#### Using lookup tables in versioned transactions
+### Using lookup tables in versioned transactions
 
 To use a lookup table in a versioned transaction, you need to retrieve the
 lookup table account using its address.
@@ -372,14 +371,14 @@ transaction.sign([payer]);
 const transactionSignature = await connection.sendTransaction(transaction);
 ```
 
-## Lab
+# Lab
 
 Let's go ahead and practice using lookup tables!
 
 this lab will guide you through the steps of creating, extending, and then using
 a lookup table in a versioned transaction.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
 To begin, download the starter code from the starter branch of this
 [repository](https://github.com/Unboxed-Software/solana-versioned-transactions/tree/starter).
@@ -489,7 +488,7 @@ async function main() {
 }
 ```
 
-#### 2. Create a `sendV0Transaction` helper function
+### 2. Create a `sendV0Transaction` helper function
 
 We'll be sending multiple "version 0" transactions, so let's create a helper
 function to facilitate this.
@@ -550,7 +549,7 @@ async function sendV0Transaction(
 }
 ```
 
-#### 3. Create a `waitForNewBlock` helper function
+### 3. Create a `waitForNewBlock` helper function
 
 Recall that lookup tables and the addresses contained in them can't be
 referenced immediately after creation or extension. This means we'll end up
@@ -589,7 +588,7 @@ function waitForNewBlock(connection: web3.Connection, targetHeight: number) {
 }
 ```
 
-#### 4. Create an `initializeLookupTable` function
+### 4. Create an `initializeLookupTable` function
 
 Now that we have some helper functions ready to go, declare a function named
 `initializeLookupTable`. This function has parameters `user`, `connection`, and
@@ -639,7 +638,7 @@ async function initializeLookupTable(
 }
 ```
 
-#### 5. Modify `main` to use lookup tables
+### 5. Modify `main` to use lookup tables
 
 Now that we can initialize a lookup table with all of the recipients' addresses,
 let's update `main` to use versioned transactions and lookup tables. We'll need
@@ -726,7 +725,7 @@ Remember, this same transaction was failing when you first downloaded the
 starter code. Now that we're using lookup tables, we can do all 22 transfers in
 a single transaction.
 
-#### 6. Add more address to the lookup table
+### 6. Add more address to the lookup table
 
 Keep in mind that the solution we've come up with so far only supports transfers
 to up to 30 accounts since we only extend the lookup table once. When you factor
@@ -797,7 +796,7 @@ with lookup tables and versioned transactions on your own. If you want to take a
 look at the final solution code you can
 [find it on the solution branch](https://github.com/Unboxed-Software/solana-versioned-transactions/tree/solution).
 
-## Challenge
+# Challenge
 
 As a challenge, experiment with deactivating, closing and freezing lookup
 tables. Remember that you need to wait for a lookup table to finish deactivating
@@ -814,7 +813,7 @@ You can reuse the functions we created in the lab for sending the transaction
 and waiting for the lookup table to activate/deactivate. Feel free to reference
 this [solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=b58fdd00-2b23-4e0d-be55-e62677d351ef)!
-</Callout>

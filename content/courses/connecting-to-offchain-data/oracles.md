@@ -7,25 +7,22 @@ objectives:
   - Explain how incentivized oracle networks make data more trustworthy
   - Effectively weigh the tradeoffs between using various types of oracles
   - Use oracles from an onchain program to access real-world data
-description: Access real-world data inside a Solana program.
 ---
 
-## Summary
+# Summary
 
 - Oracles are services that provide external data to a blockchain network
-- There are many
-  [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+- There are two main Oracle providers on Solana: **Switchboard** and **Pyth**
 - You can build your own Oracle to create a custom data feed
 - You have to be careful when choosing your data feed providers
 
-## Lesson
+# Lesson
 
-[Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
-that provide external data to a blockchain network. Blockchains by nature are
-siloed environments that do not know the outside world. This constraint
-inherently puts a limit on the use cases for decentralized applications (dApps).
-Oracles provide a solution to this limitation by creating a decentralized way to
-get real-world data onchain.
+Oracles are services that provide external data to a blockchain network.
+Blockchains by nature are siloed environments that do not know the outside
+world. This constraint inherently puts a limit on the use cases for
+decentralized applications (dApps). Oracles provide a solution to this
+limitation by creating a decentralized way to get real-world data onchain.
 
 Oracles can provide just about any type of data onchain. Examples include:
 
@@ -39,14 +36,13 @@ While the exact implementation may differ from blockchain to blockchain,
 generally Oracles work as follows:
 
 1. Data is sourced off-chain.
-2. That data is published onchain via a transaction, and stored in an account.
-3. Programs can read the data stored in the account and use that data in the
-   program's logic.
+2. That data is published onchain in a transaction and stored in an account.
+3. Programs can read the data stored in the account and use it in its logic.
 
 This lesson will go over the basics of how oracles work, the state of oracles on
 Solana, and how to effectively use oracles in your Solana development.
 
-### Trust and Oracle Networks
+## Trust and Oracle Networks
 
 The primary hurdle oracles need to overcome is one of trust. Since blockchains
 execute irreversible financial transactions, developers and users alike need to
@@ -102,13 +98,11 @@ It is your job to know how the oracle network is configured and judge if it can
 be trusted. Generally, Oracles should only be used for non-mission-critical
 functions and worst-case scenarios should be accounted for.
 
-### Oracles on Solana
+## Oracles on Solana
 
-There are many
-[Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
-Two of the most well known are [Pyth](https://pyth.network) and
-[Switchboard](https://switchboard.xyz). They’re each unique and follow slightly
-different design choices.
+[Pyth](https://pyth.network) and [Switchboard](https://switchboard.xyz) are the
+two main oracle providers on Solana today. They’re each unique and follow
+slightly different design choices.
 
 **Pyth** is primarily focused on financial data published from top-tier
 financial institutions. Pyth’s data providers publish the market data updates.
@@ -140,7 +134,7 @@ approved code, a data quote verification will fail. This allows Switchboard
 oracles to operate beyond quantitative value reporting, such as functions --
 running off-chain custom and confidential computations.
 
-### Switchboard Oracles
+## Switchboard Oracles
 
 Switchboard oracles store data on Solana using data feeds. These data feeds,
 also called aggregators, are each a collection of jobs that get aggregated to
@@ -233,7 +227,7 @@ data is published onchain:
 6. The updated result is stored in the data feed account so it can be
    read/consumed onchain.
 
-#### How to use Switchboard Oracles
+### How to use Switchboard Oracles
 
 To use Switchboard oracles and incorporate off-chain data into a Solana program,
 you first have to find a feed that provides the data you need. Switchboard feeds
@@ -335,7 +329,7 @@ program, things like this are very important to consider.
 Below is a two of the jobs related to the BTC_USD feed. It shows two sources of
 data: [MEXC](https://www.mexc.com/) and [Coinbase](https://www.coinbase.com/).
 
-![Oracle Jobs](/public/assets/courses/unboxed/oracle-jobs.png)
+![Oracle Jobs](../assets/oracle-jobs.png)
 
 Once you’ve chosen a feed to use, you can start reading the data in that feed.
 You do this by simply deserializing and reading the state stored in the account.
@@ -373,8 +367,8 @@ ways:
 - `load_mut` when the account is mutable
 
 If you’d like to learn more, check out the
-[Advance Program Architecture lesson](/developers/courses/program-optimization/program-architecture)
-where we touch on `Zero-Copy` and `AccountLoader`.
+[Advance Program Architecture lesson](./program-architecture) where we touch on
+`Zero-Copy` and `AccountLoader`.
 
 With the aggregator account passed into your program, you can use it to get the
 latest oracle result. Specifically, you can use the type's `get_result()`
@@ -391,7 +385,7 @@ let val: f64 = feed.get_result()?.try_into()?;
 
 The `get_result()` method defined on the `AggregatorAccountData` struct is safer
 than fetching the data with `latest_confirmed_round.result` because Switchboard
-has implemented some nifty safety checks.
+has implemeted some nifty safety checks.
 
 ```rust
 // from switchboard program
@@ -413,7 +407,7 @@ pub fn get_result(&self) -> anchor_lang::Result<SwitchboardDecimal> {
 You can also view the current value stored in an `AggregatorAccountData` account
 client-side in Typescript.
 
-```typescript
+```tsx
 import { AggregatorAccount, SwitchboardProgram} from '@switchboard-xyz/solana.js'
 
 ...
@@ -442,7 +436,7 @@ Remember, Switchboard data feeds are just accounts that are updated by third
 parties (oracles). Given that, you can do anything with the account that you can
 typically do with accounts external to your program.
 
-#### Best Practices and Common Pitfalls
+### Best Practices and Common Pitfalls
 
 When incorporating Switchboard feeds into your programs, there are two groups of
 concerns to consider: choosing a feed and actually consuming the data from that
@@ -456,7 +450,7 @@ the
 [BTC_USD feed](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee)
 you can see its relevant configurations.
 
-![Oracle Configs](/public/assets/courses/unboxed/oracle-configs.png)
+![Oracle Configs](../assets/oracle-configs.png)
 
 The BTC_USD feed has Min Update Delay = 6 seconds. This means that the price of
 BTC is only updated at a minimum of every 6 seconds on this feed. This is
@@ -629,7 +623,7 @@ feed.check_confidence_interval(SwitchboardDecimal::from_f64(max_confidence_inter
 Lastly, it’s important to plan for worst-case scenarios in your programs. Plan
 for feeds going stale and plan for feed accounts closing.
 
-### Conclusion
+## Conclusion
 
 If you want functional programs that can perform actions based on real-world
 data, you’re going to have to use oracles. Fortunately, there are some
@@ -637,7 +631,7 @@ trustworthy oracle networks, like Switchboard, that make using oracles easier
 than they would otherwise be. However, make sure to do your due diligence on the
 oracles you use. You are ultimately responsible for your program's behavior!
 
-## Lab
+# Lab
 
 Let's practice using oracles! We'll be building a "Michael Burry Escrow" program
 that locks SOL in an escrow account until SOL is above a certain USD value. This
@@ -652,7 +646,7 @@ oracle from switchboard. The program will have two main instructions:
 - Deposit - Lock up the SOL and set a USD price to unlock it at.
 - Withdraw - Check the USD price and withdraw the SOL if the price is met.
 
-#### 1. Program Setup
+### 1. Program Setup
 
 To get started, let’s create the program with
 
@@ -676,13 +670,13 @@ url="https://api.devnet.solana.com"
 [test]
 startup_wait = 10000
 
-[[test.validator.clone]] ## sbv2 devnet programID
+[[test.validator.clone]] # sbv2 devnet programID
 address = "SW1TCH7qEPTdLsDHRgPuMQjbQxKdH2aBStViMFnt64f"
 
-[[test.validator.clone]] ## sbv2 devnet IDL
+[[test.validator.clone]] # sbv2 devnet IDL
 address = "Fi8vncGpNKbq62gPo56G4toCehWNy77GgqGkTaAF5Lkk"
 
-[[test.validator.clone]] ## sbv2 SOL/USD Feed
+[[test.validator.clone]] # sbv2 SOL/USD Feed
 address="GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 ```
 
@@ -717,7 +711,7 @@ The `lib.rs` file will still serve as the entry point to our program, but the
 logic for each instruction will be contained in their own separate file. Go
 ahead and create the program architecture described above and we’ll get started.
 
-#### 2. `lib.rs`
+### 2. `lib.rs`
 
 Before we write any logic, we are going to set up all of our boilerplate
 information. Starting with `lib.rs`. Our actual logic will live in the
@@ -753,7 +747,7 @@ mod burry_oracle_program {
 }
 ```
 
-#### 3. `state.rs`
+### 3. `state.rs`
 
 Next, let's define our data account for this program: `EscrowState`. Our data
 account will store two pieces of info:
@@ -780,7 +774,7 @@ pub struct EscrowState {
 }
 ```
 
-#### 4. Errors
+### 4. Errors
 
 Let’s define the custom errors we’ll use throughout the program. Inside the
 `errors.rs` file, paste the following:
@@ -802,7 +796,7 @@ pub enum EscrowErrorCode {
 }
 ```
 
-#### 5. `mod.rs`
+### 5. `mod.rs`
 
 Let's set up our `instructions/mod.rs` file.
 
@@ -812,7 +806,7 @@ pub mod deposit;
 pub mod withdraw;
 ```
 
-#### 6. **Deposit**
+### 6. **Deposit**
 
 Now that we have all of the boilerplate out of the way, lets move onto our
 Deposit instruction. This will live in the `/src/instructions/deposit.rs` file.
@@ -1133,18 +1127,15 @@ pub struct Withdraw<'info> {
 And that’s it for the program! At this point, you should be able to run
 `anchor build` without any errors.
 
-<Callout type="note">
-
-If you see an error like the one presented below, you can safely ignore it.
+Note: if you see an error like the one presented below, you can safely ignore
+it.
 
 ```bash
 Compiling switchboard-v2 v0.4.0
 Error: Function _ZN86_$LT$switchboard_v2..aggregator..AggregatorAccountData$u20$as$u20$core..fmt..Debug$GT$3fmt17hea9f7644392c2647E Stack offset of 4128 exceeded max offset of 4096 by 32 bytes, please minimize large stack variables
 ```
 
-</Callout>
-
-#### 7. Testing
+### 7. Testing
 
 Let's write some tests. We should have four of them:
 
@@ -1384,7 +1375,7 @@ everything right. Pay close attention to the intent behind the code rather than
 just copy/pasting. Also feel free to review the working code
 [on the `main` branch of its Github repository](https://github.com/Unboxed-Software/michael-burry-escrow).
 
-### Challenge
+## Challenge
 
 As an independent challenge, create a fallback plan if the data feed ever goes
 down. If the Oracle queue has not updated the aggregator account in X time or if
@@ -1394,7 +1385,7 @@ funds.
 A potential solution to this challenge can be found
 [in the Github repository on the `challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/challenge-solution).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=1a5d266c-f4c1-4c45-b986-2afd4be59991)!
-</Callout>

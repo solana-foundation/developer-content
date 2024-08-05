@@ -4,11 +4,9 @@ objectives:
   - Create mint account with default account state of frozen
   - Explain the use cases of default account state
   - Experiment with the rules of the extension
-description:
-  "Create token that requires interaction with a specific service to use."
 ---
 
-## Summary
+# Summary
 
 - The `default state` extension enables developers to set new token accounts for
   a mint with this extension to be frozen by default, requiring interaction with
@@ -24,7 +22,7 @@ description:
   lab includes tests to ensure the extension works as intended for both minting
   and transferring tokens in frozen and thawed states.
 
-## Overview
+# Overview
 
 The `default state` extension allows developers to force all new token accounts
 to be in one of two states: "Initialized" or "Frozen". Most usefully, with this
@@ -39,7 +37,7 @@ to thaw their token account and allow them to play and trade with other players.
 This works because of the `default state` extension, where it is set that all
 new token accounts are frozen.
 
-#### Types of States
+### Types of States
 
 There are 3 types of state with the default account state extension:
 
@@ -64,7 +62,7 @@ However, `default state` only deals with the latter two: `Initialized` and
 `Frozen`. When you freeze an account, the state is `Frozen`, when you thaw, it
 is `Initialized`.
 
-### Adding default account state
+## Adding default account state
 
 Initializing a mint with transfer fee involves three instructions:
 
@@ -82,7 +80,7 @@ blockchain for the mint account. This instruction accomplishes three things:
 To grab the size of the mint account, we call `getMintLen`, and to grab the
 lamports needed for the space, we call `getMinimumBalanceForRentExemption`.
 
-```typescript
+```tsx
 const mintLen = getMintLen([ExtensionType.DefaultAccountState]);
 // Minimum lamports required for Mint Account
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
@@ -100,7 +98,7 @@ The second
 instruction `createInitializeDefaultAccountStateInstruction` initializes the
 default account state extension.
 
-```typescript
+```tsx
 const initializeDefaultAccountStateInstruction =
   createInitializeDefaultAccountStateInstruction(
     mintKeypair.publicKey, // Mint
@@ -111,7 +109,7 @@ const initializeDefaultAccountStateInstruction =
 
 The third instruction `createInitializeMintInstruction` initializes the mint.
 
-```typescript
+```tsx
 const initializeMintInstruction = createInitializeMintInstruction(
   mintKeypair.publicKey,
   decimals,
@@ -137,7 +135,7 @@ return await sendAndConfirmTransaction(connection, transaction, [
 ]);
 ```
 
-### Updating the Default Account State
+## Updating the Default Account State
 
 You can always change the default account state assuming you have the authority
 to do so. To do this, simply call `updateDefaultAccountState`.
@@ -169,7 +167,7 @@ export async function updateDefaultAccountState(
 ): Promise<TransactionSignature>;
 ```
 
-### Updating the Freeze Authority
+## Updating the Freeze Authority
 
 Lastly, you may want to update the `freezeAuthority` to another account. Say you
 want to handle the freezing and thawing by a program for example. You can do
@@ -206,14 +204,14 @@ await setAuthority(
 );
 ```
 
-## Lab
+# Lab
 
 In this lab we will be creating a mint which all new token accounts are frozen
 upon creation by using the `default state` extension. We will then write tests
 to check if the extension is working as intended by attempting to mint and
 transfer the tokens in a frozen and thawed account state.
 
-#### 1. Setup Environment
+### 1. Setup Environment
 
 To get started, create an empty directory named `default-account-state` and
 navigate to it. We'll be initializing a brand new project. Run `npm init` and
@@ -282,7 +280,7 @@ once we've written it.
 If you run into an error in `initializeKeypair` with airdropping, follow the
 next step.
 
-#### 2. Run validator node
+### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -292,25 +290,18 @@ retrieve and use in our connection is the JSON RPC URL, which in this case is
 `http://127.0.0.1:8899`. We then use that in the connection to specify to use
 the local RPC URL.
 
-```typescript
+```tsx
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 ```
 
 Alternatively, if you’d like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
-```typescript
+```tsx
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 ```
 
-If you decide to use devnet, and have issues with airdropping sol. Feel free to
-add the `keypairPath` parameter to `initializeKeypair`. You can get this from
-running `solana config get` in your terminal. And then go to
-[faucet.solana.com](https://faucet.solana.com/) and airdrop some sol to your
-address. You can get your address from running `solana address` in your
-terminal.
-
-#### 3. Helpers
+### 3. Helpers
 
 When we pasted the `index.ts` code from earlier, we added the following helpers:
 
@@ -326,7 +317,7 @@ Additionally we have some initial accounts:
   testing
 - `otherTokenAccountKeypair`: Another token used for testing
 
-#### 4. Create Mint with Default account state
+### 4. Create Mint with Default account state
 
 When creating a mint token with default state, we must create the account
 instruction, initialize the default account state for the mint account and
@@ -351,7 +342,7 @@ space required to store the mint information on the blockchain, the amount of
 SOL (lamports) necessary to exempt the account from rent and the ID of the token
 program that will manage this mint account (`TOKEN_2022_PROGRAM_ID`).
 
-```typescript
+```tsx
 const mintLen = getMintLen([ExtensionType.DefaultAccountState]);
 // Minimum lamports required for Mint Account
 const lamports = await connection.getMinimumBalanceForRentExemption(mintLen);
@@ -370,7 +361,7 @@ default state. The `createInitializeDefaultAccountStateInstruction` function is
 used to generate an instruction that enables the mint to set `defaultState` of
 any new token accounts.
 
-```typescript
+```tsx
 const initializeDefaultAccountStateInstruction =
   createInitializeDefaultAccountStateInstruction(
     mintKeypair.publicKey,
@@ -384,7 +375,7 @@ and passing in the required arguments. This function is provided by the SPL
 Token package and it constructs a transaction instruction that initializes a new
 mint.
 
-```typescript
+```tsx
 const initializeMintInstruction = createInitializeMintInstruction(
   mintKeypair.publicKey,
   decimals,
@@ -397,7 +388,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
 Lastly, let's add all of the instructions to a transaction and send it to the
 blockchain:
 
-```typescript
+```tsx
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeDefaultAccountStateInstruction,
@@ -486,12 +477,12 @@ export async function createTokenExtensionMintWithDefaultState(
 }
 ```
 
-#### 6. Test Setup
+### 6. Test Setup
 
 Now that we have the ability to create a mint with a default state for all of
 it's new token accounts, let's write some tests to see how it functions.
 
-#### 6.1 Create Mint with Default State
+### 6.1 Create Mint with Default State
 
 Let's first create a mint with the default state of `frozen`. To do this we call
 the `createTokenExtensionMintWithDefaultState` function we just created in out
@@ -508,14 +499,14 @@ await createTokenExtensionMintWithDefaultState(
 );
 ```
 
-#### 6.2 Create Test Token Accounts
+### 6.2 Create Test Token Accounts
 
 Now, let's create two new Token accounts to test with. We can accomplish this by
 calling the `createAccount` helper provided by the SPL Token library. We will
 use the keypairs we generated at the beginning: `ourTokenAccountKeypair` and
 `otherTokenAccountKeypair`.
 
-```typescript
+```tsx
 // CREATE TEST TOKEN ACCOUNTS
 // Transferring from account
 await createAccount(
@@ -539,7 +530,7 @@ await createAccount(
 );
 ```
 
-#### 7 Tests
+### 7 Tests
 
 Now let's write some tests to show the interactions that can be had with the
 `default state` extension.
@@ -551,7 +542,7 @@ We'll write four tests in total:
 - Transferring without thawing the recipient's account
 - Transferring with thawing the recipient's account
 
-#### 7.1 Minting without thawing the recipient's account
+### 7.1 Minting without thawing the recipient's account
 
 This test will attempt to mint a token to `ourTokenAccount` without thawing the
 account. This test is expected to fail as the account will be frozen on the mint
@@ -560,7 +551,7 @@ attempt. Remember: when a token account is frozen, the balance cannot change.
 To do this, let's wrap a `mintTo` function in a `try catch` and print out the
 respected result:
 
-```typescript
+```tsx
 // TEST: MINT WITHOUT THAWING
 try {
   // Attempt to mint without thawing
@@ -587,21 +578,21 @@ try {
 Test this by running the script:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 We should see the following error logged out in the terminal, meaning the
 extension is working as intended.
 `✅ - We expected this to fail because the account is still frozen.`
 
-#### 7.2 Minting with thawing the recipient's account
+### 7.2 Minting with thawing the recipient's account
 
 This test will attempt to mint a token after thawing the token account. This
 test is expected to pass as the account will be thawed on the mint attempt.
 
 We can create this test by calling `thawAccount` and then `mintTo`:
 
-```typescript
+```tsx
 // TEST: MINT WITH THAWING
 // Unfreeze frozen token
 await thawAccount(
@@ -642,10 +633,10 @@ console.log(
 Go ahead and run the script, the transaction should succeed.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-#### 7.3 Transferring without thawing the recipient's account
+### 7.3 Transferring without thawing the recipient's account
 
 Now that we’ve tested minting, we can test transferring our tokens frozen and
 not. First lets test a transfer without thawing the recipient's token account.
@@ -657,7 +648,7 @@ frozen and it's balance cannot change.
 
 To test this, let's wrap a `transfer` function in a `try catch`:
 
-```typescript
+```tsx
 // TEST: TRANSFER WITHOUT THAWING
 try {
   await transfer(
@@ -683,10 +674,10 @@ try {
 Run the test and see the results:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-#### 7.4 Transferring with thawing the recipient's account
+### 7.4 Transferring with thawing the recipient's account
 
 The last test we'll create tests transferring tokens after thawing the token
 account we will be transferring to. This test is expected to pass, since all
@@ -694,7 +685,7 @@ token accounts will now be thawed.
 
 We'll do this by calling `thawAccount` and then `transfer`:
 
-```typescript
+```tsx
 // TEST: TRANSFER WITH THAWING
 // Unfreeze frozen token
 await thawAccount(
@@ -737,7 +728,7 @@ console.log(
 Run all of the tests one last time and see the results:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 Remember the key takeaways:
@@ -749,7 +740,7 @@ Remember the key takeaways:
 Congratulations! We’ve just created and tested a mint using the default account
 extension!
 
-## Challenge
+# Challenge
 
 Add tests for burning tokens from frozen and thawed token accounts (hint, one
 will fail, one will succeed).

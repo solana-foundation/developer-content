@@ -7,11 +7,9 @@ objectives:
     transaction requests
   - Partially sign transactions and implement transaction gating based on
     certain conditions
-description:
-  "How to create Solana Pay payment requests using links and QR codes."
 ---
 
-## Summary
+# Summary
 
 - **Solana Pay** is a specification for encoding Solana transaction requests
   within URLs, enabling standardized transaction requests across different
@@ -22,7 +20,7 @@ description:
   certain transactions are allowed to be processed or not, based on certain
   conditions or the presence of specific data in the transaction
 
-## Lesson
+# Lesson
 
 The Solana community is continually improving and expanding the network's
 functionality. But that doesn't always mean developing brand new technology.
@@ -41,7 +39,7 @@ leaving it at that, we hope you'll see this as an example of leveraging existing
 features in new and interesting ways, using it as a launching pad for your own
 unique client-side network interactions.
 
-### Solana Pay
+## Solana Pay
 
 The [Solana Pay specification](https://docs.solanapay.com/spec) is a set of
 standards that allow users to request payments and initiate transactions using
@@ -58,7 +56,7 @@ There are two types of requests defined by the Solana Pay specification:
 1. Transfer Request: used for simple SOL or SPL Token transfers
 2. Transaction Request: used to request any type of Solana transaction
 
-#### Transfer requests
+### Transfer requests
 
 The transfer request specification describes a non-interactive request for SOL
 or SPL token transfer. Transfer request URLs take the following format
@@ -94,7 +92,7 @@ And here is a URL describing a transfer request for 0.1 USDC:
 solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
 ```
 
-#### Transaction requests
+### Transaction requests
 
 The Solana Pay transaction request is similar to a transfer request in that it
 is simply a URL that can be consumed by a supporting wallet. However, this
@@ -123,9 +121,9 @@ When a wallet receives a transaction Request URL, four things happen:
 Given that transaction requests are more involved than transfer requests, the
 remainder of this lesson will focus on creating transaction requests.
 
-### Create a transaction request
+## Create a transaction request
 
-#### Define the API endpoint
+### Define the API endpoint
 
 The main thing you, the developer, need to do to make the transaction request
 flow work is set up a REST API endpoint at the URL you plan to include in the
@@ -148,7 +146,7 @@ export default async function handler(
 }
 ```
 
-#### Handle a GET request
+### Handle a GET request
 
 The wallet consuming your transaction request URL will first issue a GET request
 to this endpoint. You'll want your endpoint to return a JSON object with two
@@ -185,7 +183,7 @@ When the wallet makes a GET request to the API endpoint, the `get` function is
 called, returning a response with a status code of 200 and the JSON object
 containing `label` and `icon`.
 
-#### Handle a POST request and build the transaction
+### Handle a POST request and build the transaction
 
 After issuing a GET request, the wallet will issue a POST request to the same
 URL. Your endpoint should expect the POST request's `body` to contain a JSON
@@ -270,7 +268,7 @@ the transaction as a base64-encoded string back in the HTTP response. The wallet
 that issued the request can then present the transaction to the user for
 signing.
 
-#### Confirm transaction
+### Confirm transaction
 
 You may have noticed that the previous example assumed a `reference` was
 provided as a query parameter. While this is _not_ a value provided by the
@@ -291,7 +289,7 @@ status.
 If you use the `@solana/pay` library, you can use the `findReference` helper
 function instead of using `getSignaturesForAddress` directly.
 
-### Gated transactions
+## Gated transactions
 
 We've mentioned before how Solana Pay is an example of being able to do cool new
 things with the network by getting creative with existing functionality. Another
@@ -319,7 +317,7 @@ for (let i = 0; i < nfts.length; i++) {
 }
 ```
 
-#### Partial Signing
+### Partial Signing
 
 If you want certain transactions behind some kind of gating mechanism, that
 functionality will have to be enforced onchain as well. Returning an error from
@@ -370,7 +368,7 @@ user has a specific NFT, you would simply add your admin signature to the
 transaction using `partialSign` before encoding the transaction as a
 base64-encoded string and issuing the HTTP response.
 
-### Solana Pay QR codes
+## Solana Pay QR codes
 
 One of the standout features of Solana Pay is its easy integration with QR
 codes. Since transfer and transaction requests are simply URLs, you can embed
@@ -389,7 +387,7 @@ function. This function needs you to provide the following:
 const qr = createQR(url, 400, "transparent");
 ```
 
-## Lab
+# Lab
 
 Now that you've got a conceptual grasp on Solana Pay, let's put it into
 practice. We'll use Solana Pay to generate a series of QR codes for a scavenger
@@ -397,7 +395,7 @@ hunt. Participants must visit each scavenger hunt location in order. At each
 location, they'll use the provided QR code to submit the appropriate transaction
 to the scavenger hunt's smart contract that keeps track of user progress.
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code on the `starter` branch of this
 [repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter).
@@ -406,7 +404,7 @@ that the menu bar lets you switch between different QR codes. The default option
 is a simple SOL transfer for illustrative purposes. Throughout this lab, we'll
 be adding functionality to the location options in the menu bar.
 
-![scavenger hunt app](/public/assets/courses/unboxed/scavenger-hunt-screenshot.png)
+![scavenger hunt app](../assets/scavenger-hunt-screenshot.png)
 
 To do this, we'll be creating a new endpoint for a transaction request that
 builds a transaction for invoking an Anchor program on Devnet. This program has
@@ -424,7 +422,7 @@ Scavenger Hunt app. Looking at `pages/index.tsx`,
 see how the transaction request for sending SOL is set up. We'll be following a
 similar pattern for the transaction request for checking in at a location.
 
-#### 2. Setup
+### 2. Setup
 
 Before we move forward, let's make sure you can run the app locally. Start by
 renaming the `.env.example` file in the frontend directory to `.env`. This file
@@ -477,7 +475,7 @@ with Devnet SOL since most people don't have Devnet SOL available for testing.
 If you were able to successfully execute the transaction using the QR code,
 you're good to move on!
 
-#### 3. Create a check-in transaction request endpoint
+### 3. Create a check-in transaction request endpoint
 
 Now that you're up and running, it's time to create an endpoint that supports
 transaction requests for location check-in using the Scavenger Hunt program.
@@ -512,7 +510,7 @@ function get(res: NextApiResponse) {}
 async function post(req: NextApiRequest, res: NextApiResponse) {}
 ```
 
-#### 4. Update `get` function
+### 4. Update `get` function
 
 Remember, the first request from a wallet will be a GET request expecting the
 endpoint to return a label and icon. Update the `get` function to send a
@@ -527,7 +525,7 @@ function get(res: NextApiResponse) {
 }
 ```
 
-#### 5. Update `post` function
+### 5. Update `post` function
 
 After the GET request, a wallet will issue a POST request to the endpoint. The
 request's `body` will contain a JSON object with an `account` field representing
@@ -601,7 +599,7 @@ async function buildTransaction(
 }
 ```
 
-#### 6. Implement the `buildTransaction` function
+### 6. Implement the `buildTransaction` function
 
 Next, let’s implement the `buildTransaction` function. It should build,
 partially sign, and return the check-in transaction. The sequence of items it
@@ -719,7 +717,7 @@ async function createCheckInInstruction(
 }
 ```
 
-#### 7. Implement `fetchUserState` function
+### 7. Implement `fetchUserState` function
 
 With the `buildTransaction` function finished, we can start implementing the
 empty helper functions we created, starting with `fetchUserState`. This function
@@ -741,7 +739,7 @@ async function fetchUserState(account: PublicKey): Promise<UserState | null> {
 }
 ```
 
-#### 8. Implement `verifyCorrectLocation` function
+### 8. Implement `verifyCorrectLocation` function
 
 Next, let’s implement the `verifyCorrectLocation` helper function. This function
 is used to verify that a user is at the correct location in a scavenger hunt
@@ -775,7 +773,7 @@ function verifyCorrectLocation(
 }
 ```
 
-#### 9. Implement the instruction creation functions
+### 9. Implement the instruction creation functions
 
 Lastly, let's implement `createInitUserInstruction` and
 `createCheckInInstruction`. These can use Anchor to generate and return the
@@ -817,7 +815,7 @@ async function createCheckInInstruction(
 }
 ```
 
-#### 10. Test the app
+### 10. Test the app
 
 At this point your app should be working! Go ahead and test it using your mobile
 wallet. Start by scanning the QR code for `Location 1`. Remember to make sure
@@ -838,7 +836,7 @@ If you want to take a look at the final solution code you can find it on the
 solution branch of
 [the same repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/solution).
 
-## Challenge
+# Challenge
 
 It's time to try this out on your own. Feel free to build out an idea of your
 own using Solana Pay. Or, if you need some inspiration, you can use the prompt
@@ -852,7 +850,7 @@ is already on a pre-determined list, etc.).
 Get creative with this! The Solana pay spec opens up a lot of doors for unique
 use cases.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=3c7e5796-c433-4575-93e1-1429f718aa10)!
-</Callout>

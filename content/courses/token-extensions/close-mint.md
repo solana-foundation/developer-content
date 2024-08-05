@@ -3,10 +3,9 @@ title: Close Mint Extension
 objectives:
   - Create a mint that is closable
   - Describe all of the prerequisites needed to close a mint
-description: "Create a mint that can be closed once the tokens are burnt."
 ---
 
-## Summary
+# Summary
 
 - The original Token Program only allowed closing token accounts, but not mint
   accounts.
@@ -16,7 +15,7 @@ description: "Create a mint that can be closed once the tokens are burnt."
   to be 0.
 - The `mintCloseAuthority` can be updated by calling `setAuthority`
 
-## Overview
+# Overview
 
 The original Token Program only allows owners to close token accounts, not mint
 accounts. So if you create a mint, you'll never be able to close the account.
@@ -40,7 +39,7 @@ account.
 Again, for a mint to be closed with this extension, the supply has to be 0. So
 if any of this token is minted, it will have to be burned first.
 
-### Create Mint with Close Authority
+## Create Mint with Close Authority
 
 Initializing the mint with the close authority extension involves three
 instructions:
@@ -121,7 +120,7 @@ const signature = await sendAndConfirmTransaction(
 When the transaction is sent, a new mint account is created with the specified
 close authority.
 
-### Close Mint with Close Authority
+## Close Mint with Close Authority
 
 To close a mint with the `close mint` extension, all that is needed is to call
 the `closeAccount` function.
@@ -130,8 +129,7 @@ Remember, that to close the mint account, the total supply has to be 0. So if
 any tokens exist, they have to be burned first. You can do this with the `burn`
 function.
 
-<Callout type="note">The `closeAccount` function works for mints and token
-accounts alike. </Callout>
+Note: The `closeAccount` function works for mints and token accounts alike.
 
 ```ts
 // burn tokens to 0
@@ -160,7 +158,7 @@ await closeAccount(
 );
 ```
 
-### Update Close Mint Authority
+## Update Close Mint Authority
 
 To change the `closeMintAuthority` you can call the `setAuthority` function and
 pass in the right accounts, as well as the `authorityType`, which in this case
@@ -196,14 +194,14 @@ await setAuthority(
 );
 ```
 
-## Lab
+# Lab
 
 In this lab, we'll create a mint with the `close mint` extension. We will then
 mint some of the tokens and see what happens when we try to close it with a
 non-zero supply (hint, the close transaction will fail). Lastly, we will burn
 the supply and close the account.
 
-### 1. Getting Started
+## 1. Getting Started
 
 To get started, create an empty directory named `close-mint` and navigate to it.
 We'll be initializing a brand new project. Run `npm init` and follow through the
@@ -270,13 +268,13 @@ Go ahead and run the script. You should see the `payer` and `mint` public key
 logged to your terminal.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 If you run into an error in `initializeKeypair` with airdropping, follow the
 next step.
 
-#### 2. Run validator node
+### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -286,25 +284,18 @@ retrieve and use in our connection is the JSON RPC URL, which in this case is
 `http://127.0.0.1:8899`. We then use that in the connection to specify to use
 the local RPC URL.
 
-```typescript
+```tsx
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 ```
 
 Alternatively, if you’d like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
-```typescript
+```tsx
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 ```
 
-If you decide to use devnet, and have issues with airdropping SOL, feel free to
-add the `keypairPath` parameter to `initializeKeypair`. You can get this from
-running `solana config get` in your terminal. And then go to
-[faucet.solana.com](https://faucet.solana.com/) and airdrop some SOL to your
-address. You can get your address from running `solana address` in your
-terminal.
-
-### 3. Create a mint with close authority
+## 3. Create a mint with close authority
 
 Let's create a closable mint by creating the function `createClosableMint` in a
 new file `src/create-mint.ts`.
@@ -413,10 +404,10 @@ This will create a transaction with close mint instruction.
 Feel free to run this and check that everything is working:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-### 4. Closing the mint
+## 4. Closing the mint
 
 We're going to close the mint, but first, lets explore what happens when we have
 a supply when trying to close (hint, it'll fail).
@@ -424,7 +415,7 @@ a supply when trying to close (hint, it'll fail).
 To do this, we are going to mint some tokens, try to close, then burn the tokens
 and then actually close.
 
-#### 4.1 Mint a token
+### 4.1 Mint a token
 
 In `src/index.ts`, create an account and mint 1 token to that account.
 
@@ -482,7 +473,7 @@ console.log("Initial supply: ", mintInfo.supply);
 Let's run the script and check the initial supply:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 You should see the following in your terminal:
@@ -491,7 +482,7 @@ You should see the following in your terminal:
 Initial supply:  1000000000n
 ```
 
-#### 4.2 Closing the mint with non zero supply
+### 4.2 Closing the mint with non zero supply
 
 Now we'll attempt to close the mint when supply is non-zero. We know this is
 going to fail, since the `close mint` extension requires a non-zero supply. So
@@ -528,7 +519,7 @@ try {
 Give this a run:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 We'll see that the program throws an error along with the program logs. You
@@ -538,7 +529,7 @@ should see the following:
 Close account fails here because the supply is not zero.
 ```
 
-#### 4.3 Burning the supply
+### 4.3 Burning the supply
 
 Let's burn the whole supply so we can actually close the mint. We do this by
 calling `burn`:
@@ -566,7 +557,7 @@ const burnSignature = await burn(
 );
 ```
 
-#### 4.4 Close the mint
+### 4.4 Close the mint
 
 With no tokens in circulation, we can now close the mint. At this point, we can
 simply call `closeAccount`, however, for the sake of visualizing how this works,
@@ -630,7 +621,7 @@ console.log("Account closed? ", accountInfoAfterClose === null);
 Run the script one last time.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 You should see the whole process of creating a closable mint, minting a token,
@@ -640,7 +631,7 @@ That's it! We have successfully created a mint with close authority. If you get
 stuck at any point, you can find working code in the `solution` branch of
 [this repository](https://github.com/Unboxed-Software/solana-lab-close-mint-account/tree/solution).
 
-## Challenge
+# Challenge
 
 For the challenge, try and create your own mint and mint to several token
 accounts, then create a script to burn all of those token accounts, then close

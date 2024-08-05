@@ -8,23 +8,20 @@ objectives:
   - Deserialize instruction data into Rust data types
   - Execute different program logic for different types of instructions
   - Explain the structure of a smart contract on Solana
-description:
-  "Learn how native programs distinguish instructions for different functions."
 ---
 
-## Summary
+# Summary
 
-- Most programs support **multiple discrete instruction handlers** - you decide
-  when writing your program what these instruction handlers are and what data
-  must accompany them when writing your program what these instruction handlers
-  are and what data
-- Rust **enums** are often used to represent discrete program instruction
+- Most programs support **multiple discrete instructions** - you decide when
+  writing your program what these instructions are and what data must accompany
+  them
+- Rust **enums** are often used to represent discrete program instructions
 - You can use the `borsh` crate and the `derive` attribute to provide Borsh
   deserialization and serialization functionality to Rust structs
 - Rust `match` expressions help create conditional code paths based on the
   provided instruction
 
-## Lesson
+# Lesson
 
 One of the most basic elements of a Solana program is the logic for handling
 instruction data. Most programs support multiple related functions and use
@@ -40,12 +37,12 @@ set up such a type, how to deserialize the instruction data into this format,
 and how to execute the proper code path based on the instruction passed into the
 program's entry point.
 
-### Rust basics
+## Rust basics
 
 Before we dive into the specifics of a basic Solana program, let's talk about
 the Rust basics we'll be using throughout this lesson.
 
-#### Variables
+### Variables
 
 Variable assignment in Rust happens with the `let` keyword.
 
@@ -72,7 +69,7 @@ The Rust compiler guarantees that immutable variables truly cannot change so
 that you don’t have to keep track of it yourself. This makes your code easier to
 reason through and simplifies debugging.
 
-#### Structs
+### Structs
 
 A struct, or structure, is a custom data type that lets you package together and
 name multiple related values that make up a meaningful group. Each piece of data
@@ -105,7 +102,7 @@ To get or set a specific value from a struct, we use dot notation.
 user1.age = 37;
 ```
 
-#### Enumerations
+### Enumerations
 
 Enumerations (or Enums) are a data struct that allow you to define a type by
 enumerating its possible variants. An example of an enum may look like:
@@ -137,7 +134,7 @@ let light_status = LightStatus::On { color: String::from("red") };
 In this example, setting a variable to the `On` variant of `LightStatus`
 requires also setting the value of `color`.
 
-#### Match statements
+### Match statements
 
 Match statements are very similar to `switch` statements in C/C++. The `match`
 statement allows you to compare a value against a series of patterns and then
@@ -163,7 +160,7 @@ fn value_in_cents(coin: Coin) -> u8 {
 }
 ```
 
-#### Implementations
+### Implementations
 
 The `impl` keyword is used in Rust to define a type's implementations. Functions
 and constants can both be defined in an implementation.
@@ -203,7 +200,7 @@ let mut example = Example { number: 3 };
 example.answer();
 ```
 
-#### Traits and attributes
+### Traits and attributes
 
 You won't be creating your own traits or attributes at this stage, so we won't
 provide an in depth explanation of either. However, you will be using the
@@ -223,7 +220,7 @@ to a type and provide one or more supported traits, code is generated under the
 hood to automatically implement the traits for that type. We'll provide a
 concrete example of this shortly.
 
-### Representing instructions as a Rust data type
+## Representing instructions as a Rust data type
 
 Now that we've covered the Rust basics, let's apply them to Solana programs.
 
@@ -257,7 +254,7 @@ Notice that each variant of the `NoteInstruction` enum comes with embedded data
 that will be used by the program to accomplish the tasks of creating, updating,
 and deleting a note, respectively.
 
-### Deserialize instruction data
+## Deserialize instruction data
 
 Instruction data is passed to the program as a byte array, so you need a way to
 deterministically convert that array into an instance of the instruction enum
@@ -346,7 +343,7 @@ Note that there is Rust syntax in this function that we haven't explained yet.
 The `ok_or` and `unwrap` functions are used for error handling and will be
 discussed in detail in another lesson.
 
-### Program logic
+## Program logic
 
 With a way to deserialize instruction data into a custom Rust type, you can then
 use appropriate control flow to execute different code paths in your program
@@ -383,7 +380,7 @@ many different possible instructions to match against, your code will be much
 more readable if the logic for each instruction is written in a separate
 function and simply called from inside the `match` statement.
 
-### Program file structure
+## Program file structure
 
 The [Hello World lesson’s](hello-world-program) program was simple enough that
 it could be confined to one file. But as the complexity of a program grows, it's
@@ -416,7 +413,7 @@ statements in other files will need to be prefaced with the `pub` keyword:
 pub enum NoteInstruction { ... }
 ```
 
-## Lab
+# Lab
 
 For this lesson’s lab, we’ll be building out the first half of the Movie Review
 program that we worked with in Module 1. This program stores movie reviews
@@ -425,7 +422,7 @@ submitted by users.
 For now, we'll focus on deserializing the instruction data. The following lesson
 will focus on the second half of this program.
 
-#### 1. Entry point
+### 1. Entry point
 
 We’ll be using [Solana Playground](https://beta.solpg.io/) again to build out
 this program. Solana Playground saves state in your browser, so everything you
@@ -458,7 +455,7 @@ pub fn process_instruction(
 }
 ```
 
-#### 2. Deserialize instruction data
+### 2. Deserialize instruction data
 
 Before we continue with the processor logic, we should define our supported
 instructions and implement our deserialization function.
@@ -527,7 +524,7 @@ impl MovieInstruction {
 }
 ```
 
-#### 3. Program logic
+### 3. Program logic
 
 With the instruction deserialization handled, we can return to the `lib.rs` file
 to handle some of our program logic.
@@ -613,7 +610,7 @@ You can also have a look at the program
 [solution code](https://beta.solpg.io/62aa9ba3b5e36a8f6716d45b) if you get
 stuck.
 
-## Challenge
+# Challenge
 
 For this lesson's challenge, try replicating the Student Intro program from
 Module 1. Recall that we created a frontend application that lets students
@@ -634,7 +631,7 @@ in the frontend code with the one you've deployed.
 Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62b0ce53f6273245aca4f5b0).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=74a157dc-01a7-4b08-9a5f-27aa51a4346c)!
-</Callout>

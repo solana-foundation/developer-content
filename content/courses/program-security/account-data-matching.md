@@ -4,11 +4,9 @@ objectives:
   - Explain the security risks associated with missing data validation checks
   - Implement data validation checks using long-form Rust
   - Implement data validation checks using Anchor constraints
-description:
-  "How to check your program's data accounts in both Anchor and Native Rust."
 ---
 
-## Summary
+# Summary
 
 - Use **data validation checks** to verify that account data matches an expected
   value. Without appropriate data validation checks, unexpected accounts may be
@@ -25,7 +23,7 @@ description:
   account field stored on the account matches the key of an account in the
   `Accounts` struct.
 
-## Lesson
+# Lesson
 
 Account data matching refers to data validation checks used to verify the data
 stored on an account matches an expected value. Data validation checks provide a
@@ -36,7 +34,7 @@ This can be useful when accounts required by an instruction have dependencies on
 values stored in other accounts or if an instruction is dependent on the data
 stored in an account.
 
-#### Missing data validation check
+### Missing data validation check
 
 The example below includes an `update_admin` instruction that updates the
 `admin` field stored on an `admin_config` account.
@@ -76,7 +74,7 @@ pub struct AdminConfig {
 }
 ```
 
-#### Add data validation check
+### Add data validation check
 
 The basic Rust approach to solve this problem is to simply compare the passed in
 `admin` key to the `admin` key stored in the `admin_config` account, throwing an
@@ -125,7 +123,7 @@ pub struct AdminConfig {
 }
 ```
 
-#### Use Anchor constraints
+### Use Anchor constraints
 
 Anchor simplifies this with the `has_one` constraint. You can use the `has_one`
 constraint to move the data validation check from the instruction logic to the
@@ -189,14 +187,14 @@ pub struct UpdateAdmin<'info> {
 }
 ```
 
-## Lab
+# Lab
 
 For this lab we’ll create a simple “vault” program similar to the program we
 used in the Signer Authorization lesson and the Owner Check lesson. Similar to
 those labs, we’ll show in this lab how a missing data validation check could
 allow the vault to be drained.
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-account-data-matching).
@@ -313,7 +311,7 @@ pub struct Vault {
 }
 ```
 
-#### 2. Test `insecure_withdraw` instruction
+### 2. Test `insecure_withdraw` instruction
 
 To prove that this is a problem, let’s write a test where an account other than
 the vault’s `authority` tries to withdraw from the vault.
@@ -331,7 +329,7 @@ instruction matches the values stored on the `vault` account initialized in the
 first test, the instruction will process successfully and the tokens will be
 transferred to the `withdrawDestinationFake` account.
 
-```typescript
+```tsx
 describe("account-data-matching", () => {
   ...
   it("Insecure withdraw", async () => {
@@ -361,7 +359,7 @@ account-data-matching
   ✔ Insecure withdraw (403ms)
 ```
 
-#### 3. Add `secure_withdraw` instruction
+### 3. Add `secure_withdraw` instruction
 
 Let’s go implement a secure version of this instruction called
 `secure_withdraw`.
@@ -427,13 +425,13 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-#### 4. Test `secure_withdraw` instruction
+### 4. Test `secure_withdraw` instruction
 
 Now let’s test the `secure_withdraw` instruction with two tests: one that uses
 `walletFake` as the authority and one that uses `wallet` as the authority. We
 expect the first invocation to return an error and the second to succeed.
 
-```typescript
+```tsx
 describe("account-data-matching", () => {
   ...
   it("Secure withdraw, expect error", async () => {
@@ -516,7 +514,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the repository](https://github.com/Unboxed-Software/solana-account-data-matching/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -527,7 +525,7 @@ are in place to avoid security exploits.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=a107787e-ad33-42bb-96b3-0592efc1b92f)!
-</Callout>

@@ -6,12 +6,11 @@ objectives:
   - Explain the basics of Solana's runtime optimizations
   - Explain Borsh
   - Use Borsh to serialize program data for native programs
-description: How to deserialize data fetched from Solana accounts.
 ---
 
-## Summary
+# Summary
 
-- Native (non-Anchor) Solana development requires manual serialization and
+- Native (non-Anchor) Solana development required manual serialization and
   deserialization of data.
 - Transactions are made up of an array of instructions, a single transaction can
   have any number of instructions in it, each targeting different programs. When
@@ -29,26 +28,18 @@ description: How to deserialize data fetched from Solana accounts.
 - Transactions can fail to be processed by the blockchain for any number of
   reasons, we’ll discuss some of the most common ones here.
 
-## Lesson
+# Lesson
 
-### Transactions
+## Transactions
 
-<Callout type="note">This course requires completing
-[Introduction to Solana](/developers/courses/intro-to-solana) or equivalent
-knowledge. It's also aimed at advanced developers that prefer more control over
-the ease of use and safe defaults Anchor provides. If you're new to developing
-onchain programs you may prefer
-[Anchor](/developers/courses/onchain-development)</Callout>
+So far, we’ve learned how to create transactions with instructions for common
+Solana programs. This chapter shows how to create instructions for our own
+native Solana programs, which we will develop in a few lessons. Specifically,
+we're going to learn about serialization and deserialization. This section is
+only required for native Solana program development, so if you find that boring,
+don't worry - just skip to the [Anchor](./intro-to-anchor) section.
 
-In [Introduction to Solana](/developers/courses/intro-to-solana) we learned how
-to create transactions with instructions for common Solana programs.
-
-This lessons shows how to create instructions for our own native Solana
-programs, which we will develop in a few lessons. Specifically, we're going to
-learn about serialization and deserialization, which is requiredfor native
-(non-Anchor) program development.
-
-#### Transaction Contents
+### Transaction Contents
 
 Every transaction contains:
 
@@ -62,7 +53,7 @@ on is adding instructions and signatures. The library builds the array of
 accounts based on that information and handles the logic for including a recent
 blockhash.
 
-### Instructions
+## Instructions
 
 Every instruction contains:
 
@@ -96,7 +87,7 @@ which transactions are non-overlapping or read-only and allow them to execute
 concurrently. To learn more about Solana’s runtime, check out this
 [blog post on Sealevel](https://solana.com/news/sealevel---parallel-processing-thousands-of-smart-contracts).
 
-#### Instruction Data
+### Instruction Data
 
 The ability to add arbitrary data to an instruction ensures that programs can be
 dynamic and flexible enough for broad use cases in the same way that the body of
@@ -133,7 +124,7 @@ written, but it’s common to have the first field in instruction data be a numb
 that the program can map to a function, after which additional fields act as
 function arguments.
 
-### Serialization
+## Serialization
 
 In addition to knowing what information to include in an instruction data
 buffer, you also need to serialize it properly. The most common serializer used
@@ -262,23 +253,23 @@ web3.sendAndConfirmTransaction(connection, transaction, [player]).then(txid => {
 });
 ```
 
-## Lab
+# Lab
 
 Let’s practice this together by building a Movie Review app that lets users
 submit a movie review and have it stored on Solana’s network. We’ll build this
 app a little bit at a time over the next few lessons, adding new functionality
 each lesson.
 
-![Movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![Movie review frontend](../assets/movie-reviews-frontend.png)
 
 Here's a quick diagram of the program we'll build:
 
-![Solana stores data items in PDAs, which can be found using their seeds](/public/assets/courses/unboxed/movie-review-program.svg)
+![Solana stores data items in PDAs, which can be found using their seeds](../assets/movie-review-program.svg)
 
 The public key of the Solana program we’ll use for this application is
 `CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN`.
 
-#### 1. Download the starter code
+### 1. Download the starter code
 
 Before we get started, go ahead and download the
 [starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/starter).
@@ -294,7 +285,7 @@ are mocks. In this lesson, we’ll focus on adding a new review but we won’t b
 able to see that review displayed. Next lesson, we’ll focus on deserializing
 custom data from onchain accounts.
 
-#### 2. Create the buffer layout
+### 2. Create the buffer layout
 
 Remember that to properly interact with a Solana program, you need to know how
 it expects data to be structured. Our Movie Review program expects instruction
@@ -335,7 +326,7 @@ export class Movie {
 Keep in mind that _order matters_. If the order of properties here differs from
 how the program is structured, the transaction will fail.
 
-#### 3. Create a method to serialize data
+### 3. Create a method to serialize data
 
 Now that we have the buffer layout set up, let’s create a method in `Movie`
 called `serialize()` that will return a `Buffer` with a `Movie` object’s
@@ -373,7 +364,7 @@ the same naming, we can use it directly with the spread operator and just add
 the `variant` property. Finally, the method returns a new buffer that leaves off
 the unused portion of the original.
 
-#### 4. Send a transaction when the user submits the form
+### 4. Send a transaction when the user submits the form
 
 Now that we have the building blocks for the instruction data, we can create and
 send the transaction when a user submits the form. Open `Form.tsx` and locate
@@ -548,13 +539,13 @@ If you need a bit more time with this project to feel comfortable, have a look
 at the complete
 [solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-serialize-instruction-data).
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Create an application that
 lets students of this course introduce themselves! The Solana program that
 supports this is at `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](../assets/student-intros-frontend.png)
 
 1. You can build this from scratch or you can
    [download the starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/starter).
@@ -580,7 +571,7 @@ If you get stumped, you can
 Feel free to get creative with these challenges and take them even further. The
 instructions aren't here to hold you back!
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=6cb40094-3def-4b66-8a72-dd5f00298f61)!
-</Callout>

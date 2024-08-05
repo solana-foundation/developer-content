@@ -6,11 +6,9 @@ objectives:
   - Connect to and sign transactions from a mobile wallet
   - Create a simple mobile wallet
   - Explain at a high level the interaction between `walletlib` and wallet apps
-description:
-  "Initiate transactions on mobile wallets in your native mobile apps."
 ---
 
-## Summary
+# Summary
 
 - Wallets are just wrappers around a keypair, but they're essential for secure
   key management
@@ -19,7 +17,7 @@ description:
 - Solana Mobile's `walletlib` does the heavy lifting for surfacing wallet
   requests to wallet apps
 
-## Lesson
+# Lesson
 
 Wallets exist to protect your secret keys. While some applications might have
 app-specific keys, many crypto use cases rely on a single identity used across
@@ -30,7 +28,7 @@ transactions for signature to a secure wallet app that holds your secret key.
 This is where the Mobile Wallet Adapter (MWA) comes in. It's the transport layer
 to connect your mobile dApps to your wallet.
 
-### What is MWA
+## What is MWA
 
 Mobile Wallet Adapter (MWA) is the mobile connection between dApps and wallets.
 Much like the [wallet adapter](https://github.com/solana-labs/wallet-adapter)
@@ -43,7 +41,7 @@ around your keypair. External applications can request that the wallet sign
 transactions without ever having access to your private key. Both the web and
 mobile wallet adapters define this interaction for their respective platforms.
 
-#### How does a web wallet work?
+### How does a web wallet work?
 
 A web wallet is simply a browser extension that stores keypairs and allows the
 browser to request access to its functions. It's the wallet's job to follow the
@@ -70,7 +68,7 @@ If you're curious to know more about how browser extensions work, take a look at
 some
 [open-source browser extensions](https://github.com/solana-labs/browser-extension/tree/master).
 
-#### How MWA is different from web wallets
+### How MWA is different from web wallets
 
 Mobile Wallet Adapter (MWA) is different. In the web world, we just need to
 inject some code into the `window` object to access our wallets. Mobile apps,
@@ -95,12 +93,12 @@ than the low-level mechanisms underpinning inter-app communication. However, if
 you want to know the nitty gritty, read the
 [MWA specs](https://solana-mobile.github.io/mobile-wallet-adapter/spec/spec.html).
 
-### How to work with MWA
+## How to work with MWA
 
 The differences between MWA and the traditional wallet adapter require slight
 modifications to how you program your apps.
 
-#### Connect to a wallet
+### Connect to a wallet
 
 By way of comparison, look at the example of connecting to a wallet with React
 vs with React Native.
@@ -134,7 +132,7 @@ transact(async (wallet: Web3MobileWallet) => {
 });
 ```
 
-#### Authorize a wallet
+### Authorize a wallet
 
 On the web, the first time you connect a wallet to a site in your browser, the
 wallet prompts you to authorize the site. Similarly, on mobile, the requesting
@@ -194,9 +192,9 @@ transact(async (wallet: Web3MobileWallet) => {
 Note that the above example does not handle errors or user rejections. In
 production, it's a good idea to wrap the authorization state and methods with a
 custom `useAuthorization` hook. For reference, we built this
-[in the previous lesson](/content/courses/mobile/intro-to-solana-mobile).
+[in the previous lesson](./basic-solana-mobile.md#5-create-authprovidertsx).
 
-#### Interact with a wallet
+### Interact with a wallet
 
 Unlike connecting and authorizing wallets, requesting methods like
 `signAndSendTransactions`, `signMessages`, and `signTransactions` is virtually
@@ -256,7 +254,7 @@ And that's it! You should have enough information to get started. The Solana
 mobile team has put in a lot of work to make the development experience as
 seamless as possible between the two.
 
-### What MWA is doing wallet-side
+## What MWA is doing wallet-side
 
 This lesson has talked mostly about what MWA is doing in dApps, but a huge
 portion of MWA functionality happens in wallets. Whether you want to create your
@@ -265,7 +263,7 @@ MWA-compatible wallets are doing at a high level. For most readers, it's not
 essential to feel like you can create a wallet after reading through these
 sections; simply try to get a sense of the overall flow.
 
-#### Introduction to the `walletlib`
+### Introduction to the `walletlib`
 
 Solana Mobile has done the vast majority of the heavy lifting by creating the
 `mobile-wallet-adapter-walletlib`. This library handles all the low-level
@@ -282,7 +280,7 @@ resolve requests. The wallet developer is responsible for displaying the
 appropriate UI, managing the wallet behavior, and appropriately resolving each
 request.
 
-#### How wallets use the `walletlib`
+### How wallets use the `walletlib`
 
 At its core, wallets use `walletlib` by calling a single function:
 `useMobileWalletAdapterSession`. When calling this function, wallets provide the
@@ -406,7 +404,7 @@ AppRegistry.registerComponent(appName, () => App);
 AppRegistry.registerComponent("MobileWalletAdapterEntrypoint", () => MWAApp);
 ```
 
-### Conclusion
+## Conclusion
 
 While the MWA is slightly different than the web wallet standard, once you
 understand the nuances between them it becomes fairly straightforward to
@@ -415,20 +413,19 @@ understand what MWA is doing not only in your dApp but also in wallets. If
 anything remains unclear to you, be sure to spend time familiarizing yourself
 with both sides of the equation.
 
-## Lab
+# Lab
 
 Now let's do some hands-on practice by building a mobile wallet. The goal here
 is to see what happens on both sides of the MWA process to demystify the
 app-wallet relationship.
 
-#### 0. Set up development environment if needed
+### 0. Set up development environment if needed
 
 Before we start programming our wallet, we need to do some setup. You will need
 a React Native development environment and a Solana dApp to test on. If you have
-completed the
-[Basic Solana Mobile lesson](/content/courses/mobile/basic-solana-mobile), both
-of these requirements should be met with the counter app installed on your
-Android device/emulator.
+completed the [Basic Solana Mobile lesson](./basic-solana-mobile), both of these
+requirements should be met with the counter app installed on your Android
+device/emulator.
 
 If you _haven't_ completed the last lesson you will need to:
 
@@ -447,7 +444,7 @@ git checkout solution
 npm run install
 ```
 
-#### 1. Plan out the app's structure
+### 1. Plan out the app's structure
 
 We are making the wallet from scratch, so let's look at our major building
 blocks.
@@ -479,7 +476,7 @@ send transactions. This entails creating the following:
 - AuthorizeDappRequestScreen.tsx
 - SignAndSendTransactionScreen.tsx
 
-#### 2. Scaffold the app
+### 2. Scaffold the app
 
 Let's scaffold the app with:
 
@@ -489,7 +486,7 @@ cd wallet
 ```
 
 Now, let's install our dependencies. These are the same dependencies from our
-[Introduction to Solana Mobile lab](/content/courses/mobile/intro-to-solana-mobile)
+[Introduction to Solana Mobile lab](./basic-solana-mobile.md#2-create-the-app)
 with two additions:
 
 - `@react-native-async-storage/async-storage`: provides access to on-device
@@ -575,7 +572,7 @@ npm run android
 If you get any errors make sure you double-check you've followed all of the
 steps above.
 
-#### 3. Create the main wallet app
+### 3. Create the main wallet app
 
 There are two parts to the wallet application we'll be building:
 
@@ -805,7 +802,7 @@ Make sure everything is working by building and deploying:
 npm run android
 ```
 
-#### 4. Create helper components
+### 4. Create helper components
 
 Now let's take a brief detour and create some helper UI components that we'll
 need for the wallet popup. We'll define a layout for some text with
@@ -883,7 +880,7 @@ const ButtonGroup = (props: ButtonGroupProps) => {
 export default ButtonGroup;
 ```
 
-#### 5. Create the wallet popup boilerplate
+### 5. Create the wallet popup boilerplate
 
 The wallet popup is what is seen when a Solana dApp sends out an intent for
 `solana-wallet://`. Our wallet will listen for this, establish a connection, and
@@ -1031,7 +1028,7 @@ lesson, then make a request.
 You should see a sheet present from the bottom of the screen that says "I'm a
 wallet."
 
-#### 6. Create the MWA scaffolding
+### 6. Create the MWA scaffolding
 
 Let's flesh out `MWAApp.tsx` to scaffold out some of the architecture that will
 later allow users to connect, sign, and send transactions. For now, we'll only
@@ -1197,7 +1194,7 @@ export default MWAApp;
 Note that `renderRequest` is not rendering anything useful yet. We still need to
 _handle_ the different requests.
 
-#### 7. Implement the authorization popup
+### 7. Implement the authorization popup
 
 Let's put together our first screen to handle new authorizations. This screen's
 only job is to show what app wants authorization and allow the user to accept or
@@ -1317,7 +1314,7 @@ switch (currentRequest?.__type) {
 Feel free to build and run the wallet again. When you first interact with
 another Solana app, our new authorization screen will now appear.
 
-#### 8. Implement the sign-and-send popup
+### 8. Implement the sign-and-send popup
 
 Let's finish up our wallet app with the sign and send transaction screen. Here,
 we need to grab the transactions from the `request`, sign them with our secret
@@ -1596,7 +1593,7 @@ got stuck anywhere, make sure to go back through it until you understand what's
 happening. Also, feel free to look through the lab's
 [solution code on the `main` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet).
 
-## Challenge
+# Challenge
 
 Now it's your turn to practice independently. Try and implement the last two
 request types: `SignMessagesRequest` and `SignTransactionsRequest`.
@@ -1605,7 +1602,7 @@ Try to do this without help as it's great practice, but if you get stuck, check
 out the
 [solution code on the `solution` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet/tree/solution).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5a3d0f62-c5fc-4e03-b8a3-323c2c7b8f4f)!
-</Callout>

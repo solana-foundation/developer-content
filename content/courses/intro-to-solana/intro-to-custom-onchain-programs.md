@@ -2,18 +2,14 @@
 title: Using custom onchain programs
 objectives:
   - Create transactions for custom onchain programs
-description:
-  "Make instructions for arbitrary programs using the 'TransactionInstruction'
-  constructor."
 ---
 
-## Summary
+# Summary
 
 Solana has multiple onchain programs you can use. Instructions that use these
-programs have data in a custom format determined by the specific function being
-invoked in the onchain program.
+programs need to have data in a custom format determined by the program.
 
-## Lesson
+# Lesson
 
 ### Instructions
 
@@ -61,11 +57,10 @@ const instruction = new TransactionInstruction({
     to during the transaction's execution
 
 - an optional `Buffer` containing data to pass to the program. We’ll be ignoring
-  the `data` field for now, but we will revisit it in a future lesson.
+  the `data` field for now, but will revisit it in a future lesson.
 
-After making our instruction, we add it to a transaction, send the tramsaction
-to our RPC to be processed and confirmed, then look at the transaction
-signature.
+After making our instruction, we add it to a transaction, send it to our RPC to
+be processed and confirmed, and look at the transaction signature.
 
 ```typescript
 const transaction = new web3.Transaction().add(instruction);
@@ -81,7 +76,7 @@ console.log(`✅ Success! Transaction signature is: ${signature}`);
 
 ### Solana Explorer
 
-![Solana Explorer set to Devnet](/public/assets/courses/unboxed/solana-explorer-devnet.png)
+![Solana Explorer set to Devnet](../assets/solana-explorer-devnet.png)
 
 All transactions on the blockchain are publicly viewable on
 [Solana Explorer](http://explorer.solana.com). For example, you could take the
@@ -93,9 +88,9 @@ for that signature in Solana Explorer, then see:
 - the transaction fee
 - and more!
 
-![Solana Explorer with details about a transaction](/public/assets/courses/unboxed/solana-explorer-transaction-overview.png)
+![Solana Explorer with details about a transaction](../assets/solana-explorer-transaction-overview.png)
 
-## Lab
+# Lab
 
 ### Writing transactions for the ping counter program
 
@@ -105,12 +100,12 @@ at address `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa`. The program stores
 its data in a specific account at the address
 `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
-![Solana stores programs and data in separate accounts](/public/assets/courses/unboxed/pdas-global-state.svg)
+![Solana stores programs and data in separate accounts](../assets/pdas-global-state.svg)
 
-### Basic scaffolding
+### 1. Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Writing Data](/content/courses/intro-to-solana/intro-to-writing-data).
+[Intro to Writing Data](./intro-to-writing-data).
 
 Name the file `send-ping-transaction.ts`:
 
@@ -135,7 +130,7 @@ const newBalance = await airdropIfRequired(
 
 This will connect to Solana Devnet and request some test Lamports if needed.
 
-### Ping program
+### 2. Ping program
 
 Now let's talk to the Ping program! To do this, we need to:
 
@@ -207,7 +202,7 @@ const signature = await web3.sendAndConfirmTransaction(
 console.log(`✅ Transaction completed! Signature is ${signature}`);
 ```
 
-### Run the ping client and check Solana Explorer
+### 3. Run the ping client and check Solana Explorer
 
 Now run the code with the following command:
 
@@ -222,15 +217,16 @@ console, like the following:
 ✅ Transaction completed! Signature is 55S47uwMJprFMLhRSewkoUuzUs5V6BpNfRx21MpngRUQG3AswCzCSxvQmS3WEPWDJM7bhHm3bYBrqRshj672cUSG
 ```
 
-Copy the transaction signature. Then visit
-[Solana explorer on devnet](https://explorer.solana.com/?cluster=devnet). Paste
-the signature into the search bar at the top of Solana Explorer (make sure
-you're connected to Devnet) and hit enter. You should see all the details about
-the transaction. If you scroll all the way to the bottom, then you will see
-`Program Logs`, which show how many times the program has been pinged including
-your ping.
+Copy the transaction signature. Open a browser and go to
+[https://explorer.solana.com/?cluster=devnet](https://explorer.solana.com/?cluster=devnet)
+(the query parameter at the end of the URL will ensure that you’ll explore
+transactions on Devnet instead of Mainnet). Paste the signature into the search
+bar at the top of Solana Explorer (make sure you're connected to Devnet) and hit
+enter. You should see all the details about the transaction. If you scroll all
+the way to the bottom, then you will see `Program Logs`, which show how many
+times the program has been pinged including your ping.
 
-![Solana Explorer with logs from calling the Ping program](/public/assets/courses/unboxed/solana-explorer-ping-result.png)
+![Solana Explorer with logs from calling the Ping program](../assets/solana-explorer-ping-result.png)
 
 Scroll around the explorer and look at what you're seeing:
 
@@ -241,6 +237,10 @@ Scroll around the explorer and look at what you're seeing:
 - The **Instruction** section will contain a single instruction with no data -
   the ping program is a pretty simple program, so it doesn't need any data.
 - The **Program Instruction Logs** show the logs from the ping program.
+
+[//]:
+  #
+  "TODO: these would make a good question-and-answer interactive once we have this content hosted on solana.com, and can support adding more interactive content easily."
 
 If you want to make it easier to look at Solana Explorer for transactions in the
 future, simply change your `console.log` to the following:
@@ -260,7 +260,7 @@ In the next few lessons, you’ll learn how to
 2. Add custom data to your instructions
 3. Deserialize data from the chain
 
-## Challenge
+# Challenge
 
 Go ahead and create a script from scratch that will allow you to transfer SOL
 from one account to another on Devnet. Be sure to print out the transaction
@@ -269,7 +269,7 @@ signature so you can look at it on Solana Explorer.
 If you get stuck feel free to glance at the
 [solution code](https://github.com/Unboxed-Software/solana-ping-client).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e969d07e-ae85-48c3-976f-261a22f02e52)!
-</Callout>

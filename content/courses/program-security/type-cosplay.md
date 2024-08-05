@@ -5,12 +5,9 @@ objectives:
   - Implement an account type discriminator using long-form Rust
   - Use Anchor's `init` constraint to initialize accounts
   - Use Anchor's `Account` type for account validation
-description:
-  "Under the risks of accounts of the wrong type being used in instruction, and
-  use account type checks to mitigate them."
 ---
 
-## Summary
+# Summary
 
 - Use discriminators to distinguish between different account types
 - To implement a discriminator in Rust, include a field in the account struct to
@@ -44,7 +41,7 @@ description:
 - Use Anchor’s `Account<'info, T>` type to automatically check the discriminator
   of the account when deserializing the account data
 
-## Lesson
+# Lesson
 
 “Type cosplay” refers to an unexpected account type being used in place of an
 expected account type. Under the hood, account data is simply stored as an array
@@ -53,7 +50,7 @@ implementing a way to explicitly distinguish between account types, account data
 from an unexpected account could result in an instruction being used in
 unintended ways.
 
-#### Unchecked account
+### Unchecked account
 
 In the example below, both the `AdminConfig` and `UserConfig` account types
 store a single public key. The `admin_instruction` instruction deserializes the
@@ -112,7 +109,7 @@ pub struct UserConfig {
 }
 ```
 
-#### Add account discriminator
+### Add account discriminator
 
 To solve this, you can add a discriminant field for each account type and set
 the discriminant when initializing an account.
@@ -185,7 +182,7 @@ pub enum AccountDiscriminant {
 }
 ```
 
-#### Use Anchor’s `Account` wrapper
+### Use Anchor’s `Account` wrapper
 
 Implementing these checks for every account needed for every instruction can be
 tedious. Fortunately, Anchor provides a `#[account]` attribute macro for
@@ -256,7 +253,7 @@ can spend more time focusing on their product, but it’s still very important t
 understand what Anchor is doing behind the scenes to develop robust Solana
 programs.
 
-## Lab
+# Lab
 
 For this lab we’ll create two programs to demonstrate a type cosplay
 vulnerability.
@@ -265,7 +262,7 @@ vulnerability.
 - The second program will initialize program accounts using Anchor’s `init`
   constraint which automatically sets an account discriminator
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-type-cosplay/tree/starter). The
@@ -283,7 +280,7 @@ Take a look at these three instructions in the `lib.rs` file. The last
 instruction should only be callable by the account matching the `admin` field on
 the admin account initialized using the `initialize_admin` instruction.
 
-#### 2. Test insecure `update_admin` instruction
+### 2. Test insecure `update_admin` instruction
 
 However, both accounts have the same fields and field types:
 
@@ -317,7 +314,7 @@ successfully.
     ✔ Invoke update admin instruction with user account (487ms)
 ```
 
-#### 3. Create `type-checked` program
+### 3. Create `type-checked` program
 
 Now we'll create a new program called `type-checked` by running
 `anchor new type-checked` from the root of the existing anchor program.
@@ -330,7 +327,7 @@ file of the `type-checked` program and to the `type_checked` program in the
 Next, update the test file's setup to include the new program and two new
 keypairs for the accounts we'll be initializing for the new program.
 
-```typescript
+```tsx
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { TypeCosplay } from "../target/types/type_cosplay";
@@ -352,7 +349,7 @@ describe("type-cosplay", () => {
 });
 ```
 
-#### 4. Implement the `type-checked` program
+### 4. Implement the `type-checked` program
 
 In the `type_checked` program, add two instructions using the `init` constraint
 to initialize an `AdminConfig` account and a `User` account. When using the
@@ -439,13 +436,13 @@ pub struct User {
 }
 ```
 
-#### 5. Test secure `update_admin` instruction
+### 5. Test secure `update_admin` instruction
 
 In the test file, we’ll initialize an `AdminConfig` account and a `User` account
 from the `type_checked` program. Then we’ll invoke the `updateAdmin` instruction
 twice passing in the newly created accounts.
 
-```typescript
+```tsx
 describe("type-cosplay", () => {
 	...
 
@@ -520,7 +517,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the repository](https://github.com/Unboxed-Software/solana-type-cosplay/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -533,7 +530,7 @@ to find a vulnerability in a native program.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=37ebccab-b19a-43c6-a96a-29fa7e80fdec)!
-</Callout>

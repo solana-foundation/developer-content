@@ -6,12 +6,9 @@ objectives:
   - Implement signer checks using long-form Rust
   - Implement signer checks using Anchor’s `Signer` type
   - Implement signer checks using Anchor’s `#[account(signer)]` constraint
-description:
-  "Ensure instructions are only ran by authorized accounts by implmementing
-  Signer checks."
 ---
 
-## Summary
+# Summary
 
 - Use **Signer Checks** to verify that specific accounts have signed a
   transaction. Without appropriate signer checks, accounts may be able to
@@ -29,7 +26,7 @@ description:
 - Anchor also has an account constraint that will automatically verify that a
   given account has signed a transaction
 
-## Lesson
+# Lesson
 
 Signer checks are used to verify that a given account’s owner has authorized a
 transaction. Without a signer check, operations whose execution should be
@@ -37,7 +34,7 @@ limited to only specific accounts can potentially be performed by any account.
 In the worst case scenario, this could result in wallets being completely
 drained by attackers passing in whatever account they want to an instruction.
 
-#### Missing Signer Check
+### Missing Signer Check
 
 The example below shows an oversimplified version of an instruction that updates
 the `authority` field stored on a program account.
@@ -90,14 +87,14 @@ pub struct Vault {
 }
 ```
 
-#### Add signer authorization checks
+### Add signer authorization checks
 
 All you need to do to validate that the `authority` account signed is to add a
 signer check within the instruction. That simply means checking that
 `authority.is_signer` is `true`, and returning a `MissingRequiredSignature`
 error if `false`.
 
-```typescript
+```tsx
 if !ctx.accounts.authority.is_signer {
     return Err(ProgramError::MissingRequiredSignature.into());
 }
@@ -145,7 +142,7 @@ pub struct Vault {
 }
 ```
 
-#### Use Anchor’s `Signer` account type
+### Use Anchor’s `Signer` account type
 
 However, putting this check into the instruction function muddles the separation
 between account validation and instruction logic.
@@ -196,7 +193,7 @@ pub struct Vault {
 Note that when you use the `Signer` type, no other ownership or type checks are
 performed.
 
-#### Use Anchor’s `#[account(signer)]` constraint
+### Use Anchor’s `#[account(signer)]` constraint
 
 While in most cases, the `Signer` account type will suffice to ensure an account
 has signed a transaction, the fact that no other ownership or type checks are
@@ -210,12 +207,12 @@ underlying data as well.
 
 As an example of when this would be useful, imagine writing an instruction that
 you expect to be invoked via CPI that expects one of the passed in accounts to
-be both a **\*\***signer**\*\*** on the transaciton and a \***\*\*\*\*\*\***data
-source\***\*\*\*\*\*\***. Using the `Signer` account type here removes the
-automatic deserialization and type checking you would get with the `Account`
-type. This is both inconvenient, as you need to manually deserialize the account
-data in the instruction logic, and may make your program vulnerable by not
-getting the ownership and type checking performed by the `Account` type.
+be both a **\*\***signer**\*\*** on the transaciton and a ****\*\*\*****data
+source****\*\*\*****. Using the `Signer` account type here removes the automatic
+deserialization and type checking you would get with the `Account` type. This is
+both inconvenient, as you need to manually deserialize the account data in the
+instruction logic, and may make your program vulnerable by not getting the
+ownership and type checking performed by the `Account` type.
 
 In the example below, you can safely write logic to interact with the data
 stored in the `authority` account while also verifying that it signed the
@@ -264,7 +261,7 @@ pub struct AuthState{
 }
 ```
 
-## Lab
+# Lab
 
 Let’s practice by creating a simple program to demonstrate how a missing signer
 check can allow an attacker to withdraw tokens that don’t belong to them.
@@ -272,7 +269,7 @@ check can allow an attacker to withdraw tokens that don’t belong to them.
 This program initializes a simplified token “vault” account and demonstrates how
 a missing signer check could allow the vault to be drained.
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/starter). The
@@ -386,7 +383,7 @@ pub struct Vault {
 }
 ```
 
-#### 2. Test `insecure_withdraw` instruction
+### 2. Test `insecure_withdraw` instruction
 
 The test file includes the code to invoke the `initialize_vault` instruction
 using `wallet` as the `authority` on the vault. The code then mints 100 tokens
@@ -400,7 +397,7 @@ those 100 tokens.
 In the test, we’ll still use the public key of `wallet` as the `authority`
 account, but we’ll use a different keypair to sign and send the transaction.
 
-```typescript
+```tsx
 describe("signer-authorization", () => {
     ...
     it("Insecure withdraw", async () => {
@@ -439,7 +436,7 @@ of the`authority` account matches the public key stored on the authority field
 of the `vault` account. Clearly, the `insecure_withdraw` instruction is as
 insecure as the name suggests.
 
-#### 3. Add `secure_withdraw` instruction
+### 3. Add `secure_withdraw` instruction
 
 Let’s fix the problem in a new instruction called `secure_withdraw`. This
 instruction will be identical to the `insecure_withdraw` instruction, except
@@ -497,7 +494,7 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-#### 4. Test `secure_withdraw` instruction
+### 4. Test `secure_withdraw` instruction
 
 With the instruction in place, return to the test file to test the
 `secure_withdraw` instruction. Invoke the `secure_withdraw` instruction, again
@@ -506,7 +503,7 @@ using the public key of `wallet` as the `authority` account and the
 the `authority` account is validated using the `Signer` type, we expect the
 transaction to fail the signer check and return an error.
 
-```typescript
+```tsx
 describe("signer-authorization", () => {
     ...
 	it("Secure withdraw", async () => {
@@ -545,7 +542,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/solution).
 
-## Challenge
+# Challenge
 
 At this point in the course, we hope you've started to work on programs and
 projects outside the labs and Challenges provided in these lessons. For this and
@@ -563,7 +560,7 @@ online) and audit it for signer checks. If you find a bug in somebody else's
 program, please alert them! If you find a bug in your own program, be sure to
 patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=26b3f41e-8241-416b-9cfa-05c5ab519d80)!
-</Callout>

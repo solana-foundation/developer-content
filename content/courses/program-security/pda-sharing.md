@@ -4,12 +4,9 @@ objectives:
   - Explain the security risks associated with PDA sharing
   - Derive PDAs that have discrete authority domains
   - Use Anchor’s `seeds` and `bump` constraints to validate PDA accounts
-description:
-  "Understand the potential problems of reusing PDAs by using user and domain
-  specific PDAs."
 ---
 
-## Summary
+# Summary
 
 - Using the same PDA for multiple authority domains opens your program up to the
   possibility of users accessing data and funds that don't belong to them
@@ -18,7 +15,7 @@ description:
 - Use Anchor’s `seeds` and `bump` constraints to validate that a PDA is derived
   using the expected seeds and bump
 
-## Lesson
+# Lesson
 
 PDA sharing refers to using the same PDA as a signer across multiple users or
 domains. Especially when using PDAs for signing, it may seem appropriate to use
@@ -26,7 +23,7 @@ a global PDA to represent the program. However, this opens up the possibility of
 account validation passing but a user being able to access funds, transfers, or
 data not belonging to them.
 
-### Insecure global PDA
+## Insecure global PDA
 
 In the example below, the `authority` of the `vault` account is a PDA derived
 using the `mint` address stored on the `pool` account. This PDA is passed into
@@ -88,7 +85,7 @@ pub struct TokenPool {
 }
 ```
 
-### Secure account specific PDA
+## Secure account specific PDA
 
 One approach to create an account specific PDA is to use the
 `withdraw_destination` as a seed to derive the PDA used as the authority of the
@@ -149,7 +146,7 @@ pub struct TokenPool {
 }
 ```
 
-### Anchor’s `seeds` and `bump` constraints
+## Anchor’s `seeds` and `bump` constraints
 
 PDAs can be used as both the address of an account and allow programs to sign
 for the PDAs they own.
@@ -221,14 +218,14 @@ pub struct TokenPool {
 }
 ```
 
-## Lab
+# Lab
 
 Let’s practice by creating a simple program to demonstrate how a PDA sharing can
 allow an attacker to withdraw tokens that don’t belong to them. this lab expands
 on the examples above by including the instructions to initialize the required
 program accounts.
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code on the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-pda-sharing/tree/starter).
@@ -246,7 +243,7 @@ However, as written the seeds used for signing are not specific to the vault's
 withdraw destination, thus opening up the program to security exploits. Take a
 minute to familiarize yourself with the code before continuing on.
 
-#### 2. Test `withdraw_insecure` instruction
+### 2. Test `withdraw_insecure` instruction
 
 The test file includes the code to invoke the `initialize_pool` instruction and
 then mint 100 tokens to the `vault` token account. It also includes a test to
@@ -262,7 +259,7 @@ The first test invokes the `initialize_pool` instruction to create a "fake"
 
 The second test withdraws from this pool, stealing funds from the vault.
 
-```typescript
+```tsx
 it("Insecure initialize allows pool to be initialized with wrong vault", async () => {
   await program.methods
     .initializePool(authInsecureBump)
@@ -313,7 +310,7 @@ Run `anchor test` to see that the transactions complete successfully and the
 `withdraw_instrucure` instruction allows the `vault` token account to be drained
 to a fake withdraw destination stored on the fake `pool` account.
 
-#### 3. Add `initialize_pool_secure` instruction
+### 3. Add `initialize_pool_secure` instruction
 
 Now let's add a new instruction to the program for securely initializing a pool.
 
@@ -359,7 +356,7 @@ pub struct InitializePoolSecure<'info> {
 }
 ```
 
-#### 4. Add `withdraw_secure` instruction
+### 4. Add `withdraw_secure` instruction
 
 Next, add a `withdraw_secure` instruction. This instruction will withdraw tokens
 from the `vault` token account to the `withdraw_destination`. The `pool` account
@@ -408,7 +405,7 @@ impl<'info> WithdrawTokensSecure<'info> {
 }
 ```
 
-#### 5. Test `withdraw_secure` instruction
+### 5. Test `withdraw_secure` instruction
 
 Finally, return to the test file to test the `withdraw_secure` instruction and
 show that by narrowing the scope of our PDA signing authority, we've removed the
@@ -549,7 +546,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the same repository](https://github.com/Unboxed-Software/solana-pda-sharing/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -561,7 +558,7 @@ focused on a single domain as much as possible.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5744079f-9473-4485-9a14-9be4d31b40d1)!
-</Callout>

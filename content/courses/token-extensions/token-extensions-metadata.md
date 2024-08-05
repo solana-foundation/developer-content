@@ -5,10 +5,9 @@ objectives:
     Extensions Program Mints
   - Create an NFT with metadata embedded in the mint account itself
   - Create an NFT with the metadata pointer extension
-description: "Include token metadata directly inside the token mint account."
 ---
 
-## Summary
+# Summary
 
 - The `metadata pointer` extension associates a token mint directly to a
   metadata account. This happens by storing the metadata account's address in
@@ -24,7 +23,7 @@ description: "Include token metadata directly inside the token mint account."
 - Directly embedding or pointing to metadata can streamline transactions and
   interactions by reducing the need for additional lookups or external calls.
 
-## Overview
+# Overview
 
 The Token Extensions Program streamlines metadata on Solana. Without the Token
 Extensions Program, developers store metadata in metadata accounts using a
@@ -46,11 +45,10 @@ Metadata extensions fix this by introducing two extensions:
   [Token-Metadata Interface](https://github.com/solana-labs/solana-program-library/tree/master/token-metadata/)
   which allows us to store the metadata in the mint itself.
 
-<Callout type="note">The `metadata` extension must be used in conjunction with
-the `metadata-pointer` extension which points back to the mint itself.
-</Callout>
+Note: The `metadata` extension has to be used in conjunction with the
+`metadata-pointer` extension which points back to the mint itself.
 
-### Metadata-Pointer extension:
+## Metadata-Pointer extension:
 
 Since multiple metadata programs exist, a mint can have numerous accounts
 claiming to describe the mint, making it complicated to know which one is the
@@ -131,7 +129,7 @@ export interface MetadataPointer {
 }
 ```
 
-#### Create NFT with metadata-pointer
+### Create NFT with metadata-pointer
 
 To create an NFT with the `metadata-pointer` extension, we need two new
 accounts: the `mint` and the `metadataAccount`.
@@ -202,18 +200,17 @@ const sig = await sendAndConfirmTransaction(connection, transaction, [
 ]);
 ```
 
-### Metadata extension:
+## Metadata extension:
 
 The `metadata` extension is an exciting addition to the Token Extensions
 Program. This extension allows us to store the metadata directly _in_ the mint
 itself! This eliminates the need for a separate account, greatly simplifying the
 handling of metadata.
 
-<Callout type="note">The `metadata` extension works directly with the
-`metadata-pointer` extension. During the mint creation, you should also add the
-`metadata-pointer` extension, pointed at the mint itself. Check out the
+Note: The `metadata` extension works directly with the `metadata-pointer`
+extension. During the mint creation, you should also add the `metadata-pointer`
+extension, pointed at the mint itself. Check out the
 [Solana Token Extensions Program docs](https://spl.solana.com/token-2022/extensions#metadata)
-</Callout>
 
 The added fields and functions in the metadata extension follow the
 [Token-Metadata Interface](https://github.com/solana-labs/solana-program-library/tree/master/token-metadata/interface)
@@ -328,13 +325,12 @@ export function createUpdateFieldInstruction(
 ): TransactionInstruction;
 ```
 
-<Callout type="note">If the metadata you are updating requires more space than
-the initial allocated space, you'll have to pair it with a `system.transfer` to
-have enough rent for the `createUpdateFieldInstruction` to realloc with. You can
-get the extra space needed with `getAdditionalRentForUpdatedMetadata`. Or if
-you're calling this update as a standalone, you can use the
-`tokenMetadataUpdateFieldWithRentTransfer` helper to do all of this at
-once.</Callout>
+Note: If the metadata you are updating requires more space than the initial
+allocated space, you'll have to pair it with a `system.transfer` to have enough
+rent for the `createUpdateFieldInstruction` to realloc with. You can get the
+extra space needed with `getAdditionalRentForUpdatedMetadata`. Or if you're
+calling this update as a standalone, you can use the
+`tokenMetadataUpdateFieldWithRentTransfer` helper to do all of this at once.
 
 The function `createRemoveKeyInstruction` returns the instruction that removes
 the `additional_metadata` field from a token-metadata account.
@@ -459,7 +455,7 @@ export async function getTokenMetadata(
 ): Promise<TokenMetadata | null>;
 ```
 
-#### Create NFT with metadata extension
+### Create NFT with metadata extension
 
 Creating an NFT with the metadata extension is just like creating one with the
 metadata-pointer with a few extra steps:
@@ -489,11 +485,10 @@ incorporate the following:
 5. the metadata pointer data (this will be the mint's address and is done for
    consistency)
 
-<Callout type="note">There is no need to allocate more space than what is
-necessary if you're anticipating more metadata. The
-`createUpdateFieldInstruction` will automatically reallocate space! However,
-you'll have to add another `system.transfer` transaction to make sure the mint
-account has enough rent.
+Note: There is no need to allocate more space than what is necessary if you're
+anticipating more metadata. The `createUpdateFieldInstruction` will
+automatically reallocate space! However, you'll have to add another
+`system.transfer` transaction to make sure the mint account has enough rent.
 
 To determine all of this programmatically, we use the `getMintLen` and `pack`
 functions from the `@solana/spl-token` library:
@@ -512,8 +507,6 @@ const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length;
 const totalLen = mintLen + mintAndPointerLen;
 const lamports = await connection.getMinimumBalanceForRentExemption(totalLen);
 ```
-
-</Callout>
 
 To actually create and initialize the `mint` with the metadata and metadata
 pointer, we need several instructions in a particular order:
@@ -591,10 +584,10 @@ const signature = await sendAndConfirmTransaction(connection, transaction, [
 
 Again, the order here matters.
 
-<Callout type="note"> The `createUpdateFieldInstruction` updates only one field
-at a time. If you want to have more than one custom field, you will have to call
-this method multiple times. Additionally, you can use the same method to update
-the basic metadata fields as well:
+Note: The `createUpdateFieldInstruction` updates only one field at a time. If
+you want to have more than one custom field, you will have to call this method
+multiple times. Additionally, you can use the same method to update the basic
+metadata fields as well:
 
 ```ts
 const updateMetadataFieldInstructions = createUpdateFieldInstruction({
@@ -606,15 +599,13 @@ const updateMetadataFieldInstructions = createUpdateFieldInstruction({
 });
 ```
 
-</Callout>
-
-## Lab
+# Lab
 
 Now it is time to practice what we have learned so far. In this lab, we'll
 create a script that will illustrate how to create an NFT with the `metadata`
 and `metadata pointer` extensions.
 
-### 0. Getting started
+## 0. Getting started
 
 Let's go ahead and clone our starter code:
 
@@ -635,21 +626,19 @@ dependencies, two other files have been provided in the `src/` directory.
 - `index.ts`
 
 **`cat.png`** is the image we'll use for the NFT. Feel free to replace it with
-your own image.
-
-<Callout type="note">we are using Irys on devnet to upload files, this is capped
-at 100 KiB. </Callout>
+your own image. Note: we are using Irys on devent to upload files, this is
+capped at 100 KiB.
 
 **`helpers.ts`** file provides us with a useful helper function
 `uploadOffChainMetadata`.
 
 `uploadOffChainMetadata` is a helper to store the off-chain metadata on Arweave
-using Irys (formerly Bundlr). In this lab we will be more focused on the Token
+using Irys (Formerly Bundlr). In this lab we will be more focused on the Token
 Extensions Program interaction, so this uploader function is provided. It is
 important to note that an NFT or any off-chain metadata can be stored anywhere
 with any storage provider like [NFT.storage](https://nft.storage/), Solana's
 native [ShadowDrive](https://www.shdwdrive.com/), or
-[Irys (formerly Bundlr)](https://irys.xyz/). At the end of the day, all you need
+[Irys (Formerly Bundlr)](https://irys.xyz/). At the end of the day, all you need
 is a url to the hosted metadata json file.
 
 This helper has some exported interfaces. These will clean up our functions as
@@ -695,7 +684,7 @@ you are running into airdropping problems:
 - Copy the address and airdrop some devnet sol from
   [faucet.solana](https://faucet.solana.com/).
 
-### 1. Uploading the off-chain metadata
+## 1. Uploading the off-chain metadata
 
 In this section we will decide on our NFT metadata and upload our files to
 NFT.Storage using the helper functions provided in the starting code.
@@ -714,7 +703,7 @@ but feel free to make up your own.
 - `description` = This is a cat
 - `symbol` = EMB
 - `externalUrl` = https://solana.com/
-- `attributes` = `{ species: 'Cat' breed: 'Cool' }`
+- `attributes` = { species: 'Cat' breed: 'Cool' }
 
 Lastly we just need to format all of this data and send it to our helper
 function `uploadOffChainMetadata` to get the uploaded metadata uri.
@@ -765,7 +754,7 @@ Now run `npm run start` in your terminal and test your code. You should see the
 URI logged once the uploading is done. If you visit the link you should see a
 JSON object that holds all of our off-chain metadata.
 
-### 2. Create NFT function
+## 2. Create NFT function
 
 Creating an NFT involves multiple instructions. As a best practice when writing
 scripts that engage with the Solana network, it is best to consolidate all of
@@ -865,9 +854,8 @@ const supply = 1; // NFTs should have a supply of 1
 ```
 
 Now let's construct the `TokenMetadata` object interfaced from
-`@solana/spl-token-metadata`, and pass it all of our inputs.
-
-Note we have to do some conversion of our `tokenAdditionalMetadata`:
+`@solana/spl-token-metadata`, and pass it all of our inputs. Note: We have to do
+some conversion of our `tokenAdditionalMetadata` to match.
 
 ```typescript
 // 1. Create the metadata object
@@ -914,8 +902,7 @@ const createMintAccountInstruction = SystemProgram.createAccount({
 });
 ```
 
-<Callout type="note">The more information in the metadata, the more it
-costs.</Callout>
+Note: The more information in the metadata, the more it costs.
 
 Step 3 has us initializing the `metadata pointer` extension. Let's do that by
 calling the `createInitializeMetadataPointerInstruction` function with the
@@ -1079,7 +1066,7 @@ console.log("Mint =====>", mintDetails);
 // Since the mint stores the metadata in itself, we can just get it like this
 const onChainMetadata = await getTokenMetadata(connection, mint.publicKey);
 // Now we can see the metadata coming with the mint
-console.log("onchain metadata =====>", onChainMetadata);
+console.log("Onchain metadata =====>", onChainMetadata);
 
 // And we can even get the off-chain json now
 if (onChainMetadata && onChainMetadata.uri) {
@@ -1287,7 +1274,7 @@ export default async function createNFTWithEmbeddedMetadata(
   // Since the mint stores the metadata in itself, we can just get it like this
   const onChainMetadata = await getTokenMetadata(connection, mint.publicKey);
   // Now we can see the metadata coming with the mint
-  console.log("onchain metadata =====>", onChainMetadata);
+  console.log("Onchain metadata =====>", onChainMetadata);
 
   // And we can even get the off-chain JSON now
   if (onChainMetadata && onChainMetadata.uri) {
@@ -1299,7 +1286,7 @@ export default async function createNFTWithEmbeddedMetadata(
 }
 ```
 
-### 3. Call Create NFT Function
+## 3. Call Create NFT Function
 
 Let's put everything together in `src/index.ts`.
 
@@ -1372,6 +1359,6 @@ extensions.
 If you run into any problems, check out the
 [solution](https://github.com/Unboxed-Software/solana-lab-token22-metadata/tree/solution).
 
-## Challenge
+# Challenge
 
 Taking what you've learned here, go and create your own NFT or SFT.

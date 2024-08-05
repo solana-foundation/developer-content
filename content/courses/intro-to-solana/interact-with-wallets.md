@@ -2,33 +2,31 @@
 title: Interact With Wallets
 objectives:
   - Explain wallets
-  - Install a Solana wallet app and set your wallet app to
-    [Devnet](https://api.devnet.solana.com/)
-  - Create a React app that uses Wallet Adapter to have users sign transactions
-description: "Connect with installed browser wallets from your React apps."
+  - Install Phantom extension
+  - Set Phantom wallet to [Devnet](https://api.devnet.solana.com/)
+  - Use Wallet Adapter to have users sign transactions
 ---
 
-## Summary
+# Summary
 
-- **Wallets** store your secret key and allow users to sign transactions
+- **Wallets** store your secret key and handle secure transaction signing
 - **Hardware wallets** store your secret key on a separate device
-- **Software wallets** use your computer for secure storage. On desktops,
-  software wallets are often **browser extensions** that add the ability to
-  connect to a wallet from a website. On mobile, wallet apps have their own
-  browsers.
-- Solana’s **Wallet Adapter** allows you to build websites that can request a
-  user’s wallet address and propose transactions for them to sign
+- **Software wallets** use your computer for secure storage
+- Software wallets are often **browser extensions** that facilitate connecting
+  to websites
+- Solana’s **Wallet-Adapter library** simplifies the support of wallet browser
+  extensions, allowing you to build websites that can request a user’s wallet
+  address and propose transactions for them to sign
 
-## Lesson
+# Lesson
 
-### Wallets
+## Wallets
 
 In the previous two lessons, we discussed keypairs. Keypairs are used to locate
 accounts and sign transactions. While the public key of a keypair is perfectly
 safe to share, the secret key should always be kept in a secure location. If a
-user’s secret key is exposed, then a malicious actor could execute transactions
-with the authority of that user, allowing them to transfer all the assets
-inside.
+user’s secret key is exposed, then a malicious actor could drain their account
+of all assets and execute transactions with the authority of that user.
 
 A “wallet” refers to anything that stores a secret key to keep it secure. These
 secure storage options can generally be described as either “hardware” or
@@ -36,15 +34,16 @@ secure storage options can generally be described as either “hardware” or
 your computer. Software wallets are applications you can install on your
 existing device(s).
 
-- On mobile, software wallets are typically mobile apps, installed through the
-  iOS App Store or Google Play. These include their own web browsers.
-- On desktop, software wallets often come in the form of a browser extension.
+Software wallets often come in the form of a browser extension. This makes it
+possible for websites to interact easily with the wallet. Such interactions are
+usually limited to:
 
-Both techniques allow websites to interact easily with the wallet, for example:
+1. Seeing the wallet’s public key (address)
+2. Submitting transactions for a user's approval
+3. Sending an approved transaction to the network
 
-1. Seeing the wallet’s wallet address (their public key)
-2. Submitting transactions for a user's approval to sign
-3. Sending signed transactions to the network
+Once a transaction is submitted, the end user can “confirm” the transaction and
+send it to the network with their “signature.”
 
 Signing transactions requires using your secret key. By letting a site submit a
 transaction to your wallet and having the wallet handle the signing, you ensure
@@ -55,26 +54,34 @@ Unless you’re creating a wallet application yourself, your code should never
 need to ask a user for their secret key. Instead, you can ask users to connect
 to your site using a reputable wallet.
 
-## Solana’s Wallet Adapter
+## Phantom Wallet
 
-If you build web apps, and need users to be able to connect to their wallets and
-sign transactions through your apps, you'll want Solana’s Wallet Adapter. Wallet
-Adapter is a suite of modular packages:
+One of the most widely used software wallets in the Solana ecosystem is
+[Phantom](https://phantom.app). Phantom supports a few of the most popular
+browsers and has a mobile app for connecting on the go. You’ll likely want your
+decentralized applications to support multiple wallets, but this course will
+focus on Phantom.
 
-- The core functionality is found in `@solana/wallet-adapter-base`.
-- React support is added by `@solana/wallet-adapter-react`.
-- Additional packages provide components for common UI frameworks. In this
-  lesson, and throughout this course, we’ll be using components from
-  `@solana/wallet-adapter-react-ui`.
+## Solana’s WalletAdapter
+
+Solana’s Wallet Adapter is a suite of modular packages you can use to simplify
+the process of supporting wallet browser extensions.
+
+The core functionality is found in `@solana/wallet-adapter-base` and
+`@solana/wallet-adapter-react`.
+
+Additional packages provide components for common UI frameworks. In this lesson
+and throughout this course, we’ll be using components from
+`@solana/wallet-adapter-react-ui`.
 
 Finally, some packages are adapters for specific wallet apps. These are now no
 longer necessary in most cases - see below.
 
-### Install Wallet-Adapter Libraries for React
+### Install Wallet-Adapter Libraries
 
 When adding wallet support to an existing React app, you start by installing the
 appropriate packages. You’ll need `@solana/wallet-adapter-base`,
-`@solana/wallet-adapter-react`. If you plan to use the provided React
+`@solana/wallet-adapter-react`. If you plan to use the provided react
 components, you'll also need to add `@solana/wallet-adapter-react-ui`.
 
 All wallets that support the
@@ -88,13 +95,6 @@ npm install @solana/wallet-adapter-base \
     @solana/wallet-adapter-react \
     @solana/wallet-adapter-react-ui
 ```
-
-<Callout type="note">
-We're learning doing this manually to learn about Wallet
-Adapter, but you can also use
-[create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) to
-create a brand new React or NextJS app that supports Solana wallets. 
-</Callout>
 
 ### Connect To Wallets
 
@@ -142,19 +142,18 @@ point, you can connect with `wallet.connect()`, which will instruct the wallet
 to prompt the user for permission to view their public key and request approval
 for transactions.
 
-![wallet connection prompt](/public/assets/courses/unboxed/wallet-connect-prompt.png)
+![wallet connection prompt](../assets/wallet-connect-prompt.png)
 
 While you could do this in a `useEffect` hook, you’ll usually want to provide
 more sophisticated functionality. For example, you may want users to be able to
 choose from a list of supported wallet applications or disconnect after they’ve
 already connected.
 
-### @solana/wallet-adapter-react-ui
+### `@solana/wallet-adapter-react-ui`
 
 You can create custom components for this, or you can leverage components
-provided by `@solana/wallet-adapter-react-ui`. The simplest way to provide a
-full-featured wallet experience is to use `WalletModalProvider` and
-`WalletMultiButton`:
+provided by `@solana/wallet-adapter-react-ui`. The simplest way to provide
+extensive options is to use `WalletModalProvider` and `WalletMultiButton`:
 
 ```tsx
 import { NextPage } from "next";
@@ -192,13 +191,13 @@ The `WalletModalProvider` adds functionality for presenting a modal screen for
 users to select which wallet they’d like to use. The `WalletMultiButton` changes
 behavior to match the connection status:
 
-![multi button select wallet option](/public/assets/courses/unboxed/multi-button-select-wallet.png)
+![multi button select wallet option](../assets/multi-button-select-wallet.png)
 
-![connect wallet modal](/public/assets/courses/unboxed/connect-wallet-modal.png)
+![connect wallet modal](../assets/connect-wallet-modal.png)
 
-![multi button connect options](/public/assets/courses/unboxed/multi-button-connect.png)
+![multi button connect options](../assets/multi-button-connect.png)
 
-![multi button connected state](/public/assets/courses/unboxed/multi-button-connected.png)
+![multi button connected state](../assets/multi-button-connected.png)
 
 You can also use more granular components if you need more specific
 functionality:
@@ -266,7 +265,7 @@ to submit transactions for approval.
 const { publicKey, sendTransaction } = useWallet();
 const { connection } = useConnection();
 
-const sendSol = async event => {
+const sendSol = event => {
   event.preventDefault();
 
   const transaction = new web3.Transaction();
@@ -275,49 +274,44 @@ const sendSol = async event => {
   const sendSolInstruction = web3.SystemProgram.transfer({
     fromPubkey: publicKey,
     toPubkey: recipientPubKey,
-    lamports: 0.1 * LAMPORTS_PER_SOL,
+    lamports: LAMPORTS_PER_SOL * 0.1,
   });
 
   transaction.add(sendSolInstruction);
-  const signature = sendTransaction(transaction, connection);
-  console.log(signature);
+  sendTransaction(transaction, connection).then(sig => {
+    console.log(sig);
+  });
 };
 ```
 
 When this function is called, the connected wallet will display the transaction
 for the user’s approval. If approved, then the transaction will be sent.
 
-![wallet transaction approval prompt](/public/assets/courses/unboxed/wallet-transaction-approval-prompt.png)
+![wallet transaction approval prompt](../assets/wallet-transaction-approval-prompt.png)
 
-## Lab
+# Lab
 
 Let’s take the Ping program from the last lesson and build a frontend that lets
 users approve a transaction that pings the program. As a reminder, the program’s
 public key is `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa` and the public key
 for the data account is `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
-![Solana Ping App](/public/assets/courses/unboxed/solana-ping-app.png)
+![Solana Ping App](../assets/solana-ping-app.png)
 
-### Download a Solana wallet
+### 1. Download the Phantom browser extension and set it to Devnet
 
-You'll need a Solana wallet app. There's a wide variety of
-[Solana wallets](https://solana.com/docs/intro/wallets) available. We're going
-to use a browser-extension wallet in this case, since you probably code on a
-laptop or desktop!
+If you don’t already have it, download the
+[Phantom browser extension](https://phantom.app/download). At the time of
+writing, it supports Chrome, Brave, Firefox, and Edge browsers, so you’ll also
+need to have one of those browsers installed. Follow Phantom’s instructions for
+creating a new account and a new wallet.
 
-Follow the wallets instructions for creating a new account and a new wallet.
+Once you have a wallet, click the settings gear on the bottom right in the
+Phantom UI. Scroll down and click on the line item “Change Network” and select
+“Devnet.” This ensures that Phantom will be connected to the same network we’ll
+be using in this lab.
 
-Then set your wallet to use Devnet, for example:
-
-- In Phantom, click **Settings** -> **Developer Settings** -> **Testnet mode**.
-  'Testnet mode' sets Solana to Devnet by default.
-- In Solflare, click **Settings** -> **General** -> **Network** -> **DevNet**
-- In Backpack, click **Preferences** -> **Developer Mode**
-
-This ensures that your wallet app will be connected to the same network we’ll be
-using in this lab.
-
-### Download the starter code
+### 2. Download the starter code
 
 Download the
 [starter code for this project](https://github.com/Unboxed-Software/solana-ping-frontend/tree/starter).
@@ -326,7 +320,7 @@ This project is a simple Next.js application. It’s mostly empty except for the
 
 You can see its current state with the command `npm run dev` in the console.
 
-### Wrap the app in context providers
+### 3. Wrap the app in context providers
 
 To start, we’re going to create a new component to contain the various
 Wallet-Adapter providers that we’ll be using. Create a new file inside the
@@ -421,7 +415,7 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 export default WalletContextProvider;
 ```
 
-### Add wallet multi-button
+### 4. Add wallet multi-button
 
 Next, let’s set up the Connect button. The current button is just a placeholder
 because rather than using a standard button or creating a custom component,
@@ -487,17 +481,17 @@ export const AppBar: FC = () => {
 
 At this point, you should be able to run the app and interact with the
 multi-button at the top-right of the screen. It should now read, "Select
-Wallet." If you have the a wallet installed, you should be able to use this
-button to connect your wallet to the site.
+Wallet." If you have the Phantom extension and are signed in, you should be able
+to connect your Phantom wallet to the site using this new button.
 
-### Create button to ping program
+### 5. Create button to ping program
 
-Now that our app can connect to our wallet, let’s make the “Ping!” button
-actually do something.
+Now that our app can connect to the Phantom wallet, let’s make the “Ping!”
+button actually do something.
 
 Start by opening the `PingButton.tsx` file. We’re going to replace the
 `console.log` inside of `onClick` with code that will create a transaction and
-submit it to the wallet app for the end user’s approval.
+submit it to the Phantom extension for the end user’s approval.
 
 First, we need a connection, the wallet’s public key, and Wallet-Adapter’s
 `sendTransaction` function. To get this, we need to import `useConnection` and
@@ -565,7 +559,7 @@ Next, add this instruction to the transaction.
 Finally, call `sendTransaction`.
 
 ```tsx
-const onClick = async () => {
+const onClick = () => {
   if (!connection || !publicKey) {
     return;
   }
@@ -586,15 +580,16 @@ const onClick = async () => {
   });
 
   transaction.add(instruction);
-  const signature = await sendTransaction(transaction, connection);
-  console.log(sig);
+  sendTransaction(transaction, connection).then(sig => {
+    console.log(sig);
+  });
 };
 ```
 
 And that’s it! If you refresh the page, connect your wallet, and click the ping
-button, your wallet should present you with a popup to confirm the transaction.
+button, Phantom should present you with a popup to confirm the transaction.
 
-### Add some polish
+### 6. Add some polish around the edges
 
 There’s a lot you could do to make the user experience here even better. For
 example, you could change the UI to only show you the Ping button when a wallet
@@ -607,12 +602,12 @@ You can also download the
 [full source code from this lab](https://github.com/Unboxed-Software/solana-ping-frontend)
 to understand all of this in context.
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Create an application that
-lets a user connect their wallet and send SOL to another account.
+lets a user connect their Phantom wallet and send SOL to another account.
 
-![Send SOL App](/public/assets/courses/unboxed/solana-send-sol-app.png)
+![Send SOL App](../assets/solana-send-sol-app.png)
 
 1. You can build this from scratch or you can
    [download the starter code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/starter).
@@ -625,7 +620,7 @@ lets a user connect their wallet and send SOL to another account.
 If you get really stumped, feel free to
 [check out the solution code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/main).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=69c5aac6-8a9f-4e23-a7f5-28ae2845dfe1)!
-</Callout>

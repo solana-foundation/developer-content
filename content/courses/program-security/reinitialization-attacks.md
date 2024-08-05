@@ -6,12 +6,9 @@ objectives:
   - Using Anchor’s `init` constraint to initialize accounts, which automatically
     sets an account discriminator that is checked to prevent the
     reinitialization of an account
-description:
-  "Understand the security risks of account reinitialized attacks being used to
-  override data, and how to prevent them."
 ---
 
-## Summary
+# Summary
 
 - Use an account discriminator or initialization flag to check whether an
   account has already been initialized to prevent an account from being
@@ -27,7 +24,7 @@ description:
 - To simplify this, use Anchor’s `init` constraint to create an account via a
   CPI to the system program and sets its discriminator
 
-## Lesson
+# Lesson
 
 Initialization refers to setting the data of a new account for the first time.
 When initializing a new account, you should implement a way to check if the
@@ -42,7 +39,7 @@ the account. Initialization is an instruction that sets the data of a newly
 created account. Creating and initializing an account can be combined into a
 single transaction.
 
-#### Missing Initialization Check
+### Missing Initialization Check
 
 In the example below, there are no checks on the `user` account. The
 `initialize` instruction deserializes the data of the `user` account as a `User`
@@ -85,7 +82,7 @@ pub struct User {
 }
 ```
 
-#### Add `is_initialized` check
+### Add `is_initialized` check
 
 One approach to fix this is to add an additional `is_initialized` field to the
 `User` account type and use it as a flag to check if an account has already been
@@ -142,7 +139,7 @@ pub struct User {
 }
 ```
 
-#### Use Anchor’s `init` constraint
+### Use Anchor’s `init` constraint
 
 Anchor provides an `init` constraint that can be used with the `#[account(...)]`
 attribute to initialize an account. The `init` constraint creates the account
@@ -190,7 +187,7 @@ pub struct User {
 }
 ```
 
-#### Anchor’s `init_if_needed` constraint
+### Anchor’s `init_if_needed` constraint
 
 It’s worth noting that Anchor has an `init_if_needed` constraint. This
 constraint should be used very cautiously. In fact, it is blocked behind a
@@ -199,9 +196,9 @@ feature flag so that you are forced to be intentional about using it.
 The `init_if_needed` constraint does the same thing as the `init` constraint,
 only if the account has already been initialized the instruction will still run.
 
-Given this, it’s \***\*\*\*\***extremely\***\*\*\*\*** important that when you
-use this constraint you include checks to avoid resetting the account to its
-initial state.
+Given this, it’s ****\*****extremely****\***** important that when you use this
+constraint you include checks to avoid resetting the account to its initial
+state.
 
 For example, if the account stores an `authority` field that gets set in the
 instruction using the `init_if_needed` constraint, you need checks that ensure
@@ -211,7 +208,7 @@ initialized and have the `authority` field set again.
 In most cases, it’s safer to have a separate instruction for initializing
 account data.
 
-## Lab
+# Lab
 
 For this lab we’ll create a simple program that does nothing but initialize
 accounts. We’ll include two instructions:
@@ -220,7 +217,7 @@ accounts. We’ll include two instructions:
 - `recommended_initialization` - initialize an account using Anchor’s `init`
   constraint
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-reinitialization-attacks/tree/starter).
@@ -266,7 +263,7 @@ pub struct User {
 }
 ```
 
-#### 2. Test `insecure_initialization` instruction
+### 2. Test `insecure_initialization` instruction
 
 The test file includes the setup to create an account by invoking the system
 program and then invokes the `insecure_initialization` instruction twice using
@@ -277,7 +274,7 @@ initialized, the `insecure_initialization` instruction will complete
 successfully both times, despite the second invocation providing a _different_
 authority account.
 
-```typescript
+```tsx
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { expect } from "chai";
@@ -353,7 +350,7 @@ initialization
   ✔ Re-invoke insecure init with different auth (464ms)
 ```
 
-#### 3. Add `recommended_initialization` instruction
+### 3. Add `recommended_initialization` instruction
 
 Let's create a new instruction called `recommended_initialization` that fixes
 this problem. Unlike the previous insecure instruction, this instruction should
@@ -395,13 +392,13 @@ pub struct Checked<'info> {
 }
 ```
 
-#### 4. Test `recommended_initialization` instruction
+### 4. Test `recommended_initialization` instruction
 
 To test the `recommended_initialization` instruction, we’ll invoke the
 instruction twice just like before. This time, we expect the transaction to fail
 when we try to initialize the same account a second time.
 
-```typescript
+```tsx
 describe("initialization", () => {
   ...
   it("Recommended init", async () => {
@@ -461,7 +458,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [this repository](https://github.com/Unboxed-Software/solana-reinitialization-attacks/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -472,7 +469,7 @@ properly protected against reinitialization attacks.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=652c68aa-18d9-464c-9522-e531fd8738d5)!
-</Callout>

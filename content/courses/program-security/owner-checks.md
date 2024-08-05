@@ -8,12 +8,9 @@ objectives:
     owner checks
   - Use Anchor’s `#[account(owner = <expr>)]` constraint to explicitly define an
     external program that should own an account
-description:
-  "Understand the use of account owner checks when processing incoming
-  instructions."
 ---
 
-## Summary
+# Summary
 
 - Use **Owner Checks** to verify that accounts are owned by the expected
   program. Without appropriate owner checks, accounts owned by unexpected
@@ -32,7 +29,7 @@ if ctx.accounts.account.owner != ctx.program_id {
 - Anchor gives you the option to explicitly define the owner of an account if it
   should be anything other than the currently executing program
 
-## Lesson
+# Lesson
 
 Owner checks are used to verify that an account passed into an instruction is
 owned by an expected program. This prevents accounts owned by an unexpected
@@ -65,7 +62,7 @@ pub struct AccountInfo<'a> {
 }
 ```
 
-#### Missing owner check
+### Missing owner check
 
 The example below shows an `admin_instruction` intended to be accessible only by
 an `admin` account stored on an `admin_config` account.
@@ -122,7 +119,7 @@ pub struct AdminConfig {
 }
 ```
 
-#### Add owner check
+### Add owner check
 
 In vanilla Rust, you could solve this problem by comparing the `owner` field on
 the account to the program ID. If they do not match, you would return an
@@ -176,7 +173,7 @@ pub struct AdminConfig {
 }
 ```
 
-#### Use Anchor’s `Account<'info, T>`
+### Use Anchor’s `Account<'info, T>`
 
 Anchor can make this simpler with the `Account` type.
 
@@ -227,7 +224,7 @@ pub struct AdminConfig {
 }
 ```
 
-#### Use Anchor’s `#[account(owner = <expr>)]` constraint
+### Use Anchor’s `#[account(owner = <expr>)]` constraint
 
 In addition to the `Account` type, you can use an `owner` constraint. The
 `owner` constraint allows you to define the program that should own an account
@@ -278,7 +275,7 @@ pub struct AdminConfig {
 }
 ```
 
-## Lab
+# Lab
 
 In this lab we’ll use two programs to demonstrate how a missing owner check
 could allow a fake account to drain the tokens from a simplified token “vault”
@@ -296,7 +293,7 @@ Without the owner check, this malicious user will be able to pass in the vault
 account owned by their “faked” program and the original program will still
 execute.
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/starter).
@@ -450,7 +447,7 @@ pub struct Vault {
 }
 ```
 
-#### 2. Test `insecure_withdraw` instruction
+### 2. Test `insecure_withdraw` instruction
 
 The test file includes a test to invoke the `initialize_vault` instruction on
 the `owner_check` program using the provider wallet as the `authority` and then
@@ -468,7 +465,7 @@ instruction’s data validation check will pass and show `walletFake` as a valid
 authority. The tokens from the `tokenPDA` account will then be withdrawn to the
 `withdrawDestinationFake` account.
 
-```typescript
+```tsx
 describe("owner-check", () => {
 	...
     it("Insecure withdraw", async () => {
@@ -517,7 +514,7 @@ Since both programs initialize identical accounts and both structs are named
 `Vault`, the accounts have the same discriminator even though they are owned by
 different programs.
 
-#### 3. Add `secure_withdraw` instruction
+### 3. Add `secure_withdraw` instruction
 
 Let’s close up this security loophole.
 
@@ -580,14 +577,14 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-#### 4. Test `secure_withdraw` instruction
+### 4. Test `secure_withdraw` instruction
 
 To test the `secure_withdraw` instruction, we’ll invoke the instruction twice.
 First, we’ll invoke the instruction using the `vaultClone` account, which we
 expect to fail. Then, we’ll invoke the instruction using the correct `vault`
 account to check that the instruction works as intended.
 
-```typescript
+```tsx
 describe("owner-check", () => {
 	...
 	it("Secure withdraw, expect error", async () => {
@@ -671,7 +668,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -682,7 +679,7 @@ checks are performed on the accounts passed into each instruction.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e3069010-3038-4984-b9d3-2dc6585147b1)!
-</Callout>

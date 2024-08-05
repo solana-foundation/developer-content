@@ -5,30 +5,20 @@ objectives:
   - Describe the basic structure of an Anchor program
   - Explain how to implement basic account validation and security checks with
     Anchor
-description: "Create your first Solana onchain program in Anchor."
 ---
 
-## Summary
+# Summary
 
-- **Programs** on Solana have **instruction handlers** that execute instruction
-  logic.
-- **Rust** is the most common language for building Solana programs. The
-  **Anchor** framework takes care of common grunt work - like reading data from
-  incoming instructions, and checking the right accounts are provided - so you
-  can focus on building your Solana program.
+- **Anchor** is a framework for building Solana programs
+- **Anchor macros** speed up the process of building Solana programs by
+  abstracting away a significant amount of boilerplate code
+- Anchor allows you to build **secure programs** more easily by performing
+  certain security checks, requiring account validation, and providing a simple
+  way to implement additional checks.
 
-## Lesson
+# Lesson
 
-Solana's ability to run arbitrary executable code is part of what makes it so
-powerful. Solana programs, similar to "smart contracts" in other blockchain
-environments, are quite literally the backbone of the Solana ecosystem. And the
-collection of programs grows daily as developers and creators dream up and
-deploy new programs.
-
-This lesson will give you a basic introduction to writing and deploying a Solana
-program using the Rust programming language and the Anchor framework.
-
-### What is Anchor?
+## What is Anchor?
 
 Anchor makes writing Solana programs easier, faster, and more secure, making it
 the "go-to" framework for Solana development. It makes it easier to organize and
@@ -36,7 +26,7 @@ reason about your code, implements common security checks automatically, and
 removes a significant amount of boilerplate code that is otherwise associated
 with writing a Solana program.
 
-### Anchor program structure
+## Anchor program structure
 
 Anchor uses macros and traits to generate boilerplate Rust code for you. These
 provide a clear structure to your program so you can more easily reason about
@@ -52,7 +42,7 @@ your code. The main high-level macros and attributes are:
 
 Let's talk about each of them before putting all the pieces together.
 
-### Declare your program ID
+## Declare your program ID
 
 The `declare_id` macro is used to specify the onchain address of the program
 (i.e. the `programId`). When you build an Anchor program for the first time, the
@@ -64,7 +54,7 @@ should be used as the `programId` specified in the `declare_id!` macro.
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 ```
 
-### Define instruction logic
+## Define instruction logic
 
 The `#[program]` attribute macro defines the module containing all of your
 program's instructions. This is where you implement the business logic for each
@@ -90,41 +80,19 @@ mod program_module_name {
 }
 ```
 
-#### Instruction `Context`
+### The `context` argument
 
-The `Context` type exposes instruction metadata and accounts to your instruction
-logic.
+The `context` argument allows you to access instruction metadata and accounts to
+your instruction handler:
 
-```rust
-pub struct Context<'a, 'b, 'c, 'info, T> {
-    /// Currently executing program id.
-    pub program_id: &'a Pubkey,
-    /// Deserialized accounts.
-    pub accounts: &'b mut T,
-    /// Remaining accounts given but not deserialized or validated.
-    /// Be very careful when using this directly.
-    pub remaining_accounts: &'c [UncheckedAccount<'info>],
-    /// Bump seeds found during constraint validation. This is provided as a
-    /// convenience so that handlers don't have to recalculate bump seeds or
-    /// pass them in as arguments.
-    pub bumps: BTreeMap<String, u8>,
-}
-```
-
-`Context` is a generic type where `T` defines the list of accounts an
-instruction requires. When you use `Context`, you specify the concrete type of
-`T` as a struct that adopts the `Accounts` trait (e.g.
-`Context<AddMovieReviewAccounts>`). Through this context argument the
-instruction can then access:
-
-- The accounts passed into the instruction (`ctx.accounts`)
 - The program ID (`ctx.program_id`) of the executing program
+- The accounts passed into the instruction (`ctx.accounts`)
 - The remaining accounts (`ctx.remaining_accounts`). The `remaining_accounts` is
   a vector that contains all accounts that were passed into the instruction but
   are not declared in the `Accounts` struct.
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
 
-### Define instruction accounts
+## Define instruction accounts
 
 The `Accounts` trait defines a data structure of validated accounts. Structs
 adopting this trait define the list of accounts required for a given
@@ -176,7 +144,7 @@ If any accounts passed into `instruction_one` fail the account validation or
 security checks specified in the `InstructionAccounts` struct, then the
 instruction fails before even reaching the program logic.
 
-### Account validation
+## Account validation
 
 You may have noticed in the previous example that one of the accounts in
 `InstructionAccounts` was of type `Account`, one was of type `Signer`, and one
@@ -187,14 +155,14 @@ accounts. Each type implements different account validation. We’ll go over a f
 of the common types you may encounter, but be sure to look through the
 [full list of account types](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/index.html).
 
-#### `Account`
+### `Account`
 
-`Account` is a wrapper around `UncheckedAccount` that verifies program ownership
-and deserializes the underlying data into a Rust type.
+`Account` is a wrapper around `AccountInfo` that verifies program ownership and
+deserializes the underlying data into a Rust type.
 
 ```rust
 // Deserializes this info
-pub struct UncheckedAccount<'a> {
+pub struct AccountInfo<'a> {
     pub key: &'a Pubkey,
     pub is_signer: bool,
     pub is_writable: bool,
@@ -231,7 +199,7 @@ Account.info.owner == T::owner()
 !(Account.info.owner == SystemProgram && Account.info.lamports() == 0)
 ```
 
-#### `Signer`
+### `Signer`
 
 The `Signer` type validates that the given account signed the transaction. No
 other ownership or type checks are done. You should only use the `Signer` when
@@ -247,7 +215,7 @@ The following check is performed for you:
 Signer.info.is_signer == true
 ```
 
-#### `Program`
+### `Program`
 
 The `Program` type validates that the account is a certain program.
 
@@ -264,7 +232,7 @@ account_info.key == expected_program
 account_info.executable == true
 ```
 
-### Add constraints with `#[account(..)]`
+## Add constraints with `#[account(..)]`
 
 The `#[account(..)]` attribute macro is used to apply constraints to accounts.
 We'll go over a few constraint examples in this and future lessons, but at some
@@ -305,7 +273,7 @@ pub user: Signer<'info>,
 Note that the `init` constraint placed on `account_name` automatically includes
 a `mut` constraint so that both `account_name` and `user` are mutable accounts.
 
-### `#[account]`
+## `#[account]`
 
 The `#[account]` attribute is applied to structs representing the data structure
 of a Solana account. It implements the following traits:
@@ -364,7 +332,7 @@ When the `account_name` account is initialized:
 - The data field of the account will match `AccountStruct`
 - The account owner is set as the `programId` from `declare_id`
 
-### Bring it all together
+## Bring it all together
 
 When you combine all of these Anchor types you end up with a complete program.
 Below is an example of a basic Anchor program with a single instruction that:
@@ -410,7 +378,7 @@ pub struct AccountStruct {
 
 You are now ready to build your own Solana program using the Anchor framework!
 
-## Lab
+# Lab
 
 Before we begin, install Anchor by
 [following the steps from the Anchor docs](https://www.anchor-lang.com/docs/installation).
@@ -420,17 +388,17 @@ For this lab we'll create a simple counter program with two instructions:
 - The first instruction will initialize an account to store our counter
 - The second instruction will increment the count stored in the counter
 
-#### 1. Setup
+### 1. Setup
 
 Create a new project called `anchor-counter` by running `anchor init`:
 
-```shell
+```console
 anchor init anchor-counter
 ```
 
 Change into the new directory, then run `anchor build`
 
-```shell
+```console
 cd anchor-counter
 anchor build
 ```
@@ -446,7 +414,7 @@ declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
 
 Run `anchor keys sync`
 
-```shell
+```console
 anchor keys sync
 ```
 
@@ -457,7 +425,7 @@ You'll see the Anchor updates both:
 
 To match the key generated during `anchor build`:
 
-```shell
+```console
 Found incorrect program id declaration in "anchor-counter/programs/anchor-counter/src/lib.rs"
 Updated to BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr
 
@@ -482,23 +450,24 @@ pub mod anchor_counter {
 }
 ```
 
-#### 2. Implement `Counter`
+### 2. Add the `initialize` instruction
 
-First, let's use the `#[account]` attribute to define a new `Counter` account
-type. The `Counter` struct defines one `count` field of type `u64`. This means
-that we can expect any new accounts initialized as a `Counter` type to have a
-matching data structure. The `#[account]` attribute also automatically sets the
-discriminator for a new account and sets the owner of the account as the
-`programId` from the `declare_id!` macro.
+First, let’s implement the `initialize` instruction within `#[program]`. This
+instruction requires a `Context` of type `Initialize` and takes no additional
+instruction data. In the instruction logic, we are simply setting the `counter`
+account’s `count` field to `0`.
 
 ```rust
-#[account]
-pub struct Counter {
-    pub count: u64,
+pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+    let counter = &mut ctx.accounts.counter;
+    counter.count = 0;
+    msg!("Counter Account Created");
+    msg!("Current Count: { }", counter.count);
+    Ok(())
 }
 ```
 
-#### 3. Implement `Context` type `Initialize`
+### 3. Implement `Context` type `Initialize`
 
 Next, using the `#[derive(Accounts)]` macro, let’s implement the `Initialize`
 type that lists and validates the accounts used by the `initialize` instruction.
@@ -520,29 +489,45 @@ pub struct Initialize<'info> {
 }
 ```
 
-#### 4. Add the `initialize` instruction
+### 4. Implement `Counter`
 
-Now that we have our `Counter` account and `Initialize` type , let’s implement
-the `initialize` instruction within `#[program]`. This instruction requires a
-`Context` of type `Initialize` and takes no additional instruction data. In the
-instruction logic, we are simply setting the `counter` account’s `count` field
-to `0`.
+Next, use the `#[account]` attribute to define a new `Counter` account type. The
+`Counter` struct defines one `count` field of type `u64`. This means that we can
+expect any new accounts initialized as a `Counter` type to have a matching data
+structure. The `#[account]` attribute also automatically sets the discriminator
+for a new account and sets the owner of the account as the `programId` from the
+`declare_id!` macro.
 
 ```rust
-pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+#[account]
+pub struct Counter {
+    pub count: u64,
+}
+```
+
+### 5. Add `increment` instruction
+
+Within `#[program]`, let’s implement an `increment` instruction to increment the
+`count` once a `counter` account is initialized by the first instruction. This
+instruction requires a `Context` of type `Update` (implemented in the next step)
+and takes no additional instruction data. In the instruction logic, we are
+simply incrementing an existing `counter` account’s `count` field by `1`.
+
+```rust
+pub fn increment(ctx: Context<Update>) -> Result<()> {
     let counter = &mut ctx.accounts.counter;
-    counter.count = 0;
-    msg!("Counter Account Created");
-    msg!("Current Count: { }", counter.count);
+    msg!("Previous counter: {}", counter.count);
+    counter.count = counter.count.checked_add(1).unwrap();
+    msg!("Counter incremented. Current count: {}", counter.count);
     Ok(())
 }
 ```
 
-#### 5. Implement `Context` type `Update`
+### 6. Implement `Context` type `Update`
 
-Now, using the `#[derive(Accounts)]` macro again, let’s create the `Update` type
-that lists the accounts that the `increment` instruction requires. It'll need
-the following accounts:
+Lastly, using the `#[derive(Accounts)]` macro again, let’s create the `Update`
+type that lists the accounts that the `increment` instruction requires. It'll
+need the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
@@ -559,26 +544,7 @@ pub struct Update<'info> {
 }
 ```
 
-#### 6. Add `increment` instruction
-
-Lastly, within `#[program]`, let’s implement an `increment` instruction to
-increment the `count` once a `counter` account is initialized by the first
-instruction. This instruction requires a `Context` of type `Update` (implemented
-in the next step) and takes no additional instruction data. In the instruction
-logic, we are simply incrementing an existing `counter` account’s `count` field
-by `1`.
-
-```rust
-pub fn increment(ctx: Context<Update>) -> Result<()> {
-    let counter = &mut ctx.accounts.counter;
-    msg!("Previous counter: {}", counter.count);
-    counter.count = counter.count.checked_add(1).unwrap();
-    msg!("Counter incremented. Current count: {}", counter.count);
-    Ok(())
-}
-```
-
-#### 7. Build
+### 7. Build
 
 All together, the complete program will look like this:
 
@@ -631,7 +597,7 @@ pub struct Counter {
 
 Run `anchor build` to build the program.
 
-#### 8. Testing
+### 8. Testing
 
 Anchor tests are typically Typescript integration tests that use the mocha test
 framework. We'll learn more about testing later, but for now navigate to
@@ -693,7 +659,7 @@ it("Incremented the count", async () => {
 
 Lastly, run `anchor test` and you should see the following output:
 
-```shell
+```console
 anchor-counter
 ✔ Is initialized! (290ms)
 ✔ Incremented the count (403ms)
@@ -711,7 +677,7 @@ Feel free to reference the
 [solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-increment)
 if you need some more time with it.
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Because we're starting with
 simple programs, yours will look almost identical to what we just created. It's
@@ -731,7 +697,7 @@ Try to do this independently if you can! But if you get stuck, feel free to
 reference
 the [solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-decrement).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!
-</Callout>

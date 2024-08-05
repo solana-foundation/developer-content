@@ -7,10 +7,9 @@ objectives:
     CPI from one Anchor program to another
   - Safely and securely make a CPI from an Anchor program to an arbitrary
     non-anchor program
-description: "How to safely invoke Solana programs from other Solana programs."
 ---
 
-## Summary
+# Summary
 
 - To generate a CPI, the target program must be passed into the invoking
   instruction as an account. This means that any target program could be passed
@@ -23,7 +22,7 @@ description: "How to safely invoke Solana programs from other Solana programs."
   secure. The Anchor CPI module automatically checks that the address of the
   program passed in matches the address of the program stored in the module.
 
-## Lesson
+# Lesson
 
 A cross program invocation (CPI) is when one program invokes an instruction on
 another program. An “arbitrary CPI” is when a program is structured to issue a
@@ -40,7 +39,7 @@ this CPI could be. It depends on the program logic (both that of the original
 program and the unexpected program), as well as what other accounts are passed
 into the original instruction.
 
-### Missing program checks
+## Missing program checks
 
 Take the following program as an example. The `cpi` instruction invokes the
 `transfer` instruction on `token_program`, but there is no code that checks
@@ -88,7 +87,7 @@ pub struct Cpi<'info> {
 An attacker could easily call this instruction and pass in a duplicate token
 program that they created and control.
 
-### Add program checks
+## Add program checks
 
 It's possible to fix this vulnerabilty by simply adding a few lines to the `cpi`
 instruction to check whether or not `token_program`'s public key is that of the
@@ -125,7 +124,7 @@ the address of the expected program ID or use the program’s Rust crate to get
 the address of the program, if available. In the example above, the `spl_token`
 crate provides the address of the SPL Token Program.
 
-### Use an Anchor CPI module
+## Use an Anchor CPI module
 
 A simpler way to manage program checks is to use Anchor CPI modules. We learned
 in a
@@ -205,7 +204,7 @@ the actual program:
 use other_program::program::OtherProgram;
 ```
 
-## Lab
+# Lab
 
 To show the importance of checking with program you use for CPIs, we're going to
 work with a simplified and somewhat contrived game. This game represents
@@ -218,7 +217,7 @@ mints, distribution, and transfers, and a separate metadata program is used to
 assign metadata to tokens. So the vulnerability we go through here could also be
 applied to real tokens.
 
-#### 1. Setup
+### 1. Setup
 
 We'll start with the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/starter).
@@ -250,7 +249,7 @@ illustrate what an attacker might make to exploit our `gameplay` program. This
 program is almost identical to the `character-metadata` program, only it assigns
 a character's initial health and power to be the max allowed: 255.
 
-#### 2. Test `create_character_insecure` instruction
+### 2. Test `create_character_insecure` instruction
 
 There is already a test in the `tests` directory for this. It's long, but take a
 minute to look at it before we talk through it together:
@@ -319,7 +318,7 @@ are each 255, making the attacker unbeatable.
 If you haven't already, run `anchor test` to see that this test in fact behaves
 as described.
 
-#### 3. Create a `create_character_secure` instruction
+### 3. Create a `create_character_secure` instruction
 
 Let's fix this by creating a secure instruction for creating a new character.
 This instruction should implement proper program checks and use the
@@ -397,7 +396,7 @@ pub fn create_character_secure(ctx: Context<CreateCharacterSecure>) -> Result<()
 }
 ```
 
-#### 4. Test `create_character_secure`
+### 4. Test `create_character_secure`
 
 Now that we have a secure way of initializing a new character, let's create a
 new test. This test just needs to attempt to initialize the attacker's character
@@ -443,7 +442,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the same repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -455,7 +454,7 @@ are invoked via CPI.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5bcaf062-c356-4b58-80a0-12cca99c29b0)!
-</Callout>

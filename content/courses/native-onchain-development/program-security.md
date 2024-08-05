@@ -7,10 +7,9 @@ objectives:
   - Perform signer checks
   - Validate accounts passed into the program
   - Perform basic data validation
-description: "How to implement account checks and validate instruction data."
 ---
 
-## Summary
+# Summary
 
 - **Thinking like an attacker** means asking "How do I break this?"
 - Perform **owner checks** to ensure that the provided account is owned by the
@@ -24,7 +23,7 @@ description: "How to implement account checks and validate instruction data."
 - **Data validation** entails ensuring that any provided data meets the criteria
   required by the program
 
-## Lesson
+# Lesson
 
 In the last two lessons we worked through building a Movie Review program
 together. The end result is pretty cool! It's exciting to get something working
@@ -43,7 +42,7 @@ program once it’s deployed**. You can only control how your program handles
 them. While this lesson is far from a comprehensive overview of program
 security, we'll cover some of the basic pitfalls to look out for.
 
-### Think like an attacker
+## Think like an attacker
 
 [Neodyme](https://workshop.neodyme.io/) gave a presentation at Breakpoint 2021
 entitled "Think Like An Attacker: Bringing Smart Contracts to Their Break(ing)
@@ -62,7 +61,7 @@ from the question "Is this broken?" to "How do I break this?" This is the first
 and most essential step in understanding what your code _actually does_ as
 opposed to what you wrote it to do.
 
-#### All programs can be broken
+### All programs can be broken
 
 It's not a question of "if."
 
@@ -78,14 +77,14 @@ We'll dig into some of these problems and how to fix them in this lesson, but
 remember that memorizing a few pitfalls isn't sufficient. It's up to you to
 change your mindset toward security.
 
-### Error handling
+## Error handling
 
 Before we dive into some of the common security pitfalls and how to avoid them,
 it's important to know how to use errors in your program. While your code can
 handle some issues gracefully, other issues will require that your program stop
 execution and return a program error.
 
-#### How to create errors
+### How to create errors
 
 While the `solana_program` crate provides a `ProgramError` enum with a list of
 generic errors we can use, it will often be useful to create your own. Your
@@ -113,7 +112,7 @@ pub enum NoteError {
 }
 ```
 
-#### How to return errors
+### How to return errors
 
 The compiler expects errors returned by the program to be of type `ProgramError`
 from the `solana_program` crate. That means we won't be able to return our
@@ -138,7 +137,7 @@ if pda != *note_pda.key {
 }
 ```
 
-### Basic security checks
+## Basic security checks
 
 While these won't comprehensively secure your program, there are a few security
 checks you can keep in mind to fill in some of the larger gaps in your code:
@@ -149,7 +148,7 @@ checks you can keep in mind to fill in some of the larger gaps in your code:
   account
 - Data Validation - used to verify the inputs provided by a user
 
-#### Ownership checks
+### Ownership checks
 
 An ownership check verifies that an account is owned by the expected public key.
 Let's use the note-taking app example that we've referenced in previous lessons.
@@ -179,7 +178,7 @@ externally-owned accounts, even if they are owned by the transaction signer. The
 only accounts that the program has complete control over are PDA accounts,
 making them the most secure.
 
-#### Signer checks
+### Signer checks
 
 A signer check simply verifies that the right parties have signed a transaction.
 In the note-taking app, for example, we would want to verify that the note
@@ -194,7 +193,7 @@ if !initializer.is_signer {
 }
 ```
 
-#### General account validation
+### General account validation
 
 In addition to checking the signers and owners of accounts, it's important to
 ensure that the provided accounts are what your code expects them to be. For
@@ -218,7 +217,7 @@ if pda != *note_pda.key {
 }
 ```
 
-### Data validation
+## Data validation
 
 Similar to validating accounts, you should also validate any data provided by
 the client.
@@ -258,7 +257,7 @@ obscenely high number of attribute points and quickly drain your treasury of all
 the rewards that were meant to be spread more evenly amongst a larger pool of
 stakers.
 
-#### Integer overflow and underflow
+### Integer overflow and underflow
 
 Rust integers have fixed sizes. This means they can only support a specific
 range of numbers. An arithmetic operation that results in a higher or lower
@@ -279,7 +278,7 @@ To avoid integer overflow and underflow, either:
    let sum = first_int.checked_add(second_int);
    ```
 
-## Lab
+# Lab
 
 Let’s practice together with the Movie Review program we've worked on in
 previous lessons. No worries if you’re just jumping into this lesson without
@@ -295,7 +294,7 @@ manner.
 Just as before, we'll be using [Solana Playground](https://beta.solpg.io/) to
 write, build, and deploy our code.
 
-### 1. Get the starter code
+## 1. Get the starter code
 
 To begin, you can find
 [the movie review starter code](https://beta.solpg.io/62b552f3f6273245aca4f5c9).
@@ -372,7 +371,7 @@ program. Look through the code and spend some time thinking through any spots
 that are confusing to you. It may be helpful to compare the starter code to the
 [solution code from the previous lesson](https://beta.solpg.io/62b23597f6273245aca4f5b4).
 
-### 2. Custom Errors
+## 2. Custom Errors
 
 Let's begin by writing our custom program errors. We'll need errors that we can
 use in the following situations:
@@ -426,12 +425,12 @@ will be using these errors shortly when we add our security checks.
 use crate::error::ReviewError;
 ```
 
-### 3. Add security checks to `add_movie_review`
+## 3. Add security checks to `add_movie_review`
 
 Now that we have errors to use, let's implement some security checks to our
 `add_movie_review` function.
 
-#### Signer check
+### Signer check
 
 The first thing we should do is ensure that the `initializer` of a review is
 also a signer on the transaction. This ensures that you can't submit movie
@@ -451,7 +450,7 @@ if !initializer.is_signer {
 }
 ```
 
-#### Account validation
+### Account validation
 
 Next, let's make sure the `pda_account` passed in by the user is the `pda` we
 expect. Recall we derived the `pda` for a movie review using the `initializer`
@@ -469,7 +468,7 @@ if pda != *pda_account.key {
 }
 ```
 
-#### Data validation
+### Data validation
 
 Now let's perform some data validation.
 
@@ -592,7 +591,7 @@ pub fn add_movie_review(
 }
 ```
 
-### 4. Support movie review updates in `MovieInstruction`
+## 4. Support movie review updates in `MovieInstruction`
 
 Now that `add_movie_review` is more secure, let's turn our attention to
 supporting the ability to update a movie review.
@@ -644,7 +643,7 @@ impl MovieInstruction {
 }
 ```
 
-### 5. Define `update_movie_review` function
+## 5. Define `update_movie_review` function
 
 Now that we can unpack our `instruction_data` and determine which instruction of
 the program to run, we can add `UpdateMovieReview` to the match statement in
@@ -687,7 +686,7 @@ pub fn update_movie_review(
 }
 ```
 
-### 6. Implement `update_movie_review` function
+## 6. Implement `update_movie_review` function
 
 All that's left now is to fill in the logic for updating a movie review. Only
 let's make it secure from the start.
@@ -716,7 +715,7 @@ pub fn update_movie_review(
 }
 ```
 
-#### Ownership Check
+### Ownership Check
 
 Before we continue, let's implement some basic security checks. We'll start with
 an ownership check on for `pda_account` to verify that it is owned by our
@@ -728,7 +727,7 @@ if pda_account.owner != program_id {
 }
 ```
 
-#### Signer Check
+### Signer Check
 
 Next, let’s perform a signer check to verify that the `initializer` of the
 update instruction has also signed the transaction. Since we are updating the
@@ -743,7 +742,7 @@ if !initializer.is_signer {
 }
 ```
 
-#### Account Validation
+### Account Validation
 
 Next, let’s check that the `pda_account` passed in by the user is the PDA we
 expect by deriving the PDA using `initializer` and `title` as seeds. If the
@@ -760,7 +759,7 @@ if pda != *pda_account.key {
 }
 ```
 
-#### Unpack `pda_account` and perform data validation
+### Unpack `pda_account` and perform data validation
 
 Now that our code ensures we can trust the passed in accounts, let's unpack the
 `pda_account` and perform some data validation. We'll start by unpacking
@@ -804,7 +803,7 @@ if total_len > 1000 {
 }
 ```
 
-#### Update the movie review account
+### Update the movie review account
 
 Now that we've implemented all of the security checks, we can finally update the
 movie review account by updating `account_data` and re-serializing it. At that
@@ -895,7 +894,7 @@ pub fn update_movie_review(
 }
 ```
 
-### 7. Build and upgrade
+## 7. Build and upgrade
 
 We're ready to build and upgrade our program! You can test your program by
 submitting a transaction with the right instruction data. For that, feel free to
@@ -910,7 +909,7 @@ have a look at the
 [solution code](https://beta.solpg.io/62c8c6dbf6273245aca4f5e7) before
 continuing.
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently by building on top of the
 Student Intro program that you've used in previous lessons. If you haven't been
@@ -930,9 +929,12 @@ the Student Intro Program. The program should:
 Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62c9120df6273245aca4f5e8).
 Note that your code may look slightly different than the solution code depending
-on the checks you implement and the errors you write.
+on the checks you implement and the errors you write. Once you complete Module
+3, we'd love to know more about your experience! Feel free to
+[share some quick feedback](https://airtable.com/shrOsyopqYlzvmXSC?prefill_Module=Module%203),
+so that we can continue to improve the course.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=3dfb98cc-7ba9-463d-8065-7bdb1c841d43)!
-</Callout>

@@ -5,10 +5,9 @@ objectives:
   - Explain the differences between the Token Program and Token Extension
     programs
   - Explain how to use Anchor Interfaces
-description: "Use token extensions in onchain programs."
 ---
 
-## Summary
+# Summary
 
 - The `Token Extensions Program` is a superset of the `Token Program` with a
   different program id
@@ -17,7 +16,7 @@ description: "Use token extensions in onchain programs."
 - Anchor introduced the concept of Interfaces to easily allow for programs to
   support interaction with both `Token Program` and `Token Extensions Program`
 
-## Overview
+# Overview
 
 The `Token Extensions Program` is a program on Solana mainnet that provides
 additional functionality to Solana tokens and mints. The
@@ -32,7 +31,7 @@ also learn how to interact with `Token Extensions Program` accounts, identifying
 which token program an account belongs to, and some differences between
 `Token Program` and the `Token Extensions Program` onchain.
 
-### Difference between legacy Token Program and Token Extensions Program
+## Difference between legacy Token Program and Token Extensions Program
 
 We must clarify that the `Token Extensions Program` is separate from the
 original `Token Program`. The `Token Extensions Program` is a superset of the
@@ -58,7 +57,7 @@ allowing existing programs to support `Token Extensions` out of the box. However
 this does not mean that `Token Extensions Program` tokens and `Token Program`
 tokens are interoperable - they are not. We'll have to handle each separately.
 
-### How to determine which program owns a particular token
+## How to determine which program owns a particular token
 
 With Anchor managing the two different token programs is pretty straight
 forward. Now when we work with tokens within our programs we'll check the
@@ -147,7 +146,7 @@ field in a conditional to execute different logic for `spl-token` and
 msg!("Token Program Owner: {}", ctx.accounts.token_account.to_account_info().owner);
 ```
 
-### Anchor Interfaces
+## Anchor Interfaces
 
 Interfaces are Anchor's newest feature that simplifies working with
 `Token Extensions` in a program. There are two relevant interface wrapper types
@@ -286,7 +285,7 @@ using this account deserialization would return an error.
 pub token_account: Account<'info, token_interface::TokenAccount>
 ```
 
-## Lab
+# Lab
 
 Now let's get some hands-on experience with the `Token Extensions Program`
 onchain by implementing a generalized token staking program that will accept
@@ -315,7 +314,7 @@ This lab will utilize a lot of Anchor and Solana APIs that have been covered
 previously in this course. We will not spend time explaining some of the
 concepts we expect you to know. With that said, let's get started.
 
-#### 1. Verify Solana/Anchor/Rust Versions
+### 1. Verify Solana/Anchor/Rust Versions
 
 We will be interacting with the `Token Extension` program in this lab and that
 requires you have solana cli version ≥ `1.18.0`.
@@ -377,7 +376,7 @@ rustup update
 
 Now, we should have all the correct versions installed.
 
-#### 2. Get starter code and add dependencies
+### 2. Get starter code and add dependencies
 
 Let's grab the starter branch.
 
@@ -387,7 +386,7 @@ cd token22-staking
 git checkout starter
 ```
 
-#### 3. Update Program ID and Anchor Keypair
+### 3. Update Program ID and Anchor Keypair
 
 Once in the starter branch, run `anchor keys list` to get your program ID.
 
@@ -410,7 +409,7 @@ Lastly set your developer keypair path in `Anchor.toml`.
 ```toml
 [provider]
 cluster = "Localnet"
-wallet = "/YOUR/PATH/HERE/id.json"
+wallet = "~/.config/solana/id.json"
 ```
 
 If you don't know what your current keypair path is you can always run the
@@ -420,7 +419,7 @@ Solana cli to find out.
 solana config get
 ```
 
-#### 4. Confirm the program builds
+### 4. Confirm the program builds
 
 Let's build the starter code to confirm we have everything configured correctly.
 If it does not build, please revisit the steps above.
@@ -442,7 +441,7 @@ yarn install
 anchor test
 ```
 
-#### 5. Explore program design
+### 5. Explore program design
 
 Now that we have confirmed the program builds, let's take a look at the layout
 of the program. You'll notice inside `/programs/token22-staking/src` there are a
@@ -488,7 +487,7 @@ files is where we will write the logic for each individual instruction. The
 `mod.rs` file is what makes these `handler` methods callable from the `lib.rs`
 file.
 
-#### 6. Implement `state.rs`
+### 6. Implement `state.rs`
 
 Open up the `/src/state.rs` file. Here, we will define some state data
 structures and a few constants that we will need throughout our program. Let's
@@ -547,7 +546,7 @@ pub struct StakeEntry {
 }
 ```
 
-#### 7. `init_pool` Instruction
+### 7. `init_pool` Instruction
 
 Now that we understand our program's architecture, let's get started with the
 first instruction `init_pool`.
@@ -853,7 +852,7 @@ program at this point.
 anchor build
 ```
 
-#### 8. `init_stake_entry` Instruction
+### 8. `init_stake_entry` Instruction
 
 Now we can move on to the `init_stake_entry.rs` file. This instruction creates a
 staking account for a user to keep track of some state while they stake their
@@ -902,13 +901,13 @@ account.
 
 ```rust
 #[account(
-    init,
-    seeds = [user.key().as_ref(), pool_state.token_mint.key().as_ref(), STAKE_ENTRY_SEED.as_bytes()],
-    bump,
-    payer = user,
-    space = 8 + size_of::<StakeEntry>()
-)]
-pub user_stake_entry: Account<'info, StakeEntry>,
+        init,
+        seeds = [user.key().as_ref(), pool_state.token_mint.key().as_ref(), STAKE_ENTRY_SEED.as_bytes()],
+        bump,
+        payer = user,
+        space = 8 + size_of::<StakeEntry>()
+    )]
+    pub user_stake_entry: Account<'info, StakeEntry>,
 ```
 
 The `user_stake_token_account` is, again, the account where the user's staking
@@ -928,18 +927,18 @@ this associated token account.
 
 ```rust
 #[account(
-    init,
-    associated_token::mint = staking_token_mint,
-    associated_token::authority = user,
-    associated_token::token_program = token_program,
-    payer = user,
-)]
-pub user_stake_token_account: InterfaceAccount<'info, token_interface::TokenAccount>,
+        init,
+        associated_token::mint = staking_token_mint,
+        associated_token::authority = user,
+        associated_token::token_program = token_program,
+        payer = user,
+    )]
+    pub user_stake_token_account: InterfaceAccount<'info, token_interface::TokenAccount>,
 ```
 
-<Callout type="note">We are using the `InterfaceAccount` and
-`token_interface::TokenAccount` types here. The `token_interface::TokenAccount`
-type can only be used in conjunction with `InterfaceAccount`.</Callout>
+Note: We are using the `InterfaceAccount` and `token_interface::TokenAccount`
+types here. The `token_interface::TokenAccount` type can only be used in
+conjunction with `InterfaceAccount`.
 
 Next, we add the `staking_token_mint` account. Notice we are using our first
 custom error here. This constraint verifies that the pubkey on the
@@ -950,11 +949,11 @@ previous step.
 
 ```rust
 #[account(
-    constraint = staking_token_mint.key() == pool_state.staking_token_mint
-    @ StakeError::InvalidStakingTokenMint,
-    mint::token_program = token_program
-)]
-pub staking_token_mint: InterfaceAccount<'info, token_interface::Mint>,
+        constraint = staking_token_mint.key() == pool_state.staking_token_mint
+        @ StakeError::InvalidStakingTokenMint,
+        mint::token_program = token_program
+    )]
+    pub staking_token_mint: InterfaceAccount<'info, token_interface::Mint>,
 ```
 
 The `pool_state` account is pretty much the same here as in the `init_pool`
@@ -1044,7 +1043,7 @@ Save your work and build to verify there are no compilation errors.
 anchor build
 ```
 
-#### 9. `stake` Instruction
+### 9. `stake` Instruction
 
 The `stake` instruction is what is called when users actually want to stake
 their tokens. This instruction should transfer the amount of tokens the user
@@ -1139,16 +1138,16 @@ transferred, so their signature is a requirement for the transfer to take place.
 
 ```rust
 #[account(
-    mut,
-    constraint = user.key() == user_stake_entry.user
-    @ StakeError::InvalidUser
-)]
-pub user: Signer<'info>,
+        mut,
+        constraint = user.key() == user_stake_entry.user
+        @ StakeError::InvalidUser
+    )]
+    pub user: Signer<'info>,
 ```
 
-<Callout type="note">We also verify that the given user is the same pubkey
-stored in the given `user_stake_entry` account. If it is not, our program will
-throw the `InvalidUser` custom error. </Callout>
+Note: We also verify that the given user is the same pubkey stored in the given
+`user_stake_entry` account. If it is not, our program will throw the
+`InvalidUser` custom error.
 
 The `user_token_account` is the token account where the tokens being transferred
 to be staked should be currently held. The mint of this token account must match
@@ -1513,7 +1512,7 @@ on, save your work and verify the program still builds!
 anchor build
 ```
 
-#### 10. `unstake` Instruction
+### 10. `unstake` Instruction
 
 Lastly, the `unstake` transaction will be pretty similar to the `stake`
 transaction. We'll need to transfer tokens out of the stake pool to the user,
@@ -1919,7 +1918,7 @@ anchor test
 If you run into problems feel free to checkout the
 [solution branch](https://github.com/Unboxed-Software/token22-staking/tree/solution).
 
-## Challenge
+# Challenge
 
 Create your own program that is Token Program and Token Extensions Program
 agnostic.

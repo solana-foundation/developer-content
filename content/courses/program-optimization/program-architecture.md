@@ -5,10 +5,9 @@ objectives:
   - Make better PDA design decisions
   - Future-proof your programs
   - Deal with concurrency issues
-description: "Design your Solana programs efficiently."
 ---
 
-## Summary
+# Summary
 
 - If your data accounts are too large for the Stack, wrap them in `Box` to
   allocate them to the Heap
@@ -19,7 +18,7 @@ description: "Design your Solana programs efficiently."
   mindful of "shared" accounts that all users interacting with the program have
   to write to
 
-## Lesson
+# Lesson
 
 Program Architecture is what separates the hobbyist from the professional.
 Crafting performant programs has more to do with system **design** than it does
@@ -34,17 +33,17 @@ only are resources more limited than in a typical computing environment, you're
 also dealing with people’s assets; code has a cost now.
 
 We'll leave most of the asset handling discussion to
-[security course lesson](/content/courses/program-security/security-intro), but
-it's important to note the nature of resource limitations in Solana development.
-There are, of course, limitations in a typical development environment, but
-there are limitations unique to blockchain and Solana development such as how
-much data can be stored in an account, the cost to store that data, and how many
-compute units are available per transaction. You, the program designer, have to
-be mindful of these limitations to create programs that are affordable, fast,
-safe, and functional. Today we will be delving into some of the more advance
-considerations that should be taken when creating Solana programs.
+[security lessons](./security-intro), but it's important to note the nature of
+resource limitations in Solana development. There are, of course, limitations in
+a typical development environment, but there are limitations unique to
+blockchain and Solana development such as how much data can be stored in an
+account, the cost to store that data, and how many compute units are available
+per transaction. You, the program designer, have to be mindful of these
+limitations to create programs that are affordable, fast, safe, and functional.
+Today we will be delving into some of the more advance considerations that
+should be taken when creating Solana programs.
 
-### Dealing With Large Accounts
+## Dealing With Large Accounts
 
 In modern application programming, we don’t often have to think about the size
 of the data structures we are using. You want to make a string? You can put a
@@ -61,21 +60,19 @@ we are going to be looking at in this section:
    introduce you to the concept of data sizes here.
 
 2. When operating on larger data, we run into
-   [Stack](https://solana.com/docs/onchain-programs/faq#stack) and
-   [Heap](https://solana.com/docs/onchain-programs/faq#heap-size) constraints -
-   to get around these, we’ll look at using Box and Zero-Copy.
+   [Stack](https://docs.solana.com/developing/onchain-programs/faq#stack) and
+   [Heap](https://docs.solana.com/developing/onchain-programs/faq#heap-size)
+   constraints - to get around these, we’ll look at using Box and Zero-Copy.
 
-#### Sizes
+### Sizes
 
 In Solana a transaction's fee payer pays for each byte stored onchain. We call
-this [rent](https://solana.com/docs/core/fees).
-
-<Callout type="note">rent is a bit of a misnomer since it never actually gets
-permanently taken. Once you deposit rent into the account, that data can stay
-there forever or you can get refunded the rent if you close the account. Rent
-used to be an actual thing, but now there's an enforced minimum rent exemption.
-You can read about it in
-[the Solana documentation](https://solana.com/docs/intro/rent).</Callout>
+this [rent](https://docs.solana.com/developing/intro/rent). Side note: rent is a
+bit of a misnomer since it never actually gets permanently taken. Once you
+deposit rent into the account, that data can stay there forever or you can get
+refunded the rent if you close the account. Rent used to be an actual thing, but
+now there's an enforced minimum rent exemption. You can read about it in
+[the Solana documentation](https://docs.solana.com/developing/intro/rent).
 
 Rent etymology aside, putting data on the blockchain can be expensive. It’s why
 NFT attributes and associated files, like the image, are stored off-chain. You
@@ -84,28 +81,30 @@ without becoming so expensive that your users don’t want to pay to open the da
 account.
 
 The first thing you need to know before you can start optimizing for space in
-your program is the size of each of your structs. Below is a very helpful list
+your program is the size of each of your structs.. Below is a very helpful list
 from the
 [Anchor Book](https://book.anchor-lang.com/anchor_references/space.html).
 
-<!-- Edits note: this very wide table looks awful unless you made your window very wide -->
-
-| Types       | Space in bytes                | Details/Example                                                                                 |
-| ----------- | ----------------------------- | ----------------------------------------------------------------------------------------------- |
-| bool        | 1                             | would only require 1 bit but still uses 1 byte                                                  |
-| u8/i8       | 1                             |                                                                                                 |
-| u16/i16     | 2                             |                                                                                                 |
-| u32/i32     | 4                             |                                                                                                 |
-| u64/i64     | 8                             |                                                                                                 |
-| u128/i128   | 16                            |                                                                                                 |
-| [T;amount]  | space(T) \* amount            | e.g. space([u16;32]) = 2 \* 32 = 64                                                             |
-| Pubkey      | 32                            |                                                                                                 |
-| Vec\<T\>    | 4 + (space(T) \* amount)      | Account size is fixed so account should be initialized with sufficient space from the beginning |
-| String      | 4 + length of string in bytes | Account size is fixed so account should be initialized with sufficient space from the beginning |
-| Option\<T\> | 1 + (space(T))                |                                                                                                 |
-| Enum        | 1 + Largest Variant Size      | e.g. Enum \{ A, B \{ val: u8 \}, C \{ val: u16 \} \} -> 1 + space(u16) = 3                      |
-| f32         | 4                             | serialization will fail for NaN                                                                 |
-| f64         | 8                             | serialization will fail for NaN                                                                 |
+| Types              | Space in bytes                | Details/Example                                                                                 |
+| ------------------ | ----------------------------- | ----------------------------------------------------------------------------------------------- |
+| bool               | 1                             | would only require 1 bit but still uses 1 byte                                                  |
+| u8/i8              | 1                             |                                                                                                 |
+| u16/i16            | 2                             |                                                                                                 |
+| u32/i32            | 4                             |                                                                                                 |
+| u64/i64            | 8                             |                                                                                                 |
+| u128/i128          | 16                            |                                                                                                 |
+| [T;amount]         | space(T) \* amount            | e.g. space([u16;32]) = 2 \* 32 = 64                                                             |
+| Pubkey             | 32                            |                                                                                                 |
+| Vec<T>             | 4 + (space(T) \* amount)      | Account size is fixed so account should be initialized with sufficient space from the beginning |
+| String             | 4 + length of string in bytes | Account size is fixed so account should be initialized with sufficient space from the beginning |
+| Option<T>          | 1 + (space(T))                |                                                                                                 |
+| Enum               | 1 + Largest Variant Size      | e.g. Enum { A, B { val: u8 }, C { val: u16 } } -> 1 + space(u16) = 3                            |
+| f32                | 4                             | serialization will fail for NaN                                                                 |
+| f64                | 8                             | serialization will fail for NaN                                                                 |
+| Accounts           | 8 + space(T)                  | #[account()]                                                                                    |
+| pub struct T { …   |
+| Data Structs       | space(T)                      | #[derive(Clone, AnchorSerialize, AnchorDeserialize)]                                            |
+| pub struct T { … } |
 
 Knowing these, start thinking about little optimizations you might take in a
 program. For example, if you have an integer field that will only ever reach
@@ -125,7 +124,7 @@ If you want to read more about Anchor sizes, take a look at
 [Sec3's blog post about it](https://www.sec3.dev/blog/all-about-anchor-account-size)
 .
 
-#### Box
+### Box
 
 Now that you know a little bit about data sizes, let’s skip forward and look at
 a problem you’ll run into if you want to deal with larger data accounts. Say you
@@ -180,7 +179,7 @@ do is add `Box<…>` around all of your big data accounts.
 But Box is not perfect. You can still overflow the stack with sufficiently large
 accounts. We'll learn how to fix this in the next section.
 
-#### Zero Copy
+### Zero Copy
 
 Okay, so now you can deal with medium sized accounts using `Box`. But what if
 you need to use really big accounts like the max size of 10MB? Take the
@@ -247,7 +246,7 @@ pub struct ConceptZeroCopy<'info> {
 Instead, your client has to create the large account and pay for it’s rent in a
 separate instruction.
 
-```typescript
+```tsx
 const accountSize = 16_384 + 8;
 const ix = anchor.web3.SystemProgram.createAccount({
   fromPubkey: wallet.publicKey,
@@ -294,14 +293,14 @@ nice [video](https://www.youtube.com/watch?v=zs_yU0IuJxc&feature=youtu.be) and
 [code](https://github.com/solana-developers/anchor-zero-copy-example) explaining
 Box and Zero-Copy in vanilla Solana.
 
-### Dealing with Accounts
+## Dealing with Accounts
 
 Now that you know the nuts and bolts of space consideration on Solana, let’s
 look at some higher level considerations. In Solana, everything is an account,
 so for the next couple sections we'll look at some account architecture
 concepts.
 
-#### Data Order
+### Data Order
 
 This first consideration is fairly simple. As a rule of thumb, keep all variable
 length fields at the end of the account. Take a look at the following:
@@ -383,7 +382,7 @@ accounts based on all the fields up to the first variable length field. To echo
 the beginning of this section: As a rule of thumb, keep all variable length
 structs at the end of the account.
 
-#### For Future Use
+### For Future Use
 
 In certain cases, consider adding extra, unused bytes to you accounts. These are
 held in reserve for flexibility and backward compatibility. Take the following
@@ -402,8 +401,7 @@ In this simple game state, a character has `health`, `mana`, and an event log.
 If at some point you are making game improvements and want to add an
 `experience` field, you'd hit a snag. The `experience` field should be a number
 like a `u64`, which is simple enough to add. You can
-[reallocate the account](/developers/courses/onchain-development/anchor-pdas)
-and add space.
+[reallocate the account](./anchor-pdas.md#realloc) and add space.
 
 However, to keep dynamic length fields, like `event_log`, at the end of the
 struct, you would need to do some memory manipulation on all reallocated
@@ -450,7 +448,7 @@ So as a general rule of thumb: anytime you think your account types have the
 potential to change in a way that will require some kind of complex migration,
 add in some `for_future_use` bytes.
 
-#### Data Optimization
+### Data Optimization
 
 The idea here is to be aware of wasted bits. For example, if you have a field
 that represents the month of the year, don’t use a `u64`. There will only ever
@@ -499,7 +497,7 @@ pub struct GoodGameFlags { // 1 byte
 That saves you 7 bytes of data! The tradeoff, of course, is now you have to do
 bitwise operations. But that's worth having in your toolkit.
 
-#### Indexing
+### Indexing
 
 This last account concept is fun and illustrates the power of PDAs. When
 creating program accounts, you can specify the seeds used to derive the PDA.
@@ -594,7 +592,7 @@ Podcast 2: seeds=[b"Podcast", channel_account.key().as_ref(), 2.to_be_bytes().as
 Podcast X: seeds=[b"Podcast", channel_account.key().as_ref(), X.to_be_bytes().as_ref()]
 ```
 
-### Dealing with Concurrency
+## Dealing with Concurrency
 
 One of the main reasons to choose Solana for your blockchain environment is its
 parallel transaction execution. That is, Solana can run transactions in parallel
@@ -602,7 +600,7 @@ as long as those transactions aren't trying to write data to the same account.
 This improves program throughput out of the box, but with some proper planning
 you can avoid concurrency issues and really boost your program's performance.
 
-#### Shared Accounts
+### Shared Accounts
 
 If you’ve been around crypto for a while, you may have experienced a big NFT
 mint event. A new NFT project is coming out, everyone is really excited for it,
@@ -771,7 +769,7 @@ might be okay for some programs. But if your program is going to have high
 traffic, it's worth trying to optimize. You can always run a simulation to see
 your worst, best and median cases.
 
-### See it in Action
+## See it in Action
 
 All of the code snippets from this lesson are part of a
 [Solana program we created to illustrate these concepts](https://github.com/Unboxed-Software/advanced-program-architecture.git).
@@ -795,7 +793,7 @@ You can run the entire test suite or add `.only` to the `describe` call in a
 specific test file to only run that file's tests. Feel free to customize it and
 make it your own.
 
-### Conclusion
+## Conclusion
 
 We've talked about quite a few program architecture considerations: bytes,
 accounts, bottlenecks, and more. Whether you wind up running into any of these
@@ -805,7 +803,7 @@ job is to weigh the pros and cons of various solutions. Be forward thinking, but
 be practical. There is no "one good way" to design anything. Just know the
 trade-offs.
 
-## Lab
+# Lab
 
 Let's use all of these concepts to create a simple, but optimized, RPG game
 engine in Solana. This program will have the following features:
@@ -822,7 +820,7 @@ engine in Solana. This program will have the following features:
 We'll walk through the tradeoffs of various design decisions as we go to give
 you a sense for why we do things. Let’s get started!
 
-#### 1. Program Setup
+### 1. Program Setup
 
 We'll build this from scratch. Start by creating a new Anchor project:
 
@@ -830,10 +828,10 @@ We'll build this from scratch. Start by creating a new Anchor project:
 anchor init rpg
 ```
 
-<Callout type="note">This lab was created with Anchor version `0.28.0` in mind.
-If there are problems compiling, please refer to the
+Note: This lab was created with Anchor version `0.28.0` in mind. If there are
+problems compiling, please refer to the
 [solution code](https://github.com/Unboxed-Software/anchor-rpg/tree/challenge-solution)
-for the environment setup.</Callout>
+for the environment setup.
 
 Next, replace the program ID in `programs/rpg/lib.rs` and `Anchor.toml` with the
 program ID shown when you run `anchor keys list`.
@@ -877,7 +875,7 @@ pub mod rpg {
 }
 ```
 
-#### 2. Create Account Structures
+### 2. Create Account Structures
 
 Now that our initial setup is ready, let's create our accounts. We'll have 3:
 
@@ -967,7 +965,7 @@ queries and likely couldn't query in a single call based on `inventory`.
 Reallocating and adding a field would move the memory position of `inventory`,
 leaving us to write complex logic to query accounts with various structures.
 
-#### 3. Create ancillary types
+### 3. Create ancillary types
 
 The next thing we need to do is add some of the types our accounts reference
 that we haven't created yet.
@@ -1024,7 +1022,7 @@ pub struct InventoryItem {
 }
 ```
 
-#### 4. Create helper function for spending action points
+### 4. Create helper function for spending action points
 
 The last thing we'll do before writing the program's instructions is create a
 helper function for spending action points. Players will send action points
@@ -1067,7 +1065,7 @@ pub fn spend_action_points<'info>(
 }
 ```
 
-#### 5. Create Game
+### 5. Create Game
 
 Our first instruction will create the `game` account. Anyone can be a
 `game_master` and create their own game, but once a game has been created there
@@ -1118,7 +1116,7 @@ pub fn run_create_game(ctx: Context<CreateGame>, max_items_per_player: u8) -> Re
 }
 ```
 
-#### 6. Create Player
+### 6. Create Player
 
 Our second instruction will create the `player` account. There are three
 tradeoffs to note about this instruction:
@@ -1184,7 +1182,7 @@ pub fn run_create_player(ctx: Context<CreatePlayer>) -> Result<()> {
 }
 ```
 
-#### 7. Spawn Monster
+### 7. Spawn Monster
 
 Now that we have a way to create players, we need a way to spawn monsters for
 them to fight. This instruction will create a new `Monster` account whose
@@ -1257,7 +1255,7 @@ pub fn run_spawn_monster(ctx: Context<SpawnMonster>) -> Result<()> {
 }
 ```
 
-#### 8. Attack Monster
+### 8. Attack Monster
 
 Now! Let’s attack those monsters and start gaining some exp!
 
@@ -1351,7 +1349,7 @@ pub fn run_attack_monster(ctx: Context<AttackMonster>) -> Result<()> {
 }
 ```
 
-#### Redeem to Treasury
+### Redeem to Treasury
 
 This is our last instruction. This instruction lets anyone send the spent
 `action_points` to the `treasury` wallet.
@@ -1399,7 +1397,7 @@ pub fn run_collect_action_points(ctx: Context<CollectActionPoints>) -> Result<()
 }
 ```
 
-#### Putting it all Together
+### Putting it all Together
 
 Now that all of our instruction logic is written, let's add these functions to
 actual instructions in the program. It can also be helpful to log compute units
@@ -1450,7 +1448,7 @@ successfully.
 anchor build
 ```
 
-#### Testing
+### Testing
 
 Now, let’s see this baby work!
 
@@ -1458,7 +1456,7 @@ Let’s set up the `tests/rpg.ts` file. We will be filling out each test in turn
 But first, we needed to set up a couple of different accounts. Mainly the
 `gameMaster` and the `treasury`.
 
-```typescript
+```tsx
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Rpg, IDL } from "../target/types/rpg";
@@ -1493,7 +1491,7 @@ Now lets add in the `Create Game` test. Just call `createGame` with eight items,
 be sure to pass in all the accounts, and make sure the `treasury` account signs
 the transaction.
 
-```typescript
+```tsx
 it("Create Game", async () => {
   const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
@@ -1522,7 +1520,7 @@ it("Create Game", async () => {
 
 Go ahead and check that your test runs:
 
-```typescript
+```tsx
 yarn install
 anchor test
 ```
@@ -1661,7 +1659,7 @@ accounts to show that anyone could call the redeem function
 game were running continuously, it probably makes sense to use something like
 [clockwork](https://www.clockwork.xyz/) cron jobs.
 
-```typescript
+```tsx
 it("Deposit Action Points", async () => {
   const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
@@ -1751,7 +1749,7 @@ you went wrong. If you need, you can refer to the
 Be sure to put these concepts into practice in your own programs. Each little
 optimization adds up!
 
-## Challenge
+# Challenge
 
 Now it’s your turn to practice independently. Go back through the lab code
 looking for additional optimizations and/or expansion you can make. Think
@@ -1764,7 +1762,7 @@ the
 Finally, go through one of your own programs and think about optimizations you
 can make to improve memory management, storage size, and/or concurrency.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=4a628916-91f5-46a9-8eb0-6ba453aa6ca6)!
-</Callout>

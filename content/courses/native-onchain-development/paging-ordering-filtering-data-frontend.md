@@ -7,10 +7,9 @@ objectives:
   - Prefetch accounts with a subset of data that can be used to order accounts
   - Fetch only accounts whose data matches specific criteria
   - Fetch a subset of total accounts using `getMultipleAccounts`
-description: "Learn how to efficiently query account data from Solana."
 ---
 
-## Summary
+# Summary
 
 - This lesson delves into some functionality of the RPC calls that we used in
   the deserializing account data lesson
@@ -19,7 +18,7 @@ description: "Learn how to efficiently query account data from Solana."
 - Once you have a filtered list of public keys, you can order them and fetch the
   account data they belong to
 
-## Lesson
+# Lesson
 
 You may have noticed in the last lesson that while we could fetch and display a
 list of account data, we didn’t have any granular control over how many accounts
@@ -27,7 +26,7 @@ to fetch or their order. In this lesson, we’ll learn about some configuration
 options for the `getProgramAccounts` function that will enable things like
 paging, ordering accounts, and filtering.
 
-### Use `dataSlice` to only fetch the data you need
+## Use `dataSlice` to only fetch the data you need
 
 Imagine the Movie Review app we worked on in past lessons having four million
 movie reviews and the average review is 500 bytes. That would make the total
@@ -44,7 +43,7 @@ options is `dataSlice` which lets you provide two things:
 When you include a `dataSlice` in the configuration object, the function will
 only return the subset of the data buffer that you specified.
 
-#### Paging Accounts
+### Paging Accounts
 
 One area where this becomes helpful is with paging. If you want to have a list
 that displays all accounts but there are so many accounts that you don’t want to
@@ -71,7 +70,7 @@ const deserializedObjects = accountInfos.map(accountInfo => {
 });
 ```
 
-#### Ordering Accounts
+### Ordering Accounts
 
 The `dataSlice` option is also helpful when you need to order a list of accounts
 while paging. You still don’t want to fetch all the data at once, but you do
@@ -125,7 +124,7 @@ representing that field. So to compare the first names directly, we need to get
 the length for each, then create a data slice with a 4 byte offset and the
 proper length.
 
-### Use `filters` to only retrieve specific accounts
+## Use `filters` to only retrieve specific accounts
 
 Limiting the data received per account is great, but what if you only want to
 return accounts that match a specific criteria rather than all of them? That’s
@@ -174,7 +173,7 @@ Two things to note in the example above:
    `bs58`` to perform base-58 encoding on the search term. You can install it using `npm
    install bs58`.
 
-## Lab
+# Lab
 
 Remember that Movie Review app we worked on in the last two lessons? We’re going
 to spice it up a little by paging the review list, ordering the reviews so they
@@ -183,9 +182,9 @@ you’re just jumping into this lesson without having looked at the previous
 ones - as long as you have the prerequisite knowledge, you should be able to
 follow the lab without having worked in this specific project yet.
 
-![movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![movie review frontend](../assets/movie-reviews-frontend.png)
 
-#### **1. Download the starter code**
+### **1. Download the starter code**
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can download the
@@ -197,7 +196,7 @@ displaying a movie review, a `MovieList` component that displays reviews in a
 list, a `Form` component for submitting a new review, and a `Movie.ts` file that
 contains a class definition for a `Movie` object.
 
-#### 2. Add paging to the reviews
+### 2. Add paging to the reviews
 
 First things first, let’s create a space to encapsulate the code for fetching
 account data. Create a new file `MovieCoordinator.ts` and declare a
@@ -334,7 +333,7 @@ return (
 
 At this point, you should be able to run the project and click between pages!
 
-#### 3. Order reviews alphabetically by title
+### 3. Order reviews alphabetically by title
 
 If you look at the reviews, you might notice they aren’t in any specific order.
 We can fix this by adding back just enough data into our data slice to help us
@@ -385,7 +384,7 @@ static async prefetchAccounts(connection: web3.Connection, filters: AccountFilte
 And just like that, you should be able to run the app and see the list of movie
 reviews ordered alphabetically.
 
-#### 4. Add search
+### 4. Add search
 
 The last thing we’ll do to improve this app is to add some basic search
 capability. Let’s add a `search` parameter to `prefetchAccounts` and reconfigure
@@ -513,13 +512,13 @@ more time with the concepts, feel free to reread the sections that were most
 challenging for you and/or have a look at the
 [solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-paging-account-data).
 
-## Challenge
+# Challenge
 
 Now it’s your turn to try and do this on your own. Using the Student Intros app
 from last lesson, add paging, ordering alphabetically by name, and searching by
 name.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](../assets/student-intros-frontend.png)
 
 1. You can build this from scratch or you can download the
    [starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-deserialize-account-data)
@@ -530,11 +529,14 @@ name.
 
 This is challenging. If you get stuck, feel free to reference the
 [solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-paging-account-data).
+With this you complete Module 1! How was your experience? Feel free to
+[share some quick feedback](https://airtable.com/shrOsyopqYlzvmXSC?prefill_Module=Module%201),
+so that we can continue to improve the course!
 
 As always, get creative with these challenges and take them beyond the
 instructions if you want!
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9342ad0a-1741-41a5-9f68-662642c8ec93)!
-</Callout>

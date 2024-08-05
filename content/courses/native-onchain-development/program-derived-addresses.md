@@ -1,14 +1,13 @@
 ---
-title: Program Derived Addresses (PDAs)
+title: PDAs
 objectives:
   - Explain Program Derived Addresses (PDAs)
   - Explain various use cases of PDAs
   - Describe how PDAs are derived
   - Use PDA derivations to locate and retrieve data
-description: "Get a deeper understanding of PDAs."
 ---
 
-## Summary
+# Summary
 
 - A **Program Derived Address** (PDA) is derived from a **program ID** and an
   optional list of **seeds**
@@ -18,9 +17,9 @@ description: "Get a deeper understanding of PDAs."
 - Seeds can be used to map to the data stored in a separate PDA account
 - A program can sign instructions on behalf of the PDAs derived from its ID
 
-## Lesson
+# Lesson
 
-### What is a Program Derived Address?
+## What is a Program Derived Address?
 
 Program Derived Addresses (PDAs) are account addresses designed to be signed for
 by a program rather than a secret key. As the name suggests, PDAs are derived
@@ -38,7 +37,7 @@ In this lesson we'll focus on using PDAs to find and store data. We'll discuss
 signing with a PDA more thoroughly in a future lesson where we cover Cross
 Program Invocations (CPIs).
 
-### Finding PDAs
+## Finding PDAs
 
 PDAs are not technically created. Rather, they are _found_ or _derived_ based on
 a program ID and one or more input seeds.
@@ -60,7 +59,7 @@ inputs, and then returns the PDA and a bump seed.
 let (pda, bump_seed) = Pubkey::find_program_address(&[user.key.as_ref(), user_input.as_bytes().as_ref(), "SEED".as_bytes()], program_id)
 ```
 
-#### Seeds
+### Seeds
 
 “Seeds” are optional inputs used in the `find_program_address` function to
 derive a PDA. For example, seeds can be any combination of public keys, inputs
@@ -81,7 +80,7 @@ decreases the bump seed by 1 and tries again (`255`, `254`, `253`, et cetera).
 Once a valid PDA is found, the function returns both the PDA and the bump that
 was used to derive the PDA.
 
-#### Under the hood of `find_program_address`
+### Under the hood of `find_program_address`
 
 Let's take a look at the source code for `find_program_address`.
 
@@ -172,7 +171,7 @@ a Program Derived Address and the bump seed used to derive it. The
 PDA returned by the function necessarily associated with an account that stores
 data.
 
-### Use PDA accounts to store data
+## Use PDA accounts to store data
 
 Since programs themselves are stateless, program state is managed through
 external accounts. Given that you can use seeds for mapping and that programs
@@ -182,9 +181,9 @@ System Program to create non-PDA accounts and use those to store data as well,
 PDAs tend to be the way to go.
 
 If you need a refresher on how to store data in PDAs, have a look at the
-[State Management lesson](/content/courses/native-onchain-development/program-state-management).
+[Create a Basic Program, Part 2 - State Management lesson](./program-state-management).
 
-### Map to data stored in PDA accounts
+## Map to data stored in PDA accounts
 
 Storing data in PDA accounts is only half of the equation. You also need a way
 to retrieve that data. We'll talk about two approaches:
@@ -194,7 +193,7 @@ to retrieve that data. We'll talk about two approaches:
 2. Strategically using seeds to locate the appropriate PDA accounts and retrieve
    the necessary data
 
-#### Map to data using PDA "map" accounts
+### Map to data using PDA "map" accounts
 
 One approach to organizing data storage is to store clusters of relevant data in
 their own PDAs and then to have a separate PDA account that stores a mapping of
@@ -232,7 +231,7 @@ relevant note data.
 There may be times where using this approach makes sense for your application,
 but we don't recommend it as your "go to" strategy.
 
-#### Map to data using PDA derivation
+### Map to data using PDA derivation
 
 If you're strategic about the seeds you use to derive PDAs, you can embed the
 required mappings into the seeds themselves. This is the natural evolution of
@@ -259,7 +258,7 @@ let (pda, bump_seed) = Pubkey::find_program_address(&[
     program_id)
 ```
 
-#### Associated token account addresses
+### Associated token account addresses
 
 Another practical example of this type of mapping is how associated token
 account (ATA) addresses are determined. Tokens are often held in an ATA whose
@@ -303,7 +302,7 @@ or architecture, it's worth calling out a few guidelines:
 - Be thoughtful about the data structure used within each account
 - Simpler is usually better
 
-## Lab
+# Lab
 
 Let’s practice together with the Movie Review program we've worked on in
 previous lessons. No worries if you’re just jumping into this lesson without
@@ -319,7 +318,7 @@ secure manner. In this lab, we'll add the ability for users to comment on a
 movie review. We'll use building this feature as an opportunity to work through
 how to structure the comment storage using PDA accounts.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
 To begin, you can find
 [the movie program starter code](https://github.com/Unboxed-Software/solana-movie-program/tree/starter)
@@ -349,7 +348,7 @@ You can test the program by using the movie review
 and updating the program ID with the one you’ve just deployed. Make sure you use
 the `solution-update-reviews` branch.
 
-#### 2. Plan out the account structure
+### 2. Plan out the account structure
 
 Adding comments means we need to make a few decisions about how to store the
 data associated with each comment. The criteria for a good structure here are:
@@ -394,7 +393,7 @@ To implement these changes, we'll need to do the following:
   include creating the comment counter account
 - Create a new `add_comment` instruction processing function
 
-#### 3. Define `MovieCommentCounter` and `MovieComment` structs
+### 3. Define `MovieCommentCounter` and `MovieComment` structs
 
 Recall that the `state.rs` file defines the structs our program uses to populate
 the data field of a new account.
@@ -498,7 +497,7 @@ impl MovieComment {
 Now everywhere we need the discriminator or account size we can use this
 implementation and not risk unintentional typos.
 
-#### 4. Create `AddComment` instruction
+### 4. Create `AddComment` instruction
 
 Recall that the `instruction.rs` file defines the instructions our program will
 accept and how to deserialize the data for each. We need to add a new
@@ -606,7 +605,7 @@ pub fn process_instruction(
 }
 ```
 
-#### 5. Update `add_movie_review` to create comment counter account
+### 5. Update `add_movie_review` to create comment counter account
 
 Before we implement the `add_comment` function, we need to update the
 `add_movie_review` function to create the review's comment counter account.
@@ -724,7 +723,7 @@ Now when a new review is created, two accounts are initialized:
    is unchanged from the version of the program we started with.
 2. The second account stores the counter for comments
 
-#### 6. Implement `add_comment`
+### 6. Implement `add_comment`
 
 Finally, let’s implement our `add_comment` function to create new comment
 accounts.
@@ -837,7 +836,7 @@ pub fn add_comment(
 }
 ```
 
-#### 7. Build and deploy
+### 7. Build and deploy
 
 We're ready to build and deploy our program!
 
@@ -862,7 +861,7 @@ the [solution code](https://github.com/Unboxed-Software/solana-movie-program/tr
 before continuing. Note that the solution code is on the `solution-add-comments`
 branch of the linked repository.
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently! Go ahead and work with the
 Student Intro program that we've used in past lessons. The Student Intro program
@@ -883,7 +882,7 @@ reference the
 Note that the solution code is on the `solution-add-replies` branch and that
 your code may look slightly different.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=89d367b4-5102-4237-a7f4-4f96050fe57e)!
-</Callout>

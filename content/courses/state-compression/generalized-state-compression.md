@@ -4,12 +4,9 @@ objectives:
   - Explain the logic flow behind Solana state compression
   - Explain the difference between a Merkle tree and a concurrent Merkle tree
   - Implement generic state compression in basic Solana programs
-description:
-  "How state compression - the tech behind compressed NFTs - works, and how to
-  implement it in your own Solana programs."
 ---
 
-## Summary
+# Summary
 
 - State Compression on Solana is most commonly used for compressed NFTs, but
   it's possible to use it for arbitrary data
@@ -23,7 +20,7 @@ description:
   user indexers to keep an off-chain cache of the data and then verify that data
   against the onchain Merkle tree.
 
-## Lesson
+# Lesson
 
 Previously, we discussed state compression in the context of compressed NFTs. At
 the time of writing, compressed NFTs represent the most common use case for
@@ -31,7 +28,7 @@ state compression, but it’s possible to use state compression within any
 program. In this lesson, we’ll discuss state compression in more generalized
 terms so that you can apply it to any of your programs.
 
-### A theoretical overview of state compression
+## A theoretical overview of state compression
 
 In traditional programs, data is serialized (typically using borsh) and then
 stored directly in an account. This allows the data to be easily read and
@@ -81,7 +78,7 @@ This involves a few rather serious development tradeoffs:
 Each of these will be a consideration when determining **if**, **when**, and
 **how** to implement state compression for your program.
 
-#### Concurrent Merkle trees
+### Concurrent Merkle trees
 
 A **Merkle tree** is a binary tree structure represented by a single hash. Every
 leaf node in the structure is a hash of its inner data while every branch is a
@@ -169,7 +166,7 @@ Program A can’t call your state-compressed program B if doing so maxes out the
 transaction size limits. Remember, program A also has required accounts and data
 in addition to required proof paths, each of which take up transaction space.
 
-#### Data access on a state-compressed program
+### Data access on a state-compressed program
 
 A state-compressed account doesn’t store the data itself. Rather, it stores the
 concurrent Merkle tree structure discussed above. The raw data itself lives only
@@ -190,14 +187,14 @@ subsequently verify against the onchain root hash.
 
 This process is complex, but it will make sense after some practice.
 
-### State compression tooling
+## State compression tooling
 
 The theory described above is essential to properly understanding state
 compression. But you don’t have to implement any of it from scratch. Brilliant
 engineers have laid most of the groundwork for you in the form of the SPL State
 Compression Program and the Noop Program.
 
-#### SPL State Compression and Noop Programs
+### SPL State Compression and Noop Programs
 
 The SPL State Compression Program exists to make the process of creating and
 updating concurrent Merkle trees repeatable and composable throughout the Solana
@@ -211,7 +208,7 @@ Compression program where it gets hashed and emitted as an “event” to the No
 program. The hash gets stored in the corresponding concurrent Merkle tree, but
 the raw data remains accessible through the Noop program’s transaction logs.
 
-#### Index data for easy lookup
+### Index data for easy lookup
 
 Under normal conditions, you would typically access onchain data by fetching the
 appropriate account. When using state compression, however, it’s not so
@@ -246,9 +243,9 @@ arbitrary state compression. Instead, you have two primary options:
 For many dApps, option 2 makes plenty of sense. Larger-scale applications may
 need to rely on infrastructure providers to handle their indexing.
 
-### State compression development process
+## State compression development process
 
-#### Create Rust types
+### Create Rust types
 
 As with a typical Anchor program, one of the first things you should do is
 define your program’s Rust types. However, Rust types in a traditional Anchor
@@ -282,7 +279,7 @@ from**. Your program will be creating an instance of this type from instruction
 inputs, not constructing an instance of this type from account data that it
 reads. We’ll discuss how to read data in a later section.
 
-#### Initialize a new tree
+### Initialize a new tree
 
 Clients will create and initialize the Merkle tree account in two separate
 instructions. The first is simply allocating the account by calling System
@@ -337,7 +334,7 @@ pub fn create_messages_tree(
 }
 ```
 
-#### Add hashes to the tree
+### Add hashes to the tree
 
 With an initialized Merkle tree, it’s possible to start adding data hashes. This
 involves passing the uncompressed data to an instruction on your program that
@@ -396,7 +393,7 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
 }
 ```
 
-#### Update hashes
+### Update hashes
 
 To update data, you need to create a new hash to replace the hash at the
 relevant leaf on the Merkle tree. To do this, your program needs access to four
@@ -502,7 +499,7 @@ pub fn update_message(
 }
 ```
 
-#### Delete hashes
+### Delete hashes
 
 At the time of writing, the State Compression Program doesn’t provide an
 explicit `delete` instruction. Instead, you’ll want to update leaf data with
@@ -510,7 +507,7 @@ data that indicates the data as “deleted.” The specific data will depend on 
 use case and security concerns. Some may opt to set all data to 0, whereas
 others might store a static string that all “deleted” items will have in common.
 
-#### Access data from a client
+### Access data from a client
 
 The discussion so far has covered 3 of the 4 standard CRUD procedures: Create,
 Update, and Delete. What’s left is one of the more difficult concepts in state
@@ -552,7 +549,7 @@ function from the `@solana/spl-account-compression` JS package to get the logs,
 then deserialize them using Borsh. Below is an example based on the messaging
 program used above.
 
-```typescript
+```tsx
 export async function getMessageLog(
   connection: Connection,
   txSignature: string,
@@ -610,20 +607,20 @@ export async function getMessageLog(
 }
 ```
 
-### Conclusion
+## Conclusion
 
 Generalized state compression can be difficult but is absolutely possible to
 implement with the available tools. Additionally, the tools and programs will
 only get better over time. If you come up with solutions that improve your
 development experience, please share with the community!
 
-## Lab
+# Lab
 
 Let’s practice generalized state compression by creating a new Anchor program.
 This program will use custom state compression to power a simple note-taking
 app.
 
-#### 1. Project setup
+### 1. Project setup
 
 Start by initializing an Anchor program:
 
@@ -696,7 +693,7 @@ modify the structure as you will.
 Feel free to build before continuing. This ensures your environment is working
 properly and shortens future build times.
 
-#### 2. Define `Note` schema
+### 2. Define `Note` schema
 
 Next, we’re going to define what a note looks like within our program. Notes
 should have the following properties:
@@ -727,7 +724,7 @@ we’re using state compression, our accounts won’t be mirroring our native
 structures. Since we don’t need all the functionality of an account, we can just
 use the `AnchorSerialize` derive macro rather than the `account` macro.
 
-#### 3. Define input accounts and constraints
+### 3. Define input accounts and constraints
 
 As luck would have it, every one of our instructions will be using the same
 accounts. We’ll create a single `NoteAccounts` struct for our account
@@ -769,7 +766,7 @@ pub struct NoteAccounts<'info> {
 }
 ```
 
-#### 4. Create `create_note_tree` instruction
+### 4. Create `create_note_tree` instruction
 
 Next, let’s create our `create_note_tree` instruction. Remember, clients will
 have already allocated the Merkle tree account but will use this instruction to
@@ -832,7 +829,7 @@ pub mod compressed_notes {
 Ensure that your signer seeds on the CPI include both the Merkle tree address
 and the tree authority bump.
 
-#### 5. Create `append_note` instruction
+### 5. Create `append_note` instruction
 
 Now, let’s create our `append_note` instruction. This instruction needs to take
 the raw note as a String and compress it into a hash that we’ll store on the
@@ -899,7 +896,7 @@ pub mod compressed_notes {
 }
 ```
 
-#### 6. Create `update_note` instruction
+### 6. Create `update_note` instruction
 
 The last instruction we’ll make is the `update_note` instruction. This should
 replace an existing leaf with a new hash representing the new updated note data.
@@ -1007,7 +1004,7 @@ pub mod compressed_notes {
 }
 ```
 
-#### 7. Client test setup
+### 7. Client test setup
 
 We’re going to write a few tests to ensure that our program works as expected.
 First, let’s do some setup.
@@ -1023,7 +1020,7 @@ Next, we’re going to give you the contents of a utility file we’ve created t
 make testing easier. Create a `utils.ts` file in the `tests` directory, add in
 the below, then we’ll explain it.
 
-```typescript
+```tsx
 import {
   SPL_NOOP_PROGRAM_ID,
   deserializeApplicationDataEvent,
@@ -1141,7 +1138,7 @@ There are 3 main things in the above file:
    finds the Noop program logs, then deserializes and returns the corresponding
    Note log.
 
-#### 8. Write client tests
+### 8. Write client tests
 
 Now that we’ve got our packages installed and utility file ready, let’s dig into
 the tests themselves. We’re going to create four of them:
@@ -1161,7 +1158,7 @@ given the note text and signer.
 Let’s start with our imports. There are quite a few from Anchor,
 `@solana/web3.js`, `@solana/spl-account-compression`, and our own utils file.
 
-```typescript
+```tsx
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { CompressedNotes } from "../target/types/compressed_notes";
@@ -1187,7 +1184,7 @@ Next, we’ll want to set up the state variables we’ll be using throughout our
 tests. This includes the default Anchor setup as well as generating a Merkle
 tree keypair, the tree authority, and some notes.
 
-```typescript
+```tsx
 describe("compressed-notes", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
@@ -1224,7 +1221,7 @@ test. This test will do two things:
    size of 8, and canopy depth of 0
 2. Initialize this new account using our program’s `createNoteTree` instruction
 
-```typescript
+```tsx
 it("Create Note Tree", async () => {
   const maxDepthSizePair: ValidDepthSizePair = {
     maxDepth: 3,
@@ -1262,7 +1259,7 @@ Next, we’ll create the `Add Note` test. It should call `append_note` with
 `firstNote`, then check that the onchain hash matches our computed hash and that
 the note log matches the text of the note we passed into the instruction.
 
-```typescript
+```tsx
 it("Add Note", async () => {
   const txSignature = await program.methods
     .appendNote(firstNote)
@@ -1285,7 +1282,7 @@ it("Add Note", async () => {
 Next, we’ll create the `Add Max Size Note` test. It is the same as the previous
 test, but with the second note.
 
-```typescript
+```tsx
 it("Add Max Size Note", async () => {
   // Size of note is limited by max transaction size of 1232 bytes, minus additional data required for the instruction
   const txSignature = await program.methods
@@ -1315,7 +1312,7 @@ than adding a note. We’ll do the following:
    data. Remember, it needs the first note and the root because the program must
    verify the entire proof path for the note’s leaf before it can be updated.
 
-```typescript
+```tsx
 it("Update First Note", async () => {
   const merkleTreeAccount =
     await ConcurrentMerkleTreeAccount.fromAccountAddress(
@@ -1351,7 +1348,7 @@ If you’re running into issues, feel free to go back through some of the demo o
 look at the full solution code in the
 [Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
 
-## Challenge
+# Challenge
 
 Now that you’ve practiced the basics of state compression, add a new instruction
 to the Compressed Notes program. This new instruction should allow users to
@@ -1362,7 +1359,7 @@ luck!
 If you'd like a very simple example of a delete function, check out the
 [`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
-</Callout>

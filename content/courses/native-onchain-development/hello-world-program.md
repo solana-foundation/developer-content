@@ -7,37 +7,36 @@ objectives:
   - Explain the entry point to a Solana program
   - Build and deploy a basic Solana program
   - Submit a transaction to invoke our “Hello, world!” program
-description:
-  "Create an onchain program for Solana using native Rust, without Anchor."
 ---
 
-## Summary
+# Summary
 
-- Native Solana programs have a single **entry point** to process instructions
+- **Programs** on Solana are a particular type of account that stores and
+  executes instruction logic
+- Solana programs have a single **entry point** to process instructions
 - A program processes an instruction using the **program_id**, list of
   **accounts**, and **instruction_data** included with the instruction
 
-## Lesson
+# Lesson
 
-<Callout type="info">
-The following guide assumes you are familiar with Solana program basics - if not, check out [introduction to onchain programming](/developers/courses/onchain-development/intro-to-onchain).
-</Callout>
+Solana's ability to run arbitrary executable code is part of what makes it so
+powerful. Solana programs, similar to "smart contracts" in other blockchain
+environments, are quite literally the backbone of the Solana ecosystem. And the
+collection of programs grows daily as developers and creators dream up and
+deploy new programs.
 
 This lesson will give you a basic introduction to writing and deploying a Solana
-program using the Rust programming language, without any framework. This gives
-you greater control, but also requires you to perform much of the basic work of
-creating an onchain program yourself.
+program using the Rust programming language. To avoid the distraction of setting
+up a local development environment, we'll be using a browser-based IDE called
+Solana Playground.
 
-To avoid the distraction of setting up a local development environment, we'll be
-using a browser-based IDE called Solana Playground.
-
-### Rust Basics
+## Rust Basics
 
 Before we dive into the building our "Hello, world!" program, let’s first go
 over some Rust basics. If you want to dig deeper into Rust, have a look at
 the [Rust language book](https://doc.rust-lang.org/book/ch00-00-introduction.html).
 
-#### Module System
+### Module System
 
 Rust organizes code using what is collectively referred to as the “module
 system”.
@@ -53,7 +52,7 @@ This includes:
 
 Throughout this lesson, we’ll focus on using crates and modules.
 
-#### Paths and scope
+### Paths and scope
 
 Crates in Rust contain modules that define functionality which can be shared
 with multiple projects. If we want to access an item within a module, then we
@@ -86,7 +85,7 @@ file without specifying the full path each time. It's common to see a series of
 use solana_program::account_info::AccountInfo
 ```
 
-#### Declaring Functions in Rust
+### Declaring Functions in Rust
 
 We define a function in Rust by using the `fn` keyword followed by a function
 name and a set of parentheses.
@@ -150,7 +149,7 @@ fn process_instruction(
 ) -> ProgramResult
 ```
 
-#### Result enum
+### Result enum
 
 `Result` is a standard library type that represents two discrete outcomes:
 success (`Ok`) or failure (`Err`). We'll talk more about enums in a future
@@ -176,14 +175,14 @@ To return an error with an integer, you would do the following:
 Err(404);
 ```
 
-### Solana Programs
+## Solana Programs
 
 Recall that all data stored on the Solana network are contained in what are
 referred to as accounts. Each account has its own unique address which is used
 to identify and access the account data. Solana programs are just a particular
 type of Solana account that store and execute instructions.
 
-#### Solana Program Crate
+### Solana Program Crate
 
 To write Solana programs with Rust, we use the `solana_program` library crate.
 The `solana_program` crate acts as a standard library for Solana programs. This
@@ -214,7 +213,7 @@ use solana_program::{
   addresses as a public key
 - `msg` - a macro that allows us to print messages to the program log
 
-#### Solana Program Entry Point
+### Solana Program Entry Point
 
 Solana programs require a single entry point to process program instructions.
 The entry point is declared using the `entrypoint!` macro.
@@ -255,20 +254,20 @@ an empty value and `ProgramError` is an error type defined in the
 foundations of creating a Solana program using Rust. Let’s practice what we’ve
 learned so far!
 
-## Lab
+# Lab
 
 We're going to build a "Hello, World!" program using Solana Playground. Solana
 Playground is a tool that allows you to write and deploy Solana programs from
 the browser.
 
-#### 1. Setup
+### 1. Setup
 
 Open the [Solana Playground](https://beta.solpg.io/). Next, go ahead and delete
 everything in the default `lib.rs` file and create a Playground wallet.
 
-![Gif Solana Playground Create Wallet](/public/assets/courses/unboxed/hello-world-create-wallet.gif)
+![Gif Solana Playground Create Wallet](../assets/hello-world-create-wallet.gif)
 
-#### 2. Solana Program Crate
+### 2. Solana Program Crate
 
 First, let's bring into scope everything we’ll need from the `solana_program`
 crate.
@@ -287,7 +286,7 @@ Next, let's set up the entry point to our program using the `entrypoint!` macro
 and create the `process_instruction` function. The `msg!` macro then allows us
 to print “Hello, world!” to the program log when the program is invoked.
 
-#### 3. Entry Point
+### 3. Entry Point
 
 ```rust
 entrypoint!(process_instruction);
@@ -327,13 +326,13 @@ pub fn process_instruction(
 }
 ```
 
-#### 4. Build and Deploy
+### 4. Build and Deploy
 
 Now let's build and deploy our program using Solana Playground.
 
-![Gif Solana Playground Build and Deploy](/public/assets/courses/unboxed/hello-world-build-deploy.gif)
+![Gif Solana Playground Build and Deploy](../assets/hello-world-build-deploy.gif)
 
-#### 5. Invoke Program
+### 5. Invoke Program
 
 Finally, let's invoke our program from the client side. The focus of this lesson
 is to build our Solana program, so we’ve gone ahead and provided
@@ -348,13 +347,13 @@ Open the `index.ts` file you should see a variable named `programId`. Go ahead
 and update this with the program ID of the “Hello, world!" program you just
 deployed using Solana Playground.
 
-```typescript
+```tsx
 let programId = new web3.PublicKey("<YOUR_PROGRAM_ID>");
 ```
 
 You can locate the program ID on Solana Playground referencing the image below.
 
-![Gif Solana Playground Program ID](/public/assets/courses/unboxed/hello-world-program-id.gif)
+![Gif Solana Playground Program ID](../assets/hello-world-program-id.gif)
 
 Next, install the Node modules with `npm i`.
 
@@ -368,11 +367,11 @@ Now, go ahead and run `npm start`. This command will:
 Copy the transaction URL printed in the console into your browser. Scroll down
 to see “Hello, world!” under Program Instruction Logs.
 
-![Screenshot Solana Explorer Program Log](/public/assets/courses/unboxed/hello-world-program-log.png)
+![Screenshot Solana Explorer Program Log](../assets/hello-world-program-log.png)
 
 Congratulations, you’ve just successfully built and deployed a Solana program!
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Because we're starting with
 very simple programs, yours will look almost identical to what we just created.
@@ -388,7 +387,7 @@ without referencing prior code, so try not to copy and paste here.
 As always, get creative with these challenges and take them beyond the basic
 instructions if you want - and have fun!
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5b56c69c-1490-46e4-850f-a7e37bbd79c2)!
-</Callout>

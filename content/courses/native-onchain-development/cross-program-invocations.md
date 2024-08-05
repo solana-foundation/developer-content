@@ -5,10 +5,9 @@ objectives:
   - Describe how to construct and use CPIs
   - Explain how a program provides a signature for a PDA
   - Avoid common pitfalls and troubleshoot common errors associated with CPIs
-description: "How to invoke functions in other Solana programs."
 ---
 
-## Summary
+# Summary
 
 - A **Cross-Program Invocation (CPI)** is a call from one program to another,
   targeting a specific instruction on the program called
@@ -21,9 +20,9 @@ description: "How to invoke functions in other Solana programs."
   it's important to verify all of the parameters passed into a CPI to ensure
   program security
 
-## Lesson
+# Lesson
 
-### What is a CPI?
+## What is a CPI?
 
 A Cross-Program Invocation (CPI) is a direct call from one program into another.
 Just as any client can call any program using the JSON RPC, any program can call
@@ -38,7 +37,7 @@ side. There are some intricacies and differences depending on if you are using
 `invoke` or `invoke_signed`. We'll be covering both of these later in this
 lesson.
 
-### How to make a CPI
+## How to make a CPI
 
 CPIs are made using the
 [`invoke`](https://docs.rs/solana-program/1.10.19/solana_program/program/fn.invoke.html)
@@ -72,7 +71,7 @@ It's important to note that you as the developer decide which accounts to pass
 into the CPI. You can think of a CPI as building another instruction from
 scratch with only information that was passed into your program.
 
-#### CPI with `invoke`
+### CPI with `invoke`
 
 ```rust
 invoke(
@@ -173,7 +172,7 @@ method is probably new to you. It's a method on vectors that takes a slice as
 input, iterates over the slice, clones each element, and then appends it to the
 `Vec`.
 
-#### Pass a list of accounts
+### Pass a list of accounts
 
 In addition to the instruction, both `invoke` and `invoke_signed` also require a
 list of `account_info` objects. Just like the list of `AccountMeta` objects you
@@ -197,7 +196,7 @@ instance.
 &[first_account.clone(), second_account.clone(), third_account.clone()]
 ```
 
-#### CPI with `invoke`
+### CPI with `invoke`
 
 With both the instruction and the list of accounts created, you can perform a
 call to `invoke`.
@@ -218,7 +217,7 @@ the original signature passed into your program. Remember, `invoke` won't work
 if a signature is required on behalf of a PDA. For that, you'll need to use
 `invoke_signed`.
 
-#### CPI with `invoke_signed`
+### CPI with `invoke_signed`
 
 Using `invoke_signed` is a little different just because there is an additional
 field that requires the seeds used to derive any PDAs that must sign the
@@ -254,9 +253,9 @@ any of the addresses match, then the runtime knows that indeed the program
 associated with this address is the caller and thus is authorized to be a
 signer.
 
-### Best Practices and common pitfalls
+## Best Practices and common pitfalls
 
-#### Security checks
+### Security checks
 
 There are some common mistakes and things to remember when utilizing CPIs that
 are important to your program’s security and robustness. The first thing to
@@ -274,7 +273,7 @@ instruction on the program you are invoking. The easiest way to do this is to
 read the source code of the program you will be invoking just as you would if
 you were constructing an instruction from the client side.
 
-#### Common errors
+### Common errors
 
 There are some common errors you might receive when executing a CPI, they
 usually mean you are constructing the CPI with incorrect information. For
@@ -314,7 +313,7 @@ it is mutable.
 To see this in action, view this
 [transaction in the explorer](https://explorer.solana.com/tx/ExB9YQJiSzTZDBqx4itPaa4TpT8VK4Adk7GU5pSoGEzNz9fa7PPZsUxssHGrBbJRnCvhoKgLCWnAycFB7VYDbBg?cluster=devnet).
 
-### Why CPIs matter?
+## Why CPIs matter?
 
 CPIs are a very important feature of the Solana ecosystem and they make all
 programs deployed interoperable with each other. With CPIs there is no need to
@@ -337,7 +336,7 @@ there would be no way for a program to sign transactions involving them -
 essentially turning them black holes (once something is sent to a PDA, there
 would be no way to get it back out w/o CPIs!)
 
-## Lab
+# Lab
 
 Now let's get some hands on experience with CPIs by making some additions to the
 Movie Review program again. If you're dropping into this lesson without having
@@ -350,11 +349,10 @@ the reviewer or commenter anytime a review or comment is submitted.
 
 To implement this, we'll have to invoke the SPL Token Program's `MintTo`
 instruction using a CPI. If you need a refresher on tokens, token mints, and
-minting new tokens, have a look at the
-[Token Program lesson](/content/courses/tokens/token-program) before moving
-forward with this lab.
+minting new tokens, have a look at the [Token Program lesson](./token-program)
+before moving forward with this lab.
 
-#### 1. Get starter code and add dependencies
+### 1. Get starter code and add dependencies
 
 To get started, we will be using the final state of the Movie Review program
 from the previous PDA lesson. So, if you just completed that lesson then you’re
@@ -362,7 +360,7 @@ all set and ready to go. If you are just jumping in here, no worries, you can
 [download the starter code here](https://github.com/Unboxed-Software/solana-movie-program/tree/solution-add-comments).
 We'll be using the `solution-add-comments` branch as our starting point.
 
-#### 2. Add dependencies to `Cargo.toml`
+### 2. Add dependencies to `Cargo.toml`
 
 Before we get started we need to add two new dependencies to the `Cargo.toml`
 file underneath `[dependencies]`. We'll be using the `spl-token` and
@@ -377,7 +375,7 @@ After adding the above, run `cargo check` in your console to have cargo resolve
 your dependencies and ensure that you are ready to continue. Depending on your
 setup you may need to modify crate versions before moving on.
 
-#### 3. Add necessary accounts to `add_movie_review`
+### 3. Add necessary accounts to `add_movie_review`
 
 Because we want users to be minted tokens upon creating a review, it makes sense
 to add minting logic inside the `add_movie_review` function. Since we'll be
@@ -416,7 +414,7 @@ There is no additional `instruction_data` required for the new functionality, so
 no changes need to be made to how data is deserialized. The only additional
 information that’s needed is the extra accounts.
 
-#### 4. Mint tokens to the reviewer in `add_movie_review`
+### 4. Mint tokens to the reviewer in `add_movie_review`
 
 Before we dive into the minting logic, let's import the address of the Token
 program and the constant `LAMPORTS_PER_SOL` at the top of the file.
@@ -535,7 +533,7 @@ transaction for this account.
 At this point, the `add_movie_review` instruction should be fully functional and
 will mint ten tokens to the reviewer when a review is created.
 
-#### 5. Repeat for `add_comment`
+### 5. Repeat for `add_comment`
 
 Our updates to the `add_comment` function will be almost identical to what we
 did for the `add_movie_review` function above. The only difference is that we’ll
@@ -618,7 +616,7 @@ invoke_signed(
 Ok(())
 ```
 
-#### 6. Set up the token mint
+### 6. Set up the token mint
 
 We've written all the code needed to mint tokens to reviewers and commenters,
 but all of it assumes that there is a token mint at the PDA derived with the
@@ -723,7 +721,7 @@ mint account, and then initialize the token mint. We won't explain all of this
 in detail, but it's worth reading through the code, especially given that the
 creation and initialization of the token mint both involve CPIs. Again, if you
 need a refresher on tokens and mints, have a look at the
-[Token Program lesson](/content/courses/tokens/token-program).
+[Token Program lesson](./token-program).
 
 ```rust
 pub fn initialize_token_mint(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
@@ -797,7 +795,7 @@ pub fn initialize_token_mint(program_id: &Pubkey, accounts: &[AccountInfo]) -> P
 }
 ```
 
-#### 7. Build and deploy
+### 7. Build and deploy
 
 Now we’re ready to build and deploy our program! You can build the program by
 running `cargo build-bpf` and then running the command that is returned, it
@@ -825,7 +823,7 @@ way, feel free to
 [take a look at the solution code](https://github.com/Unboxed-Software/solana-movie-program/tree/solution-add-tokens).
 Note that the solution to this lab is on the `solution-add-tokens` branch.
 
-## Challenge
+# Challenge
 
 To apply what you've learned about CPIs in this lesson, think about how you
 could incorporate them into the Student Intro program. You could do something
@@ -840,7 +838,11 @@ questions are answered correctly, allow users to upvote answers, etc. All of
 that is possible and you now have the skills and knowledge to go and build
 something like it on your own!
 
-<Callout type="success" title="Completed the lab?">
+Congratulations on reaching the end of Module 4! Feel free to
+[share some quick feedback](https://airtable.com/shrOsyopqYlzvmXSC?prefill_Module=Module%204),
+so that we can continue to improve the course.
+
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ade5d386-809f-42c2-80eb-a6c04c471f53)!
-</Callout>

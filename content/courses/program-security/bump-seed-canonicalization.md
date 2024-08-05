@@ -7,12 +7,9 @@ objectives:
     automatically use the canonical bump
   - Use Anchor's `seeds` and `bump` constraints to ensure the canonical bump is
     always used in future instructions when deriving a PDA
-description:
-  "Understand the need for consistent PDA calculation by storing and reusuing
-  the canonical bump."
 ---
 
-## Summary
+# Summary
 
 - The
   [**`create_program_address`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.create_program_address)
@@ -43,7 +40,7 @@ description:
   }
   ```
 
-## Lesson
+# Lesson
 
 Bump seeds are a number between 0 and 255, inclusive, used to ensure that an
 address derived using
@@ -52,7 +49,7 @@ is a valid PDA. The **canonical bump** is the highest bump value that produces a
 valid PDA. The standard in Solana is to _always use the canonical bump_ when
 deriving PDAs, both for security and convenience.
 
-### Insecure PDA derivation using `create_program_address`
+## Insecure PDA derivation using `create_program_address`
 
 Given a set of seeds, the `create_program_address` function will produce a valid
 PDA about 50% of the time. The bump seed is an additional byte added as a seed
@@ -114,7 +111,7 @@ and user, for example, this program would not properly enforce that. A user
 could call the program multiple times with many valid bumps, each producing a
 different PDA.
 
-### Recommended derivation using `find_program_address`
+## Recommended derivation using `find_program_address`
 
 A simple way around this problem is to have the program expect only the
 canonical bump and use `find_program_address` to derive the PDA.
@@ -151,7 +148,7 @@ pub fn set_value_secure(
 }
 ```
 
-### Use Anchor’s `seeds` and `bump` constraints
+## Use Anchor’s `seeds` and `bump` constraints
 
 Anchor provides a convenient way to derive PDAs in the account validation struct
 using the `seeds` and `bump` constraints. These can even be combined with the
@@ -288,13 +285,13 @@ without initializing an account, you'll be forced to either let Anchor derive
 the canonical bump or expose your program to unecessary risks. In that case,
 please use the canonical bump despite the slight mark against performance.
 
-## Lab
+# Lab
 
 To demonstrate the security exploits possible when you don't check for the
 canonical bump, let's work with a program that lets each program user "claim"
 rewards on time.
 
-#### 1. Setup
+### 1. Setup
 
 Start by getting the code on the `starter` branch of
 [this repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/starter).
@@ -318,7 +315,7 @@ using the canonical bump.
 
 Have a look at the program to understand what it does before proceeding.
 
-#### 2. Test insecure instructions
+### 2. Test insecure instructions
 
 Since the instructions don't explicitly require the `user` PDA to use the
 canonical bump, an attacker can create multiple accounts per wallet and claim
@@ -392,7 +389,7 @@ Attacker claimed 129 times and got 1290 tokens
     ✔ Attacker can claim more than reward limit with insecure instructions (133840ms)
 ```
 
-#### 3. Create secure instructions
+### 3. Create secure instructions
 
 Let's demonstrate patching the vulnerability by creating two new instructions:
 
@@ -503,7 +500,7 @@ pub fn claim_secure(ctx: Context<SecureClaim>) -> Result<()> {
 }
 ```
 
-#### 4. Test secure instructions
+### 4. Test secure instructions
 
 Let's go ahead and write a test to show that the attacker can no longer claim
 more than once using the new instructions.
@@ -597,7 +594,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the same repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -608,7 +605,7 @@ derivations and checks are using the canonical bump.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=d3f6ca7a-11c8-421f-b7a3-d6c08ef1aa8b)!
-</Callout>

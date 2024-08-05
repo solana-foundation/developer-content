@@ -4,8 +4,6 @@ objectives:
   - Understand accounts and their addresses
   - Understand SOL and lamports
   - Use web3.js to connect to Solana and read an account balance
-description:
-  "Connect to Solana DevNet from TypeScript and read data from the blockchain!"
 ---
 
 ## Summary
@@ -21,7 +19,7 @@ description:
 
 ### Accounts
 
-All data on Solana is stored in accounts. Accounts can store:
+All data stored on Solana is stored in accounts. Accounts can store:
 
 - SOL
 - Other tokens, like USDC
@@ -31,9 +29,9 @@ All data on Solana is stored in accounts. Accounts can store:
 
 ### SOL
 
-SOL is Solana's 'native token' - this means SOL is used to pay transaction fees,
-rent for accounts, and other common. SOL is sometimes shown with the `◎` symbol.
-Each SOL is made from 1 billion **Lamports**.
+SOL is Solana's native token - SOL is used to pay transaction fees, pay rent for
+accounts, and more. SOL is sometimes shown with the `◎` symbol. Each SOL is made
+from 1 billion **Lamports**.
 
 In the same way that finance apps typically do math in cents (for USD) and pence
 (for GBP), Solana apps typically transfer, spend, store, and handle SOL as
@@ -125,12 +123,12 @@ The balance of the account at CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN is 0.
 
 ...and just like that, we are reading data from the Solana blockchain!
 
-## Lab
+# Lab
 
 Let’s practice what we’ve learned, and check the balance at a particular
 address.
 
-### Load a keypair
+## Load a keypair
 
 Remember the public key from the previous chapter.
 
@@ -139,7 +137,7 @@ Make a new file called `check-balance.ts`, substituting your public key for
 
 The script loads the public key, connects to DevNet, and checks the balance:
 
-```typescript
+```tsx
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 const publicKey = new PublicKey("<your public key>");
@@ -162,7 +160,7 @@ like:
 💰 Finished! The balance for the wallet at address 31ZdXAvhRQyzLC2L97PC6Lnf2yWgHhQUKKYoUo9MLQF5 is 0!
 ```
 
-### Get Devnet SOL
+## Get Devnet Sol
 
 In Devnet you can get free SOL to develop with. Think of Devnet SOL like board
 game money - it looks like it has value, but it doesn't have value.
@@ -172,7 +170,7 @@ keypair as the address.
 
 Pick any amount of SOL you like.
 
-### Check your balance
+## Check your balance
 
 Re-run the script. You should see your balance updated:
 
@@ -180,11 +178,11 @@ Re-run the script. You should see your balance updated:
 💰 Finished! The balance for the wallet at address 31ZdXAvhRQyzLC2L97PC6Lnf2yWgHhQUKKYoUo9MLQF5 is 0.5!
 ```
 
-### Check other student's balances
+## Check other student's balances
 
 You can modify the script to check balances on any wallet.
 
-```typescript
+```tsx
 import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 
 const suppliedPublicKey = process.argv[2];
@@ -214,7 +212,7 @@ Swap wallet addresses with your classmates in the chat and check their balances.
 
 And check a few of your classmate's balances.
 
-## Challenge
+# Challenge
 
 Modify the script as follows:
 
@@ -224,7 +222,7 @@ Modify the script as follows:
 
 We'll transfer SOL in the next lesson!
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=8bbbfd93-1cdc-4ce3-9c83-637e7aa57454)!
-</Callout>

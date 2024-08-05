@@ -6,20 +6,18 @@ objectives:
   - Use `@solana/web3.js` to send SOL
   - Use `@solana/web3.js` to sign transactions
   - Use Solana Explorer to view transactions
-description:
-  "Make your first transactions on DevNet, using the System and memo programs!"
 ---
 
-## Summary
+# Summary
 
 All modifications to onchain data happen through **transactions**. Transactions
 are mostly a set of instructions that invoke Solana programs. Transactions are
 atomic, meaning they either succeed - if all the instructions have been executed
 properly - or fail as if the transaction hasn't been run at all.
 
-## Lesson
+# Lesson
 
-### Transactions are atomic
+## Transactions are atomic
 
 Any modification to onchain data happens through transactions sent to programs.
 
@@ -38,7 +36,7 @@ and not debit your account, or debit the account but not pay the merchant.
 Atomic means either the transaction happens - meaning all the individual steps
 succeed - or the entire transaction fails.
 
-### Transactions contain instructions
+## Transactions contain instructions
 
 The steps within a transaction on Solana are called **instructions**.
 
@@ -55,8 +53,8 @@ instructions included in the transaction.
 
 As you might expect, `@solana/web3.js` provides helper functions for creating
 transactions and instructions. You can create a new transaction with the
-constructor, `new Transaction()`. Once created, you can add instructions to the
-transaction using the `add()` method.
+constructor, `new Transaction()`. Once created, then you can add instructions to
+the transaction with the `add()` method.
 
 One of those helper functions is `SystemProgram.transfer()`, which makes an
 instruction for the `SystemProgram` to transfer some SOL:
@@ -82,9 +80,9 @@ The `SystemProgram.transfer()` function requires:
 `SystemProgram.transfer()` returns the instruction for sending SOL from the
 sender to the recipient.
 
-The program used in this instruction will be the `system` program (at the
-address `11111111111111111111111111111111`), the data will be the amount of SOL
-to transfer (in Lamports) and the accounts will be based on the sender and
+The program used in this instruction will be the `system` program (at address
+`11111111111111111111111111111111`), the data will be the amount of SOL to
+transfer (in Lamports) and the accounts will be based on the sender and
 recipient.
 
 The instruction can then be added to the transaction.
@@ -105,7 +103,7 @@ The `sendAndConfirmTransaction()` function takes the following parameters:
 - an array of keypairs that will act as signers on the transaction - in this
   example, we only have one signer: the sender.
 
-### Transactions have fees
+## Transactions have fees
 
 Transaction fees are built into the Solana economy as compensation to the
 validator network for the CPU and GPU resources required in processing
@@ -133,16 +131,16 @@ await airdropIfRequired(
 );
 ```
 
-This will deposit 1 SOL into your account which you can use for testing. This
-won’t work on Mainnet where it would have value. But it's incredibly convenient
-for testing locally and on Devnet.
+This will deposit 1 SOL into your account if your balance is below 0.5 SOL,
+which you can use for testing. This won’t work on Mainnet where it would have
+value. But it's incredibly convenient for testing locally and on Devnet.
 
 You can also use the Solana CLI command `solana airdrop 1` to get free test SOL
 in your account when testing, whether locally or on devnet.
 
-### Solana Explorer
+## Solana Explorer
 
-![Solana Explorer set to Devnet](/public/assets/courses/unboxed/solana-explorer-devnet.png)
+![Solana Explorer set to Devnet](../assets/solana-explorer-devnet.png)
 
 All transactions on the blockchain are publicly viewable on the
 [Solana Explorer](http://explorer.solana.com). For example, you could take the
@@ -154,16 +152,16 @@ for that signature in the Solana Explorer, then see:
 - the transaction fee
 - and more!
 
-![Solana Explorer with details about a transaction](/public/assets/courses/unboxed/solana-explorer-transaction-overview.png)
+![Solana Explorer with details about a transaction](../assets/solana-explorer-transaction-overview.png)
 
-## Lab
+# Lab
 
 We’re going to create a script to send SOL to other students.
 
-### Basic scaffolding
+### 1. Basic scaffolding
 
 We'll start by using the same packages and `.env` file we made earlier in
-[Intro to Cryptography](/content/courses/intro-to-solana/intro-to-cryptography).
+[Intro to Cryptography](./intro-to-cryptography).
 
 Create a file called `transfer.ts`:
 
@@ -243,7 +241,7 @@ Send SOL to other students in the class.
 npx esrun transfer.ts (destination wallet address)
 ```
 
-## Challenge
+# Challenge
 
 Answer the following questions:
 
@@ -256,7 +254,7 @@ Answer the following questions:
 
 - What do you think "confirmed" means?
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=dda6b8de-9ed8-4ed2-b1a5-29d7a8a8b415)!
-</Callout>

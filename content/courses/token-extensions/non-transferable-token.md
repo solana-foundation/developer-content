@@ -4,19 +4,16 @@ objectives:
   - Create non-transferable token
   - Mint a non-transferable token
   - Attempt to transfer the non-transferable token
-description:
-  "Create tokens that can't be transferred. Certificates, identity, ticketing
-  and more."
 ---
 
-## Summary
+# Summary
 
 - In the original Token Program, creating non-transferrable (sometimes called
   "soul-bound") tokens is impossible
 - The Token Extension Program's `non-transferrable token` enables
   non-transferrable tokens
 
-## Overview
+# Overview
 
 In the Token Program, it's impossible to create a token that cannot be
 transferred away. While this may seem unimportant, there are several reasons one
@@ -33,7 +30,7 @@ Token Extension Program has the `non-transferable` extension which can be used
 to create non-transferable mints. These mints can be burned, but they can't be
 transferred.
 
-### Creating non-transferable mint account
+## Creating non-transferable mint account
 
 Initializing a non-transferable mint involves three instruction:
 
@@ -112,12 +109,12 @@ And that's it! You now have a mint account, that when minted, cannot be
 transferred. This extension gets more exciting when you mix it with the
 `metadata` and `metadata-pointer` extensions to create soul-bound NFTs.
 
-## Lab
+# Lab
 
 In this lab, we will create a non-transferable token and then see what happens
 when we try to transfer it (hint: it will fail the transfer).
 
-#### 1. Getting started
+### 1. Getting started
 
 To get started, create an empty directory named `non-transferable-token` and
 navigate to it. We'll be initializing a brand new project. Run `npm init` and
@@ -176,13 +173,13 @@ Go ahead and run the script. You should see the `mint` public key logged to your
 terminal.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 If you run into an error in `initializeKeypair` with airdropping, follow the
 next step.
 
-#### 2. Setting up dev environment (optional)
+### 2. Setting up dev environment (optional)
 
 If you are having issues with airdropping devnet SOL. You can either:
 
@@ -196,11 +193,11 @@ retrieve and use in our connection is the JSON RPC URL, which in this case is
 `http://127.0.0.1:8899`. We then use that in the connection to specify to use
 the local RPC URL.
 
-```typescript
+```tsx
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 ```
 
-#### 3. Create a non-transferable mint
+### 3. Create a non-transferable mint
 
 Let's create the function `createNonTransferableMint` in a new file
 `src/create-mint.ts`.
@@ -223,7 +220,7 @@ Inside the function, we'll call the following:
 - `createInitializeMintInstruction` - initializes the mint
 - `sendAndConfirmTransaction` - sends the transaction to the blockchain
 
-```typescript
+```tsx
 import {
   sendAndConfirmTransaction,
   Connection,
@@ -289,7 +286,7 @@ export async function createNonTransferableMint(
 Now let's invoke this function in `src/index.ts` to create the non-transferable
 mint:
 
-```typescript
+```tsx
 // CREATE MINT
 const decimals = 9;
 
@@ -299,14 +296,14 @@ await createNonTransferableMint(connection, payer, mintKeypair, decimals);
 The script should run with no errors
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 The non-transferable mint has been set up correctly and will be created when we
 run `npm start`. Let’s move on to the next step and create a source account and
 mint a token to it.
 
-#### 4. Mint token
+### 4. Mint token
 
 Let's test that we can't actually transfer tokens created from this mint. To do
 this, we need to mint a token to an account.
@@ -321,7 +318,7 @@ We can accomplish this in two functions:
 - `mintTo`: This function will mint an `amount` of tokens to the given token
   account.
 
-```typescript
+```tsx
 // CREATE PAYER ATA AND MINT TOKEN
 console.log("Creating an Associated Token Account...");
 const ata = (
@@ -361,10 +358,10 @@ console.log(
 Run the script and confirm a token has been minted to an account:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-#### 5. Attempt to transfer a non-transferable token
+### 5. Attempt to transfer a non-transferable token
 
 Lastly, let's try and actually transfer the token somewhere else. First we need
 to create a token account to transfer to, and then we want to try and transfer.
@@ -382,7 +379,7 @@ We can accomplish this in two functions:
 
 First, the `createAccount` function:
 
-```typescript
+```tsx
 // CREATE DESTINATION ACCOUNT FOR TRANSFER
 console.log("Creating a destination account...\n\n");
 const destinationKeypair = Keypair.generate();
@@ -399,7 +396,7 @@ const destinationAccount = await createAccount(
 
 Now, the `transferChecked` function:
 
-```typescript
+```tsx
 // TRY TRANSFER
 console.log("Attempting to transfer non-transferable mint...");
 try {
@@ -428,7 +425,7 @@ try {
 Now let's run everything and see what happens:
 
 ```
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 You should get an error message at the very end that says
@@ -450,7 +447,7 @@ That's it! We have successfully created a non-transferable mint. If you are
 stuck at any point, you can find the working code on the `solution` branch of
 [this repository](https://github.com/Unboxed-Software/solana-lab-non-transferable-token/tree/solution).
 
-## Challenge
+# Challenge
 
 For the challenge, create your own non-transferable token with the metadata
 extension and keep a “soulbound” NFT to yourself.

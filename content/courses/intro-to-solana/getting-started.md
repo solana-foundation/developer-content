@@ -5,7 +5,6 @@ objectives:
   - understand what Solana is
   - learn how this course is structured
   - know how to get the most from this course
-description: "Understand what web3, blockchains, and Solana are."
 ---
 
 ## Welcome!
@@ -70,24 +69,59 @@ Compared to older platforms like Bitcoin and Ethereum, Solana is:
 Many of the common use cases on Solana are only possible on Solana, due to the
 high costs and slow translation times of older blockchains.
 
+## What will I learn in this course?
+
+In this course, you'll:
+
+- Create web apps that allow people to log on using web3 wallets
+- Transfer tokens (like USDC, a token that represents US dollars) between people
+- Learn to integrate tools like Solana Pay into your existing apps
+- Build a film review application, that runs in real-time on the Solana
+  blockchain. You'll build both a web front-end and the onchain program and
+  database for the app.
+- Mint large-scale NFT collections
+
+And much more. We're keeping this course updated so as new tech joins the Solana
+ecosystem you'll find a course right here.
+
 ## What do I need before I start?
 
 You **don't** need previous blockchain experience, or Rust knowledge, to follow
 this course! You do need:
 
-- A Linux, Mac or Windows computer.
-  - Windows machines should have [Windows Terminal](https://aka.ms/terminal) and
-    [WSL](https://learn.microsoft.com/en-us/windows/wsl/) installed.
-  - Have [node.js](https://nodejs.org/en/download) 20 installed. Windows
-    machines should install node.js inside WSL2.
-- Basic TypeScript programming experience.
+- A Linux, Mac or Windows computer. Windows machines should have
+  [Windows Terminal](https://aka.ms/terminal) and
+  [WSL](https://learn.microsoft.com/en-us/windows/wsl/) installed.
+- Basic JavaScript / TypeScript programming experience. We'll also use some Rust
+  but we'll explain the Rust as we go.
 - Basic use of the command line
 - Basic use of git (either via the command line or your favorite GUI)
 
-## How do I use the course effectively?
+## How is this course structured?
 
-This course is broken down into individual lessons. Each lesson has three
-sections:
+There are two tracks:
+
+- **Client-side development** - building web and mobile apps that interact with
+  popular onchain Solana programs. These lessons cover things like token
+  transfers, minting, and creating clients for arbitrary programs. You will use
+  basic TypeScript skills for this track. If you want to add blockchain
+  payments, NFTs, blockchain provenance, etc. to your apps this is the best
+  track to start with.
+
+- **Onchain program development** - creating custom apps that run on the
+  blockchain. If you want to make a new finance or accounting app, use data from
+  outside Solana onchain, or use the blockchain to store arbitrary data, this
+  track is for you. You will use Rust for this track.
+
+Modules cover a particular topic. These are broken down into individual lessons.
+
+Each lesson starts by listing the lesson objectives - ie, what you'll be
+learning in the lesson.
+
+Then there's a brief 'Summary' so that you can glance through, get a sense of
+what the lesson covers, and decide if the lesson is for you or not.
+
+Then each lesson has three sections:
 
 - **Overview** - the overview contains explanatory text, examples, and code
   snippets. You are _not_ expected to code along with any of the examples shown
@@ -100,6 +134,8 @@ sections:
 
 - **Challenge** - another project, with just a few simple prompts that you
   should take and implement independently.
+
+## How do I use the course effectively?
 
 The lessons here are very effective, but everyone comes from different
 backgrounds and aptitudes that can't be taken into account by static content.

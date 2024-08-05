@@ -1,17 +1,11 @@
 ---
-title: Intro to Token Extensions
+title: Intro to Token Extensions Program
 objectives:
-  - Learn about the Token Extensions Program
-  - Understand that mints that use Token Extensions must be created with the
-    Token Extensions Program
-  - Learn about the wide variuety of token extensions
-  - Use token extensions from the Solana CLI
-description:
-  "Learn what token extensions are, and how to create tokens that use their
-  features."
+  - Learn about Token Extensions Program
+  - Learn about extensions
 ---
 
-## Summary
+# Summary
 
 - The existing Token Program on Solana provides interfaces for fungible and
   non-fungible tokens. However as new features have been needed, various forks
@@ -25,10 +19,10 @@ description:
   the original Token Program. It supports the exact same functions plus
   additional ones through extensions.
 
-## Overview
+# Overview
 
-The Token Extensions Program, previously know as Token 2022, is a superset of
-the functionality provided by the original Token Program. The Token Program
+The Token Extensions Program, also known internally as Token 2022, is a superset
+of the functionality provided by the original Token Program. The Token Program
 serves most needs for fungible and non-fungible tokens through a simple set of
 interfaces and structures. Though simple and performant, the Token Program
 lacked features that the developer community soon found need of. This
@@ -68,7 +62,7 @@ extensions. In this case, the original Token Program would be ever-so-slightly
 preferable to use since the program does not need to go through any of the
 additional extension checks.
 
-### Extensions
+## Extensions
 
 The extensions of the Token Extension Program are just that, extensions. Meaning
 any extra data needed for the extension is tagged at the end of the Mint and
@@ -90,14 +84,14 @@ accounts, and 12 on the Mint accounts:
   Accounts (ATAs). To avoid these issues, we can use this extension which makes
   it impossible to reassign account ownership.
 
-<Callout type="note">All Token Extension Program ATAs have the immutable
-ownership extension baked in. </Callout>
+  Note: All Token Extension Program ATAs have the immutable ownership extension
+  baked in.
 
 - **Default account state** Mint creators can use this extension which forces
   all new token accounts to be frozen. This way, users must eventually interact
   with some type of service to unfreeze their accounts and use the tokens.
 
-- **CPI guard** This extension safeguards users against authorizing actions that
+- **CPI Guard** This extension safeguards users against authorizing actions that
   are not visible to them, specifically targeting concealed programs that are
   neither the System nor Token programs. It does this by restricting certain
   activities within cross-program invocations.
@@ -113,8 +107,8 @@ ownership extension baked in. </Callout>
   However, the introduction of the close authority extension now allows for the
   closure of mint accounts as well.
 
-<Callout type="note">To close a mint account, the supply has to be 0. So all
-tokens minted must be burned. </Callout>
+  Note: To close a mint account, the supply has to be 0. So all tokens minted,
+  must be burned.
 
 - **Interest-bearing tokens** Tokens which have constantly fluctuating values,
   showing the updated values in clients requires proxies that require regular
@@ -173,12 +167,12 @@ tokens minted must be burned. </Callout>
 - **Confidential transfers** This extension enhances privacy of the transactions
   without revealing key details of the transaction such as the amount.
 
-<Callout type="note">These extensions can be mixes and matched to make a
-plethora of highly functional tokens. </Callout>
+Note: These extensions can be mixes and matched to make a plethora of highly
+functional tokens.
 
 We'll dig deeper into each extension in separate lessons.
 
-## Things to consider when working with both Token Program and Token Extension Program
+# Things to consider when working with both Token Program and Token Extension Program
 
 Although the interfaces for both of these programs remain consistent, they are
 two different programs. The program IDs of these programs are not
@@ -187,11 +181,11 @@ want to support both Token Program tokens and Token Extension Program tokens,
 you must add extra logic on the client side and program side. We will dive into
 these implementations in later lessons.
 
-## Lab
+# Lab
 
 Now, we will test out some of these extensions using the `spl-token-cli` CLI.
 
-#### 1. Getting Started
+### 1. Getting Started
 
 Before we can use the extensions, we need to install the `spl-token-cli`. Follow
 the instructions in [this guide](https://spl.solana.com/token#setup). After the
@@ -201,11 +195,11 @@ installation, verify it by running the following command:
 spl-token --version
 ```
 
-<Callout type="note">Make sure you follow each step in the
+Note: Make sure you follow each step in the
 [guide above](https://spl.solana.com/token#setup) as it also describes how to
-initialize a local wallet and airdrop SOL. </Callout>
+initialize a local wallet and airdrop SOL.
 
-#### 2. Creating a mint with close authority
+### 2. Creating a mint with close authority
 
 Let's create a mint account with the close authority extension, and then, to
 show that it works, we'll close the mint!
@@ -253,13 +247,13 @@ Now that we have a mint, we can close it with the following where
 spl-token close-mint <TOKEN_MINT_ADDRESS>
 ```
 
-<Callout type="note">By closing the account, we reclaim the rent lamports on the
-mint account. Remember, the supply on the mint must be zero.</Callout>
+Note: By closing the account, we reclaim the rent lamports on the mint account.
+Remember, the supply on the mint must be zero.
 
 As a challenge, repeat this process, but before closing the mint account, mint
 some tokens and then try to close it - see what happens. (Spoiler, it'll fail)
 
-#### 3. Creating a token account with immutable owner
+### 3. Creating a token account with immutable owner
 
 Let's test out another extension, a Token account extension this time. We'll
 create a new mint, and then we'll create an associated token account using the
@@ -346,7 +340,7 @@ Signature: 54yREwGCH8YfYXqEf6gRKGou681F8NkToAJZvJqM5qZETJokRkdTb8s8HVkKPeVMQQcc8
 Feel free to use the `spl-token display` command to get some info about the mint
 and token account.
 
-#### 4. Creating a non-transferrable ("soul-bound") NFT
+### 4. Creating a non-transferrable ("soul-bound") NFT
 
 Lastly, let's create an NFT which will be non-transferable, sometimes called a
 'soul-bound' NFT. Think of it as a achievement token which is exclusively owned
@@ -452,7 +446,7 @@ That's it! This is how we can use the Solana CLI with Token Extension Program to
 use the extensions. We will dive deeper into these extensions in separate
 lessons and see how we can use them programmatically.
 
-## Challenge
+# Challenge
 
 Go and try out different combinations of extensions using the CLI.
 

@@ -6,17 +6,14 @@ objectives:
   - Create associated token accounts
   - Mint tokens
   - Transfer tokens
-description:
-  "Understand how tokens - both regular tokens and NFTs - are created, stored,
-  and transferred on Solana. "
 ---
 
-### Summary
+# Summary
 
 - You may recall SOL is the 'native token' of Solana. All other tokens, fungible
-  and non-fungible tokens (NFTs), are called **SPL Tokens**.
+  and non-fungible tokens (NFTs), are called **SPL Tokens**
 - The **Token Program** contains instructions for creating and interacting with
-  SPL Tokens.
+  SPL Tokens
 - **Token Mints** are accounts that define a specific token. This includes
   information about the token itself (like how many decimals it has), the
   account allowed to mint more tokens (called the **mint authority**), and where
@@ -26,12 +23,10 @@ description:
   balances of each token mint are stored in **Associated Token Accounts** -
   accounts with addresses made from their wallet address and the token's mint.
 - Creating Token Mints and Token Accounts requires allocating **rent** in SOL.
-  The rent for a Token Account can be refunded when the account is closed.
-  Additionally, tokens created with the
-  [Token Extensions Program](/developers/courses/token-extensions-for-mints/close-mint)
-  can also close Token Mints.
+  The rent for a Token Account can be refunded when the account is closed,
+  however, Token Mints currently cannot be closed.
 
-### Lesson
+# Lesson
 
 The Token Program is one of many programs made available by the Solana Program
 Library (SPL). It contains instructions for creating and interacting with SPL
@@ -45,11 +40,12 @@ using the Token Program:
 2. Creating Token Accounts
 3. Minting
 4. Transferring tokens from one holder to another
+5. Burning tokens
 
 We'll be approaching this from the client side of the development process using
 the `@solana/spl-token` Javascript library.
 
-#### Token Mint
+## Token Mint
 
 To create a new SPL Token you first have to create a Token Mint. A Token Mint is
 an account that holds data about a specific token.
@@ -61,7 +57,7 @@ With the explorer, we can see the particular details about USDC's Token Mint
 such as the current supply of tokens, the addresses of the mint and freeze
 authorities, and the decimal precision of the token:
 
-![USDC Token Mint](/public/assets/courses/unboxed/token-program-usdc-mint.png)
+![USDC Token Mint](../assets/token-program-usdc-mint.png)
 
 To create a new Token Mint, you need to send the right transaction instructions
 to the Token Program. To do this, we'll use the `createMint` function from
@@ -144,7 +140,7 @@ the _same transaction_. If you were to do each step in a separate transaction,
 it's theoretically possible for somebody else to take the account you create and
 initialize it for their own mint.
 
-#### Rent and Rent Exemption
+### Rent and Rent Exemption
 
 Note that the first line in the function body of the previous code snippet
 contains a call to `getMinimumBalanceForRentExemptMint`, the result of which is
@@ -166,7 +162,7 @@ However, this concept applies to all accounts and you can use the more generic
 `getMinimumBalanceForRentExemption` method on `Connection` for other accounts
 you may need to create.
 
-#### Token Account
+## Token Account
 
 Before you can mint tokens (issue new supply), you need a Token Account to hold
 the newly issued tokens.
@@ -258,7 +254,7 @@ async function buildCreateTokenAccountTransaction(
 }
 ```
 
-#### Associated Token Accounts
+### Associated Token Accounts
 
 An Associated Token Account stores tokens in an address made from:
 
@@ -277,7 +273,7 @@ want it to be an Associated Token Account. Even if the user doesn't already have
 an ATA for that token, you can simply find the address and make the account for
 them.
 
-![ATAs are PDAs](/public/assets/courses/unboxed/atas-are-pdas.svg)
+![ATAs are PDAs](../assets/atas-are-pda.svg)
 
 You can create an associated token account using the `spl-token` library's
 `createAssociatedTokenAccount` function.
@@ -339,7 +335,7 @@ async function buildCreateAssociatedTokenAccountTransaction(
 }
 ```
 
-#### Mint Tokens
+## Mint Tokens
 
 Minting tokens is the process of issuing new tokens into circulation. When you
 mint tokens, you increase the supply of the token mint and deposit the newly
@@ -398,7 +394,7 @@ async function buildMintToTransaction(
 }
 ```
 
-#### Transfer Tokens
+## Transfer Tokens
 
 SPL Token transfers require both the sender and receiver to have token accounts
 for the mint of the tokens being transferred. The tokens are transferred from
@@ -455,19 +451,20 @@ async function buildTransferTransaction(
 }
 ```
 
-### Lab
+# Lab
 
-We’re going to use the Token Token Program to create a Token Mint, create an
-Associated Token Account, mint tokens, transfer tokens, and burn tokens.
+We’re going to use the Token Program to create a Token Mint, create an
+Associated Token Account, mint tokens, approve a delegate, transfer tokens, and
+burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
-[Cryptography fundamentals](/developers/courses/intro-to-solana/intro-to-cryptography).
+[Cryptography fundamentals](./intro-to-cryptography).
 
 ```bash
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
 ```
 
-#### Create the Token Mint
+### 1. Create the Token Mint
 
 Create an empty file called `create-token-mint.ts`. After loading our keypairs,
 we'll call `createMint()`, setting our `user` as the `payer`, `mintAuthority`,
@@ -494,8 +491,8 @@ console.log(
 );
 
 // This is a shortcut that runs:
-// SystemProgram.createAccount()
-// token.createInitializeMintInstruction()
+// SystemProgram.createAccount
+// token.createInitializeMintInstruction
 // See https://www.soldev.app/course/token-program
 const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
 
@@ -514,7 +511,7 @@ Open up Solana Explorer and look at your new token!
 
 Remember the address of the mint! We'll use this later.
 
-#### Make some token metadata
+### 2. Make some token metadata
 
 You'll notice our token account does not have a pretty symbol and shows up as
 'Unknown Token' in Explorer. That's because our token has no metadata! Let's add
@@ -558,13 +555,13 @@ const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
 );
 
-// Substitute in your token mint account
+// Subtitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
 const metadataData = {
   name: "Solana Training Token",
   symbol: "TRAINING",
-  // Arweave / IPFS / Pinata etc link using metaplex standard for offchain data
+  // Arweave / IPFS / Pinata etc link using metaplex standard for off-chain data
   uri: "https://arweave.net/1234",
   sellerFeeBasisPoints: 0,
   creators: null,
@@ -642,7 +639,7 @@ name they like. However for your reference, if you are making an original token
 that becomes very well known, Solana Explorer uses a whitelist based on the
 [Unified Token List API](https://github.com/solflare-wallet/utl-api).
 
-#### Create an Associated Token Account to store the tokens
+### 3. Create an Associated Token Account to store the tokens
 
 Now that we've created the mint, let's create a new Associated Token Account so
 that someone can store our tokens. This Associated Token Account could be for
@@ -671,7 +668,7 @@ console.log(
   `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
 );
 
-// Substitute in your token mint account from create-token-mint.ts
+// Subtitute in your token mint account from create-token-mint.ts
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT");
 
 // Here we are making an associated token account for our own address, but we can
@@ -707,7 +704,7 @@ Open the token account in Solana Explorer. Look at the owner - it's the account
 you made the ATA for! The balance will be zero, as we haven't sent any tokens
 there yet. Let's mint some tokens there and fix that!
 
-#### Mint Tokens
+### 4. Mint Tokens
 
 Now that we have a token mint and a token account, let's mint tokens to the
 token account. Recall that we set the `user` as the `mintAuthority` for the
@@ -731,7 +728,7 @@ const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
-// Substitute in your token mint account from create-token-mint.ts
+// Subtitute in your token mint account from create-token-mint.ts
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ACCOUNT");
 
 // Substitute in your own, or a friend's token account address, based on the previous step.
@@ -762,19 +759,19 @@ Run the script using `npx esrun mint-tokens.ts`. You should see:
 Open Explorer, and see the transaction and the new tokens in the recipient's
 account!
 
-#### Transfer Tokens
+### 5. Transfer Tokens
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
-[add a second account on devnet](/developers/courses/intro-to-solana/intro-to-cryptography)
-if you like, or find a friend who has a devnet account and send them your token!
+[add a second account on devnet](./intro-to-cryptography) if you like, or find a
+friend who has a devnet account and send them your token!
 
 As you saw in Explorer, the tokens currently reside in an Associated Token
 Account attached to our wallet. We don't have to remember the address for our
 associated token account - we can just look it up using
-`getOrCreateAssociatedTokenAccount()` and provide our wallet address and the
-mint of the token we want to send. Likewise, we can find (or make) an ATA for
-our recipient to hold this token too.
+`getOrCreateAssociatedTokenAccount()` and providing our address and the mint of
+the token we want to send. Likewise, we can find (or make) an ATA for our
+recipient to hold this token too.
 
 ```typescript
 import "dotenv/config";
@@ -795,7 +792,7 @@ console.log(
 // Add the recipient public key here.
 const recipient = new PublicKey("YOUR_RECIPIENT_HERE");
 
-// Substitute in your token mint account
+// Subtitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
 // Our token has two decimal places
@@ -836,23 +833,23 @@ console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}!`);
 Open the Explorer link. You see your balance go down, and the recipient's
 balance go up!
 
-### Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
-To interact with the Token Program using the wallet adapter, you will have to
-build each transaction and then submit the transaction to the wallet app for
-approval.
+Note that you will not be able to directly use the helper functions we went over
+in the lab. To interact with the Token Program using the Phantom wallet adapter,
+you will have to build each transaction manually and submit the transaction to
+Phantom for approval.
 
-![Token Program Challenge Frontend](/public/assets/courses/unboxed/token-program-frontend.png)
+![Token Program Challenge Frontend](../assets/token-program-frontend.png)
 
 1. You can build this from scratch or you can
    [download the starter code](https://github.com/Unboxed-Software/solana-token-frontend/tree/starter).
 2. Create a new Token Mint in the `CreateMint` component. If you need a
    refresher on how to send transactions to a wallet for approval, have a look
-   at the
-   [Wallets lesson](/developers/courses/intro-to-solana/interact-with-wallets).
+   at the [Wallets lesson](./interact-with-wallets).
 
 When creating a new mint, the newly generated `Keypair` will also have to sign
 the transaction. When additional signers are required in addition to the
@@ -872,10 +869,7 @@ If you get stumped, feel free to reference the
 
 And remember, get creative with these challenges and make them your own!
 
-<Callout type="success">
-
-### Completed the lab?
+## Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!
-</Callout>

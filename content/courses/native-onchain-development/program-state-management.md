@@ -9,11 +9,9 @@ objectives:
   - Use a Cross Program Invocation (CPI) to initialize an account with a PDA as
     the address of the new account
   - Explain how to update the data stored on a new account
-description:
-  "Learn how programs store data, using Solana's inbuilt -key-value store."
 ---
 
-## Summary
+# Summary
 
 - Program state is stored in other accounts rather than in the program itself
 - A Program Derived Address (PDA) is derived from a program ID and an optional
@@ -26,7 +24,7 @@ description:
 - Updating the data field on an account requires that we serialize (convert to
   byte array) the data into the account
 
-## Lesson
+# Lesson
 
 Solana maintains speed, efficiency, and extensibility in part by making programs
 stateless. Rather than having state stored on the program itself, programs use
@@ -41,7 +39,7 @@ In this lesson we'll learn the basics of state management for a Solana program,
 including representing state as a Rust type, creating accounts using Program
 Derived Addresses, and serializing account data.
 
-### Program state
+## Program state
 
 All Solana accounts have a `data` field that holds a byte array. This makes
 accounts as flexible as files on a computer. You can store literally anything in
@@ -52,7 +50,7 @@ PDF or MP3, the data stored in a Solana account needs to follow some kind of
 pattern so that the data can be retrieved and deserialized into something
 usable.
 
-#### Represent state as a Rust type
+### Represent state as a Rust type
 
 When writing a program in Rust, we typically create this "format" by defining a
 Rust data type. If you went through the
@@ -72,7 +70,7 @@ struct NoteState {
 }
 ```
 
-#### Using Borsh for serialization and deserialization
+### Using Borsh for serialization and deserialization
 
 Just as with instruction data, we need a mechanism for converting from our Rust
 data type to a byte array, and vice versa. **Serialization** is the process of
@@ -98,7 +96,7 @@ struct NoteState {
 These traits will provide methods on `NoteState` that we can use to serialize
 and deserialize the data as needed.
 
-### Creating accounts
+## Creating accounts
 
 Before we can update the data field of an account, we have to first create that
 account.
@@ -109,7 +107,7 @@ To create a new account within our program we must:
 2. Have an address to assign the new account
 3. Invoke the system program to create the new account
 
-#### Space and rent
+### Space and rent
 
 Recall that storing data on the Solana network requires users to allocate rent
 in the form of lamports. The amount of rent required by a new account depends on
@@ -148,7 +146,7 @@ let rent = Rent::get()?;
 let rent_lamports = rent.minimum_balance(account_len);
 ```
 
-#### Program Derived Addresses (PDA)
+### Program Derived Addresses (PDA)
 
 Before creating an account, we also need to have an address to assign the
 account. For program owned accounts, this will be a program derived address
@@ -180,7 +178,7 @@ to deterministically find the account for each note.
 let (note_pda_account, bump_seed) = Pubkey::find_program_address(&[note_creator.key.as_ref(), id.as_bytes().as_ref(),], program_id);
 ```
 
-#### Cross Program Invocation (CPI)
+### Cross Program Invocation (CPI)
 
 Once we’ve calculated the rent required for our account and found a valid PDA to
 assign as the address of the new account, we are finally ready to create the
@@ -235,14 +233,14 @@ invoke_signed(
 )?;
 ```
 
-### Serializing and deserializing account data
+## Serializing and deserializing account data
 
 Once we've created a new account, we need to access and update the account's
 data field. This means deserializing its byte array into an instance of the type
 we created, updating the fields on that instance, then serializing that instance
 back into a byte array.
 
-#### Deserialize account data
+### Deserialize account data
 
 The first step to updating an account's data is to deserialize its `data` byte
 array into its Rust type. You can do this by first borrowing the data field on
@@ -262,7 +260,7 @@ account_data.body = rating;
 account_data.id = id;
 ```
 
-#### Serialize account data
+### Serialize account data
 
 Once the Rust instance representing the account's data has been updated with the
 appropriate values, you can "save" the data on the account.
@@ -282,7 +280,7 @@ to the `data` property on `note_pda_account`. This saves the updated
 fetches the `note_pda_account` and deserializes the data, it will display the
 updated data we’ve serialized into the account.
 
-### Iterators
+## Iterators
 
 You may have noticed in the previous examples that we referenced `note_creator`
 and didn't show where that came from.
@@ -293,7 +291,7 @@ is a Rust trait used to give sequential access to each element in a collection
 of values. Iterators are used in Solana programs to safely iterate over the list
 of accounts passed into the program entry point through the `accounts` argument.
 
-#### Rust iterator
+### Rust iterator
 
 The iterator pattern allows you to perform some task on a sequence of items. The
 `iter()` method creates an iterator object that references a collection. An
@@ -316,7 +314,7 @@ let first_item = v1_iter.next();
 let second_item = v1_iter.next();
 ```
 
-#### Solana accounts iterator
+### Solana accounts iterator
 
 Recall that the `AccountInfo` for all accounts required by an instruction are
 passing through a single `accounts` argument. To parse through the accounts and
@@ -349,7 +347,7 @@ let note_pda_account = next_account_info(account_info_iter)?;
 let system_program = next_account_info(account_info_iter)?;
 ```
 
-## Lab
+# Lab
 
 This overview covered a lot of new concepts. Let’s practice them together by
 continuing to work on the Movie Review program from the last lesson. No worries
@@ -362,7 +360,7 @@ Last lesson, we deserialized the instruction data passed in by the user but we
 have not yet stored this data in an account. Let’s now update our program to
 create new accounts to store the user’s movie review.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can reference
@@ -373,7 +371,7 @@ the `instruction_data` passed into the program entry point. We have also
 completed `lib.rs` file to the point where we can print our deserialized
 instruction data to the program log using the `msg!` macro.
 
-#### 2. Create struct to represent account data
+### 2. Create struct to represent account data
 
 Let’s begin by creating a new file named `state.rs`.
 
@@ -408,7 +406,7 @@ pub struct MovieAccountState {
 }
 ```
 
-#### 3. Update `lib.rs`
+### 3. Update `lib.rs`
 
 Next, let’s update our `lib.rs` file. First, we’ll bring into scope everything
 we will need to complete our Movie Review program. You can read more about the
@@ -436,7 +434,7 @@ use state::MovieAccountState;
 use borsh::BorshSerialize;
 ```
 
-#### 4. Iterate through `accounts`
+### 4. Iterate through `accounts`
 
 Next, let’s continue building out our `add_movie_review` function. Recall that
 an array of accounts is passed into the `add_movie_review` function through a
@@ -454,7 +452,7 @@ let pda_account = next_account_info(account_info_iter)?;
 let system_program = next_account_info(account_info_iter)?;
 ```
 
-#### 5. Derive PDA
+### 5. Derive PDA
 
 Next, within our `add_movie_review` function, let’s independently derive the PDA
 we expect the user to have passed in. We'll need to provide the bump seed for
@@ -472,7 +470,7 @@ review movies with the same title.
 let (pda, bump_seed) = Pubkey::find_program_address(&[initializer.key.as_ref(), title.as_bytes().as_ref(),], program_id);
 ```
 
-#### 6. Calculate space and rent
+### 6. Calculate space and rent
 
 Next, let’s calculate the rent that our new account will need. Recall that rent
 is the amount of lamports a user must allocate to an account for storing data on
@@ -492,7 +490,7 @@ let rent = Rent::get()?;
 let rent_lamports = rent.minimum_balance(account_len);
 ```
 
-#### 7. Create new account
+### 7. Create new account
 
 Once we’ve calculated the rent and verified the PDA, we are ready to create our
 new account. To create a new account, we must call the `create_account`
@@ -518,7 +516,7 @@ invoke_signed(
 msg!("PDA created: {}", pda);
 ```
 
-#### 8. Update account data
+### 8. Update account data
 
 Now that we’ve created a new account, we are ready to update the data field of
 the new account using the format of the `MovieAccountState` struct from our
@@ -545,11 +543,11 @@ account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
 msg!("state account serialized");
 ```
 
-#### 9. Build and deploy
+### 9. Build and deploy
 
 We're ready to build and deploy our program!
 
-![Gif Build and Deploy Program](/public/assets/courses/unboxed/movie-review-pt2-build-deploy.gif)
+![Gif Build and Deploy Program](../assets/movie-review-pt2-build-deploy.gif)
 
 You can test your program by submitting a transaction with the right instruction
 data. For that, feel free to use
@@ -571,7 +569,7 @@ have a look at the
 [solution code](https://beta.solpg.io/62b23597f6273245aca4f5b4) before
 continuing.
 
-## Challenge
+# Challenge
 
 Now it’s your turn to build something independently. Equipped with the concepts
 intoduced in this lesson, you now know everything you'll need to recreate the
@@ -591,14 +589,14 @@ taking a name a short message as instruction data, the program should:
 You can test your program by building the
 [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend)
 we created in the
-[Page, Order, and Filter Program Data lesson](/content/courses/native-onchain-development/paging-ordering-filtering-data-frontend).
+[Page, Order, and Filter Program Data lesson](./paging-ordering-filtering-data).
 Remember to replace the program ID in the frontend code with the one you've
 deployed.
 
 Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62b11ce4f6273245aca4f5b2).
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=8320fc87-2b6d-4b3a-8b1a-54b55afed781)!
-</Callout>

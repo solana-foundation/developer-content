@@ -5,12 +5,9 @@ objectives:
   - Mint compressed NFTs using the Bubblegum TS SDK
   - Transfer compressed NFTs using the Bubblegum TS SDK
   - Read compressed NFT data using the Read API
-description:
-  "How to mint, transfer and read large-scale NFT collections using Metaplex's
-  Bubblegum SDK."
 ---
 
-## Summary
+# Summary
 
 - **Compressed NFTs (cNFTs)** use **State Compression** to hash NFT data and
   store the hash onchain in an account using a **concurrent Merkle tree**
@@ -23,7 +20,7 @@ description:
   Compression** program that enables you to more simply create, mint, and manage
   cNFT collections
 
-## Lesson
+# Lesson
 
 Compressed NFTs (cNFTs) are exactly what their name suggests: NFTs whose
 structure takes up less account storage than traditional NFTs. Compressed NFTs
@@ -43,7 +40,7 @@ that the developer experience between traditional NFTs and cNFTs will be
 negligible. But for now, you’ll still need to understand the low level puzzle
 pieces, so let’s dig in!
 
-### A theoretical overview of cNFTs
+## A theoretical overview of cNFTs
 
 Most of the costs associated with traditional NFTs come down to account storage
 space. Compressed NFTs use a concept called State Compression to store data in
@@ -86,7 +83,7 @@ state compression lesson and focus primarily on application to NFTs in this
 lesson. You’ll be able to work with cNFTs by the end of this lesson even if you
 don’t fully understand every piece of the state compression puzzle.
 
-#### Concurrent Merkle trees
+### Concurrent Merkle trees
 
 A **Merkle tree** is a binary tree structure represented by a single hash. Every
 leaf node in the structure is a hash of its inner data while every branch is a
@@ -142,7 +139,7 @@ expression true: `2^maxDepth > 1million`. The answer is 20.
 Choosing a max buffer size is effectively a question of throughput: how many
 concurrent writes do you need.
 
-#### SPL State Compression and Noop Programs
+### SPL State Compression and Noop Programs
 
 The SPL State Compression Program exists to make the above process repeatable
 and composable throughout the Solana ecosystem. It provides instructions for
@@ -153,7 +150,7 @@ The State Compression Program also leverages a separate “no op” program whos
 primary purpose is to make leaf data easier to index by logging it to the ledger
 state.
 
-#### Use the Ledger State for storage
+### Use the Ledger State for storage
 
 The Solana ledger is a list of entries containing signed transactions. In
 theory, this can be traced back to the genesis block. This effectively means any
@@ -165,7 +162,7 @@ hash is then stored in the corresponding concurrent Merkle tree. Since the data
 passed through a transaction and even exists on the Noop program logs, it will
 forever exist on the ledger state.
 
-#### Index data for easy lookup
+### Index data for easy lookup
 
 Under normal conditions, you would typically access onchain data by fetching the
 appropriate account. When using state compression, however, it’s not so
@@ -189,7 +186,7 @@ Instead, you should use an indexer that will observe the events sent to the Noop
 program and store the relevant data off chain. That way you don’t need to worry
 about old data becoming inaccessible.
 
-### Create a cNFT Collection
+## Create a cNFT Collection
 
 With the theoretical background out of the way, let’s turn our attention to the
 main point of this lesson: how to create a cNFT collection.
@@ -205,7 +202,7 @@ program, and the Bubblegum program’s corresponding TS SDK
 
 </aside>
 
-#### Prepare metadata
+### Prepare metadata
 
 Prior to starting, you’ll prepare your NFT metadata similarly to how you would
 if you were using a Candy Machine. At its core, an NFT is simply a token with
@@ -241,7 +238,7 @@ might want to have a JSON file prepared for each cNFT beforehand. You’ll also
 need any other assets referenced by the JSON, such as the `image` url shown in
 the example above.
 
-#### Create Collection NFT
+### Create Collection NFT
 
 If you want your cNFTs to be part of a collection, you’ll need to create a
 Collection NFT **before** you start minting cNFTs. This is a traditional NFT
@@ -249,7 +246,7 @@ that acts as the reference binding your cNFTs together into a single collection.
 You can create this NFT using the `@metaplex-foundation/js` library. Just make
 sure you set `isCollection` to `true`.
 
-```typescript
+```tsx
 const collectionNft = await metaplex.nfts().create({
   uri: someUri,
   name: "Collection NFT",
@@ -263,7 +260,7 @@ const collectionNft = await metaplex.nfts().create({
 });
 ```
 
-#### Create Merkle tree Account
+### Create Merkle tree Account
 
 Now we start to deviate from the process you would use when creating traditional
 NFTs. The onchain storage mechanism you use for state compression is an account
@@ -338,7 +335,7 @@ Once you know these values, you can use the `createAllocTreeIx` helper function
 from the `@solana/spl-account-compression` TS SDK to create the instruction for
 creating the empty account.
 
-```typescript
+```tsx
 import { createAllocTreeIx } from "@solana/spl-account-compression"
 
 const treeKeypair = Keypair.generate()
@@ -357,7 +354,7 @@ the account and creating the instruction to send to the System Program for
 allocating the account. This function doesn’t interact with any
 compression-specific programs yet.
 
-#### Use Bubblegum to Initialize Your Tree
+### Use Bubblegum to Initialize Your Tree
 
 With the empty tree account created, you then use the Bubblegum program to
 initialize the tree. In addition to the Merkle tree account, Bubblegum creates a
@@ -369,7 +366,7 @@ instruction on the Bubblegum program. As part of the call, you’ll need to deri
 the `treeAuthority` PDA expected by the program. This PDA uses the tree’s
 address as a seed.
 
-```typescript
+```tsx
 import {
 	createAllocTreeIx,
 	SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
@@ -439,7 +436,7 @@ program. This instruction does three things:
 Feel free to take a look at the program code
 [here](https://github.com/metaplex-foundation/mpl-bubblegum/blob/main/programs/bubblegum/program/src/lib.rs#L887).
 
-#### Mint cNFTs
+### Mint cNFTs
 
 With the Merkle tree account and its corresponding Bubblegum tree config account
 initialized, it’s possible to mint cNFTs to the tree. The Bubblegum instruction
@@ -454,7 +451,7 @@ Both functions will require you to pass in the NFT metadata and a list of
 accounts required to mint the cNFT. Below is an example of minting to a
 collection:
 
-```typescript
+```tsx
 const mintWithCollectionIx = createMintToCollectionV1Instruction(
   {
     payer: payer.publicKey,
@@ -517,7 +514,7 @@ Minting without a collection requires fewer accounts, none of which are
 exclusive to minting without a collection. You can take a look at the example
 below.
 
-```typescript
+```tsx
 const mintWithoutCollectionIx = createMintV1Instruction(
   {
     payer: payer.publicKey,
@@ -535,16 +532,16 @@ const mintWithoutCollectionIx = createMintV1Instruction(
 );
 ```
 
-### Interact with cNFTs
+## Interact with cNFTs
 
 It’s important to note that cNFTs _are not_ SPL tokens. That means your code
 needs to follow different conventions to handle cNFT functionality like
 fetching, querying, transferring, etc.
 
-#### Fetch cNFT data
+### Fetch cNFT data
 
 The simplest way to fetch data from an existing cNFT is to use the
-[Digital Asset Standard Read API](https://solana.com/developers/guides/javascript/compressed-nfts#reading-compressed-nfts-metadata)
+[Digital Asset Standard Read API](https://docs.solana.com/developing/guides/compressed-nfts#reading-compressed-nfts-metadata)
 (Read API). Note that this is separate from the standard JSON RPC. To use the
 Read API, you’ll need to use a supporting RPC Provider. Metaplex maintains a
 (likely non-exhaustive)
@@ -588,7 +585,7 @@ For simplicity, you can just use the `getLeafAssetId` helper function from the
 Bubblegum SDK. With the asset ID, fetching the cNFT is fairly straightforward.
 Simply use the `getAsset` method provided by the supporting RPC provider:
 
-```typescript
+```tsx
 const assetId = await getLeafAssetId(treeAddress, new BN(leafIndex));
 const response = await fetch(process.env.RPC_URL, {
   method: "POST",
@@ -612,7 +609,7 @@ on- and off-chain metadata would look like combined. For example, you can find
 the cNFT attributes at `content.metadata.attributes` or the image at
 `content.files.uri`.
 
-#### Query cNFTs
+### Query cNFTs
 
 The Read API also includes ways to get multiple assets, query by owner, creator,
 and more. For example, Helius supports the following methods:
@@ -630,7 +627,7 @@ We won’t go over most of these directly, but be sure to look through the
 [Helius docs](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
 to learn how to use them correctly.
 
-#### Transfer cNFTs
+### Transfer cNFTs
 
 Just as with a standard SPL token transfer, security is paramount. An SPL token
 transfer, however, makes verifying transfer authority very easy. It’s built into
@@ -666,7 +663,7 @@ The first two steps are very similar. Using your supporting RPC provider, use
 the `getAsset` and `getAssetProof` methods to fetch the asset data and proof,
 respectively.
 
-```typescript
+```tsx
 const assetDataResponse = await fetch(process.env.RPC_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -700,7 +697,7 @@ The third step is to fetch the Merkle tree account. The simplest way to do this
 is using the `ConcurrentMerkleTreeAccount` type from
 `@solana/spl-account-compression`:
 
-```typescript
+```tsx
 const treePublicKey = new PublicKey(assetData.compression.tree);
 
 const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
@@ -719,7 +716,7 @@ The full proof is provided by the indexer as shown above in `assetProof`.
 However, you can exclude the same number of tail-end accounts from the proof as
 the depth of the canopy.
 
-```typescript
+```tsx
 const canopyDepth = treeAccount.getCanopyDepth() || 0;
 
 const proofPath: AccountMeta[] = assetProof.proof
@@ -764,7 +761,7 @@ An example of this is shown below. Note that the first 3 lines of code grab
 additional information nested in the objects shown previously so they are ready
 to go when assembling the instruction itself.
 
-```typescript
+```tsx
 const treeAuthority = treeAccount.getAuthority();
 const leafOwner = new PublicKey(assetData.ownership.owner);
 const leafDelegate = assetData.ownership.delegate
@@ -796,7 +793,7 @@ const transferIx = createTransferInstruction(
 );
 ```
 
-### Conclusion
+## Conclusion
 
 We’ve covered the primary skills needed to interact with cNFTs, but haven’t been
 fully comprehensive. You can also use Bubblegum to do things like burn, verify,
@@ -812,13 +809,13 @@ same. These principles can also be broadened to arbitrary state compression, so
 be sure to master them here so you’re ready for more fun stuff in future
 lessons!
 
-## Lab
+# Lab
 
 Let’s jump in and practice creating and working with cNFTs. Together, we’ll
 build as simple a script as possible that will let us mint a cNFT collection
 from a Merkle tree.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
 First things first, clone the starter code from the `starter` branch of our
 [cNFT lab repository](https://github.com/Unboxed-Software/solana-cnft-demo).
@@ -858,7 +855,7 @@ connection, calls `getOrCreateKeypair` to initialize a “wallet,” and calls
 
 We will be writing all of our code in the `index.ts`.
 
-#### 2. Create the Merkle tree account
+### 2. Create the Merkle tree account
 
 We’ll start by creating the Merkle tree account. Let’s encapsulate this in a
 function that will eventually create _and_ initialize the account. We’ll put it
@@ -872,12 +869,12 @@ parameters:
   `@solana/spl-account-compression`. It’s a simple object with properties
   `maxDepth` and `maxBufferSize` that enforces a valid combination of the two
   values.
-- `canopyDepth` - a number for the canopy depth In the body of the function,
-  we’ll generate a new address for the tree, then create the instruction for
-  allocating a new Merkle tree account by calling `createAllocTreeIx` from
-  `@solana/spl-account-compression`.
+- `canopyDepth` - a number for the canopy depth
+  In the body of the function, we’ll generate a new address for the tree, then
+  create the instruction for allocating a new Merkle tree account by calling
+  `createAllocTreeIx` from `@solana/spl-account-compression`.
 
-```typescript
+```tsx
 async function createAndInitializeTree(
   connection: Connection,
   payer: Keypair,
@@ -896,7 +893,7 @@ async function createAndInitializeTree(
 }
 ```
 
-#### 3. Use Bubblegum to initialize the Merkle tree and create the tree config account
+### 3. Use Bubblegum to initialize the Merkle tree and create the tree config account
 
 With the instruction for creating the tree ready to go, we can create an
 instruction for invoking `create_tree` on the Bubblegum program. This will
@@ -925,7 +922,7 @@ Finally, we can add both instructions to a transaction and submit the
 transaction. Keep in mind that the transaction needs to be signed by both the
 `payer` and the `treeKeypair`.
 
-```typescript
+```tsx
 async function createAndInitializeTree(
   connection: Connection,
   payer: Keypair,
@@ -993,7 +990,7 @@ If you want to test what you have so far, feel free to call
 `createAndInitializeTree` from `main` and provide small values for the max depth
 and max buffer size.
 
-```typescript
+```tsx
 async function main() {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const wallet = await getOrCreateKeypair("Wallet_1");
@@ -1021,7 +1018,7 @@ run the following:
 
 `npm run start`
 
-#### 4. Mint cNFTs to your tree
+### 4. Mint cNFTs to your tree
 
 Believe it or not, that’s all you needed to do to set up your tree to compressed
 NFTs! Now let’s turn our attention to minting.
@@ -1084,7 +1081,7 @@ them real quick:
 
 When you put it all together, this is what it’ll look like:
 
-```typescript
+```tsx
 async function mintCompressedNftToCollection(
   connection: Connection,
   payer: Keypair,
@@ -1164,7 +1161,7 @@ async function mintCompressedNftToCollection(
 This is a great point to test with a small tree. Simply update `main` to call
 `getOrCreateCollectionNFT` then `mintCompressedNftToCollection`:
 
-```typescript
+```tsx
 async function main() {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const wallet = await getOrCreateKeypair("Wallet_1");
@@ -1198,7 +1195,7 @@ async function main() {
 
 Again, to run, in your terminal type: `npm run start`
 
-#### 5. Read existing cNFT data
+### 5. Read existing cNFT data
 
 Now that we’ve written code to mint cNFTs, let’s see if we can actually fetch
 their data. This is tricky because the onchain data is just the Merkle tree
@@ -1218,22 +1215,22 @@ the leaf indexes used were 0-7. With this, we can use the `getLeafAssetId`
 function from `@metaplex-foundation/mpl-bubblegum` to get the asset ID.
 
 Finally, we can use an RPC that supports the
-[Read API](https://solana.com/developers/guides/javascript/compressed-nfts) to
-fetch the asset. We’ll be using
+[Read API](https://docs.solana.com/developing/guides/compressed-nfts#reading-compressed-nfts-metadata)
+to fetch the asset. We’ll be using
 [Helius](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api),
 but feel free to choose your own RPC provider. To use Helius, you’ll need to get
-a free API Key from [the Helius website](https://dev.helius.xyz/). Then add your
+a free API Key from [their website](https://dev.helius.xyz/). Then add your
 `RPC_URL` to your `.env` file. For example:
 
 ```bash
-## Add this
+# Add this
 RPC_URL=https://devnet.helius-rpc.com/?api-key=YOUR_API_KEY
 ```
 
 Then simply issue a POST request to your provided RPC URL and put the `getAsset`
 information in the body:
 
-```typescript
+```tsx
 async function logNftDetails(treeAddress: PublicKey, nftsMinted: number) {
   for (let i = 0; i < nftsMinted; i++) {
     const assetId = await getLeafAssetId(treeAddress, new BN(i));
@@ -1362,7 +1359,7 @@ owner, creator, etc., and more. Be sure to look through the
 [Helius docs](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
 to see what’s available.
 
-#### 6. Transfer a cNFT
+### 6. Transfer a cNFT
 
 The last thing we’re going to add to our script is a cNFT transfer. Just as with
 a standard SPL token transfer, security is paramount. Unlike with a standard SPL
@@ -1392,7 +1389,7 @@ Let’s start by declaring a `transferNft` function that takes the following:
 Inside that function, let’s fetch the asset data again then also fetch the asset
 proof. For good measure, let’s wrap everything in a `try catch`.
 
-```typescript
+```tsx
 async function transferNft(
   connection: Connection,
   assetId: PublicKey,
@@ -1439,7 +1436,7 @@ and assemble the proof path. We do this by mapping the asset proof we got from
 Helius to a list of `AccountMeta` objects, then removing any proof nodes at the
 end that are already cached onchain in the canopy.
 
-```typescript
+```tsx
 async function transferNft(
   connection: Connection,
   assetId: PublicKey,
@@ -1476,7 +1473,7 @@ Finally, we build the instruction using `createTransferInstruction`, add it to a
 transaction, then sign and send the transaction. This is what the entire
 `transferNft` function looks like when finished:
 
-```typescript
+```tsx
 async function transferNft(
   connection: Connection,
   assetId: PublicKey,
@@ -1584,7 +1581,7 @@ using `getLeafAssetId`. Then we’ll do the transfer. Finally, we’ll print out
 entire collection using our function `logNftDetails`. You’ll note that the NFT
 at index zero will now belong to our new wallet in the `ownership` field.
 
-```typescript
+```tsx
 async function main() {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const wallet = await getOrCreateKeypair("Wallet_1");
@@ -1635,16 +1632,14 @@ Congratulations! Now you know how to mint, read, and transfer cNFTs. If you
 wanted, you could update the max depth, max buffer size, and canopy depth to
 larger values and as long as you have enough Devnet SOL, this script will let
 you mint up to 10k cNFTs for a small fraction of what it would cost to mint 10k
-traditional NFTs.
-
-<Callout type="note">If you plan to mint a large amount of NFTs you might want
-to try and batch these instructions for fewer total transactions.</Callout>
+traditional NFTs (Note: if you plan to mint a large amount of NFTs you might
+want to try and batch these instructions for fewer total transactions).
 
 If you need more time with this lab, feel free to go through it again and/or
 take a look at the solution code on the `solution` branch of the
 [lab repo](https://github.com/Unboxed-Software/solana-cnft-demo/tree/solution).
 
-### Challenge
+## Challenge
 
 It’s your turn to take these concepts for a spin on your own! We’re not going to
 be overly prescriptive at this point, but here are some ideas:
@@ -1654,7 +1649,7 @@ be overly prescriptive at this point, but here are some ideas:
 3. See if you can replicate some of the lab script’s functionality in an onchain
    program, i.e. write a program that can mint cNFTs
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=db156789-2400-4972-904f-40375582384a)!
-</Callout>

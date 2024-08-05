@@ -4,11 +4,9 @@ objectives:
   - Create transfer fee configured mint
   - Transfer tokens of that mint
   - Collect fees for the transfer
-description:
-  "Create a token that allows a fee to be charged each time the token is traded."
 ---
 
-## Summary
+# Summary
 
 - The Token Extension Program's `transfer fee` extension allows fees to be
   withheld on every transfer. These fees are held on the recipient's account,
@@ -18,7 +16,7 @@ description:
 - Transfers with mints using the `transfer fee` extension need to use the
   `transferCheckedWithFee` instruction
 
-## Overview
+# Overview
 
 Suppose you're a Solana game developer and you're making a large open world
 multiplayer role playing game. You'll have a currency in this game that all the
@@ -45,7 +43,7 @@ that we'll delve into a bit later:
 - Withdraw withheld authority: The entity that can move tokens withheld on the
   mint or token accounts.
 
-### Calculating fee basis points
+## Calculating fee basis points
 
 Before we go into the extension, here's a quick intro to "fee basis points".
 
@@ -55,14 +53,12 @@ point is equivalent to 0.01% or 0.0001 in decimal form.
 
 To get the fee we must calculate it as follows:
 
-```
-Fee = (token_amount * fee_basis_points) / 10000
-```
+$$ Fee = {token_amount \* fee_basis_points \over 10000} $$
 
 The constant 10,000 is used to convert the fee basis point percentage to the
 equivalent amount.
 
-### Configuring a mint with a transfer fee
+## Configuring a mint with a transfer fee
 
 Initializing a mint with the `transfer fee` extension involves three
 instructions:
@@ -153,7 +149,7 @@ const signature = await sendAndConfirmTransaction(
 );
 ```
 
-### Transferring mint with transfer fees
+## Transferring mint with transfer fees
 
 There are a couple of notes when transferring tokens with the `transfer fee`
 extension.
@@ -225,7 +221,7 @@ const secondTransferSignature = await transferChecked(
 );
 ```
 
-### Collecting fees
+## Collecting fees
 
 There are two ways to "collect fees" from the withheld portion of the token
 accounts.
@@ -260,7 +256,7 @@ transfer fees within the recipient's account - this way, only the sender and
 receiver's accounts are writable. Then the `withdrawWithheldAuthority` can
 withdraw to the fee vault anytime after.
 
-#### Directly withdrawing fees
+### Directly withdrawing fees
 
 In the first case, If we want to withdraw all withheld transfer fees from all
 token accounts directly we can do the following:
@@ -330,7 +326,7 @@ await withdrawWithheldTokensFromAccounts(
 );
 ```
 
-#### Harvesting fees
+### Harvesting fees
 
 The second approach we call "harvesting" - this is a permissionless function
 meaning anyone can call it. This approach is great for "cranking" the harvest
@@ -393,7 +389,7 @@ await withdrawWithheldTokensFromMint(
 );
 ```
 
-### Updating fees
+## Updating fees
 
 As of right now there is no way to set the transfer fee post
 [creation with the JS library](https://solana.stackexchange.com/questions/7775/spl-token-2022-how-to-modify-transfer-fee-configuration-for-an-existing-mint).
@@ -402,11 +398,11 @@ the `transferFeeConfigAuthority`:
 
 ```bash
 solana address
-## The result of ^ needs to be the `transferFeeConfigAuthority`
+# The result of ^ needs to be the `transferFeeConfigAuthority`
 spl-token set-transfer-fee <MINT_ID> <FEE_IN_BASIS_POINTS> <MAX_FEE>
 ```
 
-### Updating authorities
+## Updating authorities
 
 If you'd like to change the `transferFeeConfigAuthority` or the
 `withdrawWithheldAuthority` you can with the `setAuthority` function. Just pass
@@ -443,13 +439,13 @@ await setAuthority(
 );
 ```
 
-## Lab
+# Lab
 
 In this lab, we are going to create a transfer fee configured mint. We'll use a
 fee vault to hold the transfer fees, and we'll collect the fees using both the
 direct and the harvesting methods.
 
-#### 1. Getting started
+### 1. Getting started
 
 To get started, create an empty directory named `transfer-fee` and navigate to
 it. We'll be initializing a brand new project. Run `npm init` and follow through
@@ -515,13 +511,13 @@ Go ahead and run the script. You should see the `mint` public key logged to your
 terminal.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 If you run into an error in `initializeKeypair` with airdropping, follow the
 next step.
 
-#### 2. Run validator node
+### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -542,14 +538,7 @@ Alternatively, if you’d like to use testnet or devnet, import the
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 ```
 
-If you decide to use devnet, and have issues with airdropping SOL. Feel free to
-add the `keypairPath` parameter to `initializeKeypair`. You can get this from
-running `solana config get` in your terminal. And then go to
-[faucet.solana.com](https://faucet.solana.com/) and airdrop some sol to your
-address. You can get your address from running `solana address` in your
-terminal.
-
-#### 3. Create a mint with transfer fee
+### 3. Create a mint with transfer fee
 
 Let's create a function `createMintWithTransferFee` in a new file
 `src/create-mint.ts`.
@@ -662,10 +651,10 @@ await createMintWithTransferFee(
 Run the script to make sure it's working so far.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-#### 4. Create a fee vault account
+### 4. Create a fee vault account
 
 Before we transfer any tokens and accrue transfer fees, let's create a "fee
 vault" that will be the final recipient of all transfer fees.
@@ -696,10 +685,10 @@ console.log("Current fee vault balance: " + initialBalance + "\n\n");
 Let's run the script again, we should have a zero balance.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-#### 5. Create two token accounts and mint to one
+### 5. Create two token accounts and mint to one
 
 Let's now create two test token accounts we'll call the `source` and
 `destination` accounts. Then let's mint some tokens to the `source`.
@@ -756,10 +745,10 @@ await mintTo(
 If you'd like, run the script to check that everything is working:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
-#### 6. Transfer one token
+### 6. Transfer one token
 
 Now, let's transfer 1 token from our `sourceAccount` to our `destinationAccount`
 and see what happens.
@@ -848,7 +837,7 @@ console.log(
 Go ahead and run the script:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 You should get the following:
@@ -867,9 +856,9 @@ used as a fee. In this case 10% of 1,000,000,000 is 100,000,000, which is way
 bigger than our 5000 max fee. So that's why we see 5000 withheld. Additionally,
 note that the receiver is the one who "pays" for the transfer fee.
 
-<Callout type="note">From now on, to calculate fees, you may want to use the
-`calculateFee` helper function. We did it manually for demonstration purposes.
-The following is one way to accomplish this:
+Note: From now on, to calculate fees, you may want to use the `calculateFee`
+helper function. We did it manually for demonstration purposes. The following is
+one way to accomplish this:
 
 ```ts
 const transferAmount = BigInt(1 * 10 ** decimals);
@@ -886,9 +875,7 @@ const fee = calculateFee(
 );
 ```
 
-</Callout>
-
-#### 7. Withdrawing fees
+### 7. Withdrawing fees
 
 There are two ways in which we can collect fees from the recipient's account
 into the fee vault. The first one is withdrawing the withheld fees directly from
@@ -898,7 +885,7 @@ fees from the recipient's account to the mint with `harvestWithheldTokensToMint`
 and then withdrawing it from the mint to the fee vault account with
 `withdrawWithheldTokensFromMint`.
 
-#### 7.1 Withdraw fees directly from the recipient accounts
+### 7.1 Withdraw fees directly from the recipient accounts
 
 First, let's withdraw the fees directly. We can accomplish this by calling
 `withdrawWithheldTokensFromAccounts`. This is a permissioned function, meaning
@@ -964,7 +951,7 @@ console.log(
 Go ahead and run the script:
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 You should get the following:
@@ -974,9 +961,9 @@ Withheld amount after withdraw: 0
 Fee vault balance after withdraw: 5000
 ```
 
-<Callout type="note">The `withdrawWithheldTokensFromAccounts` can also be used
-to collect all fees from all token accounts, if you fetch them all first.
-Something like the following would work:
+Note: the `withdrawWithheldTokensFromAccounts` can also be used to collect all
+fees from all token accounts, if you fetch them all first. Something like the
+following would work:
 
 ```ts
 const accounts = await connection.getProgramAccounts(TOKEN_2022_PROGRAM_ID, {
@@ -1021,9 +1008,7 @@ await withdrawWithheldTokensFromAccounts(
 );
 ```
 
-</Callout>
-
-#### 7.2 Harvest and then withdraw
+### 7.2 Harvest and then withdraw
 
 Let's look at the second option to retrieving the withheld fees: "harvesting".
 The difference here is that instead of withdrawing the fees directly, we
@@ -1202,7 +1187,7 @@ console.log(
 Now, let's run it.
 
 ```bash
-esrun src/index.ts
+npx esrun src/index.ts
 ```
 
 You should see the balances after every step of the way.
@@ -1211,7 +1196,7 @@ That's it! We have successfully created a mint with a transfer fee. If you get
 stuck at any point, you can find the working code in the `solution` branch of
 [this repository](https://github.com/Unboxed-Software/solana-lab-transfer-fee/tree/solution).
 
-#### Challenge
+### Challenge
 
 Create a transfer fee enabled mint and transfer some tokens with different
 decimals, fee transfer points and max fees.

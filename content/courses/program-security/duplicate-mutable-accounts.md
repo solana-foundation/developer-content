@@ -5,12 +5,9 @@ objectives:
     mutable accounts of the same type and how to avoid them
   - Implement a check for duplicate mutable accounts using long-form Rust
   - Implement a check for duplicate mutable accounts using Anchor constraints
-description:
-  "Under vulnerabilities that can occur with instruction handlers that handle
-  two mutable accounts, and how to mitigate them."
 ---
 
-## Summary
+# Summary
 
 - When an instruction requires two mutable accounts of the same type, an
   attacker can pass in the same account twice, causing the account to be mutated
@@ -27,7 +24,7 @@ description:
 - In Anchor, you can use `constraint` to add an explicit constraint to an
   account checking that it is not the same as another account.
 
-## Lesson
+# Lesson
 
 Duplicate Mutable Accounts refers to an instruction that requires two mutable
 accounts of the same type. When this occurs, you should validate that two
@@ -40,7 +37,7 @@ could result in very minor issues, or catastrophic ones - it really depends on
 what data the code changes and how these accounts are used. Regardless, this is
 a vulnerability all developers should be aware of.
 
-#### No check
+### No check
 
 For example, imagine a program that updates a `data` field for `user_a` and
 `user_b` in a single instruction. The value that the instruction sets for
@@ -88,7 +85,7 @@ pub struct User {
 }
 ```
 
-#### Add check in instruction
+### Add check in instruction
 
 To fix this problem with plan Rust, simply add a check in the instruction logic
 to verify that the public key of `user_a` isn't the same as the public key of
@@ -136,7 +133,7 @@ pub struct User {
 }
 ```
 
-#### Use Anchor `constraint`
+### Use Anchor `constraint`
 
 An even better solution if you're using Anchor is to add the check to the
 account validation struct instead of the instruction logic.
@@ -181,7 +178,7 @@ pub struct User {
 }
 ```
 
-## Lab
+# Lab
 
 Let’s practice by creating a simple Rock Paper Scissors program to demonstrate
 how failing to check for duplicate mutable accounts can cause undefined behavior
@@ -199,7 +196,7 @@ scissors.
   `rock_paper_scissors_shoot_insecure` instruction but adds a constraint that
   ensures the two player accounts are different
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code on the `starter` branch
 of [this repository](https://github.com/unboxed-software/solana-duplicate-mutable-accounts/tree/starter).
@@ -278,7 +275,7 @@ pub enum RockPaperScissors {
 }
 ```
 
-#### 2. Test `rock_paper_scissors_shoot_insecure` instruction
+### 2. Test `rock_paper_scissors_shoot_insecure` instruction
 
 The test file includes the code to invoke the `initialize` instruction twice to
 create two player accounts.
@@ -325,7 +322,7 @@ against a second option. The game would end in a draw every time. It's also
 unclear to a human whether `playerOne`'s choice should be rock or scissors, so
 the program behavior is strange.
 
-#### 3. Add `rock_paper_scissors_shoot_secure` instruction
+### 3. Add `rock_paper_scissors_shoot_secure` instruction
 
 Next, return to `lib.rs` and add a `rock_paper_scissors_shoot_secure`
 instruction that uses the `#[account(...)]` macro to add an additional
@@ -360,7 +357,7 @@ pub struct RockPaperScissorsSecure<'info> {
 }
 ```
 
-#### 7. Test `rock_paper_scissors_shoot_secure` instruction
+### 7. Test `rock_paper_scissors_shoot_secure` instruction
 
 To test the `rock_paper_scissors_shoot_secure` instruction, we’ll invoke the
 instruction twice. First, we’ll invoke the instruction using two different
@@ -425,7 +422,7 @@ If you want to take a look at the final solution code you can find it on the
 `solution` branch of
 [the repository](https://github.com/Unboxed-Software/solana-duplicate-mutable-accounts/tree/solution).
 
-## Challenge
+# Challenge
 
 Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
@@ -437,7 +434,7 @@ duplicates.
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
-<Callout type="success" title="Completed the lab?">
+## Completed the lab?
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9b759e39-7a06-4694-ab6d-e3e7ac266ea7)!
-</Callout>

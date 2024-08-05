@@ -5,10 +5,9 @@ objectives:
   - Explain keypairs
   - Generate a new keypair
   - Load a keypair from an env file
-description: "Understand asymmetric cryptography and how Solana uses it."
 ---
 
-## Summary
+# Summary
 
 - A **keypair** is a matching pair of **public key** and **secret key**.
 - The **public key** is used as an “address” that points to an account on the
@@ -18,12 +17,12 @@ description: "Understand asymmetric cryptography and how Solana uses it."
 - `@solana/web3.js` provides helper functions for creating a brand new keypair,
   or for constructing a keypair using an existing secret key.
 
-## Lesson
+# Lesson
 
-### Symmetric and Asymmetric Cryptography
+## Symmetric and Asymmetric Cryptography
 
-'Cryptography' the study of hiding information. There are two main types of
-cryptography you'll encounter day to day:
+'Cryptography' is literally the study of hiding information. There are two main
+types of cryptography you'll encounter day to day:
 
 **Symmetric Cryptography** is where the same key is used to encrypt and decrypt.
 It's hundreds of years old and has been used by everyone from the ancient
@@ -76,9 +75,9 @@ Asymmetric encryption is very popular:
 In short, cryptography is all around us. Solana, as well as other blockchains,
 are but one use of cryptography.
 
-### Solana uses public keys as addresses
+## Solana uses public keys as addresses
 
-![Solana wallet addresses](/public/assets/courses/unboxed/wallet-addresses.svg)
+![Solana wallet addresses](../assets/wallet-addresses.svg)
 
 People participating in the Solana network have at least one keypair. In Solana:
 
@@ -91,21 +90,21 @@ People participating in the Solana network have at least one keypair. In Solana:
   this reason, as the name suggests, you should always keep secret keys
   _secret_.
 
-### Using @solana/web3.js to make a keypair
+## Using @solana/web3.js to make a keypair
 
 You can use the Solana blockchain from either the browser or node.js with the
 `@solana/web3.js` npm module. Set up a project how you normally would, then
 [use `npm`](https://nodesource.com/blog/an-absolute-beginners-guide-to-using-npm/)
 to install `@solana/web3.js`
 
-```shell
+```
 npm i @solana/web3.js
 ```
 
 We’ll cover a lot of
-[web3.js](https://solana.com/docs/clients/javascript-reference) gradually
-throughout this course, but you can also check out the
-[official web3.js documentation](https://solana.com/docs/clients/javascript-reference).
+[web3.js](https://docs.solana.com/developing/clients/javascript-reference)
+gradually throughout this course, but you can also check out the
+[official web3.js documentation](https://docs.solana.com/developing/clients/javascript-reference).
 
 To send tokens, send NFTS, or read and write data Solana, you'll need your own
 keypair. To make a new keypair, use the `Keypair.generate()` function from
@@ -120,7 +119,7 @@ console.log(`The public key is: `, keypair.publicKey.toBase58());
 console.log(`The secret key is: `, keypair.secretKey);
 ```
 
-<Callout type="warning" title="Do not include secret keys in your source code">
+## ⚠️ Don't include secret keys in your source code
 
 Since the keypair can be regenerated from the secret key, we usually only store
 the secret key, and restore the keypair from the secret key.
@@ -131,9 +130,7 @@ store secret keys in source code. Instead, we:
 - Put secret keys in a `.env` file
 - Add `.env` to `.gitignore` so the `.env` file is not committed.
 
-</Callout>
-
-### Loading an existing keypair
+## Loading an existing keypair
 
 If you already have a keypair you’d like to use, you can load a `Keypair` from
 an existing secret key stored in the filesystem or an `.env` file. In node.js,
@@ -155,7 +152,7 @@ const keypair = getKeypairFromEnvironment("SECRET_KEY");
 
 You know how to make and load keypairs! Let’s practice what we’ve learned.
 
-## Lab
+# Lab
 
 ### Installation
 
@@ -237,9 +234,7 @@ Run `npx esrun generate-keypair.ts`. You should see the following result:
 We've now learned about keypairs, and how to store secret keys securely on
 Solana. In the next chapter, we'll use them!
 
-<Callout type="success">
 ## Completed the lab?
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ee06a213-5d74-4954-846e-cba883bc6db1)!
-</Callout>
