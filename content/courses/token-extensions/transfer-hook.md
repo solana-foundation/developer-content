@@ -557,8 +557,8 @@ pub fn fallback<'info>(program_id: &Pubkey, accounts: &'info [AccountInfo<'info>
 
 ### Using transfer hooks from the frontend
 
-Now that we've looked at the on-chain portion, let's look at how we interact
-with them in the frontend.
+Now that we've looked at the onchain portion, let's look at how we interact with
+them in the frontend.
 
 Let's assume we have a deployed Solana program that follows the Transfer Hook
 Interface.
