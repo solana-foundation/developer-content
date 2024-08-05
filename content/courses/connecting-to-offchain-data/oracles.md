@@ -668,7 +668,7 @@ Anchor how to configure our local testing environment. This will allow us to
 test our program locally without having to deploy and send transactions to
 devnet.
 
-At the bottom of Anchor.toml:
+At the bottom of `Anchor.toml`:
 
 ```toml
 [test.validator]
