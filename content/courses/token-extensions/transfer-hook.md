@@ -9,7 +9,7 @@ description:
   token in transferred."
 ---
 
-# Summary
+## Summary
 
 - The `transfer hook` extension allows developers to run custom logic on their
   tokens on every transfer
@@ -29,7 +29,7 @@ description:
   de-escalated, meaning they are read-only to the hook. Meaning none of those
   accounts can sign or be written to.
 
-# Overview
+## Overview
 
 The `transfer-hook` extension allows custom onchain logic to be run after each
 transfer within the same transaction. More specifically, the `transfer-hook`
@@ -52,7 +52,7 @@ This extension allows many new use cases, including:
 In this lesson, we'll explore how to implement transfer hooks onchain and work
 with them in the frontend.
 
-## Implementing transfer hooks onchain
+### Implementing transfer hooks onchain
 
 The first part of creating a mint with a `transfer hook` is to find or create an
 onchain program that follows the
@@ -97,7 +97,7 @@ By storing the extra accounts required by the `Execute` instruction in the
 token transfer instruction from the client. We'll see how to do that in the
 off-chain section.
 
-### 1. `initialize_extra_account_meta_list` instruction:
+#### 1. `initialize_extra_account_meta_list` instruction:
 
 When we transfer a token using the Token Extensions Program, the program will
 examine our mint to determine if it has a transfer hook. If a transfer hook is
@@ -464,7 +464,7 @@ sneaky and add any of these first four accounts into the
 `extra_account_meta_list`, they will always be interpreted as read-only, even if
 you specify them differently with `is_writable` or `is_signer`.
 
-### 2. `transfer_hook` Instruction
+#### 2. `transfer_hook` Instruction
 
 In Anchor, when the `Execute` function is called, it looks for and calls the
 `transfer_hook` instruction. It is the place where we can implement our custom
@@ -520,7 +520,7 @@ hook. But remember, if the hook fails, the entire transaction fails.
   }
 ```
 
-### 3. Fallback
+#### 3. Fallback
 
 One last caveat to the onchain portion of transfer hooks: when dealing with
 Anchor, we need to specify a `fallback` instruction in the Anchor program to
@@ -555,7 +555,7 @@ pub fn fallback<'info>(program_id: &Pubkey, accounts: &'info [AccountInfo<'info>
 }
 ```
 
-## Using transfer hooks from the frontend
+### Using transfer hooks from the frontend
 
 Now that we've looked at the on-chain portion, let's look at how we interact
 with them in the frontend.
@@ -576,7 +576,7 @@ follow these steps:
 3. Make sure to pass all the required accounts when invoking the transfer
    instruction from the Token Extensions Program.
 
-### Create a Mint with the `Transfer-Hook` Extension:
+#### Create a Mint with the `Transfer-Hook` Extension:
 
 To create a mint with the transfer-hook extension, we need three instructions:
 
@@ -614,7 +614,7 @@ const transaction = new Transaction().add(
   createInitializeMintInstruction(mint.publicKey, decimals, wallet.publicKey, null, TOKEN_2022_PROGRAM_ID),
 ```
 
-### Initialize `ExtraAccountMetaList` account:
+#### Initialize `ExtraAccountMetaList` account:
 
 The next step of getting the mint ready for any transactions is initializing the
 `ExtraAccountMetaList`. Generally, this is done by calling the
@@ -658,7 +658,7 @@ const transaction = new Transaction().add(
 After calling `initializeExtraAccountMetaList`, you're all set to transfer
 tokens with the transfer hook enabled mint.
 
-### Transfer tokens successfully:
+#### Transfer tokens successfully:
 
 To actually transfer tokens with the `transfer hook` extension, you need to call
 `createTransferCheckedWithTransferHookInstruction`. This is a special helper
@@ -747,7 +747,7 @@ export async function createTransferCheckedWithTransferHookInstruction(
 }
 ```
 
-## Theoretical Example - Artist Royalties
+### Theoretical Example - Artist Royalties
 
 Let's take what we know about the `transfer hook` extension and conceptually try
 to understand how we could implement artist royalties for NFTs. If you're not
@@ -794,7 +794,7 @@ theirs - should there be an approved list of "allowed" wallets? Or, should the
 artist be a signer involved in every sale/transfer? This system design makes for
 a great homework assignment!
 
-# Lab
+## Lab
 
 In this lab we'll explore how transfer hooks work by creating a Cookie Crumb
 program. We'll have a Cookie NFT that has a transfer hook which will mint a
@@ -802,9 +802,9 @@ Crumb SFT (NFT with a supply > 1) to the sender after each transfer - leaving a
 "crumb trail". A fun side effect is we'll able to tell how many times this NFT
 has been transferred just by looking at the crumb supply.
 
-## 0. Setup
+### 0. Setup
 
-### 1. Verify Solana/Anchor/Rust Versions
+#### 1. Verify Solana/Anchor/Rust Versions
 
 We'll be interacting with the `Token Extensions Program` in this lab and that
 requires you to have the Solana CLI version ≥ 1.18.1.
@@ -851,7 +851,7 @@ At the time of writing, the latest version of the Anchor CLI is `0.30.1`
 
 Now, we should have all the correct versions installed.
 
-### 2. Get starter code
+#### 2. Get starter code
 
 Let's grab the starter branch.
 
@@ -861,7 +861,7 @@ cd solana-lab-transfer-hooks
 git checkout starter
 ```
 
-### 3. Update Program ID and Anchor Keypair
+#### 3. Update Program ID and Anchor Keypair
 
 Once in the starter branch, run
 
@@ -880,7 +880,7 @@ cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 ```
 
-### 4. Confirm the program builds
+#### 4. Confirm the program builds
 
 Let's build the starter code to confirm we have everything configured correctly.
 If it does not build, please revisit the steps above.
@@ -908,7 +908,7 @@ anchor test
 
 We will be filling these tests in later.
 
-## 1. Write the transfer hook program
+### 1. Write the transfer hook program
 
 In this section we'll dive into writing the onchain transfer hook program using
 anchor, all the code will go into the `programs/transfer-hook/src/lib.rs` file.
@@ -939,7 +939,7 @@ Two instruction account structs
 
 We're going to look at each in depth.
 
-### 1. Initialize Extra Account Meta List instruction
+#### 1. Initialize Extra Account Meta List instruction
 
 The cookie transfer hook program needs some extra accounts to be able to mint
 the crumbs within the `transfer_hook` function, these are:
@@ -1108,7 +1108,7 @@ other accounts by their index. Specifically, the ATA belongs to whatever `owner`
 calls the transfer. So when a cookie is sent, the crumb will be minted to the
 sender.
 
-### 2. Transfer Hook instruction
+#### 2. Transfer Hook instruction
 
 In this step, we'll implement the `transfer_hook` instruction. This instruction
 will be called by the Token Extensions Program when a token transfer occurs.
@@ -1237,7 +1237,7 @@ Token Extensions Program -CPI-> Transfer Hook Program -✅CPI✅-> Token Progra
 
 So, that's why we're making the crumb SFT a Token Program mint.
 
-### 3. Fallback instruction
+#### 3. Fallback instruction
 
 The last instruction we have to fill out is the `fallback`, this is necessary
 because Anchor generates instruction discriminators differently from the ones
@@ -1269,7 +1269,7 @@ pub fn fallback<'info>(program_id: &Pubkey, accounts: &'info [AccountInfo<'info>
 }
 ```
 
-### 4. Build the program
+#### 4. Build the program
 
 Let's make sure our program builds and that tests are runnable before we
 continue actually writing tests for it.
@@ -1283,7 +1283,7 @@ This command will build, deploy and run tests within the `tests/` directory.
 If you're seeing any errors try to go through the steps again and make sure you
 didn't miss anything.
 
-## 2. Write the tests
+### 2. Write the tests
 
 Now we'll write some TS scripts to test our code. All of our tests will live
 inside `tests/anchor.ts`.
@@ -1302,7 +1302,7 @@ The outline of what will we do here is:
 
 6. Write the "Transfer and Transfer Back" test
 
-### 1. Understand the environment
+#### 1. Understand the environment
 
 When anchor projects are created, they come configured to create typescript
 tests with `mocha` and `chai`. When you look at `tests/anchor.ts` you'll see
@@ -1350,7 +1350,7 @@ Crumb SFT.
 
 - `crumbMetadata`
 
-### 2. Running the tests
+#### 2. Running the tests
 
 Since the Crumb SFT is a Token Program mint, to attach metadata to it, we need
 to create a Metaplex metadata account. To do this, we need to include the
@@ -1386,7 +1386,7 @@ Then you can test with:
 anchor test --skip-local-validator
 ```
 
-### 3. Write the "Create Cookie NFT with Transfer Hook and Metadata" test
+#### 3. Write the "Create Cookie NFT with Transfer Hook and Metadata" test
 
 Our first test will create our Cookie NFT, which will have metadata and our
 transfer hook attached.
@@ -1508,7 +1508,7 @@ Feel free to run the first test to make sure everything is working:
 anchor test
 ```
 
-### 4. Write the "Create Crumb Mint" test
+#### 4. Write the "Create Crumb Mint" test
 
 Now that we have our cookie NFT, we need our crumb SFTs. Creating the crumbs
 that will be minted on each transfer of our cookie will be our second test.
@@ -1625,7 +1625,7 @@ it("Create Crumb Mint", async () => {
 });
 ```
 
-### 5. Write the "Initializes ExtraAccountMetaList Account" test
+#### 5. Write the "Initializes ExtraAccountMetaList Account" test
 
 Our next test is the last step of setup before we can start transferring our
 cookie and seeing the transfer hook work. We need to create the
@@ -1672,7 +1672,7 @@ it("Initializes ExtraAccountMetaList Account", async () => {
 });
 ```
 
-### 6. Write the "Transfer and Transfer Back" test
+#### 6. Write the "Transfer and Transfer Back" test
 
 Our last test is to transfer our cookie back and forth and see that our crumbs
 have been minted to both `payerWallet` and `recipient`.
@@ -1869,7 +1869,7 @@ anchor test --skip-local-validator
 
 Thats it! You've created a mint with a transfer hook!
 
-# Challenge
+## Challenge
 
 Amend the transfer hook such that anyone who has a crumb cannot get their cookie
 back.

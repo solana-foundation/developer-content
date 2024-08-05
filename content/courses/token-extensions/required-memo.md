@@ -8,7 +8,7 @@ objectives:
 description: "Create a token that requires a short note on every transfer."
 ---
 
-# Summary
+## Summary
 
 - The `required memo` extension allows developers to mandate that all incoming
   transfers to a token account include a memo, facilitating enhanced transaction
@@ -17,7 +17,7 @@ description: "Create a token that requires a short note on every transfer."
 - The `required memo` extension can be disabled by calling
   `disableRequiredMemoTransfers`.
 
-# Overview
+## Overview
 
 For certain applications, such as exchanges or financial services, tracking the
 purpose or origin of a transaction is crucial. The `required memo` extension
@@ -32,7 +32,7 @@ It is important to note that this is a token account extension, not a mint
 extension. This means individual token accounts need to enable this feature. And
 like all extensions, this will only work with Token Extensions Program tokens.
 
-## Creating token with required memo
+### Creating token with required memo
 
 Initializing a token account with required memo involves three instructions:
 
@@ -102,7 +102,7 @@ const transactionSignature = await sendAndConfirmTransaction(
 );
 ```
 
-## Transferring with required memo
+### Transferring with required memo
 
 When transferring to a token account with the `required memo` instruction
 enabled, you need to send a memo first within the same transaction. We do this
@@ -130,7 +130,7 @@ const transaction = new Transaction().add(
 await sendAndConfirmTransaction(connection, transaction, [payer]);
 ```
 
-## Disabling required memo
+### Disabling required memo
 
 The required memo extension can be disabled given you have the authority to
 modify the token account. To do this, simply call the
@@ -161,13 +161,13 @@ await disableRequiredMemoTransfers(
 );
 ```
 
-# Lab
+## Lab
 
 In this lab, we'll create a token account with the required memo extension.
 We'll then write tests to check if the extension is working as intended by
 attempting to transfer funds with and without a memo.
 
-### 1. Setup Environment
+#### 1. Setup Environment
 
 To get started, create an empty directory named `required-memo` and navigate to
 it. We'll be initializing a brand new project. Run `npm init` and follow through
@@ -230,7 +230,7 @@ const amountToTransfer = 300;
 // DISABLE MEMO EXTENSION AND TRANSFER
 ```
 
-### 2. Run validator node
+#### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -249,7 +249,7 @@ Alternatively, if you’d like to use testnet or devnet, import the
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 ```
 
-### 3. Helpers
+#### 3. Helpers
 
 When we pasted the `index.ts` code from earlier, we added the following helpers
 provided by the `@solana-developers/helpers` package and some starting
@@ -259,7 +259,7 @@ variables.
   also airdrops 1 testnet SOL to it
 - `makeKeypairs`: This function creates keypairs without airdropping any SOL
 
-### 4. Create the mint
+#### 4. Create the mint
 
 First things first, since the `required memo` extension is a token extension, we
 don't need to do anything fancy with the mint. It just needs to be a Token
@@ -282,7 +282,7 @@ const mint = await createMint(
 );
 ```
 
-### 5. Create Token Account with required memo
+#### 5. Create Token Account with required memo
 
 Let's create a new file `src/token-helper.ts` and create a new function within
 it called `createTokenWithMemoExtension`. As the name implies, we'll use this to
@@ -442,7 +442,7 @@ await mintTo(
 Note: The `required memo` extension only requires a memo on transferring, not
 minting.
 
-### 6. Tests
+#### 6. Tests
 
 Now that we've created some accounts with the `required memo` instruction. Let's
 write some tests to see how they function.
@@ -453,7 +453,7 @@ We'll write 3 tests in total:
 - Transferring with a memo
 - Disabling Required Memo extension and transferring without a memo
 
-### 6.1 Transfer without Memo
+#### 6.1 Transfer without Memo
 
 This first test will attempt to transfer tokens from `ourTokenAccount` to
 `otherTokenAccount`. This test is expected to fail as there is no memo attached
@@ -491,7 +491,7 @@ meaning the extension is working as intended:
 npx esrun src/index.ts
 ```
 
-### 6.2 Test transfer with memo
+#### 6.2 Test transfer with memo
 
 This test will attempt to transfer tokens with a memo. This test is expected to
 pass. Pay extra attention to the first instruction - It is the part of the
@@ -537,7 +537,7 @@ Run the test and see that it passes:
 npx esrun src/index.ts
 ```
 
-### 6.3 Test transfer with disabled memo
+#### 6.3 Test transfer with disabled memo
 
 In our last test, we'll disable the `required memo` extension on the
 `otherTokenAccount` and send it some tokens without a memo. We expect this to
@@ -602,6 +602,6 @@ npx esrun src/index.ts
 
 Congratulations! We’ve just tested the required memo extension!
 
-# Challenge
+## Challenge
 
 Go create your own token account with required memo.

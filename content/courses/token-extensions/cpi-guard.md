@@ -8,7 +8,7 @@ description:
   programs."
 ---
 
-# Summary
+## Summary
 
 - `CPI Guard` is a token account extension from the Token Extensions Program
 - The `CPI Guard` extension prohibits certain actions inside cross-program
@@ -17,7 +17,7 @@ description:
 - `CPI Guard` can be enabled or disabled at will
 - These protections are enforced within the `Token Extensions Program` itself
 
-# Overview
+## Overview
 
 CPI Guard is an extension that prohibits certain actions inside cross-program
 invocations, protecting users from implicitly signing for actions they can't
@@ -44,7 +44,7 @@ account at will. When enabled, it has the following effects during a CPI:
 The CPI Guard is a token account extension, meaning each individual Token
 Extensions Program token account has to enable it.
 
-## How the CPI Guard Works
+### How the CPI Guard Works
 
 The CPI Guard can be enabled and disabled on a token account that was created
 with enough space for the extension. The `Token Extensions Program` runs a few
@@ -113,7 +113,7 @@ pub fn in_cpi() -> bool {
 Using these two helper functions, the `Token Extensions Program` can easily
 determine if it should reject an instruction or not.
 
-## Toggle CPI Guard
+### Toggle CPI Guard
 
 To toggle the CPI Guard on/off, a Token Account must have been initialized for
 this specific extension. Then, an instruction can be sent to enable the CPI
@@ -207,9 +207,9 @@ await disableCpiGuard(
 );
 ```
 
-## CPI Guard Protections
+### CPI Guard Protections
 
-### Transfer
+#### Transfer
 
 The transfer feature of the CPI Guard prevents anyone but the account delegate
 from authorizing a transfer instruction. This is enforced in the various
@@ -233,7 +233,7 @@ if let Ok(cpi_guard) = source_account.get_extension::<CpiGuard>() {
 This guard means that not even the owner of a token account can transfer tokens
 out of the account while another account is an authorized delegate.
 
-### Burn
+#### Burn
 
 This CPI Guard also ensures only the account delegate can burn tokens from a
 token account, just like the transfer protection.
@@ -254,7 +254,7 @@ if let Ok(cpi_guard) = source_account.get_extension::<CpiGuard>() {
 This guard means that not even the owner of a token account can burn tokens out
 of the account while another account is an authorized delegate.
 
-### Approve
+#### Approve
 
 The CPI Guard prevents from approving a delegate of a token account via CPI. You
 can approve a delegate via a client instruction, but not CPI. The
@@ -266,7 +266,7 @@ approves a delegate over their token account without the knowledge of the user.
 Before, the user was at the mercy of their wallet to notify them of transactions
 like this ahead of time.
 
-### Close
+#### Close
 
 To close a token account via CPI, having the guard enabled means that the
 `Token Extensions Program` will check that the
@@ -297,7 +297,7 @@ CPI. This would be hard to detect from an end user's perspective without
 inspecting the instructions themselves. This guard ensures those lamports are
 transferred only to their owner when closing a token account via CPI.
 
-### Set Close Authority
+#### Set Close Authority
 
 The CPI Guard prevents from setting the `CloseAccount` authority via CPI, you
 can unset a previously set `CloseAccount` authority however. The
@@ -329,7 +329,7 @@ AuthorityType::CloseAccount => {
 This guard prevents the user from signing a transaction that gives another
 account the ability to close their Token account behind the scenes.
 
-### Set Owner
+#### Set Owner
 
 The CPI Guard prevents from changing the account owner in all circumstances,
 whether via CPI or not. The account authority is updated in the same
@@ -355,7 +355,7 @@ if let Ok(cpi_guard) = account.get_extension::<CpiGuard>() {
 This guard prevents from changing the ownership of a Token account at all times
 when enabled.
 
-# Lab
+## Lab
 
 This lab will primarily focus on writing tests in TypeScript, but we'll need to
 run a program locally against these tests. For this reason, we'll need to go
@@ -380,7 +380,7 @@ attempts to take an action on the given token account that is potentially
 malicious unknowingly to the signer of the original transaction. We won't test
 the `Transfer` guard as it is same as the `Burn` guard.
 
-### 1. Verify Solana/Anchor/Rust Versions
+#### 1. Verify Solana/Anchor/Rust Versions
 
 We'll be interacting with the `Token Extensions Program` in this lab and that
 requires you to have Solana CLI version ≥ 1.18.0.
@@ -441,7 +441,7 @@ rustup update
 
 Now, we should have all the correct versions installed.
 
-### 2. Get starter code and add dependencies
+#### 2. Get starter code and add dependencies
 
 Let's grab the starter branch.
 
@@ -451,7 +451,7 @@ cd solana-lab-cpi-guard
 git checkout starter
 ```
 
-### 3. Update Program ID and Anchor Keypair
+#### 3. Update Program ID and Anchor Keypair
 
 Once in the starter branch, run
 
@@ -475,7 +475,7 @@ unsure, just run:
 solana config get
 ```
 
-### 4. Confirm the program builds
+#### 4. Confirm the program builds
 
 Let's build the starter code to confirm we have everything configured correctly.
 If it does not build, please revisit the steps above.
@@ -496,7 +496,7 @@ yarn install
 anchor test
 ```
 
-### 5. Create token with CPI Guard
+#### 5. Create token with CPI Guard
 
 Before we write any tests, let's create a helper function that will create a
 Token account with the CPI Guard extension. Let's do this in a new file
@@ -580,7 +580,7 @@ export async function createTokenAccountWithCPIGuard(
 }
 ```
 
-### 5. Approve delegate
+#### 5. Approve delegate
 
 The first CPI Guard we'll test is the approve delegate functionality. The CPI
 Guard prevents approving a delegate of a token account with the CPI Guard
@@ -746,7 +746,7 @@ Feel free to save your work and run `anchor test`. All of the tests will run,
 but these two are the only ones that are doing anything yet. They should both
 pass at this point.
 
-### 6. Close Account
+#### 6. Close Account
 
 The close account instruction invokes the `close_account` instruction on the
 `Token Extensions Program`. This closes the given token account. However, you
@@ -886,7 +886,7 @@ it("Close Account without CPI Guard", async () => {
 });
 ```
 
-### 7. Set Authority
+#### 7. Set Authority
 
 Moving on to the `prohibited_set_authority` instruction, the CPI Guard protects
 against a CPI setting the `CloseAccount` authority.
@@ -1015,7 +1015,7 @@ it("Set Authority Example", async () => {
 });
 ```
 
-### 8. Burn
+#### 8. Burn
 
 The next instruction we'll test is the `unauthorized_burn` instruction from our
 test program. This instruction invokes the `burn` instruction from the
@@ -1196,7 +1196,7 @@ it("Burn without Delegate Signature Example", async () => {
 });
 ```
 
-### 9. Set Owner
+#### 9. Set Owner
 
 The last CPI Guard we'll test is the `SetOwner` protection. With the CPI Guard
 enabled, this action is always prohibited even outside of a CPI. To test this,
@@ -1401,6 +1401,6 @@ it("Set Authority via CPI on Non-CPI Guarded Account", async () => {
 And that is it! You should be able to save your work and run `anchor test`. All
 of the tests we have written should pass.
 
-# Challenge
+## Challenge
 
 Write some tests for the Transfer functionality.

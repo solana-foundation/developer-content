@@ -7,7 +7,7 @@ objectives:
 description: "Make a token that earns interest over time."
 ---
 
-# Summary
+## Summary
 
 - Creators can set an interest rate and store it directly on the mint account.
 - The underlying token quantity for interest bearing tokens remains unchanged.
@@ -17,7 +17,7 @@ description: "Make a token that earns interest over time."
   interest rate. The test case also shows how to update the interest rate, along
   with retrieving the rate from the token.
 
-# Overview
+## Overview
 
 Tokens with values that either increase or decrease over time have practical
 applications in the real world, with bonds being a prime example. Previously,
@@ -40,7 +40,7 @@ purely aesthetic. That being said, this is a value stored on within the mint
 account and programs can take advantage of this to create functionality beyond
 pure aesthetics.
 
-## Adding interest rate to token
+### Adding interest rate to token
 
 Initializing an interest bearing token involves three instructions:
 
@@ -95,7 +95,7 @@ createInitializeMintInstruction(
 When the transaction with these three instructions is sent, a new interest
 bearing token is created with the specified rate configuration.
 
-## Fetching accumulated interest
+### Fetching accumulated interest
 
 To retrieve the accumulated interest on a token at any given point, first use
 the `getAccount` function to fetch token information, including the amount and
@@ -140,7 +140,7 @@ console.log("UI Amount: ", uiAmount);
 The return value of `uiAmount` is a string representation of the UI amount and
 will look similar to this: `0.0000005000001557528245`.
 
-## Update rate authority
+### Update rate authority
 
 Solana provides a helper function, `setAuthority`, to set a new authority on an
 interest bearing token.
@@ -197,14 +197,14 @@ await updateRateInterestBearingMint(
 );
 ```
 
-# Lab
+## Lab
 
 In this lab, we're establishing Interest Bearing Tokens via the Token-2022
 program on Solana. We'll initialize these tokens with a specific interest rate,
 update the rate with proper authorization, and observe how interest accumulates
 on tokens over time.
 
-### 1. Setup Environment
+#### 1. Setup Environment
 
 To get started, create an empty directory named `interest-bearing-token` and
 navigate to it. Run `npm init -y` to initialize a brand new project.
@@ -269,7 +269,7 @@ const rate = 32_767;
 this lab. The `index.ts` is where we'll end up calling the rest of our script
 once we've written it.
 
-### 2. Run validator node
+#### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -281,7 +281,7 @@ the local RPC URL.
 
 `const connection = new Connection("http://127.0.0.1:8899", "confirmed");`
 
-### 3. Helpers
+#### 3. Helpers
 
 When we pasted the `index.ts` code from earlier, we added the following helpers:
 
@@ -296,7 +296,7 @@ Additionally, we have some initial accounts:
 - `otherAccount`: The account we will use to attempt to update interest
 - `otherTokenAccountKeypair`: Another token used for testing
 
-### 4. Create Mint with interest bearing token
+#### 4. Create Mint with interest bearing token
 
 This function is where we'll be creating the token such that all new tokens will
 be created with an interest rate. Create a new file inside of `src` named
@@ -387,7 +387,7 @@ await sendAndConfirmTransaction(
 
 That's it for the token creation! Now we can move on and start adding tests.
 
-### 5. Establish required accounts
+#### 5. Establish required accounts
 
 Inside of `src/index.ts`, the starting code already has some values related to
 the creation of the interest bearing token.
@@ -422,7 +422,7 @@ const payerTokenAccount = await createAssociatedTokenAccount(
 );
 ```
 
-## 6. Tests
+### 6. Tests
 
 Before we start writing any tests, it would be helpful for us to have a function
 that takes in the `mint` and returns the current interest rate of that
@@ -640,7 +640,7 @@ Mint Config: {
 }
 ```
 
-## Update rate authority and interest rate
+### Update rate authority and interest rate
 
 Before we conclude this lab, let's set a new rate authority on the interest
 bearing token and attempt to update the interest rate. We do this by using the
@@ -693,6 +693,6 @@ This is expected to work and the new interest rate should be 10.
 Thats it! We’ve just created an interest bearing token, updated the interest
 rate and logged the updated state of the token!
 
-# Challenge
+## Challenge
 
 Create your own interest bearing token.

@@ -8,7 +8,7 @@ description:
   "Make a token that ensures the account storing the tokens cannot change owner."
 ---
 
-# Summary
+## Summary
 
 - The `immutable owner` extension ensures that once a token account is created,
   its owner is unchangeable, securing the ownership against any modifications.
@@ -19,7 +19,7 @@ description:
 - The `immutable owner` extension is a token account extension; enabled on each
   token account, not the mint.
 
-# Overview
+## Overview
 
 Associated Token Accounts (ATAs) are uniquely determined by the owner and the
 mint, streamlining the process of identifying the correct Token Account for a
@@ -37,7 +37,7 @@ unauthorized access and transfer attempts.
 It is important to note that this extension is a Token Account extension,
 meaning it's on the token account, not the mint.
 
-## Creating token account with immutable owner
+### Creating token account with immutable owner
 
 All Token Extensions Program ATAs have immutable owners enabled by default. If
 you want to create an ATA you may use `createAssociatedTokenAccount`.
@@ -123,13 +123,13 @@ return await sendAndConfirmTransaction(connection, transaction, [
 When the transaction with these three instructions is sent, a new token account
 is created with the immutable owner extension.
 
-# Lab
+## Lab
 
 In this lab, we'll be creating a token account with an immutable owner. We'll
 then write tests to check if the extension is working as intended by attempting
 to transfer ownership of the token account.
 
-### 1. Setup Environment
+#### 1. Setup Environment
 
 To get started, create an empty directory named `immutable-owner` and navigate
 to it. We'll be initializing a brand new project. Run `npm init -y` to make a
@@ -168,7 +168,7 @@ const [otherOwner, mintKeypair, ourTokenAccountKeypair] = makeKeypairs(3);
 const ourTokenAccount = ourTokenAccountKeypair.publicKey;
 ```
 
-### 2. Run validator node
+#### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -189,7 +189,7 @@ Alternatively, if you’d like to use testnet or devnet, import the
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 ```
 
-### 3. Helpers
+#### 3. Helpers
 
 When we pasted the `index.ts` code from earlier, we added the following helpers:
 
@@ -206,7 +206,7 @@ Additionally, we have some initial accounts:
 - `otherOwner`: The token account we'll try to transfer ownership of the two
   immutable accounts to
 
-### 4. Create mint
+#### 4. Create mint
 
 Let's create the mint we'll be using for our token accounts.
 
@@ -228,7 +228,7 @@ const mint = await createMint(
 );
 ```
 
-### 5. Create Token Account with immutable owner
+#### 5. Create Token Account with immutable owner
 
 Remember, all ATAs come with the `immutable owner` extension. However, we're
 going to create a token account using a keypair. This requires us to create the
@@ -401,7 +401,7 @@ If you'd like to test that everything is working, feel free to run the script.
 npx esrun src/index.ts
 ```
 
-### 6. Tests
+#### 6. Tests
 
 **Test trying to transfer owner**
 
@@ -480,6 +480,6 @@ owner extension! If you are stuck at any point, you can find the working code on
 the `solution` branch of
 [this repository](https://github.com/Unboxed-Software/solana-lab-immutable-owner/tree/solution).
 
-# Challenge
+## Challenge
 
 Go create your own token account with an immutable owner.

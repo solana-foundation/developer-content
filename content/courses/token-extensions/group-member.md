@@ -7,7 +7,7 @@ objectives:
 description: "Make an NFT collection using token extensions."
 ---
 
-# Summary
+## Summary
 
 - 'token groups' are commonly used to implement NFT collections.
 - The `group pointer` extension sets a group account on the token mint, to hold
@@ -17,7 +17,7 @@ description: "Make an NFT collection using token extensions."
   mint, to hold information about the token's membership within a group.
 - The `member` extension allows us to save member data within the mint itself.
 
-# Overview
+## Overview
 
 SPL tokens are valuable alone but can be combined for extra functionality. We
 can do this in the Token Extensions Program by combining the `group`,
@@ -44,7 +44,7 @@ but with the member data.
 
 NOTE: A group can have many members, but a member can only belong to one group.
 
-## Group and Group Pointer
+### Group and Group Pointer
 
 The `group` and `group pointer` extensions define a token group. The onchain
 data is as follows:
@@ -74,7 +74,7 @@ pub struct TokenGroup {
 }
 ```
 
-### Creating a mint with group and group pointer
+#### Creating a mint with group and group pointer
 
 Creating a mint with the `group` and `group pointer` involves four instructions:
 
@@ -168,7 +168,7 @@ const signature = await sendAndConfirmTransaction(
 );
 ```
 
-## Update group authority
+### Update group authority
 
 To update the authority of a group, we just need the
 `tokenGroupUpdateGroupAuthority` function.
@@ -188,7 +188,7 @@ const signature = await tokenGroupUpdateGroupAuthority(
 );
 ```
 
-## Update max size of a group
+### Update max size of a group
 
 To update the max size of a group we just need the
 `tokenGroupUpdateGroupMaxSize` function.
@@ -208,7 +208,7 @@ const signature = tokenGroupUpdateGroupMaxSize(
 );
 ```
 
-## Member and Member Pointer
+### Member and Member Pointer
 
 The `member` and `member pointer` extensions define a token member. The onchain
 data is as follows:
@@ -231,7 +231,7 @@ pub struct TokenGroupMember {
 }
 ```
 
-### Creating a mint with member pointer
+#### Creating a mint with member pointer
 
 Creating a mint with the `member pointer` and `member` extensions involves four
 instructions:
@@ -330,9 +330,9 @@ const signature = await sendAndConfirmTransaction(
 );
 ```
 
-## Fetch group and member data
+### Fetch group and member data
 
-### Get group pointer state
+#### Get group pointer state
 
 To retrieve the state of the `group pointer` for a mint, we need to fetch the
 account using `getMint` and then parse this data using the
@@ -361,7 +361,7 @@ const groupMint = await getMint(
 const groupPointerData: GroupPointer = getGroupPointerState(groupMint);
 ```
 
-### Get group state
+#### Get group state
 
 To retrieve the group state for a mint, we need to fetch the account using
 `getMint` and then parse this data using the `getTokenGroupState` function. This
@@ -393,7 +393,7 @@ const groupMint = await getMint(
 const groupData: TokenGroup = getTokenGroupState(groupMint);
 ```
 
-### Get group member pointer state
+#### Get group member pointer state
 
 To retrieve the `member pointer` state for a mint, we fetch the mint with
 `getMint` and then parse with `getGroupMemberPointerState`. This returns us the
@@ -422,7 +422,7 @@ const memberMint = await getMint(
 const memberPointerData = getGroupMemberPointerState(memberMint);
 ```
 
-### Get group member state
+#### Get group member state
 
 To retrieve a mint's `member` state, we fetch the mint with `getMint` and then
 parse with `getTokenGroupMemberState`. This returns the `TokenGroupMember`
@@ -451,7 +451,7 @@ const memberMint = await getMint(
 const memberData = getTokenGroupMemberState(memberMint);
 ```
 
-# Lab
+## Lab
 
 In this lab we'll create a Cool Cats NFT collection using the `group`,
 `group pointer`, `member` and `member pointer` extensions in conjunction with
@@ -460,7 +460,7 @@ the `metadata` and `metadata pointer` extensions.
 The Cool Cats NFT collection will have a group NFT with three member NFTs within
 it.
 
-### 1. Getting started
+#### 1. Getting started
 
 To get started, clone
 [this](https://github.com/Unboxed-Software/solana-lab-group-member) repository's
@@ -480,7 +480,7 @@ The `starter` code comes with:
 - `assets`: folder which contains the image for our NFT collection.
 - `helper.ts`: helper functions for uploading metadata.
 
-### 2. Run validator node
+#### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -499,7 +499,7 @@ everything is working.
 npx esrun src/index.ts
 ```
 
-### 3. Setup group metadata
+#### 3. Setup group metadata
 
 Before creating our group NFT, we must prepare and upload the group metadata. We
 are using devnet Irys (Arweave) to upload the image and metadata. This
@@ -559,7 +559,7 @@ Feel free to run the script and make sure everything uploads.
 npx esrun src/index.ts
 ```
 
-### 3. Create a mint with group and group pointer
+#### 3. Create a mint with group and group pointer
 
 Let's create the group NFT by creating a mint with the `metadata`,
 `metadata pointer`, `group` and `group pointer` extensions.
@@ -766,7 +766,7 @@ Now we can run the script and see the group NFT we created.
 npx esrun src/index.ts
 ```
 
-### 4. Setup member NFT Metadata
+#### 4. Setup member NFT Metadata
 
 Now that we've created our group NFT, we can create the member NFTs. But before
 we actually create them, we need to prepare their metadata.
@@ -853,7 +853,7 @@ const memberTokenMetadata: { mintKeypair: Keypair; metadata: TokenMetadata }[] =
   }));
 ```
 
-### 5. Create member NFTs
+#### 5. Create member NFTs
 
 Just like the group NFT, we need to create the member NFTs. Let's do this in a
 new file called `create-member.ts`. It will look very similar to the
@@ -1070,7 +1070,7 @@ npx esrun src/index.ts
 That's it! If you're having troubles feel free to check out the `solution`
 [branch in the repository](https://github.com/Unboxed-Software/solana-lab-group-member/tree/solution).
 
-# Challenge
+## Challenge
 
 Go create a NFT collection of your own using the the `group`, `group pointer`,
 `member` and `member pointer` extensions.

@@ -9,7 +9,7 @@ description:
   account."
 ---
 
-# Summary
+## Summary
 
 - The permanent delegate holds global ownership over all token accounts
   associated with the mint
@@ -21,7 +21,7 @@ description:
   administrative functions, such as reassigning tokens, managing token supplies,
   and directly implementing specific policies or rules on the token accounts.
 
-# Overview
+## Overview
 
 The `permanent delegate` extension allows a `permanent delegate` for all tokens
 of the mint. This means one address is capable of transferring or burning any
@@ -45,7 +45,7 @@ the permanent delegate extension is a double-edged sword.
 This all being said - the `permanent delegate` is a very exciting extension that
 adds a world of possibilities to Solana tokens.
 
-## Initializing a permanent delegate to mint
+### Initializing a permanent delegate to mint
 
 Initializing a permanent delegate token involves three instructions:
 
@@ -98,7 +98,7 @@ createInitializeMintInstruction(
 When the transaction with these three instructions is sent, a new permanent
 delegate token is created with the specified configuration.
 
-## Transferring tokens as delegate
+### Transferring tokens as delegate
 
 The `transferChecked` function enables the permanent delegate to securely
 transfer tokens between accounts. This function makes sure that the token
@@ -138,7 +138,7 @@ await transferChecked(
 );
 ```
 
-## Burning tokens as delegate
+### Burning tokens as delegate
 
 The `burnChecked` function allows the permanent delegate to burn tokens from any
 token account of the mint. This function makes sure that the burn operation
@@ -176,7 +176,7 @@ await burnChecked(
 );
 ```
 
-## Assign permissions to a new delegate
+### Assign permissions to a new delegate
 
 The `approveChecked` function approves a delegate to transfer or burn up to a
 maximum number of tokens from an account. This allows the designated delegate to
@@ -234,13 +234,13 @@ await transferChecked(
 );
 ```
 
-# Lab
+## Lab
 
 In this lab, we'll explore the functionality of the `permanent delegate`
 extension by creating a mint account with a permanent delegate and testing
 various interactions with token accounts associated with that mint.
 
-### 1. Setup Environment
+#### 1. Setup Environment
 
 To get started, create an empty directory named `permanent-delegate` and
 navigate to it. We'll be initializing a brand new project. Run `npm init` and
@@ -324,7 +324,7 @@ once we've written it.
 If you run into an error in `initializeKeypair` with airdropping, follow the
 next step.
 
-### 2. Run validator node
+#### 2. Run validator node
 
 For the sake of this guide, we'll be running our own validator node.
 
@@ -345,7 +345,7 @@ Alternatively, if you’d like to use testnet or devnet, import the
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 ```
 
-### 3. Helpers
+#### 3. Helpers
 
 When we pasted the `index.ts` code from earlier, we added the following helpers:
 
@@ -356,7 +356,7 @@ When we pasted the `index.ts` code from earlier, we added the following helpers:
 Additionally we have some initial accounts and variables that will be used to
 test the `permanent delegate` extension!
 
-### 4. Create Mint with permanent delegate
+#### 4. Create Mint with permanent delegate
 
 When creating a mint token with default state, we must create the account
 instruction, initialize the default account state for the mint account and
@@ -519,7 +519,7 @@ export async function createTokenExtensionMintWithPermanentDelegate(
 }
 ```
 
-### 6. Create printBalances function
+#### 6. Create printBalances function
 
 We're going to be creating multiple tests that modify a token account's balance.
 To make it easier to follow along we should probably create a utility function
@@ -550,12 +550,12 @@ async function printBalances(
 }
 ```
 
-### 7. Test Setup
+#### 7. Test Setup
 
 Now that we have the ability to create a mint with a permanent delegate for all
 of its new mint accounts, let's write some tests to see how it functions.
 
-### 7.1 Create Mint with Permanent Delegate
+#### 7.1 Create Mint with Permanent Delegate
 
 Let's first create a mint with `payer` as the permanent delegate. To do this we
 call the `createTokenExtensionMintWithPermanentDelegate` function we just
@@ -572,7 +572,7 @@ await createTokenExtensionMintWithPermanentDelegate(
 );
 ```
 
-### 7.2 Create Test Token Accounts
+#### 7.2 Create Test Token Accounts
 
 Now, let's create three new Token accounts to test with. We can accomplish this
 by calling the `createAccount` helper provided by the SPL Token library. We will
@@ -613,7 +613,7 @@ const carolAccount = await createAccount(
 );
 ```
 
-### 7.3 Mint tokens to accounts
+#### 7.3 Mint tokens to accounts
 
 In the previous step, we created the 3 accounts we need to test the
 `permanent delegate` extension. Next, we need to mint tokens to those accounts
@@ -657,7 +657,7 @@ Bob: 100
 Carol: 100
 ```
 
-### 8. Tests
+#### 8. Tests
 
 Now let's write some tests to show the interactions that can be had with the
 `permanent delegate` extension.
@@ -705,7 +705,7 @@ We'll write the following tests:
    - Attempt to transfer tokens from Bob's account to Carol's account with Carol
      again, but overdraw her allotted control (expect this to fail).
 
-### 8.1 Transfer tokens with the correct delegate
+#### 8.1 Transfer tokens with the correct delegate
 
 In this test, `alice` attempts to transfer tokens from `bob` to herself. This
 test is expected to pass as `alice` is the permanent delegate and has control
@@ -752,7 +752,7 @@ We should see the following error logged out in the terminal, meaning the
 extension is working as intended.
 `✅ Since Alice is the permanent delegate, she has control over all token accounts of this mint`
 
-### 8.2 Transfer tokens with incorrect delegate
+#### 8.2 Transfer tokens with incorrect delegate
 
 In this test, `bob` is going to try to transfer tokens from `alice` to himself.
 Given that `bob` is not the permanent delegate, the attempt won't be successful.
@@ -794,7 +794,7 @@ Go ahead and run the script, the transaction should fail.
 npx esrun src/index.ts
 ```
 
-### 8.3 Transfer from one account to another with the correct delegate
+#### 8.3 Transfer from one account to another with the correct delegate
 
 Lets use the power of the permanent delegate extension to have `alice` transfer
 some tokens from `bob` to `carol`.
@@ -841,7 +841,7 @@ results. You will notice that `bob` now has 80 tokens:
 npx esrun src/index.ts
 ```
 
-### 8.4 Burn with correct delegate
+#### 8.4 Burn with correct delegate
 
 Now let's try and burn some of the tokens from `bob`. This test is expected to
 pass.
@@ -883,7 +883,7 @@ npx esrun src/index.ts
 
 Bob had 5 tokens burned and now only has 75 tokens. Poor Bob!
 
-### 8.5 Burn with incorrect delegate
+#### 8.5 Burn with incorrect delegate
 
 Let's try and burn tokens from an account using the incorrect delegate. This is
 expected to fail as `bob` doesn't have any control over the token accounts.
@@ -919,7 +919,7 @@ Run `npm start`. You will see the following message, indicating that the
 extension is working as intended:
 `✅ We expect this to fail since Bob is not the permanent delegate and has no control over the tokens`
 
-### 8.6. Assign delegate permissions to Carol and transfer
+#### 8.6. Assign delegate permissions to Carol and transfer
 
 With the `permanent delegate` extension, the initial delegate can grant a token
 account permission to hold a certain level of control over the mint tokens. In
@@ -977,7 +977,7 @@ Run the tests again. You will notice that `bob` now only has 65 tokens as
 `carol` has just transferred 10 of his tokens to herself:
 `npx esrun src/index.ts`
 
-### 8.7. Attempt to transfer again
+#### 8.7. Attempt to transfer again
 
 In the previous test, we approved `carol` to be able to transfer 10 tokens to
 herself. This means that she has reached the maximum amount of tokens to send
@@ -1016,6 +1016,6 @@ Run the tests one last time and you will see this message, meaning that the
 Thats it! You've just created a mint account with a permanent delegate and
 tested that the functionality all works!
 
-# Challenge
+## Challenge
 
 Create your own mint account with a permanent delegate.
