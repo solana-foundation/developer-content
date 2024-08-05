@@ -668,21 +668,22 @@ Anchor how to configure our local testing environment. This will allow us to
 test our program locally without having to deploy and send transactions to
 devnet.
 
-```zsh
-// bottom of Anchor.toml
+At the bottom of Anchor.toml:
+
+```toml
 [test.validator]
 url="https://api.devnet.solana.com"
 
 [test]
 startup_wait = 10000
 
-[[test.validator.clone]] ## sbv2 devnet programID
+[[test.validator.clone]] # sbv2 devnet programID
 address = "SW1TCH7qEPTdLsDHRgPuMQjbQxKdH2aBStViMFnt64f"
 
-[[test.validator.clone]] ## sbv2 devnet IDL
+[[test.validator.clone]] # sbv2 devnet IDL
 address = "Fi8vncGpNKbq62gPo56G4toCehWNy77GgqGkTaAF5Lkk"
 
-[[test.validator.clone]] ## sbv2 SOL/USD Feed
+[[test.validator.clone]] # sbv2 SOL/USD Feed
 address="GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 ```
 
