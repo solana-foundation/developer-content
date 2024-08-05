@@ -4,6 +4,7 @@ objectives:
   - Create an NFT collection using the group, group pointer, member, and member
     pointer extensions.
   - Update the authority and max size of a group.
+description: "Make an NFT collection using token extensions."
 ---
 
 # Summary

@@ -4,6 +4,9 @@ objectives:
   - Create a mint with a permanent delegate
   - Explain the use cases of permanent delegate
   - Experiment with the rules of the extension
+description:
+  "Create a token than can be permanently transferred or burned by a particular
+  account."
 ---
 
 # Summary

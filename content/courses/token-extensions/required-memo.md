@@ -5,6 +5,7 @@ objectives:
   - Transfer with memo
   - Transfer without memo
   - Disable required memo
+description: "Create a token that requires a short note on every transfer."
 ---
 
 # Summary

@@ -1,12 +1,12 @@
 ---
 title: Transfer Hook
-
 objectives:
   - Create a program that applies the "transfer-hook" interface
-
   - Create a mint with a transfer hook
-
   - Transfer a token with a transfer hook successfully
+description:
+  "Create a token that invokes a function in an onchain program whenever the
+  token in transferred."
 ---
 
 # Summary

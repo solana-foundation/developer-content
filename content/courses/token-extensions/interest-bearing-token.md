@@ -4,6 +4,7 @@ objectives:
   - Create a mint account with the interest bearing extension
   - Explain the use cases of interest bearing tokens
   - Experiment with the rules of the extension
+description: "Make a token that earns interest over time."
 ---
 
 # Summary

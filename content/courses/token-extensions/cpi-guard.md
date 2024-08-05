@@ -3,6 +3,9 @@ title: CPI Guard
 objectives:
   - Explain what the CPI Guard protects against
   - Write code to test the CPI Guard
+description:
+  "Create tokens that don't allow certain accounts to be invoked from toher
+  programs."
 ---
 
 # Summary
