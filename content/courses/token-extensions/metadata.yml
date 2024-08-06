@@ -13,3 +13,10 @@ lessons:
   - transfer-fee
   - close-mint
   - default-account-state
+  - cpi-guard
+  - group-member
+  - immutable-owner
+  - interest-bearing-token
+  - permanent-delegate
+  - required-memo
+  - transfer-hook
