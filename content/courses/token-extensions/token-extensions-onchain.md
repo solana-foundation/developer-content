@@ -1,5 +1,5 @@
 ---
-title: Supporting Token Extensions Program in onchain programs
+title: Use Token Extensions in onchain programs
 objectives:
   - Accept both token programs' accounts, and mints in your program
   - Explain the differences between the Token Program and Token Extension
