@@ -63,7 +63,7 @@ const instruction = new TransactionInstruction({
 - an optional `Buffer` containing data to pass to the program. We’ll be ignoring
   the `data` field for now, but we will revisit it in a future lesson.
 
-After making our instruction, we add it to a transaction, send the tramsaction
+After making our instruction, we add it to a transaction, send the transaction
 to our RPC to be processed and confirmed, then look at the transaction
 signature.
 
