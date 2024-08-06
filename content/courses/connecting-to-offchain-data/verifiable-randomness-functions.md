@@ -1209,15 +1209,15 @@ up our local server, grab all of the right accounts, and then call our program.
 The first thing we’ll do is pull in some more accounts in our `Anchor.toml`
 file:
 
-```rust
+```toml
 ## VRF ACCOUNTS
-[[test.validator.clone]] ## sbv2 attestation programID
+[[test.validator.clone]] # sbv2 attestation programID
 address = "sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx"
 
-[[test.validator.clone]] ## sbv2 attestation IDL
+[[test.validator.clone]] # sbv2 attestation IDL
 address = "5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz"
 
-[[test.validator.clone]] ## sbv2 SbState
+[[test.validator.clone]] # sbv2 SbState
 address = "CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd"
 ```
 
