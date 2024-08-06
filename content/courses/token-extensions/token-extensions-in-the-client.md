@@ -1,5 +1,5 @@
 ---
-title: Support the Token Extensions Program from a Client
+title: Use Token Extensions from a Client
 objectives:
   - Learn how to effectively integrate multiple Solana token programs within
     client applications
