@@ -1650,7 +1650,8 @@ pub struct InitializeExtraAccountMetaList<'info> {
 We also need to define this extra counter account in the TransferHook struct.
 These are the accounts that are passed to our TransferHook program every time a
 transfer is done. The client gets these additional accounts from the
-ExtraAccountsMetaList PDA and includes them in token transfer instruction, but here in the program we still need to define it.
+ExtraAccountsMetaList PDA and includes them in token transfer instruction, but
+here in the program we still need to define it.
 
 ```rust
 #[derive(Accounts)]
