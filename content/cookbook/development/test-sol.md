@@ -19,8 +19,7 @@ import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
     keypair.publicKey,
     LAMPORTS_PER_SOL,
   );
-  const { blockhash, lastValidBlockHeight } =
-    await connection.getLatestBlockhash();
+  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
   await connection.confirmTransaction({
     blockhash,
     lastValidBlockHeight,

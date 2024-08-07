@@ -6,7 +6,7 @@ description:
   environment.
 ---
 
-Oftentimes, local tests rely on programs and accounts available only on mainnet.
+Oftentimes, local tests rely on programs and accounts that are not available on the local validator by default.  
 The Solana CLI allows to both:
 
 - Download Programs and Accounts
@@ -14,7 +14,7 @@ The Solana CLI allows to both:
 
 ### How to load accounts from mainnet
 
-It is possible to download the SRM token mint account to file:
+It is possible to download the JUP token mint account to file:
 
 ```shell
 # solana account -u <source cluster> --output <output format> --output-file <destination file name/path> <address of account to fetch>
