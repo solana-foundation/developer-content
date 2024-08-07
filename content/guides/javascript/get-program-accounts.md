@@ -21,7 +21,7 @@ is not supported. Requests to `getProgramAccounts` should include the
 `dataSlice` and/or `filters` parameters to improve response time and return only
 intended results.
 
-## Facts
+## getProgramAccounts has the following syntax:
 
 ```md
 - `programId`: `string` - Pubkey of the program to query, provided as a base58
@@ -72,8 +72,8 @@ by a program. We can use `getProgramAccounts` for a number of useful queries,
 such as finding:
 
 - All token accounts for a particular wallet
-- All token accounts for a particular mint (i.e. All
-  [SRM](https://www.projectserum.com/) holders)
+- All token accounts for a particular mint (i.e. All [JUP](https://www.jup.ag)
+  holders)
 - All custom accounts for a particular program (i.e. All
   [Mango](https://mango.markets/) users)
 
@@ -93,14 +93,15 @@ scope of our queries down to manageable and predictable sizes.
 A common example of `getProgramAccounts` involves interacting with the
 [SPL-Token Program](https://spl.solana.com/token). Requesting all accounts owned
 by the Token Program with a
-[basic call](../references/accounts.md#get-program-accounts) would involve an
-enormous amount of data. By providing parameters, however, we can efficiently
-request just the data we intend to use.
+[basic call](https://solana.com/docs/rpc/http/getprogramaccounts#parameters)
+would involve an enormous amount of data. By providing parameters, however, we
+can efficiently request just the data we intend to use.
 
 ### `filters`
 
 The most common parameter to use with `getProgramAccounts` is the `filters`
-array. This array accepts two types of filters,`dataSize` and `memcmp`. Before
+array. This array accepts two types of filters, `dataSize` and `memcmp`.
+Before  
 using either of these filters, we should be familiar with how the data we are
 requesting is laid out and serialized.
 
@@ -112,7 +113,7 @@ Specifically, a token account has eight different fields, with each field
 requiring a predictable number of bytes. We can visualize how this data is laid
 out using the below illustration.
 
-![Account Size](./get-program-accounts/account-size.png)
+![Account Size](/public/assets/guides/get-program-accounts/account-size.png)
 
 If we wanted to find all token accounts owned by our wallet address, we could
 add `{ dataSize: 165 }` to our `filters` array to narrow the scope of our query
@@ -127,9 +128,10 @@ any field stored on our account. Specifically, we can query only for accounts
 that match a particular set of bytes at a particular position. `memcmp` requires
 two arguments:
 
-- `offset`: The position at which to begin comparing data. This position is
+- `offset`: the position at which to begin comparing data. This position is  
   measured in bytes and is expressed as an integer.
-- `bytes`: The data that should match the account's data. This is represented as
+- `bytes`: the data that should match the account's data. This is represented
+  as  
   a base-58 encoded string should be limited to less than 129 bytes.
 
 It's important to note that `memcmp` will only return results that are an exact
@@ -185,10 +187,16 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
       `Amount: ${account.account.data["parsed"]["info"]["tokenAmount"]["uiAmount"]}`,
     );
   });
+})();
+```
+
+The output should look like:
+
+```text
   /*
     // Output
 
-    Found 2 token account(s) for wallet FriELggez2Dy3phZeHHAdpcoEXkKQVkv6tx3zDtCVP8T: 
+    Found 2 token account(s) for wallet FriELggez2Dy3phZeHHAdpcoEXkKQVkv6tx3zDtCVP8T:
     -- Token Account Address 0:  H12yCcKLHFJFfohkeKiN8v3zgaLnUMwRcnJTyB4igAsy --
     Mint: CKKDsBT6KiT4GDKs3e39Ue9tDkhuGUKM3cC2a7pmV9YK
     Amount: 1
@@ -196,7 +204,6 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
     Mint: BUGuuhPsHpk8YZrL2GctsCtXGneL1gmT5zYb7eMHZDWf
     Amount: 3
   */
-})();
 ```
 
 ### `dataSlice`
@@ -249,11 +256,13 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
     `Found ${accounts.length} token account(s) for mint ${MY_TOKEN_MINT_ADDRESS}`,
   );
   console.log(accounts);
+})();
+```
 
-  /*
-  // Output (notice the empty <Buffer > at acccount.data)
-  
-  Found 3 token account(s) for mint BUGuuhPsHpk8YZrL2GctsCtXGneL1gmT5zYb7eMHZDWf
+The output should look like (notice the empty <Buffer > at acccount.data):
+
+```text
+Found 3 token account(s) for mint BUGuuhPsHpk8YZrL2GctsCtXGneL1gmT5zYb7eMHZDWf
   [
     {
       account: {
@@ -292,8 +301,6 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
       }
     }
   ]
-  */
-})();
 ```
 
 By combining all three parameters (`dataSlice`, `dataSize`, and `memcmp`) we can
