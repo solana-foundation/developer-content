@@ -232,10 +232,11 @@ import base58 from "bs58";
 
 ## Durable Nonce
 
-`RecentBlockhash` is an important value for a transaction. Your transaction will
-be rejected if you use an expired recent blockhash (after 150 blocks). You can
-use `durable nonce` to get a never expired recent blockhash. To trigger this
-mechanism, your transaction must
+`recentBlockhash` is an important value for a transaction. Your transaction
+will  
+be rejected if you use an expired blockhash (older than 150 blocks). Instead of
+a recent blockhash, you can use a durable nonce, which never expires. To use a
+durable nonce, your transaction must:
 
 1. use a `nonce` stored in `nonce account` as a recent blockhash
 2. put `nonce advance` operation in the first instruction
@@ -265,7 +266,9 @@ import {
   );
   await connection.confirmTransaction(airdropSignature);
 
-  const nonceAccountAuth = Keypair.generate();
+  // you can use any keypair as nonce account authority,
+  // load default solana keypair for nonce account authority
+  const nonceAccountAuth = await getKeypairFromFile();
 
   let nonceAccount = Keypair.generate();
   console.log(`nonce account: ${nonceAccount.publicKey.toBase58()}`);
@@ -307,7 +310,6 @@ import {
 } from "@solana/web3.js";
 
 (async () => {
-  // connection
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   const nonceAccountPubkey = new PublicKey(
@@ -336,6 +338,7 @@ import {
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import * as bs58 from "bs58";
+import { getKeypairFromFile } from "@solana-developers/helpers";
 
 (async () => {
   // Setup our connection and wallet
@@ -349,12 +352,10 @@ import * as bs58 from "bs58";
   );
   await connection.confirmTransaction(airdropSignature);
 
-  // G2FAbFQPFa5qKXCetoFZQEvF9BVvCKbvUZvodpVidnoY
-  const nonceAccountAuth = Keypair.fromSecretKey(
-    bs58.decode(
-      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp",
-    ),
-  );
+  // you can use any keypair as nonce account authority,
+  // but nonceAccountAuth must be the same as the one used in nonce account creation
+  // load default solana keypair for nonce account authority
+  const nonceAccountAuth = await getKeypairFromFile();
 
   const nonceAccountPubkey = new PublicKey(
     "7H18z3v3rZEoKiwY3kh8DLn9eFT6nFCQ2m4kiC7RZ3a4",
