@@ -4,7 +4,7 @@ sidebarSortOrder: 2
 description: "Learn how to get the clock in a Solana program."
 ---
 
-Getting a clock can be done in two ways
+Getting a clock (ie, the current time) can be done in two ways:
 
 1. Passing `SYSVAR_CLOCK_PUBKEY` into an instruction
 2. Accessing Clock directly inside an instruction.

@@ -4,7 +4,7 @@ sidebarSortOrder: 6
 description: "Learn how to read accounts in a Solana program."
 ---
 
-Almost all instructions in Solana would require atleast 2 - 3 accounts, and they
+Almost all instructions in Solana require at least 2 - 3 accounts, and they  
 would be mentioned over the instruction handlers on what order it's expecting
 those set of accounts. It's fairly simple if we take advantage of the `iter()`
 method in Rust, instead of manually indicing the accounts. The

@@ -5,9 +5,12 @@ description:
   "Learn how to create a Program Derived Address (PDA) in a Solana program."
 ---
 
-A Program Derived Address is simply an account owned by the program, but has no
-private key. Instead it's signature is obtained by a set of seeds and a bump (a
-nonce which makes sure it's off curve). "**Generating**" a Program Address is
+A Program Derived Address is simply an account owned by the program, but has
+no  
+private key. Instead it's signature is obtained by a set of seeds and a bump
+(a  
+nonce which makes sure it's 'off curve', i.e. not a valid public key).
+"**Generating**" a Program Address is  
 different from "**creating**" it. One can generate a PDA using
 `Pubkey::find_program_address`. Creating a PDA essentially means to initialize
 the address with space and set the state to it. A normal Keypair account can be
