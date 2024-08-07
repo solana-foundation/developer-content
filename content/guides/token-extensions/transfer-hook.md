@@ -1612,11 +1612,11 @@ pub struct Account {
 }
 ```
 
-I our case we want to derive a counter account from the owner of the sender
-token account so when we create the ExtraAccountMeta accounts we `init`this PDA
+In our case, we want to derive a counter account from the owner of the sender
+token account so when we create the ExtraAccountMeta accounts we `init` this PDA
 counter account that is derived from the sender token account owner and the
 string 'counter'. When the PDA counter account is initialized we will be able to
-use it with in the transfer hook to increase it in every transfer.
+use it within the transfer hook to increment the value in every transfer.
 
 ````rust
 struct.
@@ -1649,8 +1649,8 @@ pub struct InitializeExtraAccountMetaList<'info> {
 
 We also need to define this extra counter account in the TransferHook struct.
 These are the accounts that are passed to our TransferHook program every time a
-transfer is done. The client get the additional accounts from the
-ExtraAccountsMetaList PDA but here in the program we still need to define it.
+transfer is done. The client gets these additional accounts from the
+ExtraAccountsMetaList PDA and includes them in token transfer instruction, but here in the program we still need to define it.
 
 ```rust
 #[derive(Accounts)]
