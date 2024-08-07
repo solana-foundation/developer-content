@@ -6,7 +6,8 @@ description:
   environment.
 ---
 
-Oftentimes, local tests rely on programs and accounts that are not available on the local validator by default.  
+Oftentimes, local tests rely on programs and accounts that are not available on
+the local validator by default.  
 The Solana CLI allows to both:
 
 - Download Programs and Accounts
