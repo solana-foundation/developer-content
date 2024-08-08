@@ -1,5 +1,5 @@
 ---
 metaOnly: true
 title: Tokens
-sidebarSortOrder: 3
+sidebarSortOrder: 6
 ---
