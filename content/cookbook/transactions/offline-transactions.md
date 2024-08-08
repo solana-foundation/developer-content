@@ -267,7 +267,7 @@ import {
   await connection.confirmTransaction(airdropSignature);
 
   // you can use any keypair as nonce account authority,
-  // load default solana keypair for nonce account authority
+  // this uses the default Solana keypair file (id.json) as the nonce account authority
   const nonceAccountAuth = await getKeypairFromFile();
 
   let nonceAccount = Keypair.generate();
