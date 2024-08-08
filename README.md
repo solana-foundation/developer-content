@@ -26,15 +26,12 @@ repo, including the documentation for the
 
 #### Validator Docs
 
-The documentation within this repo for the Solana protocol in general, rather 
-than for specific validators.
+The documentation within this repo is for Solana in general, rather than for 
+specific validators. See the sites below to kearn about a specific 
+validator:
 
-For validator-specific documentation, see below:
-
-| Validator Client         | Repo                                                               | Documentation                                          |
-| ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------ |
-| Anza's Agave             | [Repo](https://github.com/anza-xyz/agave/blob/master/docs)         | [Agave docs](https://docs.solanalabs.com/)             |
-| Jump Crypto's Firedancer | [Repo](https://github.com/firedancer-io/firedancer/tree/main/book) | [Firedancer docs](https://firedancer-io.github.io/firedancer/) |
+- Anza's Agave - [Agave docs](https://docs.solanalabs.com/), [Repo](https://github.com/anza-xyz/agave/blob/master/docs)
+- Jump Crypto's Firedancer - [Firedancer docs](https://firedancer-io.github.io/firedancer/), [Repo](https://github.com/firedancer-io/firedancer/tree/main/book)
 
 ### Developer Guides
 
