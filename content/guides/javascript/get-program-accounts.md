@@ -306,5 +306,5 @@ interested in.
 ## Other Resources
 
 - [RPC API Documentation](https://solana.com/docs/rpc/http/getprogramaccounts)
-- [Web3js Documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getProgramAccounts)
-- [JSON-parsed Web3js Documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
+- [web3.js documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getProgramAccounts)
+- [JSON-parsed web3.js Documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
