@@ -346,3 +346,25 @@ In the Solana program examples you can find a
 
 2. If you encounter `Clock handle timeout` error you can just restart your
    terminal and run the tests again.
+
+## Conclusion
+
+Testing your Solana programs is essential for ensuring they behave as expected.
+Bankrun offers a lightweight and fast alternative to the local validator, making
+your tests up to 10 times faster. It enables powerful features like custom
+account data and time travel, which can significantly enhance your testing
+capabilities. Additionally, Jest is a great alternative to Mocha for writing
+tests and can be easily integrated with Bankrun.
+
+However, it's important to note a few disadvantages of using Bankrun compared to
+the local validator:
+
+1. Environment Representation: Tests run with Bankrun may not fully represent a
+   live or testnet environment.
+2. Code Reusability: Some code used in local validator tests might not be
+   reusable with Bankrun.
+3. Dependency: Using Bankrun and Bankrun Anchor introduces dependencies specific
+   to these tools.
+
+Despite these drawbacks, Bankrun is a valuable tool that can greatly improve
+your development workflow.
