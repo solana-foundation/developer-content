@@ -33,7 +33,9 @@ Most Solana tests use the [Mocha framework](https://mochajs.org/) for writing
 the tests and [Chai](https://www.chaijs.com/) for assertions. However, you can
 use any testing framework that you are comfortable with. In this guide we will
 have a look at [Jest](https://jestjs.io/) and
-[Bankrun](https://kevinheavey.github.io/solana-bankrun/) as alternatives.
+[Bankrun](https://kevinheavey.github.io/solana-bankrun/). With Bankrun, you can
+accelerate your tests by almost 10x, gain the ability to modify program time,
+and write custom account data.
 
 ## Presets
 
