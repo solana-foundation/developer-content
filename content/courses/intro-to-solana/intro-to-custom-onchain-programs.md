@@ -236,8 +236,8 @@ Scroll around the explorer and look at what you're seeing:
 
 - The **Account Input(s)** will include:
   - The address of your payer - being debited 5000 lamports for the transaction
-  - The program address for the ping program
   - The data address for the ping program
+  - The program address for the ping program
 - The **Instruction** section will contain a single instruction with no data -
   the ping program is a pretty simple program, so it doesn't need any data.
 - The **Program Instruction Logs** show the logs from the ping program.
