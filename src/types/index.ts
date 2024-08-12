@@ -51,9 +51,6 @@ type NavItemBase = {
   href?: string;
   sidebarSortOrder?: number;
   metaOnly?: boolean;
-  /**
-   *
-   */
   items?: Array<any>;
   altRoutes?: string[] | undefined;
   isSkippedInNav?: boolean;
