@@ -44,14 +44,22 @@ for your Solana programs. These presets are for example:
 
 ```bash
 npx create-solana-dapp my-dapp
+```
+
+`create-solana-dapp` will set you up with a Solana web project with various
+configuration options, including a Next.js or React client, the Tailwind UI
+Library, and either a basic or counter Anchor program. The tests are written
+using Jest and can be run with the `anchor test` command.
+
+```bash
 npx create-solana-game my-game
 ```
 
-In both cases, you can run the tests with:
-
-```bash
-anchor test
-```
+`create-solana-game` will set you up with a Solana game project that includes
+[Jest](https://jestjs.io/), [Mocha](https://mochajs.org/) and
+[Bankrun](https://kevinheavey.github.io/solana-bankrun/) tests and a `next.js`
+app and an additional Unity Game engine client using Solana Wallet adapter. The
+Mocha and Bankrun tests can both be run using the `anchor test` command.
 
 You can also find many test examples in the
 [Solana Program Examples](https://github.com/solana-developers/program-examples).
