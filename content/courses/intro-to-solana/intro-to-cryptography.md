@@ -218,7 +218,8 @@ SECRET_KEY="[(a series of numbers)]"
 We can then load the keypair from the environment. Update `generate-keypair.ts`:
 
 ```typescript
-import "dotenv/config";
+import dotenv from "dotenv";
+dotenv.config();
 import { getKeypairFromEnvironment } from "@solana-developers/helpers";
 
 const keypair = getKeypairFromEnvironment("SECRET_KEY");
