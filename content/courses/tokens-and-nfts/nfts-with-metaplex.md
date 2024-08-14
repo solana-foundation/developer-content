@@ -296,6 +296,12 @@ To begin, make a new folder and install the relevant dependencies:
 npm i "@solana/web3.js" "@solana-developers/helpers "@metaplex-foundation/js"
 ```
 
+<Callout type="note">As of July 15 2024 Metaplex shows a deprecation warning
+when installing this package. However, as mentioned above, the
+[Metaplex JavaScript SDK](https://github.com/metaplex-foundation/js) remains the
+simplest and most popular JS/TS client to create NFTs with broad wallet
+support.</Callout>
+
 Then create a file called `create-metaplex-collection.ts`, and add our imports:
 
 ```typescript
