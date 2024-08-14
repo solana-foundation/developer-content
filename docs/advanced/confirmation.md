@@ -33,8 +33,9 @@ let's briefly set the base understanding of a few things:
 Transactions consist of two components: a
 [message](/docs/terminology.md#message) and a
 [list of signatures](/docs/terminology.md#signature). The transaction message is
-where the magic happens and at a high level it consists of three components:
+where the magic happens and at a high level it consists of four components:
 
+- a **header** with metadata about the transaction,
 - a **list of instructions** to invoke,
 - a **list of accounts** to load, and
 - a **“recent blockhash.”**
@@ -48,8 +49,8 @@ in transaction confirmation.
 Below is a high level view of the lifecycle of a transaction. This article will
 touch on everything except steps 1 and 4.
 
-1. Create a list of instructions along with the list of accounts that
-   instructions need to read and write
+1. Create a header and a list of instructions along with the list of accounts
+   that instructions need to read and write
 2. Fetch a recent blockhash and use it to prepare a transaction message
 3. Simulate the transaction to ensure it behaves as expected
 4. Prompt user to sign the prepared transaction message with their private key
