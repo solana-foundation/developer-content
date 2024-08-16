@@ -14,6 +14,13 @@ keywords:
   - node runner
 ---
 
+# Deprecated
+
+Running a solana node in the cloud requires significantly greater
+operational expertise to achieve stability and performance. Do not
+expect to find sympathetic voices should you chose this route and
+find yourself in need of support.
+
 # Solana on AWS
 
 Running Solana nodes on AWS can help to reduce operational costs and improve
