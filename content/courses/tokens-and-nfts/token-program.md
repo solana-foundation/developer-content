@@ -105,7 +105,7 @@ contains two instructions:
 This would look as follows:
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildCreateMintTransaction(
@@ -224,7 +224,7 @@ hood:
    new token account
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildCreateTokenAccountTransaction(
@@ -313,7 +313,7 @@ Under the hood, `createAssociatedTokenAccount` is doing two things:
    `createAssociatedTokenAccountInstruction`
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildCreateAssociatedTokenAccountTransaction(
@@ -381,7 +381,7 @@ Under the hood, the `mintTo` function simply creates a transaction with the
 instructions obtained from the `createMintToInstruction` function.
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildMintToTransaction(
@@ -438,7 +438,7 @@ Under the hood, the `transfer` function simply creates a transaction with the
 instructions obtained from the `createTransferInstruction` function:
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildTransferTransaction(
