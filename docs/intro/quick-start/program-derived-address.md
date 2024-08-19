@@ -125,11 +125,6 @@ represent account data (data type to store in the AccountInfo's data field).
 In this example, we're defining a `MessageAccount` struct to store a message
 created by users that contains three fields:
 
-- `user`: A Pubkey representing the user who created the message account.
-- `message`: A String containing the user's message.
-- `bump`: A u8 storing the "bump" seed used in deriving the program derived
-  address (PDA). Storing this value saves compute by eliminating the need to
-  rederive it for each use in subsequent instructions.
 - `user` - A Pubkey representing the user who created the message account.
 - `message` - A String containing the user's message.
 - `bump` - A u8 storing the ["bump" seed](/docs/core/pda#canonical-bump) used in
