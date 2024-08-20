@@ -11,14 +11,18 @@ the Solana ecosystem and displayed on
 
 There are a few primary types of Solana Developer content within this repo:
 
-- [`docs`](#solana-docs) - The [core documentation](https://solana.com/docs) for
-  the Solana blockchain
-- [`guides`](#developer-guides) - Long form tutorials focused on a specific
+- [`courses`](#cources) - multiple lessons comprehensively covering a given
+  topic, with both a read session and and an interactive lab for each lesson
+- [`docs`](#docs) - the [core documentation](https://solana.com/docs) for the
+  Solana blockchain
+- [`guides`](#developer-guides) - long form tutorials focused on a specific
   topic related to Solana development, like building dApps and programs
-- [`resources`](#developer-resources) - Collection of the popular frameworks,
-  sdks, documentation sites, and developer tools from around the ecosystem
+- [`resources`](#developer-resources) - collection of popular frameworks, SDKs,
+  documentation sites, and developer tools from around the ecosystem
 
-### Solana Docs
+### Courses
+
+### Docs
 
 The core [Solana Documentation](https://solana.com/docs) is housed within this
 repo, including the documentation for the
@@ -29,8 +33,7 @@ repo, including the documentation for the
 The "core documentation" within this repo is generalized to the Solana protocol
 as a whole and not the specific implementations of any given Validator client.
 
-If you are looking for the documentation of a specific Validator client's
-implementation, consult their respective documentation:
+For specific validator clients, consult their respective documentation:
 
 | Validator Client         | Repo                                                               | Website                                                |
 | ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------ |

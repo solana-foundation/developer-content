@@ -5,3 +5,4 @@ lessons:
   - oracles
   - verifiable-randomness-functions
 priority: 20
+isHidden: true
