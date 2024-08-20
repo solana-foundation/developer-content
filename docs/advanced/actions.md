@@ -426,8 +426,8 @@ export interface ActionGetResponse {
 
 - `error` - An optional error indication for non-fatal errors. If present, the
   client should display it to the user. If set, it should not prevent the client
-  from interpreting the action or displaying it to the user. (see
-  [Action Errors](#action-errors)) For example, the error can be used together
+  from interpreting the action or displaying it to the user (see
+  [Action Errors](#action-errors)). For example, the error can be used together
   with `disabled` to display a reason like business constraints, authorization,
   the state, or an error of external resource.
 
@@ -698,7 +698,7 @@ export interface ActionError {
 }
 ```
 
-When an Actions API responds with a HTTP error status code (i.e. 4xx and 5xx),
+When an Actions API responds with an HTTP error status code (i.e. 4xx and 5xx),
 the response body should be a JSON payload following `ActionError`. The error is
 considered fatal and the included `message` should be presented to the user.
 
