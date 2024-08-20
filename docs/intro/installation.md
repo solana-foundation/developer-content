@@ -187,7 +187,7 @@ build and deploy Solana programs.
     ```
 
 You can view the latest versions on the
-[Agave Github repo](https://github.com/anza-xyz/agave/releases)
+[Agave Github repo](https://github.com/anza-xyz/agave/releases).
 
 <Callout title="Updating the Solana CLI">
 
