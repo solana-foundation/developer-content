@@ -1,6 +1,11 @@
 ---
 title: Installation
 sidebarSortOrder: 1
+description:
+  "Easily setup your local development environment for Solana development on
+  Linux, Mac or Windows. Including installing Rust, the Solana CLI, and Anchor."
+altRoutes:
+  - /guides/getstarted/setup-local-development
 ---
 
 This section covers the steps to set up your local environment for Solana
