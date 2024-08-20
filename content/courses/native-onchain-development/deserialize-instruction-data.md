@@ -482,8 +482,8 @@ pub enum MovieInstruction {
 ```
 
 Next, define a `MovieReviewPayload` struct. This will act as an intermediary
-type for deserialization so it should use the `derive` attribute macro to provide
-a default implementation for the `BorshDeserialize` trait.
+type for deserialization so it should use the `derive` attribute macro to
+provide a default implementation for the `BorshDeserialize` trait.
 
 ```rust
 #[derive(BorshDeserialize)]
