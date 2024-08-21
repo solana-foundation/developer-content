@@ -107,7 +107,11 @@ We want the minimal amount of code necessary to solve the problem.
 We're trying to focus on Solana, not teaching JS/TS development and setup. This
 means reducing the JS/TS concepts needed to understand our demo code.
 
-- On the command line (not in the browser),`.ts` files are run on the command line with `esrun`, which supports top-level `await`, doesn't require a `tsconfig.json`, etc. There is no need for `async function main()` wrappers or [IIFEs](https://developer.mozilla.org/en-US/docs/Glossary/IIFE). `await` just works. If you see these wrappers, remove them.
+- On the command line (not in the browser),`.ts` files are run on the command
+  line with `esrun`, which supports top-level `await`, doesn't require a
+  `tsconfig.json`, etc. There is no need for `async function main()` wrappers or
+  [IIFEs](https://developer.mozilla.org/en-US/docs/Glossary/IIFE). `await` just
+  works. If you see these wrappers, remove them.
 
 - Likewise, use `async`/`await` and consistently use `try` / `catch` all the
   time, rather than sometimes using `.then()` and `.catch()`
