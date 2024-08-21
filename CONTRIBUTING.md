@@ -31,8 +31,7 @@ and block approval/merging.
 
 ### Prose
 
-The guidelines below are consistent with Solana Foundation Style (if you work at
-Solana Foundation, see Notion), and
+The guidelines below are consistent with Solana Foundation Style Guide, and
 [TERMINOLOGY](https://github.com/solana-foundation/developer-content/blob/main/docs/terminology.md),
 to ensure consistency with other content on solana.com. There are also a few
 additional items aimed at technical documents.
@@ -44,7 +43,9 @@ In particular:
   and save the person reviewing your PR some time. We recommend
   [Grammarly](https://grammarly.com/). In
   [your Grammarly dictionary](https://account.grammarly.com/customize), you may
-  wish to add Solana-specific words like `lamport`, `blockhash`, etc.
+  wish to add Solana-specific words like `lamport`, `blockhash`, etc. For VScode
+  users, there is a
+  [VScode extension for Grammarly](https://marketplace.visualstudio.com/items?itemName=znck.grammarly).
 - Use US English rather than British English. Grammarly will catch this for you.
 - Use 'onchain' (not on-chain, definitely not smart contract) when referring to
   onchain apps. This comes from the Solana Foundation style guide, and is
@@ -84,12 +85,6 @@ In particular:
   instruction. The `multiple` template in Anchor also calls the functions
   `handler`.
 
-Finally, run Grammarly over your PRs. While your spelling might be fine,
-Grammarly will often catch dangling words and consistencies over your prose. You
-don't have to change everything Grammarly asks, but checking your document will
-save other people time. For VScode users, there is a
-[VScode extension for Grammarly](https://marketplace.visualstudio.com/items?itemName=znck.grammarly).
-
 ### Code
 
 You're writing code to be read, understood, and changed by others.
@@ -98,7 +93,7 @@ We want the minimal amount of code necessary to solve the problem.
 
 - Use full names. Call a `thing` a `thing`. Don't call it a `thg` - this means
   we don't have to say 'thing, spelled tee aitch gee' every time we talk about
-  it, and means students (who often don't speak English as a first language)
+  it, and means developers (who often don't speak English as a first language)
   have to work out that 'thg' means 'thing'.
 - Avoid repetitive, copy-paste code. This helps others change the code easily,
   as they can update and fix things in a single place. If there's some
@@ -106,9 +101,6 @@ We want the minimal amount of code necessary to solve the problem.
   [make a PR to the 'helpers' repository](https://github.com/solana-developers/helpers).
 - Avoid magic numbers. Nobody should see a `+ 32` in your code and wonder what
   the `32` means. See Anchor notes below for Anchor-specific advice.
-- Avoid asking students to clone a git repo. The idea is that students should be
-  able to create projects from scratch when they have finished the course.
-  Referring to the code students have made in previous chapters is fine.
 
 #### JS/TS
 
