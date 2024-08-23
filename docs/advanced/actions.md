@@ -270,6 +270,14 @@ backend, etc) and returned to the _Action client_. Ultimately, providing a
 signable transaction or message for a wallet to prompt the user to approve,
 sign, and send to the blockchain.
 
+> The types and interfaces declared within this readme files are often the
+> simplified version of the types to aid in readability.
+>
+> For better type safety and improved developer experience, the
+> `@solana/actions-spec` package contains more complex type definitions. You can
+> find the
+> [source code for them here](https://github.com/solana-developers/solana-actions/blob/main/packages/actions-spec/index.d.ts).
+
 ### URL Scheme
 
 A Solana Action URL describes an interactive request for a signable Solana
@@ -382,7 +390,13 @@ A `GET` response with an HTTP `OK` JSON response should include a body payload
 that follows the interface specification:
 
 ```ts filename="ActionGetResponse"
-export interface ActionGetResponse {
+export type ActionType = "action" | "completed";
+
+export type ActionGetResponse = Action<"action">;
+
+export interface Action<T extends ActionType> {
+  /** type of Action to present to the user */
+  type: T;
   /** image url that represents the source of the action request */
   icon: string;
   /** describes the source of the action request */
@@ -401,6 +415,13 @@ export interface ActionGetResponse {
   error?: ActionError;
 }
 ```
+
+- `type` - The type of action being given to the user. Defaults to `action`. The
+  initial `ActionGetResponse` is required to have a type of `action`.
+
+  - `action` - Standard action that will allow the user to interact with any of
+    the `LinkedActions`
+  - `completed` - Used to declare the "completed" state within action chaining.
 
 - `icon` - The value must be an absolute HTTP or HTTPS URL of an icon image. The
   file must be an SVG, PNG, or WebP image, or the client/wallet must reject it
@@ -450,20 +471,168 @@ export interface LinkedAction {
   href: string;
   /** button text rendered to the user */
   label: string;
-  /** Parameter to accept user input within an action */
-  parameters?: [ActionParameter];
+  /**
+   * Parameters to accept user input within an action
+   * @see {ActionParameter}
+   * @see {ActionParameterSelectable}
+   */
+  parameters?: Array<TypedActionParameter>;
 }
+```
 
-/** Parameter to accept user input within an action */
+The `ActionParameter` allows declaring what input the Action API is requesting
+from the user:
+
+```ts filename="ActionParameter"
+/**
+ * Parameter to accept user input within an action
+ * note: for ease of reading, this is a simplified type of the actual
+ */
 export interface ActionParameter {
+  /** input field type */
+  type?: ActionParameterType;
   /** parameter name in url */
   name: string;
   /** placeholder text for the user input field */
   label?: string;
   /** declare if this field is required (defaults to `false`) */
   required?: boolean;
+  /** regular expression pattern to validate user input client side */
+  pattern?: string;
+  /** human-readable description of the `type` and/or `pattern`, represents a caption and error, if value doesn't match */
+  patternDescription?: string;
+  /** the minimum value allowed based on the `type` */
+  min?: string | number;
+  /** the maximum value allowed based on the `type` */
+  max?: string | number;
 }
 ```
+
+The `pattern` should be a string equivalent of a valid regular expression. This
+regular expression pattern should by used by blink-clients to validate user
+input before before making the POST request. If the `pattern` is not a valid
+regular expression, it should be ignored by clients.
+
+The `patternDescription` is a human readable description of the expected input
+requests from the user. If `pattern` is provided, the `patternDescription` is
+required to be provided.
+
+The `min` and `max` values allows the input to set a lower and/or upper bounds
+of the input requested from the user (i.e. min/max number and or min/max
+character length), and should be used for client side validation. For input
+`type`s of `date` or `datetime-local`, these values should be a string dates.
+For other string based input `type`s, the values should be numbers representing
+their min/max character length.
+
+If the user input value is not considered valid per the `pattern`, the user
+should receive a client side error message indicating the input field is not
+valid and displayed the `patternDescription` string.
+
+The `type` field allows the Action API to declare more specific user input
+fields, providing better client side validation and improving the user
+experience. In many cases, this type will resemble the standard
+[HTML input element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input).
+
+The `ActionParameterType` can be simplified to the following type:
+
+```ts filename="ActionParameterType"
+/**
+ * Input field type to present to the user
+ * @default `text`
+ */
+export type ActionParameterType =
+  | "text"
+  | "email"
+  | "url"
+  | "number"
+  | "date"
+  | "datetime-local"
+  | "checkbox"
+  | "radio"
+  | "textarea"
+  | "select";
+```
+
+Each of the `type` values should normally result in a user input field that
+resembles a standard HTML `input` element of the corresponding `type` (i.e.
+`<input type="email" />`) to provide better client side validation and user
+experience:
+
+- `text` - equivalent of HTML
+  [“text” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/text)
+  element
+- `email` - equivalent of HTML
+  [“email” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email)
+  element
+- `url` - equivalent of HTML
+  [“url” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/url)
+  element
+- `number` - equivalent of HTML
+  [“number” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number)
+  element
+- `date` - equivalent of HTML
+  [“date” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)
+  element
+- `datetime-local` - equivalent of HTML
+  [“datetime-local” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local)
+  element
+- `checkbox` - equivalent to a grouping of standard HTML
+  [“checkbox” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/checkbox)
+  elements. The Action API should return `options` as detailed below. The user
+  should be able to select multiple of the provided checkbox options.
+- `radio` - equivalent to a grouping of standard HTML
+  [“radio” input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/radio)
+  elements. The Action API should return `options` as detailed below. The user
+  should be able to select only one of the provided radio options.
+- Other HTML input type equivalents not specified above (`hidden`, `button`,
+  `submit`, `file`, etc) are not supported at this time.
+
+In addition to the elements resembling HTML input types above, the following
+user input elements are also supported:
+
+- `textarea` - equivalent of HTML
+  [textarea element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea).
+  Allowing the user provide multi-line input.
+- `select` - equivalent of HTML
+  [select element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select),
+  allowing the user to experience a “dropdown” style field. The Action API
+  should return `options` as detailed below.
+
+When `type` is set as `select`, `checkbox`, or `radio` then the Action API
+should include an array of `options` that each provide a `label` and `value` at
+a minimum. Each option may also have a `selected` value to inform the
+blink-client which of the options should be selected by default for the user
+(see `checkbox` and `radio` for differences).
+
+This `ActionParameterSelectable` can be simplified to the following type
+definition:
+
+```ts filename="ActionParameterSelectable"
+/**
+ * note: for ease of reading, this is a simplified type of the actual
+ */
+interface ActionParameterSelectable extends ActionParameter {
+  options: Array<{
+    /** displayed UI label of this selectable option */
+    label: string;
+    /** value of this selectable option */
+    value: string;
+    /** whether or not this option should be selected by default */
+    selected?: boolean;
+  }>;
+}
+```
+
+If no `type` is set or an unknown/unsupported value is set, blink-clients should
+default to `text` and render a simple text input.
+
+The Action API is still responsible to validate and sanitize all data from the
+user input parameters, enforcing any “required” user input as necessary.
+
+For platforms other that HTML/web based ones (like native mobile), the
+equivalent native user input component should be used to achieve the equivalent
+experience and client side validation as the HTML/web input types described
+above.
 
 #### Example GET Response
 
@@ -628,11 +797,21 @@ A `POST` response with an HTTP `OK` JSON response should include a body payload
 of:
 
 ```ts filename="ActionPostResponse"
-export interface ActionPostResponse {
+/**
+ * Response body payload returned from the Action POST Request
+ */
+export interface ActionPostResponse<T extends ActionType = ActionType> {
   /** base64 encoded serialized transaction */
   transaction: string;
   /** describes the nature of the transaction */
   message?: string;
+  links?: {
+    /**
+     * The next action in a successive chain of actions to be obtained after
+     * the previous was successful.
+     */
+    next: NextActionLink;
+  };
 }
 ```
 
@@ -645,6 +824,11 @@ export interface ActionPostResponse {
   transaction included in the response. The client should display this value to
   the user. For example, this might be the name of an item being purchased, a
   discount applied to a purchase, or a thank you note.
+
+- `links.next` - An optional value use to "chain" multiple Actions together in
+  series. After the included `transaction` has been confirmed on-chain, the
+  client can fetch and render the next action. See
+  [Action Chaining](#action-chaining) for more details.
 
 - The client and application should allow additional fields in the request body
   and response body, which may be added by future specification updates.
@@ -705,6 +889,91 @@ considered fatal and the included `message` should be presented to the user.
 For API responses that support the optional `error` attribute (like
 [`ActionGetResponse`](#get-response)), the error is considered non-fatal and the
 included `message` should be presented to the user.
+
+## Action Chaining
+
+Solana Actions can be "chained" together in a successive series. After an
+Action's transaction is confirmed on-chain, the next action can be obtained and
+presented to the user.
+
+Action chaining allows developers to build more complex and dynamic experiences
+within blinks, including:
+
+- providing multiple transactions (and eventually sign message) to a user
+- customized action metadata based on the user's wallet address
+- refreshing the blink metadata after a successful transaction
+- receive an API callback with the transaction signature for additional
+  validation and logic on the Action API server
+- customized "success" messages by updating the displayed metadata (e.g. a new
+  image and description)
+
+To chain multiple actions together, in any `ActionPostResponse` include a
+`links.next` of either:
+
+- `PostNextActionLink` - POST request link with a same origin callback url to
+  receive the `signature` and user's `account` in the body. This callback url
+  should respond with a `NextAction`.
+- `InlineNextActionLink` - Inline metadata for the next action to be presented
+  to the user immediately after the transaction has confirmed. No callback will
+  be made.
+
+```ts
+export type NextActionLink = PostNextActionLink | InlineNextActionLink;
+
+/** @see {NextActionPostRequest} */
+export interface PostNextActionLink {
+  /** Indicates the type of the link. */
+  type: "post";
+  /** Relative or same origin URL to which the POST request should be made. */
+  href: string;
+}
+
+/**
+ * Represents an inline next action embedded within the current context.
+ */
+export interface InlineNextActionLink {
+  /** Indicates the type of the link. */
+  type: "inline";
+  /** The next action to be performed */
+  action: NextAction;
+}
+```
+
+### NextAction
+
+After the `ActionPostResponse` included `transaction` is signed by the user and
+confirmed on-chain, the blink client should either:
+
+- execute the callback request to fetch and display the `NextAction`, or
+- if a `NextAction` is already provided via `links.next`, the blink client
+  should update the displayed metadata and make no callback request
+
+If the callback url is not the same origin as the initial POST request, no
+callback request should be made. Blink clients should display an error notifying
+the user.
+
+```ts filename="NextAction"
+/** The next action to be performed */
+export type NextAction = Action<"action"> | CompletedAction;
+
+/** The completed action, used to declare the "completed" state within action chaining. */
+export type CompletedAction = Omit<Action<"completed">, "links">;
+```
+
+Based on the `type`, the next action should be presented to the user via blink
+clients in one of the following ways:
+
+- `action` - (default) A standard action that will allow the user to see the
+  included Action metadata, interact with the provided `LinkedActions`, and
+  continue to chain any following actions.
+
+- `completed` - The terminal state of an action chain that can update the blink
+  UI with the included Action metadata, but will not allow the user to execute
+  further actions.
+
+If no `links.next` is not provided, blink clients should assume the current
+action is final action in the chain, presenting their "completed" UI state after
+the transaction is confirmed.
 
 ## actions.json
 
