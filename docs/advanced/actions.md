@@ -634,6 +634,121 @@ equivalent native user input component should be used to achieve the equivalent
 experience and client side validation as the HTML/web input types described
 above.
 
+#### Example GET Response
+
+The following example response provides a single "root" action that is expected
+to be presented to the user a single button with a label of "Claim Access
+Token":
+
+```json
+{
+  "title": "HackerHouse Events",
+  "icon": "<url-to-image>",
+  "description": "Claim your Hackerhouse access token.",
+  "label": "Claim Access Token" // button text
+}
+```
+
+The following example response provides 3 related action links that allow the
+user to click one of 3 buttons to cast their vote for a DAO proposal:
+
+```json
+{
+  "title": "Realms DAO Platform",
+  "icon": "<url-to-image>",
+  "description": "Vote on DAO governance proposals #1234.",
+  "label": "Vote",
+  "links": {
+    "actions": [
+      {
+        "label": "Vote Yes", // button text
+        "href": "/api/proposal/1234/vote?choice=yes"
+      },
+      {
+        "label": "Vote No", // button text
+        "href": "/api/proposal/1234/vote?choice=no"
+      },
+      {
+        "label": "Abstain from Vote", // button text
+        "href": "/api/proposal/1234/vote?choice=abstain"
+      }
+    ]
+  }
+}
+```
+
+#### Example GET Response with Parameters
+
+The following examples response demonstrate how to accept text input from the
+user (via `parameters`) and include that input in the final `POST` request
+endpoint (via the `href` field within a `LinkedAction`):
+
+The following example response provides the user with 3 linked actions to stake
+SOL: a button labeled "Stake 1 SOL", another button labeled "Stake 5 SOL", and a
+text input field that allows the user to enter a specific "amount" value that
+will be sent to the Action API:
+
+```json
+{
+  "title": "Stake-o-matic",
+  "icon": "<url-to-image>",
+  "description": "Stake SOL to help secure the Solana network.",
+  "label": "Stake SOL", // not displayed since `links.actions` are provided
+  "links": {
+    "actions": [
+      {
+        "label": "Stake 1 SOL", // button text
+        "href": "/api/stake?amount=1"
+        // no `parameters` therefore not a text input field
+      },
+      {
+        "label": "Stake 5 SOL", // button text
+        "href": "/api/stake?amount=5"
+        // no `parameters` therefore not a text input field
+      },
+      {
+        "label": "Stake", // button text
+        "href": "/api/stake?amount={amount}",
+        "parameters": [
+          {
+            "name": "amount", // field name
+            "label": "SOL amount" // text input placeholder
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+The following example response provides a single input field for the user to
+enter an `amount` which is sent with the POST request (either as a query
+parameter or a subpath can be used):
+
+```json
+{
+  "icon": "<url-to-image>",
+  "label": "Donate SOL",
+  "title": "Donate to GoodCause Charity",
+  "description": "Help support this charity by donating SOL.",
+  "links": {
+    "actions": [
+      {
+        "label": "Donate", // button text
+        "href": "/api/donate/{amount}", // or /api/donate?amount={amount}
+        "parameters": [
+          // {amount} input field
+          {
+            "name": "amount", // input field name
+            "label": "SOL amount" // text input placeholder
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
 ### POST Request
 
 The client must make an HTTP `POST` JSON request to the action URL with a body
