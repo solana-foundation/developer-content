@@ -506,8 +506,8 @@ try {
 
 } catch (error) {
 
-    console.log("createMint failed with errors: ");
-    console.log(error);
+    console.log("❌ createMint failed with errors: ");
+    console.log(error.message);
 }
 ```
 
@@ -612,28 +612,37 @@ const createMetadataAccountInstruction =
 
 transaction.add(createMetadataAccountInstruction);
 
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [user],
-);
+try {
 
-const transactionLink = getExplorerLink(
-  "transaction",
-  transactionSignature,
-  "devnet",
-);
+    const transactionSignature = await sendAndConfirmTransaction(
+        connection,
+        transaction,
+        [user],
+    );
 
-console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}!`);
+    const transactionLink = getExplorerLink(
+        "transaction",
+        transactionSignature,
+        "devnet",
+    );
 
-const tokenMintLink = getExplorerLink(
-  "address",
-  tokenMintAccount.toString(),
-  "devnet",
-);
+    console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
 
-console.log(`✅ Look at the token mint again: ${tokenMintLink}!`);
+    const tokenMintLink = getExplorerLink(
+        "address",
+        tokenMintAccount.toString(),
+        "devnet",
+    );
+
+    console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
+
+} catch (error) {
+
+    console.log("❌ Make token metadata failed with errors:");
+    console.log(error.message);
+}
 ```
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your address of the mint and Run the script using `npx esrun create-token-metadata.ts`.
 
 You'll now see Solana Explorer is updated, showing the token's name and symbol
 on the mint!
@@ -686,25 +695,29 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT");
 // const recipient = new PublicKey("SOMEONE_ELSES_DEVNET_ADDRESS");
 const recipient = user.publicKey;
 
-const tokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  recipient,
-);
+try {
+    const tokenAccount = await getOrCreateAssociatedTokenAccount(
+        connection,
+        user,
+        tokenMintAccount,
+        recipient
+    );
 
-console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
+    console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
 
-const link = getExplorerLink(
-  "address",
-  tokenAccount.address.toBase58(),
-  "devnet",
-);
+    const link = getExplorerLink(
+        "address",
+        tokenAccount.address.toBase58(),
+        "devnet"
+    );
 
-console.log(`✅ Created token Account: ${link}`);
+    console.log(`✅ Created token Account: ${link}`);
+} catch (error) {
+    console.log("❌ Create token account failed with errors:");
+    console.log(error.message);
+}
 ```
-
-Run the script using `npx esrun create-token-mint.ts`. You should see:
+Run the script using `npx esrun create-token-account.ts`. You should see:
 
 ```bash
 ✅ Success! Created token account: https://explorer.solana.com/address/CTjoLdEeK8rk4YWYW9ZqACyjHexbYKH3hEoagHxLVEFs?cluster=devnet
@@ -714,14 +727,17 @@ Open the token account in Solana Explorer. Look at the owner - it's the account
 you made the ATA for! The balance will be zero, as we haven't sent any tokens
 there yet. Let's mint some tokens there and fix that!
 
+Remember the address of your token account ! We'll use it to mint tokens.
+
 #### Mint Tokens
 
 Now that we have a token mint and a token account, let's mint tokens to the
 token account. Recall that we set the `user` as the `mintAuthority` for the
 `mint` we created.
 
-Create a function `mintTokens` that uses the `spl-token` function `mintTo` to
-mint tokens:
+Create an empty file called `mint-tokens.ts`. Then uses the `spl-token` function `mintTo` to
+mint tokens.
+Remember to substitute in your token mint address and token account address below!
 
 ```typescript
 import { mintTo } from "@solana/spl-token";
@@ -746,18 +762,23 @@ const recipientAssociatedTokenAccount = new PublicKey(
   "RECIPIENT_TOKEN_ACCOUNT",
 );
 
-const transactionSignature = await mintTo(
-  connection,
-  user,
-  tokenMintAccount,
-  recipientAssociatedTokenAccount,
-  user,
-  10 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+try {
+    const transactionSignature = await mintTo(
+        connection,
+        user,
+        tokenMintAccount,
+        recipientAssociatedTokenAccount,
+        user,
+        10 * MINOR_UNITS_PER_MAJOR_UNITS,
+    );
 
-const link = getExplorerLink("transaction", transactionSignature, "devnet");
+    const link = getExplorerLink("transaction", transactionSignature, "devnet");
 
-console.log(`✅ Success! Mint Token Transaction: ${link}`);
+    console.log(`✅ Success! Mint Token Transaction: ${link}`);
+} catch (error) {
+    console.log("❌ mintToken failed with errors: ");
+    console.log(error.message);
+}
 ```
 
 Run the script using `npx esrun mint-tokens.ts`. You should see:
@@ -773,7 +794,7 @@ account!
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
-[add a second account on devnet](/developers/courses/intro-to-solana/intro-to-cryptography)
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography)
 if you like, or find a friend who has a devnet account and send them your token!
 
 As you saw in Explorer, the tokens currently reside in an Associated Token
@@ -782,6 +803,9 @@ associated token account - we can just look it up using
 `getOrCreateAssociatedTokenAccount()` and provide our wallet address and the
 mint of the token we want to send. Likewise, we can find (or make) an ATA for
 our recipient to hold this token too.
+
+Create an empty file called `transfer-tokens.ts`. Then replace `YOUR_RECIPIENT_HERE` with your recipient public key
+and replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your token mint address.
 
 ```typescript
 import "dotenv/config";
@@ -810,36 +834,59 @@ const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
 console.log(`💸 Attempting to send 1 token to ${recipient.toBase58()}...`);
 
-// Get or create the source and destination token accounts to store this token
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  sender,
-  tokenMintAccount,
-  sender.publicKey,
-);
 
-const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  sender,
-  tokenMintAccount,
-  recipient,
-);
+let sourceTokenAccount: { address: PublicKey; };
+try {
+    // Get or create the source token account to store this token
+    const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+        connection,
+        sender,
+        tokenMintAccount,
+        sender.publicKey,
+    );
+} catch (error) {
+    console.log("❌ Get or create the source token account failed with errors.");
+    throw new Error(error.message);
+}
 
-// Transfer the tokens
-const signature = await transfer(
-  connection,
-  sender,
-  sourceTokenAccount.address,
-  destinationTokenAccount.address,
-  sender,
-  1 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+let destinationTokenAccount: { address: PublicKey; };
+try {
+    // Get or create the destination token account to store this token
+    const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
+        connection,
+        sender,
+        tokenMintAccount,
+        recipient,
+    );
+} catch (error) {
+    console.log("❌ Get or create the destination token account failed with errors.");
+    throw new Error(error.message);
+}
 
-const explorerLink = getExplorerLink("transaction", signature, "devnet");
+try {
+    // Transfer the tokens
+    const signature = await transfer(
+        connection,
+        sender,
+        sourceTokenAccount.address,
+        destinationTokenAccount.address,
+        sender,
+        1 * MINOR_UNITS_PER_MAJOR_UNITS,
+    );
 
-console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}!`);
+    const explorerLink = getExplorerLink("transaction", signature, "devnet");
+
+    console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}`);
+
+} catch (error) {
+    console.log("❌ transfer tokens failed with errors: ");
+    console.log(error.message);
+}
 ```
-
+Run the script using `npx esrun transfer-tokens.ts`. You should see:
+```bash
+✅ Transaction confirmed, explorer link is: https://explorer.solana.com/tx/SgV2j2DkaErYf7ERiB11USoZzGqAk8HPEqVJLP8HWdz9M61FSFgyEMXJycHQtfCooCAPBom7Vi3akEAwSUHQUsu?cluster=devnet
+```
 Open the Explorer link. You see your balance go down, and the recipient's
 balance go up!
 
