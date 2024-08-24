@@ -246,14 +246,18 @@ the static `accounts` property.
 
 ```tsx
 static async prefetchAccounts(connection: web3.Connection) {
-  const accounts = await connection.getProgramAccounts(
-    new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
-    {
-      dataSlice: { offset: 0, length: 0 },
-    }
-  )
+  try {
+    const accounts = await connection.getProgramAccounts(
+      new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+      {
+        dataSlice: { offset: 0, length: 0 },
+      }
+    );
 
-  this.accounts = accounts.map(account => account.pubkey)
+    this.accounts = accounts.map((account) => account.pubkey);
+  } catch (error) {
+    console.error("Error prefetching accounts:", error);
+  }
 }
 ```
 
@@ -264,32 +268,45 @@ that correspond to the requested page and call
 and return the corresponding `Movie` objects.
 
 ```tsx
-static async fetchPage(connection: web3.Connection, page: number, perPage: number): Promise<Movie[]> {
-  if (this.accounts.length === 0) {
-    await this.prefetchAccounts(connection)
-  }
-
-  const paginatedPublicKeys = this.accounts.slice(
-    (page - 1) * perPage,
-    page * perPage,
-  )
-
-  if (paginatedPublicKeys.length === 0) {
-    return []
-  }
-
-  const accounts = await connection.getMultipleAccountsInfo(paginatedPublicKeys)
-
-  const movies = accounts.reduce((accum: Movie[], account) => {
-    const movie = Movie.deserialize(account?.data)
-    if (!movie) {
-      return accum
+static async fetchPage(
+  connection: web3.Connection,
+  page: number,
+  perPage: number,
+  search: string,
+  reload: boolean = false
+): Promise<Movie[]> {
+  try {
+    if (this.accounts.length === 0 || reload) {
+      await this.prefetchAccounts(connection, search);
     }
 
-    return [...accum, movie]
-  }, [])
+    const paginatedPublicKeys = this.accounts.slice(
+      (page - 1) * perPage,
+      page * perPage
+    );
 
-  return movies
+    if (paginatedPublicKeys.length === 0) {
+      return [];
+    }
+
+    const accounts = await connection.getMultipleAccountsInfo(
+      paginatedPublicKeys
+    );
+
+    const movies = accounts.reduce((accum: Movie[], account) => {
+      const movie = Movie.deserialize(account?.data);
+      if (!movie) {
+        return accum;
+      }
+
+      return [...accum, movie];
+    }, []);
+
+    return movies;
+  } catch (error) {
+    console.error("Error fetching page:", error);
+    return []; // Return an empty array or handle the error as needed
+  }
 }
 ```
 
@@ -299,13 +316,13 @@ With that done, we can reconfigure `MovieList` to use these methods. In
 instead of fetching the accounts inline.
 
 ```tsx
-const { connection } = useConnection();
+const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 const [movies, setMovies] = useState<Movie[]>([]);
 const [page, setPage] = useState(1);
 
 useEffect(() => {
   MovieCoordinator.fetchPage(connection, page, 10).then(setMovies);
-}, [page]);
+}, [page, connection]);
 ```
 
 Lastly, we need to add buttons to the bottom of the list for navigating to
@@ -363,22 +380,27 @@ Now that we’ve thought through this, let’s modify the implementation of
 
 ```tsx
 static async prefetchAccounts(connection: web3.Connection, filters: AccountFilter[]) {
-  const accounts = await connection.getProgramAccounts(
+  try {
+    const accounts = await connection.getProgramAccounts(
     new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
     {
       dataSlice: { offset: 2, length: 18 },
     }
-  )
+    )
 
-  accounts.sort( (a, b) => {
-    const lengthA = a.account.data.readUInt32LE(0)
-    const lengthB = b.account.data.readUInt32LE(0)
-    const dataA = a.account.data.slice(4, 4 + lengthA)
-    const dataB = b.account.data.slice(4, 4 + lengthB)
-    return dataA.compare(dataB)
-  })
+    accounts.sort( (a, b) => {
+      const lengthA = a.account.data.readUInt32LE(0)
+      const lengthB = b.account.data.readUInt32LE(0)
+      const dataA = a.account.data.slice(4, 4 + lengthA)
+      const dataB = b.account.data.slice(4, 4 + lengthB)
+      return dataA.compare(dataB)
+    })
 
-  this.accounts = accounts.map(account => account.pubkey)
+    this.accounts = accounts.map(account => account.pubkey)
+
+    } catch (error) {
+    console.error("Error prefetching accounts:", error);
+  }
 }
 ```
 
@@ -473,16 +495,16 @@ calls. Then update the call to `MovieCoordinator.fetchPage` in the `useEffect`
 to pass the `search` parameter and to reload when `search !== ''`.
 
 ```tsx
-const { connection } = useConnection();
+const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 const [movies, setMovies] = useState<Movie[]>([]);
 const [page, setPage] = useState(1);
 const [search, setSearch] = useState("");
 
 useEffect(() => {
-  MovieCoordinator.fetchPage(connection, page, 2, search, search !== "").then(
+  MovieCoordinator.fetchPage(connection, page, 5, search, search !== "").then(
     setMovies,
   );
-}, [page, search]);
+}, [connection, page, search]);
 ```
 
 Finally, add a search bar that will set the value of `search`:
