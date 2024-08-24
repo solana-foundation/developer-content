@@ -3,7 +3,8 @@ title: Local Program Development
 objectives:
   - Set up a local environment for Solana program development, with Solana CLI
     tools, Rust and Anchor.
-  - Ensure Anchor works out of the box with no errors or warnings
+  - Ensure Anchor works out of the box with no errors or warnings; a successful
+    installation of anchor in the system.
 description:
   "Setup a local development environment for building onchain programs."
 ---
@@ -17,18 +18,23 @@ description:
 
 ## Lesson
 
-There's no lesson here! Let's install Solana CLI tools, the Rust SDK, and
-Anchor, and create a test program to ensure that our setup works.
+This lesson is a guide to installing the tools required for developing onchain
+programs. Let's install Solana CLI tools, the Rust SDK, and Anchor, and create a
+test program to ensure that our setup works.
 
 ## Lab
 
-#### Extra steps for Windows users
+### Extra steps for Windows users
 
-Firstly install
-[Windows Terminal](https://apps.microsoft.com/detail/9N0DX20HK701) from the
-Microsoft store.
+> MacOS and Linux users can skip this section. Linux and MacOS are the
+> recommended operating systems for Solana program development. However, if
+> you're on Windows, you can still follow along with these extra steps.
 
-Then
+Firstly, make sure you have Windows Terminal installed, otherwise you can
+install it from the
+[Microsoft store](https://apps.microsoft.com/detail/9N0DX20HK701).
+
+Then,
 [install Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install).
 WSL provides a Linux environment that launches instantly whenever you need it
 and doesn't slow your computer down.
@@ -36,40 +42,58 @@ and doesn't slow your computer down.
 Start Windows Terminal, launch an 'Ubuntu' session inside the terminal, and
 proceed with the rest of these steps.
 
-#### Download Rust
+### Download Rust
 
 First, download Rust by
 [following the instructions](https://www.rust-lang.org/tools/install):
 
-```
+```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-#### Download the Solana CLI tools
+### Download the Solana CLI tools
 
-Next
+Next,
 [download the Solana CLI tools](https://docs.solana.com/cli/install-solana-cli-tools).
 
-```
+> the command below will install the stable version of the Solana CLI.
+
+```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
 Afterwards, `solana -V` should show `solana-cli 1.18.x` (any number for `x` is
-fine).
+fine) which is the version of the Solana CLI installed in your system indicating
+that it was installed successfully.
 
-#### Download Anchor
+### Download Anchor
 
-Finally [download Anchor](https://www.anchor-lang.com/docs/installation):
+Finally, [download Anchor](https://www.anchor-lang.com/docs/installation):
 
-```
+```bash
 cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+```
+
+you may need to install additional dependencies in Linux (or WSL):
+
+```bash
+sudo apt-get update && \
+sudo apt-get upgrade && \
+sudo apt-get install -y pkg-config build-essential libudev-dev libssl-dev
+```
+
+proceed...
+
+```bash
 avm install latest
 avm use latest
 ```
 
-Afterwards, `anchor -V` should show `anchor-cli 0.30.0`.
+Afterwards, `anchor -V` should show `anchor-cli 0.30.x` (any number for `x` is
+fine) which is the version of the Solana CLI installed in your system indicating
+that it was installed successfully.
 
-#### Check your Anchor installation
+### Initialize Anchor project
 
 Create a temporary project, with the default contents, using Anchor and make
 sure it compiles and runs our tests:
@@ -81,32 +105,35 @@ anchor test
 ```
 
 **The `anchor test` command should complete with no errors or warnings**.
-However you may encounter issues, and we'll fix them below:
 
-##### `package `solana-program v1.18.12` cannot be built because it requires rustc 1.75.0 or newer` error
+**However you may encounter issues, and we'll fix them below:**
 
+- `package `solana-program
+  v1.18.12` cannot be built because it requires rustc 1.75.0 or newer` error
+
+This error is due to incompatible versions of `solana-program` and `solana-cli`.
 Run `cargo add solana-program@"=1.18.x"`, where `x` matches your version of
 `solana-cli`. Then re-run `anchor test`.
 
-##### `Error: Unable to read keypair file`
+- `Error: Unable to read keypair file`
 
 Add a keypair to `.config/solana/id.json`. You can either copy a keypair from an
 `.env` file (just the array of numbers) into a file or use the command
 `solana-keygen new --no-bip39-passphrase` to create a new keypair file. Then
 re-run `anchor test`.
 
-##### `unused variable: 'ctx'` warning
+- `unused variable: 'ctx'` warning
 
 This simply means the `initialize` instruction handler isn't doing anything yet.
 You can open `programs/favorites/src/lib.rs` and change `ctx` to `_ctx` or just
 go onto the next step.
 
-##### `No license field in package.json` warning
+- `No license field in package.json` warning
 
 Open package.json, add `"license": "MIT"` or `"license": "UNLICENSED"` depending
 on preferences
 
-#### All done?
+### All done?
 
 Ensure `anchor test` completes successfully - with no warnings and no errors -
 before continuing.
