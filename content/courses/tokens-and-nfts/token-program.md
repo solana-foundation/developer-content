@@ -497,11 +497,18 @@ console.log(
 // SystemProgram.createAccount()
 // token.createInitializeMintInstruction()
 // See https://www.soldev.app/course/token-program
-const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
+try {
+    const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
 
-const link = getExplorerLink("address", tokenMint.toString(), "devnet");
+    const link = getExplorerLink("address", tokenMint.toString(), "devnet");
 
-console.log(`✅ Finished! Created token mint: ${link}`);
+    console.log(`✅ Finished! Created token mint: ${link}`);
+
+} catch (error) {
+
+    console.log("createMint failed with errors: ");
+    console.log(error);
+}
 ```
 
 Run the script using `npx esrun create-token-mint.ts`. You should see
