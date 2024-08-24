@@ -28,7 +28,7 @@ description:
 - Creating Token Mints and Token Accounts requires allocating **rent** in SOL.
   The rent for a Token Account can be refunded when the account is closed.
   Additionally, tokens created with the
-  [Token Extensions Program](/developers/courses/token-extensions-for-mints/close-mint)
+  [Token Extensions Program](/content/courses/token-extensions/close-mint)
   can also close Token Mints.
 
 ### Lesson
