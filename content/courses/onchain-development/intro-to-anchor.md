@@ -1,7 +1,7 @@
 ---
 title: Intro to Anchor development
 objectives:
-  - Use the Anchor framework to build a basic program
+  - Use the Anchor framework to build a basic Solana program
   - Describe the basic structure of an Anchor program
   - Explain how to implement basic account validation and security checks with
     Anchor
@@ -11,7 +11,7 @@ description: "Create your first Solana onchain program in Anchor."
 ## Summary
 
 - **Programs** on Solana have **instruction handlers** that execute instruction
-  logic.
+  logic. They are the entry point for any operation in a program.
 - **Rust** is the most common language for building Solana programs. The
   **Anchor** framework takes care of common grunt work - like reading data from
   incoming instructions, and checking the right accounts are provided - so you
@@ -19,14 +19,19 @@ description: "Create your first Solana onchain program in Anchor."
 
 ## Lesson
 
-Solana's ability to run arbitrary executable code is part of what makes it so
-powerful. Solana programs, similar to "smart contracts" in other blockchain
-environments, are quite literally the backbone of the Solana ecosystem. And the
-collection of programs grows daily as developers and creators dream up and
-deploy new programs.
+Solana's capacity to execute arbitrary code is a key part of its power. Solana
+programs, akin to "smart contracts" in other blockchain systems, are the very
+foundation of the Solana ecosystem. And as developers and creators continuously
+conceive and deploy new programs, the collection of Solana programs continues to
+expand daily.
 
 This lesson will give you a basic introduction to writing and deploying a Solana
 program using the Rust programming language and the Anchor framework.
+
+> This and the further lessons in this course will give a good base to start
+> building Solana programs with Anchor, however if you want to get more into
+> Anchor, we would recommend checking out the
+> [The Anchor Book](https://book.anchor-lang.com/).
 
 ### What is Anchor?
 
@@ -40,25 +45,31 @@ with writing a Solana program.
 
 Anchor uses macros and traits to generate boilerplate Rust code for you. These
 provide a clear structure to your program so you can more easily reason about
-your code. The main high-level macros and attributes are:
+your code and focus more on the functionality of your program. The main
+high-level macros and attributes are:
 
-- `declare_id` - a macro for declaring the program’s onchain address
+> From here on out, you'll see a lot of Rust. We assume that you are familiar
+> with Rust, if not, we recommend you to check out the
+> [Rust Book](https://doc.rust-lang.org/book/).
+
+- `declare_id!` - a macro for declaring the program’s onchain address
 - `#[program]` - an attribute macro used to denote the module containing the
-  program’s instruction logic
+  program’s instruction logic. This is where all the instruction handlers are
+  defined.
 - `Accounts` - a trait applied to structs representing the list of accounts
-  required for an instruction
+  required for an instruction.
 - `#[account]` - an attribute macro used to define custom account types for the
-  program
+  program.
 
 Let's talk about each of them before putting all the pieces together.
 
 ### Declare your program ID
 
-The `declare_id` macro is used to specify the onchain address of the program
-(i.e. the `programId`). When you build an Anchor program for the first time, the
-framework will generate a new keypair. This becomes the default keypair used to
-deploy the program unless specified otherwise. The corresponding public key
-should be used as the `programId` specified in the `declare_id!` macro.
+The `declare_id` macro sets the on-chain address of the Anchor program (i.e. the
+`programId`). When you create a new Anchor program, the framework generates a
+default keypair. This keypair is used to deploy the program unless specified
+otherwise. The public key of this keypair is used as the `programId` in the
+`declare_id!` macro.
 
 ```rust
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -74,7 +85,8 @@ Each public function in the module with the `#[program]` attribute will be
 treated as a separate instruction.
 
 Each instruction function requires a parameter of type `Context` and can
-optionally include additional function parameters representing instruction data.
+optionally include additional function parameters representing instruction data
+needed by the handler to do the operation inside the instruction function.
 Anchor will automatically handle instruction data deserialization so that you
 can work with instruction data as Rust types.
 
@@ -90,24 +102,33 @@ mod program_module_name {
 }
 ```
 
-#### Instruction `Context`
+- The `#[program]` attribute macro is used to denote the module containing the
+  program’s instruction logic.
+- `use super::*;` is used to bring all the items from the parent module into
+  scope, which are needed to define the instruction logic.
+- Next, there is the instruction function definition. It's a simple public
+  function that writes some data (`instruction_data` in this case) to an
+  account.
+
+### Instruction `Context`
 
 The `Context` type exposes instruction metadata and accounts to your instruction
 logic.
 
 ```rust
-pub struct Context<'a, 'b, 'c, 'info, T> {
+pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
     /// Currently executing program id.
     pub program_id: &'a Pubkey,
     /// Deserialized accounts.
     pub accounts: &'b mut T,
     /// Remaining accounts given but not deserialized or validated.
     /// Be very careful when using this directly.
-    pub remaining_accounts: &'c [UncheckedAccount<'info>],
+    pub remaining_accounts: &'c [AccountInfo<'info>],
     /// Bump seeds found during constraint validation. This is provided as a
     /// convenience so that handlers don't have to recalculate bump seeds or
     /// pass them in as arguments.
-    pub bumps: BTreeMap<String, u8>,
+    /// Type is the bumps struct generated by #[derive(Accounts)]
+    pub bumps: T::Bumps,
 }
 ```
 
@@ -117,19 +138,27 @@ instruction requires. When you use `Context`, you specify the concrete type of
 `Context<AddMovieReviewAccounts>`). Through this context argument the
 instruction can then access:
 
+Through this context argument the instruction can then access:
+
 - The accounts passed into the instruction (`ctx.accounts`)
 - The program ID (`ctx.program_id`) of the executing program
 - The remaining accounts (`ctx.remaining_accounts`). The `remaining_accounts` is
   a vector that contains all accounts that were passed into the instruction but
   are not declared in the `Accounts` struct.
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
+- The seeds for any PDA accounts in tha `Accounts` struct (`ctx.seeds`)
+
+> The design of Contexts can be different across different programs to serve
+> their purpose; and the name of the context could be anything (not limited to
+> Context) to better reflect it's usage. This example is to help understand how
+> contexts work in Anchor.
 
 ### Define instruction accounts
 
-The `Accounts` trait defines a data structure of validated accounts. Structs
-adopting this trait define the list of accounts required for a given
-instruction. These accounts are then exposed through an instruction's `Context`
-so that manual account iteration and deserialization is no longer necessary.
+The `Accounts` trait defines a structure of validated accounts. Structs that
+adopt this trait specify the accounts required for an instruction. These
+accounts are then accessible through an instruction's `Context`, eliminating the
+need for manual account handling and deserialization.
 
 You typically apply the `Accounts` trait through the `derive` macro (e.g.
 `#[derive(Accounts)]`). This implements an `Accounts` deserializer on the given
@@ -156,13 +185,18 @@ mod program_module_name {
 }
 
 #[derive(Accounts)]
-pub struct InstructionAccounts {
-    #[account(init, payer = user, space = 8 + 8)]
+pub struct InstructionAccounts<'info> {
+    #[account(
+        init,
+        payer = user,
+        space = AccountStruct::INIT_SPACE
+    )]
     pub account_name: Account<'info, AccountStruct>,
+
     #[account(mut)]
     pub user: Signer<'info>,
-    pub system_program: Program<'info, System>,
 
+    pub system_program: Program<'info, System>,
 }
 ```
 
@@ -274,7 +308,11 @@ point be sure to look at the full
 Recall again the `account_name` field from the `InstructionAccounts` example.
 
 ```rust
-#[account(init, payer = user, space = 8 + 8)]
+#[account(
+    init,
+    payer = user,
+    space = AccountStruct::INIT_SPACE
+)]
 pub account_name: Account<'info, AccountStruct>,
 #[account(mut)]
 pub user: Signer<'info>,
@@ -287,10 +325,11 @@ values:
   it (sets its account discriminator)
 - `payer` - specifies the payer for the account initialization to be the `user`
   account defined in the struct
-- `space`- specifies that the space allocated for the account should be `8 + 8`
-  bytes. The first 8 bytes are for a discriminator that Anchor automatically
-  adds to identify the account type. The next 8 bytes allocate space for the
-  data stored on the account as defined in the `AccountStruct` type.
+- `space`- specifies that the space allocated for the account. The `INIT_SPACE`
+  is a constant defined in the `AccountStruct` implementation. It is a more
+  convenient and readable way to specify the space required for the account. It
+  includes the total space (in bytes) required for the account including the
+  discriminator.
 
 For `user` we use the `#[account(..)]` attribute to specify that the given
 account is mutable. The `user` account must be marked as mutable because
@@ -344,7 +383,10 @@ As an example, let's look at `AccountStruct` used by the `account_name` of
 ```rust
 #[derive(Accounts)]
 pub struct InstructionAccounts {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init,
+        payer = user,
+        space = AnchorStruct::INIT_SPACE
+    )]
     pub account_name: Account<'info, AccountStruct>,
     ...
 }
@@ -352,6 +394,13 @@ pub struct InstructionAccounts {
 #[account]
 pub struct AccountStruct {
     data: u64
+}
+
+const DISCRIMINATOR: usize = 0;
+const DATA_SIZE: usize = 8;
+
+impl Space for AccountStruct {
+    const INIT_SPACE: usize = DISCRIMINATOR + DATA_SIZE;
 }
 ```
 
@@ -363,6 +412,10 @@ When the `account_name` account is initialized:
 - The first 8 bytes is set as the `AccountStruct` discriminator
 - The data field of the account will match `AccountStruct`
 - The account owner is set as the `programId` from `declare_id`
+- In this example, you can also the implementation of the `AccountStruct` with
+  the `DISCRIMINATOR` and `DATA_SIZE` constants. The is how the `INIT_SPACE`
+  constant you say earlier is calculated. It is considered a good practice to
+  define the space using constants and the `INIT_SPACE`.
 
 ### Bring it all together
 
@@ -393,7 +446,10 @@ mod program_module_name {
 // Validate incoming accounts for instructions
 #[derive(Accounts)]
 pub struct InstructionAccounts<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init,
+        payer = user,
+        space = AccountStruct::INIT_SPACE
+    )]
     pub account_name: Account<'info, AccountStruct>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -406,7 +462,24 @@ pub struct InstructionAccounts<'info> {
 pub struct AccountStruct {
     data: u64
 }
+
+// Space calculation for account the AccountStruct
+const DISCRIMINATOR: usize = 0;
+const DATA_SIZE: usize = 8;
+
+impl Space for  AccountStruct {
+    const INIT_SPACE: usize = DISCRIMINATOR + DATA_SIZE;
+}
 ```
+
+#### Key takeaways:
+
+- The whole program structure can be broadly divided into three parts:
+  1. Instruction Logic: where the instruction handlers are defined (i.e., the
+     `#[program]` module).
+  2. Instruction Contexts: where the accounts required for the instructions are
+     configured.
+  3. Account Types: where the data structure of the accounts are defined.
 
 You are now ready to build your own Solana program using the Anchor framework!
 
@@ -444,7 +517,7 @@ Open the file `lib.rs` and look at `declare_id!`:
 declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
 ```
 
-Run `anchor keys sync`
+and then run...
 
 ```shell
 anchor keys sync
@@ -489,12 +562,20 @@ type. The `Counter` struct defines one `count` field of type `u64`. This means
 that we can expect any new accounts initialized as a `Counter` type to have a
 matching data structure. The `#[account]` attribute also automatically sets the
 discriminator for a new account and sets the owner of the account as the
-`programId` from the `declare_id!` macro.
+`programId` from the `declare_id!` macro. Then we define the `INIT_SPACE`
+constant to calculate the space required for the account.
 
 ```rust
 #[account]
 pub struct Counter {
     pub count: u64,
+}
+
+const DISCRIMINATOR: usize = 8;
+const COUNT_SIZE: usize = 8;
+
+impl Space for Counter {
+    const INIT_SPACE: usize = DISCRIMINATOR + COUNT_SIZE;
 }
 ```
 
@@ -512,7 +593,10 @@ It'll need the following accounts:
 ```rust
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init,
+        payer = user,
+        space = Counter::INIT_SPACE
+    )]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -609,7 +693,10 @@ pub mod anchor_counter {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init,
+        payer = user,
+        space = Counter::INIT_SPACE
+    )]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -626,6 +713,13 @@ pub struct Update<'info> {
 #[account]
 pub struct Counter {
     pub count: u64,
+}
+
+const DISCRIMINATOR: usize = 8;
+const COUNT_SIZE: usize = 8;
+
+impl Space for Counter {
+    const INIT_SPACE: usize = DISCRIMINATOR + COUNT_SIZE;
 }
 ```
 
