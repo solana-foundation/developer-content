@@ -4,14 +4,16 @@ objectives:
   - Understand why and how to burn tokens
   - Allow a token holder to allocate a limited amount of tokens to another
     account to spend or burn using token delegation.
-description: "How to burn tokens, and approve/revoke token delegations on Solana."
+description:
+  "How to burn tokens, and approve/revoke token delegations on Solana."
 ---
 
 ### Lesson
 
 Finally, we'll cover burning tokens, and delegation. You may not use these in
 your own application, so if you're really excited about NFTs, feel free to skip
-to [creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex)!
+to
+[creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex)!
 
 ### Burn Tokens
 
@@ -173,12 +175,13 @@ This lab extends the lab from the
 Let's use `approve` from `spl-token` to authorize a delegate to transfer or burn
 up to 50 tokens from our token account.
 
-Just like [Transferring Tokens](/content/courses/tokens-and-nfts/token-program) in the
-previous lab, you can
+Just like [Transferring Tokens](/content/courses/tokens-and-nfts/token-program)
+in the previous lab, you can
 [add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography)
 if you like, or find a friend who has a devnet account!
 
-Create a new file `delegate-tokens.ts`. We use the system program account as the delegate here for demonstration.
+Create a new file `delegate-tokens.ts`. We use the system program account as the
+delegate here for demonstration.
 
 ```typescript
 import "dotenv/config";
@@ -248,7 +251,8 @@ console.log(
 );
 ```
 
-Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained from the previous chapter.
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter.
 
 Run the script using `npx esrun delegate-tokens.ts`. You should see:
 
@@ -262,8 +266,8 @@ Open the explorer link, you will see the ‌approval information.
 
 Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
 
-Revoke will set delegate for the associated token account to null and reset the delegated
-amount to 0.
+Revoke will set delegate for the associated token account to null and reset the
+delegated amount to 0.
 
 Create a new file `revoke-approve-tokens.ts`.
 
@@ -327,7 +331,8 @@ console.log(
 );
 ```
 
-Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained from the previous chapter.
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter.
 
 Run the script using `npx esrun revoke-approve-tokens.ts`. You should see:
 
@@ -411,7 +416,8 @@ console.log(
 );
 ```
 
-Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained from the previous chapter.
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter.
 
 Run the script using `npx esrun burn-tokens.ts`. You should see:
 
