@@ -3,10 +3,10 @@ title: Solana Pay
 objectives:
   - Use the Solana Pay specification to build payment requests and initiate
     transactions using URLs encoded as QR codes
-  - Use the `@solana/pay` library to help with the creation of Solana Pay
-    transaction requests
+  - Use the `@solana/pay` library to assist in creating Solana Pay transaction
+    requests
   - Partially sign transactions and implement transaction gating based on
-    certain conditions
+    specific conditions
 description:
   "How to create Solana Pay payment requests using links and QR codes."
 ---
@@ -15,19 +15,19 @@ description:
 
 - **Solana Pay** is a specification for encoding Solana transaction requests
   within URLs, enabling standardized transaction requests across different
-  Solana apps and wallets
-- **Partial signing** of transactions allows for the creation of transactions
-  that require multiple signatures before they are submitted to the network
+  Solana apps and wallets.
+- **Partial signing** of transactions allows the creation of transactions that
+  require multiple signatures before they are submitted to the network.
 - **Transaction gating** involves implementing rules that determine whether
-  certain transactions are allowed to be processed or not, based on certain
-  conditions or the presence of specific data in the transaction
+  certain transactions are allowed to be processed, based on specific conditions
+  or the presence of particular data in the transaction.
 
 ## Lesson
 
 The Solana community is continually improving and expanding the network's
-functionality. But that doesn't always mean developing brand new technology.
+functionality. But that doesn't always mean developing brand-new technology.
 Sometimes it means leveraging the network's existing features in new and
-interesting ways.
+innovative ways.
 
 Solana Pay is a great example of this. Rather than adding new functionality to
 the network, Solana Pay uses the network's existing signing features in a unique
@@ -38,17 +38,17 @@ Throughout this lesson, you'll learn how to use Solana Pay to create transfer
 and transaction requests, encode these requests as a QR code, partially sign
 transactions, and gate transactions based on conditions you choose. Rather than
 leaving it at that, we hope you'll see this as an example of leveraging existing
-features in new and interesting ways, using it as a launching pad for your own
+features in new and innovative ways, using it as a launching pad for your own
 unique client-side network interactions.
 
 ### Solana Pay
 
 The [Solana Pay specification](https://docs.solanapay.com/spec) is a set of
 standards that allow users to request payments and initiate transactions using
-URLs in a uniform way across various Solana apps and wallets.
+URLs uniformly across various Solana apps and wallets.
 
 Request URLs are prefixed with `solana:` so that platforms can direct the link
-to the appropriate application. For example, on mobile a URL that starts with
+to the appropriate application. For example, on mobile, a URL that starts with
 `solana:` will be directed to wallet applications that support the Solana Pay
 specification. From there, the wallet can use the remainder of the URL to
 appropriately handle the request.
@@ -223,7 +223,7 @@ function get(res: NextApiResponse) {
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
 }
-async function post(req: PublicKey, res: PublicKey) {
+async function post(req: NextApiRequest, res: NextApiResponse) {
   const { account, reference } = req.body;
 
   const connection = new Connection(clusterApiUrl("devnet"));
@@ -241,13 +241,13 @@ async function post(req: PublicKey, res: PublicKey) {
     lamports: 0.001 * LAMPORTS_PER_SOL,
   });
 
-  transaction.add(instruction);
-
-  transaction.keys.push({
+  instruction.keys.push({
     pubkey: reference,
     isSigner: false,
     isWritable: false,
   });
+
+  transaction.add(instruction);
 
   const serializedTransaction = transaction.serialize({
     requireAllSignatures: false,
@@ -256,7 +256,7 @@ async function post(req: PublicKey, res: PublicKey) {
 
   const message = "Simple transfer of 0.001 SOL";
 
-  res.send(200).json({
+  res.status(200).json({
     transaction: base64,
     message,
   });
