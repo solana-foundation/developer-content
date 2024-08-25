@@ -12,5 +12,6 @@ lessons:
   - deserialize-custom-data-frontend
   - paging-ordering-filtering-data-frontend
 priority: 50
+isHidden: true
 # Uses out of date repos
 # TODO: Superteam to update
