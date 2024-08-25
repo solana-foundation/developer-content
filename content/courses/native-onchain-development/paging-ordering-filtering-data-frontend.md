@@ -191,6 +191,22 @@ If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can download the
 [starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-deserialize-account-data).
 
+Include this in the project's tsconfig file to eliminate the
+`Component cannot be used as a JSX component. Its return type 'Element[]' is not a valid JSX element`
+error.
+
+```tsx
+{
+  "compilerOptions": {
+     "paths": {
+      "react": [
+        "./node_modules/@types/react"
+      ]
+    }
+  }
+}
+```
+
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
 displaying a movie review, a `MovieList` component that displays reviews in a
