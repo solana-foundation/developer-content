@@ -438,21 +438,26 @@ import bs58 from 'bs58'
 ...
 
 static async prefetchAccounts(connection: web3.Connection, search: string) {
-  const accounts = await connection.getProgramAccounts(
-    new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
-    {
-      dataSlice: { offset: 2, length: 18 },
-      filters: search === '' ? [] : [
-        {
-          memcmp:
-            {
-              offset: 6,
-              bytes: bs58.encode(Buffer.from(search))
-            }
-        }
-      ]
-    }
-  )
+  const accounts = (await connection.getProgramAccounts(
+      new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+      {
+        dataSlice: { offset: 2, length: 18 },
+        filters:
+          search === ""
+            ? []
+            : [
+                {
+                  memcmp: {
+                    offset: 6,
+                    bytes: bs58.encode(Buffer.from(search)),
+                  },
+                },
+              ],
+      }
+    )) as Array<{
+      pubkey: web3.PublicKey;
+      account: web3.AccountInfo<Buffer>;
+    }>;
 
   accounts.sort( (a, b) => {
     const lengthA = a.account.data.readUInt32LE(0)
