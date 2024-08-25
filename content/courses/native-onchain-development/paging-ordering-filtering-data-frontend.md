@@ -285,13 +285,12 @@ and return the corresponding `Movie` objects.
 
 ```tsx
 static async fetchPage(
-  connection: web3.Connection,
-  page: number,
-  perPage: number,
-  search: string,
-  reload: boolean = false
-): Promise<Movie[]> {
-  try {
+    connection: web3.Connection,
+    page: number,
+    perPage: number,
+    search: string,
+    reload: boolean = false
+  ): Promise<Movie[]> {
     if (this.accounts.length === 0 || reload) {
       await this.prefetchAccounts(connection, search);
     }
@@ -310,20 +309,19 @@ static async fetchPage(
     );
 
     const movies = accounts.reduce((accum: Movie[], account) => {
-      const movie = Movie.deserialize(account?.data);
-      if (!movie) {
-        return accum;
+      try {
+        const movie = Movie.deserialize(account?.data);
+        if (movie) {
+          accum.push(movie);
+        }
+      } catch (error) {
+        console.error("Error deserializing movie data: ", error);
       }
-
-      return [...accum, movie];
+      return accum;
     }, []);
 
     return movies;
-  } catch (error) {
-    console.error("Error fetching page:", error);
-    return []; // Return an empty array or handle the error as needed
   }
-}
 ```
 
 With that done, we can reconfigure `MovieList` to use these methods. In
