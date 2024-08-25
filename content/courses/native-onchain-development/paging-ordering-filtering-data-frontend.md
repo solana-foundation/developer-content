@@ -288,17 +288,16 @@ static async fetchPage(
     connection: web3.Connection,
     page: number,
     perPage: number,
-    search: string,
     reload: boolean = false
   ): Promise<Movie[]> {
     if (this.accounts.length === 0 || reload) {
-      await this.prefetchAccounts(connection, search);
+      await this.prefetchAccounts(connection);
     }
 
-    const paginatedPublicKeys = this.accounts.slice(
-      (page - 1) * perPage,
-      page * perPage
-    );
+  const paginatedPublicKeys = this.accounts.slice(
+    (page - 1) * perPage,
+    page * perPage
+  );
 
     if (paginatedPublicKeys.length === 0) {
       return [];
