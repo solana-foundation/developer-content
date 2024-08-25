@@ -491,33 +491,44 @@ parameter to `fetchPage` so that we can force a refresh of the account
 prefetching every time the search value changes.
 
 ```tsx
-static async fetchPage(connection: web3.Connection, page: number, perPage: number, search: string, reload: boolean = false): Promise<Movie[]> {
-  if (this.accounts.length === 0 || reload) {
-    await this.prefetchAccounts(connection, search)
-  }
-
-  const paginatedPublicKeys = this.accounts.slice(
-    (page - 1) * perPage,
-    page * perPage,
-  )
-
-  if (paginatedPublicKeys.length === 0) {
-    return []
-  }
-
-  const accounts = await connection.getMultipleAccountsInfo(paginatedPublicKeys)
-
-  const movies = accounts.reduce((accum: Movie[], account) => {
-    const movie = Movie.deserialize(account?.data)
-    if (!movie) {
-      return accum
+  static async fetchPage(
+    connection: web3.Connection,
+    page: number,
+    perPage: number,
+    search: string,
+    reload: boolean = false
+  ): Promise<Movie[]> {
+    if (this.accounts.length === 0 || reload) {
+      await this.prefetchAccounts(connection, search);
     }
 
-    return [...accum, movie]
-  }, [])
+    const paginatedPublicKeys = this.accounts.slice(
+      (page - 1) * perPage,
+      page * perPage
+    );
 
-  return movies
-}
+    if (paginatedPublicKeys.length === 0) {
+      return [];
+    }
+
+    const accounts = await connection.getMultipleAccountsInfo(
+      paginatedPublicKeys
+    );
+
+    const movies = accounts.reduce((accum: Movie[], account) => {
+      try {
+        const movie = Movie.deserialize(account?.data);
+        if (movie) {
+          accum.push(movie);
+        }
+      } catch (error) {
+        console.error("Error deserializing movie data: ", error);
+      }
+      return accum;
+    }, []);
+
+    return movies;
+  }
 ```
 
 With that in place, let’s update the code in `MovieList` to call this properly.
