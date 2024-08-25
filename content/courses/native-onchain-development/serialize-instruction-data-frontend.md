@@ -477,7 +477,7 @@ the following, where `pda` is the address to the account where data will be
 stored:
 
 ```typescript
-const [pda] = await web3.PublicKey.findProgramAddress(
+const [pda] = await web3.PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from(movie.title)],
   new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
 );
@@ -499,7 +499,7 @@ const handleTransactionSubmit = async (movie: Movie) => {
   const buffer = movie.serialize();
   const transaction = new web3.Transaction();
 
-  const [pda] = await web3.PublicKey.findProgramAddress(
+  const [pda] = await web3.PublicKey.findProgramAddressSync(
     [publicKey.toBuffer(), new TextEncoder().encode(movie.title)],
     new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   );
