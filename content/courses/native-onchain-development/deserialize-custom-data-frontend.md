@@ -81,7 +81,7 @@ separation makes it possible for the client to locate each user’s data by
 finding the address using the program ID and the user’s public key.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+const [pda, bump] = await web3.PublicKey.findProgramAddressSync(
   [publicKey.toBuffer()],
   programId,
 );
