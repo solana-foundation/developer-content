@@ -97,7 +97,7 @@ account per note where each PDA is derived with the user’s public key and the
 note’s title.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+const [pda, bump] = await web3.PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from("Shopping list")],
   programId,
 );
