@@ -459,15 +459,29 @@ static async prefetchAccounts(connection: web3.Connection, search: string) {
       account: web3.AccountInfo<Buffer>;
     }>;
 
-  accounts.sort( (a, b) => {
-    const lengthA = a.account.data.readUInt32LE(0)
-    const lengthB = b.account.data.readUInt32LE(0)
-    const dataA = a.account.data.slice(4, 4 + lengthA)
-    const dataB = b.account.data.slice(4, 4 + lengthB)
-    return dataA.compare(dataB)
-  })
+ accounts.sort((a, b) => {
+      try {
+        const lengthA = a.account.data.readUInt32LE(0);
+        const lengthB = b.account.data.readUInt32LE(0);
 
-  this.accounts = accounts.map(account => account.pubkey)
+        if (
+          a.account.data.length < 4 + lengthA ||
+          b.account.data.length < 4 + lengthB
+        ) {
+          throw new Error("Buffer length is insufficient");
+        }
+
+        const dataA = a.account.data.subarray(4, 4 + lengthA);
+        const dataB = b.account.data.subarray(4, 4 + lengthB);
+
+        return dataA.compare(dataB);
+      } catch (error) {
+        console.error("Error sorting accounts: ", error);
+        return 0;
+      }
+    });
+
+    this.accounts = accounts.map((account) => account.pubkey);
 }
 ```
 
