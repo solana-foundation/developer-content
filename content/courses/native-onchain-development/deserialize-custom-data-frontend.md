@@ -273,11 +273,14 @@ export class Movie {
     }
 
     try {
-      const { title, rating, description } = this.borshAccountSchema.decode(buffer)
-      return new Movie(title, rating, description)
-    } catch(error) {
-      console.log('Deserialization error:', error)
-      return null
+      const { title, rating, description } =
+        this.borshAccountSchema.decode(buffer);
+      return new Movie(title, rating, description);
+    } catch (e) {
+      console.error("Deserialization error:", e);
+      console.error("Buffer length:", buffer.length);
+      console.error("Buffer data:", buffer.toString("hex"));
+      return null;
     }
   }
 }
