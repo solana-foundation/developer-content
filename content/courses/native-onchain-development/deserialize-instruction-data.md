@@ -603,9 +603,9 @@ data. For that, feel free to use
 [this script](https://github.com/Unboxed-Software/solana-movie-client) or
 [the frontend](https://github.com/Unboxed-Software/solana-movie-frontend) we
 built in the
-[Serialize Custom Instruction Data lesson](serialize-instruction-data). In both
-cases, make sure you copy and paste the program ID for your program into the
-appropriate area of the source code to make sure you're testing the right
+[Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md).
+In both cases, make sure you copy and paste the program ID for your program into
+the appropriate area of the source code to make sure you're testing the right
 program.
 
 If you need to spend some more time with this lab before moving on, please do!
@@ -627,9 +627,9 @@ program logs when the program is invoked.
 You can test your program by building the
 [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data)
 we created in the
-[Serialize Custom Instruction Data lesson](serialize-instruction-data) and then
-checking the program logs on Solana Explorer. Remember to replace the program ID
-in the frontend code with the one you've deployed.
+[Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md)
+and then checking the program logs on Solana Explorer. Remember to replace the
+program ID in the frontend code with the one you've deployed.
 
 Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62b0ce53f6273245aca4f5b0).
