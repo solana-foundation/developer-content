@@ -103,9 +103,9 @@ import { clusterApiUrl } from "@solana/web3.js";
 const umi = createUmi(clusterApiUrl("devnet"));
 ```
 
-Finally, we pass in the identity/signer for our umi instance and the plugins
-that we will use, in our case, this is the
-`metaplex-foundation/mpl-token-metadata`.
+Finally, we pass in the identity for our Umi instance (this is the keypair that
+will be used to sign transactions) and the plugins that we will use, in our
+case, this is the `metaplex-foundation/mpl-token-metadata`.
 
 ```typescript
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
@@ -401,7 +401,7 @@ upload our files.
 const umi = createUmi(connection);
 
 // load keypair from local file system
-// assumes that the keypair is already generated using `solana-keygen new`
+// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
 const user = await getKeypairFromFile();
 
 // convert to umi compatible keypair
