@@ -3,8 +3,7 @@ title: Solana Pay
 objectives:
   - Use the Solana Pay specification to build payment requests and initiate
     transactions using URLs encoded as QR codes
-  - Use the `@solana/pay` library to assist in creating Solana Pay transaction
-    requests
+  - Use the `@solana/pay` library to create Solana Pay transaction requests
   - Partially sign transactions and implement transaction gating based on
     specific conditions
 description:
@@ -168,9 +167,8 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     return get(res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
   }
+  return res.status(405).json({ error: "Method not allowed" });
 }
 
 function get(res: NextApiResponse) {
@@ -212,9 +210,8 @@ export default async function handler(
     return get(res);
   } else if (req.method === "POST") {
     return post(req, res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
   }
+  return res.status(405).json({ error: "Method not allowed" });
 }
 
 function get(res: NextApiResponse) {
@@ -502,9 +499,8 @@ export default async function handler(
     return get(res);
   } else if (req.method === "POST") {
     return await post(req, res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
   }
+  return res.status(405).json({ error: "Method not allowed" });
 }
 
 function get(res: NextApiResponse) {}
@@ -586,9 +582,9 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
         let error = err as any
         if (error.message) {
             res.status(200).json({ transaction: "", message: error.message })
-        } else {
-            res.status(500).json({ error: "error creating transaction" })
+            return
         }
+        res.status(500).json({ error: "error creating transaction" })
     }
 }
 
@@ -769,9 +765,8 @@ function verifyCorrectLocation(
 
   if (!lastLocation || currentLocation.index !== lastLocation.index + 1) {
     return false;
-  } else {
-    return true;
   }
+  return true;
 }
 ```
 
