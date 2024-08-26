@@ -603,7 +603,7 @@ data. For that, feel free to use
 [this script](https://github.com/Unboxed-Software/solana-movie-client) or
 [the frontend](https://github.com/Unboxed-Software/solana-movie-frontend) we
 built in the
-[Serialize Custom Instruction Data lesson](https://solana.com/developers/courses/native-onchain-development/serialize-instruction-data-frontend).
+[Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md).
 In both cases, make sure you copy and paste the program ID for your program into
 the appropriate area of the source code to make sure you're testing the right
 program.
