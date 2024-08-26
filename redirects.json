@@ -179,7 +179,11 @@
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/support" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide" },
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/:path" },
-    { "destination": "/docs/intro", "source": "/introduction" }
+    { "destination": "/docs/intro", "source": "/introduction" },
+    {
+      "destination": "/docs/rpc/http/getstakeactivation",
+      "source": "/docs/rpc/deprecated/getstakeactivation"
+    }
   ],
   "solana-client": [
     {
