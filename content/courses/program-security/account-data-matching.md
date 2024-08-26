@@ -1,5 +1,5 @@
 ---
-title: Account data matching
+title: Account Data Matching
 objectives:
   - Explain the security risks associated with missing data validation checks
   - Implement data validation checks using native Rust
@@ -12,13 +12,13 @@ description: Learn how to properly validate account data in Solana programs to p
 ## Summary
 
 - **Data validation checks** are crucial for verifying that account data matches expected values. Without proper checks, malicious users could exploit your program using unexpected accounts.
-- In native Rust, implement data validation by comparing account data to expected values:
+- Implement data validation in native Rust by comparing account data to expected values:
   ```rust
   if ctx.accounts.user.key() != ctx.accounts.user_data.user {
       return Err(ProgramError::InvalidAccountData.into());
   }
   ```
-- Anchor simplifies this process with constraints:
+- Use Anchor constraints to simplify the process:
   - Use `constraint` to evaluate custom expressions
   - Use `has_one` to check that a field on one account matches the key of another account
 
@@ -30,9 +30,9 @@ Account data matching is a critical security practice in Solana program developm
 
 Without proper data validation, your program becomes vulnerable to various attacks:
 
-1. Unauthorized access: Malicious users could pass in unexpected accounts, gaining access to functionality they shouldn't have.
-2. State manipulation: Attackers might alter the program's state in unintended ways, compromising its integrity.
-3. Fund theft: In programs dealing with tokens or SOL, inadequate checks could lead to unauthorized withdrawals.
+1. Unauthorized access: Malicious users could pass in unexpected accounts, gaining access to functionality they shouldn't have
+2. State manipulation: Attackers might alter the program's state in unintended ways, compromising its integrity
+3. Fund theft: In programs dealing with tokens or SOL, inadequate checks could lead to unauthorized withdrawals
 
 Let's look at an example to illustrate the importance of account data matching.
 
@@ -60,7 +60,8 @@ pub struct UpdateAdmin<'info> {
     #[account(mut)]
     pub admin_config: Account<'info, AdminConfig>,
     pub current_admin: Signer<'info>,
-    pub new_admin: SystemAccount<'info>,
+    /// CHECK: This account is not read or written in this instruction
+    pub new_admin: UncheckedAccount<'info>,
 }
 
 #[account]
@@ -104,7 +105,8 @@ pub struct UpdateAdmin<'info> {
     )]
     pub admin_config: Account<'info, AdminConfig>,
     pub current_admin: Signer<'info>,
-    pub new_admin: SystemAccount<'info>,
+    /// CHECK: This account is not read or written in this instruction
+    pub new_admin: UncheckedAccount<'info>,
 }
 ```
 
@@ -121,7 +123,8 @@ pub struct UpdateAdmin<'info> {
     )]
     pub admin_config: Account<'info, AdminConfig>,
     pub current_admin: Signer<'info>,
-    pub new_admin: SystemAccount<'info>,
+    /// CHECK: This account is not read or written in this instruction
+    pub new_admin: UncheckedAccount<'info>,
 }
 ```
 
@@ -166,7 +169,7 @@ Let's examine the `insecure_withdraw` instruction:
 pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
     let amount = ctx.accounts.token_account.amount;
 
-    let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+    let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
     let signer = [&seeds[..]];
 
     let cpi_ctx = CpiContext::new_with_signer(
@@ -215,6 +218,7 @@ it("Insecure withdraw allows unauthorized access", async () => {
   // ... (initialization code here)
 
   // Attempt unauthorized withdrawal
+  // Note: walletFake represents an unauthorized wallet trying to withdraw funds
   const tx = await program.methods
     .insecureWithdraw()
     .accounts({
@@ -243,7 +247,7 @@ Now, let's implement a secure version of the withdraw instruction:
 pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
     let amount = ctx.accounts.token_account.amount;
 
-    let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+    let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
     let signer = [&seeds[..]];
 
     let cpi_ctx = CpiContext::new_with_signer(
@@ -295,6 +299,7 @@ it("Secure withdraw prevents unauthorized access", async () => {
   // ... (initialization code here)
 
   // Attempt unauthorized withdrawal
+  // Note: walletFake represents an unauthorized wallet trying to withdraw funds
   try {
     await program.methods
       .secureWithdraw()
@@ -342,7 +347,7 @@ Run `anchor test` again. You should see that the unauthorized withdrawal now fai
 
 By implementing proper account data matching, we've significantly improved the security of our vault program. The secure version ensures that only the authorized user can withdraw funds, preventing potential exploits.
 
-Remember, as your programs grow in complexity, it becomes increasingly important to implement thorough data validation checks. Always consider what assumptions your program is making about its inputs and validate them explicitly.
+Remember, as your programs grow in complexity, it becomes increasingly important to implement thorough data validation checks. Always consider what assumptions your program is making about its inputs. Validate these assumptions explicitly.
 
 <Callout type="success" title="Challenge">
   Now that you've seen how to implement account data matching, take some time to review one of your existing programs. Look for places where you might be making assumptions about account data without explicitly checking it. Implement appropriate checks using the techniques you've learned in this lesson.
