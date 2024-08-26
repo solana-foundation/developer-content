@@ -19,8 +19,9 @@ description:
   files, any special traits the NFT has, and more.
 - The **Metaplex Token Metadata** program is an onchain program that attaches
   metadata to a token mint. We can interact with the Token Metadata program
-  using UMI and the
-  [Token Metadata plugin](https://developers.metaplex.com/token-metadata).
+  using Umi and the
+  [Token Metadata package](https://developers.metaplex.com/token-metadata) via
+  Umi, a tool made by Metaplex for working with onchain programs.
 
 ### Lesson
 
@@ -69,25 +70,25 @@ program.
   offchain component of NFT metadata.
 
 In the following sections, we'll cover the basics of using the
-`metaplex-foundation/token-metadata` plugin with UMI to prepare assets, create
+`metaplex-foundation/token-metadata` plugin with Umi to prepare assets, create
 NFTs, update NFTs, and associate an NFT with a broader collection. For more
 information on `metaplex-foundation/token-metadata` see the
 [developer docs for Token Metadata](https://developers.metaplex.com/token-metadata).
 
-<Callout type="note">The Metaplex Foundation released a new standard for
-creating and managing NFTs called
-[Metaplex Core](https://developers.metaplex.com/core), that utilizes a single
-account model. But the only way to add metadata to SPL tokens is still done by
-using the Metadata program. </Callout>
+<Callout type="note">
+[Metaplex Core](https://developers.metaplex.com/core), is an NFT standard from Metaplex where asset details such as the owner, name, uri e.t.c are stored on a single account. However, the most common style of NFT is still by making a Solana
+SPL token with some Metadata attached via the Metaplex Metadata program, so
+that's what we'll be using in this tutorial. </Callout>
 
 #### UMI instance
 
-The UMI framework was designed by Metaplex to be a modular framework with zero
-dependencies that allow a developer to choose specific implementations/plugins
-that he will make use of and leave out those that won't be needed.
+Umi is a framework for making JS/TS clients for onchain program created by
+Metaplex. Umi can create JS/TS clients to many different programs, but in
+practice, it's most commonly used to communicate to the Token Metadata program.
 
-The framework also provides a set of default implementations and bundles out of
-the box that allow a developer to get started quickly.
+Note that Umi has different concepts for many concepts than web3.js, including
+Keypairs, PublicKeys, and Connections. However, it is easy to convert from
+web3.j versions of these items to the Umi versions.
 
 #### Installation and setting up Umi
 
@@ -103,23 +104,24 @@ const umi = createUmi(clusterApiUrl("devnet"));
 ```
 
 Finally, we pass in the identity/signer for our umi instance and the plugins
-that we will make use of, in our case, this is the
+that we will use, in our case, this is the
 `metaplex-foundation/mpl-token-metadata`.
 
 ```typescript
-import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata"; // [!code ++]
-import { keypairIdentity } from "@metaplex-foundation/umi"; // [!code ++]
+import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
+import { keypairIdentity } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { getKeypairFromFile } from "@solana-developers/helpers"; // [!code ++]
+import { getKeypairFromFile } from "@solana-developers/helpers";
+import { promises as fs } from "fs";
 import { clusterApiUrl } from "@solana/web3.js";
 
 const umi = createUmi(clusterApiUrl("devnet"));
 
 // load keypair from local file system
-// assumes that the keypair is already generated using `solana-keygen new`
+// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
 const localKeypair = await getKeypairFromFile();
 
-// convert to umi compatible keypair
+// convert to Umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(localKeypair.secretKey);
 
 // load the MPL metadata program plugin and assign a signer to our umi instance
@@ -142,10 +144,10 @@ The `GenericFile` type allows Umi to support different file variations despite
 the difference of browser files and local file system files i.e. those on your
 computer.
 
-In action, uploading an image names `random-image.png` from your computer would
-take the following steps,
+In action, uploading an image named `random-image.png` from your computer would
+take the following steps:
 
-1. Reading the file using `readFileSync` into a buffer.
+1. Reading the file using `readFile` into a buffer.
 
 2. Creating a generic file type with the files MIME Type from the buffer and
    filePath.
@@ -155,9 +157,10 @@ take the following steps,
 ```typescript
 let filePath = "random-image.png";
 
-const buffer = readFileSync(filePath);
+const buffer = await fs.readFile(filePath);
 let file = createGenericFile(buffer, filePath, {
-  contentType: "image/jpeg", // chose the correct file MIME type https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+  // chose the correct file MIME type https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+  contentType: "image/jpeg",
 });
 const [image] = await umi.uploader.upload([file]);
 ```
@@ -314,8 +317,10 @@ When you checkout the metadata on your newly created NFT, you should now see a
 
 The last thing you need to do is verify the NFT. This effectively just flips the
 `verified` field above to true, but it's incredibly important. This is what lets
-consuming programs and apps know that your NFT is in fact part of the
-collection. You can do this using the `verifyCollectionV1` function:
+consuming programs and apps, including wallets and art marketplaces, know that
+your NFT is in fact part of the collection - because the Collection's owner has
+signed a transaction making the NFT a member of that collection. You can do this
+using the `verifyCollectionV1` function:
 
 ```typescript
 const metadata = findMetadataPda(umi, { mint: mint.publicKey });
@@ -329,10 +334,10 @@ await verifyCollectionV1(umi, {
 
 ### Lab
 
-In this lab, we'll go through the steps to create an NFT using the Metaplex UMI
+In this lab, we'll go through the steps to create an NFT using the Metaplex Umi
 framework, update the NFT's metadata after the fact, and then associate the NFT
 with a collection. By the end, you will have a basic understanding of how to use
-the Metaplex UMI and the mplTokenMetadata library to interact with NFTs on
+the Metaplex Umi and the mplTokenMetadata library to interact with NFTs on
 Solana.
 
 #### Part 1: Creating an NFT collection
@@ -340,13 +345,7 @@ Solana.
 To begin, make a new folder and install the relevant dependencies:
 
 ```bash
-npm i @solana/web3.js \
-npm i @solana/web3.js \
-npm i @solana-developers/helpers \
-npm i @metaplex-foundation/mpl-token-metadata \
-npm i @metaplex-foundation/umi-bundle-defaults \
-npm i @metaplex-foundation/umi-uploader-irys \
-&& npm i -save-dev esrun
+npm i @solana/web3.js npm i @solana/web3.js npm i @solana-developers/helpers npm i @metaplex-foundation/mpl-token-metadata npm i @metaplex-foundation/umi-bundle-defaults npm i @metaplex-foundation/umi-uploader-irys npm i --save-dev esrun
 ```
 
 Then create a file called `create-metaplex-collection.ts`, and add our imports:
@@ -370,7 +369,7 @@ import {
   getKeypairFromFile,
 } from "@solana-developers/helpers";
 import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { readFileSync } from "fs";
+import { promises as fs } from "fs";
 import * as path from "path";
 ```
 
@@ -394,7 +393,7 @@ await airdropIfRequired(
 console.log("Loaded user:", user.publicKey.toBase58());
 ```
 
-Create a new UMI instance, assign it the loaded keypair, load the
+Create a new Umi instance, assign it the loaded keypair, load the
 `mplTokenMetadata` to interact with the metadata program and `irysUploader` to
 upload our files.
 
@@ -436,7 +435,7 @@ Upload the offchain metadata to Irys:
 ```typescript
 const collectionImagePath = path.resolve(__dirname, "collection.png");
 
-const buffer = readFileSync(collectionImagePath);
+const buffer = await fs.readFile(collectionImagePath);
 let file = createGenericFile(buffer, collectionImagePath, {
   contentType: "image/png",
 });
@@ -479,8 +478,9 @@ console.log(`Collection NFT address is:`, collectionMint.publicKey);
 console.log("✅ Finished successfully!");
 ```
 
-We advise using [esrun]() to run the scripts because it allows you to use top
-level await without having to wrap your code inside asynchronous function.
+We advise using [esrun](https://www.npmjs.com/package/esrun) to run the scripts
+because it allows you to use top level await without having to wrap your code
+inside asynchronous function.
 
 Run the `create-metaplex-nft-collection.ts` script
 
@@ -519,16 +519,16 @@ the same as the previous file, with slightly different imports:
 ```typescript
 import {
   createNft,
-  findMetadataPda, // [!code ++]
+  findMetadataPda,
   mplTokenMetadata,
-  verifyCollectionV1, // [!code ++]
+  verifyCollectionV1,
 } from "@metaplex-foundation/mpl-token-metadata";
 import {
   createGenericFile,
   generateSigner,
   keypairIdentity,
   percentAmount,
-  publicKey as UMIPublicKey, // [!code ++]
+  publicKey as UMIPublicKey,
 } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
@@ -538,7 +538,7 @@ import {
   getKeypairFromFile,
 } from "@solana-developers/helpers";
 import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { readFileSync } from "fs";
+import { promises as fs } from "fs";
 import * as path from "path";
 // create a new connection to Solana's devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"));
@@ -588,7 +588,7 @@ We can then put out files into Irys:
 ```typescript
 const NFTImagePath = path.resolve(__dirname, "nft.png");
 
-const buffer = readFileSync(NFTImagePath);
+const buffer = await fs.readFile(NFTImagePath);
 let file = createGenericFile(buffer, NFTImagePath, {
   contentType: "image/png",
 });
@@ -678,8 +678,8 @@ to our previous files:
 ```typescript
 import {
   createNft,
-  fetchMetadataFromSeeds, // [!code ++]
-  updateV1, // [!code ++]
+  fetchMetadataFromSeeds,
+  updateV1,
   findMetadataPda,
   mplTokenMetadata,
 } from "@metaplex-foundation/mpl-token-metadata";
@@ -698,7 +698,7 @@ import {
   getKeypairFromFile,
 } from "@solana-developers/helpers";
 import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { readFileSync } from "fs";
+import { promises as fs } from "fs";
 import * as path from "path";
 
 // create a new connection to Solana's devnet cluster
@@ -751,7 +751,7 @@ We can then use Metaplex to update our NFT:
 ```typescript
 const NFTImagePath = path.resolve(__dirname, "nft.png");
 
-const buffer = readFileSync(NFTImagePath);
+const buffer = await fs.readFile(NFTImagePath);
 let file = createGenericFile(buffer, NFTImagePath, {
   contentType: "image/png",
 });
@@ -807,6 +807,8 @@ Inspect the updated NFT on Solana Explorer! Just like previously, if you have
 any issues, you should fix them yourself, but if needed the
 [solution code](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/update-nft.ts)
 is available.
+
+![Solana Explorer with details about the updated NFT](/public/assets/courses/unboxed/solana-explorer-with-updated-NFT.png)
 
 Congratulations! You've successfully learned how to use the Metaplex SDK to
 create, update, and verify NFTs as part of a collection. That's everything you
