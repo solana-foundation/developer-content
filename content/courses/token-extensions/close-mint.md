@@ -198,10 +198,10 @@ await setAuthority(
 
 ## Lab
 
-In this lab, we'll create a mint with the `close mint` extension. We will then
-mint some of the tokens and see what happens when we try to close it with a
-non-zero supply (hint, the close transaction will fail). Lastly, we will burn
-the supply and close the account.
+In this lab, we'll create a token mint account with the `close mint` extension.
+We will then mint some of the tokens and see what happens when we try to close
+it with a non-zero supply (hint, the close transaction will fail). Lastly, we
+will burn the supply and close the account.
 
 ### 1. Getting Started
 
@@ -304,6 +304,14 @@ running `solana config get` in your terminal. And then go to
 address. You can get your address from running `solana address` in your
 terminal.
 
+For example, assuming `keypairPath` is `/home/.config/solana/id.json`
+
+```typescript
+const payer = initializeKeypair(connection, {
+  keypairPath: "/home/.config/solana/id.json",
+});
+```
+
 ### 3. Create a mint with close authority
 
 Let's create a closable mint by creating the function `createClosableMint` in a
@@ -399,7 +407,13 @@ export async function createClosableMint(
 ```
 
 Now let's call this function in `src/index.ts`. First you'll need to import our
-new function. Then paste the following under the right comment section:
+new function by uncommenting the 3rd line.
+
+```ts
+import { createClosableMint } from "./create-mint";
+```
+
+Then paste the following under the right comment section:
 
 ```ts
 // CREATE A MINT WITH CLOSE AUTHORITY
@@ -470,7 +484,7 @@ Underneath the minting functions, add the following code block:
 /**
  * Get mint information to verify supply
  */
-const mintInfo = await getMint(
+let mintInfo = await getMint(
   connection,
   mintKeypair.publicKey,
   "finalized",
@@ -591,7 +605,7 @@ Putting this all together we get:
 
 ```ts
 // CLOSE MINT
-const mintInfo = await getMint(
+mintInfo = await getMint(
   connection,
   mintKeypair.publicKey,
   "finalized",
