@@ -81,7 +81,8 @@ separation makes it possible for the client to locate each user’s data by
 finding the address using the program ID and the user’s public key.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddressSync(
+import { PublicKey } from "@solana/web3.js";
+const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer()],
   programId,
 );
@@ -97,7 +98,7 @@ account per note where each PDA is derived with the user’s public key and the
 note’s title.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddressSync(
+const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from("Shopping list")],
   programId,
 );
@@ -276,8 +277,8 @@ export class Movie {
       const { title, rating, description } =
         this.borshAccountSchema.decode(buffer);
       return new Movie(title, rating, description);
-    } catch (e) {
-      console.error("Deserialization error:", e);
+    } catch (error) {
+      console.error("Deserialization error:", error);
       console.error("Buffer length:", buffer.length);
       console.error("Buffer data:", buffer.toString("hex"));
       return null;
@@ -304,7 +305,7 @@ array of movies and call `setMovies`.
 import { Card } from "./Card";
 import { FC, useEffect, useState } from "react";
 import { Movie } from "../models/Movie";
-import * as web3 from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js"
 import { useConnection } from "@solana/wallet-adapter-react";
 
 const MOVIE_REVIEW_PROGRAM_ID = "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
@@ -315,7 +316,7 @@ export const MovieList: FC = () => {
 
   useEffect(() => {
     connection
-      .getProgramAccounts(new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID))
+      .getProgramAccounts(new PublicKey(MOVIE_REVIEW_PROGRAM_ID))
       .then(async accounts => {
         const movies: Movie[] = accounts.map(({ account }) => {
           return Movie.deserialize(account.data);
