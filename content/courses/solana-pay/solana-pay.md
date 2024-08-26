@@ -208,7 +208,8 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     return get(res);
-  } else if (req.method === "POST") {
+  }
+  if (req.method === "POST") {
     return post(req, res);
   }
   return res.status(405).json({ error: "Method not allowed" });
@@ -497,7 +498,8 @@ export default async function handler(
 ) {
   if (req.method === "GET") {
     return get(res);
-  } else if (req.method === "POST") {
+  }
+  if (req.method === "POST") {
     return await post(req, res);
   }
   return res.status(405).json({ error: "Method not allowed" });
