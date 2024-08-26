@@ -133,13 +133,14 @@ This approach allows for more flexibility in your validation logic.
 <Callout type="info">
   Remember to define your custom errors in your program's error enum:
 
-  ```rust
-  #[error_code]
-  pub enum MyError {
-      #[msg("Only the current admin can perform this action")]
-      InvalidAdmin,
-  }
-  ```
+```rust
+#[error_code]
+pub enum MyError {
+    #[msg("Only the current admin can perform this action")]
+    InvalidAdmin,
+}
+```
+
 </Callout>
 
 By implementing these checks, you ensure that only the rightful admin can update the admin_config account, significantly improving your program's security.
@@ -227,14 +228,14 @@ it("Insecure withdraw allows unauthorized access", async () => {
       withdrawDestination: withdrawDestinationFake,
       authority: walletFake.publicKey,
     })
-    .transaction()
+    .transaction();
 
-  await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
+  await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
 
   // Check that the withdrawal succeeded (it shouldn't have!)
-  const balance = await connection.getTokenAccountBalance(tokenPDA)
-  expect(balance.value.uiAmount).to.eq(0)
-})
+  const balance = await connection.getTokenAccountBalance(tokenPDA);
+  expect(balance.value.uiAmount).to.eq(0);
+});
 ```
 
 Run `anchor test` to see that this unauthorized withdrawal succeeds, demonstrating the security flaw.
@@ -309,19 +310,19 @@ it("Secure withdraw prevents unauthorized access", async () => {
         withdrawDestination: withdrawDestinationFake,
         authority: walletFake.publicKey,
       })
-      .rpc()
-    
+      .rpc();
+
     // If we reach here, the test failed
-    assert.fail("Expected an error, but withdrawal succeeded")
+    assert.fail("Expected an error, but withdrawal succeeded");
   } catch (error) {
     // Check that it's the error we expect
-    expect(error.error.errorCode.code).to.equal("ConstraintHasOne")
+    expect(error.error.errorCode.code).to.equal("ConstraintHasOne");
   }
 
   // Check that the balance hasn't changed
-  const balance = await connection.getTokenAccountBalance(tokenPDA)
-  expect(balance.value.uiAmount).to.eq(100) // Assuming 100 tokens were initially minted
-})
+  const balance = await connection.getTokenAccountBalance(tokenPDA);
+  expect(balance.value.uiAmount).to.eq(100); // Assuming 100 tokens were initially minted
+});
 
 it("Secure withdraw allows authorized access", async () => {
   // Perform authorized withdrawal
@@ -333,12 +334,12 @@ it("Secure withdraw allows authorized access", async () => {
       withdrawDestination: withdrawDestination,
       authority: wallet.publicKey,
     })
-    .rpc()
+    .rpc();
 
   // Check that the withdrawal succeeded
-  const balance = await connection.getTokenAccountBalance(tokenPDA)
-  expect(balance.value.uiAmount).to.eq(0)
-})
+  const balance = await connection.getTokenAccountBalance(tokenPDA);
+  expect(balance.value.uiAmount).to.eq(0);
+});
 ```
 
 Run `anchor test` again. You should see that the unauthorized withdrawal now fails, while the authorized one succeeds.
@@ -349,10 +350,10 @@ By implementing proper account data matching, we've significantly improved the s
 
 Remember, as your programs grow in complexity, it becomes increasingly important to implement thorough data validation checks. Always consider what assumptions your program is making about its inputs. Validate these assumptions explicitly.
 
-<Callout type="success" title="Challenge">
-  Now that you've seen how to implement account data matching, take some time to review one of your existing programs. Look for places where you might be making assumptions about account data without explicitly checking it. Implement appropriate checks using the techniques you've learned in this lesson.
+Now that you've seen how to implement account data matching, take some time to review one of your existing programs. Look for places where you might be making assumptions about account data without explicitly checking it. Implement appropriate checks using the techniques you've learned in this lesson.
 
-  Remember, if you find a security vulnerability in someone else's program, responsibly disclose it to the program's maintainers. If you find one in your own program, patch it as soon as possible!
-</Callout>
+Remember, if you find a security vulnerability in someone else's program, responsibly disclose it to the program's maintainers. If you find one in your own program, patch it as soon as possible!
 
 After completing this lab and challenge, you'll have gained practical experience in identifying and fixing security vulnerabilities related to account data matching. This skill is crucial for developing secure Solana programs.
+
+Push your code to GitHub and [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=a107787e-ad33-42bb-96b3-0592efc1b92f)!
