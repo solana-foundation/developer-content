@@ -627,7 +627,7 @@ program logs when the program is invoked.
 You can test your program by building the
 [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data)
 we created in the
-[Serialize Custom Instruction Data lesson](https://solana.com/developers/courses/native-onchain-development/serialize-instruction-data-frontend)
+[Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md)
 and then checking the program logs on Solana Explorer. Remember to replace the
 program ID in the frontend code with the one you've deployed.
 
