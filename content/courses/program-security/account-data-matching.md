@@ -1,50 +1,44 @@
 ---
-title: Account Data Matching
+title: Account data matching
 objectives:
   - Explain the security risks associated with missing data validation checks
-  - Implement data validation checks using long-form Rust
+  - Implement data validation checks using native Rust
   - Implement data validation checks using Anchor constraints
-description:
-  "How to check your program's data accounts in both Anchor and Native Rust."
+description: Learn how to properly validate account data in Solana programs to prevent security vulnerabilities.
 ---
+
+# Account Data Matching
 
 ## Summary
 
-- Use **data validation checks** to verify that account data matches an expected
-  value. Without appropriate data validation checks, unexpected accounts may be
-  used in an instruction.
-- To implement data validation checks in Rust, simply compare the data stored on
-  an account to an expected value.
+- **Data validation checks** are crucial for verifying that account data matches expected values. Without proper checks, malicious users could exploit your program using unexpected accounts.
+- In native Rust, implement data validation by comparing account data to expected values:
   ```rust
   if ctx.accounts.user.key() != ctx.accounts.user_data.user {
       return Err(ProgramError::InvalidAccountData.into());
   }
   ```
-- In Anchor, you can use `constraint` to checks whether the given expression
-  evaluates to true. Alternatively, you can use `has_one` to check that a target
-  account field stored on the account matches the key of an account in the
-  `Accounts` struct.
+- Anchor simplifies this process with constraints:
+  - Use `constraint` to evaluate custom expressions
+  - Use `has_one` to check that a field on one account matches the key of another account
 
 ## Lesson
 
-Account data matching refers to data validation checks used to verify the data
-stored on an account matches an expected value. Data validation checks provide a
-way to include additional constraints to ensure the appropriate accounts are
-passed into an instruction.
+Account data matching is a critical security practice in Solana program development. It involves implementing data validation checks to ensure that the data stored on an account matches expected values. These checks are essential for preventing unauthorized access and maintaining the integrity of your program's state.
 
-This can be useful when accounts required by an instruction have dependencies on
-values stored in other accounts or if an instruction is dependent on the data
-stored in an account.
+### Why Account Data Matching Matters
 
-#### Missing data validation check
+Without proper data validation, your program becomes vulnerable to various attacks:
 
-The example below includes an `update_admin` instruction that updates the
-`admin` field stored on an `admin_config` account.
+1. Unauthorized access: Malicious users could pass in unexpected accounts, gaining access to functionality they shouldn't have.
+2. State manipulation: Attackers might alter the program's state in unintended ways, compromising its integrity.
+3. Fund theft: In programs dealing with tokens or SOL, inadequate checks could lead to unauthorized withdrawals.
 
-The instruction is missing a data validation check to verify the `admin` account
-signing the transaction matches the `admin` stored on the `admin_config`
-account. This means any account signing the transaction and passed into the
-instruction as the `admin` account can update the `admin_config` account.
+Let's look at an example to illustrate the importance of account data matching.
+
+### Example: Insecure Admin Update
+
+Consider a program with an `update_admin` instruction that changes the admin of a configuration account:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -52,9 +46,9 @@ use anchor_lang::prelude::*;
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
-pub mod data_validation {
+pub mod insecure_admin {
     use super::*;
-    ...
+
     pub fn update_admin(ctx: Context<UpdateAdmin>) -> Result<()> {
         ctx.accounts.admin_config.admin = ctx.accounts.new_admin.key();
         Ok(())
@@ -65,8 +59,7 @@ pub mod data_validation {
 pub struct UpdateAdmin<'info> {
     #[account(mut)]
     pub admin_config: Account<'info, AdminConfig>,
-    #[account(mut)]
-    pub admin: Signer<'info>,
+    pub current_admin: Signer<'info>,
     pub new_admin: SystemAccount<'info>,
 }
 
@@ -76,214 +69,118 @@ pub struct AdminConfig {
 }
 ```
 
-#### Add data validation check
+This instruction is insecure because it doesn't verify that the `current_admin` signer matches the `admin` stored in the `admin_config` account. Any signer could potentially update the admin!
 
-The basic Rust approach to solve this problem is to simply compare the passed in
-`admin` key to the `admin` key stored in the `admin_config` account, throwing an
-error if they don’t match.
+### Implementing Data Validation Checks
 
-```rust
-if ctx.accounts.admin.key() != ctx.accounts.admin_config.admin {
-    return Err(ProgramError::InvalidAccountData.into());
-}
-```
+Let's secure this instruction using two methods: native Rust and Anchor constraints.
 
-By adding a data validation check, the `update_admin` instruction would only
-process if the `admin` signer of the transaction matched the `admin` stored on
-the `admin_config` account.
+#### Native Rust Approach
+
+In native Rust, we can add a simple comparison:
 
 ```rust
-use anchor_lang::prelude::*;
-
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
-#[program]
-pub mod data_validation {
-    use super::*;
-    ...
-    pub fn update_admin(ctx: Context<UpdateAdmin>) -> Result<()> {
-      if ctx.accounts.admin.key() != ctx.accounts.admin_config.admin {
-            return Err(ProgramError::InvalidAccountData.into());
-        }
-        ctx.accounts.admin_config.admin = ctx.accounts.new_admin.key();
-        Ok(())
+pub fn update_admin(ctx: Context<UpdateAdmin>) -> Result<()> {
+    if ctx.accounts.current_admin.key() != ctx.accounts.admin_config.admin {
+        return Err(ProgramError::InvalidAccountData.into());
     }
-}
-
-#[derive(Accounts)]
-pub struct UpdateAdmin<'info> {
-    #[account(mut)]
-    pub admin_config: Account<'info, AdminConfig>,
-    #[account(mut)]
-    pub admin: Signer<'info>,
-    pub new_admin: SystemAccount<'info>,
-}
-
-#[account]
-pub struct AdminConfig {
-    admin: Pubkey,
+    ctx.accounts.admin_config.admin = ctx.accounts.new_admin.key();
+    Ok(())
 }
 ```
 
-#### Use Anchor constraints
+This check ensures that only the current admin can update the admin_config account.
 
-Anchor simplifies this with the `has_one` constraint. You can use the `has_one`
-constraint to move the data validation check from the instruction logic to the
-`UpdateAdmin` struct.
+#### Anchor Constraints
 
-In the example below, `has_one = admin` specifies that the `admin` account
-signing the transaction must match the `admin` field stored on the
-`admin_config` account. To use the `has_one` constraint, the naming convention
-of the data field on the account must be consistent with the naming on the
-account validation struct.
-
-```rust
-use anchor_lang::prelude::*;
-
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
-#[program]
-pub mod data_validation {
-    use super::*;
-    ...
-    pub fn update_admin(ctx: Context<UpdateAdmin>) -> Result<()> {
-        ctx.accounts.admin_config.admin = ctx.accounts.new_admin.key();
-        Ok(())
-    }
-}
-
-#[derive(Accounts)]
-pub struct UpdateAdmin<'info> {
-    #[account(
-        mut,
-        has_one = admin
-    )]
-    pub admin_config: Account<'info, AdminConfig>,
-    #[account(mut)]
-    pub admin: Signer<'info>,
-    pub new_admin: SystemAccount<'info>,
-}
-
-#[account]
-pub struct AdminConfig {
-    admin: Pubkey,
-}
-```
-
-Alternatively, you can use `constraint` to manually add an expression that must
-evaluate to true in order for execution to continue. This is useful when for
-some reason naming can’t be consistent or when you need a more complex
-expression to fully validate the incoming data.
+Anchor provides a more declarative way to implement these checks using constraints:
 
 ```rust
 #[derive(Accounts)]
 pub struct UpdateAdmin<'info> {
     #[account(
         mut,
-        constraint = admin_config.admin == admin.key()
+        has_one = current_admin @ MyError::InvalidAdmin
     )]
     pub admin_config: Account<'info, AdminConfig>,
-    #[account(mut)]
-    pub admin: Signer<'info>,
+    pub current_admin: Signer<'info>,
     pub new_admin: SystemAccount<'info>,
 }
 ```
 
-## Lab
+The `has_one = current_admin` constraint checks that the `current_admin` account's key matches the `admin` field in the `AdminConfig` account. If it doesn't match, Anchor will return the custom `InvalidAdmin` error.
 
-For this lab we’ll create a simple “vault” program similar to the program we
-used in the Signer Authorization lesson and the Owner Check lesson. Similar to
-those labs, we’ll show in this lab how a missing data validation check could
-allow the vault to be drained.
-
-#### 1. Starter
-
-To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-account-data-matching).
-The starter code includes a program with two instructions and the boilerplate
-setup for the test file.
-
-The `initialize_vault` instruction initializes a new `Vault` account and a new
-`TokenAccount`. The `Vault` account will store the address of a token account,
-the authority of the vault, and a withdraw destination token account.
-
-The authority of the new token account will be set as the `vault`, a PDA of the
-program. This allows the `vault` account to sign for the transfer of tokens from
-the token account.
-
-The `insecure_withdraw` instruction transfers all the tokens in the `vault`
-account’s token account to a `withdraw_destination` token account.
-
-Notice that this instruction \***\*does\*\*** have a signer check for
-`authority` and an owner check for `vault`. However, nowhere in the account
-validation or instruction logic is there code that checks that the `authority`
-account passed into the instruction matches the `authority` account on the
-`vault`.
+Alternatively, you can use the `constraint` attribute for more complex checks:
 
 ```rust
-use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount};
-
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
-#[program]
-pub mod account_data_matching {
-    use super::*;
-
-    pub fn initialize_vault(ctx: Context<InitializeVault>) -> Result<()> {
-        ctx.accounts.vault.token_account = ctx.accounts.token_account.key();
-        ctx.accounts.vault.authority = ctx.accounts.authority.key();
-        ctx.accounts.vault.withdraw_destination = ctx.accounts.withdraw_destination.key();
-        Ok(())
-    }
-
-    pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
-        let amount = ctx.accounts.token_account.amount;
-
-        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
-        let signer = [&seeds[..]];
-
-        let cpi_ctx = CpiContext::new_with_signer(
-            ctx.accounts.token_program.to_account_info(),
-            token::Transfer {
-                from: ctx.accounts.token_account.to_account_info(),
-                authority: ctx.accounts.vault.to_account_info(),
-                to: ctx.accounts.withdraw_destination.to_account_info(),
-            },
-            &signer,
-        );
-
-        token::transfer(cpi_ctx, amount)?;
-        Ok(())
-    }
-}
-
 #[derive(Accounts)]
-pub struct InitializeVault<'info> {
+pub struct UpdateAdmin<'info> {
     #[account(
-        init,
-        payer = authority,
-        space = 8 + 32 + 32 + 32,
-        seeds = [b"vault"],
-        bump,
+        mut,
+        constraint = admin_config.admin == current_admin.key() @ MyError::InvalidAdmin
     )]
-    pub vault: Account<'info, Vault>,
-    #[account(
-        init,
-        payer = authority,
-        token::mint = mint,
-        token::authority = vault,
-        seeds = [b"token"],
-        bump,
-    )]
-    pub token_account: Account<'info, TokenAccount>,
-    pub withdraw_destination: Account<'info, TokenAccount>,
-    pub mint: Account<'info, Mint>,
-    #[account(mut)]
-    pub authority: Signer<'info>,
-    pub token_program: Program<'info, Token>,
-    pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
+    pub admin_config: Account<'info, AdminConfig>,
+    pub current_admin: Signer<'info>,
+    pub new_admin: SystemAccount<'info>,
+}
+```
+
+This approach allows for more flexibility in your validation logic.
+
+<Callout type="info">
+  Remember to define your custom errors in your program's error enum:
+
+  ```rust
+  #[error_code]
+  pub enum MyError {
+      #[msg("Only the current admin can perform this action")]
+      InvalidAdmin,
+  }
+  ```
+</Callout>
+
+By implementing these checks, you ensure that only the rightful admin can update the admin_config account, significantly improving your program's security.
+
+## Lab: Securing a Vault Program
+
+In this lab, we'll create a simple "vault" program to demonstrate the importance of account data matching. We'll implement both an insecure and a secure version of a withdraw instruction to highlight the difference.
+
+### 1. Setup
+
+Clone the starter code from the `starter` branch of [this repository](https://github.com/Unboxed-Software/solana-account-data-matching).
+
+The starter code includes a program with two instructions and a boilerplate test file:
+
+1. `initialize_vault`: Creates a new `Vault` account and associated `TokenAccount`.
+2. `insecure_withdraw`: Transfers tokens from the vault's token account to a destination account.
+
+<Callout type="warning">
+  The `insecure_withdraw` instruction has a critical flaw. Can you spot it before we implement the fix?
+</Callout>
+
+### 2. Understand the Insecure Withdraw Instruction
+
+Let's examine the `insecure_withdraw` instruction:
+
+```rust
+pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
+    let amount = ctx.accounts.token_account.amount;
+
+    let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+    let signer = [&seeds[..]];
+
+    let cpi_ctx = CpiContext::new_with_signer(
+        ctx.accounts.token_program.to_account_info(),
+        token::Transfer {
+            from: ctx.accounts.token_account.to_account_info(),
+            authority: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.withdraw_destination.to_account_info(),
+        },
+        &signer,
+    );
+
+    token::transfer(cpi_ctx, amount)?;
+    Ok(())
 }
 
 #[derive(Accounts)]
@@ -304,103 +201,63 @@ pub struct InsecureWithdraw<'info> {
     pub token_program: Program<'info, Token>,
     pub authority: Signer<'info>,
 }
-
-#[account]
-pub struct Vault {
-    token_account: Pubkey,
-    authority: Pubkey,
-    withdraw_destination: Pubkey,
-}
 ```
 
-#### 2. Test `insecure_withdraw` instruction
+The critical flaw here is that while the instruction requires an `authority` signer, it doesn't verify whether the `authority` account passed to the instruction matches the `authority` stored in the `Vault` account. This means that any signer could potentially withdraw funds from the vault, even if they're not the authorized user.
 
-To prove that this is a problem, let’s write a test where an account other than
-the vault’s `authority` tries to withdraw from the vault.
+### 3. Test the Insecure Withdraw Instruction
 
-The test file includes the code to invoke the `initialize_vault` instruction
-using the provider wallet as the `authority` and then mints 100 tokens to the
-`vault` token account.
-
-Add a test to invoke the `insecure_withdraw` instruction. Use
-`withdrawDestinationFake` as the `withdrawDestination` account and `walletFake`
-as the `authority`. Then send the transaction using `walletFake`.
-
-Since there are no checks the verify the `authority` account passed into the
-instruction matches the values stored on the `vault` account initialized in the
-first test, the instruction will process successfully and the tokens will be
-transferred to the `withdrawDestinationFake` account.
+Let's write a test to demonstrate this vulnerability. Add the following test to your `tests/account-data-matching.ts` file:
 
 ```typescript
-describe("account-data-matching", () => {
-  ...
-  it("Insecure withdraw", async () => {
-    const tx = await program.methods
-      .insecureWithdraw()
-      .accounts({
-        vault: vaultPDA,
-        tokenAccount: tokenPDA,
-        withdrawDestination: withdrawDestinationFake,
-        authority: walletFake.publicKey,
-      })
-      .transaction()
+it("Insecure withdraw allows unauthorized access", async () => {
+  // Setup: Initialize vault and mint some tokens to it
+  // ... (initialization code here)
 
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
+  // Attempt unauthorized withdrawal
+  const tx = await program.methods
+    .insecureWithdraw()
+    .accounts({
+      vault: vaultPDA,
+      tokenAccount: tokenPDA,
+      withdrawDestination: withdrawDestinationFake,
+      authority: walletFake.publicKey,
+    })
+    .transaction()
 
-    const balance = await connection.getTokenAccountBalance(tokenPDA)
-    expect(balance.value.uiAmount).to.eq(0)
-  })
+  await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
+
+  // Check that the withdrawal succeeded (it shouldn't have!)
+  const balance = await connection.getTokenAccountBalance(tokenPDA)
+  expect(balance.value.uiAmount).to.eq(0)
 })
 ```
 
-Run `anchor test` to see that both transactions will complete successfully.
+Run `anchor test` to see that this unauthorized withdrawal succeeds, demonstrating the security flaw.
 
-```bash
-account-data-matching
-  ✔ Initialize Vault (811ms)
-  ✔ Insecure withdraw (403ms)
-```
+### 4. Implement a Secure Withdraw Instruction
 
-#### 3. Add `secure_withdraw` instruction
-
-Let’s go implement a secure version of this instruction called
-`secure_withdraw`.
-
-This instruction will be identical to the `insecure_withdraw` instruction,
-except we’ll use the `has_one` constraint in the account validation struct
-(`SecureWithdraw`) to check that the `authority` account passed into the
-instruction matches the `authority` account on the `vault` account. That way
-only the correct authority account can withdraw the vault’s tokens.
+Now, let's implement a secure version of the withdraw instruction:
 
 ```rust
-use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount};
+pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
+    let amount = ctx.accounts.token_account.amount;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+    let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+    let signer = [&seeds[..]];
 
-#[program]
-pub mod account_data_matching {
-    use super::*;
-    ...
-    pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
-        let amount = ctx.accounts.token_account.amount;
+    let cpi_ctx = CpiContext::new_with_signer(
+        ctx.accounts.token_program.to_account_info(),
+        token::Transfer {
+            from: ctx.accounts.token_account.to_account_info(),
+            authority: ctx.accounts.vault.to_account_info(),
+            to: ctx.accounts.withdraw_destination.to_account_info(),
+        },
+        &signer,
+    );
 
-        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
-        let signer = [&seeds[..]];
-
-        let cpi_ctx = CpiContext::new_with_signer(
-            ctx.accounts.token_program.to_account_info(),
-            token::Transfer {
-                from: ctx.accounts.token_account.to_account_info(),
-                authority: ctx.accounts.vault.to_account_info(),
-                to: ctx.accounts.withdraw_destination.to_account_info(),
-            },
-            &signer,
-        );
-
-        token::transfer(cpi_ctx, amount)?;
-        Ok(())
-    }
+    token::transfer(cpi_ctx, amount)?;
+    Ok(())
 }
 
 #[derive(Accounts)]
@@ -408,10 +265,9 @@ pub struct SecureWithdraw<'info> {
     #[account(
         seeds = [b"vault"],
         bump,
-        has_one = token_account,
         has_one = authority,
+        has_one = token_account,
         has_one = withdraw_destination,
-
     )]
     pub vault: Account<'info, Vault>,
     #[account(
@@ -427,107 +283,71 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-#### 4. Test `secure_withdraw` instruction
+The key difference here is the use of `has_one` constraints in the `SecureWithdraw` struct. These ensure that the `authority`, `token_account`, and `withdraw_destination` passed to the instruction match those stored in the `Vault` account.
 
-Now let’s test the `secure_withdraw` instruction with two tests: one that uses
-`walletFake` as the authority and one that uses `wallet` as the authority. We
-expect the first invocation to return an error and the second to succeed.
+### 5. Test the Secure Withdraw Instruction
+
+Now, let's test our secure instruction:
 
 ```typescript
-describe("account-data-matching", () => {
-  ...
-  it("Secure withdraw, expect error", async () => {
-    try {
-      const tx = await program.methods
-        .secureWithdraw()
-        .accounts({
-          vault: vaultPDA,
-          tokenAccount: tokenPDA,
-          withdrawDestination: withdrawDestinationFake,
-          authority: walletFake.publicKey,
-        })
-        .transaction()
+it("Secure withdraw prevents unauthorized access", async () => {
+  // Setup: Initialize vault and mint some tokens to it
+  // ... (initialization code here)
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
-    } catch (err) {
-      expect(err)
-      console.log(err)
-    }
-  })
-
-  it("Secure withdraw", async () => {
-    await spl.mintTo(
-      connection,
-      wallet.payer,
-      mint,
-      tokenPDA,
-      wallet.payer,
-      100
-    )
-
+  // Attempt unauthorized withdrawal
+  try {
     await program.methods
       .secureWithdraw()
       .accounts({
         vault: vaultPDA,
         tokenAccount: tokenPDA,
-        withdrawDestination: withdrawDestination,
-        authority: wallet.publicKey,
+        withdrawDestination: withdrawDestinationFake,
+        authority: walletFake.publicKey,
       })
       .rpc()
+    
+    // If we reach here, the test failed
+    assert.fail("Expected an error, but withdrawal succeeded")
+  } catch (error) {
+    // Check that it's the error we expect
+    expect(error.error.errorCode.code).to.equal("ConstraintHasOne")
+  }
 
-    const balance = await connection.getTokenAccountBalance(tokenPDA)
-    expect(balance.value.uiAmount).to.eq(0)
-  })
+  // Check that the balance hasn't changed
+  const balance = await connection.getTokenAccountBalance(tokenPDA)
+  expect(balance.value.uiAmount).to.eq(100) // Assuming 100 tokens were initially minted
+})
+
+it("Secure withdraw allows authorized access", async () => {
+  // Perform authorized withdrawal
+  await program.methods
+    .secureWithdraw()
+    .accounts({
+      vault: vaultPDA,
+      tokenAccount: tokenPDA,
+      withdrawDestination: withdrawDestination,
+      authority: wallet.publicKey,
+    })
+    .rpc()
+
+  // Check that the withdrawal succeeded
+  const balance = await connection.getTokenAccountBalance(tokenPDA)
+  expect(balance.value.uiAmount).to.eq(0)
 })
 ```
 
-Run `anchor test` to see that the transaction using an incorrect authority
-account will now return an Anchor Error while the transaction using correct
-accounts completes successfully.
+Run `anchor test` again. You should see that the unauthorized withdrawal now fails, while the authorized one succeeds.
 
-```bash
-'Program Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS invoke [1]',
-'Program log: Instruction: SecureWithdraw',
-'Program log: AnchorError caused by account: vault. Error Code: ConstraintHasOne. Error Number: 2001. Error Message: A has one constraint was violated.',
-'Program log: Left:',
-'Program log: DfLZV18rD7wCQwjYvhTFwuvLh49WSbXFeJFPQb5czifH',
-'Program log: Right:',
-'Program log: 5ovvmG5ntwUC7uhNWfirjBHbZD96fwuXDMGXiyMwPg87',
-'Program Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS consumed 10401 of 200000 compute units',
-'Program Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS failed: custom program error: 0x7d1'
-```
+### Conclusion
 
-Note that Anchor specifies in the logs the account that causes the error
-(`AnchorError caused by account: vault`).
+By implementing proper account data matching, we've significantly improved the security of our vault program. The secure version ensures that only the authorized user can withdraw funds, preventing potential exploits.
 
-```bash
-✔ Secure withdraw, expect error (77ms)
-✔ Secure withdraw (10073ms)
-```
+Remember, as your programs grow in complexity, it becomes increasingly important to implement thorough data validation checks. Always consider what assumptions your program is making about its inputs and validate them explicitly.
 
-And just like that, you've closed up the security loophole. The theme across
-most of these potential exploits is that they're quite simple. However, as your
-programs grow in scope and complexity, it becomse increasingly easy to miss
-possible exploits. It's great to get in a habit of writing tests that send
-instructions that _shouldn't_ work. The more the better. That way you catch
-problems before you deploy.
+<Callout type="success" title="Challenge">
+  Now that you've seen how to implement account data matching, take some time to review one of your existing programs. Look for places where you might be making assumptions about account data without explicitly checking it. Implement appropriate checks using the techniques you've learned in this lesson.
 
-If you want to take a look at the final solution code you can find it on the
-`solution` branch of
-[the repository](https://github.com/Unboxed-Software/solana-account-data-matching/tree/solution).
-
-## Challenge
-
-Just as with other lessons in this unit, your opportunity to practice avoiding
-this security exploit lies in auditing your own or other programs.
-
-Take some time to review at least one program and ensure that proper data checks
-are in place to avoid security exploits.
-
-Remember, if you find a bug or exploit in somebody else's program, please alert
-them! If you find one in your own program, be sure to patch it right away.
-
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=a107787e-ad33-42bb-96b3-0592efc1b92f)!
+  Remember, if you find a security vulnerability in someone else's program, responsibly disclose it to the program's maintainers. If you find one in your own program, patch it as soon as possible!
 </Callout>
+
+After completing this lab and challenge, you'll have gained practical experience in identifying and fixing security vulnerabilities related to account data matching. This skill is crucial for developing secure Solana programs.
