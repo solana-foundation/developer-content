@@ -4,15 +4,20 @@ objectives:
   - Explain the security risks associated with missing data validation checks
   - Implement data validation checks using native Rust
   - Implement data validation checks using Anchor constraints
-description: Learn how to properly validate account data in Solana programs to prevent security vulnerabilities.
+description:
+  Learn how to properly validate account data in Solana programs to prevent
+  security vulnerabilities.
 ---
 
 # Account Data Matching
 
 ## Summary
 
-- **Data validation checks** are crucial for verifying that account data matches expected values. Without proper checks, malicious users could exploit your program using unexpected accounts.
-- Implement data validation in native Rust by comparing account data to expected values:
+- **Data validation checks** are crucial for verifying that account data matches
+  expected values. Without proper checks, malicious users could exploit your
+  program using unexpected accounts.
+- Implement data validation in native Rust by comparing account data to expected
+  values:
   ```rust
   if ctx.accounts.user.key() != ctx.accounts.user_data.user {
       return Err(ProgramError::InvalidAccountData.into());
@@ -20,25 +25,35 @@ description: Learn how to properly validate account data in Solana programs to p
   ```
 - Use Anchor constraints to simplify the process:
   - Use `constraint` to evaluate custom expressions
-  - Use `has_one` to check that a field on one account matches the key of another account
+  - Use `has_one` to check that a field on one account matches the key of
+    another account
 
 ## Lesson
 
-Account data matching is a critical security practice in Solana program development. It involves implementing data validation checks to ensure that the data stored on an account matches expected values. These checks are essential for preventing unauthorized access and maintaining the integrity of your program's state.
+Account data matching is a critical security practice in Solana program
+development. It involves implementing data validation checks to ensure that the
+data stored on an account matches expected values. These checks are essential
+for preventing unauthorized access and maintaining the integrity of your
+program's state.
 
 ### Why Account Data Matching Matters
 
-Without proper data validation, your program becomes vulnerable to various attacks:
+Without proper data validation, your program becomes vulnerable to various
+attacks:
 
-1. Unauthorized access: Malicious users could pass in unexpected accounts, gaining access to functionality they shouldn't have
-2. State manipulation: Attackers might alter the program's state in unintended ways, compromising its integrity
-3. Fund theft: In programs dealing with tokens or SOL, inadequate checks could lead to unauthorized withdrawals
+1. Unauthorized access: Malicious users could pass in unexpected accounts,
+   gaining access to functionality they shouldn't have
+2. State manipulation: Attackers might alter the program's state in unintended
+   ways, compromising its integrity
+3. Fund theft: In programs dealing with tokens or SOL, inadequate checks could
+   lead to unauthorized withdrawals
 
 Let's look at an example to illustrate the importance of account data matching.
 
 ### Example: Insecure Admin Update
 
-Consider a program with an `update_admin` instruction that changes the admin of a configuration account:
+Consider a program with an `update_admin` instruction that changes the admin of
+a configuration account:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -70,11 +85,14 @@ pub struct AdminConfig {
 }
 ```
 
-This instruction is insecure because it doesn't verify that the `current_admin` signer matches the `admin` stored in the `admin_config` account. Any signer could potentially update the admin!
+This instruction is insecure because it doesn't verify that the `current_admin`
+signer matches the `admin` stored in the `admin_config` account. Any signer
+could potentially update the admin!
 
 ### Implementing Data Validation Checks
 
-Let's secure this instruction using two methods: native Rust and Anchor constraints.
+Let's secure this instruction using two methods: native Rust and Anchor
+constraints.
 
 #### Native Rust Approach
 
@@ -90,11 +108,13 @@ pub fn update_admin(ctx: Context<UpdateAdmin>) -> Result<()> {
 }
 ```
 
-This check ensures that only the current admin can update the admin_config account.
+This check ensures that only the current admin can update the admin_config
+account.
 
 #### Anchor Constraints
 
-Anchor provides a more declarative way to implement these checks using constraints:
+Anchor provides a more declarative way to implement these checks using
+constraints:
 
 ```rust
 #[derive(Accounts)]
@@ -110,7 +130,9 @@ pub struct UpdateAdmin<'info> {
 }
 ```
 
-The `has_one = current_admin` constraint checks that the `current_admin` account's key matches the `admin` field in the `AdminConfig` account. If it doesn't match, Anchor will return the custom `InvalidAdmin` error.
+The `has_one = current_admin` constraint checks that the `current_admin`
+account's key matches the `admin` field in the `AdminConfig` account. If it
+doesn't match, Anchor will return the custom `InvalidAdmin` error.
 
 Alternatively, you can use the `constraint` attribute for more complex checks:
 
@@ -143,20 +165,27 @@ pub enum MyError {
 
 </Callout>
 
-By implementing these checks, you ensure that only the rightful admin can update the admin_config account, significantly improving your program's security.
+By implementing these checks, you ensure that only the rightful admin can update
+the admin_config account, significantly improving your program's security.
 
 ## Lab: Securing a Vault Program
 
-In this lab, we'll create a simple "vault" program to demonstrate the importance of account data matching. We'll implement both an insecure and a secure version of a withdraw instruction to highlight the difference.
+In this lab, we'll create a simple "vault" program to demonstrate the importance
+of account data matching. We'll implement both an insecure and a secure version
+of a withdraw instruction to highlight the difference.
 
 ### 1. Setup
 
-Clone the starter code from the `starter` branch of [this repository](https://github.com/Unboxed-Software/solana-account-data-matching).
+Clone the starter code from the `starter` branch of
+[this repository](https://github.com/Unboxed-Software/solana-account-data-matching).
 
-The starter code includes a program with two instructions and a boilerplate test file:
+The starter code includes a program with two instructions and a boilerplate test
+file:
 
-1. `initialize_vault`: Creates a new `Vault` account and associated `TokenAccount`.
-2. `insecure_withdraw`: Transfers tokens from the vault's token account to a destination account.
+1. `initialize_vault`: Creates a new `Vault` account and associated
+   `TokenAccount`.
+2. `insecure_withdraw`: Transfers tokens from the vault's token account to a
+   destination account.
 
 <Callout type="warning">
   The `insecure_withdraw` instruction has a critical flaw. Can you spot it before we implement the fix?
@@ -207,11 +236,16 @@ pub struct InsecureWithdraw<'info> {
 }
 ```
 
-The critical flaw here is that while the instruction requires an `authority` signer, it doesn't verify whether the `authority` account passed to the instruction matches the `authority` stored in the `Vault` account. This means that any signer could potentially withdraw funds from the vault, even if they're not the authorized user.
+The critical flaw here is that while the instruction requires an `authority`
+signer, it doesn't verify whether the `authority` account passed to the
+instruction matches the `authority` stored in the `Vault` account. This means
+that any signer could potentially withdraw funds from the vault, even if they're
+not the authorized user.
 
 ### 3. Test the Insecure Withdraw Instruction
 
-Let's write a test to demonstrate this vulnerability. Add the following test to your `tests/account-data-matching.ts` file:
+Let's write a test to demonstrate this vulnerability. Add the following test to
+your `tests/account-data-matching.ts` file:
 
 ```typescript
 it("Insecure withdraw allows unauthorized access", async () => {
@@ -238,7 +272,8 @@ it("Insecure withdraw allows unauthorized access", async () => {
 });
 ```
 
-Run `anchor test` to see that this unauthorized withdrawal succeeds, demonstrating the security flaw.
+Run `anchor test` to see that this unauthorized withdrawal succeeds,
+demonstrating the security flaw.
 
 ### 4. Implement a Secure Withdraw Instruction
 
@@ -288,7 +323,10 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-The key difference here is the use of `has_one` constraints in the `SecureWithdraw` struct. These ensure that the `authority`, `token_account`, and `withdraw_destination` passed to the instruction match those stored in the `Vault` account.
+The key difference here is the use of `has_one` constraints in the
+`SecureWithdraw` struct. These ensure that the `authority`, `token_account`, and
+`withdraw_destination` passed to the instruction match those stored in the
+`Vault` account.
 
 ### 5. Test the Secure Withdraw Instruction
 
@@ -342,18 +380,31 @@ it("Secure withdraw allows authorized access", async () => {
 });
 ```
 
-Run `anchor test` again. You should see that the unauthorized withdrawal now fails, while the authorized one succeeds.
+Run `anchor test` again. You should see that the unauthorized withdrawal now
+fails, while the authorized one succeeds.
 
 ### Conclusion
 
-By implementing proper account data matching, we've significantly improved the security of our vault program. The secure version ensures that only the authorized user can withdraw funds, preventing potential exploits.
+By implementing proper account data matching, we've significantly improved the
+security of our vault program. The secure version ensures that only the
+authorized user can withdraw funds, preventing potential exploits.
 
-Remember, as your programs grow in complexity, it becomes increasingly important to implement thorough data validation checks. Always consider what assumptions your program is making about its inputs. Validate these assumptions explicitly.
+Remember, as your programs grow in complexity, it becomes increasingly important
+to implement thorough data validation checks. Always consider what assumptions
+your program is making about its inputs. Validate these assumptions explicitly.
 
-Now that you've seen how to implement account data matching, take some time to review one of your existing programs. Look for places where you might be making assumptions about account data without explicitly checking it. Implement appropriate checks using the techniques you've learned in this lesson.
+Now that you've seen how to implement account data matching, take some time to
+review one of your existing programs. Look for places where you might be making
+assumptions about account data without explicitly checking it. Implement
+appropriate checks using the techniques you've learned in this lesson.
 
-Remember, if you find a security vulnerability in someone else's program, responsibly disclose it to the program's maintainers. If you find one in your own program, patch it as soon as possible!
+Remember, if you find a security vulnerability in someone else's program,
+responsibly disclose it to the program's maintainers. If you find one in your
+own program, patch it as soon as possible!
 
-After completing this lab and challenge, you'll have gained practical experience in identifying and fixing security vulnerabilities related to account data matching. This skill is crucial for developing secure Solana programs.
+After completing this lab and challenge, you'll have gained practical experience
+in identifying and fixing security vulnerabilities related to account data
+matching. This skill is crucial for developing secure Solana programs.
 
-Push your code to GitHub and [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=a107787e-ad33-42bb-96b3-0592efc1b92f)!
+Push your code to GitHub and
+[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=a107787e-ad33-42bb-96b3-0592efc1b92f)!
