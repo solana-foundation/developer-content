@@ -211,7 +211,14 @@ lessons. The example below assumes that:
 
 ```typescript
 import * as borsh from "@coral-xyz/borsh";
-import * as web3 from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Connection,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 
 const equipPlayerSchema = borsh.struct([
   borsh.u8("variant"),
@@ -227,11 +234,11 @@ equipPlayerSchema.encode(
 
 const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
 
-const endpoint = web3.clusterApiUrl("devnet");
-const connection = new web3.Connection(endpoint);
+const endpoint = clusterApiUrl("devnet");
+const connection = new Connection(endpoint);
 
-const transaction = new web3.Transaction();
-const instruction = new web3.TransactionInstruction({
+const transaction = new Transaction();
+const instruction = new TransactionInstruction({
   keys: [
     {
       pubkey: player.publicKey,
@@ -244,7 +251,7 @@ const instruction = new web3.TransactionInstruction({
       isWritable: true,
     },
     {
-      pubkey: web3.SystemProgram.programId,
+      pubkey: SystemProgram.programId,
       isSigner: false,
       isWritable: false,
     },
@@ -255,11 +262,18 @@ const instruction = new web3.TransactionInstruction({
 
 transaction.add(instruction);
 
-web3.sendAndConfirmTransaction(connection, transaction, [player]).then(txid => {
-  console.log(
-    `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
+try {
+  const transactionId = await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [player],
   );
-});
+  console.log(
+    `Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
+  );
+} catch (error) {
+  alert(JSON.stringify(error));
+}
 ```
 
 ## Lab
@@ -403,7 +417,13 @@ import {
   NumberInputStepper,
   Textarea,
 } from "@chakra-ui/react";
-import * as web3 from "@solana/web3.js";
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 ```
 
@@ -416,7 +436,13 @@ import { FC } from 'react'
 import { Movie } from '../models/Movie'
 import { useState } from 'react'
 import { Box, Button, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Textarea } from '@chakra-ui/react'
-import * as web3 from '@solana/web3.js'
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js"
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 
 const MOVIE_REVIEW_PROGRAM_ID = 'CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN'
@@ -465,7 +491,7 @@ const handleTransactionSubmit = async (movie: Movie) => {
   }
 
   const buffer = movie.serialize();
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 };
 ```
 
@@ -477,14 +503,14 @@ the following, where `pda` is the address to the account where data will be
 stored:
 
 ```typescript
-const [pda] = await web3.PublicKey.findProgramAddressSync(
+const [pda] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from(movie.title)],
-  new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+  new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
 );
 ```
 
 In addition to this account, the program will also need to read from
-`SystemProgram`, so our array needs to include `web3.SystemProgram.programId` as
+`SystemProgram`, so our array needs to include `SystemProgram.programId` as
 well.
 
 With that, we can finish the remaining steps:
@@ -497,14 +523,14 @@ const handleTransactionSubmit = async (movie: Movie) => {
   }
 
   const buffer = movie.serialize();
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 
-  const [pda] = await web3.PublicKey.findProgramAddressSync(
+  const [pda] = await PublicKey.findProgramAddressSync(
     [publicKey.toBuffer(), new TextEncoder().encode(movie.title)],
-    new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   );
 
-  const instruction = new web3.TransactionInstruction({
+  const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: publicKey,
@@ -517,24 +543,24 @@ const handleTransactionSubmit = async (movie: Movie) => {
         isWritable: true,
       },
       {
-        pubkey: web3.SystemProgram.programId,
+        pubkey: SystemProgram.programId,
         isSigner: false,
         isWritable: false,
       },
     ],
     data: buffer,
-    programId: new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    programId: new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   });
 
   transaction.add(instruction);
 
   try {
-    let txid = await sendTransaction(transaction, connection);
+    let transactionId = await sendTransaction(transaction, connection);
     console.log(
-      `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
+      `Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
     );
-  } catch (e) {
-    alert(JSON.stringify(e));
+  } catch (error) {
+    alert(JSON.stringify(error));
   }
 };
 ```
