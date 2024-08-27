@@ -1082,14 +1082,14 @@ const onChainMetadata = await getTokenMetadata(connection, mint.publicKey);
 console.log("onchain metadata =====>", onChainMetadata);
 
 // And we can even get the off-chain json now
-try {
-  if (onChainMetadata?.uri) {
+if (onChainMetadata?.uri) {
+  try {
     const response = await fetch(onChainMetadata.uri);
     const offChainMetadata = await response.json();
     console.log("Mint off-chain metadata =====>", offChainMetadata);
+  } catch (error) {
+    console.error("Error fetching or parsing off-chain metadata:", error);
   }
-} catch (error) {
-  console.error("Error fetching or parsing off-chain metadata:", error);
 }
 ```
 
