@@ -601,8 +601,7 @@ address you can generate a new program ID from the playground before deploying.
 You can test your program by submitting a transaction with the right instruction
 data. For that, feel free to use
 [this script](https://github.com/Unboxed-Software/solana-movie-client) or
-[the frontend](https://github.com/Unboxed-Software/solana-movie-frontend) we
-built in the
+[the frontend](https://github.com/EmekaManuel/movie-review-dapp) we built in the
 [Serialize Custom Instruction Data lesson](serialize-instruction-data). In both
 cases, make sure you copy and paste the program ID for your program into the
 appropriate area of the source code to make sure you're testing the right
