@@ -255,18 +255,11 @@ const instruction = new web3.TransactionInstruction({
 
 transaction.add(instruction);
 
-try {
-  const transactionId = await web3.sendAndConfirmTransaction(
-    connection,
-    transaction,
-    [player],
-  );
+web3.sendAndConfirmTransaction(connection, transaction, [player]).then(txid => {
   console.log(
-    `Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
+    `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
   );
-} catch (error) {
-  console.error("Error submitting transaction:", error);
-}
+});
 ```
 
 ## Lab
