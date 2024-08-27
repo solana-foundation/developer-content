@@ -138,7 +138,7 @@
       "source": "/getstarted/hello-world"
     },
     {
-      "destination": "/developers/guides/getstarted/setup-local-development",
+      "destination": "docs/intro/installation",
       "source": "/getstarted/local"
     },
     {
