@@ -13,7 +13,7 @@ description:
 Finally, we'll cover burning tokens, and delegation. You may not use these in
 your own application, so if you're really excited about NFTs, feel free to skip
 to
-[creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex)!
+[creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex.md)!
 
 ### Burn Tokens
 
