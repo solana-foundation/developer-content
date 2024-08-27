@@ -269,7 +269,7 @@ try {
     [player],
   );
   console.log(
-    `Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
+    ` Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
   );
 } catch (error) {
   alert(JSON.stringify(error));
