@@ -268,9 +268,8 @@ try {
     transaction,
     [player],
   );
-  console.log(
-    ` Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
-  );
+  const explorerLink = getExplorerLink("transaction", transactionId, "devnet");
+  console.log(`Transaction submitted: ${explorerLink}`);
 } catch (error) {
   alert(JSON.stringify(error));
 }
@@ -444,6 +443,7 @@ import {
   TransactionInstruction,
 } from "@solana/web3.js"
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { getExplorerLink } from "@solana-developers/helpers";
 
 const MOVIE_REVIEW_PROGRAM_ID = 'CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN'
 
@@ -556,9 +556,12 @@ const handleTransactionSubmit = async (movie: Movie) => {
 
   try {
     let transactionId = await sendTransaction(transaction, connection);
-    console.log(
-      `Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
+    const explorerLink = getExplorerLink(
+      "transaction",
+      transactionId,
+      "devnet",
     );
+    console.log(`Transaction submitted: ${explorerLink}`);
   } catch (error) {
     alert(JSON.stringify(error));
   }
