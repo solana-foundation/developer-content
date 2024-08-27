@@ -590,7 +590,7 @@ use anchor_lang::prelude::*;
 
 declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
 
-const ACCOUNT_SIZE: usize = 8 + 8; 
+const ACCOUNT_SIZE: usize = 8 + 8;
 
 #[program]
 pub mod anchor_counter {
