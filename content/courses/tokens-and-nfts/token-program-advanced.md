@@ -425,7 +425,7 @@ Run the script using `npx esrun burn-tokens.ts`. You should see:
 ✅ Burn Transaction: https://explorer.solana.com/tx/P9JAK7bSAhycccGunDEThgt12QFiqMr9oexenEmRXXKoXsLKr2x64k9BWNppjTxFeVMUYjBEncRKe3gZsyd29JY?cluster=devnet
 ```
 
-Open the explorer link, you will see the burn information.
+Open the Explorer link, you will see the burn information.
 
 Well done! You've now
 
