@@ -560,34 +560,34 @@ import { PublicKey, Transaction } from "@solana/web3.js"
 ...
 
 async function post(req: NextApiRequest, res: NextApiResponse) {
-    const { account } = req.body
-    const { reference, id } = req.query
+  const { account } = req.body;
+  const { reference, id } = req.query;
 
-    if (!account || !reference || !id) {
-        res.status(400).json({ error: "Missing required parameter(s)" })
-        return
+  if (!account || !reference || !id) {
+    res.status(400).json({ error: "Missing required parameter(s)" });
+    return;
+  }
+
+  try {
+    const transaction = await buildTransaction(
+      new PublicKey(account),
+      new PublicKey(reference),
+      id.toString(),
+    );
+
+    res.status(200).json({
+      transaction: transaction,
+      message: `You've found location ${id}!`,
+    });
+  } catch (err) {
+    console.log(err);
+    let error = err as any;
+    if (error.message) {
+      res.status(200).json({ transaction: "", message: error.message });
+      return;
     }
-
-    try {
-        const transaction = await buildTransaction(
-            new PublicKey(account),
-            new PublicKey(reference),
-            id.toString()
-        )
-
-        res.status(200).json({
-            transaction: transaction,
-            message: `You've found location ${id}!`,
-        })
-    } catch (err) {
-        console.log(err)
-        let error = err as any
-        if (error.message) {
-            res.status(200).json({ transaction: "", message: error.message })
-            return
-        }
-        res.status(500).json({ error: "error creating transaction" })
-    }
+    res.status(500).json({ error: "error creating transaction" });
+  }
 }
 
 async function buildTransaction(
