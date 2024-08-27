@@ -11,7 +11,8 @@ description:
 
 ## Summary
 
-- **Onchain programs** refers to the code that run directly on Solana.
+- **Onchain programs** run directly on Solana, just like programs on your
+  computer.
 - These programs consist of **instruction handlers** - functions that process
   instructions from transactions.
 - Programs interact with the blockchain by reading from and writing to Solana
@@ -46,8 +47,8 @@ that is, by using the **native onchain program development**, however **Anchor**
 makes things a lot simpler and safer. Some pros of using Anchor are:
 
 - Security checks are implemented automatically
-- Instruction routing to appropriate handlers
-- Data serialization and deserialization from incoming transactions
+- Automatic routing of incoming instructions to the correct instruction handler
+- Automatic serialization and deserialization of the data inside transactions
 - Account validation, including:
   - Type checking
   - Ensuring account uniqueness
@@ -81,26 +82,23 @@ execute.
 
 Instruction handlers are how blockchain programs process the instructions from
 clients. Every exchange, lending protocol, escrow, oracle, etc. provides their
-functionality by instruction handlers. They enable program to process complex
-financial operations on Solana.
+functionality by instruction handlers.
 
 ### Instruction handlers write their state to Solana accounts
 
-If you have previously done web development, you can think of instruction
-handlers like an HTTP route handler, and incoming instructions like HTTP
-requests.
+If you have done web development before, think of instruction handlers like HTTP
+route handlers, and incoming instructions like HTTP requests.
 
-But unlike HTTP route handlers, Solana instruction handlers don't return data.
-Instead, the instruction handlers write their data to accounts on Solana.
+However, unlike HTTP route handlers, Solana instruction handlers don't return
+data. Instead, they write their data to accounts on Solana.
 
-Programs on Solana can transfer tokens, which end up in user wallet addresses
-(for SOL) for the user's token accounts (for other tokens).
+Programs on Solana can transfer tokens to user wallet addresses (for SOL) or
+user token accounts (for other tokens).
 
-But more importantly, programs on Solana can create additional addresses as
-needed, to store items of data.
+More importantly, programs can create additional addresses to store data as
+needed.
 
-This approach allows Solana programs to maintain complex states and interact
-with various types of data, all within the blockchain's account structure.
+This is how Solana programs store their state.
 
 ### Program Derived Addresses (PDAs): Solana's Key-Value Store
 
@@ -129,8 +127,9 @@ to store any form of data as required by the program.
    - Can store any type of program-specific information
 
 4. **Some properties**:
-   - PDAs are off the ED25519 elliptic curve so they are not `KeyPairs` like
-     traditional accounts on Solana, they only have a `PublicKey`.
+   - PDAs are off the Ed25519 elliptic curve. While the data type web3.js uses
+     is a `PublicKey`, PDA addresses are not public keys and do not have a
+     matching private key.
    - A program's PDAs are unique so, they won't conflict with other programs.
    - PDAs can also act as signer in an instruction. We'll learn more about this
      in further lessons.
