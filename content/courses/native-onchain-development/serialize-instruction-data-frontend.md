@@ -211,7 +211,14 @@ lessons. The example below assumes that:
 
 ```typescript
 import * as borsh from "@coral-xyz/borsh";
-import * as web3 from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Connection,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 
 const equipPlayerSchema = borsh.struct([
   borsh.u8("variant"),
@@ -227,11 +234,11 @@ equipPlayerSchema.encode(
 
 const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
 
-const endpoint = web3.clusterApiUrl("devnet");
-const connection = new web3.Connection(endpoint);
+const endpoint = clusterApiUrl("devnet");
+const connection = new Connection(endpoint);
 
-const transaction = new web3.Transaction();
-const instruction = new web3.TransactionInstruction({
+const transaction = new Transaction();
+const instruction = new TransactionInstruction({
   keys: [
     {
       pubkey: player.publicKey,
@@ -244,7 +251,7 @@ const instruction = new web3.TransactionInstruction({
       isWritable: true,
     },
     {
-      pubkey: web3.SystemProgram.programId,
+      pubkey: SystemProgram.programId,
       isSigner: false,
       isWritable: false,
     },
@@ -256,16 +263,15 @@ const instruction = new web3.TransactionInstruction({
 transaction.add(instruction);
 
 try {
-  const transactionId = await web3.sendAndConfirmTransaction(
+  const transactionId = await sendAndConfirmTransaction(
     connection,
     transaction,
     [player],
   );
-  console.log(
-    `Transaction submitted: https://explorer.solana.com/tx/${transactionId}?cluster=devnet`,
-  );
+  const explorerLink = getExplorerLink("transaction", transactionId, "devnet");
+  console.log(`Transaction submitted: ${explorerLink}`);
 } catch (error) {
-  console.error("Error submitting transaction:", error);
+  alert(JSON.stringify(error));
 }
 ```
 
@@ -276,7 +282,7 @@ submit a movie review and have it stored on Solana’s network. We’ll build th
 app a little bit at a time over the next few lessons, adding new functionality
 each lesson.
 
-![Movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![Movie review frontend](/public/assets/courses/superteam/movie-review-frontend-dapp.png)
 
 Here's a quick diagram of the program we'll build:
 
@@ -288,7 +294,7 @@ The public key of the Solana program we’ll use for this application is
 #### 1. Download the starter code
 
 Before we get started, go ahead and download the
-[starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/starter).
+[starter code](https://github.com/EmekaManuel/movie-review-dapp/tree/starter).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -410,7 +416,13 @@ import {
   NumberInputStepper,
   Textarea,
 } from "@chakra-ui/react";
-import * as web3 from "@solana/web3.js";
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 ```
 
@@ -423,8 +435,15 @@ import { FC } from 'react'
 import { Movie } from '../models/Movie'
 import { useState } from 'react'
 import { Box, Button, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Textarea } from '@chakra-ui/react'
-import * as web3 from '@solana/web3.js'
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js"
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { getExplorerLink } from "@solana-developers/helpers";
 
 const MOVIE_REVIEW_PROGRAM_ID = 'CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN'
 
@@ -472,7 +491,7 @@ const handleTransactionSubmit = async (movie: Movie) => {
   }
 
   const buffer = movie.serialize();
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 };
 ```
 
@@ -484,14 +503,14 @@ the following, where `pda` is the address to the account where data will be
 stored:
 
 ```typescript
-const [pda] = await web3.PublicKey.findProgramAddress(
+const [pda] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from(movie.title)],
-  new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+  new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
 );
 ```
 
 In addition to this account, the program will also need to read from
-`SystemProgram`, so our array needs to include `web3.SystemProgram.programId` as
+`SystemProgram`, so our array needs to include `SystemProgram.programId` as
 well.
 
 With that, we can finish the remaining steps:
@@ -504,14 +523,14 @@ const handleTransactionSubmit = async (movie: Movie) => {
   }
 
   const buffer = movie.serialize();
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 
-  const [pda] = await web3.PublicKey.findProgramAddress(
+  const [pda] = await PublicKey.findProgramAddressSync(
     [publicKey.toBuffer(), new TextEncoder().encode(movie.title)],
-    new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   );
 
-  const instruction = new web3.TransactionInstruction({
+  const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: publicKey,
@@ -524,24 +543,27 @@ const handleTransactionSubmit = async (movie: Movie) => {
         isWritable: true,
       },
       {
-        pubkey: web3.SystemProgram.programId,
+        pubkey: SystemProgram.programId,
         isSigner: false,
         isWritable: false,
       },
     ],
     data: buffer,
-    programId: new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    programId: new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   });
 
   transaction.add(instruction);
 
   try {
-    let txid = await sendTransaction(transaction, connection);
-    console.log(
-      `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
+    let transactionId = await sendTransaction(transaction, connection);
+    const explorerLink = getExplorerLink(
+      "transaction",
+      transactionId,
+      "devnet",
     );
-  } catch (e) {
-    alert(JSON.stringify(e));
+    console.log(`Transaction submitted: ${explorerLink}`);
+  } catch (error) {
+    alert(JSON.stringify(error));
   }
 };
 ```
@@ -553,7 +575,7 @@ successful.
 
 If you need a bit more time with this project to feel comfortable, have a look
 at the complete
-[solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-serialize-instruction-data).
+[solution code](https://github.com/EmekaManuel/movie-review-dapp/tree/solution-serialize-instruction-data).
 
 ## Challenge
 
