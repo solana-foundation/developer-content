@@ -118,10 +118,10 @@ import {
   ConnectionProvider,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
-import * as web3 from "@solana/web3.js";
+import { clusterApiUrl } from "@solana/web3.js";
 
 export const Home: NextPage = props => {
-  const endpoint = web3.clusterApiUrl("devnet");
+  const endpoint = clusterApiUrl("devnet");
   const wallets = useMemo(() => [], []);
 
   return (
@@ -167,10 +167,15 @@ import {
   WalletModalProvider,
   WalletMultiButton,
 } from "@solana/wallet-adapter-react-ui";
-import * as web3 from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Transaction,
+  PublicKey,
+  SystemProgram,
+} from "@solana/web3.js";
 
 const Home: NextPage = props => {
-  const endpoint = web3.clusterApiUrl("devnet");
+  const endpoint = clusterApiUrl("devnet");
   const wallets = useMemo(() => [], []);
 
   return (
@@ -269,18 +274,28 @@ const { connection } = useConnection();
 const sendSol = async event => {
   event.preventDefault();
 
-  const transaction = new web3.Transaction();
-  const recipientPubKey = new web3.PublicKey(event.target.recipient.value);
+  if (!publicKey) {
+    console.error("Wallet not connected");
+    return;
+  }
 
-  const sendSolInstruction = web3.SystemProgram.transfer({
-    fromPubkey: publicKey,
-    toPubkey: recipientPubKey,
-    lamports: 0.1 * LAMPORTS_PER_SOL,
-  });
+  try {
+    const recipientPubKey = new PublicKey(event.currentTarget.recipient.value);
 
-  transaction.add(sendSolInstruction);
-  const signature = sendTransaction(transaction, connection);
-  console.log(signature);
+    const transaction = new Transaction();
+    const sendSolInstruction = SystemProgram.transfer({
+      fromPubkey: publicKey,
+      toPubkey: recipientPubKey,
+      lamports: 0.1 * LAMPORTS_PER_SOL,
+    });
+
+    transaction.add(sendSolInstruction);
+
+    const signature = await sendTransaction(transaction, connection);
+    console.log(`Transaction signature: ${signature}`);
+  } catch (error) {
+    console.error("Transaction failed", error);
+  }
 };
 ```
 
@@ -401,12 +416,12 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import * as web3 from "@solana/web3.js";
+import { clusterApiUrl } from "@solana/web3.js";
 import * as walletAdapterWallets from "@solana/wallet-adapter-wallets";
 require("@solana/wallet-adapter-react-ui/styles.css");
 
 const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const endpoint = web3.clusterApiUrl("devnet");
+  const endpoint = clusterApiUrl("devnet");
   const wallets = useMemo(() => [], []);
 
   return (
@@ -506,7 +521,12 @@ import `@solana/web3.js` since we’ll need it to create our transaction.
 
 ```tsx
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import * as web3 from "@solana/web3.js";
+import {
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+  sendTransaction,
+} from "@solana/web3.js";
 import { FC, useState } from "react";
 import styles from "../styles/PingButton.module.css";
 
@@ -528,7 +548,12 @@ Now use the `useConnection` hook to create a `connection` constant and the
 
 ```tsx
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import * as web3 from "@solana/web3.js";
+import {
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+  sendTransaction,
+} from "@solana/web3.js";
 import { FC, useState } from "react";
 import styles from "../styles/PingButton.module.css";
 
@@ -567,27 +592,32 @@ Finally, call `sendTransaction`.
 ```tsx
 const onClick = async () => {
   if (!connection || !publicKey) {
-    return;
+    console.error("Wallet not connected or connection unavailable");
   }
 
-  const programId = new web3.PublicKey(PROGRAM_ID);
-  const programDataAccount = new web3.PublicKey(DATA_ACCOUNT_PUBKEY);
-  const transaction = new web3.Transaction();
+  try {
+    const programId = new PublicKey(PROGRAM_ID);
+    const programDataAccount = new PublicKey(DATA_ACCOUNT_PUBKEY);
+    const transaction = new Transaction();
 
-  const instruction = new web3.TransactionInstruction({
-    keys: [
-      {
-        pubkey: programDataAccount,
-        isSigner: false,
-        isWritable: true,
-      },
-    ],
-    programId,
-  });
+    const instruction = new TransactionInstruction({
+      keys: [
+        {
+          pubkey: programDataAccount,
+          isSigner: false,
+          isWritable: true,
+        },
+      ],
+      programId,
+    });
 
-  transaction.add(instruction);
-  const signature = await sendTransaction(transaction, connection);
-  console.log(sig);
+    transaction.add(instruction);
+
+    const signature = await sendTransaction(transaction, connection);
+    console.log("Transaction Signature:", signature);
+  } catch (error) {
+    console.error("Transaction failed:", error);
+  }
 };
 ```
 
