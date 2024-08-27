@@ -1008,11 +1008,27 @@ export function CounterView() {
   const { program, counterAddress } = useProgram();
   const [counter, setCounter] = useState<CounterAccount>();
 
-  // Fetch Counter Info
   useEffect(() => {
-    if (!program || !counterAddress) return;
+    if (!program || !counterAddress) {
+      console.log("Missing dependencies:", {
+        program: !!program ? "Program Loaded" : "Program Not loaded",
+        counterAddress: !!counterAddress
+          ? "Counter Address Loaded"
+          : "Counter Address Not loaded",
+      });
+      return;
+    }
 
-    program.account.counter.fetch(counterAddress).then(setCounter);
+    const fetchCounter = async () => {
+      try {
+        const counterData = await program.account.counter.fetch(counterAddress);
+        setCounter(counterData);
+      } catch (error) {
+        console.error("Failed to fetch counter:", error);
+      }
+    };
+
+    fetchCounter();
 
     const subscriptionId = connection.onAccountChange(
       counterAddress,
@@ -1023,8 +1039,8 @@ export function CounterView() {
             accountInfo.data,
           );
           setCounter(data);
-        } catch (e) {
-          console.log("account decoding error: " + e);
+        } catch (error) {
+          console.error("Account decoding error:", error);
         }
       },
     );
@@ -1109,62 +1125,63 @@ export function CounterButton() {
   const { connection } = useConnection();
   const [isTransactionInProgress, setIsTransactionInProgress] = useState(false);
 
-  const showToastOrAlert = (message: string) => {
-    if (Platform.OS === "android") {
-      ToastAndroid.show(message, ToastAndroid.SHORT);
-    } else {
-      Alert.alert(message);
-    }
+  const showNotification = (message: string) => {
+    Platform.OS === "android"
+      ? ToastAndroid.show(message, ToastAndroid.SHORT)
+      : Alert.alert(message);
   };
 
   const incrementCounter = () => {
-    if (!program || !counterAddress) return;
+    if (!program || !counterAddress) {
+      console.log("Missing program or counterAddress.");
+      return;
+    }
 
-    if (!isTransactionInProgress) {
+    if (isTransactionInProgress) return;
+
+    try {
       setIsTransactionInProgress(true);
 
-      transact(async (wallet: Web3MobileWallet) => {
+      await transact(async (wallet: Web3MobileWallet) => {
         const authResult = await authorizeSession(wallet);
-        const latestBlockhashResult = await connection.getLatestBlockhash();
+        const { blockhash, lastValidBlockHeight } =
+          await connection.getLatestBlockhash();
 
-        const ix = await program.methods
+        const incrementInstruction = await program.methods
           .increment()
           .accounts({ counter: counterAddress, user: authResult.publicKey })
           .instruction();
 
         const balance = await connection.getBalance(authResult.publicKey);
-
         console.log(
           `Wallet ${authResult.publicKey} has a balance of ${balance}`,
         );
 
-        // When on Devnet you may want to transfer SOL manually per session, due to Devnet's airdrop rate limit
         const minBalance = LAMPORTS_PER_SOL / 1000;
-
         if (balance < minBalance) {
           console.log(
-            `requesting airdrop for ${authResult.publicKey} on ${connection.rpcEndpoint}`,
+            `Requesting airdrop for ${authResult.publicKey} on ${connection.rpcEndpoint}`,
           );
           await connection.requestAirdrop(authResult.publicKey, minBalance * 2);
         }
 
         const transaction = new Transaction({
-          ...latestBlockhashResult,
           feePayer: authResult.publicKey,
-        }).add(ix);
+          blockhash,
+          lastValidBlockHeight,
+        }).add(incrementInstruction);
+
         const signature = await wallet.signAndSendTransactions({
           transactions: [transaction],
         });
 
-        showToastOrAlert(`Transaction successful! ${signature}`);
-      })
-        .catch(e => {
-          console.log(e);
-          showToastOrAlert(`Error: ${JSON.stringify(e)}`);
-        })
-        .finally(() => {
-          setIsTransactionInProgress(false);
-        });
+        showNotification(`Transaction successful! ${signature}`);
+      });
+    } catch (error) {
+      console.error("Transaction failed:", error);
+      showNotification(`Error: ${JSON.stringify(error)}`);
+    } finally {
+      setIsTransactionInProgress(false);
     }
   };
 
