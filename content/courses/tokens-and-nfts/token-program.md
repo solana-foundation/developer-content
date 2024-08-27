@@ -734,7 +734,7 @@ token account. Recall that we set the `user` as the `mintAuthority` for the
 `mint` we created.
 
 Create an empty file called `mint-tokens.ts`. Then uses the `spl-token` function
-`mintTo` to mint tokens. Remember to substitute in your token mint address and
+`mintTo()` to mint tokens. Remember to substitute in your token mint address and
 token account address below!
 
 ```typescript
