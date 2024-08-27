@@ -328,9 +328,9 @@ npx create-solana-game gameName
 ### Setup your local environment
 
 In order to run this example locally, you will need to make sure you have
-[setup your local environment](/content/guides/getstarted/setup-local-development)
-for Solana development, including installing and configuring the Anchor CLI. If
-you do not already, you can follow the previously linked setup guide to do so.
+[setup your local environment](/docs/intro/installation) for Solana development,
+including installing and configuring the Anchor CLI. If you do not already, you
+can follow the previously linked setup guide to do so.
 
 ### Project structure
 
