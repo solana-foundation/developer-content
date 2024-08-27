@@ -26,7 +26,7 @@ test program to ensure that our setup works.
 
 ### Extra steps for Windows users
 
-> MacOS and Linux users can skip this section. Linux and MacOS are the
+> macOS and Linux users can skip this section. Linux and macOS are the
 > recommended operating systems for Solana program development. However, if
 > you're on Windows, you can still follow along with these extra steps.
 
@@ -93,7 +93,7 @@ Afterwards, `anchor -V` should show `anchor-cli 0.30.x` (any number for `x` is
 fine) which is the version of the Solana CLI installed in your system indicating
 that it was installed successfully.
 
-### Initialize Anchor project
+### Create an Anchor project
 
 Create a temporary project, with the default contents, using Anchor and make
 sure it compiles and runs our tests:
@@ -108,30 +108,42 @@ anchor test
 
 **However you may encounter issues, and we'll fix them below:**
 
-- `package `solana-program
-  v1.18.12` cannot be built because it requires rustc 1.75.0 or newer` error
+#### `package `solana-program
+
+v1.18.12` cannot be built because it requires rustc 1.75.0 or newer` error
 
 This error is due to incompatible versions of `solana-program` and `solana-cli`.
 Run `cargo add solana-program@"=1.18.x"`, where `x` matches your version of
 `solana-cli`. Then re-run `anchor test`.
 
-- `Error: Unable to read keypair file`
+#### `Error: Unable to read keypair file`
 
 Add a keypair to `.config/solana/id.json`. You can either copy a keypair from an
 `.env` file (just the array of numbers) into a file or use the command
 `solana-keygen new --no-bip39-passphrase` to create a new keypair file. Then
 re-run `anchor test`.
 
-- `unused variable: 'ctx'` warning
+#### error: no such command: `build-sbf`
 
-This simply means the `initialize` instruction handler isn't doing anything yet.
-You can open `programs/favorites/src/lib.rs` and change `ctx` to `_ctx` or just
-go onto the next step.
+Add this to your `~/.zshrc` or `~/.bashrc` file to make the change permanent.
 
-- `No license field in package.json` warning
+```bash
+export PATH=~"/.local/share/solana/install/active_release/bin:$PATH"
+```
 
-Open package.json, add `"license": "MIT"` or `"license": "UNLICENSED"` depending
-on preferences
+#### Unable to get latest blockhash. Test validator does not look started.
+
+- Install Homebrew and use it to install GNU tar:
+
+  ```bash
+  brew install gnu-tar
+  ```
+
+- Add this to your ~/.zshrc or ~/.bashrc file to make the change permanent.
+
+  ```bash
+  export PATH=/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH
+  ```
 
 ### All done?
 
