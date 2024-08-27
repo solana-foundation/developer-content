@@ -1,4 +1,0 @@
-Metaplex
-onchain
-Solana
-Umi
