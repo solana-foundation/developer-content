@@ -119,12 +119,20 @@ of the account and an `account` property of type `AccountInfo`. You can use the
 `account` property to get the account data.
 
 ```typescript
-const accounts = connection.getProgramAccounts(programId).then(accounts => {
-  accounts.map(({ pubkey, account }) => {
-    console.log("Account:", pubkey);
-    console.log("Data buffer:", account.data);
-  });
-});
+const fetchProgramAccounts = async () => {
+  try {
+    const accounts = await connection.getProgramAccounts(programId);
+
+    accounts.forEach(({ pubkey, account }) => {
+      console.log("Account:", pubkey.toBase58());
+      console.log("Data buffer:", account.data);
+    });
+  } catch (error) {
+    console.error("Error fetching program accounts:", error);
+  }
+};
+
+fetchProgramAccounts();
 ```
 
 ### Deserializing program data
@@ -315,16 +323,20 @@ export const MovieList: FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    connection
-      .getProgramAccounts(new PublicKey(MOVIE_REVIEW_PROGRAM_ID))
-      .then(async accounts => {
-        const movies: Movie[] = accounts.map(({ account }) => {
-          return Movie.deserialize(account.data);
-        });
+    const fetchProgramAccounts = async () => {
+      try {
+        const accounts = await connection.getProgramAccounts(new PublicKey(MOVIE_REVIEW_PROGRAM_ID));
+
+        const movies: Movie[] = accounts.map(({ account }) => Movie.deserialize(account.data));
 
         setMovies(movies);
-      });
-  }, []);
+      } catch (error) {
+        console.error("Error fetching program accounts:", error);
+      }
+    };
+    fetchProgramAccounts();
+  }, [connection]);
+
 
   return (
     <div>
