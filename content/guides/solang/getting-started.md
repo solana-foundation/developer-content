@@ -42,9 +42,8 @@ Just follow the steps outlined below:
 1. **Check Your Prerequisites**: Before diving in, ensure that you have
    [Rust](https://www.rust-lang.org/tools/install) and
    [Node.js](https://nodejs.org/en) installed on your system. Windows users will
-   also need to have
-   [Windows Subsystem for Linux](https://solana.com/developers/guides/setup-local-development#windows-users-only)
-   set up.
+   also need to have [Windows Subsystem for Linux](/docs/intro/installation) set
+   up.
 2. **Solana Tool Suite Installation**: Begin by installing the
    [Solana Tool Suite](https://docs.solana.com/cli/install-solana-cli-tools),
    which includes the Solana Command Line Interface (CLI) and the latest version
