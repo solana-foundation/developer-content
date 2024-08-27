@@ -581,12 +581,9 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
     });
   } catch (err) {
     console.log(err);
-    let error = err as any;
-    if (error.message) {
-      res.status(200).json({ transaction: "", message: error.message });
-      return;
-    }
-    res.status(500).json({ error: "error creating transaction" });
+    let error = err as Error;
+    res.status(500).json({ transaction: "", message: error.message });
+    return;
   }
 }
 
