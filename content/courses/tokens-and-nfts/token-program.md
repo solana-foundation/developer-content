@@ -497,16 +497,11 @@ console.log(
 // SystemProgram.createAccount()
 // token.createInitializeMintInstruction()
 // See https://www.soldev.app/course/token-program
-try {
-  const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
+const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
 
-  const link = getExplorerLink("address", tokenMint.toString(), "devnet");
+const link = getExplorerLink("address", tokenMint.toString(), "devnet");
 
-  console.log(`✅ Finished! Created token mint: ${link}`);
-} catch (error) {
-  console.log("❌ createMint failed with errors: ");
-  console.log(error.message);
-}
+console.log(`✅ Finished! Created token mint: ${link}`);
 ```
 
 Run the script using `npx esrun create-token-mint.ts`. You should see
@@ -610,32 +605,27 @@ const createMetadataAccountInstruction =
 
 transaction.add(createMetadataAccountInstruction);
 
-try {
-  const transactionSignature = await sendAndConfirmTransaction(
-    connection,
-    transaction,
-    [user],
-  );
+const transactionSignature = await sendAndConfirmTransaction(
+  connection,
+  transaction,
+  [user],
+);
 
-  const transactionLink = getExplorerLink(
-    "transaction",
-    transactionSignature,
-    "devnet",
-  );
+const transactionLink = getExplorerLink(
+  "transaction",
+  transactionSignature,
+  "devnet",
+);
 
-  console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
+console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
 
-  const tokenMintLink = getExplorerLink(
-    "address",
-    tokenMintAccount.toString(),
-    "devnet",
-  );
+const tokenMintLink = getExplorerLink(
+  "address",
+  tokenMintAccount.toString(),
+  "devnet",
+);
 
-  console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
-} catch (error) {
-  console.log("❌ Make token metadata failed with errors:");
-  console.log(error.message);
-}
+console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
 ```
 
 Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your address of the mint and Run the
@@ -692,27 +682,22 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT");
 // const recipient = new PublicKey("SOMEONE_ELSES_DEVNET_ADDRESS");
 const recipient = user.publicKey;
 
-try {
-  const tokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    user,
-    tokenMintAccount,
-    recipient,
-  );
+const tokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  user,
+  tokenMintAccount,
+  recipient,
+);
 
-  console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
+console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
 
-  const link = getExplorerLink(
-    "address",
-    tokenAccount.address.toBase58(),
-    "devnet",
-  );
+const link = getExplorerLink(
+  "address",
+  tokenAccount.address.toBase58(),
+  "devnet",
+);
 
-  console.log(`✅ Created token Account: ${link}`);
-} catch (error) {
-  console.log("❌ Create token account failed with errors:");
-  console.log(error.message);
-}
+console.log(`✅ Created token Account: ${link}`);
 ```
 
 Run the script using `npx esrun create-token-account.ts`. You should see:
@@ -760,23 +745,18 @@ const recipientAssociatedTokenAccount = new PublicKey(
   "RECIPIENT_TOKEN_ACCOUNT",
 );
 
-try {
-  const transactionSignature = await mintTo(
-    connection,
-    user,
-    tokenMintAccount,
-    recipientAssociatedTokenAccount,
-    user,
-    10 * MINOR_UNITS_PER_MAJOR_UNITS,
-  );
+const transactionSignature = await mintTo(
+  connection,
+  user,
+  tokenMintAccount,
+  recipientAssociatedTokenAccount,
+  user,
+  10 * MINOR_UNITS_PER_MAJOR_UNITS,
+);
 
-  const link = getExplorerLink("transaction", transactionSignature, "devnet");
+const link = getExplorerLink("transaction", transactionSignature, "devnet");
 
-  console.log(`✅ Success! Mint Token Transaction: ${link}`);
-} catch (error) {
-  console.log("❌ mintToken failed with errors: ");
-  console.log(error.message);
-}
+console.log(`✅ Success! Mint Token Transaction: ${link}`);
 ```
 
 Run the script using `npx esrun mint-tokens.ts`. You should see:
@@ -833,54 +813,35 @@ const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
 console.log(`💸 Attempting to send 1 token to ${recipient.toBase58()}...`);
 
-let sourceTokenAccount: { address: PublicKey };
-try {
-  // Get or create the source token account to store this token
-  const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    sender,
-    tokenMintAccount,
-    sender.publicKey,
-  );
-} catch (error) {
-  console.log("❌ Get or create the source token account failed with errors.");
-  throw new Error(error.message);
-}
+// Get or create the source token account to store this token
+const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  sender,
+  tokenMintAccount,
+  sender.publicKey,
+);
 
-let destinationTokenAccount: { address: PublicKey };
-try {
-  // Get or create the destination token account to store this token
-  const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    sender,
-    tokenMintAccount,
-    recipient,
-  );
-} catch (error) {
-  console.log(
-    "❌ Get or create the destination token account failed with errors.",
-  );
-  throw new Error(error.message);
-}
+// Get or create the destination token account to store this token
+const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  sender,
+  tokenMintAccount,
+  recipient,
+);
 
-try {
-  // Transfer the tokens
-  const signature = await transfer(
-    connection,
-    sender,
-    sourceTokenAccount.address,
-    destinationTokenAccount.address,
-    sender,
-    1 * MINOR_UNITS_PER_MAJOR_UNITS,
-  );
+// Transfer the tokens
+const signature = await transfer(
+  connection,
+  sender,
+  sourceTokenAccount.address,
+  destinationTokenAccount.address,
+  sender,
+  1 * MINOR_UNITS_PER_MAJOR_UNITS,
+);
 
-  const explorerLink = getExplorerLink("transaction", signature, "devnet");
+const explorerLink = getExplorerLink("transaction", signature, "devnet");
 
-  console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}`);
-} catch (error) {
-  console.log("❌ transfer tokens failed with errors: ");
-  console.log(error.message);
-}
+console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}`);
 ```
 
 Run the script using `npx esrun transfer-tokens.ts`. You should see:

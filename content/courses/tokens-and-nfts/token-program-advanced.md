@@ -211,37 +211,25 @@ const delegate = new PublicKey("11111111111111111111111111111111");
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-let sourceTokenAccount: Account;
-try {
-  // Get or create the source and destination token accounts to store this token
-  sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    user,
-    tokenMintAccount,
-    user.publicKey,
-  );
-} catch (error) {
-  console.log("❌ getOrCreateAssociatedTokenAccount failed with errors:");
-  throw new Error(error.message);
-}
+// Get or create the source and destination token accounts to store this token
+const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  user,
+  tokenMintAccount,
+  user.publicKey,
+);
 
 // Our token has two decimal places
 const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
-let approveTransactionSignature: string;
-try {
-  approveTransactionSignature = await approve(
-    connection,
-    user,
-    sourceTokenAccount.address,
-    delegate,
-    user.publicKey,
-    50 * MINOR_UNITS_PER_MAJOR_UNITS,
-  );
-} catch (error) {
-  console.log("❌ approve failed with errors:");
-  throw new Error(error.message);
-}
+const approveTransactionSignature = await approve(
+  connection,
+  user,
+  sourceTokenAccount.address,
+  delegate,
+  user.publicKey,
+  50 * MINOR_UNITS_PER_MAJOR_UNITS,
+);
 
 console.log(
   `✅ Approve Delegate Transaction: ${getExplorerLink(
@@ -279,11 +267,7 @@ import {
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
-import {
-  Account,
-  getOrCreateAssociatedTokenAccount,
-  revoke,
-} from "@solana/spl-token";
+import { getOrCreateAssociatedTokenAccount, revoke } from "@solana/spl-token";
 
 const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -296,32 +280,20 @@ console.log(
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-let sourceTokenAccount: Account;
-try {
-  // Get or create the source and destination token accounts to store this token
-  sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    user,
-    tokenMintAccount,
-    user.publicKey,
-  );
-} catch (error) {
-  console.log("❌ getOrCreateAssociatedTokenAccount failed with errors:");
-  throw new Error(error.message);
-}
+// Get or create the source and destination token accounts to store this token
+const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  user,
+  tokenMintAccount,
+  user.publicKey,
+);
 
-let revokeTransactionSignature: String;
-try {
-  revokeTransactionSignature = await revoke(
-    connection,
-    user,
-    sourceTokenAccount.address,
-    user.publicKey,
-  );
-} catch (error) {
-  console.log("❌ revoke failed with errors:");
-  throw new Error(error.message);
-}
+const revokeTransactionSignature = await revoke(
+  connection,
+  user,
+  sourceTokenAccount.address,
+  user.publicKey,
+);
 
 console.log(
   `✅ Revoke Delegate Transaction: ${getExplorerLink(
@@ -376,37 +348,25 @@ console.log(
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-let sourceTokenAccount: Account;
-try {
-  // Get or create the source and destination token accounts to store this token
-  sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-    connection,
-    user,
-    tokenMintAccount,
-    user.publicKey,
-  );
-} catch (error) {
-  console.log("❌ getOrCreateAssociatedTokenAccount failed with errors:");
-  throw new Error(error.message);
-}
+// Get or create the source and destination token accounts to store this token
+const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  user,
+  tokenMintAccount,
+  user.publicKey,
+);
 
 // Our token has two decimal places
 const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
-let transactionSignature: string;
-try {
-  transactionSignature = await burn(
-    connection,
-    user,
-    sourceTokenAccount.address,
-    tokenMintAccount,
-    user,
-    25 * MINOR_UNITS_PER_MAJOR_UNITS,
-  );
-} catch (error) {
-  console.log("❌ burn failed with errors:");
-  throw new Error(error.message);
-}
+const transactionSignature = await burn(
+  connection,
+  user,
+  sourceTokenAccount.address,
+  tokenMintAccount,
+  user,
+  25 * MINOR_UNITS_PER_MAJOR_UNITS,
+);
 
 console.log(
   `✅ Burn Transaction: ${getExplorerLink(
