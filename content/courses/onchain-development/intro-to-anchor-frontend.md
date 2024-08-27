@@ -84,23 +84,47 @@ counter program you built previously:
 
 ```json
 {
-  "version": "0.1.0",
-  "name": "counter",
+  "address": "9sMy4hnC9MML6mioESFZmzpntt3focqwUq1ymPgbMf64",
+  "metadata": {
+    "name": "anchor_counter",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
   "instructions": [
     {
-      "name": "initialize",
+      "name": "increment",
+      "discriminator": [11, 18, 104, 9, 104, 174, 59, 33],
       "accounts": [
-        { "name": "counter", "isMut": true, "isSigner": true },
-        { "name": "user", "isMut": true, "isSigner": true },
-        { "name": "systemProgram", "isMut": false, "isSigner": false }
+        {
+          "name": "counter",
+          "writable": true
+        },
+        {
+          "name": "user",
+          "signer": true
+        }
       ],
       "args": []
     },
     {
-      "name": "increment",
+      "name": "initialize",
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
       "accounts": [
-        { "name": "counter", "isMut": true, "isSigner": false },
-        { "name": "user", "isMut": false, "isSigner": true }
+        {
+          "name": "counter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "user",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
       ],
       "args": []
     }
@@ -108,17 +132,30 @@ counter program you built previously:
   "accounts": [
     {
       "name": "Counter",
+      "discriminator": [255, 176, 4, 245, 188, 253, 124, 25]
+    }
+  ],
+  "types": [
+    {
+      "name": "Counter",
       "type": {
         "kind": "struct",
-        "fields": [{ "name": "count", "type": "u64" }]
+        "fields": [
+          {
+            "name": "count",
+            "type": "u64"
+          }
+        ]
       }
     }
   ]
 }
 ```
 
-Inspecting the IDL, you can see that this program contains two instructions
-(`initialize` and `increment`).
+Inspecting the IDL, you can see the `programId` and the `metadata` object which
+have been added in anchor 0.30.0
+
+This program contains two instructions (`initialize` and `increment`).
 
 Notice that in addition to specifying the instructions, it species the accounts
 and inputs for each instruction. The `initialize` instruction requires three
@@ -139,8 +176,12 @@ neither instructions require any additional instruction data since the `args`
 section is blank for both.
 
 Looking further down at the `accounts` section, you can see that the program
-contains one account type named `Counter` with a single `count` field of type
-`u64`.
+contains one account type named `Counter` with a the `discriminator` field,
+which is used to distinguish between various type of accounts present.
+
+Last, we have the `types` section, which contains types of account in the
+`accounts` section , in this case, for account type `Counter` it contains a
+single field named `count` of type `u64`
 
 Although the IDL does not provide the implementation details for each
 instruction, we can get a basic idea of how the onchain program expects
@@ -156,7 +197,85 @@ import idl from "./idl.json";
 
 You would _ideally_ also require types for the IDL which would make it easier to
 interact with the program. The types can be found at `/target/types` folder
-after you have build your program.
+after you have build your program. Here are the types for the above IDL which
+when you notice has the exact same structure as the IDL but are just as type
+helper.
+
+```typescript
+/**
+ * Program IDL in camelCase format in order to be used in JS/TS.
+ *
+ * Note that this is only a type helper and is not the actual IDL. The original
+ * IDL can be found at `target/idl/anchor_counter.json`.
+ */
+export type AnchorCounter = {
+  address: "9sMy4hnC9MML6mioESFZmzpntt3focqwUq1ymPgbMf64";
+  metadata: {
+    name: "anchorCounter";
+    version: "0.1.0";
+    spec: "0.1.0";
+    description: "Created with Anchor";
+  };
+  instructions: [
+    {
+      name: "increment";
+      discriminator: [11, 18, 104, 9, 104, 174, 59, 33];
+      accounts: [
+        {
+          name: "counter";
+          writable: true;
+        },
+        {
+          name: "user";
+          signer: true;
+        },
+      ];
+      args: [];
+    },
+    {
+      name: "initialize";
+      discriminator: [175, 175, 109, 31, 13, 152, 155, 237];
+      accounts: [
+        {
+          name: "counter";
+          writable: true;
+          signer: true;
+        },
+        {
+          name: "user";
+          writable: true;
+          signer: true;
+        },
+        {
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
+        },
+      ];
+      args: [];
+    },
+  ];
+  accounts: [
+    {
+      name: "counter";
+      discriminator: [255, 176, 4, 245, 188, 253, 124, 25];
+    },
+  ];
+  types: [
+    {
+      name: "counter";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "count";
+            type: "u64";
+          },
+        ];
+      };
+    },
+  ];
+};
+```
 
 #### Provider
 
@@ -513,7 +632,10 @@ useEffect(() => {
     anchor.setProvider(provider);
   }
 
-  const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID);
+  const program = new anchor.Program(
+    idl as anchor.Idl,
+    PROGRAM_ID,
+  ) as Program<AnchorCounter>;
   setProgram(program);
 }, []);
 ```
@@ -540,8 +662,6 @@ const onClick = async () => {
     .initialize()
     .accounts({
       counter: newAccount.publicKey,
-      user: wallet.publicKey,
-      systemAccount: anchor.web3.SystemProgram.programId,
     })
     .signers([newAccount])
     .rpc();
@@ -576,7 +696,7 @@ export const Increment: FC<Props> = ({ counter, setTransactionUrl }) => {
       anchor.setProvider(provider)
     }
 
-    const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID)
+    const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID) as Program<AnchorCounter>
     setProgram(program)
     refreshCount(program)
   }, [])
