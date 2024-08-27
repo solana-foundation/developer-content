@@ -13,7 +13,7 @@ description:
 Finally, we'll cover burning tokens, and delegation. You may not use these in
 your own application, so if you're really excited about NFTs, feel free to skip
 to
-[creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex)!
+[creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex.md)!
 
 ### Burn Tokens
 
@@ -168,16 +168,17 @@ async function buildRevokeTransaction(
 ### Lab
 
 This lab extends the lab from the
-[previous chapter](/content/courses/tokens-and-nfts/token-program).
+[previous chapter](/content/courses/tokens-and-nfts/token-program.md).
 
 #### 1. Delegating tokens
 
 Let's use `approve` from `spl-token` to authorize a delegate to transfer or burn
 up to 50 tokens from our token account.
 
-Just like [Transferring Tokens](/content/courses/tokens-and-nfts/token-program)
-in the previous lab, you can
-[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography)
+Just like
+[Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md) in the
+previous lab, you can
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account!
 
 Create a new file `delegate-tokens.ts`. We use the system program account as the
@@ -260,7 +261,7 @@ Run the script using `npx esrun delegate-tokens.ts`. You should see:
 ✅ Approve Delegate Transaction: https://explorer.solana.com/tx/3sBr62x2VMaoJ4Z3SQMy6ZPzQKaa5Bs9ni9dgwwZZ5qEViKh1gQznCgH489h6pgfruMmqPbc2GgminTPK4UXRRZd?cluster=devnet
 ```
 
-Open the explorer link, you will see the ‌approval information.
+Open the Explorer link, you will see the ‌approval information.
 
 #### 2. Revoke Delegate
 
@@ -340,7 +341,7 @@ Run the script using `npx esrun revoke-approve-tokens.ts`. You should see:
 ✅ Revoke Delegate Transaction: https://explorer.solana.com/tx/5UboxLULHT3pPznBxThfQMc73NNjYNLmvqrB3JVVXPwWxUFWA49WG58sFQP8B5rv4FXxxZm3mur319YNiyYxYgBd?cluster=devnet
 ```
 
-Open the explorer link, you will see the revoke information.
+Open the Explorer link, you will see the revoke information.
 
 #### 3. Burn Tokens
 
@@ -425,7 +426,7 @@ Run the script using `npx esrun burn-tokens.ts`. You should see:
 ✅ Burn Transaction: https://explorer.solana.com/tx/P9JAK7bSAhycccGunDEThgt12QFiqMr9oexenEmRXXKoXsLKr2x64k9BWNppjTxFeVMUYjBEncRKe3gZsyd29JY?cluster=devnet
 ```
 
-Open the explorer link, you will see the burn information.
+Open the Explorer link, you will see the burn information.
 
 Well done! You've now
 
