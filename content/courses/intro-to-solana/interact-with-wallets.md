@@ -234,21 +234,33 @@ export const BalanceDisplay: FC = () => {
   const { publicKey } = useWallet();
 
   useEffect(() => {
-    if (!connection || !publicKey) {
-      return;
-    }
+    const updateBalance = async () => {
+      if (!connection || !publicKey) {
+        console.error("Wallet not connected or connection unavailable");
+      }
 
-    connection.onAccountChange(
-      publicKey,
-      updatedAccountInfo => {
-        setBalance(updatedAccountInfo.lamports / LAMPORTS_PER_SOL);
-      },
-      "confirmed",
-    );
+      try {
+        connection.onAccountChange(
+          publicKey,
+          updatedAccountInfo => {
+            setBalance(updatedAccountInfo.lamports / LAMPORTS_PER_SOL);
+          },
+          "confirmed",
+        );
 
-    connection.getAccountInfo(publicKey).then(info => {
-      setBalance(info.lamports);
-    });
+        const accountInfo = await connection.getAccountInfo(publicKey);
+
+        if (accountInfo) {
+          setBalance(accountInfo.lamports / LAMPORTS_PER_SOL);
+        } else {
+          throw new Error("Account info not found");
+        }
+      } catch (error) {
+        console.error("Failed to retrieve account info:", error);
+      }
+    };
+
+    updateBalance();
   }, [connection, publicKey]);
 
   return (
