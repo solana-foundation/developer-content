@@ -277,7 +277,7 @@ point be sure to look at the full
 Recall again the `account_name` field from the `InstructionAccounts` example.
 
 ```rust
-#[account(init, payer = user, space = 8 + 8)]
+#[account(init, payer = user, space = ACCOUNT_SIZE)]
 pub account_name: Account<'info, AccountStruct>,
 #[account(mut)]
 pub user: Signer<'info>,
@@ -347,8 +347,7 @@ As an example, let's look at `AccountStruct` used by the `account_name` of
 ```rust
 #[derive(Accounts)]
 pub struct InstructionAccounts {
-    // Allocate 8 bytes for the discriminator and 8 bytes for the u64 data field
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init, payer = user, space = ACCOUNT_SIZE)]
     pub account_name: Account<'info, AccountStruct>,
     ...
 }
@@ -397,7 +396,7 @@ mod program_module_name {
 // Validate incoming accounts for instructions
 #[derive(Accounts)]
 pub struct InstructionAccounts<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init, payer = user, space = ACCOUNT_SIZE)]
     pub account_name: Account<'info, AccountStruct>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -516,7 +515,7 @@ It'll need the following accounts:
 ```rust
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init, payer = user, space = ACCOUNT_SIZE)]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
