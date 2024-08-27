@@ -56,7 +56,7 @@ writing to the program.
 
 To create an instance of `Program`, you'll need the following:
 
-- IDL - file representing the structure of a program
+- `IDL` - file representing the structure of a program
 - `Connection` - the cluster connection
 - `Wallet` - default keypair used to pay for and sign transactions
 - `Provider` - encapsulates the `Connection` to a Solana cluster and a `Wallet`
@@ -148,11 +148,15 @@ instructions to be constructed and see the structure of the program accounts.
 
 Regardless of how you get it, you _need_ an IDL file to interact with a program
 using the `@coral-xyz/anchor` package. To use the IDL, you'll need to include
-the IDL file in your project and then import the file.
+the IDL file along with the types in your project and then import the file.
 
 ```typescript
 import idl from "./idl.json";
 ```
+
+You would _ideally_ also require types for the IDL which would make it easier to
+interact with the program. The types can be found at `/target/types` folder
+after you have build your program.
 
 #### Provider
 
@@ -248,7 +252,9 @@ import { AnchorProvider, setProvider } from "@coral-xyz/anchor";
 
 const { connection } = useConnection();
 const wallet = useAnchorWallet();
-const provider = new AnchorProvider(connection, wallet, {});
+const provider = new AnchorProvider(connection, wallet, {
+  commitment: "confirmed",
+});
 setProvider(provider);
 ```
 
@@ -277,10 +283,14 @@ Next, specify the `programId` of the program. We have to explicitly state the
 When creating the `Program` object, the default `Provider` is used if one is not
 explicitly specified.
 
+To enable type support, import the types to your project from `/target/types`
+present in your anchor project, and declare the type for the program object.
+
 All together, the final setup looks something like this:
 
 ```typescript
 import idl from "./idl.json";
+import type { CounterContract } from "@/types";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { Program, Idl, AnchorProvider, setProvider } from "@coral-xyz/anchor";
 
@@ -291,7 +301,14 @@ const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 
 const programId = new PublicKey("JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n");
-const program = new Program(idl as Idl, programId);
+const program = new Program(idl as Idl, programId) as Program<CounterContract>;
+
+// we can also explicitly mention the provider
+const program = new Program(
+  idl as Idl,
+  programId,
+  provider,
+) as Program<CounterContract>;
 ```
 
 ### Anchor `MethodsBuilder`
