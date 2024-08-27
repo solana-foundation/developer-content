@@ -30,23 +30,21 @@ description:
 
 ## Lesson
 
-Account data matching is a critical security practice in Solana program
-development. It involves implementing data validation checks to ensure that the
-data stored on an account matches expected values. These checks are essential
-for preventing unauthorized access and maintaining the integrity of your
-program's state.
+Account data matching involves implementing data validation checks to ensure that the  
+data stored on an account matches expected values. This is essential for preventing 
+unauthorized access and maintaining the integrity of your program's state.  
 
 ### Why Account Data Matching Matters
 
 Without proper data validation, your program becomes vulnerable to various
 attacks:
 
-1. Unauthorized access: Malicious users could pass in unexpected accounts,
-   gaining access to functionality they shouldn't have
-2. State manipulation: Attackers might alter the program's state in unintended
-   ways, compromising its integrity
-3. Fund theft: In programs dealing with tokens or SOL, inadequate checks could
-   lead to unauthorized withdrawals
+1. Unauthorized access: malicious users could pass in unexpected accounts,  
+   gaining access to functionality they shouldn't have  
+2. State manipulation: attackers might alter the program's state in unintended  
+   ways, compromising its integrity  
+3. Fund theft: in programs dealing with tokens or SOL, inadequate checks could  
+   lead to unauthorized withdrawals 
 
 Let's look at an example to illustrate the importance of account data matching.
 
@@ -114,7 +112,7 @@ account.
 #### Anchor Constraints
 
 Anchor provides a more declarative way to implement these checks using
-constraints:
+[account constraints](https://www.anchor-lang.com/docs/account-constraints):
 
 ```rust
 #[derive(Accounts)]
@@ -166,7 +164,7 @@ pub enum MyError {
 </Callout>
 
 By implementing these checks, you ensure that only the rightful admin can update
-the admin_config account, significantly improving your program's security.
+the 'admin_config' account, significantly improving your program's security.
 
 ## Lab: Securing a Vault Program
 
@@ -182,8 +180,8 @@ Clone the starter code from the `starter` branch of
 The starter code includes a program with two instructions and a boilerplate test
 file:
 
-1. `initialize_vault`: Creates a new `Vault` account and associated
-   `TokenAccount`.
+1. `initialize_vault`: Creates a new `Vault` account and a
+   `tokenAccount`.
 2. `insecure_withdraw`: Transfers tokens from the vault's token account to a
    destination account.
 
@@ -248,23 +246,23 @@ Let's write a test to demonstrate this vulnerability. Add the following test to
 your `tests/account-data-matching.ts` file:
 
 ```typescript
-it("Insecure withdraw allows unauthorized access", async () => {
+test("Insecure withdraw allows unauthorized access", async () => {
   // Setup: Initialize vault and mint some tokens to it
   // ... (initialization code here)
 
   // Attempt unauthorized withdrawal
-  // Note: walletFake represents an unauthorized wallet trying to withdraw funds
+  // Note: unauthorizedWallet represents an unauthorized wallet trying to withdraw funds
   const tx = await program.methods
     .insecureWithdraw()
     .accounts({
       vault: vaultPDA,
       tokenAccount: tokenPDA,
-      withdrawDestination: withdrawDestinationFake,
-      authority: walletFake.publicKey,
+      withdrawDestination: unauthorizedWalletWithdrawDestination,
+      authority: unauthorizedWallet.publicKey,
     })
     .transaction();
 
-  await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+  await anchor.web3.sendAndConfirmTransaction(connection, tx, [unauthorizedWallet]);
 
   // Check that the withdrawal succeeded (it shouldn't have!)
   const balance = await connection.getTokenAccountBalance(tokenPDA);
@@ -323,30 +321,28 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-The key difference here is the use of `has_one` constraints in the
-`SecureWithdraw` struct. These ensure that the `authority`, `token_account`, and
-`withdraw_destination` passed to the instruction match those stored in the
-`Vault` account.
+The key difference here is the use of a [`has_one` constraint](https://www.anchor-lang.com/docs/account-constraints) in the `SecureWithdraw` struct. These ensure that the `authority`, `token_account`, and `withdraw_destination` passed to the instruction match those stored in the `Vault` account.
+
 
 ### 5. Test the Secure Withdraw Instruction
 
 Now, let's test our secure instruction:
 
 ```typescript
-it("Secure withdraw prevents unauthorized access", async () => {
+test("Secure withdraw prevents unauthorized access", async () => {
   // Setup: Initialize vault and mint some tokens to it
   // ... (initialization code here)
 
   // Attempt unauthorized withdrawal
-  // Note: walletFake represents an unauthorized wallet trying to withdraw funds
+  // Note: unauthorizedWallet represents an unauthorized wallet trying to withdraw funds
   try {
     await program.methods
       .secureWithdraw()
       .accounts({
         vault: vaultPDA,
         tokenAccount: tokenPDA,
-        withdrawDestination: withdrawDestinationFake,
-        authority: walletFake.publicKey,
+        withdrawDestination: unauthorizedWalletWithdrawDestination,
+        authority: unauthorizedWallet.publicKey,
       })
       .rpc();
 
@@ -362,7 +358,7 @@ it("Secure withdraw prevents unauthorized access", async () => {
   expect(balance.value.uiAmount).to.eq(100); // Assuming 100 tokens were initially minted
 });
 
-it("Secure withdraw allows authorized access", async () => {
+test("Secure withdraw allows authorized access", async () => {
   // Perform authorized withdrawal
   await program.methods
     .secureWithdraw()
@@ -398,9 +394,9 @@ review one of your existing programs. Look for places where you might be making
 assumptions about account data without explicitly checking it. Implement
 appropriate checks using the techniques you've learned in this lesson.
 
-Remember, if you find a security vulnerability in someone else's program,
-responsibly disclose it to the program's maintainers. If you find one in your
-own program, patch it as soon as possible!
+Remember, if you find a security vulnerability in someone else's program,  
+[responsibly disclose](https://en.wikipedia.org/wiki/Coordinated_vulnerability_disclosure)  
+it to the program's maintainers. If you find one in your own program, patch it as soon as possible!
 
 After completing this lab and challenge, you'll have gained practical experience
 in identifying and fixing security vulnerabilities related to account data
