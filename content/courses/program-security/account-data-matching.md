@@ -30,9 +30,11 @@ description:
 
 ## Lesson
 
-Account data matching involves implementing data validation checks to ensure that the  
-data stored on an account matches expected values. This is essential for preventing 
-unauthorized access and maintaining the integrity of your program's state.  
+Account data matching involves implementing data validation checks to ensure
+that the  
+data stored on an account matches expected values. This is essential for
+preventing unauthorized access and maintaining the integrity of your program's
+state.
 
 ### Why Account Data Matching Matters
 
@@ -40,11 +42,11 @@ Without proper data validation, your program becomes vulnerable to various
 attacks:
 
 1. Unauthorized access: malicious users could pass in unexpected accounts,  
-   gaining access to functionality they shouldn't have  
+   gaining access to functionality they shouldn't have
 2. State manipulation: attackers might alter the program's state in unintended  
-   ways, compromising its integrity  
+   ways, compromising its integrity
 3. Fund theft: in programs dealing with tokens or SOL, inadequate checks could  
-   lead to unauthorized withdrawals 
+   lead to unauthorized withdrawals
 
 Let's look at an example to illustrate the importance of account data matching.
 
@@ -180,8 +182,7 @@ Clone the starter code from the `starter` branch of
 The starter code includes a program with two instructions and a boilerplate test
 file:
 
-1. `initialize_vault`: Creates a new `Vault` account and a
-   `tokenAccount`.
+1. `initialize_vault`: Creates a new `Vault` account and a `tokenAccount`.
 2. `insecure_withdraw`: Transfers tokens from the vault's token account to a
    destination account.
 
@@ -262,7 +263,9 @@ test("Insecure withdraw allows unauthorized access", async () => {
     })
     .transaction();
 
-  await anchor.web3.sendAndConfirmTransaction(connection, tx, [unauthorizedWallet]);
+  await anchor.web3.sendAndConfirmTransaction(connection, tx, [
+    unauthorizedWallet,
+  ]);
 
   // Check that the withdrawal succeeded (it shouldn't have!)
   const balance = await connection.getTokenAccountBalance(tokenPDA);
@@ -321,8 +324,11 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-The key difference here is the use of a [`has_one` constraint](https://www.anchor-lang.com/docs/account-constraints) in the `SecureWithdraw` struct. These ensure that the `authority`, `token_account`, and `withdraw_destination` passed to the instruction match those stored in the `Vault` account.
-
+The key difference here is the use of a
+[`has_one` constraint](https://www.anchor-lang.com/docs/account-constraints) in
+the `SecureWithdraw` struct. These ensure that the `authority`, `token_account`,
+and `withdraw_destination` passed to the instruction match those stored in the
+`Vault` account.
 
 ### 5. Test the Secure Withdraw Instruction
 
@@ -396,7 +402,8 @@ appropriate checks using the techniques you've learned in this lesson.
 
 Remember, if you find a security vulnerability in someone else's program,  
 [responsibly disclose](https://en.wikipedia.org/wiki/Coordinated_vulnerability_disclosure)  
-it to the program's maintainers. If you find one in your own program, patch it as soon as possible!
+it to the program's maintainers. If you find one in your own program, patch it
+as soon as possible!
 
 After completing this lab and challenge, you'll have gained practical experience
 in identifying and fixing security vulnerabilities related to account data
