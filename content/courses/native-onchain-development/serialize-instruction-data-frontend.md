@@ -283,7 +283,7 @@ submit a movie review and have it stored on Solana’s network. We’ll build th
 app a little bit at a time over the next few lessons, adding new functionality
 each lesson.
 
-![Movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![Movie review frontend](/public/assets/courses/superteam/movie-review-frontend-dapp.png)
 
 Here's a quick diagram of the program we'll build:
 
@@ -295,7 +295,7 @@ The public key of the Solana program we’ll use for this application is
 #### 1. Download the starter code
 
 Before we get started, go ahead and download the
-[starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/starter).
+[starter code](https://github.com/EmekaManuel/movie-review-dapp/tree/starter).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -572,7 +572,7 @@ successful.
 
 If you need a bit more time with this project to feel comfortable, have a look
 at the complete
-[solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-serialize-instruction-data).
+[solution code](https://github.com/EmekaManuel/movie-review-dapp/tree/solution-serialize-instruction-data).
 
 ## Challenge
 
