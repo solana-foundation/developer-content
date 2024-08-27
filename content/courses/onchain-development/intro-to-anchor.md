@@ -103,6 +103,7 @@ pub struct Context<'a, 'b, 'c, 'info, T> {
     pub accounts: &'b mut T,
     /// Remaining accounts given but not deserialized or validated.
     /// Be very careful when using this directly.
+    /// Add /// CHECK: <reason> when using UncheckedAccount to resolve errors during anchor build.
     pub remaining_accounts: &'c [UncheckedAccount<'info>],
     /// Bump seeds found during constraint validation. This is provided as a
     /// convenience so that handlers don't have to recalculate bump seeds or
@@ -146,6 +147,8 @@ For example, `instruction_one` requires a `Context` argument of type
 `user`, and `system_program`.
 
 ```rust
+const ACCOUNT_SIZE: usize = 8 + 8; // 8 bytes for discriminator + 8 bytes for the account data
+
 #[program]
 mod program_module_name {
     use super::*;
@@ -157,7 +160,7 @@ mod program_module_name {
 
 #[derive(Accounts)]
 pub struct InstructionAccounts {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init, payer = user, space = ACCOUNT_SIZE)]
     pub account_name: Account<'info, AccountStruct>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -344,6 +347,7 @@ As an example, let's look at `AccountStruct` used by the `account_name` of
 ```rust
 #[derive(Accounts)]
 pub struct InstructionAccounts {
+    // Allocate 8 bytes for the discriminator and 8 bytes for the u64 data field
     #[account(init, payer = user, space = 8 + 8)]
     pub account_name: Account<'info, AccountStruct>,
     ...
@@ -438,7 +442,7 @@ anchor build
 Anchor build will also generate a keypair for your new program - the keys are
 saved in the `target/deploy` directory.
 
-Open the file `lib.rs` and look at `declare_id!`:
+Open the file `programs/anchor-counter/src/lib.rs` and look at `declare_id!`:
 
 ```rust
 declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
@@ -587,6 +591,8 @@ use anchor_lang::prelude::*;
 
 declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
 
+const ACCOUNT_SIZE: usize = 8 + 8; 
+
 #[program]
 pub mod anchor_counter {
     use super::*;
@@ -609,7 +615,7 @@ pub mod anchor_counter {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(init, payer = user, space = ACCOUNT_SIZE)]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
