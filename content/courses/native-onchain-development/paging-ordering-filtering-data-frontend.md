@@ -108,11 +108,26 @@ const accounts = await connection.getProgramAccounts(programId, {
 });
 
 accounts.sort((a, b) => {
-  const lengthA = a.account.data.readUInt32LE(0);
-  const lengthB = b.account.data.readUInt32LE(0);
-  const dataA = a.account.data.slice(4, 4 + lengthA);
-  const dataB = b.account.data.slice(4, 4 + lengthB);
-  return dataA.compare(dataB);
+  try {
+    // Check if buffers are long enough to avoid out-of-bounds access
+    const lengthA = a.account.data.readUInt32LE(0);
+    const lengthB = b.account.data.readUInt32LE(0);
+
+    if (
+      a.account.data.length < 4 + lengthA ||
+      b.account.data.length < 4 + lengthB
+    ) {
+      throw new Error("Buffer length is insufficient");
+    }
+
+    const dataA = a.account.data.subarray(4, 4 + lengthA);
+    const dataB = b.account.data.subarray(4, 4 + lengthB);
+
+    return dataA.compare(dataB);
+  } catch (error) {
+    console.error("Error sorting accounts: ", error);
+    return 0; // Default sort order in case of error
+  }
 });
 
 const accountKeys = accounts.map(account => account.pubkey);
@@ -151,17 +166,26 @@ async function fetchMatchingContactAccounts(
   connection: web3.Connection,
   search: string,
 ): Promise<(web3.AccountInfo<Buffer> | null)[]> {
-  const accounts = await connection.getProgramAccounts(programId, {
-    dataSlice: { offset: 0, length: 0 },
-    filters: [
-      {
-        memcmp: {
-          offset: 13,
-          bytes: bs58.encode(Buffer.from(search)),
-        },
-      },
-    ],
-  });
+  const accounts = (await connection.getProgramAccounts(
+    new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    {
+      dataSlice: { offset: 2, length: 18 },
+      filters:
+        search === ""
+          ? []
+          : [
+              {
+                memcmp: {
+                  offset: 6,
+                  bytes: bs58.encode(Buffer.from(search)),
+                },
+              },
+            ],
+    },
+  )) as Array<{
+    pubkey: PublicKey;
+    account: AccountInfo<Buffer>;
+  }>; // Explicitly define the expected structure
 }
 ```
 
@@ -183,29 +207,13 @@ you’re just jumping into this lesson without having looked at the previous
 ones - as long as you have the prerequisite knowledge, you should be able to
 follow the lab without having worked in this specific project yet.
 
-![movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![movie review frontend](/public/assets/courses/superteam/movie-review-frontend-dapp.png)
 
 #### **1. Download the starter code**
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can download the
-[starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-deserialize-account-data).
-
-Include this in the project's tsconfig file to eliminate the
-`Component cannot be used as a JSX component. Its return type 'Element[]' is not a valid JSX element`
-error.
-
-```tsx
-{
-  "compilerOptions": {
-     "paths": {
-      "react": [
-        "./node_modules/@types/react"
-      ]
-    }
-  }
-}
-```
+[starter code](https://github.com/EmekaManuel/movie-review-dapp/tree/solutions-deserialize-account-data).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -238,18 +246,18 @@ With that out of the way, let’s create a static property `accounts` of type
 You’ll also need to import `@solana/web3.js` and `Movie`.
 
 ```tsx
-import * as web3 from "@solana/web3.js";
+import { Connection, PublicKey, AccountInfo } from "@solana/web3.js";
 import { Movie } from "../models/Movie";
 
 const MOVIE_REVIEW_PROGRAM_ID = "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
 
 export class MovieCoordinator {
-  static accounts: web3.PublicKey[] = [];
+  static accounts: PublicKey[] = [];
 
-  static async prefetchAccounts(connection: web3.Connection) {}
+  static async prefetchAccounts(connection: Connection) {}
 
   static async fetchPage(
-    connection: web3.Connection,
+    connection: Connection,
     page: number,
     perPage: number,
   ): Promise<Movie[]> {}
@@ -285,14 +293,14 @@ and return the corresponding `Movie` objects.
 
 ```tsx
 static async fetchPage(
-    connection: web3.Connection,
-    page: number,
-    perPage: number,
-    reload: boolean = false
-  ): Promise<Movie[]> {
-    if (this.accounts.length === 0 || reload) {
-      await this.prefetchAccounts(connection);
-    }
+  connection: Connection,
+  page: number,
+  perPage: number,
+  reload = false
+): Promise<Movie[]> {
+  if (this.accounts.length === 0 || reload) {
+    await this.prefetchAccounts(connection);
+  }
 
   const paginatedPublicKeys = this.accounts.slice(
     (page - 1) * perPage,
@@ -307,16 +315,16 @@ static async fetchPage(
       paginatedPublicKeys
     );
 
-    const movies = accounts.reduce((accum: Movie[], account) => {
+    const movies = accounts.reduce((accumulator: Movie[], account) => {
       try {
         const movie = Movie.deserialize(account?.data);
         if (movie) {
-          accum.push(movie);
+          accumulator.push(movie);
         }
       } catch (error) {
         console.error("Error deserializing movie data: ", error);
       }
-      return accum;
+      return accumulator;
     }, []);
 
     return movies;
@@ -401,13 +409,28 @@ static async prefetchAccounts(connection: web3.Connection, filters: AccountFilte
     }
     )
 
-    accounts.sort( (a, b) => {
-      const lengthA = a.account.data.readUInt32LE(0)
-      const lengthB = b.account.data.readUInt32LE(0)
-      const dataA = a.account.data.slice(4, 4 + lengthA)
-      const dataB = b.account.data.slice(4, 4 + lengthB)
-      return dataA.compare(dataB)
-    })
+  accounts.sort((a, b) => {
+    try {
+      // Check if buffers are long enough to avoid out-of-bounds access
+      const lengthA = a.account.data.readUInt32LE(0);
+      const lengthB = b.account.data.readUInt32LE(0);
+
+      if (
+        a.account.data.length < 4 + lengthA ||
+        b.account.data.length < 4 + lengthB
+      ) {
+        throw new Error('Buffer length is insufficient');
+      }
+
+      const dataA = a.account.data.subarray(4, 4 + lengthA);
+      const dataB = b.account.data.subarray(4, 4 + lengthB);
+
+      return dataA.compare(dataB);
+    } catch (error) {
+      console.error('Error sorting accounts: ', error);
+      return 0; // Default sort order in case of error
+    }
+  });
 
     this.accounts = accounts.map(account => account.pubkey)
 
@@ -491,43 +514,43 @@ parameter to `fetchPage` so that we can force a refresh of the account
 prefetching every time the search value changes.
 
 ```tsx
-  static async fetchPage(
-    connection: web3.Connection,
-    page: number,
-    perPage: number,
-    search: string,
-    reload: boolean = false
-  ): Promise<Movie[]> {
-    if (this.accounts.length === 0 || reload) {
-      await this.prefetchAccounts(connection, search);
-    }
+static async fetchPage(
+  connection: Connection,
+  page: number,
+  perPage: number,
+  search: string,
+  reload = false
+): Promise<Movie[]> {
+  if (this.accounts.length === 0 || reload) {
+    await this.prefetchAccounts(connection, search);
+  }
 
-    const paginatedPublicKeys = this.accounts.slice(
-      (page - 1) * perPage,
-      page * perPage
-    );
+  const paginatedPublicKeys = this.accounts.slice(
+    (page - 1) * perPage,
+    page * perPage
+  );
 
-    if (paginatedPublicKeys.length === 0) {
-      return [];
-    }
+  if (paginatedPublicKeys.length === 0) {
+    return [];
+  }
 
-    const accounts = await connection.getMultipleAccountsInfo(
-      paginatedPublicKeys
-    );
+  const accounts = await connection.getMultipleAccountsInfo(
+    paginatedPublicKeys
+  );
 
-    const movies = accounts.reduce((accum: Movie[], account) => {
-      try {
-        const movie = Movie.deserialize(account?.data);
-        if (movie) {
-          accum.push(movie);
-        }
-      } catch (error) {
-        console.error("Error deserializing movie data: ", error);
+  const movies = accounts.reduce((accum: Movie[], account) => {
+    try {
+      const movie = Movie.deserialize(account?.data);
+      if (movie) {
+        accum.push(movie);
       }
-      return accum;
-    }, []);
+    } catch (error) {
+        console.error('Error deserializing movie data: ', error);
+      }
+    return accum;
+  }, []);
 
-    return movies;
+  return movies;
   }
 ```
 
@@ -576,7 +599,7 @@ And that’s it! The app now has ordered reviews, paging, and search.
 That was a lot to digest, but you made it through. If you need to spend some
 more time with the concepts, feel free to reread the sections that were most
 challenging for you and/or have a look at the
-[solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-paging-account-data).
+[solution code](https://github.com/EmekaManuel/movie-review-dapp/tree/solutions-paging-account-data).
 
 ## Challenge
 
