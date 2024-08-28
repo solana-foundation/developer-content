@@ -33,8 +33,8 @@ first Rust based Solana program to the blockchain.
 
 This guide uses the Solana CLI and assumes you have setup your local development
 environment. Checkout our
-[local development quickstart guide](/content/guides/getstarted/setup-local-development.md)
-here to quickly get setup.
+[local development quickstart guide](/docs/intro/installation) here to quickly
+get setup.
 
 </Callout>
 

@@ -14,11 +14,9 @@ description:
 
 ## Summary
 
-- Most programs support **multiple discrete instruction handlers** - you decide
-  when writing your program what these instruction handlers are and what data
-  must accompany them when writing your program what these instruction handlers
-  are and what data
-- Rust **enums** are often used to represent discrete program instruction
+- Most programs support **multiple discrete instruction handlers** (sometimes
+  just referred to as 'instructions') - these are functions inside your program
+- Rust **enums** are often used to represent each instruction handler
 - You can use the `borsh` crate and the `derive` attribute to provide Borsh
   deserialization and serialization functionality to Rust structs
 - Rust `match` expressions help create conditional code paths based on the
@@ -27,18 +25,18 @@ description:
 ## Lesson
 
 One of the most basic elements of a Solana program is the logic for handling
-instruction data. Most programs support multiple related functions and use
-differences in instruction data to determine which code path to execute. For
-example, two different data formats in the instruction data passed to the
-program may represent instructions for creating a new piece of data vs deleting
-the same piece of data.
+instruction data. Most programs support multiple functions, also called
+instruction handlers. For example, a program may have different instruction
+handlers for creating a new piece of data versus deleting the same piece of
+data. Programs use differences in instruction data to determine which
+instruction handler to execute.
 
 Since instruction data is provided to your program's entry point as a byte
 array, it's common to create a Rust data type to represent instructions in a way
 that's more usable throughout your code. This lesson will walk through how to
 set up such a type, how to deserialize the instruction data into this format,
-and how to execute the proper code path based on the instruction passed into the
-program's entry point.
+and how to execute the proper instruction handler based on the instruction
+passed into the program's entry point.
 
 ### Rust basics
 
@@ -53,10 +51,10 @@ Variable assignment in Rust happens with the `let` keyword.
 let age = 33;
 ```
 
-Variables in Rust by default are immutable, meaning a variable's value cannot be
-changed once it has been set. To create a variable that we'd like to change at
-some point in the future, we use the `mut` keyword. Defining a variable with
-this keyword means that the value stored in it can change.
+By default, variables in Rust are immutable, meaning a variable's value cannot
+be changed once it has been set. To create a variable that we'd like to change
+at some point in the future, we use the `mut` keyword. Defining a variable with
+this keyword means that its stored value can change.
 
 ```rust
 // compiler will throw error
@@ -68,15 +66,15 @@ let mut mutable_age = 33;
 mutable_age = 34;
 ```
 
-The Rust compiler guarantees that immutable variables truly cannot change so
-that you don’t have to keep track of it yourself. This makes your code easier to
-reason through and simplifies debugging.
+The Rust compiler guarantees that immutable variables cannot change, so you
+don’t have to keep track of it yourself. This makes your code easier to reason
+through and simplifies debugging.
 
 #### Structs
 
 A struct, or structure, is a custom data type that lets you package together and
 name multiple related values that make up a meaningful group. Each piece of data
-in a struct can be of different types and each has a name associated with it.
+in a struct can be of different types, and each has a name associated with it.
 These pieces of data are called **fields**. They behave similarly to properties
 in other languages.
 
@@ -117,8 +115,8 @@ enum LightStatus {
 }
 ```
 
-The `LightStatus` enum has two possible variants in this situation: it's either
-`On` or `Off`.
+The `LightStatus` enum has two possible variants in this situation: it's
+either`On` or `Off`.
 
 You can also embed values into enum variants, similar to adding fields to a
 struct.
@@ -139,10 +137,10 @@ requires also setting the value of `color`.
 
 #### Match statements
 
-Match statements are very similar to `switch` statements in C/C++. The `match`
-statement allows you to compare a value against a series of patterns and then
-execute code based on which pattern matches the value. Patterns can be made of
-literal values, variable names, wildcards, and more. The match statement must
+Match statements are very similar to `switch` statements in other languages. The
+`match` statement allows you to compare a value against a series of patterns and
+then execute code based on which pattern matches the value. Patterns can be made
+of literal values, variable names, wildcards, and more. The match statement must
 include all possible scenarios, otherwise the code will not compile.
 
 ```rust
@@ -206,9 +204,9 @@ example.answer();
 #### Traits and attributes
 
 You won't be creating your own traits or attributes at this stage, so we won't
-provide an in depth explanation of either. However, you will be using the
+provide an in-depth explanation of either. However, you will be using the
 `derive` attribute macro and some traits provided by the `borsh` crate, so it's
-important you have a high level understanding of each.
+important you have a high-level understanding of each.
 
 Traits describe an abstract interface that types can implement. If a trait
 defines a function `bark()` and a type then adopts that trait, the type must
@@ -227,10 +225,10 @@ concrete example of this shortly.
 
 Now that we've covered the Rust basics, let's apply them to Solana programs.
 
-More often than not, programs will have more than one function. For example, you
-may have a program that acts as the backend for a note-taking app. Assume this
-program accepts instructions for creating a new note, updating an existing note,
-and deleting an existing note.
+More often than not, programs will have more than one instruction handler. For
+example, you may have a program that acts as the backend for a note-taking app.
+Assume this program accepts instructions for creating a new note, updating an
+existing note, and deleting an existing note.
 
 Since instructions have discrete types, they're usually a great fit for an enum
 data type.
@@ -293,10 +291,10 @@ accepts the instruction data as an argument and returns the appropriate instance
 of the enum with the deserialized data.
 
 It's standard practice to structure your program to expect the first byte (or
-other fixed number of bytes) to be an identifier for which instruction the
-program should run. This could be an integer or a string identifier. For this
-example, we'll use the first byte and map integers 0, 1, and 2 to instructions
-create, update, and delete, respectively.
+other fixed number of bytes) to be an identifier for which instruction handler
+the program should run. This could be an integer or a string identifier. For
+this example, we'll use the first byte and map integers 0, 1, and 2 to the
+instruction handlers for create, update, and delete, respectively.
 
 ```rust
 impl NoteInstruction {
@@ -304,7 +302,7 @@ impl NoteInstruction {
     // The expected format for input is a Borsh serialized vector
     pub fn unpack(input: &[u8]) -> Result<Self, ProgramError> {
         // Take the first byte as the variant to
-        // determine which instruction to execute
+        // determine which instruction handler to execute
         let (&variant, rest) = input.split_first().ok_or(ProgramError::InvalidInstructionData)?;
         // Use the temporary payload struct to deserialize
         let payload = NoteInstructionPayload::try_from_slice(rest).unwrap();
@@ -380,7 +378,7 @@ pub fn process_instruction(
 For simple programs where there are only one or two instructions to execute, it
 may be fine to write the logic inside the match statement. For programs with
 many different possible instructions to match against, your code will be much
-more readable if the logic for each instruction is written in a separate
+more readable if the logic for each instruction handler is written in a separate
 function and simply called from inside the `match` statement.
 
 ### Program file structure
@@ -391,11 +389,11 @@ important to maintain a project structure that remains readable and extensible.
 This involves encapsulating code into functions and data structures as we've
 done so far. But it also involves grouping related code into separate files.
 
-For example, a good portion of the code we've worked through so far has to do
-with defining and deserializing instructions. That code should live in its own
-file rather than be written in the same file as the entry point. By doing so, we
-would then have 2 files, one with the program entry point and the other with the
-instruction code:
+For example, a good portion of the code we've worked through so far involves
+defining and deserializing instructions. That code should live in its own file
+rather than be written in the same file as the entry point. By doing so, we
+would then have two files, one with the program entry point and the other with
+the instruction handler:
 
 - **lib.rs**
 - **instruction.rs**
@@ -541,11 +539,11 @@ pub mod instruction;
 use instruction::{MovieInstruction};
 ```
 
-Next, let's define a new function `add_movie_review` that takes as arguments
+Next, let's define a new function `add_movie_review` that takes the arguments
 `program_id`, `accounts`, `title`, `rating`, and `description`. It should also
-return an instance of `ProgramResult` Inside this function, let's simply log our
-values for now and we'll revisit the rest of the implementation of the function
-in the next lesson.
+return an instance of `ProgramResult`. Inside this function, let's simply log
+our values for now and we'll revisit the rest of the implementation of the
+function in the next lesson.
 
 ```rust
 pub fn add_movie_review(
@@ -596,15 +594,15 @@ instruction data passed in when a transaction is submitted!
 Build and deploy your program from Solana Program just like in the last lesson.
 If you haven't changed the program ID since going through the last lesson, it
 will automatically deploy to the same ID. If you'd like it to have a separate
-address you can generate a new program ID from the playground before deploying.
+address, you can generate a new program ID from the playground before deploying.
 
 You can test your program by submitting a transaction with the right instruction
 data. For that, feel free to use
 [this script](https://github.com/Unboxed-Software/solana-movie-client) or
 [the frontend](https://github.com/EmekaManuel/movie-review-dapp) we built in the
-[Serialize Custom Instruction Data lesson](serialize-instruction-data). In both
-cases, make sure you copy and paste the program ID for your program into the
-appropriate area of the source code to make sure you're testing the right
+[Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md).
+In both cases, make sure you copy and paste the program ID for your program into
+the appropriate area of the source code to make sure you're testing the right
 program.
 
 If you need to spend some more time with this lab before moving on, please do!
@@ -626,9 +624,9 @@ program logs when the program is invoked.
 You can test your program by building the
 [frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data)
 we created in the
-[Serialize Custom Instruction Data lesson](serialize-instruction-data) and then
-checking the program logs on Solana Explorer. Remember to replace the program ID
-in the frontend code with the one you've deployed.
+[Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md)
+and then checking the program logs on Solana Explorer. Remember to replace the
+program ID in the frontend code with the one you've deployed.
 
 Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62b0ce53f6273245aca4f5b0).
