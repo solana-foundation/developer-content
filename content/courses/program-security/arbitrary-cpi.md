@@ -13,9 +13,8 @@ description: "How to safely invoke Solana programs from other Solana programs."
 ## Summary
 
 - To generate a CPI, the target program must be passed into the invoking
-  instruction as an account. This means any target program could be passed into
-  the instruction. Your program should check for incorrect or unexpected
-  programs.
+  instruction as an account. Any target program could be passed in, so your
+  program should check for incorrect or unexpected programs.
 - Perform program checks in native programs by comparing the public key of the
   passed-in program to the program you expected.
 - If a program is written in Anchor, it may have a publicly available CPI
@@ -132,7 +131,8 @@ A simpler way to manage program checks is to use Anchor CPI modules. We learned
 in a [previous lesson](../anchor-cpi/README.md) that Anchor can automatically
 generate CPI modules to make CPIs into the program simpler. These modules also
 enhance security by verifying the public key of the program that's passed into
-one of its public instructions.
+one of its public instructions using
+[account constraints](https://www.anchor-lang.com/docs/account-constraints).
 
 Every Anchor program uses the `declare_id()` macro to define the address of the
 program. When a CPI module is generated for a specific program, it uses the
@@ -259,7 +259,7 @@ There is already a test in the `tests` directory for this. It's long, but take a
 minute to look at it before we talk through it together:
 
 ```typescript
-test("Insecure instructions allow attacker to win every time", async () => {
+it("Insecure instructions allow attacker to win every time", async () => {
   // Initialize player one with real metadata program
   await gameplayProgram.methods
     .createCharacterInsecure()
@@ -407,15 +407,15 @@ new test. This test just needs to attempt to initialize the attacker's character
 and expect an error to be thrown.
 
 ```typescript
-test("Secure character creation doesn't allow fake program", async () => {
+it("Secure character creation doesn't allow unauthorized program", async () => {
   try {
     await gameplayProgram.methods
       .createCharacterSecure()
       .accounts({
-        metadataProgram: fakeMetadataProgram.programId,
-        authority: attacker.publicKey,
+        metadataProgram: unauthorizedMetadataProgram.programId,
+        authority: unauthorizedWallet.publicKey,
       })
-      .signers([attacker])
+      .signers([unauthorizedWallet])
       .rpc();
   } catch (error) {
     expect(error);
@@ -455,8 +455,10 @@ Take some time to review at least one program and ensure that program checks are
 in place for every program passed into the instructions, particularly those that
 are invoked via CPI.
 
-Remember, if you find a bug or exploit in somebody else's program, please alert
-them! If you find one in your own program, be sure to patch it right away.
+Remember, if you find a bug or exploit in somebody else's program,
+[responsibly disclose](https://en.wikipedia.org/wiki/Coordinated_vulnerability_disclosure)
+it to the program's maintainers. If you find one in your own program, patch it
+as soon as possible!
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
