@@ -22,12 +22,11 @@ keywords:
   - web3 developer
 ---
 
-# Testing Solana Programs with Jest and Bankrun
-
 Testing your Solana programs is a critical part of the development process to
 ensure that your program behaves as expected and can even speedup your
 development. This guide will walk you through how you can test your Solana
-programs.
+programs using [Bankrun](https://kevinheavey.github.io/solana-bankrun/), a super
+fast test runner for Solana programs. .
 
 Most Solana tests use the [Mocha framework](https://mochajs.org/) for writing
 the tests and [Chai](https://www.chaijs.com/) for assertions. However, you can
@@ -48,8 +47,8 @@ npx create-solana-dapp my-dapp
 
 `create-solana-dapp` will set you up with a Solana web project with various
 configuration options, including a Next.js or React client, the Tailwind UI
-Library, and either a basic or counter Anchor program. The tests are written
-using Jest and can be run with the `anchor test` command.
+Library, and a simple Anchor program. The tests are written using Jest and can
+be run with the `anchor test` command.
 
 ```bash
 npx create-solana-game my-game
@@ -57,7 +56,7 @@ npx create-solana-game my-game
 
 `create-solana-game` will set you up with a Solana game project that includes
 [Jest](https://jestjs.io/), [Mocha](https://mochajs.org/) and
-[Bankrun](https://kevinheavey.github.io/solana-bankrun/) tests and a `next.js`
+[Bankrun](https://kevinheavey.github.io/solana-bankrun/) tests and a NextJS app
 app and an additional Unity Game engine client using Solana Wallet adapter. The
 Mocha and Bankrun tests can both be run using the `anchor test` command.
 
@@ -66,30 +65,29 @@ You can also find many test examples in the
 
 ## Anchor test
 
-What `anchor test` does is that Anchor will perform the command defined in
-`anchor.toml` file.
+Using the Anchor framework, you can run `anchor test` command to perform the
+pre-configured `test` command within the `anchor.toml` file.
 
-```bash
+```toml filename="Anchor.toml"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 ```
 
-This will run the tests in the tests directory using the ts-mocha command with a
-timeout of 1,000,000 milliseconds.
+This will run the tests in the tests directory using the `ts-mocha` command with
+a timeout of 1,000,000 milliseconds.
 
 What anchor does here is that it starts up a local validator, deploys the
 program from your anchor workspace and runs the test against the defined network
-in the `anchor.toml`.
+in the `Anchor.toml`.
 
-> Tip: You can also run `anchor test --detach`. This will let the validator
-> continue running after the tests have finished which lets you inspect your
-> transactions in the
-> [solana explorer](https://explorer.solana.com/?cluster=custom).
+> Tip: You can also run `anchor test --detach` to let the validator continue
+> running after the tests have finished which lets you inspect your transactions
+> in the [Solana Explorer](https://explorer.solana.com/?cluster=custom).
 
 You can also define your own test command in the `anchor.toml` file. For example
 you can first run the mocha tests against the local validator and then run the
 jest tests using bankrun by combining them using `&&`:
 
-```bash
+```toml filename="Anchor.toml"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts && yarn run jest"
 ```
 
@@ -97,7 +95,7 @@ This would run the mocha tests first and then run the jest tests.
 
 You can also define your own test command. For example:
 
-```bash
+```toml filename="Anchor.toml"
 super_test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 only_super_test.ts"
 jest_tests = "yarn test"
 ```
@@ -119,8 +117,8 @@ anchor run jest_tests
 
 In this part we will learn how to migrate from [Mocha](https://mochajs.org/) to
 [Jest](https://jestjs.io/). Jest is another Javascript testing framework similar
-to Mocha. It has already and integrated test runner so you don't need to use
-Chai anymore.
+to Mocha. It already has an integrated test runner so you don't need to use Chai
+anymore.
 
 First you need to install Jest:
 
@@ -130,7 +128,7 @@ yarn add --dev jest
 
 Then you add a new command to your `package.json`:
 
-```json
+```json filename="package.json"
 {
   "scripts": {
     "test": "jest"
@@ -153,20 +151,20 @@ yarn ts-jest config:init
 ```
 
 This will create a `jest.config.js` file in your project. Now you can update
-your `anchor.toml` file to run the Jest tests:
+your `Anchor.toml` file to run the Jest tests:
 
-```bash
+```toml filename="Anchor.toml"
 test = "yarn test"
 ```
 
 ### Jest Troubleshooting
 
-1. In case your get a
-   `SyntaxError: Cannot use import statement outside a module` error you either
-   did not create a jest config or you need to add the following to your
-   `jest.config.js` file:
+1. In case you get a
+   `SyntaxError: Cannot use import statement outside a module`  
+   error, you either did not create a jest config or you need to add the  
+   following to your `jest.config.js` file:
 
-```js
+```js filename="jest.config.js"
 module.exports = {
   transform: {
     "^.+\\.tsx?$": "ts-jest",
@@ -178,10 +176,10 @@ module.exports = {
 
 2. Since running tests against the local validator can take quite some time, if
    you get an error saying that you can not log after the test is finished your
-   test is probably timing out. Different to Mocha Jest does not have a default
-   timeout. You can set a timeout in your `jest.config.js` file:
+   test is probably timing out. Different from Mocha, Jest does not have a
+   default timeout. You can set a timeout in your `jest.config.js` file:
 
-```js
+```js filename="jest.config.js"
 module.exports = {
   testTimeout: 10000,
 };
@@ -189,7 +187,7 @@ module.exports = {
 
 Or you can set a timeout for a single test:
 
-```js
+```js filename="your.test.js"
 test("test name", async () => {
   // your test code
 }, 10000);
@@ -223,14 +221,21 @@ To switch from a Mocha Anchor test to a
 [Bankrun Anchor](https://github.com/kevinheavey/anchor-bankrun) test you only
 need to change the provider to be a
 [`BankrunProvider`](https://kevinheavey.github.io/solana-bankrun/tutorial/#anchor-integration)
-and create a context using `startAnchor`:
+and create a context using `startAnchor` within each of your test files:
 
-```js
-const context = await startAnchor(".", [], []);
-const client = context.banksClient;
+```js filename="my-test.test.ts" /startAnchor/
+// ... imports here
+describe('My test', () => {
+  test('Test allocate counter + increment tx', async () => {
+    const context = await startAnchor(".", [], []);
+    const client = context.banksClient;
 
-const provider = new BankrunProvider(context);
-anchor.setProvider(provider);
+    const provider = new BankrunProvider(context);
+    anchor.setProvider(provider);
+
+    // ... testing logic
+  }
+}
 ```
 
 `startAnchor` will automatically add your program from your Anchor workspace to
@@ -242,8 +247,15 @@ which we will cover in the next section.
 
 ### Bankrun differences to the local validator
 
-Because Bankrun directly runs your tests against a local Bank the tests are
-faster, but there are a few differences to the local validator:
+Bankrun uses a BanksServer (a simplified version of
+[Solana's bank](https://github.com/solana-labs/solana/blob/master/runtime/src/bank.rs)
+that processes transactions and manages accounts) and a BanksClient to simulate
+the Solana network, enabling advanced testing features like time manipulation
+and dynamic account data setting. Unlike the `solana-test-validator`, bankrun
+allows efficient testing by running against a local instance of the network
+state, making it ideal for testing Solana programs without the overhead of a
+full validator. The behaviour for transactions is pretty similar, but there are
+a few differences to the local validator:
 
 #### Airdrops
 
@@ -280,9 +292,12 @@ available. You can just leave it out.
 
 #### Getting account data
 
-While you can still use `connection.getAccount` to get the account data of an
-account you can also use the `client.getAccount` function to get the account
-data of an account. This will return a `Promise<Account>`.
+While you can still use `connection.getAccount` to retrieve account data, the
+preferred method in the bankrun framework is to use `client.getAccount`, which
+returns a `Promise<Account>`. This method aligns better with the testing
+framework's design. However, if you prefer consistency with how accounts are
+retrieved in the rest of your Solana codebase, you can continue using
+connection.getAccount. Choose the method that best fits your specific use case.
 
 ```js
 await client.getAccount(playerPDA).then(info => {
@@ -328,9 +343,10 @@ secondProgram = new Program<Vesting>(IDL as Vesting, beneficiaryProvider);
 
 ### Using Bankrun for native programs
 
-You can also use Bankrun for native programs. The main difference is that you
-use `start` instead of `startAnchor` to start the Bankrun bank. You can then use
-the `client` to interact with the bank.
+You can also use Bankrun for
+[native programs](/content/guides/getstarted/intro-to-native-rust.md). The main
+difference is that you use `start` instead of `startAnchor` to start the Bankrun
+bank. You can then use the `client` to interact with the bank.
 
 ```js
 const context = await start(
