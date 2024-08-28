@@ -447,30 +447,39 @@ client-side in Typescript.
 import { AggregatorAccount, SwitchboardProgram } from '@switchboard-xyz/solana.js';
 import * as anchor from '@project-serum/anchor';
 
-// create keypair for test user
+// Create keypair for test user
 const user = anchor.web3.Keypair.generate();
 
-// establish connection to Solana devnet
-const connection = new anchor.web3.Connection("https://api.devnet.solana.com");
+async function fetchSolPrice() {
+  try {
+    // Establish connection to Solana devnet
+    const connection = new anchor.web3.Connection("https://api.devnet.solana.com");
 
-// eoad Switchboard devnet program object
-const switchboardProgram = await SwitchboardProgram.load(
-  "devnet",
-  connection,
-  user
-);
+    // Load Switchboard devnet program object
+    const switchboardProgram = await SwitchboardProgram.load(
+      "devnet",
+      connection,
+      user
+    );
 
-// pass Switchboard program object and feed pubkey into AggregatorAccount constructor
-const aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed);
+    // Pass Switchboard program object and feed pubkey into AggregatorAccount constructor
+    const aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed);
 
-// fetch latest SOL price
-const solPrice: Big | null = await aggregatorAccount.fetchLatestValue()
-if (solPrice === null) {
-  throw new Error('Aggregator holds no value')
+    // Fetch latest SOL price
+    const solPrice = await aggregatorAccount.fetchLatestValue();
+
+    if (solPrice === null) {
+      throw new Error('Aggregator holds no value');
+    }
+
+    console.log(`Latest SOL Price: ${solPrice.toString()}`);
+  } catch (error) {
+    console.error('Failed to fetch SOL price:', error);
+  }
 }
 
-console.log(`Latest SOL Price: ${solPrice.toString()}`);
-
+// Call the function to fetch the SOL price
+fetchSolPrice();
 ```
 
 Remember, Switchboard data feeds are just accounts that are updated by third
