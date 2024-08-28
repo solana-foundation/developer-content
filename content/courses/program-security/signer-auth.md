@@ -318,7 +318,7 @@ pub mod signer_authorization {
     pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+        let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
@@ -339,7 +339,9 @@ pub mod signer_authorization {
 #[derive(Accounts)]
 pub struct InitializeVault<'info> {
     #[account(
-        init,
+        // We use init_if_needed here for the test. Otherwise, the test will result in an error "Already in use" after testing once.
+        // Use "init" if you want to ensure that the "initialize_vault" function runs only once.
+        init_if_needed,
         payer = authority,
         space = 8 + 32 + 32,
         seeds = [b"vault"],
@@ -402,26 +404,23 @@ account, but we’ll use a different keypair to sign and send the transaction.
 
 ```typescript
 describe("signer-authorization", () => {
-    ...
-    it("Insecure withdraw", async () => {
+  ...
+  it("Insecure withdraw", async () => {
     const tx = await program.methods
       .insecureWithdraw()
       .accounts({
-        vault: vaultPDA,
-        tokenAccount: tokenAccount.publicKey,
         withdrawDestination: withdrawDestinationFake,
-        authority: wallet.publicKey,
       })
-      .transaction()
+      .transaction();
 
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
+    await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
 
     const balance = await connection.getTokenAccountBalance(
-      tokenAccount.publicKey
-    )
-    expect(balance.value.uiAmount).to.eq(0)
-  })
-})
+      tokenAccount.publicKey,
+    );
+    expect(balance.value.uiAmount).to.eq(0);
+  });
+});
 ```
 
 Run `anchor test` to see that both transactions will complete successfully.
@@ -461,7 +460,7 @@ pub mod signer_authorization {
     pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+        let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
@@ -514,10 +513,7 @@ describe("signer-authorization", () => {
       const tx = await program.methods
         .secureWithdraw()
         .accounts({
-          vault: vaultPDA,
-          tokenAccount: tokenAccount.publicKey,
           withdrawDestination: withdrawDestinationFake,
-          authority: wallet.publicKey,
         })
         .transaction()
 
