@@ -1,8 +1,7 @@
 ---
 title: Oracles and Oracle Networks
 objectives:
- - Explain why onchain programs cannot readily access real-world data on their
-    own
+ - Explain why onchain programs cannot readily access real-world data on their own
  - Explain how oracles solve the problem of accessing real-world data onchain
  - Explain how incentivized Oracle networks make data more trustworthy
  - Effectively weigh the tradeoffs between using various types of oracles
@@ -14,20 +13,17 @@ description: Access real-world data inside a Solana program.
 
 - Oracles are services that provide external data to a blockchain network
 - There are many
-  [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+ [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
 - You can build your own Oracle to create a custom data feed
 - You have to be careful when choosing your data feed providers
 
 ## Lesson
 
 [Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
-that provide external data to a blockchain network. Blockchains, by nature, are
-siloed environments that do not know the outside world. This constraint
-inherently puts a limit on the use cases for decentralized applications (dApps).
-Oracles provide a solution to this limitation by creating a decentralized way to
-get real-world data onchain.
+that provide external data to a blockchain network. The blockchains, by nature, is a siloed network that do not interact with external data. This constraint inherently puts a limit on the use cases for decentralized applications (dApps).
+Oracles provide a solution to this limitation by creating a decentralized way to get real-world off-chain data onchain.
 
-Oracles can provide just about any type of data onchain. Examples include:
+Oracles can provide just about any type of external data. Examples include:
 
 - Results of sporting events
 - Weather data
@@ -39,16 +35,13 @@ While the exact implementation may differ from blockchain to blockchain,
 generally, Oracles work as follows:
 
 1. Data is obtained from an off-chain source.
-2. That data is then published onchain via a transaction and stored in an
-   account.
-3. Programs on the network can read the data stored in the account and use that
-   data in the program's logic.
+2. That data is then published onchain via a transaction and stored in an account.
+3. Programs on the network can read the data stored in the account and use that data in the
+ program's logic.
 
-On completing this lesson, you'll learn the basics of how oracles work, the
-state of oracles on Solana, and how to effectively use oracles to build dapps on
-your Solana network.
+On completing this lesson, you'll learn the basics of how oracles work, the state of oracles on Solana, and how to effectively use oracles to build dapps on your Solana network.
 
-## The Offchain data accessibility problem
+## Trust and Oracle Networks
 
 The primary hurdle oracles need to overcome is one of trust. Since blockchains
 execute irreversible financial transactions, developers and users alike need to
@@ -57,21 +50,23 @@ trusting an oracle is understanding how it's implemented.
 
 Broadly speaking, there are three implementation types:
 
-1. Single, centralized oracle publishes data onchain.    1. Pro: It’s simple;
-   there's one source of truth.    2. Con: nothing is stopping the Oracle
-   provider from providing inaccurate data.
+1. Single, centralized oracle publishes data onchain.
+    - Pro: It’s simple; there's one source of truth.
+    - Con: nothing is stopping the Oracle provider from providing inaccurate
+ data.
 2. A network of oracles publish data, and a consensus mechanism is used to
-   determine the final result.    1. Pro: Consensus makes it less likely that
-   bad data is pushed onchain.    2. Con: There is no way to disincentivize bad
-   actors from publishing bad data and trying to sway the consensus.
+ determine the final result.
+    - Pro: Consensus makes it less likely that bad data is pushed onchain.
+    - Con: There is no way to disincentivize bad actors from publishing bad data
+ and trying to sway the consensus.
 3. Oracle network with some kind of proof of stake mechanism. I.e. require
-   oracles to stake tokens to participate in the consensus mechanism. On every
-   response, if an oracle deviates by some threshold from the accepted range of
-   results, their stake is taken by the protocol, and they can no longer report.
-      1. Pro: Ensures no single oracle can influence the final result too
-   drastically while also incentivizing honest and accurate actions.    2. Con:
-   Building decentralized networks is challenging; incentives need to be set up
-   properly and be sufficient to get participation, etc.
+ oracles to stake tokens to participate in the consensus mechanism. On every
+ response, if an oracle deviates by some threshold from the accepted range of
+ results, their stake is taken by the protocol, and they can no longer report.
+    - Pro: Ensures no single oracle can influence the final result too
+ drastically while also incentivizing honest and accurate actions.
+    - Con: Building decentralized networks is challenging; incentives need to be
+ set up properly and be sufficient to get participation, etc.
 
 Depending on the use case of an oracle, any of the above solutions could be the
 right approach. For example, you might be perfectly willing to participate in a
@@ -105,10 +100,9 @@ functions and worst-case scenarios should be accounted for.
 ### Oracles on Solana
 
 There are many
-[Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
-Two of the most popular ones are [Pyth](https://pyth.network) and
-[Switchboard](https://switchboard.xyz). They’re each unique and follow slightly
-different design choices.
+[Oracle providers on Solana](https://www.alchemy.com/list-of/decentralized-oracles-on-solana).
+Two of the most popular ones are [Pyth](https://www.pyth.network/) and
+[Switchboard](https://app.switchboard.xyz/solana/mainnet). They’re each unique and follow slightly different design choices.
 
 **Pyth** is primarily focused on financial data published from top-tier
 financial institutions. Pyth’s data providers publish the market data updates.
@@ -120,10 +114,10 @@ higher quality.
 
 **Switchboard** is a completely decentralized Oracle network and has data of all
 kinds available. Check out all of the feeds
-[on their website](https://app.switchboard.xyz/solana/devnet/explore)
-Additionally, anyone can run a Switchboard oracle and consume their data. This
-means you'll have to be diligent about researching feeds. We'll talk more about
-what to look for later in the lesson.
+[on their website](https://ondemand.switchboard.xyz/solana/devnet)
+Additionally, anyone can run a Switchboard oracle and consume their
+data. This means you'll have to be diligent about researching feeds. We'll talk
+more about what to look for later in the lesson.
 
 Switchboard follows a variation of the stake-weighted oracle network described
 in the third option of the previous section. It does so by introducing what are
@@ -131,7 +125,7 @@ called TEEs (Trusted Execution Environments). TEEs are secure environments
 isolated from the rest of the system where sensitive code can be executed. In
 simple terms, given a program and an input, TEEs can execute and generate an
 output along with a proof. If you’d like to learn more about TEEs, please read
-[Switchboard’s documentation](https://docs.switchboard.xyz/functions).
+[Switchboard’s documentation](https://docs.switchboard.xyz/docs).
 
 By introducing TEEs on top of stake-weighted oracles, Switchboard is able to
 verify each oracle’s software to allow participation in the network. If an
@@ -150,27 +144,27 @@ writes the data directly to these accounts. Let's go over a few terms to
 understand how Switchboard works:
 
 - **[Aggregator (Data Feed)](https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs#L60)** -
-  Contains the data feed configuration, dictating how data feed updates get
-  requested, updated, and resolved onchain from its assigned source. The The
-  aggregator is the account owned by the Switchboard Solana program and is where
-  the data is published onchain.
+ Contains the data feed configuration, dictating how data feed updates get
+ requested, updated, and resolved onchain from its assigned source. The
+ The aggregator is the account owned by the Switchboard Solana program and is where
+ the data is published onchain.
 - **[Job](https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/job.rs)** -
-  Each data source should correspond to a job account. The job account is a
-  collection of Switchboard tasks used to instruct the oracles on how to fetch
-  and transform data. In other words, it stores the blueprints for how data is
-  fetched off-chain for a particular data source.
+ Each data source should correspond to a job account. The job account is a
+ collection of Switchboard tasks used to instruct the oracles on how to fetch
+ and transform data. In other words, it stores the blueprints for how data is
+ fetched off-chain for a particular data source.
 - **Oracle** - A separate program that sits between the internet and the
-  blockchain and facilitates the flow of information. An oracle reads a feed’s
-  job definitions, calculates the result, and submits its response onchain.
+ blockchain and facilitates the flow of information. An oracle reads a feed’s
+ job definitions, calculates the result, and submits its response onchain.
 - **Oracle Queue** - A group of oracles that get assigned to update requests in
-  a round-robin fashion. The oracles in the queue must be actively heartbeating
-  onchain to provide updates. Data and configurations for this queue are stored
-  onchain in an
-  [account owned by the Switchboard program](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/javascript/solana.js/src/generated/oracle-program/accounts/OracleQueueAccountData.ts#L8).
+ a round-robin fashion. The oracles in the queue must be actively heartbeating
+ onchain to provide updates. Data and configurations for this queue are stored
+ onchain in an
+ [account owned by the Switchboard program](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/javascript/solana.js/src/generated/oracle-program/accounts/OracleQueueAccountData.ts#L8).
 - **Oracle Consensus** - Determines how oracles come to an agreement on the
-  accepted onchain result. Switchboard oracles use the median oracle response as
-  the accepted result. A feed authority can control how many oracles are
-  requested and how many must respond to influence its security.
+ accepted onchain result. Switchboard oracles use the median oracle response as
+ the accepted result. A feed authority can control how many oracles are
+ requested and how many must respond to influence its security.
 
 Switchboard oracles are incentivized to update data feeds because they are
 rewarded for doing so accurately. Each data feed has a `LeaseContract` account.
@@ -195,56 +189,60 @@ Now that you understand the terminology and economics let’s take a look at how
 data is published onchain:
 
 1. Oracle queue setup - When an update is requested from a queue, the next `N`
-   oracles are assigned to the update request and cycled to the back of the
-   queue. Each oracle queue in the Switchboard network is independent and
-   maintains its own configuration. The configuration influences its level of
-   security. This design choice enables users to tailor the Oracle queue's
-   behavior to match their specific use case. An Oracle queue is stored onchain
-   as an account and contains metadata about the queue. A queue is created by
-   invoking the
-   [oracleQueueInit instruction](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/javascript/solana.js/src/generated/oracle-program/instructions/oracleQueueInit.ts#L13)
-   on the Switchboard Solana program.    1. Some relevant Oracle Queue
-   configurations:       1. `oracle_timeout` - Interval when stale oracles will
-   be removed if they fail to heartbeat.       2. `reward` - Rewards to provide
-   oracles and round openers on this queue.       3. `min_stake` - The minimum
-   amount of stake that oracles must provide to remain on the queue.       4.
-   `size` - The current number of oracles on a queue.       5. `max_size` - The
-   maximum number of oracles a queue can support.
+ oracles are assigned to the update request and cycled to the back of the
+ queue. 
+
+    Each oracle queue in the Switchboard network is independent and
+ maintains its own configuration. The configuration influences its level of
+ security. This design choice enables users to tailor the Oracle queue's
+ behavior to match their specific use case. An Oracle queue is stored onchain
+ as an account and contains metadata about the queue. A queue is created by
+ invoking the
+ [oracleQueueInit instruction](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/javascript/solana.js/src/generated/oracle-program/instructions/oracleQueueInit.ts#L13)
+ on the Switchboard Solana program.
+
+    Some relevant Oracle Queue configurations:
+    - `oracle_timeout` - Interval when stale oracles will be removed if they
+ fail to heartbeat.
+    - `reward` - Rewards to provide oracles and round openers on this queue.
+    - `min_stake` - The minimum amount of stake that oracles must provide to
+ remain on the queue.
+    - `size` - The current number of oracles on a queue.
+    - `max_size` - The maximum number of oracles a queue can support.
 2. Aggregator/data feed setup - The aggregator/feed account gets created. A feed
-   belongs to a single Oracle queue. The feed’s configuration dictates how
-   update requests are invoked and routed through the network.
-3. Job account setup - Besides the feed, a job account for each data source must
-   be set up. This defines how oracles can fulfill the feed’s update requests.
-   This includes defining where the oracles should fetch the data the feed is
-   requesting.
+ belongs to a single Oracle queue. The feed’s configuration dictates how
+ update requests are invoked and routed through the network.
+3. Job account setup - Besides the feed, a job account for each data
+ source must be set up. This defines how oracles can fulfill the feed’s update
+ requests. This includes defining where the oracles should fetch the data the
+ feed is requesting.
 4. Request assignment - Once an update has been requested with the feed account,
-   the Oracle queue assigns the request to different oracles/nodes in the queue
-   to fulfill. The oracles will fetch the data from the data source defined in
-   each of the feed’s job accounts. Each job account has a weight associated
-   with it. The oracle will calculate the weighted median of the results from
-   across all the jobs.
+ the Oracle queue assigns the request to different oracles/nodes in the queue
+ to fulfill. The oracles will fetch the data from the data source defined in
+ each of the feed’s job accounts. Each job account has a weight associated
+ with it. The oracle will calculate the weighted median of the results from
+ across all the jobs.
 5. After `minOracleResults` responses are received, the onchain program
-   calculates the result using the median of the oracle responses. Oracles who
-   respond within the queue’s configured parameters are rewarded, while the
-   oracles who respond outside this threshold are slashed (if the queue has  
-    `slashingEnabled`).
+ calculates the result using the median of the oracle responses. Oracles who
+ respond within the queue’s configured parameters are rewarded, while the
+ oracles who respond outside this threshold are slashed (if the queue has
+   `slashingEnabled`).
 6. The updated result is stored in the data feed account so it can be
-   read/consumed onchain.
+ read/consumed onchain.
 
 #### How to use Switchboard Oracles
 
 To use Switchboard oracles and incorporate off-chain data into a Solana program,
 you first have to find a feed that provides the data you need. Switchboard feeds
-are public, and there are many available
-[options](https://app.switchboard.xyz/solana/devnet/explore) to choose from when
-looking for a feed, you have to decide how accurate/reliable you want the feed,
-where you want to source the data and the feed’s update cadence. When consuming
-a publicly available feed, you have no control over these things, so choose
-carefully!
+are public, and there are many
+available [options](https://app.switchboard.xyz/solana/devnet/explore) to choose from when looking for a feed, you have to decide how accurate/reliable you want the
+feed, where you want to source the data and the feed’s update
+cadence. When consuming a publicly available feed, you have no control over
+these things, so choose carefully!
 
-For example, there is a Switchboard-sponsored.
+For example, there is a Switchboard-sponsored
 [BTC_USD feed](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee).
-This feed is available on **Solana devnet/mainnet** with a `pubkey`
+This feed is available on **Solana devnet and mainnet** with a `pubkey`
 `8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee`. It provides the current price of
 Bitcoin in USD onchain.
 
@@ -255,51 +253,88 @@ The actual onchain data for a Switchboard feed account looks a little like this:
 // https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs#L60
 
 pub struct AggregatorAccountData {
-    /// Name of the aggregator to store onchain.
-    pub name: [u8; 32],
-    ...
-    ...
-    /// Pubkey of the queue the aggregator belongs to.
-    pub queue_pubkey: Pubkey,
-    ...
-    /// Minimum number of oracle responses required before a round is validated.
-    pub min_oracle_results: u32,
-    /// Minimum number of job results before an oracle accepts a result.
-    pub min_job_results: u32,
-    /// Minimum number of seconds required between aggregator rounds.
-    pub min_update_delay_seconds: u32,
-    ...
-    /// Change percentage required between a previous round and the current round. If variance percentage is not met, reject new oracle responses.
-    pub variance_threshold: SwitchboardDecimal,
-    ...
-    /// Latest confirmed update request result that has been accepted as valid. This is where you will find the data you are requesting in latest_confirmed_round.result
-    pub latest_confirmed_round: AggregatorRound,
-    ...
-    /// The previous confirmed round result.
-    pub previous_confirmed_round_result: SwitchboardDecimal,
-    /// The slot when the previous confirmed round was opened.
-    pub previous_confirmed_round_slot: u64,
-    ...
+    /// Name of the aggregator to store on-chain.
+    pub name: [u8; 32],
+    /// Metadata of the aggregator to store on-chain.
+    pub metadata: [u8; 128],
+    /// Reserved.
+    pub _reserved1: [u8; 32],
+    /// Pubkey of the queue the aggregator belongs to.
+    pub queue_pubkey: Pubkey,
+    /// CONFIGS
+    /// Number of oracles assigned to an update request.
+    pub oracle_request_batch_size: u32,
+    /// Minimum number of oracle responses required before a round is validated.
+    pub min_oracle_results: u32,
+    /// Minimum number of job results before an oracle accepts a result.
+    pub min_job_results: u32,
+    /// Minimum number of seconds required between aggregator rounds.
+    pub min_update_delay_seconds: u32,
+    /// Unix timestamp for which no feed update will occur before.
+    pub start_after: i64,
+    /// Change percentage required between a previous round and the current round. If variance percentage is not met, reject new oracle responses.
+    pub variance_threshold: SwitchboardDecimal,
+    /// Number of seconds for which, even if the variance threshold is not passed, accept new responses from oracles.
+    pub force_report_period: i64,
+    /// Timestamp when the feed is no longer needed.
+    pub expiration: i64,
+    //
+    /// Counter for the number of consecutive failures before a feed is removed from a queue. If set to 0, failed feeds will remain on the queue.
+    pub consecutive_failure_count: u64,
+    /// Timestamp when the next update request will be available.
+    pub next_allowed_update_time: i64,
+    /// Flag for whether an aggregators configuration is locked for editing.
+    pub is_locked: bool,
+    /// Optional, public key of the crank the aggregator is currently using. Event based feeds do not need a crank.
+    pub crank_pubkey: Pubkey,
+    /// Latest confirmed update request result that has been accepted as valid.
+    pub latest_confirmed_round: AggregatorRound,
+    /// Oracle results from the current round of update request that has not been accepted as valid yet.
+    pub current_round: AggregatorRound,
+    /// List of public keys containing the job definitions for how data is sourced off-chain by oracles.
+    pub job_pubkeys_data: [Pubkey; 16],
+    /// Used to protect against malicious RPC nodes providing incorrect task definitions to oracles before fulfillment.
+    pub job_hashes: [Hash; 16],
+    /// Number of jobs assigned to an oracle.
+    pub job_pubkeys_size: u32,
+    /// Used to protect against malicious RPC nodes providing incorrect task definitions to oracles before fulfillment.
+    pub jobs_checksum: [u8; 32],
+    //
+    /// The account delegated as the authority for making account changes.
+    pub authority: Pubkey,
+    /// Optional, public key of a history buffer account storing the last N accepted results and their timestamps.
+    pub history_buffer: Pubkey,
+    /// The previous confirmed round result.
+    pub previous_confirmed_round_result: SwitchboardDecimal,
+    /// The slot when the previous confirmed round was opened.
+    pub previous_confirmed_round_slot: u64,
+    /// 	Whether an aggregator is permitted to join a crank.
+    pub disable_crank: bool,
+    /// Job weights used for the weighted median of the aggregator's assigned job accounts.
+    pub job_weights: [u8; 16],
+    /// Unix timestamp when the feed was created.
+    pub creation_timestamp: i64,
+    /// Use sliding windoe or round based resolution
+    /// NOTE: This changes result propogation in latest_round_result
+    pub resolution_mode: AggregatorResolutionMode,
+    /// Reserved for future info.
+    pub _ebuf: [u8; 138],
 }
+
 ```
 
-You can view the full code for this data structure in the
+You can view the entire code for this data structure in the
 [Switchboard program here](https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs#L60).
 
-Some relevant fields and configurations on the `AggregatorAccountData` type are:
+Some relevant fields and configurations you should consider on the `AggregatorAccountData` type are:
 
-- `min_oracle_results` - Minimum number of oracle responses required before a
-  round is validated.
-- `min_job_results` - Minimum number of job results before an oracle accepts a
-  result.
-- `variance_threshold` - Change the percentage required for a previous round and
-  the current round. If the variance percentage is not met, reject new Oracle
-  responses.
-- `latest_confirmed_round` - The latest confirmed update request result that has
-  been accepted as valid. This is where you will find the data of the feed in  
-  `latest_confirmed_round.result`
-- `min_update_delay_seconds` - Minimum number of seconds required between
-  aggregator rounds.
+- `min_oracle_results` - This is the minimum number of oracle responses required before a round is validated.
+- `min_job_results` - This is the minimum number of job results before an oracle accepts a
+ result.
+- `variance_threshold` - This changes the percentage required for a previous round and the current round. If the variance percentage is not met, reject new Oracle
+ responses.
+- `latest_confirmed_round` - This is the latest confirmed update request result that has been accepted as valid. This is where you will find the data of the feed in `latest_confirmed_round.result`.
+- `min_update_delay_seconds` - This is the minimum number of seconds required between aggregator rounds.
 
 The first three configs listed above are directly related to the accuracy and
 reliability of a data feed.
@@ -322,16 +357,13 @@ The `min_update_delay_seconds` field is directly related to a feed’s update
 cadence. `min_update_delay_seconds` must have passed between one round of
 updates and the next one before the Switchboard program will accept results.
 
-It can help you look at the jobs tab of a feed in your Switchboard's Explorer.
-For example, you can look at the
-[BTC_USD feed in the explorer](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee).
+It can help you look at the jobs tab of a feed in your Switchboard's Explorer. For example, you can see the [BTC_USD feed in the explorer](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee).
+
 Each job listed defines the source the oracles will fetch data from and the
-weighting of each source. You can view the actual API endpoints that provide the
-data for this specific feed. When determining what data feed to use in your
+weighting of each source. You can view the actual API endpoints that provide the data for this specific feed. When determining what data feed to use in your
 program, things like this are very important to consider.
 
-Below are two of the jobs related to the BTC_USD feed. It shows two sources of
-data: [MEXC](https://www.mexc.com/) and [Coinbase](https://www.coinbase.com/).
+Below are two of the jobs related to the BTC_USD feed. It shows two sources of data: [MEXC](https://www.mexc.com/) and [Coinbase](https://www.coinbase.com/).
 
 ![Oracle Jobs](/public/assets/courses/unboxed/oracle-jobs.png)
 
@@ -366,7 +398,7 @@ memory and gives our program direct access to the data instead. When using
 ways:
 
 - `load_init` after initializing an account (this will ignore the missing
-  account discriminator that gets added only after the user’s instruction code)
+ account discriminator that gets added only after the user’s instruction code)
 - `load` when the account is not mutable
 - `load_mut` when the account is mutable
 
@@ -396,15 +428,15 @@ has implemented some nifty safety checks.
 // https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs#L195
 
 pub fn get_result(&self) -> anchor_lang::Result<SwitchboardDecimal> {
-    if self.resolution_mode == AggregatorResolutionMode::ModeSlidingResolution {
-        return Ok(self.latest_confirmed_round.result);
- }
-    let min_oracle_results = self.min_oracle_results;
-    let latest_confirmed_round_num_success = self.latest_confirmed_round.num_success;
-    if min_oracle_results > latest_confirmed_round_num_success {
-        return Err(SwitchboardError::InvalidAggregatorRound.into());
- }
-    Ok(self.latest_confirmed_round.result)
+    if self.resolution_mode == AggregatorResolutionMode::ModeSlidingResolution {
+        return Ok(self.latest_confirmed_round.result);
+    }
+    let min_oracle_results = self.min_oracle_results;
+    let latest_confirmed_round_num_success = self.latest_confirmed_round.num_success;
+    if min_oracle_results > latest_confirmed_round_num_success {
+        return Err(SwitchboardError::InvalidAggregatorRound.into());
+    }
+    Ok(self.latest_confirmed_round.result)
 }
 ```
 
@@ -412,28 +444,33 @@ You can also view the current value stored in an `AggregatorAccountData` account
 client-side in Typescript.
 
 ```typescript
-import { AggregatorAccount, SwitchboardProgram} from '@switchboard-xyz/solana.js'
+import { AggregatorAccount, SwitchboardProgram } from '@switchboard-xyz/solana.js';
+import * as anchor from '@project-serum/anchor';
 
-...
-...
 // create keypair for test user
-let user = new anchor.web3.Keypair()
+const user = anchor.web3.Keypair.generate();
 
-// fetch switchboard devnet program object
-switchboardProgram = await SwitchboardProgram.load(
-  "devnet",
-  new anchor.web3.Connection("https://api.devnet.solana.com"),
- user
-)
+// establish connection to Solana devnet
+const connection = new anchor.web3.Connection("https://api.devnet.solana.com");
 
-// pass switchboard program object and feed pubkey into AggregatorAccount constructor
-aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed)
+// eoad Switchboard devnet program object
+const switchboardProgram = await SwitchboardProgram.load(
+  "devnet",
+  connection,
+  user
+);
+
+// pass Switchboard program object and feed pubkey into AggregatorAccount constructor
+const aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed);
 
 // fetch latest SOL price
 const solPrice: Big | null = await aggregatorAccount.fetchLatestValue()
 if (solPrice === null) {
   throw new Error('Aggregator holds no value')
 }
+
+console.log(`Latest SOL Price: ${solPrice.toString()}`);
+
 ```
 
 Remember, Switchboard data feeds are just accounts that are updated by third
@@ -456,30 +493,29 @@ you can see its relevant configurations.
 
 ![Oracle Configs](/public/assets/courses/unboxed/oracle-configs.png)
 
-The BTC_USD feed has a Min Update Delay = 6 seconds. This means that the price
-of BTC is only updated at a minimum of every 6 seconds on this feed. This is
+The BTC_USD feed has a Min Update Delay = 6 seconds. This means that the price of
+BTC is only updated at a minimum of every 6 seconds on this feed. This is
 probably fine for most use cases, but if you wanted to use this feed for
 something latency-sensitive, it’s probably not a good choice.
 
-It’s also worthwhile to audit a feed's sources in the Jobs section of the Oracle
-Explorer. Since the value that is persisted onchain is the weighted median
+It’s also worthwhile to audit a feed's sources in the Jobs section of the Oracle Explorer. Since the value that is persisted onchain is the weighted median
 result the oracles pull from each source, the sources directly influence what is
 stored in the feed. Check for shady links and potentially run the APIs yourself
 for a time to gain confidence in them.
 
 Once you have found a feed that fits your needs, you still need to make sure
 you're using the feed appropriately. For example, you should still implement
-necessary security checks on the account that are passed into your instructions.
-Any account can be passed into your program's instructions, so you should verify
+necessary security checks on the account that are passed into your instruction. Any
+account can be passed into your program's instruction, so you should verify
 it’s the account you expect it to be.
 
 In Anchor, if you deserialize the account to the `AggregatorAccountData` type
 from the `switchboard_v2` crate, Anchor checks that the account is owned by the
 Switchboard program. If your program expects that only a specific data feed will
-be passed in the instructions, then you can also verify that the public key of
-the account passed matches what it should be. One way to do this is to hard code
-the address in the program somewhere and use account constraints to verify the
-address passed in matches what is expected.
+be passed in the instruction, then you can also verify that the public key of
+the account passed matches what it should be. One way to do this is to hard
+code the address in the program somewhere and use account constraints to verify
+the address passed in matches what is expected.
 
 ```rust
 use {
@@ -503,9 +539,9 @@ pub struct TestInstruction<'info> {
 }
 ```
 
-After ensuring the feed account is the one you expect, you can also check the
-data stored in the feed in your program's instruction logic. Two common things
-to check for are data staleness and the confidence interval.
+After ensuring the feed account is the one you expect, you can also 
+check the data stored in the feed in your program's instruction logic. Two
+common things to check for are data staleness and the confidence interval.
 
 Each data feed updates the current value stored in it when triggered by the
 oracles. This means the updates are dependent on the oracles in the queue that
@@ -573,13 +609,17 @@ pub struct AggregatorRound {
 }
 ```
 
-There are some other relevant fields that may be of interest to you in the
+Here are some relevant fields you should take note of in the
 Aggregator accounts like `num_success`, `medians_data`, `std_deviation`, etc.
-`num_success` is the number of successful responses received from oracles in
-this round of updates. `medians_data` is an array of all of the successful
+- `num_success` is the number of successful responses received from oracles in
+this round of updates. 
+- `medians_data` is an array of all of the successful
 responses received from oracles this round. This is the dataset that is used to
-derive the median and the final result. `std_deviation` is the standard
-deviation of the accepted results in this round. You might want to check for a
+derive the median and the final result. 
+- `std_deviation` is the standard
+deviation of the accepted results in this round. 
+
+You might want to check for a
 low standard deviation, meaning that all of the oracle responses were similar.
 The switchboard program is in charge of updating the relevant fields on this
 struct every time it receives an update from an oracle.
@@ -594,13 +634,13 @@ the results received from the oracle is greater than the given
 // https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs#L228
 
 pub fn check_confidence_interval(
-    &self,
- max_confidence_interval: SwitchboardDecimal,
+    &self,
+    max_confidence_interval: SwitchboardDecimal,
 ) -> anchor_lang::Result<()> {
-    if self.latest_confirmed_round.std_deviation > max_confidence_interval {
-        return Err(SwitchboardError::ConfidenceIntervalExceeded.into());
- }
-    Ok(())
+    if self.latest_confirmed_round.std_deviation > max_confidence_interval {
+        return Err(SwitchboardError::ConfidenceIntervalExceeded.into());
+    }
+    Ok(())
 }
 ```
 
@@ -627,7 +667,7 @@ feed.check_confidence_interval(SwitchboardDecimal::from_f64(max_confidence_inter
 Lastly, it’s important to plan for worst-case scenarios in your programs. Plan
 for feeds going stale and plan for feed accounts closing.
 
-### Conclusion
+## Conclusion
 
 If you want functional programs that can perform actions based on real-world
 data, you’re going to have to use oracles. Fortunately, there are some
@@ -650,7 +690,7 @@ oracle from the switchboard. The program will have two main instructions:
 - Deposit - Lock up the SOL and set a USD price to unlock it.
 - Withdraw - Check the USD price and withdraw the SOL if the price is met.
 
-#### 1. Program Setup
+### Step 1: Program Setup
 
 To get started, let’s create the program with
 
@@ -696,34 +736,34 @@ switchboard-v2 = "0.4.0"
 
 Before we get started with the logic, let’s go over the structure of our
 program. With small programs, it’s very easy to add all of the smart contract
-code to a single `lib.rs` file and call it a day. To keep it more organized,
-though, it’s helpful to break it up across different files. Our program will
-have the following files within the `programs/src` directory:
+code to a single `lib.rs` file and call it a day. To keep it more organized, though, it’s helpful to break it up across different files. 
 
-`/instructions/deposit.rs`
+Our program will have the following files within the `programs/src` directory:
 
-`/instructions/withdraw.rs`
+- `/instructions/deposit.rs`
 
-`/instructions/mod.rs`
+- `/instructions/withdraw.rs`
 
-`errors.rs`
+- `/instructions/mod.rs`
 
-`state.rs`
+- `errors.rs`
 
-`lib.rs`
+- `state.rs`
+
+- `lib.rs`
+
+
+### Step 2: `lib.rs`
 
 The `lib.rs` file will still serve as the entry point to our program, but the
-logic for each instruction will be contained in its own separate file. Go ahead
-and create the program architecture described above, and we’ll get started.
-
-#### 2. `lib.rs`
+logic for each instruction will be contained in its own separate file. Go
+ahead and create the program architecture described above, and we’ll get started.
 
 Before we write any logic, we are going to set up all of our boilerplate
 information. Starting with `lib.rs`. Our actual logic will live in the
 `/instructions` directory.
 
-The `lib.rs` file will serve as the entry point for our program. It contains the
-API endpoints through which all transactions must pass.
+The `lib.rs` file will serve as the entry point for our program. It contains the API endpoints through which all transactions must pass.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -752,15 +792,15 @@ mod burry_oracle_program {
 }
 ```
 
-#### 3. `state.rs`
+### Step 3: `state.rs`
 
 Next, let's define our data account for this program: `EscrowState`. Our data
 account will store two pieces of info:
 
 - `unlock_price` - The price of SOL in USD, at which point you can withdraw; you
-  can hard-code it to whatever you want (e.g. $21.53)
+ can hard-code it to whatever you want (e.g. $21.53)
 - `escrow_amount` - Keeps track of how many lamports are stored in the escrow
-  account
+ account
 
 We will also be defining our PDA seed of `"MICHAEL BURRY"` and our hardcoded
 SOL_USD oracle pubkey `SOL_USDC_FEED`.
@@ -779,7 +819,7 @@ pub struct EscrowState {
 }
 ```
 
-#### 4. Errors
+### Step 4: Errors
 
 Let’s define the custom errors we’ll use throughout the program. Inside the
 `errors.rs` file, paste the following:
@@ -801,7 +841,7 @@ pub enum EscrowErrorCode {
 }
 ```
 
-#### 5. `mod.rs`
+### Step 5: `mod.rs`
 
 Let's set up our `instructions/mod.rs` file.
 
@@ -811,7 +851,7 @@ pub mod deposit;
 pub mod withdraw;
 ```
 
-#### 6. **Deposit**
+### Step 6: Deposit
 
 Now that we have all of the boilerplate out of the way, let's move on to our
 Deposit instruction. This will live in the `/src/instructions/deposit.rs` file.
@@ -855,12 +895,12 @@ pub struct Deposit<'info> {
 Notice the constraints we added to the accounts:
 
 - Because we'll be transferring SOL from the User account to the `escrow_state`
-  account, they both need to be mutable.
+ account, they both need to be mutable.
 - We know the `escrow_account` is supposed to be a PDA derived with the “MICHAEL
-  BURRY” string and the user’s pubkey. We can use Anchor account constraints to
-  guarantee that the address passed in actually meets that requirement.
+ BURRY” string and the user’s pubkey. We can use Anchor account constraints to
+ guarantee that the address passed in actually meets that requirement.
 - We also know that we have to initialize an account at this PDA to store some
-  state for the program. We use the `init` constraint here.
+ state for the program. We use the `init` constraint here.
 
 Let’s move on to the actual logic. All we need to do is to initialize the state
 of the `escrow_state` account and transfer the SOL. We expect the user to pass
@@ -900,7 +940,7 @@ pub fn deposit_handler(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64
 }
 ```
 
-That’s the gist of the deposit instructions! The final result of the
+That’s the gist of the deposit instruction! The final result of the
 `deposit.rs` file should look as follows:
 
 ```rust
@@ -957,7 +997,7 @@ pub struct Deposit<'info> {
 }
 ```
 
-**Withdraw**
+### Step 7: Withdraw
 
 The withdrawal instruction will require the same three accounts as the deposit
 instruction plus the SOL_USDC Switchboard feed account. This code will go in the
@@ -1001,8 +1041,8 @@ We also use the address constraints to verify that the feed account passed in is
 actually the `usdc_sol` feed and not some other feed (we have the SOL_USDC_FEED
 address hard coded). In addition, the AggregatorAccountData struct that we
 deserialize comes from the Switchboard rust crate. It verifies that the given
-account is owned by the switchboard program and allows us to look at its values
-easily. You’ll notice it’s wrapped in an `AccountLoader`. This is because the
+account is owned by the switchboard program and allows us to look at its
+values easily. You’ll notice it’s wrapped in an `AccountLoader`. This is because the
 feed is actually a fairly large account, and it needs to be copied at zero.
 
 Now, let's implement the withdrawal instruction's logic. First, we check if the
@@ -1010,7 +1050,7 @@ feed is stale. Then we fetch the current price of SOL stored in the
 `feed_aggregator` account. Lastly, we want to check that the current price is
 above the escrow `unlock_price`. If it is, then we transfer the SOL from the
 escrow account back to the user and close the account. If it isn’t, then the
-instructions should be finished, and an error should be returned.
+instruction should be finished, and an error should be returned.
 
 ```rust
 pub fn withdraw_handler(ctx: Context<Withdraw>, params: WithdrawParams) -> Result<()> {
@@ -1035,11 +1075,11 @@ pub fn withdraw_handler(ctx: Context<Withdraw>, params: WithdrawParams) -> Resul
 }
 ```
 
-To finish the logic off, we will execute the transfer; this time, we will have
-to transfer the funds in a different way. Because we are transferring from an
-account that also holds data, we cannot use the `system_program::transfer`
-method as we did before. If we try to, the instructions will fail to execute
-with the following error:
+To finish the logic off, we will execute the transfer; this time, we will have to
+transfer the funds in a different way. Because we are transferring from an
+account that also holds data, we cannot use the `system_program::transfer` method
+as we did before. If we try to, the instruction will fail to execute with the
+following error:
 
 ```zsh
 'Transfer: `from` must not carry data'
@@ -1143,21 +1183,20 @@ Error: Function _ZN86_$LT$switchboard_v2..aggregator..AggregatorAccountData$u20$
 
 </Callout>
 
-#### 7. Testing
+### Step 8: Testing
 
 Let's write some tests. We should have four of them:
 
 - Creating an Escrow with the unlock price **_below_** the current SOL price so
-  we can test withdrawing it
+ we can test withdrawing it
 - Withdrawing and closing from the above escrow
 - Creating an Escrow with the unlock price **_above_** the current SOL price so
-  we can test withdrawing it
+ we can test withdrawing it
 - Withdrawing and failing from the above escrow
 
 Note that there can only be one escrow per user, so the above order matters.
 
-We'll provide all the testing code in one snippet. Take a look through to make
-sure you understand it before running `anchor test`.
+We'll provide all the testing code in one snippet. Take a look through to make sure you understand it before running `anchor test`.
 
 ```typescript
 // tests/burry-escrow.ts
@@ -1173,8 +1212,9 @@ import {
 } from "@switchboard-xyz/solana.js";
 import { assert } from "chai";
 
-export const solUsedSwitchboardFeed = new anchor.web3.PublicKey(
-  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+// Constant for Switchboard feed public key
+export const SOL_FEED_PUBLIC_KEY = new anchor.web3.PublicKey(
+  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 );
 
 describe("burry-escrow", () => {
@@ -1184,115 +1224,41 @@ describe("burry-escrow", () => {
   const program = anchor.workspace.BurryEscrow as Program<BurryEscrow>;
   const payer = (provider.wallet as AnchorWallet).payer;
 
+  // Utility function to fetch the Switchboard program and aggregator account
+  const getSwitchboardAggregator = async () => {
+    const connection = provider.connection;
+    const switchboardProgram = await SwitchboardProgram.load(
+      "devnet",
+      connection,
+      payer
+    );
+    const aggregatorAccount = new AggregatorAccount(
+      switchboardProgram,
+      SOL_FEED_PUBLIC_KEY
+    );
+    return aggregatorAccount;
+  };
+
+  // Utility function to derive escrow state account
+  const deriveEscrowStateAccount = async () => {
+    return anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
+      program.programId
+    );
+  };
+
   it("Create Burry Escrow Below Price", async () => {
-    // fetch switchboard devnet program object
-    const switchboardProgram = await SwitchboardProgram.load(
-      "devnet",
-      new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer,
-    );
-    const aggregatorAccount = new AggregatorAccount(
-      switchboardProgram,
-      solUsedSwitchboardFeed,
-    ); // derive escrow state account
+    const aggregatorAccount = await getSwitchboardAggregator();
+    const [escrowState] = await deriveEscrowStateAccount();
 
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    ); // fetch latest SOL price
-
+    // Fetch latest SOL price
     const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
-    if (solPrice === null) {
-      throw new Error("Aggregator holds no value");
-    }
+    if (!solPrice) throw new Error("Aggregator holds no value");
+
     const failUnlockPrice = solPrice.minus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100); // Send transaction
+    const amountToLockUp = new anchor.BN(100);
 
-    try {
-      const tx = await program.methods
-        .deposit(amountToLockUp, failUnlockPrice)
-        .accounts({
-          user: payer.publicKey,
-          escrowAccount: escrowState,
-          systemProgram: anchor.web3.SystemProgram.programId,
-        })
-        .signers([payer])
-        .rpc();
-
-      await provider.connection.confirmTransaction(tx, "confirmed"); // Fetch the created account
-
-      const newAccount = await program.account.escrowState.fetch(escrowState);
-
-      const escrowBalance = await provider.connection.getBalance(
-        escrowState,
-        "confirmed",
-      );
-      console.log("Onchain unlock price:", newAccount.unlockPrice);
-      console.log("Amount in escrow:", escrowBalance); // Check whether the data onchain is equal to local 'data'
-
-      assert(failUnlockPrice == newAccount.unlockPrice);
-      assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
-    }
-  });
-
-  it("Withdraw from escrow", async () => {
-    // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    ); // send tx
-
-    const tx = await program.methods
-      .withdraw()
-      .accounts({
-        user: payer.publicKey,
-        escrowAccount: escrowState,
-        feedAggregator: solUsedSwitchboardFeed,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      })
-      .signers([payer])
-      .rpc();
-
-    await provider.connection.confirmTransaction(tx, "confirmed"); // assert that the escrow account has been closed
-
-    let accountFetchDidFail = false;
-    try {
-      await program.account.escrowState.fetch(escrowState);
-    } catch (e) {
-      accountFetchDidFail = true;
-    }
-
-    assert(accountFetchDidFail);
-  });
-
-  it("Create Burry Escrow Above Price", async () => {
-    // fetch switchboard devnet program object
-    const switchboardProgram = await SwitchboardProgram.load(
-      "devnet",
-      new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer,
-    );
-    const aggregatorAccount = new AggregatorAccount(
-      switchboardProgram,
-      solUsedSwitchboardFeed,
-    ); // derive escrow state account
-
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
-    console.log("Escrow Account: ", escrowState.toBase58()); // fetch the latest SOL price
-
-    const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
-    if (solPrice === null) {
-      throw new Error("Aggregator holds no value");
-    }
-    const failUnlockPrice = solPrice.plus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100); // Send transaction
-
+    // Send transaction
     try {
       const tx = await program.methods
         .deposit(amountToLockUp, failUnlockPrice)
@@ -1305,40 +1271,111 @@ describe("burry-escrow", () => {
         .rpc();
 
       await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx); // Fetch the created account
 
+      // Fetch the created account
       const newAccount = await program.account.escrowState.fetch(escrowState);
 
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
-        "confirmed",
+        "confirmed"
+      );
+
+      console.log("Onchain unlock price:", newAccount.unlockPrice);
+      console.log("Amount in escrow:", escrowBalance);
+
+      // Check whether the data onchain is equal to local 'data'
+      assert.strictEqual(failUnlockPrice, newAccount.unlockPrice);
+      assert.isAbove(escrowBalance, 0);
+    } catch (e) {
+      console.error(e);
+      assert.fail(e);
+    }
+  });
+
+  it("Withdraw from escrow", async () => {
+    const [escrowState] = await deriveEscrowStateAccount();
+
+    // Send withdrawal transaction
+    const tx = await program.methods
+      .withdraw()
+      .accounts({
+        user: payer.publicKey,
+        escrowAccount: escrowState,
+        feedAggregator: SOL_FEED_PUBLIC_KEY,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([payer])
+      .rpc();
+
+    await provider.connection.confirmTransaction(tx, "confirmed");
+
+    // Assert that the escrow account has been closed
+    try {
+      await program.account.escrowState.fetch(escrowState);
+      assert.fail("The escrow account should have been closed");
+    } catch (e) {
+      assert.isTrue(e instanceof Error, "Expected an error when fetching closed account");
+    }
+  });
+
+  it("Create Burry Escrow Above Price", async () => {
+    const aggregatorAccount = await getSwitchboardAggregator();
+    const [escrowState] = await deriveEscrowStateAccount();
+
+    // Fetch the latest SOL price
+    const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
+    if (!solPrice) throw new Error("Aggregator holds no value");
+
+    const failUnlockPrice = solPrice.plus(10).toNumber();
+    const amountToLockUp = new anchor.BN(100);
+
+    // Send transaction
+    try {
+      const tx = await program.methods
+        .deposit(amountToLockUp, failUnlockPrice)
+        .accounts({
+          user: payer.publicKey,
+          escrowAccount: escrowState,
+          systemProgram: anchor.web3.SystemProgram.programId,
+        })
+        .signers([payer])
+        .rpc();
+
+      await provider.connection.confirmTransaction(tx, "confirmed");
+      console.log("Your transaction signature", tx);
+
+      // Fetch the created account
+      const newAccount = await program.account.escrowState.fetch(escrowState);
+
+      const escrowBalance = await provider.connection.getBalance(
+        escrowState,
+        "confirmed"
       );
       console.log("Onchain unlock price:", newAccount.unlockPrice);
-      console.log("Amount in escrow:", escrowBalance); // Check whether the data onchain is equal to local 'data'
+      console.log("Amount in escrow:", escrowBalance);
 
-      assert(failUnlockPrice == newAccount.unlockPrice);
-      assert(escrowBalance > 0);
+      // Check whether the data onchain is equal to local 'data'
+      assert.strictEqual(failUnlockPrice, newAccount.unlockPrice);
+      assert.isAbove(escrowBalance, 0);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       assert.fail(e);
     }
   });
 
   it("Attempt to withdraw while price is below UnlockPrice", async () => {
-    let didFail = false; // derive escrow address
+    let didFail = false;
 
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    ); // send tx
+    const [escrowState] = await deriveEscrowStateAccount();
 
+    // Send withdrawal transaction
     try {
       const tx = await program.methods
         .withdraw()
         .accounts({
           user: payer.publicKey,
           escrowAccount: escrowState,
-          feedAggregator: solUsedSwitchboardFeed,
+          feedAggregator: SOL_FEED_PUBLIC_KEY,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([payer])
@@ -1347,18 +1384,18 @@ describe("burry-escrow", () => {
       await provider.connection.confirmTransaction(tx, "confirmed");
       console.log("Your transaction signature", tx);
     } catch (e) {
-      // verify tx returns expected error
       didFail = true;
-      console.log(e.error.errorMessage);
-      assert(
-        e.error.errorMessage ==
-          "Current SOL price is not above Escrow unlock price.",
+      console.error(e.error.errorMessage);
+      assert.strictEqual(
+        e.error.errorMessage,
+        "Current SOL price is not above Escrow unlock price."
       );
     }
 
-    assert(didFail);
+    assert(didFail, "The withdrawal should fail when the price is below the unlock price");
   });
 });
+
 ```
 
 If you feel confident in the testing logic, go ahead and run `anchor test` in
