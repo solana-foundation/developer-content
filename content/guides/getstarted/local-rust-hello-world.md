@@ -229,8 +229,7 @@ library.
 ### Install Node.js
 
 To use node in WSL2 on Windows, please follow this  
-[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl) to
-install node.
+[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl).
 
 ```shell
 sudo apt-get install curl
