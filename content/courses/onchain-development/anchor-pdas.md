@@ -37,9 +37,9 @@ reallocate accounts, and close accounts.
 
 ### PDAs with Anchor
 
-Recall that
-[PDAs](https://github.com/Unboxed-Software/solana-course/blob/main/content/pda)
-are derived using a list of optional seeds, a bump seed, and a program ID.
+PDAs store data, at addressed specified by the onchain programmer, using a list of 
+seeds, a bump seed, and a program ID.
+
 Anchor provides a convenient way to validate a PDA with the `seeds` and `bump`
 constraints.
 
