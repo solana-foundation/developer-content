@@ -599,7 +599,8 @@ address, you can generate a new program ID from the playground before deploying.
 You can test your program by submitting a transaction with the right instruction
 data. For that, feel free to use
 [this script](https://github.com/Unboxed-Software/solana-movie-client) or
-[the frontend](https://github.com/EmekaManuel/movie-review-dapp) we built in the
+[the frontend](https://github.com/solana-developers/movie-review-frontend) we
+built in the
 [Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md).
 In both cases, make sure you copy and paste the program ID for your program into
 the appropriate area of the source code to make sure you're testing the right
@@ -622,7 +623,7 @@ point where you can print the `name` and `message` provided by the user to the
 program logs when the program is invoked.
 
 You can test your program by building the
-[frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data)
+[frontend](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data)
 we created in the
 [Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md)
 and then checking the program logs on Solana Explorer. Remember to replace the
