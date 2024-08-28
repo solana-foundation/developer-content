@@ -102,7 +102,7 @@ to interact with and respond to real-world events. The Switchboard network is
 made up of many different individual oracles run by third parties to provide
 external data and service requests onchain. To learn more about Switchboard’s
 Oracle network, please refer to our
-[Oracle lesson](/developers/courses/connecting-to-offchain-data/oracles).
+[Oracle lesson](/content/courses/connecting-to-offchain-data/oracles.md)
 
 Switchboard's VRF allows users to request an oracle to produce a randomness
 output onchain. Once an oracle has been assigned the request, the proof of the
