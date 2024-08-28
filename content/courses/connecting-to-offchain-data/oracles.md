@@ -12,7 +12,7 @@ description: Access real-world data inside a Solana program.
 
 ## Summary
 
-- Oracles are services that provide external data to a blockchain network
+- oracles are services that provide external data to a blockchain network
 - There are many
   [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
 - You can build your own Oracle to create a custom data feed
@@ -21,10 +21,10 @@ description: Access real-world data inside a Solana program.
 ## Lesson
 
 [Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
-that provide external data to a blockchain network. The blockchains, by nature,
-is a siloed network that do not interact with external data. This constraint
+that provide external data to a blockchain network. The blockchain, by nature,
+is programmed to function independently without interacting with external data. This constraint
 inherently puts a limit on the use cases for decentralized applications (dApps).
-Oracles provide a solution to this limitation by creating a decentralized way to
+Oracles provides a solution to this limitation by creating a decentralized way to
 get real-world off-chain data onchain.
 
 Oracles can provide just about any type of external data. Examples include:
@@ -36,7 +36,7 @@ Oracles can provide just about any type of external data. Examples include:
 - Randomness
 
 While the exact implementation may differ from blockchain to blockchain,
-generally, Oracles work as follows:
+generally, oracles work as follows:
 
 1. Data is obtained from an off-chain source.
 2. That data is then published onchain via a transaction and stored in an
@@ -52,21 +52,21 @@ your Solana network.
 
 The primary hurdle oracles need to overcome is one of trust. Since blockchains
 execute irreversible financial transactions, developers and users alike need to
-know they can trust the validity and accuracy of Oracle data. The first step in
+know they can trust the validity and accuracy of oracle data. The first step in
 trusting an oracle is understanding how it's implemented.
 
 Broadly speaking, there are three implementation types:
 
 1. Single, centralized oracle publishes data onchain.
    - Pro: It’s simple; there's one source of truth.
-   - Con: nothing is stopping the Oracle provider from providing inaccurate
+   - Con: nothing is stopping the oracle provider from providing inaccurate
      data.
 2. A network of oracles publish data, and a consensus mechanism is used to
    determine the final result.
    - Pro: Consensus makes it less likely that bad data is pushed onchain.
    - Con: There is no way to disincentivize bad actors from publishing bad data
      and trying to sway the consensus.
-3. Oracle network with some kind of proof of stake mechanism. I.e. require
+3. racle network with some kind of proof of stake mechanism. I.e. require
    oracles to stake tokens to participate in the consensus mechanism. On every
    response, if an oracle deviates by some threshold from the accepted range of
    results, their stake is taken by the protocol, and they can no longer report.
@@ -95,13 +95,13 @@ consensus mechanism. By introducing a staking mechanism, it’s in the oracle
 providers' best interest to ensure their data is accurate to keep their staked
 funds.
 
-Even when an Oracle network claims to have such a consensus mechanism, be sure
+Even when an oracle network claims to have such a consensus mechanism, be sure
 to know the risks involved with using the network. If the total value involved
 in the downstream applications is greater than the oracle's allocated stake,
 oracles still may have sufficient incentive to collude.
 
-It is your job to know how the Oracle network is configured and judge if it can
-be trusted. Generally, Oracles should only be used for non-mission-critical
+It is your job to know how the oracle network is configured and judge if it can
+be trusted. Generally, oracles should only be used for non-mission-critical
 functions and worst-case scenarios should be accounted for.
 
 ### Oracles on Solana
@@ -114,13 +114,13 @@ and follow slightly different design choices.
 
 **Pyth** is primarily focused on financial data published from top-tier
 financial institutions. Pyth’s data providers publish the market data updates.
-These updates are then aggregated and published onchain by the Pyth program. The
+These updates are then aggregated and published onchain by the `Pyth` program. The
 data sourced from Pyth is not completely decentralized, as only approved data
 providers can publish data. The selling point of Pyth is that its data is vetted
 directly by the platform and sourced from financial institutions, ensuring
 higher quality.
 
-**Switchboard** is a completely decentralized Oracle network and has data of all
+**Switchboard** is a completely decentralized oracle network and has data of all
 kinds available. Check out all of the feeds
 [on their website](https://ondemand.switchboard.xyz/solana/devnet) Additionally,
 anyone can run a Switchboard oracle and consume their data. This means you'll
@@ -137,7 +137,7 @@ output along with a proof. If you’d like to learn more about TEEs, please read
 
 By introducing TEEs on top of stake-weighted oracles, Switchboard is able to
 verify each oracle’s software to allow participation in the network. If an
-Oracle operator acts maliciously and attempts to change the operation of the
+oracle operator acts maliciously and attempts to change the operation of the
 approved code; a data quote verification will fail. This allows Switchboard
 oracles to operate beyond quantitative value reporting, such as functions --
 running off-chain custom and confidential computations.
@@ -202,8 +202,8 @@ data is published onchain:
 
    Each oracle queue in the Switchboard network is independent and maintains its
    own configuration. The configuration influences its level of security. This
-   design choice enables users to tailor the Oracle queue's behavior to match
-   their specific use case. An Oracle queue is stored onchain as an account and
+   design choice enables users to tailor the oracle queue's behavior to match
+   their specific use case. An oracle queue is stored onchain as an account and
    contains metadata about the queue. A queue is created by invoking the
    [oracleQueueInit instruction](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/javascript/solana.js/src/generated/oracle-program/instructions/oracleQueueInit.ts#L13)
    on the Switchboard Solana program.
@@ -219,20 +219,20 @@ data is published onchain:
    - `max_size` - The maximum number of oracles a queue can support.
 
 2. Aggregator/data feed setup - The aggregator/feed account gets created. A feed
-   belongs to a single Oracle queue. The feed’s configuration dictates how
+   belongs to a single oracle queue. The feed’s configuration dictates how
    update requests are invoked and routed through the network.
 3. Job account setup - Besides the feed, a job account for each data source must
    be set up. This defines how oracles can fulfill the feed’s update requests.
    This includes defining where the oracles should fetch the data the feed is
    requesting.
 4. Request assignment - Once an update has been requested with the feed account,
-   the Oracle queue assigns the request to different oracles/nodes in the queue
+   the oracle queue assigns the request to different oracles/nodes in the queue
    to fulfill. The oracles will fetch the data from the data source defined in
    each of the feed’s job accounts. Each job account has a weight associated
    with it. The oracle will calculate the weighted median of the results from
    across all the jobs.
 5. After `minOracleResults` responses are received, the onchain program
-   calculates the result using the median of the oracle responses. Oracles who
+   calculates the result using the median of the oracle responses. Oracles that
    respond within the queue’s configured parameters are rewarded, while the
    oracles who respond outside this threshold are slashed (if the queue has  
     `slashingEnabled`).
@@ -263,9 +263,9 @@ The actual onchain data for a Switchboard feed account looks a little like this:
 // https://github.com/switchboard-xyz/sbv2-solana/blob/0b5e0911a1851f9ca37042e6ff88db4cd840067b/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs#L60
 
 pub struct AggregatorAccountData {
-    /// Name of the aggregator to store on-chain.
+    /// Name of the aggregator to store onchain.
     pub name: [u8; 32],
-    /// Metadata of the aggregator to store on-chain.
+    /// Metadata of the aggregator to store onchain.
     pub metadata: [u8; 128],
     /// Reserved.
     pub _reserved1: [u8; 32],
@@ -299,7 +299,7 @@ pub struct AggregatorAccountData {
     pub crank_pubkey: Pubkey,
     /// Latest confirmed update request result that has been accepted as valid.
     pub latest_confirmed_round: AggregatorRound,
-    /// Oracle results from the current round of update request that has not been accepted as valid yet.
+    /// oracle results from the current round of update request that has not been accepted as valid yet.
     pub current_round: AggregatorRound,
     /// List of public keys containing the job definitions for how data is sourced off-chain by oracles.
     pub job_pubkeys_data: [Pubkey; 16],
@@ -345,7 +345,7 @@ Some relevant fields and configurations you should consider on the
   accepts a result.
 - `variance_threshold` - This changes the percentage required for a previous
   round and the current round. If the variance percentage is not met, reject new
-  Oracle responses.
+  oracle responses.
 - `latest_confirmed_round` - This is the latest confirmed update request result
   that has been accepted as valid. This is where you will find the data of the
   feed in `latest_confirmed_round.result`.
@@ -385,7 +385,7 @@ program, things like this are very important to consider.
 Below are two of the jobs related to the BTC_USD feed. It shows two sources of
 data: [MEXC](https://www.mexc.com/) and [Coinbase](https://www.coinbase.com/).
 
-![Oracle Jobs](/public/assets/courses/unboxed/oracle-jobs.png)
+![oracle Jobs](/public/assets/courses/unboxed/oracle-jobs.png)
 
 Once you’ve chosen a feed to use, you can start reading the data in that feed.
 You do this by simply deserializing and reading the state stored in the account.
@@ -427,7 +427,7 @@ If you’d like to learn more, check out the
 where we touch on `Zero-Copy` and `AccountLoader`.
 
 With the aggregator account passed into your program, you can use it to get the
-latest Oracle results. Specifically, you can use the type's `get_result()`
+latest oracle results. Specifically, you can use the type's `get_result()`
 method:
 
 ```rust
@@ -522,21 +522,21 @@ feed.
 
 Always audit the configurations of a feed before deciding to incorporate it into
 a program. Configurations like **Min Update Delay**, **Min job Results**, and
-**Min Oracle Results** can directly affect the data that eventually persist
+**Min oracle Results** can directly affect the data that eventually persist
 onchain to the aggregator account. For example, looking at the config section of
 the
 [BTC_USD feed](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee)
 you can see its relevant configurations.
 
-![Oracle Configs](/public/assets/courses/unboxed/oracle-configs.png)
+![oracle Configs](/public/assets/courses/unboxed/oracle-configs.png)
 
 The BTC_USD feed has a Min Update Delay = 6 seconds. This means that the price
 of BTC is only updated at a minimum of every 6 seconds on this feed. This is
 probably fine for most use cases, but if you wanted to use this feed for
 something latency-sensitive, it’s probably not a good choice.
 
-It’s also worthwhile to audit a feed's sources in the Jobs section of the Oracle
-Explorer. Since the value that is persisted onchain is the weighted median
+It’s also worthwhile to audit a feed's sources in the Jobs section of the oracle
+Explorer. Since the value that is persisted, onchain is the weighted median
 result the oracles pull from each source, the sources directly influence what is
 stored in the feed. Check for shady links and potentially run the APIs yourself
 for a time to gain confidence in them.
@@ -1455,7 +1455,7 @@ just copying/pasting. Also, feel free to review the working code
 ### Challenge
 
 As an independent challenge, create a fallback plan if the data feed ever goes
-down. If the Oracle queue has not updated the aggregator account in X time or if
+down. If the oracle queue has not updated the aggregator account in X time or if
 the data feed account does not exist anymore, withdraw the user’s escrowed
 funds.
 
