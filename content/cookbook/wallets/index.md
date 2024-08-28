@@ -1,5 +1,5 @@
 ---
 metaOnly: true
 title: Wallets
-sidebarSortOrder: 1
+sidebarSortOrder: 2
 ---

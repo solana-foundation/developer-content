@@ -490,6 +490,17 @@ export const CourseRecord = defineDocumentType(() => ({
       type: "number",
       resolve: () => DEFAULT_PRIORITY,
     },
+
+    // Some of the Unboxed courses are out of date, so they are hidden from the
+    // UI (their URLs remain available to editors and users that know them)
+    // while we get them updated.
+    isHidden: {
+      type: "boolean",
+      description:
+        "Hide this course from the course list (does not affect URL availability)",
+      required: false,
+      default: false,
+    },
   },
 }));
 

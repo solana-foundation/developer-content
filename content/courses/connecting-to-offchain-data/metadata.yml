@@ -5,3 +5,6 @@ lessons:
   - oracles
   - verifiable-randomness-functions
 priority: 20
+# Uses out of date repos
+# TODO: Superteam to update
+isHidden: true
