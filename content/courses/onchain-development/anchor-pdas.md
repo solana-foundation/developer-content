@@ -230,7 +230,7 @@ To use `init_if_needed`, you must first enable the feature in `Cargo.toml`.
 
 ```rust
 [dependencies]
-anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 ```
 
 Once you’ve enabled the feature, you can include the constraint in the
