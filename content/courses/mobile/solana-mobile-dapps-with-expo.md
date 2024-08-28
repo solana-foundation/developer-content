@@ -73,12 +73,18 @@ speakers. The libraries are intuitive and the documentation is phenomenal.
 To get started with Expo, you first need the prerequisite setup described in the
 [Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md).
 After that, you'll want to sign up for an
-[Expo Application Services (EAS) account](https://expo.dev/).
+[Expo Application Services (EAS) account](https://expo.dev/signup).
 
 Once you have an EAS account, you can install the EAS CLI and log in:
 
 ```bash
+# For npm users
 npm install --global eas-cli
+
+# For yarn users
+yarn global add eas-cli
+
+# After installation, log in with:
 eas login
 ```
 
@@ -208,6 +214,22 @@ For a Solana + Expo app, you'll need the following:
   for `web3.js` underlying Crypto library on React Native.
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
 
+```bash
+# Using npm
+npm install @solana-mobile/mobile-wallet-adapter-protocol \
+            @solana-mobile/mobile-wallet-adapter-protocol-web3js \
+            @solana/web3.js \
+            react-native-get-random-values \
+            buffer
+
+# Using yarn
+yarn add @solana-mobile/mobile-wallet-adapter-protocol \
+         @solana-mobile/mobile-wallet-adapter-protocol-web3js \
+         @solana/web3.js \
+         react-native-get-random-values \
+         buffer
+```
+
 #### Metaplex Polyfills
 
 If you want to use the Metaplex SDK, you'll need to add the Metaplex library
@@ -223,6 +245,30 @@ plus a few additional polyfills:
   - `browserify-zlib`
   - `path-browserify`
   - `react-native-url-polyfill`
+
+  ```bash
+  # Using npm
+  npm install @metaplex-foundation/js@0.19.4 \
+            assert \
+            util \
+            crypto-browserify \
+            stream-browserify \
+            readable-stream \
+            browserify-zlib \
+            path-browserify \
+            react-native-url-polyfill
+            
+  # Using yarn
+  yarn add @metaplex-foundation/js@0.19.4 \
+         assert \
+         util \
+         crypto-browserify \
+         stream-browserify \
+         readable-stream \
+         browserify-zlib \
+         path-browserify \
+         react-native-url-polyfill
+  ```
 
 All of the libraries that the above polyfills are meant to replace are utilized
 by the Metaplex library in the background. It's unlikely you'll be importing any
@@ -293,12 +339,18 @@ it to run. We use 5GB of ram on our side.</Callout>
 To simplify the Expo process, you'll want an Expo Application Services (EAS)
 account. This will help you build and run the application.
 
-First sign up for an [EAS account](https://expo.dev/).
+First sign up for an [EAS account](https://expo.dev/signup).
 
 Then, install the EAS CLI and log in:
 
 ```bash
+# For npm users
 npm install --global eas-cli
+
+# For yarn users
+yarn global add eas-cli
+
+# After installation, log in with:
 eas login
 ```
 
@@ -336,7 +388,8 @@ Copy and paste the following into the newly created `eas.json`:
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": { "ANDROID_SDK_ROOT": "/path/to/AndroidSDK" }
     },
     "preview": {
       "distribution": "internal"
@@ -348,6 +401,10 @@ Copy and paste the following into the newly created `eas.json`:
   }
 }
 ```
+### **Important:**
+
+- Replace `"/path/to/AndroidSDK"` with the actual path to your Android SDK.
+- To find the SDK path, you can navigate to **Android Studio** > **SDK Manager** > **Android SDK Location**. Copy the path and replace it in the `ANDROID_SDK_ROOT` field.
 
 #### 4. Build and emulate
 
@@ -364,7 +421,7 @@ Locate this file in your file explorer and **_drag it_** into your emulator. The
 emulator should show a message that it is installing the new APK. When it
 finishes installing, you should see the APK as an app icon in the emulator.
 
-The app that was installed is just a scaffold app from Expo. The last thing
+The app that was installed is just a [Custom Dev Build](https://docs.expo.dev/develop/development-builds/introduction/) app from Expo. The last thing
 you'll need to do is run the following command to run the development server:
 
 ```bash
@@ -373,7 +430,7 @@ npx expo start --dev-client --android
 
 This should open and run the app in your Android emulator.
 
-**_NOTE_** Every time you add in new dependencies, you'll have to build and
+**_NOTE_** Every time you add in new native dependencies, you'll have to build and
 re-install the app. Anything visual or logic-based should be captured by the
 hot-reloader.
 
@@ -386,7 +443,7 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 #### 0. Install a Devnet-enabled Solana wallet
 
 You'll need a wallet that supports Devnet to test with. In
-[our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
+[our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive.md) we
 created one of these. Let's install it from the solution branch in a different
 directory from our app:
 
