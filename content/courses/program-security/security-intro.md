@@ -15,12 +15,12 @@ course off Coral's
 [Sealevel Attacks](https://github.com/coral-xyz/sealevel-attacks) repo.
 
 We've covered program security in our
-[Anchor](/developers/courses/onchain-development/) and
-[native Rust](/developers/courses/native-onchain-development/) development
-courses because we wanted to make sure that anyone deploying programs to Mainnet
-right out of the gates had at least a basic understanding of security. And if
-that’s you then hopefully the fundamental principles you learned in that lesson
-have led to you avoiding some common Solana exploits on your own.
+[Anchor](/content/courses/onchain-development.md) and
+[native Rust](/content/courses/native-onchain-development.md) development courses
+because we wanted to make sure that anyone deploying programs to Mainnet right
+out of the gates had at least a basic understanding of security. And if that’s
+you then hopefully the fundamental principles you learned in that lesson have
+led to you avoiding some common Solana exploits on your own.
 
 This unit is meant to build on top of that lesson with two goals in mind:
 
