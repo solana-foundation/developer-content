@@ -1,8 +1,7 @@
 ---
 title: How to create an NFT
 sidebarSortOrder: 15
-description:
-  "Learn how to create an NFT on Solana, using Arweave and Metaplex."
+description: "Learn how to create an NFT on Solana, using Arweave and Metaplex."
 ---
 
 To create an NFT you have to:
@@ -14,14 +13,14 @@ To create an NFT you have to:
 ### Upload to Arweave
 
 ```typescript filename="upload-to-arweave.ts"
-import fs from 'node:fs';
-import Arweave from 'arweave';
+import fs from "node:fs";
+import Arweave from "arweave";
 
 (async () => {
   const arweave = Arweave.init({
-    host: 'localhost',
+    host: "localhost",
     port: 1984,
-    protocol: 'http',
+    protocol: "http",
     timeout: 20000,
     logging: false,
   });
@@ -31,18 +30,18 @@ import Arweave from 'arweave';
   const protocol = arweave.getConfig().api.protocol;
 
   // Upload image to Arweave
-  const data = fs.readFileSync('./code/nfts/upload-arweave/lowres-dog.png');
+  const data = fs.readFileSync("./code/nfts/upload-arweave/lowres-dog.png");
 
   const transaction = await arweave.createTransaction({
     data: data,
   });
 
-  transaction.addTag('Content-Type', 'image/png');
+  transaction.addTag("Content-Type", "image/png");
 
   // const wallet = JSON.parse(fs.readFileSync("./code/nfts/upload-arweave/wallet.json", "utf-8"))
   const wallet = await arweave.wallets.generate();
   const addr = await arweave.wallets.getAddress(wallet);
-  console.log('address ', addr);
+  console.log("address ", addr);
 
   await arweave.api.get(`/mint/${encodeURI(addr)}/10000000000000000`);
   await arweave.transactions.sign(transaction, wallet);
@@ -52,38 +51,38 @@ import Arweave from 'arweave';
 
   const id = transaction.id;
   const imageUrl = id ? `${protocol}://${host}:${port}/${id}` : undefined;
-  console.log('imageUrl', imageUrl);
+  console.log("imageUrl", imageUrl);
 
   // Upload metadata to Arweave
 
   const metadata = {
-    name: 'Custom NFT #1',
-    symbol: 'CNFT',
-    description: 'A description about my custom NFT #1',
+    name: "Custom NFT #1",
+    symbol: "CNFT",
+    description: "A description about my custom NFT #1",
     seller_fee_basis_points: 500,
-    external_url: 'https://www.customnft.com/',
+    external_url: "https://www.customnft.com/",
     attributes: [
       {
-        trait_type: 'NFT type',
-        value: 'Custom',
+        trait_type: "NFT type",
+        value: "Custom",
       },
     ],
     collection: {
-      name: 'Test Collection',
-      family: 'Custom NFTs',
+      name: "Test Collection",
+      family: "Custom NFTs",
     },
     properties: {
       files: [
         {
           uri: imageUrl,
-          type: 'image/png',
+          type: "image/png",
         },
       ],
-      category: 'image',
+      category: "image",
       maxSupply: 0,
       creators: [
         {
-          address: 'CBBUMHRmbVUck99mTCip5sHP16kzGj3QTYB8K3XxwmQx',
+          address: "CBBUMHRmbVUck99mTCip5sHP16kzGj3QTYB8K3XxwmQx",
           share: 100,
         },
       ],
@@ -97,11 +96,11 @@ import Arweave from 'arweave';
     data: metadataRequest,
   });
 
-  metadataTransaction.addTag('Content-Type', 'application/json');
+  metadataTransaction.addTag("Content-Type", "application/json");
 
   await arweave.transactions.sign(metadataTransaction, wallet);
 
-  console.log('metadata txid', metadataTransaction.id);
+  console.log("metadata txid", metadataTransaction.id);
 
   console.log(await arweave.transactions.post(metadataTransaction));
 })();
@@ -110,64 +109,71 @@ import Arweave from 'arweave';
 ### Mint the NFT
 
 ```typescript filename="mint-nft.ts"
-import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
-import { 
-  generateSigner, 
-  percentAmount, 
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import {
+  generateSigner,
+  percentAmount,
   keypairIdentity,
-} from '@metaplex-foundation/umi';
-import { clusterApiUrl } from '@solana/web3.js'
-import { createNft, fetchDigitalAsset, mplTokenMetadata } from '@metaplex-foundation/mpl-token-metadata';
-import 'dotenv/config';
+} from "@metaplex-foundation/umi";
+import { clusterApiUrl } from "@solana/web3.js";
+import {
+  createNft,
+  fetchDigitalAsset,
+  mplTokenMetadata,
+} from "@metaplex-foundation/mpl-token-metadata";
+import "dotenv/config";
 
 (async () => {
   try {
-    console.log('Loading keypair from environment...');
-    const privateKey = JSON.parse(process.env.SOLANA_PRIVATE_KEY || '[]');
+    console.log("Loading keypair from environment...");
+    const privateKey = JSON.parse(process.env.SOLANA_PRIVATE_KEY || "[]");
     if (privateKey.length === 0) {
-      throw new Error('SOLANA_PRIVATE_KEY is not set in .env file');
+      throw new Error("SOLANA_PRIVATE_KEY is not set in .env file");
     }
 
-    console.log('Creating Umi instance...');
-    const umi = createUmi(clusterApiUrl('devnet'));
-    
-    const keypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(privateKey));
+    console.log("Creating Umi instance...");
+    const umi = createUmi(clusterApiUrl("devnet"));
+
+    const keypair = umi.eddsa.createKeypairFromSecretKey(
+      new Uint8Array(privateKey),
+    );
 
     // Use keypairIdentity to set the keypair as the signer
     const signer = keypairIdentity(keypair);
     umi.use(signer);
     umi.use(mplTokenMetadata());
 
-    console.log('Keypair loaded. Public key:', keypair.publicKey);
+    console.log("Keypair loaded. Public key:", keypair.publicKey);
 
-    console.log('Generating new mint address...');
+    console.log("Generating new mint address...");
     const mint = generateSigner(umi);
 
-    console.log('Creating NFT...');
+    console.log("Creating NFT...");
     const { signature } = await createNft(umi, {
       mint,
-      name: 'My NFT',
-      uri: 'https://ffaaqinzhkt4ukhbohixfliubnvpjgyedi3f2iccrq4efh3s.arweave.net/KUAIIbk6p8oo4XHRcq0U__C2r0mwQaNl0gQow4Qp9yk',
+      name: "My NFT",
+      uri: "https://ffaaqinzhkt4ukhbohixfliubnvpjgyedi3f2iccrq4efh3s.arweave.net/KUAIIbk6p8oo4XHRcq0U__C2r0mwQaNl0gQow4Qp9yk",
       maxSupply: 1,
       sellerFeeBasisPoints: percentAmount(5.5),
-      creators: [{
-        address: keypair.publicKey,
-        share: 100,
-        verified: true,
-      }],
+      creators: [
+        {
+          address: keypair.publicKey,
+          share: 100,
+          verified: true,
+        },
+      ],
     }).sendAndConfirm(umi);
 
-    console.log('NFT created successfully!');
-    console.log('Mint address:', mint.publicKey);
-    console.log('Transaction signature:', signature);
+    console.log("NFT created successfully!");
+    console.log("Mint address:", mint.publicKey);
+    console.log("Transaction signature:", signature);
 
-    console.log('Fetching digital asset...');
+    console.log("Fetching digital asset...");
     const asset = await fetchDigitalAsset(umi, mint.publicKey);
-    console.log('Digital Asset:', asset);
-
+    console.log("Digital Asset:", asset);
   } catch (error) {
-    console.error('Error:', error);
-    console.error('Stack trace:', error.stack);
+    console.error("Error:", error);
+    console.error("Stack trace:", error.stack);
   }
 })();
 ```
