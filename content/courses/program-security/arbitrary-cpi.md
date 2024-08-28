@@ -259,7 +259,7 @@ There is already a test in the `tests` directory for this. It's long, but take a
 minute to look at it before we talk through it together:
 
 ```typescript
-it("Insecure instructions allow attacker to win every time", async () => {
+test("Insecure instructions allow attacker to win every time", async () => {
   // Initialize player one with real metadata program
   await gameplayProgram.methods
     .createCharacterInsecure()
@@ -407,7 +407,7 @@ new test. This test just needs to attempt to initialize the attacker's character
 and expect an error to be thrown.
 
 ```typescript
-it("Secure character creation doesn't allow fake program", async () => {
+test("Secure character creation doesn't allow fake program", async () => {
   try {
     await gameplayProgram.methods
       .createCharacterSecure()
