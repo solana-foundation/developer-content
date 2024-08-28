@@ -71,7 +71,7 @@ speakers. The libraries are intuitive and the documentation is phenomenal.
 #### How to create an Expo app
 
 To get started with Expo, you first need the prerequisite setup described in the
-[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile).
+[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md).
 After that, you'll want to sign up for an
 [Expo Application Services (EAS) account](https://expo.dev/).
 
