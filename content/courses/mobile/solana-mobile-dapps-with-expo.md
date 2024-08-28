@@ -406,20 +406,27 @@ Copy and paste the following into the newly created `eas.json`:
 - Replace `"/path/to/AndroidSDK"` with the actual path to your Android SDK.
 - To find the SDK path, you can navigate to **Android Studio** > **SDK Manager** > **Android SDK Location**. Copy the path and replace it in the `ANDROID_SDK_ROOT` field.
 
-#### 4. Build and emulate
+#### 4. Build and Emulate
 
-Now let's build the project. You will choose `y` for every answer. This will
-take a while to complete.
+Now let's build the project. You will choose `y` for every answer. This will take a while to complete.
 
 ```bash
 npx eas build --profile development --platform android --local
 ```
 
-When the command is done, you will get an output file at the root of your
-directory. This file will have a naming format of `build-XXXXXXXXXXX.apk`.
-Locate this file in your file explorer and **_drag it_** into your emulator. The
-emulator should show a message that it is installing the new APK. When it
-finishes installing, you should see the APK as an app icon in the emulator.
+When the command is done, you will get an output file at the root of your directory. This file will have a naming format of `build-XXXXXXXXXXX.apk`. Locate this file in your file explorer and **_drag it_** into your emulator. The emulator should show a message that it is installing the new APK. When it finishes installing, you should see the APK as an app icon in the emulator.
+
+#### **Optional: Create a Remote Development Build**
+
+If you prefer to create the development build remotely using Expo's EAS services, you can skip the local build by using the following command:
+
+```bash
+npx eas build --profile development --platform android
+```
+
+- This command will upload your project to Expo's servers and create the development build in the cloud.
+- Once the build is complete, you will receive a download link to the APK. You can download the APK and install it on your emulator or device just like before.
+
 
 The app that was installed is just a [Custom Dev Build](https://docs.expo.dev/develop/development-builds/introduction/) app from Expo. The last thing
 you'll need to do is run the following command to run the development server:
