@@ -1,7 +1,7 @@
 ---
 sidebarLabel: Wallets
 title: Solana Wallet Guide
-sidebarSortOrder: 2
+sidebarSortOrder: 3
 ---
 
 This document describes the different wallet options that are available to users
