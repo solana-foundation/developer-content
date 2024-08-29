@@ -496,7 +496,10 @@ async function createNonceAccount(connection: Connection, payer: Keypair) {
     );
 
     // Send the transaction
-    await sendAndConfirmTransaction(connection, transaction, [payer, nonceKeypair]);
+    await sendAndConfirmTransaction(connection, transaction, [
+      payer,
+      nonceKeypair,
+    ]);
     console.log("Nonce account initialized successfully");
   } catch (error) {
     console.error("Error initializing nonce account:", error);
@@ -528,7 +531,6 @@ To create and submit a durable transaction we must follow these steps:
 We can put all of this together in our first test:
 
 ```typescript
-
 const AIRDROP_AMOUNT = 3 * LAMPORTS_PER_SOL;
 const MINIMUM_BALANCE = 1 * LAMPORTS_PER_SOL;
 const TRANSFER_AMOUNT = 0.1 * LAMPORTS_PER_SOL;
@@ -596,7 +598,6 @@ it("Creates a durable transaction and submits it", async () => {
       "Transaction Signature:",
       `https://explorer.solana.com/tx/${signature}?cluster=custom&customUrl=http%3A%2F%2Flocalhost%3A8899`,
     );
-
   } catch (error) {
     console.error("Error during transaction:", error);
     throw error;
@@ -620,7 +621,6 @@ Here is what we'll test:
 3. Try to submit the transaction, and it should fail.
 
 ```typescript
-
 const AIRDROP_AMOUNT = 3 * LAMPORTS_PER_SOL;
 const MINIMUM_BALANCE = 1 * LAMPORTS_PER_SOL;
 const TRANSFER_AMOUNT = 0.1 * LAMPORTS_PER_SOL;
@@ -692,9 +692,11 @@ it("Fails if the nonce has advanced", async () => {
 
     // Step 3: Try to submit the transaction, expecting it to fail due to nonce advancement.
     await assert.rejects(
-      sendAndConfirmRawTransaction(connection, deserializedTransaction as Buffer),
+      sendAndConfirmRawTransaction(
+        connection,
+        deserializedTransaction as Buffer,
+      ),
     );
-
   } catch (error) {
     console.error("Test failed:", error);
     throw error;
@@ -797,7 +799,6 @@ it("Advances the nonce account even if the transaction fails", async () => {
 
     // Verify that the nonce has advanced even though the transaction failed
     assert.notEqual(nonceBeforeAdvancing, nonceAfterAdvancing);
-
   } catch (error) {
     console.error("Test failed:", error);
     throw error;
@@ -826,7 +827,6 @@ authority did not sign the transaction.
 Let's see this in action.
 
 ```typescript
-
 const TRANSACTION_LAMPORTS = 0.1 * LAMPORTS_PER_SOL;
 const AIRDROP_AMOUNT = 3 * LAMPORTS_PER_SOL;
 const MINIMUM_BALANCE = 1 * LAMPORTS_PER_SOL;
@@ -920,9 +920,13 @@ it("Submits after changing the nonce authority to an already signed address", as
     );
 
     // Submit the transaction, which will now succeed
-    const transactionSignature = await sendAndConfirmRawTransaction(connection, deserializedTx as Buffer, {
-      skipPreflight: true,
-    });
+    const transactionSignature = await sendAndConfirmRawTransaction(
+      connection,
+      deserializedTx as Buffer,
+      {
+        skipPreflight: true,
+      },
+    );
 
     console.log(
       "Transaction Signature:",
