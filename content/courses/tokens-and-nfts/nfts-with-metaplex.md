@@ -19,7 +19,7 @@ description:
   files, any special traits the NFT has, and more.
 - The **Metaplex Token Metadata** program is an onchain program that attaches
   metadata to a token mint. We can interact with the Token Metadata program
-  using Umi and the
+  using the
   [Token Metadata package](https://developers.metaplex.com/token-metadata) via
   Umi, a tool made by Metaplex for working with onchain programs.
 
@@ -82,13 +82,13 @@ that's what we'll be using in this tutorial. </Callout>
 
 #### UMI instance
 
-Umi is a framework for making JS/TS clients for onchain program created by
-Metaplex. Umi can create JS/TS clients to many different programs, but in
+Umi is a framework for making JS/TS clients for onchain programs, that was
+created by Metaplex. Umi can create JS/TS clients for many programs, but in
 practice, it's most commonly used to communicate to the Token Metadata program.
 
-Note that Umi has different concepts for many concepts than web3.js, including
-Keypairs, PublicKeys, and Connections. However, it is easy to convert from
-web3.j versions of these items to the Umi versions.
+Note that Umi has different implementations for many concepts than web3.js,
+including Keypairs, PublicKeys, and Connections. However, it is easy to convert
+from web3.js versions of these items to the Umi equivalents.
 
 #### Installation and setting up Umi
 
@@ -245,7 +245,7 @@ await updateV1(umi, {
   authority: umi.identity,
   data: {
     ...nft,
-    sellerFeeBasisPoints: 100, // 1%
+    sellerFeeBasisPoints: 0,
     name: "Updated Name",
   },
   primarySaleHappened: true,
@@ -407,7 +407,7 @@ const user = await getKeypairFromFile();
 // convert to umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
-// load our plugins MPL metadata program plugins, Irys uploader and assign a signer to our umi instance
+// assigns a signer to our umi instance, and loads the MPL metadata program and Irys uploader plugins.
 umi
   .use(keypairIdentity(umiKeypair))
   .use(mplTokenMetadata())
@@ -502,7 +502,9 @@ Collection NFT address is: D2zi1QQmtZR5fk7wpA1Fmf6hTY2xy8xVMyNgfq6LsKy1
 ```
 
 Congratulations! You've created a Metaplex Collection. Check this out on Solana
-Explorer using the URL above.
+Explorer using the URL above which should resemble
+
+![Solana Explorer with details about created collection](/public/assets/courses/unboxed/solana-explorer-metaplex-collection.png)
 
 If you have any trouble, try and fix it yourself, but if you need to you can
 also check out the
@@ -631,25 +633,6 @@ let explorerLink = getExplorerLink("address", mint.publicKey, "devnet");
 console.log(`Token Mint:  ${explorerLink}`);
 ```
 
-Finally let's verify our mint as being part of our collection. This makes it so
-the `verified` field in the onchain metadata is set to `true`, so consuming
-programs and apps can know for sure that the NFT in fact belongs to the
-collection:
-
-```typescript
-// Verify our collection as a Certified Collection
-// See https://developers.metaplex.com/token-metadata/collections
-const metadata = findMetadataPda(umi, { mint: collectionAddress });
-await verifyCollectionV1(umi, {
-  metadata,
-  collectionMint: collectionAddress,
-  authority: umi.identity,
-}).sendAndConfirm(umi);
-
-console.log(`Created NFT address is`, mint.publicKey);
-console.log("✅ Finished successfully!");
-```
-
 Run `npx esrun create-metaplex-nft.ts`. If all goes well, you will see the
 following:
 
@@ -657,16 +640,110 @@ following:
 % npx esrun create-metaplex-nft.ts
 
 Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
-image uri: https://arweave.net/nVjCW_g-UMQUZano8vh-xPLX4nHwd5LsC8hXEuMdk_w
-NFT offchain metadata URI: https://arweave.net/N2HivyLiwRdb4CutMSM9aDXMSMyS0PF_VSuAfKGUhhI
-Token Mint:  https://explorer.solana.com/address/Zxd9TmtBHQNti6tJxtx1AKYJFykNUwJL4rth441CjRd?cluster=devnet
-Created NFT address is Zxd9TmtBHQNti6tJxtx1AKYJFykNUwJL4rth441CjRd
+image uri: https://arweave.net/XgTss3uKlddlMFjRTIvDiDLBv6Pptm-Vx9mz6Oe5f-o
+NFT offchain metadata URI: https://arweave.net/PK3Url31k4BYNvYOgTuYgWuCLrNjl5BrrF5lbY9miR8
+Token Mint:  https://explorer.solana.com/address/CymscdAwuTRjCz1ezsNZa15MnwGNrxhGUEToLFcyijMT?cluster=devnet
+Created NFT address is CymscdAwuTRjCz1ezsNZa15MnwGNrxhGUEToLFcyijMT
 ✅ Finished successfully!
 ```
 
 Inspect your NFT at the address given! If you have any trouble, try and fix it
 yourself, but if you need to you can also check out the
 [solution code](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/create-nft.ts).
+
+You should have something similar to this image on your explorer page
+![Solana Explorer with details about created NFT](/public/assets/courses/unboxed/solana-explorer-metaplex-nft.png)
+
+Finally, let's verify our mint as being part of our collection. This makes it so
+the `verified` field in the onchain metadata is set to `true`, so consuming
+programs and apps can know for sure that the NFT in fact belongs to the
+collection.
+
+Create a new file `verify-metaplex-nft.ts`, import the required libraries and
+instantiate a new umi Instance.
+
+```typescript
+import {
+  findMetadataPda,
+  mplTokenMetadata,
+  verifyCollectionV1,
+} from "@metaplex-foundation/mpl-token-metadata";
+import {
+  keypairIdentity,
+  publicKey as UMIPublicKey,
+} from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
+import {
+  airdropIfRequired,
+  getExplorerLink,
+  getKeypairFromFile,
+} from "@solana-developers/helpers";
+import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+
+// create a new connection to Solana's devnet cluster
+const connection = new Connection(clusterApiUrl("devnet"));
+
+// load keypair from local file system
+// assumes that the keypair is already generated using `solana-keygen new`
+const user = await getKeypairFromFile();
+console.log("Loaded user:", user.publicKey.toBase58());
+
+await airdropIfRequired(
+  connection,
+  user.publicKey,
+  1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL,
+);
+
+const umi = createUmi(connection);
+
+// Substitute in your collection NFT address from create-metaplex-collection.ts
+const collectionAddress = UMIPublicKey("");
+
+// Substitute in your NFT address from create-metaplex-nft.ts
+const nftAddress = UMIPublicKey("");
+```
+
+Verifying an NFT will require you to have the `collectionAddress` you used
+created in the creation of a collection stage, and we will use the
+`verifyCollectionV1` method.
+
+```typescript
+// Verify our collection as a Certified Collection
+// See https://developers.metaplex.com/token-metadata/collections
+const metadata = findMetadataPda(umi, { mint: nftAddress });
+await verifyCollectionV1(umi, {
+  metadata,
+  collectionMint: collectionAddress,
+  authority: umi.identity,
+}).sendAndConfirm(umi);
+
+let explorerLink = getExplorerLink("address", nftAddress, "devnet");
+console.log(`verified collection:  ${explorerLink}`);
+console.log("✅ Finished successfully!");
+```
+
+Run `npx esrun verify-metaplex-nft.ts`. If all goes well, you will see the
+following:
+
+```
+% npx esrun create-metaplex-nft.ts
+
+Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
+verified collection: https://explorer.solana.com/address/CymscdAwuTRjCz1ezsNZa15MnwGNrxhGUEToLFcyijMT?cluster=devnet
+✅ Finished successfully!
+```
+
+Inspect your verified NFT at the address given! If you have any trouble, try and
+fix it yourself, but if you need to you can also check out the
+[solution code](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/verify-nft.ts).
+
+The verified flag on your NFT should now be set to `1` -> `true` showing that
+it's verified. To confirm this, look under the metadata tab on the Solana
+Explorer to confirm that your NFT is verified as part of the collection.
+
+![Solana Explorer with details about created NFT](/public/assets/courses/unboxed/solana-explorer-verified-nft.png)
 
 Remember the NFT address, we'll use it in the next step.
 
@@ -741,7 +818,7 @@ const updatedNftData = {
   name: "Updated Asset",
   symbol: "UPDATED",
   description: "Updated Description",
-  sellerFeeBasisPoints: 100,
+  sellerFeeBasisPoints: 0,
   imageFile: "nft.png",
 };
 ```
@@ -778,7 +855,7 @@ await updateV1(umi, {
   authority: umi.identity,
   data: {
     ...nft,
-    sellerFeeBasisPoints: 100, // 1%
+    sellerFeeBasisPoints: 0,
     name: "Updated Asset",
   },
   primarySaleHappened: true,
