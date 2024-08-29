@@ -271,7 +271,7 @@ try {
   const explorerLink = getExplorerLink("transaction", transactionId, "devnet");
   console.log(`Transaction submitted: ${explorerLink}`);
 } catch (error) {
-  alert(JSON.stringify(error));
+  alert(error);
 }
 ```
 
@@ -282,7 +282,7 @@ submit a movie review and have it stored on Solana’s network. We’ll build th
 app a little bit at a time over the next few lessons, adding new functionality
 each lesson.
 
-![Movie review frontend](/public/assets/courses/superteam/movie-review-frontend-dapp.png)
+![Movie review frontend](/public/assets/courses/movie-review-dapp.png)
 
 Here's a quick diagram of the program we'll build:
 
@@ -294,7 +294,7 @@ The public key of the Solana program we’ll use for this application is
 #### 1. Download the starter code
 
 Before we get started, go ahead and download the
-[starter code](https://github.com/EmekaManuel/movie-review-dapp/tree/starter).
+[starter code](https://github.com/solana-developers/movie-review-frontend/tree/starter).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -575,7 +575,7 @@ successful.
 
 If you need a bit more time with this project to feel comfortable, have a look
 at the complete
-[solution code](https://github.com/EmekaManuel/movie-review-dapp/tree/solution-serialize-instruction-data).
+[solution code](https://github.com/solana-developers/movie-review-frontend/tree/solution-serialize-instruction-data).
 
 ## Challenge
 
@@ -583,10 +583,10 @@ Now it’s your turn to build something independently. Create an application tha
 lets students of this course introduce themselves! The Solana program that
 supports this is at `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](/public/assets/courses/student-intros-frontend.png)
 
 1. You can build this from scratch or you can
-   [download the starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/starter).
+   [download the starter code](https://github.com/solana-developers/solana-student-intro-frontend/tree/starter).
 2. Create the instruction buffer layout in `StudentIntro.ts`. The program
    expects instruction data to contain:
    1. `variant` as an unsigned, 8-bit integer representing the instruction to
@@ -604,7 +604,7 @@ supports this is at `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
    Explorer to verify that it worked.
 
 If you get stumped, you can
-[check out the solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data).
+[check out the solution code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data).
 
 Feel free to get creative with these challenges and take them even further. The
 instructions aren't here to hold you back!
