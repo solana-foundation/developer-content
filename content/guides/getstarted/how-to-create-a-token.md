@@ -264,15 +264,9 @@ created and uploaded.
 spl-token initialize-metadata mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ 'Example token' 'EXMPL' https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/CompressedCoil/metadata.json
 ```
 
-Congratulations, you created a token with metadata! Look at your token in one of
-the Solana block explorers:
-
-- [Solana Explorer](https://explorer.solana.com/address/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
-- [SolanaFM](https://solana.fm/?cluster=devnet-solana)
-- [SolScan](https://solscan.io/token/mntTymSqMU4e1NEDdxJ9XoPN4MitCgQ7xxGW6AuRAWQ?cluster=devnet)
-
-Make sure your explorer is set to devnet (if you are working on devnet) and
-replace the address to your mint address starting with `mnt`.
+Congratulations, you created a token with metadata! Look at your token's mint
+address (starting with `mnt`) in Solana Explorer - making sure to to use devnet
+(if you are working on devnet).
 
 ![Token with metadata](/assets/guides/make-a-token/token-with-metadata.png)
 
