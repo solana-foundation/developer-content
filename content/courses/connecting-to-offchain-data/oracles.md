@@ -414,27 +414,32 @@ You can also view the current value stored in an `AggregatorAccountData` account
 client-side in Typescript.
 
 ```typescript
-import { AggregatorAccount, SwitchboardProgram} from '@switchboard-xyz/solana.js'
+import { AggregatorAccount, SwitchboardProgram } from '@switchboard-xyz/solana.js';
+import { Keypair, Connection } from '@solana/web3.js';
 
-...
-...
-// create keypair for test user
-let user = new anchor.web3.Keypair()
+// Create keypair for test user
+const user = Keypair.generate();
 
-// fetch switchboard devnet program object
-switchboardProgram = await SwitchboardProgram.load(
-  "devnet",
-  new anchor.web3.Connection("https://api.devnet.solana.com"),
-  user
-)
+try {
+  // Fetch Switchboard Devnet program object
+  const switchboardProgram = await SwitchboardProgram.load(
+    'devnet',
+    new Connection('https://api.devnet.solana.com'),
+    user
+  );
 
-// pass switchboard program object and feed pubkey into AggregatorAccount constructor
-aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed)
+  // Pass Switchboard program object and feed pubkey into AggregatorAccount constructor
+  const aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed);
 
-// fetch latest SOL price
-const solPrice: Big | null = await aggregatorAccount.fetchLatestValue()
-if (solPrice === null) {
-  throw new Error('Aggregator holds no value')
+  // Fetch latest SOL price
+  const solPrice = await aggregatorAccount.fetchLatestValue();
+  if (solPrice === null) {
+    throw new Error('Aggregator holds no value');
+  }
+
+  console.log('Latest SOL price:', solPrice.toString());
+} catch (error) {
+  console.error('Error fetching SOL price:', error);
 }
 ```
 
@@ -1176,46 +1181,58 @@ import {
 import { assert } from "chai";
 
 export const solUsedSwitchboardFeed = new anchor.web3.PublicKey(
-  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 );
 
-describe("burry-escrow", () => {
-  // Configure the client to use the local cluster.
+describe("Burry Escrow", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const provider = anchor.AnchorProvider.env();
   const program = anchor.workspace.BurryEscrow as Program<BurryEscrow>;
   const payer = (provider.wallet as AnchorWallet).payer;
 
-  it("Create Burry Escrow Below Price", async () => {
-    // fetch switchboard devnet program object
-    const switchboardProgram = await SwitchboardProgram.load(
+  const ESCROW_IDENTIFIER = "MICHAEL BURRY";
+  const SOL_PRICE_DECREMENT = 10;
+  const SOL_PRICE_INCREMENT = 10;
+  const AMOUNT_TO_LOCK_UP = new anchor.BN(100);
+
+  async function fetchSwitchboardProgram() {
+    return await SwitchboardProgram.load(
       "devnet",
       new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer,
+      payer
     );
-    const aggregatorAccount = new AggregatorAccount(
-      switchboardProgram,
-      solUsedSwitchboardFeed,
-    );
+  }
 
-    // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
+  async function deriveEscrowState() {
+    return await anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(ESCROW_IDENTIFIER), payer.publicKey.toBuffer()],
+      program.programId
     );
+  }
 
-    // fetch latest SOL price
+  async function fetchSolPrice(aggregatorAccount: AggregatorAccount) {
     const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
     if (solPrice === null) {
       throw new Error("Aggregator holds no value");
     }
-    const failUnlockPrice = solPrice.minus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100);
+    return solPrice;
+  }
 
-    // Send transaction
+  it("Create Burry Escrow Below Price", async () => {
+    const switchboardProgram = await fetchSwitchboardProgram();
+    const aggregatorAccount = new AggregatorAccount(
+      switchboardProgram,
+      solUsedSwitchboardFeed
+    );
+
+    const [escrowState] = await deriveEscrowState();
+
+    const solPrice = await fetchSolPrice(aggregatorAccount);
+    const failUnlockPrice = solPrice.minus(SOL_PRICE_DECREMENT).toNumber();
+
     try {
-      const tx = await program.methods
-        .deposit(amountToLockUp, failUnlockPrice)
+      const transactionSignature = await program.methods
+        .deposit(AMOUNT_TO_LOCK_UP, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
           escrowAccount: escrowState,
@@ -1224,36 +1241,32 @@ describe("burry-escrow", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
+      await provider.connection.confirmTransaction(
+        transactionSignature,
+        "confirmed"
+      );
 
-      // Fetch the created account
       const newAccount = await program.account.escrowState.fetch(escrowState);
-
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
-        "confirmed",
+        "confirmed"
       );
+
       console.log("Onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data onchain is equal to local 'data'
-      assert(failUnlockPrice == newAccount.unlockPrice);
+      assert(failUnlockPrice === newAccount.unlockPrice);
       assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
+    } catch (error) {
+      console.error(error);
+      assert.fail(error);
     }
   });
 
-  it("Withdraw from escrow", async () => {
-    // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
+  it("Withdraw from Escrow", async () => {
+    const [escrowState] = await deriveEscrowState();
 
-    // send tx
-    const tx = await program.methods
+    const transactionSignature = await program.methods
       .withdraw()
       .accounts({
         user: payer.publicKey,
@@ -1264,13 +1277,15 @@ describe("burry-escrow", () => {
       .signers([payer])
       .rpc();
 
-    await provider.connection.confirmTransaction(tx, "confirmed");
+    await provider.connection.confirmTransaction(
+      transactionSignature,
+      "confirmed"
+    );
 
-    // assert that the escrow account has been closed
     let accountFetchDidFail = false;
     try {
       await program.account.escrowState.fetch(escrowState);
-    } catch (e) {
+    } catch (error) {
       accountFetchDidFail = true;
     }
 
@@ -1278,36 +1293,21 @@ describe("burry-escrow", () => {
   });
 
   it("Create Burry Escrow Above Price", async () => {
-    // fetch switchboard devnet program object
-    const switchboardProgram = await SwitchboardProgram.load(
-      "devnet",
-      new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer,
-    );
+    const switchboardProgram = await fetchSwitchboardProgram();
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      solUsedSwitchboardFeed,
+      solUsedSwitchboardFeed
     );
 
-    // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
-    console.log("Escrow Account: ", escrowState.toBase58());
+    const [escrowState] = await deriveEscrowState();
+    console.log("Escrow Account:", escrowState.toBase58());
 
-    // fetch latest SOL price
-    const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
-    if (solPrice === null) {
-      throw new Error("Aggregator holds no value");
-    }
-    const failUnlockPrice = solPrice.plus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100);
+    const solPrice = await fetchSolPrice(aggregatorAccount);
+    const failUnlockPrice = solPrice.plus(SOL_PRICE_INCREMENT).toNumber();
 
-    // Send transaction
     try {
-      const tx = await program.methods
-        .deposit(amountToLockUp, failUnlockPrice)
+      const transactionSignature = await program.methods
+        .deposit(AMOUNT_TO_LOCK_UP, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
           escrowAccount: escrowState,
@@ -1316,40 +1316,36 @@ describe("burry-escrow", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx);
+      await provider.connection.confirmTransaction(
+        transactionSignature,
+        "confirmed"
+      );
+      console.log("Your transaction signature:", transactionSignature);
 
-      // Fetch the created account
       const newAccount = await program.account.escrowState.fetch(escrowState);
-
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
-        "confirmed",
+        "confirmed"
       );
+
       console.log("Onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data onchain is equal to local 'data'
-      assert(failUnlockPrice == newAccount.unlockPrice);
+      assert(failUnlockPrice === newAccount.unlockPrice);
       assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
+    } catch (error) {
+      console.error(error);
+      assert.fail(error);
     }
   });
 
-  it("Attempt to withdraw while price is below UnlockPrice", async () => {
+  it("Attempt to Withdraw while Price is Below Unlock Price", async () => {
     let didFail = false;
 
-    // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
+    const [escrowState] = await deriveEscrowState();
 
-    // send tx
     try {
-      const tx = await program.methods
+      const transactionSignature = await program.methods
         .withdraw()
         .accounts({
           user: payer.publicKey,
@@ -1360,15 +1356,17 @@ describe("burry-escrow", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx);
-    } catch (e) {
-      // verify tx returns expected error
+      await provider.connection.confirmTransaction(
+        transactionSignature,
+        "confirmed"
+      );
+      console.log("Your transaction signature:", transactionSignature);
+    } catch (error) {
       didFail = true;
-      console.log(e.error.errorMessage);
+      console.error(error.errorMessage);
       assert(
-        e.error.errorMessage ==
-          "Current SOL price is not above Escrow unlock price.",
+        error.errorMessage ===
+          "Current SOL price is not above Escrow unlock price."
       );
     }
 
