@@ -1091,17 +1091,21 @@ through the code for each of them and then show you the entire file at the end:
    the resulting `publicKey` into the state.
 
    ```tsx
-   const connect = () => {
-     if (isLoading) return;
+    const connect = async () => {
+    try {
+      if (isLoading) return;
 
-     setIsLoading(true);
-     transact(async wallet => {
-       const auth = await authorizeSession(wallet);
-       setAccount(auth);
-     }).finally(() => {
-       setIsLoading(false);
-     });
-   };
+      setIsLoading(true);
+      await transact(async (wallet) => {
+        const auth = await authorizeSession(wallet);
+        setAccount(auth);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
    ```
 
 2. `fetchNFTs` - This function will fetch the NFTs using Metaplex:
@@ -1152,50 +1156,58 @@ through the code for each of them and then show you the entire file at the end:
 
    ```tsx
    // https://nft.storage/api-docs/
-   const uploadImage = async (fileUri: string): Promise<string> => {
-     const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
-       fileUri,
-       "base64",
-     );
-     const bytes = Buffer.from(imageBytesInBase64, "base64");
+   const uploadImage = async (fileUri: string): Promise<string | undefined> => {
+    try {
+      const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
+        fileUri,
+        "base64"
+      );
+      const bytes = Buffer.from(imageBytesInBase64, "base64");
 
-     const response = await fetch("https://api.nft.storage/upload", {
-       method: "POST",
-       headers: {
-         Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-         "Content-Type": "image/jpg",
-       },
-       body: bytes,
-     });
+      const response = await fetch("https://api.nft.storage/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+          "Content-Type": "image/jpg",
+        },
+        body: bytes,
+      });
 
-     const data = await response.json();
-     const cid = data.value.cid;
+      const data = await response.json();
+      const cid = data.value.cid;
 
-     return cid as string;
-   };
+      return cid as string;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-   const uploadMetadata = async (
-     name: string,
-     description: string,
-     imageCID: string,
-   ): Promise<string> => {
-     const response = await fetch("https://api.nft.storage/upload", {
-       method: "POST",
-       headers: {
-         Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-       },
-       body: JSON.stringify({
-         name,
-         description,
-         image: `https://ipfs.io/ipfs/${imageCID}`,
-       }),
-     });
+  const uploadMetadata = async (
+    name: string,
+    description: string,
+    imageCID: string
+  ): Promise<string | undefined> => {
+    try {
+      const response = await fetch("https://api.nft.storage/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+        },
+        body: JSON.stringify({
+          name,
+          description,
+          image: `https://ipfs.io/ipfs/${imageCID}`,
+        }),
+      });
 
-     const data = await response.json();
-     const cid = data.value.cid;
+      const data = await response.json();
+      const cid = data.value.cid;
 
-     return cid;
-   };
+      return cid;
+    } catch (error) {
+      console.log(error);
+    }
+  };
    ```
 
    Minting the NFT after the image and metadata have been uploaded is as simple
@@ -1299,16 +1311,20 @@ export function NFTProvider(props: NFTProviderProps) {
 
   const { metaplex } = useMetaplex(connection, account, authorizeSession);
 
-  const connect = () => {
-    if (isLoading) return;
+  const connect = async () => {
+    try {
+      if (isLoading) return;
 
-    setIsLoading(true);
-    transact(async wallet => {
-      const auth = await authorizeSession(wallet);
-      setAccount(auth);
-    }).finally(() => {
+      setIsLoading(true);
+      await transact(async (wallet) => {
+        const auth = await authorizeSession(wallet);
+        setAccount(auth);
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
       setIsLoading(false);
-    });
+    }
   };
 
   const fetchNFTs = async () => {
@@ -1322,14 +1338,15 @@ export function NFTProvider(props: NFTProviderProps) {
       });
 
       const loadedNFTs = await Promise.all(
-        nfts.map(nft => {
+        nfts.map((nft) => {
           return metaplex.nfts().load({ metadata: nft as Metadata });
-        }),
+        })
       );
+
       setLoadedNFTs(loadedNFTs);
 
       // Check if we already took a snapshot today
-      const nftOfTheDayIndex = loadedNFTs.findIndex(nft => {
+      const nftOfTheDayIndex = loadedNFTs.findIndex((nft) => {
         return formatDate(new Date(Date.now())) === nft.name;
       });
 
@@ -1344,70 +1361,79 @@ export function NFTProvider(props: NFTProviderProps) {
   };
 
   // https://nft.storage/api-docs/
-  const uploadImage = async (fileUri: string): Promise<string> => {
-    const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
-      fileUri,
-      "base64",
-    );
-    const bytes = Buffer.from(imageBytesInBase64, "base64");
+  const uploadImage = async (fileUri: string): Promise<string | undefined> => {
+    try {
+      const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
+        fileUri,
+        "base64"
+      );
+      const bytes = Buffer.from(imageBytesInBase64, "base64");
 
-    const response = await fetch("https://api.nft.storage/upload", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-        "Content-Type": "image/jpg",
-      },
-      body: bytes,
-    });
+      const response = await fetch("https://api.nft.storage/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+          "Content-Type": "image/jpg",
+        },
+        body: bytes,
+      });
 
-    const data = await response.json();
-    const cid = data.value.cid;
+      const data = await response.json();
+      const cid = data.value.cid;
 
-    return cid as string;
+      return cid as string;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const uploadMetadata = async (
     name: string,
     description: string,
-    imageCID: string,
-  ): Promise<string> => {
-    const response = await fetch("https://api.nft.storage/upload", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-      },
-      body: JSON.stringify({
-        name,
-        description,
-        image: `https://ipfs.io/ipfs/${imageCID}`,
-      }),
-    });
+    imageCID: string
+  ): Promise<string | undefined> => {
+    try {
+      const response = await fetch("https://api.nft.storage/upload", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+        },
+        body: JSON.stringify({
+          name,
+          description,
+          image: `https://ipfs.io/ipfs/${imageCID}`,
+        }),
+      });
 
-    const data = await response.json();
-    const cid = data.value.cid;
+      const data = await response.json();
+      const cid = data.value.cid;
 
-    return cid;
+      return cid;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const createNFT = async (
     name: string,
     description: string,
-    fileUri: string,
+    fileUri: string
   ) => {
     if (!metaplex || !account || isLoading) return;
 
     setIsLoading(true);
     try {
       const imageCID = await uploadImage(fileUri);
-      const metadataCID = await uploadMetadata(name, description, imageCID);
+      if (imageCID) {
+        const metadataCID = await uploadMetadata(name, description, imageCID);
+        const nft = await metaplex.nfts().create({
+          uri: `https://ipfs.io/ipfs/${metadataCID}`,
+          name: name,
+          sellerFeeBasisPoints: 0,
+        });
 
-      const nft = await metaplex.nfts().create({
-        uri: `https://ipfs.io/ipfs/${metadataCID}`,
-        name: name,
-        sellerFeeBasisPoints: 0,
-      });
-
-      setNftOfTheDay(nft.nft);
+        setNftOfTheDay(nft.nft);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -1606,25 +1632,29 @@ export function MainScreen() {
     });
   }, [nftOfTheDay]);
 
-  const mintNFT = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setCurrentImage({
-        uri: result.assets[0].uri,
-        date: todaysDate,
+   const mintNFT = async () => {
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
       });
 
-      createNFT(
-        formatDate(todaysDate),
-        `${todaysDate.getTime()}`,
-        result.assets[0].uri,
-      );
+      if (!result.canceled) {
+        setCurrentImage({
+          uri: result.assets[0].uri,
+          date: todaysDate,
+        });
+
+        createNFT(
+          formatDate(todaysDate),
+          `${todaysDate.getTime()}`,
+          result.assets[0].uri
+        );
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
