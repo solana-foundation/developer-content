@@ -248,7 +248,7 @@ plus a few additional polyfills:
   - `react-native-url-polyfill`
   - `react-native-quick-crypto`
 
-  ```bash
+```bash
   # Using npm
   npm install @metaplex-foundation/js@0.19.4 \
             assert \
