@@ -20,12 +20,12 @@ description: Access real-world data inside a Solana program.
 
 ## Lesson
 
-[Oracles](https://www.alchemy.com/list-of/decentralized-oracles-on-solana) are services
-that provide external data to a blockchain network. Blockchains by nature are
-siloed environments that do not know the outside world. This constraint
-inherently puts a limit on the use cases for decentralized applications (dApps).
-Oracles provide a solution to this limitation by creating a decentralized way to
-get real-world data onchain.
+[Oracles](https://www.alchemy.com/list-of/decentralized-oracles-on-solana) are
+services that provide external data to a blockchain network. Blockchains by
+nature are siloed environments that do not know the outside world. This
+constraint inherently puts a limit on the use cases for decentralized
+applications (dApps). Oracles provide a solution to this limitation by creating
+a decentralized way to get real-world data onchain.
 
 Oracles can provide just about any type of data onchain. Examples include:
 
@@ -58,12 +58,12 @@ Broadly speaking, there are three implementation types:
 1. Single, centralized oracle publishes data onchain.
    - Pro: It’s simple; there's one source of truth.
    - Con: nothing is stopping the oracle provider from providing inaccurate
-      data.
+     data.
 2. Network of oracles publish data and a consensus mechanism is used to
    determine the final result.
    - Pro: Consensus makes it less likely that bad data is pushed onchain.
    - Con: There is no way to disincentivize bad actors from publishing bad data
-      and trying to sway the consensus.
+     and trying to sway the consensus.
 3. Oracle network with some kind of proof of stake mechanism. I.e. require
    oracles to stake tokens to participate in the consensus mechanism. On every
    response, if an oracle deviates by some threshold from the accepted range of
@@ -414,8 +414,11 @@ You can also view the current value stored in an `AggregatorAccountData` account
 client-side in Typescript.
 
 ```typescript
-import { AggregatorAccount, SwitchboardProgram } from '@switchboard-xyz/solana.js';
-import { Keypair, Connection } from '@solana/web3.js';
+import {
+  AggregatorAccount,
+  SwitchboardProgram,
+} from "@switchboard-xyz/solana.js";
+import { Keypair, Connection } from "@solana/web3.js";
 
 // Create keypair for test user
 const user = Keypair.generate();
@@ -423,23 +426,26 @@ const user = Keypair.generate();
 try {
   // Fetch Switchboard Devnet program object
   const switchboardProgram = await SwitchboardProgram.load(
-    'devnet',
-    new Connection('https://api.devnet.solana.com'),
-    user
+    "devnet",
+    new Connection("https://api.devnet.solana.com"),
+    user,
   );
 
   // Pass Switchboard program object and feed pubkey into AggregatorAccount constructor
-  const aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed);
+  const aggregatorAccount = new AggregatorAccount(
+    switchboardProgram,
+    solUsedSwitchboardFeed,
+  );
 
   // Fetch latest SOL price
   const solPrice = await aggregatorAccount.fetchLatestValue();
   if (solPrice === null) {
-    throw new Error('Aggregator holds no value');
+    throw new Error("Aggregator holds no value");
   }
 
-  console.log('Latest SOL price:', solPrice.toString());
+  console.log("Latest SOL price:", solPrice.toString());
 } catch (error) {
-  console.error('Error fetching SOL price:', error);
+  console.error("Error fetching SOL price:", error);
 }
 ```
 
@@ -719,7 +725,6 @@ have the following files within the `programs/src` directory:
 
 - `lib.rs`
 
-
 ### 2. `lib.rs`
 
 Before we write any logic, we are going to set up all of our boilerplate
@@ -727,12 +732,11 @@ information. Starting with `lib.rs`. Our actual logic will live in the
 `/instructions` directory.
 
 The `lib.rs` file will still serve as the entry point to our program, but the
-logic for each instruction will be contained in their own separate file. It will define
-the API endpoints that all transactions must go through.
+logic for each instruction will be contained in their own separate file. It will
+define the API endpoints that all transactions must go through.
 
-Go
-ahead and create the program architecture described above and we’ll get started.
-
+Go ahead and create the program architecture described above and we’ll get
+started.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -1213,7 +1217,7 @@ import {
 import { assert } from "chai";
 
 export const solUsedSwitchboardFeed = new anchor.web3.PublicKey(
-  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
+  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
 );
 
 describe("Burry Escrow", () => {
@@ -1231,14 +1235,14 @@ describe("Burry Escrow", () => {
     return await SwitchboardProgram.load(
       "devnet",
       new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer
+      payer,
     );
   }
 
   async function deriveEscrowState() {
     return await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_IDENTIFIER), payer.publicKey.toBuffer()],
-      program.programId
+      program.programId,
     );
   }
 
@@ -1254,7 +1258,7 @@ describe("Burry Escrow", () => {
     const switchboardProgram = await fetchSwitchboardProgram();
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      solUsedSwitchboardFeed
+      solUsedSwitchboardFeed,
     );
 
     const [escrowState] = await deriveEscrowState();
@@ -1275,13 +1279,13 @@ describe("Burry Escrow", () => {
 
       await provider.connection.confirmTransaction(
         transactionSignature,
-        "confirmed"
+        "confirmed",
       );
 
       const newAccount = await program.account.escrowState.fetch(escrowState);
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
-        "confirmed"
+        "confirmed",
       );
 
       console.log("Onchain unlock price:", newAccount.unlockPrice);
@@ -1311,7 +1315,7 @@ describe("Burry Escrow", () => {
 
     await provider.connection.confirmTransaction(
       transactionSignature,
-      "confirmed"
+      "confirmed",
     );
 
     let accountFetchDidFail = false;
@@ -1328,7 +1332,7 @@ describe("Burry Escrow", () => {
     const switchboardProgram = await fetchSwitchboardProgram();
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      solUsedSwitchboardFeed
+      solUsedSwitchboardFeed,
     );
 
     const [escrowState] = await deriveEscrowState();
@@ -1350,14 +1354,14 @@ describe("Burry Escrow", () => {
 
       await provider.connection.confirmTransaction(
         transactionSignature,
-        "confirmed"
+        "confirmed",
       );
       console.log("Your transaction signature:", transactionSignature);
 
       const newAccount = await program.account.escrowState.fetch(escrowState);
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
-        "confirmed"
+        "confirmed",
       );
 
       console.log("Onchain unlock price:", newAccount.unlockPrice);
@@ -1390,7 +1394,7 @@ describe("Burry Escrow", () => {
 
       await provider.connection.confirmTransaction(
         transactionSignature,
-        "confirmed"
+        "confirmed",
       );
       console.log("Your transaction signature:", transactionSignature);
     } catch (error) {
@@ -1398,7 +1402,7 @@ describe("Burry Escrow", () => {
       console.error(error.errorMessage);
       assert(
         error.errorMessage ===
-          "Current SOL price is not above Escrow unlock price."
+          "Current SOL price is not above Escrow unlock price.",
       );
     }
 
