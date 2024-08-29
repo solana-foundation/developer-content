@@ -14,8 +14,8 @@ to Solana development. We’ve modeled this course heavily on Coral's
 [Sealevel Attacks](https://github.com/coral-xyz/sealevel-attacks) repository.
 
 Program security is covered in our
-[Anchor](/developers/courses/onchain-development/) and
-[Native Rust](/developers/courses/native-onchain-development/) development
+[Anchor](/content/courses/onchain-development.md) and
+[Native Rust](/content/courses/native-onchain-development.md) development
 courses to ensure that anyone deploying programs to Mainnet has at least a basic
 understanding of security. If that’s you, the fundamental principles you learned
 in those lessons should help you avoid some common Solana exploits on your own.
