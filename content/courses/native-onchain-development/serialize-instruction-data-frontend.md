@@ -404,19 +404,6 @@ import { FC } from "react";
 import { Movie } from "../models/Movie";
 import { useState } from "react";
 import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Textarea,
-} from "@chakra-ui/react";
-import {
   Connection,
   PublicKey,
   SystemProgram,
@@ -434,7 +421,6 @@ Next, before the `handleSubmit` function, call `useConnection()` to get a
 import { FC } from 'react'
 import { Movie } from '../models/Movie'
 import { useState } from 'react'
-import { Box, Button, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Textarea } from '@chakra-ui/react'
 import {
   Connection,
   PublicKey,
