@@ -207,13 +207,13 @@ you’re just jumping into this lesson without having looked at the previous
 ones - as long as you have the prerequisite knowledge, you should be able to
 follow the lab without having worked in this specific project yet.
 
-![movie review frontend](/public/assets/courses/superteam/movie-review-frontend-dapp.png)
+![movie review frontend](/public/assets/courses/movie-review-frontend-dapp.png)
 
 #### **1. Download the starter code**
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can download the
-[starter code](https://github.com/EmekaManuel/movie-review-dapp/tree/solutions-deserialize-account-data).
+[starter code](https://github.com/solana-developers/movie-review-frontend/tree/solutions-deserialize-account-data).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -269,10 +269,10 @@ the body of `prefetchAccounts` to do this and set the retrieved public keys to
 the static `accounts` property.
 
 ```tsx
-static async prefetchAccounts(connection: web3.Connection) {
+static async prefetchAccounts(connection: Connection) {
   try {
     const accounts = await connection.getProgramAccounts(
-      new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+      new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
       {
         dataSlice: { offset: 0, length: 0 },
       }
@@ -337,12 +337,21 @@ With that done, we can reconfigure `MovieList` to use these methods. In
 instead of fetching the accounts inline.
 
 ```tsx
-const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+const connection = new Connection(clusterApiUrl("devnet"));
 const [movies, setMovies] = useState<Movie[]>([]);
 const [page, setPage] = useState(1);
 
 useEffect(() => {
-  MovieCoordinator.fetchPage(connection, page, 10).then(setMovies);
+  const fetchMovies = async () => {
+    try {
+      const movies = await MovieCoordinator.fetchPage(connection, page, 10);
+      setMovies(movies);
+    } catch (error) {
+      console.error("Failed to fetch movies:", error);
+    }
+  };
+
+  fetchMovies();
 }, [page, connection]);
 ```
 
@@ -351,21 +360,29 @@ different pages:
 
 ```tsx
 return (
-  <div>
+  <div className="py-5 flex flex-col w-fullitems-center justify-center">
     {movies.map((movie, i) => (
       <Card key={i} movie={movie} />
     ))}
-    <Center>
-      <HStack w="full" mt={2} mb={8} ml={4} mr={4}>
-        {page > 1 && (
-          <Button onClick={() => setPage(page - 1)}>Previous</Button>
-        )}
-        <Spacer />
-        {MovieCoordinator.accounts.length > page * 2 && (
-          <Button onClick={() => setPage(page + 1)}>Next</Button>
-        )}
-      </HStack>
-    </Center>
+
+    <div className="flex justify-between mt-4">
+      {page > 1 && (
+        <button
+          onClick={() => setPage(page - 1)}
+          className="px-6 py-2 bg-gray-300 text-black font-semibold rounded"
+        >
+          Previous
+        </button>
+      )}
+      {movies.length === 5 && (
+        <button
+          onClick={() => setPage(page + 1)}
+          className="px-6 py-2 bg-gray-300 text-black font-semibold rounded"
+        >
+          Next
+        </button>
+      )}
+    </div>
   </div>
 );
 ```
@@ -400,14 +417,16 @@ Now that we’ve thought through this, let’s modify the implementation of
 `prefetchAccounts` in `MovieCoordinator`:
 
 ```tsx
-static async prefetchAccounts(connection: web3.Connection, filters: AccountFilter[]) {
-  try {
-    const accounts = await connection.getProgramAccounts(
-    new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
-    {
-      dataSlice: { offset: 2, length: 18 },
-    }
-    )
+static async prefetchAccounts(connection: Connection) {
+    const accounts = (await connection.getProgramAccounts(
+      new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+      {
+        dataSlice: { offset: 2, length: 18 },
+      }
+    )) as Array<{
+      pubkey: PublicKey;
+      account: AccountInfo<Buffer>;
+    }>;
 
   accounts.sort((a, b) => {
     try {
@@ -460,9 +479,9 @@ import bs58 from 'bs58'
 
 ...
 
-static async prefetchAccounts(connection: web3.Connection, search: string) {
+static async prefetchAccounts(connection: Connection, search: string) {
   const accounts = (await connection.getProgramAccounts(
-      new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+      new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
       {
         dataSlice: { offset: 2, length: 18 },
         filters:
@@ -478,8 +497,8 @@ static async prefetchAccounts(connection: web3.Connection, search: string) {
               ],
       }
     )) as Array<{
-      pubkey: web3.PublicKey;
-      account: web3.AccountInfo<Buffer>;
+      pubkey: PublicKey;
+      account: AccountInfo<Buffer>;
     }>;
 
  accounts.sort((a, b) => {
@@ -538,16 +557,16 @@ static async fetchPage(
     paginatedPublicKeys
   );
 
-  const movies = accounts.reduce((accum: Movie[], account) => {
+  const movies = accounts.reduce((accumulator: Movie[], account) => {
     try {
       const movie = Movie.deserialize(account?.data);
       if (movie) {
-        accum.push(movie);
+        accumulator.push(movie);
       }
     } catch (error) {
         console.error('Error deserializing movie data: ', error);
       }
-    return accum;
+    return accumulator;
   }, []);
 
   return movies;
@@ -561,15 +580,28 @@ calls. Then update the call to `MovieCoordinator.fetchPage` in the `useEffect`
 to pass the `search` parameter and to reload when `search !== ''`.
 
 ```tsx
-const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+const connection = new Connection(clusterApiUrl("devnet"));
 const [movies, setMovies] = useState<Movie[]>([]);
 const [page, setPage] = useState(1);
 const [search, setSearch] = useState("");
 
 useEffect(() => {
-  MovieCoordinator.fetchPage(connection, page, 5, search, search !== "").then(
-    setMovies,
-  );
+  const fetchMovies = async () => {
+    try {
+      const movies = await MovieCoordinator.fetchPage(
+        connection,
+        page,
+        5,
+        search,
+        search !== "",
+      );
+      setMovies(movies);
+    } catch (error) {
+      console.error("Failed to fetch movies:", error);
+    }
+  };
+
+  fetchMovies();
 }, [connection, page, search]);
 ```
 
@@ -577,18 +609,13 @@ Finally, add a search bar that will set the value of `search`:
 
 ```tsx
 return (
-  <div>
-    <Center>
-      <Input
-        id="search"
-        color="gray.400"
-        onChange={event => setSearch(event.currentTarget.value)}
-        placeholder="Search"
-        w="97%"
-        mt={2}
-        mb={2}
-      />
-    </Center>
+  <div className="py-5 flex flex-col w-fullitems-center justify-center">
+    <input
+      id="search"
+      className="w-[300px] p-2 mb-4 bg-gray-700 border border-gray-600 rounded text-gray-400"
+      onChange={e => setSearch(e.target.value)}
+      placeholder="Search"
+    />
     ...
   </div>
 );
@@ -599,7 +626,7 @@ And that’s it! The app now has ordered reviews, paging, and search.
 That was a lot to digest, but you made it through. If you need to spend some
 more time with the concepts, feel free to reread the sections that were most
 challenging for you and/or have a look at the
-[solution code](https://github.com/EmekaManuel/movie-review-dapp/tree/solutions-paging-account-data).
+[solution code](https://github.com/solana-developers/movie-review-frontend/tree/solutions-paging-account-data).
 
 ## Challenge
 
@@ -607,17 +634,17 @@ Now it’s your turn to try and do this on your own. Using the Student Intros ap
 from last lesson, add paging, ordering alphabetically by name, and searching by
 name.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](/public/assets/courses/student-intros-frontend.png)
 
 1. You can build this from scratch or you can download the
-   [starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-deserialize-account-data)
+   [starter code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-deserialize-account-data)
 2. Add paging to the project by prefetching accounts without data, then only
    fetching the account data for each account when it’s needed.
 3. Order the accounts displayed in the app alphabetically by name.
 4. Add the ability to search through introductions by a student’s name.
 
 This is challenging. If you get stuck, feel free to reference the
-[solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-paging-account-data).
+[solution code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-paging-account-data).
 
 As always, get creative with these challenges and take them beyond the
 instructions if you want!
