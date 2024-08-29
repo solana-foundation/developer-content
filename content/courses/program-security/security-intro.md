@@ -3,7 +3,7 @@ title: How to Approach the Program Security Module
 objectives:
   - Understand how to approach the Program Security Module
 description:
-  "Learn how to think intelligently about security for your on-chain programs,
+  "Learn how to think intelligently about security for your onchain programs,
   whether developing in Anchor or Native Rust."
 ---
 
