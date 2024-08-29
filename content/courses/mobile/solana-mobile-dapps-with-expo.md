@@ -1107,33 +1107,33 @@ export interface NFTContextState {
 }
 ```
 
-The state flow here is: `connect`, `fetchNFTs`, and then `createNFT`. We'll walk
+The state flow here is: connect, fetchNFTs, and then createNFT. We'll walk
 through the code for each of them and then show you the entire file at the end:
 
 1. `connect` - This function will connect and authorize the app, and then store
    the resulting `publicKey` into the state.
 
-   ```tsx
-    const connect = async () => {
-    try {
-      if (isLoading) return;
+  ```tsx
+   const connect = async () => {
+     try {
+       if (isLoading) return;
 
-      setIsLoading(true);
-      await transact(async (wallet) => {
-        const auth = await authorizeSession(wallet);
-        setAccount(auth);
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-   ```
+       setIsLoading(true);
+       await transact(async (wallet) => {
+         const auth = await authorizeSession(wallet);
+         setAccount(auth);
+       });
+     } catch (error) {
+       console.log(error);
+     } finally {
+       setIsLoading(false);
+     }
+   };
+  ```
 
 2. `fetchNFTs` - This function will fetch the NFTs using Metaplex:
 
-   ```tsx
+  ```tsx
    const fetchNFTs = async () => {
      if (!metaplex || !account || isLoading) return;
 
@@ -1165,7 +1165,7 @@ through the code for each of them and then show you the entire file at the end:
        setIsLoading(false);
      }
    };
-   ```
+  ```
 
 3. `createNFT` - This function will upload a file to NFT.Storage, and then use
    Metaplex to create and mint an NFT to your wallet. This comes in three parts,
@@ -1177,65 +1177,67 @@ through the code for each of them and then show you the entire file at the end:
    We'll create two helper functions for uploading the image and metadata
    separately, then tie them together into a single `createNFT` function:
 
-   ```tsx
+  ```tsx
    // https://nft.storage/api-docs/
    const uploadImage = async (fileUri: string): Promise<string | undefined> => {
-    try {
-      const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
-        fileUri,
-        "base64"
-      );
-      const bytes = Buffer.from(imageBytesInBase64, "base64");
+     try {
+       const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
+         fileUri,
+         "base64"
+       );
+       const bytes = Buffer.from(imageBytesInBase64, "base64");
 
-      const response = await fetch("https://api.nft.storage/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-          "Content-Type": "image/jpg",
-        },
-        body: bytes,
-      });
+       const response = await fetch("https://api.nft.storage/upload", {
+         method: "POST",
+         headers: {
+           Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+           "Content-Type": "image/jpg",
+         },
+         body: bytes,
+       });
 
-      const data = await response.json();
-      const cid = data.value.cid;
+       const data = await response.json();
+       const cid = data.value.cid;
 
-      return cid as string;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+       return cid as string;
+     } catch (error) {
+       console.log(error);
+     }
+   };
 
-  const uploadMetadata = async (
-    name: string,
-    description: string,
-    imageCID: string
-  ): Promise<string | undefined> => {
-    try {
-      const response = await fetch("https://api.nft.storage/upload", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-        },
-        body: JSON.stringify({
-          name,
-          description,
-          image: `https://ipfs.io/ipfs/${imageCID}`,
-        }),
-      });
+   const uploadMetadata = async (
+     name: string,
+     description: string,
+     imageCID: string
+   ): Promise<string | undefined> => {
+     try {
+       const response = await fetch("https://api.nft.storage/upload", {
+         method: "POST",
+         headers: {
+           Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+         },
+         body: JSON.stringify({
+           name,
+           description,
+           image: `https://ipfs.io/ipfs/${imageCID}`,
+         }),
+       });
 
-      const data = await response.json();
-      const cid = data.value.cid;
+       const data = await response.json();
+       const cid = data.value.cid;
 
-      return cid;
-    } catch (error) {
-      console.log(error);
-    }
-    }; 
+       return cid;
+     } catch (error) {
+       console.log(error);
+     }
+   };
+  ```
+
    Minting the NFT after the image and metadata have been uploaded is as simple
    as calling `metaplex.nfts().create(...)`. Below shows the `createNFT`
    function tying everything together:
 
-   ```tsx
+  ```tsx
    const createNFT = async (
      name: string,
      description: string,
@@ -1261,7 +1263,7 @@ through the code for each of them and then show you the entire file at the end:
        setIsLoading(false);
      }
    };
-   ```
+  ```
 
 We'll put all of the above into the `NFTProvider.tsx` file. All together, this
 looks as follows:
