@@ -1,48 +1,45 @@
 ---
-title: How to approach the Program Security module
+title: How to Approach the Program Security Module
 objectives:
-  - understand how to approach the Program Security Module
+  - Understand how to approach the Program Security Module
 description:
-  "Learn how to think intelligently about security for your onchain programs,
-  whether developing in Anchor or in Native Rust."
+  "Learn how to think intelligently about security for your on-chain programs,
+  whether developing in Anchor or Native Rust."
 ---
 
 ## Overview
 
-The goal of this course is to expose you to a wide variety of common security
-exploits that are unique to Solana development. We’ve heavily modeled this
-course off Coral's
-[Sealevel Attacks](https://github.com/coral-xyz/sealevel-attacks) repo.
+This course aims to introduce you to a range of common security exploits unique
+to Solana development. We’ve modeled this course heavily on Coral's
+[Sealevel Attacks](https://github.com/coral-xyz/sealevel-attacks) repository.
 
-We've covered program security in our
+Program security is covered in our
 [Anchor](/developers/courses/onchain-development/) and
-[native Rust](/developers/courses/native-onchain-development/) development
-courses because we wanted to make sure that anyone deploying programs to Mainnet
-right out of the gates had at least a basic understanding of security. And if
-that’s you then hopefully the fundamental principles you learned in that lesson
-have led to you avoiding some common Solana exploits on your own.
+[Native Rust](/developers/courses/native-onchain-development/) development
+courses to ensure that anyone deploying programs to Mainnet has at least a basic
+understanding of security. If that’s you, the fundamental principles you learned
+in those lessons should help you avoid some common Solana exploits on your own.
 
-This unit is meant to build on top of that lesson with two goals in mind:
+This module is designed to build on those lessons with two main goals:
 
-1. To expand your awareness of the Solana programming model and the areas where
-   you need to focus to close up security loopholes in your programs
-2. To show you the array of tools provided by Anchor to help you keep your
-   programs secure
+1. Expand your awareness of the Solana programming model and highlight areas
+   where you need to focus to close security loopholes.
+2. Introduce you to the tools provided by Anchor to help keep your programs
+   secure.
 
-If you went through the Basic Security lesson, the first few lessons should seem
-familiar. They largely cover topics we discussed in that lesson. After that,
-some of the attacks may seem new. We encourage you to go through all of them.
+If you completed the Basic Security lesson, the first few topics in this module
+should feel familiar, as they cover similar concepts. However, as you progress,
+you’ll encounter new types of attacks. We encourage you to explore all of them.
 
-The last thing to call out is that there are a lot more lessons in this course
-than in prior course. And the lessons aren't dependent on each other in the same
-ways, so you can bounce around a bit more if you'd like.
+One key point to note is that this course contains more lessons than previous
+ones. The lessons are less interdependent, allowing you more flexibility to
+explore topics in the order that suits you best.
 
-Originally, we were going to have more, shorter lessons in this course. And
-while they might be shorter than average, they aren't much shorter. It turns out
-that even though each of the security vulnerabilities is "simple," there's a lot
-to discuss. So each lesson may have a little bit less prose and more code
-snippets, making it easy for readers to choose how in depth to go. But,
-ultimately, each lesson is still as fully-fledged as they have been before so
-that you can really get a solid grasp on each of the discussed security risks.
+Initially, we intended to create shorter lessons, but even though each security
+vulnerability may seem "simple," there's a lot to discuss. Consequently, each
+lesson may contain less prose and more code snippets, offering readers the
+flexibility to dive as deep as they want. Ultimately, each lesson remains
+comprehensive, ensuring you gain a solid understanding of the security risks
+discussed.
 
-As always, we appreciate feedback. Good luck digging in!
+As always, your feedback is appreciated. Good luck as you delve into the course!
