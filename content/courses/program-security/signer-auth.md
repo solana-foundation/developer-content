@@ -405,7 +405,7 @@ account, but we’ll use a different keypair to sign and send the transaction.
 ```typescript
 describe("signer-authorization", () => {
   ...
-  it("Insecure withdraw", async () => {
+  it("insecureWithdraw should be success", async () => {
     const tx = await program.methods
       .insecureWithdraw()
       .accounts({
@@ -508,7 +508,7 @@ transaction to fail the signer check and return an error.
 ```typescript
 describe("signer-authorization", () => {
     ...
-	it("Secure withdraw", async () => {
+	it("secureWithdraw should throw an exception", async () => {
     try {
       const tx = await program.methods
         .secureWithdraw()
