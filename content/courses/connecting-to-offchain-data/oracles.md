@@ -56,13 +56,13 @@ trusting an oracle is understanding how it's implemented.
 Broadly speaking, there are three implementation types:
 
 1. Single, centralized oracle publishes data onchain.
-   1. Pro: It’s simple; there's one source of truth.
-   2. Con: nothing is stopping the oracle provider from providing inaccurate
+   - Pro: It’s simple; there's one source of truth.
+   - Con: nothing is stopping the oracle provider from providing inaccurate
       data.
 2. Network of oracles publish data and a consensus mechanism is used to
    determine the final result.
-   1. Pro: Consensus makes it less likely that bad data is pushed onchain.
-   2. Con: There is no way to disincentivize bad actors from publishing bad data
+   - Pro: Consensus makes it less likely that bad data is pushed onchain.
+   - Con: There is no way to disincentivize bad actors from publishing bad data
       and trying to sway the consensus.
 3. Oracle network with some kind of proof of stake mechanism. I.e. require
    oracles to stake tokens to participate in the consensus mechanism. On every
@@ -657,7 +657,7 @@ oracle from switchboard. The program will have two main instructions:
 - Deposit - Lock up the SOL and set a USD price to unlock it at.
 - Withdraw - Check the USD price and withdraw the SOL if the price is met.
 
-#### 1. Program Setup
+### 1. Program Setup
 
 To get started, let’s create the program with
 
@@ -707,30 +707,32 @@ code to a single `lib.rs` file and call it a day. To keep it more organized
 though, it’s helpful to break it up across different files. Our program will
 have the following files within the `programs/src` directory:
 
-`/instructions/deposit.rs`
+- `/instructions/deposit.rs`
 
-`/instructions/withdraw.rs`
+- `/instructions/withdraw.rs`
 
-`/instructions/mod.rs`
+- `/instructions/mod.rs`
 
-`errors.rs`
+- `errors.rs`
 
-`state.rs`
+- `state.rs`
 
-`lib.rs`
+- `lib.rs`
 
-The `lib.rs` file will still serve as the entry point to our program, but the
-logic for each instruction will be contained in their own separate file. Go
-ahead and create the program architecture described above and we’ll get started.
 
-#### 2. `lib.rs`
+### 2. `lib.rs`
 
 Before we write any logic, we are going to set up all of our boilerplate
 information. Starting with `lib.rs`. Our actual logic will live in the
 `/instructions` directory.
 
-The `lib.rs` file will serve as the entrypoint to our program. It will define
+The `lib.rs` file will still serve as the entry point to our program, but the
+logic for each instruction will be contained in their own separate file. It will define
 the API endpoints that all transactions must go through.
+
+Go
+ahead and create the program architecture described above and we’ll get started.
+
 
 ```rust
 use anchor_lang::prelude::*;
@@ -749,17 +751,19 @@ mod burry_oracle_program {
 
     use super::*;
 
-    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64) -> Result<()> {
-        deposit_handler(ctx, escrow_amt, unlock_price)
+    pub fn deposit(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: u64) -> Result<()> {
+        // Call the deposit handler with the provided context, escrow amount, and unlock price
+        deposit_handler(ctx, escrow_amount, unlock_price)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
+        // Call the withdraw handler with the provided context
         withdraw_handler(ctx)
     }
 }
 ```
 
-#### 3. `state.rs`
+### 3. `state.rs`
 
 Next, let's define our data account for this program: `EscrowState`. Our data
 account will store two pieces of info:
@@ -773,20 +777,22 @@ We will also be defining our PDA seed of `"MICHAEL BURRY"` and our hardcoded
 SOL_USD oracle pubkey `SOL_USDC_FEED`.
 
 ```rust
-// in state.rs
 use anchor_lang::prelude::*;
 
 pub const ESCROW_SEED: &[u8] = b"MICHAEL BURRY";
+
 pub const SOL_USDC_FEED: &str = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR";
 
 #[account]
 pub struct EscrowState {
     pub unlock_price: f64,
+
     pub escrow_amount: u64,
 }
+
 ```
 
-#### 4. Errors
+### 4. Errors
 
 Let’s define the custom errors we’ll use throughout the program. Inside the
 `errors.rs` file, paste the following:
@@ -808,7 +814,7 @@ pub enum EscrowErrorCode {
 }
 ```
 
-#### 5. `mod.rs`
+### 5. `mod.rs`
 
 Let's set up our `instructions/mod.rs` file.
 
@@ -818,7 +824,7 @@ pub mod deposit;
 pub mod withdraw;
 ```
 
-#### 6. **Deposit**
+### 6. Deposit
 
 Now that we have all of the boilerplate out of the way, lets move onto our
 Deposit instruction. This will live in the `/src/instructions/deposit.rs` file.
@@ -838,23 +844,25 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
     system_instruction::transfer,
-    program::invoke
+    program::invoke,
 };
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
+
+    // Account to store SOL in escrow
     #[account(
-      init,
-      seeds = [ESCROW_SEED, user.key().as_ref()],
-      bump,
-      payer = user,
-      space = std::mem::size_of::<EscrowState>() + 8
+        init,
+        seeds = [ESCROW_SEED, user.key().as_ref()],
+        bump,
+        payer = user,
+        space = std::mem::size_of::<EscrowState>() + 8
     )]
     pub escrow_account: Account<'info, EscrowState>,
-		// system program
+
     pub system_program: Program<'info, System>,
 }
 ```
@@ -881,29 +889,33 @@ lamports the user wants to lock up in escrow and invoke the transfer
 instruction.
 
 ```rust
-pub fn deposit_handler(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64) -> Result<()> {
-		msg!("Depositing funds in escrow...");
+pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
+    msg!("Initiating deposit into escrow...");
 
+    // Set the escrow state with the provided unlock price and escrow amount
     let escrow_state = &mut ctx.accounts.escrow_account;
     escrow_state.unlock_price = unlock_price;
     escrow_state.escrow_amount = escrow_amount;
 
-    let transfer_ix = transfer(
-      &ctx.accounts.user.key(),
-      &escrow_state.key(),
-      escrow_amount
+    // Prepare the transfer instruction to move funds into the escrow account
+    let transfer_instruction = transfer(
+        &ctx.accounts.user.key(),
+        &escrow_state.key(),
+        escrow_amount,
     );
 
+    // Invoke the transfer instruction to execute the fund transfer
     invoke(
-        &transfer_ix,
+        &transfer_instruction,
         &[
             ctx.accounts.user.to_account_info(),
             ctx.accounts.escrow_account.to_account_info(),
-            ctx.accounts.system_program.to_account_info()
-        ]
+            ctx.accounts.system_program.to_account_info(),
+        ],
     )?;
 
-    msg!("Transfer complete. Escrow will unlock SOL at {}", &ctx.accounts.escrow_account.unlock_price);
+    msg!("Transfer complete. Escrow will unlock SOL at a price of {}", unlock_price);
+
 }
 ```
 
@@ -915,42 +927,46 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
     system_instruction::transfer,
-    program::invoke
+    program::invoke,
 };
 
 pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
-    msg!("Depositing funds in escrow...");
+    msg!("Initiating deposit into escrow...");
 
+    // Set the escrow state with the provided unlock price and escrow amount
     let escrow_state = &mut ctx.accounts.escrow_account;
     escrow_state.unlock_price = unlock_price;
     escrow_state.escrow_amount = escrow_amount;
 
-    let transfer_ix = transfer(
+    // Prepare the transfer instruction to move funds into the escrow account
+    let transfer_instruction = transfer(
         &ctx.accounts.user.key(),
         &escrow_state.key(),
-        escrow_amount
+        escrow_amount,
     );
 
+    // Invoke the transfer instruction to execute the fund transfer
     invoke(
-        &transfer_ix,
+        &transfer_instruction,
         &[
             ctx.accounts.user.to_account_info(),
             ctx.accounts.escrow_account.to_account_info(),
-            ctx.accounts.system_program.to_account_info()
-        ]
+            ctx.accounts.system_program.to_account_info(),
+        ],
     )?;
 
-    msg!("Transfer complete. Escrow will unlock SOL at {}", &ctx.accounts.escrow_account.unlock_price);
+    msg!("Transfer complete. Escrow will unlock SOL at a price of {}", unlock_price);
 
     Ok(())
 }
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
-    // account to store SOL in escrow
+
+    // Account to store SOL in escrow
     #[account(
         init,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -964,7 +980,7 @@ pub struct Deposit<'info> {
 }
 ```
 
-**Withdraw**
+### 7. Withdraw
 
 The withdraw instruction will require the same three accounts as the deposit
 instruction plus the SOL_USDC Switchboard feed account. This code will go in the
@@ -980,10 +996,11 @@ use anchor_lang::solana_program::clock::Clock;
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
-    // escrow account
+
+    // Escrow account
     #[account(
         mut,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -991,11 +1008,13 @@ pub struct Withdraw<'info> {
         close = user
     )]
     pub escrow_account: Account<'info, EscrowState>,
+
     // Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
     )]
     pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+
     pub system_program: Program<'info, System>,
 }
 ```
@@ -1020,22 +1039,25 @@ escrow account back to the user and close the account. If it isn’t, then the
 instruction should finish and return an error.
 
 ```rust
-pub fn withdraw_handler(ctx: Context<Withdraw>, params: WithdrawParams) -> Result<()> {
+pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let feed = &ctx.accounts.feed_aggregator.load()?;
     let escrow_state = &ctx.accounts.escrow_account;
 
-    // get result
-    let val: f64 = feed.get_result()?.try_into()?;
+    // Get the result
+    let feed_value: f64 = feed.get_result()?.try_into()?;
 
-    // check whether the feed has been updated in the last 300 seconds
-    feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
-    .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
+    // Check whether the feed has been updated in the last 300 seconds
+    let current_timestamp = Clock::get().unwrap().unix_timestamp;
+    let staleness_threshold = 300;
+    feed.check_staleness(current_timestamp, staleness_threshold)
+        .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
-    msg!("Current feed result is {}!", val);
+    msg!("Current feed result is {}!", feed_value);
     msg!("Unlock price is {}", escrow_state.unlock_price);
 
-    if val < escrow_state.unlock_price as f64 {
-        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into())
+    // Ensure the feed value is below the unlock price
+    if feed_value < escrow_state.unlock_price as f64 {
+        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into());
     }
 
 	....
@@ -1057,17 +1079,19 @@ add/subtract the amount of lamports stored in each account.
 
 ```rust
 // 'Transfer: `from` must not carry data'
-  **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
-      .to_account_info()
-      .lamports()
-      .checked_sub(escrow_state.escrow_amount)
-      .ok_or(ProgramError::InvalidArgument)?;
+    let escrow_lamports = escrow_state.escrow_amount;
+    **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
+        .to_account_info()
+        .lamports()
+        .checked_sub(escrow_lamports)
+        .ok_or(ProgramError::InvalidArgument)?;
 
-  **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
-      .to_account_info()
-      .lamports()
-      .checked_add(escrow_state.escrow_amount)
-      .ok_or(ProgramError::InvalidArgument)?;
+    **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
+        .to_account_info()
+        .lamports()
+        .checked_add(escrow_lamports)
+        .ok_or(ProgramError::InvalidArgument)?;
+
 ```
 
 The final withdraw method in the `withdraw.rs` file should look like this:
@@ -1084,31 +1108,35 @@ pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let feed = &ctx.accounts.feed_aggregator.load()?;
     let escrow_state = &ctx.accounts.escrow_account;
 
-    // get result
-    let val: f64 = feed.get_result()?.try_into()?;
+    // Get the result
+    let feed_value: f64 = feed.get_result()?.try_into()?;
 
-    // check whether the feed has been updated in the last 300 seconds
-    feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
-    .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
+    // Check whether the feed has been updated in the last 300 seconds
+    let current_timestamp = Clock::get().unwrap().unix_timestamp;
+    let staleness_threshold = 300;
+    feed.check_staleness(current_timestamp, staleness_threshold)
+        .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
-    msg!("Current feed result is {}!", val);
+    msg!("Current feed result is {}!", feed_value);
     msg!("Unlock price is {}", escrow_state.unlock_price);
 
-    if val < escrow_state.unlock_price as f64 {
-        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into())
+    // Ensure the feed value is below the unlock price
+    if feed_value < escrow_state.unlock_price as f64 {
+        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into());
     }
 
-    // 'Transfer: `from` must not carry data'
+    // Transfer funds from the escrow account to the user
+    let escrow_lamports = escrow_state.escrow_amount;
     **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
         .to_account_info()
         .lamports()
-        .checked_sub(escrow_state.escrow_amount)
+        .checked_sub(escrow_lamports)
         .ok_or(ProgramError::InvalidArgument)?;
 
     **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
         .to_account_info()
         .lamports()
-        .checked_add(escrow_state.escrow_amount)
+        .checked_add(escrow_lamports)
         .ok_or(ProgramError::InvalidArgument)?;
 
     Ok(())
@@ -1116,10 +1144,11 @@ pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
-    // escrow account
+
+    // Escrow account
     #[account(
         mut,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -1127,13 +1156,16 @@ pub struct Withdraw<'info> {
         close = user
     )]
     pub escrow_account: Account<'info, EscrowState>,
+
     // Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
     )]
     pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+
     pub system_program: Program<'info, System>,
 }
+
 ```
 
 And that’s it for the program! At this point, you should be able to run
@@ -1150,7 +1182,7 @@ Error: Function _ZN86_$LT$switchboard_v2..aggregator..AggregatorAccountData$u20$
 
 </Callout>
 
-#### 7. Testing
+### 8. Testing
 
 Let's write some tests. We should have four of them:
 
