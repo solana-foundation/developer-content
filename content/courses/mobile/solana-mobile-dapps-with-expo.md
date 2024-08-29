@@ -237,6 +237,7 @@ plus a few additional polyfills:
 
 - `@metaplex-foundation/js@0.19.4` - Metaplex Library
 - Several more polyfills
+
   - `assert`
   - `util`
   - `crypto-browserify`
@@ -275,9 +276,9 @@ plus a few additional polyfills:
 All of the libraries that the above polyfills are meant to replace are utilized
 by the Metaplex library in the background. It's unlikely you'll be importing any
 of them into your code directly. Because of this, you'll need to register the
-polyfills using a `metro.config.js` and `babel.config.js` file. This will ensure that Metaplex uses
-the polyfills instead of the usual Node.js libraries that aren't supported in
-React Native. Below is an example `metro.config.js` file:
+polyfills using a `metro.config.js` and `babel.config.js` file. This will ensure
+that Metaplex uses the polyfills instead of the usual Node.js libraries that
+aren't supported in React Native. Below is an example `metro.config.js` file:
 
 ```js
 // Import the default Expo Metro config
@@ -301,7 +302,7 @@ defaultConfig.resolver.resolveRequest = (context, moduleName, platform) => {
     return context.resolveRequest(
       context,
       "react-native-quick-crypto",
-      platform
+      platform,
     );
   }
   // otherwise chain to the standard Metro resolver.
@@ -313,6 +314,7 @@ module.exports = defaultConfig;
 ```
 
 Below is an example `babel.config.js` file:
+
 ```js
 module.exports = function (api) {
   api.cache(true);
@@ -443,34 +445,49 @@ Copy and paste the following into the newly created `eas.json`:
   }
 }
 ```
+
 ### **Important:**
 
 - Replace `"/path/to/AndroidSDK"` with the actual path to your Android SDK.
-- To find the SDK path, you can navigate to **Android Studio** > **SDK Manager** > **Android SDK Location**. Copy the path and replace it in the `ANDROID_SDK_ROOT` field.
+- To find the SDK path, you can navigate to **Android Studio** > **SDK
+  Manager** > **Android SDK Location**. Copy the path and replace it in the
+  `ANDROID_SDK_ROOT` field.
 
 #### 4. Build and Emulate
 
-Now let's build the project. You will choose `y` for every answer. This will take a while to complete.
+Now let's build the project. You will choose `y` for every answer. This will
+take a while to complete.
 
 ```bash
 npx eas build --profile development --platform android --local
 ```
 
-When the command is done, you will get an output file at the root of your directory. This file will have a naming format of `build-XXXXXXXXXXX.apk`. Locate this file in your file explorer and **_drag it_** into your emulator. The emulator should show a message that it is installing the new APK. When it finishes installing, you should see the APK as an app icon in the emulator.
+When the command is done, you will get an output file at the root of your
+directory. This file will have a naming format of `build-XXXXXXXXXXX.apk`.
+Locate this file in your file explorer and **_drag it_** into your emulator. The
+emulator should show a message that it is installing the new APK. When it
+finishes installing, you should see the APK as an app icon in the emulator.
 
 #### Troubleshooting
 
 #### 1. Incorrect JDK Version or Missing Android SDK
 
-Follow the [React Native CLI setup instructions](https://reactnative.dev/docs/environment-setup) to ensure your local environment is properly configured for Android development. You'll need:
+Follow the
+[React Native CLI setup instructions](https://reactnative.dev/docs/environment-setup)
+to ensure your local environment is properly configured for Android development.
+You'll need:
 
-- **JDK Version 11**: Ensure that Java Development Kit (JDK) version 11 is installed.
-- **Android SDK**: Install and configure the Android SDK through the Android Studio SDK Manager.
-- **ANDROID_HOME Environment Variable**: Set up the `ANDROID_HOME` environment variable to point to your Android SDK installation.
+- **JDK Version 11**: Ensure that Java Development Kit (JDK) version 11 is
+  installed.
+- **Android SDK**: Install and configure the Android SDK through the Android
+  Studio SDK Manager.
+- **ANDROID_HOME Environment Variable**: Set up the `ANDROID_HOME` environment
+  variable to point to your Android SDK installation.
 
 #### 2. Missing Android NDK
 
-If you encounter errors related to a missing Android NDK, follow these steps to install it:
+If you encounter errors related to a missing Android NDK, follow these steps to
+install it:
 
 1. Open **Android Studio**.
 2. Navigate to **File -> Project Structure -> SDK Location**.
@@ -480,21 +497,25 @@ This should resolve issues related to the missing Android NDK.
 
 ![Android NDK Download](https://docs.solanamobile.com/assets/images/ndk-download-c7adebb1cb08c1d5e77d7c02aff3f167.png)
 
-
 #### **Optional: Create a Remote Development Build**
 
-If you prefer to create the development build remotely using Expo's EAS services, you can skip the local build by using the following command:
+If you prefer to create the development build remotely using Expo's EAS
+services, you can skip the local build by using the following command:
 
 ```bash
 npx eas build --profile development --platform android
 ```
 
-- This command will upload your project to Expo's servers and create the development build in the cloud.
-- Once the build is complete, you will receive a download link to the APK. You can download the APK and install it on your emulator or device just like before.
+- This command will upload your project to Expo's servers and create the
+  development build in the cloud.
+- Once the build is complete, you will receive a download link to the APK. You
+  can download the APK and install it on your emulator or device just like
+  before.
 
-
-The app that was installed is just a [Custom Dev Build](https://docs.expo.dev/develop/development-builds/introduction/) app from Expo. The last thing
-you'll need to do is run the following command to run the development server:
+The app that was installed is just a
+[Custom Dev Build](https://docs.expo.dev/develop/development-builds/introduction/)
+app from Expo. The last thing you'll need to do is run the following command to
+run the development server:
 
 ```bash
 npx expo start --dev-client --android
@@ -502,8 +523,8 @@ npx expo start --dev-client --android
 
 This should open and run the app in your Android emulator.
 
-**_NOTE_** Every time you add in new native dependencies, you'll have to build and
-re-install the app. Anything visual or logic-based should be captured by the
+**_NOTE_** Every time you add in new native dependencies, you'll have to build
+and re-install the app. Anything visual or logic-based should be captured by the
 hot-reloader.
 
 ### 2. Configure your Expo app to work with Solana
@@ -570,8 +591,8 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We will be
-copying over `components/AuthProvider.tsx` and
+[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We
+will be copying over `components/AuthProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
 
@@ -583,7 +604,8 @@ Secondly, create file `components/ConnectionProvider.tsx` and copy the contents
 [of our existing Connection Provider from Github](https://raw.githubusercontent.com/Unboxed-Software/solana-advance-mobile/main/components/ConnectionProvider.tsx)
 into the new file.
 
-then, create file `polyfills.ts` and copy the contents from below to that file. This will ensure that few native node.js packages work in our app.
+then, create file `polyfills.ts` and copy the contents from below to that file.
+This will ensure that few native node.js packages work in our app.
 
 ```js
 import "react-native-get-random-values";
@@ -635,8 +657,8 @@ export default function App() {
 }
 ```
 
-Notice we've imported polyfills at the top of the file. These are necessary for the Solana
-dependencies to run correctly.
+Notice we've imported polyfills at the top of the file. These are necessary for
+the Solana dependencies to run correctly.
 
 #### 3. Build and run Solana boilerplate
 
@@ -704,7 +726,8 @@ yarn add assert \
 #### 2. Polyfill config
 
 We won't be importing any of the above polyfills in our code directly, so we
-need to add them to a `metro.config.js` as well as `babel.confing.js` file to ensure that Metaplex uses them:
+need to add them to a `metro.config.js` as well as `babel.confing.js` file to
+ensure that Metaplex uses them:
 
 ```bash
 touch metro.config.js
@@ -1009,8 +1032,8 @@ an environment variable, then we need to add one last dependency to convert our
 images into a file type we can upload.
 
 We'll be using NFT.storage to host our NFTs with IPFS since they do this for
-free. [Sign up, and create an API key](https://app.nft.storage/signup). Keep this
-API key private.
+free. [Sign up, and create an API key](https://app.nft.storage/signup). Keep
+this API key private.
 
 Best practices suggest keeping API keys in a `.env` file with `.env` added to
 your `.gitignore`. It's also a good idea to create a `.env.example` file that
@@ -1113,59 +1136,59 @@ through the code for each of them and then show you the entire file at the end:
 1. `connect` - This function will connect and authorize the app, and then store
    the resulting `publicKey` into the state.
 
-  ```tsx
-   const connect = async () => {
-     try {
-       if (isLoading) return;
+```tsx
+const connect = async () => {
+  try {
+    if (isLoading) return;
 
-       setIsLoading(true);
-       await transact(async (wallet) => {
-         const auth = await authorizeSession(wallet);
-         setAccount(auth);
-       });
-     } catch (error) {
-       console.log(error);
-     } finally {
-       setIsLoading(false);
-     }
-   };
-  ```
+    setIsLoading(true);
+    await transact(async wallet => {
+      const auth = await authorizeSession(wallet);
+      setAccount(auth);
+    });
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+```
 
 2. `fetchNFTs` - This function will fetch the NFTs using Metaplex:
 
-  ```tsx
-   const fetchNFTs = async () => {
-     if (!metaplex || !account || isLoading) return;
+```tsx
+const fetchNFTs = async () => {
+  if (!metaplex || !account || isLoading) return;
 
-     setIsLoading(true);
+  setIsLoading(true);
 
-     try {
-       const nfts = await metaplex.nfts().findAllByCreator({
-         creator: account.publicKey,
-       });
+  try {
+    const nfts = await metaplex.nfts().findAllByCreator({
+      creator: account.publicKey,
+    });
 
-       const loadedNFTs = await Promise.all(
-         nfts.map(nft => {
-           return metaplex.nfts().load({ metadata: nft as Metadata });
-         }),
-       );
-       setLoadedNFTs(loadedNFTs);
+    const loadedNFTs = await Promise.all(
+      nfts.map(nft => {
+        return metaplex.nfts().load({ metadata: nft as Metadata });
+      }),
+    );
+    setLoadedNFTs(loadedNFTs);
 
-       // Check if we already took a snapshot today
-       const nftOfTheDayIndex = loadedNFTs.findIndex(nft => {
-         return formatDate(new Date(Date.now())) === nft.name;
-       });
+    // Check if we already took a snapshot today
+    const nftOfTheDayIndex = loadedNFTs.findIndex(nft => {
+      return formatDate(new Date(Date.now())) === nft.name;
+    });
 
-       if (nftOfTheDayIndex !== -1) {
-         setNftOfTheDay(loadedNFTs[nftOfTheDayIndex]);
-       }
-     } catch (error) {
-       console.log(error);
-     } finally {
-       setIsLoading(false);
-     }
-   };
-  ```
+    if (nftOfTheDayIndex !== -1) {
+      setNftOfTheDay(loadedNFTs[nftOfTheDayIndex]);
+    }
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+```
 
 3. `createNFT` - This function will upload a file to NFT.Storage, and then use
    Metaplex to create and mint an NFT to your wallet. This comes in three parts,
@@ -1177,93 +1200,93 @@ through the code for each of them and then show you the entire file at the end:
    We'll create two helper functions for uploading the image and metadata
    separately, then tie them together into a single `createNFT` function:
 
-  ```tsx
-   // https://nft.storage/api-docs/
-   const uploadImage = async (fileUri: string): Promise<string | undefined> => {
-     try {
-       const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
-         fileUri,
-         "base64"
-       );
-       const bytes = Buffer.from(imageBytesInBase64, "base64");
+```tsx
+// https://nft.storage/api-docs/
+const uploadImage = async (fileUri: string): Promise<string | undefined> => {
+  try {
+    const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
+      fileUri,
+      "base64",
+    );
+    const bytes = Buffer.from(imageBytesInBase64, "base64");
 
-       const response = await fetch("https://api.nft.storage/upload", {
-         method: "POST",
-         headers: {
-           Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-           "Content-Type": "image/jpg",
-         },
-         body: bytes,
-       });
+    const response = await fetch("https://api.nft.storage/upload", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+        "Content-Type": "image/jpg",
+      },
+      body: bytes,
+    });
 
-       const data = await response.json();
-       const cid = data.value.cid;
+    const data = await response.json();
+    const cid = data.value.cid;
 
-       return cid as string;
-     } catch (error) {
-       console.log(error);
-     }
-   };
+    return cid as string;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-   const uploadMetadata = async (
-     name: string,
-     description: string,
-     imageCID: string
-   ): Promise<string | undefined> => {
-     try {
-       const response = await fetch("https://api.nft.storage/upload", {
-         method: "POST",
-         headers: {
-           Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
-         },
-         body: JSON.stringify({
-           name,
-           description,
-           image: `https://ipfs.io/ipfs/${imageCID}`,
-         }),
-       });
+const uploadMetadata = async (
+  name: string,
+  description: string,
+  imageCID: string,
+): Promise<string | undefined> => {
+  try {
+    const response = await fetch("https://api.nft.storage/upload", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        image: `https://ipfs.io/ipfs/${imageCID}`,
+      }),
+    });
 
-       const data = await response.json();
-       const cid = data.value.cid;
+    const data = await response.json();
+    const cid = data.value.cid;
 
-       return cid;
-     } catch (error) {
-       console.log(error);
-     }
-   };
-  ```
+    return cid;
+  } catch (error) {
+    console.log(error);
+  }
+};
+```
 
-   Minting the NFT after the image and metadata have been uploaded is as simple
-   as calling `metaplex.nfts().create(...)`. Below shows the `createNFT`
-   function tying everything together:
+Minting the NFT after the image and metadata have been uploaded is as simple as
+calling `metaplex.nfts().create(...)`. Below shows the `createNFT` function
+tying everything together:
 
-  ```tsx
-   const createNFT = async (
-     name: string,
-     description: string,
-     fileUri: string,
-   ) => {
-     if (!metaplex || !account || isLoading) return;
+```tsx
+const createNFT = async (
+  name: string,
+  description: string,
+  fileUri: string,
+) => {
+  if (!metaplex || !account || isLoading) return;
 
-     setIsLoading(true);
-     try {
-       const imageCID = await uploadImage(fileUri);
-       const metadataCID = await uploadMetadata(name, description, imageCID);
+  setIsLoading(true);
+  try {
+    const imageCID = await uploadImage(fileUri);
+    const metadataCID = await uploadMetadata(name, description, imageCID);
 
-       const nft = await metaplex.nfts().create({
-         uri: `https://ipfs.io/ipfs/${metadataCID}`,
-         name: name,
-         sellerFeeBasisPoints: 0,
-       });
+    const nft = await metaplex.nfts().create({
+      uri: `https://ipfs.io/ipfs/${metadataCID}`,
+      name: name,
+      sellerFeeBasisPoints: 0,
+    });
 
-       setNftOfTheDay(nft.nft);
-     } catch (error) {
-       console.log(error);
-     } finally {
-       setIsLoading(false);
-     }
-   };
-  ```
+    setNftOfTheDay(nft.nft);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+```
 
 We'll put all of the above into the `NFTProvider.tsx` file. All together, this
 looks as follows:
@@ -1339,7 +1362,7 @@ export function NFTProvider(props: NFTProviderProps) {
       if (isLoading) return;
 
       setIsLoading(true);
-      await transact(async (wallet) => {
+      await transact(async wallet => {
         const auth = await authorizeSession(wallet);
         setAccount(auth);
       });
@@ -1361,15 +1384,15 @@ export function NFTProvider(props: NFTProviderProps) {
       });
 
       const loadedNFTs = await Promise.all(
-        nfts.map((nft) => {
+        nfts.map(nft => {
           return metaplex.nfts().load({ metadata: nft as Metadata });
-        })
+        }),
       );
 
       setLoadedNFTs(loadedNFTs);
 
       // Check if we already took a snapshot today
-      const nftOfTheDayIndex = loadedNFTs.findIndex((nft) => {
+      const nftOfTheDayIndex = loadedNFTs.findIndex(nft => {
         return formatDate(new Date(Date.now())) === nft.name;
       });
 
@@ -1388,7 +1411,7 @@ export function NFTProvider(props: NFTProviderProps) {
     try {
       const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
         fileUri,
-        "base64"
+        "base64",
       );
       const bytes = Buffer.from(imageBytesInBase64, "base64");
 
@@ -1413,7 +1436,7 @@ export function NFTProvider(props: NFTProviderProps) {
   const uploadMetadata = async (
     name: string,
     description: string,
-    imageCID: string
+    imageCID: string,
   ): Promise<string | undefined> => {
     try {
       const response = await fetch("https://api.nft.storage/upload", {
@@ -1440,7 +1463,7 @@ export function NFTProvider(props: NFTProviderProps) {
   const createNFT = async (
     name: string,
     description: string,
-    fileUri: string
+    fileUri: string,
   ) => {
     if (!metaplex || !account || isLoading) return;
 
@@ -1505,30 +1528,30 @@ description to our `createNFT` function from `NFTProvider` to mint the NFT.
 
 ```tsx
 const mintNFT = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
+  try {
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setCurrentImage({
+        uri: result.assets[0].uri,
+        date: todaysDate,
       });
 
-      if (!result.canceled) {
-        setCurrentImage({
-          uri: result.assets[0].uri,
-          date: todaysDate,
-        });
-
-        createNFT(
-          formatDate(todaysDate),
-          `${todaysDate.getTime()}`,
-          result.assets[0].uri
-        );
-      }
-    } catch (error) {
-      console.log(error);
+      createNFT(
+        formatDate(todaysDate),
+        `${todaysDate.getTime()}`,
+        result.assets[0].uri,
+      );
     }
-  };
+  } catch (error) {
+    console.log(error);
+  }
+};
 ```
 
 The full code for `MainScreen.tsx` is as follows:
@@ -1659,7 +1682,7 @@ export function MainScreen() {
     });
   }, [nftOfTheDay]);
 
-   const mintNFT = async () => {
+  const mintNFT = async () => {
     try {
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -1677,7 +1700,7 @@ export function MainScreen() {
         createNFT(
           formatDate(todaysDate),
           `${todaysDate.getTime()}`,
-          result.assets[0].uri
+          result.assets[0].uri,
         );
       }
     } catch (error) {
