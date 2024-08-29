@@ -55,7 +55,6 @@ existing `authority` stored on the account data.
 
 ```rust
 use anchor_lang::prelude::*;
-use borsh::{BorshDeserialize, BorshSerialize};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -79,7 +78,8 @@ pub struct Initialize<'info> {
 		authority: Signer<'info>,
 }
 
-#[derive(BorshSerialize, BorshDeserialize)]
+#[account]
+#[derive(InitSpace)]
 pub struct User {
     authority: Pubkey,
 }
@@ -105,7 +105,6 @@ authority with their own public key.
 
 ```rust
 use anchor_lang::prelude::*;
-use borsh::{BorshDeserialize, BorshSerialize};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -135,7 +134,7 @@ pub struct Initialize<'info> {
 		authority: Signer<'info>,
 }
 
-#[derive(BorshSerialize, BorshDeserialize)]
+
 pub struct User {
     is_initialized: bool,
     authority: Pubkey,
@@ -177,7 +176,7 @@ pub mod initialization_recommended {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = authority, space = 8+32)]
+    #[account(init, payer = authority, space = DISCRIMINATOR_SIZE + User::INIT_SPACE)]
     user: Account<'info, User>,
     #[account(mut)]
     authority: Signer<'info>,
@@ -185,6 +184,7 @@ pub struct Initialize<'info> {
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct User {
     authority: Pubkey,
 }
@@ -236,7 +236,6 @@ a second time to override the `authority` stored on an existing `user` account.
 
 ```rust
 use anchor_lang::prelude::*;
-use borsh::{BorshDeserialize, BorshSerialize};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
@@ -260,7 +259,8 @@ pub struct Unchecked<'info> {
     authority: Signer<'info>,
 }
 
-#[derive(BorshSerialize, BorshDeserialize)]
+#[account]
+#[derive(InitSpace)]
 pub struct User {
     authority: Pubkey,
 }
@@ -291,7 +291,6 @@ describe("initialization", () => {
 
   const wallet = anchor.workspace.Initialization.provider.wallet;
   const walletTwo = anchor.web3.Keypair.generate();
-
   const userInsecure = anchor.web3.Keypair.generate();
   const userRecommended = anchor.web3.Keypair.generate();
 
@@ -312,35 +311,43 @@ describe("initialization", () => {
       userInsecure,
     ]);
 
+    const airdropSignature = await provider.connection.requestAirdrop(
+      walletTwo.publicKey,
+      1 * anchor.web3.LAMPORTS_PER_SOL,
+    );
+
+    const latestBlockHash = await provider.connection.getLatestBlockhash();
+
     await provider.connection.confirmTransaction(
-      await provider.connection.requestAirdrop(
-        walletTwo.publicKey,
-        1 * anchor.web3.LAMPORTS_PER_SOL,
-      ),
+      {
+        blockhash: latestBlockHash.blockhash,
+        lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+        signature: airdropSignature,
+      },
       "confirmed",
     );
   });
 
-  it("Insecure init", async () => {
+  it("insecureInitialization should be successful", async () => {
     await program.methods
       .insecureInitialization()
       .accounts({
         user: userInsecure.publicKey,
+        authority: wallet.publicKey,
       })
+      .signers([wallet.payer])
       .rpc();
   });
 
-  it("Re-invoke insecure init with different auth", async () => {
-    const tx = await program.methods
+  it("insecureInitialization with a different authority should be successful again", async () => {
+    await program.methods
       .insecureInitialization()
       .accounts({
         user: userInsecure.publicKey,
         authority: walletTwo.publicKey,
       })
-      .transaction();
-    await anchor.web3.sendAndConfirmTransaction(provider.connection, tx, [
-      walletTwo,
-    ]);
+      .signers([walletTwo])
+      .rpc();
   });
 });
 ```
@@ -349,8 +356,8 @@ Run `anchor test` to see that both transactions will complete successfully.
 
 ```bash
 initialization
-  ✔ Insecure init (478ms)
-  ✔ Re-invoke insecure init with different auth (464ms)
+  ✔ insecureInitialization should be successful (417ms)
+  ✔ insecureInitialization with a different authority should be successful again (417ms)
 ```
 
 #### 3. Add `recommended_initialization` instruction
@@ -371,9 +378,10 @@ state.
 
 ```rust
 use anchor_lang::prelude::*;
-use borsh::{BorshDeserialize, BorshSerialize};
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+
+const DISCRIMINATOR_SIZE:usize = 8;
 
 #[program]
 pub mod initialization {
@@ -387,11 +395,10 @@ pub mod initialization {
 
 #[derive(Accounts)]
 pub struct Checked<'info> {
-    #[account(init, payer = authority, space = 8+32)]
+    #[account(init, payer = authority, space = DISCRIMINATOR_SIZE + User::INIT_SPACE)]
     user: Account<'info, User>,
     #[account(mut)]
-    authority: Signer<'info>,
-    system_program: Program<'info, System>,
+    authority: Signer<'info>
 }
 ```
 
@@ -404,36 +411,33 @@ when we try to initialize the same account a second time.
 ```typescript
 describe("initialization", () => {
   ...
-  it("Recommended init", async () => {
-    await program.methods
+it("recommendedInitialization should be successful", async () => {
+    const tx = await program.methods
       .recommendedInitialization()
       .accounts({
         user: userRecommended.publicKey,
+        authority: wallet.publicKey,
       })
       .signers([userRecommended])
-      .rpc()
-  })
+      .rpc();
+  });
 
-  it("Re-invoke recommended init with different auth, expect error", async () => {
+  it("recommendedInitialization with a different authority should throw an expection", async () => {
     try {
-      // Add your test here.
       const tx = await program.methods
         .recommendedInitialization()
         .accounts({
           user: userRecommended.publicKey,
           authority: walletTwo.publicKey,
         })
-        .transaction()
-      await anchor.web3.sendAndConfirmTransaction(provider.connection, tx, [
-        walletTwo,
-        userRecommended,
-      ])
+        .signers([userRecommended, walletTwo])
+        .rpc();
     } catch (err) {
-      expect(err)
-      console.log(err)
+      expect(err);
+      console.log(err);
     }
-  })
-})
+  });
+});
 ```
 
 Run `anchor test` and to see that the second transaction which tries to
