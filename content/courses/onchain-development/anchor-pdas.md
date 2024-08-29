@@ -35,9 +35,9 @@ handle PDAs, reallocate space, and close accounts.
 
 ### PDAs with Anchor
 
-Recall that
-[PDAs](https://github.com/Unboxed-Software/solana-course/blob/main/content/pda.md)
-are derived using a list of optional seeds, a bump seed, and a program ID.
+PDAs store data, at addressed specified by the onchain programmer, using a list
+of seeds, a bump seed, and a program ID.
+
 Anchor provides a convenient way to validate a PDA with the `seeds` and `bump`
 constraints.
 
@@ -232,7 +232,7 @@ To use `init_if_needed`, you must first enable the feature in `Cargo.toml`.
 
 ```rust
 [dependencies]
-anchor-lang = { version = "0.30.0", features = ["init-if-needed"] }
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 ```
 
 Once you’ve enabled the feature, you can include the constraint in the

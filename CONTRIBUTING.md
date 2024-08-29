@@ -871,6 +871,50 @@ To embed a Whimsical diagram:
   slightly deflated beach ball. **Do not draw a snake or some other kind or
   curve!**
 
+### Tabs
+
+The Tabs component allows you to organize content into multiple tabbed sections,
+enabling users to switch between content.
+
+Wrap your content in <Tabs> and use <Tab> for each individual tab section.
+
+```md
+<!-- prettier-ignore -->
+<Tabs groupId="language" items={['Rust', 'Typescript']}>
+<Tab value="Rust">Rust 1</Tab>
+<Tab value="Typescript">Typescript 1</Tab>
+</Tabs>
+```
+
+### Accordion
+
+The Accordion component allows you to create collapsible content sections. It's
+useful for organizing and presenting information in a compact, expandable
+format.
+
+Wrap your content in <Accordion> and use <AccordionItem> for each collapsible
+section.
+
+<!-- prettier-ignore -->
+```md
+<Accordion>
+<AccordionItem title="Hello">
+
+```ts
+console.log("hello");
+```
+
+</AccordionItem>
+<AccordionItem title="World">
+
+```rs
+println!("world");
+```
+
+</AccordionItem>
+</Accordion>
+```
+
 ## Translations
 
 Content translations are supported via the Crowdin platform.
