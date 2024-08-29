@@ -25,4 +25,4 @@ jobs:
 
       - name: Check links in Markdown files
         run: |
-          find . -name "*.md" -print0 | xargs -0 markdown-link-check
+          find . -name "*.md" -print0 | xargs -0 markdown-link-check --quiet
