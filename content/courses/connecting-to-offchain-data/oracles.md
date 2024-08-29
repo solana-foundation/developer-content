@@ -14,13 +14,13 @@ description: Access real-world data inside a Solana program.
 
 - Oracles are services that provide external data to a blockchain network
 - There are many
-  [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+  [Oracle providers on Solana](https://www.alchemy.com/list-of/decentralized-oracles-on-solana).
 - You can build your own Oracle to create a custom data feed
 - You have to be careful when choosing your data feed providers
 
 ## Lesson
 
-[Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
+[Oracles](https://www.alchemy.com/list-of/decentralized-oracles-on-solana) are services
 that provide external data to a blockchain network. Blockchains by nature are
 siloed environments that do not know the outside world. This constraint
 inherently puts a limit on the use cases for decentralized applications (dApps).
@@ -105,7 +105,7 @@ functions and worst-case scenarios should be accounted for.
 ### Oracles on Solana
 
 There are many
-[Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+[Oracle providers on Solana](https://www.alchemy.com/list-of/decentralized-oracles-on-solana).
 Two of the most well known are [Pyth](https://pyth.network) and
 [Switchboard](https://switchboard.xyz). They’re each unique and follow slightly
 different design choices.
