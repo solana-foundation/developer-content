@@ -245,6 +245,7 @@ plus a few additional polyfills:
   - `browserify-zlib`
   - `path-browserify`
   - `react-native-url-polyfill`
+  - `react-native-quick-crypto`
 
   ```bash
   # Using npm
@@ -256,8 +257,8 @@ plus a few additional polyfills:
             readable-stream \
             browserify-zlib \
             path-browserify \
-            react-native-url-polyfill
-            
+            react-native-url-polyfill \
+            react-native-quick-crypto
   # Using yarn
   yarn add @metaplex-foundation/js@0.19.4 \
          assert \
@@ -267,20 +268,25 @@ plus a few additional polyfills:
          readable-stream \
          browserify-zlib \
          path-browserify \
-         react-native-url-polyfill
+         react-native-url-polyfill \
+         react-native-quick-crypto
   ```
 
 All of the libraries that the above polyfills are meant to replace are utilized
 by the Metaplex library in the background. It's unlikely you'll be importing any
 of them into your code directly. Because of this, you'll need to register the
-polyfills using a `metro.config.js` file. This will ensure that Metaplex uses
+polyfills using a `metro.config.js` and `babel.config.js` file. This will ensure that Metaplex uses
 the polyfills instead of the usual Node.js libraries that aren't supported in
 React Native. Below is an example `metro.config.js` file:
 
 ```js
+// Import the default Expo Metro config
 const { getDefaultConfig } = require("@expo/metro-config");
+
+// Get the default Expo Metro configuration
 const defaultConfig = getDefaultConfig(__dirname);
 
+// Customize the configuration to include your extra node modules
 defaultConfig.resolver.extraNodeModules = {
   crypto: require.resolve("crypto-browserify"),
   stream: require.resolve("readable-stream"),
@@ -289,7 +295,43 @@ defaultConfig.resolver.extraNodeModules = {
   path: require.resolve("path-browserify"),
 };
 
+defaultConfig.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === "crypto") {
+    // when importing crypto, resolve to react-native-quick-crypto
+    return context.resolveRequest(
+      context,
+      "react-native-quick-crypto",
+      platform
+    );
+  }
+  // otherwise chain to the standard Metro resolver.
+  return context.resolveRequest(context, moduleName, platform);
+};
+
+// Export the modified configuration
 module.exports = defaultConfig;
+```
+
+Below is an example `babel.config.js` file:
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: [
+      [
+        "module-resolver",
+        {
+          alias: {
+            crypto: "react-native-quick-crypto",
+            stream: "readable-stream",
+            buffer: "buffer",
+          },
+        },
+      ],
+    ],
+  };
+};
 ```
 
 ### Putting it all together
@@ -480,7 +522,16 @@ all Solana mobile apps. This will include some polyfills that allow otherwise
 incompatible packages to work with React native:
 
 ```bash
+# Using npm
 npm install \
+  @solana/web3.js \
+  @solana-mobile/mobile-wallet-adapter-protocol-web3js \
+  @solana-mobile/mobile-wallet-adapter-protocol \
+  react-native-get-random-values \
+  buffer
+
+# Using yarn
+yarn add \
   @solana/web3.js \
   @solana-mobile/mobile-wallet-adapter-protocol-web3js \
   @solana-mobile/mobile-wallet-adapter-protocol \
@@ -488,7 +539,7 @@ npm install \
   buffer
 ```
 
-#### 3. Add Solana boilerplate providers
+#### 2. Add Solana boilerplate providers
 
 Next, let's add some Solana boilerplate that can springboard you into most
 Solana-based apps.
@@ -496,7 +547,7 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](/content/courses/mobile/basic-solana-mobile). We will be
+[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We will be
 copying over `components/AuthProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
@@ -508,6 +559,15 @@ into the new file.
 Secondly, create file `components/ConnectionProvider.tsx` and copy the contents
 [of our existing Connection Provider from Github](https://raw.githubusercontent.com/Unboxed-Software/solana-advance-mobile/main/components/ConnectionProvider.tsx)
 into the new file.
+
+then, create file `polyfills.ts` and copy the contents from below to that file. This will ensure that few native node.js packages work in our app.
+
+```js
+import "react-native-get-random-values";
+import { Buffer } from "buffer";
+
+global.Buffer = Buffer;
+```
 
 Now let's create a boilerplate for our main screen in `screens/MainScreen.tsx`:
 
@@ -528,14 +588,11 @@ Finally, let's change `App.tsx` to wrap our application in the two providers we
 just created:
 
 ```tsx
-import "react-native-get-random-values";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import "./polyfills";
 import { ConnectionProvider } from "./components/ConnectionProvider";
 import { AuthorizationProvider } from "./components/AuthProvider";
 import { clusterApiUrl } from "@solana/web3.js";
 import { MainScreen } from "./screens/MainScreen";
-global.Buffer = require("buffer").Buffer;
 
 export default function App() {
   const cluster = "devnet";
@@ -555,11 +612,10 @@ export default function App() {
 }
 ```
 
-Notice we've added two polyfills above: `buffer` and
-`react-native-get-random-values`. These are necessary for the Solana
+Notice we've imported polyfills at the top of the file. These are necessary for the Solana
 dependencies to run correctly.
 
-#### 4. Build and run Solana boilerplate
+#### 3. Build and run Solana boilerplate
 
 Let's make sure everything is working and compiling correctly. In Expo, anytime
 you change the dependencies, you'll need to rebuild and re-install the app.
@@ -597,6 +653,7 @@ however it was written largely for Node.js, so we'll need several more polyfills
 to make it work:
 
 ```bash
+# Using npm
 npm install assert \
   util \
   crypto-browserify \
@@ -605,13 +662,26 @@ npm install assert \
   browserify-zlib \
   path-browserify \
   react-native-url-polyfill \
+  react-native-quick-crypto \
+  @metaplex-foundation/js@0.19.4
+
+# Using yarn
+yarn add assert \
+  util \
+  crypto-browserify \
+  stream-browserify \
+  readable-stream \
+  browserify-zlib \
+  path-browserify \
+  react-native-url-polyfill \
+  react-native-quick-crypto \
   @metaplex-foundation/js@0.19.4
 ```
 
 #### 2. Polyfill config
 
 We won't be importing any of the above polyfills in our code directly, so we
-need to add them to a `metro.config.js` file to ensure that Metaplex uses them:
+need to add them to a `metro.config.js` as well as `babel.confing.js` file to ensure that Metaplex uses them:
 
 ```bash
 touch metro.config.js
@@ -637,6 +707,29 @@ defaultConfig.resolver.extraNodeModules = {
 
 // Export the modified configuration
 module.exports = defaultConfig;
+```
+
+then Copy and paste the following into `babel.config.js`:
+
+```js
+module.exports = function (api) {
+  api.cache(true);
+  return {
+    presets: ["babel-preset-expo"],
+    plugins: [
+      [
+        "module-resolver",
+        {
+          alias: {
+            crypto: "react-native-quick-crypto",
+            stream: "readable-stream",
+            buffer: "buffer",
+          },
+        },
+      ],
+    ],
+  };
+};
 ```
 
 #### 3. Metaplex provider
@@ -862,7 +955,7 @@ as a plugin in `app.json`:
       [
         "expo-image-picker",
         {
-          "photosPermission": "Allows you to use images to create solana NFTs"
+          "photosPermission": "The app accesses your photos to let you use images to create solana NFTs"
         }
       ]
     ],
@@ -893,7 +986,7 @@ an environment variable, then we need to add one last dependency to convert our
 images into a file type we can upload.
 
 We'll be using NFT.storage to host our NFTs with IPFS since they do this for
-free. [Sign up, and create an API key](https://nft.storage/manage/). Keep this
+free. [Sign up, and create an API key](https://app.nft.storage/signup). Keep this
 API key private.
 
 Best practices suggest keeping API keys in a `.env` file with `.env` added to
@@ -915,7 +1008,11 @@ device's URI scheme and turn them into Blobs we can the upload to
 Install it with the following:
 
 ```bash
+# Using npm
 npm i rn-fetch-blob
+
+# Using yarn
+yarn add rn-fetch-blob
 ```
 
 #### 3. Final build
