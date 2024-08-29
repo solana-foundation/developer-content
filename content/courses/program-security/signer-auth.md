@@ -339,9 +339,7 @@ pub mod signer_authorization {
 #[derive(Accounts)]
 pub struct InitializeVault<'info> {
     #[account(
-        // We use init_if_needed here for the test. Otherwise, the test will result in an error "Already in use" after testing once.
-        // Use "init" if you want to ensure that the "initialize_vault" function runs only once.
-        init_if_needed,
+        init,
         payer = authority,
         space = 8 + 32 + 32,
         seeds = [b"vault"],
