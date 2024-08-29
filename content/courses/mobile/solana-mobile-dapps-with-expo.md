@@ -246,7 +246,7 @@ plus a few additional polyfills:
   - `path-browserify`
   - `react-native-url-polyfill`
   - `react-native-quick-crypto`
-  
+
   ```bash
   # Using npm
   npm install @metaplex-foundation/js@0.19.4 \
@@ -457,6 +457,29 @@ npx eas build --profile development --platform android --local
 ```
 
 When the command is done, you will get an output file at the root of your directory. This file will have a naming format of `build-XXXXXXXXXXX.apk`. Locate this file in your file explorer and **_drag it_** into your emulator. The emulator should show a message that it is installing the new APK. When it finishes installing, you should see the APK as an app icon in the emulator.
+
+#### Troubleshooting
+
+#### 1. Incorrect JDK Version or Missing Android SDK
+
+Follow the [React Native CLI setup instructions](https://reactnative.dev/docs/environment-setup) to ensure your local environment is properly configured for Android development. You'll need:
+
+- **JDK Version 11**: Ensure that Java Development Kit (JDK) version 11 is installed.
+- **Android SDK**: Install and configure the Android SDK through the Android Studio SDK Manager.
+- **ANDROID_HOME Environment Variable**: Set up the `ANDROID_HOME` environment variable to point to your Android SDK installation.
+
+#### 2. Missing Android NDK
+
+If you encounter errors related to a missing Android NDK, follow these steps to install it:
+
+1. Open **Android Studio**.
+2. Navigate to **File -> Project Structure -> SDK Location**.
+3. Under "Android NDK Location," select **Download Android NDK**.
+
+This should resolve issues related to the missing Android NDK.
+
+![Android NDK Download](https://docs.solanamobile.com/assets/images/ndk-download-c7adebb1cb08c1d5e77d7c02aff3f167.png)
+
 
 #### **Optional: Create a Remote Development Build**
 
