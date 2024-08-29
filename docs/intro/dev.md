@@ -2,7 +2,7 @@
 sidebarLabel: Intro to Development
 title: "Getting Started with Solana Development"
 description: "Learn how to get started building on Solana"
-sidebarSortOrder: 1
+sidebarSortOrder: 2
 keywords:
   - solana basics
   - tutorial
@@ -126,7 +126,7 @@ solana-test-validator
 
 This will start a local validator on your machine that you can use to test your
 programs. You can
-[read more about local development in this guide](https://solana.com/developers/guides/getstarted/setup-local-development).
+[read more about local development in this guide](https://solana.com/docs/intro/installation).
 
 When building onchain programs, you have a choice to either build with native
 Rust (ie, without a framework) or use the Anchor framework. Anchor is a
@@ -195,6 +195,5 @@ problem can find your question!
 You're now ready to get started building on Solana!
 
 - [Deploy your first Solana program in the browser](/content/guides/getstarted/hello-world-in-your-browser.md)
-- [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
 - [Get started building programs locally with Rust](/content/guides/getstarted/local-rust-hello-world.md)
 - [Overview of writing Solana programs](/docs/programs/index.md)
