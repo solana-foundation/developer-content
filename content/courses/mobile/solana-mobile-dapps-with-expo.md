@@ -1230,9 +1230,7 @@ through the code for each of them and then show you the entire file at the end:
     } catch (error) {
       console.log(error);
     }
-  };
-   ```
-
+    }; 
    Minting the NFT after the image and metadata have been uploaded is as simple
    as calling `metaplex.nfts().create(...)`. Below shows the `createNFT`
    function tying everything together:
@@ -1505,26 +1503,30 @@ description to our `createNFT` function from `NFTProvider` to mint the NFT.
 
 ```tsx
 const mintNFT = async () => {
-  const result = await ImagePicker.launchCameraAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    aspect: [1, 1],
-    quality: 1,
-  });
+    try {
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
 
-  if (!result.canceled) {
-    setCurrentImage({
-      uri: result.assets[0].uri,
-      date: todaysDate,
-    });
+      if (!result.canceled) {
+        setCurrentImage({
+          uri: result.assets[0].uri,
+          date: todaysDate,
+        });
 
-    createNFT(
-      formatDate(todaysDate),
-      `${todaysDate.getTime()}`,
-      result.assets[0].uri,
-    );
-  }
-};
+        createNFT(
+          formatDate(todaysDate),
+          `${todaysDate.getTime()}`,
+          result.assets[0].uri
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 ```
 
 The full code for `MainScreen.tsx` is as follows:
