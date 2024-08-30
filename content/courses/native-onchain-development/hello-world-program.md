@@ -177,7 +177,7 @@ Err(404);
 Recall that all data stored on the Solana network are contained in what are
 referred to as accounts. Each account has its own unique address, which is used
 to identify and access the account data. Solana programs are a specific type of
-Solana account that store and execute instructions.
+Solana account that stores and executes instructions.
 
 #### Solana Program Crate
 
