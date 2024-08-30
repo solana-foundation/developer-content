@@ -25,7 +25,7 @@ description: How to deserialize data fetched from Solana accounts.
   signatures.
 - To pass instruction data from a client, it must be serialized into a byte
   buffer. To facilitate this process of serialization, we will be using
-  [Borsh](https://borsh.io/).
+  [Borsh](https://github.com/near/borsh).
 - Transactions can fail to be processed by the blockchain for any number of
   reasons, we’ll discuss some of the most common ones here.
 
@@ -34,19 +34,19 @@ description: How to deserialize data fetched from Solana accounts.
 ### Transactions
 
 <Callout type="note">This course requires completing
-[Introduction to Solana](/developers/courses/intro-to-solana) or equivalent
+[Introduction to Solana](/content/courses/intro-to-solana) or equivalent
 knowledge. It's also aimed at advanced developers that prefer more control over
 the ease of use and safe defaults Anchor provides. If you're new to developing
 onchain programs you may prefer
-[Anchor](/developers/courses/onchain-development)</Callout>
+[Anchor](/content/courses/onchain-development)</Callout>
 
-In [Introduction to Solana](/developers/courses/intro-to-solana) we learned how
-to create transactions with instructions for common Solana programs.
+In [Introduction to Solana](/content/courses/intro-to-solana) we learned how to
+create transactions with instructions for common Solana programs.
 
-This lessons shows how to create instructions for our own native Solana
-programs, which we will develop in a few lessons. Specifically, we're going to
-learn about serialization and deserialization, which is requiredfor native
-(non-Anchor) program development.
+This lesson shows how to create instructions for our own native Solana programs,
+which we will develop in a few lessons. Specifically, we're going to learn about
+serialization and deserialization, which is requiredfor native (non-Anchor)
+program development.
 
 #### Transaction Contents
 
@@ -137,7 +137,7 @@ function arguments.
 
 In addition to knowing what information to include in an instruction data
 buffer, you also need to serialize it properly. The most common serializer used
-in Solana is [Borsh](https://borsh.io). Per the website:
+in Solana is [Borsh](https://github.com/near/borsh). Per the website:
 
 > Borsh stands for Binary Object Representation Serializer for Hashing. It is
 > meant to be used in security-critical projects as it prioritizes consistency,
@@ -195,7 +195,7 @@ equipPlayerSchema.encode(
   buffer,
 );
 
-const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
+const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 ```
 
 Once a buffer is properly created and the data serialized, all that’s left is
@@ -225,7 +225,7 @@ equipPlayerSchema.encode(
   buffer,
 );
 
-const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
+const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 
 const endpoint = web3.clusterApiUrl("devnet");
 const connection = new web3.Connection(endpoint);
@@ -361,7 +361,7 @@ export class Movie {
   serialize(): Buffer {
     const buffer = Buffer.alloc(1000)
     this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer)
-    return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer))
+    return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer))
   }
 }
 ```
@@ -472,12 +472,12 @@ const handleTransactionSubmit = async (movie: Movie) => {
 The next step is to get all of the accounts that the transaction will read or
 write. In past lessons, the account where data will be stored has been given to
 you. This time, the account’s address is more dynamic, so it needs to be
-computed. We’ll cover this in-depth in the next lesson, but for now, you can use
+computed. We’ll cover this in depth in the next lesson, but for now, you can use
 the following, where `pda` is the address to the account where data will be
 stored:
 
 ```typescript
-const [pda] = await web3.PublicKey.findProgramAddress(
+const [pda] = web3.PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from(movie.title)],
   new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
 );
@@ -580,7 +580,6 @@ If you get stumped, you can
 Feel free to get creative with these challenges and take them even further. The
 instructions aren't here to hold you back!
 
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
+Push your code to GitHub and <Callout type="success" title="Completed the lab?">
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=6cb40094-3def-4b66-8a72-dd5f00298f61)!
 </Callout>
