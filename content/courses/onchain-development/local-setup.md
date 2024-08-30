@@ -56,12 +56,14 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 Next,
 [download the Solana CLI tools](https://docs.solana.com/cli/install-solana-cli-tools).
 
-Solana installation no longer supports symbolic channel names (`edge`, `beta`, `stable`), hence we'll have to specify the version.
+Solana installation no longer supports symbolic channel names (`edge`, `beta`,
+`stable`), hence we'll have to specify the version.
 
 > the command below will install version `1.18.22` of the Solana CLI.
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.22/install)"
+```
 
 Afterwards, `solana -V` should show `solana-cli 1.18.x` (any number for `x` is
 fine) which is the version of the Solana CLI installed in your system indicating
