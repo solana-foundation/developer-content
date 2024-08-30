@@ -60,7 +60,6 @@ To create an instance of `Program`, you'll need the following:
 - `Connection` - the cluster connection
 - `Wallet` - default keypair used to pay for and sign transactions
 - `Provider` - encapsulates the `Connection` to a Solana cluster and a `Wallet`
-- `ProgramId` - the program’s onchain address
 
 ![Anchor structure](/public/assets/courses/unboxed/anchor-client-structure.png)
 
@@ -383,7 +382,6 @@ Once you have the IDL and a provider, you can create an instance of `Program`.
 The constructor requires three parameters:
 
 - `idl` - the IDL as type `Idl`
-- `programId` - the onchain address of the program as a `string` or `PublicKey`
 - `Provider` - the provider discussed in the previous section
 
 The `Program` object creates a custom API you can use to interact with a Solana
@@ -396,9 +394,6 @@ and listen to events. You can also
 To create the `Program` object, first import `Program` and `Idl` from
 `@coral-xyz/anchor`. `Idl` is a type you can use when working with Typescript.
 
-Next, specify the `programId` of the program. We have to explicitly state the
-`programId` since there can be multiple programs with the same IDL structure
-(i.e. if the same program is deployed multiple times using different addresses).
 When creating the `Program` object, the default `Provider` is used if one is not
 explicitly specified.
 
@@ -419,13 +414,11 @@ const wallet = useAnchorWallet();
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 
-const programId = new PublicKey("JPLockxtkngHkaQT5AuRYow3HyUv5qWzmhwsCPd653n");
-const program = new Program(idl as Idl, programId) as Program<CounterContract>;
+const program = new Program(idl as Idl) as Program<CounterContract>;
 
 // we can also explicitly mention the provider
 const program = new Program(
   idl as Idl,
-  programId,
   provider,
 ) as Program<CounterContract>;
 ```
@@ -578,130 +571,106 @@ last lesson. As a reminder, the Counter program has two instructions:
 #### 1. Download the starter code
 
 Download
-[the starter code for this project](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/starter).
+[the starter code for this project](https://github.com/solana-developers/anchor-ping-frontend/tree/starter).
 Once you have the starter code, take a look around. Install the dependencies
 with `npm install` and then run the app with `npm run dev`.
 
-This project is a simple Next.js application. It includes the
-`WalletContextProvider` we created in the
-[Wallets lesson](https://github.com/Unboxed-Software/solana-course/blob/main/content/interact-with-wallets),
-the `idl.json` file for the Counter program, and the `Initialize` and
-`Increment` components we’ll be building throughout this lab. The `programId` of
-the program we’ll be invoking is also included in the starter code.
+This project is a simple Next.js application, created using `npx create-next-dapp`
+
+The `idl.json` file for the Counter program, and the `Initialize` and
+`Increment` components we’ll be building throughout this lab.
 
 #### 2. `Initialize`
 
-To begin, let’s complete the setup to create the `Program` object in
-`Initialize.tsx` component.
+To begin, let’s complete the setup to create the `useCounterProgram` hook in
+`components/counter/counter-data-access.tsx` component.
 
 Remember, we’ll need an instance of `Program` to use the Anchor `MethodsBuilder`
-to invoke the instructions on our program. For that, we'll need an Anchor wallet
-and a connection, which we can get from the `useAnchorWallet` and
-`useConnection` hooks. Let's also create a `useState` to capture the program
-instance.
+to invoke the instructions on our program. `create-solana-dapp` already creates a `getCounterProgram` for us, which will return us the `Program` instance. 
 
 ```typescript
-export const Initialize: FC<Props> = ({ setCounter }) => {
-  const [program, setProgram] = useState("")
-
-  const { connection } = useConnection()
-  const wallet = useAnchorWallet()
-
-  ...
+// This is a helper function to get the Counter Anchor program.
+export function getCounterProgram(provider: AnchorProvider) {
+  return new Program(CounterIDL as AnchorCounter, provider);
 }
 ```
 
-With that, we can work on creating the actual `Program` instance. Let's do this
-in a `useEffect`.
-
-First we need to either get the default provider if it already exists, or create
-it if it doesn't. We can do that by calling `getProvider` inside a try/catch
-block. If an error is thrown, that means there is no default provider and we
-need to create one.
-
-Once we have a provider, we can construct a `Program` instance.
+Now, in the `useCounterProgram` hook, we'll create a program instance
 
 ```typescript
-useEffect(() => {
-  let provider: anchor.Provider;
+const provider = useAnchorProvider();
+const program = getCounterProgram(provider);
+  ```
 
-  try {
-    provider = anchor.getProvider();
-  } catch {
-    provider = new anchor.AnchorProvider(connection, wallet, {});
-    anchor.setProvider(provider);
-  }
+- `useAnchorProvider` is an helper function at `components/solana/solana-provider` which returns the provider.
 
-  const program = new anchor.Program(
-    idl as anchor.Idl,
-    PROGRAM_ID,
-  ) as Program<AnchorCounter>;
-  setProgram(program);
-}, []);
-```
+Now that we've the program instance, we can actually invoke the program's
+`initialize` instruction. We'll do this using `useMutation`.
 
-Now that we've finished the Anchor setup, we can actually invoke the program's
-`initialize` instruction. We'll do this inside the `onClick` function.
-
-First, we’ll need to generate a new `Keypair` for the new `Counter` account
+Remember, We’ll need to generate a new `Keypair` for the new `Counter` account
 since we are initializing an account for the first time.
 
-Then we can use the Anchor `MethodsBuilder` to create and send a new
+```typescript
+  const initialize = useMutation({
+    mutationKey: ['counter', 'initialize', { cluster }],
+
+    mutationFn: (keypair: Keypair) =>
+      program.methods
+        .initialize()
+        .accounts({ counter: keypair.publicKey })
+        .signers([keypair])
+        .rpc(),
+
+    onSuccess: (signature) => {
+      transactionToast(signature);
+      return accounts.refetch();
+    },
+    onError: () => toast.error('Failed to initialize account'),
+  });
+  ```
+
+Just focus on the `mutationFn` which accepts a `keypair` which we'll be passing.
+We are using the Anchor `MethodsBuilder` to create and send a new
 transaction. Remember, Anchor can infer some of the accounts required, like the
 `user` and `systemAccount` accounts. However, it can't infer the `counter`
 account because we generate that dynamically, so you'll need to add it with
 `.accounts`. You'll also need to add that keypair as a sign with `.signers`.
 Lastly, you can use `.rpc()` to submit the transaction to the user's wallet.
 
-Once the transaction goes through, call `setUrl` with the explorer URL and then
-call `setCounter`, passing in the counter account.
+Once the transaction goes through,we are calling `onSuccess` with the signature and then
+fetching `accounts`.
+
+#### 3. `Accounts`
+
+In the above `initialize` mutation, we are calling `accounts.refetch()`.
+This is a to refresh the accounts that we have stored, every time a new account
+is initialized.
 
 ```typescript
-const onClick = async () => {
-  const sig = await program.methods
-    .initialize()
-    .accounts({
-      counter: newAccount.publicKey,
-    })
-    .signers([newAccount])
-    .rpc();
-
-  setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`);
-  setCounter(newAccount.publicKey);
-};
+const accounts = useQuery({
+  queryKey: ['counter', 'all', { cluster }],
+  queryFn: () => program.account.counter.all(),
+});
 ```
 
-#### 3. `Increment`
+We now use `account` from `program` instance to get all `counter` accounts created.
+This method internally calls, `getProgramAccounts`.
 
-Next, let’s move on the the `Increment.tsx` component. Just as before, complete
-the setup to create the `Program` object. In addition to calling `setProgram`,
-the `useEffect` should call `refreshCount`.
+#### 4. `Increment`
+
+Next, let’s move on the the `useCounterProgramAccount` hook. 
+As we have earlier already created `program` and `accounts` function in previous hook,
+we'll call the hooks to access them and not redefine them.
 
 Add the following code for the initial set up:
 
 ```typescript
-export const Increment: FC<Props> = ({ counter, setTransactionUrl }) => {
-  const [count, setCount] = useState(0)
-  const [program, setProgram] = useState<anchor.Program>()
-  const { connection } = useConnection()
-  const wallet = useAnchorWallet()
-
-  useEffect(() => {
-    let provider: anchor.Provider
-
-    try {
-      provider = anchor.getProvider()
-    } catch {
-      provider = new anchor.AnchorProvider(connection, wallet, {})
-      anchor.setProvider(provider)
-    }
-
-    const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID) as Program<AnchorCounter>
-    setProgram(program)
-    refreshCount(program)
-  }, [])
+export function useCounterProgramAccount({ account }: { account: PublicKey }) {
   ...
+
+  const { program, accounts } = useCounterProgram();
 }
+  
 ```
 
 Next, let’s use the Anchor `MethodsBuilder` to build a new instruction to invoke
@@ -709,53 +678,39 @@ the `increment` instruction. Again, Anchor can infer the `user` account from the
 wallet so we only need to include the `counter` account.
 
 ```typescript
-const incrementCount = async () => {
-  const sig = await program.methods
-    .increment()
-    .accounts({
-      counter: counter,
-      user: wallet.publicKey,
-    })
-    .rpc();
+const incrementMutation = useMutation({
+  mutationKey: ['counter', 'increment', { cluster, account }],
 
-  setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`);
-};
+  mutationFn: () =>
+    program.methods.increment().accounts({ counter: account }).rpc(),
+
+  onSuccess: (tx) => {
+    transactionToast(tx);
+    return accountQuery.refetch();
+  },
+});
 ```
 
-#### 4. Display the correct count
-
-Now that we can initialize the counter program and increment the count, we need
-to get our UI to show the count stored in the counter account.
-
-We'll show how to observe account changes in a future lesson, but for now we
-just have a button that calls `refreshCount` so you can click it to show the new
-count after each `increment` invocation.
-
-Inside `refreshCount`, let's use `program` to fetch the counter account, then
-use `setCount` to set the count to the number stored on the program:
+As the counter is getting updated, we'll update the counter count by calling
+`accountQuery.refetch()` when the transaction is success.
 
 ```typescript
-const refreshCount = async program => {
-  const counterAccount = await program.account.counter.fetch(counter);
-  setCount(counterAccount.count.toNumber());
-};
-```
+const accountQuery = useQuery({
+  queryKey: ['counter', 'fetch', { cluster, account }],
+  queryFn: () => program.account.counter.fetch(account),
+});
+  ```
 
-Super simple with Anchor!
-
-#### 5. Test the frontend
+#### 6. Test the frontend
 
 At this point, everything should work! You can test the frontend by running
-`npm run dev`.
+`yarn dev`.
 
-1. Connect your wallet and you should see the `Initialize Counter` button
-2. Click the `Initialize Counter` button, and then approve the transaction
-3. You should then see a link at the bottom of the screen to Solana Explorer for
-   the `initialize` transaction. The `Increment Counter` button, `Refresh Count`
-   button, and the count should also all appear.
-4. Click the `Increment Counter` button, and then approve the transaction
-5. Wait a few seconds and click `Refresh Count`. The count should increment on
-   the screen.
+1. Connect your wallet and head to `Counter Program` tab
+2. Click the `Create` button, and then approve the transaction
+3. You should then see a link at the bottom right of the screen to Solana Explorer for the `initialize` transaction. The `Increment` button and the count appear.
+4. Click the `Increment` button, and then approve the transaction
+5. Wait a few seconds . The count should increment on the screen.
 
 ![Anchor Frontend Demo](/public/assets/courses/unboxed/anchor-frontend-demo.gif)
 
@@ -786,11 +741,11 @@ Before building the component in the frontend, you’ll first need to:
 3. Update the `programId` with the one from your new program
 
 If you need some help, feel free to
-[reference this program](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-decrement).
+[reference this program](https://github.com/solana-developers/anchor-ping-frontend/tree/solution-increment).
 
 Try to do this independently if you can! But if you get stuck, feel free to
 reference
-the [solution code](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/solution-decrement).
+the [solution code](https://github.com/solana-developers/anchor-ping-frontend/tree/solution-decrement).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
