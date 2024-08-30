@@ -542,7 +542,7 @@ to see the review.
 
 If you need more time with this project to feel comfortable with these concepts,
 have a look at the
-[solution code](https://beta.solpg.io/66d67458cffcf4b13384d331) before
+[solution code](https://beta.solpg.io/66d67f31cffcf4b13384d334) before
 continuing.
 
 ## Challenge
@@ -570,7 +570,7 @@ Remember to replace the program ID in the frontend code with the one you've
 deployed.
 
 Try to do this independently if you can! But if you get stuck, feel free to
-reference the [solution code](https://beta.solpg.io/66d67458cffcf4b13384d331).
+reference the [solution code](https://beta.solpg.io/66d67f31cffcf4b13384d334).
 
 <Callout type="success" title="Completed the lab?">
 
