@@ -333,7 +333,7 @@ create new accounts to store the user’s movie review.
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can reference
-[the starter code](https://beta.solpg.io/6295b25b0e6ab1eb92d947f7).
+[the starter code](https://beta.solpg.io/66d67d97cffcf4b13384d333).
 
 Our program currently includes an `instruction.rs` file used to deserialize the
 `instruction_data` passed into the program entry point. We’ve also completed the
