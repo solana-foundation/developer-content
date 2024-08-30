@@ -17,8 +17,8 @@ description:
   fail.
 - Solana programs are commonly written in **Rust** with the **Anchor**
   framework.
-- Anchor programs have IDLs (Interface Description Language), small JSON files
-  that describe programs. IDLs can be used to automatically generate JS/TS
+- Anchor programs have IDLs (Interface Description Language) and small JSON
+  files that describe programs. IDLs can be used to automatically generate JS/TS
   libraries for a program.
 
 ## Overview
