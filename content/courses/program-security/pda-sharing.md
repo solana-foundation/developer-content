@@ -63,7 +63,8 @@ pub struct WithdrawTokens<'info> {
     pool: Account<'info, TokenPool>,
     vault: Account<'info, TokenAccount>,
     withdraw_destination: Account<'info, TokenAccount>,
-    authority: AccountInfo<'info>,
+    /// CHECK: PDA
+    authority: UncheckedAccount<'info>,
     token_program: Program<'info, Token>,
 }
 
@@ -124,7 +125,8 @@ pub struct WithdrawTokens<'info> {
     pool: Account<'info, TokenPool>,
     vault: Account<'info, TokenAccount>,
     withdraw_destination: Account<'info, TokenAccount>,
-    authority: AccountInfo<'info>,
+    /// CHECK: PDA
+    authority: UncheckedAccount<'info>,
     token_program: Program<'info, Token>,
 }
 
@@ -236,8 +238,9 @@ The starter code includes a program with two instructions and the boilerplate
 setup for the test file.
 
 The `initialize_pool` instruction initializes a new `TokenPool` that stores a
-`vault`, `mint`, `withdraw_destination`, and `bump`. The `vault` is a token
-account where the authority is set as a PDA derived using the `mint` address.
+`vault`, `mint`, `withdraw_destination`, and `bump`. The `vault` is a associated
+token account where the authority is set as a PDA derived using the `mint`
+address.
 
 The `withdraw_insecure` instruction will transfer tokens in the `vault` token
 account to a `withdraw_destination` token account.
@@ -271,12 +274,9 @@ it("Insecure initialize allows pool to be initialized with wrong vault", async (
       mint: mint,
       vault: vaultInsecure.address,
       withdrawDestination: withdrawDestinationFake,
-      payer: walletFake.publicKey,
     })
-    .signers([walletFake, poolInsecureFake])
+    .signers([poolInsecureFake])
     .rpc();
-
-  await new Promise(x => setTimeout(x, 1000));
 
   await spl.mintTo(
     connection,
@@ -288,24 +288,21 @@ it("Insecure initialize allows pool to be initialized with wrong vault", async (
   );
 
   const account = await spl.getAccount(connection, vaultInsecure.address);
-  expect(Number(account.amount)).to.equal(100);
+  expect(account.amount).eq(100n);
 });
 
-it("Insecure withdraw allows stealing from vault", async () => {
+it("Insecure withdraw allows withdraw to wrong destination", async () => {
   await program.methods
     .withdrawInsecure()
     .accounts({
       pool: poolInsecureFake.publicKey,
-      vault: vaultInsecure.address,
-      withdrawDestination: withdrawDestinationFake,
       authority: authInsecure,
-      signer: walletFake.publicKey,
     })
-    .signers([walletFake])
     .rpc();
 
   const account = await spl.getAccount(connection, vaultInsecure.address);
-  expect(Number(account.amount)).to.equal(0);
+
+  expect(account.amount).eq(0n);
 });
 ```
 
@@ -319,7 +316,7 @@ Now let's add a new instruction to the program for securely initializing a pool.
 
 This new `initialize_pool_secure` instruction will initialize a `pool` account
 as a PDA derived using the `withdraw_destination`. It will also initialize a
-`vault` token account with the authority set as the `pool` PDA.
+`vault` associated token account with the authority set as the `pool` PDA.
 
 ```rust
 pub fn initialize_pool_secure(ctx: Context<InitializePoolSecure>) -> Result<()> {
@@ -337,7 +334,7 @@ pub struct InitializePoolSecure<'info> {
     #[account(
         init,
         payer = payer,
-        space = 8 + 32 + 32 + 32 + 1,
+        space = DISCRIMINATOR_SIZE + TokenPool::INIT_SPACE,
         seeds = [withdraw_destination.key().as_ref()],
         bump
     )]
@@ -376,7 +373,6 @@ pub fn withdraw_secure(ctx: Context<WithdrawTokensSecure>) -> Result<()> {
     ];
     token::transfer(ctx.accounts.transfer_ctx().with_signer(&[seeds]), amount)
 }
-
 ...
 
 #[derive(Accounts)]
@@ -420,7 +416,7 @@ expected:
 
 ```typescript
 it("Secure pool initialization and withdraw works", async () => {
-  const withdrawDestinationAccount = await getAccount(
+  const withdrawDestinationAccount = await spl.getAccount(
     provider.connection,
     withdrawDestination,
   );
@@ -428,7 +424,6 @@ it("Secure pool initialization and withdraw works", async () => {
   await program.methods
     .initializePoolSecure()
     .accounts({
-      pool: authSecure,
       mint: mint,
       vault: vaultRecommended.publicKey,
       withdrawDestination: withdrawDestination,
@@ -450,20 +445,17 @@ it("Secure pool initialization and withdraw works", async () => {
   await program.methods
     .withdrawSecure()
     .accounts({
-      pool: authSecure,
       vault: vaultRecommended.publicKey,
       withdrawDestination: withdrawDestination,
     })
     .rpc();
 
-  const afterAccount = await getAccount(
+  const afterAccount = await spl.getAccount(
     provider.connection,
     withdrawDestination,
   );
 
-  expect(
-    Number(afterAccount.amount) - Number(withdrawDestinationAccount.amount),
-  ).to.equal(100);
+  expect(afterAccount.amount - withdrawDestinationAccount.amount).eq(100n);
 });
 ```
 
@@ -481,11 +473,10 @@ it("Secure withdraw doesn't allow withdraw to wrong destination", async () => {
     await program.methods
       .withdrawSecure()
       .accounts({
-        pool: authSecure,
         vault: vaultRecommended.publicKey,
         withdrawDestination: withdrawDestinationFake,
       })
-      .signers([walletFake])
+      .signers([vaultRecommended])
       .rpc();
 
     assert.fail("expected error");
@@ -508,7 +499,6 @@ it("Secure pool initialization doesn't allow wrong vault", async () => {
     await program.methods
       .initializePoolSecure()
       .accounts({
-        pool: authSecure,
         mint: mint,
         vault: vaultInsecure.address,
         withdrawDestination: withdrawDestination,
