@@ -417,10 +417,7 @@ setProvider(provider);
 const program = new Program(idl as Idl) as Program<CounterContract>;
 
 // we can also explicitly mention the provider
-const program = new Program(
-  idl as Idl,
-  provider,
-) as Program<CounterContract>;
+const program = new Program(idl as Idl, provider) as Program<CounterContract>;
 ```
 
 ### Anchor `MethodsBuilder`
@@ -575,7 +572,8 @@ Download
 Once you have the starter code, take a look around. Install the dependencies
 with `npm install` and then run the app with `npm run dev`.
 
-This project is a simple Next.js application, created using `npx create-next-dapp`
+This project is a simple Next.js application, created using
+`npx create-next-dapp`
 
 The `idl.json` file for the Counter program, and the `Initialize` and
 `Increment` components we’ll be building throughout this lab.
@@ -586,7 +584,8 @@ To begin, let’s complete the setup to create the `useCounterProgram` hook in
 `components/counter/counter-data-access.tsx` component.
 
 Remember, we’ll need an instance of `Program` to use the Anchor `MethodsBuilder`
-to invoke the instructions on our program. `create-solana-dapp` already creates a `getCounterProgram` for us, which will return us the `Program` instance. 
+to invoke the instructions on our program. `create-solana-dapp` already creates
+a `getCounterProgram` for us, which will return us the `Program` instance.
 
 ```typescript
 // This is a helper function to get the Counter Anchor program.
@@ -600,9 +599,10 @@ Now, in the `useCounterProgram` hook, we'll create a program instance
 ```typescript
 const provider = useAnchorProvider();
 const program = getCounterProgram(provider);
-  ```
+```
 
-- `useAnchorProvider` is an helper function at `components/solana/solana-provider` which returns the provider.
+- `useAnchorProvider` is an helper function at
+  `components/solana/solana-provider` which returns the provider.
 
 Now that we've the program instance, we can actually invoke the program's
 `initialize` instruction. We'll do this using `useMutation`.
@@ -611,56 +611,56 @@ Remember, We’ll need to generate a new `Keypair` for the new `Counter` account
 since we are initializing an account for the first time.
 
 ```typescript
-  const initialize = useMutation({
-    mutationKey: ['counter', 'initialize', { cluster }],
+const initialize = useMutation({
+  mutationKey: ["counter", "initialize", { cluster }],
 
-    mutationFn: (keypair: Keypair) =>
-      program.methods
-        .initialize()
-        .accounts({ counter: keypair.publicKey })
-        .signers([keypair])
-        .rpc(),
+  mutationFn: (keypair: Keypair) =>
+    program.methods
+      .initialize()
+      .accounts({ counter: keypair.publicKey })
+      .signers([keypair])
+      .rpc(),
 
-    onSuccess: (signature) => {
-      transactionToast(signature);
-      return accounts.refetch();
-    },
-    onError: () => toast.error('Failed to initialize account'),
-  });
-  ```
+  onSuccess: signature => {
+    transactionToast(signature);
+    return accounts.refetch();
+  },
+  onError: () => toast.error("Failed to initialize account"),
+});
+```
 
 Just focus on the `mutationFn` which accepts a `keypair` which we'll be passing.
-We are using the Anchor `MethodsBuilder` to create and send a new
-transaction. Remember, Anchor can infer some of the accounts required, like the
-`user` and `systemAccount` accounts. However, it can't infer the `counter`
-account because we generate that dynamically, so you'll need to add it with
-`.accounts`. You'll also need to add that keypair as a sign with `.signers`.
-Lastly, you can use `.rpc()` to submit the transaction to the user's wallet.
+We are using the Anchor `MethodsBuilder` to create and send a new transaction.
+Remember, Anchor can infer some of the accounts required, like the `user` and
+`systemAccount` accounts. However, it can't infer the `counter` account because
+we generate that dynamically, so you'll need to add it with `.accounts`. You'll
+also need to add that keypair as a sign with `.signers`. Lastly, you can use
+`.rpc()` to submit the transaction to the user's wallet.
 
-Once the transaction goes through,we are calling `onSuccess` with the signature and then
-fetching `accounts`.
+Once the transaction goes through,we are calling `onSuccess` with the signature
+and then fetching `accounts`.
 
 #### 3. `Accounts`
 
-In the above `initialize` mutation, we are calling `accounts.refetch()`.
-This is a to refresh the accounts that we have stored, every time a new account
-is initialized.
+In the above `initialize` mutation, we are calling `accounts.refetch()`. This is
+a to refresh the accounts that we have stored, every time a new account is
+initialized.
 
 ```typescript
 const accounts = useQuery({
-  queryKey: ['counter', 'all', { cluster }],
+  queryKey: ["counter", "all", { cluster }],
   queryFn: () => program.account.counter.all(),
 });
 ```
 
-We now use `account` from `program` instance to get all `counter` accounts created.
-This method internally calls, `getProgramAccounts`.
+We now use `account` from `program` instance to get all `counter` accounts
+created. This method internally calls, `getProgramAccounts`.
 
 #### 4. `Increment`
 
-Next, let’s move on the the `useCounterProgramAccount` hook. 
-As we have earlier already created `program` and `accounts` function in previous hook,
-we'll call the hooks to access them and not redefine them.
+Next, let’s move on the the `useCounterProgramAccount` hook. As we have earlier
+already created `program` and `accounts` function in previous hook, we'll call
+the hooks to access them and not redefine them.
 
 Add the following code for the initial set up:
 
@@ -670,7 +670,7 @@ export function useCounterProgramAccount({ account }: { account: PublicKey }) {
 
   const { program, accounts } = useCounterProgram();
 }
-  
+
 ```
 
 Next, let’s use the Anchor `MethodsBuilder` to build a new instruction to invoke
@@ -679,12 +679,12 @@ wallet so we only need to include the `counter` account.
 
 ```typescript
 const incrementMutation = useMutation({
-  mutationKey: ['counter', 'increment', { cluster, account }],
+  mutationKey: ["counter", "increment", { cluster, account }],
 
   mutationFn: () =>
     program.methods.increment().accounts({ counter: account }).rpc(),
 
-  onSuccess: (tx) => {
+  onSuccess: tx => {
     transactionToast(tx);
     return accountQuery.refetch();
   },
@@ -696,10 +696,10 @@ As the counter is getting updated, we'll update the counter count by calling
 
 ```typescript
 const accountQuery = useQuery({
-  queryKey: ['counter', 'fetch', { cluster, account }],
+  queryKey: ["counter", "fetch", { cluster, account }],
   queryFn: () => program.account.counter.fetch(account),
 });
-  ```
+```
 
 #### 6. Test the frontend
 
@@ -708,7 +708,9 @@ At this point, everything should work! You can test the frontend by running
 
 1. Connect your wallet and head to `Counter Program` tab
 2. Click the `Create` button, and then approve the transaction
-3. You should then see a link at the bottom right of the screen to Solana Explorer for the `initialize` transaction. The `Increment` button and the count appear.
+3. You should then see a link at the bottom right of the screen to Solana
+   Explorer for the `initialize` transaction. The `Increment` button and the
+   count appear.
 4. Click the `Increment` button, and then approve the transaction
 5. Wait a few seconds . The count should increment on the screen.
 
