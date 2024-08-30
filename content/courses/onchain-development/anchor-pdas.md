@@ -323,13 +323,14 @@ const BORSH_LEN: usize = 4;
 
 The `realloc` constraint from the above example can be broken down as follows:
 
-- the discriminator (8 bytes)
-- the length of the Borsh serialized data (4 bytes)
+- the `DISCRIMINATOR` is `8`
+- the `BORSH_LEN` is `4` for the space required to store the length of the
+  string
 - `instruction_data.len()` is the length of the string itself
 
 > [BORSH](https://solanacookbook.com/guides/serialization.html) stands for
-> Binary Object Representation Serializer for Hashing and is used to efficiently
-> and compactly serialize and deserialize data structures.
+> _Binary Object Representation Serializer for Hashing_ and is used to
+> efficiently and compactly serialize and deserialize data structures.
 
 If the change in account data length is additive, lamports will be transferred
 from the `realloc::payer` to the account to maintain rent exemption. Likewise,
