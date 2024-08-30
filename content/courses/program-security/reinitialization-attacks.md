@@ -2,7 +2,7 @@
 title: Reinitialization Attacks
 objectives:
   - Explain security risks associated with a reinitialization vulnerability
-  - Use long-form Rust check if an account has already been initialized
+  - Use native Rust to check if an account has already been initialized
   - Using Anchor’s `init` constraint to initialize accounts, which automatically
     sets an account discriminator that is checked to prevent the
     reinitialization of an account
@@ -254,8 +254,8 @@ program and then invokes the `insecure_initialization` instruction twice using
 the same account.
 
 Since there are no checks to verify that the account data has not already been
-initialized, the insecure\*initialization instruction will complete successfully
-both times, even with a _different_ authority account.
+initialized, the `insecure_initialization` instruction will be completed
+successfully both times, even with a _different_ authority account.
 
 ````typescript
 import * as anchor from "@coral-xyz/anchor";
