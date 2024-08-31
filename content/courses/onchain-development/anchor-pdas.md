@@ -471,7 +471,7 @@ impl Space for MovieAccountState {
 
 The `Space` trait will force us to define the space of our account for
 initialization, by defining the `INIT_SPACE` constant. This constant can then be
-used during the account initalization.
+used during the account initialization.
 
 Note that, in this case, since the account state is dynamic (`title` and
 `description` are strings without a fixed size), we will add
@@ -486,7 +486,7 @@ length storage + 4 bytes for the description length storage.
 ### Custom error codes
 
 During our implementation, we will be doing some checks and throwing some custom
-errors in case those checks are bot successful.
+errors in case those checks are not successful.
 
 For, that let's go ahead and create an enum that will contain the different type
 of errors as well as the error messages associated:
