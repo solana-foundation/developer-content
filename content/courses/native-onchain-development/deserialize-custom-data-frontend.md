@@ -14,7 +14,7 @@ description:
 - Programs store data in PDAs, which stands for **Program Derived Address**.
 - PDAs do not have a corresponding secret key.
 - To store and locate data, derive a PDA using the
-  `findProgramAddress(seeds, programid)` method.
+  `findProgramAddressSync(seeds, programid)` method.
 - You can get the accounts belonging to a program using
   `getProgramAccounts(programId)`.
 - Account data needs to be deserialized using the same layout used to store it
@@ -32,7 +32,7 @@ the data they store.
 As the saying goes, everything in Solana is an account. Even programs. Programs
 are accounts that store code and are marked as executable. This code can be
 executed by the Solana runtime when instructed to do so. A program address is a
-public keys on the Ed25519 Elliptic Curve. Like all public keys, they have
+public key on the Ed25519 Elliptic Curve. Like all public keys, they have
 corresponding secret keys.
 
 Programs store data separately from their code. Programs store data in PDAs,
@@ -44,7 +44,7 @@ Solana, but the pattern is familiar:
 - You can also consider PDAs as records in a database, with the address being
   the primary key used to look up the values inside.
 
-PDAs combine a program addresss and some developer-chosen seeds to create
+PDAs combine a program address and some developer-chosen seeds to create
 addresses that store individual pieces of data. Since PDAs are addresses that
 lie _off_ the Ed25519 Elliptic curve, PDAs don't have secret keys. Instead, PDAs
 can be signed for by the program address used to create them.
@@ -52,7 +52,7 @@ can be signed for by the program address used to create them.
 PDAs and the data inside them can be consistently found based on the program
 address, bump, and seeds. To find a PDA, the program ID and seeds of the
 developer’s choice (like a string of text) are passed through the
-[`findProgramAddress()`](https://solana-labs.github.io/solana-web3.js/classes/PublicKey.html#findProgramAddress)
+[`findProgramAddressSync()`](https://solana-labs.github.io/solana-web3.js/classes/PublicKey.html#findProgramAddressSync)
 function.
 
 Let's have a look at some examples...
@@ -65,7 +65,7 @@ the client wanted to read data from this PDA, it could derive the address using
 the program ID and this same seed.
 
 ```typescript
-const [pda, bump] = await findProgramAddress(
+const [pda, bump] = findProgramAddressSync(
   Buffer.from("GLOBAL_STATE"),
   programId,
 );
@@ -81,7 +81,7 @@ separation makes it possible for the client to locate each user’s data by
 finding the address using the program ID and the user’s public key.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+const [pda, bump] = web3.PublicKey.findProgramAddressSync(
   [publicKey.toBuffer()],
   programId,
 );
@@ -97,7 +97,7 @@ account per note where each PDA is derived with the user’s public key and the
 note’s title.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+const [pda, bump] = web3.PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from("Shopping list")],
   programId,
 );
@@ -113,7 +113,7 @@ exist at the same time.
 
 In addition to deriving addresses, you can fetch all accounts created by a
 program using `connection.getProgramAccounts(programId)`. This returns an array
-of objects where each object has `pubkey` property representing the public key
+of objects where each object has a `pubkey` property representing the public key
 of the account and an `account` property of type `AccountInfo`. You can use the
 `account` property to get the account data.
 
@@ -131,8 +131,9 @@ const accounts = connection.getProgramAccounts(programId).then(accounts => {
 The `data` property on an `AccountInfo` object is a buffer. To use it
 efficiently, you’ll need to write code that deserializes it into something more
 usable. This is similar to the serialization process we covered last lesson.
-Just as before, we’ll use [Borsh](https://borsh.io/) and `@coral-xyz/borsh`. If
-you need a refresher on either of these, have a look at the previous lesson.
+Just as before, we’ll use [Borsh](https://github.com/near/borsh) and
+`@coral-xyz/borsh`. If you need a refresher on either of these, have a look at
+the previous lesson.
 
 Deserializing requires knowledge of the account layout ahead of time. When
 creating your own programs, you will define how this is done as part of that
@@ -175,7 +176,7 @@ Let’s practice this together by continuing to work on the Movie Review app fro
 the last lesson. No worries if you’re just jumping into this lesson - it should
 be possible to follow either way.
 
-As a refresher, this project uses a Solana program deployed on Devnet which lets
+As a refresher, this project uses a Solana program deployed on Devnet that lets
 users review movies. Last lesson, we added functionality to the frontend
 skeleton letting users submit movie reviews but the list of reviews is still
 showing mock data. Let’s fix that by fetching the program’s storage accounts and
@@ -206,9 +207,9 @@ its data is structured. A reminder:
 ![Ed25519 curve showing Movie Review Program](/public/assets/courses/unboxed/movie-review-program.svg)
 
 The program's executable data is in a program account, but individual reviews
-are kept in PDAs. We use `findProgramAddress()` to create a PDA that's unique
-for every wallet, for every film title. We'll store the following data in the
-PDA's `data`:
+are kept in PDAs. We use `findProgramAddressSync()` to create a PDA that's
+unique for every wallet, for every film title. We'll store the following data in
+the PDA's `data`:
 
 1. `initialized` as a boolean representing whether or not the account has been
    initialized.
@@ -247,7 +248,7 @@ structured.
 #### 3. Create a method to deserialize data
 
 Now that we have the buffer layout set up, let’s create a static method in
-`Movie` called `deserialize` that will take an optional `Buffer` and return a
+`Movie` called `deserialize` that will take an optional `buffer` and return a
 `Movie` object or `null`.
 
 ```typescript
@@ -283,10 +284,10 @@ export class Movie {
 }
 ```
 
-The method first checks whether or not the buffer exists and returns `null` if
-it doesn’t. Next, it uses the layout we created to decode the buffer, then uses
-the data to construct and return an instance of `Movie`. If the decoding fails,
-the method logs the error and returns `null`.
+The method first checks whether the buffer exists and returns `null` if it
+doesn’t. Next, it uses the layout we created to decode the buffer, then uses the
+data to construct and return an instance of `Movie`. If the decoding fails, the
+method logs the error and returns `null`.
 
 #### 4. Fetch movie review accounts
 
@@ -377,7 +378,6 @@ If you get really stumped, feel free to
 As always, get creative with these challenges and take them beyond the
 instructions if you want!
 
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
+Push your code to GitHub and <Callout type="success" title="Completed the lab?">
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9cb89e09-2c97-4185-93b0-c89f7aca7677)!
 </Callout>
