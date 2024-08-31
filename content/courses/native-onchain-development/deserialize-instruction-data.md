@@ -136,9 +136,9 @@ let light_status = LightStatus::On { color: String::from("red") };
 ```
 
 In this example, setting a variable to the `On` variant of `LightStatus`
-requires also setting the value of `color`. You can check out more such examples
-of using enum
-[here](https://doc.rust-lang.org/rust-by-example/custom_types/enum.html).
+requires also setting the value of `color`. You can check out more examples of
+using enums in Rust by visiting
+[this Rust by Example page on enums](https://doc.rust-lang.org/rust-by-example/custom_types/enum.html).
 
 #### Match statements
 
@@ -414,7 +414,7 @@ location, typically in `lib.rs`. Each file must be registered this way.
 pub mod instruction;
 ```
 
-Additionally, use the pub keyword to make declarations available for `use`
+Additionally, use the `pub` keyword to make declarations available for `use`
 statements in other files.
 
 ```rust
@@ -430,7 +430,7 @@ cover the remaining implementation.
 ### 1. Entry point
 
 Using [Solana Playground](https://beta.solpg.io/), clear everything in the
-current lib.rs file if it's still populated from the previous lesson. Then,
+current `lib.rs` file if it's still populated from the previous lesson. Then,
 bring in the following crates and define the program's entry point using the
 entrypoint macro.
 
