@@ -271,7 +271,7 @@ plus a few additional polyfills:
          path-browserify \
          react-native-url-polyfill \
          react-native-quick-crypto
-  ```
+```
 
 All of the libraries that the above polyfills are meant to replace are utilized
 by the Metaplex library in the background. It's unlikely you'll be importing any
