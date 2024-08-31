@@ -70,6 +70,32 @@ To start the Solana Test Validator, run the following command:
 solana-test-validator
 ```
 
+When running `solana-test-validator`, you should see output indicating that the
+validator is working correctly. Below is an example of what the output should
+look like:
+
+```bash
+$ solana-test-validator
+--faucet-sol argument ignored, ledger already exists
+Ledger location: test-ledger
+Log: test-ledger/validator.log
+⠴ Initializing...
+Waiting for fees to stabilize 1...
+Identity: J8yKZJa5NtcmCQqmBRC6Fe8X6AECo8Vc3d7L3dF9JPiM
+Genesis Hash: FTPnCMDzTEthZxE6DvHbsWWv83F2hFe1GFvpVFBMUoys
+Version: 1.18.22
+Shred Version: 49491
+Gossip Address: 127.0.0.1:1024
+TPU Address: 127.0.0.1:1027
+JSON RPC URL: http://127.0.0.1:8899
+WebSocket PubSub URL: ws://127.0.0.1:8900
+⠄ 00:00:25 | Processed Slot: 114 | Confirmed Slot: 114 | Finalized Slot: 82 | Full Snapshot Slot: - | Incremental Snapshot Slot: - | Transactions: 111 | ◎499.999445000
+```
+
+If you see this output, it means the Solana test validator is running correctly.
+You should cancel the process by pressing CTRL + C, as you'll need to run the
+anchor test command next.
+
 For more detailed information, you can refer to the
 [Solana Test Validator guide](https://solana.com/developers/guides/getstarted/solana-test-validator).
 
