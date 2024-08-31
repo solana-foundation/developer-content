@@ -1311,9 +1311,9 @@ describe("burry-escrow-vrf", () => {
       // Check whether the data onchain is equal to local 'data'
       assert(failUnlockPrice == newAccount.unlockPrice);
       assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
+    } catch (error) {
+      console.log(error);
+      assert.fail(error);
     }
   });
 
@@ -1341,13 +1341,18 @@ describe("burry-escrow-vrf", () => {
 
       await provider.connection.confirmTransaction(tx, "confirmed");
       console.log("Your transaction signature", tx);
-    } catch (e) {
+    } catch (error) {
       // verify tx returns expected error
       didFail = true;
-      console.log(e.error.errorMessage);
+      // Safely access error message and verify it
+      const errorMessage =
+        error?.error?.errorMessage || error.message || error.toString();
+      console.log(errorMessage);
       assert(
-        e.error.errorMessage ==
+        errorMessage.includes(
           "Current SOL price is not above Escrow unlock price.",
+        ),
+        "Unexpected error message: " + errorMessage,
       );
     }
 
@@ -1517,8 +1522,8 @@ it("Roll till you can withdraw", async () => {
       })
       .signers([payer])
       .rpc();
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
     assert.fail();
   }
 
@@ -1580,8 +1585,8 @@ it("Roll till you can withdraw", async () => {
         console.log("Resetting die...");
         await delay(5000);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       assert.fail();
     }
   }
