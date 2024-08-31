@@ -40,8 +40,8 @@ import Arweave from "arweave";
 
   // const wallet = JSON.parse(fs.readFileSync("./code/nfts/upload-arweave/wallet.json", "utf-8"))
   const wallet = await arweave.wallets.generate();
-  const addr = await arweave.wallets.getAddress(wallet);
-  console.log("address ", addr);
+  const address = await arweave.wallets.getAddress(wallet);
+  console.log("address:, ", address);
 
   await arweave.api.get(`/mint/${encodeURI(addr)}/10000000000000000`);
   await arweave.transactions.sign(transaction, wallet);
