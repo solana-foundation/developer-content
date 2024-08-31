@@ -12,7 +12,9 @@ description:
 
 ## Summary
 
-- **Use discriminators** to distinguish between different account types.
+- **Discriminators** are 8-byte identifiers written to accounts that distinguish
+  between different account types, ensuring programs interact with the correct
+  data.
 - **Implement a discriminator** in Rust by including a field in the account
   struct to represent the account type.
 
