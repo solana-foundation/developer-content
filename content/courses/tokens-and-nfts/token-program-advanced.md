@@ -12,7 +12,8 @@ description:
 
 Finally, we'll cover burning tokens, and delegation. You may not use these in
 your own application, so if you're really excited about NFTs, feel free to skip
-to [creating NFTs with Metaplex](/content/courses/tokens/nfts-with-metaplex)!
+to
+[creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex.md)!
 
 ### Burn Tokens
 
@@ -167,16 +168,17 @@ async function buildRevokeTransaction(
 ### Lab
 
 This lab extends the lab from the
-[previous chapter](/content/courses/tokens/token-program).
+[previous chapter](/content/courses/tokens-and-nfts/token-program.md).
 
 #### 1. Delegating tokens
 
 Let's use `approve` from `spl-token` to authorize a delegate to transfer or burn
 up to 50 tokens from our token account.
 
-Just like [Transferring Tokens](/content/courses/tokens/token-program) in the
+Just like
+[Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md) in the
 previous lab, you can
-[add a second account on devnet](/developers/courses/intro-to-solana/intro-to-cryptography)
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account!
 
 Create a new file `delegate-tokens.ts`
@@ -250,7 +252,7 @@ All we will need for this function is the token account and user. After the
 const revokeTransactionSignature = await revoke(
   connection,
   user,
-  delegate,
+  sourceTokenAccount.address,
   user.publicKey,
 );
 
