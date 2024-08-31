@@ -1,61 +1,58 @@
 ---
 title: Signer Authorization
 objectives:
-  - Explain the security risks associated with not performing appropriate signer
-    checks
-  - Implement signer checks using long-form Rust
+  - Explain the security risks of not performing appropriate signer checks.
+  - Implement signer checks using native Rust
   - Implement signer checks using Anchor’s `Signer` type
   - Implement signer checks using Anchor’s `#[account(signer)]` constraint
 description:
-  "Ensure instructions are only ran by authorized accounts by implmementing
-  Signer checks."
+  "Ensure instructions are only executed by authorized accounts by implementing
+  signer checks."
 ---
 
 ## Summary
 
-- Use **Signer Checks** to verify that specific accounts have signed a
-  transaction. Without appropriate signer checks, accounts may be able to
-  execute instructions they shouldn’t be authorized to perform.
-- To implement a signer check in Rust, simply check that an account’s
-  `is_signer` property is `true`
+- **Signer Checks** are essential to verify that specific accounts have signed a
+  transaction. Without proper signer checks, unauthorized accounts may execute
+  instructions they shouldn't be allowed to perform.
+- In Rust, implement a signer check by verifying that an account's `is_signer`
+  property is `true`:
+
   ```rust
   if !ctx.accounts.authority.is_signer {
-  	return Err(ProgramError::MissingRequiredSignature.into());
+      return Err(ProgramError::MissingRequiredSignature.into());
   }
   ```
-- In Anchor, you can use the **`Signer`** account type in your account
-  validation struct to have Anchor automatically perform a signer check on a
-  given account
-- Anchor also has an account constraint that will automatically verify that a
-  given account has signed a transaction
+
+- In Anchor, you can use the `Signer` account type in your account validation
+  struct to automatically perform a signer check on a given account.
+- Anchor also provides the `#[account(signer)]` constraint, which automatically
+  verifies that a specified account has signed the transaction.
 
 ## Lesson
 
-Signer checks are used to verify that a given account’s owner has authorized a
-transaction. Without a signer check, operations whose execution should be
-limited to only specific accounts can potentially be performed by any account.
-In the worst case scenario, this could result in wallets being completely
-drained by attackers passing in whatever account they want to an instruction.
+**Signer checks** ensure that only authorized accounts can execute specific
+instructions. Without these checks, any account might perform operations that
+should be restricted, potentially leading to severe security vulnerabilities,
+such as unauthorized access and control over program accounts.
 
-#### Missing Signer Check
+### Missing Signer Check
 
-The example below shows an oversimplified version of an instruction that updates
-the `authority` field stored on a program account.
+Below is an oversimplified instruction that updates the `authority` field on a
+program account. Notice that the `authority` field in the `UpdateAuthority`
+account validation struct is of type `AccountInfo`. In Anchor, the `AccountInfo`
+type indicates that no checks are performed on the account before executing the
+instruction.
 
-Notice that the `authority` field on the `UpdateAuthority` account validation
-struct is of type `AccountInfo`. In Anchor, the `AccountInfo` account type
-indicates that no checks are performed on the account prior to instruction
-execution.
-
-Although the `has_one` constraint is used to validate the `authority` account
-passed into the instruction matches the `authority` field stored on the `vault`
-account, there is no check to verify the `authority` account authorized the
+Although the `has_one` constraint ensures that the `authority` account passed to
+the instruction matches the `authority` field on the `vault` account, there is
+no verification that the `authority` account actually authorized the
 transaction.
 
-This means an attacker can simply pass in the public key of the `authority`
-account and their own public key as the `new_authority` account to reassign
-themselves as the new authority of the `vault` account. At that point, they can
-interact with the program as the new authority.
+This omission allows an attacker to pass in the `authority` account’s public key
+and their own public key as the `new_authority` account, effectively reassigning
+themselves as the new authority of the `vault` account. Once they have control,
+they can interact with the program as the new authority.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -90,12 +87,10 @@ pub struct Vault {
 }
 ```
 
-#### Add signer authorization checks
+### Adding Signer Authorization Checks
 
-All you need to do to validate that the `authority` account signed is to add a
-signer check within the instruction. That simply means checking that
-`authority.is_signer` is `true`, and returning a `MissingRequiredSignature`
-error if `false`.
+To validate that the `authority` account signed the transaction, add a signer
+check within the instruction:
 
 ```typescript
 if !ctx.accounts.authority.is_signer {
@@ -103,10 +98,9 @@ if !ctx.accounts.authority.is_signer {
 }
 ```
 
-By adding a signer check, the instruction would only process if the account
-passed in as the `authority` account also signed the transaction. If the
-transaction was not signed by the account passed in as the `authority` account,
-then the transaction would fail.
+By adding this check, the instruction will only proceed if the `authority`
+account has signed the transaction. If the account did not sign, the transaction
+will fail.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -145,20 +139,13 @@ pub struct Vault {
 }
 ```
 
-#### Use Anchor’s `Signer` account type
+### Use Anchor’s Signer Account Type
 
-However, putting this check into the instruction function muddles the separation
-between account validation and instruction logic.
-
-Fortunately, Anchor makes it easy to perform signer checks by providing the
-`Signer` account type. Simply change the `authority` account’s type in the
-account validation struct to be of type `Signer`, and Anchor will check at
-runtime that the specified account is a signer on the transaction. This is the
-approach we generally recommend since it allows you to separate the signer check
-from instruction logic.
-
-In the example below, if the `authority` account does not sign the transaction,
-then the transaction will fail before even reaching the instruction logic.
+Incorporating the `signer` check directly within the instruction logic can blur
+the separation between account validation and instruction execution. To maintain
+this separation, use Anchor's `Signer` account type. By changing the `authority`
+account's type to `Signer` in the validation struct, Anchor automatically checks
+at runtime that the specified account signed the transaction.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -196,30 +183,21 @@ pub struct Vault {
 Note that when you use the `Signer` type, no other ownership or type checks are
 performed.
 
-#### Use Anchor’s `#[account(signer)]` constraint
+### Using Anchor’s `#[account(signer)]` Constraint
 
-While in most cases, the `Signer` account type will suffice to ensure an account
-has signed a transaction, the fact that no other ownership or type checks are
-performed means that this account can’t really be used for anything else in the
-instruction.
+While the `Signer` account type is useful, it doesn't perform other ownership or
+type checks, limiting its use in instruction logic. The `#[account(signer)]`
+constraint addresses this by verifying that the account signed the transaction
+while allowing access to its underlying data.
 
-This is where the `signer` _constraint_ comes in handy. The `#[account(signer)]`
-constraint allows you to verify the account signed the transaction, while also
-getting the benefits of using the `Account` type if you wanted access to it’s
-underlying data as well.
+For example, if you expect an account to be both a signer and a data source,
+using the `Signer` type would require manual deserialization, and you wouldn't
+benefit from automatic ownership and type checking. Instead, the
+`#[account(signer)]` constraint allows you to access the data and ensure the
+account signed the transaction.
 
-As an example of when this would be useful, imagine writing an instruction that
-you expect to be invoked via CPI that expects one of the passed in accounts to
-be both a **\*\***signer**\*\*** on the transaciton and a \***\*\*\*\*\*\***data
-source\***\*\*\*\*\*\***. Using the `Signer` account type here removes the
-automatic deserialization and type checking you would get with the `Account`
-type. This is both inconvenient, as you need to manually deserialize the account
-data in the instruction logic, and may make your program vulnerable by not
-getting the ownership and type checking performed by the `Account` type.
-
-In the example below, you can safely write logic to interact with the data
-stored in the `authority` account while also verifying that it signed the
-transaction.
+In this example, you can safely interact with the data stored in the `authority`
+account while ensuring that it signed the transaction.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -258,46 +236,45 @@ pub struct Vault {
 }
 #[account]
 pub struct AuthState{
-	amount: u64,
-	num_depositors: u64,
-	num_vaults: u64
+    amount: u64,
+    num_depositors: u64,
+    num_vaults: u64
 }
 ```
 
 ## Lab
 
-Let’s practice by creating a simple program to demonstrate how a missing signer
-check can allow an attacker to withdraw tokens that don’t belong to them.
+In this lab, we'll create a simple program to demonstrate how a missing signer
+check can allow an attacker to withdraw tokens that don't belong to them. This
+program initializes a simplified token `vault` account and shows how the absence
+of a signer check could result in the vault being drained.
 
-This program initializes a simplified token “vault” account and demonstrates how
-a missing signer check could allow the vault to be drained.
+### 1. Starter
 
-#### 1. Starter
+To get started, download the starter code from the
+[`starter` branch of this repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/starter).
+The starter code includes a program with two instructions and the boilerplate
+setup for the test file.
 
-To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/starter). The
-starter code includes a program with two instructions and the boilerplate setup
-for the test file.
+The `initialize_vault` instruction sets up two new accounts: `Vault` and
+`TokenAccount`. The `Vault` account is initialized using a Program Derived
+Address (PDA) and stores the address of a token account and the vault's
+authority. The `vault` PDA will be the authority of the token account, enabling
+the program to sign off on token transfers.
 
-The `initialize_vault` instruction initializes two new accounts: `Vault` and
-`TokenAccount`. The `Vault` account will be initialized using a Program Derived
-Address (PDA) and store the address of a token account and the authority of the
-vault. The authority of the token account will be the `vault` PDA which enables
-the program to sign for the transfer of tokens.
+The `insecure_withdraw` instruction transfers tokens from the `vault` account’s
+token account to a `withdraw_destination` token account. However, the
+`authority` account in the `InsecureWithdraw` struct is of type
+`UncheckedAccount`, a wrapper around `AccountInfo` that explicitly indicates the
+account is unchecked.
 
-The `insecure_withdraw` instruction will transfer tokens in the `vault`
-account’s token account to a `withdraw_destination` token account. However, the
-`authority` account in the `InsecureWithdraw` struct has a type of
-`UncheckedAccount`. This is a wrapper around `AccountInfo` to explicitly
-indicate the account is unchecked.
+Without a signer check, anyone can provide the public key of the `authority`
+account that matches the `authority` stored on the `vault` account, and the
+`insecure_withdraw` instruction will continue processing.
 
-Without a signer check, anyone can simply provide the public key of the
-`authority` account that matches `authority` stored on the `vault` account and
-the `insecure_withdraw` instruction would continue to process.
-
-While this is somewhat contrived in that any DeFi program with a vault would be
-more sophisticated than this, it will show how the lack of a signer check can
-result in tokens being withdrawn by the wrong party.
+Although this example is somewhat contrived, as any DeFi program with a vault
+would be more sophisticated, it effectively illustrates how the lack of a signer
+check can lead to unauthorized token withdrawals.
 
 ```rust
 use anchor_lang::prelude::*;
