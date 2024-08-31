@@ -31,23 +31,5 @@ import { Connection, PublicKey } from "@solana/web3.js";
 
   const owner = largestAccountInfo?.value?.data?.parsed.info.owner;
   console.log("NFT owner :", owner);
-  /*
-  {
-    parsed: {
-    info: {
-        isNative: false,
-        mint: '9ARngHhVaCtH5JFieRdSS5Y8cdZk2TMF4tfGSWFB9iSK',
-        owner: 'A5s2T7DQzPSUXpGKPiFC5vEcJXUkuunv1SjpwkD1JG8e',
-        state: 'frozen',
-        tokenAmount: [Object]
-      },
-      type: 'account'
-    },
-    program: 'spl-token',
-    space: 165
-  }
-  
-  NFT owner: 
- */
 })();
 ```

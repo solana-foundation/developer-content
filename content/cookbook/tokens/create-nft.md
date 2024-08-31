@@ -7,7 +7,7 @@ description: "Learn how to create an NFT on Solana, using Arweave and Metaplex."
 To create an NFT you have to:
 
 1. Upload the image to IPFS like Arweave
-2. Upload the json metadata to IPFS like Arweave
+2. Upload the json metadata to Arweave or similar storage service.
 3. Call metaplex to create an account for the NFT
 
 ### Upload to Arweave
@@ -50,7 +50,7 @@ import Arweave from "arweave";
   console.log(response);
 
   const id = transaction.id;
-  const imageUrl = id ? `${protocol}://${host}:${port}/${id}` : undefined;
+  const imageUrl = id ? `${protocol}://${host}:${port}/${id}` : null;
   console.log("imageUrl", imageUrl);
 
   // Upload metadata to Arweave
@@ -90,10 +90,10 @@ import Arweave from "arweave";
     image: imageUrl,
   };
 
-  const metadataRequest = JSON.stringify(metadata);
+  const metadata = JSON.stringify(metadata);
 
   const metadataTransaction = await arweave.createTransaction({
-    data: metadataRequest,
+    data: metadata,
   });
 
   metadataTransaction.addTag("Content-Type", "application/json");
@@ -102,7 +102,7 @@ import Arweave from "arweave";
 
   console.log("metadata txid", metadataTransaction.id);
 
-  console.log(await arweave.transactions.post(metadataTransaction));
+  console.log();
 })();
 ```
 
@@ -152,9 +152,10 @@ import "dotenv/config";
     const { signature } = await createNft(umi, {
       mint,
       name: "My NFT",
+      // Replace this with your Arweave metadata URI
       uri: "https://ffaaqinzhkt4ukhbohixfliubnvpjgyedi3f2iccrq4efh3s.arweave.net/KUAIIbk6p8oo4XHRcq0U__C2r0mwQaNl0gQow4Qp9yk",
       maxSupply: 1,
-      sellerFeeBasisPoints: percentAmount(5.5),
+      sellerFeeBasisPoints: percentAmount(0),
       creators: [
         {
           address: keypair.publicKey,
