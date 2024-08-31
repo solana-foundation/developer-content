@@ -34,7 +34,7 @@ Next,
 WSL provides a Linux environment that launches instantly when needed without
 slowing down your computer.
 
-Open Windows Terminal, start an 'Ubuntu' session, and proceed with the rest of
+Open Windows Terminal, start an 'Ubuntu' session and proceed with the rest of
 these steps.
 
 ### Download Rust
