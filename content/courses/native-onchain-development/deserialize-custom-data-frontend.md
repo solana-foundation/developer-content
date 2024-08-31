@@ -190,13 +190,13 @@ skeleton letting users submit movie reviews but the list of reviews is still
 showing mock data. Let’s fix that by fetching the program’s storage accounts and
 deserializing the data stored there.
 
-![movie review frontend](/public/assets/courses/superteam/movie-review-frontend-dapp.png)
+![movie review frontend](/public/assets/courses/movie-review-frontend-dapp.png)
 
 #### 1. Download the starter code
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can download the
-[starter code](https://github.com/EmekaManuel/movie-review-dapp/tree/solution-serialize-instruction-data).
+[starter code](https://github.com/solana-developers/movie-review-frontend/tree/solution-serialize-instruction-data).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -358,7 +358,7 @@ load.
 
 If you need more time with this project to feel comfortable with these concepts,
 have a look at the
-[solution code](https://github.com/EmekaManuel/movie-review-dapp/tree/solutions-deserialize-account-data)
+[solution code](https://github.com/solana-developers/movie-review-frontend/tree/solutions-deserialize-account-data)
 before continuing.
 
 ## Challenge
@@ -369,10 +369,10 @@ network. Now, it's time to fetch and deserialize the program's account data.
 Remember, the Solana program that supports this is at
 `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](/public/assets/courses/student-intros-frontend.png)
 
 1. You can build this from scratch or you can
-   [download the starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data).
+   [download the starter code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data).
 2. Create the account buffer layout in `StudentIntro.ts`. The account data
    contains:
    1. `initialized` as an unsigned, 8-bit integer representing the instruction
@@ -388,7 +388,7 @@ Remember, the Solana program that supports this is at
    network!
 
 If you get really stumped, feel free to
-[check out the solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-deserialize-account-data).
+[check out the solution code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-deserialize-account-data).
 
 As always, get creative with these challenges and take them beyond the
 instructions if you want!
