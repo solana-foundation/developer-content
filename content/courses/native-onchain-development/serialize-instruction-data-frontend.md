@@ -34,14 +34,14 @@ description: How to deserialize data fetched from Solana accounts.
 ### Transactions
 
 <Callout type="note">This course requires completing
-[Introduction to Solana](/developers/courses/intro-to-solana) or equivalent
+[Introduction to Solana](/content/courses/intro-to-solana) or equivalent
 knowledge. It's also aimed at advanced developers that prefer more control over
 the ease of use and safe defaults Anchor provides. If you're new to developing
 onchain programs you may prefer
-[Anchor](/developers/courses/onchain-development)</Callout>
+[Anchor](/content/courses/onchain-development)</Callout>
 
-In [Introduction to Solana](/developers/courses/intro-to-solana) we learned how
-to create transactions with instructions for common Solana programs.
+In [Introduction to Solana](/content/courses/intro-to-solana) we learned how to
+create transactions with instructions for common Solana programs.
 
 This lessons shows how to create instructions for our own native Solana
 programs, which we will develop in a few lessons. Specifically, we're going to
@@ -195,7 +195,7 @@ equipPlayerSchema.encode(
   buffer,
 );
 
-const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
+const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 ```
 
 Once a buffer is properly created and the data serialized, all that’s left is
@@ -232,7 +232,7 @@ equipPlayerSchema.encode(
   buffer,
 );
 
-const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
+const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 
 const endpoint = clusterApiUrl("devnet");
 const connection = new Connection(endpoint);
@@ -372,9 +372,14 @@ export class Movie {
   ])
 
   serialize(): Buffer {
-    const buffer = Buffer.alloc(1000)
-    this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer)
-    return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer))
+    try {
+      const buffer = Buffer.alloc(1000); // Adjust size if needed
+      this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
+      return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));
+    } catch (e) {
+      console.error('Serialization error:', e);
+      return Buffer.alloc(0);
+    }
   }
 }
 ```
