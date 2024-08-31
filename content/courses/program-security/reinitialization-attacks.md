@@ -135,7 +135,7 @@ pub struct User {
 
 ### Use Anchor’s init Constraint
 
-Anchor’s `init` constraint, used with the `#[account(...)]` attribute,
+[Anchor’s `init` constraint](https://www.anchor-lang.com/docs/account-constraints), used with the `#[account(...)]` attribute,
 initializes an account, sets the account discriminator, and ensures that the
 instruction can only be called once per account. The `  ` constraint must be
 used with `payer` and `space` constraints to specify the account paying for
@@ -181,13 +181,13 @@ pub struct User {
 
 #### Anchor’s init_if_needed Constraint
 
-Anchor’s `init_if_needed` constraint, guarded by a feature flag, should be used
+[Anchor’s `init_if_needed` constraint](https://www.anchor-lang.com/docs/account-constraints), guarded by a feature flag, should be used
 with caution. It initializes an account only if it hasn’t been initialized yet.
 If the account is already initialized, the instruction will still run, so
 it's \***\*\*\*\***extremely\***\*\*\*\*** important to include checks to
 prevent resetting the account to its initial state.
 
-For example, if the authority field is set in the instruction, ensure that no
+For example, if the `authority` field is set in the instruction, ensure that no
 attacker can reinitialize it after it’s already been set. Typically, it's safer
 to have a separate instruction for initializing account data.
 
