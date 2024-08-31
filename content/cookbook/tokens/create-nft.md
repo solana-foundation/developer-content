@@ -90,10 +90,10 @@ import Arweave from "arweave";
     image: imageUrl,
   };
 
-  const metadata = JSON.stringify(metadata);
+  const metadataString = JSON.stringify(metadata);
 
   const metadataTransaction = await arweave.createTransaction({
-    data: metadata,
+    data: metadataString,
   });
 
   metadataTransaction.addTag("Content-Type", "application/json");
@@ -102,7 +102,9 @@ import Arweave from "arweave";
 
   console.log("metadata txid", metadataTransaction.id);
 
-  console.log();
+  const txnResult = await arweave.transactions.post(metadataTransaction);
+
+  console.log(txnResult);
 })();
 ```
 
