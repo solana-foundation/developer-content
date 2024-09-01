@@ -23,7 +23,8 @@ description:
       return Err(ProgramError::InvalidAccountData.into());
   }
   ```
-- Use [Anchor constraints](https://www.anchor-lang.com/docs/account-constraints) to simplify the process:
+- Use [Anchor constraints](https://www.anchor-lang.com/docs/account-constraints)
+  to simplify the process:
   - Use `constraint` to evaluate custom expressions
   - Use `has_one` to check that a field on one account matches the key of
     another account
