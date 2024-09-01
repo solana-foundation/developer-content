@@ -461,7 +461,7 @@ We’re going to use the Token Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
-[Cryptography fundamentals](/developers/courses/intro-to-solana/intro-to-cryptography).
+[Cryptography fundamentals](/developer-content/content/courses/intro-to-solana/intro-to-cryptography).
 
 ```bash
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
