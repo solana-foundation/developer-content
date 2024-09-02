@@ -175,9 +175,9 @@ This lab extends the lab from the
 Let's use `approve` from `spl-token` to authorize a delegate to transfer or burn
 up to 50 tokens from our token account.
 
-Just like [Transferring Tokens](/content/courses/tokens/token-program) in the
+Just like [Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md) in the
 previous lab, you can
-[add a second account on devnet](/developers/courses/intro-to-solana/intro-to-cryptography)
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account!
 
 Create a new file `delegate-tokens.ts`
