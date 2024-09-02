@@ -167,7 +167,7 @@ async function buildRevokeTransaction(
 ### Lab
 
 This lab extends the lab from the
-[previous chapter](/content/courses/tokens/token-program).
+[previous chapter](/content/courses/tokens-and-nfts/token-program.md).
 
 #### 1. Delegating tokens
 
