@@ -284,6 +284,7 @@ Next, let's set up the entry point to our program using the `entrypoint!` macro
 and create the `process_instruction` function. The `msg!` macro then allows us
 to print “Hello, world!” to the program log when the program is invoked.
 
+
 #### 3. Entry Point
 
 ```rust
@@ -327,6 +328,13 @@ pub fn process_instruction(
 }
 ```
 
+```markdown
+The `msg!` macro is a convenient way to log messages within your Solana program. These messages are invaluable for debugging and tracking the flow of execution, especially when deployed on-chain.
+
+In our example, the `msg!("Hello, world!");` line logs a simple "Hello, world!" message. For more complex programs, you would likely include additional logs at critical points in your logic.
+
+Additionally, while this example returns `Ok(())` to indicate success, in more advanced programs, you may encounter or need to handle errors. You would then return an `Err(ProgramError::CustomErrorCode)` or similar to signal failure. Proper error handling ensures your program behaves predictably, even in unexpected situations.
+```
 
 #### 4. Build and Deploy
 
