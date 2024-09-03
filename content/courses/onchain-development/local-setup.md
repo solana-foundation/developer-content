@@ -53,7 +53,7 @@ avm install latest
 avm use latest
 ```
 
-After installation, running `anchor -V` should show `anchor-cli 0.30.0`.
+After installation, running `anchor -V` should show `anchor-cli 0.30.1`.
 
 #### Check your Anchor installation
 
@@ -75,16 +75,6 @@ Run `cargo add solana-program@"=1.18.x"`, where `x` matches your version of `sol
 ##### Error: `Unable to read keypair file`
 
 Add a keypair to `.config/solana/id.json`. You can either copy a keypair from an `.env` file (just the array of numbers) into a file or use the command `solana-keygen new --no-bip39-passphrase` to create a new keypair file. Then re-run `anchor test`.
-
-##### Warning: `unused variable: 'ctx'`
-
-This simply means the `initialize` instruction handler isn't doing anything yet. You can open `programs/favorites/src/lib.rs` and change `ctx` to `_ctx` or just
-go onto the next step.
-
-##### Warning: `No license field in package.json`
-
-Open package.json, add `"license": "MIT"` or `"license": "UNLICENSED"` depending
-on preferences
 
 #### All done?
 
