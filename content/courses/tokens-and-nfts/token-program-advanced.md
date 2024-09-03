@@ -250,7 +250,7 @@ All we will need for this function is the token account and user. After the
 const revokeTransactionSignature = await revoke(
   connection,
   user,
-  delegate,
+  sourceTokenAccount.address,
   user.publicKey,
 );
 
