@@ -1,51 +1,29 @@
 ---
-title: Arbitrary CPI
+
+title: Arbitrary CPI  
 objectives:
-  - Explain the security risks associated with invoking a CPI to an unknown
-    program
-  - Showcase how Anchor’s CPI module prevents this from happening when making a
-    CPI from one Anchor program to another
-  - Safely and securely make a CPI from an Anchor program to an arbitrary
-    non-anchor program
+  - Explain the security risks associated with invoking a CPI to an unknown program.
+  - Showcase how Anchor’s CPI module prevents this from happening when making a CPI from one Anchor program to another.
+  - Safely and securely make a CPI from an Anchor program to an arbitrary non-Anchor program.
 description: "How to safely invoke Solana programs from other Solana programs."
+
 ---
 
 ## Summary
 
-- To generate a CPI, the target program must be passed into the invoking
-  instruction as an account. This means that any target program could be passed
-  into the instruction. Your program should check for incorrect or unexpected
-  programs.
-- Perform program checks in native programs by simply comparing the public key
-  of the passed-in program to the progam you expected.
-- If a program is written in Anchor, then it may have a publicly available CPI
-  module. This makes invoking the program from another Anchor program simple and
-  secure. The Anchor CPI module automatically checks that the address of the
-  program passed in matches the address of the program stored in the module.
+- To perform a CPI, the target program must be passed into the invoking instruction as an account. This means that any target program could be passed into the instruction. Your program should check for incorrect or unexpected programs.
+- Perform program checks in native programs by simply comparing the public key of the passed-in program to the program you expected.
+- If a program is written in Anchor, it may have a publicly available CPI module. This makes invoking the program from another Anchor program simple and secure. The Anchor CPI module automatically checks that the address of the program passed in matches the address of the program stored in the module.
 
 ## Lesson
 
-A cross program invocation (CPI) is when one program invokes an instruction on
-another program. An “arbitrary CPI” is when a program is structured to issue a
-CPI to whatever program is passed into the instruction rather than expecting to
-perform a CPI to one specific program. Given that the callers of your program's
-instruction can pass any program they'd like into the instruction's list of
-accounts, failing to verify the address of a passed-in program results in your
-program performing CPIs to arbitrary programs.
+A cross-program invocation (CPI) is when one program invokes an instruction on another program. An “arbitrary CPI” occurs when a program is structured to issue a CPI to whatever program is passed into the instruction rather than expecting to perform a CPI to one specific program. Given that the callers of your program's instruction can pass any program they'd like into the instruction's list of accounts, failing to verify the address of a passed-in program results in your program performing CPIs to arbitrary programs.
 
-This lack of program checks creates an opportunity for a malicious user to pass
-in a different program than expected, causing the original program to call an
-instruction on this mystery program. There’s no telling what the consequences of
-this CPI could be. It depends on the program logic (both that of the original
-program and the unexpected program), as well as what other accounts are passed
-into the original instruction.
+This lack of program checks creates an opportunity for a malicious user to pass in a different program than expected, causing the original program to call an instruction on this unknown program. The consequences of this CPI depend on the program logic (both that of the original program and the unexpected program), as well as what other accounts are passed into the original instruction.
 
-### Missing program checks
+### Missing Program Checks
 
-Take the following program as an example. The `cpi` instruction invokes the
-`transfer` instruction on `token_program`, but there is no code that checks
-whether or not the `token_program` account passed into the instruction is, in
-fact, the SPL Token Program.
+Consider the following program. The `cpi` instruction invokes the `transfer` instruction on `token_program`, but there is no code that checks whether the `token_program` account passed into the instruction is, in fact, the SPL Token Program.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -85,14 +63,11 @@ pub struct Cpi<'info> {
 }
 ```
 
-An attacker could easily call this instruction and pass in a duplicate token
-program that they created and control.
+An attacker could easily call this instruction and pass in a duplicate token program that they created and control.
 
-### Add program checks
+### Add Program Checks
 
-It's possible to fix this vulnerabilty by simply adding a few lines to the `cpi`
-instruction to check whether or not `token_program`'s public key is that of the
-SPL Token Program.
+You can fix this vulnerability by adding a few lines to the `cpi` instruction to check whether the `token_program`'s public key matches that of the SPL Token Program.
 
 ```rust
 pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
@@ -117,34 +92,21 @@ pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
 }
 ```
 
-Now, if an attacker passes in a different token program, the instruction will
-return the `ProgramError::IncorrectProgramId` error.
+Now, if an attacker passes in a different token program, the instruction will return the `ProgramError::IncorrectProgramId` error.
 
-Depending on the program you’re invoking with your CPI, you can either hard code
-the address of the expected program ID or use the program’s Rust crate to get
-the address of the program, if available. In the example above, the `spl_token`
-crate provides the address of the SPL Token Program.
+Depending on the program you’re invoking with your CPI, you can either hard-code the address of the expected program ID or use the program’s Rust crate to get the address of the program, if available. In the example above, the `spl_token` crate provides the address of the SPL Token Program.
 
-### Use an Anchor CPI module
+### Use an Anchor CPI Module
 
-A simpler way to manage program checks is to use Anchor CPI modules. We learned
-in a
+A simpler way to manage program checks is to use Anchor CPI modules. We learned in a
 [previous lesson](https://github.com/Unboxed-Software/solana-course/blob/main/content/anchor-cpi)
-that Anchor can automatically generate CPI modules to make CPIs into the program
-simpler. These modules also enhance security by verifying the public key of the
-program that’s passed into one of its public instructions.
+that Anchor can automatically generate CPI modules to simplify CPIs into the program. These modules also enhance security by verifying the public key of the program that’s passed into one of its public instructions.
 
-Every Anchor program uses the `declare_id()` macro to define the address of the
-program. When a CPI module is generated for a specific program, it uses the
-address passed into this macro as the "source of truth" and will automatically
-verify that all CPIs made using its CPI module target this program id.
+Every Anchor program uses the `declare_id()` macro to define the address of the program. When a CPI module is generated for a specific program, it uses the address passed into this macro as the "source of truth" and will automatically verify that all CPIs made using its CPI module target this program ID.
 
-While at the core no different than manual program checks, using CPI modules
-avoids the possibility of forgetting to perform a program check or accidentally
-typing in the wrong program ID when hard-coding it.
+While at the core no different than manual program checks, using CPI modules avoids the possibility of forgetting to perform a program check or accidentally typing in the wrong program ID when hard-coding it.
 
-The program below shows an example of using a CPI module for the SPL Token
-Program to perform the transfer shown in the previous examples.
+The program below shows an example of using a CPI module for the SPL Token Program to perform the transfer shown in the previous examples.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -186,12 +148,10 @@ Note that, like the example above, Anchor has created a few
 [wrappers for popular native programs](https://github.com/coral-xyz/anchor/tree/master/spl/src)
 that allow you to issue CPIs into them as if they were Anchor programs.
 
-Additionally and depending on the program you’re making the CPI to, you may be
+Additionally, depending on the program you’re making the CPI to, you may be
 able to use Anchor’s
 [`Program` account type](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/program/struct.Program.html)
-to validate the passed-in program in your account validation struct. Between
-the [`anchor_lang`](https://docs.rs/anchor-lang/latest/anchor_lang) and [`anchor_spl`](https://docs.rs/anchor_spl/latest/) crates,
-the following `Program` types are provided out of the box:
+to validate the passed-in program in your account validation struct. Between the [`anchor_lang`](https://docs.rs/anchor-lang/latest/anchor_lang) and [`anchor_spl`](https://docs.rs/anchor_spl/latest/) crates, the following `Program` types are provided out of the box:
 
 - [`System`](https://docs.rs/anchor-lang/latest/anchor_lang/system_program/struct.System.html)
 - [`AssociatedToken`](https://docs.rs/anchor-spl/latest/anchor_spl/associated_token/struct.AssociatedToken.html)
@@ -207,13 +167,13 @@ use other_program::program::OtherProgram;
 
 ## Lab
 
-To show the importance of checking with program you use for CPIs, we're going to
+To show the importance of checking the program you use for CPIs, we're going to
 work with a simplified and somewhat contrived game. This game represents
-characters with PDA accounts, and uses a separate "metadata" program to manage
+characters with PDA accounts and uses a separate "metadata" program to manage
 character metadata and attributes like health and power.
 
 While this example is somewhat contrived, it's actually almost identical
-architecture to how NFTs on Solana work: the SPL Token Program manages the token
+in architecture to how NFTs on Solana work: the SPL Token Program manages the token
 mints, distribution, and transfers, and a separate metadata program is used to
 assign metadata to tokens. So the vulnerability we go through here could also be
 applied to real tokens.
@@ -236,21 +196,140 @@ The first program, `gameplay`, is the one that our test directly uses. Take a
 look at the program. It has two instructions:
 
 1. `create_character_insecure` - creates a new character and CPI's into the
-   metadata program to set up the character's initial attributes
+   metadata program to set up the character's initial attributes.
 2. `battle_insecure` - pits two characters against each other, assigning a "win"
-   to the character with the highest attributes
+   to the character with the highest attributes.
 
-The second program, `character-metadata`, is meant to be the "approved" program
-for handling character metadata. Have a look at this program. It has a single
-instruction for `create_metadata` that creates a new PDA and assigns a
-pseudo-random value between 0 and 20 for the character's health and power.
+The second program, `character-metadata`, is meant to
 
-The last program, `fake-metadata` is a "fake" metadata program meant to
-illustrate what an attacker might make to exploit our `gameplay` program. This
-program is almost identical to the `character-metadata` program, only it assigns
-a character's initial health and power to be the max allowed: 255.
+ be the legitimate
+metadata program that manages the health and power of characters. It uses a
+program-defined `Character` struct to store metadata.
 
-#### 2. Test `create_character_insecure` instruction
+The third program, `fake-metadata`, is a malicious metadata program meant to
+demonstrate the CPI attack vulnerability. It stores data in a way that lets it
+easily manipulate character data.
+
+```rust
+use anchor_lang::prelude::*;
+use anchor_spl::token::{self, Token, TokenAccount};
+
+declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+
+#[program]
+pub mod gameplay {
+    use super::*;
+
+    pub fn create_character_insecure(ctx: Context<CreateCharacterInsecure>, name: String) -> ProgramResult {
+        let character = &mut ctx.accounts.character;
+        character.name = name.clone();
+        character.health = 100;
+        character.power = 10;
+        
+        // CPI into metadata program
+        solana_program::program::invoke(
+            &character_metadata::instruction::create_character(
+                ctx.accounts.metadata_program.key,
+                ctx.accounts.character.key,
+                name,
+                100,
+                10
+            )?,
+            &[
+                ctx.accounts.character.to_account_info(),
+                ctx.accounts.metadata_program.to_account_info(),
+            ],
+        )
+    }
+
+    pub fn battle_insecure(ctx: Context<BattleInsecure>) -> ProgramResult {
+        let character1 = &ctx.accounts.character1;
+        let character2 = &ctx.accounts.character2;
+
+        if character1.power > character2.power {
+            // Character 1 wins
+        } else if character1.power < character2.power {
+            // Character 2 wins
+        } else {
+            // Draw
+        }
+
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct CreateCharacterInsecure<'info> {
+    #[account(init, payer = user, space = 8 + 40)]
+    character: Account<'info, Character>,
+    #[account(address = crate::ID)]
+    metadata_program: Account<'info, Program>,
+    #[account(mut)]
+    user: Signer<'info>,
+    #[account(signer)]
+    authority: Signer<'info>,
+    system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct BattleInsecure<'info> {
+    character1: Account<'info, Character>,
+    character2: Account<'info, Character>,
+}
+
+#[account]
+pub struct Character {
+    name: String,
+    health: u64,
+    power: u64,
+}
+```
+
+#### 2. Find and Fix the CPI Vulnerability and Add the CPI Check
+
+- Examine the `gameplay` program. The `create_character_insecure` instruction has a CPI call to the `character_metadata` program.
+- Look at the `character-metadata` and `fake-metadata` programs. `fake-metadata` is a malicious program with the same instruction as `character-metadata`, but it stores the metadata in an easily manipulated way.
+
+To exploit the vulnerability, an attacker would replace the address of the metadata program with their own program address, `fake-metadata`, which would then modify the character attributes.
+
+Your task is to modify `gameplay` to add a program check, ensuring that only the legitimate `character-metadata` program can be called. 
+
+Update the `create_character_insecure` instruction to check if the `metadata_program` account is indeed the correct `character-metadata` program.
+
+Here is the updated instruction with the program check:
+
+```rust
+pub fn create_character_secure(ctx: Context<CreateCharacterInsecure>, name: String) -> ProgramResult {
+    if &character_metadata::ID != ctx.accounts.metadata_program.key {
+        return Err(ProgramError::IncorrectProgramId);
+    }
+    
+    let character = &mut ctx.accounts.character;
+    character.name = name.clone();
+    character.health = 100;
+    character.power = 10;
+    
+    // CPI into metadata program
+    solana_program::program::invoke(
+        &character_metadata::instruction::create_character(
+            ctx.accounts.metadata_program.key,
+            ctx.accounts.character.key,
+            name,
+            100,
+            10
+        )?,
+        &[
+            ctx.accounts.character.to_account_info(),
+            ctx.accounts.metadata_program.to_account_info(),
+        ],
+    )
+}
+```
+
+After this change, if an attacker tries to pass their `fake-metadata` program address, the instruction will return an `IncorrectProgramId` error.
+
+
+#### 2b. Test `create_character_insecure` instruction
 
 There is already a test in the `tests` directory for this. It's long, but take a
 minute to look at it before we talk through it together:
@@ -397,7 +476,7 @@ pub fn create_character_secure(ctx: Context<CreateCharacterSecure>) -> Result<()
 }
 ```
 
-#### 4. Test `create_character_secure`
+#### 3b. Test `create_character_secure`
 
 Now that we have a secure way of initializing a new character, let's create a
 new test. This test just needs to attempt to initialize the attacker's character
