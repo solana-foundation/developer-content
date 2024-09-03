@@ -80,7 +80,8 @@ However, with the
 [`use`](https://doc.rust-lang.org/stable/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html)
 keyword, we can bring an item into scope so that it can be reused throughout a
 file without specifying the full path each time. It's common to see a series of
-`use` commands at the top of a Rust file to make the code more readable and maintainable.
+`use` commands at the top of a Rust file to make the code more readable and
+maintainable.
 
 ```rust
 use solana_program::account_info::AccountInfo;
@@ -123,7 +124,10 @@ is the correct data type specified in the `process_instruction` function.
 
 Additionally, note the brackets `[]` around `&[AccountInfo]` and `&[u8]`. This
 means that the `accounts` and `instruction_data` arguments expect “slices” of
-types `AccountInfo` and `u8`, respectively. A “slice” is a view into a block of memory representing a contiguous sequence of elements of a single type, but without needing to own the entire data. It’s important because it allows functions to handle inputs of varying lengths efficiently.
+types `AccountInfo` and `u8`, respectively. A “slice” is a view into a block of
+memory representing a contiguous sequence of elements of a single type, but
+without needing to own the entire data. It’s important because it allows
+functions to handle inputs of varying lengths efficiently.
 
 ```rust
 fn process_instruction(
@@ -284,7 +288,6 @@ Next, let's set up the entry point to our program using the `entrypoint!` macro
 and create the `process_instruction` function. The `msg!` macro then allows us
 to print “Hello, world!” to the program log when the program is invoked.
 
-
 #### 3. Entry Point
 
 ```rust
@@ -302,6 +305,7 @@ pub fn process_instruction(
 ```
 
 All together, the “Hello, world!” program will look like this:
+
 ```rust
 use solana_program::{
     account_info::AccountInfo,  // Importing AccountInfo for account handling
@@ -329,11 +333,19 @@ pub fn process_instruction(
 ```
 
 ```markdown
-The `msg!` macro is a convenient way to log messages within your Solana program. These messages are invaluable for debugging and tracking the flow of execution, especially when deployed on-chain.
+The `msg!` macro is a convenient way to log messages within your Solana program.
+These messages are invaluable for debugging and tracking the flow of execution,
+especially when deployed on-chain.
 
-In our example, the `msg!("Hello, world!");` line logs a simple "Hello, world!" message. For more complex programs, you would likely include additional logs at critical points in your logic.
+In our example, the `msg!("Hello, world!");` line logs a simple "Hello, world!"
+message. For more complex programs, you would likely include additional logs at
+critical points in your logic.
 
-Additionally, while this example returns `Ok(())` to indicate success, in more advanced programs, you may encounter or need to handle errors. You would then return an `Err(ProgramError::CustomErrorCode)` or similar to signal failure. Proper error handling ensures your program behaves predictably, even in unexpected situations.
+Additionally, while this example returns `Ok(())` to indicate success, in more
+advanced programs, you may encounter or need to handle errors. You would then
+return an `Err(ProgramError::CustomErrorCode)` or similar to signal failure.
+Proper error handling ensures your program behaves predictably, even in
+unexpected situations.
 ```
 
 #### 4. Build and Deploy
