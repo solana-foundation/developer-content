@@ -352,7 +352,7 @@ We'll be using the `solution-pdas` branch as our starting point.
 Before we get started we need enable the `init-if-needed` feature and add the
 `anchor-spl` crate to the dependencies in `Cargo.toml`. If you need to brush up
 on the `init-if-needed` feature take a look at the
-[Anchor PDAs and Accounts lesson](anchor-pdas.md).
+[Anchor PDAs and Accounts lesson](/content/courses/onchain-development/anchor-pdas.md)).
 
 ```rust
 [dependencies]
