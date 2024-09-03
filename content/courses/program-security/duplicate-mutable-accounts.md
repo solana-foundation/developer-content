@@ -191,7 +191,7 @@ and scissors.
 ### Starter
 
 To get started, download the starter code on the `starter` branch
-of [this repository](https://github.com/unboxed-software/solana-duplicate-mutable-accounts/tree/starter).
+of [this repository](https://github.com/solana-developers/duplicate-mutable-accounts/tree/starter).
 The starter code includes a program with two instructions and the boilerplate
 setup for the test file.
 
@@ -417,7 +417,7 @@ whether that is explicit.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the repository](https://github.com/Unboxed-Software/solana-duplicate-mutable-accounts/tree/solution).
+[the repository](https://github.com/solana-developers/duplicate-mutable-accounts/tree/solution).
 
 ## Challenge
 
