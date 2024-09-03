@@ -365,7 +365,7 @@ which we expect to fail.
 ```typescript
 describe("duplicate-mutable-accounts", () => {
     ...
-    it("Invoke secure instruction", async () => {
+    it("Invokes secure instruction", async () => {
         await program.methods
         .rockPaperScissorsShootSecure({ rock: {} }, { scissors: {} })
         .accounts({
