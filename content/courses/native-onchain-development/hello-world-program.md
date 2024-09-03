@@ -78,12 +78,12 @@ Absent of any other keywords, we would need to reference this entire path to use
 
 However, with the
 [`use`](https://doc.rust-lang.org/stable/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html)
-keyword we can bring an item into scope so that it can be reused throughout a
+keyword, we can bring an item into scope so that it can be reused throughout a
 file without specifying the full path each time. It's common to see a series of
-`use` commands at the top of a Rust file.
+`use` commands at the top of a Rust file to make the code more readable and maintainable.
 
 ```rust
-use solana_program::account_info::AccountInfo
+use solana_program::account_info::AccountInfo;
 ```
 
 #### Declaring Functions in Rust
@@ -123,10 +123,7 @@ is the correct data type specified in the `process_instruction` function.
 
 Additionally, note the brackets `[]` around `&[AccountInfo]` and `&[u8]`. This
 means that the `accounts` and `instruction_data` arguments expect “slices” of
-types `AccountInfo` and `u8`, respectively. A “slice” is similar to an array
-(collection of objects of the same type), except the length is not known at
-compile time. In other words, the `accounts` and `instruction_data` arguments
-expect inputs of unknown length.
+types `AccountInfo` and `u8`, respectively. A “slice” is a view into a block of memory representing a contiguous sequence of elements of a single type, but without needing to own the entire data. It’s important because it allows functions to handle inputs of varying lengths efficiently.
 
 ```rust
 fn process_instruction(
@@ -304,28 +301,32 @@ pub fn process_instruction(
 ```
 
 All together, the “Hello, world!” program will look like this:
-
 ```rust
 use solana_program::{
-    account_info::AccountInfo,
-    entrypoint,
-    entrypoint::ProgramResult,
-    pubkey::Pubkey,
-    msg
+    account_info::AccountInfo,  // Importing AccountInfo for account handling
+    entrypoint,                 // Importing entrypoint macro for defining program entry
+    entrypoint::ProgramResult,  // Importing ProgramResult to handle function return type
+    pubkey::Pubkey,             // Importing Pubkey to handle public keys
+    msg                         // Importing msg macro for logging messages
 };
 
+// Define the program's entry point
 entrypoint!(process_instruction);
 
+// The main function that will be executed when the program is invoked
 pub fn process_instruction(
-    program_id: &Pubkey,
-    accounts: &[AccountInfo],
-    instruction_data: &[u8]
-) -> ProgramResult{
+    program_id: &Pubkey,             // ID of the program being executed
+    accounts: &[AccountInfo],        // Accounts required for instruction processing
+    instruction_data: &[u8]          // Instruction-specific data
+) -> ProgramResult {
+    // Log a "Hello, world!" message to the program log
     msg!("Hello, world!");
 
+    // Return success
     Ok(())
 }
 ```
+
 
 #### 4. Build and Deploy
 
