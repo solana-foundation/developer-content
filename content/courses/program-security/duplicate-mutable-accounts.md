@@ -126,7 +126,8 @@ pub struct User {
 
 #### Using Anchor Constraint
 
-An even better solution in Anchor is to use the `constraint` keyword in the
+An even better solution in Anchor is to use 
+[the `constraint` keyword](https://www.anchor-lang.com/docs/account-constraints) in the
 account validation struct.
 
 You can use the #[account(..)] attribute macro and the constraint keyword to add
