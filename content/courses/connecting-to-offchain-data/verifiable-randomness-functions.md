@@ -1343,8 +1343,15 @@ describe("burry-escrow-vrf", () => {
       console.log("Your transaction signature", tx);
     } catch (error) {
       didFail = true;
-      const errorMessage = error.message || error.toString();
-      console.log(errorMessage);
+      if (
+        error.message.includes(
+          "Current SOL price is not above Escrow unlock price.",
+        )
+      ) {
+        console.log("Expected error: " + error.message);
+      } else {
+        console.log("Unexpected error: " + error.message);
+      }
       assert(
         errorMessage.includes(
           "Current SOL price is not above Escrow unlock price.",
