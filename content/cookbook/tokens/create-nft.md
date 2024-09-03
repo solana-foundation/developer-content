@@ -7,7 +7,7 @@ description: "Learn how to create an NFT on Solana, using Arweave and Metaplex."
 To create an NFT you have to:
 
 1. Upload the image to IPFS like Arweave
-2. Upload the json metadata to Arweave or similar storage service.
+2. Upload the JSON metadata to Arweave or similar storage service.
 3. Call metaplex to create an account for the NFT
 
 ### Upload to Arweave
