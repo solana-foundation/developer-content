@@ -627,7 +627,22 @@ pub fn program(
         .into()
 }
 ```
-
+Create a derive macro that automatically generates error enums and conversion functions for your Anchor `#[program]`, making error handling more concise
+```rust
+#[derive(AnchorErrors)] 
+pub enum MyError {
+    #[msg("Invalid input")]
+    InvalidInput,
+    // ... other errors
+}
+```
+Develop an attribute macro that adds logging statements to your functions, potentially with configurable log levels.
+```rust
+#[log(level = "debug")]
+fn my_function() {
+    // ... your function code
+}
+```
 Overall, the use of proc macros in Anchor greatly reduces the amount of
 repetitive code that Solana developers have to write. By reducing the amount of
 boilerplate code, developers can focus on their program's core functionality and
