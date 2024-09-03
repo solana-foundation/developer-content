@@ -83,15 +83,14 @@ was used to derive the PDA.
 
 #### Under the hood of `find_program_address`
 
-Let's take a look at the source code for `find_program_address`.
+Let's take a look at the source code for `find_program_address` in Higher Abstraction.
 
 ```rust
- pub fn find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> (Pubkey, u8) {
+ pub fn find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Result<(Pubkey, u8), ProgramError> {
     Self::try_find_program_address(seeds, program_id)
-        .unwrap_or_else(|| panic!("Unable to find a viable program address bump seed"))
+        .ok_or_else(|| ProgramError::InvalidSeeds)
 }
 ```
-
 Under the hood, the `find_program_address` function passes the input `seeds` and
 `program_id` to the `try_find_program_address` function.
 
@@ -104,25 +103,16 @@ function. If the output of `create_program_address` is not a valid PDA, then the
 
 ```rust
 pub fn try_find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Option<(Pubkey, u8)> {
-
-    let mut bump_seed = [std::u8::MAX];
-    for _ in 0..std::u8::MAX {
-        {
-            let mut seeds_with_bump = seeds.to_vec();
-            seeds_with_bump.push(&bump_seed);
-            match Self::create_program_address(&seeds_with_bump, program_id) {
-                Ok(address) => return Some((address, bump_seed[0])),
-                Err(PubkeyError::InvalidSeeds) => (),
-                _ => break,
-            }
+    for bump in (0..=std::u8::MAX).rev() {
+        let mut seeds_with_bump = seeds.to_vec();
+        seeds_with_bump.push(&[bump]);
+        if let Ok(pda) = Pubkey::create_program_address(&seeds_with_bump, program_id) {
+            return Some((pda, bump));
         }
-        bump_seed[0] -= 1;
     }
     None
-
 }
 ```
-
 The `create_program_address` function performs a set of hash operations over the
 seeds and `program_id`. These operations compute a key, then verify if the
 computed key lies on the Ed25519 elliptic curve or not. If a valid PDA is found
@@ -631,16 +621,17 @@ let pda_counter = next_account_info(account_info_iter)?;
 let system_program = next_account_info(account_info_iter)?;
 ```
 
-Next, there's a check to make sure `total_len` is less than 1000 bytes, but
-`total_len` is no longer accurate since we added the discriminator. Let's
-replace `total_len` with a call to `MovieAccountState::get_account_size`:
+Next, Calculate the account size dynamically, accounting for all data fields and potential growth.
+Define maximum sizes using constants to avoid magic numbers:
 
 ```rust
-let account_len: usize = 1000;
+const MAX_TITLE_LENGTH: usize = 256;
+const MAX_DESCRIPTION_LENGTH: usize = 1024;
 
-if MovieAccountState::get_account_size(title.clone(), description.clone()) > account_len {
-    msg!("Data length is larger than 1000 bytes");
-    return Err(ReviewError::InvalidDataLength.into());
+impl MovieAccountState {
+    pub fn get_account_size(title: &str, description: &str) -> usize {
+        8 + 1 + (4 + title.len().min(MAX_TITLE_LENGTH)) + (4 + description.len().min(MAX_DESCRIPTION_LENGTH))
+    }
 }
 ```
 
@@ -663,7 +654,7 @@ account_data.is_initialized = true;
 Finally, let’s add the logic to initialize the counter account within the
 `add_movie_review` function. This means:
 
-1. Calculating the rent exemption amount for the counter account
+1. Base rent exemption on actual account size and ensure accounts are rent-exempt.
 2. Deriving the counter PDA using the review address and the string "comment" as
    seeds
 3. Invoking the system program to create the account
@@ -675,8 +666,8 @@ the `Ok(())`.
 
 ```rust
 msg!("create comment counter");
-let rent = Rent::get()?;
-let counter_rent_lamports = rent.minimum_balance(MovieCommentCounter::SIZE);
+let account_size = MovieCommentCounter::SIZE;
+let rent_exempt_lamports = Rent::get()?.minimum_balance(account_size);
 
 let (counter, counter_bump) =
     Pubkey::find_program_address(&[pda.as_ref(), "comment".as_ref()], program_id);
@@ -684,21 +675,17 @@ if counter != *pda_counter.key {
     msg!("Invalid seeds for PDA");
     return Err(ProgramError::InvalidArgument);
 }
-
+// Ensure the account is rent-exempt when creating it
 invoke_signed(
     &system_instruction::create_account(
         initializer.key,
         pda_counter.key,
-        counter_rent_lamports,
-        MovieCommentCounter::SIZE.try_into().unwrap(),
+        rent_exempt_lamports,
+        account_size.try_into().unwrap(),
         program_id,
     ),
-    &[
-        initializer.clone(),
-        pda_counter.clone(),
-        system_program.clone(),
-    ],
-    &[&[pda.as_ref(), "comment".as_ref(), &[counter_bump]]],
+    &[initializer.clone(), pda_counter.clone(), system_program.clone()],
+    &[&[pda_review.key.as_ref(), b"comment", &[counter_bump]]],
 )?;
 msg!("comment counter created");
 
