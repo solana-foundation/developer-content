@@ -103,6 +103,9 @@ Once you’ve fetched accounts with the given data slice, you can use the `sort`
 method to sort the array before mapping it to an array of public keys.
 
 ```tsx
+// 4 bytes are used to store the current length of a string
+const STRING_LENGTH_SPACE = 4;
+
 const accounts = await connection.getProgramAccounts(programId, {
   dataSlice: { offset: 13, length: 15 },
 });
@@ -114,14 +117,20 @@ accounts.sort((a, b) => {
     const lengthB = b.account.data.readUInt32LE(0);
 
     if (
-      a.account.data.length < 4 + lengthA ||
-      b.account.data.length < 4 + lengthB
+      a.account.data.length < STRING_LENGTH_SPACE + lengthA ||
+      b.account.data.length < STRING_LENGTH_SPACE + lengthB
     ) {
       throw new Error("Buffer length is insufficient");
     }
 
-    const dataA = a.account.data.subarray(4, 4 + lengthA);
-    const dataB = b.account.data.subarray(4, 4 + lengthB);
+    const dataA = a.account.data.subarray(
+      STRING_LENGTH_SPACE,
+      STRING_LENGTH_SPACE + lengthA,
+    );
+    const dataB = b.account.data.subarray(
+      STRING_LENGTH_SPACE,
+      STRING_LENGTH_SPACE + lengthB,
+    );
 
     return dataA.compare(dataB);
   } catch (error) {
@@ -162,6 +171,8 @@ For example, you could search through a list of contacts by including a `memcmp`
 filter:
 
 ```tsx
+const DATA_OFFSET = 2; // The offset into the program account data - Skip the first 2 bytes of metadata
+const DATA_LENGTH = 18; // The length of the data slice to retrieve - Retrieve 18 bytes of relevant data starting from the 3rd byte
 async function fetchMatchingContactAccounts(
   connection: web3.Connection,
   search: string,
@@ -169,14 +180,14 @@ async function fetchMatchingContactAccounts(
   const accounts = (await connection.getProgramAccounts(
     new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
     {
-      dataSlice: { offset: 2, length: 18 },
+      dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH },
       filters:
         search === ""
           ? []
           : [
               {
                 memcmp: {
-                  offset: 6,
+                  offset: 6, // Compare starting from the 7th byte
                   bytes: bs58.encode(Buffer.from(search)),
                 },
               },
@@ -431,17 +442,17 @@ static async prefetchAccounts(connection: Connection) {
   accounts.sort((a, b) => {
     try {
       // Check if buffers are long enough to avoid out-of-bounds access
-      const lengthA = a.account.data.readUInt32LE(0);
+      const lengthA = a.account.data.readUInt32LE(0); // Reads the first 4 bytes for length
       const lengthB = b.account.data.readUInt32LE(0);
 
       if (
-        a.account.data.length < 4 + lengthA ||
-        b.account.data.length < 4 + lengthB
+        a.account.data.length < 4 + lengthA ||  // Ensures there's enough data for lengthA
+        b.account.data.length < 4 + lengthB     // Ensures there's enough data for lengthB
       ) {
         throw new Error('Buffer length is insufficient');
       }
 
-      const dataA = a.account.data.subarray(4, 4 + lengthA);
+      const dataA = a.account.data.subarray(4, 4 + lengthA); // Extracts data starting from the 5th byte
       const dataB = b.account.data.subarray(4, 4 + lengthB);
 
       return dataA.compare(dataB);
