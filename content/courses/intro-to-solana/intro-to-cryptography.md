@@ -45,9 +45,11 @@ you'll see today are AES and Chacha20.
   the same keypair can be used to read it
 - **Signatures**: if it's encrypted with a secret key, the public key from the
   same keypair can be used to prove the secret key holder signed it.
-- You can even use asymmetric cryptography to work out a good key for symmetric
-  cryptography! This is called **key exchange**, where you use your public keys
-  and the recipient's public key to come up with a 'session' key.
+- Asymmetric cryptography also enables secure **key exchange**, where two
+  parties use their respective public keys to generate a shared 'session' key.
+  This key is then used for symmetric encryption, combining the security of
+  asymmetric encryption with the efficiency of symmetric encryption for the rest
+  of the communication.
 - There's a variety of asymmetric cryptography algorithms, but the most common
   you'll see today are variants of ECC or RSA.
 
@@ -107,8 +109,8 @@ We’ll cover a lot of
 throughout this course, but you can also check out the
 [official web3.js documentation](https://solana.com/docs/clients/javascript-reference).
 
-To send tokens, send NFTS, or read and write data Solana, you'll need your own
-keypair. To make a new keypair, use the `Keypair.generate()` function from
+To send tokens, send NFTS, or read and write data on Solana, you'll need your
+own keypair. To make a new keypair, use the `Keypair.generate()` function from
 `@solana/web3.js`:
 
 ```typescript
@@ -159,7 +161,7 @@ You know how to make and load keypairs! Let’s practice what we’ve learned.
 
 ### Installation
 
-Make a new directory, install TypeScript, Solana web3.js and esrun:
+Create a new directory and install TypeScript, Solana web3.js, esrun, and Solana Developers Helpers:
 
 ```bash
 mkdir generate-keypair
