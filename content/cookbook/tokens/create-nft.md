@@ -38,6 +38,8 @@ import Arweave from "arweave";
 
   transaction.addTag("Content-Type", "image/png");
 
+  // Instead of generating a new wallet, you can use an existing one from your file system
+  // useful in production environments
   // const wallet = JSON.parse(fs.readFileSync("./code/nfts/upload-arweave/wallet.json", "utf-8"))
   const wallet = await arweave.wallets.generate();
   const address = await arweave.wallets.getAddress(wallet);
