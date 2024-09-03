@@ -284,7 +284,7 @@ passing in the `playerOne.publicKey` for as both `playerOne` and `playerTwo`.
 ```typescript
 describe("duplicate-mutable-accounts", () => {
     ...
-    it("Invoke insecure instruction", async () => {
+    it("Invokes insecure instruction", async () => {
         await program.methods
         .rockPaperScissorsShootInsecure({ rock: {} }, { scissors: {} })
         .accounts({
