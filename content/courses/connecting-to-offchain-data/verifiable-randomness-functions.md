@@ -1342,11 +1342,8 @@ describe("burry-escrow-vrf", () => {
       await provider.connection.confirmTransaction(tx, "confirmed");
       console.log("Your transaction signature", tx);
     } catch (error) {
-      // verify tx returns expected error
       didFail = true;
-      // Safely access error message and verify it
-      const errorMessage =
-        error?.error?.errorMessage || error.message || error.toString();
+      const errorMessage = error.message || error.toString();
       console.log(errorMessage);
       assert(
         errorMessage.includes(
