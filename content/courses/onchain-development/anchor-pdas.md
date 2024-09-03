@@ -116,7 +116,7 @@ pub struct InitializePda<'info> {
         seeds = [b"example_seed", user.key().as_ref()],
         bump,
         payer = user,
-        space = (DISCRIMINATOR as usize) + Accountype::INIT_SPACE
+        space = DISCRIMINATOR + Accountype::INIT_SPACE
     )]
     pub pda_account: Account<'info, AccountType>,
     #[account(mut)]
@@ -130,7 +130,7 @@ pub struct AccountType {
     pub data: u64,
 }
 
-const DISCRIMINATOR: u8 = 8;
+const DISCRIMINATOR: usize = 8;
 ```
 
 When using `init` for non-PDA accounts, Anchor defaults to setting the owner of
@@ -301,7 +301,7 @@ pub struct ReallocExample<'info> {
         mut,
         seeds = [b"example_seed", user.key().as_ref()],
         bump,
-        realloc = (DISCRIMINATOR as usize) + BORSH_LEN + instruction_data.len(),
+        realloc = DISCRIMINATOR + BORSH_LEN + instruction_data.len(),
         realloc::payer = user,
         realloc::zero = false,
     )]
@@ -317,7 +317,7 @@ pub struct AccountType {
     pub data: String,
 }
 
-const DISCRIMINATOR: u8 = 8;
+const DISCRIMINATOR: usize = 8;
 const BORSH_LEN: usize = 4;
 ```
 
@@ -464,7 +464,7 @@ pub struct MovieAccountState {
     pub description: String, // 4 + len()
 }
 
-const DISCRIMINATOR: u8 = 8;
+const DISCRIMINATOR: usize = 8;
 ```
 
 Using the `#[derive(InitSpace)]` macro on the `AccountStruct` automatically
@@ -599,7 +599,7 @@ pub struct AddMovieReview<'info> {
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = (DISCRIMINATOR as usize) + MovieAccountState::INIT_SOACE
+        space = DISCRIMINATOR + MovieAccountState::INIT_SOACE
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
@@ -674,7 +674,7 @@ pub struct UpdateMovieReview<'info> {
         mut,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
-        realloc = (DISCRIMINATOR as usize) + MovieAccountState::INIT_SOACE
+        realloc = DISCRIMINATOR + MovieAccountState::INIT_SOACE
         realloc::payer = initializer,
         realloc::zero = true,
     )]
