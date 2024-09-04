@@ -238,7 +238,7 @@ data is published onchain:
 To use Switchboard oracles and incorporate off-chain data into a Solana program,
 you first have to find a feed that provides the data you need. Switchboard feeds
 are public and there are many
-[already available that you can choose from](https://app.switchboard.xyz/solana/devnet/explore).
+[already available that you can choose from](https://app.switchboard.xyz/solana/devnet).
 When looking for a feed, you have to decide how accurate/reliable you want the
 feed, where you want to source the data from, as well as the feed’s update
 cadence. When consuming a publicly available feed, you have no control over
