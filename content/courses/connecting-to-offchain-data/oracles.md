@@ -1175,7 +1175,7 @@ import {
 } from "@switchboard-xyz/solana.js";
 import { assert } from "chai";
 
-export const solUsedSwitchboardFeed = new anchor.web3.PublicKey(
+export const solUsdSwitchboardFeed = new anchor.web3.PublicKey(
   "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
 );
 
@@ -1189,7 +1189,6 @@ describe("burry-escrow", () => {
   it("Create Burry Escrow Below Price", async () => {
     // fetch switchboard devnet program object
     const switchboardProgram = await SwitchboardProgram.load(
-      "devnet",
       new anchor.web3.Connection("https://api.devnet.solana.com"),
       payer,
     );
@@ -1258,7 +1257,7 @@ describe("burry-escrow", () => {
       .accounts({
         user: payer.publicKey,
         escrowAccount: escrowState,
-        feedAggregator: solUsedSwitchboardFeed,
+        feedAggregator: solUsdSwitchboardFeed,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
       .signers([payer])
@@ -1280,13 +1279,12 @@ describe("burry-escrow", () => {
   it("Create Burry Escrow Above Price", async () => {
     // fetch switchboard devnet program object
     const switchboardProgram = await SwitchboardProgram.load(
-      "devnet",
       new anchor.web3.Connection("https://api.devnet.solana.com"),
       payer,
     );
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      solUsedSwitchboardFeed,
+      solUsdSwitchboardFeed,
     );
 
     // derive escrow state account
@@ -1354,7 +1352,7 @@ describe("burry-escrow", () => {
         .accounts({
           user: payer.publicKey,
           escrowAccount: escrowState,
-          feedAggregator: solUsedSwitchboardFeed,
+          feedAggregator: solUsdSwitchboardFeed,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([payer])
