@@ -1,5 +1,5 @@
 ---
-title: Program Configuration
+title: admin configuration
 objectives:
   - Define program features in the `Cargo.toml` file
   - Use the Rust `cfg` attribute to conditionally compile code based on which
@@ -7,7 +7,7 @@ objectives:
   - Use the Rust `cfg!` macro to conditionally compile code based on which
     features are or are not enabled
   - Create an admin-only instruction to set up a program account that can be
-    used to store program configuration values
+    used to store admin configuration values
 description:
   "Create distinct environments, feature flags and admin-only instructions."
 ---
@@ -243,7 +243,7 @@ In Anchor, that simply means creating an account struct and using a single seed
 to derive the account's address.
 
 ```rust
-pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
+pub const SEED_ADMIN_CONFIG: &[u8] = b"admin_config";
 
 #[account]
 pub struct ProgramConfig {
@@ -287,14 +287,14 @@ mod my_program {
     }
 }
 
-pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
+pub const SEED_ADMIN_CONFIG: &[u8] = b"admin_config";
 
 #[constant]
 pub const ADMIN_PUBKEY: Pubkey = pubkey!("ADMIN_WALLET_ADDRESS_HERE");
 
 #[derive(Accounts)]
 pub struct UpdateProgramConfig<'info> {
-    #[account(mut, seeds = SEED_PROGRAM_CONFIG, bump)]
+    #[account(mut, seeds = SEED_ADMIN_CONFIG, bump)]
     pub program_config: Account<'info, ProgramConfig>,
     #[account(constraint = authority.key() == ADMIN_PUBKEY)]
     pub authority: Signer<'info>,
@@ -339,7 +339,7 @@ When completed, that looks like this:
 
 #[derive(Accounts)]
 pub struct UpdateProgramConfig<'info> {
-    #[account(mut, seeds = SEED_PROGRAM_CONFIG, bump)]
+    #[account(mut, seeds = [SEED_ADMIN_CONFIG], bump)]
     pub program_config: Account<'info, ProgramConfig>,
     #[account(constraint = program.programdata_address()? == Some(program_data.key()))]
     pub program: Program<'info, MyProgram>,
@@ -365,7 +365,7 @@ want to update the admin to be someone else? For that, you can store the admin
 on the config account.
 
 ```rust
-pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
+pub const SEED_ADMIN_CONFIG: &[u8] = b"admin_config";
 
 #[account]
 pub struct ProgramConfig {
@@ -381,11 +381,11 @@ against the config account's `admin` field.
 ```rust
 ...
 
-pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
+pub const SEED_ADMIN_CONFIG: &[u8] = b"admin_config";
 
 #[derive(Accounts)]
 pub struct UpdateProgramConfig<'info> {
-    #[account(mut, seeds = SEED_PROGRAM_CONFIG, bump)]
+    #[account(mut, seeds = [SEED_ADMIN_CONFIG], bump)]
     pub program_config: Account<'info, ProgramConfig>,
     #[account(constraint = authority.key() == program_config.admin)]
     pub authority: Signer<'info>,
@@ -456,11 +456,11 @@ public key for your program printed to the console. This differs based on the
 keypair you have locally, so you need to update `lib.rs` and `Anchor.toml` to
 use _your_ key.
 
-Finally, run `anchor test` to start the test. It should fail with the following
-output:
+Finally, run `anchor test --skip-deploy` to start the test. It should fail with
+the following output:
 
 ```
-Error: failed to send transaction: Transaction simulation failed: Error processing Instruction 0: incorrect program id for instruction
+Error: AnchorError occurred. Error Code: ConstraintTokenMint. Error Number: 2014. Error Message: A token mint constraint was violated.
 ```
 
 The reason for this error is that we're attempting to use the mainnet USDC mint
@@ -534,13 +534,7 @@ local-testing = []
 ```
 
 Next, update the `config.ts` test file to create a mint using the generated
-keypair. Start by deleting the `mint` constant.
-
-```typescript
-const mint = new anchor.web3.PublicKey(
-  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-);
-```
+keypair.
 
 Next, update the test to create a mint using the keypair, which will enable us
 to reuse the same mint address each time the tests are run. Remember to replace
@@ -550,57 +544,54 @@ the file name with the one generated in the previous step.
 let mint: anchor.web3.PublicKey
 
 before(async () => {
-  let data = fs.readFileSync(
-    "env9Y3szLdqMLU9rXpEGPqkjdvVn8YNHtxYNvCKXmHe.json"
-  )
-
-  let keypair = anchor.web3.Keypair.fromSecretKey(
-    new Uint8Array(JSON.parse(data))
-  )
-
-  const mint = await spl.createMint(
-    connection,
-    wallet.payer,
-    wallet.publicKey,
-    null,
-    0,
-    keypair
-  )
+  let rawdata = fs.readFileSync(
+      "env9Y3szLdqMLU9rXpEGPqkjdvVn8YNHtxYNvCKXmHe.json"
+    );
+    let keyData = JSON.parse(rawdata);
+    let key = anchor.web3.Keypair.fromSecretKey(new Uint8Array(keyData));
+    mint = await spl.createMint(
+      connection,
+      wallet.payer,
+      wallet.publicKey,
+      null,
+      0,
+      key
+    );
 ...
 ```
 
 Lastly, run the test with the `local-testing` feature enabled.
 
 ```
-anchor test -- --features "local-testing"
+anchor test --skip-deploy -- --features "local-testing"
 ```
 
 You should see the following output:
 
 ```
 config
-  ✔ Payment completes successfully (406ms)
+    ✔ Initialize Admin should be successfully (416ms)
+    ✔ Payment should complete successfully (426ms)
 
-
-1 passing (3s)
+  2 passing (2s)
 ```
 
 Boom. Just like that, you've used features to run two different code paths for
 different environments.
 
-#### 4. Program Config
+#### 4. admin config
 
 Features are great for setting different values at compilation, but what if you
 wanted to be able to dynamically update the fee percentage used by the program?
-Let's make that possible by creating a Program Config account that allows us to
+Let's make that possible by creating a admin config account that allows us to
 update the fee without upgrading the program.
 
 To begin, let's first update the `lib.rs` file to:
 
-1. Include a `SEED_PROGRAM_CONFIG` constant, which will be used to generate the
-   PDA for the program config account.
+1. Include a `SEED_ADMIN_CONFIG` constant, which will be used to generate the
+   PDA for the admin config account.
 2. Include an `ADMIN` constant, which will be used as a constraint when
-   initializing the program config account. Run the `solana address` command to
+   initializing the admin config account. Run the `solana address` command to
    get your address to use as the constant's value.
 3. Include a `state` module that we'll implement shortly.
 4. Include the `initialize_program_config` and `update_program_config`
@@ -609,7 +600,6 @@ To begin, let's first update the `lib.rs` file to:
 
 ```rust
 use anchor_lang::prelude::*;
-use solana_program::{pubkey, pubkey::Pubkey};
 mod instructions;
 mod state;
 use instructions::*;
@@ -624,7 +614,7 @@ pub const USDC_MINT_PUBKEY: Pubkey = pubkey!("envgiPXWwmpkHFKdy4QLv2cypgAWmVTVEm
 #[constant]
 pub const USDC_MINT_PUBKEY: Pubkey = pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 
-pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
+pub const SEED_ADMIN_CONFIG: &[u8] = b"admin_config";
 
 #[constant]
 pub const ADMIN: Pubkey = pubkey!("...");
@@ -650,7 +640,7 @@ pub mod config {
 }
 ```
 
-#### 5. Program Config State
+#### 5. admin config State
 
 Next, let's define the structure for the `ProgramConfig` state. This account
 will store the admin, the token account where fees are sent, and the fee rate.
@@ -662,59 +652,62 @@ following code.
 ```rust
 use anchor_lang::prelude::*;
 
+const DISCRIMINATOR_SIZE: usize = 8;
+
 #[account]
-pub struct ProgramConfig {
+#[derive(InitSpace)]
+pub struct AdminConfig {
     pub admin: Pubkey,
     pub fee_destination: Pubkey,
     pub fee_basis_points: u64,
 }
 
-impl ProgramConfig {
-    pub const LEN: usize = 8 + 32 + 32 + 8;
+impl AdminConfig {
+    pub const LEN: usize = DISCRIMINATOR_SIZE + AdminConfig::INIT_SPACE;
 }
 ```
 
-#### 6. Add Initialize Program Config Account Instruction
+#### 6. Add Initialize admin config Account Instruction
 
-Now let's create the instruction logic for initializing the program config
+Now let's create the instruction logic for initializing the admin config
 account. It should only be callable by a transaction signed by the `ADMIN` key
 and should set all the properties on the `ProgramConfig` account.
 
 Create a folder called `program_config` at the path
 `/src/instructions/program_config`. This folder will store all instructions
-related to the program config account.
+related to the admin config account.
 
 Within the `program_config` folder, create a file called
 `initialize_program_config.rs` and add the following code.
 
 ```rust
-use crate::state::ProgramConfig;
-use crate::ADMIN;
-use crate::SEED_PROGRAM_CONFIG;
+use crate::state::AdminConfig;
+use crate::ADMIN_PUBKEY;
+use crate::SEED_ADMIN_CONFIG;
 use crate::USDC_MINT_PUBKEY;
 use anchor_lang::prelude::*;
 use anchor_spl::token::TokenAccount;
 
 #[derive(Accounts)]
-pub struct InitializeProgramConfig<'info> {
-    #[account(init, seeds = [SEED_PROGRAM_CONFIG], bump, payer = authority, space = ProgramConfig::LEN)]
-    pub program_config: Account<'info, ProgramConfig>,
+pub struct InitializeAdminConfig<'info> {
+    #[account(init, seeds = [SEED_ADMIN_CONFIG], bump, payer = authority, space = AdminConfig::LEN)]
+    pub admin_config: Account<'info, AdminConfig>,
     #[account( token::mint = USDC_MINT_PUBKEY)]
     pub fee_destination: Account<'info, TokenAccount>,
-    #[account(mut, address = ADMIN)]
+    #[account(mut,address = ADMIN_PUBKEY)]
     pub authority: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
-pub fn initialize_program_config_handler(ctx: Context<InitializeProgramConfig>) -> Result<()> {
-    ctx.accounts.program_config.admin = ctx.accounts.authority.key();
-    ctx.accounts.program_config.fee_destination = ctx.accounts.fee_destination.key();
-    ctx.accounts.program_config.fee_basis_points = 100;
+pub fn initialize_admin_config_handler(ctx: Context<InitializeAdminConfig>) -> Result<()> {
+    ctx.accounts.admin_config.admin = ctx.accounts.authority.key();
+    ctx.accounts.admin_config.fee_destination = ctx.accounts.fee_destination.key();
+    ctx.accounts.admin_config.fee_basis_points = 100;
     Ok(())
 }
 ```
 
-#### 7. Add Update Program Config Fee Instruction
+#### 7. Add Update admin config Fee Instruction
 
 Next, implement the instruction logic for updating the config account. The
 instruction should require that the signer match the `admin` stored in the
@@ -725,14 +718,14 @@ Within the `program_config` folder, create a file called
 
 ```rust
 use crate::state::ProgramConfig;
-use crate::SEED_PROGRAM_CONFIG;
+use crate::SEED_ADMIN_CONFIG;
 use crate::USDC_MINT_PUBKEY;
 use anchor_lang::prelude::*;
 use anchor_spl::token::TokenAccount;
 
 #[derive(Accounts)]
 pub struct UpdateProgramConfig<'info> {
-    #[account(mut, seeds = [SEED_PROGRAM_CONFIG], bump)]
+    #[account(mut, seeds = [SEED_ADMIN_CONFIG], bump)]
     pub program_config: Account<'info, ProgramConfig>,
     #[account( token::mint = USDC_MINT_PUBKEY)]
     pub fee_destination: Account<'info, TokenAccount>,
@@ -787,11 +780,11 @@ pub use payment::*;
 Lastly, let's update the payment instruction to check that the `fee_destination`
 account in the instruction matches the `fee_destination` stored in the program
 config account. Then update the instruction's fee calculation to be based on the
-`fee_basis_point` stored in the program config account.
+`fee_basis_point` stored in the admin config account.
 
 ```rust
 use crate::state::ProgramConfig;
-use crate::SEED_PROGRAM_CONFIG;
+use crate::SEED_ADMIN_CONFIG;
 use crate::USDC_MINT_PUBKEY;
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount};
@@ -799,7 +792,7 @@ use anchor_spl::token::{self, Token, TokenAccount};
 #[derive(Accounts)]
 pub struct Payment<'info> {
     #[account(
-        seeds = [SEED_PROGRAM_CONFIG],
+        seeds = [SEED_ADMIN_CONFIG],
         bump,
         has_one = fee_destination
     )]
@@ -866,51 +859,50 @@ pub fn payment_handler(ctx: Context<Payment>, amount: u64) -> Result<()> {
 
 #### 10. Test
 
-Now that we're done implementing our new program configuration struct and
+Now that we're done implementing our new admin configuration struct and
 instructions, let's move on to testing our updated program. To begin, add the
-PDA for the program config account to the test file.
+PDA for the admin config account to the test file.
 
 ```typescript
 describe("config", () => {
   ...
-  const programConfig = findProgramAddressSync(
-    [Buffer.from("program_config")],
+  const adminConfig = PublicKey.findProgramAddressSync(
+    [Buffer.from("admin_config")],
     program.programId
-  )[0]
+  )[0];
 ...
 ```
 
 Next, update the test file with three more tests testing that:
 
-1. The program config account is initialized correctly
+1. The admin config account is initialized correctly
 2. The payment instruction is functioning as intended
 3. The config account can be updated successfully by the admin
 4. The config account cannot be updated by someone other than the admin
 
-The first test initializes the program config account and verifies that the
-correct fee is set and that the correct admin is stored on the program config
+The first test initializes the admin config account and verifies that the
+correct fee is set and that the correct admin is stored on the admin config
 account.
 
 ```typescript
-it("Initialize Program Config Account", async () => {
+it("Initialize Admin config should be successfully", async () => {
   const tx = await program.methods
-    .initializeProgramConfig()
+    .initializeAdminConfig()
     .accounts({
-      programConfig: programConfig,
       feeDestination: feeDestination,
       authority: wallet.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
+      programData: programDataAddress,
     })
     .rpc();
 
   assert.strictEqual(
     (
-      await program.account.programConfig.fetch(programConfig)
+      await program.account.adminConfig.fetch(adminConfig)
     ).feeBasisPoints.toNumber(),
     100,
   );
   assert.strictEqual(
-    (await program.account.programConfig.fetch(programConfig)).admin.toString(),
+    (await program.account.adminConfig.fetch(adminConfig)).admin.toString(),
     wallet.publicKey.toString(),
   );
 });
@@ -919,10 +911,10 @@ it("Initialize Program Config Account", async () => {
 The second test verifies that the payment instruction is working correctly, with
 the fee being sent to the fee destination and the remaining balance being
 transferred to the receiver. Here we update the existing test to include the
-`programConfig` account.
+`adminConfig` account.
 
 ```typescript
-it("Payment completes successfully", async () => {
+it("Payment should complete successfully", async () => {
   const tx = await program.methods
     .payment(new anchor.BN(10000))
     .accounts({
@@ -955,16 +947,14 @@ it("Payment completes successfully", async () => {
 });
 ```
 
-The third test attempts to update the fee on the program config account, which
+The third test attempts to update the fee on the admin config account, which
 should be successful.
 
 ```typescript
-it("Update Program Config Account", async () => {
+it("Admin Config Update should be successfully", async () => {
   const tx = await program.methods
-    .updateProgramConfig(new anchor.BN(200))
+    .updateAdminConfig(new anchor.BN(200))
     .accounts({
-      programConfig: programConfig,
-      admin: wallet.publicKey,
       feeDestination: feeDestination,
       newAdmin: sender.publicKey,
     })
@@ -972,50 +962,57 @@ it("Update Program Config Account", async () => {
 
   assert.strictEqual(
     (
-      await program.account.programConfig.fetch(programConfig)
+      await program.account.adminConfig.fetch(adminConfig)
     ).feeBasisPoints.toNumber(),
     200,
   );
 });
 ```
 
-The fourth test tries to update the fee on the program config account, where the
-admin is not the one stored on the program config account, and this should fail.
+The fourth test tries to update the fee on the admin config account, where the
+admin is not the one stored on the admin config account, and this should fail.
 
 ```typescript
-it("Update Program Config Account with unauthorized admin (expect fail)", async () => {
+it("Admin Config Update with unauthorized admin should throw an exception", async () => {
   try {
     const tx = await program.methods
-      .updateProgramConfig(new anchor.BN(300))
+      .updateAdminConfig(new anchor.BN(300))
       .accounts({
-        programConfig: programConfig,
-        admin: sender.publicKey,
         feeDestination: feeDestination,
         newAdmin: sender.publicKey,
+        admin: sender.publicKey, //ignore an error on this line
       })
-      .transaction();
-
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender]);
+      .signers([sender])
+      .rpc();
   } catch (err) {
     expect(err);
+    console.log(err.message);
+    return;
   }
+
+  assert.fail("should throw an exception");
 });
 ```
 
 Finally, run the test using the following command:
 
 ```
-anchor test -- --features "local-testing"
+anchor test --skip-deploy -- --features "local-testing"
 ```
 
 You should see the following output:
 
 ```
 config
-  ✔ Initialize Program Config Account (199ms)
-  ✔ Payment completes successfully (405ms)
-  ✔ Update Program Config Account (403ms)
-  ✔ Update Program Config Account with unauthorized admin (expect fail)
+    ✔ Initialize Admin config should be successfully (416ms)
+    ✔ Payment should complete successfully (419ms)
+    ✔ Admin Config Update should be successfully (414ms)
+AnchorError caused by account: admin. Error Code: ConstraintAddress. Error Number: 2012. Error Message: An address constraint was violated.
+Program log: Left:
+Program log: 9DFY8t5NsZ2g8bQDypYZ5spHzBt6qjbVUgKhFxATMBRv
+Program log: Right:
+Program log: CbcfaDHPwur22CzyWmzn6b4kBe3ntsw9Hu1UTWt9q33Y
+    ✔ Admin Config Update with unauthorized admin should throw an exception
 
 4 passing (8s)
 ```
