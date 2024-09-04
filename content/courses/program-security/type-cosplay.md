@@ -19,20 +19,17 @@ description:
   struct to represent the account type.
 
   ```rust
-  use anchor_lang::prelude::*;
-
-  #[account]
-  #[derive(Default, InitSpace)]
+  #[derive(BorshSerialize, BorshDeserialize)]
   pub struct User {
-    pub discriminant: AccountDiscriminant,
-    pub user: Pubkey,
+      discriminant: AccountDiscriminant,
+      user: Pubkey,
   }
 
-   #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, InitSpace)]
-   pub enum AccountDiscriminant {
-    User,
-    Admin,
-   }
+  #[derive(BorshSerialize, BorshDeserialize, PartialEq)]
+  pub enum AccountDiscriminant {
+      User,
+      Admin,
+  }
   ```
 
 - **Check the discriminator** in Rust to verify that the deserialized account
