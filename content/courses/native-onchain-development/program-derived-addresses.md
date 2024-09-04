@@ -629,6 +629,8 @@ const MAX_TITLE_LENGTH: usize = 256;
 const MAX_DESCRIPTION_LENGTH: usize = 1024;
 
 impl MovieAccountState {
+    pub const INIT_SPACE: usize = 8 + 1 + (4 + MAX_TITLE_LENGTH) + (4 + MAX_DESCRIPTION_LENGTH) + 1;
+    
     pub fn get_account_size(title: &str, description: &str) -> usize {
         8 + 1 + (4 + title.len().min(MAX_TITLE_LENGTH)) + (4 + description.len().min(MAX_DESCRIPTION_LENGTH))
     }
