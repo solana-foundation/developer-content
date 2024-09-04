@@ -1024,52 +1024,6 @@ of [the same repository](https://github.com/Unboxed-Software/solana-admin-instr
 
 ## Challenge
 
-Now it's time for you to do some of this on your own. We mentioned being able to
-use the program's upgrade authority as the initial admin. Go ahead and update
-the lab's `initialize_program_config` so that only the upgrade authority can
-call it rather than having a hardcoded `ADMIN`.
-
-Note that the `anchor test` command, when run on a local network, starts a new
-test validator using `solana-test-validator`. This test validator uses a
-non-upgradeable loader. The non-upgradeable loader makes it so the program's
-`program_data` account isn't initialized when the validator starts. You'll
-recall from the lesson that this account is how we access the upgrade authority
-from the program.
-
-To work around this, you can add a `deploy` function to the test file that runs
-the deploy command for the program with an upgradeable loader. To use it, run
-`anchor test --skip-deploy`, and call the `deploy` function within the test to
-run the deploy command after the test validator has started.
-
-```typescript
-import { execSync } from "child_process"
-
-...
-
-const deploy = () => {
-  const deployCmd = `solana program deploy --url localhost -v --program-id $(pwd)/target/deploy/config-keypair.json $(pwd)/target/deploy/config.so`
-  execSync(deployCmd)
-}
-
-...
-
-before(async () => {
-  ...
-  deploy()
-})
-```
-
-For example, the command to run the test with features would look like this:
-
-```
-anchor test --skip-deploy -- --features "local-testing"
-```
-
-Try doing this on your own, but if you get stuck, feel free to reference the
-`challenge` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/challenge)
-to see one possible solution.
-
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=02a7dab7-d9c1-495b-928c-a4412006ec20)!
