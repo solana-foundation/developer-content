@@ -56,13 +56,10 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 Next,
 [download the Solana CLI tools](https://docs.solana.com/cli/install-solana-cli-tools).
 
-Solana installation no longer supports symbolic channel names (`edge`, `beta`,
-`stable`), hence we'll have to specify the version.
-
-> the command below will install version `1.18.22` of the Solana CLI.
+the command below will install the stable version of the Solana CLI.
 
 ```bash
-sh -c "$(curl -sSfL https://release.anza.xyz/v1.18.22/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
 Afterwards, `solana -V` should show `solana-cli 1.18.x` (any number for `x` is
@@ -128,7 +125,15 @@ re-run `anchor test`.
 
 #### error: no such command: `build-sbf`
 
-Add this to your `~/.zshrc` or `~/.bashrc` file to make the change permanent.
+This error typically occurs because the Solana Build SBF (Solana BPF) feature is
+not available in your current environment. Solana BPF is used for compiling
+programs to run on the Solana blockchain. The error might indicate that either
+the Solana installation is corrupted or the relevant binaries are not in your
+system's PATH variable.
+
+One possible solution is to add the Solana binaries to your system's PATH
+variable. Add this to your `~/.zshrc` or `~/.bashrc` file to make the change
+permanent.
 
 ```bash
 export PATH=~"/.local/share/solana/install/active_release/bin:$PATH"
@@ -136,9 +141,12 @@ export PATH=~"/.local/share/solana/install/active_release/bin:$PATH"
 
 #### Unable to get latest blockhash. Test validator does not look started.
 
-- Install Homebrew and use it to install GNU tar:
+- Install [Homebrew](https://brew.sh/) and use it to install GNU tar:
 
   ```bash
+  # Install Homebrew; you can skip this step if you already have Homebrew installed
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # Install GNU tar
   brew install gnu-tar
   ```
 
