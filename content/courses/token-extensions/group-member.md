@@ -537,7 +537,7 @@ const groupMetadata: LabNFTMetadata = {
   tokenUri: "",
 };
 
-// Upload off-chain metadata
+// Upload offchain metadata
 groupMetadata.tokenUri = await uploadOffChainMetadata(payer, groupMetadata);
 
 // Format group token metadata

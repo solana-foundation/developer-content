@@ -131,7 +131,7 @@ sign with your cold wallet.
 
 ### Using Durable nonces overcome the short lifespan of regular transactions
 
-Durable nonces are a way to sign transactions off-chain and keep them in storage
+Durable nonces are a way to sign transactions offchain and keep them in storage
 until they are ready to be submitted to the network. And this allows us to
 create durable transactions.
 
