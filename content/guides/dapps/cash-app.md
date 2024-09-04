@@ -81,7 +81,7 @@ Setup the following tools on your local development environment:
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Node.js](https://nodejs.org/en/download)
-- [Solana CLI & Anchor](https://solana.com/developers/guides/getstarted/setup-local-development)
+- [Solana CLI & Anchor](https://solana.com/docs/intro/installation)
 - [Android Studio and emulator set up](https://docs.solanamobile.com/getting-started/development-setup)
 - [React Native Setup](https://reactnative.dev/docs/environment-setup?platform=android)
 - [EAS CLI and Account Setup](https://docs.expo.dev/build/setup/)

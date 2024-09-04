@@ -61,13 +61,13 @@ Here's a list of the tools you'll need to have installed:
 - [Node.js](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Solana CLI](/content/guides/getstarted/setup-local-development.md#3-install-solana-cli)
+- [Solana CLI](/docs/intro/installation)
 - [Anchor](https://www.anchor-lang.com/docs/installation)
 
 You can download Node and Yarn from their setup pages which I've linked above.
 For the rest, check out the
-[Solana Local development guide](/content/guides/getstarted/setup-local-development.md)
-which has detailed instructions for different operating systems.
+[Solana Local development guide](/docs/intro/installation) which has detailed
+instructions for different operating systems.
 
 **We'll be using Anchor 0.29 for this guide**. You can make sure you're using it
 with `avm use 0.29.0`.
