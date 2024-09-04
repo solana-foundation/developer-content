@@ -12,7 +12,6 @@ Before starting this lesson, You'll find it helpful to have:
 
 - [A basic understanding of the Solana blockchain](/content/workshops/solana-101.md).
 - [Getting started with token extensions](/content/guides/token-extensions/getting-started.md).
-- [A local Solana development environment set up](/content/workshops/solana-101.md).
 
 ## Summary
 
@@ -759,9 +758,10 @@ extension, here are some next steps you can take:
   to discover other useful features.
 - Consider using the `close mint` extension in a real-world project, such as an
   NFT platform or a DeFi application.
-- Lastly, don’t forget to share your experience with the Solana developer
-  community, contribute to open-source projects, or write a blog post about what
-  you've learned.
+- Lastly, don’t forget to share your experience and questions with the Solana
+  developer community [Solana StackExchange](https://solana.stackexchange.com),
+  contribute to open-source projects, or write a blog post about what you've
+  learned.
 
 By continuing to build on this knowledge, you'll deepen your expertise and
 become a more proficient Solana developer.
