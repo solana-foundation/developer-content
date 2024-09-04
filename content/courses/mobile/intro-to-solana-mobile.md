@@ -1011,13 +1011,14 @@ export function CounterView() {
   useEffect(() => {
     if (!program || !counterAddress) {
       console.log("Missing dependencies:", {
-        program: !!program ? "Program Loaded" : "Program Not loaded",
-        counterAddress: !!counterAddress
+        program: Boolean(program) ? "Program Loaded" : "Program Not loaded",
+        counterAddress: Boolean(counterAddress)
           ? "Counter Address Loaded"
           : "Counter Address Not loaded",
       });
       return;
     }
+  });
 
     const fetchCounter = async () => {
       try {
@@ -1126,9 +1127,11 @@ export function CounterButton() {
   const [isTransactionInProgress, setIsTransactionInProgress] = useState(false);
 
   const showNotification = (message: string) => {
-    Platform.OS === "android"
-      ? ToastAndroid.show(message, ToastAndroid.SHORT)
-      : Alert.alert(message);
+    if (Platform.OS === "android") {
+      ToastAndroid.show(message, ToastAndroid.SHORT);
+    } else {
+      Alert.alert(message);
+    }
   };
 
   const incrementCounter = () => {
