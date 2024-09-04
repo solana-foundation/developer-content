@@ -692,8 +692,8 @@ file. Make sure your dependencies look as follows:
 
 ```toml
 [dependencies]
-anchor-lang = "0.28.0"
-switchboard-v2 = "0.4.0"
+anchor-lang = "0.30.1"
+switchboard-solana = "0.30.4"
 ```
 
 Before we get started with the logic, let’s go over the structure of our
