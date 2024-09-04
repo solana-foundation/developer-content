@@ -11,7 +11,7 @@ description:
 
 ## Summary
 
-- **Onchain programs** run directly on Solana, just like programs on your
+- **Onchain programs** (sometimes called 'smart contracts') run directly on Solana, just like programs on your
   computer.
 - These programs consist of **instruction handlers** - functions that process
   instructions from transactions.
