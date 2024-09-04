@@ -700,7 +700,7 @@ Before we get started with the logic, let’s go over the structure of our
 program. With small programs, it’s very easy to add all of the smart contract
 code to a single `lib.rs` file and call it a day. To keep it more organized
 though, it’s helpful to break it up across different files. Our program will
-have the following files within the `programs/src` directory:
+have the following files within the `programs/burry-escrow/src` directory:
 
 `/instructions/deposit.rs`
 
