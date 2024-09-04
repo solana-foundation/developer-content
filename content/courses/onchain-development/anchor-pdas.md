@@ -37,9 +37,9 @@ reallocate accounts, and close accounts.
 
 ### PDAs with Anchor
 
-Recall that
-[PDAs](https://github.com/Unboxed-Software/solana-course/blob/main/content/pda)
-are derived using a list of optional seeds, a bump seed, and a program ID.
+PDAs store data, at addressed specified by the onchain programmer, using a list
+of seeds, a bump seed, and a program ID.
+
 Anchor provides a convenient way to validate a PDA with the `seeds` and `bump`
 constraints.
 
@@ -230,7 +230,7 @@ To use `init_if_needed`, you must first enable the feature in `Cargo.toml`.
 
 ```rust
 [dependencies]
-anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 ```
 
 Once you’ve enabled the feature, you can include the constraint in the
@@ -471,7 +471,7 @@ impl Space for MovieAccountState {
 
 The `Space` trait will force us to define the space of our account for
 initialization, by defining the `INIT_SPACE` constant. This constant can then be
-used during the account initalization.
+used during the account initialization.
 
 Note that, in this case, since the account state is dynamic (`title` and
 `description` are strings without a fixed size), we will add
@@ -486,7 +486,7 @@ length storage + 4 bytes for the description length storage.
 ### Custom error codes
 
 During our implementation, we will be doing some checks and throwing some custom
-errors in case those checks are bot successful.
+errors in case those checks are not successful.
 
 For, that let's go ahead and create an enum that will contain the different type
 of errors as well as the error messages associated:

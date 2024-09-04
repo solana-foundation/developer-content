@@ -52,7 +52,7 @@ with a few tools:
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Node JS](https://nodejs.org/en/download)
-- [Solana CLI & Anchor](https://solana.com/developers/guides/getstarted/setup-local-development)
+- [Solana CLI & Anchor](https://solana.com/docs/intro/installation)
 
 ## Setting up the project
 
