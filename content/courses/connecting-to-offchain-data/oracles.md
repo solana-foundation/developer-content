@@ -744,7 +744,7 @@ mod burry_oracle_program {
 
     use super::*;
 
-    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64) -> Result<()> {
+    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: f64) -> Result<()> {
         deposit_handler(ctx, escrow_amt, unlock_price)
     }
 
