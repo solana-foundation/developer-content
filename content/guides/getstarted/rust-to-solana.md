@@ -101,7 +101,7 @@ entrypoint!(process_instruction);
 ### Building and Testing
 
 After
-[installing the Solana command-line tools](https://solana.com/developers/guides/getstarted/setup-local-development#3-install-the-solana-cli),
+[installing the Solana command-line tools](https://solana.com/docs/intro/installation),
 projects can be built to target host machines as normal with `cargo build`.
 
 However, to target the Solana runtime, use `cargo build-bpf` or
