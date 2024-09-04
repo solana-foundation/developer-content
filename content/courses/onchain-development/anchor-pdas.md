@@ -479,7 +479,7 @@ of length 20 (max), and the `description` string to be of length 50 (max).
 ### Custom error codes
 
 During our implementation, we will be doing some checks and throwing some custom
-errors in case those checks are bot successful.
+errors in case those checks are not successful.
 
 For, that let's go ahead and create an enum that will contain the different type
 of errors as well as the error messages associated:
