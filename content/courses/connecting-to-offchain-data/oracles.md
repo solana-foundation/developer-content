@@ -373,7 +373,7 @@ ways:
 - `load_mut` when the account is mutable
 
 If you’d like to learn more, check out the
-[Advance Program Architecture lesson](/developers/courses/program-optimization/program-architecture)
+[Advance Program Architecture lesson](/content/courses/program-optimization/program-architecture.md)
 where we touch on `Zero-Copy` and `AccountLoader`.
 
 With the aggregator account passed into your program, you can use it to get the
