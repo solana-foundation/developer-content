@@ -373,6 +373,8 @@ export class Movie {
 
   serialize(): Buffer {
     try {
+      // We allocate a buffer with a size of 1000 bytes. This size is chosen as a reasonable estimate to accommodate the serialized data structure.
+      // The actual size needed depends on the structure of the data and the serialization schema. If the data exceeds 1000 bytes, you might need to increase the buffer size.
       const buffer = Buffer.alloc(1000);
       this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
       return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));

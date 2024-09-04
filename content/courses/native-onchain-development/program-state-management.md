@@ -553,19 +553,20 @@ We're ready to build and deploy our program!
 
 You can test your program by submitting a transaction with the right instruction
 data. For that, feel free to use
-[this script](https://github.com/Unboxed-Software/solana-movie-client) or
-[the frontend](https://github.com/solana-developers/movie-review-frontend) we
+[this script](https://github.com/solana-developers/movie-review-program-client)
+or [the frontend](https://github.com/solana-developers/movie-review-frontend) we
 built in the
 [Deserialize Custom Instruction Data lesson](/content/courses/native-onchain-development/deserialize-custom-data-frontend.md).
-In both cases, make sure you copy and paste the program ID for your program into
-the appropriate area of the source code to make sure you're testing the right
+In both cases, set the program ID for your program in the appropriate file
+`web/components/ui/review-form.ts` to make sure you're testing the right
 program.
 
-If you're using the script, simply replace the value assigned to movieProgramId
-in the index.ts component with the public key of the program you've deployed.
+- If you're using the script, simply replace the value assigned to
+  `movieProgramId` in the `index.ts` component with the public key of the
+  program you've deployed.
+- If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in the
+  `review-form.tsx` components with the address of the program you’ve deployed.
 
-If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in the
-`review-form.tsx` components with the address of the program you’ve deployed.
 Then run the frontend, submit a view, and refresh the browser to see the review.
 
 If you need more time with this project to feel comfortable with these concepts,
