@@ -301,7 +301,7 @@ pub struct ReallocExample<'info> {
         mut,
         seeds = [b"example_seed", user.key().as_ref()],
         bump,
-        realloc = DISCRIMINATOR + BORSH_LEN + instruction_data.len(),
+        realloc = DISCRIMINATOR + STRING_SIZE_SPACE + instruction_data.len(),
         realloc::payer = user,
         realloc::zero = false,
     )]
@@ -318,14 +318,14 @@ pub struct AccountType {
 }
 
 const DISCRIMINATOR: usize = 8;
-const BORSH_LEN: usize = 4;
+const STRING_SIZE_SPACE: usize = 4;
 ```
 
 The `realloc` constraint from the above example can be broken down as follows:
 
 - the `DISCRIMINATOR` is `8`
-- the `BORSH_LEN` is `4` for the space required to store the length of the
-  string
+- the `STRING_SIZE_SPACE` is `4` for the space required to store the length of
+  the string. As required by BORSH serialization
 - `instruction_data.len()` is the length of the string itself
 
 > [BORSH](https://solanacookbook.com/guides/serialization.html) stands for
