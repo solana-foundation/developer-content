@@ -1072,7 +1072,7 @@ use crate::state::*;
 use crate::errors::*;
 use std::str::FromStr;
 use anchor_lang::prelude::*;
-use switchboard_v2::AggregatorAccountData;
+use switchboard_solana::AggregatorAccountData;
 use anchor_lang::solana_program::clock::Clock;
 
 pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
