@@ -364,7 +364,7 @@ changed (unless we want it to).
 
 > Learn more about how State Compression uses
 > [concurrent merkle trees](https://docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
-> to cryptographically secure off-chain data using the Solana ledger.
+> to cryptographically secure offchain data using the Solana ledger.
 
 ### Define our NFT's metadata
 
