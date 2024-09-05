@@ -181,7 +181,7 @@ pub struct User {
 
 #### Anchor’s init_if_needed Constraint
 
-Anchor’s `init_if_needed` constraint, guarded by a feature flag, should be used
+[Anchor’s `init_if_needed` constraint](https://www.anchor-lang.com/docs/account-constraints), guarded by a feature flag, should be used
 with caution. It initializes an account only if it hasn’t been initialized yet.
 If the account is already initialized, the instruction will still run, so
 it's \***\*\*\*\***extremely\***\*\*\*\*** important to include checks to
