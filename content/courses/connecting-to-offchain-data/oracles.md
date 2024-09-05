@@ -837,6 +837,8 @@ use anchor_lang::solana_program::{
     program::invoke
 };
 
+pub const ANCHOR_DISCRIMINATOR: usize = 8;
+
 #[derive(Accounts)]
 pub struct Deposit<'info> {
     // user account
@@ -847,7 +849,7 @@ pub struct Deposit<'info> {
       seeds = [ESCROW_SEED, user.key().as_ref()],
       bump,
       payer = user,
-      space =  EscrowState::INIT_SPACE + 8
+      space =   EscrowState::INIT_SPACE + ANCHOR_DISCRIMINATOR
     )]
     pub escrow_account: Account<'info, EscrowState>,
 		// system program
@@ -941,6 +943,8 @@ pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: 
     Ok(())
 }
 
+pub const ANCHOR_DISCRIMINATOR: usize = 8;
+
 #[derive(Accounts)]
 pub struct Deposit<'info> {
     // user account
@@ -952,7 +956,7 @@ pub struct Deposit<'info> {
         seeds = [ESCROW_SEED, user.key().as_ref()],
         bump,
         payer = user,
-        space =  EscrowState::INIT_SPACE + 8
+        space =   EscrowState::INIT_SPACE + ANCHOR_DISCRIMINATOR
     )]
     pub escrow_account: Account<'info, EscrowState>,
 
@@ -1175,7 +1179,7 @@ import {
   SwitchboardProgram,
 } from "@switchboard-xyz/solana.js";
 import { assert } from "chai";
-
+//for SOL_USD  See https://app.switchboard.xyz/solana/devnet/feed/GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR
 export const solUsdSwitchboardFeed = new anchor.web3.PublicKey(
   "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
 );
