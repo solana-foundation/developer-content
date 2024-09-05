@@ -16,8 +16,8 @@ program, take a look at these detailed quick start guides:
 
 - [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
   No installation needed.
-- [Setup your local environment](/content/guides/getstarted/setup-local-development.md)
-  and use the local test validator.
+- [Setup your local environment](/docs/intro/installation) and use the local
+  test validator.
 
 </Callout>
 

@@ -457,7 +457,7 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We’re going to use the Token Token Program to create a Token Mint, create an
+We’re going to use the Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
@@ -869,7 +869,7 @@ approval.
 2. Create a new Token Mint in the `CreateMint` component. If you need a
    refresher on how to send transactions to a wallet for approval, have a look
    at the
-   [Wallets lesson](/developers/courses/intro-to-solana/interact-with-wallets).
+   [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
 
 When creating a new mint, the newly generated `Keypair` will also have to sign
 the transaction. When additional signers are required in addition to the
