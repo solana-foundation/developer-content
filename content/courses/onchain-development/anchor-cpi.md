@@ -119,12 +119,12 @@ generic, allowing you to pass in any object that implements the `ToAccountMetas`
 and `ToAccountInfos<'info>` traits.
 
 These traits are added by the `#[derive(Accounts)]` attribute macro you've used
-before for instruction accounts. This means you can use similar structs with
-`CpiContext`.
+before, to specify the accounts required by your instruction handlers. You can
+use also use `#[derive(Accounts)]` structs with `CpiContext`.
 
 This helps with code organization and type safety.
 
-#### Invoke an instruction on another Anchor program
+#### Invoke an instruction handler on another Anchor program
 
 When calling another Anchor program with a published crate, Anchor can generate
 instruction builders and CPI helper functions for you.
@@ -144,7 +144,7 @@ The `cpi` module turns `callee`'s instructions into Rust functions. These
 functions take a `CpiContext` and any extra data needed for the instruction.
 They work just like the instruction functions in your Anchor programs, but use
 `CpiContext` instead of `Context`. The `cpi` module also provides the account
-structs needed for these instructions.
+structs needed for these instruction handler.
 
 For example, if `callee` has the instruction `do_something` that requires the
 accounts defined in the `DoSomething` struct, you could invoke `do_something` as
