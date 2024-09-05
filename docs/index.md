@@ -24,8 +24,8 @@ Dive right into Solana to start building or setting up your local environment.
 
 - [Quick Start](/docs/intro/quick-start) - Build and deploy your first on-chain
   Solana program, directly in your browser using Solana Playground
-- [Setup Local Environment](/content/guides/getstarted/setup-local-development) -
-  Install the Solana CLI to get your local development environment setup
+- [Setup Local Environment](/docs/intro/installation) - Install the Solana CLI
+  to get your local development environment setup
 
 ## Start learning
 
