@@ -1,5 +1,5 @@
 ---
-title: How to Approach the Program Security Module
+title: How to Approach the Program Security Course
 objectives:
   - Understand how to approach the Program Security Module
 description:
