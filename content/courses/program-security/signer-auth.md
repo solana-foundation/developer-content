@@ -26,8 +26,10 @@ description:
 
 - In Anchor, you can use the `Signer` account type in your account validation
   struct to automatically perform a signer check on a given account.
-- Anchor also provides the `#[account(signer)]` constraint, which automatically
-  verifies that a specified account has signed the transaction.
+- Anchor also provides the
+  [`#[account(signer)]`](https://www.anchor-lang.com/docs/account-constraints)
+  constraint, which automatically verifies that a specified account has signed
+  the transaction.
 
 ## Lesson
 
@@ -38,15 +40,17 @@ such as unauthorized access and control over program accounts.
 
 ### Missing Signer Check
 
-Below is an oversimplified instruction that updates the `authority` field on a
-program account. Notice that the `authority` field in the `UpdateAuthority`
-account validation struct is of type `AccountInfo`. In Anchor, the `AccountInfo`
+Below is an oversimplified instruction handler that updates the `authority`
+field on a program account. Notice that the `authority` field in the
+`UpdateAuthority` account validation struct is of type `UncheckedAccount`. In
+Anchor, the
+[`UncheckedAccount`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/unchecked_account/struct.UncheckedAccount.html)
 type indicates that no checks are performed on the account before executing the
-instruction.
+instruction handler.
 
 Although the `has_one` constraint ensures that the `authority` account passed to
-the instruction matches the `authority` field on the `vault` account, there is
-no verification that the `authority` account actually authorized the
+the instruction handler matches the `authority` field on the `vault` account,
+there is no verification that the `authority` account actually authorized the
 transaction.
 
 This omission allows an attacker to pass in the `authority` account’s public key
@@ -76,8 +80,10 @@ pub struct UpdateAuthority<'info> {
         has_one = authority
     )]
     pub vault: Account<'info, Vault>,
-    pub new_authority: AccountInfo<'info>,
-    pub authority: AccountInfo<'info>,
+    /// CHECK: This account will not be checked by Anchor
+    pub new_authority: UncheckedAccount<'info>,
+    /// CHECK: This account will not be checked by Anchor
+    pub authority: UncheckedAccount<'info>,
 }
 
 #[account]
@@ -90,17 +96,17 @@ pub struct Vault {
 ### Adding Signer Authorization Checks
 
 To validate that the `authority` account signed the transaction, add a signer
-check within the instruction:
+check within the instruction handler:
 
-```typescript
+```rust
 if !ctx.accounts.authority.is_signer {
     return Err(ProgramError::MissingRequiredSignature.into());
 }
 ```
 
-By adding this check, the instruction will only proceed if the `authority`
-account has signed the transaction. If the account did not sign, the transaction
-will fail.
+By adding this check, the instruction handler will only proceed if the
+`authority` account has signed the transaction. If the account is not signed,
+the transaction will fail.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -128,8 +134,10 @@ pub struct UpdateAuthority<'info> {
         has_one = authority
     )]
     pub vault: Account<'info, Vault>,
-    pub new_authority: AccountInfo<'info>,
-    pub authority: AccountInfo<'info>,
+    /// CHECK: This account will not be checked by Anchor
+    pub new_authority: UncheckedAccount<'info>,
+    /// CHECK: This account will not be checked by Anchor
+    pub authority: UncheckedAccount<'info>,
 }
 
 #[account]
@@ -141,9 +149,11 @@ pub struct Vault {
 
 ### Use Anchor’s Signer Account Type
 
-Incorporating the `signer` check directly within the instruction logic can blur
-the separation between account validation and instruction execution. To maintain
-this separation, use Anchor's `Signer` account type. By changing the `authority`
+Incorporating the
+[`signer`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/signer/struct.Signer.html)
+check directly within the instruction handler logic can blur the separation
+between account validation and instruction handler execution. To maintain this
+separation, use Anchor's `Signer` account type. By changing the `authority`
 account's type to `Signer` in the validation struct, Anchor automatically checks
 at runtime that the specified account signed the transaction.
 
@@ -169,7 +179,8 @@ pub struct UpdateAuthority<'info> {
         has_one = authority
     )]
     pub vault: Account<'info, Vault>,
-    pub new_authority: AccountInfo<'info>,
+    /// CHECK: This account will not be checked by Anchor
+    pub new_authority: UncheckedAccount<'info>,
     pub authority: Signer<'info>,
 }
 
@@ -188,7 +199,7 @@ performed.
 ### Using Anchor’s `#[account(signer)]` Constraint
 
 While the `Signer` account type is useful, it doesn't perform other ownership or
-type checks, limiting its use in instruction logic. The
+type checks, limiting its use in instruction handler logic. The
 [anchor's `#[account(signer)]`](https://www.anchor-lang.com/docs/account-constraints)
 constraint addresses this by verifying that the account signed the transaction
 while allowing access to its underlying data.
@@ -227,7 +238,8 @@ pub struct UpdateAuthority<'info> {
         has_one = authority
     )]
     pub vault: Account<'info, Vault>,
-    pub new_authority: AccountInfo<'info>,
+    /// CHECK: This account will not be checked by Anchor
+    pub new_authority: UncheckedAccount<'info>,
     #[account(signer)]
     pub authority: Account<'info, AuthState>
 }
@@ -255,25 +267,25 @@ of a signer check could result in the vault being drained.
 ### 1. Starter
 
 To get started, download the starter code from the
-[`starter` branch of this repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/starter).
-The starter code includes a program with two instructions and the boilerplate
-setup for the test file.
+[`starter` branch of this repository](https://github.com/solana-developers/solana-signer-auth/tree/starter).
+The starter code includes a program with two instruction handlers and the
+boilerplate setup for the test file.
 
-The `initialize_vault` instruction sets up two new accounts: `Vault` and
+The `initialize_vault` instruction handler sets up two new accounts: `Vault` and
 `TokenAccount`. The `Vault` account is initialized using a Program Derived
 Address (PDA) and stores the address of a token account and the vault's
 authority. The `vault` PDA will be the authority of the token account, enabling
 the program to sign off on token transfers.
 
-The `insecure_withdraw` instruction transfers tokens from the `vault` account’s
-token account to a `withdraw_destination` token account. However, the
+The `insecure_withdraw` instruction handler transfers tokens from the `vault`
+account’s token account to a `withdraw_destination` token account. However, the
 `authority` account in the `InsecureWithdraw` struct is of type
 `UncheckedAccount`, a wrapper around `AccountInfo` that explicitly indicates the
 account is unchecked.
 
 Without a signer check, anyone can provide the public key of the `authority`
 account that matches the `authority` stored on the `vault` account, and the
-`insecure_withdraw` instruction will continue processing.
+`insecure_withdraw` instruction handler will continue processing.
 
 Although this example is somewhat contrived, as any DeFi program with a vault
 would be more sophisticated, it effectively illustrates how the lack of a signer
@@ -366,19 +378,19 @@ pub struct Vault {
 }
 ```
 
-#### 2. Test `insecure_withdraw` instruction
+### 2. Test insecure_withdraw Instruction Handler
 
-The test file includes the code to invoke the `initialize_vault` instruction
-using `wallet` as the `authority` on the vault. The code then mints 100 tokens
-to the `vault` token account. Theoretically, the `wallet` key should be the only
-one that can withdraw the 100 tokens from the vault.
+The test file includes code to invoke the `initialize_vault` instruction
+handler, using `wallet` as the `authority` on the vault. The code then mints 100
+tokens to the `vault` token account. Ideally, only the `wallet` key should be
+able to withdraw these 100 tokens from the vault.
 
-Now, let’s add a test to invoke `insecure_withdraw` on the program to show that
-the current version of the program allows a third party to in fact withdraw
-those 100 tokens.
+Next, we'll add a test to invoke `insecure_withdraw` on the program to
+demonstrate that the current version allows a third party to withdraw those 100
+tokens.
 
-In the test, we’ll still use the public key of `wallet` as the `authority`
-account, but we’ll use a different keypair to sign and send the transaction.
+In the test, we'll use the `wallet` public key as the `authority` account but
+sign and send the transaction with a different keypair.
 
 ```typescript
 describe("signer-authorization", () => {
@@ -404,7 +416,8 @@ describe("signer-authorization", () => {
 })
 ```
 
-Run `anchor test` to see that both transactions will complete successfully.
+Run `anchor test` to confirm that both transactions will be completed
+successfully.
 
 ```bash
 signer-authorization
@@ -413,20 +426,20 @@ signer-authorization
 ```
 
 Since there is no signer check for the `authority` account, the
-`insecure_withdraw` instruction will transfer tokens from the `vault` token
-account to the `withdrawDestinationFake` token account as long as the public key
-of the`authority` account matches the public key stored on the authority field
-of the `vault` account. Clearly, the `insecure_withdraw` instruction is as
-insecure as the name suggests.
+`insecure_withdraw` instruction handler will transfer tokens from the `vault`
+token account to the `withdrawDestinationFake` token account, as long as the
+public key of the `authority` account matches the public key stored in the
+`vault` account's `authority` field. This illustrates that the
+`insecure_withdraw` instruction handler is indeed insecure.
 
-#### 3. Add `secure_withdraw` instruction
+### 3. Add secure_withdraw Instruction Handler
 
-Let’s fix the problem in a new instruction called `secure_withdraw`. This
-instruction will be identical to the `insecure_withdraw` instruction, except
-we’ll use the `Signer` type in the Accounts struct to validate the `authority`
-account in the `SecureWithdraw` struct. If the `authority` account is not a
-signer on the transaction, then we expect the transaction to fail and return an
-error.
+To fix this issue, we'll create a new instruction handler called
+`secure_withdraw`. This instruction handler will be identical to
+`insecure_withdraw`, but we'll use the `Signer` type in the Accounts struct to
+validate the authority account in the `SecureWithdraw` struct. If the
+`authority` account isn't a signer on the transaction, the transaction should
+fail with an error.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -477,19 +490,19 @@ pub struct SecureWithdraw<'info> {
 }
 ```
 
-#### 4. Test `secure_withdraw` instruction
+### 4. Test secure_withdraw Instruction Handler
 
-With the instruction in place, return to the test file to test the
-`secure_withdraw` instruction. Invoke the `secure_withdraw` instruction, again
-using the public key of `wallet` as the `authority` account and the
-`withdrawDestinationFake` keypair as the signer and withdraw destination. Since
-the `authority` account is validated using the `Signer` type, we expect the
-transaction to fail the signer check and return an error.
+With the new instruction handler in place, return to the test file to test the
+`secure_withdraw` instruction handler. Invoke the `secure_withdraw` instruction
+handler, again using the `wallet` public key as the `authority` account, and use
+the `withdrawDestinationFake` keypair as the signer and withdraw destination.
+Since the `authority` account is validated using the `Signer` type, the
+transaction should fail with a signature verification error.
 
 ```typescript
 describe("signer-authorization", () => {
     ...
-	it("Secure withdraw", async () => {
+    it("Secure withdraw", async () => {
     try {
       const tx = await program.methods
         .secureWithdraw()
@@ -510,40 +523,52 @@ describe("signer-authorization", () => {
 })
 ```
 
-Run `anchor test` to see that the transaction will now return a signature
+Run `anchor test` to see that the transaction now returns a signature
 verification error.
 
 ```bash
 Error: Signature verification failed
 ```
 
-That’s it! This is a fairly simple thing to avoid, but incredibly important.
-Make sure to always think through who should who should be authorizing
-instructions and make sure that each is a signer on the transaction.
+This example shows how important it is to think through who should authorize
+instructions and ensure that each is a signer on the transaction.
 
-If you want to take a look at the final solution code you can find it on the
-`solution` branch of
-[the repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/solution).
+To review the final solution code, you can find it on the
+[`solution` branch of the repository](https://github.com/solana-developers/solana-signer-auth/tree/solution).
 
 ## Challenge
 
-At this point in the course, we hope you've started to work on programs and
-projects outside the labs and Challenges provided in these lessons. For this and
-the remainder of the lessons on security vulnerabilities, the Challenge for each
-lesson will be to audit your own code for the security vulnerability discussed
-in the lesson.
+Now that you've worked through the labs and challenges in this course, it's time
+to apply your knowledge in a practical setting. For this challenge and those
+that follow on security vulnerabilities, audit your own programs for the
+specific vulnerability discussed in each lesson.
 
-Alternatively, you can find open source programs to audit. There are plenty of
-programs you can look at. A good start if you don't mind diving into native Rust
-would be the
-[SPL programs](https://github.com/solana-labs/solana-program-library).
+### Steps
 
-So for this lesson, take a look at a program (whether yours or one you've found
-online) and audit it for signer checks. If you find a bug in somebody else's
-program, please alert them! If you find a bug in your own program, be sure to
-patch it right away.
+1. **Audit Your Program or Find an Open Source Project**:
+
+   - Begin by auditing your own code for missing signer checks, or find an open
+     source Solana program to audit. A great place to start is with the
+     [SPL programs](https://github.com/solana-labs/solana-program-library) if
+     you’re comfortable working with native Rust.
+
+2. **Look for Signer Check Issues**:
+
+   - Focus on instruction handlers where signer authorization is crucial,
+     especially those that transfer tokens or modify sensitive account data.
+   - Review the program for any `UncheckedAccount` types where signer validation
+     should be enforced.
+   - Ensure that any accounts that should require user authorization are defined
+     as `Signer` in the instruction handler.
+
+3. **Patch or Report**:
+   - If you find a bug in your own code, fix it by using the `Signer` type for
+     accounts that require signer validation.
+   - If the issue exists in an open source project, notify the project
+     maintainers or submit a pull request.
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
+
+After completing the challenge, push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=26b3f41e-8241-416b-9cfa-05c5ab519d80)!
 </Callout>
