@@ -124,7 +124,7 @@ before, to specify the accounts required by your instruction handlers. You can u
 
 This helps with code organization and type safety.
 
-#### Invoke an instruction on another Anchor program
+#### Invoke an instruction handler on another Anchor program
 
 When calling another Anchor program with a published crate, Anchor can generate
 instruction builders and CPI helper functions for you.
