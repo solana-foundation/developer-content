@@ -774,6 +774,7 @@ pub const ESCROW_SEED: &[u8] = b"MICHAEL BURRY";
 pub const SOL_USDC_FEED: &str = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR";
 
 #[account]
+[derive(InitSpace)]
 pub struct EscrowState {
     pub unlock_price: f64,
     pub escrow_amount: u64,
@@ -845,7 +846,7 @@ pub struct Deposit<'info> {
       seeds = [ESCROW_SEED, user.key().as_ref()],
       bump,
       payer = user,
-      space = std::mem::size_of::<EscrowState>() + 8
+      space =  EscrowState::INIT_SPACE + 8
     )]
     pub escrow_account: Account<'info, EscrowState>,
 		// system program
@@ -875,7 +876,7 @@ lamports the user wants to lock up in escrow and invoke the transfer
 instruction.
 
 ```rust
-pub fn deposit_handler(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64) -> Result<()> {
+pub fn deposit_handler(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: f64) -> Result<()> {
 		msg!("Depositing funds in escrow...");
 
     let escrow_state = &mut ctx.accounts.escrow_account;
@@ -950,7 +951,7 @@ pub struct Deposit<'info> {
         seeds = [ESCROW_SEED, user.key().as_ref()],
         bump,
         payer = user,
-        space = std::mem::size_of::<EscrowState>() + 8
+        space =  EscrowState::INIT_SPACE + 8
     )]
     pub escrow_account: Account<'info, EscrowState>,
 
