@@ -223,7 +223,7 @@ accounts. We’ll include two instructions:
 #### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-reinitialization-attacks/tree/starter).
+[this repository](https://github.com/solana-developers/reinitialization-attacks/tree/starter).
 The starter code includes a program with one instruction and the boilerplate
 setup for the test file.
 
@@ -463,7 +463,7 @@ state.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[this repository](https://github.com/Unboxed-Software/solana-reinitialization-attacks/tree/solution).
+[this repository](https://github.com/solana-developers/reinitialization-attacks/tree/solution).
 
 ## Challenge
 
