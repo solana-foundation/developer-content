@@ -200,9 +200,12 @@ use solana_program::{
 };
 ```
 
-- `AccountInfo` - A struct within the `account_info` module that allows us to
-  access account information.
-- `entrypoint` -A macro that declares the entry point of the program.
+- `AccountInfo` - A struct that allows us to access account information like
+  account addresses, owners, lamport balances, data length, executable status,
+  rent epoch, and whether the account was signed or writable in the current
+  transaction.
+- `entrypoint` - A macro that defines a function that receives incoming
+  instructions and routes them to the appropriate instruction handler.
 - `ProgramResult` - A type within the `entrypoint` module that returns either a
   `Result` or `ProgramError`.
 - `Pubkey` - A struct within the `pubkey` module that allows us to access
