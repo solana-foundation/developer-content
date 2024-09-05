@@ -135,7 +135,7 @@ pub struct User {
 
 ### Use Anchor’s init Constraint
 
-Anchor’s `init` constraint, used with the `#[account(...)]` attribute,
+[Anchor’s `init` constraint](https://www.anchor-lang.com/docs/account-constraints), used with the `#[account(...)]` attribute,
 initializes an account, sets the account discriminator, and ensures that the
 instruction can only be called once per account. The `  ` constraint must be
 used with `payer` and `space` constraints to specify the account paying for
