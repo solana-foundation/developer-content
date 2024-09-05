@@ -238,11 +238,11 @@ data is published onchain:
 To use Switchboard oracles and incorporate off-chain data into a Solana program,
 you first have to find a feed that provides the data you need. Switchboard feeds
 are public and there are many
-[already available that you can choose from](https://app.switchboard.xyz/solana/devnet).
-When looking for a feed, you have to decide how accurate/reliable you want the
-feed, where you want to source the data from, as well as the feed’s update
-cadence. When consuming a publicly available feed, you have no control over
-these things, so choose carefully!
+[price feeds to choose from](https://app.switchboard.xyz/solana/devnet). When
+looking for a feed, you have to decide how accurate/reliable you want the feed,
+where you want to source the data from, as well as the feed’s update cadence.
+When consuming a publicly available feed, you have no control over these things,
+so choose carefully!
 
 For example, there is a Switchboard-sponsored
 [BTC_USD feed](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee).
@@ -479,7 +479,8 @@ from the `switchboard_solana` crate, Anchor checks that the account is owned by
 the Switchboard program. If your program expects that only a specific data feed
 will be passed in the instruction, then you can also verify that the public key
 of the account passed in matches what it should be. One way to do this is to
-hard code the address in the program somewhere and use account constraints to
+hard code the address in the program somewhere and use
+[account constraints](https://www.anchor-lang.com/docs/account-constraints) to
 verify the address passed in matches what is expected.
 
 ```rust
