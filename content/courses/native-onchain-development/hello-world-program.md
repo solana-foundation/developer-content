@@ -353,7 +353,7 @@ Next, install the Node modules by running `npm i`.
 Afterwards, execute `npm start`. This command will:
 
 1. Generate a new keypair and create a `.env` file if it doesn't already exist.
-2. Airdrop some SOL onto this account on devnet.
+2. Airdrop some SOL on the Devnet.
 3. Invoke the “Hello, world!” program.
 4. Output a transaction URL that you can view on Solana Explorer.
 
@@ -378,7 +378,7 @@ examples, so try to avoid copying and pasting.
    your message was printed in the program log.
 
 As always, feel free to get creative with these challenges and go beyond the
-basic instructions if you want — most importantly, have fun!
+basic instructions if you want—most importantly, have fun!
 
 <Callout type="success" title="Completed the lab?">
 
