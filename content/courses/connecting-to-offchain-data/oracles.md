@@ -756,8 +756,8 @@ mod burry_oracle_program {
 
 #### 3. `state.rs`
 
-Next, let's define our data account for this program: `EscrowState`. Our data
-account will store two pieces of info:
+Next, let's define our data account for this program: `Escrow`. Our data account
+will store two pieces of info:
 
 - `unlock_price` - The price of SOL in USD at which point you can withdraw; you
   can hard-code it to whatever you want (e.g. $21.53)
@@ -776,7 +776,7 @@ pub const SOL_USDC_FEED: &str = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR";
 
 #[account]
 [derive(InitSpace)]
-pub struct EscrowState {
+pub struct Escrow {
     pub unlock_price: f64,
     pub escrow_amount: u64,
 }
@@ -849,9 +849,9 @@ pub struct Deposit<'info> {
       seeds = [ESCROW_SEED, user.key().as_ref()],
       bump,
       payer = user,
-      space =   EscrowState::INIT_SPACE + ANCHOR_DISCRIMINATOR
+      space =   Escrow::INIT_SPACE + ANCHOR_DISCRIMINATOR
     )]
-    pub escrow_account: Account<'info, EscrowState>,
+    pub escrow_account: Account<'info, Escrow>,
 		// system program
     pub system_program: Program<'info, System>,
 }
@@ -956,9 +956,9 @@ pub struct Deposit<'info> {
         seeds = [ESCROW_SEED, user.key().as_ref()],
         bump,
         payer = user,
-        space =   EscrowState::INIT_SPACE + ANCHOR_DISCRIMINATOR
+        space =   Escrow::INIT_SPACE + ANCHOR_DISCRIMINATOR
     )]
-    pub escrow_account: Account<'info, EscrowState>,
+    pub escrow_account: Account<'info, Escrow>,
 
     pub system_program: Program<'info, System>,
 }
@@ -990,7 +990,7 @@ pub struct Withdraw<'info> {
         bump,
         close = user
     )]
-    pub escrow_account: Account<'info, EscrowState>,
+    pub escrow_account: Account<'info, Escrow>,
     // Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
@@ -1126,7 +1126,7 @@ pub struct Withdraw<'info> {
         bump,
         close = user
     )]
-    pub escrow_account: Account<'info, EscrowState>,
+    pub escrow_account: Account<'info, Escrow>,
     // Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
@@ -1203,7 +1203,7 @@ describe("burry-escrow", () => {
     );
 
     // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+    const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
       program.programId,
     );
@@ -1222,7 +1222,7 @@ describe("burry-escrow", () => {
         .deposit(amountToLockUp, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
-          escrowAccount: escrowState,
+          escrowAccount: Escrow,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([payer])
@@ -1231,10 +1231,10 @@ describe("burry-escrow", () => {
       await provider.connection.confirmTransaction(tx, "confirmed");
 
       // Fetch the created account
-      const newAccount = await program.account.escrowState.fetch(escrowState);
+      const newAccount = await program.account.Escrow.fetch(Escrow);
 
       const escrowBalance = await provider.connection.getBalance(
-        escrowState,
+        Escrow,
         "confirmed",
       );
       console.log("Onchain unlock price:", newAccount.unlockPrice);
@@ -1251,7 +1251,7 @@ describe("burry-escrow", () => {
 
   it("Withdraw from escrow", async () => {
     // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+    const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
       program.programId,
     );
@@ -1261,7 +1261,7 @@ describe("burry-escrow", () => {
       .withdraw()
       .accounts({
         user: payer.publicKey,
-        escrowAccount: escrowState,
+        escrowAccount: Escrow,
         feedAggregator: solUsdSwitchboardFeed,
         systemProgram: anchor.web3.SystemProgram.programId,
       })
@@ -1273,7 +1273,7 @@ describe("burry-escrow", () => {
     // assert that the escrow account has been closed
     let accountFetchDidFail = false;
     try {
-      await program.account.escrowState.fetch(escrowState);
+      await program.account.Escrow.fetch(Escrow);
     } catch (e) {
       accountFetchDidFail = true;
     }
@@ -1293,11 +1293,11 @@ describe("burry-escrow", () => {
     );
 
     // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+    const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
       program.programId,
     );
-    console.log("Escrow Account: ", escrowState.toBase58());
+    console.log("Escrow Account: ", Escrow.toBase58());
 
     // fetch latest SOL price
     const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
@@ -1313,7 +1313,7 @@ describe("burry-escrow", () => {
         .deposit(amountToLockUp, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
-          escrowAccount: escrowState,
+          escrowAccount: Escrow,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([payer])
@@ -1323,10 +1323,10 @@ describe("burry-escrow", () => {
       console.log("Your transaction signature", tx);
 
       // Fetch the created account
-      const newAccount = await program.account.escrowState.fetch(escrowState);
+      const newAccount = await program.account.Escrow.fetch(Escrow);
 
       const escrowBalance = await provider.connection.getBalance(
-        escrowState,
+        Escrow,
         "confirmed",
       );
       console.log("Onchain unlock price:", newAccount.unlockPrice);
@@ -1345,7 +1345,7 @@ describe("burry-escrow", () => {
     let didFail = false;
 
     // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+    const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
       program.programId,
     );
@@ -1356,7 +1356,7 @@ describe("burry-escrow", () => {
         .withdraw()
         .accounts({
           user: payer.publicKey,
-          escrowAccount: escrowState,
+          escrowAccount: Escrow,
           feedAggregator: solUsdSwitchboardFeed,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
