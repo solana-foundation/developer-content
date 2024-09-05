@@ -14,18 +14,18 @@ description: Access real-world data inside a Solana program.
 
 - Oracles are services that provide external data to a blockchain network
 - There are many
-  [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+  [Oracle providers on Solana](https://solana.com/developers/courses/connecting-to-offchain-data/oracles).
 - You can build your own Oracle to create a custom data feed
 - You have to be careful when choosing your data feed providers
 
 ## Lesson
 
-[Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
-that provide external data to a blockchain network. Blockchains by nature are
-siloed environments that do not know the outside world. This constraint
-inherently puts a limit on the use cases for decentralized applications (dApps).
-Oracles provide a solution to this limitation by creating a decentralized way to
-get real-world data onchain.
+[Oracles](https://solana.com/developers/courses/connecting-to-offchain-data/oracles)
+are services that provide external data to a blockchain network. Blockchains by
+nature are siloed environments that do not know the outside world. This
+constraint inherently puts a limit on the use cases for decentralized
+applications (dApps). Oracles provide a solution to this limitation by creating
+a decentralized way to get real-world data onchain.
 
 Oracles can provide just about any type of data onchain. Examples include:
 
@@ -105,7 +105,7 @@ functions and worst-case scenarios should be accounted for.
 ### Oracles on Solana
 
 There are many
-[Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+[Oracle providers on Solana](https://solana.com/developers/courses/connecting-to-offchain-data/oracles).
 Two of the most well known are [Pyth](https://pyth.network) and
 [Switchboard](https://switchboard.xyz). They’re each unique and follow slightly
 different design choices.
@@ -120,10 +120,10 @@ higher quality.
 
 **Switchboard** is a completely decentralized oracle network and has data of all
 kinds available. Check out all of the feeds
-[on their website](https://app.switchboard.xyz/solana/devnet/explore)
-Additionally, anyone can run a Switchboard oracle and anyone can consume their
-data. This means you'll have to be diligent about researching feeds. We'll talk
-more about what to look for later in the lesson.
+[on their website](https://app.switchboard.xyz/solana/devnet) Additionally,
+anyone can run a Switchboard oracle and anyone can consume their data. This
+means you'll have to be diligent about researching feeds. We'll talk more about
+what to look for later in the lesson.
 
 Switchboard follows a variation of the stake weighted oracle network described
 in the third option of the previous section. It does so by introducing what are
@@ -131,7 +131,7 @@ called TEEs (Trusted Execution Environments). TEEs are secure environments
 isolated from the rest of the system where sensitive code can be executed. In
 simple terms, given a program and an input, TEEs can execute and generate an
 output along with a proof. If you’d like to learn more about TEEs, please read
-[Switchboard’s documentation](https://docs.switchboard.xyz/functions).
+[Switchboard’s documentation](https://docs.switchboard.xyz/docs).
 
 By introducing TEEs on top of stake weighted oracles, Switchboard is able to
 verify each oracle’s software to allow participation in the network. If an
