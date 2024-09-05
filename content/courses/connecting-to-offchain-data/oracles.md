@@ -687,8 +687,8 @@ address = "Fi8vncGpNKbq62gPo56G4toCehWNy77GgqGkTaAF5Lkk"
 address="GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 ```
 
-Additionally, we want to import the `switchboard-solana` crate in our `Cargo.toml`
-file. Make sure your dependencies look as follows:
+Additionally, we want to import the `switchboard-solana` crate in our
+`Cargo.toml` file. Make sure your dependencies look as follows:
 
 ```toml
 [dependencies]
