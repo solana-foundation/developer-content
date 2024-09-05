@@ -181,7 +181,7 @@ participation in the lottery.
 ### 1. Setup
 
 Start by getting the code on the `starter` branch from the
-[following repo](https://github.com/Unboxed-Software/solana-closing-accounts/tree/starter).
+[following repo](https://github.com/solana-developers/closing-accounts/tree/starter).
 
 The code has two instructions on the program and two tests in the `tests`
 directory.
@@ -470,7 +470,7 @@ make sure to replicate its functionality to ensure your program is secure.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-closing-accounts/tree/solution).
+[the same repository](https://github.com/solana-developers/closing-accounts/tree/solution).
 
 ## Challenge
 
