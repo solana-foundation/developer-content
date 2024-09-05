@@ -36,7 +36,7 @@ be using a browser-based IDE called Solana Playground.
 
 ### Rust Basics
 
-Before diving into building our "Hello, world!" program, let’s review some Rust
+Before diving into building our "Hello, world!" program, let's review some Rust
 basics. For a deeper dive into Rust, check out the
 [Rust Language Book](https://doc.rust-lang.org/book/ch00-00-introduction.html).
 
@@ -52,7 +52,7 @@ system.” This includes:
 - **Packages**: A collection of crates along with a manifest file that specifies
   metadata and dependencies between packages.
 
-Throughout this lesson, we’ll focus on using crates and modules.
+Throughout this lesson, we'll focus on using crates and modules.
 
 #### Paths and Scope
 
@@ -77,7 +77,7 @@ Absent any other keywords, you would need to reference this entire path to use
 `AccountInfo` in your code. However, with the
 [`use`](https://doc.rust-lang.org/stable/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html)
 keyword, you can bring an item into scope so it can be reused throughout a file
-without specifying the full path each time. It’s common to see a series of `use`
+without specifying the full path each time. It's common to see a series of `use`
 commands at the top of a Rust file.
 
 ```rust
@@ -137,7 +137,7 @@ We can also have our functions return values by declaring the return type using
 an arrow -> after the function.
 
 In the example below, the `process_instruction` function will now return a value
-of type `ProgramResult`. We’ll go over this in the next section.
+of type `ProgramResult`. We'll go over this in the next section.
 
 ```rust
 pub fn process_instruction(
@@ -151,11 +151,11 @@ pub fn process_instruction(
 
 `Result` is a standard library type representing two discrete outcomes: success
 (`Ok`) or failure (`Err`). We'll discuss enums more in a future lesson, but
-you'll see `Ok` used later in this lesson, so it’s important to cover the
+you'll see `Ok` used later in this lesson, so it's important to cover the
 basics.
 
 When using `Ok` or `Err`, you must include a value, the type of which is
-determined by the code’s context. For example, a function that requires a return
+determined by the code's context. For example, a function that requires a return
 value of type `Result<String, i64>` can either return `Ok` with an embedded
 string value or `Err` with an embedded integer. In this example, the integer is
 an error code that can be used to handle the error appropriately.
@@ -247,7 +247,7 @@ an empty value, and `ProgramError` is an error type defined in the
 `solana_program` crate.
 
 ...and there you have it—you now know the foundations of creating a Solana
-program using Rust. Let’s practice what we’ve learned so far!
+program using Rust. Let's practice what we've learned so far!
 
 ## Lab
 
@@ -366,7 +366,7 @@ Congratulations! You've successfully built and deployed a Solana program!
 
 ## Challenge
 
-Now it’s your turn to build something independently. Since we're starting with
+Now it's your turn to build something independently. Since we're starting with
 very simple programs, your task will closely resemble what we've just created.
 The goal is to practice writing the code from scratch without referencing prior
 examples, so try to avoid copying and pasting.
