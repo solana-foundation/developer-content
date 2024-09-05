@@ -970,7 +970,7 @@ use crate::state::*;
 use crate::errors::*;
 use std::str::FromStr;
 use anchor_lang::prelude::*;
-use switchboard_v2::AggregatorAccountData;
+use switchboard_solana::AggregatorAccountData;
 use anchor_lang::solana_program::clock::Clock;
 
 #[derive(Accounts)]
@@ -1381,7 +1381,7 @@ your shell of choice. You should get four passing tests.
 If something went wrong, go back through the lab and make sure you got
 everything right. Pay close attention to the intent behind the code rather than
 just copy/pasting. Also feel free to review the working code
-[on the `main` branch of its Github repository](https://github.com/Unboxed-Software/michael-burry-escrow).
+[on the `main` branch of its Github repository](https://github.com/solana-developers/burry-escrow).
 
 ### Challenge
 
@@ -1391,7 +1391,7 @@ the data feed account does not exist anymore, withdraw the user’s escrowed
 funds.
 
 A potential solution to this challenge can be found
-[in the Github repository on the `challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/challenge-solution).
+[in the Github repository on the `challenge-solution` branch](https://github.com/solana-developers/burry-escrow).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
