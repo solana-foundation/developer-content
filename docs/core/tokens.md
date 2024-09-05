@@ -551,8 +551,8 @@ spl-token initialize-metadata <TOKEN_MINT_ADDRESS> <YOUR_TOKEN_NAME>
 <YOUR_TOKEN_SYMBOL> <YOUR_TOKEN_URI>
 ```
 
-The token URI is normally a link to off-chain metadata you want to associate
-with the token. You can find an example of the JSON format
+The token URI is normally a link to offchain metadata you want to associate with
+the token. You can find an example of the JSON format
 [here](https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/DeveloperPortal/metadata.json).
 
 For example, running the following command will store the additional metadata
