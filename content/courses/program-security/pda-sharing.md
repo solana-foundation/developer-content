@@ -233,7 +233,7 @@ program accounts.
 #### 1. Starter
 
 To get started, download the starter code on the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-pda-sharing/tree/starter).
+[this repository](https://github.com/solana-developers/pda-sharing/tree/starter).
 The starter code includes a program with two instructions and the boilerplate
 setup for the test file.
 
@@ -537,7 +537,7 @@ program and ensure that you aren't sharing PDAs across different domains.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-pda-sharing/tree/solution).
+[the same repository](https://github.com/solana-developers/pda-sharing/tree/solution).
 
 ## Challenge
 
