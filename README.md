@@ -12,7 +12,7 @@ the Solana ecosystem and displayed on
 There are a few primary types of Solana Developer content within this repo:
 
 - [`courses`](#cources) - multiple lessons comprehensively covering a given
-  topic, with both a read session and and an interactive lab for each lesson
+  topic, with both a theory section and an interactive lab for each lesson
 - [`docs`](#docs) - the [core documentation](https://solana.com/docs) for the
   Solana blockchain
 - [`guides`](#developer-guides) - long form tutorials focused on a specific
