@@ -20,7 +20,7 @@ courses to ensure that anyone deploying programs to Mainnet has at least a basic
 understanding of security. If that’s you, the fundamental principles you learned
 in those lessons should help you avoid some common Solana exploits on your own.
 
-This module is designed to build on those lessons with two main goals:
+This course builds on those courses with two main goals:
 
 1. Expand your awareness of the Solana programming model and highlight areas
    where you need to focus to close security loopholes.
