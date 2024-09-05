@@ -26,12 +26,11 @@ test program to ensure that our setup works.
 
 ### Extra steps for Windows users
 
-> macOS and Linux users can skip this section. Linux and macOS are the
-> recommended operating systems for Solana program development. However, if
-> you're on Windows, you can still follow along with these extra steps.
+> macOS and Linux users can skip this section. If you're on Windows, you can
+> follow along with these extra steps.
 
 Firstly, make sure you have Windows Terminal installed, otherwise you can
-install it from the
+install Windows Terminal from the
 [Microsoft store](https://apps.microsoft.com/detail/9N0DX20HK701).
 
 Then,
@@ -62,9 +61,10 @@ the command below will install the stable version of the Solana CLI.
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
-Afterwards, `solana -V` should show `solana-cli 1.18.x` (any number for `x` is
-fine) which is the version of the Solana CLI installed in your system indicating
-that it was installed successfully.
+Afterwards, run `solana -V` to see the Solana CLI version installed on your
+system. This should show `solana-cli 1.18.x` (any number for `x` is fine) which
+is the version of the Solana CLI installed in your system. If so, Solana CLI was
+installed successfully.
 
 ### Download Anchor
 
@@ -125,21 +125,21 @@ re-run `anchor test`.
 
 #### error: no such command: `build-sbf`
 
-This error typically occurs because the Solana Build SBF (Solana BPF) feature is
-not available in your current environment. Solana BPF is used for compiling
-programs to run on the Solana blockchain. The error might indicate that either
-the Solana installation is corrupted or the relevant binaries are not in your
-system's PATH variable.
+If you see this message, this error typically occurs because the relevant
+binaries are not in your shell's PATH variable.
 
-One possible solution is to add the Solana binaries to your system's PATH
-variable. Add this to your `~/.zshrc` or `~/.bashrc` file to make the change
-permanent.
+Run this command to add this folder to your shell, and also add this to your
+`~/.zshrc` or `~/.bashrc` file to make the change permanent.
 
 ```bash
 export PATH=~"/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
 #### Unable to get latest blockhash. Test validator does not look started.
+
+There's multiple versions of the 'tar' (tape archiver) command Solana used for
+archiving. macOS comes with BSD tar, but Solana CLI wants the GNU version
+installed.
 
 - Install [Homebrew](https://brew.sh/) and use it to install GNU tar:
 
