@@ -16,7 +16,11 @@ description: Access real-world data inside a Solana program.
 - There are many
   [Oracle providers on Solana](https://solana.com/developers/courses/connecting-to-offchain-data/oracles).
 - You can build your own Oracle to create a custom data feed
-- You have to be careful when choosing your data feed providers
+- You must be careful when choosing data feed providers on Solana to ensure
+  accurate, reliable data for smart contracts and financial apps. Malicious or
+  faulty providers can lead to security risks, manipulation, or financial loss.
+  Additionally, slow or centralized feeds may result in performance issues or
+  single points of failure.
 
 ## Lesson
 
