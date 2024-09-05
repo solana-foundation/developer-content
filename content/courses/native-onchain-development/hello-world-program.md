@@ -29,7 +29,7 @@ check out
 This lesson will introduce you to writing and deploying a Solana program using
 the Rust programming language without any framework. This approach offers
 greater control but requires you to handle much of the foundational work of
-creating an on-chain program yourself.
+creating an onchain program yourself.
 
 To avoid the distractions of setting up a local development environment, we'll
 be using a browser-based IDE called Solana Playground.
