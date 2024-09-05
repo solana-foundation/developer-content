@@ -657,11 +657,11 @@ oracle from switchboard. The program will have two main instructions:
 To get started, let’s create the program with
 
 ```zsh
-anchor init burry-escrow
+anchor init burry-escrow --template=multiple
 ```
 
 Next, replace the program ID in `lib.rs` and `Anchor.toml` with the program ID
-shown when you run `anchor keys list`.
+shown when you run `anchor keys sync`.
 
 Next, add the following to the bottom of your Anchor.toml file. This will tell
 Anchor how to configure our local testing environment. This will allow us to
