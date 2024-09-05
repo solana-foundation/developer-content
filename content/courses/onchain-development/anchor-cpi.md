@@ -212,10 +212,10 @@ possible options:
    organize and prepare your CPI.
    ```rust
    pub fn mint_to<'info>(
-       ctx: CpiContext<'_, '_, '_, 'info, MintTo<'info>>,
+       ctx: CpiContext<'_foo, '_bar, '_baz, 'info, MintTo<'info>>,
        amount: u64,
    ) -> Result<()> {
-       let ix = spl_token::instruction::mint_to(
+       let instruction_handler = spl_token::instruction::mint_to(
            &spl_token::ID,
            ctx.accounts.mint.key,
            ctx.accounts.to.key,
@@ -224,7 +224,7 @@ possible options:
            amount,
        )?;
        anchor_lang::solana_program::program::invoke_signed(
-           &ix,
+           &instruction_handler,
            &[
                ctx.accounts.to,
                ctx.accounts.mint,
@@ -454,7 +454,7 @@ pub struct AddMovieReview<'info> {
         seeds=[title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = (DISCRIMINATOR as usize) + MovieAccountState::INIT_SPACE
+        space = DISCRIMINATOR + MovieAccountState::INIT_SPACE
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
