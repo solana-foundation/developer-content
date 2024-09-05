@@ -389,7 +389,7 @@ export function createUpdateAuthorityInstruction(
 The function `createEmitInstruction` "emits" or logs out token-metadata in the
 expected TokenMetadata state format. This is a required function for metadata
 programs that want to follow the TokenMetadata interface. The emit instruction
-allows indexers and other off-chain users to call to get metadata. This also
+allows indexers and other offchain users to call to get metadata. This also
 allows custom metadata programs to store
 [metadata in a different format while maintaining compatibility with the Interface standards](https://solana.com/developers/guides/token-extensions/metadata-pointer#metadata-interface-instructions).
 
@@ -643,10 +643,10 @@ at 100 KiB. </Callout>
 **`helpers.ts`** file provides us with a useful helper function
 `uploadOffChainMetadata`.
 
-`uploadOffChainMetadata` is a helper to store the off-chain metadata on Arweave
+`uploadOffChainMetadata` is a helper to store the offchain metadata on Arweave
 using Irys (formerly Bundlr). In this lab we will be more focused on the Token
 Extensions Program interaction, so this uploader function is provided. It is
-important to note that an NFT or any off-chain metadata can be stored anywhere
+important to note that an NFT or any offchain metadata can be stored anywhere
 with any storage provider like [NFT.storage](https://nft.storage/), Solana's
 native [ShadowDrive](https://www.shdwdrive.com/), or
 [Irys (formerly Bundlr)](https://irys.xyz/). At the end of the day, all you need
@@ -695,12 +695,12 @@ you are running into airdropping problems:
 - Copy the address and airdrop some devnet sol from
   [faucet.solana](https://faucet.solana.com/).
 
-### 1. Uploading the off-chain metadata
+### 1. Uploading the offchain metadata
 
 In this section we will decide on our NFT metadata and upload our files to
 NFT.Storage using the helper functions provided in the starting code.
 
-To upload our off-chain metadata, we need to first prepare an image that will
+To upload our offchain metadata, we need to first prepare an image that will
 represent our NFT. We've provided `cat.png`, but feel free to replace it with
 your own. Most image types are supported by most wallets. (Again devenet Irys
 allows up to 100KiB per file)
@@ -763,7 +763,7 @@ console.log("Token URI:", tokenUri);
 
 Now run `npm run start` in your terminal and test your code. You should see the
 URI logged once the uploading is done. If you visit the link you should see a
-JSON object that holds all of our off-chain metadata.
+JSON object that holds all of our offchain metadata.
 
 ### 2. Create NFT function
 
@@ -1081,12 +1081,15 @@ const onChainMetadata = await getTokenMetadata(connection, mint.publicKey);
 // Now we can see the metadata coming with the mint
 console.log("onchain metadata =====>", onChainMetadata);
 
-// And we can even get the off-chain json now
-if (onChainMetadata && onChainMetadata.uri) {
-  const offChainMetadata = await fetch(onChainMetadata.uri).then(res =>
-    res.json(),
-  );
-  console.log("Mint off-chain metadata =====>", offChainMetadata);
+// And we can even get the offchain json now
+if (onChainMetadata?.uri) {
+  try {
+    const response = await fetch(onChainMetadata.uri);
+    const offChainMetadata = await response.json();
+    console.log("Mint offchain metadata =====>", offChainMetadata);
+  } catch (error) {
+    console.error("Error fetching or parsing offchain metadata:", error);
+  }
 }
 ```
 
@@ -1289,12 +1292,15 @@ export default async function createNFTWithEmbeddedMetadata(
   // Now we can see the metadata coming with the mint
   console.log("onchain metadata =====>", onChainMetadata);
 
-  // And we can even get the off-chain JSON now
-  if (onChainMetadata && onChainMetadata.uri) {
-    const offChainMetadata = await fetch(onChainMetadata.uri).then(res =>
-      res.json(),
-    );
-    console.log("Mint off-chain metadata =====>", offChainMetadata);
+  // And we can even get the offchain JSON now
+  if (onChainMetadata?.uri) {
+    try {
+      const response = await fetch(onChainMetadata.uri);
+      const offChainMetadata = await response.json();
+      console.log("Mint offchain metadata =====>", offChainMetadata);
+    } catch (error) {
+      console.error("Error fetching or parsing offchain metadata:", error);
+    }
   }
 }
 ```
