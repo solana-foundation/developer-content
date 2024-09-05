@@ -119,7 +119,7 @@ generic, allowing you to pass in any object that implements the `ToAccountMetas`
 and `ToAccountInfos<'info>` traits.
 
 These traits are added by the `#[derive(Accounts)]` attribute macro you've used
-before for instruction accounts. This means you can use similar structs with
+before, to specify the accounts required by your instruction handlers. You can use also use `#[derive(Accounts)]` structs with
 `CpiContext`.
 
 This helps with code organization and type safety.
