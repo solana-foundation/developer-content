@@ -56,7 +56,7 @@ Throughout this lesson, we’ll focus on using crates and modules.
 
 #### Paths and Scope
 
-Crates in Rust contain modules that define functionality, which can be shared
+Crates contain modules that can be shared
 across multiple projects. If we want to access an item within a module, we need
 to know its "path," similar to navigating a filesystem.
 
