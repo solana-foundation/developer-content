@@ -36,7 +36,6 @@ you progress, you’ll encounter new types of attacks. We encourage you to explo
 all of them.
 
 <Callout>
-
 Unlike the lessons in other courses, which are in order, you are welcome to
 explore these lessons in whatever order suits you best. </Callout>
 
