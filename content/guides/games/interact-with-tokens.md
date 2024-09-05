@@ -211,7 +211,7 @@ pub struct CreateMint<'info> {
 
 The `create_mint` instruction creates a new token mint, using a Program Derived
 Address (PDA) as both the address of the token mint and its mint authority. The
-instruction takes a URI (off-chain metadata), name, and symbol as parameters.
+instruction takes a URI (offchain metadata), name, and symbol as parameters.
 
 This instruction then creates a metadata account for the token mint through a
 [Cross-Program Invocation (CPI)](/docs/core/cpi.md) calling the
