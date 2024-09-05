@@ -744,8 +744,8 @@ mod burry_oracle_program {
 
     use super::*;
 
-    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: f64) -> Result<()> {
-        deposit_handler(ctx, escrow_amt, unlock_price)
+    pub fn deposit(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
+        deposit_handler(ctx, escrow_amount, unlock_price)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
@@ -879,7 +879,7 @@ lamports the user wants to lock up in escrow and invoke the transfer
 instruction.
 
 ```rust
-pub fn deposit_handler(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: f64) -> Result<()> {
+pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
 		msg!("Depositing funds in escrow...");
 
     let escrow_state = &mut ctx.accounts.escrow_account;
