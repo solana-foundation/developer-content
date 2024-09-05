@@ -16,25 +16,28 @@ description:
 ## Summary
 
 - Program state is stored in other accounts, not in the program itself.
-- A Program Derived Address (PDA) is derived from a program ID and optional
-  seeds, and it is used as the address for a storage account.
+- State is stored in Program Derived Address (PDA) accounts, which are generated
+  from a program ID and optional seeds. The data within a PDA is defined by the
+  programmer.
 - Creating an account requires calculating the necessary space and corresponding
   rent in lamports.
-- A Cross Program Invocation (CPI) to the `create_account` instruction on the
-  System Program is needed to create a new account.
+- A Cross Program Invocation (CPI) to the `create_account` instruction handler
+  on the System Program is needed to create a new account.
 - Updating the data field on an account involves serializing (converting to a
   byte array) the data into the account.
 
 ## Lesson
 
 Solana maintains speed, efficiency, and extensibility by making programs
-stateless. Instead of storing state on the program, programs use Solana's
-account model to read and write state to separate PDA accounts.
+stateless. Instead of storing state alongside the program's executable, programs
+use Solana's account model to read and write state to separate PDA accounts.
 
-This model is flexible but can be challenging if you're unfamiliar with it. In
-this lesson, we'll start simple and gradually introduce more complex programs.
-You'll learn the basics of state management in a Solana program, including
-representing the state as a Rust type, creating accounts using PDAs, and
+This model provides a simple, user-friendly key-value store for managing data
+and allows programs to be upgraded without affecting their data. However, if
+you're familiar with older blockchains, this might be challenging. In this
+lesson, we'll begin with the basics and gradually introduce more complex onchain
+programs. You'll learn the fundamentals of state management in a Solana program,
+including representing state as a Rust type, creating accounts using PDAs, and
 serializing account data.
 
 ### Program State
@@ -51,9 +54,10 @@ and deserialized into something usable.
 
 When writing a program in Rust, we typically create this "format" by defining a
 Rust data type. This is similar to how we created an enum to represent discrete
-instructions in the [first part of this lesson](basic-program-pt-1).
+instructions in the
+[first part of deserialize instruction data lesson](/content/courses/native-onchain-development/deserialize-instruction-data.md#enumerations).
 
-A simple struct is usually sufficient for most use cases. For example, a
+A simple `struct` is usually sufficient for most use cases. For example, a
 note-taking program that stores notes in separate accounts might have fields for
 a title, body, and an ID:
 
@@ -181,13 +185,21 @@ pub fn invoke_signed(
 ) -> ProgramResult
 ```
 
-In this lesson, we'll use `invoke_signed`, which uses the seeds, bump seed, and
-program ID to derive a PDA and sign an instruction. The signer field for an
-account is set to true if the derived PDA matches any of the passed accounts.
+In this lesson, we'll explore `invoke_signed`, a function that allows a program
+to authorize actions for a Program Derived Address (PDA) without using a
+traditional secret key. Here's how it operates:
 
-This method is secure because `invoke_signed` generates the PDA with the program
-ID of the invoking program, preventing other programs from generating matching
-PDAs.
+1. `invoke_signed` derives a PDA using seeds, a bump seed, and the program ID.
+2. It compares this derived PDA against all accounts in the instruction.
+3. If an account matches the derived PDA, that account's signer field becomes
+   true.
+
+This method ensures security because `invoke_signed` generates the PDA using the
+invoking program's ID, preventing other programs from producing matching PDAs to
+authorize accounts derived with a different program ID. It's crucial to
+understand that while we describe the PDA as "authorizing," it doesn't use a
+secret key like traditional signatures. Instead, this mechanism enables programs
+to approve actions onchain for PDA accounts they control.
 
 ```rust
 invoke_signed(
@@ -216,8 +228,8 @@ back.
 
 To update an account's data, first, deserialize its data byte array into its
 Rust type. Borrow the data field on the account to access it without taking
-ownership. Then, use the try_from_slice_unchecked function to deserialize the
-data into the appropriate Rust type:
+ownership. Then, use the `try_from_slice_unchecked()` function to deserialize
+the data into the appropriate Rust type:
 
 ```rust
 let mut account_data = try_from_slice_unchecked::<NoteState>(note_pda_account.data.borrow()).unwrap();
@@ -245,7 +257,7 @@ The above example converts the `account_data` object to a byte array and sets it
 to the `data` property on `note_pda_account`. This saves the updated
 `account_data` variable to the data field of the new account. Now when a user
 fetches the `note_pda_account` and deserializes the data, it will display the
-updated data we’ve serialized into the account.
+updated data we've serialized into the account.
 
 ### Iterators
 
@@ -281,12 +293,13 @@ let second_item = v1_iter.next();
 
 #### Solana Accounts Iterator
 
-When processing instructions in a Solana program, the `AccountInfo` for all
-required accounts is passed through a single `accounts` argument. To parse these
-accounts and use them within your instruction handler, create an iterator with a
-mutable reference to `accounts`.
+In Solana programs, the instruction handler receives an `accounts` argument
+containing `AccountInfo` items for all required accounts. To use these accounts
+within your instruction handler, create an iterator with a mutable reference to
+`accounts`. This approach allows you to process the account information
+sequentially and access the data you need for your instruction handler logic.
 
-Instead of using the iterator directly, you can pass it to the
+Instead of using the iterator directly, you can pass the iterator to the
 `next_account_info` function from the `account_info` module provided by the
 `solana_program` crate.
 
@@ -318,38 +331,40 @@ let system_program = next_account_info(account_info_iter)?;
 
 ## Lab
 
-This section introduces several new concepts. Let’s practice them together by
+This section introduces several new concepts. Let's practice them together by
 continuing with the Movie Review program from the previous lesson. Even if
-you’re starting with this lesson, you should be able to follow along. We'll be
+you're starting with this lesson, you should be able to follow along. We'll be
 using the [Solana Playground](https://beta.solpg.io) to write, build, and deploy
 our code.
 
 As a refresher, we are building a Solana program that lets users review movies.
-In the last lesson, we deserialized the instruction data passed in by the user
-but did not store this data in an account. Let’s now update our program to
-create new accounts to store the user’s movie review.
+In
+[the previous lesson deserialize instruction data](/content/courses/native-onchain-development/deserialize-instruction-data.md),
+we deserialized the instruction data passed in by the user but did not store
+this data in an account. Let's now update our program to create new accounts to
+store the user's movie review.
 
 ### 1. Get the starter code
 
-If you didn’t complete the lab from the last lesson or just want to make sure
-that you didn’t miss anything, you can reference
+If you didn't complete the lab from the last lesson or just want to make sure
+that you didn't miss anything, you can reference
 [the starter code](https://beta.solpg.io/66d67d97cffcf4b13384d333).
 
 Our program currently includes an `instruction.rs` file used to deserialize the
-`instruction_data` passed into the program entry point. We’ve also completed the
+`instruction_data` passed into the program entry point. We've also completed the
 `lib.rs` file to the point where we can print our deserialized instruction data
 to the program log using the `msg!` macro.
 
 ### 2. Create struct to represent account data
 
-Let’s begin by creating a new file named `state.rs`.
+Let's begin by creating a new file named `state.rs`.
 
 This file will:
 
-1. Define the struct used to populate the data field of a new account.
+1. Define the `struct` used to populate the data field of a new account.
 2. Add `BorshSerialize` and `BorshDeserialize` traits to this struct
 
-First, import the necessary items from the borsh crate:
+First, import the necessary items from the `borsh` crate:
 
 ```rust
 use borsh::{BorshSerialize, BorshDeserialize};
@@ -360,8 +375,8 @@ each new movie review account will store in its data field. The struct includes
 the following fields:
 
 - `is_initialized` - indicates whether the account has been initialized.
-- `rating` - the user’s rating of the movie.
-- `description` - the user’s description of the movie.
+- `rating` - the user's rating of the movie.
+- `description` - the user's description of the movie.
 - `title` - the title of the movie being reviewed.
 
 ```rust
@@ -422,10 +437,10 @@ let system_program = next_account_info(account_info_iter)?;
 
 Within the `add_movie_review` function, derive the PDA you expect the user to
 have passed in. Even though `pda_account` should reference the same account, you
-still need to call `find_program_address` as the bump seed is required for the
+still need to call `find_program_address()` as the bump seed is required for the
 derivation.
 
-The PDA for each new account is derived using the initializer’s public key and
+The PDA for each new account is derived using the initializer's public key and
 the movie title as seeds. This setup restricts each user to only one review per
 movie title but allows different users to review the same movie and the same
 user to review different movies.
@@ -492,7 +507,7 @@ msg!("PDA created: {}", pda);
 
 ### 8. Update account data
 
-Now that we’ve created a new account, we are ready to update the data field of
+Now that we've created a new account, we are ready to update the data field of
 the new account using the format of the `MovieAccountState` struct from our
 `state.rs` file. We first deserialize the account data from `pda_account` using
 `try_from_slice_unchecked`, then set the values of each field.
@@ -521,7 +536,7 @@ msg!("State account serialized");
 
 ### 9. Build and deploy
 
-You’re now ready to build and deploy your program!
+You're now ready to build and deploy your program!
 
 ![Gif Build and Deploy Program](/public/assets/courses/unboxed/movie-review-pt2-build-deploy.gif)
 
@@ -537,7 +552,7 @@ program.
 
 If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in both
 the `MovieList.tsx` and `Form.tsx` components with the address of the program
-you’ve deployed. Then run the frontend, submit a view, and refresh the browser
+you've deployed. Then run the frontend, submit a view, and refresh the browser
 to see the review.
 
 If you need more time with this project to feel comfortable with these concepts,
@@ -547,7 +562,7 @@ continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Equipped with the concepts
+Now it's your turn to build something independently. Equipped with the concepts
 introduced in this lesson, you now know everything you'll need to recreate the
 entirety of the Student Intro program from Module 1.
 
