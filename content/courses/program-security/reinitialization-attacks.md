@@ -187,7 +187,7 @@ If the account is already initialized, the instruction will still run, so
 it's \***\*\*\*\***extremely\***\*\*\*\*** important to include checks to
 prevent resetting the account to its initial state.
 
-For example, if the authority field is set in the instruction, ensure that no
+For example, if the `authority` field is set in the instruction, ensure that no
 attacker can reinitialize it after it’s already been set. Typically, it's safer
 to have a separate instruction for initializing account data.
 
