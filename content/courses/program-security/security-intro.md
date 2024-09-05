@@ -35,8 +35,10 @@ in the [Native Course](/content/courses/native-onchain-development.md), but as
 you progress, you’ll encounter new types of attacks. We encourage you to explore
 all of them.
 
+<Callout>
+
 Unlike the lessons in other courses, which are in order, you are welcome to
-explore these lessons in whatever order suits you best.
+explore these lessons in whatever order suits you best. </Callout>
 
 Even though each security vulnerability may seem "simple," there's a lot to
 discuss. These lessons contain less prose and more code, ensuring you gain a
