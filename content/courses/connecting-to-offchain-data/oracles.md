@@ -1179,7 +1179,7 @@ import {
   SwitchboardProgram,
 } from "@switchboard-xyz/solana.js";
 import { assert } from "chai";
-//for SOL_USD  See https://app.switchboard.xyz/solana/devnet/feed/GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR
+// For SOL_USD - see  https://app.switchboard.xyz/solana/devnet/feed/GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR
 export const solUsdSwitchboardFeed = new anchor.web3.PublicKey(
   "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
 );
