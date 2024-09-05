@@ -17,8 +17,8 @@ Program security is covered in our
 [Anchor](/content/courses/onchain-development.md) and
 [Native Rust](/content/courses/native-onchain-development.md) development
 courses to ensure that anyone deploying programs to Mainnet has at least a basic
-understanding of security. If that’s you, the fundamental principles you learned
-in those lessons should help you avoid some common Solana exploits on your own.
+understanding of security. Those courses should help you avoid some common
+Solana exploits on your own.
 
 This module is designed to build on those lessons with two main goals:
 
