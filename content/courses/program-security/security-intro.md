@@ -28,9 +28,12 @@ This course builds on those courses with two main goals:
    secure, and show native Rust users how to implement similar techniques on
    their own.
 
-If you completed the Basic Security lesson, the first few topics in this module
-should feel familiar, as they cover similar concepts. However, as you progress,
-you’ll encounter new types of attacks. We encourage you to explore all of them.
+While the first few lessons in this course cover topics similar to those in the
+[Anchor course](/content/courses/onchain-development/intro-to-anchor.md) or
+[Program Security lesson](/content/courses/native-onchain-development/program-security.md)
+in the [Native Course](/content/courses/native-onchain-development.md), but as
+you progress, you’ll encounter new types of attacks. We encourage you to explore
+all of them.
 
 Unlike the lessons in other courses, which are in order, you are welcome to
 explore these lessons in whatever order suits you best.
