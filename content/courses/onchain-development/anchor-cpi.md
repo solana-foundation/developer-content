@@ -144,7 +144,7 @@ The `cpi` module turns `callee`'s instructions into Rust functions. These
 functions take a `CpiContext` and any extra data needed for the instruction.
 They work just like the instruction functions in your Anchor programs, but use
 `CpiContext` instead of `Context`. The `cpi` module also provides the account
-structs needed for these instructions.
+structs needed for these instruction handler.
 
 For example, if `callee` has the instruction `do_something` that requires the
 accounts defined in the `DoSomething` struct, you could invoke `do_something` as
