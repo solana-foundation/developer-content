@@ -207,7 +207,7 @@ In this lab, we’ll create a simple program with two instructions:
 ### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-reinitialization-attacks/tree/starter).
+[this repository](https://github.com/solana-developers/reinitialization-attacks/tree/starter).
 The starter code includes a program with one instruction and the boilerplate
 setup for the test file.
 
@@ -482,8 +482,8 @@ straightforward, it is crucial. Every time you initialize an account, ensure
 that you're either using the `init` constraint or implementing another check to
 prevent resetting an existing account's initial state.
 
-For the final solution code, refer to the solution branch of
-[this repository](https://github.com/Unboxed-Software/solana-reinitialization-attacks/tree/solution).
+For the final solution code, refer to the `solution` branch of
+[this repository](https://github.com/solana-developers/reinitialization-attacks/tree/solution).
 
 ## Challenge
 
