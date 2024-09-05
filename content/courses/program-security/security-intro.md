@@ -1,7 +1,7 @@
 ---
-title: How to Approach the Program Security Module
+title: How to Approach the Program Security Course
 objectives:
-  - Understand how to approach the Program Security Module
+  - Understand how to approach the Program Security Course
 description:
   "Learn how to think intelligently about security for your onchain programs,
   whether developing in Anchor or Native Rust."
@@ -20,26 +20,21 @@ courses to ensure that anyone deploying programs to Mainnet has at least a basic
 understanding of security. Those courses should help you avoid some common
 Solana exploits on your own.
 
-This module is designed to build on those lessons with two main goals:
+This course builds on those courses with two main goals:
 
 1. Expand your awareness of the Solana programming model and highlight areas
    where you need to focus to close security loopholes.
 2. Introduce you to the tools provided by Anchor to help keep your programs
-   secure.
+   secure, and show native Rust users how to implement similar techniques on their own.  
 
 If you completed the Basic Security lesson, the first few topics in this module
 should feel familiar, as they cover similar concepts. However, as you progress,
 you’ll encounter new types of attacks. We encourage you to explore all of them.
 
-One key point to note is that this course contains more lessons than previous
-ones. The lessons are less interdependent, allowing you more flexibility to
-explore topics in the order that suits you best.
+Unlike the lessons in other courses, which are in order, you are welcome to explore these lessons in whatever order suits you best.
 
-Initially, we intended to create shorter lessons, but even though each security
-vulnerability may seem "simple," there's a lot to discuss. Consequently, each
-lesson may contain less prose and more code snippets, offering readers the
-flexibility to dive as deep as they want. Ultimately, each lesson remains
-comprehensive, ensuring you gain a solid understanding of the security risks
+Even though each security
+vulnerability may seem "simple," there's a lot to discuss. These lessons contain less prose and more code, ensuring you gain a solid understanding of the security risks
 discussed.
 
 As always, your feedback is appreciated. Good luck as you delve into the course!
