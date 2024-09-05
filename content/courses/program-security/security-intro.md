@@ -31,9 +31,7 @@ If you completed the Basic Security lesson, the first few topics in this module
 should feel familiar, as they cover similar concepts. However, as you progress,
 you’ll encounter new types of attacks. We encourage you to explore all of them.
 
-One key point to note is that this course contains more lessons than previous
-ones. The lessons are less interdependent, allowing you more flexibility to
-explore topics in the order that suits you best.
+Unlike the lessons in other courses, which are in order, you are welcome to explore these lessons in whatever order suits you best.
 
 Initially, we intended to create shorter lessons, but even though each security
 vulnerability may seem "simple," there's a lot to discuss. Consequently, each
