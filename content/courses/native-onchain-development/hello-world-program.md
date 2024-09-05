@@ -378,7 +378,7 @@ examples, so try to avoid copying and pasting.
    your message was printed in the program log.
 
 As always, feel free to get creative with these challenges and go beyond the
-basic instructions if you want—most importantly, have fun!
+basic instructions if you want — most importantly, have fun!
 
 <Callout type="success" title="Completed the lab?">
 
