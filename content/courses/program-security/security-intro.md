@@ -23,7 +23,7 @@ Solana exploits on your own.
 This course builds on those courses with two main goals:
 
 1. Expand your awareness of the Solana programming model and highlight areas
-   where you need to focus to close security loopholes.
+   where you need to focus on closing security loopholes.
 2. Introduce you to the tools provided by Anchor to help keep your programs
    secure, and show native Rust users how to implement similar techniques on
    their own.
