@@ -335,7 +335,7 @@ Now, let's build and deploy our program using Solana Playground.
 
 Finally, let's invoke our program from the client side. The main focus of this
 lesson is building our Solana program, so we've provided
-[the client code to invoke our “Hello, world!” program](https://github.com/Unboxed-Software/solana-hello-world-client)
+[the client code to invoke our “Hello, world!” program](https://github.com/solana-developers/hello-world-client)
 for you to download.
 
 This code includes a `sayHello` helper function that constructs and submits the
