@@ -340,13 +340,13 @@ data: [MEXC](https://www.mexc.com/) and [Coinbase](https://www.coinbase.com/).
 Once you’ve chosen a feed to use, you can start reading the data in that feed.
 You do this by simply deserializing and reading the state stored in the account.
 The easiest way to do that is by making use of the `AggregatorAccountData`
-struct we defined above from the `switchboard_v2` crate in your program.
+struct we defined above from the `switchboard_solana` crate in your program.
 
 ```rust
 // import anchor and switchboard crates
 use {
     anchor_lang::prelude::*,
-    switchboard_v2::AggregatorAccountData,
+    switchboard_solana::AggregatorAccountData,
 };
 
 ...
@@ -423,13 +423,12 @@ let user = new anchor.web3.Keypair()
 
 // fetch switchboard devnet program object
 switchboardProgram = await SwitchboardProgram.load(
-  "devnet",
   new anchor.web3.Connection("https://api.devnet.solana.com"),
   user
 )
 
 // pass switchboard program object and feed pubkey into AggregatorAccount constructor
-aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed)
+aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsdSwitchboardFeed)
 
 // fetch latest SOL price
 const solPrice: Big | null = await aggregatorAccount.fetchLatestValue()
@@ -476,18 +475,18 @@ account can be passed into your program's instructions, so you should verify
 it’s the account you expect it to be.
 
 In Anchor, if you deserialize the account to the `AggregatorAccountData` type
-from the `switchboard_v2` crate, Anchor checks that the account is owned by the
-Switchboard program. If your program expects that only a specific data feed will
-be passed in the instruction, then you can also verify that the public key of
-the account passed in matches what it should be. One way to do this is to hard
-code the address in the program somewhere and use account constraints to verify
-the address passed in matches what is expected.
+from the `switchboard_solana` crate, Anchor checks that the account is owned by
+the Switchboard program. If your program expects that only a specific data feed
+will be passed in the instruction, then you can also verify that the public key
+of the account passed in matches what it should be. One way to do this is to
+hard code the address in the program somewhere and use account constraints to
+verify the address passed in matches what is expected.
 
 ```rust
 use {
   anchor_lang::prelude::*,
   solana_program::{pubkey, pubkey::Pubkey},
-	switchboard_v2::{AggregatorAccountData},
+	switchboard_solana::{AggregatorAccountData},
 };
 
 pub static BTC_USDC_FEED: Pubkey = pubkey!("8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee");
@@ -524,7 +523,7 @@ than 30 seconds ago.
 use {
     anchor_lang::prelude::*,
     anchor_lang::solana_program::clock,
-    switchboard_v2::{AggregatorAccountData, SwitchboardDecimal},
+    switchboard_solana::{AggregatorAccountData, SwitchboardDecimal},
 };
 
 ...
@@ -613,7 +612,7 @@ use {
     crate::{errors::*},
     anchor_lang::prelude::*,
     std::convert::TryInto,
-    switchboard_v2::{AggregatorAccountData, SwitchboardDecimal},
+    switchboard_solana::{AggregatorAccountData, SwitchboardDecimal},
 };
 
 ...
