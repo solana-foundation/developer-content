@@ -25,7 +25,7 @@ This course builds on those courses with two main goals:
 1. Expand your awareness of the Solana programming model and highlight areas
    where you need to focus to close security loopholes.
 2. Introduce you to the tools provided by Anchor to help keep your programs
-   secure.
+   secure, and show native Rust users how to implement similar techniques on their own.  
 
 If you completed the Basic Security lesson, the first few topics in this module
 should feel familiar, as they cover similar concepts. However, as you progress,
