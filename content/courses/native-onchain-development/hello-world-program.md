@@ -45,7 +45,7 @@ basics. For a deeper dive into Rust, check out the
 Rust organizes code using what is collectively referred to as the “module
 system.” This includes:
 
-- **Modules**: Separate code into logical units to provide isolated namespaces
+- **Modules**: Separates code into logical units to provide isolated namespaces
   for organization, scope, and privacy of paths.
 - **Crates**: Either a library or an executable program. The source code for a
   crate is usually subdivided into multiple modules.
