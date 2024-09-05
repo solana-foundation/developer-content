@@ -485,9 +485,9 @@ verify the address passed in matches what is expected.
 
 ```rust
 use {
-  anchor_lang::prelude::*,
-  solana_program::{pubkey, pubkey::Pubkey},
-	switchboard_solana::{AggregatorAccountData},
+    anchor_lang::prelude::*,
+    solana_program::{pubkey, pubkey::Pubkey},
+    switchboard_solana::AggregatorAccountData,
 };
 
 pub static BTC_USDC_FEED: Pubkey = pubkey!("8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee");
