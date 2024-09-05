@@ -679,8 +679,8 @@ export function WalletProvider(props: WalletProviderProps) {
         );
       }
       setKeyPair(keyPair);
-    } catch (e) {
-      console.log("error getting keypair: ", e);
+    } catch (error) {
+      console.log("error getting keypair: ", error);
     }
   };
 
@@ -735,9 +735,12 @@ function MainScreen() {
 
   const updateBalance = async () => {
     if (wallet) {
-      await connection.getBalance(wallet.publicKey).then(lamports => {
+      try {
+        const lamports = await connection.getBalance(wallet.publicKey);
         setBalance(lamports / LAMPORTS_PER_SOL);
-      });
+      } catch (error) {
+        console.error("Failed to fetch / update balance:", error);
+      }
     }
   };
 
@@ -751,8 +754,8 @@ function MainScreen() {
         );
         await connection.confirmTransaction(signature, "max");
         await updateBalance();
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        console.log("error requesting airdrop", error);
       }
 
       setIsLoading(false);
@@ -1455,8 +1458,8 @@ export function signTransactionPayloads(
         },
       ]);
       return transaction.serialize();
-    } catch (e) {
-      console.log("sign error: " + e);
+    } catch (error) {
+      console.log("sign error: " + error);
       valid[index] = false;
       return new Uint8Array([]);
     }
@@ -1521,12 +1524,13 @@ function SignAndSendTransactionScreen(
     setLoading(true);
     try {
       await signAndSendTransaction(wallet, connection, request);
-    } catch (e) {
+    } catch (error) {
       const valid = request.payloads.map(() => false);
       resolve(request, {
         failReason: MWARequestFailReason.InvalidSignatures,
         valid,
       });
+      console.error("Transaction failed:", error);
     } finally {
       setLoading(false);
     }
