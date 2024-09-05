@@ -56,9 +56,9 @@ Throughout this lesson, we'll focus on using crates and modules.
 
 #### Paths and Scope
 
-Crates contain modules that can be shared
-across multiple projects. If we want to access an item within a module, we need
-to know its "path," similar to navigating a filesystem.
+Crates contain modules that can be shared across multiple projects. If we want
+to access an item within a module, we need to know its "path," similar to
+navigating a filesystem.
 
 Think of the crate structure as a tree where the crate is the base and modules
 are branches, each potentially having submodules or items as additional
