@@ -295,7 +295,9 @@ check can lead to unauthorized token withdrawals.
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("FeKh59XMh6BcN6UdekHnaFHsNH9NVE121GgDzSyYPKKS");
+
+pub const DISCRIMINATOR_SIZE: usize = 8;
 
 #[program]
 pub mod signer_authorization {
@@ -310,7 +312,7 @@ pub mod signer_authorization {
     pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+        let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
@@ -333,7 +335,7 @@ pub struct InitializeVault<'info> {
     #[account(
         init,
         payer = authority,
-        space = 8 + 32 + 32,
+        space = DISCRIMINATOR_SIZE + Vault::INIT_SPACE,
         seeds = [b"vault"],
         bump
     )]
@@ -372,6 +374,7 @@ pub struct InsecureWithdraw<'info> {
 }
 
 #[account]
+#[derive(Default, InitSpace)]
 pub struct Vault {
     token_account: Pubkey,
     authority: Pubkey,
@@ -395,24 +398,29 @@ sign and send the transaction with a different keypair.
 ```typescript
 describe("signer-authorization", () => {
     ...
-    it("Insecure withdraw", async () => {
-    const tx = await program.methods
-      .insecureWithdraw()
-      .accounts({
-        vault: vaultPDA,
-        tokenAccount: tokenAccount.publicKey,
-        withdrawDestination: withdrawDestinationFake,
-        authority: wallet.publicKey,
-      })
-      .transaction()
+    it("performs insecure withdraw", async () => {
+    try {
+      const tx = await program.methods
+        .insecureWithdraw()
+        .accounts({
+          vault: vaultPDA,
+          tokenAccount: tokenAccount.publicKey,
+          withdrawDestination: withdrawDestinationFake,
+          authority: wallet.publicKey,
+        })
+        .transaction();
 
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
+      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
 
-    const balance = await connection.getTokenAccountBalance(
-      tokenAccount.publicKey
-    )
-    expect(balance.value.uiAmount).to.eq(0)
-  })
+      const tokenAccountInfo = await getAccount(
+        connection,
+        tokenAccount.publicKey
+      );
+      expect(tokenAccountInfo.amount).to.equal(0n);
+    } catch (error) {
+      throw new Error(`Failed to perform insecure withdraw: ${error.message}`);
+    }
+  });
 })
 ```
 
@@ -421,8 +429,8 @@ successfully.
 
 ```bash
 signer-authorization
-  ✔ Initialize Vault (810ms)
-  ✔ Insecure withdraw  (405ms)
+    ✔ initializes vault (865ms)
+    ✔ performs insecure withdraw (421ms)
 ```
 
 Since there is no signer check for the `authority` account, the
@@ -454,7 +462,7 @@ pub mod signer_authorization {
     pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
+        let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
@@ -502,7 +510,7 @@ transaction should fail with a signature verification error.
 ```typescript
 describe("signer-authorization", () => {
     ...
-    it("Secure withdraw", async () => {
+    it("fails to perform secure withdraw with incorrect signer", async () => {
     try {
       const tx = await program.methods
         .secureWithdraw()
@@ -512,14 +520,15 @@ describe("signer-authorization", () => {
           withdrawDestination: withdrawDestinationFake,
           authority: wallet.publicKey,
         })
-        .transaction()
+        .transaction();
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
-    } catch (err) {
-      expect(err)
-      console.log(err)
+      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+      throw new Error("Expected transaction to fail, but it succeeded");
+    } catch (error) {
+      expect(error).to.be.an("error");
+      console.log("Error message:", error.message);
     }
-  })
+  });
 })
 ```
 
@@ -527,7 +536,10 @@ Run `anchor test` to see that the transaction now returns a signature
 verification error.
 
 ```bash
-Error: Signature verification failed
+signer-authorization
+Error message: Signature verification failed.
+Missing signature for public key [`GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM`].
+    ✔ fails to perform secure withdraw with incorrect signer
 ```
 
 This example shows how important it is to think through who should authorize
