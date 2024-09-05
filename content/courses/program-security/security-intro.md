@@ -33,11 +33,8 @@ you’ll encounter new types of attacks. We encourage you to explore all of them
 
 Unlike the lessons in other courses, which are in order, you are welcome to explore these lessons in whatever order suits you best.
 
-Initially, we intended to create shorter lessons, but even though each security
-vulnerability may seem "simple," there's a lot to discuss. Consequently, each
-lesson may contain less prose and more code snippets, offering readers the
-flexibility to dive as deep as they want. Ultimately, each lesson remains
-comprehensive, ensuring you gain a solid understanding of the security risks
+Even though each security
+vulnerability may seem "simple," there's a lot to discuss. These lessons contain less prose and more code, ensuring you gain a solid understanding of the security risks
 discussed.
 
 As always, your feedback is appreciated. Good luck as you delve into the course!
