@@ -180,13 +180,16 @@ pub struct Vault {
 }
 ```
 
-Note that when you use the `Signer` type, no other ownership or type checks are
+<Callout>
+When you use the `Signer` type, no other ownership or type checks are
 performed.
+</Callout>
 
 ### Using Anchor’s `#[account(signer)]` Constraint
 
 While the `Signer` account type is useful, it doesn't perform other ownership or
-type checks, limiting its use in instruction logic. The `#[account(signer)]`
+type checks, limiting its use in instruction logic. The
+[anchor's `#[account(signer)]`](https://www.anchor-lang.com/docs/account-constraints)
 constraint addresses this by verifying that the account signed the transaction
 while allowing access to its underlying data.
 
