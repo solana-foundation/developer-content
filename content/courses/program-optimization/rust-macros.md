@@ -147,7 +147,7 @@ use syn::parse_macro_input;
 #[proc_macro]
 pub fn my_macro(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as syn::LitStr);
-    eprintln! {"{:#?}", ast};
+    eprintln!("{:#?}", ast);
     ...
 }
 ```
@@ -195,8 +195,8 @@ use quote::quote;
 pub fn my_macro(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as syn::LitStr);
     eprintln! {"{:#?}", ast};
-    let expanded = {
-        quote! {println!("The input is: {}", #ast)}
+    let expanded = quote! {
+        println!("The input is: {}", #ast)
     };
     expanded.into()
 }
@@ -325,6 +325,7 @@ or block that the original item belongs to. This allows developers to extend the
 functionality of the original item without modifying the original code.
 
 ```rust
+use proc_macro::TokenStream;
 #[proc_macro_derive(MyMacro)]
 pub fn my_macro(input: TokenStream) -> TokenStream {
 	...
@@ -390,13 +391,14 @@ The first step is to define the procedural macro using the using the
 `parse_macro_input!()` macro to extract the struct's identifier and data.
 
 ```rust
-use proc_macro::{self, TokenStream};
+use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput, FieldsNamed};
+use syn::{parse_macro_input, DeriveInput, Data, Fields};
 
 #[proc_macro_derive(Describe)]
 pub fn describe_struct(input: TokenStream) -> TokenStream {
-    let DeriveInput { ident, data, .. } = parse_macro_input!(input);
+    let ast = parse_macro_input!(input as DeriveInput);
+    let ident = &ast.ident;
     ...
 }
 ```
@@ -415,27 +417,28 @@ The `#(#idents), *` syntax specifies that the `idents` iterator will be
 "expanded" to create a comma-separated list of the elements in the iterator.
 
 ```rust
-use proc_macro::{self, TokenStream};
+use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput, FieldsNamed};
+use syn::{parse_macro_input, DeriveInput, Data, Fields};
 
 #[proc_macro_derive(Describe)]
 pub fn describe_struct(input: TokenStream) -> TokenStream {
-    let DeriveInput { ident, data, .. } = parse_macro_input!(input);
+    let ast = parse_macro_input!(input as DeriveInput);
+    let ident = &ast.ident;
 
-    let field_names = match data {
-        syn::Data::Struct(s) => match s.fields {
-            syn::Fields::Named(FieldsNamed { named, .. }) => {
-                let idents = named.iter().map(|f| &f.ident);
-                format!(
-                    "a struct with these named fields: {}",
-                    quote! {#(#idents), *},
-                )
-            }
-            _ => panic!("The syn::Fields variant is not supported"),
+    let fields = match &ast.data {
+        Data::Struct(data) => match &data.fields {
+            Fields::Named(fields) => &fields.named,
+            _ => return quote! {
+                compile_error!("This macro only works on structs with named fields");
+            }.into(),
         },
-        _ => panic!("The syn::Data variant is not supported"),
+        _ => return quote! {
+            compile_error!("This macro only works on structs");
+        }.into(),
     };
+
+    let field_names = fields.iter().map(|f| &f.ident);
     ...
 }
 ```
@@ -451,12 +454,12 @@ Finally, the `expanded` variable is converted into a `TokenStream` using the
 `into()` method.
 
 ```rust
-use proc_macro::{self, TokenStream};
+use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, DeriveInput, FieldsNamed};
+use syn::{parse_macro_input, DeriveInput, Data, Fields};
 
 #[proc_macro_derive(Describe)]
-pub fn describe(input: TokenStream) -> TokenStream {
+pub fn describe_struct(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
     let field_names = match data {
@@ -476,7 +479,10 @@ pub fn describe(input: TokenStream) -> TokenStream {
     let expanded = quote! {
         impl #ident {
             fn describe() {
-            println!("{} is {}.", stringify!(#ident), #field_names);
+                println!("{} is a struct with these named fields: {}.",
+                    stringify!(#ident),
+                    stringify!(#(#field_names),*)
+                );
             }
         }
     };
@@ -504,23 +510,15 @@ struct generated using the the `#[derive(Describe)]` attribute looks like this:
 ```rust
 struct MyStruct {
     my_string: String,
-    my_number: f64,
+    my_number: u64,
 }
 impl MyStruct {
     fn describe() {
-        {
-            ::std::io::_print(
-                ::core::fmt::Arguments::new_v1(
-                    &["", " is ", ".\n"],
-                    &[
-                        ::core::fmt::ArgumentV1::new_display(&"MyStruct"),
-                        ::core::fmt::ArgumentV1::new_display(
-                            &"a struct with these named fields: my_string, my_number",
-                        ),
-                    ],
-                ),
-            );
-        };
+        println!(
+            "{} is {}.",
+            stringify!(MyStruct),
+            "a struct with these named fields: my_string, my_number"
+        );
     }
 }
 ```
@@ -546,10 +544,16 @@ The `declare_id` macro is defined using the `#[proc_macro]` attribute,
 indicating that it's a function-like proc macro.
 
 ```rust
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::parse_macro_input;
+
 #[proc_macro]
-pub fn declare_id(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    let id = parse_macro_input!(input as id::Id);
-    proc_macro::TokenStream::from(quote! {#id})
+pub fn declare_id(input: TokenStream) -> TokenStream {
+    let id = parse_macro_input!(input as anchor_syn::IdLiteral);
+    TokenStream::from(quote! {
+        anchor_lang::prelude::declare_id!(#id);
+    })
 }
 ```
 
@@ -588,11 +592,14 @@ that this is a derive macro that processes `account` and `instruction` helper
 attributes.
 
 ```rust
+use proc_macro::TokenStream;
+use quote::ToTokens;
+use syn::parse_macro_input;
+
 #[proc_macro_derive(Accounts, attributes(account, instruction))]
-pub fn derive_anchor_deserialize(item: TokenStream) -> TokenStream {
-    parse_macro_input!(item as anchor_syn::AccountsStruct)
-        .to_token_stream()
-        .into()
+pub fn derive_accounts(input: TokenStream) -> TokenStream {
+    let accounts_struct = parse_macro_input!(input as anchor_syn::AccountsStruct);
+    accounts_struct.to_token_stream().into()
 }
 ```
 
@@ -617,14 +624,14 @@ In this case, the `#[program]` attribute is applied to a module, and it is used
 to specify that the module contains instruction handlers for a Solana program.
 
 ```rust
+use proc_macro::TokenStream;
+use quote::ToTokens;
+use syn::parse_macro_input;
+
 #[proc_macro_attribute]
-pub fn program(
-    _args: proc_macro::TokenStream,
-    input: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    parse_macro_input!(input as anchor_syn::Program)
-        .to_token_stream()
-        .into()
+pub fn program(_args: TokenStream, input: TokenStream) -> TokenStream {
+    let program = parse_macro_input!(input as anchor_syn::Program);
+    program.to_token_stream().into()
 }
 ```
 
@@ -697,10 +704,10 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
-syn = "1.0.105"
+syn = { version = "2.0", features = ["full"] }
 quote = "1.0.21"
-proc-macro2 = "0.4"
-anchor-lang = "0.25.0"
+proc-macro2 = "1.0"
+anchor-lang = "0.29.0"
 ```
 
 The `proc-macro = true` line defines this crate as containing a procedural
@@ -733,7 +740,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anchor-lang = "0.25.0"
+anchor-lang = "0.29.0"
 custom-macro = { path = "../custom-macro" }
 ```
 
@@ -783,10 +790,10 @@ use syn::*;
 pub fn instruction_builder(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
-    eprintln! {"{:#?}", ident};
-    eprintln! {"{:#?}", data};
+    println!("{:#?}", ident);
+    println!("{:#?}", data);
 
-    TokenStream::new()
+    proc_macro::TokenStream::new()
 }
 ```
 
@@ -819,16 +826,16 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
     let fields = match data {
-        syn::Data::Struct(s) => match s.fields {
-            syn::Fields::Named(n) => n.named,
+        Data::Struct(s) => match s.fields {
+            Fields::Named(n) => n.named,
             _ => panic!("The syn::Fields variant is not supported: {:#?}", s.fields),
         },
         _ => panic!("The syn::Data variant is not supported: {:#?}", data),
     };
 
-    eprintln! {"{:#?}", fields};
+    println!("{:#?}", fields);
 
-    TokenStream::new()
+    proc_macro::TokenStream::new()
 }
 ```
 
@@ -853,8 +860,8 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
     let fields = match data {
-        syn::Data::Struct(s) => match s.fields {
-            syn::Fields::Named(n) => n.named,
+        Data::Struct(s) => match s.fields {
+            Fields::Named(n) => n.named,
             _ => panic!("The syn::Fields variant is not supported: {:#?}", s.fields),
         },
         _ => panic!("The syn::Data variant is not supported: {:#?}", data),
@@ -874,7 +881,9 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
         }
     });
 
-    TokenStream::new()
+    quote! {
+        #(#update_instruction)*
+    }.into()
 }
 ```
 
@@ -896,14 +905,14 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
     let fields = match data {
-        syn::Data::Struct(s) => match s.fields {
-            syn::Fields::Named(n) => n.named,
+        Data::Struct(s) => match s.fields {
+            Fields::Named(n) => n.named,
             _ => panic!("The syn::Fields variant is not supported: {:#?}", s.fields),
         },
         _ => panic!("The syn::Data variant is not supported: {:#?}", data),
     };
 
-    let update_instruction = fields.into_iter().map(|f| {
+    let update_instruction = fields.iter().map(|f| {
         let name = &f.ident;
         let ty = &f.ty;
         let fname = format_ident!("update_{}", name.clone().unwrap());
@@ -980,7 +989,7 @@ first add the `custom-macro` crate as a dependency to the program in its
 
 ```text
 [dependencies]
-anchor-lang = "0.25.0"
+anchor-lang = "0.29.0"
 custom-macro = { path = "../../custom-macro" }
 ```
 
