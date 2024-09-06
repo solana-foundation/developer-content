@@ -354,32 +354,53 @@ Now that we have the buffer layout set up, let’s create a method in `Movie`
 called `serialize()` that will return a `Buffer` with a `Movie` object’s
 properties encoded into the appropriate layout.
 
+Instead of allocating a fixed buffer size, we'll calculate the size dynamically
+using known constants for the space required by each field in the `Movie`
+object. Specifically, we'll use `INIT_SPACE` (to account for string length
+metadata) and `ANCHOR_DISCRIMINATOR` (to account for the 8-byte discriminator
+used by Anchor).
+
 ```typescript
-import * as borsh from '@coral-xyz/borsh'
+import * as borsh from "@coral-xyz/borsh";
+
+// Constants for size calculations
+const ANCHOR_DISCRIMINATOR = 8; // Typically 8 bytes for the Anchor discriminator
+const STRING_LENGTH_SPACE = 4; // 4 bytes to store the length of each string (used by Borsh)
+const INIT_SPACE = STRING_LENGTH_SPACE * 2; // Two strings: 'title' and 'description'
+
+// Assume maximum sizes for the strings
+const MAX_TITLE_LENGTH = 100; // Arbitrary max length for title
+const MAX_DESCRIPTION_LENGTH = 500; // Arbitrary max length for description
+
+// Calculate the total space required for a Movie review
+const MOVIE_REVIEW_SPACE =
+  ANCHOR_DISCRIMINATOR + // Discriminator for the instruction
+  INIT_SPACE + // Space to store string lengths
+  MAX_TITLE_LENGTH + // Maximum title length
+  MAX_DESCRIPTION_LENGTH + // Maximum description length
+  2 * 1; // 1 byte for 'variant' and 'rating'
 
 export class Movie {
   title: string;
   rating: number;
   description: string;
 
-  ...
-
+  // Borsh schema for the Movie class
   borshInstructionSchema = borsh.struct([
-    borsh.u8('variant'),
-    borsh.str('title'),
-    borsh.u8('rating'),
-    borsh.str('description'),
-  ])
+    borsh.u8("variant"),
+    borsh.str("title"),
+    borsh.u8("rating"),
+    borsh.str("description"),
+  ]);
 
   serialize(): Buffer {
     try {
-      // We allocate a buffer with a size of 1000 bytes. This size is chosen as a reasonable estimate to accommodate the serialized data structure.
-      // The actual size needed depends on the structure of the data and the serialization schema. If the data exceeds 1000 bytes, you might need to increase the buffer size.
-      const buffer = Buffer.alloc(1000);
+      // Dynamically allocate a buffer based on the calculated size
+      const buffer = Buffer.alloc(MOVIE_REVIEW_SPACE);
       this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
       return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));
     } catch (error) {
-      console.error('Serialization error:', error);
+      console.error("Serialization error:", error);
       return Buffer.alloc(0);
     }
   }
