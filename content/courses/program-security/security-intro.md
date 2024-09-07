@@ -1,5 +1,3 @@
-### Intro to Security
-
 ---
 title: How to approach the Program Security module objectives:
 objectives:
