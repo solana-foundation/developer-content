@@ -1019,6 +1019,12 @@ install it:
 yarn add @solana/spl-account-compression
 ```
 
+or
+
+```bash
+npm install @solana/spl-account-compression
+```
+
 Next, we’re going to give you the contents of a utility file we’ve created to
 make testing easier. Create a `utils.ts` file in the `tests` directory, add in
 the below, then we’ll explain it.
