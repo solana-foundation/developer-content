@@ -636,9 +636,9 @@ enabled. Let’s add it as a dependency in `programs/compressed-notes/Cargo.toml
 
 ```toml
 [dependencies]
-anchor-lang = "0.28.0"
-spl-account-compression = { version="0.2.0", features = ["cpi"] }
-solana-program = "1.16.0"
+anchor-lang = "0.30.1"
+spl-account-compression = { version="0.3.1", features = ["cpi"] }
+solana-program = ">=1.18.11,<=2"
 ```
 
 We’ll be testing locally but we need both the Compression program and the Noop
