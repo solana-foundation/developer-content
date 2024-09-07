@@ -806,7 +806,7 @@ pub mod compressed_notes {
         // Define the seeds for pda signing
         let signer_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
-            &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
+                        &[ctx.bumps.tree_authority], // The bump seed for the pda
         ]];
 
         // Create cpi context for init_empty_merkle_tree instruction.
@@ -878,7 +878,7 @@ pub mod compressed_notes {
         // Define the seeds for pda signing
         let signer_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
-            &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
+                        &[ctx.bumps.tree_authority], // The bump seed for the pda
         ]];
         // Create a new cpi context and append the leaf node to the Merkle tree.
         let cpi_ctx = CpiContext::new_with_signer(
@@ -958,7 +958,7 @@ pub mod compressed_notes {
         // Define the seeds for pda signing
         let signer_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
-            &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
+                        &[ctx.bumps.tree_authority], // The bump seed for the pda
         ]];
 
         // Verify Leaf
