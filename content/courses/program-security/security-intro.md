@@ -1,15 +1,14 @@
 ---
-title: How to approach the Program Security module objectives:
+title: How to approach the Program Security module
 objectives:
-- Understand how to approach the Program Security Module
-- Learn about common security vulnerabilities in Solana programs
-- Understand the importance of proper account validation and constraint checks
-- Gain insight into Anchor's security features and best practices
-- Learn about advanced testing techniques for program security description:
+  - understand how to approach the Program Security Module
+  - Learn about common security vulnerabilities in Solana programs
+  - Understand the importance of proper account validation and constraint checks
+  - Gain insight into Anchor's security features and best practices
+  - Learn about advanced testing techniques for program security description
 description:
-  "Learn how to think intelligently about security for your on-chain programs,
-  whether developing in Anchor or Native Rust, and understand common attack
-  vectors and mitigation strategies."
+  "Learn how to think intelligently about security for your onchain programs,
+  whether developing in Anchor or in Native Rust."
 ---
 
 ## Overview
