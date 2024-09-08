@@ -1203,7 +1203,7 @@ to fix them:
   wallet installed ( like the fake wallet we installed in Prerequisites )
 - You get stuck in a forever loop while calling `increment` → This is likely due
   to you reaching a Devnet airdrop rate limit. Take out the airdrop section in
-  `CounterButton` and manually send some Devnet sol to your wallet’s address
+  `CounterButton` and manually send some Devnet SOL to your wallet’s address
   (printed in the console)
 
 That's it! You've made your first Solana Mobile dApp. If you get stuck, feel
