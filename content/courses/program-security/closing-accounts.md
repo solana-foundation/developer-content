@@ -87,8 +87,8 @@ pub struct Data {
 }
 ```
 
-However, the garbage collection doesn't occur until the transaction completes.
-And since there can be multiple instruction in a transaction, this creates an
+However, garbage collection doesn't occur until the transaction is completed.
+And since there can be multiple instructions in a transaction, this creates an
 opportunity for an attacker to invoke the instruction handler to close the
 account but also include in the transaction a transfer to refund the account's
 rent exemption lamports. The result is that the account _will not_ be garbage
@@ -177,7 +177,7 @@ pub struct Data {
     pub data: u64,
 }
 
-/// Helper function to totally delete an account onchain
+/// Helper function to delete an account onchain
 fn delete_account(account_info: &AccountInfo) -> Result<()> {
     account_info.assign(&system_program::id());
     account_info.realloc(0, false)?;
@@ -348,13 +348,13 @@ to implement on your own if you’d like to utilize it. </Callout>
 ## Lab
 
 To clarify how an attacker might take advantage of a revival attack, let's work
-with a simple lottery program that uses program account state to manage a user's
-participation in the lottery.
+with a simple lottery program that uses a program account state to manage a
+user's participation in the lottery.
 
 ### 1. Setup
 
 Start by getting the code on the
-[`starter` branch from the this repo](https://github.com/solana-developers/closing-accounts/tree/starter).
+[`starter` branch from this repo](https://github.com/solana-developers/closing-accounts/tree/starter).
 
 The code has two instruction handlers on the program and two tests in the
 `tests` directory.
@@ -369,8 +369,8 @@ store some state about the user's lottery entry.
 
 Since this is a simplified example rather than a fully-fledge lottery program,
 once a user has entered the lottery they can call the `redeem_rewards_insecure`
-instruction handler at any time. This instruction handler will mint the user an
-amount of Reward tokens proportional to the amount of times the user has entered
+instruction handler at any time. This instruction handler will mint the user a
+number of Reward tokens proportional to the number of times the user has entered
 the lottery. After minting the rewards, the program closes the user's lottery
 entry.
 
@@ -460,19 +460,19 @@ it("allows attacker to close + refund lottery account + claim multiple rewards",
 This test does the following:
 
 1. Calls `redeem_rewards_insecure` to redeem the user's rewards
-2. In the same transaction, adds an instruction to refund the user's
-   `lottery_entry` before it can actually be closed
-3. Successfully repeats steps 1 and 2, redeeming rewards for a second time.
+2. In the same transaction, add an instruction to refund the user's
+   `lottery_entry` before it can be closed
+3. Successfully repeat steps 1 and 2, redeeming rewards for a second time.
 
 You can theoretically repeat steps 1-2 infinitely until either a) the program
 has no more rewards to give or b) someone notices and patches the exploit. This
-would obviously be a severe problem in any real program as it allows a malicious
-attacker to drain an entire rewards pool.
+would be a severe problem in any real program as it allows a malicious attacker
+to drain an entire rewards pool.
 
 ### 3. Create a redeem_rewards_secure Instruction Handler
 
 To prevent this from happening we're going to create a new instruction handler
-that closes the lottery account seucrely using the Anchor `close` constraint.
+that closes the lottery account securely using the Anchor `close` constraint.
 Feel free to try this out on your own if you'd like.
 
 The new account validation struct called `RedeemWinningsSecure` should look like
@@ -512,7 +512,7 @@ pub struct RedeemWinningsSecure<'info> {
 }
 ```
 
-It should be the exact same as the original `RedeemWinnings` account validation
+It should be the same as the original `RedeemWinnings` account validation
 struct, except there is an additional `close = user` constraint on the
 `lottery_entry` account. This will tell Anchor to close the account by zeroing
 out the data, transferring its lamports to the `user` account, and assigning the
@@ -561,8 +561,8 @@ times.
 
 ### 4. Test the Program
 
-To test our new secure instruction handler, let's create a new test that trys to
-call `redeemingWinningsSecure` twice. We expect the second call to throw an
+To test our new secure instruction handler, let's create a new test that tries
+to call `redeemingWinningsSecure` twice. We expect the second call to throw an
 error.
 
 ```typescript
