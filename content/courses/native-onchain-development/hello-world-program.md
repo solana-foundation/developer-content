@@ -14,28 +14,26 @@ description:
 ## Summary
 
 - Native Solana programs have a single **entry point** to process instructions
-- A program processes an instruction using the **program_id**, list of
+- A program processes an instruction using the **program_id**, a list of
   **accounts**, and **instruction_data** included with the instruction
 
 ## Lesson
 
 <Callout type="info">
-The following guide assumes you are familiar with Solana program basics - if not, check out [introduction to onchain programming](/developers/courses/onchain-development/intro-to-onchain).
+The following guide assumes you are familiar with Solana program basics. If not,
+check out
+[Introduction to Onchain Programming](/content/courses/onchain-development/intro-to-onchain.md).
 </Callout>
 
-This lesson will give you a basic introduction to writing and deploying a Solana
-program using the Rust programming language, without any framework. This gives
-you greater control, but also requires you to perform much of the basic work of
-creating an onchain program yourself.
+This lesson provides a basic introduction to writing and deploying a Solana program without any framework using the Rust programming language. While this approach offers you greater control, it also requires you to handle much of the foundational work involved in creating an on-chain program yourself.
 
 To avoid the distraction of setting up a local development environment, we'll be
-using a browser-based IDE called Solana Playground.
+using a browser-based IDE called [Solana Playground](https://beta.solpg.io/).
 
 ### Rust Basics
 
-Before we dive into the building our "Hello, world!" program, let’s first go
-over some Rust basics. If you want to dig deeper into Rust, have a look at
-the [Rust language book](https://doc.rust-lang.org/book/ch00-00-introduction.html).
+Before we jump into building our "Hello, World!" program, let’s first go
+over some Rust basics. If you’d like to explore Rust further, check out the [Rust language book](https://doc.rust-lang.org/book/ch00-00-introduction.html).
 
 #### Module System
 
@@ -55,11 +53,11 @@ Throughout this lesson, we’ll focus on using crates and modules.
 
 #### Paths and scope
 
-Crates in Rust contain modules that define functionality which can be shared
+Crates in Rust contain modules that define functionality that can be shared
 with multiple projects. If we want to access an item within a module, then we
 need to know its "path" (like when we're navigating a filesystem).
 
-Think of the crate structure as a tree where the crate is the base and modules
+Think of the crate structure as a tree where the crate is the base and the modules
 are branches, each of which can have submodules or items that are additional
 branches.
 
@@ -73,7 +71,7 @@ following structure:
 
 The path to `AccountInfo` would be `solana_program::account_info::AccountInfo`.
 
-Absent of any other keywords, we would need to reference this entire path to use
+Absent any other keywords, we would need to reference this entire path to use
 `AccountInfo` in our code.
 
 However, with the
@@ -99,7 +97,7 @@ We can then add arguments to our function by including variable names and
 specifying its corresponding data type within the parentheses.
 
 Rust is known as a ”statically typed” language and every value in Rust is of a
-certain ”data type”. This meaning that Rust must know the types of all variables
+certain ”data type”. This means that Rust must know the types of all variables
 at compile time. In cases when multiple types are possible, we must add a type
 annotation to our variables.
 
@@ -118,7 +116,7 @@ The action of creating a reference in Rust is called “borrowing”.
 
 In this example, when the `process_instruction` function is called, a user must
 pass in values for the required arguments. The `process_instruction` function
-then references the values passed in by the user, and guarantees that each value
+then references the values passed in by the user and guarantees that each value
 is the correct data type specified in the `process_instruction` function.
 
 Additionally, note the brackets `[]` around `&[AccountInfo]` and `&[u8]`. This
@@ -192,7 +190,7 @@ Solana programs. If you want to dig deeper into the `solana_program` crate, hav
 a look
 [at the `solana_program` crate documentation](https://docs.rs/solana-program/latest/solana_program/index.html).
 
-For a basic program we will need to bring into scope the following items from
+For a basic program, we will need to bring into scope the following items from
 the `solana_program` crate:
 
 ```rust
@@ -335,38 +333,57 @@ Now let's build and deploy our program using Solana Playground.
 
 #### 5. Invoke Program
 
-Finally, let's invoke our program from the client side. The focus of this lesson
-is to build our Solana program, so we’ve gone ahead and provided
-[the client code to invoke our “Hello, world!” program](https://github.com/Unboxed-Software/solana-hello-world-client)
-for you to download.
+In this final step, we'll invoke the "Hello, world!" Solana program from the client side. While the main focus of this lesson is on building your Solana program, we've provided [the client code](https://github.com/Unboxed-Software/solana-hello-world-client) to help you easily interact with your deployed program.
+
+Before we dive into the steps, watch the tutorial video below for a visual walkthrough:
+
+![hello-world-solana](https://github.com/user-attachments/assets/6865e275-bbb9-43a1-acf7-8a97438c8ed5)
+
+
+In this video, you'll see how to:
+
+- Update your program ID in the client code
+- Install dependencies
+- Run the client to invoke your Solana program
+- View your transaction on Solana Explorer
+
 
 The code provided includes a `sayHello` helper function that builds and submits
 our transaction. We then call `sayHello` in the main function and print a Solana
 Explorer URL to view our transaction details in the browser.
 
-Open the `index.ts` file you should see a variable named `programId`. Go ahead
-and update this with the program ID of the “Hello, world!" program you just
-deployed using Solana Playground.
+Start by opening the `index.ts` file. Inside, you'll find a variable named `programId`. You'll need to update this with the program ID of the "Hello, world!" program you just deployed using Solana Playground.
 
 ```typescript
-let programId = new web3.PublicKey("<YOUR_PROGRAM_ID>");
+const programId = new web3.PublicKey("<YOUR_PROGRAM_ID>");
 ```
 
-You can locate the program ID on Solana Playground referencing the image below.
+You can locate the program ID on Solana Playground by referencing the image below.
 
 ![Gif Solana Playground Program ID](/public/assets/courses/unboxed/hello-world-program-id.gif)
 
-Next, install the Node modules with `npm i`.
+Before running the client code, you need to install the necessary Node modules. Open your terminal, navigate to your project directory, and run:
 
-Now, go ahead and run `npm start`. This command will:
+```bash
+npm i
+```
+This command installs all the required dependencies for your project. Make sure this step completes successfully before moving on.
 
-1. Generate a new keypair and create a `.env` file if one does not already exist
-2. Airdrop devnet SOL
-3. Invoke the “Hello, world!” program
-4. Output the transaction URL to view on Solana Explorer
+Now, you're ready to invoke your Solana program. Run the following command:
 
-Copy the transaction URL printed in the console into your browser. Scroll down
-to see “Hello, world!” under Program Instruction Logs.
+```bash
+npm start
+```
+This command does several things under the hood:
+
+- Generates a New Keypair: If you haven't already set up a keypair, this step will generate one and save it in a `.env` file. This keypair will be used as the payer for your transactions.
+- Airdrops Devnet SOL: The script will request 1 SOL from the Solana devnet faucet and deposit it into your newly generated keypair.
+- Invokes the "Hello, world!" Program: The `sayHello` function builds a transaction, submits it to the network, and logs the transaction signature.
+- Outputs the Transaction URL: Finally, the script will print a URL to the console. This URL directs you to the Solana Explorer, where you can view the details of your transaction.
+
+Copy the transaction URL printed in the console and paste it into your browser. The Solana Explorer page will show you all the details of your transaction.
+
+Scroll down to the Program Instruction Logs section, where you'll see "Hello, world!" logged as part of the transaction's execution.
 
 ![Screenshot Solana Explorer Program Log](/public/assets/courses/unboxed/hello-world-program-log.png)
 

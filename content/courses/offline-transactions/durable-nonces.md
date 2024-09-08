@@ -14,11 +14,11 @@ description: "Use durable nonces to sign transactions ahead of time."
   have an expiration date of 150 blocks (~80-90 seconds).
 - After signing a durable transaction you can store it in a database or a file
   or send it to another device to submit it later.
-- A durable transactions is made using a nonce account. A nonce account holds
+- A durable transaction is made using a nonce account. A nonce account holds
   the authority and the nonce value which replaces the recent blockhash to make
   a durable transaction
 - Durable transactions must start with an `advanceNonce` instruction, and the
-  nonce authority has to be a signer in the transaction.
+  nonce authority has to be a signer of the transaction.
 - If the transaction fails for any reason other than the nonce advanced
   instruction the nonce will still get advanced, even though all other
   instruction will get reverted.
@@ -31,11 +31,11 @@ transactions.
 
 In Solana, transactions are made of three main parts:
 
-1. **Instructions**: Instructions are the operations that you want to perform on
+1. **Instructions**: Instructions are the operations you want to perform on
    the blockchain, like transferring tokens, creating accounts, or calling a
    program. These are executed in order.
 
-2. **Signatures**: Signatures are the proof that the transaction was signed by
+2. **Signatures**: Signatures are proof that the transaction was signed by
    the required singers/authorities. For instance, if you are transferring SOL
    from your wallet to another, you'll need to sign the transaction so the
    network can verify that the transaction is valid.
@@ -68,7 +68,7 @@ is >80 TB. So to solve this, Solana uses recent blockhashs.
 
 A recent blockhash is a 32-byte SHA-256 hash of a valid block's last
 [entry id](https://solana.com/docs/terminology#blockhash) within the last 150
-blocks. Since this recent blockhash is part of the transaction before it was
+blocks. Since this recent blockhash was part of the transaction before it was
 signed, we can guarantee the signer has signed it within the last 150 blocks.
 Checking 150 blocks is much more reasonable than the entire ledger.
 
@@ -80,7 +80,7 @@ When the transaction is submitted, the Solana validators will do the following:
 2. If the transaction signature has not been found, it will check the recent
    blockhash to see if it exists within the last 150 blocks - if it does not, it
    will return a "Blockhash not found" error. If it does, the transaction goes
-   through to its execution checks.
+   through its execution checks.
 
 While this solution is great for most use cases, it has some limitations.
 Mainly, the transaction needs to get signed and submitted to the network within
@@ -206,7 +206,7 @@ takes two parameters:
 
 Here is a code example for it:
 
-```ts
+```typescript
 // 1. Generate/get a keypair for the nonce account, and the authority.
 const [nonceKeypair, nonceAuthority] = makeKeypairs(2); // from '@solana-developers/helpers'
 
@@ -243,7 +243,7 @@ takes two parameters:
 
 Here is a code example for it:
 
-```ts
+```typescript
 const instruction = SystemProgram.nonceAdvance({
   authorizedPubkey: nonceAuthority.publicKey,
   noncePubkey: nonceKeypair.publicKey,
@@ -268,7 +268,7 @@ four parameters:
 
 Here is a code example for it:
 
-```ts
+```typescript
 const instruction = SystemProgram.nonceWithdraw({
   noncePubkey: nonceKeypair.publicKey,
   toPubkey: payer.publicKey,
@@ -293,7 +293,7 @@ three parameters:
 
 Here is a code example for it:
 
-```ts
+```typescript
 const instruction = SystemProgram.nonceAuthorize({
   noncePubkey: nonceKeypair.publicKey,
   authorizedPubkey: nonceAuthority.publicKey,
@@ -317,7 +317,7 @@ We'll discuss:
 We can fetch the nonce account to get the nonce value by fetching the account
 and serializing it:
 
-```ts
+```typescript
 const nonceAccount = await connection.getAccountInfo(nonceKeypair.publicKey);
 
 const nonce = NonceAccount.fromAccountData(nonceAccount.data);
@@ -335,7 +335,7 @@ After building and signing the transaction we can serialize it and encode it
 into a base58 string, and we can save this string in some store to submit it
 later.
 
-```ts
+```typescript
 // Assemble the durable transaction
 const durableTx = new Transaction();
 durableTx.feePayer = payer.publicKey;
@@ -374,7 +374,7 @@ const serializedTx = base58.encode(
 
 Now that we have a base58 encoded transaction, we can decode it and submit it:
 
-```ts
+```typescript
 const tx = base58.decode(serializedTx);
 const sig = await sendAndConfirmRawTransaction(connection, tx as Buffer);
 ```
@@ -424,7 +424,7 @@ git checkout starter
 npm install
 ```
 
-In the starter code you will find a file inside `test/index.ts`, with a testing
+In the starter code, you will find a file inside `test/index.ts`, with a testing
 skeleton, we'll write all of our code here.
 
 We're going to use the local validator for this lab. However, feel free to use
@@ -450,7 +450,7 @@ We'll discuss each test case in depth.
 ### 1. Create the nonce account
 
 Before we write any tests, let's create a helper function above the `describe`
-block, called `createNonceAccount`.
+block called `createNonceAccount`.
 
 It will take the following parameters:
 
@@ -470,7 +470,7 @@ It will:
 
 Paste the following somewhere above the `describe` block.
 
-```ts
+```typescript
 async function createNonceAccount(
   connection: Connection,
   payer: Keypair,
@@ -532,7 +532,7 @@ To create and submit a durable transaction we must follow these steps:
 
 We can put all of this together in our first test:
 
-```ts
+```typescript
 it("Creates a durable transaction and submits it", async () => {
   const payer = await initializeKeypair(connection, {
     airdropAmount: 3 * LAMPORTS_PER_SOL,
@@ -574,7 +574,7 @@ it("Creates a durable transaction and submits it", async () => {
     }),
   );
 
-  // 1.6 Sign the transaction with the keyPairs that need to sign it, and make sure to add the nonce authority as a signer as well.
+  // 1.6 Sign the transaction with the keypair that needs to sign it and make sure to add the nonce authority as a signer as well.
   // In this particular example the nonce auth is the payer, and the only signer needed for our transfer instruction is the payer as well, so the payer here as a sign is sufficient.
   durableTx.sign(payer);
 
@@ -606,7 +606,7 @@ it("Creates a durable transaction and submits it", async () => {
 Because we are using the nonce in place of the recent blockhash, the system will
 check to ensure that the nonce we provided matches the nonce in the
 `nonce_account`. Additionally with each transaction, we need to add the
-`nonceAdvance` instruction as the first instruction. This ensures that if the
+`nonceAdvance` instruction is the first instruction. This ensures that if the
 transaction goes through, the nonce will change, and no one will be able to
 submit it twice.
 
@@ -616,7 +616,7 @@ Here is what we'll test:
 2. Advance the nonce.
 3. Try to submit the transaction, and it should fail.
 
-```ts
+```typescript
 it("Fails if the nonce has advanced", async () => {
   const payer = await initializeKeypair(connection, {
     airdropAmount: 3 * LAMPORTS_PER_SOL,
@@ -700,7 +700,7 @@ transaction to transfer 50 SOL from the payer to the recipient. However, the
 payer doesn't have enough SOL for the transfer, so the transaction will fail,
 but the nonce will still advance.
 
-```ts
+```typescript
 it("Advances the nonce account even if the transaction fails", async () => {
   const TRANSFER_AMOUNT = 50;
   const payer = await initializeKeypair(connection, {
@@ -805,7 +805,7 @@ authority did not sign the transaction.
 
 Let's see this in action.
 
-```ts
+```typescript
 it("The nonce account will not advance if the transaction fails because the nonce auth did not sign the transaction", async () => {
   const payer = await initializeKeypair(connection, {
     airdropAmount: 3 * LAMPORTS_PER_SOL,
@@ -873,7 +873,7 @@ it("The nonce account will not advance if the transaction fails because the nonc
     nonceAccountAfterAdvancing!.data,
   ).nonce;
 
-  // We can see that the nonce did not advance, because the error was in the nonce advance instruction
+  // We can see that the nonce did not advance because the error was in the nonce advance instruction
   assert.equal(nonceBeforeAdvancing, nonceAfterAdvancing);
 });
 ```
@@ -884,7 +884,7 @@ The last test case we'll go over is creating a durable transaction. Try to send
 it with the wrong nonce authority (it will fail). Change the nonce authority and
 send it with the correct one this time and it will succeed.
 
-```ts
+```typescript
 it("Submits after changing the nonce auth to an already signed address", async () => {
   const payer = await initializeKeypair(connection, {
     airdropAmount: 3 * LAMPORTS_PER_SOL,
@@ -915,7 +915,7 @@ it("Submits after changing the nonce auth to an already signed address", async (
   // make a nonce advance instruction
   durableTx.add(
     SystemProgram.nonceAdvance({
-      // The nonce auth is not the payer at this point in time, so the transaction will fail
+      // The nonce auth is not the payer at this point, so the transaction will fail
       // But in the future we can change the nonce auth to be the payer and submit the transaction whenever we want
       authorizedPubkey: payer.publicKey,
       noncePubkey: nonceKeypair.publicKey,
@@ -955,7 +955,7 @@ it("Submits after changing the nonce auth to an already signed address", async (
     nonceAccountAfterAdvancing!.data,
   ).nonce;
 
-  // We can see that the nonce did not advance, because the error was in the nonce advance instruction
+  // We can see that the nonce did not advance because the error was in the nonce advance instruction
   assert.equal(nonceBeforeAdvancing, nonceAfterAdvancing);
 
   // Now we can change the nonce auth to be the payer
