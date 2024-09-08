@@ -481,7 +481,7 @@ this:
 ```rust
 #[derive(Accounts)]
 pub struct RedeemWinningsSecure<'info> {
-    // program expects this account to be initialized
+    // Verifying lottery entry PDA and closing it
     #[account(
         mut,
         seeds = [DATA_PDA_SEED,user.key.as_ref()],
@@ -501,12 +501,13 @@ pub struct RedeemWinningsSecure<'info> {
         constraint = reward_mint.key() == user_ata.mint
     )]
     pub reward_mint: Account<'info, Mint>,
-    ///CHECK: mint authority
+    /// CHECKED: Mint authority PDA, checked by seeds constraint
     #[account(
         seeds = [MINT_SEED],
         bump
     )]
-    pub mint_auth: AccountInfo<'info>,
+    /// CHECKED: This account will not be checked by anchor
+    pub mint_auth: UncheckedAccount<'info>,
     pub token_program: Program<'info, Token>,
 }
 ```
@@ -543,11 +544,11 @@ pub fn redeem_winnings_secure(ctx: Context<RedeemWinningsSecure>) -> Result<()> 
     msg!("Calculating winnings");
     let amount = ctx.accounts.lottery_entry.timestamp as u64 * 10
     msg!("Minting {} tokens in rewards", amount);
-    // program signer seeds
+    // Program signer seeds
     let auth_bump = ctx.bumps.mint_auth;
     let auth_seeds = &[MINT_SEED, &[auth_bump]];
     let signer = &[&auth_seeds[..]]
-    // redeem rewards by minting to user
+    // Redeem rewards by minting to user
     mint_to(ctx.accounts.mint_ctx().with_signer(signer), amount)?
     Ok(())
 }
