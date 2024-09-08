@@ -375,8 +375,9 @@ few prerequisite setup items:
 
    1. Install dependencies
    2. Install Android Studio
-   3. Configure **ANDROID_HOME** environment variable
-   4. Create a new sample project (this is only used to set up the emulator)
+   3. Install the Android SDK
+   4. Configure the **ANDROID_HOME** environment variable
+   5. Create a new sample project (this is only used to set up the emulator)
 
       1. If you run into the error `✖ Copying template`, add the `--npm` flag
          at the end
