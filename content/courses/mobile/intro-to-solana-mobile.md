@@ -72,7 +72,7 @@ can be part of it:
 #### How Solana development differs between native mobile apps and web
 
 Solana wallet interaction differs slightly on mobile compared to the web. The
-core wallet functionality is the same: the wallet holds your private keys and
+core wallet functionality is the same: the wallet holds your secret keys and
 uses them to sign and send transactions. To avoid having different interfaces
 between wallets, developers abstracted that functionality into the Solana Wallet
 Adapter standard. This remains the standard on the web. The mobile counterpart
@@ -210,7 +210,7 @@ If you need a refresher on this, check out our
 #### Connecting to a wallet
 
 Writing data to the blockchain has to happen through a transaction. Transactions
-have to be signed by one or more private keys and sent to an RPC provider. This
+have to be signed by one or more secret keys and sent to an RPC provider. This
 virtually always happens through a wallet application.
 
 Typical wallet interaction happens by calling out to a browser extension. On
