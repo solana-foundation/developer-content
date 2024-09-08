@@ -66,8 +66,8 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-To summarize, mobile blockchain opens up many doors. Let’s dive in and learn how we
-can be part of it:
+To summarize, mobile blockchain opens up many doors. Let’s dive in and learn how
+we can be part of it:
 
 #### How Solana development differs between native mobile apps and web
 
@@ -87,8 +87,8 @@ application to another. The Mobile Wallet Adapter exists to enable any app,
 written in any language, to connect to a native wallet app.
 
 We'll dig into the specifics of the Mobile Wallet Adapter in a
-[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively opens
-a WebSocket between applications to facilitate communication. That way a
+[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively
+opens a WebSocket between applications to facilitate communication. That way a
 separate app can provide the wallet app with the transaction to be signed and
 sent, and the wallet app can respond with appropriate status updates.
 
@@ -293,24 +293,30 @@ you to better debug the transaction if you’re running into problems.
 #### Releasing
 
 Deploying mobile applications can be difficult on its own. It's often even more
-difficult when it's a blockchain app. There are two main reasons for this: customer
-safety and financial incentives.
+difficult when it's a blockchain app. There are two main reasons for this:
+customer safety and financial incentives.
 
 First, most of the mobile app marketplaces have policies restricting blockchain
 involvement. Blockchain is new enough that it's a regulatory wildcard. Platforms
 feel they're protecting users by being strict with blockchain-related apps.
 
-Second, in some marketplaces, using blockchain-based apps for in-app "purchases" can be seen as
-circumnavigating the platform’s fee (typically 15-30%). This explicitly violates certain app store policies, as these platforms aim to protect their revenue streams.
+Second, in some marketplaces, using blockchain-based apps for in-app "purchases"
+can be seen as circumnavigating the platform’s fee (typically 15-30%). This
+explicitly violates certain app store policies, as these platforms aim to
+protect their revenue streams.
 
 These are hurdles for sure, but there's hope. Here are some things to keep in
 mind for each marketplace:
 
 - **App Store (iOS) -** We only talked about Android today for the technical MWA
-  reason. However, their policies are also among the strictest, making it difficult for Solana dApps to thrive. Currently, Apple has some pretty strict anti-blockchain and NFT policies, and its In-App Purchase system does not support crypto.
+  reason. However, their policies are also among the strictest, making it
+  difficult for Solana dApps to thrive. Currently, Apple has some pretty strict
+  anti-blockchain and NFT policies, and its In-App Purchase system does not
+  support crypto.
 - **Google Play (Android) -** Google is generally more relaxed, but there are
-  still a few things to be aware of. In December 2023, Google
-  rolled out new policies for [blockchain-based apps](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
+  still a few things to be aware of. In December 2023, Google rolled out new
+  policies for
+  [blockchain-based apps](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
   to clarify their rules.
 - **Steam -** Does not allow games based on blockchain technology
   > “games based on blockchain technology that issue or allow the exchange of
@@ -388,7 +394,7 @@ few prerequisite setup items:
          ✔ Copying template
          ```
 
-   5. Run and compile the sample project on your emulator
+   6. Run and compile the sample project on your emulator
 
 2. Install and run the Solana fake wallet
 
