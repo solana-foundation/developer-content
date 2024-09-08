@@ -40,7 +40,7 @@ and come back here when you feel ready!
 ### Intro To Solana Mobile
 
 In these units, we'll develop mobile apps that interact with the Solana network.
-This opens up a whole new paradigm of crypto use cases and behaviors.
+This opens up a whole new paradigm of blockchain use cases and behaviors.
 
 #### Solana Mobile Use Cases
 
@@ -66,7 +66,7 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-To summarize, mobile crypto opens up many doors. Let’s dive in and learn how we
+To summarize, mobile blockchain opens up many doors. Let’s dive in and learn how we
 can be part of it:
 
 #### How Solana development differs between native mobile apps and web
@@ -293,14 +293,14 @@ you to better debug the transaction if you’re running into problems.
 #### Releasing
 
 Deploying mobile applications can be difficult on its own. It's often even more
-difficult when it's a crypto app. There are two main reasons for this: customer
+difficult when it's a blockchain app. There are two main reasons for this: customer
 safety and financial incentives.
 
 First, most of the mobile app marketplaces have policies restricting blockchain
-involvement. Crypto is new enough that it's a regulatory wildcard. Platforms
+involvement. Blockchain is new enough that it's a regulatory wildcard. Platforms
 feel they're protecting users by being strict with blockchain-related apps.
 
-Second, if you use crypto for "purchases" in-app, you’ll be seen as
+Second, if you use blockchain for "purchases" in-app, you’ll be seen as
 circumnavigating the platform’s fee (anywhere from 15-30%). This is explicitly
 against app store policies as the platform is trying to protect its revenue
 stream.
@@ -311,16 +311,14 @@ mind for each marketplace:
 - **App Store (iOS) -** We only talked about Android today for the technical MWA
   reason. However, their policies are also some of the most strict and make it
   hard for Solana dApps to exist. For now, Apple has some pretty strict
-  anti-crypto policies. Wallets seem to be fine, but they'll flag and likely
-  reject anything that seems like a purchase using crypto.
+  anti-blockchain and NFT policies and its In-App Purchase system does not support crypto.
 - **Google Play (Android) -** Google is generally more relaxed, but there are
-  still a few things to be aware of. As of this writing in November ‘23, Google
-  is rolling out
-  [new crypto policies](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
-  to make it more clear what they will and will not allow. Take a look.
-- **Steam -** Does not allow crypto games at all
-  > “built on blockchain technology that issue or allow the exchange of
-  > cryptocurrencies or NFTs.”
+  still a few things to be aware of. In December 2023, Google
+  rolled out new policies for [blockchain-based apps](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
+  to clarify their rules.
+- **Steam -** Does not allow games based on blockchain technology
+  > “games based on blockchain technology that issue or allow the exchange of
+  > cryptocurrencies or NFTs are banned.”
 - **Download Sites / Your Site -** Depending on the target platform, you can
   make your dApp available for download on your own site. However, most users
   are wary of downloading mobile applications from websites.
