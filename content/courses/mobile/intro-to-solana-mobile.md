@@ -300,18 +300,14 @@ First, most of the mobile app marketplaces have policies restricting blockchain
 involvement. Blockchain is new enough that it's a regulatory wildcard. Platforms
 feel they're protecting users by being strict with blockchain-related apps.
 
-Second, if you use blockchain for "purchases" in-app, you’ll be seen as
-circumnavigating the platform’s fee (anywhere from 15-30%). This is explicitly
-against app store policies as the platform is trying to protect its revenue
-stream.
+Second, in some marketplaces, using blockchain-based apps for in-app "purchases" can be seen as
+circumnavigating the platform’s fee (typically 15-30%). This explicitly violates certain app store policies, as these platforms aim to protect their revenue streams.
 
 These are hurdles for sure, but there's hope. Here are some things to keep in
 mind for each marketplace:
 
 - **App Store (iOS) -** We only talked about Android today for the technical MWA
-  reason. However, their policies are also some of the most strict and make it
-  hard for Solana dApps to exist. For now, Apple has some pretty strict
-  anti-blockchain and NFT policies and its In-App Purchase system does not support crypto.
+  reason. However, their policies are also among the strictest, making it difficult for Solana dApps to thrive. Currently, Apple has some pretty strict anti-blockchain and NFT policies, and its In-App Purchase system does not support crypto.
 - **Google Play (Android) -** Google is generally more relaxed, but there are
   still a few things to be aware of. In December 2023, Google
   rolled out new policies for [blockchain-based apps](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
