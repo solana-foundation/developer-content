@@ -234,7 +234,7 @@ const vrfCallback: Callback = {
         { pubkey: vrfClientKey, isSigner: false, isWritable: true },
         { pubkey: vrfSecret.publicKey, isSigner: false, isWritable: true },
       ],
-			// use name of instruction
+   // use name of instruction
       ixData: vrfIxCoder.encode("consumeRandomness", ""), // pass any params for instruction here
     }
 ```
@@ -329,34 +329,34 @@ or `invoke_signed` on the object.
 
 ```rust
 // our client program
-use switchboard_v2::VrfRequestRandomness;
+use switchboard_solana::VrfRequestRandomness;
 use state::*;
 
 pub fn request_randomness(ctx: Context<RequestRandomness>, request_params: RequestRandomnessParams) -> Result <()> {
-	let switchboard_program = ctx.accounts.switchboard_program.to_account_info();
+ let switchboard_program = ctx.accounts.switchboard_program.to_account_info();
 
-	let vrf_request_randomness = VrfRequestRandomness {
-	    authority: ctx.accounts.vrf_state.to_account_info(),
-	    vrf: ctx.accounts.vrf.to_account_info(),
-	    oracle_queue: ctx.accounts.oracle_queue.to_account_info(),
-	    queue_authority: ctx.accounts.queue_authority.to_account_info(),
-	    data_buffer: ctx.accounts.data_buffer.to_account_info(),
-	    permission: ctx.accounts.permission.to_account_info(),
-	    escrow: ctx.accounts.switchboard_escrow.clone(),
-	    payer_wallet: ctx.accounts.payer_wallet.clone(),
-	    payer_authority: ctx.accounts.user.to_account_info(),
-	    recent_blockhashes: ctx.accounts.recent_blockhashes.to_account_info(),
-	    program_state: ctx.accounts.program_state.to_account_info(),
-	    token_program: ctx.accounts.token_program.to_account_info(),
-	};
+ let vrf_request_randomness = VrfRequestRandomness {
+     authority: ctx.accounts.vrf_state.to_account_info(),
+     vrf: ctx.accounts.vrf.to_account_info(),
+     oracle_queue: ctx.accounts.oracle_queue.to_account_info(),
+     queue_authority: ctx.accounts.queue_authority.to_account_info(),
+     data_buffer: ctx.accounts.data_buffer.to_account_info(),
+     permission: ctx.accounts.permission.to_account_info(),
+     escrow: ctx.accounts.switchboard_escrow.clone(),
+     payer_wallet: ctx.accounts.payer_wallet.clone(),
+     payer_authority: ctx.accounts.user.to_account_info(),
+     recent_blockhashes: ctx.accounts.recent_blockhashes.to_account_info(),
+     program_state: ctx.accounts.program_state.to_account_info(),
+     token_program: ctx.accounts.token_program.to_account_info(),
+ };
 
-	msg!("requesting randomness");
-	vrf_request_randomness.invoke_signed(
-	    switchboard_program,
-	    request_params.switchboard_state_bump,
-	    request_params.permission_bump,
-	    state_seeds,
-	)?;
+ msg!("requesting randomness");
+ vrf_request_randomness.invoke_signed(
+     switchboard_program,
+     request_params.switchboard_state_bump,
+     request_params.permission_bump,
+     state_seeds,
+ )?;
 
 ...
 
@@ -395,19 +395,19 @@ pub struct ConsumeRandomness<'info> {
 pub fn handler(ctx: Context<ConsumeRandomness>) -> Result <()> {
     msg!("Consuming randomness!");
 
-		// load the vrf account data
+  // load the vrf account data
     let vrf = ctx.accounts.vrf.load()?;
-		// use the get_result method to fetch the randomness results
+  // use the get_result method to fetch the randomness results
     let result_buffer = vrf.get_result()?;
 
-		// check if result buff is all 0's
+  // check if result buff is all 0's
     if result_buffer == [0u8; 32] {
         msg!("vrf buffer empty");
         return Ok(());
     }
 
     msg!("Result buffer is {:?}", result_buffer);
-		// use the random value how you see fit
+  // use the random value how you see fit
 
     Ok(())
 }
@@ -484,9 +484,9 @@ in our `Cargo.toml` file.
 
 ```typescript
 [dependencies]
-anchor-lang = "0.28.0"
-anchor-spl = "0.28.0"
-switchboard-v2 = "0.4.0"
+anchor-lang = "0.30.1"
+anchor-spl = "0.30.1"
+switchboard-solana = "0.30.4"
 ```
 
 #### 3. Lib.rs
@@ -534,7 +534,7 @@ mod burry_escrow {
         init_vrf_client_handler(ctx)
     }
 
-		pub fn get_out_of_jail(ctx: Context<RequestRandomness>, params: RequestRandomnessParams) -> Result<()>{
+  pub fn get_out_of_jail(ctx: Context<RequestRandomness>, params: RequestRandomnessParams) -> Result<()>{
         get_out_of_jail_handler(ctx, params)
     }
 
@@ -591,7 +591,7 @@ about `zero_copy`, take a look at our
 pub struct VrfClientState {
     pub bump: u8,
     pub result_buffer: [u8; 32],
-		pub dice_type: u8, // 6 sided
+  pub dice_type: u8, // 6 sided
     pub die_result_1: u8,
     pub die_result_2: u8,
     pub timestamp: i64,
@@ -628,7 +628,7 @@ pub struct EscrowState {
 pub struct VrfClientState {
     pub bump: u8,
     pub result_buffer: [u8; 32],
-		pub dice_type: u8, // 6 sided
+  pub dice_type: u8, // 6 sided
     pub die_result_1: u8,
     pub die_result_2: u8,
     pub timestamp: i64,
@@ -740,7 +740,7 @@ the following accounts:
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
-use switchboard_v2::VrfAccountData;
+use switchboard_solana::VrfAccountData;
 
 #[derive(Accounts)]
 pub struct InitVrfClient<'info> {
@@ -757,7 +757,7 @@ pub struct InitVrfClient<'info> {
     #[account(
         init,
         seeds = [
-						VRF_STATE_SEED,
+      VRF_STATE_SEED,
             user.key.as_ref(),
             escrow_account.key().as_ref(),
             vrf.key().as_ref(),
@@ -849,7 +849,7 @@ use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::sysvar::*;
-use switchboard_v2::{VrfAccountData, OracleQueueAccountData, PermissionAccountData, SbState, VrfRequestRandomness};
+use switchboard_solana::{VrfAccountData, OracleQueueAccountData, PermissionAccountData, SbState, VrfRequestRandomness};
 use anchor_spl::token::{TokenAccount, Token};
 
 #[derive(Accounts)]
@@ -950,7 +950,7 @@ pub fn get_out_of_jail_handler(ctx: Context<RequestRandomness>, params: RequestR
     let bump = vrf_state.bump.clone();
     drop(vrf_state);
 
-		// build vrf request struct from the Switchboard Rust crate
+  // build vrf request struct from the Switchboard Rust crate
     let vrf_request_randomness = VrfRequestRandomness {
         authority: ctx.accounts.vrf_state.to_account_info(),
         vrf: ctx.accounts.vrf.to_account_info(),
@@ -970,7 +970,7 @@ pub fn get_out_of_jail_handler(ctx: Context<RequestRandomness>, params: RequestR
     let escrow_key = ctx.accounts.escrow_account.key();
     let user_key = ctx.accounts.user.key();
     let state_seeds: &[&[&[u8]]] = &[&[
-				&VRF_STATE_SEED,
+    &VRF_STATE_SEED,
         user_key.as_ref(),
         escrow_key.as_ref(),
         vrf_key.as_ref(),
@@ -1015,7 +1015,7 @@ three accounts.
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
-use switchboard_v2::VrfAccountData;
+use switchboard_solana::VrfAccountData;
 
 #[derive(Accounts)]
 pub struct ConsumeRandomness<'info> {
@@ -1058,7 +1058,7 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
         return Ok(());
     }
 
-		Ok(())
+  Ok(())
 }
 ```
 
@@ -1079,15 +1079,15 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
         msg!("vrf buffer empty");
         return Ok(());
     }
-		// new code
+  // new code
     let vrf_state = &mut ctx.accounts.vrf_state.load_mut()?;
     if result_buffer == vrf_state.result_buffer {
         msg!("result_buffer unchanged");
         return Ok(());
     }
 
-		...
-		...
+  ...
+  ...
 }
 ```
 
@@ -1130,8 +1130,8 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
     msg!("Current Die 1 Value [1 - {}) = {}!", dice_type, dice_1);
     msg!("Current Die 2 Value [1 - {}) = {}!", dice_type, dice_2);
 
-		...
-		...
+  ...
+  ...
 }
 ```
 
@@ -1210,13 +1210,13 @@ file:
 
 ```toml
 ## VRF ACCOUNTS
-[[test.validator.clone]] # sbv2 attestation programID
+[[test.validator.clone]] # Switchboard Solana attestation programID
 address = "sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx"
 
-[[test.validator.clone]] # sbv2 attestation IDL
+[[test.validator.clone]] # Switchboard Solana attestation IDL
 address = "5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz"
 
-[[test.validator.clone]] # sbv2 SbState
+[[test.validator.clone]] # Switchboard Solana SbState
 address = "CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd"
 ```
 
