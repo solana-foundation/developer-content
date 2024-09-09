@@ -300,8 +300,7 @@ That's a lot of accounts, let's walk through each one and give them some
 context.
 
 - `authority` - PDA derived from our program
-- `vrf` -
-  [Account owned by the Switchboard program](https://docs.rs/switchboard-solana/latest/switchboard_solana/oracle_program/accounts/vrf/struct.VrfAccountData.html)
+- `vrf` - Account owned by the Switchboard program
 - Oracle Queue -
   [Account owned by Switchboard program that contains metadata about the oracle queue to use for this request](https://docs.rs/switchboard-solana/latest/switchboard_solana/oracle_program/accounts/queue/struct.OracleQueueAccountData.html)
 - Queue Authority - Authority of the Oracle Queue chosen
