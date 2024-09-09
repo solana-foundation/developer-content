@@ -376,7 +376,7 @@ The `init` constraint placed on `account_name` automatically includes a `mut`
 constraint so that both `account_name` and `user` are mutable accounts.
 </Callout>
 
-### `#[account]`
+### Attribute #[account]
 
 The `#[account]` attribute is applied to structs representing the data structure
 of a Solana account. It implements the following traits:
@@ -612,7 +612,7 @@ pub struct Initialize<'info> {
 
 ### 4. Add the initialize Instruction Handler
 
-Now that we have our `Counter` account and `Initialize` type , let's implement
+Now that we have our `Counter` account and `Initialize` type, let's implement
 the `initialize` instruction handler within `#[program]`. This instruction
 handler requires a `Context` of type `Initialize` and takes no additional
 instruction data. In the instruction handler logic, we are simply setting the
@@ -735,8 +735,8 @@ Run `anchor build` to build the program.
 
 ### 8. Testing
 
-Anchor tests are typically Typescript integration tests that use the mocha test
-framework. We'll learn more about testing later, but for now navigate to
+Anchor tests are typically Typescript integration tests that use the Mocha test
+framework. We'll learn more about testing later, but for now, navigate to
 `anchor-counter.ts` and replace the default test code with the following:
 
 ```typescript
@@ -837,7 +837,7 @@ if you need some more time with it.
 Now it's your turn to build something independently. Because we're starting with
 simple programs, yours will look almost identical to what we just created. It's
 useful to try and get to the point where you can write it from scratch without
-referencing prior code, so try not to copy and paste here.
+referencing prior code, so try not to copy and paste it here.
 
 1. Write a new program that initializes a `counter` account
 2. Implement both an `increment` and `decrement` instruction handlers
