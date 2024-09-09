@@ -15,7 +15,8 @@ description:
 - Wallets are just wrappers around a keypair, but they're essential for secure
   key management
 - Mobile and Web dApps handle their wallet-app connection differently
-- MWA handles all of its wallet interaction by wrapping all the wallet's functionalities within the `transact` function for easier intergration.
+- MWA handles all of its wallet interaction by wrapping all the wallet's functionalities 
+  within the `transact` function for easier intergration.
 - Solana Mobile's `walletlib` does the heavy lifting for surfacing wallet
   requests to wallet apps
 
