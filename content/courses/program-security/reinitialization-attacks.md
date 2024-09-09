@@ -2,10 +2,10 @@
 title: Reinitialization Attacks
 objectives:
   - Explain security risks associated with a reinitialization vulnerability
-  - Use native Rust to check if an account has already been initialized
-  - Using Anchor’s `init` constraint to initialize accounts, which automatically
+  - Using Anchor's `init` constraint to initialize accounts, which automatically
     sets an account discriminator that is checked to prevent the
     reinitialization of an account
+  - Use native Rust to check if an account has already been initialized
 description:
   "Understand the security risks of account reinitialized attacks being used to
   override data, and how to prevent them."
@@ -16,8 +16,11 @@ description:
 - **Prevent Account Reinitialization:** Use an account discriminator or
   initialization flag to prevent an account from being reinitialized and
   overwriting existing data.
-- **Rust Approach:** In plain Rust, set an is_initialized flag during account
-  initialization and check it before reinitializing:
+- **Anchor Approach:** Simplify this by using Anchor's `init` constraint to
+  create an account via a CPI to the system program, automatically setting its
+  discriminator.
+- **Native Rust Approach:** In native Rust, set an is_initialized flag during
+  account initialization and check it before reinitializing:
 
   ```rust
   if account.is_initialized {
@@ -25,25 +28,21 @@ description:
   }
   ```
 
-- **Anchor Approach:** Simplify this by using Anchor’s `init` constraint to
-  create an account via a CPI to the system program, automatically setting its
-  discriminator.
-
 ## Lesson
 
 Initialization sets the data of a new account for the first time. It's essential
 to check if an account has already been initialized to prevent overwriting
 existing data. Note that creating and initializing an account are separate
 actions. Creating an account involves invoking the `create_account` instruction
-on the System Program, which allocates space, rent in lamports, and assigns the
-program owner. Initialization sets the account data. These steps can be combined
-into a single transaction.
+handler on the System Program, which allocates space, rent in lamports, and
+assigns the program owner. Initialization sets the account data. These steps can
+be combined into a single transaction.
 
 ### Missing Initialization Check
 
-In the example below, there’s no check on the `user` account. The `initialize`
-instruction sets the `authority` field on the `User` account type and serializes
-the data. Without checks, an attacker could reinitialize the account,
+In the example below, there's no check on the `user` account. The `initialize`
+instruction handler sets the `authority` field on the `User` account type and
+serializes the data. Without checks, an attacker could reinitialize the account,
 overwriting the existing `authority`.
 
 ```rust
@@ -133,14 +132,14 @@ pub struct User {
 }
 ```
 
-### Use Anchor’s init Constraint
+### Use Anchor's init Constraint
 
-[Anchor’s `init` constraint](https://www.anchor-lang.com/docs/account-constraints),
+[Anchor's `init` constraint](https://www.anchor-lang.com/docs/account-constraints),
 used with the `#[account(...)]` attribute, initializes an account, sets the
-account discriminator, and ensures that the instruction can only be called once
-per account. The `init` constraint must be used with `payer` and `space`
-constraints to specify the account paying for initialization and the amount of
-space required.
+account discriminator, and ensures that the instruction handler can only be
+called once per account. The `init` constraint must be used with `payer` and
+`space` constraints to specify the account paying for initialization and the
+amount of space required.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -180,43 +179,45 @@ pub struct User {
 }
 ```
 
-#### Anchor’s init_if_needed Constraint
+#### Anchor's init_if_needed Constraint
 
 <Callout type="caution">
 
-[Anchor’s `init_if_needed` constraint](https://www.anchor-lang.com/docs/account-constraints),
-guarded by a feature flag, should be used with caution. It initializes an
-account only if it hasn’t been initialized yet. If the account is already
-initialized, the instruction will still run, so
-it's \***\*\*\*\***extremely\***\*\*\*\*** important to include checks to
-prevent resetting the account to its initial state. </Callout>
+[Anchor's `init_if_needed` constraint](https://www.anchor-lang.com/docs/account-constraints),
+guarded by a feature flag, should be used with caution.It initializes an account
+only if it hasn't been initialized yet. If the account is already initialized,
+the instruction handler will still execute, so
+it's \***\*\*\*\***extremely\***\*\*\*\*** important to include checks in your
+instruction handler to prevent resetting the account to its initial state.
+</Callout>
 
-For example, if the `authority` field is set in the instruction, ensure that no
-attacker can reinitialize it after it’s already been set. Typically, it's safer
-to have a separate instruction for initializing account data.
+For example, if the `authority` field is set in the instruction handler, ensure
+that your instruction handler includes checks to prevent an attacker from
+reinitializing it after it's already been set. Typically, it's safer to have a
+separate instruction handler for initializing account data.
 
-## Lab Overview
+## Lab
 
-In this lab, we’ll create a simple program with two instructions:
+In this lab, we'll create a simple Solana program with two instruction handlers:
 
 - `insecure_initialization` - Initializes an account without checks, allowing
   reinitialization.
-- `recommended_initialization` - Initializes an account using Anchor’s `init`
+- `recommended_initialization` - Initializes an account using Anchor's `init`
   constraint, preventing reinitialization.
 
 ### 1. Starter
 
-To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/solana-developers/reinitialization-attacks/tree/starter).
-The starter code includes a program with one instruction and the boilerplate
-setup for the test file.
+To get started, download the starter code from the
+[`starter` branch of this repository](https://github.com/solana-developers/reinitialization-attacks/tree/starter).
+The starter code includes a program with one instruction handler and the
+boilerplate setup for the test file.
 
-The `insecure_initialization` instruction initializes a new `user` account that
-stores the public key of an `authority`. The account is expected to be allocated
-client-side and then passed into the program instruction. However, there are no
-checks to verify if the `user` account's initial state has already been set.
-This means the same account can be passed in a second time, allowing the
-`authority` to be overwritten.
+The `insecure_initialization` instruction handler initializes a new `user`
+account that stores the public key of an `authority`. The account is expected to
+be allocated client-side and then passed into the program instruction. However,
+there are no checks to verify if the `user` account's initial state has already
+been set. This means the same account can be passed in a second time, allowing
+the `authority` to be overwritten.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -251,17 +252,18 @@ pub struct User {
 }
 ```
 
-### 2. Test insecure_initialization Instruction
+### 2. Test insecure_initialization Instruction Handler
 
 The test file includes the setup to create an account by invoking the system
-program and then invokes the `insecure_initialization` instruction twice using
-the same account.
+program and then invokes the `insecure_initialization` instruction handler twice
+using the same account.
 
-Since there are no checks to verify that the account data has not already been
-initialized, the `insecure_initialization` instruction will be completed
-successfully both times, even with a _different_ authority account.
+Since there are no checks in the `insecure_initialization` instruction handler
+to verify that the account data has not already been initialized, this
+instruction handler will execute successfully both times, even with a
+_different_ authority account.
 
-````typescript
+```typescript
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Initialization } from "../target/types/initialization";
@@ -270,7 +272,9 @@ import {
   LAMPORTS_PER_SOL,
   SystemProgram,
   Transaction,
+  SendTransactionError,
 } from "@solana/web3.js";
+import { expect } from "chai";
 import { airdropIfRequired } from "@solana-developers/helpers";
 
 describe("Initialization", () => {
@@ -279,39 +283,48 @@ describe("Initialization", () => {
 
   const program = anchor.workspace.Initialization as Program<Initialization>;
 
-  const wallet = provider.wallet as anchor.Wallet;
-  const walletTwo = Keypair.generate();
+  const walletAuthority = provider.wallet as anchor.Wallet;
+  const secondWallet = Keypair.generate();
 
-  const userInsecure = Keypair.generate();
-  const userRecommended = Keypair.generate();
+  const insecureUserAccount = Keypair.generate();
+  const recommendedUserAccount = Keypair.generate();
+
+  const ACCOUNT_SPACE = 32;
+  const AIRDROP_AMOUNT = 1 * LAMPORTS_PER_SOL;
+  const MINIMUM_BALANCE_FOR_RENT_EXEMPTION = 1 * LAMPORTS_PER_SOL;
 
   before(async () => {
     try {
-      const tx = new Transaction().add(
-        SystemProgram.createAccount({
-          fromPubkey: wallet.publicKey,
-          newAccountPubkey: userInsecure.publicKey,
-          space: 32,
-          lamports: await provider.connection.getMinimumBalanceForRentExemption(
-            32
-          ),
-          programId: program.programId,
-        })
-      );
+      const rentExemptionAmount =
+        await provider.connection.getMinimumBalanceForRentExemption(
+          ACCOUNT_SPACE,
+        );
 
-      await anchor.web3.sendAndConfirmTransaction(provider.connection, tx, [
-        wallet.payer,
-        userInsecure,
-      ]);
+      const createAccountInstruction = SystemProgram.createAccount({
+        fromPubkey: walletAuthority.publicKey,
+        newAccountPubkey: insecureUserAccount.publicKey,
+        space: ACCOUNT_SPACE,
+        lamports: rentExemptionAmount,
+        programId: program.programId,
+      });
+
+      const transaction = new Transaction().add(createAccountInstruction);
+
+      await anchor.web3.sendAndConfirmTransaction(
+        provider.connection,
+        transaction,
+        [walletAuthority.payer, insecureUserAccount],
+      );
 
       await airdropIfRequired(
         provider.connection,
-        walletTwo.publicKey,
-        1 * LAMPORTS_PER_SOL,
-        1 * LAMPORTS_PER_SOL
+        secondWallet.publicKey,
+        AIRDROP_AMOUNT,
+        MINIMUM_BALANCE_FOR_RENT_EXEMPTION,
       );
     } catch (error) {
-      throw new Error(`Setup failed: ${error.message}`);
+      console.error("Setup failed:", error);
+      throw error;
     }
   });
 
@@ -320,51 +333,56 @@ describe("Initialization", () => {
       await program.methods
         .insecureInitialization()
         .accounts({
-          user: userInsecure.publicKey,
-          authority: wallet.publicKey,
+          user: insecureUserAccount.publicKey,
+          authority: walletAuthority.publicKey,
         })
-        .signers([wallet.payer])
+        .signers([walletAuthority.payer])
         .rpc();
     } catch (error) {
-      throw new Error(`Insecure initialization failed: ${error.message}`);
+      console.error("Insecure initialization failed:", error);
+      throw error;
     }
   });
 
   it("re-invokes insecure initialization with different authority", async () => {
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .insecureInitialization()
         .accounts({
-          user: userInsecure.publicKey,
-          authority: walletTwo.publicKey,
+          user: insecureUserAccount.publicKey,
+          authority: secondWallet.publicKey,
         })
-        .signers([walletTwo])
+        .signers([secondWallet])
         .transaction();
 
-      await anchor.web3.sendAndConfirmTransaction(provider.connection, tx, [
-        walletTwo,
-      ]);
-    } catch (error) {
-      throw new Error(
-        `Re-invocation of insecure initialization failed: ${error.message}`
+      await anchor.web3.sendAndConfirmTransaction(
+        provider.connection,
+        transaction,
+        [secondWallet],
       );
+    } catch (error) {
+      console.error("Re-invocation of insecure initialization failed:", error);
+      throw error;
     }
   });
 });
+```
 
+Run `anchor test` to verify that the `insecure_initialization` instruction
+handler executes successfully in both invocations.
 
 ```bash
 Initialization
-  ✔ performs insecure initialization (428ms)
-    ✔ re-invokes insecure initialization with different authority (446ms)
-````
+    ✔ performs insecure initialization (420ms)
+    ✔ re-invokes insecure initialization with different authority (419ms)
+```
 
-### 3. Add recommended_initialization Instruction
+### 3. Add recommended_initialization Instruction Handler
 
-Now, let’s create a new instruction called `recommended_initialization` that
-addresses the issue. Unlike the insecure instruction, this one will handle both
-the creation and initialization of the user's account using Anchor's init
-constraint.
+Now, let's create a new instruction handler called `recommended_initialization`
+that addresses the issue. Unlike the insecure instruction handler, this one will
+handle both the creation and initialization of the user's account using Anchor's
+`init` constraint.
 
 This constraint ensures the account is created via a CPI to the system program,
 and the discriminator is set. This way, any subsequent invocation with the same
@@ -406,45 +424,45 @@ pub struct User {
 }
 ```
 
-### 4. Test recommended_initialization Instruction
+### 4. Test recommended_initialization Instruction Handler
 
-To test the `recommended_initialization` instruction, invoke it twice as before.
-This time, the transaction should fail when attempting to initialize the same
-account a second time.
+To test the `recommended_initialization` instruction handler, invoke it twice as
+before. This time, the transaction should fail when attempting to initialize the
+same account a second time.
 
 ```typescript
-describe("initialization", () => {
+describe("Initialization", () => {
   ...
-  it("Performs recommended initialization", async () => {
+  it("performs recommended initialization", async () => {
     try {
       await program.methods
         .recommendedInitialization()
         .accounts({
-          user: userRecommended.publicKey,
+          user: recommendedUserAccount.publicKey,
         })
-        .signers([userRecommended])
+        .signers([recommendedUserAccount])
         .rpc();
     } catch (error) {
-      throw new Error(`Recommended initialization failed: ${error.message}`);
+      console.error("Recommended initialization failed:", error);
+      throw error;
     }
   });
 
-
-  it("Fails to re-invoke recommended initialization with different authority", async () => {
+  it("fails to re-invoke recommended initialization with different authority", async () => {
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .recommendedInitialization()
         .accounts({
-          user: userRecommended.publicKey,
-          authority: walletTwo.publicKey,
+          user: recommendedUserAccount.publicKey,
+          authority: secondWallet.publicKey,
         })
         .transaction();
 
       await anchor.web3.sendAndConfirmTransaction(
         provider.connection,
-        tx,
-        [walletTwo, userRecommended],
-        {commitment: 'confirmed'}
+        transaction,
+        [secondWallet, recommendedUserAccount],
+        { commitment: "confirmed" }
       );
 
       throw new Error("Re-invocation succeeded unexpectedly");
@@ -455,8 +473,10 @@ describe("initialization", () => {
 
       if (error instanceof SendTransactionError) {
         console.log("Transaction failed as expected");
+      } else {
+        console.error("Unexpected error:", error);
       }
-      console.log(err)
+      console.log(error)
       expect(error).to.exist;
     }
   });
@@ -482,16 +502,16 @@ straightforward, it is crucial. Every time you initialize an account, ensure
 that you're either using the `init` constraint or implementing another check to
 prevent resetting an existing account's initial state.
 
-For the final solution code, refer to the `solution` branch of
-[this repository](https://github.com/solana-developers/reinitialization-attacks/tree/solution).
+For the final solution code, refer to the
+[`solution` branch of this repository](https://github.com/solana-developers/reinitialization-attacks/tree/solution).
 
 ## Challenge
 
 Your challenge is to audit your own or other programs to practice avoiding this
 security exploit.
 
-Take some time to review at least one program and confirm that instructions are
-adequately protected against reinitialization attacks.
+Take some time to review at least one program and confirm that instruction
+handlers are adequately protected against reinitialization attacks.
 
 If you find a bug or exploit in another program, alert the developer. If you
 find one in your own program, patch it immediately.
