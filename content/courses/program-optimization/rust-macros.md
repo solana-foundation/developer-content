@@ -586,7 +586,6 @@ to be used as a derive macro that can be applied to a struct. The line
 `#[proc_macro_derive(Accounts, attributes(account, instruction))]` indicates
 that this is a derive macro that processes `account` and `instruction` helper
 attributes.
-
 ```rust
 #[proc_macro_derive(Accounts, attributes(account, instruction))]
 pub fn derive_anchor_deserialize(item: TokenStream) -> TokenStream {
@@ -598,10 +597,8 @@ pub fn derive_anchor_deserialize(item: TokenStream) -> TokenStream {
 
 #### Attribute macro `#[program]`
 
-The `#[program]` attribute macro is an example of an attribute macro used in
-Anchor to define the module containing instruction handlers for a Solana
-program.
-
+The #[program] attribute macro marks a module as the entry point for a Solana program. 
+This module contains the instruction handlers that define the program's logic.
 ```rust
 #[program]
 pub mod my_program {
@@ -612,10 +609,7 @@ pub mod my_program {
     }
 }
 ```
-
-In this case, the `#[program]` attribute is applied to a module, and it is used
-to specify that the module contains instruction handlers for a Solana program.
-
+This macro is implemented as follows:
 ```rust
 #[proc_macro_attribute]
 pub fn program(
@@ -627,13 +621,12 @@ pub fn program(
         .into()
 }
 ```
-Create a derive macro that automatically generates error enums and conversion functions for your Anchor `#[program]`, making error handling more concise
+Derive macros can be used to generate error enums and conversion functions for your Anchor program, making error management more concise and streamlined.
 ```rust
-#[derive(AnchorErrors)] 
+#[derive(AnchorErrors)]
 pub enum MyError {
     #[msg("Invalid input")]
     InvalidInput,
-    // ... other errors
 }
 ```
 Develop an attribute macro that adds logging statements to your functions, potentially with configurable log levels.
