@@ -384,41 +384,45 @@ pub struct Vault {
 ### 2. Test insecure_withdraw Instruction Handler
 
 The test file includes code to invoke the `initialize_vault` instruction
-handler, using `wallet` as the `authority` on the vault. The code then mints 100
-tokens to the `vault` token account. Ideally, only the `wallet` key should be
-able to withdraw these 100 tokens from the vault.
+handler, using `walletAuthority` as the `authority` on the vault. The code then
+mints 100 tokens to the `vaultTokenAccount` token account. Ideally, only the
+`walletAuthority` key should be able to withdraw these 100 tokens from the
+vault.
 
 Next, we'll add a test to invoke `insecure_withdraw` on the program to
 demonstrate that the current version allows a third party to withdraw those 100
 tokens.
 
-In the test, we'll use the `wallet` public key as the `authority` account but
-sign and send the transaction with a different keypair.
+In the test, we'll use the `walletAuthority` public key as the `authority`
+account but sign and send the transaction with a different keypair.
 
 ```typescript
-describe("signer-authorization", () => {
+describe("Signer Authorization", () => {
     ...
     it("performs insecure withdraw", async () => {
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .insecureWithdraw()
         .accounts({
           vault: vaultPDA,
-          tokenAccount: tokenAccount.publicKey,
-          withdrawDestination: withdrawDestinationFake,
-          authority: wallet.publicKey,
+          tokenAccount: vaultTokenAccount.publicKey,
+          withdrawDestination: unauthorizedWithdrawDestination,
+          authority: walletAuthority.publicKey,
         })
         .transaction();
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+      await anchor.web3.sendAndConfirmTransaction(connection, transaction, [
+        unauthorizedWallet,
+      ]);
 
       const tokenAccountInfo = await getAccount(
         connection,
-        tokenAccount.publicKey
+        vaultTokenAccount.publicKey
       );
-      expect(tokenAccountInfo.amount).to.equal(0n);
+      expect(Number(tokenAccountInfo.amount)).to.equal(0);
     } catch (error) {
-      throw new Error(`Failed to perform insecure withdraw: ${error.message}`);
+      console.error("Insecure withdraw failed:", error);
+      throw error;
     }
   });
 })
@@ -428,17 +432,24 @@ Run `anchor test` to confirm that both transactions will be completed
 successfully.
 
 ```bash
-signer-authorization
-    ✔ initializes vault (865ms)
-    ✔ performs insecure withdraw (421ms)
+Signer Authorization
+    ✔ initializes vault and mints tokens (882ms)
+    ✔ performs insecure withdraw (435ms)
 ```
 
-Since there is no signer check for the `authority` account, the
-`insecure_withdraw` instruction handler will transfer tokens from the `vault`
-token account to the `withdrawDestinationFake` token account, as long as the
-public key of the `authority` account matches the public key stored in the
-`vault` account's `authority` field. This illustrates that the
-`insecure_withdraw` instruction handler is indeed insecure.
+The `insecure_withdraw` instruction handler demonstrates a security
+vulnerability. Since there is no signer check for the `authority` account, this
+handler will transfer tokens from the `vaultTokenAccount` to the
+`unauthorizedWithdrawDestination`, as long as the public key of the `authority`
+account matches the `walletAuthority.publicKey` stored in the `vault` account's
+`authority` field.
+
+In the test, we use the `unauthorizedWallet` to sign the transaction, while
+still specifying the `walletAuthority.publicKey` as the authority in the
+instruction accounts. This mismatch between the signer and the specified
+`authority` would normally cause a transaction to fail. However, due to the lack
+of a proper signer check in the `insecure_withdraw` handler, the transaction
+succeeds.
 
 ### 3. Add secure_withdraw Instruction Handler
 
@@ -501,28 +512,40 @@ pub struct SecureWithdraw<'info> {
 ### 4. Test secure_withdraw Instruction Handler
 
 With the new instruction handler in place, return to the test file to test the
-`secure_withdraw` instruction handler. Invoke the `secure_withdraw` instruction
-handler, again using the `wallet` public key as the `authority` account, and use
-the `withdrawDestinationFake` keypair as the signer and withdraw destination.
+`secureWithdraw` instruction handler. Invoke the `secureWithdraw` instruction
+handler, using the `walletAuthority.publicKey` as the `authority` account, and
+use the `unauthorizedWallet` keypair as the signer. Set the
+`unauthorizedWithdrawDestination` as the withdraw destination.
+
 Since the `authority` account is validated using the `Signer` type, the
-transaction should fail with a signature verification error.
+transaction should fail with a signature verification error. This is because the
+`unauthorizedWallet` is attempting to sign the transaction, but it doesn't match
+the `authority` specified in the instruction (which is
+`walletAuthority.publicKey`).
+
+The test expects this transaction to fail, demonstrating that the secure
+withdraw function properly validates the signer. If the transaction unexpectedly
+succeeds, the test will throw an error indicating that the expected security
+check did not occur.
 
 ```typescript
-describe("signer-authorization", () => {
+describe("Signer Authorization", () => {
     ...
     it("fails to perform secure withdraw with incorrect signer", async () => {
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .secureWithdraw()
         .accounts({
           vault: vaultPDA,
-          tokenAccount: tokenAccount.publicKey,
-          withdrawDestination: withdrawDestinationFake,
-          authority: wallet.publicKey,
+          tokenAccount: vaultTokenAccount.publicKey,
+          withdrawDestination: unauthorizedWithdrawDestination,
+          authority: walletAuthority.publicKey,
         })
         .transaction();
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+      await anchor.web3.sendAndConfirmTransaction(connection, transaction, [
+        unauthorizedWallet,
+      ]);
       throw new Error("Expected transaction to fail, but it succeeded");
     } catch (error) {
       expect(error).to.be.an("error");
