@@ -844,6 +844,8 @@ function AppInfo(props: AppInfoProps) {
     </>
   );
 }
+
+export default AppInfo;
 ```
 
 Second, let's create a component that groups an "accept" and "reject" button as
