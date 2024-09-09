@@ -53,7 +53,7 @@ pub mod pda_sharing_insecure {
     pub fn withdraw_tokens(ctx: Context<WithdrawTokens>) -> Result<()> {
         let amount = ctx.accounts.vault.amount;
         let seeds = &[ctx.accounts.pool.mint.as_ref(), &[ctx.accounts.pool.bump]];
-        token::transfer(ctx.accounts.transfer_ctx().with_signer(&[seeds]), amount)
+        token::transfer(get_transfer_ctx(&ctx.accounts).with_signer(&[seeds]), amount)
     }
 }
 
@@ -68,17 +68,17 @@ pub struct WithdrawTokens<'info> {
     token_program: Program<'info, Token>,
 }
 
-impl<'info> WithdrawTokens<'info> {
-    pub fn transfer_ctx(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
-        CpiContext::new(
-            self.token_program.to_account_info(),
-            token::Transfer {
-                from: self.vault.to_account_info(),
-                to: self.withdraw_destination.to_account_info(),
-                authority: self.authority.to_account_info(),
-            },
-        )
-    }
+pub fn get_transfer_ctx<'accounts, 'remaining, 'cpi_code, 'info>(
+    accounts: &'accounts WithdrawTokens<'info>,
+) -> CpiContext<'accounts, 'remaining, 'cpi_code, 'info, token::Transfer<'info>> {
+    CpiContext::new(
+        accounts.token_program.to_account_info(),
+        token::Transfer {
+            from: accounts.vault.to_account_info(),
+            to: accounts.withdraw_destination.to_account_info(),
+            authority: accounts.authority.to_account_info(),
+        },
+    )
 }
 
 #[account]
@@ -117,7 +117,7 @@ pub mod pda_sharing_secure {
             ctx.accounts.pool.withdraw_destination.as_ref(),
             &[ctx.accounts.pool.bump],
         ];
-        token::transfer(ctx.accounts.transfer_ctx().with_signer(&[seeds]), amount)
+        token::transfer(get_transfer_ctx(&ctx.accounts).with_signer(&[seeds]), amount)
     }
 }
 
@@ -132,17 +132,17 @@ pub struct WithdrawTokens<'info> {
     token_program: Program<'info, Token>,
 }
 
-impl<'info> WithdrawTokens<'info> {
-    pub fn transfer_ctx(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
-        CpiContext::new(
-            self.token_program.to_account_info(),
-            token::Transfer {
-                from: self.vault.to_account_info(),
-                to: self.withdraw_destination.to_account_info(),
-                authority: self.authority.to_account_info(),
-            },
-        )
-    }
+pub fn get_transfer_ctx<'accounts, 'remaining, 'cpi_code, 'info>(
+    accounts: &'accounts WithdrawTokens<'info>,
+) -> CpiContext<'accounts, 'remaining, 'cpi_code, 'info, token::Transfer<'info>> {
+    CpiContext::new(
+        accounts.token_program.to_account_info(),
+        token::Transfer {
+            from: accounts.vault.to_account_info(),
+            to: accounts.withdraw_destination.to_account_info(),
+            authority: accounts.authority.to_account_info(),
+        },
+    )
 }
 
 #[account]
@@ -189,7 +189,7 @@ pub mod pda_sharing_recommended {
             ctx.accounts.pool.withdraw_destination.as_ref(),
             &[ctx.accounts.pool.bump],
         ];
-        token::transfer(ctx.accounts.transfer_ctx().with_signer(&[seeds]), amount)
+        token::transfer(get_transfer_ctx(&ctx.accounts).with_signer(&[seeds]), amount)
     }
 }
 
@@ -209,17 +209,17 @@ pub struct WithdrawTokens<'info> {
     token_program: Program<'info, Token>,
 }
 
-impl<'info> WithdrawTokens<'info> {
-    pub fn transfer_ctx(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
-        CpiContext::new(
-            self.token_program.to_account_info(),
-            token::Transfer {
-                from: self.vault.to_account_info(),
-                to: self.withdraw_destination.to_account_info(),
-                authority: self.pool.to_account_info(),
-            },
-        )
-    }
+pub fn get_transfer_ctx<'accounts, 'remaining, 'cpi_code, 'info>(
+    accounts: &'accounts WithdrawTokens<'info>,
+) -> CpiContext<'accounts, 'remaining, 'cpi_code, 'info, token::Transfer<'info>> {
+    CpiContext::new(
+        accounts.token_program.to_account_info(),
+        token::Transfer {
+            from: accounts.vault.to_account_info(),
+            to: accounts.withdraw_destination.to_account_info(),
+            authority: accounts.pool.to_account_info(),
+        },
+    )
 }
 
 #[account]
@@ -289,7 +289,7 @@ it("allows insecure initialization with incorrect vault", async () => {
       .signers([insecurePoolFake])
       .rpc();
 
-    await spl.mintTo(
+    await mintTo(
       connection,
       wallet.payer,
       tokenMint,
@@ -298,10 +298,7 @@ it("allows insecure initialization with incorrect vault", async () => {
       INITIAL_MINT_AMOUNT,
     );
 
-    const vaultAccount = await spl.getAccount(
-      connection,
-      insecureVault.address,
-    );
+    const vaultAccount = await getAccount(connection, insecureVault.address);
     expect(Number(vaultAccount.amount)).to.equal(INITIAL_MINT_AMOUNT);
   } catch (error) {
     throw new Error(`Test failed: ${error.message}`);
@@ -318,10 +315,7 @@ it("allows insecure withdrawal to incorrect destination", async () => {
       })
       .rpc();
 
-    const vaultAccount = await spl.getAccount(
-      connection,
-      insecureVault.address,
-    );
+    const vaultAccount = await getAccount(connection, insecureVault.address);
     expect(Number(vaultAccount.amount)).to.equal(0);
   } catch (error) {
     throw new Error(`Test failed: ${error.message}`);
@@ -394,7 +388,10 @@ pub fn withdraw_secure(ctx: Context<WithdrawTokensSecure>) -> Result<()> {
         ctx.accounts.pool.withdraw_destination.as_ref(),
         &[ctx.accounts.pool.bump],
     ];
-    token::transfer(ctx.accounts.transfer_ctx().with_signer(&[seeds]), amount)
+    token::transfer(
+        get_secure_transfer_ctx(&ctx.accounts).with_signer(&[seeds]),
+        amount,
+    )
 }
 
 ...
@@ -407,25 +404,25 @@ pub struct WithdrawTokensSecure<'info> {
         seeds = [withdraw_destination.key().as_ref()],
         bump = pool.bump,
     )]
-    pool: Account<'info, TokenPool>,
+    pub pool: Account<'info, TokenPool>,
     #[account(mut)]
-    vault: Account<'info, TokenAccount>,
+    pub vault: Account<'info, TokenAccount>,
     #[account(mut)]
-    withdraw_destination: Account<'info, TokenAccount>,
-    token_program: Program<'info, Token>,
+    pub withdraw_destination: Account<'info, TokenAccount>,
+    pub token_program: Program<'info, Token>,
 }
 
-impl<'info> WithdrawTokensSecure<'info> {
-    pub fn transfer_ctx(&self) -> CpiContext<'_, '_, '_, 'info, token::Transfer<'info>> {
-        CpiContext::new(
-            self.token_program.to_account_info(),
-            token::Transfer {
-                from: self.vault.to_account_info(),
-                to: self.withdraw_destination.to_account_info(),
-                authority: self.pool.to_account_info(),
-            },
-        )
-    }
+pub fn get_secure_transfer_ctx<'accounts, 'remaining, 'cpi_code, 'info>(
+    accounts: &'accounts WithdrawTokensSecure<'info>,
+) -> CpiContext<'accounts, 'remaining, 'cpi_code, 'info, token::Transfer<'info>> {
+    CpiContext::new(
+        accounts.token_program.to_account_info(),
+        token::Transfer {
+            from: accounts.vault.to_account_info(),
+            to: accounts.withdraw_destination.to_account_info(),
+            authority: accounts.pool.to_account_info(),
+        },
+    )
 }
 ```
 
@@ -442,7 +439,7 @@ work as expected:
 ```typescript
 it("performs secure pool initialization and withdrawal correctly", async () => {
   try {
-    const initialWithdrawBalance = await spl.getAccount(
+    const initialWithdrawBalance = await getAccount(
       connection,
       withdrawDestination,
     );
@@ -459,7 +456,7 @@ it("performs secure pool initialization and withdrawal correctly", async () => {
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    await spl.mintTo(
+    await mintTo(
       connection,
       wallet.payer,
       tokenMint,
@@ -476,7 +473,7 @@ it("performs secure pool initialization and withdrawal correctly", async () => {
       })
       .rpc();
 
-    const finalWithdrawBalance = await spl.getAccount(
+    const finalWithdrawBalance = await getAccount(
       connection,
       withdrawDestination,
     );
