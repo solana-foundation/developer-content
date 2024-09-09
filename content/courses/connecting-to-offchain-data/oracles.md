@@ -38,7 +38,7 @@ Oracles can provide just about any type of data onchain. Examples include:
 While the exact implementation may differ from blockchain to blockchain,
 generally Oracles work as follows:
 
-1. Data is sourced off-chain.
+1. Data is sourced offchain.
 2. That data is published onchain via a transaction, and stored in an account.
 3. Programs can read the data stored in the account and use that data in the
    program's logic.
@@ -82,7 +82,7 @@ On the other hand, you may be less willing to trust a centralized oracle
 providing price information for trading applications.
 
 You may end up creating many standalone oracles for your own applications simply
-as a way to get access to off-chain information that you need. However, those
+as a way to get access to offchain information that you need. However, those
 oracles are unlikely to be used by the broader community where decentralization
 is a core tenet. You should also be hesitant to use centralized, third-party
 oracles yourself.
@@ -138,7 +138,7 @@ verify each oracle’s software to allow participation in the network. If an
 oracle operator acts maliciously and attempts to change the operation of the
 approved code, a data quote verification will fail. This allows Switchboard
 oracles to operate beyond quantitative value reporting, such as functions --
-running off-chain custom and confidential computations.
+running offchain custom and confidential computations.
 
 ### Switchboard Oracles
 
@@ -158,7 +158,7 @@ understand how Switchboard works:
   Each data source should correspond to a job account. The job account is a
   collection of Switchboard tasks used to instruct the oracles on how to fetch
   and transform data. In other words, it stores the blueprints for how data is
-  fetched off-chain for a particular data source.
+  fetched offchain for a particular data source.
 - **Oracle** - A separate program that sits between the internet and the
   blockchain and facilitates the flow of information. An oracle reads a feed’s
   job definitions, calculates the result, and submits its response onchain.
@@ -235,7 +235,7 @@ data is published onchain:
 
 #### How to use Switchboard Oracles
 
-To use Switchboard oracles and incorporate off-chain data into a Solana program,
+To use Switchboard oracles and incorporate offchain data into a Solana program,
 you first have to find a feed that provides the data you need. Switchboard feeds
 are public and there are many
 [already available that you can choose from](https://app.switchboard.xyz/solana/devnet/explore).
