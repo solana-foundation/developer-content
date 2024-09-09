@@ -180,7 +180,7 @@ For example, you could search through a list of contacts by including a `memcmp`
 filter:
 
 ```tsx
-const DATA_OFFSET = 2; // Skip the first 2 bytes of metadata because they store versioning information and are not needed for the search.
+const DATA_OFFSET = 2; // The first 2 bytes of metadata they store versioning information and are not needed for the search.
 const DATA_LENGTH = 18; // Retrieve 18 bytes of relevant data - This length includes the specific part of the account's data that holds the necessary information for comparison.
 async function fetchMatchingContactAccounts(
   connection: web3.Connection,
