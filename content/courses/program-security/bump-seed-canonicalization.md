@@ -18,31 +18,67 @@ tags:
 
 ## Summary
 
-- The `create_program_address` function derives a PDA without using the
-  canonical bump, potentially leading to security vulnerabilities.
-- Always use `find_program_address` to ensure the canonical bump is used for PDA
-  derivation.
-- Anchor's `seeds` and `bump` constraints can automatically handle canonical
-  bump usage for PDA initialization and verification.
-- Store the canonical bump in the account's data for efficient re-derivation in
-  future instructions.
+
+- The
+  [**`create_program_address`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.create_program_address)
+  function derives a PDA without searching for the **canonical bump**. This
+  means there are multiple valid bumps, all of which will produce different
+  addresses.
+- Using
+  [**`find_program_address`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.find_program_address)
+  ensures that the highest valid bump, or canonical bump, is used for the
+  derivation, thus creating a deterministic way to find an address given
+  specific seeds.
+- Upon initialization, you can use Anchor's `seeds` and `bump` constraint to
+  ensure that PDA derivations in the account validation struct always use the
+  canonical bump
+- Anchor allows you to **specify a bump** with the `bump = <some_bump>`
+  constraint when verifying the address of a PDA
+- Because `find_program_address` can be expensive, best practice is to store the
+  derived bump in an account’s data field to be referenced later on when
+  re-deriving the address for verification
+  ```rust
+  #[derive(Accounts)]
+  pub struct VerifyAddress<'info> {
+  	#[account(
+      	seeds = [DATA_PDA_SEED.as_bytes()],
+  	    bump = data.bump
+  	)]
+  	data: Account<'info, Data>,
+  }
+  ```
 
 ## Lesson
 
-Bump seeds are numbers between 0 and 255 used to ensure that an address derived
-using `create_program_address` is a valid PDA. The canonical bump is the highest
-valid bump value that produces a valid PDA. For security and consistency, always
-use the canonical bump when deriving PDAs.
+Bump seeds are a number between 0 and 255, inclusive, used to ensure that an
+address derived using
+[`create_program_address`](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.create_program_address)
+is a valid PDA. The **canonical bump** is the highest bump value that produces a
+valid PDA. The standard in Solana is to _always use the canonical bump_ when
+deriving PDAs, both for security and convenience.
 
-### Insecure PDA derivation
+### Insecure PDA derivation using `create_program_address`
 
-The `create_program_address` function produces a valid PDA about 50% of the
-time. Multiple valid bumps can exist for a given set of input seeds, potentially
-causing security issues.
+Given a set of seeds, the `create_program_address` function will produce a valid
+PDA about 50% of the time. The bump seed is an additional byte added as a seed
+to "bump" the derived address into valid territory. Since there are 256 possible
+bump seeds and the function produces valid PDAs approximately 50% of the time,
+there are many valid bumps for a given set of input seeds.
+
+You can imagine that this could cause confusion for locating accounts when using
+seeds as a way of mapping between known pieces of information to accounts. Using
+the canonical bump as the standard ensures that you can always find the right
+account. More importantly, it avoids security exploits caused by the open-ended
+nature of allowing multiple bumps.
+
+In the example below, the `set_value` instruction uses a `bump` that was passed
+in as instruction data to derive a PDA. The instruction then derives the PDA
+using `create_program_address` function and checks that the `address` matches
+the public key of the `data` account.
 
 Here's an example of an insecure implementation:
 
-```
+```rust
 use anchor_lang::prelude::*;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -99,7 +135,7 @@ derive it.
 This ensures a one-to-one mapping between your input seeds and the address they
 produce.
 
-```
+```rust
 pub fn set_value_secure(
     ctx: Context<BumpSeed>,
     key: u64,
@@ -131,7 +167,7 @@ Anchor does not even allow you to initialize an account at a PDA using anything
 but the canonical bump. Instead, it uses `find_program_address` to derive the
 PDA and subsequently performs the initialization.
 
-```
+```rust
 use anchor_lang::prelude::*;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
@@ -187,7 +223,7 @@ provided bump instead of `find_program_address`. This pattern of storing the
 bump in the account data ensures that your program always uses the canonical
 bump without degrading performance.
 
-```
+```rust
 use anchor_lang::prelude::*;
 
 declare_id!("CVwV9RoebTbmzsGg1uqU1s4a3LvTKseewZKmaNLSxTqc");
@@ -300,7 +336,7 @@ represent an attacker. It then loops through all possible bumps and calls
 the attacker has been able to claim rewards multiple times and has earned more
 than the 10 tokens allotted per user.
 
-```
+```typescript
 it("Attacker can claim more than reward limit with insecure instructions", async () => {
   const attacker = Keypair.generate();
   await safeAirdrop(attacker.publicKey, provider.connection);
@@ -356,7 +392,7 @@ Run `anchor test` to see that this test passes, showing that the attacker is
 successful. Since the test calles the instructions for every valid bump, it
 takes a bit to run, so be patient.
 
-```
+```bash
   bump-seed-canonicalization
 Attacker claimed 129 times and got 1290 tokens
     ✔ Attacker can claim more than reward limit with insecure instructions (133840ms)
@@ -373,7 +409,7 @@ Before we write the account validation or instruction logic, let's create a new
 user type, `UserSecure`. This new type will add the canonical bump as a field on
 the struct.
 
-```
+```rust
 #[account]
 pub struct UserSecure {
     auth: Pubkey,
@@ -386,7 +422,7 @@ Next, let's create account validation structs for each of the new instructions.
 They'll be very similar to the insecure versions but will let Anchor handle the
 derivation and deserialization of the PDAs.
 
-```
+```rust
 #[derive(Accounts)]
 pub struct CreateUserSecure<'info> {
     #[account(mut)]
@@ -437,7 +473,7 @@ Finally, let's implement the instruction logic for the two new instructions. The
 `create_user_secure` instruction simply needs to set the `auth`, `bump` and
 `rewards_claimed` fields on the `user` account data.
 
-```
+```rust
 pub fn create_user_secure(ctx: Context<CreateUserSecure>) -> Result<()> {
     ctx.accounts.user.auth = ctx.accounts.payer.key();
     ctx.accounts.user.bump = *ctx.bumps.get("user").unwrap();
@@ -449,7 +485,7 @@ pub fn create_user_secure(ctx: Context<CreateUserSecure>) -> Result<()> {
 The `claim_secure` instruction needs to mint 10 tokens to the user and set the
 `user` account's `rewards_claimed` field to `true`.
 
-```
+```rust
 pub fn claim_secure(ctx: Context<SecureClaim>) -> Result<()> {
     token::mint_to(
         CpiContext::new_with_signer(
@@ -484,7 +520,7 @@ still loop through using the various PDAs and at the end check that only 1 claim
 happened for a total of 10 tokens. Your final test will look something like
 this:
 
-```
+```typescript
 it.only("Attacker can only claim once with secure instructions", async () => {
   const attacker = Keypair.generate();
   await safeAirdrop(attacker.publicKey, provider.connection);
@@ -552,7 +588,7 @@ it.only("Attacker can only claim once with secure instructions", async () => {
 });
 ```
 
-```
+```bash
   bump-seed-canonicalization
 Attacker claimed 119 times and got 1190 tokens
     ✔ Attacker can claim more than reward limit with insecure instructions (128493ms)

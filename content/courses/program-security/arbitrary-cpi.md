@@ -18,8 +18,7 @@ description: "How to safely invoke Solana programs from other Solana programs."
 - Perform program checks in native programs by comparing the public key of the
   passed-in program to the program you expected.
 - If a program is written in Anchor, it may have a publicly available CPI
-  module. This makes invoking the program from another Anchor program simple and
-  secure. The Anchor CPI module automatically checks that the address of the
+  module for making cross-program invocations. This makes invoking the program from another Anchor program simple and secure. The Anchor CPI module automatically checks that the address of the
   program passed in matches the address of the program stored in the module.
 
 ## Lesson
@@ -128,7 +127,7 @@ crate provides the address of the SPL Token Program.
 ### Use an Anchor CPI Module
 
 A simpler way to manage program checks is to use Anchor CPI modules. We learned
-in a [previous lesson](../anchor-cpi/README.md) that Anchor can automatically
+in a [previous lesson](https://github.com/solana-foundation/developer-content/blob/main/content/courses/onchain-development/anchor-cpi.md) that Anchor can automatically
 generate CPI modules to make CPIs into the program simpler. These modules also
 enhance security by verifying the public key of the program that's passed into
 one of its public instructions using
@@ -224,7 +223,7 @@ applied to real tokens.
 ### 1. Setup
 
 We'll start with the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/starter).
+[this repository](https://github.com/solana-developers/arbitrary-cpi/tree/starter).
 Clone the repository and then open it on the `starter` branch.
 
 Notice that there are three programs:

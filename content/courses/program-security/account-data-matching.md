@@ -46,14 +46,14 @@ attacks:
    gaining access to functionality they shouldn't have
 2. State manipulation: attackers might alter the program's state in unintended  
    ways, compromising its integrity
-3. Fund theft: in programs dealing with tokens or SOL, inadequate checks could  
+3. Fund theft: in programs dealing with tokens, inadequate checks could  
    lead to unauthorized withdrawals
 
 Let's look at an example to illustrate the importance of account data matching.
 
 ### Example: Insecure Admin Update
 
-Consider a program with an `update_admin` instruction that changes the admin of
+Consider a program with an `update_admin` instruction handler that changes the admin of
 a configuration account:
 
 ```rust
@@ -178,7 +178,7 @@ of a withdraw instruction to highlight the difference.
 ### 1. Setup
 
 Clone the starter code from the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-account-data-matching).
+[this repository](https://github.com/solana-developers/solana-account-data-matching).
 
 The starter code includes a program with two instructions and a boilerplate test
 file:
@@ -200,7 +200,7 @@ pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
     let amount = ctx.accounts.token_account.amount;
 
     let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
-    let signer = [&seeds[..]];
+    let signers = [&seeds[..]];
 
     let cpi_ctx = CpiContext::new_with_signer(
         ctx.accounts.token_program.to_account_info(),
@@ -209,7 +209,7 @@ pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
             authority: ctx.accounts.vault.to_account_info(),
             to: ctx.accounts.withdraw_destination.to_account_info(),
         },
-        &signer,
+        &signers,
     );
 
     token::transfer(cpi_ctx, amount)?;
@@ -286,7 +286,7 @@ pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
     let amount = ctx.accounts.token_account.amount;
 
     let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
-    let signer = [&seeds[..]];
+    let signers = [&seeds[..]];
 
     let cpi_ctx = CpiContext::new_with_signer(
         ctx.accounts.token_program.to_account_info(),
@@ -295,7 +295,7 @@ pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
             authority: ctx.accounts.vault.to_account_info(),
             to: ctx.accounts.withdraw_destination.to_account_info(),
         },
-        &signer,
+        &signers,
     );
 
     token::transfer(cpi_ctx, amount)?;
@@ -385,6 +385,41 @@ test("Secure withdraw allows authorized access", async () => {
 
 Run `anchor test` again. You should see that the unauthorized withdrawal now
 fails, while the authorized one succeeds.
+
+Run `anchor test` to see that the transaction using an incorrect authority
+account will now return an Anchor Error while the transaction using correct
+accounts completes successfully.
+
+```bash
+'Program Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS invoke [1]',
+'Program log: Instruction: SecureWithdraw',
+'Program log: AnchorError caused by account: vault. Error Code: ConstraintHasOne. Error Number: 2001. Error Message: A has one constraint was violated.',
+'Program log: Left:',
+'Program log: DfLZV18rD7wCQwjYvhTFwuvLh49WSbXFeJFPQb5czifH',
+'Program log: Right:',
+'Program log: 5ovvmG5ntwUC7uhNWfirjBHbZD96fwuXDMGXiyMwPg87',
+'Program Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS consumed 10401 of 200000 compute units',
+'Program Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS failed: custom program error: 0x7d1'
+```
+
+Note that Anchor specifies in the logs the account that causes the error
+(`AnchorError caused by account: vault`).
+
+```bash
+✔ Secure withdraw, expect error (77ms)
+✔ Secure withdraw (10073ms)
+```
+
+And just like that, you've closed up the security loophole. The theme across
+most of these potential exploits is that they're quite simple. However, as your
+programs grow in scope and complexity, it becomse increasingly easy to miss
+possible exploits. It's great to get in a habit of writing tests that send
+instructions that _shouldn't_ work. The more the better. That way you catch
+problems before you deploy.
+
+If you want to take a look at the final solution code you can find it on the
+`solution` branch of
+[the repository](https://github.com/solana-developers/account-data-matching/tree/solution)
 
 ### Conclusion
 
