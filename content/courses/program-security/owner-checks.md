@@ -3,11 +3,11 @@ title: Owner Checks
 objectives:
   - Explain the security risks associated with not performing appropriate owner
     checks
-  - Implement owner checks using native Rust
   - Use Anchor's `Account<'info, T>` wrapper and an account type to automate
     owner checks
   - Use Anchor's `#[account(owner = <expr>)]` constraint to explicitly define an
     external program that should own an account
+  - Implement owner checks using native Rust
 description:
   "Understand the use of account owner checks when processing incoming
   instructions."
@@ -18,21 +18,20 @@ description:
 - **Owner checks** ensure that accounts are owned by the expected program.
   Without owner checks, accounts owned by other programs can be used in an
   instruction handler.
-- To implement an owner check in Rust, verify that the account's owner matches
-  the expected program ID.
-
-```rust
-if ctx.accounts.account.owner != ctx.program_id {
-    return Err(ProgramError::IncorrectProgramId.into());
-}
-```
-
 - Anchor program account types implement the `Owner` trait, allowing
   `Account<'info, T>` to automatically verify program ownership.
 - You can also use Anchor's
   [`#[account(owner = <expr>)]`](https://www.anchor-lang.com/docs/account-constraints)
   constraint to define an account's owner when it's external to the current
   program.
+- To implement an owner check in native Rust, verify that the account's owner
+  matches the expected program ID.
+
+```rust
+if ctx.accounts.account.owner != ctx.program_id {
+    return Err(ProgramError::IncorrectProgramId.into());
+}
+```
 
 ## Lesson
 
@@ -41,7 +40,7 @@ handler is owned by the expected program, preventing exploitation by accounts
 from different programs.
 
 The `AccountInfo` struct contains several fields, including the `owner`, which
-represents the program that owns the account. Owner checks ensure that this
+represents the **program** that owns the account. Owner checks ensure that this
 `owner` field in the `AccountInfo` matches the expected program ID.
 
 ```rust
@@ -204,12 +203,13 @@ pub struct AdminConfig {
 
 ### Use Anchor's `#[account(owner = <expr>)]` constraint
 
-In addition to the `Account` type, you can use the `owner` constraint to specify
-the program that should own an account when it differs from the executing
-program. This is particularly useful when an instruction handler expects an
-account to be a PDA created by another program. By using the `seeds` and `bump`
-constraints along with the `owner`, you can properly derive and verify the
-account's address.
+In addition to the `Account` type, you can use the Anchor's
+[`owner` constraint](https://www.anchor-lang.com/docs/account-constraints) to
+specify the program that should own an account when it differs from the
+executing program. This is particularly useful when an instruction handler
+expects an account to be a PDA created by another program. By using the `seeds`
+and `bump` constraints along with the `owner`, you can properly derive and
+verify the account's address.
 
 To apply the `owner` constraint, you need access to the public key of the
 program expected to own the account. This can be provided either as an
@@ -438,26 +438,29 @@ lack of an owner check allows token withdrawal from the original program's
 vault.
 
 ```typescript
-describe("owner-check", () => {
+describe("Owner Check", () => {
     ...
     it("performs insecure withdraw", async () => {
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .insecureWithdraw()
         .accounts({
-          vault: vaultClone.publicKey,
+          vault: vaultCloneAccount.publicKey,
           tokenAccount: tokenPDA,
-          withdrawDestination: withdrawDestinationFake,
-          authority: walletFake.publicKey,
+          withdrawDestination: unauthorizedWithdrawDestination,
+          authority: unauthorizedWallet.publicKey,
         })
         .transaction();
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+      await anchor.web3.sendAndConfirmTransaction(connection, transaction, [
+        unauthorizedWallet,
+      ]);
 
       const tokenAccountInfo = await getAccount(connection, tokenPDA);
-      expect(tokenAccountInfo.amount).to.equal(0n);
+      expect(Number(tokenAccountInfo.amount)).to.equal(0);
     } catch (error) {
-      throw new Error(`Failed to perform insecure withdraw: ${error.message}`);
+      console.error("Insecure withdraw failed:", error);
+      throw error;
     }
   });
 })
@@ -475,8 +478,8 @@ owner-check
 
 <Callout>
 
-The `vaultClone` deserializes successfully due to both programs using the same
-discriminator, derived from the identical `Vault` struct name. </Callout>
+The `vaultCloneAccount` deserializes successfully due to both programs using the
+same discriminator, derived from the identical `Vault` struct name. </Callout>
 
 ```rust
 #[account]
@@ -553,26 +556,28 @@ pub struct SecureWithdraw<'info> {
 ### 4. Test secure_withdraw Instruction Handler
 
 To test the `secure_withdraw` instruction handler, we'll invoke it twice. First,
-we'll use the `vaultClone` account, expecting it to fail. Then, we'll invoke the
-instruction handler with the correct `vault` account to verify the instruction
-handler works as intended.
+we'll use the `vaultCloneAccount` account, expecting it to fail. Then, we'll
+invoke the instruction handler with the correct `vaultAccount` account to verify
+the instruction handler works as intended.
 
 ```typescript
-describe("owner-check", () => {
+describe("Owner Check", () => {
     ...
     it("fails secure withdraw with incorrect authority", async () => {
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .secureWithdraw()
         .accounts({
-          vault: vaultClone.publicKey,
+          vault: vaultCloneAccount.publicKey,
           tokenAccount: tokenPDA,
-          withdrawDestination: withdrawDestinationFake,
-          authority: walletFake.publicKey,
+          withdrawDestination: unauthorizedWithdrawDestination,
+          authority: unauthorizedWallet.publicKey,
         })
         .transaction();
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+      await anchor.web3.sendAndConfirmTransaction(connection, transaction, [
+        unauthorizedWallet,
+      ]);
       throw new Error("Expected transaction to fail, but it succeeded");
     } catch (error) {
       expect(error).to.be.an("error");
@@ -582,30 +587,38 @@ describe("owner-check", () => {
 
   it("performs secure withdraw successfully", async () => {
     try {
-      await mintTo(connection, wallet.payer, mint, tokenPDA, wallet.payer, 100);
+      await mintTo(
+        connection,
+        walletAuthority.payer,
+        tokenMint,
+        tokenPDA,
+        walletAuthority.payer,
+        INITIAL_TOKEN_AMOUNT
+      );
 
       await program.methods
         .secureWithdraw()
         .accounts({
-          vault: vault.publicKey,
+          vault: vaultAccount.publicKey,
           tokenAccount: tokenPDA,
-          withdrawDestination: withdrawDestination,
-          authority: wallet.publicKey,
+          withdrawDestination: authorizedWithdrawDestination,
+          authority: walletAuthority.publicKey,
         })
         .rpc();
 
       const tokenAccountInfo = await getAccount(connection, tokenPDA);
-      expect(tokenAccountInfo.amount).to.equal(0n);
+      expect(Number(tokenAccountInfo.amount)).to.equal(0);
     } catch (error) {
-      throw new Error(`Failed to perform secure withdraw: ${error.message}`);
+      console.error("Secure withdraw failed:", error);
+      throw error;
     }
   });
 })
 ```
 
-Running `anchor test` will show that the transaction using the `vaultClone`
-account fails, while the transaction using the `vault` account withdraws
-successfully.
+Running `anchor test` will show that the transaction using the
+`vaultCloneAccount` account fails, while the transaction using the
+`vaultAccount` account withdraws successfully.
 
 ```bash
 "Program 3uF3yaymq1YBmDDHpRPwifiaBf4eK8M2jLgaMcCTg9n9 invoke [1]",
