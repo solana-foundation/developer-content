@@ -5,7 +5,7 @@ objectives:
   - Create and use Rust structs and enums
   - Use Rust match statements
   - Add implementations to Rust types
-  - Deserialize instruction data into Rust data types
+  - Deserialize instruction data into native Rust data types
   - Execute different program logic for different types of instructions
   - Explain the structure of a smart contract on Solana
 description:
@@ -143,9 +143,10 @@ using enums in Rust by visiting
 #### Match statements
 
 Match statements are very similar to `switch` statements in other languages. The
-`match` statement allows you to compare a value against a series of patterns and
-then execute code based on which pattern matches the value. Patterns can be made
-of literal values, variable names, wildcards, and more. The match statement must
+[`match`](https://doc.rust-lang.org/rust-by-example/flow_control/match.html)
+statement allows you to compare a value against a series of patterns and then
+execute code based on which pattern matches the value. Patterns can be made of
+literal values, variable names, wildcards, and more. The match statement must
 include all possible scenarios; otherwise, the code will not compile.
 
 ```rust
@@ -168,8 +169,9 @@ fn value_in_cents(coin: Coin) -> u8 {
 
 #### Implementations
 
-The `impl` keyword is used in Rust to define a type's implementations. Functions
-and constants can both be defined in an implementation.
+The [`impl`](https://doc.rust-lang.org/rust-by-example/trait/impl_trait.html)
+keyword is used in Rust to define a type's implementations. Functions and
+constants can both be defined in an implementation.
 
 ```rust
 struct Example {
@@ -213,9 +215,10 @@ in-depth explanation isn't necessary. However, you will be using the `derive`
 attribute macro and some traits provided by the `borsh` crate, so it's important
 to have a high-level understanding of each.
 
-Traits describe an abstract interface that types can implement. If a trait
-defines a function `bark()` and a type adopts that trait, the type must
-implement the `bark()` function.
+[Traits](https://doc.rust-lang.org/rust-by-example/trait.html) describe an
+abstract interface that types can implement. If a trait defines a function
+`bark()` and a type adopts that trait, the type must implement the `bark()`
+function.
 
 [Attributes](https://doc.rust-lang.org/rust-by-example/attribute.html) add
 metadata to a type and can be used for many different purposes.
@@ -409,7 +412,7 @@ files: one for the program entry point and another for the instruction handler.
 When splitting your program into multiple files, register all files in a central
 location, typically in `lib.rs`. Each file must be registered this way.
 
-```rust
+```rust filename="lib.rs"
 // Inside lib.rs
 pub mod instruction;
 ```
@@ -434,7 +437,7 @@ current `lib.rs` file if it's still populated from the previous lesson. Then,
 bring in the following crates and define the program's entry point using the
 entrypoint macro.
 
-```rust
+```rust filename="lib.rs"
 use solana_program::{
     entrypoint,
     entrypoint::ProgramResult,
@@ -465,7 +468,7 @@ Create a new file called `instruction.rs`, and add `use` statements for
 an `AddMovieReview` variant that includes `title`, `rating`, and `description`
 values.
 
-```rust
+```rust filename="instruction.rs"
 use borsh::{BorshDeserialize};
 use solana_program::program_error::ProgramError;
 
