@@ -17,7 +17,7 @@ description:
   structure
 - The cNFT data hash can’t be used to infer the cNFT data, but it can be used to
   **verify** if the cNFT data you’re seeing is correct
-- Supporting RPC providers **index** cNFT data off-chain when the cNFT is minted
+- Supporting RPC providers **index** cNFT data offchain when the cNFT is minted
   so that you can use the **Read API** to access the data
 - The **Metaplex Bubblegum program** is an abstraction on top of the **State
   Compression** program that enables you to more simply create, mint, and manage
@@ -77,7 +77,7 @@ data exists in the ledger state and could theoretically be retrieved from the
 original transaction by replaying the entire chain state from origin. However,
 it’s much more straightforward (though still complicated) to have an **indexer**
 track and index this data as the transactions occur. This ensures there is an
-off-chain “cache” of the data that anyone can access and subsequently verify
+offchain “cache” of the data that anyone can access and subsequently verify
 against the onchain root hash.
 
 This process is _very complex_. We’ll cover some of the key concepts below but
@@ -608,7 +608,7 @@ console.log(JSON.stringify(result, null, 2));
 ```
 
 This will return a JSON object that is comprehensive of what a traditional NFT’s
-on- and off-chain metadata would look like combined. For example, you can find
+on- and offchain metadata would look like combined. For example, you can find
 the cNFT attributes at `content.metadata.attributes` or the image at
 `content.files.uri`.
 
@@ -833,9 +833,9 @@ Take some time to familiarize yourself with the starter code provided. Most
 important are the helper functions provided in `utils.ts` and the URIs provided
 in `uri.ts`.
 
-The `uri.ts` file provides 10k URIs that you can use for the off-chain portion
-of your NFT metadata. You can, of course, create your own metadata. But this
-lesson isn’t explicitly about preparing metadata so we’ve provided some for you.
+The `uri.ts` file provides 10k URIs that you can use for the offchain portion of
+your NFT metadata. You can, of course, create your own metadata. But this lesson
+isn’t explicitly about preparing metadata so we’ve provided some for you.
 
 The `utils.ts` file has a few helper functions to keep you from writing more
 unnecessary boilerplate than you need to. They are as follows:
@@ -1262,7 +1262,7 @@ surface that data when requested.
 
 If we add a call to this function at the end of `main` and re-run your script,
 the data we get back in the console is very comprehensive. It includes all of
-the data you’d expect in both the onchain and off-chain portion of a traditional
+the data you’d expect in both the onchain and offchain portion of a traditional
 NFT. You can find the cNFT’s attributes, files, ownership and creator
 information, and more.
 
