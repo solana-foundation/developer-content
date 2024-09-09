@@ -15,8 +15,8 @@ description:
 - Wallets are just wrappers around a keypair, but they're essential for secure
   key management
 - Mobile and Web dApps handle their wallet-app connection differently
-- MWA handles all of its wallet interaction by wrapping all the wallet's functionalities 
-  within the `transact` function for easier intergration.
+- MWA handles all of its wallet interaction by wrapping all the wallet's
+  functionalities within the `transact` function for easier intergration.
 - Solana Mobile's `walletlib` does the heavy lifting for surfacing wallet
   requests to wallet apps
 
@@ -131,8 +131,8 @@ interact with the wallet directly.
 
 ```tsx
 transact(async (wallet: Web3MobileWallet) => {
-    // returns you the context of the user selected wallet
-  });
+  // returns you the context of the user selected wallet
+});
 ```
 
 #### Authorize a wallet
@@ -148,20 +148,21 @@ authorization request. The returned `AuthorizationResult` will indicate the
 user's acceptance or rejection. If accepted, this result object provides you
 with the user's account as well as an `auth_token` you can use in
 `wallet.reauthorize()` for subsequent calls. This auth token ensures that other
-apps can't pretend to be your app. The auth token is generated during the `authorize()` 
-call, and subsequent requests from the dApp can use the `reauthorize()` method with the 
-stored token to maintain secure communication without repeatedly prompting the user.
+apps can't pretend to be your app. The auth token is generated during the
+`authorize()` call, and subsequent requests from the dApp can use the
+`reauthorize()` method with the stored token to maintain secure communication
+without repeatedly prompting the user.
 
 ```tsx
 transact(async (wallet: Web3MobileWallet) => {
-    const authResult = wallet.authorize({
-      cluster: "devnet",
-      identity: { name: "Solana Counter Incrementor" },
-    }); // Authorizes the wallet
-  
-    const authToken = authResult.auth_token; // save this for the wallet.reauthorize() function
-    const publicKey = authResult.selectedAccount.publicKey;
-  });
+  const authResult = wallet.authorize({
+    cluster: "devnet",
+    identity: { name: "Solana Counter Incrementor" },
+  }); // Authorizes the wallet
+
+  const authToken = authResult.auth_token; // save this for the wallet.reauthorize() function
+  const publicKey = authResult.selectedAccount.publicKey;
+});
 ```
 
 It's worth noting that all methods except `authorize` and `deauthorize` are
@@ -254,12 +255,11 @@ transact(async (wallet: Web3MobileWallet) => {
 Every time you want to call these methods, you will have to call
 `wallet.authorize()` or `wallet.reauthorize()`.
 
-When invoking `wallet.signAndSendTransactions(...)`, it’s essential to
-handle transaction failures gracefully. Transactions can fail due to
-various reasons such as network issues, signature mismatches, or insufficient
-funds. Proper error handling ensures a smooth user experience, even 
-when the transaction process encounters issues:
-
+When invoking `wallet.signAndSendTransactions(...)`, it’s essential to handle
+transaction failures gracefully. Transactions can fail due to various reasons
+such as network issues, signature mismatches, or insufficient funds. Proper
+error handling ensures a smooth user experience, even when the transaction
+process encounters issues:
 
 ```tsx
 transact(async (wallet: Web3MobileWallet) => {
@@ -295,6 +295,7 @@ communication between dApps and wallets:
 ```bash
 npm @solana-mobile/mobile-wallet-adapter-walletlib
 ```
+
 > This package is still in alpha and is not production ready. However, the API
 > is stable and will not change drastically, so you can begin integration with
 > your wallet.
@@ -383,23 +384,23 @@ resolve function:
 
 ```ts
 export function resolve(
-    request: SignAndSendTransactionsRequest,
-    response: SignAndSendTransactionsResponse,
-  ): void;
+  request: SignAndSendTransactionsRequest,
+  response: SignAndSendTransactionsResponse,
+): void;
 ```
 
 The `SignAndSendTransactionsResponse` type is defined as follows:
 
 ```ts
 export type SignAndSendTransactionsCompleteResponse = Readonly<{
-    signedTransactions: Uint8Array[];
-  }>;
-  export type SignAndSendTransactionsResponse =
-    | SignAndSendTransactionsCompleteResponse
-    | UserDeclinedResponse
-    | TooManyPayloadsResponse
-    | AuthorizationNotValidResponse
-    | InvalidSignaturesResponse;
+  signedTransactions: Uint8Array[];
+}>;
+export type SignAndSendTransactionsResponse =
+  | SignAndSendTransactionsCompleteResponse
+  | UserDeclinedResponse
+  | TooManyPayloadsResponse
+  | AuthorizationNotValidResponse
+  | InvalidSignaturesResponse;
 ```
 
 Which response you send would depend on the result of attempting to sign and
@@ -449,19 +450,20 @@ app-wallet relationship.
 Before we start programming our wallet, we need to do some setup. You will need
 a React Native development environment and a Solana dApp to test on. If you have
 completed the
-[Introduction to Solana Mobile lab](/content/courses/mobile/intro-to-solana-mobile), both
-of these requirements should be met and the counter app installed on your
+[Introduction to Solana Mobile lab](/content/courses/mobile/intro-to-solana-mobile),
+both of these requirements should be met and the counter app installed on your
 Android device/emulator.
 
-If you _haven't_ completed/done the [intro to solana mobile](/content/courses/mobile/intro-to-solana-mobile) you will need to:
+If you _haven't_ completed/done the
+[intro to solana mobile](/content/courses/mobile/intro-to-solana-mobile) you
+will need to:
 
 1. Setup an
    [Android React Native developer environment](https://reactnative.dev/docs/set-up-your-environment)
    with a device or emulator
 2. Install a
-   [Devnet Solana dApp](https://github.com/Unboxed-Software/solana-react-native-counter.git) by 
-   doing the following steps in your terminal:
-
+   [Devnet Solana dApp](https://github.com/Unboxed-Software/solana-react-native-counter.git)
+   by doing the following steps in your terminal:
 
 ```bash
 git clone https://github.com/Unboxed-Software/solana-react-native-counter.git
@@ -537,20 +539,18 @@ npm install \
   fast-text-encoding
 ```
 
-We need to depend on Solana's `mobile-wallet-adapter-walletlib` package, which handles all of the low-level
-communication. 
+We need to depend on Solana's `mobile-wallet-adapter-walletlib` package, which
+handles all of the low-level communication.
 
-> A reminder that this package is still in alpha and is not production ready. However, the API
-> is stable and will not change drastically, so you can begin integration with
-> your wallet.
-
+> A reminder that this package is still in alpha and is not production ready.
+> However, the API is stable and will not change drastically, so you can begin
+> integration with your wallet.
 
 Let's install the package in a new folder `lib`:
 
 ```bash
 npm @solana-mobile/mobile-wallet-adapter-walletlib
 ```
-
 
 Next, in `android/build.gradle`, change the `minSdkVersion` to version `23`.
 
@@ -683,7 +683,7 @@ export function WalletProvider(props: WalletProviderProps) {
 
   const connection = useMemo(
     () => new Connection(rpcUrl ?? "https://api.devnet.solana.com"),
-    [rpcUrl]
+    [rpcUrl],
   );
 
   const value = {
@@ -740,7 +740,6 @@ function MainScreen() {
       } catch (error) {
         console.error("Failed to fetch / update balance:", error);
         setErrorMessage("Failed to fetch balance");
-
       }
     }
   };
@@ -771,7 +770,7 @@ function MainScreen() {
       <Text>Balance:</Text>
       <Text>{balance?.toFixed(5) ?? ""}</Text>
       {isLoading && <Text>Loading...</Text>}
-      {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>}
+      {errorMessage && <Text style={{ color: "red" }}>{errorMessage}</Text>}
       {balance !== null && !isLoading && balance < 0.005 && (
         <Button title="Airdrop 1 SOL" onPress={airdrop} />
       )}
@@ -845,7 +844,6 @@ function AppInfo(props: AppInfoProps) {
     </>
   );
 }
-
 ```
 
 Second, let's create a component that groups an "accept" and "reject" button as
@@ -915,28 +913,28 @@ Here is an example of the minimum setup to satisfy
 
 ```tsx
 const config: MobileWalletAdapterConfig = useMemo(() => {
-    return {
-      supportsSignAndSendTransactions: true,
-      maxTransactionsPerSigningRequest: 10,
-      maxMessagesPerSigningRequest: 10,
-      supportedTransactionVersions: [0, "legacy"],
-      noConnectionWarningTimeoutMs: 3000,
-    };
-  }, []);
-  
-  const handleRequest = useCallback((request: MWARequest) => {}, []);
-  
-  const handleSessionEvent = useCallback(
-    (sessionEvent: MWASessionEvent) => {},
-    [],
-  );
-  
-  useMobileWalletAdapterSession(
-    "React Native Fake Wallet",
-    config,
-    handleRequest,
-    handleSessionEvent,
-  );
+  return {
+    supportsSignAndSendTransactions: true,
+    maxTransactionsPerSigningRequest: 10,
+    maxMessagesPerSigningRequest: 10,
+    supportedTransactionVersions: [0, "legacy"],
+    noConnectionWarningTimeoutMs: 3000,
+  };
+}, []);
+
+const handleRequest = useCallback((request: MWARequest) => {}, []);
+
+const handleSessionEvent = useCallback(
+  (sessionEvent: MWASessionEvent) => {},
+  [],
+);
+
+useMobileWalletAdapterSession(
+  "React Native Fake Wallet",
+  config,
+  handleRequest,
+  handleSessionEvent,
+);
 ```
 
 We will be implementing `handleRequest` and `handleSessionEvent` soon, but let's
@@ -1120,13 +1118,16 @@ function MWAApp() {
   // ------------------- EFFECTS --------------------
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
-    resolve(currentRequest as any, {
-      failReason: MWARequestFailReason.UserDeclined,
-    });
-    return true; // Prevents default back button behavior
-  });
-  return () => backHandler.remove();
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        resolve(currentRequest as any, {
+          failReason: MWARequestFailReason.UserDeclined,
+        });
+        return true; // Prevents default back button behavior
+      },
+    );
+    return () => backHandler.remove();
   }, [currentRequest]);
 
   useEffect(() => {
@@ -1224,15 +1225,15 @@ export type AuthorizeDappResponse =
   | UserDeclinedResponse;
 
 export type AuthorizeDappCompleteResponse = Readonly<{
-    publicKey: Uint8Array;
-    accountLabel?: string;
-    walletUriBase?: string;
-    authorizationScope?: Uint8Array;
-  }>;
+  publicKey: Uint8Array;
+  accountLabel?: string;
+  walletUriBase?: string;
+  authorizationScope?: Uint8Array;
+}>;
 
 export type UserDeclinedResponse = Readonly<{
-    failReason: MWARequestFailReason.UserDeclined;
-  }>;
+  failReason: MWARequestFailReason.UserDeclined;
+}>;
 ```
 
 Our logic will determine which of these to use when resolving the request.
@@ -1306,18 +1307,18 @@ Now let's update our `MWAApp.tsx` to handle this situation by adding to our
 
 ```tsx
 switch (currentRequest?.__type) {
-    case MWARequestType.AuthorizeDappRequest:
-      return (
-        <AuthorizeDappRequestScreen
-          request={currentRequest as AuthorizeDappRequest}
-        />
-      );
-    case MWARequestType.SignAndSendTransactionsRequest:
-    case MWARequestType.SignMessagesRequest:
-    case MWARequestType.SignTransactionsRequest:
-    default:
-      return <Text>TODO Show screen for {currentRequest?.__type}</Text>;
-  }
+  case MWARequestType.AuthorizeDappRequest:
+    return (
+      <AuthorizeDappRequestScreen
+        request={currentRequest as AuthorizeDappRequest}
+      />
+    );
+  case MWARequestType.SignAndSendTransactionsRequest:
+  case MWARequestType.SignMessagesRequest:
+  case MWARequestType.SignTransactionsRequest:
+  default:
+    return <Text>TODO Show screen for {currentRequest?.__type}</Text>;
+}
 ```
 
 Feel free to build and run the wallet again. When you first interact with
@@ -1336,9 +1337,9 @@ will fulfill the `SignAndSendTransactionsRequest` and
 
 ```ts
 export function resolve(
-    request: SignAndSendTransactionsRequest,
-    response: SignAndSendTransactionsResponse,
-  ): void;
+  request: SignAndSendTransactionsRequest,
+  response: SignAndSendTransactionsResponse,
+): void;
 ```
 
 More specifically, we'll have to adhere to what
@@ -1346,14 +1347,14 @@ More specifically, we'll have to adhere to what
 
 ```ts
 export type SignAndSendTransactionsCompleteResponse = Readonly<{
-    signedTransactions: Uint8Array[];
-  }>;
-  export type SignAndSendTransactionsResponse =
-    | SignAndSendTransactionsCompleteResponse
-    | UserDeclinedResponse
-    | TooManyPayloadsResponse
-    | AuthorizationNotValidResponse
-    | InvalidSignaturesResponse;
+  signedTransactions: Uint8Array[];
+}>;
+export type SignAndSendTransactionsResponse =
+  | SignAndSendTransactionsCompleteResponse
+  | UserDeclinedResponse
+  | TooManyPayloadsResponse
+  | AuthorizationNotValidResponse
+  | InvalidSignaturesResponse;
 ```
 
 We are only going to cover the `SignAndSendTransactionsCompleteResponse`,
@@ -1363,9 +1364,9 @@ Most notably, we'll have to adhere to `InvalidSignaturesResponse`:
 
 ```ts
 export type InvalidSignaturesResponse = Readonly<{
-    failReason: MWARequestFailReason.InvalidSignatures;
-    valid: boolean[];
-  }>;
+  failReason: MWARequestFailReason.InvalidSignatures;
+  valid: boolean[];
+}>;
 ```
 
 The `InvalidSignaturesResponse` is unique because it requires an array of
@@ -1389,208 +1390,208 @@ Let's put that all together in a new file called
 
 ```tsx
 import {
-    Connection,
-    Keypair,
-    TransactionSignature,
-    VersionedTransaction,
-  } from "@solana/web3.js";
-  import { useState } from "react";
-  import {
-    MWARequestFailReason,
-    SignAndSendTransactionsRequest,
-    resolve,
-  } from "../lib/mobile-wallet-adapter-walletlib/src";
-  
-  import { useWallet } from "../components/WalletProvider";
-  import { Text, View } from "react-native";
-  import AppInfo from "../components/AppInfo";
-  import ButtonGroup from "../components/ButtonGroup";
-  import { decode } from "bs58";
-  
-  export async function sendSignedTransactions(
-    signedTransactions: Array<Uint8Array>,
-    minContextSlot: number | undefined,
-    connection: Connection,
-  ): Promise<[boolean[], Uint8Array[]]> {
-    const valid = signedTransactions.map(_ => true);
-    const signatures: (Uint8Array | null)[] = await Promise.all(
-      signedTransactions.map(async (byteArray, index) => {
-        try {
-          const transaction: VersionedTransaction =
-            VersionedTransaction.deserialize(byteArray);
-  
-          const signature: TransactionSignature =
-            await connection.sendTransaction(transaction, {
-              minContextSlot: minContextSlot,
-              preflightCommitment: "finalized",
-              skipPreflight: true,
-            });
-  
-          const response = await connection.confirmTransaction(
-            signature,
-            "confirmed",
-          );
-  
-          return decode(signature);
-        } catch (error) {
-          console.log("Failed sending transaction " + error);
-          valid[index] = false;
-          return null;
-        }
-      }),
-    );
-  
-    return [valid, signatures as Uint8Array[]];
-  }
-  
-  export function signTransactionPayloads(
-    wallet: Keypair,
-    payloads: Uint8Array[],
-  ): [boolean[], Uint8Array[]] {
-    const valid = payloads.map(_ => true);
-  
-    const signedPayloads = payloads.map((payload, index) => {
+  Connection,
+  Keypair,
+  TransactionSignature,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { useState } from "react";
+import {
+  MWARequestFailReason,
+  SignAndSendTransactionsRequest,
+  resolve,
+} from "../lib/mobile-wallet-adapter-walletlib/src";
+
+import { useWallet } from "../components/WalletProvider";
+import { Text, View } from "react-native";
+import AppInfo from "../components/AppInfo";
+import ButtonGroup from "../components/ButtonGroup";
+import { decode } from "bs58";
+
+export async function sendSignedTransactions(
+  signedTransactions: Array<Uint8Array>,
+  minContextSlot: number | undefined,
+  connection: Connection,
+): Promise<[boolean[], Uint8Array[]]> {
+  const valid = signedTransactions.map(_ => true);
+  const signatures: (Uint8Array | null)[] = await Promise.all(
+    signedTransactions.map(async (byteArray, index) => {
       try {
         const transaction: VersionedTransaction =
-          VersionedTransaction.deserialize(new Uint8Array(payload));
-  
-        transaction.sign([
-          {
-            publicKey: wallet.publicKey,
-            secretKey: wallet.secretKey,
-          },
-        ]);
-        return transaction.serialize();
-      } catch (error) {
-        console.log("sign error: " + error);
-        valid[index] = false;
-        return new Uint8Array([]);
-      }
-    });
-  
-    return [valid, signedPayloads];
-  }
-  
-  export interface SignAndSendTransactionScreenProps {
-    request: SignAndSendTransactionsRequest;
-  }
-  
-  function SignAndSendTransactionScreen(
-    props: SignAndSendTransactionScreenProps,
-  ) {
-    const { request } = props;
-    const { wallet, connection } = useWallet();
-    const [loading, setLoading] = useState(false);
-  
-    if (!wallet) {
-      throw new Error("Wallet is null or undefined");
-    }
-  
-    const signAndSendTransaction = async (
-      wallet: Keypair,
-      connection: Connection,
-      request: SignAndSendTransactionsRequest,
-    ) => {
-      const [validSignatures, signedTransactions] = signTransactionPayloads(
-        wallet,
-        request.payloads,
-      );
-  
-      if (validSignatures.includes(false)) {
-        resolve(request, {
-          failReason: MWARequestFailReason.InvalidSignatures,
-          valid: validSignatures,
-        });
-        return;
-      }
-  
-      const [validTransactions, transactionSignatures] =
-        await sendSignedTransactions(
-          signedTransactions,
-          request.minContextSlot ? request.minContextSlot : undefined,
-          connection,
+          VersionedTransaction.deserialize(byteArray);
+
+        const signature: TransactionSignature =
+          await connection.sendTransaction(transaction, {
+            minContextSlot: minContextSlot,
+            preflightCommitment: "finalized",
+            skipPreflight: true,
+          });
+
+        const response = await connection.confirmTransaction(
+          signature,
+          "confirmed",
         );
-  
-      if (validTransactions.includes(false)) {
-        resolve(request, {
-          failReason: MWARequestFailReason.InvalidSignatures,
-          valid: validTransactions,
-        });
-        return;
-      }
-  
-      resolve(request, { signedTransactions: transactionSignatures });
-    };
-  
-    const signAndSend = async () => {
-      if (loading) return;
-      setLoading(true);
-      try {
-        await signAndSendTransaction(wallet, connection, request);
+
+        return decode(signature);
       } catch (error) {
-        const valid = request.payloads.map(() => false);
-        resolve(request, {
-          failReason: MWARequestFailReason.InvalidSignatures,
-          valid,
-        });
-        console.error("Transaction failed:", error);
-      } finally {
-        setLoading(false);
+        console.log("Failed sending transaction " + error);
+        valid[index] = false;
+        return null;
       }
-    };
-  
-    const reject = () => {
-      resolve(request, { failReason: MWARequestFailReason.UserDeclined });
-    };
-  
-    return (
-      <View>
-        <AppInfo
-          title="Sign and Send Transaction"
-          appName={request.appIdentity?.identityName}
-          cluster={request.cluster}
-          scope={"app"}
-        />
-        <Text>Payloads</Text>
-        <Text>
-          This request has {request.payloads.length}{" "}
-          {request.payloads.length > 1 ? "payloads" : "payload"} to sign.
-        </Text>
-        <ButtonGroup
-          positiveButtonText="Sign and Send"
-          negativeButtonText="Reject"
-          positiveOnClick={signAndSend}
-          negativeOnClick={reject}
-        />
-        {loading && <Text>Loading...</Text>}
-      </View>
-    );
+    }),
+  );
+
+  return [valid, signatures as Uint8Array[]];
+}
+
+export function signTransactionPayloads(
+  wallet: Keypair,
+  payloads: Uint8Array[],
+): [boolean[], Uint8Array[]] {
+  const valid = payloads.map(_ => true);
+
+  const signedPayloads = payloads.map((payload, index) => {
+    try {
+      const transaction: VersionedTransaction =
+        VersionedTransaction.deserialize(new Uint8Array(payload));
+
+      transaction.sign([
+        {
+          publicKey: wallet.publicKey,
+          secretKey: wallet.secretKey,
+        },
+      ]);
+      return transaction.serialize();
+    } catch (error) {
+      console.log("sign error: " + error);
+      valid[index] = false;
+      return new Uint8Array([]);
+    }
+  });
+
+  return [valid, signedPayloads];
+}
+
+export interface SignAndSendTransactionScreenProps {
+  request: SignAndSendTransactionsRequest;
+}
+
+function SignAndSendTransactionScreen(
+  props: SignAndSendTransactionScreenProps,
+) {
+  const { request } = props;
+  const { wallet, connection } = useWallet();
+  const [loading, setLoading] = useState(false);
+
+  if (!wallet) {
+    throw new Error("Wallet is null or undefined");
   }
-  
-  export default SignAndSendTransactionScreen;
+
+  const signAndSendTransaction = async (
+    wallet: Keypair,
+    connection: Connection,
+    request: SignAndSendTransactionsRequest,
+  ) => {
+    const [validSignatures, signedTransactions] = signTransactionPayloads(
+      wallet,
+      request.payloads,
+    );
+
+    if (validSignatures.includes(false)) {
+      resolve(request, {
+        failReason: MWARequestFailReason.InvalidSignatures,
+        valid: validSignatures,
+      });
+      return;
+    }
+
+    const [validTransactions, transactionSignatures] =
+      await sendSignedTransactions(
+        signedTransactions,
+        request.minContextSlot ? request.minContextSlot : undefined,
+        connection,
+      );
+
+    if (validTransactions.includes(false)) {
+      resolve(request, {
+        failReason: MWARequestFailReason.InvalidSignatures,
+        valid: validTransactions,
+      });
+      return;
+    }
+
+    resolve(request, { signedTransactions: transactionSignatures });
+  };
+
+  const signAndSend = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await signAndSendTransaction(wallet, connection, request);
+    } catch (error) {
+      const valid = request.payloads.map(() => false);
+      resolve(request, {
+        failReason: MWARequestFailReason.InvalidSignatures,
+        valid,
+      });
+      console.error("Transaction failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const reject = () => {
+    resolve(request, { failReason: MWARequestFailReason.UserDeclined });
+  };
+
+  return (
+    <View>
+      <AppInfo
+        title="Sign and Send Transaction"
+        appName={request.appIdentity?.identityName}
+        cluster={request.cluster}
+        scope={"app"}
+      />
+      <Text>Payloads</Text>
+      <Text>
+        This request has {request.payloads.length}{" "}
+        {request.payloads.length > 1 ? "payloads" : "payload"} to sign.
+      </Text>
+      <ButtonGroup
+        positiveButtonText="Sign and Send"
+        negativeButtonText="Reject"
+        positiveOnClick={signAndSend}
+        negativeOnClick={reject}
+      />
+      {loading && <Text>Loading...</Text>}
+    </View>
+  );
+}
+
+export default SignAndSendTransactionScreen;
 ```
 
 Finally, let's edit `MWAApp.tsx` and add our new screen to the switch statement:
 
 ```tsx
 switch (currentRequest?.__type) {
-    case MWARequestType.AuthorizeDappRequest:
-      return (
-        <AuthorizeDappRequestScreen
-          request={currentRequest as AuthorizeDappRequest}
-        />
-      );
-    case MWARequestType.SignAndSendTransactionsRequest:
-      return (
-        <SignAndSendTransactionScreen
-          request={currentRequest as SignAndSendTransactionsRequest}
-        />
-      );
-    case MWARequestType.SignMessagesRequest:
-    case MWARequestType.SignTransactionsRequest:
-    default:
-      return <Text>TODO Show screen for {currentRequest?.__type}</Text>;
-  }
+  case MWARequestType.AuthorizeDappRequest:
+    return (
+      <AuthorizeDappRequestScreen
+        request={currentRequest as AuthorizeDappRequest}
+      />
+    );
+  case MWARequestType.SignAndSendTransactionsRequest:
+    return (
+      <SignAndSendTransactionScreen
+        request={currentRequest as SignAndSendTransactionsRequest}
+      />
+    );
+  case MWARequestType.SignMessagesRequest:
+  case MWARequestType.SignTransactionsRequest:
+  default:
+    return <Text>TODO Show screen for {currentRequest?.__type}</Text>;
+}
 ```
 
 Go ahead and build and run your wallet app. You should now be able to authorize
