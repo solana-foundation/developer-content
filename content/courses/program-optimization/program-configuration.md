@@ -79,7 +79,7 @@ You can also specify multiple features by separating them with a comma.
 anchor test -- --features "feature-one", "feature-two"
 ```
 
-#### Make code conditional using the `cfg` attribute
+#### Make code conditional using the cfg attribute
 
 With a feature defined, you can then use the `cfg` attribute within your code to
 conditionally compile code based on whether or not a given feature is enabled.
@@ -419,10 +419,10 @@ We'll quickly learn while testing our program that it could benefit from the
 flexibility provided by an admin-controlled configuration account and some
 feature flags.
 
-#### 1. Starter
+### 1. Starter
 
-Download the starter code from the `starter` branch
-of [this repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/starter).
+Download the starter code from the
+of [`starter` branch this repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/starter).
 The code contains a program with a single instruction and a single test in the
 `tests` directory.
 
@@ -446,7 +446,7 @@ account balances have been debited and credited accordingly.
 Before we continue, take a few minutes to familiarize yourself with these files
 and their contents.
 
-#### 2. Run the existing test
+### 2. Run the existing test
 
 Let's start by running the existing test.
 
@@ -459,7 +459,7 @@ use _your_ key.
 Finally, run `anchor test` to start the test. It should fail with the following
 output:
 
-```
+```shell
 Error: failed to send transaction: Transaction simulation failed: Error processing Instruction 0: incorrect program id for instruction
 ```
 
@@ -467,7 +467,7 @@ The reason for this error is that we're attempting to use the mainnet USDC mint
 address (as hard-coded in the `lib.rs` file of the program), but that mint
 doesn't exist in the local environment.
 
-#### 3. Adding a `local-testing` feature
+### 3. Adding a local-testing feature
 
 To fix this, we need a mint we can use locally _and_ hard-code into the program.
 Since the local environment is reset often during testing, you'll need to store
@@ -481,13 +481,13 @@ make the program use our local mint but otherwise use the production USDC mint.
 Generate a new keypair by running `solana-keygen grind`. Run the following
 command to generate a keypair with a public key that begins with "env".
 
-```
+```shell
 solana-keygen grind --starts-with env:1
 ```
 
 Once a keypair is found, you should see an output similar to the following:
 
-```
+```shell
 Wrote keypair to env9Y3szLdqMLU9rXpEGPqkjdvVn8YNHtxYNvCKXmHe.json
 ```
 
@@ -527,7 +527,7 @@ pub mod config {
 Next, add the `local-testing` feature to the `Cargo.toml` file located in
 `/programs`.
 
-```
+```shell
 [features]
 ...
 local-testing = []
@@ -571,13 +571,13 @@ before(async () => {
 
 Lastly, run the test with the `local-testing` feature enabled.
 
-```
+```shell
 anchor test -- --features "local-testing"
 ```
 
 You should see the following output:
 
-```
+```shell
 config
   ✔ Payment completes successfully (406ms)
 
@@ -588,7 +588,7 @@ config
 Boom. Just like that, you've used features to run two different code paths for
 different environments.
 
-#### 4. Program Config
+### 4. Program Config
 
 Features are great for setting different values at compilation, but what if you
 wanted to be able to dynamically update the fee percentage used by the program?
@@ -650,7 +650,7 @@ pub mod config {
 }
 ```
 
-#### 5. Program Config State
+### 5. Program Config State
 
 Next, let's define the structure for the `ProgramConfig` state. This account
 will store the admin, the token account where fees are sent, and the fee rate.
@@ -674,7 +674,7 @@ impl ProgramConfig {
 }
 ```
 
-#### 6. Add Initialize Program Config Account Instruction
+### 6. Add Initialize Program Config Account Instruction
 
 Now let's create the instruction logic for initializing the program config
 account. It should only be callable by a transaction signed by the `ADMIN` key
@@ -714,7 +714,7 @@ pub fn initialize_program_config_handler(ctx: Context<InitializeProgramConfig>) 
 }
 ```
 
-#### 7. Add Update Program Config Fee Instruction
+### 7. Add Update Program Config Fee Instruction
 
 Next, implement the instruction logic for updating the config account. The
 instruction should require that the signer match the `admin` stored in the
@@ -756,7 +756,7 @@ pub fn update_program_config_handler(
 }
 ```
 
-#### 8. Add mod.rs and update instructions.rs
+### 8. Add mod.rs and update instructions.rs
 
 Next, let's expose the instruction handlers we created so that the call from
 `lib.rs` doesn't show an error. Start by adding a file `mod.rs` in the
@@ -782,7 +782,7 @@ mod payment;
 pub use payment::*;
 ```
 
-#### 9. Update Payment Instruction
+### 9. Update Payment Instruction
 
 Lastly, let's update the payment instruction to check that the `fee_destination`
 account in the instruction matches the `fee_destination` stored in the program
@@ -864,7 +864,7 @@ pub fn payment_handler(ctx: Context<Payment>, amount: u64) -> Result<()> {
 }
 ```
 
-#### 10. Test
+### 10. Test
 
 Now that we're done implementing our new program configuration struct and
 instructions, let's move on to testing our updated program. To begin, add the
@@ -1004,13 +1004,13 @@ it("Update Program Config Account with unauthorized admin (expect fail)", async 
 
 Finally, run the test using the following command:
 
-```
+```shell
 anchor test -- --features "local-testing"
 ```
 
 You should see the following output:
 
-```
+```shell
 config
   ✔ Initialize Program Config Account (199ms)
   ✔ Payment completes successfully (405ms)
@@ -1022,8 +1022,7 @@ config
 
 And that's it! You've made the program a lot easier to work with moving forward.
 If you want to take a look at the final solution code you can find it on
-the `solution` branch
-of [the same repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/solution).
+the [`solution` branch of the same](https://github.com/Unboxed-Software/solana-admin-instructions/tree/solution).
 
 ## Challenge
 
@@ -1032,12 +1031,14 @@ use the program's upgrade authority as the initial admin. Go ahead and update
 the lab's `initialize_program_config` so that only the upgrade authority can
 call it rather than having a hardcoded `ADMIN`.
 
-Note that the `anchor test` command, when run on a local network, starts a new
-test validator using `solana-test-validator`. This test validator uses a
+<Callout>
+
+The `anchor test` command, when run on a local network, starts a new test
+validator using `solana-test-validator`. This test validator uses a
 non-upgradeable loader. The non-upgradeable loader makes it so the program's
 `program_data` account isn't initialized when the validator starts. You'll
 recall from the lesson that this account is how we access the upgrade authority
-from the program.
+from the program. </Callout>
 
 To work around this, you can add a `deploy` function to the test file that runs
 the deploy command for the program with an upgradeable loader. To use it, run
@@ -1064,7 +1065,7 @@ before(async () => {
 
 For example, the command to run the test with features would look like this:
 
-```
+```shell
 anchor test --skip-deploy -- --features "local-testing"
 ```
 
@@ -1074,6 +1075,7 @@ Try doing this on your own, but if you get stuck, feel free to reference the
 to see one possible solution.
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=02a7dab7-d9c1-495b-928c-a4412006ec20)!
 </Callout>
