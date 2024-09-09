@@ -349,9 +349,23 @@ There's a lot in this example so let's take it one step at a time:
    valid variant (0, 1, 2) corresponds to a specific NoteInstruction variant,
    while any other value results in an error.
 
-Note that there is Rust syntax in this function that we haven't explained yet.
-The `ok_or`, `map_err`, and `?` operators are used for error handling and will
-be discussed in detail in another lesson.
+<Callout>
+
+There is Rust syntax in this function that we haven't explained yet. The
+`ok_or`, `map_err`, and `?` operators are used for error handling:
+
+- [`ok_or`](https://doc.rust-lang.org/std/option/enum.Option.html#method.ok_or):
+  Converts an `Option` to a `Result`. If the `Option` is `None`, it returns the
+  provided error. Otherwise, it returns the `Some` value as `Ok`.
+
+- [`map_err`](https://doc.rust-lang.org/std/result/enum.Result.html#method.map_err):
+  Transforms the error of a `Result` by applying a function to the error. It
+  leaves the `Ok` value unchanged.
+
+- [`?` operator](https://doc.rust-lang.org/rust-by-example/error/result/enter_question_mark.html):
+  Unwraps a `Result` or `Option`. If it’s `Ok` or `Some`, it returns the value.
+  If it’s an `Err` or `None`, it propagates the error up to the calling
+  function. </Callout>
 
 ### Program logic
 
