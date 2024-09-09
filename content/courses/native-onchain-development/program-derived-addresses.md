@@ -22,17 +22,20 @@ description: "Get a deeper understanding of PDAs."
 
 ### What is a Program Derived Address?
 
-Program Derived Addresses (PDAs) are account addresses designed to be signed for
-by a program rather than a secret key. As the name suggests, PDAs are derived
-using a program ID. Optionally, the program finds the derived accounts using the
-ID and a set of "seeds". More on this later, but these seeds will play a role in
-using PDAs for data storage and retrieval.
+Program Derived Addresses (PDAs) are addresses that, instead of being public
+keys, are calculated (or 'found') based on a combination of:
+
+- The program ID
+- A set of "seeds" determined by the programmer.
+
+More on this later, but these seeds will play a role in using PDAs for data
+storage and retrieval.
 
 PDAs serve two main functions:
 
 1. Provide a deterministic way to find a given item of data for a program
-2. Authorize the program that derives a PDA to sign on its behalf, just as a
-   user signs with their secret key.
+2. Authorize the program that owns a PDA to sign on the PDAs behalf, just like a
+   user signs for their own account using their secret key.
 
 This lesson will focus on using PDAs to find and store data. We'll discuss
 signing with a PDA more thoroughly in a future lesson, where we will cover
@@ -43,45 +46,22 @@ Cross-Program Invocations (CPIs).
 Technically, PDAs are _found_ or _derived_ based on a program ID and one or more
 input seeds.
 
-Solana's cryptographic algorithm uses the Ed25519 Elliptic Curve (Ed25519), a
-deterministic signature scheme, to generate corresponding public and secret
-keys, which are called keypairs.
+Unlike other Solana accounts, PDAs are not public keys and don't have secret
+keys. Since public keys are on Solana's Ed25519 curve, PDAs are sometimes called
+'off curve addresses'.
 
-Alternatively, PDAs are addresses that lie _off_ the Ed25519 curve. PDAs are not
-public keys and don't have secret keys. This property of PDAs is essential for
-programs to be able to sign on their behalf, but we'll cover that in a future
-lesson.
-
-PDAs are application-specific, and their seeds must be unique for each PDA
-account. A hashing function deterministically generates a PDA by digesting the
-program ID and seeds.
-
-```rust
-// Pseudocode to show how a PDA address is derived
-/// where `hash` is a hash function whose result is
-/// 32 bytes, e.g., SHA256
-let seeds = &[&[]]; // An array of bytes of a seed
-let hasher = hashing_algorithm::Hasher();
-
-for seed in seeds {
- 	hash(seed);
-}
-
-// Should return 32-byte array
-let output: [u8;32] = hasher.finalize();
-
-// Return a Public key
-solana_program::pubkey::Pubkey::from(output)
-
-```
+PDAs are found using a hashing function that deterministically generates a PDA
+using the program ID and seeds. Both Solana frontend and backend code can
+determine an address using the program ID and seeds, and the same program with
+the same seeds always results in the same Program Derived Address.
 
 ### Seeds
 
-“Seeds” are optional inputs in the `find_program_address` method to derive a
-PDA. For example, seeds can be any combination of public keys, inputs provided
-by a user, or hard-coded values. A PDA can also be derived using only the
-program ID and no additional seeds. However, using seeds to find our PDAs allows
-us to create an arbitrary number of accounts that our program can own.
+“Seeds” are inputs in the `find_program_address` function, this method provides
+an additional seed called a “bump seed.” The find*program_address method adds a
+numeric seed called a bump seed that ensures the result is \_off* on the Ed25519
+curve, ie, is not a valid public key and does not have a corresponding secret
+key.
 
 While you, the developer, determine the seeds to pass into the
 `find_program_address`, this method provides an additional seed called a “bump
