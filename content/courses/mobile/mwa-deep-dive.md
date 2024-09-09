@@ -15,7 +15,7 @@ description:
 - Wallets are just wrappers around a keypair, but they're essential for secure
   key management
 - Mobile and Web dApps handle their wallet-app connection differently
-- MWA handles all of its wallet interaction within the `transact` function
+- MWA handles all of its wallet interaction by wrapping all the wallet's functionalities within the `transact` function for easier intergration.
 - Solana Mobile's `walletlib` does the heavy lifting for surfacing wallet
   requests to wallet apps
 
@@ -147,7 +147,9 @@ authorization request. The returned `AuthorizationResult` will indicate the
 user's acceptance or rejection. If accepted, this result object provides you
 with the user's account as well as an `auth_token` you can use in
 `wallet.reauthorize()` for subsequent calls. This auth token ensures that other
-apps can't pretend to be your app.
+apps can't pretend to be your app. The auth token is generated during the `authorize()` 
+call, and subsequent requests from the dApp can use the `reauthorize()` method with the 
+stored token to maintain secure communication without repeatedly prompting the user.
 
 ```tsx
 transact(async (wallet: Web3MobileWallet) => {
@@ -252,6 +254,25 @@ transact(async (wallet: Web3MobileWallet) => {
 Every time you want to call these methods, you will have to call
 `wallet.authorize()` or `wallet.reauthorize()`.
 
+When invoking `wallet.signAndSendTransactions(...)`, it’s essential to
+handle transaction failures gracefully. Transactions can fail due to
+various reasons such as network issues, signature mismatches, or insufficient
+funds. Proper error handling ensures a smooth user experience, even 
+when the transaction process encounters issues:
+
+
+```tsx
+transact(async (wallet: Web3MobileWallet) => {
+  try {
+    const result = await wallet.signAndSendTransactions(...);
+    // Handle success
+  } catch (error) {
+    console.error("Failed to sign and send transactions:", error);
+    // Implement error handling logic
+  }
+});
+```
+
 And that's it! You should have enough information to get started. The Solana
 mobile team has put in a lot of work to make the development experience as
 seamless as possible between the two.
@@ -269,9 +290,11 @@ sections; simply try to get a sense of the overall flow.
 
 Solana Mobile has done the vast majority of the heavy lifting by creating the
 `mobile-wallet-adapter-walletlib`. This library handles all the low-level
-communication between dApps and wallets. However, this package is still in
-development and is not available through npm. From their GitHub:
+communication between dApps and wallets:
 
+```bash
+npm @solana-mobile/mobile-wallet-adapter-walletlib
+```
 > This package is still in alpha and is not production ready. However, the API
 > is stable and will not change drastically, so you can begin integration with
 > your wallet.
@@ -351,7 +374,7 @@ user's secret key to sign the transaction provided by the request, send the
 request to an RPC provider, and then respond to the requesting dApp using a
 `resolve` function.
 
-All the `resolve` function does is tell the dApp what happened and close the
+All the `resolve` function does is tell the dApp what happened and closes the
 session. The `resolve` function takes two arguments: `request` and `response`.
 The types of `request` and `response` are different depending on what the
 original request was. So in the example of
@@ -383,7 +406,7 @@ Which response you send would depend on the result of attempting to sign and
 send the transaction.
 
 You can dig into the
-[`walletlib` source](https://github.com/solana-mobile/mobile-wallet-adapter/tree/main/js/packages/mobile-wallet-adapter-walletlib)
+[`walletlib` source](https://github.com/solana-mobile/mobile-wallet-adapter/blob/main/js/packages/mobile-wallet-adapter-walletlib/src/resolve.ts)
 if you'd like to know all of the types associated with `resolve`.
 
 One final point is that the component used for interacting with `walletlib` also
@@ -426,52 +449,48 @@ app-wallet relationship.
 Before we start programming our wallet, we need to do some setup. You will need
 a React Native development environment and a Solana dApp to test on. If you have
 completed the
-[Basic Solana Mobile lesson](/content/courses/mobile/basic-solana-mobile), both
-of these requirements should be met with the counter app installed on your
+[Introduction to Solana Mobile lab](/content/courses/mobile/intro-to-solana-mobile), both
+of these requirements should be met and the counter app installed on your
 Android device/emulator.
 
-If you _haven't_ completed the last lesson you will need to:
+If you _haven't_ completed/done the [intro to solana mobile](/content/courses/mobile/intro-to-solana-mobile) you will need to:
 
 1. Setup an
-   [Android React Native developer environment](https://reactnative.dev/docs/environment-setup)
+   [Android React Native developer environment](https://reactnative.dev/docs/set-up-your-environment)
    with a device or emulator
 2. Install a
-   [Devnet Solana dApp](https://github.com/Unboxed-Software/solana-react-native-counter.git)
+   [Devnet Solana dApp](https://github.com/Unboxed-Software/solana-react-native-counter.git) by 
+   doing the following steps in your terminal:
 
-If you want to install the app from the previous lesson, you can:
 
 ```bash
 git clone https://github.com/Unboxed-Software/solana-react-native-counter.git
 cd solana-react-native-counter
-git checkout solution
 npm run install
 ```
 
-#### 1. Plan out the app's structure
+#### 1. Planning out the app's structure
 
 We are making the wallet from scratch, so let's look at our major building
 blocks.
 
-First, we'll make the actual wallet app (popup not included). This will include
-creating or modifying the following:
+First, we'll make the actual wallet app (popup not included). This will include:
 
-- WalletProvider.tsx
-- MainScreen.tsx
-- App.tsx
+- Creating a WalletProvider.tsx
+- Modifying the MainScreen.tsx
+- Modifying App.tsx
 
 Next, we'll make a boilerplate MWA app that displays 'Im a Wallet' anytime the
-wallet is requested from a different dApp. This will include creating or
-modifying the following:
+wallet is requested from a different dApp. This will include:
 
-- MWAApp.tsx
-- index.js
+- Creating a MWAApp.tsx
+- Modifying index.js
 
-Then we'll set up all of our UI and request routing. This will mean creating or
-modifying the following:
+Then we'll set up all of our UI and request routing. This will mean:
 
-- MWAApp.tsx
-- ButtonGroup.tsx
-- AppInfo.tsx
+- Modifying the MWAApp.tsx
+- Creating a ButtonGroup.tsx
+- Creating a AppInfo.tsx
 
 Finally, we'll implement two actual request functions, authorize and sign and
 send transactions. This entails creating the following:
@@ -479,7 +498,7 @@ send transactions. This entails creating the following:
 - AuthorizeDappRequestScreen.tsx
 - SignAndSendTransactionScreen.tsx
 
-#### 2. Scaffold the app
+#### 2. Scaffold the Wallet app
 
 Let's scaffold the app with:
 
@@ -518,46 +537,20 @@ npm install \
   fast-text-encoding
 ```
 
-The next step is a bit messy. We need to depend on Solana's
-`mobile-wallet-adapter-walletlib` package, which handles all of the low-level
-communication. However, this package is still in development and is not
-available through npm. From their github:
+We need to depend on Solana's `mobile-wallet-adapter-walletlib` package, which handles all of the low-level
+communication. 
 
-> This package is still in alpha and is not production ready. However, the API
+> A reminder that this package is still in alpha and is not production ready. However, the API
 > is stable and will not change drastically, so you can begin integration with
 > your wallet.
 
-However, we have extracted the package and made it available on GitHub. If
-you're interested in how we did that, take a look at the README
-[on the GitHub repo where we've made this package available](https://github.com/Unboxed-Software/mobile-wallet-adapter-walletlib)
 
 Let's install the package in a new folder `lib`:
 
 ```bash
-mkdir lib
-cd lib
-git clone https://github.com/Unboxed-Software/mobile-wallet-adapter-walletlib.git
+npm @solana-mobile/mobile-wallet-adapter-walletlib
 ```
 
-Next, we have to manually link it by adding
-`@solana-mobile/mobile-wallet-adapter-walletlib` to our `package.json`
-dependencies with the file path as the resolution:
-
-```json
-"dependencies": {
-    ...
-    "@solana-mobile/mobile-wallet-adapter-walletlib": "file:./lib/mobile-wallet-adapter-walletlib",
-    ...
-}
-```
-
-Let npm know about the new package by installing again in the root of your
-project:
-
-```bash
-cd ..
-npm install
-```
 
 Next, in `android/build.gradle`, change the `minSdkVersion` to version `23`.
 
@@ -666,13 +659,13 @@ export function WalletProvider(props: WalletProviderProps) {
     try {
       const storedKey = await AsyncStorage.getItem(ASYNC_STORAGE_KEY);
       let keyPair;
-      if (storedKey && storedKey !== null) {
+      if (storedKey) {
         const encodedKeypair: EncodedKeypair = JSON.parse(storedKey);
         keyPair = decodeKeypair(encodedKeypair);
       } else {
         // Generate a new random pair of keys and store them in local storage for later retrieval
         // This is not secure! Async storage is used for demo purpose. Never store keys like this!
-        keyPair = await Keypair.generate();
+        keyPair = Keypair.generate();
         await AsyncStorage.setItem(
           ASYNC_STORAGE_KEY,
           JSON.stringify(encodeKeypair(keyPair)),
@@ -688,9 +681,14 @@ export function WalletProvider(props: WalletProviderProps) {
     fetchOrGenerateKeypair();
   }, []);
 
+  const connection = useMemo(
+    () => new Connection(rpcUrl ?? "https://api.devnet.solana.com"),
+    [rpcUrl]
+  );
+
   const value = {
     wallet: keyPair,
-    connection: new Connection(rpcUrl ?? "https://api.devnet.solana.com"),
+    connection,
   };
 
   return (
@@ -728,6 +726,7 @@ function MainScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [balance, setBalance] = useState<null | number>(null);
   const { wallet, connection } = useWallet();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
     updateBalance();
@@ -740,6 +739,8 @@ function MainScreen() {
         setBalance(lamports / LAMPORTS_PER_SOL);
       } catch (error) {
         console.error("Failed to fetch / update balance:", error);
+        setErrorMessage("Failed to fetch balance");
+
       }
     }
   };
@@ -756,6 +757,7 @@ function MainScreen() {
         await updateBalance();
       } catch (error) {
         console.log("error requesting airdrop", error);
+        setErrorMessage("Airdrop failed");
       }
 
       setIsLoading(false);
@@ -769,7 +771,8 @@ function MainScreen() {
       <Text>Balance:</Text>
       <Text>{balance?.toFixed(5) ?? ""}</Text>
       {isLoading && <Text>Loading...</Text>}
-      {balance != null && !isLoading && balance < 0.005 && (
+      {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>}
+      {balance !== null && !isLoading && balance < 0.005 && (
         <Button title="Airdrop 1 SOL" onPress={airdrop} />
       )}
     </View>
@@ -1118,16 +1121,17 @@ function MWAApp() {
   // ------------------- EFFECTS --------------------
 
   useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => {
-      resolve(currentRequest as any, {
-        failReason: MWARequestFailReason.UserDeclined,
-      });
-      return false;
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+    resolve(currentRequest as any, {
+      failReason: MWARequestFailReason.UserDeclined,
     });
-  }, []);
+    return true; // Prevents default back button behavior
+  });
+  return () => backHandler.remove();
+  }, [currentRequest]);
 
   useEffect(() => {
-    if (currentSession?.__type == MWASessionEventType.SessionTerminatedEvent) {
+    if (currentSession?.__type === MWASessionEventType.SessionTerminatedEvent) {
       endWalletSession();
     }
   }, [currentSession]);
@@ -1137,7 +1141,7 @@ function MWAApp() {
       return;
     }
 
-    if (currentRequest.__type == MWARequestType.ReauthorizeDappRequest) {
+    if (currentRequest.__type === MWARequestType.ReauthorizeDappRequest) {
       resolve(currentRequest, {
         authorizationScope: new TextEncoder().encode("app"),
       });
