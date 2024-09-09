@@ -1,8 +1,8 @@
 ---
 title: Intro to Anchor development
 objectives:
-  - Use the Anchor framework to build a basic program
-  - Describe the basic structure of an Anchor program
+  - Use the Anchor framework to build a basic Solana program
+  - Understand the structure of an Anchor program
   - Explain how to implement basic account validation and security checks with
     Anchor
 description: "Create your first Solana onchain program in Anchor."
@@ -10,73 +10,78 @@ description: "Create your first Solana onchain program in Anchor."
 
 ## Summary
 
-- **Programs** on Solana have **instruction handlers** that execute instruction
-  logic.
-- **Rust** is the most common language for building Solana programs. The
-  **Anchor** framework takes care of common grunt work - like reading data from
-  incoming instructions, and checking the right accounts are provided - so you
-  can focus on building your Solana program.
+- Solana **programs** are comprised of **instruction handlers**, which execute
+  the program's logic.
+- [**Rust**](https://doc.rust-lang.org) is the most common language for building
+  Solana programs. The [**Anchor**](https://www.anchor-lang.com/) framework
+  streamlines the development process by automating tasks like data
+  deserialization and account validation, allowing developers to focus on the
+  core logic of their program.
 
 ## Lesson
 
 Solana's ability to run arbitrary executable code is part of what makes it so
-powerful. Solana programs, similar to "smart contracts" in other blockchain
-environments, are quite literally the backbone of the Solana ecosystem. And the
-collection of programs grows daily as developers and creators dream up and
-deploy new programs.
+powerful. Solana programs, much like "smart contracts" in other blockchains,
+form the foundation of the ecosystem. Developers continually expand this
+collection of programs as they create and deploy new solutions using programs.
 
-This lesson will give you a basic introduction to writing and deploying a Solana
-program using the Rust programming language and the Anchor framework.
+Before starting this lesson, you should have a basic understanding of the Rust
+programming language. You can learn the fundamentals from
+[The Rust Book](https://doc.rust-lang.org/book/).
+
+This lesson introduces the basics of writing and deploying a Solana program
+using the Rust programming language and the Anchor framework.
 
 ### What is Anchor?
 
-Anchor makes writing Solana programs easier, faster, and more secure, making it
-the "go-to" framework for Solana development. It makes it easier to organize and
-reason about your code, implements common security checks automatically, and
-removes a significant amount of boilerplate code that is otherwise associated
-with writing a Solana program.
+Anchor simplifies Solana development by automating common tasks such as account
+validation and deserialization. It reduces boilerplate code, making programs
+easier to write, understand, and maintain. As a result, it's become the "go-to"
+framework for many developers in the Solana ecosystem.
 
 ### Anchor program structure
 
-Anchor uses macros and traits to generate boilerplate Rust code for you. These
-provide a clear structure to your program so you can more easily reason about
-your code. The main high-level macros and attributes are:
+Anchor uses macros and traits to streamline the process of writing Solana
+programs. These provide a clear structure to your program so you can more easily
+reason about your code. The main high-level macros and attributes are:
 
-- `declare_id` - a macro for declaring the program’s onchain address
-- `#[program]` - an attribute macro used to denote the module containing the
-  program’s instruction logic
-- `Accounts` - a trait applied to structs representing the list of accounts
-  required for an instruction
-- `#[account]` - an attribute macro used to define custom account types for the
-  program
+- `declare_id()` - a macro for declaring the program's onchain address
+- `#[program]` - an attribute macro used to mark the module containing
+  instruction handlers.
+- `Accounts` - a trait applied to structs for defining the required accounts for
+  instructions.
+- `#[account]` - an attribute macro used to mark structs as account types,
+  providing serialization, ownership, and discriminator checks.
+
+If you'd like to dive deeper into understanding the Anchor framework, you can
+refer to [The Anchor Book](https://book.anchor-lang.com/).
 
 Let's talk about each of them before putting all the pieces together.
 
 ### Declare your program ID
 
-The `declare_id` macro is used to specify the onchain address of the program
-(i.e. the `programId`). When you build an Anchor program for the first time, the
-framework will generate a new keypair. This becomes the default keypair used to
-deploy the program unless specified otherwise. The corresponding public key
-should be used as the `programId` specified in the `declare_id!` macro.
+The
+[`declare_id!()`](https://docs.rs/anchor-lang/latest/anchor_lang/macro.declare_program.html)
+macro specifies the onchain address (or `programId`) of your program. When
+building an Anchor program for the first time, a new keypair is generated, which
+becomes the program's default keypair used to deploy the program unless
+specified otherwise. The corresponding public key should be used as the
+`programId` specified in the `declare_id!()` macro.
 
 ```rust
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 ```
 
-### Define instruction logic
+### Define Instruction Handler Logic
 
-The `#[program]` attribute macro defines the module containing all of your
-program's instructions. This is where you implement the business logic for each
-instruction in your program.
-
-Each public function in the module with the `#[program]` attribute will be
-treated as a separate instruction.
-
-Each instruction function requires a parameter of type `Context` and can
-optionally include additional function parameters representing instruction data.
-Anchor will automatically handle instruction data deserialization so that you
-can work with instruction data as Rust types.
+Anchor's
+[`#[program]`](https://docs.rs/anchor-lang/latest/anchor_lang/attr.program.html)
+attribute defines the module containing all instruction handlers defining all
+entries into a Solana program. Each instruction handler receives a `Context`
+type parameter, which provides instruction metadata and account information.
+Additional instruction handler parameters can represent instruction data, which
+Anchor automatically deserializes, allowing you to work with instruction data as
+native Rust types.
 
 ```rust
 #[program]
@@ -84,113 +89,163 @@ mod program_module_name {
     use super::*;
 
     pub fn instruction_one(ctx: Context<InstructionAccounts>, instruction_data: u64) -> Result<()> {
-		ctx.accounts.account_name.data = instruction_data;
+    ctx.accounts.account_name.data = instruction_data;
         Ok(())
     }
 }
 ```
 
-#### Instruction `Context`
+#### Understand the Instruction Handler Context
 
-The `Context` type exposes instruction metadata and accounts to your instruction
-logic.
+The
+[`Context`](https://docs.rs/anchor-lang/latest/anchor_lang/context/struct.Context.html)
+type is a generic structure that provides access to the accounts and metadata
+required for an instruction handler.
 
 ```rust
-pub struct Context<'a, 'b, 'c, 'info, T> {
+pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
     /// Currently executing program id.
     pub program_id: &'a Pubkey,
     /// Deserialized accounts.
     pub accounts: &'b mut T,
     /// Remaining accounts given but not deserialized or validated.
     /// Be very careful when using this directly.
-    pub remaining_accounts: &'c [UncheckedAccount<'info>],
+    pub remaining_accounts: &'c [AccountInfo<'info>],
     /// Bump seeds found during constraint validation. This is provided as a
     /// convenience so that handlers don't have to recalculate bump seeds or
     /// pass them in as arguments.
-    pub bumps: BTreeMap<String, u8>,
+    /// Type is the bumps struct generated by #[derive(Accounts)]
+    pub bumps: T::Bumps,
 }
 ```
 
 `Context` is a generic type where `T` defines the list of accounts an
-instruction requires. When you use `Context`, you specify the concrete type of
-`T` as a struct that adopts the `Accounts` trait (e.g.
-`Context<AddMovieReviewAccounts>`). Through this context argument the
-instruction can then access:
+instruction handler requires. The `T` type must implement the `Accounts` trait,
+which is typically derived using the `#[derive(Accounts)]` macro. When you use
+`Context`, you specify the concrete type of `T` as a struct that adopts the
+`Accounts` trait (e.g., `Context<MyAccounts>`). Through this context argument,
+the instruction handler can access:
 
 - The accounts passed into the instruction (`ctx.accounts`)
 - The program ID (`ctx.program_id`) of the executing program
-- The remaining accounts (`ctx.remaining_accounts`). The `remaining_accounts` is
-  a vector that contains all accounts that were passed into the instruction but
-  are not declared in the `Accounts` struct.
+- The remaining accounts (`ctx.remaining_accounts`), which are the accounts
+  passed into the instruction but not declared in the `Accounts` struct
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
 
-### Define instruction accounts
+```rust
+pub fn add_movie_review(ctx: Context<AddMovieReviewAccounts>, rating: u8, description: String) -> Result<()> {
+    let movie_review = &mut ctx.accounts.movie_review;
+    let movie = &ctx.accounts.movie;
+    let reviewer = &ctx.accounts.reviewer;
+    let clock = &ctx.accounts.clock;
 
-The `Accounts` trait defines a data structure of validated accounts. Structs
-adopting this trait define the list of accounts required for a given
-instruction. These accounts are then exposed through an instruction's `Context`
-so that manual account iteration and deserialization is no longer necessary.
+    // Set the movie review data
+    movie_review.rating = rating;
+    movie_review.description = description;
+    movie_review.movie = movie.key();
+    movie_review.reviewer = reviewer.key();
+    movie_review.created_at = clock.unix_timestamp;
 
-You typically apply the `Accounts` trait through the `derive` macro (e.g.
-`#[derive(Accounts)]`). This implements an `Accounts` deserializer on the given
-struct and removes the need to deserialize each account manually.
+    // Increment the movie's review count
+    movie.review_count += 1;
 
-Implementations of the `Accounts` trait are responsible for performing all
-requisite constraint checks to ensure the accounts meet the conditions required
-for the program to run securely. Constraints are provided for each field using
-the `#account(..)` attribute (more on that shortly).
+    Ok(())
+}
+```
 
-For example, `instruction_one` requires a `Context` argument of type
-`InstructionAccounts`. The `#[derive(Accounts)]` macro is used to implement the
-`InstructionAccounts` struct which includes three accounts: `account_name`,
-`user`, and `system_program`.
+### Define Instruction Accounts
+
+The
+[`Accounts`](https://docs.rs/anchor-lang/latest/anchor_lang/trait.Accounts.html)
+trait defines a data structure for validated accounts required by an instruction
+handler. Structs that implement this trait specify the accounts an instruction
+handler needs, which are exposed through the `Context` type, eliminating the
+need for manual account iteration and deserialization.
+
+Typically, you apply the `Accounts` trait using the `derive` macro (e.g.
+[`#[derive(Accounts)]`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html)).
+This automatically implements an `Accounts` deserializer on the struct, so each
+account doesn't need to be deserialized manually.
+
+Implementations of the `Accounts` trait are responsible for executing constraint
+checks to verify that the provided accounts meet the necessary conditions for
+secure program execution. These constraints are applied to each field using the
+`#account(..)` attribute.
+
+For instance, an instruction handler `instruction_one` uses a `Context`
+parameter of type `InstructionAccounts`. The `#[derive(Accounts)]` macro
+implements the `InstructionAccounts` struct, which contains the following
+accounts: `account_name`, `user`, and `system_program`.
 
 ```rust
+// Constants
+pub const DISCRIMINATOR_SIZE: usize = 8;
+
 #[program]
-mod program_module_name {
+pub mod program_module_name {
     use super::*;
+
     pub fn instruction_one(ctx: Context<InstructionAccounts>, instruction_data: u64) -> Result<()> {
-		...
+        // Instruction handler logic goes here
         Ok(())
     }
 }
 
 #[derive(Accounts)]
-pub struct InstructionAccounts {
-    #[account(init, payer = user, space = 8 + 8)]
+pub struct InstructionAccounts<'info> {
+    #[account(
+        init,
+        payer = user,
+        space = DISCRIMINATOR_SIZE + AccountStruct::INIT_SPACE
+    )]
     pub account_name: Account<'info, AccountStruct>,
     #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>,
+}
 
+#[account]
+#[derive(InitSpace)]
+pub struct AccountStruct {
+    pub data: u64,
 }
 ```
 
-When `instruction_one` is invoked, the program:
+When `instruction_one` is invoked, the program using the Anchor framework:
 
-- Checks that the accounts passed into the instruction match the account types
-  specified in the `InstructionAccounts` struct
-- Checks the accounts against any additional constraints specified
+- Verifies that the accounts passed into the instruction match the account types
+  specified in the `InstructionAccounts` struct.
+- Checks the accounts against any additional constraints specified in the
+  `account` attributes.
+- Initializes the `account_name` account if it doesn't exist, using the `user`
+  as the payer.
+- Allocates the correct amount of space for the `account_name` account, which
+  includes the 8-byte discriminator(`DISCRIMINATOR_SIZE`) and the space required
+  by `AccountStruct`.
 
-If any accounts passed into `instruction_one` fail the account validation or
-security checks specified in the `InstructionAccounts` struct, then the
-instruction fails before even reaching the program logic.
+If any accounts passed into the `instruction_one` instruction handler fail the
+account validation or security checks specified in the `InstructionAccounts`
+struct, the execution fails before reaching the custom logic within the
+`instruction_one` function.
 
-### Account validation
+### Account Validation
 
 You may have noticed in the previous example that one of the accounts in
 `InstructionAccounts` was of type `Account`, one was of type `Signer`, and one
 was of type `Program`.
 
 Anchor provides a number of account types that can be used to represent
-accounts. Each type implements different account validation. We’ll go over a few
+accounts. Each type implements different account validation. We'll go over a few
 of the common types you may encounter, but be sure to look through the
 [full list of account types](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/index.html).
 
-#### `Account`
+#### Account
 
-`Account` is a wrapper around `UncheckedAccount` that verifies program ownership
-and deserializes the underlying data into a Rust type.
+[`Account`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/account/struct.Account.html)
+is a wrapper
+around [`UncheckedAccount`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/unchecked_account/struct.UncheckedAccount.html)
+that verifies program ownership and deserializes the underlying data into a Rust
+type.
 
 ```rust
 // Deserializes this info
@@ -206,36 +261,39 @@ pub struct UncheckedAccount<'a> {
 }
 ```
 
-Recall the previous example where `InstructionAccounts` had a field
-`account_name`:
+In the previous example, the `InstructionAccounts` struct contained the
+following field:
 
 ```rust
 pub account_name: Account<'info, AccountStruct>
 ```
 
-The `Account` wrapper here does the following:
+The `Account` wrapper is responsible for:
 
-- Deserializes the account `data` in the format of type `AccountStruct`
-- Checks that the program owner of the account matches the program owner
-  specified for the `AccountStruct` type.
+- Deserializing the account `data` into the specified type (`AccountStruct`).
+- Verifying that the account's program owner matches the program owner required
+  for the `AccountStruct` type.
 
-When the account type specified in the `Account` wrapper is defined within the
-same crate using the `#[account]` attribute macro, the program ownership check
-is against the `programId` defined in the `declare_id!` macro.
+When the account type inside the `Account` wrapper is defined within the same
+crate using the `#[account]` attribute macro, the program ownership check
+ensures that the account is owned by the program ID specified in the
+`declare_id!()` macro.
 
-The following are the checks performed:
+The following checks are performed to validate the account:
 
 ```rust
-// Checks
-Account.info.owner == T::owner()
-!(Account.info.owner == SystemProgram && Account.info.lamports() == 0)
+// Checks performed
+Account.info.owner == T::owner() // Ensures the account is owned by the correct program
+!(Account.info.owner == SystemProgram && Account.info.lamports() == 0) // Ensures the account is not uninitialized
 ```
 
-#### `Signer`
+#### Signer
 
-The `Signer` type validates that the given account signed the transaction. No
-other ownership or type checks are done. You should only use the `Signer` when
-the underlying account data is not required in the instruction.
+The
+[`Signer`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/signer/struct.Signer.html)
+type validates that the given account signed the transaction. No other ownership
+or type checks are done. You should only use the `Signer` when the underlying
+account data is not required in the instruction.
 
 For the `user` account in the previous example, the `Signer` type specifies that
 the `user` account must be a signer of the instruction.
@@ -243,58 +301,68 @@ the `user` account must be a signer of the instruction.
 The following check is performed for you:
 
 ```rust
-// Checks
+// Checks performed
 Signer.info.is_signer == true
 ```
 
-#### `Program`
+#### Program
 
-The `Program` type validates that the account is a certain program.
+The
+[`Program`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/program/struct.Program.html)
+type ensures that an account is a specific program.
 
-For the `system_program` account in the previous example, the `Program` type is
-used to specify the program should be the system program. Anchor provides a
-`System` type which includes the `programId` of the system program to check
-against.
-
-The following checks are performed for you:
+In the previous example, the `system_program` account used the `Program` type to
+validate that the account corresponds to the system program. Anchor provides a
+`System` type that includes the `programId` of the system program, which is used
+for validation.
 
 ```rust
-//Checks
-account_info.key == expected_program
-account_info.executable == true
+// Checks performed
+account_info.key == expected_program     // Ensures the account is the expected program
+account_info.executable == true          // Ensures the account is executable
 ```
 
-### Add constraints with `#[account(..)]`
+### Add Constraints with #[account(..)]
 
-The `#[account(..)]` attribute macro is used to apply constraints to accounts.
-We'll go over a few constraint examples in this and future lessons, but at some
-point be sure to look at the full
-[list of possible constraints](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html).
+The
+[`#[account(..)]`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html#normal-constraints)
+attribute macro applies constraints to accounts. While this example covers a few
+constraint cases, you can refer to the full
+[list of possible `#[account(..)]` constraints](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html)
+for further details.
 
-Recall again the `account_name` field from the `InstructionAccounts` example.
+Here's a recall of the `account_name` field from the `InstructionAccounts`
+example:
 
 ```rust
-#[account(init, payer = user, space = 8 + 8)]
+#[account(
+    init,
+    payer = user,
+    space = DISCRIMINATOR_SIZE + AccountStruct::INIT_SPACE
+)]
 pub account_name: Account<'info, AccountStruct>,
 #[account(mut)]
 pub user: Signer<'info>,
 ```
 
-Notice that the `#[account(..)]` attribute contains three comma-separated
-values:
+The `#[account(..)]` attribute includes three comma-separated values:
 
-- `init` - creates the account via a CPI to the system program and initializes
-  it (sets its account discriminator)
-- `payer` - specifies the payer for the account initialization to be the `user`
-  account defined in the struct
-- `space`- specifies that the space allocated for the account should be `8 + 8`
-  bytes. The first 8 bytes are for a discriminator that Anchor automatically
-  adds to identify the account type. The next 8 bytes allocate space for the
-  data stored on the account as defined in the `AccountStruct` type.
+- `init` - Initializes the account by creating it through a CPI to the system
+  program and setting its discriminator.
+- `payer` - Specifies the `user` account as the payer for the account
+  initialization.
+- `space`- Allocates space for the account as
+  `DISCRIMINATOR_SIZE + AccountStruct::INIT_SPACE`. The discriminator occupies
+  the first 8 bytes, and the remaining space is allocated for the account data
+  based on `AccountStruct`.
 
 For `user` we use the `#[account(..)]` attribute to specify that the given
 account is mutable. The `user` account must be marked as mutable because
 lamports will be deducted from the account to pay for the initialization of
+`account_name`.
+
+The `#[account(mut)]` attribute is applied to `user`, marking the account as
+mutable, as lamports are deducted from `user` to pay for the initialization of
 `account_name`.
 
 ```rust
@@ -302,8 +370,11 @@ lamports will be deducted from the account to pay for the initialization of
 pub user: Signer<'info>,
 ```
 
-Note that the `init` constraint placed on `account_name` automatically includes
-a `mut` constraint so that both `account_name` and `user` are mutable accounts.
+<Callout>
+
+The `init` constraint placed on `account_name` automatically includes a `mut`
+constraint so that both `account_name` and `user` are mutable accounts.
+</Callout>
 
 ### `#[account]`
 
@@ -319,27 +390,26 @@ of a Solana account. It implements the following traits:
 - `Owner`
 
 You can read more about the
-[details of each trait](https://docs.rs/anchor-lang/latest/anchor_lang/attr.account.html).
-However, mostly what you need to know is that the `#[account]` attribute enables
-serialization and deserialization, and implements the discriminator and owner
-traits for an account.
+[details of each trait of `#[account]`](https://docs.rs/anchor-lang/latest/anchor_lang/attr.account.html),
+but here's the key takeaway: the `#[account]` attribute enables serialization
+and deserialization, and implements the discriminator and owner traits for an
+account.
 
-The discriminator is an 8-byte unique identifier for an account type derived
-from the first 8 bytes of the SHA256 hash of the account type's name. The first
-8 bytes are reserved for the account discriminator when implementing account
-serialization traits (which is almost always in an Anchor program).
+The discriminator is an 8-byte unique identifier derived from the first 8 bytes
+of the SHA256 hash of the account type's name. This discriminator is reserved
+for the first 8 bytes when implementing account serialization traits, which is
+standard in Anchor programs.
 
-As a result, any calls to `AccountDeserialize`’s `try_deserialize` will check
-this discriminator. If it doesn’t match, an invalid account was given, and the
-account deserialization will exit with an error.
+When `AccountDeserialize`'s `try_deserialize` is called, it checks the
+discriminator. If the discriminator doesn't match, it indicates an invalid
+account, and the deserialization exits with an error.
 
-The `#[account]` attribute also implements the `Owner` trait for a struct using
-the `programId` declared by `declareId` of the crate `#[account]` is used in. In
-other words, all accounts initialized using an account type defined using the
-`#[account]` attribute within the program are also owned by the program.
+The `#[account]` attribute also implements the `Owner` trait, setting the
+account owner to the `programId` declared by `declareId` in the crate. Any
+account initialized using an account type defined with the `#[account]`
+attribute is owned by the program.
 
-As an example, let's look at `AccountStruct` used by the `account_name` of
-`InstructionAccounts`
+For example, in `InstructionAccounts`, `account_name` uses the `AccountStruct`:
 
 ```rust
 #[derive(Accounts)]
@@ -360,18 +430,18 @@ The `#[account]` attribute ensures that it can be used as an account in
 
 When the `account_name` account is initialized:
 
-- The first 8 bytes is set as the `AccountStruct` discriminator
-- The data field of the account will match `AccountStruct`
-- The account owner is set as the `programId` from `declare_id`
+- The first 8 bytes are set as the `AccountStruct` discriminator.
+- The account data field matches `AccountStruct`.
+- The account owner is set to the `programId` from `declare_id!()`.
 
 ### Bring it all together
 
-When you combine all of these Anchor types you end up with a complete program.
-Below is an example of a basic Anchor program with a single instruction that:
+By combining these Anchor types, you can create a complete program. Here's an
+example of a basic Anchor program with a single instruction handler that:
 
 - Initializes a new account
-- Updates the data field on the account with the instruction data passed into
-  the instruction
+- Updates the account's `data` field with the instruction data passed into the
+  instruction handler
 
 ```rust
 // Use this import to gain access to common anchor features
@@ -380,10 +450,12 @@ use anchor_lang::prelude::*;
 // Program onchain address
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
-// Instruction logic
+pub const DISCRIMINATOR_SIZE: usize = 8;
+
 #[program]
 mod program_module_name {
     use super::*;
+    // Instruction handler logic
     pub fn instruction_one(ctx: Context<InstructionAccounts>, instruction_data: u64) -> Result<()> {
         ctx.accounts.account_name.data = instruction_data;
         Ok(())
@@ -393,18 +465,22 @@ mod program_module_name {
 // Validate incoming accounts for instructions
 #[derive(Accounts)]
 pub struct InstructionAccounts<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(
+        init,
+        payer = user,
+        space = DISCRIMINATOR_SIZE + AccountStruct::INIT_SPACE
+    )]
     pub account_name: Account<'info, AccountStruct>,
     #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>,
-
 }
 
 // Define custom program account type
 #[account]
+#[derive(InitSpace)]
 pub struct AccountStruct {
-    data: u64
+    pub data: u64
 }
 ```
 
@@ -413,14 +489,16 @@ You are now ready to build your own Solana program using the Anchor framework!
 ## Lab
 
 Before we begin, install Anchor by
-[following the steps from the Anchor docs](https://www.anchor-lang.com/docs/installation).
+[following the steps from the Anchor docs](https://www.anchor-lang.com/docs/installation)
+or the
+[local setup lesson](/content/courses/onchain-development/local-setup.md).
 
 For this lab we'll create a simple counter program with two instructions:
 
 - The first instruction will initialize an account to store our counter
 - The second instruction will increment the count stored in the counter
 
-#### 1. Setup
+### 1. Setup
 
 Create a new project called `anchor-counter` by running `anchor init`:
 
@@ -438,7 +516,7 @@ anchor build
 Anchor build will also generate a keypair for your new program - the keys are
 saved in the `target/deploy` directory.
 
-Open the file `lib.rs` and look at `declare_id!`:
+Open the file `lib.rs` and look at `declare_id!()`:
 
 ```rust
 declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
@@ -482,25 +560,33 @@ pub mod anchor_counter {
 }
 ```
 
-#### 2. Implement `Counter`
+### 2. Implement Counter
 
 First, let's use the `#[account]` attribute to define a new `Counter` account
 type. The `Counter` struct defines one `count` field of type `u64`. This means
 that we can expect any new accounts initialized as a `Counter` type to have a
 matching data structure. The `#[account]` attribute also automatically sets the
 discriminator for a new account and sets the owner of the account as the
-`programId` from the `declare_id!` macro.
+`programId` from the `declare_id!()` macro. Add a custom error `ErrorCode` enum
+for better error handling and reporting.
 
 ```rust
 #[account]
+#[derive(InitSpace)]
 pub struct Counter {
     pub count: u64,
 }
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Math operation overflow")]
+    Overflow,
+}
 ```
 
-#### 3. Implement `Context` type `Initialize`
+### 3. Implement Context type Initialize
 
-Next, using the `#[derive(Accounts)]` macro, let’s implement the `Initialize`
+Next, using the `#[derive(Accounts)]` macro, let's implement the `Initialize`
 type that lists and validates the accounts used by the `initialize` instruction.
 It'll need the following accounts:
 
@@ -512,7 +598,11 @@ It'll need the following accounts:
 ```rust
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(
+        init,
+        payer = user,
+        space = DISCRIMINATOR_SIZE + Counter::INIT_SPACE,
+    )]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -520,34 +610,33 @@ pub struct Initialize<'info> {
 }
 ```
 
-#### 4. Add the `initialize` instruction
+### 4. Add the initialize Instruction Handler
 
-Now that we have our `Counter` account and `Initialize` type , let’s implement
-the `initialize` instruction within `#[program]`. This instruction requires a
-`Context` of type `Initialize` and takes no additional instruction data. In the
-instruction logic, we are simply setting the `counter` account’s `count` field
-to `0`.
+Now that we have our `Counter` account and `Initialize` type , let's implement
+the `initialize` instruction handler within `#[program]`. This instruction
+handler requires a `Context` of type `Initialize` and takes no additional
+instruction data. In the instruction handler logic, we are simply setting the
+`counter` account's `count` field to `0`.
 
 ```rust
 pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
     let counter = &mut ctx.accounts.counter;
     counter.count = 0;
-    msg!("Counter Account Created");
-    msg!("Current Count: { }", counter.count);
+    msg!("Counter account created. Current count: {}", counter.count);
     Ok(())
 }
 ```
 
-#### 5. Implement `Context` type `Update`
+### 5. Implement Context type Update
 
-Now, using the `#[derive(Accounts)]` macro again, let’s create the `Update` type
-that lists the accounts that the `increment` instruction requires. It'll need
-the following accounts:
+Now, using the `#[derive(Accounts)]` macro again, let's create the `Update`
+struct that lists the accounts that the `increment` instruction handler
+requires. It'll need the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
 
-Again, we’ll need to specify any constraints using the `#[account(..)]`
+Again, we'll need to specify any constraints using the `#[account(..)]`
 attribute:
 
 ```rust
@@ -559,33 +648,35 @@ pub struct Update<'info> {
 }
 ```
 
-#### 6. Add `increment` instruction
+### 6. Add increment Instruction Handler
 
-Lastly, within `#[program]`, let’s implement an `increment` instruction to
-increment the `count` once a `counter` account is initialized by the first
-instruction. This instruction requires a `Context` of type `Update` (implemented
-in the next step) and takes no additional instruction data. In the instruction
-logic, we are simply incrementing an existing `counter` account’s `count` field
-by `1`.
+Lastly, within `#[program]`, let's implement an `increment` instruction handler
+to increment the `count` once a `counter` account is initialized by the first
+instruction. This instruction handler requires a `Context` of type `Update`
+(implemented in the next step) and takes no additional instruction data. In the
+instruction handler logic, we are simply incrementing an existing `counter`
+account's `count` field by `1`.
 
 ```rust
 pub fn increment(ctx: Context<Update>) -> Result<()> {
     let counter = &mut ctx.accounts.counter;
     msg!("Previous counter: {}", counter.count);
-    counter.count = counter.count.checked_add(1).unwrap();
+    counter.count = counter.count.checked_add(1).ok_or(ErrorCode::Overflow)?;
     msg!("Counter incremented. Current count: {}", counter.count);
     Ok(())
 }
 ```
 
-#### 7. Build
+### 7. Build
 
-All together, the complete program will look like this:
+Altogether, the complete program will look like this:
 
 ```rust
 use anchor_lang::prelude::*;
 
-declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
+declare_id!("Arf2LET7mchncY1Z24eZz71sqoPaFAb1RMtXeUvuET61");
+
+pub const DISCRIMINATOR_SIZE: usize = 8;
 
 #[program]
 pub mod anchor_counter {
@@ -601,7 +692,7 @@ pub mod anchor_counter {
     pub fn increment(ctx: Context<Update>) -> Result<()> {
         let counter = &mut ctx.accounts.counter;
         msg!("Previous counter: {}", counter.count);
-        counter.count = counter.count.checked_add(1).unwrap();
+        counter.count = counter.count.checked_add(1).ok_or(ErrorCode::Overflow)?;
         msg!("Counter incremented. Current count: {}", counter.count);
         Ok(())
     }
@@ -609,7 +700,11 @@ pub mod anchor_counter {
 
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init, payer = user, space = 8 + 8)]
+    #[account(
+        init,
+        payer = user,
+        space = DISCRIMINATOR_SIZE + Counter::INIT_SPACE,
+    )]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -624,14 +719,21 @@ pub struct Update<'info> {
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct Counter {
     pub count: u64,
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Math operation overflow")]
+    Overflow,
 }
 ```
 
 Run `anchor build` to build the program.
 
-#### 8. Testing
+### 8. Testing
 
 Anchor tests are typically Typescript integration tests that use the mocha test
 framework. We'll learn more about testing later, but for now navigate to
@@ -642,64 +744,83 @@ import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { expect } from "chai";
 import { AnchorCounter } from "../target/types/anchor_counter";
+import { PublicKey } from "@solana/web3.js";
 
-describe("anchor-counter", () => {
-  // Configure the client to use the local cluster.
+describe("Anchor counter", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
   const program = anchor.workspace.AnchorCounter as Program<AnchorCounter>;
+  const counterKeypair = anchor.web3.Keypair.generate();
+  let counterPubkey: PublicKey;
 
-  const counter = anchor.web3.Keypair.generate();
+  before(async () => {
+    counterPubkey = counterKeypair.publicKey;
+  });
 
-  it("Is initialized!", async () => {});
+  it("initializes the counter", async () => {});
 
-  it("Incremented the count", async () => {});
+  it("increments the count", async () => {});
 });
 ```
 
 The above code generates a new keypair for the `counter` account we'll be
-initializing and creates placeholders for a test of each instruction.
+initializing and creates placeholders for a test of each instruction handler.
 
-Next, create the first test for the `initialize` instruction:
+Next, create the first test for the `initialize` instruction handler:
 
 ```typescript
-it("Is initialized!", async () => {
-  // Add your test here.
-  const tx = await program.methods
-    .initialize()
-    .accounts({ counter: counter.publicKey })
-    .signers([counter])
-    .rpc();
+it("initializes the counter", async () => {
+  try {
+    await program.methods
+      .initialize()
+      .accounts({
+        counter: counterPubkey,
+        user: provider.wallet.publicKey,
+      })
+      .signers([counterKeypair])
+      .rpc();
 
-  const account = await program.account.counter.fetch(counter.publicKey);
-  expect(account.count.toNumber()).to.equal(0);
+    const account = await program.account.counter.fetch(counterPubkey);
+    expect(account.count.toNumber()).to.equal(0);
+  } catch (error) {
+    console.error("Initialization failed:", error);
+    throw error;
+  }
 });
 ```
 
-Next, create the second test for the `increment` instruction:
+Next, create the second test for the `increment` instruction handler:
 
 ```typescript
-it("Incremented the count", async () => {
-  const tx = await program.methods
-    .increment()
-    .accounts({ counter: counter.publicKey, user: provider.wallet.publicKey })
-    .rpc();
+it("increments the count", async () => {
+  try {
+    await program.methods
+      .increment()
+      .accounts({
+        counter: counterPubkey,
+        user: provider.wallet.publicKey,
+      })
+      .rpc();
 
-  const account = await program.account.counter.fetch(counter.publicKey);
-  expect(account.count.toNumber()).to.equal(1);
+    const account = await program.account.counter.fetch(counterPubkey);
+    expect(account.count.toNumber()).to.equal(1);
+  } catch (error) {
+    console.error("Increment failed:", error);
+    throw error;
+  }
 });
 ```
 
 Lastly, run `anchor test` and you should see the following output:
 
 ```shell
-anchor-counter
-✔ Is initialized! (290ms)
-✔ Incremented the count (403ms)
+ Anchor counter
+    ✔ initializes the counter (506ms)
+    ✔ increments the count (422ms)
 
 
-2 passing (696ms)
+ 2 passing (929ms)
 ```
 
 Running `anchor test` automatically spins up a local test validator, deploys
@@ -708,18 +829,18 @@ confused by the tests for now - we'll dig in more later.
 
 Congratulations, you just built a Solana program using the Anchor framework!
 Feel free to reference the
-[solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-increment)
+[solution code](https://github.com/solana-developers/anchor-counter-program/tree/solution-increment)
 if you need some more time with it.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Because we're starting with
+Now it's your turn to build something independently. Because we're starting with
 simple programs, yours will look almost identical to what we just created. It's
 useful to try and get to the point where you can write it from scratch without
 referencing prior code, so try not to copy and paste here.
 
 1. Write a new program that initializes a `counter` account
-2. Implement both an `increment` and `decrement` instruction
+2. Implement both an `increment` and `decrement` instruction handlers
 3. Build and deploy your program like we did in the lab
 4. Test your newly deployed program and use Solana Explorer to check the program
    logs
@@ -729,9 +850,10 @@ instructions if you want - and have fun!
 
 Try to do this independently if you can! But if you get stuck, feel free to
 reference
-the [solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-decrement).
+the [solution code](https://github.com/solana-developers/anchor-counter-program/tree/solution-decrement).
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!
 </Callout>
