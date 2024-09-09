@@ -674,7 +674,7 @@ pub struct UpdateMovieReview<'info> {
         mut,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
-        realloc = DISCRIMINATOR + MovieAccountState::INIT_SPACE
+        realloc = DISCRIMINATOR + MovieAccountState::INIT_SPACE,
         realloc::payer = initializer,
         realloc::zero = true,
     )]
