@@ -109,7 +109,7 @@ const STRING_LENGTH_SPACE = 4;
 // 9 bytes are reserved for some metadata related to the account structure.
 const ACCOUNT_METADATA_SPACE = 9;
 
-// Combined, 4 + 9 = 13, which is the offset where the actual data begins.
+// The offset where the actual data begins.
 const DATA_OFFSET = STRING_LENGTH_SPACE + ACCOUNT_METADATA_SPACE;
 
 // Length of data we need to retrieve (15 bytes in this case, based on the expected size of the relevant data slice).
