@@ -15,21 +15,20 @@ description:
 - **Signer Checks** are essential to verify that specific accounts have signed a
   transaction. Without proper signer checks, unauthorized accounts may execute
   instructions they shouldn't be allowed to perform.
-- In Rust, implement a signer check by verifying that an account's `is_signer`
-  property is `true`:
-
-  ```rust
-  if !ctx.accounts.authority.is_signer {
-      return Err(ProgramError::MissingRequiredSignature.into());
-  }
-  ```
-
 - In Anchor, you can use the `Signer` account type in your account validation
   struct to automatically perform a signer check on a given account.
 - Anchor also provides the
   [`#[account(signer)]`](https://www.anchor-lang.com/docs/account-constraints)
   constraint, which automatically verifies that a specified account has signed
   the transaction.
+- In native Rust, implement a signer check by verifying that an account's
+  `is_signer` property is `true`:
+
+  ```rust
+  if !ctx.accounts.authority.is_signer {
+      return Err(ProgramError::MissingRequiredSignature.into());
+  }
+  ```
 
 ## Lesson
 
@@ -267,7 +266,7 @@ of a signer check could result in the vault being drained.
 ### 1. Starter
 
 To get started, download the starter code from the
-[`starter` branch of this repository](https://github.com/solana-developers/solana-signer-auth/tree/starter).
+[`starter` branch of this repository](https://github.com/solana-developers/signer-auth/tree/starter).
 The starter code includes a program with two instruction handlers and the
 boilerplate setup for the test file.
 
@@ -569,7 +568,7 @@ This example shows how important it is to think through who should authorize
 instructions and ensure that each is a signer on the transaction.
 
 To review the final solution code, you can find it on the
-[`solution` branch of the repository](https://github.com/solana-developers/solana-signer-auth/tree/solution).
+[`solution` branch of the repository](https://github.com/solana-developers/signer-auth/tree/solution).
 
 ## Challenge
 
@@ -584,8 +583,8 @@ specific vulnerability discussed in each lesson.
 
    - Begin by auditing your own code for missing signer checks, or find an open
      source Solana program to audit. A great place to start is with the
-     [SPL programs](https://github.com/solana-labs/solana-program-library) if
-     you’re comfortable working with native Rust.
+     [program examples](https://github.com/solana-developers/program-examples)
+     repository.
 
 2. **Look for Signer Check Issues**:
 
