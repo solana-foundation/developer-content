@@ -180,32 +180,38 @@ For example, you could search through a list of contacts by including a `memcmp`
 filter:
 
 ```tsx
-const DATA_OFFSET = 2; // Skip the first 2 bytes of metadata because they store versioning information and are not needed for the search.
-const DATA_LENGTH = 18; // Retrieve 18 bytes of relevant data - This length includes the specific part of the account's data that holds the necessary information for comparison.
+const DATA_OFFSET = 2; // Skip the first 2 bytes, which store versioning information for the data schema of the account. This versioning ensures that changes to the account's structure can be tracked and managed over time.
+const DATA_LENGTH = 18; // Retrieve 18 bytes of data, including the part of the account's data that stores the user's public key for comparison.
+
 async function fetchMatchingContactAccounts(
-  connection: web3.Connection,
+  connection: Connection,
   search: string,
-): Promise<(web3.AccountInfo<Buffer> | null)[]> {
+): Promise<Array<AccountInfo<Buffer> | null>> {
+  let filters: Array<{ memcmp: { offset: number; bytes: string } }> = [];
+
+  if (search.length > 0) {
+    filters = [
+      {
+        memcmp: {
+          offset: 6, // Skip the first 6 bytes, which store account metadata like versioning or reserved fields that are not relevant to the search.
+          bytes: bs58.encode(Buffer.from(search)), // Convert the search string to Base58 for comparison with the on-chain data.
+        },
+      },
+    ];
+  }
+
   const accounts = (await connection.getProgramAccounts(
     new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
     {
-      dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH },
-      filters:
-        search === ""
-          ? []
-          : [
-              {
-                memcmp: {
-                  offset: 6, // Skip the first 6 bytes of metadata as they contain irrelevant metadata, starting comparison at the 7th byte where the searchable content begins.
-                  bytes: bs58.encode(Buffer.from(search)), // Convert the search string to Base58 for comparison with the on-chain data.
-                },
-              },
-            ],
+      dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH }, // Only retrieve the portion of data relevant to the search.
+      filters,
     },
   )) as Array<{
     pubkey: PublicKey;
     account: AccountInfo<Buffer>;
-  }>; // Explicitly define the expected structure for better type safety and clarity.
+  }>;
+
+  return accounts.map(account => account.account); // Return the account data.
 }
 ```
 
@@ -262,7 +268,7 @@ accounts. You can, and should, do better for a production application.
 With that out of the way, let’s create a static property `accounts` of type
 `web3.PublicKey[]`, a static function
 `prefetchAccounts(connection: web3.Connection)`, and a static function
-`fetchPage(connection: web3.Connection, page: number, perPage: number): Promise<Movie[]>`.
+`fetchPage(connection: web3.Connection, page: number, perPage: number): Promise<Array<Movie>>`.
 You’ll also need to import `@solana/web3.js` and `Movie`.
 
 ```tsx
@@ -280,7 +286,7 @@ export class MovieCoordinator {
     connection: Connection,
     page: number,
     perPage: number,
-  ): Promise<Movie[]> {}
+  ): Promise<Array<Movie>> {}
 }
 ```
 
@@ -317,7 +323,7 @@ static async fetchPage(
   page: number,
   perPage: number,
   reload = false
-): Promise<Movie[]> {
+): Promise<Array<Movie>> {
   if (this.accounts.length === 0 || reload) {
     await this.prefetchAccounts(connection);
   }
@@ -327,7 +333,7 @@ static async fetchPage(
     page * perPage
   );
 
-    if (paginatedPublicKeys.length === 0) {
+    if (!paginatedPublicKeys.length) {
       return [];
     }
 
@@ -335,7 +341,7 @@ static async fetchPage(
       paginatedPublicKeys
     );
 
-    const movies = accounts.reduce((accumulator: Movie[], account) => {
+    const movies = accounts.reduce((accumulator: <Array<Movie>>, account) => {
       try {
         const movie = Movie.deserialize(account?.data);
         if (movie) {
@@ -358,7 +364,7 @@ instead of fetching the accounts inline.
 
 ```tsx
 const connection = new Connection(clusterApiUrl("devnet"));
-const [movies, setMovies] = useState<Movie[]>([]);
+const [movies, setMovies] = useState<Array<Movie>>([]);
 const [page, setPage] = useState(1);
 
 useEffect(() => {
@@ -562,7 +568,7 @@ static async fetchPage(
   perPage: number,
   search: string,
   reload = false
-): Promise<Movie[]> {
+): Promise<Array<Movie>> {
   if (this.accounts.length === 0 || reload) {
     await this.prefetchAccounts(connection, search);
   }
@@ -580,7 +586,7 @@ static async fetchPage(
     paginatedPublicKeys
   );
 
-  const movies = accounts.reduce((accumulator: Movie[], account) => {
+  const movies = accounts.reduce((accumulator: <Array<Movie>>, account) => {
     try {
       const movie = Movie.deserialize(account?.data);
       if (movie) {
@@ -604,7 +610,7 @@ to pass the `search` parameter and to reload when `search !== ''`.
 
 ```tsx
 const connection = new Connection(clusterApiUrl("devnet"));
-const [movies, setMovies] = useState<Movie[]>([]);
+const [movies, setMovies] = useState<Array<Movie>>([]);
 const [page, setPage] = useState(1);
 const [search, setSearch] = useState("");
 
