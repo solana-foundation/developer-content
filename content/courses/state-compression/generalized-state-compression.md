@@ -402,9 +402,9 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
     // Create a new "message log" using the leaf node hash, sender, recipient, and message
     let message_log = MessageLog::new(
         leaf_node.clone(),
-        *ctx.accounts.sender.key,
-        *ctx.accounts.recipient.key,
-        message.clone()
+        ctx.accounts.sender.key().clone(),
+        ctx.accounts.recipient.key().clone(),
+        message
     );
 
     // Log the "message log" data using noop program
@@ -485,17 +485,14 @@ pub fn update_message(
     old_message: String,
     new_message: String
 ) -> Result<()> {
-    let old_leaf = keccak
-        ::hashv(&[old_message.as_bytes(), ctx.accounts.sender.key().as_ref()])
-        .to_bytes();
-
+    let old_leaf = keccak::hashv(&[old_message.as_bytes(), ctx.accounts.sender.key().as_ref()]).to_bytes();
     let merkle_tree = ctx.accounts.merkle_tree.key();
 
     // Define the seeds for pda signing
     let signer_seeds: &[&[&[u8]]] = &[
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
-            &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
+            &[ctx.bumps.tree_authority], // The bump seed for the pda
         ],
     ];
 
@@ -505,7 +502,6 @@ pub fn update_message(
             msg!("Messages are the same!");
             return Ok(());
         }
-
         let cpi_ctx = CpiContext::new_with_signer(
             ctx.accounts.compression_program.to_account_info(), // The spl account compression program
             VerifyLeaf {
@@ -517,12 +513,16 @@ pub fn update_message(
         verify_leaf(cpi_ctx, root, old_leaf, index)?;
     }
 
-    let new_leaf = keccak
-        ::hashv(&[new_message.as_bytes(), ctx.accounts.sender.key().as_ref()])
-        .to_bytes();
+    let new_leaf = keccak::hashv(&[new_message.as_bytes(), ctx.accounts.sender.key().as_ref()]).to_bytes();
 
     // Log out for indexers
-    let message_log = MessageLog::new(new_leaf.clone(), ctx.accounts.sender.key().clone(), ctx.accounts.recipient.key().clone(), new_message);
+    let message_log = MessageLog::new(
+        new_leaf.clone(),
+        ctx.accounts.sender.key().clone(),
+        ctx.accounts.recipient.key().clone(),
+        new_message
+    );
+
     // Log the "message log" data using noop program
     wrap_application_data_v1(message_log.try_to_vec()?, &ctx.accounts.log_wrapper)?;
 
@@ -537,7 +537,7 @@ pub fn update_message(
             },
             signer_seeds // The seeds for pda signing
         );
-        // CPI to append the leaf node to the Merkle tree
+        // CPI to replace the leaf node in the Merkle tree
         replace_leaf(cpi_ctx, root, old_leaf, new_leaf, index)?;
     }
 
