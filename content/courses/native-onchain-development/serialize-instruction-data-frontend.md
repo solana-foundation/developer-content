@@ -364,28 +364,42 @@ used by Anchor).
 import * as borsh from "@coral-xyz/borsh";
 
 // Constants for size calculations
-const ANCHOR_DISCRIMINATOR = 8; // Typically 8 bytes for the Anchor discriminator
-const STRING_LENGTH_SPACE = 4; // 4 bytes to store the length of each string (used by Borsh)
-const INIT_SPACE = STRING_LENGTH_SPACE * 2; // Two strings: 'title' and 'description'
+const ANCHOR_DISCRIMINATOR = 8; // 8 bytes for the Anchor discriminator
+const STRING_LENGTH_SPACE = 4; // 4 bytes to store the length of each string
 
-// Assume maximum sizes for the strings
-const MAX_TITLE_LENGTH = 100; // Arbitrary max length for title
-const MAX_DESCRIPTION_LENGTH = 500; // Arbitrary max length for description
+// Absolute maximum sizes for the strings
+const MAX_TITLE_LENGTH = 100; // Absolute max length for 'title'
+const MAX_DESCRIPTION_LENGTH = 500; // Absolute max length for 'description'
 
-// Calculate the total space required for a Movie review
+// Total space required for the Movie struct
 const MOVIE_REVIEW_SPACE =
-  ANCHOR_DISCRIMINATOR + // Discriminator for the instruction
-  INIT_SPACE + // Space to store string lengths
-  MAX_TITLE_LENGTH + // Maximum title length
-  MAX_DESCRIPTION_LENGTH + // Maximum description length
-  2 * 1; // 1 byte for 'variant' and 'rating'
+  ANCHOR_DISCRIMINATOR + // Discriminator
+  STRING_LENGTH_SPACE * 2 + // Space for the length of two strings ('title' and 'description')
+  MAX_TITLE_LENGTH + // Maximum space allocated for the 'title'
+  MAX_DESCRIPTION_LENGTH + // Maximum space allocated for the 'description'
+  2; // 1 byte each for 'variant' and 'rating'
 
 export class Movie {
   title: string;
   rating: number;
   description: string;
 
-  // Borsh schema for the Movie class
+  constructor(title: string, rating: number, description: string) {
+    // Enforce absolute max lengths for title and description
+    if (title.length > MAX_TITLE_LENGTH) {
+      throw new Error(`Title cannot exceed ${MAX_TITLE_LENGTH} characters.`);
+    }
+    if (description.length > MAX_DESCRIPTION_LENGTH) {
+      throw new Error(
+        `Description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters.`,
+      );
+    }
+
+    this.title = title;
+    this.rating = rating;
+    this.description = description;
+  }
+
   borshInstructionSchema = borsh.struct([
     borsh.u8("variant"),
     borsh.str("title"),
@@ -395,7 +409,7 @@ export class Movie {
 
   serialize(): Buffer {
     try {
-      // Dynamically allocate a buffer based on the calculated size
+      // Allocate a buffer with the exact space needed
       const buffer = Buffer.alloc(MOVIE_REVIEW_SPACE);
       this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
       return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));
