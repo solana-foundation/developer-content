@@ -44,7 +44,7 @@ export async function GET(req: Request, { params: { slug } }: RouteProps) {
 
     // create a flat listing of all the nav items to locate the next, current, and prev records
     let flatNavItems = generateFlatNavItemListing(
-      generateNavItemListing(baseLocalRecords)
+      generateNavItemListing(baseLocalRecords),
     );
 
     if (!flatNavItems || flatNavItems.length <= 0) return notFound();
@@ -57,7 +57,11 @@ export async function GET(req: Request, { params: { slug } }: RouteProps) {
     // Find the current item based on href
     for (let i = 0; i < flatNavItems.length; i++) {
       const item = flatNavItems[i];
-      const matchesHref = [item.href, `/${item.href}`].includes(href.toLowerCase()) || item?.altRoutes?.some(route => route.toLowerCase() === href.toLowerCase());
+      const matchesHref =
+        [item.href, `/${item.href}`].includes(href.toLowerCase()) ||
+        item?.altRoutes?.some(
+          route => route.toLowerCase() === href.toLowerCase(),
+        );
 
       if (!matchesHref) continue;
 
@@ -65,12 +69,19 @@ export async function GET(req: Request, { params: { slug } }: RouteProps) {
 
       // get the "previous" record link to display (that is an actual link)
       if (i > 0) {
-        prev = flatNavItems.slice(0, i).reverse().find(item => item?.href && !item.isSkippedInNav) || null;
+        prev =
+          flatNavItems
+            .slice(0, i)
+            .reverse()
+            .find(item => item?.href && !item.isSkippedInNav) || null;
       }
 
       // get the "next" record link to display (that is an actual link)
       if (i < flatNavItems.length - 1) {
-        next = flatNavItems.slice(i + 1).find(item => item?.href && !item.isSkippedInNav) || null;
+        next =
+          flatNavItems
+            .slice(i + 1)
+            .find(item => item?.href && !item.isSkippedInNav) || null;
       }
 
       break; // Stop processing after finding the current record
@@ -82,36 +93,61 @@ export async function GET(req: Request, { params: { slug } }: RouteProps) {
     let course: CourseRecord | null = null;
     if (group === "lessons" && current.slug) {
       const courseSlug = appendix.split("/")[0];
-      course = (getRecordsForGroup("courses", { locale: DEFAULT_LOCALE_EN }) as CourseRecord[]).find(item => item.slug === courseSlug) || null;
+      course =
+        (
+          getRecordsForGroup("courses", {
+            locale: DEFAULT_LOCALE_EN,
+          }) as CourseRecord[]
+        ).find(item => item.slug === courseSlug) || null;
       if (!course) throw new Error(`Course '${courseSlug}' not found`);
 
       if (!course.lessons) course.lessons = [];
 
-      const lessonIndex = course.lessons.findIndex(item => item === current.slug);
+      const lessonIndex = course.lessons.findIndex(
+        item => item === current.slug,
+      );
 
-      next = lessonIndex >= 0 && course.lessons.length > lessonIndex + 1 
-        ? flatNavItems.find(item => item.path?.endsWith(course.lessons![lessonIndex + 1])) || null 
-        : null;
+      next =
+        lessonIndex >= 0 && course.lessons.length > lessonIndex + 1
+          ? flatNavItems.find(item =>
+              item.path?.endsWith(course.lessons![lessonIndex + 1]),
+            ) || null
+          : null;
 
-      prev = lessonIndex > 0 
-        ? flatNavItems.find(item => item.path?.endsWith(course.lessons![lessonIndex - 1])) || null 
-        : null;
+      prev =
+        lessonIndex > 0
+          ? flatNavItems.find(item =>
+              item.path?.endsWith(course.lessons![lessonIndex - 1]),
+            ) || null
+          : null;
     }
 
     // Locate the base locale's record
-    let record = baseLocalRecords.find(item => item.href.toLowerCase() === current?.href?.toLowerCase());
+    let record = baseLocalRecords.find(
+      item => item.href.toLowerCase() === current?.href?.toLowerCase(),
+    );
     if (!record) return notFound();
 
     // Attempt to find the desired locale's record
     if (locale !== DEFAULT_LOCALE_EN) {
-      const localeRecords = getRecordsForGroup(group, { locale }) as SupportedDocTypes[];
-      const localRecord = localeRecords.find(item => item.href.toLowerCase() === current?.href?.toLowerCase());
+      const localeRecords = getRecordsForGroup(group, {
+        locale,
+      }) as SupportedDocTypes[];
+      const localRecord = localeRecords.find(
+        item => item.href.toLowerCase() === current?.href?.toLowerCase(),
+      );
 
       if (localRecord) record = localRecord;
 
-      flatNavItems = generateFlatNavItemListing(generateNavItemListing(localeRecords));
-      next = next ? flatNavItems.find(item => item.id === next!.id) || next : null;
-      prev = prev ? flatNavItems.find(item => item.id === prev!.id) || prev : null;
+      flatNavItems = generateFlatNavItemListing(
+        generateNavItemListing(localeRecords),
+      );
+      next = next
+        ? flatNavItems.find(item => item.id === next!.id) || next
+        : null;
+      prev = prev
+        ? flatNavItems.find(item => item.id === prev!.id) || prev
+        : null;
     }
 
     const breadcrumbs: BreadcrumbItem[] = [];
@@ -145,10 +181,13 @@ export async function GET(req: Request, { params: { slug } }: RouteProps) {
     // Get author information
     let author: AuthorRecord | null = null;
     if (record?.author) {
-      const allAuthors = getRecordsForGroup("authors", { locale: DEFAULT_LOCALE_EN }) as AuthorRecord[];
+      const allAuthors = getRecordsForGroup("authors", {
+        locale: DEFAULT_LOCALE_EN,
+      }) as AuthorRecord[];
       author = allAuthors.find(node => node.slug === record.author) || null;
       if (author && author.organization) {
-        author.organization = allAuthors.find(node => node.slug === author.organization) || null;
+        author.organization =
+          allAuthors.find(node => node.slug === author.organization) || null;
       }
     }
 
