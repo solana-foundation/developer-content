@@ -14,7 +14,7 @@ description:
 - State Compression on Solana is most commonly used for compressed NFTs, but
   it's possible to use it for arbitrary data
 - State Compression lowers the amount of data you have to store onchain by
-  leveraging Merkle trees.
+  leveraging [Merkle trees](https://en.wikipedia.org/wiki/Merkle_tree).
 - Merkle trees store a single hash that represents an entire binary tree of
   hashes. Each leaf on a Merkle tree is a hash of that leaf's data.
 - Concurrent Merkle trees are a specialized version of Merkle trees that allow
