@@ -154,14 +154,17 @@ pub fn my_macro(input: TokenStream) -> TokenStream {
 Inside the proc macro, the code uses the `parse_macro_input!` macro from the
 `syn` crate to parse the input `TokenStream` into an abstract syntax tree (AST).
 Specifically, this example parses it as an instance of `LitStr` representing a
-UTF-8 string literal in Rust. The `eprintln!` macro is then used to print the
-`LitStr` AST for debugging purposes.
+UTF-8 string literal in Rust. Call the `.token()` method to return a
+[Literal](https://docs.rs/proc-macro2/1.0.86/proc_macro2/struct.Literal.html)
+that we pass to the `eprintln!` to print the AST for debugging purposes.
 
 ```rust
 Literal {
     kind: Str,
     symbol: "hello, world",
     suffix: None,
+    // Shows the byte offsets 31 to 45 of the literal "hello, world"
+    // in the portion of the source code from which the `TokenStream` was parsed.
     span: #0 bytes(31..45),
 }
 ```
@@ -609,7 +612,7 @@ this array of 8 bytes gives us the length of the discriminator;
 ```rust
 #[proc_macro_derive(Accounts, attributes(account, instruction))]
 pub fn derive_anchor_deserialize(item: TokenStream) -> TokenStream {
-	parse_macro_input!(item as anchor_syn::AccountsStruct)
+    parse_macro_input!(item as anchor_syn::AccountsStruct)
         .to_token_stream()
         .into()
 }
@@ -662,7 +665,7 @@ in an Anchor program.
 ### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/solana-developers/anchor-custom-macro/tree/starter).
+[the `anchor-custom-macro` repository](https://github.com/solana-developers/anchor-custom-macro/tree/starter).
 
 The starter code includes a simple Anchor program that allows you to initialize
 and update a `Config` account, similar to what we did with the
@@ -1108,7 +1111,7 @@ use macros where they make sense. But even if you don't know how they work, it
 helps you understand what's happening with Anchor under the hood.
 
 If you need more time with the solution code, reference the `solution` branch of
-[the repository](https://github.com/solana-developers/anchor-custom-macro/tree/solution).
+[the `anchor-custom-macro` repository](https://github.com/solana-developers/anchor-custom-macro/tree/solution).
 
 ## Challenge
 
