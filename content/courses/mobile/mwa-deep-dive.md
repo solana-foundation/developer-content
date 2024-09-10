@@ -293,7 +293,7 @@ Solana Mobile has done the vast majority of the heavy lifting by creating the
 communication between dApps and wallets:
 
 ```bash
-npm @solana-mobile/mobile-wallet-adapter-walletlib
+npm i @solana-mobile/mobile-wallet-adapter-walletlib
 ```
 
 > This package is still in alpha and is not production ready. However, the API
@@ -375,7 +375,7 @@ user's secret key to sign the transaction provided by the request, send the
 request to an RPC provider, and then respond to the requesting dApp using a
 `resolve` function.
 
-All the `resolve` function does is tell the dApp what happened and closes the
+The `resolve` function simply tells the dApp what happened and closes the
 session. The `resolve` function takes two arguments: `request` and `response`.
 The types of `request` and `response` are different depending on what the
 original request was. So in the example of
@@ -478,27 +478,27 @@ blocks.
 
 First, we'll make the actual wallet app (popup not included). This will include:
 
-- Creating a WalletProvider.tsx
-- Modifying the MainScreen.tsx
-- Modifying App.tsx
+- Creating a `WalletProvider.tsx`
+- Modifying the `MainScreen.tsx`
+- Modifying `App.tsx`
 
 Next, we'll make a boilerplate MWA app that displays 'Im a Wallet' anytime the
 wallet is requested from a different dApp. This will include:
 
-- Creating a MWAApp.tsx
-- Modifying index.js
+- Creating a `MWAApp.tsx`
+- Modifying `index.js`
 
 Then we'll set up all of our UI and request routing. This will mean:
 
-- Modifying the MWAApp.tsx
-- Creating a ButtonGroup.tsx
-- Creating a AppInfo.tsx
+- Modifying the `MWAApp.tsx`
+- Creating a `ButtonGroup.tsx`
+- Creating a `AppInfo.tsx`
 
 Finally, we'll implement two actual request functions, authorize and sign and
 send transactions. This entails creating the following:
 
-- AuthorizeDappRequestScreen.tsx
-- SignAndSendTransactionScreen.tsx
+- `AuthorizeDappRequestScreen.tsx`
+- `SignAndSendTransactionScreen.tsx`
 
 #### 2. Scaffold the Wallet app
 
@@ -542,7 +542,7 @@ npm install \
 We need to depend on Solana's `mobile-wallet-adapter-walletlib` package, which
 handles all of the low-level communication.
 
-> A reminder that this package is still in alpha and is not production ready.
+> Note: A reminder that this package is still in alpha and is not production ready.
 > However, the API is stable and will not change drastically, so you can begin
 > integration with your wallet.
 
@@ -1123,12 +1123,24 @@ function MWAApp() {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        resolve(currentRequest as any, {
-          failReason: MWARequestFailReason.UserDeclined,
-        });
-        return true; // Prevents default back button behavior
-      },
-    );
+      if (currentRequest) {
+        // Use a type guard to check if `currentRequest` matches a known request type
+        switch (currentRequest.__type) {
+          case MWARequestType.AuthorizeDappRequest:
+          case MWARequestType.SignAndSendTransactionsRequest:
+          case MWARequestType.SignMessagesRequest:
+          case MWARequestType.SignTransactionsRequest:
+            resolve(currentRequest, {
+              failReason: MWARequestFailReason.UserDeclined,
+            });
+            break;
+          default:
+            console.warn("Unhandled request type");
+        }
+      }
+      return true; // Prevents default back button behavior
+    }
+  );
     return () => backHandler.remove();
   }, [currentRequest]);
 
