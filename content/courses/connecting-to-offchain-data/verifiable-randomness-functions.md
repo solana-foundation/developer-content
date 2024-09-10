@@ -549,9 +549,9 @@ Make sure you replace `YOUR_KEY_HERE` with your own program key.
 
 ### 4. State.rs
 
-Next, in `state.rs`, add an `out_of_jail` flag to `Escrow`. When we finally
-roll two matching die, we'll flip this flag. When the `withdraw` function is
-called we can transfer the funds without checking the price.
+Next, in `state.rs`, add an `out_of_jail` flag to `Escrow`. When we finally roll
+two matching die, we'll flip this flag. When the `withdraw` function is called
+we can transfer the funds without checking the price.
 
 ```rust
 // state.rs
@@ -563,8 +563,8 @@ pub struct Escrow {
 }
 ```
 
-Then, create our second data account for this program: `VrfClient`. This
-will hold the state of our dice rolls. It will have the following fields:
+Then, create our second data account for this program: `VrfClient`. This will
+hold the state of our dice rolls. It will have the following fields:
 
 - `bump` - Stores the bump of the account for easy signing later.
 - `result_buffer` - This is where the VRF function will dump the raw randomness
@@ -694,8 +694,8 @@ let escrow = &mut ctx.accounts.escrow_account;
 ```
 
 Next, let's write our simple get-out-of-jail logic. Wrap our oracle price-checks
-with an `if` statement. If the `out_of_jail` flag on the `escrow` account
-is false, then we check the price at which to unlock the SOL:
+with an `if` statement. If the `out_of_jail` flag on the `escrow` account is
+false, then we check the price at which to unlock the SOL:
 
 ```rust
 if !escrow.out_of_jail {
@@ -730,8 +730,8 @@ the following accounts:
 - `user` - the signer who has funds in escrow.
 - `escrow_account` - the burry escrow account created when the user locked their
   funds up.
-- `vrf_client` - account we will be creating in this instruction to hold
-  state about the user’s dice rolls.
+- `vrf_client` - account we will be creating in this instruction to hold state
+  about the user’s dice rolls.
 - `vrf` - Our VRF owned by the Switchboard program, we will create this account
   client-side before we call `init_vrf_client`.
 - `system_program` - The system program since we use the init macro for
@@ -1068,9 +1068,9 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
 
 Then we load our `vrf_state` using `load_mut` since we'll be storing the
 randomness and dice rolls within it. We also want to check that the
-`result_buffer` returned from the `vrf` does not match the
-`result_buffer` from the `vrf_state` byte for byte. If they do match, we know the returned
-randomness is stale.
+`result_buffer` returned from the `vrf` does not match the `result_buffer` from
+the `vrf_state` byte for byte. If they do match, we know the returned randomness
+is stale.
 
 ```rust
 pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()> {
