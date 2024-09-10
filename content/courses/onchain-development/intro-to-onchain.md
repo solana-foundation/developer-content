@@ -1,43 +1,57 @@
 ---
-title: Intro to onchain development
+title: Intro to Solana Onchain Development
 objectives:
   - Understand how Solana onchain programs work
-  - Describe the structure and operation of onchain programs
+  - Know about the structure and operation of Solana programs
   - Build a basic program
 description:
-  "How onchain programs (often called 'smart contracts') work on Solana."
+  "Discover how onchain programs ( often called 'smart contracts') work on
+  Solana and learn to build your own."
 ---
 
 ## Summary
 
-- **Onchain programs** are programs that run on Solana.
-- Programs contain one or more **instruction handlers**. These are functions
-  that process **instructions** within Solana transactions.
-- Instruction handlers write data to Solana **accounts** and either succeed or
-  fail.
-- Solana programs are commonly written in **Rust** with the **Anchor**
-  framework.
-- Anchor programs have IDLs (Interface Description Language) and small JSON
-  files that describe programs. IDLs can be used to automatically generate JS/TS
-  libraries for a program.
+- **Onchain programs** (sometimes called 'smart contracts') run directly on
+  Solana, just like programs on your computer.
+- These programs consist of **instruction handlers** - functions that process
+  instructions from transactions.
+- Programs interact with the blockchain by reading from and writing to Solana
+  **accounts**.
+- Solana programs are most commonly written in **Rust**, often using the
+  **Anchor** framework for simplified development.
+- Anchor generates **Interface Description Language (IDL)** files, which:
+  - Describe the program's structure and functionality
+  - Enable automatic creation of JavaScript/TypeScript client libraries
+- Solana's architecture allows for parallel execution of non-overlapping
+  transactions, contributing to its high speed and efficiency.
+- Rent is a concept in Solana where accounts must maintain a minimum balance to
+  stay alive on the blockchain.
 
 ## Overview
 
-Each Solana cluster (`mainnet-beta`, `testnet`, `devnet`, `localnet`) functions
-as a single computer with a globally synchronized state. The programs that
-operate on Solana—creating tokens, swapping tokens, powering art marketplaces,
-escrows, market makers, DePIN apps, auctions, retail payment platforms, and
-more—are referred to as **Solana apps**.
+Solana operates on various clusters, each functioning as a unified, globally
+synchronized system:
 
-The most popular way to build onchain apps is by using the **Rust** language and
-the **Anchor** framework.
+- **mainnet-beta**: The main production network
+- **testnet**: For testing new features
+- **devnet**: For application development
 
-These frameworks automate common security checks and handle tasks such as:
+The programs that run on Solana - the ones that create tokens, swap tokens, art
+marketplaces, escrows, market makers, DePIN apps, auctions, retail payments
+platforms, etc - are called **Solana apps**.
 
-- Routing incoming instructions to the appropriate instruction handlers.
-- Deserializing data from incoming transactions.
-- Validating accounts provided with instructions, such as ensuring that certain
-  accounts are of a specific type or distinct from other accounts.
+The most popular way to build onchain apps is using **Rust** language and the
+**Anchor** framework. There is also another way of developing Solana programs
+which is, by using the **native onchain program development**, however
+**Anchor** makes things a lot simpler and safer. Some pros of using Anchor are:
+
+- Security checks are implemented automatically
+- Automatic routing of incoming instructions to the correct instruction handler
+- Automatic serialization and deserialization of the data inside transactions
+- Account validation, including:
+  - Ensuring that certain accounts have signed the transaction
+  - Type checking
+  - Ensuring account uniqueness
 
 Regardless of the language and framework you use, Solana operates in the same
 way. Let’s review how programs function on Solana.
@@ -51,8 +65,9 @@ programs using the program's public key. When using Anchor, a keypair is created
 during `anchor init`, and the private key is saved in the `target/deploy`
 directory of your project.
 
-A program's public key is sometimes referred to as a 'program ID' or 'program
-address.'
+A program's public key is sometimes called a 'program ID' or 'program address'.
+Which can be seen in the `programs/<insert_project_name>/src/lib.rs` and
+`Anchor.toml` files.
 
 ### Programs have instruction handlers
 
@@ -66,7 +81,7 @@ Both instructions must be completed successfully for the transaction to execute.
 
 Instruction handlers are how onchain programs process instructions from clients.
 Every exchange, lending protocol, escrow, oracle, and similar application
-provides their functionality via instruction handlers.
+provide their functionality via instruction handlers.
 
 ### Instruction handlers write their state to Solana accounts
 
@@ -79,29 +94,43 @@ data. Instead, they write their data to accounts on Solana.
 Programs on Solana can transfer tokens to user wallet addresses (for SOL) or
 user token accounts (for other tokens).
 
-More importantly, Solana programs can create additional addresses as needed to
-store data items.
+More importantly, programs can create additional addresses to store data as
+needed.
 
-### Programs store data in Program Derived Addresses (PDAs), a key-value store
+This is how Solana programs store their state.
+
+### Program Derived Addresses (PDAs): Solana's Key-Value Store
 
 Data for Solana programs are stored in **Program-Derived Addresses (PDAs)**.
 Solana’s PDAs can be viewed as a **key-value store**:
 
-- The 'key' is the PDA address, determined by `seeds` chosen by you, the
-  developer.
-  - For example, if your program needs to store the USD to AUD exchange rate,
-    you can use the seeds `USD` and `AUD` to create a Program-Derived Address.
-  - To store information about the relationship between two users, you can use
-    both users' wallet addresses as seeds to create a PDA to store that
-    information.
-  - To store Steve's review of Titanic, you can use Steve's **wallet address**
-    and the string `titanic` (or the IMDB ID if you prefer) to create a
-    Program-Derived Address.
-  - To store global information for your entire program, you can use a string
-    like `'config'`. Since your program’s PDAs are unique, they won’t conflict
-    with other programs.
-- The 'value' is the data stored inside the account at the given address,
-  defined by you, the developer.
+#### Key Concepts
+
+1. **Structure**
+
+   - **Key**: The PDA's address
+   - **Value**: Data stored in the account at that address
+
+2. **Address Generation**
+
+   - **Seed**: chosen by the programmer
+   - **Bump**: An additional value to ensure unique PDA creation
+   - **Deterministic**: The same combination of seed and bump always produces
+     the same address. This helps the program and the client to accurately
+     determine the address of the data.
+
+3. **Data Storage**
+
+   - Programmers define the structure of data stored in PDAs
+   - Can store any type of program-specific information
+
+4. **Some properties**:
+   - PDAs are off the Ed25519 elliptic curve. While the data type web3.js uses
+     is a `PublicKey`, PDA addresses are not public keys and do not have a
+     matching private key.
+   - A program's PDAs are unique so, they won't conflict with other programs.
+   - PDAs can also act as signers in an instruction. We'll learn more about this
+     in further lessons.
 
 Key-value stores enable your onchain program and client software to consistently
 determine the address for a data item because the same seeds will always return
@@ -187,14 +216,14 @@ const [address, bump] = PublicKey.findProgramAddressSync(
 
 You currently have two options for onchain program development:
 
-- We recommend new developers start with
+- We recommend new developers
   [start with Anchor](/content/courses/onchain-development/intro-to-anchor).
   Anchor's defaults make it easy to create secure programs.
 - There is also a course on
   [native onchain program development](/content/courses/native-onchain-development).
 
 Whichever approach you choose, the Solana Foundation provides
-[examples in both languages](https://github.com/solana-developers/program-examples),
+[examples in both Anchor and native Rust](https://github.com/solana-developers/program-examples),
 and [Solana Stack Exchange](https://solana.stackexchange.com/) is available for
 support.
 
