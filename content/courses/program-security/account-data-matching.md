@@ -53,8 +53,8 @@ Let's look at an example to illustrate the importance of account data matching.
 
 ### Example: Insecure Admin Update
 
-Consider a program with an `update_admin` instruction handler that changes the admin of
-a configuration account:
+Consider a program with an `update_admin` instruction handler that changes the
+admin of a configuration account:
 
 ```rust
 use anchor_lang::prelude::*;

@@ -18,7 +18,6 @@ tags:
 
 ## Summary
 
-
 - The
   [**`create_program_address`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.create_program_address)
   function derives a PDA without searching for the **canonical bump**. This
