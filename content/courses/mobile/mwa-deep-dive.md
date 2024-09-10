@@ -542,9 +542,9 @@ npm install \
 We need to depend on Solana's `mobile-wallet-adapter-walletlib` package, which
 handles all of the low-level communication.
 
-> Note: A reminder that this package is still in alpha and is not production ready.
-> However, the API is stable and will not change drastically, so you can begin
-> integration with your wallet.
+> Note: A reminder that this package is still in alpha and is not production
+> ready. However, the API is stable and will not change drastically, so you can
+> begin integration with your wallet.
 
 Let's install the package in a new folder `lib`:
 
@@ -1123,24 +1123,24 @@ function MWAApp() {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-      if (currentRequest) {
-        // Use a type guard to check if `currentRequest` matches a known request type
-        switch (currentRequest.__type) {
-          case MWARequestType.AuthorizeDappRequest:
-          case MWARequestType.SignAndSendTransactionsRequest:
-          case MWARequestType.SignMessagesRequest:
-          case MWARequestType.SignTransactionsRequest:
-            resolve(currentRequest, {
-              failReason: MWARequestFailReason.UserDeclined,
-            });
-            break;
-          default:
-            console.warn("Unhandled request type");
+        if (currentRequest) {
+          // Use a type guard to check if `currentRequest` matches a known request type
+          switch (currentRequest.__type) {
+            case MWARequestType.AuthorizeDappRequest:
+            case MWARequestType.SignAndSendTransactionsRequest:
+            case MWARequestType.SignMessagesRequest:
+            case MWARequestType.SignTransactionsRequest:
+              resolve(currentRequest, {
+                failReason: MWARequestFailReason.UserDeclined,
+              });
+              break;
+            default:
+              console.warn("Unhandled request type");
+          }
         }
-      }
-      return true; // Prevents default back button behavior
-    }
-  );
+        return true; // Prevents default back button behavior
+      },
+    );
     return () => backHandler.remove();
   }, [currentRequest]);
 
