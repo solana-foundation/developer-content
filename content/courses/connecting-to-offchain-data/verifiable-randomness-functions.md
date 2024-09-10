@@ -465,9 +465,7 @@ following:
 1. `git clone https://github.com/solana-developers/burry-escrow`
 2. `cd michael-burry-escrow`
 3. `anchor build`
-4. `anchor keys list`
-   1. Take the resulting key and put it into `Anchor.toml` and
-      `programs/burry-escrow/src/lib.rs`
+4. `anchor keys sync`
 5. `solana config get`
    1. Take your **Keypair Path** and change the `wallet` field in your
       `Anchor.toml`
@@ -1641,3 +1639,4 @@ If you get stuck, we have the solution in the
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5af49eda-f3e7-407d-8cd7-78d0653ee17c)!
 </Callout>
+
