@@ -494,6 +494,14 @@ Once a keypair is found, you should see an output similar to the following:
 Wrote keypair to env9Y3szLdqMLU9rXpEGPqkjdvVn8YNHtxYNvCKXmHe.json
 ```
 
+<Callout type="caution">
+
+Make sure to add the generated keypair file
+(`env9Y3szLdqMLU9rXpEGPqkjdvVn8YNHtxYNvCKXmHe.json`) to your `.gitignore` file
+to prevent accidentally committing and leaking your keypair to GitHub or other
+version control platforms. If you plan to use the keypair later, securing it
+properly is critical. </Callout>
+
 The keypair is written to a file in your working directory. Now that we have a
 placeholder USDC address, let's modify the `lib.rs` file. Use the `cfg`
 attribute to define the `USDC_MINT_PUBKEY` constant depending on whether the
