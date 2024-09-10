@@ -1124,7 +1124,6 @@ function MWAApp() {
       "hardwareBackPress",
       () => {
         if (currentRequest) {
-          // Use a type guard to check if `currentRequest` matches a known request type
           switch (currentRequest.__type) {
             case MWARequestType.AuthorizeDappRequest:
             case MWARequestType.SignAndSendTransactionsRequest:
