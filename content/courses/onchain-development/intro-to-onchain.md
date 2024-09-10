@@ -217,10 +217,10 @@ const [address, bump] = PublicKey.findProgramAddressSync(
 You currently have two options for onchain program development:
 
 - We recommend new developers
-  [start with Anchor](/content/courses/onchain-development/intro-to-anchor).
+  [start with Anchor](/content/courses/onchain-development/intro-to-anchor.md).
   Anchor's defaults make it easy to create secure programs.
 - There is also a course on
-  [native onchain program development](/content/courses/native-onchain-development).
+  [native onchain program development](/content/courses/native-onchain-development.md).
 
 Whichever approach you choose, the Solana Foundation provides
 [examples in both Anchor and native Rust](https://github.com/solana-developers/program-examples),
@@ -228,4 +228,4 @@ and [Solana Stack Exchange](https://solana.stackexchange.com/) is available for
 support.
 
 For now, let's
-[set up your computer](/content/courses/onchain-development/local-setup)!
+[set up your computer](/content/courses/onchain-development/local-setup.md)!
