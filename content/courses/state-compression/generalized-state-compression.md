@@ -341,18 +341,19 @@ pub fn create_messages_tree(
 ) -> Result<()> {
     // Get the address for the Merkle tree account
     let merkle_tree = ctx.accounts.merkle_tree.key();
+
     // Define the seeds for pda signing
     let signer_seeds: &[&[&[u8]]] = &[
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
-            &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
+            &[ctx.bumps.tree_authority], // The bump seed for the pda
         ],
     ];
 
     // Create cpi context for init_empty_merkle_tree instruction.
     let cpi_ctx = CpiContext::new_with_signer(
         ctx.accounts.compression_program.to_account_info(), // The spl account compression program
-        Initialize {
+        spl_account_compression::cpi::accounts::Initialize {
             authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
             merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be initialized
             noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
@@ -361,7 +362,7 @@ pub fn create_messages_tree(
     );
 
     // CPI to initialize an empty Merkle tree with given max depth and buffer size
-    init_empty_merkle_tree(cpi_ctx, max_depth, max_buffer_size)?;
+    spl_account_compression::cpi::init_empty_merkle_tree(cpi_ctx, max_depth, max_buffer_size)?;
 
     Ok(())
 }
