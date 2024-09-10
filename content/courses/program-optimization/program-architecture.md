@@ -61,20 +61,21 @@ we are going to be looking at in this section:
    introduce you to the concept of data sizes here.
 
 2. When operating on larger data, we run into
-   [Stack](https://solana.com/docs/onchain-programs/faq#stack) and
-   [Heap](https://solana.com/docs/onchain-programs/faq#heap-size) constraints -
-   to get around these, we’ll look at using Box and Zero-Copy.
+   [Stack](https://solana.com/docs/programs/faq#stack) and
+   [Heap](https://solana.com/docs/programs/faq#heap-size) constraints - to get
+   around these, we’ll look at using Box and Zero-Copy.
 
 #### Sizes
 
 In Solana a transaction's fee payer pays for each byte stored onchain. We call
 this [rent](https://solana.com/docs/core/fees).
 
-<Callout type="note">rent is a bit of a misnomer since it never actually gets
-permanently taken. Once you deposit rent into the account, that data can stay
-there forever or you can get refunded the rent if you close the account. Rent
-used to be an actual thing, but now there's an enforced minimum rent exemption.
-You can read about it in
+<Callout type="note">
+
+Rent is a bit of a misnomer since it never actually gets permanently taken. Once
+you deposit rent into the account, that data can stay there forever or you can
+get refunded the rent if you close the account. Rent used to be an actual thing,
+but now there's an enforced minimum rent exemption. You can read about it in
 [the Solana documentation](https://solana.com/docs/intro/rent).</Callout>
 
 Rent etymology aside, putting data on the blockchain can be expensive. It’s why
