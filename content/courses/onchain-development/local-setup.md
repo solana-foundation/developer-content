@@ -144,7 +144,8 @@ re-run `anchor test`.
 If you are running `solana-test-validator`, you may encounter the error
 `Error: Your configured rpc port: 8899 is already in use` when running
 `anchor test`. To resolve this, stop the `solana-test-validator` before running
-`anchor test`.
+`anchor test`or if you are unable to find solana-test-validator just run folllowing command 
+in your linux terminal to stop service running on that port `sudo kill -9 $(sudo lsof -t -i :port_number)`.
 
 #### All done?
 
