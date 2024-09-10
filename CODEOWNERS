@@ -1,4 +1,3 @@
-# This is a comment.
 # Each line is a file pattern followed by one or more owners.
 
 # These global owners will be the default owners for everything in
@@ -9,3 +8,5 @@
 # This list owns any file in the `/docs` directory in the root of 
 # the repository and any of its subdirectories.
 # /docs/ @nickfrosty
+
+/content/courses/ @mikemaccana

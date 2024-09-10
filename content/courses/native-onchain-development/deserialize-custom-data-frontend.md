@@ -81,7 +81,8 @@ separation makes it possible for the client to locate each user’s data by
 finding the address using the program ID and the user’s public key.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+import { PublicKey } from "@solana/web3.js";
+const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer()],
   programId,
 );
@@ -97,7 +98,7 @@ account per note where each PDA is derived with the user’s public key and the
 note’s title.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from("Shopping list")],
   programId,
 );
@@ -118,12 +119,20 @@ of the account and an `account` property of type `AccountInfo`. You can use the
 `account` property to get the account data.
 
 ```typescript
-const accounts = connection.getProgramAccounts(programId).then(accounts => {
-  accounts.map(({ pubkey, account }) => {
-    console.log("Account:", pubkey);
-    console.log("Data buffer:", account.data);
-  });
-});
+const fetchProgramAccounts = async () => {
+  try {
+    const accounts = await connection.getProgramAccounts(programId);
+
+    accounts.forEach(({ pubkey, account }) => {
+      console.log("Account:", pubkey.toBase58());
+      console.log("Data buffer:", account.data);
+    });
+  } catch (error) {
+    console.error("Error fetching program accounts:", error);
+  }
+};
+
+fetchProgramAccounts();
 ```
 
 ### Deserializing program data
@@ -181,13 +190,13 @@ skeleton letting users submit movie reviews but the list of reviews is still
 showing mock data. Let’s fix that by fetching the program’s storage accounts and
 deserializing the data stored there.
 
-![movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![movie review frontend](/public/assets/courses/movie-review-frontend-dapp.png)
 
 #### 1. Download the starter code
 
 If you didn’t complete the lab from the last lesson or just want to make sure
 that you didn’t miss anything, you can download the
-[starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-serialize-instruction-data).
+[starter code](https://github.com/solana-developers/movie-review-frontend/tree/solution-serialize-instruction-data).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -273,11 +282,14 @@ export class Movie {
     }
 
     try {
-      const { title, rating, description } = this.borshAccountSchema.decode(buffer)
-      return new Movie(title, rating, description)
-    } catch(error) {
-      console.log('Deserialization error:', error)
-      return null
+      const { title, rating, description } =
+        this.borshAccountSchema.decode(buffer);
+      return new Movie(title, rating, description);
+    } catch (error) {
+      console.error("Deserialization error:", error);
+      console.error("Buffer length:", buffer.length);
+      console.error("Buffer data:", buffer.toString("hex"));
+      return null;
     }
   }
 }
@@ -301,7 +313,7 @@ array of movies and call `setMovies`.
 import { Card } from "./Card";
 import { FC, useEffect, useState } from "react";
 import { Movie } from "../models/Movie";
-import * as web3 from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js"
 import { useConnection } from "@solana/wallet-adapter-react";
 
 const MOVIE_REVIEW_PROGRAM_ID = "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
@@ -311,16 +323,20 @@ export const MovieList: FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    connection
-      .getProgramAccounts(new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID))
-      .then(async accounts => {
-        const movies: Movie[] = accounts.map(({ account }) => {
-          return Movie.deserialize(account.data);
-        });
+    const fetchProgramAccounts = async () => {
+      try {
+        const accounts = await connection.getProgramAccounts(new PublicKey(MOVIE_REVIEW_PROGRAM_ID));
+
+        const movies: Movie[] = accounts.map(({ account }) => Movie.deserialize(account.data));
 
         setMovies(movies);
-      });
-  }, []);
+      } catch (error) {
+        console.error("Error fetching program accounts:", error);
+      }
+    };
+    fetchProgramAccounts();
+  }, [connection]);
+
 
   return (
     <div>
@@ -342,7 +358,7 @@ load.
 
 If you need more time with this project to feel comfortable with these concepts,
 have a look at the
-[solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-deserialize-account-data)
+[solution code](https://github.com/solana-developers/movie-review-frontend/tree/solutions-deserialize-account-data)
 before continuing.
 
 ## Challenge
@@ -353,10 +369,10 @@ network. Now, it's time to fetch and deserialize the program's account data.
 Remember, the Solana program that supports this is at
 `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](/public/assets/courses/student-intros-frontend.png)
 
 1. You can build this from scratch or you can
-   [download the starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data).
+   [download the starter code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data).
 2. Create the account buffer layout in `StudentIntro.ts`. The account data
    contains:
    1. `initialized` as an unsigned, 8-bit integer representing the instruction
@@ -372,7 +388,7 @@ Remember, the Solana program that supports this is at
    network!
 
 If you get really stumped, feel free to
-[check out the solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-deserialize-account-data).
+[check out the solution code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-deserialize-account-data).
 
 As always, get creative with these challenges and take them beyond the
 instructions if you want!
