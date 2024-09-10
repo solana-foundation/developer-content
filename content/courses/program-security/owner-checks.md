@@ -273,7 +273,7 @@ withdrawal.
 ### 1. Starter
 
 Begin by downloading the starter code from the
-[`starter` branch of this repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/starter).
+[`starter` branch of this repository](https://github.com/solana-developers/owner-checks/tree/starter).
 The starter code includes two programs: `clone` and `owner_check`, and the setup
 for the test file.
 
@@ -648,7 +648,7 @@ This example demonstrates how simple it is to implement proper validation, but
 it’s vital to always verify which accounts are owned by specific programs.
 
 If you'd like to review the final solution code, it's available on the
-[`solution` branch of the repository](https://github.com/Unboxed-Software/solana-owner-checks/tree/solution).
+[`solution` branch of the repository](https://github.com/solana-developers/owner-checks/tree/solution).
 
 ## Challenge
 
