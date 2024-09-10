@@ -364,20 +364,22 @@ used by Anchor).
 import * as borsh from "@coral-xyz/borsh";
 
 // Constants for size calculations
-const ANCHOR_DISCRIMINATOR = 8; // 8 bytes for the Anchor discriminator
+const ANCHOR_DISCRIMINATOR = 8; // 8 bytes for the account discriminator used by Anchor
 const STRING_LENGTH_SPACE = 4; // 4 bytes to store the length of each string
 
-// Absolute maximum sizes for the strings
-const MAX_TITLE_LENGTH = 100; // Absolute max length for 'title'
-const MAX_DESCRIPTION_LENGTH = 500; // Absolute max length for 'description'
+// Specific sizes for 'title' and 'description' strings
+const TITLE_SIZE = 100; // Allocate 100 bytes for the 'title'
+const DESCRIPTION_SIZE = 500; // Allocate 500 bytes for the 'description'
 
-// Total space required for the Movie struct
+// Total space calculation for the Movie review structure
 const MOVIE_REVIEW_SPACE =
-  ANCHOR_DISCRIMINATOR + // Discriminator
-  STRING_LENGTH_SPACE * 2 + // Space for the length of two strings ('title' and 'description')
-  MAX_TITLE_LENGTH + // Maximum space allocated for the 'title'
-  MAX_DESCRIPTION_LENGTH + // Maximum space allocated for the 'description'
-  2; // 1 byte each for 'variant' and 'rating'
+  ANCHOR_DISCRIMINATOR + // 8 bytes for the account discriminator
+  STRING_LENGTH_SPACE +
+  TITLE_SIZE + // 4 bytes for the title length + 100 bytes for the title
+  STRING_LENGTH_SPACE +
+  DESCRIPTION_SIZE + // 4 bytes for the description length + 500 bytes for the description
+  1 + // 1 byte for 'variant'
+  1; // 1 byte for 'rating'
 
 export class Movie {
   title: string;
@@ -385,13 +387,13 @@ export class Movie {
   description: string;
 
   constructor(title: string, rating: number, description: string) {
-    // Enforce absolute max lengths for title and description
-    if (title.length > MAX_TITLE_LENGTH) {
-      throw new Error(`Title cannot exceed ${MAX_TITLE_LENGTH} characters.`);
+    // Enforce specific sizes for title and description
+    if (title.length > TITLE_SIZE) {
+      throw new Error(`Title cannot exceed ${TITLE_SIZE} characters.`);
     }
-    if (description.length > MAX_DESCRIPTION_LENGTH) {
+    if (description.length > DESCRIPTION_SIZE) {
       throw new Error(
-        `Description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters.`,
+        `Description cannot exceed ${DESCRIPTION_SIZE} characters.`,
       );
     }
 
