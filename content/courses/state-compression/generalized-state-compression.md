@@ -671,7 +671,7 @@ app.
 Start by initializing an Anchor program:
 
 ```bash
-anchor init compressed-notes
+anchor init compressed-notes --template=multiple
 ```
 
 We’ll be using the `spl-account-compression` crate with the `cpi` feature
