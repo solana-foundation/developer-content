@@ -212,9 +212,9 @@ pub struct CallbackZC {
     /// The number of accounts used in the callback
     pub accounts_len: u32,
     /// The serialized instruction data.
-    pub ix_data: [u8; 1024],
+    pub instruction_data: [u8; 1024],
     /// The number of serialized bytes in the instruction data.
-    pub ix_data_len: u32,
+    pub instruction_data_len: u32,
 }
 ```
 
@@ -235,7 +235,7 @@ const vrfCallback: Callback = {
         { pubkey: vrfSecret.publicKey, isSigner: false, isWritable: true },
       ],
    // use name of instruction
-      ixData: vrfIxCoder.encode("consumeRandomness", ""), // pass any params for instruction here
+      instructionData: vrfInstructionCoder.encode("consumeRandomness", ""), // pass any params for instruction here
     }
 ```
 
@@ -383,7 +383,7 @@ first step.
 pub struct ConsumeRandomness<'info> {
     // vrf client state
     #[account]
-    pub vrf_auth: AccountLoader<'info, VrfClientState>,
+    pub vrf_auth: AccountLoader<'info, VrfClient>,
     // switchboard vrf account
     #[account(
         mut,
@@ -448,6 +448,7 @@ lesson's codebase.
 If you don't want to complete the Oracle lesson, the starter code for this lab
 is provided for you in
 [the main branch of the lab Github repository](https://github.com/solana-developers/burry-escrow).
+[the main branch of the lab Github repository](https://github.com/solana-developers/burry-escrow).
 
 The repo contains a "Michael Burry" escrow program. This is a program that
 allows a user to lock up some solana funds in escrow that cannot be withdrawn
@@ -457,13 +458,13 @@ by rolling doubles. Our demo today will allow the user to roll two virtual dice,
 if they roll doubles (the two dice match), the user can withdraw their funds
 from escrow regardless of the SOL price.
 
-#### 1. Program Setup
+### 1. Program Setup
 
 If you are cloning the repo from the previous lesson make sure to do the
 following:
 
 1. `git clone https://github.com/solana-developers/burry-escrow`
-2. `cd burry-escrow`
+2. `cd michael-burry-escrow`
 3. `anchor build`
 4. `anchor keys list`
    1. Take the resulting key and put it into `Anchor.toml` and
@@ -477,7 +478,7 @@ following:
 When all tests pass we're ready to begin. We will start by filling in some
 boilerplate stuff, then we'll implement the functions.
 
-#### 2. Cargo.toml
+### 2. Cargo.toml
 
 First, since VRF uses SPL tokens for their fees we need to import `anchor-spl`
 in our `Cargo.toml` file.
@@ -489,7 +490,7 @@ anchor-spl = "0.30.1"
 switchboard-solana = "0.30.4"
 ```
 
-#### 3. Lib.rs
+### 3. Lib.rs
 
 Next, let's edit `lib.rs` and add the additional functions we'll be building
 today. The functions are as follows:
@@ -522,8 +523,8 @@ mod burry_escrow {
 
     use super::*;
 
-    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: f64) -> Result<()> {
-        deposit_handler(ctx, escrow_amt, unlock_price)
+    pub fn deposit(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: u64) -> Result<()> {
+        deposit_handler(ctx, escrow_amount, unlock_price)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
@@ -546,23 +547,23 @@ mod burry_escrow {
 
 Make sure you replace `YOUR_KEY_HERE` with your own program key.
 
-#### 4. State.rs
+### 4. State.rs
 
-Next, in `state.rs`, add an `out_of_jail` flag to `EscrowState`. When we finally
+Next, in `state.rs`, add an `out_of_jail` flag to `Escrow`. When we finally
 roll two matching die, we'll flip this flag. When the `withdraw` function is
 called we can transfer the funds without checking the price.
 
 ```rust
 // state.rs
 #[account]
-pub struct EscrowState {
-    pub unlock_price: f64,
+pub struct Escrow {
+    pub unlock_price: u64,
     pub escrow_amount: u64,
     pub out_of_jail: bool
 }
 ```
 
-Then, create our second data account for this program: `VrfClientState`. This
+Then, create our second data account for this program: `VrfClient`. This
 will hold the state of our dice rolls. It will have the following fields:
 
 - `bump` - Stores the bump of the account for easy signing later.
@@ -572,10 +573,10 @@ will hold the state of our dice rolls. It will have the following fields:
 - `die_result_1` and `die_result_2` - The results of our dice roll.
 - `timestamp` - Keeps track of when our last roll was.
 - `vrf` - Public key of the VRF account; owned by the Switchboard program. We
-  will create this before we call `VrfClientState`'s initialization function.
+  will create this before we call `VrfClient`'s initialization function.
 - `escrow` - Public key of our burry escrow account.
 
-We're also going to make the `VrfClientState` context a `zero_copy` struct. This
+We're also going to make the `VrfClient` context a `zero_copy` struct. This
 means that we will initialize it with `load_init()` and pass it into accounts
 with `AccountLoader`. We do this because VRF functions are very account
 intensive and we need to be mindful of the stack. If you'd like to learn more
@@ -588,7 +589,7 @@ about `zero_copy`, take a look at our
 #[repr(packed)]
 #[account(zero_copy(unsafe))]
 #[derive(Default)]
-pub struct VrfClientState {
+pub struct VrfClient {
     pub bump: u8,
     pub result_buffer: [u8; 32],
   pub dice_type: u8, // 6 sided
@@ -616,8 +617,8 @@ pub const VRF_STATE_SEED: &[u8] = b"VRFCLIENT";
 pub const SOL_USDC_FEED: &str = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR";
 
 #[account]
-pub struct EscrowState {
-    pub unlock_price: f64,
+pub struct Escrow {
+    pub unlock_price: u64,
     pub escrow_amount: u64,
     pub out_of_jail: bool
 }
@@ -625,7 +626,7 @@ pub struct EscrowState {
 #[repr(packed)]
 #[account(zero_copy(unsafe))]
 #[derive(Default)]
-pub struct VrfClientState {
+pub struct VrfClient {
     pub bump: u8,
     pub result_buffer: [u8; 32],
   pub dice_type: u8, // 6 sided
@@ -637,7 +638,7 @@ pub struct VrfClientState {
 }
 ```
 
-#### 5. Errors.rs
+### 5. Errors.rs
 
 Next, let's take a quick pit stop and add one last error
 `InvalidVrfAuthorityError` to `errors.rs`. We'll use this when the VRF authority
@@ -662,7 +663,7 @@ pub enum EscrowErrorCode {
 }
 ```
 
-#### 6. Mod.rs
+### 6. Mod.rs
 
 Now, let's modify our `mod.rs` file to include our new functions we'll be
 writing.
@@ -675,7 +676,7 @@ pub mod get_out_of_jail;
 pub mod consume_randomness;
 ```
 
-#### 7. Deposit.rs and Withdraw.rs
+### 7. Deposit.rs and Withdraw.rs
 
 Lastly, let's update our `deposit.rs` and `withdraw.rs` files to reflect our
 soon-to-be new powers.
@@ -685,30 +686,30 @@ First, let's initialize our `out_of_jail` flag to `false` in `deposit.rs`.
 ```rust
 // in deposit.rs
 ...
-let escrow_state = &mut ctx.accounts.escrow_account;
-    escrow_state.unlock_price = unlock_price;
-    escrow_state.escrow_amount = escrow_amount;
-    escrow_state.out_of_jail = false;
+let escrow = &mut ctx.accounts.escrow_account;
+    escrow.unlock_price = unlock_price;
+    escrow.escrow_amount = escrow_amount;
+    escrow.out_of_jail = false;
 ...
 ```
 
 Next, let's write our simple get-out-of-jail logic. Wrap our oracle price-checks
-with an `if` statement. If the `out_of_jail` flag on the `escrow_state` account
+with an `if` statement. If the `out_of_jail` flag on the `escrow` account
 is false, then we check the price at which to unlock the SOL:
 
 ```rust
-if !escrow_state.out_of_jail {
+if !escrow.out_of_jail {
       // get result
       let val: f64 = feed.get_result()?.try_into()?;
 
       // check whether the feed has been updated in the last 300 seconds
-      feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
+      feed.check_staleness(Clock::get().unwrap().uninstruction_timestamp, 300)
       .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
       msg!("Current feed result is {}!", val);
-      msg!("Unlock price is {}", escrow_state.unlock_price);
+      msg!("Unlock price is {}", escrow.unlock_price);
 
-      if val < escrow_state.unlock_price as f64 {
+      if val < escrow.unlock_price as f64 {
           return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into())
       }
   }
@@ -717,7 +718,7 @@ if !escrow_state.out_of_jail {
 If `out_of_jail` is true, then we get out of jail free and can skip the price
 check, going straight to our withdrawal.
 
-#### 8. Using VRF
+### 8. Using VRF
 
 Now that we have the boilerplate out of the way, let's move on to our first
 addition: initializing our VRF Client. Let's create a new file called
@@ -729,8 +730,8 @@ the following accounts:
 - `user` - the signer who has funds in escrow.
 - `escrow_account` - the burry escrow account created when the user locked their
   funds up.
-- `vrf_client_state` - account we will be creating in this instruction to hold
-  state about the user's dice rolls.
+- `vrf_client` - account we will be creating in this instruction to hold
+  state about the user’s dice rolls.
 - `vrf` - Our VRF owned by the Switchboard program, we will create this account
   client-side before we call `init_vrf_client`.
 - `system_program` - The system program since we use the init macro for
@@ -742,6 +743,8 @@ use crate::errors::*;
 use anchor_lang::prelude::*;
 use switchboard_solana::VrfAccountData;
 
+pub const ANCHOR_DISCRIMINATOR: usize = 8;
+
 #[derive(Accounts)]
 pub struct InitVrfClient<'info> {
     #[account(mut)]
@@ -752,8 +755,9 @@ pub struct InitVrfClient<'info> {
         seeds = [ESCROW_SEED, user.key().as_ref()],
         bump,
     )]
-    pub escrow_account: Account<'info, EscrowState>,
-    // vrf client state
+    pub escrow_account: Account<'info, Escrow>,
+    // vrf client
+    #[derive(InitSpace)]
     #[account(
         init,
         seeds = [
@@ -763,10 +767,10 @@ pub struct InitVrfClient<'info> {
             vrf.key().as_ref(),
         ],
         payer = user,
-        space = 8 + std::mem::size_of::<VrfClientState>(),
+        space =  VrfClient::INIT_SPACE + ANCHOR_DISCRIMINATOR,
         bump
     )]
-    pub vrf_state: AccountLoader<'info, VrfClientState>,
+    pub vrf_state: AccountLoader<'info, VrfClient>,
 
     // switchboard vrf account
     #[account(
@@ -794,7 +798,7 @@ pub fn init_vrf_client_handler(ctx: Context<InitVrfClient>) -> Result<()> {
     msg!("init_client validate");
 
     let mut vrf_state = ctx.accounts.vrf_state.load_init()?;
-    *vrf_state = VrfClientState::default();
+    *vrf_state = VrfClient::default();
     vrf_state.bump = ctx.bumps.get("vrf_state").unwrap().clone();
     vrf_state.escrow = ctx.accounts.escrow_account.key();
     vrf_state.die_result_1 = 0;
@@ -806,9 +810,9 @@ pub fn init_vrf_client_handler(ctx: Context<InitVrfClient>) -> Result<()> {
 }
 ```
 
-#### 9. Get Out of Jail
+### 9. Get Out of Jail
 
-Now that we have the `VrfClientState` account initialized, we can use it in the
+Now that we have the `VrfClient` account initialized, we can use it in the
 `get_out_jail` instruction. Create a new file called `get_out_of_jail.rs` in the
 `/instructions` folder.
 
@@ -869,7 +873,7 @@ pub struct RequestRandomness<'info> {
         seeds = [ESCROW_SEED, user.key().as_ref()],
         bump,
     )]
-    pub escrow_account: Account<'info, EscrowState>,
+    pub escrow_account: Account<'info, Escrow>,
     // vrf client state
     #[account(
         mut,
@@ -881,7 +885,7 @@ pub struct RequestRandomness<'info> {
         ],
         bump
     )]
-    pub vrf_state: AccountLoader<'info, VrfClientState>,
+    pub vrf_state: AccountLoader<'info, VrfClient>,
     // switchboard vrf account
     #[account(
         mut,
@@ -992,7 +996,7 @@ pub fn get_out_of_jail_handler(ctx: Context<RequestRandomness>, params: RequestR
 }
 ```
 
-#### 10. Consume Randomness
+### 10. Consume Randomness
 
 Now that we've built the logic to request a VRF from Switchboard, we must build
 the callback instruction the Switchboard program will call once the VRF has been
@@ -1021,10 +1025,10 @@ use switchboard_solana::VrfAccountData;
 pub struct ConsumeRandomness<'info> {
     // burry escrow account
     #[account(mut)]
-    pub escrow_account: Account<'info, EscrowState>,
+    pub escrow_account: Account<'info, Escrow>,
     // vrf client state
     #[account(mut)]
-    pub vrf_state: AccountLoader<'info, VrfClientState>,
+    pub vrf_state: AccountLoader<'info, VrfClient>,
     // switchboard vrf account
     #[account(
         mut,
@@ -1064,8 +1068,8 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
 
 Then we load our `vrf_state` using `load_mut` since we'll be storing the
 randomness and dice rolls within it. We also want to check that the
-`result_buffer` returned from the `vrf` does not match byte for byte the
-`result_buffer` from the `vrf_state`. If they do match, we know the returned
+`result_buffer` returned from the `vrf` does not match the
+`result_buffer` from the `vrf_state` byte for byte. If they do match, we know the returned
 randomness is stale.
 
 ```rust
@@ -1186,8 +1190,8 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
 
     if dice_1 == dice_2 {
         msg!("Rolled doubles, get out of jail free!");
-        let escrow_state = &mut ctx.accounts.escrow_account;
-        escrow_state.out_of_jail = true;
+        let escrow = &mut ctx.accounts.escrow_account;
+        escrow.out_of_jail = true;
     }
 
     Ok(())
@@ -1198,7 +1202,7 @@ And that's it for the get-out-of-jail functionality! Congrats, you have just
 built a program that can consume Switchboard data feeds and submit VRF requests.
 Please make sure your program builds successfully by running `anchor build`.
 
-#### 11. Testing
+### 11. Testing
 
 Alright, let's test our program. Historically, we'd need to test the VRF on
 Devnet. Fortunately, the folks at Switchboard have created some really nice
@@ -1268,11 +1272,11 @@ describe("burry-escrow-vrf", () => {
     );
 
     // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+    const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
       program.programId,
     );
-    console.log("Escrow Account: ", escrowState.toBase58());
+    console.log("Escrow Account: ", Escrow.toBase58());
 
     // fetch latest SOL price
     const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
@@ -1288,7 +1292,7 @@ describe("burry-escrow-vrf", () => {
         .deposit(amountToLockUp, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
-          escrowAccount: escrowState,
+          escrowAccount: Escrow,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([payer])
@@ -1298,10 +1302,10 @@ describe("burry-escrow-vrf", () => {
       console.log("Your transaction signature", tx);
 
       // Fetch the created account
-      const newAccount = await program.account.escrowState.fetch(escrowState);
+      const newAccount = await program.account.escrow.fetch(Escrow);
 
       const escrowBalance = await provider.connection.getBalance(
-        escrowState,
+        Escrow,
         "confirmed",
       );
       console.log("Onchain unlock price:", newAccount.unlockPrice);
@@ -1320,7 +1324,7 @@ describe("burry-escrow-vrf", () => {
     let didFail = false;
 
     // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+    const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
       program.programId,
     );
@@ -1331,8 +1335,8 @@ describe("burry-escrow-vrf", () => {
         .withdraw()
         .accounts({
           user: payer.publicKey,
-          escrowAccount: escrowState,
-          feedAggregator: solUsedSwitchboardFeed,
+          escrowAccount: Escrow,
+          feedAggregator: solUsdSwitchboardFeed,
           systemProgram: anchor.web3.SystemProgram.programId,
         })
         .signers([payer])
@@ -1358,7 +1362,7 @@ describe("burry-escrow-vrf", () => {
 
 <Callout type="note">
 If you only want to run the vrf tests, change
-`describe("burry-escrow-vrf", () => {` to: 
+`describe("burry-escrow-vrf", () => {` to:
 `describe.only("burry-escrow-vrf", () => {`
 </Callout>
 
@@ -1445,7 +1449,7 @@ Finally, we'll roll our dice in a loop and check for doubles.
 ```typescript
 it("Roll till you can withdraw", async () => {
   // derive escrow address
-  const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
+  const [Escrow] = await anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
     program.programId,
   );
@@ -1455,24 +1459,24 @@ it("Roll till you can withdraw", async () => {
     [
       Buffer.from("VRFCLIENT"),
       payer.publicKey.toBytes(),
-      escrowState.toBytes(),
+      Escrow.toBytes(),
       vrfSecret.publicKey.toBytes(),
     ],
     program.programId,
   );
   console.log(`VRF Client: ${vrfClientKey}`);
 
-  const vrfIxCoder = new anchor.BorshInstructionCoder(program.idl);
+  const vrfInstructionCoder = new anchor.BorshInstructionCoder(program.idl);
   const vrfClientCallback: Callback = {
     programId: program.programId,
     accounts: [
       // ensure all accounts in consumeRandomness are populated
       // { pubkey: payer.publicKey, isSigner: false, isWritable: true },
-      { pubkey: escrowState, isSigner: false, isWritable: true },
+      { pubkey: Escrow, isSigner: false, isWritable: true },
       { pubkey: vrfClientKey, isSigner: false, isWritable: true },
       { pubkey: vrfSecret.publicKey, isSigner: false, isWritable: true },
     ],
-    ixData: vrfIxCoder.encode("consumeRandomness", ""), // pass any params for instruction here
+    instructionData: vrfInstructionCoder.encode("consumeRandomness", ""), // pass any params for instruction here
   };
 
   const queue = await switchboard.queue.loadData();
@@ -1510,7 +1514,7 @@ it("Roll till you can withdraw", async () => {
       .initVrfClient()
       .accounts({
         user: payer.publicKey,
-        escrowAccount: escrowState,
+        escrowAccount: Escrow,
         vrfState: vrfClientKey,
         vrf: vrfAccount.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId,
@@ -1536,7 +1540,7 @@ it("Roll till you can withdraw", async () => {
           vrf: vrfAccount.publicKey,
           user: payer.publicKey,
           payerWallet: payerTokenWallet,
-          escrowAccount: escrowState,
+          escrowAccount: Escrow,
           oracleQueue: switchboard.queue.publicKey,
           queueAuthority: queue.authority,
           dataBuffer: queue.dataBuffer,
@@ -1555,15 +1559,15 @@ it("Roll till you can withdraw", async () => {
       await provider.connection.confirmTransaction(tx, "confirmed");
       console.log(`Created VrfClient Account: ${vrfClientKey}`);
 
-      // wait a few sec for switchboard to generate the random number and invoke callback ix
+      // wait a few sec for switchboard to generate the random number and invoke callback instruction
       console.log("Rolling Die...");
 
       let didUpdate = false;
-      let vrfState = await program.account.vrfClientState.fetch(vrfClientKey);
+      let vrfState = await program.account.vrfClient.fetch(vrfClientKey);
 
       while (!didUpdate) {
         console.log("Checking die...");
-        vrfState = await program.account.vrfClientState.fetch(vrfClientKey);
+        vrfState = await program.account.vrfClient.fetch(vrfClientKey);
         didUpdate = vrfState.timestamp.toNumber() > 0;
         await delay(1000);
       }
@@ -1590,7 +1594,7 @@ it("Roll till you can withdraw", async () => {
     .withdraw()
     .accounts({
       user: payer.publicKey,
-      escrowAccount: escrowState,
+      escrowAccount: Escrow,
       feedAggregator: solUsedSwitchboardFeed,
       systemProgram: anchor.web3.SystemProgram.programId,
     })
