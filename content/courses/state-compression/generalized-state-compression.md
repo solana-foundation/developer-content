@@ -398,19 +398,29 @@ like this:
 pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<()> {
     // Hash the message + whatever key should have update authority
     let leaf_node = keccak::hashv(&[message.as_bytes(), ctx.accounts.sender.key().as_ref()]).to_bytes();
-    // Create a new "message log" using the leaf node hash, sender, receipient, and message
-    let message_log = MessageLog::new(leaf_node.clone(), ctx.accounts.sender.key().clone(), ctx.accounts.receipient.key().clone(), message);
+
+    // Create a new "message log" using the leaf node hash, sender, recipient, and message
+    let message_log = MessageLog::new(
+        leaf_node.clone(),
+        *ctx.accounts.sender.key,
+        *ctx.accounts.recipient.key,
+        message.clone()
+    );
+
     // Log the "message log" data using noop program
     wrap_application_data_v1(message_log.try_to_vec()?, &ctx.accounts.log_wrapper)?;
+
     // Get the address for the Merkle tree account
     let merkle_tree = ctx.accounts.merkle_tree.key();
+
     // Define the seeds for pda signing
     let signer_seeds: &[&[&[u8]]] = &[
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
-            &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
+            &[ctx.bumps.tree_authority], // The bump seed for the pda
         ],
     ];
+
     // Create a new cpi context and append the leaf node to the Merkle tree.
     let cpi_ctx = CpiContext::new_with_signer(
         ctx.accounts.compression_program.to_account_info(), // The spl account compression program
@@ -421,8 +431,10 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
         },
         signer_seeds // The seeds for pda signing
     );
+
     // CPI to append the leaf node to the Merkle tree
     append(cpi_ctx, leaf_node)?;
+
     Ok(())
 }
 ```
