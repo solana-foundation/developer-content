@@ -662,7 +662,7 @@ in an Anchor program.
 ### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/448-OG/anchor-custom-macro/tree/starter).
+[this repository](https://github.com/solana-developers/anchor-custom-macro/tree/starter).
 
 The starter code includes a simple Anchor program that allows you to initialize
 and update a `Config` account, similar to what we did with the
@@ -1108,7 +1108,7 @@ use macros where they make sense. But even if you don't know how they work, it
 helps you understand what's happening with Anchor under the hood.
 
 If you need more time with the solution code, reference the `solution` branch of
-[the repository](https://github.com/448-OG/anchor-custom-macro/tree/solution).
+[the repository](https://github.com/solana-developers/anchor-custom-macro/tree/solution).
 
 ## Challenge
 
