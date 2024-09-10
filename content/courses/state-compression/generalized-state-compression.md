@@ -263,17 +263,47 @@ a simple messaging program, your `Message` struct might look as follows:
 ```rust
 #[derive(AnchorSerialize)]
 pub struct MessageLog {
-		leaf_node: [u8; 32], // The leaf node hash
-    from: Pubkey,        // Pubkey of the message sender
-		to: Pubkey,          // Pubkey of the message recipient
-    message: String,     // The message to send
+    pub leaf_node: [u8; 32], // leaf node hash
+    pub from: Pubkey,
+    pub to: Pubkey,
+    pub message: String,     // message to send
 }
 
 impl MessageLog {
     // Constructs a new message log from given leaf node and message
     pub fn new(leaf_node: [u8; 32], from: Pubkey, to: Pubkey, message: String) -> Self {
-        Self { leaf_node, from, to, message }
+        Self {
+            leaf_node,
+            from,
+            to,
+            message,
+        }
     }
+}
+
+#[derive(Accounts)]
+pub struct MessageAccounts<'info> {
+    // The payer for the transaction
+    #[account(mut)]
+    pub owner: Signer<'info>,
+
+    // The pda authority for the merkle tree, only used for signing
+    #[account(
+        seeds = [merkle_tree.key().as_ref()],
+        bump,
+    )]
+    pub tree_authority: SystemAccount<'info>,
+
+    // The merkle tree account
+    /// CHECK: This account is validated by the spl account compression program
+    #[account(mut)]
+    pub merkle_tree: UncheckedAccount<'info>,
+
+    // The noop program to log data
+    pub log_wrapper: Program<'info, Noop>,
+
+    // The spl account compression program
+    pub compression_program: Program<'info, SplAccountCompression>,
 }
 ```
 
