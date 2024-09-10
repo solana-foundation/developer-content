@@ -2,10 +2,10 @@
 title: Program Configuration
 objectives:
   - Define program features in the `Cargo.toml` file
-  - Use the Rust `cfg` attribute to conditionally compile code based on which
-    features are or are not enabled
-  - Use the Rust `cfg!` macro to conditionally compile code based on which
-    features are or are not enabled
+  - Use the native Rust `cfg` attribute to conditionally compile code based on
+    which features are or are not enabled
+  - Use the native Rust `cfg!` macro to conditionally compile code based on
+    which features are or are not enabled
   - Create an admin-only instruction to set up a program account that can be
     used to store program configuration values
 description:
@@ -17,15 +17,17 @@ description:
 - There are no "out of the box" solutions for creating distinct environments in
   an onchain program, but you can achieve something similar to environment
   variables if you get creative.
-- You can use the `cfg` attribute with **Rust features**
-  (`#[cfg(feature = ...)]`) to run different code or provide different variable
-  values based on the Rust feature provided. _This happens at compile-time and
-  doesn't allow you to swap values after a program has been deployed_.
-- Similarly, you can use the `cfg!` **macro** to compile different code paths
-  based on the features that are enabled.
-- Alternatively, you can achieve something similar to environment variables that
-  can be modified after deployment by creating accounts and instructions that
-  are only accessible by the program’s upgrade authority.
+- You can use the
+  [`cfg` attribute](https://doc.rust-lang.org/rust-by-example/attribute/cfg.html)
+  with **Rust features** (`#[cfg(feature = ...)]`) to run different code or
+  provide different variable values based on the Rust feature provided. _This
+  happens at compile-time and doesn't allow you to swap values after a program
+  has been deployed_.
+- Similarly, you can use the
+  [`cfg!` **macro**](https://doc.rust-lang.org/std/macro.cfg.html) to compile
+  different code paths based on the enabled features.
+- For environment-like variables post-deployment, create program accounts and
+  admin-only instructions accessible by the program’s upgrade authority.
 
 ## Lesson
 
@@ -33,27 +35,28 @@ One of the difficulties engineers face across all types of software development
 is that of writing testable code and creating distinct environments for local
 development, testing, production, etc.
 
-This can be particularly difficult in Solana program development. For example,
-imagine creating an NFT staking program that rewards each staked NFT with 10
-reward tokens per day. How do you test the ability to claim rewards when tests
-run in a few hundred milliseconds, not nearly long enough to earn rewards?
+This is especially difficult in Solana program development. For instance,
+imagine building an NFT staking program where each staked NFT earns 10 reward
+tokens daily. How can you test the ability to claim rewards when tests run in
+just a few hundred milliseconds—not nearly long enough to accrue rewards?
 
-Traditional web development solves some of this with environment variables whose
-values can differ in each distinct "environment." Currently, there's no formal
-concept of environment variables in a Solana program. If there were, you could
-just make it so that rewards in your test environment are 10,000,000 tokens per
-day and it would be easier to test the ability to claim rewards.
+In traditional web development, this is often addressed through environment
+variables, allowing different values in distinct "environments." However, Solana
+programs currently lack a formal concept of environment variables. If they
+existed, you could easily modify the rewards in your test environment to
+something like 10,000,000 tokens per day, making it easier to test claiming
+rewards.
 
-Fortunately, you can achieve similar functionality if you get creative. The best
-approach is probably a combination of two things:
+Luckily, you can mimic this functionality with a bit of creativity. The most
+effective solution involves a combination of two techniques:
 
-1. Rust feature flags that allow you to specify in your build command the
-   "environment" of the build, coupled with code that adjusts specific values
-   accordingly
-2. Program "admin-only" accounts and instructions that are only accessible by
-   the program's upgrade authority
+1. **Native Rust** feature flags that let you specify the "environment" during
+   your build, allowing the code to adjust values based on the specified build.
+2. **Admin-only** program accounts and instructions that are only accessible by
+   the program's upgrade `authority` for setting and managing configuration
+   values post-deployment.
 
-### Rust feature flags
+### Native Rust Feature Flags
 
 One of the simplest ways to create environments is to use Rust features.
 Features are defined in the `[features]` table of the program’s `Cargo.toml`
@@ -79,7 +82,7 @@ You can also specify multiple features by separating them with a comma.
 anchor test -- --features "feature-one", "feature-two"
 ```
 
-#### Make code conditional using the cfg attribute
+#### Make Code Conditional Using the cfg Attribute
 
 With a feature defined, you can then use the `cfg` attribute within your code to
 conditionally compile code based on whether or not a given feature is enabled.
@@ -167,7 +170,7 @@ different implementations of the `constants` module. This allows the program to
 use different values for the `USDC_MINT_PUBKEY` constant depending on whether or
 not the `local-testing` feature is enabled.
 
-#### Make code conditional using the `cfg!` macro
+#### Make Code Conditional using the cfg! Macro
 
 Similar to the `cfg` attribute, the `cfg!` **macro** in Rust allows you to check
 the values of certain configuration flags at runtime. This can be useful if you
@@ -207,7 +210,7 @@ the `local-testing` feature at runtime. If the `local-testing` feature is
 enabled, the first code path is executed. If the `local-testing` feature is not
 enabled, the second code path is executed instead.
 
-### Admin-only instructions
+### Admin-only Instructions
 
 Feature flags are great for adjusting values and code paths at compilation, but
 they don't help much if you end up needing to adjust something after you've
@@ -269,8 +272,8 @@ simplest way to do this is to hard-code an admin's public key in your code and
 then add a simple signer check into your instruction's account validation
 comparing the signer to this public key.
 
-In Anchor, constraining an `update_program_config` instruction to only be usable
-by a hard-coded admin might look like this:
+In Anchor, constraining an `update_program_config` instruction handler to only
+be usable by a hard-coded admin might look like this:
 
 ```rust
 #[program]
@@ -301,11 +304,11 @@ pub struct UpdateProgramConfig<'info> {
 }
 ```
 
-Before instruction logic even executes, a check will be performed to make sure
-the instruction's signer matches the hard-coded `ADMIN_PUBKEY`. Notice that the
-example above doesn't show the instruction that initializes the config account,
-but it should have similar constraints to ensure that an attacker can't
-initialize the account with unexpected values.
+Before instruction handler logic even executes, a check will be performed to
+make sure the instruction's signer matches the hard-coded `ADMIN_PUBKEY`. Notice
+that the example above doesn't show the instruction handler that initializes the
+config account, but it should have similar constraints to ensure that an
+attacker can't initialize the account with unexpected values.
 
 While this approach works, it also means keeping track of an admin wallet on top
 of keeping track of a program's upgrade authority. With a few more lines of
@@ -421,23 +424,23 @@ feature flags.
 
 ### 1. Starter
 
-Download the starter code from the
-of [`starter` branch this repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/starter).
-The code contains a program with a single instruction and a single test in the
-`tests` directory.
+Download the starter code from
+the [`starter` branch of this repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/starter).
+The code contains a program with a single instruction handler and a single test
+in the `tests` directory.
 
 Let's quickly walk through how the program works.
 
 The `lib.rs` file includes a constant for the USDC address and a single
 `payment` instruction. The `payment` instruction simply calls the
-`payment_handler` function in the `instructions/payment.rs` file where the
-instruction logic is contained.
+`payment_handler` instruction handler in the `instructions/payment.rs` file
+where the instruction handler logic is contained.
 
 The `instructions/payment.rs` file contains both the `payment_handler` function
 as well as the `Payment` account validation struct representing the accounts
-required by the `payment` instruction. The `payment_handler` function calculates
-a 1% fee from the payment amount, transfers the fee to a designated token
-account, and transfers the remaining amount to the payment recipient.
+required by the `payment` instruction. The `payment_handler` instruction handler
+calculates a 1% fee from the payment amount, transfers the fee to a designated
+token account, and transfers the remaining amount to the payment recipient.
 
 Finally, the `tests` directory has a single test file, `config.ts` that simply
 invokes the `payment` instruction and asserts that the corresponding token
@@ -500,7 +503,6 @@ previous step rather than copying the one below.
 
 ```rust
 use anchor_lang::prelude::*;
-use solana_program::{pubkey, pubkey::Pubkey};
 mod instructions;
 use instructions::*;
 
@@ -537,9 +539,45 @@ Next, update the `config.ts` test file to create a mint using the generated
 keypair. Start by deleting the `mint` constant.
 
 ```typescript
-const mint = new anchor.web3.PublicKey(
-  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-);
+const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+```
+
+<Callout>
+
+The `anchor test` command, when run on a local network, starts a new test
+validator using `solana-test-validator`. This test validator uses a
+non-upgradeable loader. The non-upgradeable loader makes it so the program's
+`program_data` account isn't initialized when the validator starts. You'll
+recall from the lesson that this account is how we access the upgrade authority
+from the program. </Callout>
+
+To work around this, you can add a `deploy` function to the test file that runs
+the deploy command for the program with an upgradeable loader. To use it, run
+`anchor test --skip-deploy`, and call the `deploy` function within the test to
+run the deploy command after the test validator has started.
+
+```typescript
+import { execSync } from "child_process"
+
+...
+
+const deploy = () => {
+  const deployCmd = `solana program deploy --url localhost -v --program-id $(pwd)/target/deploy/config-keypair.json $(pwd)/target/deploy/config.so`
+  execSync(deployCmd)
+}
+
+...
+
+before(async () => {
+  deploy()
+  ...
+})
+```
+
+For example, the command to run the test with features would look like this:
+
+```shell
+anchor test --skip-deploy -- --features "local-testing"
 ```
 
 Next, update the test to create a mint using the keypair, which will enable us
@@ -547,42 +585,48 @@ to reuse the same mint address each time the tests are run. Remember to replace
 the file name with the one generated in the previous step.
 
 ```typescript
-let mint: anchor.web3.PublicKey
+let tokenMint: PublicKey;
+
+const deploy = () => {
+  const deployCmd = `solana program deploy --url localhost -v --program-id $(pwd)/target/deploy/config-keypair.json $(pwd)/target/deploy/config.so`;
+  execSync(deployCmd);
+};
 
 before(async () => {
-  let data = fs.readFileSync(
-    "env9Y3szLdqMLU9rXpEGPqkjdvVn8YNHtxYNvCKXmHe.json"
-  )
+  try {
+      deploy();
+      const mintKeypairData = fs.readFileSync(
+        "envYcAnc9BvWEqDy4VKJsiECCbbc72Fynz87rBih6DV.json"
+      );
+      const mintKeypair = Keypair.fromSecretKey(
+        new Uint8Array(JSON.parse(mintKeypairData))
+      );
 
-  let keypair = anchor.web3.Keypair.fromSecretKey(
-    new Uint8Array(JSON.parse(data))
-  )
-
-  const mint = await spl.createMint(
-    connection,
-    wallet.payer,
-    wallet.publicKey,
-    null,
-    0,
-    keypair
-  )
+      tokenMint = await createMint(
+        connection,
+        walletAuthority.payer,
+        walletAuthority.publicKey,
+        null,
+        0,
+        mintKeypair
+      );
 ...
 ```
 
 Lastly, run the test with the `local-testing` feature enabled.
 
 ```shell
-anchor test -- --features "local-testing"
+anchor test --skip-deploy -- --features "local-testing"
 ```
 
 You should see the following output:
 
 ```shell
-config
-  ✔ Payment completes successfully (406ms)
+Config
+  ✔ completes payment successfully (432ms)
 
 
-1 passing (3s)
+  1 passing (21s)
 ```
 
 Boom. Just like that, you've used features to run two different code paths for
@@ -609,43 +653,40 @@ To begin, let's first update the `lib.rs` file to:
 
 ```rust
 use anchor_lang::prelude::*;
-use solana_program::{pubkey, pubkey::Pubkey};
 mod instructions;
-mod state;
 use instructions::*;
+mod state;
 
-declare_id!("BC3RMBvVa88zSDzPXnBXxpnNYCrKsxnhR3HwwHhuKKei");
-
-#[cfg(feature = "local-testing")]
-#[constant]
-pub const USDC_MINT_PUBKEY: Pubkey = pubkey!("envgiPXWwmpkHFKdy4QLv2cypgAWmVTVEm71YbNpYRu");
+declare_id!("FF3eGbZnharYruJNwRV7jqnDYvpLkyvgbSv5gsGbJHps");
 
 #[cfg(not(feature = "local-testing"))]
 #[constant]
 pub const USDC_MINT_PUBKEY: Pubkey = pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 
+#[cfg(feature = "local-testing")]
+#[constant]
+pub const USDC_MINT_PUBKEY: Pubkey = pubkey!("envYcAnc9BvWEqDy4VKJsiECCbbc72Fynz87rBih6DV");
+
 pub const SEED_PROGRAM_CONFIG: &[u8] = b"program_config";
 
 #[constant]
-pub const ADMIN: Pubkey = pubkey!("...");
+pub const ADMIN: Pubkey = pubkey!("GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM");
 
 #[program]
 pub mod config {
+
     use super::*;
+
+    pub fn payment(ctx: Context<Payment>, amount: u64) -> Result<()> {
+        instructions::payment_handler(ctx, amount)
+    }
 
     pub fn initialize_program_config(ctx: Context<InitializeProgramConfig>) -> Result<()> {
         instructions::initialize_program_config_handler(ctx)
     }
 
-    pub fn update_program_config(
-        ctx: Context<UpdateProgramConfig>,
-        new_fee: u64,
-    ) -> Result<()> {
+    pub fn update_program_config(ctx: Context<UpdateProgramConfig>, new_fee: u64) -> Result<()> {
         instructions::update_program_config_handler(ctx, new_fee)
-    }
-
-    pub fn payment(ctx: Context<Payment>, amount: u64) -> Result<()> {
-        instructions::payment_handler(ctx, amount)
     }
 }
 ```
@@ -663,14 +704,11 @@ following code.
 use anchor_lang::prelude::*;
 
 #[account]
+#[derive(InitSpace)]
 pub struct ProgramConfig {
     pub admin: Pubkey,
     pub fee_destination: Pubkey,
     pub fee_basis_points: u64,
-}
-
-impl ProgramConfig {
-    pub const LEN: usize = 8 + 32 + 32 + 8;
 }
 ```
 
@@ -689,17 +727,23 @@ Within the `program_config` folder, create a file called
 
 ```rust
 use crate::state::ProgramConfig;
-use crate::ADMIN;
-use crate::SEED_PROGRAM_CONFIG;
-use crate::USDC_MINT_PUBKEY;
+use crate::{ADMIN, SEED_PROGRAM_CONFIG, USDC_MINT_PUBKEY};
 use anchor_lang::prelude::*;
 use anchor_spl::token::TokenAccount;
 
+pub const DISCRIMINATOR_SIZE: usize = 8;
+
 #[derive(Accounts)]
 pub struct InitializeProgramConfig<'info> {
-    #[account(init, seeds = [SEED_PROGRAM_CONFIG], bump, payer = authority, space = ProgramConfig::LEN)]
+    #[account(
+        init,
+        seeds = [SEED_PROGRAM_CONFIG],
+        bump,
+        payer = authority,
+        space = DISCRIMINATOR_SIZE + ProgramConfig::INIT_SPACE
+    )]
     pub program_config: Account<'info, ProgramConfig>,
-    #[account( token::mint = USDC_MINT_PUBKEY)]
+    #[account(token::mint = USDC_MINT_PUBKEY)]
     pub fee_destination: Account<'info, TokenAccount>,
     #[account(mut, address = ADMIN)]
     pub authority: Signer<'info>,
@@ -707,9 +751,11 @@ pub struct InitializeProgramConfig<'info> {
 }
 
 pub fn initialize_program_config_handler(ctx: Context<InitializeProgramConfig>) -> Result<()> {
-    ctx.accounts.program_config.admin = ctx.accounts.authority.key();
-    ctx.accounts.program_config.fee_destination = ctx.accounts.fee_destination.key();
-    ctx.accounts.program_config.fee_basis_points = 100;
+    ctx.accounts.program_config.set_inner(ProgramConfig {
+        admin: ctx.accounts.authority.key(),
+        fee_destination: ctx.accounts.fee_destination.key(),
+        fee_basis_points: 100,
+    });
     Ok(())
 }
 ```
@@ -725,8 +771,7 @@ Within the `program_config` folder, create a file called
 
 ```rust
 use crate::state::ProgramConfig;
-use crate::SEED_PROGRAM_CONFIG;
-use crate::USDC_MINT_PUBKEY;
+use crate::{SEED_PROGRAM_CONFIG, USDC_MINT_PUBKEY};
 use anchor_lang::prelude::*;
 use anchor_spl::token::TokenAccount;
 
@@ -734,12 +779,9 @@ use anchor_spl::token::TokenAccount;
 pub struct UpdateProgramConfig<'info> {
     #[account(mut, seeds = [SEED_PROGRAM_CONFIG], bump)]
     pub program_config: Account<'info, ProgramConfig>,
-    #[account( token::mint = USDC_MINT_PUBKEY)]
+    #[account(token::mint = USDC_MINT_PUBKEY)]
     pub fee_destination: Account<'info, TokenAccount>,
-    #[account(
-        mut,
-        address = program_config.admin,
-    )]
+    #[account(mut, address = program_config.admin)]
     pub admin: Signer<'info>,
     /// CHECK: arbitrarily assigned by existing admin
     pub new_admin: UncheckedAccount<'info>,
@@ -791,8 +833,7 @@ config account. Then update the instruction's fee calculation to be based on the
 
 ```rust
 use crate::state::ProgramConfig;
-use crate::SEED_PROGRAM_CONFIG;
-use crate::USDC_MINT_PUBKEY;
+use crate::{SEED_PROGRAM_CONFIG, USDC_MINT_PUBKEY};
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Token, TokenAccount};
 
@@ -804,20 +845,11 @@ pub struct Payment<'info> {
         has_one = fee_destination
     )]
     pub program_config: Account<'info, ProgramConfig>,
-    #[account(
-        mut,
-        token::mint = USDC_MINT_PUBKEY
-    )]
+    #[account(mut, token::mint = USDC_MINT_PUBKEY)]
     pub fee_destination: Account<'info, TokenAccount>,
-    #[account(
-        mut,
-        token::mint = USDC_MINT_PUBKEY
-    )]
+    #[account(mut, token::mint = USDC_MINT_PUBKEY)]
     pub sender_token_account: Account<'info, TokenAccount>,
-    #[account(
-        mut,
-        token::mint = USDC_MINT_PUBKEY
-    )]
+    #[account(mut, token::mint = USDC_MINT_PUBKEY)]
     pub receiver_token_account: Account<'info, TokenAccount>,
     pub token_program: Program<'info, Token>,
     #[account(mut)]
@@ -827,10 +859,10 @@ pub struct Payment<'info> {
 pub fn payment_handler(ctx: Context<Payment>, amount: u64) -> Result<()> {
     let fee_amount = amount
         .checked_mul(ctx.accounts.program_config.fee_basis_points)
-        .unwrap()
+        .ok_or(ProgramError::ArithmeticOverflow)?
         .checked_div(10000)
-        .unwrap();
-    let remaining_amount = amount.checked_sub(fee_amount).unwrap();
+        .ok_or(ProgramError::ArithmeticOverflow)?;
+    let remaining_amount = amount.checked_sub(fee_amount).ok_or(ProgramError::ArithmeticOverflow)?;
 
     msg!("Amount: {}", amount);
     msg!("Fee Amount: {}", fee_amount);
@@ -871,7 +903,7 @@ instructions, let's move on to testing our updated program. To begin, add the
 PDA for the program config account to the test file.
 
 ```typescript
-describe("config", () => {
+describe("Config", () => {
   ...
   const programConfig = findProgramAddressSync(
     [Buffer.from("program_config")],
@@ -892,27 +924,30 @@ correct fee is set and that the correct admin is stored on the program config
 account.
 
 ```typescript
-it("Initialize Program Config Account", async () => {
-  const tx = await program.methods
-    .initializeProgramConfig()
-    .accounts({
-      programConfig: programConfig,
-      feeDestination: feeDestination,
-      authority: wallet.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc();
+it("initializes program config account", async () => {
+  try {
+    await program.methods
+      .initializeProgramConfig()
+      .accounts({
+        programConfig: programConfig,
+        feeDestination: feeDestination,
+        authority: walletAuthority.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
 
-  assert.strictEqual(
-    (
-      await program.account.programConfig.fetch(programConfig)
-    ).feeBasisPoints.toNumber(),
-    100,
-  );
-  assert.strictEqual(
-    (await program.account.programConfig.fetch(programConfig)).admin.toString(),
-    wallet.publicKey.toString(),
-  );
+    const configAccount =
+      await program.account.programConfig.fetch(programConfig);
+    expect(configAccount.feeBasisPoints.toNumber()).to.equal(
+      INITIAL_FEE_BASIS_POINTS,
+    );
+    expect(configAccount.admin.toString()).to.equal(
+      walletAuthority.publicKey.toString(),
+    );
+  } catch (error) {
+    console.error("Program config initialization failed:", error);
+    throw error;
+  }
 });
 ```
 
@@ -922,36 +957,38 @@ transferred to the receiver. Here we update the existing test to include the
 `programConfig` account.
 
 ```typescript
-it("Payment completes successfully", async () => {
-  const tx = await program.methods
-    .payment(new anchor.BN(10000))
-    .accounts({
-      programConfig: programConfig,
-      feeDestination: feeDestination,
-      senderTokenAccount: senderTokenAccount,
-      receiverTokenAccount: receiverTokenAccount,
-      sender: sender.publicKey,
-    })
-    .transaction();
+it("completes payment successfully", async () => {
+  try {
+    const transaction = await program.methods
+      .payment(new anchor.BN(PAYMENT_AMOUNT))
+      .accounts({
+        programConfig: programConfig,
+        feeDestination: feeDestination,
+        senderTokenAccount: senderTokenAccount,
+        receiverTokenAccount: receiverTokenAccount,
+        sender: sender.publicKey,
+      })
+      .transaction();
 
-  await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender]);
+    await anchor.web3.sendAndConfirmTransaction(connection, transaction, [
+      sender,
+    ]);
 
-  assert.strictEqual(
-    (await connection.getTokenAccountBalance(senderTokenAccount)).value
-      .uiAmount,
-    0,
-  );
+    const senderBalance = await getAccount(connection, senderTokenAccount);
+    const feeDestinationBalance = await getAccount(connection, feeDestination);
+    const receiverBalance = await getAccount(connection, receiverTokenAccount);
 
-  assert.strictEqual(
-    (await connection.getTokenAccountBalance(feeDestination)).value.uiAmount,
-    100,
-  );
-
-  assert.strictEqual(
-    (await connection.getTokenAccountBalance(receiverTokenAccount)).value
-      .uiAmount,
-    9900,
-  );
+    expect(Number(senderBalance.amount)).to.equal(0);
+    expect(Number(feeDestinationBalance.amount)).to.equal(
+      (PAYMENT_AMOUNT * INITIAL_FEE_BASIS_POINTS) / 10000,
+    );
+    expect(Number(receiverBalance.amount)).to.equal(
+      (PAYMENT_AMOUNT * (10000 - INITIAL_FEE_BASIS_POINTS)) / 10000,
+    );
+  } catch (error) {
+    console.error("Payment failed:", error);
+    throw error;
+  }
 });
 ```
 
@@ -959,23 +996,27 @@ The third test attempts to update the fee on the program config account, which
 should be successful.
 
 ```typescript
-it("Update Program Config Account", async () => {
-  const tx = await program.methods
-    .updateProgramConfig(new anchor.BN(200))
-    .accounts({
-      programConfig: programConfig,
-      admin: wallet.publicKey,
-      feeDestination: feeDestination,
-      newAdmin: sender.publicKey,
-    })
-    .rpc();
+it("updates program config account", async () => {
+  try {
+    await program.methods
+      .updateProgramConfig(new anchor.BN(UPDATED_FEE_BASIS_POINTS))
+      .accounts({
+        programConfig: programConfig,
+        admin: walletAuthority.publicKey,
+        feeDestination: feeDestination,
+        newAdmin: walletAuthority.publicKey,
+      })
+      .rpc();
 
-  assert.strictEqual(
-    (
-      await program.account.programConfig.fetch(programConfig)
-    ).feeBasisPoints.toNumber(),
-    200,
-  );
+    const configAccount =
+      await program.account.programConfig.fetch(programConfig);
+    expect(configAccount.feeBasisPoints.toNumber()).to.equal(
+      UPDATED_FEE_BASIS_POINTS,
+    );
+  } catch (error) {
+    console.error("Program config update failed:", error);
+    throw error;
+  }
 });
 ```
 
@@ -983,9 +1024,9 @@ The fourth test tries to update the fee on the program config account, where the
 admin is not the one stored on the program config account, and this should fail.
 
 ```typescript
-it("Update Program Config Account with unauthorized admin (expect fail)", async () => {
+it("fails to update program config account with unauthorized admin", async () => {
   try {
-    const tx = await program.methods
+    const transaction = await program.methods
       .updateProgramConfig(new anchor.BN(300))
       .accounts({
         programConfig: programConfig,
@@ -995,9 +1036,13 @@ it("Update Program Config Account with unauthorized admin (expect fail)", async 
       })
       .transaction();
 
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [sender]);
-  } catch (err) {
-    expect(err);
+    await anchor.web3.sendAndConfirmTransaction(connection, transaction, [
+      sender,
+    ]);
+    throw new Error("Expected transaction to fail, but it succeeded");
+  } catch (error) {
+    expect(error).to.exist;
+    console.log("Transaction failed as expected:", error.message);
   }
 });
 ```
@@ -1005,19 +1050,35 @@ it("Update Program Config Account with unauthorized admin (expect fail)", async 
 Finally, run the test using the following command:
 
 ```shell
-anchor test -- --features "local-testing"
+anchor test --skip-deploy -- --features "local-testing"
 ```
 
 You should see the following output:
 
 ```shell
-config
-  ✔ Initialize Program Config Account (199ms)
-  ✔ Payment completes successfully (405ms)
-  ✔ Update Program Config Account (403ms)
-  ✔ Update Program Config Account with unauthorized admin (expect fail)
+Config
+    ✔ initializes program config account (430ms)
+    ✔ completes payment successfully (438ms)
+    ✔ updates program config account (416ms)
+Transaction failed as expected: Simulation failed.
+Message: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x7dc.
+Logs:
+[
+  "Program FF3eGbZnharYruJNwRV7jqnDYvpLkyvgbSv5gsGbJHps invoke [1]",
+  "Program log: Instruction: UpdateProgramConfig",
+  "Program log: AnchorError caused by account: admin. Error Code: ConstraintAddress. Error Number: 2012. Error Message: An address constraint was violated.",
+  "Program log: Left:",
+  "Program log: F32dEMPn4BtQjHBgXXwfuEMo5qBQJySs8cCDrtwWQdBr",
+  "Program log: Right:",
+  "Program log: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM",
+  "Program FF3eGbZnharYruJNwRV7jqnDYvpLkyvgbSv5gsGbJHps consumed 7868 of 200000 compute units",
+  "Program FF3eGbZnharYruJNwRV7jqnDYvpLkyvgbSv5gsGbJHps failed: custom program error: 0x7dc"
+].
+Catch the `SendTransactionError` and call `getLogs()` on it for full details.
+    ✔ fails to update program config account with unauthorized admin
 
-4 passing (8s)
+
+  4 passing (22s)
 ```
 
 And that's it! You've made the program a lot easier to work with moving forward.
@@ -1030,44 +1091,6 @@ Now it's time for you to do some of this on your own. We mentioned being able to
 use the program's upgrade authority as the initial admin. Go ahead and update
 the lab's `initialize_program_config` so that only the upgrade authority can
 call it rather than having a hardcoded `ADMIN`.
-
-<Callout>
-
-The `anchor test` command, when run on a local network, starts a new test
-validator using `solana-test-validator`. This test validator uses a
-non-upgradeable loader. The non-upgradeable loader makes it so the program's
-`program_data` account isn't initialized when the validator starts. You'll
-recall from the lesson that this account is how we access the upgrade authority
-from the program. </Callout>
-
-To work around this, you can add a `deploy` function to the test file that runs
-the deploy command for the program with an upgradeable loader. To use it, run
-`anchor test --skip-deploy`, and call the `deploy` function within the test to
-run the deploy command after the test validator has started.
-
-```typescript
-import { execSync } from "child_process"
-
-...
-
-const deploy = () => {
-  const deployCmd = `solana program deploy --url localhost -v --program-id $(pwd)/target/deploy/config-keypair.json $(pwd)/target/deploy/config.so`
-  execSync(deployCmd)
-}
-
-...
-
-before(async () => {
-  ...
-  deploy()
-})
-```
-
-For example, the command to run the test with features would look like this:
-
-```shell
-anchor test --skip-deploy -- --features "local-testing"
-```
 
 Try doing this on your own, but if you get stuck, feel free to reference the
 `challenge` branch of
