@@ -55,7 +55,7 @@ the JavaScript client. Each NFT will have some basic structure provided via the
 Token Metadata interface:
 
 - default on-chain fields - `name`, `symbol` and `uri`
-  - the `uri` is a link to an off-chain json file which contains the off chain
+  - the `uri` is a link to an offchain json file which contains the off chain
     metadata of the NFT
 - we will also have custom "additional fields" that we define
 
