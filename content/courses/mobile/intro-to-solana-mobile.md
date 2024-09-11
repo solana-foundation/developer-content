@@ -11,15 +11,8 @@ description:
 
 ## Summary
 
-- The Solana Mobile Wallet Adapter (MWA) creates a web socket connection between
-  mobile apps and mobile wallets, allowing native mobile apps to submit
-  transactions for signing
-- The simplest way to get started creating Solana mobile applications is with
-  Solana Mobile's
-  [React Native packages](https://docs.solanamobile.com/react-native/setup)
-  `@solana-mobile/mobile-wallet-adapter-protocol` and
-  `@solana-mobile/mobile-wallet-adapter-protocol-web3js`
-- React Native is very similar to React with a few mobile quirks
+ - The **Solana Mobile Wallet Adapter** (**MWA**) allows mobile apps to submit transactions for signing via a WebSocket connection to mobile wallets.
+ - The easiest way to start building Solana mobile applications is by using Solana Mobile’s [React Native packages](https://docs.solanamobile.com/react-native/setup) - `@solana-mobile/mobile-wallet-adapter-protocol` and `@solana-mobile/mobile-wallet-adapter-protocol-web3js` 
 
 ## Lesson
 
@@ -110,7 +103,7 @@ However, this doesn’t mean that Solana dApps can’t run on iOS at all. You ca
 still create a Mobile Web App using the
 [standard wallet adapter](https://github.com/solana-labs/wallet-adapter)
 library. Your users can then install a mobile-friendly wallet like
-the [Glow Wallet](https://glow.app/).
+the [Glow Wallet](https://glow.app/).
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
@@ -404,8 +397,8 @@ few prerequisite setup items:
       ```
 
    2. In Android
-      Studio, `Open project > Navigate to the cloned directory > Select mobile-wallet-adapter/android`
-   3. After Android Studio finishes loading the project, select `fakewallet` in
+      Studio, `Open project > Navigate to the cloned directory > Select mobile-wallet-adapter/android`
+   3. After Android Studio finishes loading the project, select `fakewallet` in
       the build/run configuration dropdown in the top right
 
       ![Fake Wallet](/public/assets/courses/unboxed/basic-solana-mobile-fake-wallet.png)
@@ -470,13 +463,13 @@ and explanations for why we need them:
   enabling interaction with MWA-compatible wallets
 - `@solana-mobile/mobile-wallet-adapter-protocol-web3js`: A convenience wrapper
   to use common primitives
-  from [@solana/web3.js](https://github.com/solana-labs/solana-web3.js), such
-  as `Transaction` and `Uint8Array`
+  from [@solana/web3.js](https://github.com/solana-labs/solana-web3.js), such
+  as `Transaction` and `Uint8Array`
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
-  through the [JSON RPC API](https://docs.solana.com/api/http)
-- `react-native-get-random-values` Secure random number generator polyfill
-  for `web3.js` underlying Crypto library on React Native
-- `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
+  through the [JSON RPC API](https://docs.solana.com/api/http)
+- `react-native-get-random-values` Secure random number generator polyfill
+  for `web3.js` underlying Crypto library on React Native
+- `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
 
 In addition to this list, we'll add two more packages:
 
