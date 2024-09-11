@@ -246,24 +246,41 @@ the wallet.
 Here is an example of sending a transaction using MWA:
 
 ```tsx
+import { Transaction } from "@solana/web3.js";
+import { useAuthorization } from "./AuthProvider";
+import { useConnection } from "./ConnectionProvider";
+
 const { authorizeSession } = useAuthorization();
 const { connection } = useConnection();
 
-const sendTransactions = (transaction: Transaction) => {
-  transact(async (wallet: Web3MobileWallet) => {
-    const latestBlockhashResult = await connection.getLatestBlockhash();
-    const authResult = await authorizeSession(wallet);
+const sendTransactions = async (transaction: Transaction) => {
+  try {
+    // Start a session with the wallet
+    await transact(async (wallet: Web3MobileWallet) => {
+      // Get the latest blockhash for the transaction
+      const { blockhash, lastValidBlockHeight } =
+        await connection.getLatestBlockhash();
 
-    const updatedTransaction = new Transaction({
-      ...transaction,
-      ...latestBlockhashResult,
-      feePayer: authResult.publicKey,
-    });
+      // Authorize the wallet session
+      const authResult = await authorizeSession(wallet);
 
-    const signature = await wallet.signAndSendTransactions({
-      transactions: [transaction],
+      // Create an updated transaction with the latest blockhash and feePayer
+      const updatedTransaction = new Transaction({
+        recentBlockhash: blockhash,
+        feePayer: authResult.publicKey,
+      }).add(transaction);
+
+      // Sign and send the transaction via the wallet
+      const signatures = await wallet.signAndSendTransactions({
+        transactions: [updatedTransaction],
+      });
+
+      console.log(`Transaction successful! Signature: ${signatures[0]}`);
     });
-  });
+  } catch (error) {
+    console.error("Error sending transaction:", error);
+    throw new Error("Transaction failed");
+  }
 };
 ```
 
