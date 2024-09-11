@@ -499,13 +499,13 @@ pub fn update_message(
 }
 ```
 
-#### Delete hashes
+#### Deleting Hashes
 
-At the time of writing, the State Compression Program doesn’t provide an
-explicit `delete` instruction. Instead, you’ll want to update leaf data with
-data that indicates the data as “deleted.” The specific data will depend on your
-use case and security concerns. Some may opt to set all data to 0, whereas
-others might store a static string that all “deleted” items will have in common.
+As of now, the State Compression Program does not have a dedicated `delete` instruction.
+
+Instead, you can simulate deletion by updating the leaf data with a value that signals it has been "deleted." 
+
+The exact value you choose will depend on your specific use case and security requirements. For some, this may involve setting all data fields to zero, while others might prefer storing a predefined static string that clearly marks the leaf as deleted. This approach allows you to handle deletions in a way that suits your application’s needs without compromising data integrity.
 
 #### Access data from a client
 
