@@ -410,43 +410,26 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
 }
 ```
 
-#### Update hashes
+#### Updating Hashes
 
-To update data, you need to create a new hash to replace the hash at the
-relevant leaf on the Merkle tree. To do this, your program needs access to four
-things:
+To update a leaf in a Merkle tree, you'll need to generate a new hash to replace the existing one. This process requires four key inputs:
 
-1. The index of the leaf to update
+1. The index of the leaf you wish to update
 2. The root hash of the Merkle tree
-3. The original data you wish to modify
+3. The original data you want to modify
 4. The updated data
 
-Given access to this data, a program instruction can follow very similar steps
-as those used to append the initial data to the tree:
+Using these inputs, you can follow a series of steps similar to those used when initially appending data to the tree:
 
-1. **Verify update authority** - The first step is new. In most cases, you want
-   to verify update authority. This typically involves proving that the signer
-   of the `update` transaction is the true owner or authority of the leaf at the
-   given index. Since the data is compressed as a hash on the leaf, we can’t
-   simply compare the `authority` public key to a stored value. Instead, we need
-   to compute the previous hash using the old data and the `authority` listed in
-   the account validation struct. We then build and issue a CPI to the State
-   Compression Program’s `verify_leaf` instruction using our computed hash.
-2. **Hash the new data** - This step is the same as the first step from
-   appending initial data. Use the `hashv` function from the `keccak` crate to
-   hash the new data and the update authority, each as their corresponding byte
-   representation.
-3. **Log the new data** - This step is the same as the second step from
-   appending initial data. Create an instance of the log struct and call
-   `wrap_application_data_v1` to issue a CPI to the Noop program.
-4. **Replace the existing leaf hash** - This step is slightly different than the
-   last step of appending initial data. Build and issue a CPI to the State
-   Compression Program’s `replace_leaf` instruction. This uses the old hash, the
-   new hash, and the leaf index to replace the data of the leaf at the given
-   index with the new hash. Just as before, this requires the Merkle tree
-   address and the tree authority bump as signature seeds.
+1. **Verify Update Authority**: The first step, unique to updates, is to verify the authority of the entity making the update. This generally involves checking that the signer of the `update` transaction is indeed the owner or authority of the leaf at the specified index. Since the data in the leaf is hashed, you can’t directly compare the authority’s public key to a stored value. Instead, compute the previous hash using the old data and the `authority` listed in the account validation struct. Then, invoke a CPI to the State Compression Program’s `verify_leaf` instruction to confirm the hash matches.
 
-Combined into a single instruction, this process looks as follows:
+2. **Hash the New Data**: This step mirrors the hashing process for appending data. Use the `hashv` function from the `keccak` crate to hash the new data and the update authority, converting each to its corresponding byte representation.
+
+3. **Log the New Data**: As with the initial append operation, create a log object to represent the new data, and use `wrap_application_data_v1` to invoke the Noop Program via CPI. This ensures that the new uncompressed data is logged and accessible offchain.
+
+4. **Replace the Existing Leaf Hash**: This step is slightly different from appending new data. Here, you'll need to invoke a CPI to the State Compression Program’s `replace_leaf` instruction. This operation will replace the existing hash at the specified leaf index with the new hash. You'll need to provide the old hash, the new hash, and the leaf index. As usual, the Merkle tree address and tree authority bump are required as signature seeds.
+
+When combined, the instruction for updating a hash might look like this:
 
 ```rust
 pub fn update_message(
