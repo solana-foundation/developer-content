@@ -10,7 +10,7 @@ description: "Understand what web3, blockchains, and Solana are."
 
 ## Welcome!
 
-Welcome to the best starting point for developers looking to learn web3 and
+Welcome to the best starting point for developers looking to learn web3 an
 blockchain!
 
 ## What is web 3?
