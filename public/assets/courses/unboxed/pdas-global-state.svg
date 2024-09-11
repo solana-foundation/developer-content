@@ -1,63 +1,505 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="264 -1320 2016 1704" width="2016px" height="1704px"><defs><style>@font-face{
-    font-family:"DIN Next";
-    font-weight: 400;
-    src:url("https://whimsical.com/fonts/139e8e25-0eea-4cb4-a5d4-79048803e73d.eot?#iefix");
-    src:url("https://whimsical.com/fonts/139e8e25-0eea-4cb4-a5d4-79048803e73d.eot?#iefix") format("eot"),url("https://whimsical.com/fonts/094b15e3-94bd-435b-a595-d40edfde661a.woff2") format("woff2"),url("https://whimsical.com/fonts/7e5fbe11-4858-4bd1-9ec6-a1d9f9d227aa.woff") format("woff"),url("https://whimsical.com/fonts/0f11eff9-9f05-46f5-9703-027c510065d7.ttf") format("truetype"),url("https://whimsical.com/fonts/48b61978-3f30-4274-823c-5cdcd1876918.svg#48b61978-3f30-4274-823c-5cdcd1876918") format("svg");
-}
-@font-face{
-    font-family:"DIN Next";
-    font-weight: 400;
-    font-style: italic;
-    src:url("https://whimsical.com/fonts/df24d5e8-5087-42fd-99b1-b16042d666c8.eot?#iefix");
-    src:url("https://whimsical.com/fonts/df24d5e8-5087-42fd-99b1-b16042d666c8.eot?#iefix") format("eot"),url("https://whimsical.com/fonts/46251881-ffe9-4bfb-99c7-d6ce3bebaf3e.woff2") format("woff2"),url("https://whimsical.com/fonts/790ebbf2-62c5-4a32-946f-99d405f9243e.woff") format("woff"),url("https://whimsical.com/fonts/d28199e6-0f4a-42df-97f4-606701c6f75a.ttf") format("truetype"),url("https://whimsical.com/fonts/37a462c0-d86e-492c-b9ab-35e6bd417f6c.svg#37a462c0-d86e-492c-b9ab-35e6bd417f6c") format("svg");
-}
-@font-face{
-    font-weight: 500;
-    font-family:"DIN Next";
-    src:url("https://whimsical.com/fonts/c5b058fc-55ce-4e06-a175-5c7d9a7e90f4.eot?#iefix");
-    src:url("https://whimsical.com/fonts/c5b058fc-55ce-4e06-a175-5c7d9a7e90f4.eot?#iefix") format("eot"),url("https://whimsical.com/fonts/7b29ae40-30ff-4f99-a2b9-cde88669fa2f.woff2") format("woff2"),url("https://whimsical.com/fonts/bf73077c-e354-4562-a085-f4703eb1d653.woff") format("woff"),url("https://whimsical.com/fonts/0ffa6947-5317-4d07-b525-14d08a028821.ttf") format("truetype"),url("https://whimsical.com/fonts/9e423e45-5450-4991-a157-dbe6cf61eb4e.svg#9e423e45-5450-4991-a157-dbe6cf61eb4e") format("svg");
-}
-@font-face{
-    font-family:"DIN Next";
-    font-weight: 500;
-    font-style: italic;
-    src:url("https://whimsical.com/fonts/9897c008-fd65-48a4-afc7-36de2fea97b9.eot?#iefix");
-    src:url("https://whimsical.com/fonts/9897c008-fd65-48a4-afc7-36de2fea97b9.eot?#iefix") format("eot"),url("https://whimsical.com/fonts/c7717981-647d-4b76-8817-33062e42d11f.woff2") format("woff2"),url("https://whimsical.com/fonts/b852cd4c-1255-40b1-a2be-73a9105b0155.woff") format("woff"),url("https://whimsical.com/fonts/821b00ad-e741-4e2d-af1a-85594367c8a2.ttf") format("truetype"),url("https://whimsical.com/fonts/d3e3b689-a6b0-45f2-b279-f5e194f87409.svg#d3e3b689-a6b0-45f2-b279-f5e194f87409") format("svg");
-}
-@font-face{
-    font-weight: 700;
-    font-family:"DIN Next";
-    src:url("https://whimsical.com/fonts/81cd3b08-fd39-4ae3-8d05-9d24709eba84.eot?#iefix");
-    src:url("https://whimsical.com/fonts/81cd3b08-fd39-4ae3-8d05-9d24709eba84.eot?#iefix") format("eot"),url("https://whimsical.com/fonts/31704504-4671-47a6-a61e-397f07410d91.woff2") format("woff2"),url("https://whimsical.com/fonts/b8a280da-481f-44a0-8d9c-1bc64bd7227c.woff") format("woff"),url("https://whimsical.com/fonts/276d122a-0fab-447b-9fc0-5d7fb0eafce2.ttf") format("truetype"),url("https://whimsical.com/fonts/8fb8273a-8213-4928-808b-b5bfaf3fd7e9.svg#8fb8273a-8213-4928-808b-b5bfaf3fd7e9") format("svg");
-}
-@font-face{
-    font-family:"DIN Next";
-    font-weight: 700;
-    font-style: italic;
-    src:url("https://whimsical.com/fonts/00cc6df3-ed32-4004-8dd8-1c576600a408.eot?#iefix");
-    src:url("https://whimsical.com/fonts/00cc6df3-ed32-4004-8dd8-1c576600a408.eot?#iefix") format("eot"),url("https://whimsical.com/fonts/4132c4c8-680c-4d6d-9251-a2da38503bbd.woff2") format("woff2"),url("https://whimsical.com/fonts/366401fe-6df4-47be-8f55-8a411cff0dd2.woff") format("woff"),url("https://whimsical.com/fonts/dbe4f7ba-fc16-44a6-a577-571620e9edaf.ttf") format("truetype"),url("https://whimsical.com/fonts/f874edca-ee87-4ccf-8b1d-921fbc3c1c36.svg#f874edca-ee87-4ccf-8b1d-921fbc3c1c36") format("svg");
-}
-
-@font-face {
-    font-family: 'PFDINMonoPro';
-    src:url('https://whimsical.com/fonts/PFDINMonoPro-Regular.woff') format('woff');
-    font-weight: 400;
-}
-@font-face {
-    font-family: 'PFDINMonoPro';
-    src:url('https://whimsical.com/fonts/PFDINMonoPro-Italic.woff') format('woff');
-    font-style: italic;
-    font-weight: 400;
-}
-@font-face {
-    font-family: 'PFDINMonoPro';
-    src:url('https://whimsical.com/fonts/PFDINMonoPro-Bold.woff') format('woff');
-    font-weight: 700;
-}
-@font-face {
-    font-family: 'PFDINMonoPro';
-    src:url('https://whimsical.com/fonts/PFDINMonoPro-BoldItalic.woff') format('woff');
-    font-style: italic;
-    font-weight: 700;
-}
-* {-webkit-font-smoothing: auto; -moz-osx-font-smoothing: auto;}@media print { svg { width: 100%; height: 100%; } }</style><g><filter id="white-fill-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.03" flood-color="#000000"></feDropShadow></filter><filter id="light-gray-fill-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.09" flood-color="#000000"></feDropShadow></filter><filter id="yellow-fill-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.12" flood-color="#000000"></feDropShadow></filter><filter id="fill-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.16" flood-color="#000000"></feDropShadow></filter><filter id="frame-shadow"><feDropShadow dx="0" dy="3" stdDeviation="8" flood-opacity="0.06" flood-color="#000000"></feDropShadow></filter><filter id="button-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.03" flood-color="#000000"></feDropShadow></filter><filter id="button-hover-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.08" flood-color="#000000"></feDropShadow></filter><filter id="badge-shadow"><feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.08" flood-color="#000000"></feDropShadow></filter></g></defs><g><rect x="264" y="-1320" width="2016" height="1704" fill="#FFFFFF" filter="url(#frame-shadow)"></rect><rect x="264" y="-1320" width="2016" height="1704" fill="#FFFFFF"></rect><svg x="264" y="-1320" width="2016" height="1704" viewBox="264 -1320 2016 1704"><g><g><path d="M396,-1212c143.5,278.83333 287,557.66667 559,740c272,182.33333 672.5,268.16667 1073,354" fill="none" stroke="#730FC3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="1188" y="-383.5" font-family="DIN Next, sans-serif" font-size="36" font-style="normal" font-weight="normal">Ed25519 curve</tspan></text></g></g></g></g></g></g><g><g><g><g><rect width="290.5" height="125.00000000000001" x="593" y="-253" stroke="#E8833A" stroke-width="2" fill="#fae6d8"></rect></g><g><g><g><g transform="translate(614 -211) rotate(0 18 18)"><svg id="sb0d6df0d-7575-4641-ba74-2da31e043712" width="36" height="36" viewBox="0 0 48 48" data-icon-name="hash-mark" data-icon-partition="g48-13" data-icon-color="#FFFFFF"><style>#sb0d6df0d-7575-4641-ba74-2da31e043712 *[fill=&#x27;#444444&#x27;], #sb0d6df0d-7575-4641-ba74-2da31e043712 *[fill=&#x27;#444&#x27;] {fill:#FFFFFF;}#sb0d6df0d-7575-4641-ba74-2da31e043712 *[stroke=&#x27;#444444&#x27;], #sb0d6df0d-7575-4641-ba74-2da31e043712 *[stroke=&#x27;#444&#x27;] {stroke:#FFFFFF;}</style><g><path d="M43,19V14H36.028L37.9,1.5H32.847L30.972,14H20.028L21.9,1.5H16.847L14.972,14H7v5h7.222l-1.5,10H5v5h6.973L10.1,46.5h5.055L17.028,34H27.972L26.1,46.5h5.056L33.028,34H41V29H33.778l1.5-10ZM28.722,29H17.778l1.5-10H30.222Z" fill="#444"></path></g></svg></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="671" y="-177.5" font-family="DIN Next, sans-serif" font-size="27" font-style="normal" font-weight="normal">Counter: 126</tspan></text></g></g></g></g></g></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="594" y="-261.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">PROGRAM DERIVED ADDRESS</tspan></text></g></g></g></g></g></g></g></g><g><g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="737" y="-679.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">ADDRESS</tspan></text></g></g></g></g></g></g><g><g><ellipse fill="#e3cff3" cx="717.5" cy="-684.5" rx="11" ry="11"></ellipse></g></g></g></g><g><g><g><g><g><g><g><g><rect width="246" height="160" x="491" y="-916" stroke="#730FC3" stroke-width="2" fill="#e3cff3"></rect></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="507" y="-886.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">Ping counter program</tspan></text></g></g></g></g></g></g></g></g><g><g><g transform="translate(507.68333333333334 -870.45) rotate(0 21.45 21.45)"><svg id="s2bf03e19-6d14-4cd1-b043-63516e6a7472" width="42.9" height="42.9" viewBox="0 0 12 12" data-icon-name="cogwheel" data-icon-partition="g12-1" data-icon-color="#730FC3"><style>#s2bf03e19-6d14-4cd1-b043-63516e6a7472 *[fill=&#x27;#444444&#x27;], #s2bf03e19-6d14-4cd1-b043-63516e6a7472 *[fill=&#x27;#444&#x27;] {fill:#730FC3;}#s2bf03e19-6d14-4cd1-b043-63516e6a7472 *[stroke=&#x27;#444444&#x27;], #s2bf03e19-6d14-4cd1-b043-63516e6a7472 *[stroke=&#x27;#444&#x27;] {stroke:#730FC3;}</style><g><path d="M11.555,5l-1.486-.165a4.223,4.223,0,0,0-.37-.893l.934-1.168a.5.5,0,0,0-.037-.666L9.889,1.4a.5.5,0,0,0-.666-.037L8.055,2.3a4.223,4.223,0,0,0-.893-.37L7,.445A.5.5,0,0,0,6.5,0h-1A.5.5,0,0,0,5,.445L4.838,1.931a4.223,4.223,0,0,0-.893.37L2.777,1.367a.5.5,0,0,0-.666.037L1.4,2.111a.5.5,0,0,0-.037.666L2.3,3.945a4.223,4.223,0,0,0-.37.893L.445,5A.5.5,0,0,0,0,5.5v1A.5.5,0,0,0,.445,7l1.486.165a4.223,4.223,0,0,0,.37.893L1.367,9.223a.5.5,0,0,0,.037.666l.707.707a.5.5,0,0,0,.666.037L3.945,9.7a4.223,4.223,0,0,0,.893.37L5,11.555A.5.5,0,0,0,5.5,12h1a.5.5,0,0,0,.5-.445l.165-1.486a4.223,4.223,0,0,0,.893-.37l1.168.934a.5.5,0,0,0,.666-.037l.707-.707a.5.5,0,0,0,.037-.666L9.7,8.055a4.223,4.223,0,0,0,.37-.893L11.555,7A.5.5,0,0,0,12,6.5v-1A.5.5,0,0,0,11.555,5ZM6,8A2,2,0,1,1,8,6,2,2,0,0,1,6,8Z" fill="#444"></path></g></svg></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="565" y="-852.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">Increment</tspan></text></g></g></g></g></g></g></g></g></g></g><g><g><rect width="240" height="104.5" x="708.5" y="-660.5" stroke="#BD34D1" stroke-width="2" fill="#f2d6f6"></rect></g><g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="774" y="-583.5" font-family="DIN Next, sans-serif" font-size="27" font-style="normal" font-weight="normal">◎15 SOL</tspan></text></g></g></g></g></g></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="726" y="-625.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">Alice’s wallet</tspan></text></g></g></g></g></g></g><g><g><g transform="translate(720.5 -610.5) rotate(0 18 18)"><svg id="saf8945e8-357b-480a-94ec-c2e8c39da8d9" width="36" height="36" viewBox="0 0 48 48" data-icon-name="single-02" data-icon-partition="g48-8" data-icon-color="#BD34D1"><style>#saf8945e8-357b-480a-94ec-c2e8c39da8d9 *[fill=&#x27;#444444&#x27;], #saf8945e8-357b-480a-94ec-c2e8c39da8d9 *[fill=&#x27;#444&#x27;] {fill:#BD34D1;}#saf8945e8-357b-480a-94ec-c2e8c39da8d9 *[stroke=&#x27;#444444&#x27;], #saf8945e8-357b-480a-94ec-c2e8c39da8d9 *[stroke=&#x27;#444&#x27;] {stroke:#BD34D1;}</style><g><path fill="#444444" d="M30,29H18c-7.168,0-13,5.832-13,13v2c0,0.435,0.281,0.82,0.695,0.953 C5.957,45.036,12.229,47,24,47s18.043-1.964,18.305-2.047C42.719,44.82,43,44.435,43,44v-2C43,34.832,37.168,29,30,29z"></path><path data-color="color-2" fill="#444444" d="M24,25c6.195,0,11-6.988,11-13c0-6.065-4.935-11-11-11S13,5.935,13,12C13,18.012,17.805,25,24,25z"></path></g></svg></g></g></g><g><g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="565" y="-929.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">ADDRESS</tspan></text></g></g></g></g></g></g><g><g><ellipse stroke="#730FC3" stroke-width="2" fill="#e3cff3" cx="545.5" cy="-934.5" rx="11" ry="11"></ellipse></g></g></g></g><g><g><path d="M491,-548v147c0,8.28426 6.71574,15 15,15h7.5M558.5,-386h145.5c7.17969,0 13,5.82031 13,13v9" fill="none" stroke="#C3CFD9" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path><polygon points="722.54095,-367.0921 717,-360 711.45905,-367.0921" fill="#C3CFD9" stroke="#C3CFD9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polygon><text y="-398" font-style="normal" font-size="18" font-weight="normal" fill="#C3CFD9" width="37" xml:space="preserve" x="517.5" font-family="DIN Next, sans-serif" height="24"><tspan x="536" y="-380" text-anchor="middle" style="white-space:pre;">seed</tspan></text></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="737" y="-679.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">ADDRESS</tspan></text></g></g></g></g></g></g><g><g><ellipse stroke="#730FC3" stroke-width="2" fill="#e3cff3" cx="717.5" cy="-684.5" rx="11" ry="11"></ellipse></g></g><g><g><g><rect x="358" y="-633" width="253" height="77" rx="3" ry="3" fill="#FFFFFF" filter="url(#fill-shadow)"></rect><g><rect x="358" y="-633" width="253" height="77" rx="3" ry="3" fill="#2C88D9"></rect><g class="content"><g><g><g><g><g></g><text fill="#FFFFFF"><tspan x="420.11474609375" y="-588" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">“GLOBAL STATE”</tspan></text></g></g></g></g></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="358" y="-642.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">STRING</tspan></text></g></g></g></g></g></g></g></g><g><g><g><g><rect width="240" height="104.5" x="1670" y="-175" stroke="#BD34D1" stroke-width="2" fill="#f2d6f6"></rect></g><g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="1735" y="-97.5" font-family="DIN Next, sans-serif" font-size="27" font-style="normal" font-weight="normal">◎27 SOL</tspan></text></g></g></g></g></g></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="1687" y="-140.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">Bob’s wallet</tspan></text></g></g></g></g></g></g><g><g><g transform="translate(1682 -125) rotate(0 18 18)"><svg id="sde967045-3991-43d7-879a-32cdea134310" width="36" height="36" viewBox="0 0 48 48" data-icon-name="single-02" data-icon-partition="g48-8" data-icon-color="#BD34D1"><style>#sde967045-3991-43d7-879a-32cdea134310 *[fill=&#x27;#444444&#x27;], #sde967045-3991-43d7-879a-32cdea134310 *[fill=&#x27;#444&#x27;] {fill:#BD34D1;}#sde967045-3991-43d7-879a-32cdea134310 *[stroke=&#x27;#444444&#x27;], #sde967045-3991-43d7-879a-32cdea134310 *[stroke=&#x27;#444&#x27;] {stroke:#BD34D1;}</style><g><path fill="#444444" d="M30,29H18c-7.168,0-13,5.832-13,13v2c0,0.435,0.281,0.82,0.695,0.953 C5.957,45.036,12.229,47,24,47s18.043-1.964,18.305-2.047C42.719,44.82,43,44.435,43,44v-2C43,34.832,37.168,29,30,29z"></path><path data-color="color-2" fill="#444444" d="M24,25c6.195,0,11-6.988,11-13c0-6.065-4.935-11-11-11S13,5.935,13,12C13,18.012,17.805,25,24,25z"></path></g></svg></g></g></g></g></g><g><g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="1701" y="-192.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">ADDRESS</tspan></text></g></g></g></g></g></g><g><g><ellipse stroke="#730FC3" stroke-width="2" fill="#e3cff3" cx="1681.5" cy="-197.5" rx="11" ry="11"></ellipse></g></g></g></g><g><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="1592.5029296875" y="-1200" font-family="DIN Next, sans-serif" font-size="60" font-style="normal" font-weight="normal">Ping Counter Program</tspan></text></g></g></g></g></g></g><g><g><path d="M618,-756v244c0,0.33603 0.01105,0.66948 0.0328,1M677,-497h75c8.28426,0 15,6.71574 15,15v118" fill="none" stroke="#C3CFD9" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path><polygon points="772.54095,-367.0921 767,-360 761.45905,-367.0921" fill="#C3CFD9" stroke="#C3CFD9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polygon><text y="-509" font-style="normal" font-size="18" font-weight="normal" fill="#C3CFD9" width="82" xml:space="preserve" x="591" font-family="DIN Next, sans-serif" height="24"><tspan x="632" y="-491" text-anchor="middle" style="white-space:pre;">programId</tspan></text></g></g><g><g><rect x="622" y="-348" width="233" height="36" rx="3" ry="3" fill="#ffffff"></rect><rect y="-348" rx="3" stroke="#C3CFD9" fill="none" stroke-linejoin="round" width="233" stroke-linecap="round" stroke-width="2" x="622" ry="3" height="36"></rect><g class="content"><g><g><g><g><g></g><text fill="#293845"><tspan x="652.46044921875" y="-323.5" font-family="DIN Next, sans-serif" font-size="18" font-style="normal" font-weight="normal">findProgramAddress()</tspan></text></g></g></g></g></g></g></g><g><g><line stroke="#C3CFD9" fill="none" stroke-linejoin="round" y1="-304" stroke-linecap="round" stroke-width="4" x1="738" y2="-292" x2="738"></line><polygon points="743.54095,-295.0921 738,-288 732.45905,-295.0921" fill="#C3CFD9" stroke="#C3CFD9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polygon></g></g></svg><g></g></g></svg>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2016 1704" width="2016" height="1704">
+	<title>pdas-global-state-svg</title>
+	<defs>
+		<image  width="274" height="46" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARIAAAAuCAMAAADTJmZzAAAAAXNSR0IB2cksfwAAAJNQTFRFAAAAws/Yws7Yws7Zws7Zw8/Zws7YwszWw83Xw8/Zw8/Zw8/Zw8/Zw8/Zwc/Wws7Yw8/Zw8/Zws7Yw8/Yw8/Zws7Yw8/Zws7Yws7Wws7Vws7Xw8/Yw8/Yws7Yw8/Zw8/Ywc3Tws7Vw8/Yw8/Zws7Yv8zZws7Zws7Zw8/ZwM7Zw83Xw87Zw87Zw8/Yw8/Yws/Ywc/WLxVm2wAAADF0Uk5TAD+c2/b/mztBw/D6/sI/ouzYlFxJ2/iXOAs4mNz0/WgLDPVZOAuTW+s+PNz29NqaOxuwq5UAAADwSURBVHic7do9DgFRFIbhc4zfSiUiQYIG+1+IkogQzVQW4CeuuaMw8i3g3uJ9VvDlzSmPm3lkqIRQ+N1J0vBN0q+T3FOPyUMvNvEhV/ITIh/VScrUY/IwcX92fRaTXFJvycXiHdreMZufUi/Jx+pqJPlHEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESQRJBEkESEZMs7eWtc+oluagfs6b26Az8mHpLHr7ve/HJc+S31GPyEEIYl7wCN01uoZi62Xa/8UPqMXlYV9exI0lTneQD8s9tql9SrQgAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		tspan { white-space:pre } 
+		.s0 { fill: #ffffff } 
+		.s1 { fill: none;stroke: #730fc3;stroke-linecap: round;stroke-linejoin: round;stroke-width: 4 } 
+		.t2 { font-size: 36px;fill: #293845;font-family: "D IN  Next" } 
+		.s3 { fill: #fae6d8;stroke: #e8833a;stroke-width: 2 } 
+		.s4 { fill: #444444 } 
+		.t5 { font-size: 27px;fill: #293845;font-family: "D IN  Next" } 
+		.t6 { font-size: 18px;fill: #293845;font-family: "D IN  Next" } 
+		.s7 { fill: #e3cff3 } 
+		.s8 { fill: #e3cff3;stroke: #730fc3;stroke-width: 2 } 
+		.s9 { fill: #f2d6f6;stroke: #bd34d1;stroke-width: 2 } 
+		.s10 { fill: none;stroke: #c3cfd9;stroke-linecap: round;stroke-linejoin: round;stroke-width: 4 } 
+		.s11 { fill: #c3cfd9;stroke: #c3cfd9;stroke-linecap: round;stroke-linejoin: round;stroke-width: 2 } 
+		.t12 { font-size: 18px;fill: #c3cfd9;font-family: "D IN  Next" } 
+		.s13 { fill: #2c88d9 } 
+		.t14 { font-size: 18px;fill: #ffffff;font-family: "D IN  Next" } 
+		.t15 { font-size: 60px;fill: #293845;font-family: "D IN  Next" } 
+	</style>
+	<g>
+		<path class="s0" d="m0 0h2016v1704h-2016z"/>
+		<path class="s0" d="m-840-89h2016v1704h-2016z"/>
+		<g>
+			<g>
+				<g>
+					<path class="s1" d="m132 108c143.5 278.8 287 557.7 559 740 272 182.3 672.5 268.2 1073 354"/>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+									</g>
+									<text id="Ed25519 curve" style="transform: matrix(1,0,0,1,924,936.5)" >
+										<tspan x="0" y="0" class="t2">Ed25519 curve
+</tspan>
+									</text>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<path class="s3" d="m329 1067h290.5v125h-290.5z"/>
+						</g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g id="sb0d6df0d-7575-4641-ba74-2da31e043712">
+											<g>
+												<path fill-rule="evenodd" class="s4" d="m376.5 1123.3l-1.2 7.5h5.5l-0.1 3.7h-5.9l-1.4 9.4h-3.8l1.4-9.4h-8.2l-1.4 9.4h-3.8l1.4-9.4h-5.3v-3.7h5.8l1.2-7.5h-5.5v-3.8h6l1.4-9.4h3.8l-1.4 9.4h8.2l1.4-9.4h3.8l-1.4 9.4h5.3v3.8zm-3.8 0h-8.3l-1.1 7.5h8.2z"/>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+												<g>
+													<g>
+													</g>
+													<text id="Counter: 126" style="transform: matrix(1,0,0,1,407,1142.5)" >
+														<tspan x="0" y="0" class="t5">Counter: 126
+</tspan>
+													</text>
+												</g>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="PROGRAM DERIVED ADDRESS" style="transform: matrix(1,0,0,1,330,1058.5)" >
+												<tspan x="0" y="0" class="t6">PROGRAM DERIVED ADDRESS
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="ADDRESS" style="transform: matrix(1,0,0,1,473,640.5)" >
+												<tspan x="0" y="0" class="t6">ADDRESS
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<path class="s7" d="m453.5 646.5c-6.1 0-11-4.9-11-11 0-6.1 4.9-11 11-11 6.1 0 11 4.9 11 11 0 6.1-4.9 11-11 11z"/>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<path class="s8" d="m227 404h246v160h-246z"/>
+										</g>
+									</g>
+									<g>
+										<g>
+											<g>
+												<g>
+													<g>
+														<g>
+															<g>
+															</g>
+															<text id="Ping counter program" style="transform: matrix(1,0,0,1,243,433.5)" >
+																<tspan x="0" y="0" class="t6">Ping counter program
+</tspan>
+															</text>
+														</g>
+													</g>
+												</g>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+							<g>
+								<g>
+									<g>
+										<g id="s2bf03e19-6d14-4cd1-b043-63516e6a7472">
+											<g>
+												<path fill-rule="evenodd" class="s4" d="m285.6 467.6q0.3 0.2 0.5 0.4 0.3 0.3 0.4 0.6 0.1 0.3 0.1 0.6v3.6q0 0.3-0.1 0.6-0.1 0.3-0.4 0.6-0.2 0.2-0.5 0.4-0.3 0.1-0.6 0.2l-5.3 0.6q-0.1 0.4-0.3 0.8-0.1 0.4-0.3 0.8-0.2 0.4-0.3 0.8-0.2 0.4-0.4 0.7l3.3 4.2q0.2 0.3 0.3 0.6 0.1 0.3 0.1 0.6 0 0.4-0.2 0.7-0.1 0.3-0.3 0.5l-2.6 2.5q-0.2 0.3-0.5 0.4-0.3 0.1-0.6 0.2-0.3 0-0.7-0.1-0.3-0.1-0.5-0.3l-4.2-3.4q-0.4 0.2-0.8 0.4-0.4 0.2-0.8 0.4-0.4 0.1-0.8 0.3-0.4 0.1-0.8 0.2l-0.6 5.4q0 0.3-0.2 0.6-0.1 0.3-0.4 0.5-0.2 0.2-0.5 0.3-0.3 0.2-0.7 0.1h-3.6q-0.3 0.1-0.6-0.1-0.3-0.1-0.6-0.3-0.2-0.2-0.4-0.5-0.1-0.3-0.1-0.6l-0.6-5.3q-0.4-0.2-0.8-0.3-0.5-0.2-0.9-0.3-0.4-0.2-0.7-0.4-0.4-0.2-0.8-0.4l-4.2 3.4q-0.2 0.2-0.6 0.3-0.3 0.1-0.6 0.1-0.3-0.1-0.6-0.2-0.3-0.1-0.6-0.4l-2.5-2.5q-0.2-0.2-0.4-0.5-0.1-0.3-0.1-0.7 0-0.3 0.1-0.6 0.1-0.3 0.3-0.6l3.3-4.1q-0.2-0.4-0.4-0.8-0.2-0.4-0.3-0.8-0.2-0.4-0.4-0.8-0.1-0.4-0.2-0.8l-5.3-0.6q-0.4-0.1-0.6-0.2-0.3-0.2-0.6-0.4-0.2-0.3-0.3-0.6-0.1-0.3-0.1-0.6v-3.6q0-0.3 0.1-0.6 0.1-0.3 0.3-0.6 0.3-0.2 0.6-0.4 0.2-0.1 0.6-0.2l5.3-0.6q0.1-0.4 0.2-0.8 0.2-0.4 0.4-0.8 0.1-0.4 0.3-0.8 0.2-0.4 0.4-0.7l-3.3-4.2q-0.2-0.3-0.4-0.6-0.1-0.3 0-0.6 0-0.4 0.1-0.7 0.2-0.3 0.4-0.5l2.5-2.5q0.3-0.3 0.6-0.4 0.3-0.1 0.6-0.2 0.3 0 0.6 0.1 0.4 0.1 0.6 0.3l4.2 3.4q0.4-0.2 0.8-0.4 0.3-0.2 0.7-0.4 0.4-0.1 0.9-0.3 0.4-0.1 0.8-0.2l0.6-5.4q0-0.3 0.1-0.6 0.2-0.3 0.4-0.5 0.3-0.2 0.6-0.3 0.3-0.2 0.6-0.2h3.6q0.4 0 0.7 0.2 0.3 0.1 0.5 0.3 0.3 0.2 0.4 0.5 0.2 0.3 0.2 0.6l0.6 5.3q0.4 0.2 0.8 0.3 0.4 0.2 0.8 0.3 0.4 0.2 0.8 0.4 0.4 0.2 0.8 0.4l4.2-3.4q0.2-0.2 0.5-0.3 0.3-0.1 0.7-0.1 0.3 0.1 0.6 0.2 0.3 0.1 0.5 0.4l2.6 2.5q0.2 0.2 0.3 0.5 0.2 0.3 0.2 0.7 0 0.3-0.1 0.6-0.1 0.3-0.3 0.6l-3.3 4.1q0.2 0.4 0.4 0.8 0.1 0.4 0.3 0.8 0.2 0.4 0.3 0.8 0.2 0.4 0.3 0.8l5.3 0.6q0.3 0.1 0.6 0.2zm-17.7 10q1.3-0.5 2.3-1.5 1-1.1 1.5-2.4 0.6-1.3 0.6-2.7c0-2.9-1.8-5.5-4.4-6.6-2.7-1.1-5.8-0.5-7.8 1.5-2.1 2.1-2.7 5.2-1.6 7.8 1.1 2.7 3.7 4.4 6.6 4.4q1.5 0 2.8-0.5z"/>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+												<g>
+													<g>
+													</g>
+													<text id="Increment" style="transform: matrix(1,0,0,1,301,467.5)" >
+														<tspan x="0" y="0" class="t6">Increment
+</tspan>
+													</text>
+												</g>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path class="s9" d="m444.5 659.5h240v104.5h-240z"/>
+				</g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="◎15 SOL" style="transform: matrix(1,0,0,1,510,736.5)" >
+												<tspan x="0" y="0" class="t5">◎15 SOL
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+									</g>
+									<text id="Alice’s wallet" style="transform: matrix(1,0,0,1,462,694.5)" >
+										<tspan x="0" y="0" class="t6">Alice’s wallet
+</tspan>
+									</text>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g id="saf8945e8-357b-480a-94ec-c2e8c39da8d9">
+							<g>
+								<path class="s4" d="m479 731.3h-9c-5.4 0-9.8 4.3-9.8 9.7l0.1 1.5c0 0.3 0.2 0.6 0.5 0.7 0.2 0.1 4.9 1.6 13.7 1.6 8.8 0 13.5-1.5 13.7-1.6 0.3-0.1 0.6-0.4 0.6-0.7v-1.5c0-5.4-4.4-9.7-9.8-9.7z"/>
+								<path class="s4" d="m474.5 728.3c4.6 0 8.3-5.3 8.3-9.8-0.1-4.5-3.8-8.2-8.3-8.2-4.5 0-8.3 3.7-8.3 8.2 0.1 4.5 3.7 9.8 8.3 9.8z"/>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="ADDRESS" style="transform: matrix(1,0,0,1,301,390.5)" >
+												<tspan x="0" y="0" class="t6">ADDRESS
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<path class="s8" d="m281.5 396.5c-6.1 0-11-4.9-11-11 0-6.1 4.9-11 11-11 6.1 0 11 4.9 11 11 0 6.1-4.9 11-11 11z"/>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path class="s10" d="m227 772v147c0 8.3 6.7 15 15 15h7.5"/>
+					<path class="s10" d="m294.5 934h145.5c7.2 0 13 5.8 13 13v9"/>
+					<path class="s11" d="m458.5 952.9l-5.5 7.1-5.5-7.1z"/>
+					<text id="seed" style="transform: matrix(1,0,0,1,272,940)" >
+						<tspan x="-21.5" y="0" class="t12">seed
+</tspan>
+					</text>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+									</g>
+									<text id="ADDRESS" style="transform: matrix(1,0,0,1,473,640.5)" >
+										<tspan x="0" y="0" class="t6">ADDRESS
+</tspan>
+									</text>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path class="s8" d="m453.5 646.5c-6.1 0-11-4.9-11-11 0-6.1 4.9-11 11-11 6.1 0 11 4.9 11 11 0 6.1-4.9 11-11 11z"/>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<path class="s0" d="m97 687h247c1.7 0 3 1.3 3 3v71c0 1.7-1.3 3-3 3h-247c-1.7 0-3-1.3-3-3v-71c0-1.7 1.3-3 3-3z"/>
+						<g>
+							<path class="s13" d="m97 687h247c1.7 0 3 1.3 3 3v71c0 1.7-1.3 3-3 3h-247c-1.7 0-3-1.3-3-3v-71c0-1.7 1.3-3 3-3z"/>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+												<g>
+												</g>
+												<text id="“GLOBAL STATE”" style="transform: matrix(1,0,0,1,156.115,732)" >
+													<tspan x="0" y="0" class="t14">“GLOBAL STATE”
+</tspan>
+												</text>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="STRING" style="transform: matrix(1,0,0,1,94,677.5)" >
+												<tspan x="0" y="0" class="t6">STRING
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<path class="s9" d="m1406 1145h240v104.5h-240z"/>
+						</g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+												<g>
+													<g>
+													</g>
+													<text id="◎27 SOL" style="transform: matrix(1,0,0,1,1471,1222.5)" >
+														<tspan x="0" y="0" class="t5">◎27 SOL
+</tspan>
+													</text>
+												</g>
+											</g>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="Bob’s wallet" style="transform: matrix(1,0,0,1,1423,1179.5)" >
+												<tspan x="0" y="0" class="t6">Bob’s wallet
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<g>
+								<g id="sde967045-3991-43d7-879a-32cdea134310">
+									<g>
+										<path class="s4" d="m1440.5 1216.8h-9c-5.4 0-9.8 4.3-9.8 9.7l0.1 1.5c0 0.3 0.2 0.6 0.5 0.7 0.2 0.1 4.9 1.6 13.7 1.6 8.8 0 13.5-1.5 13.7-1.6 0.3-0.1 0.6-0.4 0.6-0.7v-1.5c0-5.4-4.4-9.7-9.8-9.7z"/>
+										<path class="s4" d="m1436 1213.8c4.6 0 8.3-5.3 8.3-9.8-0.1-4.5-3.8-8.2-8.3-8.2-4.5 0-8.3 3.7-8.3 8.2 0.1 4.5 3.7 9.8 8.3 9.8z"/>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<g>
+											<g>
+											</g>
+											<text id="ADDRESS" style="transform: matrix(1,0,0,1,1437,1127.5)" >
+												<tspan x="0" y="0" class="t6">ADDRESS
+</tspan>
+											</text>
+										</g>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+					<g>
+						<g>
+							<path class="s8" d="m1417.5 1133.5c-6.1 0-11-4.9-11-11 0-6.1 4.9-11 11-11 6.1 0 11 4.9 11 11 0 6.1-4.9 11-11 11z"/>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+									</g>
+									<text id="Ping Counter Program" style="transform: matrix(1,0,0,1,1328.503,120)" >
+										<tspan x="0" y="0" class="t15">Ping Counter Program
+</tspan>
+									</text>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path class="s10" d="m354 564v244q0 0.5 0 1"/>
+					<path class="s10" d="m413 823h75c8.3 0 15 6.7 15 15v118"/>
+					<path class="s11" d="m508.5 952.9l-5.5 7.1-5.5-7.1z"/>
+					<text id="programId" style="transform: matrix(1,0,0,1,368,829)" >
+						<tspan x="-46.8" y="0" class="t12">programId
+</tspan>
+					</text>
+				</g>
+			</g>
+			<g>
+				<g>
+					<use  href="#img1" x="346" y="966"/>
+					<g>
+						<g>
+							<g>
+								<g>
+									<g>
+										<text id="findProgramAddressAsync()" style="transform: matrix(1,0,0,1,357.46,998.5)" >
+											<tspan x="0" y="0" class="t6">findProgramAddress</tspan><tspan  y="0" class="t6">A</tspan><tspan  y="0" class="t6">s</tspan><tspan  y="0" class="t6">y</tspan><tspan  y="0" class="t6">n</tspan><tspan  y="0" class="t6">c</tspan><tspan  y="0" class="t6">()
+</tspan>
+										</text>
+									</g>
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+			<g>
+				<g>
+					<path class="s10" d="m474 1016v12"/>
+					<path class="s11" d="m479.5 1024.9l-5.5 7.1-5.5-7.1z"/>
+				</g>
+			</g>
+		</g>
+		<g>
+		</g>
+	</g>
+</svg>
