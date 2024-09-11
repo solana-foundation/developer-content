@@ -1154,12 +1154,12 @@ pub struct Withdraw<'info> {
 And that’s it for the program! At this point, you should be able to run
 `anchor build` without any errors.
 
-<Callout type="note">
+> [!NOTE]
 
 If you see an error like the one presented below, you can safely ignore it.
 
 ```bash
-Compiling switchboard-v2 v0.4.0
+Compiling switchboard-solana v0.30.4
 Error: Function _ZN86_$LT$switchboard_v2..aggregator..AggregatorAccountData$u20$as$u20$core..fmt..Debug$GT$3fmt17hea9f7644392c2647E Stack offset of 4128 exceeded max offset of 4096 by 32 bytes, please minimize large stack variables
 ```
 
@@ -1201,8 +1201,8 @@ export const solUsdSwitchboardFeed = new anchor.web3.PublicKey(
 
 describe("burry-escrow", () => {
   // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
   const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
   const program = anchor.workspace.BurryEscrow as Program<BurryEscrow>;
   const payer = (provider.wallet as AnchorWallet).payer;
 
@@ -1255,7 +1255,7 @@ describe("burry-escrow", () => {
       console.log("Onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data onchain is equal to local 'data'
+      // Check whether the data onchain is same as  local 'data'
       assert(failUnlockPrice == newAccount.unlockPrice);
       assert(escrowBalance > 0);
     } catch (e) {
@@ -1405,15 +1405,15 @@ just copy/pasting. Also feel free to review the working code
 
 ### Challenge
 
-As an independent challenge, create a fallback plan if the data feed ever goes
-down. If the Oracle queue has not updated the aggregator account in X time or if
-the data feed account does not exist anymore, withdraw the user’s escrowed
-funds.
+As an independent challenge, create a fallback plan for when the data feed goes
+down. If the Oracle queue hasn't updated the aggregator account within X time or
+if the data feed account no longer exists, withdraw the user’s escrowed funds
 
 A potential solution to this challenge can be found
 [in the Github repository on the `challenge-solution` branch](https://github.com/solana-developers/burry-escrow).
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=1a5d266c-f4c1-4c45-b986-2afd4be59991)!
 </Callout>
