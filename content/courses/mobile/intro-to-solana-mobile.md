@@ -21,10 +21,14 @@ The **Solana Mobile Stack** (**SMS**) is designed to help developers seamlessly 
 
 This lesson focuses on using React Native to create a simple Android app that integrates with the Solana network. If you're not familiar with programming in React or Solana, we recommend starting with our [Intro to Solana lesson](https://github.com/solana-foundation/developer-content/tree/main/content/courses/intro-to-solana) and returning when you're ready. If you are, let's dive in!
 
-### Intro To Solana Mobile
+## Intro to Solana Mobile
+The Solana wallet interaction differs slightly on mobile compared to the web. The core wallet functionality is the same: the wallet holds your private keys and uses them to sign and send transactions. To avoid having different interfaces
+between wallets, developers abstracted that functionality into the SWA standard. This remains the standard on the web while its mobile counterpart is the MWA.
 
-In these units, we'll develop mobile apps that interact with the Solana network.
-This opens up a whole new paradigm of crypto use cases and behaviors.
+The differences between the two standards are due to the different construction of web vs mobile wallets. Web wallets are just browser extensions that inject wallet adapter functions into the `window` object of your webpage. This gives
+your site access to them. Mobile wallets, however, are native applications on a mobile operating system. There's no way to surface functions from one native application to another. The Mobile Wallet Adapter exists to enable any app, written in any language, to connect to a native wallet app.
+
+We will dig into the specifics of the MWA in a [later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens a WebSocket between applications to facilitate communication. That way a separate app can provide the wallet app with the transaction to be signed and sent, and the wallet app can respond with appropriate status updates.
 
 #### Solana Mobile Use Cases
 
