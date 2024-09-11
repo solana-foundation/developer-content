@@ -573,13 +573,25 @@ over most program interactions, this approach can work.
 
 There’s no one-size-fits-all solution here. Two potential strategies include:
 
-1. **Store raw data**: One approach is to store the raw data in a database simultaneously with sending it to the program. This allows you to keep a record of the data, along with the Merkle tree leaf where the data was hashed and stored.
+1. **Store raw data**: One approach is to store the raw data in a database
+   simultaneously with sending it to the program. This allows you to keep a
+   record of the data, along with the Merkle tree leaf where the data was hashed
+   and stored.
 
-2. **Create a transaction observer**: Another approach is to create a server that observes the transactions your program executes. This server would fetch transactions, look up the related Noop logs, decode them, and store the data.
+2. **Create a transaction observer**: Another approach is to create a server
+   that observes the transactions your program executes. This server would fetch
+   transactions, look up the related Noop logs, decode them, and store the data.
 
-When writing tests in the lab, we'll simulate both of these approaches, although instead of using a database, the data will be stored in memory for the test's duration.
+When writing tests in the lab, we'll simulate both of these approaches, although
+instead of using a database, the data will be stored in memory for the test's
+duration.
 
-The process of setting this up can be a bit complex. For a given transaction, you’ll retrieve it from the RPC provider, extract the inner instructions related to the Noop program, and use the `deserializeApplicationDataEvent` function from the `@solana/spl-account-compression` JS package to decode the logs. Then, you'll use Borsh to deserialize the data. Here's an example from the messaging program to illustrate the process:
+The process of setting this up can be a bit complex. For a given transaction,
+you’ll retrieve it from the RPC provider, extract the inner instructions related
+to the Noop program, and use the `deserializeApplicationDataEvent` function from
+the `@solana/spl-account-compression` JS package to decode the logs. Then,
+you'll use Borsh to deserialize the data. Here's an example from the messaging
+program to illustrate the process:
 
 ```typescript
 export async function getMessageLog(
@@ -641,16 +653,18 @@ export async function getMessageLog(
 
 ### Conclusion
 
-Generalized state compression can be difficult but is absolutely possible to
-implement with the available tools. Additionally, the tools and programs will
-only get better over time. If you come up with solutions that improve your
-development experience, please share with the community!
+Implementing generalized state compression may be challenging, but it is
+entirely achievable using the available tools. As the ecosystem evolves, these
+tools and programs will continue to improve, making the process more
+streamlined. If you discover solutions that enhance your development experience,
+please don't hesitate to share them with the community!
 
-## Lab
+## Lab: Building a Note-Taking App with Generalized State Compression
 
-Let’s practice generalized state compression by creating a new Anchor program.
-This program will use custom state compression to power a simple note-taking
-app.
+In this lab, we'll walk through the process of developing an Anchor program that
+uses custom state compression to power a basic note-taking app. This will give
+you hands-on experience in working with compressed data and help reinforce key
+concepts around state compression on Solana.
 
 #### 1. Project setup
 
@@ -660,8 +674,9 @@ Start by initializing an Anchor program:
 anchor init compressed-notes
 ```
 
-We’ll be using the `spl-account-compression` crate with the `cpi` feature
-enabled. Let’s add it as a dependency in `programs/compressed-notes/Cargo.toml`.
+Next, we'll add the spl-account-compression crate with the cpi feature enabled.
+To do this, update the Cargo.toml file located at programs/compressed-notes by
+adding the following dependency:
 
 ```toml
 [dependencies]
@@ -670,9 +685,9 @@ spl-account-compression = { version="0.2.0", features = ["cpi"] }
 solana-program = "1.16.0"
 ```
 
-We’ll be testing locally but we need both the Compression program and the Noop
-program from Mainnet. We’ll need to add these to the `Anchor.toml` in the root
-directory so they get cloned to our local cluster.
+We'll be running tests locally, but we'll need both the State Compression Program and the Noop Program from the Mainnet to do so. To make sure these programs are available on our local cluster, we need to include them in the `Anchor.toml` file located in the root directory. Here's how you can add them:
+
+In `Anchor.toml`, update the programs section with the following entries:
 
 ```toml
 [test.validator]
@@ -685,10 +700,7 @@ address = "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV"
 address = "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK"
 ```
 
-Lastly, let’s prepare the `lib.rs` file for the rest of the Demo. Remove the
-`initialize` instruction and the `Initialize` accounts struct, then add the
-imports shown in the code snippet below (be sure to put in **_your_** program
-id):
+Finally, let's set up the `lib.rs` file for the remainder of the demo. Start by removing the `initialize` instruction and the `Initialize` accounts struct. Next, add the necessary imports as indicated in the code snippet, making sure to include **_your_** program ID.
 
 ```rust
 use anchor_lang::{
@@ -718,12 +730,9 @@ pub mod compressed_notes {
 }
 ```
 
-For the rest of this Demo, we’ll be making updates to the program code directly
-in the `lib.rs` file. This simplifies the explanations a bit. You’re welcome to
-modify the structure as you will.
+For the remainder of this demo, we'll be making updates directly in the `lib.rs` file. This approach simplifies the explanations. You can modify the structure as needed.
 
-Feel free to build before continuing. This ensures your environment is working
-properly and shortens future build times.
+It's a good idea to build your project now to confirm that your environment is set up correctly and to reduce build times in the future.
 
 #### 2. Define `Note` schema
 
