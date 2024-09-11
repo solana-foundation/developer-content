@@ -37,8 +37,9 @@ lesson will be spent in the lab.
 
 ### React Native Expo
 
-Expo is an open-source platform for making universal native apps for Android, iOS, and the web that wrap around React
-Native, much like Next.js is a framework built on top of React.
+Expo is an open-source platform for making universal native apps for Android,
+iOS, and the web that wrap around React Native, much like Next.js is a framework
+built on top of React.
 
 Expo consists of three main parts:
 
@@ -120,7 +121,12 @@ the following inside this file:
 }
 ```
 
-With the EAS configuration file in place, you can build your project using the ```eas build``` command along with relevant flags to meet any additional requirements. This command submits a job to the EAS Build service, where your APK is built using Expo's cloud infrastructure. If you want to build locally, you can add the ```--local``` flag. For example, the following command builds the project locally with a development profile specifically for Android:
+With the EAS configuration file in place, you can build your project using the
+`eas build` command along with relevant flags to meet any additional
+requirements. This command submits a job to the EAS Build service, where your
+APK is built using Expo's cloud infrastructure. If you want to build locally,
+you can add the `--local` flag. For example, the following command builds the
+project locally with a development profile specifically for Android:
 
 ```bash
 eas build --profile development --platform android --message "Developing on Android!" --local
@@ -165,9 +171,12 @@ JS/TS.
 import { Pedometer } from "expo-sensors";
 ```
 
-Depending on the package, there may be additional setup required.
-For example, if you're using the ```expo-camera``` package, you not only need to install the package but also configure the appropriate permissions in your ```app.json``` or ```AndroidManifest.xml``` file for Android and request runtime permissions for accessing the camera.
-Be sure to read the [docs](https://docs.expo.dev/versions/latest/) when working with a new package.
+Depending on the package, there may be additional setup required. For example,
+if you're using the `expo-camera` package, you not only need to install the
+package but also configure the appropriate permissions in your `app.json` or
+`AndroidManifest.xml` file for Android and request runtime permissions for
+accessing the camera. Be sure to read the
+[docs](https://docs.expo.dev/versions/latest/) when working with a new package.
 
 ### Integrate ecosystem libraries into your Expo app
 
@@ -202,7 +211,8 @@ For a Solana + Expo app, you'll need the following:
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
   through the [JSON RPC API](https://docs.solana.com/api/http).
 - `expo-crypto`: Secure random number generator polyfill.
-  for `web3.js` underlying Crypto library on React Native. (This only works for Expo SDK Version 49+ and Expo Router, so make sure you update)
+  for `web3.js` underlying Crypto library on React Native. (This only works for
+  Expo SDK Version 49+ and Expo Router, so make sure you update)
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
 
 #### Metaplex Polyfills
@@ -210,19 +220,20 @@ For a Solana + Expo app, you'll need the following:
 If you want to use the Metaplex SDK, you'll need to add the Metaplex library
 plus a few additional polyfills:
 
-- `@metaplex-foundation/umi` `@metaplex-foundation/umi-bundle-defaults` `@metaplex-foundation/mpl-core` - Metaplex Library
+- `@metaplex-foundation/umi` `@metaplex-foundation/umi-bundle-defaults`
+  `@metaplex-foundation/mpl-core` - Metaplex Library
 - Several more polyfills
   - `assert`
   - `crypto-browserify`
   - `readable-stream`
   - `zlib`
-  - `react-native-url-polyfill`
-All of the libraries that the above polyfills are meant to replace are utilized
-by the Metaplex libraries in the background. It's unlikely you'll be importing any
-of them into your code directly. Because of this, you'll need to register the
-polyfills using a `metro.config.js` file. This will ensure that Metaplex uses
-the polyfills instead of the usual Node.js libraries that aren't supported in
-React Native. Below is an example `metro.config.js` file:
+  - `react-native-url-polyfill` All of the libraries that the above polyfills
+    are meant to replace are utilized by the Metaplex libraries in the
+    background. It's unlikely you'll be importing any of them into your code
+    directly. Because of this, you'll need to register the polyfills using a
+    `metro.config.js` file. This will ensure that Metaplex uses the polyfills
+    instead of the usual Node.js libraries that aren't supported in React
+    Native. Below is an example `metro.config.js` file:
 
 ```js
 // Import the default Expo Metro config
@@ -238,7 +249,7 @@ defaultConfig.resolver.extraNodeModules = {
   url: require.resolve("react-native-url-polyfill"),
   zlib: require.resolve("browserify-zlib"),
   path: require.resolve("path-browserify"),
-  crypto : require.resolve('expo-crypto')
+  crypto: require.resolve("expo-crypto"),
 };
 
 // Export the modified configuration
@@ -350,8 +361,8 @@ Copy and paste the following into the newly created `eas.json`:
 
 #### 4. Build and emulate
 
-Now let's build the project locally. You will choose `y` for every answer. This will
-take a while to complete.
+Now let's build the project locally. You will choose `y` for every answer. This
+will take a while to complete.
 
 ```bash
 npx eas build --profile development --platform android --local
@@ -386,8 +397,8 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 
 You'll need a wallet that supports Devnet to test with. In
 [our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
-created one of these. Let's install it from the repo in a different
-directory from our app:
+created one of these. Let's install it from the repo in a different directory
+from our app:
 
 ```bash
 cd ..
@@ -479,7 +490,6 @@ const webCrypto = typeof crypto !== "undefined" ? crypto : new Crypto();
       configurable: true,
       enumerable: true,
       get: () => webCrypto,
-      
     });
   }
 })();
@@ -492,8 +502,8 @@ just created:
 import { ConnectionProvider } from "./components/ConnectionProvider";
 import { AuthorizationProvider } from "./components/AuthProvider";
 import { clusterApiUrl } from "@solana/web3.js";
-import { MainScreen } from "./screens/MainScreen"
-import "./polyfills"
+import { MainScreen } from "./screens/MainScreen";
+import "./polyfills";
 
 export default function App() {
   const cluster = "devnet";
@@ -513,9 +523,8 @@ export default function App() {
 }
 ```
 
-Notice we've added two polyfills above: `buffer` and
-`expo-crypto`. These are necessary for the Solana
-dependencies to run correctly.
+Notice we've added two polyfills above: `buffer` and `expo-crypto`. These are
+necessary for the Solana dependencies to run correctly.
 
 #### 4. Build and run Solana boilerplate
 
@@ -608,7 +617,7 @@ defaultConfig.resolver.extraNodeModules = {
   url: require.resolve("react-native-url-polyfill"),
   zlib: require.resolve("browserify-zlib"),
   path: require.resolve("path-browserify"),
-  crypto : require.resolve('expo-crypto'),
+  crypto: require.resolve("expo-crypto"),
 };
 
 // Export the modified configuration
@@ -619,8 +628,7 @@ module.exports = {
     ...defaultConfig.resolver,
     unstable_enablePackageExports: true,
   },
-}
-
+};
 ```
 
 #### 3. Metaplex provider
@@ -633,15 +641,20 @@ an `IdentitySigner` for the `Metaplex` object to use. This allows it to call
 several privileged functions on our behalf:
 
 ```tsx
-import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
-import { mplCandyMachine } from '@metaplex-foundation/mpl-candy-machine';
-import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
-import { transact, Web3MobileWallet } from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
+import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
+import {
+  transact,
+  Web3MobileWallet,
+} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { useMemo } from "react";
 import { Account } from "./AuthProvider";
 
-type Web3JsTransactionOrVersionedTransaction = Transaction | VersionedTransaction;
+type Web3JsTransactionOrVersionedTransaction =
+  | Transaction
+  | VersionedTransaction;
 
 export const useMetaplex = (
   connection: Connection,
@@ -665,7 +678,11 @@ export const useMetaplex = (
           return signedMessages[0];
         });
       },
-      signTransaction: async <T extends Web3JsTransactionOrVersionedTransaction>(transaction: T): Promise<T> => {
+      signTransaction: async <
+        T extends Web3JsTransactionOrVersionedTransaction,
+      >(
+        transaction: T,
+      ): Promise<T> => {
         return await transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
           const signedTransactions = await wallet.signTransactions({
@@ -674,7 +691,11 @@ export const useMetaplex = (
           return signedTransactions[0] as T;
         });
       },
-      signAllTransactions: async <T extends Web3JsTransactionOrVersionedTransaction>(transactions: T[]): Promise<T[]> => {
+      signAllTransactions: async <
+        T extends Web3JsTransactionOrVersionedTransaction,
+      >(
+        transactions: T[],
+      ): Promise<T[]> => {
         return transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
           const signedTransactions = await wallet.signTransactions({
@@ -755,8 +776,8 @@ Now, let's wrap our new `NFTProvider` around `MainScreen` in `App.tsx`:
 import { ConnectionProvider } from "./components/ConnectionProvider";
 import { AuthorizationProvider } from "./components/AuthProvider";
 import { clusterApiUrl } from "@solana/web3.js";
-import { MainScreen } from "./screens/MainScreen"
-import "./polyfills"
+import { MainScreen } from "./screens/MainScreen";
+import "./polyfills";
 
 export default function App() {
   const cluster = "devnet";
