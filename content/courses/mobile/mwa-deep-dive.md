@@ -549,7 +549,7 @@ handles all of the low-level communication.
 Let's install the package in a new folder `lib`:
 
 ```bash
-npm @solana-mobile/mobile-wallet-adapter-walletlib
+npm i @solana-mobile/mobile-wallet-adapter-walletlib
 ```
 
 Next, in `android/build.gradle`, change the `minSdkVersion` to version `23`.
