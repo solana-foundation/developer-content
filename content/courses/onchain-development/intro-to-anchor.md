@@ -17,6 +17,35 @@ description: "Create your first Solana onchain program in Anchor."
   incoming instructions, and checking the right accounts are provided - so you
   can focus on building your Solana program.
 
+## Overview
+  
+Anchor is a framework designed to simplify the process of writing Solana programs. By **abstracting away much of the low-level details**, Anchor enables developers to focus more on the logic of their decentralized applications (dApps) without worrying about the complexities of Solana's native APIs.
+
+Anchor provides many features that make building Solana programs easier and safer:
+
+- `Pre-built Security Mechanisms`: Anchor implements common security checks automatically, reducing the chances of errors.
+- `Automatic Account Validation`: Anchor validates accounts by checking for:
+- `Type correctness`: Ensures that accounts match the expected data types.
+- `Uniqueness`: Ensures that each account is correctly initialized and doesn't conflict with existing ones.
+- `Simplified Data Handling`: Anchor automatically serializes and deserializes the data passed in transactions, making it easier to manage the inputs and outputs of your program.
+- `Instruction Routing`: Anchor routes incoming instructions to the appropriate function, simplifying the process of executing program logic.
+
+Here’s how Anchor works in practice:
+
+Programs are deployed at addresses
+In the same way, Solana programs can be deployed using their program ID, and Anchor programs can also be deployed with a unique public key. This keypair is created during the initialization of an Anchor project and is stored in the target/deploy directory.
+
+- When you create a new Anchor program, a keypair is generated via the anchor init command.
+- This keypair is essential for deploying the program and is referenced as the program's ID in multiple places, such as Anchor.toml and your program’s main file (typically lib.rs).
+Using Anchor
+The core structure of an Anchor project revolves around:
+
+- `Accounts`: These are user or program-specific accounts that store state and data. Anchor makes it easy to define and validate accounts in your program.
+- `Instructions`: These are the actions users and programs can trigger. Anchor simplifies instruction handling by automatically mapping the data to specific program logic.
+For example, consider a program that mints tokens. Anchor allows you to define the instructions and accounts needed for the minting process concisely.
+
+Regardless of the tools or framework you use, Solana's core concepts remain consistent. Anchor provides a higher-level abstraction that streamlines development.
+
 ## Lesson
 
 Solana's ability to run arbitrary executable code is part of what makes it so
