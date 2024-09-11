@@ -366,15 +366,30 @@ pub fn create_messages_tree(
 
 #### Adding Hashes to the Tree
 
-Once the Merkle tree is initialized, you can begin adding data hashes to it. This process involves passing the uncompressed data to an instruction within your program, which will hash the data, log it to the Noop Program, and then use the State Compression Program's `append` instruction to add the hash to the tree. Here's how the instruction operates in detail:
+Once the Merkle tree is initialized, you can begin adding data hashes to it.
+This process involves passing the uncompressed data to an instruction within
+your program, which will hash the data, log it to the Noop Program, and then use
+the State Compression Program's `append` instruction to add the hash to the
+tree. Here's how the instruction operates in detail:
 
-1. **Hash the Data**: Use the `hashv` function from the `keccak` crate to hash the data. It's recommended to include the data owner or authority in the hash to ensure that only the proper authority can modify it.
-   
-2. **Log the Data**: Create a log object representing the data you want to log to the Noop Program. Then, call `wrap_application_data_v1` to issue a CPI (Cross-Program Invocation) to the Noop Program with this object. This makes the uncompressed data easily accessible to any client, such as indexers, that may need it. You could also develop a custom client to observe and index data for your application specifically.
+1. **Hash the Data**: Use the `hashv` function from the `keccak` crate to hash
+   the data. It's recommended to include the data owner or authority in the hash
+   to ensure that only the proper authority can modify it.
+2. **Log the Data**: Create a log object representing the data you want to log
+   to the Noop Program. Then, call `wrap_application_data_v1` to issue a CPI
+   (Cross-Program Invocation) to the Noop Program with this object. This makes
+   the uncompressed data easily accessible to any client, such as indexers, that
+   may need it. You could also develop a custom client to observe and index data
+   for your application specifically.
 
-3. **Append the Hash**: Construct and issue a CPI to the State Compression Program’s `append` instruction. This will take the hash generated in step 1 and append it to the next available leaf on the Merkle tree. As with previous steps, this requires the Merkle tree address and tree authority bump as signature seeds.
+3. **Append the Hash**: Construct and issue a CPI to the State Compression
+   Program’s `append` instruction. This will take the hash generated in step 1
+   and append it to the next available leaf on the Merkle tree. As with previous
+   steps, this requires the Merkle tree address and tree authority bump as
+   signature seeds.
 
-When applied to a messaging system, the resulting implementation might look like this:
+When applied to a messaging system, the resulting implementation might look like
+this:
 
 ```rust
 // Instruction for appending a message to a tree.
@@ -412,22 +427,43 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
 
 #### Updating Hashes
 
-To update a leaf in a Merkle tree, you'll need to generate a new hash to replace the existing one. This process requires four key inputs:
+To update a leaf in a Merkle tree, you'll need to generate a new hash to replace
+the existing one. This process requires four key inputs:
 
 1. The index of the leaf you wish to update
 2. The root hash of the Merkle tree
 3. The original data you want to modify
 4. The updated data
 
-Using these inputs, you can follow a series of steps similar to those used when initially appending data to the tree:
+Using these inputs, you can follow a series of steps similar to those used when
+initially appending data to the tree:
 
-1. **Verify Update Authority**: The first step, unique to updates, is to verify the authority of the entity making the update. This generally involves checking that the signer of the `update` transaction is indeed the owner or authority of the leaf at the specified index. Since the data in the leaf is hashed, you can’t directly compare the authority’s public key to a stored value. Instead, compute the previous hash using the old data and the `authority` listed in the account validation struct. Then, invoke a CPI to the State Compression Program’s `verify_leaf` instruction to confirm the hash matches.
+1. **Verify Update Authority**: The first step, unique to updates, is to verify
+   the authority of the entity making the update. This generally involves
+   checking that the signer of the `update` transaction is indeed the owner or
+   authority of the leaf at the specified index. Since the data in the leaf is
+   hashed, you can’t directly compare the authority’s public key to a stored
+   value. Instead, compute the previous hash using the old data and the
+   `authority` listed in the account validation struct. Then, invoke a CPI to
+   the State Compression Program’s `verify_leaf` instruction to confirm the hash
+   matches.
 
-2. **Hash the New Data**: This step mirrors the hashing process for appending data. Use the `hashv` function from the `keccak` crate to hash the new data and the update authority, converting each to its corresponding byte representation.
+2. **Hash the New Data**: This step mirrors the hashing process for appending
+   data. Use the `hashv` function from the `keccak` crate to hash the new data
+   and the update authority, converting each to its corresponding byte
+   representation.
 
-3. **Log the New Data**: As with the initial append operation, create a log object to represent the new data, and use `wrap_application_data_v1` to invoke the Noop Program via CPI. This ensures that the new uncompressed data is logged and accessible offchain.
+3. **Log the New Data**: As with the initial append operation, create a log
+   object to represent the new data, and use `wrap_application_data_v1` to
+   invoke the Noop Program via CPI. This ensures that the new uncompressed data
+   is logged and accessible offchain.
 
-4. **Replace the Existing Leaf Hash**: This step is slightly different from appending new data. Here, you'll need to invoke a CPI to the State Compression Program’s `replace_leaf` instruction. This operation will replace the existing hash at the specified leaf index with the new hash. You'll need to provide the old hash, the new hash, and the leaf index. As usual, the Merkle tree address and tree authority bump are required as signature seeds.
+4. **Replace the Existing Leaf Hash**: This step is slightly different from
+   appending new data. Here, you'll need to invoke a CPI to the State
+   Compression Program’s `replace_leaf` instruction. This operation will replace
+   the existing hash at the specified leaf index with the new hash. You'll need
+   to provide the old hash, the new hash, and the leaf index. As usual, the
+   Merkle tree address and tree authority bump are required as signature seeds.
 
 When combined, the instruction for updating a hash might look like this:
 
@@ -501,11 +537,17 @@ pub fn update_message(
 
 #### Deleting Hashes
 
-As of now, the State Compression Program does not have a dedicated `delete` instruction.
+As of now, the State Compression Program does not have a dedicated `delete`
+instruction.
 
-Instead, you can simulate deletion by updating the leaf data with a value that signals it has been "deleted." 
+Instead, you can simulate deletion by updating the leaf data with a value that
+signals it has been "deleted."
 
-The exact value you choose will depend on your specific use case and security requirements. For some, this may involve setting all data fields to zero, while others might prefer storing a predefined static string that clearly marks the leaf as deleted. This approach allows you to handle deletions in a way that suits your application’s needs without compromising data integrity.
+The exact value you choose will depend on your specific use case and security
+requirements. For some, this may involve setting all data fields to zero, while
+others might prefer storing a predefined static string that clearly marks the
+leaf as deleted. This approach allows you to handle deletions in a way that
+suits your application’s needs without compromising data integrity.
 
 #### Access data from a client
 
