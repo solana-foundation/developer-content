@@ -18,20 +18,20 @@
     "paths": {
       "contentlayer/generated": ["./.contentlayer/generated"],
       "@/*": ["./src/*"],
-      "@@/*": ["./*"]
+      "@@/*": ["./*"],
     },
     "plugins": [
       {
-        "name": "next"
-      }
-    ]
+        "name": "next",
+      },
+    ],
   },
   "include": [
     ".contentlayer/generated",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }

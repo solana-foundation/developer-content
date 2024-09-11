@@ -13,6 +13,6 @@ solved:
     # Close the discussion
     close: true
     # Set a close reason
-    close-reason: 'resolved'
+    close-reason: "resolved"
     # Lock the discussion
     lock: true
