@@ -190,8 +190,7 @@ Close and reopen your terminal to apply the PATH changes or run the following in
 export PATH="/Users/test/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
-<!-- prettier-ignore -->
-<Tabs groupId="language" items={['Linux', 'Mac']}>
+<Tabs groupId="language" items="Linux, Mac">
 <Tab value="Linux">
 
 If you are using a Linux or WSL terminal, you can add the PATH environment
@@ -311,7 +310,7 @@ the Anchor CLI, try changing your Rust version to 1.79.0 and attempt the
 installation again.
 
 <Accordion>
-<AccordionItem title="error[E0282]: type annotations needed for `Box<_>`">
+<AccordionItem title={"error[E0282]: type annotations needed for `Box<_>`"}>
 
 ```
    Compiling time v0.3.29
