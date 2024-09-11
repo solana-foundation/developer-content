@@ -176,24 +176,35 @@ understand how Switchboard works:
   the accepted result. A feed authority can control how many oracles are
   requested and how many must respond to influence its security.
 
-Switchboard oracles are incentivized to update data feeds because they are
-rewarded for doing so accurately. Each data feed has a `LeaseContract` account.
-The lease contract is a pre-funded escrow account to reward oracles for
-fulfilling update requests. Only the predefined `leaseAuthority` can withdraw
-funds from the contract, but anyone can contribute to it. When a new round of
-updates is requested for a data feed, the user who requested the update is
-rewarded from the escrow. This is to incentivize users and crank turners (anyone
-who runs software to systematically send update requests to Oracles) to keep
-feeds updating based on a feed’s configurations. Once an update request has been
-successfully fulfilled and submitted onchain by the oracles in the queue, the
-oracles are transferred rewards from the escrow as well. These payments ensure
-active participation.
+### Switchboard Oracle System: Incentives and Data Publishing
 
-Additionally, oracles have to stake tokens before they can service update
-requests and submit responses onchain. If an oracle submits a result onchain
-that falls outside the queue’s configured parameters, their stake will be
-slashed (if the queue has `slashingEnabled`). This helps ensure that oracles are
-responding in good faith with accurate information.
+Incentive Structure
+Switchboard oracles are incentivized to update data feeds accurately through a reward system. This system involves several key components:
+
+1.LeaseContract Account:
+
+Each data feed has an associated LeaseContract account.
+This account acts as a pre-funded escrow to reward oracles.
+Only the predefined leaseAuthority can withdraw funds.
+Anyone can contribute to the account.
+
+
+2.Update Request Rewards:
+
+When a new round of updates is requested, the requester is rewarded from the escrow.
+This incentivizes users and "crank turners" (those who systematically send update requests) to maintain feed updates based on configurations.
+
+
+3.Oracle Rewards:
+
+Oracles receive rewards from the escrow upon successfully fulfilling and submitting updates onchain.
+
+
+4.Staking Mechanism:
+
+Oracles must stake tokens before servicing update requests and submitting responses.
+If an oracle's submission falls outside the queue's configured parameters, their stake may be slashed (if slashingEnabled is true for the queue).
+This mechanism encourages oracles to respond accurately and in good faith.
 
 Now that you understand the terminology and economics, let’s take a look at how
 data is published onchain:
