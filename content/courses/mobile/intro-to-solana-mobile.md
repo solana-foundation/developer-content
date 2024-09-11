@@ -30,9 +30,9 @@ your site access to them. Mobile wallets, however, are native applications on a 
 
 We will dig into the specifics of the MWA in a [later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens a WebSocket between applications to facilitate communication. That way a separate app can provide the wallet app with the transaction to be signed and sent, and the wallet app can respond with appropriate status updates.
 
-#### Solana Mobile Use Cases
+### Mobile Use Cases with Solana
 
-Here are a few examples of what Solana mobile development can unlock:
+Before development, it is important to understand the current landscape of Web3 mobile development to foresee potential blockers and opportunities. Here are a few examples of what Solana mobile development can unlock:
 
 **Mobile Banking and Trading (DeFi)**
 
@@ -54,8 +54,7 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-To summarize, mobile crypto opens up many doors. Let’s dive in and learn how we
-can be part of it:
+>In summary, mobile crypto opens up many doors. It is important to be informed and learn how one can be part of it, let's explore how.
 
 #### How Solana development differs between native mobile apps and web
 
