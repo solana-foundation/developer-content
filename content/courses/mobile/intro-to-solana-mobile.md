@@ -56,48 +56,13 @@ wallet as seamlessly as you can use Apple Pay.
 
 >In summary, mobile crypto opens up many doors. It is important to be informed and learn how one can be part of it, let's explore how.
 
-#### How Solana development differs between native mobile apps and web
+### Supported Operating Systems
 
-Solana wallet interaction differs slightly on mobile compared to the web. The
-core wallet functionality is the same: the wallet holds your private keys and
-uses them to sign and send transactions. To avoid having different interfaces
-between wallets, developers abstracted that functionality into the Solana Wallet
-Adapter standard. This remains the standard on the web. The mobile counterpart
-is the Mobile Wallet Adapter (MWA).
-
-The differences between the two standards are due to the different construction
-of web vs mobile wallets. Web wallets are just browser extensions that inject
-wallet adapter functions into the `window` object of your webpage. This gives
-your site access to them. Mobile wallets, however, are native applications on a
-mobile operating system. There's no way to surface functions from one native
-application to another. The Mobile Wallet Adapter exists to enable any app,
-written in any language, to connect to a native wallet app.
-
-We'll dig into the specifics of the Mobile Wallet Adapter in a
-[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
-a WebSocket between applications to facilitate communication. That way a
-separate app can provide the wallet app with the transaction to be signed and
-sent, and the wallet app can respond with appropriate status updates.
-
-#### Supported Operating Systems
-
-At the time of writing, Android is the only mobile OS supported by the Mobile
-Wallet Adapter.
-
-On Android, a WebSocket connection can persist between apps, even when the
+Currently, the MWA only supports Android OS. A WebSocket connection can persist between apps, even when the
 wallet app is in the background.
 
-On iOS, the lifetime of a connection between apps is purposefully limited by the
-operating system. Specifically, iOS will quickly suspend connections when an app
-is pushed to the background. This kills the MWA WebSocket connection. This is an
-inherent design difference between iOS and Android (probably made to preserve
-battery, network usage, etc).
-
-However, this doesn’t mean that Solana dApps can’t run on iOS at all. You can
-still create a Mobile Web App using the
-[standard wallet adapter](https://github.com/solana-labs/wallet-adapter)
-library. Your users can then install a mobile-friendly wallet like
-the [Glow Wallet](https://glow.app/).
+A prominent limitation to the adoption of MWAs in iOS is that it is designed to quickly suspend connections when an app
+is pushed to the background. This kills the MWA WebSocket connection. However, this doesn’t mean that Solana dApps can’t run on iOS at all. Developers can still create a Mobile Web App using the [Standard Wallet Adapter](https://github.com/solana-labs/wallet-adapter) library.
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
@@ -121,52 +86,6 @@ Unreal Engine.
 
 To keep the development experience as close as possible to other lessons, we'll
 be working exclusively with React Native.
-
-### From React to React Native
-
-React Native takes the React web framework and applies it to mobile
-applications. However, while React and React Native feel very similar, there are
-differences. The best way to understand these differences is to experience them
-while coding. But, to give you a head start here is a list of some differences
-to keep in mind:
-
-- React Native compiles down to native iOS and Android applications while React
-  compiles down to a collection of web pages.
-- In React, you use JSX to program with HTML and CSS. With React Native, you use
-  similar syntax to manipulate native UI components. It's more like using a UI
-  library like Chakra or Tailwind UI. Instead of `<div>`, `<p>`, and `<img>`
-  you'll be using `<View>`, `<Text>`, and `<Image>`.
-- Interactions are different. Instead of `onClick`, you'll use `onPress` and
-  other gestures.
-- Many standard React and Node packages may not be compatible with React Native.
-  Fortunately, there are React Native counterparts to the most popular libraries
-  and you can often use polyfills to make Node packages available. If you're not
-  familiar with polyfills, take a look at the
-  [MDN docs](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill). In
-  short, polyfills actively replace Node-native libraries to make them work
-  anywhere Node is not running.
-- Setting up a development environment in React Native can be challenging. This
-  will require setting up Android Studio to compile to Android and XCode for
-  iOS. React Native has a
-  [really good guide](https://reactnative.dev/docs/environment-setup?guide=native)
-  for this.
-- For regular development and testing, you'll use a physical mobile device or an
-  emulator to run your code. This relies on a tool called Metro that comes
-  pre-installed. React Native's setup guide also covers this.
-- React Native gives you access to the phone's hardware that React can't
-  provide. This includes things like the phone's camera, accelerometer, and
-  more.
-- React Native introduces new config files and build folders. For example, the
-  `ios` and `android` directories contain platform-specific information.
-  Additionally, there are config files like `Gemfile` and `metro.config.js`.
-  Generally, leave all configurations alone and just worry about writing your
-  code, the starting point for which will be in `App.tsx`.
-
-There is a learning curve, but if you know React you're not nearly as far from
-being able to develop mobile apps as you think! It may feel jarring to start,
-but after a few hours of React Native development, you'll start to feel much
-more comfortable. You'll likely feel much more confident even after
-[this lesson's lab](#lab).
 
 ### Creating a Solana dApp with React Native
 
