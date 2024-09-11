@@ -53,3 +53,35 @@ translated content from Crowdin.
 It will first upload all the new content in the base language (i.e. when a page
 gets edited or newly created), then download all translations for all languages.
 The `deploy` action will then continue to build the content api normally.
+
+### Testing and fixing broken translation files
+
+Crowdin will often return altered and incorrectly formatted content files back
+when performing `crowdin download`. It may be helpful (and faster) to work with
+a single content file at a time by altering the content locally, uploading it to
+Crowdin, the downloading the Crowdin-altered version to see if the changes will
+actually work and not break the site.
+
+To upload single content file to Crowdin specify the source path (`-s` flag) and
+the translation path (`-t` flag). Be sure to include the `%locale%` wildcard in
+the translation path:
+
+```shell
+yarn crowdin upload -s docs/intro/installation.md -t i18n/%locale%/docs/intro/installation.md
+```
+
+To download the Crowdin formatted content, download the entire locale using the
+`-l` flag and passing the locale short code. For example, downloading only the
+German (DE) translated content:
+
+```shell
+yarn crowdin download -l de
+```
+
+It may be helpful to also run the prettier formatter on the translation files,
+since this is normally performed by a GitHub action on deployment to catch and
+fix many formatting issues that Crowdin causes due to altering content:
+
+```shell
+yarn prettier:i18n
+```
