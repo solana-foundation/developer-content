@@ -864,30 +864,17 @@ pub mod compressed_notes {
 
 Make sure that when setting up your CPI, you include both the Merkle tree address and the tree authority bump in the signer seeds.
 
-#### 5. Create `append_note` instruction
+#### 5. Create `append_note` Instruction
 
-Now, let’s create our `append_note` instruction. This instruction needs to take
-the raw note as a String and compress it into a hash that we’ll store on the
-Merkle tree. We’ll also log the note to the Noop program so the entirety of the
-data exists within the chain’s state.
+Let’s move on to creating the `append_note` instruction.  This instruction will compress a raw note into a hash and store it on the Merkle tree, while also logging the note to the Noop program to ensure all data remains available on-chain.
 
-The steps here are as follows:
+Here’s how to accomplish this:
 
-1. Use the `hashv` function from the `keccak` crate to hash the note and owner,
-   each as their corresponding byte representation. It’s **_crucial_** that you
-   hash the owner as well as the note. This is how we’ll verify note ownership
-   before updates in the update instruction.
-2. Create an instance of the `NoteLog` struct using the hash from step 1, the
-   owner’s public key, and the raw note as a String. Then call
-   `wrap_application_data_v1` to issue a CPI to the Noop program, passing the
-   instance of `NoteLog`. This ensures the entirety of the note (not just the
-   hash) is readily available to any client looking for it. For broad use cases
-   like cNFTs, that would be indexers. You might create your observing client to
-   simulate what indexers are doing but for your own application.
-3. Build and issue a CPI to the State Compression Program’s `append`
-   instruction. This takes the hash computed in step 1 and adds it to the next
-   available leaf on your Merkle tree. Just as before, this requires the Merkle
-   tree address and the tree authority bump as signature seeds.
+1. **Hash the Data**: Utilize the `hashv` function from the `keccak` crate to compute a hash of the note and the owner’s public key. Both should be converted to their byte representations. It's essential to hash the owner along with the note to facilitate ownership verification during updates.
+
+2. **Log the Data**: Create a `NoteLog` instance with the hash from step 1, the owner’s public key, and the note as a `String`. Then, use `wrap_application_data_v1` to issue a CPI to the Noop program with this `NoteLog` instance. This ensures the complete note (not just the hash) is available to clients, similar to how indexers manage cNFTs. You might also develop an observing client to simulate indexer functionality specific to your application.
+
+3. **Append to the Merkle Tree**: Build and issue a CPI to the State Compression Program’s `append` instruction. This will add the hash from step 1 to the next available leaf on your Merkle tree. Ensure that the Merkle tree address and the tree authority bump are included as signature seeds.
 
 ```rust
 #[program]
