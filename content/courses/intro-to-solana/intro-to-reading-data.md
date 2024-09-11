@@ -50,6 +50,8 @@ account.
 
 ## Reading from the Solana Blockchain
 
+We will start by setting up the necessary tools.
+
 ### Installation
 
 We use an npm package called `@solana/web3.js` to do most of the work with
