@@ -193,23 +193,20 @@ async function fetchMatchingContactAccounts(
     filters = [
       {
         memcmp: {
-          offset: 6, // Skip the first 6 bytes, which store account metadata like versioning or reserved fields that are not relevant to the search.
+          offset: DATA_OFFSET,
           bytes: bs58.encode(Buffer.from(search)), // Convert the search string to Base58 for comparison with the on-chain data.
         },
       },
     ];
   }
 
-  const accounts = (await connection.getProgramAccounts(
+  const accounts = await connection.getProgramAccounts(
     new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
     {
       dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH }, // Only retrieve the portion of data relevant to the search.
       filters,
     },
-  )) as Array<{
-    pubkey: PublicKey;
-    account: AccountInfo<Buffer>;
-  }>;
+  );
 
   return accounts.map(account => account.account); // Return the account data.
 }
