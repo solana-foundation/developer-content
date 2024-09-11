@@ -1,6 +1,4 @@
 ---
----
-
 title: Generalized State Compression objectives:
 
 - Explain the flow of Solana's state compression's logic.
@@ -9,7 +7,6 @@ title: Generalized State Compression objectives:
 - Implement generic state compression in a basic Solana programs description:
   "Understand how state compression and the technology behind compressed NFTs
   works, and learn how to apply it in your own Solana programs."
-
 ---
 
 ## Summary
@@ -87,91 +84,112 @@ get into the technical bit.
 
 #### Concurrent Merkle trees
 
-A **Merkle tree** is a binary tree structure represented by a single hash. Every
-leaf node in the structure is a hash of its inner data while every branch is a
-hash of its child leaf hashes. In turn, branches are also hashed together until,
-eventually, one final root hash remains.
+A **Merkle tree** is a binary tree structure represented by a single hash.
 
-Since the Merkle tree is represented as a single hash, any modification to leaf
-data changes the root hash. This causes an issue when multiple transactions in
-the same slot are attempting to modify leaf data. Since these transactions must
-execute in series, all but the first will fail since the root hash and proof
-passed in will have been invalidated by the first transaction to be executed. In
-other words, a standard Merkle tree can only modify a single leaf per slot. In a
-hypothetical state-compressed program that relies on a single Merkle tree for
-its state, this severely limits throughput.
+- Each leaf node is a hash of its data.
+- Each branch is a hash of its child leaves.
+- The branches are also hashed together, eventually forming one final root hash.
 
-This can be solved with a **concurrent Merkle tree**. A concurrent Merkle
-tree is a Merkle tree that stores a secure changelog of the most recent changes
-along with their root hash and the proof to derive it. When multiple
-transactions in the same slot try to modify leaf data, the changelog can be used
-as a source of truth to allow for concurrent changes to be made to the tree.
+Since a Merkle tree is represented as a single hash, any change to a leaf node
+alters the entire root hash. his becomes problematic when multiple transactions
+in the same slot try to update leaf data in the same slot. Since transactions
+are executed serially i.e one after the other — all but the first will fail
+since the root hash and proof passed in will have been invalidated by the first
+transaction executed.
 
-In other words, while an account storing a Merkle tree would have only the root
-hash, a concurrent Merkle tree will also contain additional data that allows
-subsequent writes to successfully occur. This includes:
+In short, a standard Merkle tree can only handle one leaf update per slot. This
+significantly limits the throughput in a state-compressed program that depends
+on a single Merkle tree for its state.
 
-1. The root hash - The same root hash that a standard Merkle tree has.
-2. A changelog buffer - This buffer contains proof data pertinent to recent root
-   hash changes so that subsequent writes in the same slot can still be
-   successful.
-3. A canopy - When performing an update action on any given leaf, you need the
-   entire proof path from that leaf to the root hash. The canopy stores
-   intermediate proof nodes along that path so they don’t all have to be passed
-   into the program from the client.
+Thankfully, this issue can be addressed using a concurrent Merkle tree. Unlike a
+regular Merkle tree, a concurrent Merkle tree keeps a secure changelog of recent
+updates, along with their root hash and the proof needed to derive it. When
+multiple transactions in the same slot attempt to modify leaf data, the
+changelog serves as a reference, enabling concurrent updates to the tree.
 
-As a program architect, you control three values directly related to these three
-items. Your choice determines the size of the tree, the cost to create the tree,
-and the number of concurrent changes that can be made to the tree:
+This can be solved with a **concurrent Merkle tree**.
 
-1. Max depth
-2. Max buffer size
-3. Canopy depth
+A concurrent Merkle tree is a Merkle tree that stores a secure changelog of the
+most recent changes along with their root hash and the proof to derive it. When
+multiple transactions in the same slot try to modify leaf data, the changelog
+can be used as a source of truth to allow for concurrent changes to be made to
+the tree.
 
-The **max depth** is the maximum number of hops to get from any leaf to the root
-of the tree. Since Merkle trees are binary trees, every leaf is connected only
-to one other leaf. Max depth can then logically be used to calculate the number
-of nodes for the tree with `2 ^ maxDepth`.
+How does the concurrent Merkle tree achieve this? In a standard Merkle tree,
+only the root hash is stored. However, a concurrent Merkle tree includes extra
+data that ensures subsequent writes can succeed.
 
-The **max buffer size** is effectively the maximum number of concurrent changes
-that you can make to a tree within a single slot with the root hash still being
-valid. When multiple transactions are submitted in the same slot, each of which
-is competing to update leafs on a standard Merkle tree, only the first to run
-will be valid. This is because that “write” operation will modify the hash
-stored in the account. Subsequent transactions in the same slot will be trying
-to validate their data against a now-outdated hash. A concurrent Merkle tree has
-a buffer so that the buffer can keep a running log of these modifications. This
-allows the State Compression Program to validate multiple data writes in the
-same slot because it can look up what the previous hashes were in the buffer and
-compare against the appropriate hash.
+This includes:
 
-The **canopy depth** is the number of proof nodes that are stored onchain for
-any given proof path. Verifying any leaf requires the complete proof path for
-the tree. The complete proof path is made up of one proof node for every “layer”
-of the tree, i.e. a max depth of 14 means there are 14 proof nodes. Every proof
-node passed into the program adds 32 bytes to a transaction, so large trees
-would quickly exceed the maximum transaction size limit. Caching proof nodes
-onchain in the canopy helps improve program composability.
+1. The root hash - The same root hash found in a regular Merkle tree..
+2. A changelog buffer - A buffer containing proof data for recent root hash
+   changes, allowing further writes in the same slot to succeed.
+3. A canopy - To update a specific leaf, you need the entire proof path from the
+   leaf to the root hash. The canopy stores intermediate proof nodes along this
+   path so that not all of them need to be sent from the client to the program.
 
-Each of these three values, max depth, max buffer size, and canopy depth, comes
-with a tradeoff. Increasing the value of any of these values increases the size
-of the account used to store the tree, thus increasing the cost of creating the
-tree.
+### Key Parameters for Configuring a Concurrent Merkle Tree
 
-Choosing the max depth is fairly straightforward as it directly relates to the
-number of leafs and therefore the amount of data you can store. If you need 1
-million cNFTs on a single tree where each cNFT is a leaf of the tree, find the
-max depth that makes the following expression true: `2^maxDepth > 1 million`.
-The answer is 20.
+As a program architect, you are responsible for controlling three key parameters
+that directly affect the tree’s size, cost, and the number of concurrent changes
+it can handle:
 
-Choosing a max buffer size is effectively a question of throughput: how many
-concurrent writes do you need? The larger the buffer, the higher the throughput.
+1. **Max Depth**
+2. **Max Buffer Size**
+3. **Canopy Depth**
 
-Lastly, the canopy depth will determine your program’s composability. State
-compression pioneers have made it clear that omitting a canopy is a bad idea.
-Program A can’t call your state-compressed program B if doing so maxes out the
-transaction size limits. Remember, program A also has required accounts and data
-in addition to required proof paths, each of which take up transaction space.
+Let's take a brief overview of each parameters.
+
+#### Max Depth
+
+The **max depth** determines how many levels or "hops" are required to reach the
+root of the tree from any leaf. Since Merkle trees are structured as binary
+trees, where each leaf is paired with only one other leaf, the max depth can be
+used to calculate the total number of nodes in the tree with the formula:
+`2^maxDepth`.
+
+For example, a max depth of 20 would allow for over one million leaves, making
+it suitable for storing large datasets like NFTs.
+
+#### Max Buffer Size
+
+The **max buffer size** controls how many concurrent updates can be made to the
+tree within a single slot while keeping the root hash valid. In a standard
+Merkle tree, only the first transaction in a slot would be successful since it
+updates the root hash, causing all subsequent transactions to fail due to hash
+mismatches. However, in a concurrent Merkle tree, the buffer maintains a log of
+changes, allowing multiple transactions to update the tree simultaneously by
+checking the appropriate root hash from the buffer. A larger buffer size
+increases throughput by enabling more concurrent changes.
+
+#### Canopy Depth
+
+The **canopy depth** specifies how many proof nodes are stored on-chain for any
+given proof path. To verify any leaf in the tree, you need a complete proof
+path, which includes one proof node for every layer of the tree. For a tree with
+a max depth of 14, there will be 14 proof nodes in total. Each proof node adds
+32 bytes to the transaction, and without careful management, large trees could
+exceed the transaction size limit. Storing proof nodes on-chain via the canopy
+helps optimize composability, allowing other programs to interact with your
+state-compressed program without exceeding transaction size limits.
+
+### Balancing Trade-offs
+
+These three values—max depth, max buffer size, and canopy depth—all come with
+trade-offs. Increasing any of them will enlarge the account used to store the
+tree, raising the cost of creating the tree.
+
+- **Max Depth:** This is straightforward to determine based on how much data
+  needs to be stored. For example, if you need to store 1 million compressed
+  NFTs (cNFTs), where each cNFT is a leaf, you would need a max depth of 20
+  (`2^maxDepth > 1 million`).
+- **Max Buffer Size:** The choice of buffer size is mainly a question of
+  throughput—how many concurrent updates are required? A larger buffer allows
+  for more updates in the same slot.
+- **Canopy Depth:** A deeper canopy improves composability, enabling other
+  programs to interact with your state-compressed program without exceeding
+  transaction size limits. Omitting the canopy is discouraged, as it could cause
+  issues with transaction size, especially when other programs are involved.
 
 #### Data access on a state-compressed program
 
