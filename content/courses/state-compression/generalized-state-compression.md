@@ -1129,16 +1129,13 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
 }
 ```
 
-There are 3 main things in the above file:
+The `utils.ts` file contains three key components:
 
-1. `NoteLog` - a class representing the note log we’ll find in the Noop program
-   logs. We’ve also added the borsh schema as `NoteLogBorshSchema` for
-   deserialization.
-2. `getHash` - a function that creates a hash of the note and note owner so we
-   can compare it to what we find on the Merkle tree
-3. `getNoteLog` - a function that looks through the provided transaction’s logs,
-   finds the Noop program logs, then deserializes and returns the corresponding
-   Note log.
+1. **`NoteLog` Class**: This class represents the note log that we’ll extract from the Noop program logs. It also includes the Borsh schema, named `NoteLogBorshSchema`, which is used for deserialization.
+
+2. **`getHash` Function**: This function generates a hash from the note and its owner, allowing us to compare it against the data in the Merkle tree.
+
+3. **`getNoteLog` Function**: This function searches through the transaction logs to locate the Noop program logs, then deserializes and retrieves the corresponding `NoteLog`.
 
 #### 8. Write client tests
 
