@@ -776,11 +776,15 @@ instead of the `account` macro.
 
 #### 3. Define Input Accounts and Constraints
 
-In our setup, all instructions will use the same accounts, so we'll create a single `NoteAccounts` struct to handle account validation. This struct will include the following accounts:
+In our setup, all instructions will use the same accounts, so we'll create a
+single `NoteAccounts` struct to handle account validation. This struct will
+include the following accounts:
 
 - `owner` - The creator and owner of the note, who must sign the transaction.
-- `tree_authority` - The authority for the Merkle tree, used for signing compression-related CPIs.
-- `merkle_tree` - The address of the Merkle tree where note hashes are stored; this will be unchecked as it's validated by the State Compression Program.
+- `tree_authority` - The authority for the Merkle tree, used for signing
+  compression-related CPIs.
+- `merkle_tree` - The address of the Merkle tree where note hashes are stored;
+  this will be unchecked as it's validated by the State Compression Program.
 - `log_wrapper` - The address of the Noop Program.
 - `compression_program` - The address of the State Compression Program.
 
@@ -813,14 +817,22 @@ pub struct NoteAccounts<'info> {
 
 #### 4. Create `create_note_tree` Instruction
 
-Next, we’ll set up the `create_note_tree` instruction. This instruction is used to initialize the already allocated Merkle tree account.
+Next, we’ll set up the `create_note_tree` instruction. This instruction is used
+to initialize the already allocated Merkle tree account.
 
-To implement this, you’ll need to build a CPI to invoke the `init_empty_merkle_tree` instruction from the State Compression Program. The `NoteAccounts` struct will provide the necessary accounts, but you’ll also need to include two additional arguments:
+To implement this, you’ll need to build a CPI to invoke the
+`init_empty_merkle_tree` instruction from the State Compression Program. The
+`NoteAccounts` struct will provide the necessary accounts, but you’ll also need
+to include two additional arguments:
 
-1. **`max_depth`** - Specifies the maximum depth of the Merkle tree, indicating the longest path from any leaf to the root.
-2. **`max_buffer_size`** - Defines the maximum buffer size for the Merkle tree, which determines the space allocated for recording tree updates. This buffer is crucial for supporting concurrent updates within the same block.
+1. **`max_depth`** - Specifies the maximum depth of the Merkle tree, indicating
+   the longest path from any leaf to the root.
+2. **`max_buffer_size`** - Defines the maximum buffer size for the Merkle tree,
+   which determines the space allocated for recording tree updates. This buffer
+   is crucial for supporting concurrent updates within the same block.
 
-These values are essential for properly initializing the Merkle tree’s data structure.
+These values are essential for properly initializing the Merkle tree’s data
+structure.
 
 ```rust
 #[program]
@@ -862,19 +874,35 @@ pub mod compressed_notes {
 }
 ```
 
-Make sure that when setting up your CPI, you include both the Merkle tree address and the tree authority bump in the signer seeds.
+Make sure that when setting up your CPI, you include both the Merkle tree
+address and the tree authority bump in the signer seeds.
 
 #### 5. Create `append_note` Instruction
 
-Let’s move on to creating the `append_note` instruction.  This instruction will compress a raw note into a hash and store it on the Merkle tree, while also logging the note to the Noop program to ensure all data remains available on-chain.
+Let’s move on to creating the `append_note` instruction. This instruction will
+compress a raw note into a hash and store it on the Merkle tree, while also
+logging the note to the Noop program to ensure all data remains available
+on-chain.
 
 Here’s how to accomplish this:
 
-1. **Hash the Data**: Utilize the `hashv` function from the `keccak` crate to compute a hash of the note and the owner’s public key. Both should be converted to their byte representations. It's essential to hash the owner along with the note to facilitate ownership verification during updates.
+1. **Hash the Data**: Utilize the `hashv` function from the `keccak` crate to
+   compute a hash of the note and the owner’s public key. Both should be
+   converted to their byte representations. It's essential to hash the owner
+   along with the note to facilitate ownership verification during updates.
 
-2. **Log the Data**: Create a `NoteLog` instance with the hash from step 1, the owner’s public key, and the note as a `String`. Then, use `wrap_application_data_v1` to issue a CPI to the Noop program with this `NoteLog` instance. This ensures the complete note (not just the hash) is available to clients, similar to how indexers manage cNFTs. You might also develop an observing client to simulate indexer functionality specific to your application.
+2. **Log the Data**: Create a `NoteLog` instance with the hash from step 1, the
+   owner’s public key, and the note as a `String`. Then, use
+   `wrap_application_data_v1` to issue a CPI to the Noop program with this
+   `NoteLog` instance. This ensures the complete note (not just the hash) is
+   available to clients, similar to how indexers manage cNFTs. You might also
+   develop an observing client to simulate indexer functionality specific to
+   your application.
 
-3. **Append to the Merkle Tree**: Build and issue a CPI to the State Compression Program’s `append` instruction. This will add the hash from step 1 to the next available leaf on your Merkle tree. Ensure that the Merkle tree address and the tree authority bump are included as signature seeds.
+3. **Append to the Merkle Tree**: Build and issue a CPI to the State Compression
+   Program’s `append` instruction. This will add the hash from step 1 to the
+   next available leaf on your Merkle tree. Ensure that the Merkle tree address
+   and the tree authority bump are included as signature seeds.
 
 ```rust
 #[program]
@@ -920,7 +948,8 @@ pub mod compressed_notes {
 
 #### 6. Create `update_note` Instruction
 
-The final instruction we’ll implement is `update_note`, which will replace an existing leaf with a new hash that represents the updated note data.
+The final instruction we’ll implement is `update_note`, which will replace an
+existing leaf with a new hash that represents the updated note data.
 
 To perform this update, you’ll need the following parameters:
 
@@ -929,15 +958,30 @@ To perform this update, you’ll need the following parameters:
 3. **Old Note**: The string representation of the note that is being updated.
 4. **New Note**: The string representation of the updated note.
 
-The process for this instruction is similar to `append_note`, with some additional steps:
+The process for this instruction is similar to `append_note`, with some
+additional steps:
 
-1. **Verify Ownership**: Before updating, prove that the `owner` executing this instruction is the rightful owner of the leaf at the specified index. Since the leaf data is compressed as a hash, you can’t directly compare the `owner`'s public key. Instead, compute the previous hash using the old note data and the `owner` from the account validation struct. Then, use this computed hash to build and issue a CPI to the State Compression Program’s `verify_leaf` instruction.
+1. **Verify Ownership**: Before updating, prove that the `owner` executing this
+   instruction is the rightful owner of the leaf at the specified index. Since
+   the leaf data is compressed as a hash, you can’t directly compare the
+   `owner`'s public key. Instead, compute the previous hash using the old note
+   data and the `owner` from the account validation struct. Then, use this
+   computed hash to build and issue a CPI to the State Compression Program’s
+   `verify_leaf` instruction.
 
-2. **Hash the New Data**: Hash the new note and the owner’s public key using the `hashv` function from the `keccak` crate, converting each to its byte representation.
+2. **Hash the New Data**: Hash the new note and the owner’s public key using the
+   `hashv` function from the `keccak` crate, converting each to its byte
+   representation.
 
-3. **Log the New Data**: Create a `NoteLog` instance with the new hash from step 2, the owner’s public key, and the new note. Call `wrap_application_data_v1` to issue a CPI to the Noop program with this `NoteLog` instance, ensuring the updated note data is available to clients.
+3. **Log the New Data**: Create a `NoteLog` instance with the new hash from step
+   2, the owner’s public key, and the new note. Call `wrap_application_data_v1`
+   to issue a CPI to the Noop program with this `NoteLog` instance, ensuring the
+   updated note data is available to clients.
 
-4. **Replace the Leaf**: Build and issue a CPI to the State Compression Program’s `replace_leaf` instruction. This will replace the old hash with the new hash at the specified leaf index. Ensure the Merkle tree address and the tree authority bump are included as signature seeds.
+4. **Replace the Leaf**: Build and issue a CPI to the State Compression
+   Program’s `replace_leaf` instruction. This will replace the old hash with the
+   new hash at the specified leaf index. Ensure the Merkle tree address and the
+   tree authority bump are included as signature seeds.
 
 ```rust
 #[program]
@@ -1012,15 +1056,20 @@ pub mod compressed_notes {
 
 #### 7. Client Test Setup
 
-To ensure our program functions correctly, we’ll set up and write some tests. Here’s what you need to do for the setup:
+To ensure our program functions correctly, we’ll set up and write some tests.
+Here’s what you need to do for the setup:
 
-1. **Install Dependencies**: We’ll be using the `@solana/spl-account-compression` package for our tests. Install it using the following command:
+1. **Install Dependencies**: We’ll be using the
+   `@solana/spl-account-compression` package for our tests. Install it using the
+   following command:
 
    ```bash
    yarn add @solana/spl-account-compression
    ```
 
-2. **Create Utility File**: To simplify testing, we’ve provided a utility file. Create a `utils.ts` file in the `tests` directory and add the provided contents. We’ll go over the details of this file shortly.
+2. **Create Utility File**: To simplify testing, we’ve provided a utility file.
+   Create a `utils.ts` file in the `tests` directory and add the provided
+   contents. We’ll go over the details of this file shortly.
 
 ```typescript
 import {
@@ -1131,24 +1180,39 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
 
 The `utils.ts` file contains three key components:
 
-1. **`NoteLog` Class**: This class represents the note log that we’ll extract from the Noop program logs. It also includes the Borsh schema, named `NoteLogBorshSchema`, which is used for deserialization.
+1. **`NoteLog` Class**: This class represents the note log that we’ll extract
+   from the Noop program logs. It also includes the Borsh schema, named
+   `NoteLogBorshSchema`, which is used for deserialization.
 
-2. **`getHash` Function**: This function generates a hash from the note and its owner, allowing us to compare it against the data in the Merkle tree.
+2. **`getHash` Function**: This function generates a hash from the note and its
+   owner, allowing us to compare it against the data in the Merkle tree.
 
-3. **`getNoteLog` Function**: This function searches through the transaction logs to locate the Noop program logs, then deserializes and retrieves the corresponding `NoteLog`.
+3. **`getNoteLog` Function**: This function searches through the transaction
+   logs to locate the Noop program logs, then deserializes and retrieves the
+   corresponding `NoteLog`.
 
 #### 8. Write Client Tests
 
-With our packages and utility file set up, we’re ready to dive into writing the tests. We will create four tests for our program:
+With our packages and utility file set up, we’re ready to dive into writing the
+tests. We will create four tests for our program:
 
-1. **Create Note Tree**: This test will initialize the Merkle tree for storing note hashes.
-2. **Add Note**: This test will invoke the `append_note` instruction to add a note to the tree.
-3. **Add Max Size Note**: This test will also use the `append_note` instruction, but with a note that reaches the maximum allowable size of 1232 bytes in a single transaction.
-4. **Update First Note**: This test will use the `update_note` instruction to modify the first note that was added.
+1. **Create Note Tree**: This test will initialize the Merkle tree for storing
+   note hashes.
+2. **Add Note**: This test will invoke the `append_note` instruction to add a
+   note to the tree.
+3. **Add Max Size Note**: This test will also use the `append_note` instruction,
+   but with a note that reaches the maximum allowable size of 1232 bytes in a
+   single transaction.
+4. **Update First Note**: This test will use the `update_note` instruction to
+   modify the first note that was added.
 
-The first test is mainly for setup purposes. For the remaining three tests, we will check that the note hash in the Merkle tree matches the expected value based on the note content and the signer.
+The first test is mainly for setup purposes. For the remaining three tests, we
+will check that the note hash in the Merkle tree matches the expected value
+based on the note content and the signer.
 
-We’ll start by setting up our imports. This includes a variety of components from Anchor, `@solana/web3.js`, `@solana/spl-account-compression`, and our own utility functions.
+We’ll start by setting up our imports. This includes a variety of components
+from Anchor, `@solana/web3.js`, `@solana/spl-account-compression`, and our own
+utility functions.
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
@@ -1172,7 +1236,8 @@ import { getHash, getNoteLog } from "./utils";
 import { assert } from "chai";
 ```
 
-Next, we’ll set up the state variables needed for our tests. This setup will include:
+Next, we’ll set up the state variables needed for our tests. This setup will
+include:
 
 1. **Default Anchor Setup**: Configure the basic environment for Anchor testing.
 2. **Merkle Tree Keypair**: Generate a keypair for the Merkle tree.
@@ -1209,10 +1274,14 @@ describe("compressed-notes", () => {
 });
 ```
 
-Finally, let's dive into the `Create Note Tree` test. This test will accomplish two key tasks:
+Finally, let's dive into the `Create Note Tree` test. This test will accomplish
+two key tasks:
 
-1. **Allocate a New Merkle Tree Account**: Create a new account for the Merkle tree, specifying a max depth of 3, a max buffer size of 8, and a canopy depth of 0.
-2. **Initialize the Account**: Use our program’s `createNoteTree` instruction to set up the newly allocated Merkle tree account.
+1. **Allocate a New Merkle Tree Account**: Create a new account for the Merkle
+   tree, specifying a max depth of 3, a max buffer size of 8, and a canopy depth
+   of 0.
+2. **Initialize the Account**: Use our program’s `createNoteTree` instruction to
+   set up the newly allocated Merkle tree account.
 
 ```typescript
 it("Create Note Tree", async () => {
@@ -1250,8 +1319,11 @@ it("Create Note Tree", async () => {
 
 Next, let's set up the `Add Note` test. This test will:
 
-1. **Call `append_note`**: Use the `append_note` instruction with `firstNote` to add the note to the Merkle tree.
-2. **Verify Hash and Log**: Check that the hash stored on-chain matches the computed hash and ensure that the note log reflects the text of the note we submitted.
+1. **Call `append_note`**: Use the `append_note` instruction with `firstNote` to
+   add the note to the Merkle tree.
+2. **Verify Hash and Log**: Check that the hash stored on-chain matches the
+   computed hash and ensure that the note log reflects the text of the note we
+   submitted.
 
 ```typescript
 it("Add Note", async () => {
@@ -1273,10 +1345,13 @@ it("Add Note", async () => {
 });
 ```
 
-Next, let's create the `Add Max Size Note` test. This test will be similar to the previous one, but it will:
+Next, let's create the `Add Max Size Note` test. This test will be similar to
+the previous one, but it will:
 
-1. **Call `append_note`**: Use the `append_note` instruction with the second note, which is designed to be the maximum size allowed (1232 bytes).
-2. **Verify Hash and Log**: Ensure that the on-chain hash matches the computed hash and that the note log accurately reflects the content of the large note.
+1. **Call `append_note`**: Use the `append_note` instruction with the second
+   note, which is designed to be the maximum size allowed (1232 bytes).
+2. **Verify Hash and Log**: Ensure that the on-chain hash matches the computed
+   hash and that the note log accurately reflects the content of the large note.
 
 ```typescript
 it("Add Max Size Note", async () => {
@@ -1299,16 +1374,21 @@ it("Add Max Size Note", async () => {
 });
 ```
 
-Lastly, let’s create the `Update First Note` test. This test involves a few more steps:
+Lastly, let’s create the `Update First Note` test. This test involves a few more
+steps:
 
-1. **Retrieve the Merkle Tree Root**: Obtain the current root hash of the Merkle tree, as it is needed for the update operation.
-2. **Invoke `update_note` Instruction**: Call the `update_note` instruction with the following parameters:
+1. **Retrieve the Merkle Tree Root**: Obtain the current root hash of the Merkle
+   tree, as it is needed for the update operation.
+2. **Invoke `update_note` Instruction**: Call the `update_note` instruction with
+   the following parameters:
+
    - The index `0` (indicating the first note),
    - The current Merkle tree root hash,
    - The original note data,
    - The updated note data.
-   
-   Please nsure that the program uses both the original note and the tree root to verify the proof path for the note's leaf before applying the update.
+
+   Please nsure that the program uses both the original note and the tree root
+   to verify the proof path for the note's leaf before applying the update.
 
 ```typescript
 it("Update First Note", async () => {
@@ -1339,17 +1419,26 @@ it("Update First Note", async () => {
 });
 ```
 
-That’s a wrap—congratulations! Run `anchor test`, and you should see all four tests passing.
+That’s a wrap—congratulations! Run `anchor test`, and you should see all four
+tests passing.
 
-If you encounter any issues, don’t hesitate to revisit the demo or check out the complete solution code in the [Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
+If you encounter any issues, don’t hesitate to revisit the demo or check out the
+complete solution code in the
+[Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
 
 ### Challenge
 
-Now that you've got the hang of state compression, it's time to add a new feature to the Compressed Notes program. Your task is to implement an instruction that allows users to delete an existing note. Keep in mind that you can’t physically remove a leaf from the Merkle tree, so you’ll need to come up with a method to signify that a note has been deleted. 
+Now that you've got the hang of state compression, it's time to add a new
+feature to the Compressed Notes program. Your task is to implement an
+instruction that allows users to delete an existing note. Keep in mind that you
+can’t physically remove a leaf from the Merkle tree, so you’ll need to come up
+with a method to signify that a note has been deleted.
 
 Good luck, and happy coding!
 
-For a straightforward example of how to implement a delete function, check out the [`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
+For a straightforward example of how to implement a delete function, check out
+the
+[`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
