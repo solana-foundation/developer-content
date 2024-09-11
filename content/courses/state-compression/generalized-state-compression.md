@@ -211,40 +211,22 @@ The SPL State Compression Program is designed to streamline and standardize the 
 
 Additionally, the State Compression Program works in conjunction with a separate "Noop" program. The Noop Program’s main function is to make leaf data easier to index by logging it in the ledger state. When you store compressed data, it’s passed to the State Compression Program, which hashes the data and emits it as an "event" to the Noop Program. While the hash is stored in the concurrent Merkle tree, the raw data can still be accessed via the Noop Program’s transaction logs.
 
-#### Index data for easy lookup
+### Indexing Data for Easy Lookup
 
-Under normal conditions, you would typically access onchain data by fetching the
-appropriate account. When using state compression, however, it’s not so
-straightforward.
+Typically, accessing on-chain data is as simple as fetching the relevant account. However, with state compression, it’s not that straightforward.
 
-As mentioned above, the data now exists in the ledger state rather than in an
-account. The easiest place to find the full data is in the logs of the Noop
-instruction. Unfortunately, while this data will in a sense exist in the ledger
-state forever, it will likely be inaccessible through validators after a certain
-period of time.
+As mentioned earlier, the data now resides in the ledger state rather than in an account. The most accessible place to find the complete data is in the logs of the Noop instruction. While this data remains in the ledger state indefinitely, it may become inaccessible through validators after a certain period of time.
 
-To save space and be more performant, validators don’t retain every transaction
-back to the genesis block. The specific amount of time you’ll be able to access
-the Noop instruction logs related to your data will vary based on the validator.
-Eventually, you’ll lose access to it if you’re relying directly on instruction
-logs.
+Validators don't store all transactions back to the genesis block in order to save space and improve performance. The length of time you can access Noop instruction logs varies depending on the validator. Eventually, the logs will become unavailable if you're relying on direct access to them.
 
-Technically, you *can* replay the transaction state back to the genesis block
-but the average team isn’t going to do that, and it certainly won’t be
-performant. The
-[Digital Asset Standard (DAS)](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
-has been adopted by many RPC providers to enable efficient queries of compressed
-NFTs and other assets. However, at the time of writing, it doesn’t support
-arbitrary state compression. Instead, you have two primary options:
+In theory, it’s possible to replay transaction states back to the genesis block, but this approach is impractical for most teams and isn't efficient. Some RPC providers have adopted the [Digital Asset Standard (DAS)](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api) to enable efficient querying of compressed NFTs and other assets. However, as of now, DAS does not support arbitrary state compression. 
 
-1. Use an indexing provider that will build a custom indexing solution for your
-   program that observes the events sent to the Noop program and stores the
-   relevant data offchain.
-2. Create your own pseudo-indexing solution that stores transaction data
-   offchain.
+You essentially have two main options:
 
-For many dApps, option 2 makes plenty of sense. Larger-scale applications may
-need to rely on infrastructure providers to handle their indexing.
+1. Use an indexing provider to create a custom indexing solution for your program, which will monitor the events sent to the Noop program and store the relevant data off-chain.
+2. Build your own indexing solution that stores transaction data off-chain.
+
+For many dApps, option 2 can be a practical choice. Larger-scale applications, however, may need to rely on infrastructure providers to manage their indexing needs.
 
 ### State compression development process
 
