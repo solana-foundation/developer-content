@@ -20,6 +20,8 @@ description: "Understand asymmetric cryptography and how Solana uses it."
 
 ## Lesson
 
+In this lesson, we will explore the basics of cryptography and how it's applied within the Solana ecosystem.
+
 ### Symmetric and Asymmetric Cryptography
 
 'Cryptography' the study of hiding information. There are two main types of
@@ -156,6 +158,8 @@ const keypair = getKeypairFromEnvironment("SECRET_KEY");
 You know how to make and load keypairs! Let’s practice what we’ve learned.
 
 ## Lab
+
+In this lab we will learn about keypairs, and how to store secret keys securely on solana
 
 ### Installation
 
