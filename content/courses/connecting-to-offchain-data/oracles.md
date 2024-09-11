@@ -1154,7 +1154,7 @@ pub struct Withdraw<'info> {
 And that’s it for the program! At this point, you should be able to run
 `anchor build` without any errors.
 
-> [!NOTE]
+<Callout type="note">
 
 If you see an error like the one presented below, you can safely ignore it.
 
@@ -1415,5 +1415,5 @@ A potential solution to this challenge can be found
 <Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=1a5d266c-f4c1-4c45-b986-2afd4be59991)!
+[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=1a5d266c-f4c1-4c45-b986-2afd4be59991)
 </Callout>
