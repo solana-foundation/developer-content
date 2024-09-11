@@ -13,17 +13,17 @@ title: Generalized State Compression objectives:
 
 - State compression on Solana is primarily used for compressed NFTs, but it can
  be applied to any data type
-- State Compression lowers the amount of data you have to store on-chain using
+- State Compression lowers the amount of data you have to store onchain using
  Merkle trees.
 - A Merkle tree compresses data by hashing pairs of data repeatedly until a
- single root hash is produced. It's this root hash that's then stored on-chain.
+ single root hash is produced. It's this root hash that's then stored onchain.
 - Each leaf on a Merkle tree is a hash of that leaf's data.
 -A concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a
  standard Merkle tree, it allows multiple updates simultaneously without
  affecting transaction validity.
-- Data in a state-compressed program is not stored on-chain. So you have to use
+- Data in a state-compressed program is not stored onchain. So you have to use
  indexers to keep an off-chain cache of the data. It's this off-chain cache data
- that is used to then verify against the on-chain Merkle tree.
+ that is used to then verify against the onchain Merkle tree.
 
 ## Lesson
 
@@ -43,10 +43,10 @@ it.
 
 State compression focuses on ensuring that the data is trustworthy. If the goal
 is simply to verify the integrity of the data, then there's no need to store the
-actual data on-chain. Instead, we can store hashes of the data, which can be
+actual data onchain. Instead, we can store hashes of the data, which can be
 used to prove or verify its accuracy. These hashes take up far less storage
 space than the original data. The full data can be stored in a cheaper,
-off-chain location, and only needs to be verified against the on-chain hash when
+off-chain location, and only needs to be verified against the onchain hash when
 accessed.
 
 The Solana State Compression program uses a Solana State Compression program
@@ -55,7 +55,7 @@ kind of binary tree that predictably hashes data. Hence, deterministic.
 
 The final hash is significantly smaller in size than all the original full data
 sets combined. This is why it's called "compression". And it's this hash that's
-stored on-chain.
+stored onchain.
 
 **Outlined below are the steps to this process, in order:**
 
@@ -66,14 +66,14 @@ stored on-chain.
 5. Hash pairs of branches together.
 6. Repeat this process until you reach the top of the tree.
 7. The top of the tree contains a final "root hash."
-8. Store this root hash on-chain as proof of the data.
+8. Store this root hash onchain as proof of the data.
 9. To verify the data, recompute the hashes and compare the final hash to the
- on-chain root hash.
+ onchain root hash.
 
 This method comes with some trade-offs:
 
-1. The data isn’t stored on-chain, so it’s harder to access.
-2. Developers must decide how often to verify the data against the on-chain
+1. The data isn’t stored onchain, so it’s harder to access.
+2. Developers must decide how often to verify the data against the onchain
  hash.
 3. If the data changes, the entire data set must be sent to the program, along
  with the new data. You’ll also need proof that the data matches the hash.
@@ -164,12 +164,12 @@ increases throughput by enabling more concurrent changes.
 
 #### Canopy Depth
 
-The **canopy depth** specifies how many proof nodes are stored on-chain for any
+The **canopy depth** specifies how many proof nodes are stored onchain for any
 given proof path. To verify any leaf in the tree, you need a complete proof
 path, which includes one proof node for every layer of the tree. For a tree with
 a max depth of 14, there will be 14 proof nodes in total. Each proof node adds
 32 bytes to the transaction, and without careful management, large trees could
-exceed the transaction size limit. Storing proof nodes on-chain via the canopy
+exceed the transaction size limit. Storing proof nodes onchain via the canopy
 helps optimize composability, allowing other programs to interact with your
 state-compressed program without exceeding transaction size limits.
 
@@ -193,7 +193,7 @@ tree, raising the cost of creating the tree.
 
 ### Data Access in a State-Compressed Program
 
-In a state-compressed program, the actual data isn’t stored directly on-chain.
+In a state-compressed program, the actual data isn’t stored directly onchain.
 Instead, the concurrent Merkle tree structure is stored, while the raw data
 resides in the blockchain’s more affordable ledger state. This makes accessing
 the data more challenging, but not impossible.
@@ -203,12 +203,12 @@ transactions, which can be traced back to the Genesis block theoretically. This
 means any data that has ever been included in a transaction is stored in the
 ledger.
 
-Since the state compression process happens on-chain, all the data is still in
+Since the state compression process happens onchain, all the data is still in
 the ledger state. In theory, you could retrieve the original data by replaying
 the entire chain state from the start. However, it’s far more practical (though
 still somewhat complex) to use an indexer to track and index the data as the
 transactions happen. This creates an off-chain "cache" of the data that can be
-easily accessed and verified against the on-chain root hash.
+easily accessed and verified against the onchain root hash.
 
 While this process may seem complex at first, it becomes clearer with practice.
 
@@ -237,7 +237,7 @@ transaction logs.
 
 ### Indexing Data for Easy Lookup
 
-Typically, accessing on-chain data is as simple as fetching the relevant
+Typically, accessing onchain data is as simple as fetching the relevant
 account. However, with state compression, it’s not that straightforward.
 
 As mentioned earlier, the data now resides in the ledger state rather than in an
@@ -276,7 +276,7 @@ In a typical Anchor program, the initial step involves defining Rust types that
 represent accounts. For a state-compressed program, however, the focus shifts to
 defining types that align with the Merkle tree structure.
 
-In state compression, your on-chain account will primarily store the Merkle
+In state compression, your onchain account will primarily store the Merkle
 tree. The more practical data schema will be serialized and logged to the Noop
 program for easier access and management.
 
@@ -882,7 +882,7 @@ address and the tree authority bump in the signer seeds.
 Let’s move on to creating the `append_note` instruction. This instruction will
 compress a raw note into a hash and store it on the Merkle tree, while also
 logging the note to the Noop program to ensure all data remains available
-on-chain.
+onchain.
 
 Here’s how to accomplish this:
 
@@ -1321,7 +1321,7 @@ Next, let's set up the `Add Note` test. This test will:
 
 1. **Call `append_note`**: Use the `append_note` instruction with `firstNote` to
  add the note to the Merkle tree.
-2. **Verify Hash and Log**: Check that the hash stored on-chain matches the
+2. **Verify Hash and Log**: Check that the hash stored onchain matches the
  computed hash and ensure that the note log reflects the text of the note we
  submitted.
 
@@ -1350,7 +1350,7 @@ the previous one, but it will:
 
 1. **Call `append_note`**: Use the `append_note` instruction with the second
  note, which is designed to be the maximum size allowed (1232 bytes).
-2. **Verify Hash and Log**: Ensure that the on-chain hash matches the computed
+2. **Verify Hash and Log**: Ensure that the onchain hash matches the computed
  hash and that the note log accurately reflects the content of the large note.
 
 ```typescript
