@@ -41,6 +41,6 @@
   },
   "devDependencies": {
     "contentlayer2": "^0.4.6",
-    "prettier": "^3.2.4"
+    "prettier": "^3.3.3"
   }
 }
