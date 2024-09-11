@@ -178,33 +178,33 @@ understand how Switchboard works:
 
 ### Switchboard Oracle System: Incentives and Data Publishing
 
-Incentive Structure
-Switchboard oracles are incentivized to update data feeds accurately through a reward system. This system involves several key components:
+Incentive Structure Switchboard oracles are incentivized to update data feeds
+accurately through a reward system. This system involves several key components:
 
 1.LeaseContract Account:
 
-Each data feed has an associated LeaseContract account.
-This account acts as a pre-funded escrow to reward oracles.
-Only the predefined leaseAuthority can withdraw funds.
-Anyone can contribute to the account.
-
+Each data feed has an associated LeaseContract account. This account acts as a
+pre-funded escrow to reward oracles. Only the predefined leaseAuthority can
+withdraw funds. Anyone can contribute to the account.
 
 2.Update Request Rewards:
 
-When a new round of updates is requested, the requester is rewarded from the escrow.
-This incentivizes users and "crank turners" (those who systematically send update requests) to maintain feed updates based on configurations.
-
+When a new round of updates is requested, the requester is rewarded from the
+escrow. This incentivizes users and "crank turners" (those who systematically
+send update requests) to maintain feed updates based on configurations.
 
 3.Oracle Rewards:
 
-Oracles receive rewards from the escrow upon successfully fulfilling and submitting updates onchain.
-
+Oracles receive rewards from the escrow upon successfully fulfilling and
+submitting updates onchain.
 
 4.Staking Mechanism:
 
-Oracles must stake tokens before servicing update requests and submitting responses.
-If an oracle's submission falls outside the queue's configured parameters, their stake may be slashed (if slashingEnabled is true for the queue).
-This mechanism encourages oracles to respond accurately and in good faith.
+Oracles must stake tokens before servicing update requests and submitting
+responses. If an oracle's submission falls outside the queue's configured
+parameters, their stake may be slashed (if slashingEnabled is true for the
+queue). This mechanism encourages oracles to respond accurately and in good
+faith.
 
 Now that you understand the terminology and economics, let’s take a look at how
 data is published onchain:
