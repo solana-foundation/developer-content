@@ -1,37 +1,37 @@
 ---
 title: Generalized State Compression objectives:
 
-- Explain the flow of Solana's state compression's logic.
+- Explain the flow of Solana's state compression logic.
 - Describe and Explain the difference between a Merkle tree and a concurrent
-  Merkle tree
-- Implement generic state compression in a basic Solana programs description:
-  "Understand how state compression and the technology behind compressed NFTs
-  works, and learn how to apply it in your own Solana programs."
+ Merkle tree
+- Implement generic state compression in a basic Solana program description:
+ "Understand how state compression and the technology behind compressed NFTs
+ works, and learn how to apply it in your own Solana programs."
 ---
 
 ## Summary
 
 - State compression on Solana is primarily used for compressed NFTs, but it can
-  be applied to any data type
-- State Compression lowers the amount of data you have to store onchain using
-  Merkle trees.
+ be applied to any data type
+- State Compression lowers the amount of data you have to store on-chain using
+ Merkle trees.
 - A Merkle tree compresses data by hashing pairs of data repeatedly until a
-  single root hash is produced. It's this root hash that's then stored on-chain.
+ single root hash is produced. It's this root hash that's then stored on-chain.
 - Each leaf on a Merkle tree is a hash of that leaf's data.
-- Concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a
-  standard Merkle tree, it allows multiple updates at the same time without
-  affecting transaction validity.
-- Data in a state-compressed program is not stored onchain. So you have to use
-  indexers to keep an offchain cache of the data. It's this offchain cache data
-  that's is used to then verify against the onchain Merkle tree.
+-A concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a
+ standard Merkle tree, it allows multiple updates simultaneously without
+ affecting transaction validity.
+- Data in a state-compressed program is not stored on-chain. So you have to use
+ indexers to keep an off-chain cache of the data. It's this off-chain cache data
+ that is used to then verify against the on-chain Merkle tree.
 
 ## Lesson
 
-Previous, we talked about state compression in the context of compressed NFTs.
+Previously, we talked about state compression in the context of compressed NFTs.
 
-At the moment, compressed NFTs are the main use case for state compression.
+Currently, compressed NFTs are the main use case for state compression.
 However, you can apply it to any Solana program. In this lesson, we'll discuss
-state compression in general terms so that you can use it across your solana
+state compression in general terms so that you can use it across your Solana
 projects.
 
 ### A theoretical overview of state compression
@@ -51,10 +51,10 @@ accessed.
 
 The Solana State Compression program uses a Solana State Compression program
 known as a **concurrent Merkle tree**. A concurrent Merkle tree is a special
-kind of binary tree that hashes data in a predictable way. Hence, deterministic.
+kind of binary tree that predictably hashes data. Hence, deterministic.
 
 The final hash is significantly smaller in size than all the original full data
-set combined. This is why it's called "compression". Ant it's this hash that's
+sets combined. This is why it's called "compression". And it's this hash that's
 stored on-chain.
 
 **Outlined below are the steps to this process, in order:**
@@ -68,15 +68,15 @@ stored on-chain.
 7. The top of the tree contains a final "root hash."
 8. Store this root hash on-chain as proof of the data.
 9. To verify the data, recompute the hashes and compare the final hash to the
-   on-chain root hash.
+ on-chain root hash.
 
 This method comes with some trade-offs:
 
 1. The data isn’t stored on-chain, so it’s harder to access.
 2. Developers must decide how often to verify the data against the on-chain
-   hash.
+ hash.
 3. If the data changes, the entire data set must be sent to the program, along
-   with the new data. You’ll also need proof that the data matches the hash.
+ with the new data. You’ll also need proof that the data matches the hash.
 
 These considerations will guide you when deciding whether, when, and how to
 implement state compression in your programs. With that quick overview, let's
@@ -84,16 +84,16 @@ get into the technical bit.
 
 #### Concurrent Merkle trees
 
-A **Merkle tree** is a binary tree structure represented by a single hash.
+A **Merkle tree** is a binary tree structure represented by a single hash.
 
 - Each leaf node is a hash of its data.
 - Each branch is a hash of its child leaves.
-- The branches are also hashed together, eventually forming one final root hash.
+- The branches are also hashed together, forming one final root hash.
 
 Since a Merkle tree is represented as a single hash, any change to a leaf node
-alters the entire root hash. his becomes problematic when multiple transactions
+alters the entire root hash. This becomes problematic when multiple transactions
 in the same slot try to update leaf data in the same slot. Since transactions
-are executed serially i.e one after the other — all but the first will fail
+are executed serially i.e. one after the other — all but the first will fail
 since the root hash and proof passed in will have been invalidated by the first
 transaction executed.
 
@@ -123,10 +123,10 @@ This includes:
 
 1. The root hash - The same root hash found in a regular Merkle tree..
 2. A changelog buffer - A buffer containing proof data for recent root hash
-   changes, allowing further writes in the same slot to succeed.
+ changes, allowing further writes in the same slot to succeed.
 3. A canopy - To update a specific leaf, you need the entire proof path from the
-   leaf to the root hash. The canopy stores intermediate proof nodes along this
-   path so that not all of them need to be sent from the client to the program.
+ leaf to the root hash. The canopy stores intermediate proof nodes along this
+ path so that not all of them need to be sent from the client to the program.
 
 ### Key Parameters for Configuring a Concurrent Merkle Tree
 
@@ -138,7 +138,7 @@ it can handle:
 2. **Max Buffer Size**
 3. **Canopy Depth**
 
-Let's take a brief overview of each parameters.
+Let's take a brief overview of each parameter.
 
 #### Max Depth
 
@@ -180,16 +180,16 @@ trade-offs. Increasing any of them will enlarge the account used to store the
 tree, raising the cost of creating the tree.
 
 - **Max Depth:** This is straightforward to determine based on how much data
-  needs to be stored. For example, if you need to store 1 million compressed
-  NFTs (cNFTs), where each cNFT is a leaf, you would need a max depth of 20
-  (`2^maxDepth > 1 million`).
+ needs to be stored. For example, if you need to store 1 million compressed
+ NFTs (cNFTs), where each cNFT is a leaf, you would need a max depth of 20
+ (`2^maxDepth > 1 million`).
 - **Max Buffer Size:** The choice of buffer size is mainly a question of
-  throughput—how many concurrent updates are required? A larger buffer allows
-  for more updates in the same slot.
+ throughput—how many concurrent updates are required? A larger buffer allows
+ for more updates in the same slot.
 - **Canopy Depth:** A deeper canopy improves composability, enabling other
-  programs to interact with your state-compressed program without exceeding
-  transaction size limits. Omitting the canopy is discouraged, as it could cause
-  issues with transaction size, especially when other programs are involved.
+ programs to interact with your state-compressed program without exceeding
+ transaction size limits. Omitting the canopy is discouraged, as it could cause
+ issues with transaction size, especially when other programs are involved.
 
 ### Data Access in a State-Compressed Program
 
@@ -199,7 +199,7 @@ resides in the blockchain’s more affordable ledger state. This makes accessing
 the data more challenging, but not impossible.
 
 The Solana ledger is essentially a list of entries containing signed
-transactions, which can be traced back to the genesis block theorectically. This
+transactions, which can be traced back to the Genesis block theoretically. This
 means any data that has ever been included in a transaction is stored in the
 ledger.
 
@@ -243,9 +243,9 @@ account. However, with state compression, it’s not that straightforward.
 As mentioned earlier, the data now resides in the ledger state rather than in an
 account. The most accessible place to find the complete data is in the logs of
 the Noop instruction. While this data remains in the ledger state indefinitely,
-it may become inaccessible through validators after a certain period of time.
+it may become inaccessible through validators after a certain period.
 
-Validators don't store all transactions back to the genesis block in order to
+Validators don't store all transactions back to the Genesis block to
 save space and improve performance. The length of time you can access Noop
 instruction logs varies depending on the validator. Eventually, the logs will
 become unavailable if you're relying on direct access to them.
@@ -260,9 +260,9 @@ now, DAS does not support arbitrary state compression.
 You essentially have two main options:
 
 1. Use an indexing provider to create a custom indexing solution for your
-   program, which will monitor the events sent to the Noop program and store the
-   relevant data off-chain.
-2. Build your own indexing solution that stores transaction data off-chain.
+ program, which will monitor the events sent to the Noop program and store the
+ relevant data off-chain.
+2. Build your indexing solution that stores transaction data off-chain.
 
 For many dApps, option 2 can be a practical choice. Larger-scale applications,
 however, may need to rely on infrastructure providers to manage their indexing
@@ -288,9 +288,9 @@ something like this:
 ```rust
 #[derive(AnchorSerialize)]
 pub struct MessageLog {
-		leaf_node: [u8; 32], // The leaf node hash
+    leaf_node: [u8; 32], // The leaf node hash
     from: Pubkey,        // Pubkey of the message sender
-		to: Pubkey,          // Pubkey of the message recipient
+    to: Pubkey,          // Pubkey of the message recipient
     message: String,     // The message to send
 }
 
@@ -298,7 +298,7 @@ impl MessageLog {
     // Constructs a new message log from given leaf node and message
     pub fn new(leaf_node: [u8; 32], from: Pubkey, to: Pubkey, message: String) -> Self {
         Self { leaf_node, from, to, message }
-    }
+ }
 }
 ```
 
@@ -313,8 +313,8 @@ To set up a new Merkle tree, clients need to perform two distinct steps.
 
 1. First, they allocate the account by calling the System Program.
 2. Next, they use a custom program to initialize the new account. This
-   initialization involves setting the maximum depth and buffer size for the
-   Merkle tree.
+ initialization involves setting the maximum depth and buffer size for the
+ Merkle tree.
 
 The initialization instruction must create a CPI (Cross-Program Invocation) to
 call the `init_empty_merkle_tree` instruction from the State Compression
@@ -322,10 +322,10 @@ Program. You’ll need to provide the maximum depth and buffer size as arguments
 to this instruction.
 
 - **Max depth**: Defines the maximum number of hops needed to travel from any
-  leaf to the root of the tree.
+ leaf to the root of the tree.
 - **Max buffer size**: Specifies the space allocated for storing a changelog of
-  tree updates. This changelog is essential for supporting concurrent updates
-  within the same block.
+ tree updates. This changelog is essential for supporting concurrent updates
+ within the same block.
 
 For instance, if you are initializing a tree to store messages between users,
 your instruction might look like this:
@@ -343,8 +343,8 @@ pub fn create_messages_tree(
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
-        ],
-    ];
+ ],
+ ];
 
     // Create cpi context for init_empty_merkle_tree instruction.
     let cpi_ctx = CpiContext::new_with_signer(
@@ -353,9 +353,9 @@ pub fn create_messages_tree(
             authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
             merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be initialized
             noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
-        },
+ },
         signer_seeds // The seeds for pda signing
-    );
+ );
 
     // CPI to initialize an empty Merkle tree with given max depth and buffer size
     init_empty_merkle_tree(cpi_ctx, max_depth, max_buffer_size)?;
@@ -373,20 +373,20 @@ the State Compression Program's `append` instruction to add the hash to the
 tree. Here's how the instruction operates in detail:
 
 1. **Hash the Data**: Use the `hashv` function from the `keccak` crate to hash
-   the data. It's recommended to include the data owner or authority in the hash
-   to ensure that only the proper authority can modify it.
+ the data. It's recommended to include the data owner or authority in the hash
+ to ensure that only the proper authority can modify it.
 2. **Log the Data**: Create a log object representing the data you want to log
-   to the Noop Program. Then, call `wrap_application_data_v1` to issue a CPI
-   (Cross-Program Invocation) to the Noop Program with this object. This makes
-   the uncompressed data easily accessible to any client, such as indexers, that
-   may need it. You could also develop a custom client to observe and index data
-   for your application specifically.
+ to the Noop Program. Then, call `wrap_application_data_v1` to issue a CPI
+ (Cross-Program Invocation) to the Noop Program with this object. This makes
+ the uncompressed data easily accessible to any client, such as indexers, that
+ may need it. You could also develop a custom client to observe and index data
+ for your application specifically.
 
 3. **Append the Hash**: Construct and issue a CPI to the State Compression
-   Program’s `append` instruction. This will take the hash generated in step 1
-   and append it to the next available leaf on the Merkle tree. As with previous
-   steps, this requires the Merkle tree address and tree authority bump as
-   signature seeds.
+ Program’s `append` instruction. This will take the hash generated in step 1
+ and append it to the next available leaf on the Merkle tree. As with previous
+ steps, this requires the Merkle tree address and tree authority bump as
+ signature seeds.
 
 When applied to a messaging system, the resulting implementation might look like
 this:
@@ -407,8 +407,8 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
-        ],
-    ];
+ ],
+ ];
     // Create a new cpi context and append the leaf node to the Merkle tree.
     let cpi_ctx = CpiContext::new_with_signer(
         ctx.accounts.compression_program.to_account_info(), // The spl account compression program
@@ -416,9 +416,9 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
             authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
             merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
             noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
-        },
+ },
         signer_seeds // The seeds for pda signing
-    );
+ );
     // CPI to append the leaf node to the Merkle tree
     append(cpi_ctx, leaf_node)?;
     Ok(())
@@ -439,33 +439,33 @@ Using these inputs, you can follow a series of steps similar to those used when
 initially appending data to the tree:
 
 1. **Verify Update Authority**: The first step, unique to updates, is to verify
-   the authority of the entity making the update. This generally involves
-   checking that the signer of the `update` transaction is indeed the owner or
-   authority of the leaf at the specified index. Since the data in the leaf is
-   hashed, you can’t directly compare the authority’s public key to a stored
-   value. Instead, compute the previous hash using the old data and the
+ the authority of the entity making the update. This generally involves
+ checking that the signer of the `update` transaction is indeed the owner or
+ authority of the leaf at the specified index. Since the data in the leaf is
+ hashed, you can’t directly compare the authority’s public key to a stored
+ value. Instead, compute the previous hash using the old data and the
    `authority` listed in the account validation struct. Then, invoke a CPI to
-   the State Compression Program’s `verify_leaf` instruction to confirm the hash
-   matches.
+ the State Compression Program’s `verify_leaf` instruction to confirm the hash
+ matches.
 
 2. **Hash the New Data**: This step mirrors the hashing process for appending
-   data. Use the `hashv` function from the `keccak` crate to hash the new data
-   and the update authority, converting each to its corresponding byte
-   representation.
+ data. Use the `hashv` function from the `keccak` crate to hash the new data
+ and the update authority, converting each to its corresponding byte
+ representation.
 
 3. **Log the New Data**: As with the initial append operation, create a log
-   object to represent the new data, and use `wrap_application_data_v1` to
-   invoke the Noop Program via CPI. This ensures that the new uncompressed data
-   is logged and accessible offchain.
+ object to represent the new data, and use `wrap_application_data_v1` to
+ invoke the Noop Program via CPI. This ensures that the new uncompressed data
+ is logged and accessible off-chain.
 
 4. **Replace the Existing Leaf Hash**: This step is slightly different from
-   appending new data. Here, you'll need to invoke a CPI to the State
-   Compression Program’s `replace_leaf` instruction. This operation will replace
-   the existing hash at the specified leaf index with the new hash. You'll need
-   to provide the old hash, the new hash, and the leaf index. As usual, the
-   Merkle tree address and tree authority bump are required as signature seeds.
+ appending new data. Here, you'll need to invoke a CPI to the State
+ Compression Program’s `replace_leaf` instruction. This operation will replace
+ the existing hash at the specified leaf index with the new hash. You'll need
+ to provide the old hash, the new hash, and the leaf index. As usual, the
+ Merkle tree address and tree authority bump are required as signature seeds.
 
-When combined, the instruction for updating a hash might look like this:
+When combined, the instructions for updating a hash might look like this:
 
 ```rust
 pub fn update_message(
@@ -486,26 +486,26 @@ pub fn update_message(
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
-        ],
-    ];
+ ],
+ ];
 
     // Verify Leaf
-    {
+ {
         if old_message == new_message {
             msg!("Messages are the same!");
             return Ok(());
-        }
+ }
 
         let cpi_ctx = CpiContext::new_with_signer(
             ctx.accounts.compression_program.to_account_info(), // The spl account compression program
             VerifyLeaf {
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
-            },
+ },
             signer_seeds // The seeds for pda signing
-        );
+ );
         // Verify or Fails
         verify_leaf(cpi_ctx, root, old_leaf, index)?;
-    }
+ }
 
     let new_leaf = keccak
         ::hashv(&[new_message.as_bytes(), ctx.accounts.sender.key().as_ref()])
@@ -517,19 +517,19 @@ pub fn update_message(
     wrap_application_data_v1(message_log.try_to_vec()?, &ctx.accounts.log_wrapper)?;
 
     // replace leaf
-    {
+ {
         let cpi_ctx = CpiContext::new_with_signer(
             ctx.accounts.compression_program.to_account_info(), // The spl account compression program
             Modify {
                 authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
                 noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
-            },
+ },
             signer_seeds // The seeds for pda signing
-        );
+ );
         // CPI to append the leaf node to the Merkle tree
         replace_leaf(cpi_ctx, root, old_leaf, new_leaf, index)?;
-    }
+ }
 
     Ok(())
 }
@@ -545,14 +545,14 @@ signals it has been "deleted."
 
 The exact value you choose will depend on your specific use case and security
 requirements. For some, this may involve setting all data fields to zero, while
-others might prefer storing a predefined static string that clearly marks the
+others might prefer storing a predefined static string that marks the
 leaf as deleted. This approach allows you to handle deletions in a way that
 suits your application’s needs without compromising data integrity.
 
 #### Accessing Data from a Client
 
 We've covered creating, updating, and deleting data in state compression, but
-reading data presents its own unique challenges.
+reading data presents its unique challenges.
 
 Accessing compressed data from a client can be tricky because the Merkle tree
 stores only data hashes, which cannot be used to recover the original data.
@@ -562,25 +562,25 @@ indefinitely.
 To access this data, you generally have two options:
 
 1. **Work with an indexing provider** to develop a custom solution tailored to
-   your program. This allows you to write client-side code to retrieve and
-   access the data based on how the indexer provides it.
+ your program. This allows you to write client-side code to retrieve and
+ access the data based on how the indexer provides it.
 2. **Create your own pseudo-indexer** to store and retrieve the data, offering a
-   lighter-weight solution.
+ lighter-weight solution.
 
 If your project is decentralized and expects widespread interaction beyond your
-own frontend, option 2 might not be sufficient. However, if you have control
+ frontend, option 2 might not be sufficient. However, if you have control
 over most program interactions, this approach can work.
 
 There’s no one-size-fits-all solution here. Two potential strategies include:
 
 1. **Store raw data**: One approach is to store the raw data in a database
-   simultaneously with sending it to the program. This allows you to keep a
-   record of the data, along with the Merkle tree leaf where the data was hashed
-   and stored.
+ simultaneously by sending it to the program. This allows you to keep a
+ record of the data, along with the Merkle tree leaf where the data was hashed
+ and stored.
 
 2. **Create a transaction observer**: Another approach is to create a server
-   that observes the transactions your program executes. This server would fetch
-   transactions, look up the related Noop logs, decode them, and store the data.
+ that observes the transactions your program executes. This server would fetch
+ transactions, look up the related Noop logs, decode them, and store the data.
 
 When writing tests in the lab, we'll simulate both of these approaches, although
 instead of using a database, the data will be stored in memory for the test's
@@ -604,12 +604,12 @@ export async function getMessageLog(
     blockhash: latestBlockHash.blockhash,
     lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
     signature: txSignature,
-  });
+ });
 
   // Get the transaction info using the tx signature
   const txInfo = await connection.getTransaction(txSignature, {
     maxSupportedTransactionVersion: 0,
-  });
+ });
 
   // Get the inner instructions related to the program instruction at index 0
   // We only send one instruction in test transaction, so we can assume the first
@@ -620,8 +620,8 @@ export async function getMessageLog(
     instruction =>
       txInfo?.transaction.message.staticAccountKeys[
         instruction.programIdIndex
-      ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58(),
-  );
+ ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58(),
+ );
 
   let messageLog: MessageLog;
   for (let i = noopInnerIx.length - 1; i >= 0; i--) {
@@ -629,7 +629,7 @@ export async function getMessageLog(
       // Try to decode and deserialize the instruction data
       const applicationDataEvent = deserializeApplicationDataEvent(
         Buffer.from(bs58.decode(noopInnerIx[i]?.data!)),
-      );
+ );
 
       // Get the application data
       const applicationData = applicationDataEvent.fields[0].applicationData;
@@ -639,13 +639,13 @@ export async function getMessageLog(
         MessageLogBorshSchema,
         MessageLog,
         Buffer.from(applicationData),
-      );
+ );
 
       if (messageLog !== undefined) {
         break;
-      }
-    } catch (__) {}
-  }
+ }
+ } catch (__) {}
+ }
 
   return messageLog;
 }
@@ -718,9 +718,9 @@ use spl_account_compression::{
     program::SplAccountCompression,
     cpi::{
         accounts::{Initialize, Modify, VerifyLeaf},
-        init_empty_merkle_tree, verify_leaf, replace_leaf, append,
-    },
-    wrap_application_data_v1,
+ init_empty_merkle_tree, verify_leaf, replace_leaf, append,
+ },
+ wrap_application_data_v1,
 };
 
 declare_id!("YOUR_KEY_GOES_HERE");
@@ -731,7 +731,7 @@ declare_id!("YOUR_KEY_GOES_HERE");
 pub mod compressed_notes {
     use super::*;
 
-	// FUNCTIONS GO HERE
+  // FUNCTIONS GO HERE
 
 }
 ```
@@ -764,7 +764,7 @@ impl NoteLog {
     // Constructs a new note from given leaf node and message
     pub fn new(leaf_node: [u8; 32], owner: Pubkey, note: String) -> Self {
         Self { leaf_node, owner, note }
-    }
+ }
 }
 ```
 
@@ -782,9 +782,9 @@ include the following accounts:
 
 - `owner` - The creator and owner of the note, who must sign the transaction.
 - `tree_authority` - The authority for the Merkle tree, used for signing
-  compression-related CPIs.
+ compression-related CPIs.
 - `merkle_tree` - The address of the Merkle tree where note hashes are stored;
-  this will be unchecked as it's validated by the State Compression Program.
+ this will be unchecked as it's validated by the State Compression Program.
 - `log_wrapper` - The address of the Noop Program.
 - `compression_program` - The address of the State Compression Program.
 
@@ -792,19 +792,19 @@ include the following accounts:
 #[derive(Accounts)]
 pub struct NoteAccounts<'info> {
     // The payer for the transaction
-    #[account(mut)]
+ #[account(mut)]
     pub owner: Signer<'info>,
 
     // The pda authority for the Merkle tree, only used for signing
-    #[account(
-        seeds = [merkle_tree.key().as_ref()],
+ #[account(
+ seeds = [merkle_tree.key().as_ref()],
         bump,
-    )]
+ )]
     pub tree_authority: SystemAccount<'info>,
 
     // The Merkle tree account
     /// CHECK: This account is validated by the spl account compression program
-    #[account(mut)]
+ #[account(mut)]
     pub merkle_tree: UncheckedAccount<'info>,
 
     // The noop program to log data
@@ -826,10 +826,10 @@ To implement this, you’ll need to build a CPI to invoke the
 to include two additional arguments:
 
 1. **`max_depth`** - Specifies the maximum depth of the Merkle tree, indicating
-   the longest path from any leaf to the root.
+ the longest path from any leaf to the root.
 2. **`max_buffer_size`** - Defines the maximum buffer size for the Merkle tree,
-   which determines the space allocated for recording tree updates. This buffer
-   is crucial for supporting concurrent updates within the same block.
+ which determines the space allocated for recording tree updates. This buffer
+ is crucial for supporting concurrent updates within the same block.
 
 These values are essential for properly initializing the Merkle tree’s data
 structure.
@@ -844,7 +844,7 @@ pub mod compressed_notes {
         ctx: Context<NoteAccounts>,
         max_depth: u32,       // Max depth of the Merkle tree
         max_buffer_size: u32, // Max buffer size of the Merkle tree
-    ) -> Result<()> {
+ ) -> Result<()> {
         // Get the address for the Merkle tree account
         let merkle_tree = ctx.accounts.merkle_tree.key();
 
@@ -852,7 +852,7 @@ pub mod compressed_notes {
         let signer_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
-        ]];
+ ]];
 
         // Create cpi context for init_empty_merkle_tree instruction.
         let cpi_ctx = CpiContext::new_with_signer(
@@ -861,14 +861,14 @@ pub mod compressed_notes {
                 authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be initialized
                 noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
-            },
+ },
             signer_seeds, // The seeds for pda signing
-        );
+ );
 
         // CPI to initialize an empty Merkle tree with given max depth and buffer size
         init_empty_merkle_tree(cpi_ctx, max_depth, max_buffer_size)?;
         Ok(())
-    }
+ }
 
     //...
 }
@@ -887,22 +887,22 @@ on-chain.
 Here’s how to accomplish this:
 
 1. **Hash the Data**: Utilize the `hashv` function from the `keccak` crate to
-   compute a hash of the note and the owner’s public key. Both should be
-   converted to their byte representations. It's essential to hash the owner
-   along with the note to facilitate ownership verification during updates.
+ compute a hash of the note and the owner’s public key. Both should be
+ converted to their byte representations. It's essential to hash the owner
+ along with the note to facilitate ownership verification during updates.
 
 2. **Log the Data**: Create a `NoteLog` instance with the hash from step 1, the
-   owner’s public key, and the note as a `String`. Then, use
+ owner’s public key, and the note as a `String`. Then, use
    `wrap_application_data_v1` to issue a CPI to the Noop program with this
    `NoteLog` instance. This ensures the complete note (not just the hash) is
-   available to clients, similar to how indexers manage cNFTs. You might also
-   develop an observing client to simulate indexer functionality specific to
-   your application.
+ available to clients, similar to how indexers manage cNFTs. You might also
+ develop an observing client to simulate indexer functionality specific to
+ your application.
 
 3. **Append to the Merkle Tree**: Build and issue a CPI to the State Compression
-   Program’s `append` instruction. This will add the hash from step 1 to the
-   next available leaf on your Merkle tree. Ensure that the Merkle tree address
-   and the tree authority bump are included as signature seeds.
+ Program’s `append` instruction. This will add the hash from step 1 to the
+ next available leaf on your Merkle tree. Ensure that the Merkle tree address
+ and the tree authority bump are included as signature seeds.
 
 ```rust
 #[program]
@@ -926,7 +926,7 @@ pub mod compressed_notes {
         let signer_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
-        ]];
+ ]];
         // Create a new cpi context and append the leaf node to the Merkle tree.
         let cpi_ctx = CpiContext::new_with_signer(
             ctx.accounts.compression_program.to_account_info(), // The spl account compression program
@@ -934,13 +934,13 @@ pub mod compressed_notes {
                 authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
                 noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
-            },
+ },
             signer_seeds, // The seeds for pda signing
-        );
+ );
         // CPI to append the leaf node to the Merkle tree
         append(cpi_ctx, leaf_node)?;
         Ok(())
-    }
+ }
 
     //...
 }
@@ -962,26 +962,26 @@ The process for this instruction is similar to `append_note`, with some
 additional steps:
 
 1. **Verify Ownership**: Before updating, prove that the `owner` executing this
-   instruction is the rightful owner of the leaf at the specified index. Since
-   the leaf data is compressed as a hash, you can’t directly compare the
+ instruction is the rightful owner of the leaf at the specified index. Since
+ the leaf data is compressed as a hash, you can’t directly compare the
    `owner`'s public key. Instead, compute the previous hash using the old note
-   data and the `owner` from the account validation struct. Then, use this
-   computed hash to build and issue a CPI to the State Compression Program’s
+ data and the `owner` from the account validation struct. Then, use this
+ computed hash to build and issue a CPI to the State Compression Program’s
    `verify_leaf` instruction.
 
 2. **Hash the New Data**: Hash the new note and the owner’s public key using the
    `hashv` function from the `keccak` crate, converting each to its byte
-   representation.
+ representation.
 
 3. **Log the New Data**: Create a `NoteLog` instance with the new hash from step
-   2, the owner’s public key, and the new note. Call `wrap_application_data_v1`
-   to issue a CPI to the Noop program with this `NoteLog` instance, ensuring the
-   updated note data is available to clients.
+ 2, the owner’s public key, and the new note. Call `wrap_application_data_v1`
+ to issue a CPI to the Noop program with this `NoteLog` instance, ensuring the
+ updated note data is available to clients.
 
 4. **Replace the Leaf**: Build and issue a CPI to the State Compression
-   Program’s `replace_leaf` instruction. This will replace the old hash with the
-   new hash at the specified leaf index. Ensure the Merkle tree address and the
-   tree authority bump are included as signature seeds.
+ Program’s `replace_leaf` instruction. This will replace the old hash with the
+ new hash at the specified leaf index. Ensure the Merkle tree address and the
+ tree authority bump are included as signature seeds.
 
 ```rust
 #[program]
@@ -990,13 +990,13 @@ pub mod compressed_notes {
 
     //...
 
-		pub fn update_note(
+    pub fn update_note(
         ctx: Context<NoteAccounts>,
         index: u32,
         root: [u8; 32],
         old_note: String,
         new_note: String,
-    ) -> Result<()> {
+ ) -> Result<()> {
         let old_leaf =
             keccak::hashv(&[old_note.as_bytes(), ctx.accounts.owner.key().as_ref()]).to_bytes();
 
@@ -1006,25 +1006,25 @@ pub mod compressed_notes {
         let signer_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the pda
-        ]];
+ ]];
 
         // Verify Leaf
-        {
+ {
             if old_note == new_note {
                 msg!("Notes are the same!");
                 return Ok(());
-            }
+ }
 
             let cpi_ctx = CpiContext::new_with_signer(
                 ctx.accounts.compression_program.to_account_info(), // The spl account compression program
                 VerifyLeaf {
                     merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
-                },
+ },
                 signer_seeds, // The seeds for pda signing
-            );
+ );
             // Verify or Fails
             verify_leaf(cpi_ctx, root, old_leaf, index)?;
-        }
+ }
 
         let new_leaf =
             keccak::hashv(&[new_note.as_bytes(), ctx.accounts.owner.key().as_ref()]).to_bytes();
@@ -1035,22 +1035,22 @@ pub mod compressed_notes {
         wrap_application_data_v1(note_log.try_to_vec()?, &ctx.accounts.log_wrapper)?;
 
         // replace leaf
-        {
+ {
             let cpi_ctx = CpiContext::new_with_signer(
                 ctx.accounts.compression_program.to_account_info(), // The spl account compression program
                 Modify {
                     authority: ctx.accounts.tree_authority.to_account_info(), // The authority for the Merkle tree, using a PDA
                     merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
                     noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
-                },
+ },
                 signer_seeds, // The seeds for pda signing
-            );
+ );
             // CPI to append the leaf node to the Merkle tree
             replace_leaf(cpi_ctx, root, old_leaf, new_leaf, index)?;
-        }
+ }
 
         Ok(())
-    }
+ }
 }
 ```
 
@@ -1061,15 +1061,15 @@ Here’s what you need to do for the setup:
 
 1. **Install Dependencies**: We’ll be using the
    `@solana/spl-account-compression` package for our tests. Install it using the
-   following command:
+ following command:
 
-   ```bash
+ ```bash
    yarn add @solana/spl-account-compression
-   ```
+ ```
 
 2. **Create Utility File**: To simplify testing, we’ve provided a utility file.
-   Create a `utils.ts` file in the `tests` directory and add the provided
-   contents. We’ll go over the details of this file shortly.
+ Create a `utils.ts` file in the `tests` directory and add the provided
+ contents. We’ll go over the details of this file shortly.
 
 ```typescript
 import {
@@ -1090,26 +1090,26 @@ class NoteLog {
     leafNode: Uint8Array;
     owner: Uint8Array;
     note: string;
-  }) {
+ }) {
     this.leafNode = properties.leafNode;
     this.owner = new PublicKey(properties.owner);
     this.note = properties.note;
-  }
+ }
 }
 
 // A map that describes the Note structure for Borsh deserialization
 const NoteLogBorshSchema = new Map([
-  [
+ [
     NoteLog,
-    {
+ {
       kind: "struct",
       fields: [
-        ["leafNode", [32]], // Array of 32 `u8`
-        ["owner", [32]], // Pubkey
-        ["note", "string"],
-      ],
-    },
-  ],
+ ["leafNode", [32]], // Array of 32 `u8`
+ ["owner", [32]], // Pubkey
+ ["note", "string"],
+ ],
+ },
+ ],
 ]);
 
 export function getHash(note: string, owner: PublicKey) {
@@ -1120,7 +1120,7 @@ export function getHash(note: string, owner: PublicKey) {
     concatenatedBuffer.buffer,
     concatenatedBuffer.byteOffset,
     concatenatedBuffer.byteLength,
-  );
+ );
   return keccak256(concatenatedUint8Array);
 }
 
@@ -1131,12 +1131,12 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
     blockhash: latestBlockHash.blockhash,
     lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
     signature: txSignature,
-  });
+ });
 
   // Get the transaction info using the tx signature
   const txInfo = await connection.getTransaction(txSignature, {
     maxSupportedTransactionVersion: 0,
-  });
+ });
 
   // Get the inner instructions related to the program instruction at index 0
   // We only send one instruction in test transaction, so we can assume the first
@@ -1147,8 +1147,8 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
     instruction =>
       txInfo?.transaction.message.staticAccountKeys[
         instruction.programIdIndex
-      ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58(),
-  );
+ ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58(),
+ );
 
   let noteLog: NoteLog;
   for (let i = noopInnerIx.length - 1; i >= 0; i--) {
@@ -1156,7 +1156,7 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
       // Try to decode and deserialize the instruction data
       const applicationDataEvent = deserializeApplicationDataEvent(
         Buffer.from(bs58.decode(noopInnerIx[i]?.data!)),
-      );
+ );
 
       // Get the application data
       const applicationData = applicationDataEvent.fields[0].applicationData;
@@ -1166,13 +1166,13 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
         NoteLogBorshSchema,
         NoteLog,
         Buffer.from(applicationData),
-      );
+ );
 
       if (noteLog !== undefined) {
         break;
-      }
-    } catch (__) {}
-  }
+ }
+ } catch (__) {}
+ }
 
   return noteLog;
 }
@@ -1181,15 +1181,15 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
 The `utils.ts` file contains three key components:
 
 1. **`NoteLog` Class**: This class represents the note log that we’ll extract
-   from the Noop program logs. It also includes the Borsh schema, named
+ from the Noop program logs. It also includes the Borsh schema, named
    `NoteLogBorshSchema`, which is used for deserialization.
 
 2. **`getHash` Function**: This function generates a hash from the note and its
-   owner, allowing us to compare it against the data in the Merkle tree.
+ owner, allowing us to compare it against the data in the Merkle tree.
 
 3. **`getNoteLog` Function**: This function searches through the transaction
-   logs to locate the Noop program logs, then deserializes and retrieves the
-   corresponding `NoteLog`.
+ logs to locate the Noop program logs then deserializes and retrieves the
+ corresponding `NoteLog`.
 
 #### 8. Write Client Tests
 
@@ -1197,14 +1197,14 @@ With our packages and utility file set up, we’re ready to dive into writing th
 tests. We will create four tests for our program:
 
 1. **Create Note Tree**: This test will initialize the Merkle tree for storing
-   note hashes.
+ note hashes.
 2. **Add Note**: This test will invoke the `append_note` instruction to add a
-   note to the tree.
+ note to the tree.
 3. **Add Max Size Note**: This test will also use the `append_note` instruction,
-   but with a note that reaches the maximum allowable size of 1232 bytes in a
-   single transaction.
+ but with a note that reaches the maximum allowable size of 1232 bytes in a
+ single transaction.
 4. **Update First Note**: This test will use the `update_note` instruction to
-   modify the first note that was added.
+ modify the first note that was added.
 
 The first test is mainly for setup purposes. For the remaining three tests, we
 will check that the note hash in the Merkle tree matches the expected value
@@ -1251,7 +1251,7 @@ describe("compressed-notes", () => {
   const connection = new Connection(
     provider.connection.rpcEndpoint,
     "confirmed", // has to be confirmed for some of the methods below
-  );
+ );
 
   const wallet = provider.wallet as anchor.Wallet;
   const program = anchor.workspace.CompressedNotes as Program<CompressedNotes>;
@@ -1262,9 +1262,9 @@ describe("compressed-notes", () => {
   // Derive the PDA to use as the tree authority for the Merkle tree account
   // This is a PDA derived from the Note program, which allows the program to sign for appends instructions to the tree
   const [treeAuthority] = PublicKey.findProgramAddressSync(
-    [merkleTree.publicKey.toBuffer()],
+ [merkleTree.publicKey.toBuffer()],
     program.programId,
-  );
+ );
 
   const firstNote = "hello world";
   const secondNote = "0".repeat(917);
@@ -1278,17 +1278,17 @@ Finally, let's dive into the `Create Note Tree` test. This test will accomplish
 two key tasks:
 
 1. **Allocate a New Merkle Tree Account**: Create a new account for the Merkle
-   tree, specifying a max depth of 3, a max buffer size of 8, and a canopy depth
-   of 0.
+ tree, specifying a max depth of 3, a max buffer size of 8, and a canopy depth
+ of 0.
 2. **Initialize the Account**: Use our program’s `createNoteTree` instruction to
-   set up the newly allocated Merkle tree account.
+ set up the newly allocated Merkle tree account.
 
 ```typescript
 it("Create Note Tree", async () => {
   const maxDepthSizePair: ValidDepthSizePair = {
     maxDepth: 3,
     maxBufferSize: 8,
-  };
+ };
 
   const canopyDepth = 0;
 
@@ -1299,18 +1299,18 @@ it("Create Note Tree", async () => {
     wallet.publicKey,
     maxDepthSizePair,
     canopyDepth,
-  );
+ );
 
   // instruction to initialize the tree through the Note program
   const ix = await program.methods
-    .createNoteTree(maxDepthSizePair.maxDepth, maxDepthSizePair.maxBufferSize)
-    .accounts({
+ .createNoteTree(maxDepthSizePair.maxDepth, maxDepthSizePair.maxBufferSize)
+ .accounts({
       merkleTree: merkleTree.publicKey,
       treeAuthority: treeAuthority,
       logWrapper: SPL_NOOP_PROGRAM_ID,
       compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .instruction();
+ })
+ .instruction();
 
   const tx = new Transaction().add(allocTreeIx, ix);
   await sendAndConfirmTransaction(connection, tx, [wallet.payer, merkleTree]);
@@ -1320,22 +1320,22 @@ it("Create Note Tree", async () => {
 Next, let's set up the `Add Note` test. This test will:
 
 1. **Call `append_note`**: Use the `append_note` instruction with `firstNote` to
-   add the note to the Merkle tree.
+ add the note to the Merkle tree.
 2. **Verify Hash and Log**: Check that the hash stored on-chain matches the
-   computed hash and ensure that the note log reflects the text of the note we
-   submitted.
+ computed hash and ensure that the note log reflects the text of the note we
+ submitted.
 
 ```typescript
 it("Add Note", async () => {
   const txSignature = await program.methods
-    .appendNote(firstNote)
-    .accounts({
+ .appendNote(firstNote)
+ .accounts({
       merkleTree: merkleTree.publicKey,
       treeAuthority: treeAuthority,
       logWrapper: SPL_NOOP_PROGRAM_ID,
       compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .rpc();
+ })
+ .rpc();
 
   const noteLog = await getNoteLog(connection, txSignature);
   const hash = getHash(firstNote, provider.publicKey);
@@ -1349,22 +1349,22 @@ Next, let's create the `Add Max Size Note` test. This test will be similar to
 the previous one, but it will:
 
 1. **Call `append_note`**: Use the `append_note` instruction with the second
-   note, which is designed to be the maximum size allowed (1232 bytes).
+ note, which is designed to be the maximum size allowed (1232 bytes).
 2. **Verify Hash and Log**: Ensure that the on-chain hash matches the computed
-   hash and that the note log accurately reflects the content of the large note.
+ hash and that the note log accurately reflects the content of the large note.
 
 ```typescript
 it("Add Max Size Note", async () => {
   // Size of note is limited by max transaction size of 1232 bytes, minus additional data required for the instruction
   const txSignature = await program.methods
-    .appendNote(secondNote)
-    .accounts({
+ .appendNote(secondNote)
+ .accounts({
       merkleTree: merkleTree.publicKey,
       treeAuthority: treeAuthority,
       logWrapper: SPL_NOOP_PROGRAM_ID,
       compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .rpc();
+ })
+ .rpc();
 
   const noteLog = await getNoteLog(connection, txSignature);
   const hash = getHash(secondNote, provider.publicKey);
@@ -1378,17 +1378,17 @@ Lastly, let’s create the `Update First Note` test. This test involves a few mo
 steps:
 
 1. **Retrieve the Merkle Tree Root**: Obtain the current root hash of the Merkle
-   tree, as it is needed for the update operation.
+ tree, as it is needed for the update operation.
 2. **Invoke `update_note` Instruction**: Call the `update_note` instruction with
-   the following parameters:
+ the following parameters:
 
    - The index `0` (indicating the first note),
    - The current Merkle tree root hash,
    - The original note data,
    - The updated note data.
 
-   Please nsure that the program uses both the original note and the tree root
-   to verify the proof path for the note's leaf before applying the update.
+ Please be ensure that the program uses both the original note and the tree root
+ to verify the proof path for the note's leaf before applying the update.
 
 ```typescript
 it("Update First Note", async () => {
@@ -1396,20 +1396,20 @@ it("Update First Note", async () => {
     await ConcurrentMerkleTreeAccount.fromAccountAddress(
       connection,
       merkleTree.publicKey,
-    );
+ );
 
   const rootKey = merkleTreeAccount.tree.changeLogs[0].root;
   const root = Array.from(rootKey.toBuffer());
 
   const txSignature = await program.methods
-    .updateNote(0, root, firstNote, updatedNote)
-    .accounts({
+ .updateNote(0, root, firstNote, updatedNote)
+ .accounts({
       merkleTree: merkleTree.publicKey,
       treeAuthority: treeAuthority,
       logWrapper: SPL_NOOP_PROGRAM_ID,
       compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .rpc();
+ })
+ .rpc();
 
   const noteLog = await getNoteLog(connection, txSignature);
   const hash = getHash(updatedNote, provider.publicKey);
