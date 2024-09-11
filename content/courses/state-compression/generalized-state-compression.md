@@ -774,20 +774,15 @@ structures because we're using state compression. And since we don't need the
 full functionality of an account, we can use the `AnchorSerialize` derive macro
 instead of the `account` macro.
 
-#### 3. Define input accounts and constraints
+#### 3. Define Input Accounts and Constraints
 
-As luck would have it, every one of our instructions will be using the same
-accounts. We’ll create a single `NoteAccounts` struct for our account
-validation. It’ll need the following accounts:
+In our setup, all instructions will use the same accounts, so we'll create a single `NoteAccounts` struct to handle account validation. This struct will include the following accounts:
 
-- `owner` - this is the creator and owner of the note; should be a signer on the
-  transaction
-- `tree_authority` - the authority for the Merkle tree; used for signing
-  compression-related CPIs
-- `merkle_tree` - the address of the Merkle tree used to store the note hashes;
-  will be unchecked since it is validated by the State Compression Program
-- `log_wrapper` - the address of the Noop Program
-- `compression_program` - the address of the State Compression Program
+- `owner` - The creator and owner of the note, who must sign the transaction.
+- `tree_authority` - The authority for the Merkle tree, used for signing compression-related CPIs.
+- `merkle_tree` - The address of the Merkle tree where note hashes are stored; this will be unchecked as it's validated by the State Compression Program.
+- `log_wrapper` - The address of the Noop Program.
+- `compression_program` - The address of the State Compression Program.
 
 ```rust
 #[derive(Accounts)]
