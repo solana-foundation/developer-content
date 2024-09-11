@@ -678,10 +678,9 @@ anchor init burry-escrow --template=multiple
 Next, replace the program ID in `lib.rs` and `Anchor.toml` with the program ID
 shown when you run `anchor keys sync`.
 
-Next, add the following to the bottom of your Anchor.toml file. This will tell
-Anchor how to configure our local testing environment. This will allow us to
-test our program locally without having to deploy and send transactions to
-devnet.
+Then, add the following to the bottom of your Anchor.toml file. This will tell
+Anchor how to configure our local testing environment,allowing us to test our
+program locally without needing to deploy and send transactions to Devnet.
 
 At the bottom of `Anchor.toml`:
 
@@ -775,12 +774,12 @@ Next, let's define our data account for this program: `Escrow`. Our data account
 will store two pieces of info:
 
 - `unlock_price` - The price of SOL in USD at which point you can withdraw; you
-  can hard-code it to whatever you want (e.g. $21.53)
+  can hard-code it to whatever value you prefer (e.g. $21.53)
 - `escrow_amount` - Keeps track of how many lamports are stored in the escrow
   account
 
-We will also be defining our PDA seed of `"MICHAEL BURRY"` and our hardcoded
-SOL_USD oracle pubkey `SOL_USDC_FEED`.
+We will also define our PDA seed of `"MICHAEL BURRY"` and our hardcoded SOL_USD
+oracle pubkey as `SOL_USDC_FEED`.
 
 ```rust
 // in state.rs
@@ -895,55 +894,23 @@ instruction.
 
 ```rust
 pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: u64) -> Result<()> {
-		msg!("Depositing funds in escrow...");
-
-    let escrow_state = &mut ctx.accounts.escrow_account;
-    escrow_state.unlock_price = unlock_price;
-    escrow_state.escrow_amount = escrow_amount;
-
-    let transfer_ix = transfer(
-      &ctx.accounts.user.key(),
-      &escrow_state.key(),
-      escrow_amount
-    );
-
-    invoke(
-        &transfer_ix,
-        &[
-            ctx.accounts.user.to_account_info(),
-            ctx.accounts.escrow_account.to_account_info(),
-            ctx.accounts.system_program.to_account_info()
-        ]
-    )?;
-
-    msg!("Transfer complete. Escrow will unlock SOL at {}", &ctx.accounts.escrow_account.unlock_price);
-}
-```
-
-That’s is the gist of the deposit instruction! The final result of the
-`deposit.rs` file should look as follows:
-
-```rust
-use crate::state::*;
-use anchor_lang::prelude::*;
-use anchor_lang::solana_program::{
-    system_instruction::transfer,
-    program::invoke
-};
-
-pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: u64) -> Result<()> {
     msg!("Depositing funds in escrow...");
 
+    // Get a mutable reference to the escrow account
     let escrow_state = &mut ctx.accounts.escrow_account;
+
+    // Set the unlock price and escrow amount
     escrow_state.unlock_price = unlock_price;
     escrow_state.escrow_amount = escrow_amount;
 
+    // Create a transfer instruction
     let transfer_ix = transfer(
         &ctx.accounts.user.key(),
         &escrow_state.key(),
         escrow_amount
     );
 
+    // Execute the transfer instruction
     invoke(
         &transfer_ix,
         &[
@@ -957,24 +924,69 @@ pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: 
 
     Ok(())
 }
+```
 
+That’s the gist of the deposit instruction! The final result of the `deposit.rs`
+file should look as follows:
+
+```rust
+use crate::state::*;
+use anchor_lang::prelude::*;
+use anchor_lang::solana_program::{
+    system_instruction::transfer,
+    program::invoke
+};
+
+pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: u64) -> Result<()> {
+    msg!("Depositing funds in escrow...");
+
+    let escrow_state = &mut ctx.accounts.escrow_account;
+
+    // Set the unlock price and escrow amount
+    escrow_state.unlock_price = unlock_price;
+    escrow_state.escrow_amount = escrow_amount;
+
+    // Create a transfer instruction
+    let transfer_ix = transfer(
+        &ctx.accounts.user.key(),
+        &escrow_state.key(),
+        escrow_amount
+    );
+
+    // Execute the transfer instruction
+    invoke(
+        &transfer_ix,
+        &[
+            ctx.accounts.user.to_account_info(),
+            ctx.accounts.escrow_account.to_account_info(),
+            ctx.accounts.system_program.to_account_info()
+        ]
+    )?;
+
+    msg!("Transfer complete. Escrow will unlock SOL at {}", &ctx.accounts.escrow_account.unlock_price);
+    Ok(())
+}
+
+// Constant for Anchor's account discriminator size
 pub const ANCHOR_DISCRIMINATOR: usize = 8;
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
-    // user account
+    /// User account (signer and payer)
     #[account(mut)]
     pub user: Signer<'info>,
-    // account to store SOL in escrow
+
+    /// Account to store SOL in escrow
     #[account(
         init,
         seeds = [ESCROW_SEED, user.key().as_ref()],
         bump,
         payer = user,
-        space =   Escrow::INIT_SPACE + ANCHOR_DISCRIMINATOR
+        space = Escrow::INIT_SPACE + ANCHOR_DISCRIMINATOR
     )]
     pub escrow_account: Account<'info, Escrow>,
 
+    /// System program
     pub system_program: Program<'info, System>,
 }
 ```
@@ -1016,8 +1028,8 @@ pub struct Withdraw<'info> {
 ```
 
 Notice we’re using the close constraint because once the transaction completes,
-we want to close the `escrow_account`. The SOL used as rent in the account will
-be transferred to the user account.
+we want to close the `escrow_account`. The SOL used as rent for the account will
+be transferred to the user's account.
 
 We also use the address constraints to verify that the feed account passed in is
 actually the `usdc_sol` feed and not some other feed (we have the SOL_USDC_FEED
@@ -1025,14 +1037,14 @@ address hard coded). In addition, the AggregatorAccountData struct that we
 deserialize comes from the Switchboard rust crate. It verifies that the given
 account is owned by the switchboard program and allows us to easily look at its
 values. You’ll notice it’s wrapped in a `AccountLoader`. This is because the
-feed is actually a fairly large account and it needs to be zero copied.
+feed is a fairly large account and needs to be zero-copied.
 
 Now let's implement the withdraw instruction's logic. First, we check if the
 feed is stale. Then we fetch the current price of SOL stored in the
 `feed_aggregator` account. Lastly, we want to check that the current price is
-above the escrow `unlock_price`. If it is, then we transfer the SOL from the
-escrow account back to the user and close the account. If it isn’t, then the
-instruction should finish and return an error.
+above the escrow `unlock_price`. If it is, we transfer the SOL from the escrow
+account back to the user and close the account. If it isn’t, the instruction
+should terminate and return an error.
 
 ```rust
 pub fn withdraw_handler(ctx: Context<Withdraw>, params: WithdrawParams) -> Result<()> {
@@ -1060,8 +1072,7 @@ pub fn withdraw_handler(ctx: Context<Withdraw>, params: WithdrawParams) -> Resul
 To finish the logic off, we will execute the transfer, this time we will have to
 transfer the funds in a different way. Because we are transferring from an
 account that also holds data we cannot use the `system_program::transfer` method
-like before. If we try to, the instruction will fail to execute with the
-following error.
+like before.If we try, the instruction will fail with the following error.
 
 ```zsh
 'Transfer: `from` must not carry data'
@@ -1088,39 +1099,42 @@ add/subtract the amount of lamports stored in each account.
 The final withdraw method in the `withdraw.rs` file should look like this:
 
 ```rust
-use crate::state::*;
 use crate::errors::*;
-use std::str::FromStr;
+use crate::state::*;
 use anchor_lang::prelude::*;
-use switchboard_solana::AggregatorAccountData;
 use anchor_lang::solana_program::clock::Clock;
+use std::str::FromStr;
+use switchboard_solana::AggregatorAccountData;
 
 pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let feed = &ctx.accounts.feed_aggregator.load()?;
     let escrow_state = &ctx.accounts.escrow_account;
 
-    // get result
+    // Get the current price from the feed
     let val: u64 = feed.get_result()?.try_into()?;
 
-    // check whether the feed has been updated in the last 300 seconds
+    // Check if the feed has been updated in the last 300 seconds
     feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
-    .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
+        .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
     msg!("Current feed result is {}!", val);
     msg!("Unlock price is {}", escrow_state.unlock_price);
 
+    // Ensure the current price is below the unlock price
     if val < escrow_state.unlock_price as u64 {
-        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into())
+        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into());
     }
 
-    // 'Transfer: `from` must not carry data'
+    // Transfer funds from escrow to user
     **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
         .to_account_info()
         .lamports()
         .checked_sub(escrow_state.escrow_amount)
         .ok_or(ProgramError::InvalidArgument)?;
 
-    **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
+    **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx
+        .accounts
+        .user
         .to_account_info()
         .lamports()
         .checked_add(escrow_state.escrow_amount)
@@ -1131,10 +1145,11 @@ pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
-    // user account
+    /// User account (signer)
     #[account(mut)]
     pub user: Signer<'info>,
-    // escrow account
+
+    /// Escrow account
     #[account(
         mut,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -1142,11 +1157,13 @@ pub struct Withdraw<'info> {
         close = user
     )]
     pub escrow_account: Account<'info, Escrow>,
-    // Switchboard SOL feed aggregator
+
+    /// Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
     )]
     pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+
     pub system_program: Program<'info, System>,
 }
 ```
