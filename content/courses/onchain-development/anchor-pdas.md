@@ -5,7 +5,7 @@ objectives:
   - Enable and use the `init_if_needed` constraint
   - Use the `realloc` constraint to reallocate space on an existing account
   - Use the `close` constraint to close an existing account
-description: 
+description:
   "Store arbitrary data on Solana, using PDAs, an inbuilt key-value store."
 ---
 
