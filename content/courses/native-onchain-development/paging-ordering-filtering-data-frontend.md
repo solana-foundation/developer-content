@@ -200,14 +200,16 @@ async function fetchMatchingContactAccounts(
     ];
   }
 
-  const accounts = await connection.getProgramAccounts(
+  const accounts = (await connection.getProgramAccounts(
     new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
     {
       dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH }, // Only retrieve the portion of data relevant to the search.
       filters,
     },
-  );
-
+  )) as Array<{
+    pubkey: PublicKey;
+    account: AccountInfo<Buffer>;
+  }>;
   return accounts.map(account => account.account); // Return the account data.
 }
 ```
