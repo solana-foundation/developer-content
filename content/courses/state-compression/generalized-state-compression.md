@@ -1010,21 +1010,17 @@ pub mod compressed_notes {
 }
 ```
 
-#### 7. Client test setup
+#### 7. Client Test Setup
 
-We’re going to write a few tests to ensure that our program works as expected.
-First, let’s do some setup.
+To ensure our program functions correctly, we’ll set up and write some tests. Here’s what you need to do for the setup:
 
-We’ll be using the `@solana/spl-account-compression` package. Go ahead and
-install it:
+1. **Install Dependencies**: We’ll be using the `@solana/spl-account-compression` package for our tests. Install it using the following command:
 
-```bash
-yarn add @solana/spl-account-compression
-```
+   ```bash
+   yarn add @solana/spl-account-compression
+   ```
 
-Next, we’re going to give you the contents of a utility file we’ve created to
-make testing easier. Create a `utils.ts` file in the `tests` directory, add in
-the below, then we’ll explain it.
+2. **Create Utility File**: To simplify testing, we’ve provided a utility file. Create a `utils.ts` file in the `tests` directory and add the provided contents. We’ll go over the details of this file shortly.
 
 ```typescript
 import {
