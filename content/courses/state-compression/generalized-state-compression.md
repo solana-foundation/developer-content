@@ -364,30 +364,17 @@ pub fn create_messages_tree(
 }
 ```
 
-#### Add hashes to the tree
+#### Adding Hashes to the Tree
 
-With an initialized Merkle tree, it’s possible to start adding data hashes. This
-involves passing the uncompressed data to an instruction on your program that
-will hash the data, log it to the Noop program, and use the State Compression
-Program’s `append` instruction to add the hash to the tree. The following
-discuss what your instruction needs to do in depth:
+Once the Merkle tree is initialized, you can begin adding data hashes to it. This process involves passing the uncompressed data to an instruction within your program, which will hash the data, log it to the Noop Program, and then use the State Compression Program's `append` instruction to add the hash to the tree. Here's how the instruction operates in detail:
 
-1. Use the `hashv` function from the `keccak` crate to hash the data. In most
-   cases, you’ll want to also hash the owner or authority of the data as well to
-   ensure that it can only be modified by the proper authority.
-2. Create a log object representing the data you wish to log to the Noop
-   Program, then call `wrap_application_data_v1` to issue a CPI to the Noop
-   program with this object. This ensures that the uncompressed data is readily
-   available to any client looking for it. For broad use cases like cNFTs, that
-   would be indexers. You might also create your own observing client to
-   simulate what indexers are doing but specific to your application.
-3. Build and issue a CPI to the State Compression Program’s `append`
-   instruction. This takes the hash computed in step 1 and adds it to the next
-   available leaf on your Merkle tree. Just as before, this requires the Merkle
-   tree address and the tree authority bump as signature seeds.
+1. **Hash the Data**: Use the `hashv` function from the `keccak` crate to hash the data. It's recommended to include the data owner or authority in the hash to ensure that only the proper authority can modify it.
+   
+2. **Log the Data**: Create a log object representing the data you want to log to the Noop Program. Then, call `wrap_application_data_v1` to issue a CPI (Cross-Program Invocation) to the Noop Program with this object. This makes the uncompressed data easily accessible to any client, such as indexers, that may need it. You could also develop a custom client to observe and index data for your application specifically.
 
-When all this is put together using the messaging example, it looks something
-like this:
+3. **Append the Hash**: Construct and issue a CPI to the State Compression Program’s `append` instruction. This will take the hash generated in step 1 and append it to the next available leaf on the Merkle tree. As with previous steps, this requires the Merkle tree address and tree authority bump as signature seeds.
+
+When applied to a messaging system, the resulting implementation might look like this:
 
 ```rust
 // Instruction for appending a message to a tree.
