@@ -1343,16 +1343,13 @@ That’s a wrap—congratulations! Run `anchor test`, and you should see all fou
 
 If you encounter any issues, don’t hesitate to revisit the demo or check out the complete solution code in the [Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
 
-## Challenge
+### Challenge
 
-Now that you’ve practiced the basics of state compression, add a new instruction
-to the Compressed Notes program. This new instruction should allow users to
-delete an existing note. keep in mind that you can’t remove a leaf from the
-tree, so you’ll need to decide what “deleted” looks like for your program. Good
-luck!
+Now that you've got the hang of state compression, it's time to add a new feature to the Compressed Notes program. Your task is to implement an instruction that allows users to delete an existing note. Keep in mind that you can’t physically remove a leaf from the Merkle tree, so you’ll need to come up with a method to signify that a note has been deleted. 
 
-If you'd like a very simple example of a delete function, check out the
-[`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
+Good luck, and happy coding!
+
+For a straightforward example of how to implement a delete function, check out the [`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
