@@ -404,7 +404,7 @@ All together, the final setup looks something like this:
 
 ```typescript
 import idl from "./idl.json";
-import type { CounterContract } from "@/types";
+import type { CounterProgram } from "@/types";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { Program, Idl, AnchorProvider, setProvider } from "@coral-xyz/anchor";
 
@@ -414,10 +414,10 @@ const wallet = useAnchorWallet();
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 
-const program = new Program(idl as Idl) as Program<CounterContract>;
+const program = new Program(idl as Idl) as Program<CounterProgram>;
 
 // we can also explicitly mention the provider
-const program = new Program(idl as Idl, provider) as Program<CounterContract>;
+const program = new Program(idl as Idl, provider) as Program<CounterProgram>;
 ```
 
 ### Anchor `MethodsBuilder`
