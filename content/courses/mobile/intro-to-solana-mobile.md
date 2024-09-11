@@ -14,21 +14,12 @@ description:
  - The **Solana Mobile Wallet Adapter** (**MWA**) allows mobile apps to submit transactions for signing via a WebSocket connection to mobile wallets.
  - The easiest way to start building Solana mobile applications is by using Solana Mobile’s [React Native packages](https://docs.solanamobile.com/react-native/setup) - `@solana-mobile/mobile-wallet-adapter-protocol` and `@solana-mobile/mobile-wallet-adapter-protocol-web3js` 
 
-## Lesson
+## Lesson Overview
 
-Solana Mobile Stack (SMS) is designed to help developers create mobile dApps
-with a seamless UX. It consists of the
-[Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter),
-[Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault),
-and the
-[Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store).
+In these units, we will develop mobile apps that interact with the Solana network, this opens up a whole new paradigm of crypto use cases and behaviors.
+The **Solana Mobile Stack** (**SMS**) is designed to help developers seamlessly create mobile dApps. It includes the [Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter) -A Solana Mobile SDK that uses React Native, [Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault), and the [Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store). These resources simplify mobile development with a similar experience but with mobile-specific features.
 
-Most relevant to your development journey is the Mobile Wallet Adapter (MWA).
-The simplest way to get started is to use the Mobile Wallet Adapter with React
-Native to create a simple Android app. This lesson assumes you're familiar with
-React and Solana programming. If that's not the case,
-[start our course from the beginning](/content/courses/intro-to-solana/intro-to-cryptography)
-and come back here when you feel ready!
+This lesson focuses on using React Native to create a simple Android app that integrates with the Solana network. If you're not familiar with programming in React or Solana, we recommend starting with our [Intro to Solana lesson](https://github.com/solana-foundation/developer-content/tree/main/content/courses/intro-to-solana) and returning when you're ready. If you are, let's dive in!
 
 ### Intro To Solana Mobile
 
