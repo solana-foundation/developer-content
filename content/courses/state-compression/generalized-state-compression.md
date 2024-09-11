@@ -549,47 +549,37 @@ others might prefer storing a predefined static string that clearly marks the
 leaf as deleted. This approach allows you to handle deletions in a way that
 suits your application’s needs without compromising data integrity.
 
-#### Access data from a client
+#### Accessing Data from a Client
 
-The discussion so far has covered 3 of the 4 standard CRUD procedures: Create,
-Update, and Delete. What’s left is one of the more difficult concepts in state
-compression: reading data.
+We've covered creating, updating, and deleting data in state compression, but
+reading data presents its own unique challenges.
 
-Accessing data from a client is tricky primarily because the data isn’t stored
-in a format that is easy to access. The data hashes stored in the Merkle tree
-account can’t be used to reconstruct the initial data, and the data logged to
-the Noop program isn’t available indefinitely.
+Accessing compressed data from a client can be tricky because the Merkle tree
+stores only data hashes, which cannot be used to recover the original data.
+Additionally, the uncompressed data logged to the Noop program is not retained
+indefinitely.
 
-Your best bet is one of two options:
+To access this data, you generally have two options:
 
-1. Work with an indexing provider to create a custom indexing solution for your
-   program, then write client-side code based on how the indexer gives you
-   access to the data.
-2. Create your own pseudo-indexer as a lighter-weight solution.
+1. **Work with an indexing provider** to develop a custom solution tailored to
+   your program. This allows you to write client-side code to retrieve and
+   access the data based on how the indexer provides it.
+2. **Create your own pseudo-indexer** to store and retrieve the data, offering a
+   lighter-weight solution.
 
-If your project is truly decentralized such that many participants will interact
-with your program through means other than your own frontend, then option 2
-might not be sufficient. However, depending on the scale of the project or
-whether or not you’ll have control over most program access, it can be a viable
-approach.
+If your project is decentralized and expects widespread interaction beyond your
+own frontend, option 2 might not be sufficient. However, if you have control
+over most program interactions, this approach can work.
 
-There is no “right” way to do this. Two potential approaches are:
+There’s no one-size-fits-all solution here. Two potential strategies include:
 
-1. Store the raw data in a database at the same time as sending it to the
-   program, along with the leaf that the data is hashed and stored to.
-2. Create a server that observes your program’s transactions, looks up the
-   associated Noop logs, decodes the logs, and stores them.
+1. **Store raw data**: One approach is to store the raw data in a database simultaneously with sending it to the program. This allows you to keep a record of the data, along with the Merkle tree leaf where the data was hashed and stored.
 
-We’ll do a little bit of both when writing tests in this lesson’s lab (though we
-won’t persist data in a db - it will only live in memory for the duration of the
-tests).
+2. **Create a transaction observer**: Another approach is to create a server that observes the transactions your program executes. This server would fetch transactions, look up the related Noop logs, decode them, and store the data.
 
-The setup for this is somewhat tedious. Given a particular transaction, you can
-fetch the transaction from the RPC provider, get the inner instructions
-associated with the Noop program, use the `deserializeApplicationDataEvent`
-function from the `@solana/spl-account-compression` JS package to get the logs,
-then deserialize them using Borsh. Below is an example based on the messaging
-program used above.
+When writing tests in the lab, we'll simulate both of these approaches, although instead of using a database, the data will be stored in memory for the test's duration.
+
+The process of setting this up can be a bit complex. For a given transaction, you’ll retrieve it from the RPC provider, extract the inner instructions related to the Noop program, and use the `deserializeApplicationDataEvent` function from the `@solana/spl-account-compression` JS package to decode the logs. Then, you'll use Borsh to deserialize the data. Here's an example from the messaging program to illustrate the process:
 
 ```typescript
 export async function getMessageLog(
