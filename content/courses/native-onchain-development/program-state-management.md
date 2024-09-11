@@ -580,7 +580,7 @@ taking a name a short message as instruction data, the program should:
    string in each account
 
 You can test your program by building the
-[frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend)
+[frontend](https://github.com/solana-developers/solana-student-intro-frontend)
 we created in the
 [Page, Order, and Filter Program Data lesson](/content/courses/native-onchain-development/paging-ordering-filtering-data-frontend).
 Remember to replace the program ID in the frontend code with the one you've
