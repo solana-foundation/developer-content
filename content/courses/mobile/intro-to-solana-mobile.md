@@ -284,58 +284,23 @@ const sendTransactions = async (transaction: Transaction) => {
 };
 ```
 
-#### Debugging
+### Debugging
+Debugging can be challenging when working with Solana mobile transactions, as two separate applications are involved: your dApp and the mobile wallet. Unlike typical single-application setups, you won't have direct access to the wallet’s logs, which makes tracking issues more complex.
 
-Since two applications are involved in sending transactions, debugging can be
-tricky. Specifically, you won’t be able to see the wallet's debug logs the way
-you can see your dApps logs.
+However, Android Studio’s [Logcat](https://developer.android.com/studio/debug/logcat) provides a useful solution - enabling you to view logs from all applications running on your device including the wallet. By leveraging Logcat, you can monitor the interaction between your dApp and the wallet, helping you identify any issues that arise during transaction signing and submission.
 
-Fortunately,
-[Logcat on Android Studio](https://developer.android.com/studio/debug/logcat)
-makes it possible to see logs from all applications on your device.
+If Logcat is not your preferred tool, an alternative approach is to use the wallet solely for signing transactions, while handling the actual transaction submission in your dApp’s code. This method allows for greater control over debugging, as you can inspect the transaction flow more thoroughly on the client side.
 
-If you prefer not to use Logcat, the other method you could try is to only use
-the wallet to sign transactions, and then send them in your code. This allows
-you to better debug the transaction if you’re running into problems.
+### Deploying for Solana Mobile
+Deploying mobile applications can be challenging, and the complexity increases when dealing with crypto-based apps. Two primary factors contribute to this difficulty: customer safety and financial incentives.
 
-#### Releasing
+#### Customer Safety and Regulatory Uncertainty:
+Most mobile app marketplaces, such as the Apple App Store and Google Play Store, have policies that restrict blockchain-related apps. Since cryptocurrency is still a relatively new and evolving technology, platforms are cautious about regulatory compliance. They often adopt strict guidelines to protect users from potential risks associated with blockchain apps.
 
-Deploying mobile applications can be difficult on its own. It's often even more
-difficult when it's a crypto app. There are two main reasons for this: customer
-safety and financial incentives.
+#### In-App Purchases and Platform Fees:
+Another significant challenge arises when using cryptocurrency for in-app purchases. Many platforms impose a transaction fee on purchases made within their apps (ranging from 15% to 30%). Using cryptocurrency as a payment method is often seen as a way to bypass these fees, which is explicitly prohibited by most app stores. These platforms prioritize protecting their revenue streams and therefore enforce strict policies against apps that facilitate crypto payments for in-app purchases.
 
-First, most of the mobile app marketplaces have policies restricting blockchain
-involvement. Crypto is new enough that it's a regulatory wildcard. Platforms
-feel they're protecting users by being strict with blockchain-related apps.
-
-Second, if you use crypto for "purchases" in-app, you’ll be seen as
-circumnavigating the platform’s fee (anywhere from 15-30%). This is explicitly
-against app store policies as the platform is trying to protect its revenue
-stream.
-
-These are hurdles for sure, but there's hope. Here are some things to keep in
-mind for each marketplace:
-
-- **App Store (iOS) -** We only talked about Android today for the technical MWA
-  reason. However, their policies are also some of the most strict and make it
-  hard for Solana dApps to exist. For now, Apple has some pretty strict
-  anti-crypto policies. Wallets seem to be fine, but they'll flag and likely
-  reject anything that seems like a purchase using crypto.
-- **Google Play (Android) -** Google is generally more relaxed, but there are
-  still a few things to be aware of. As of this writing in November ‘23, Google
-  is rolling out
-  [new crypto policies](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
-  to make it more clear what they will and will not allow. Take a look.
-- **Steam -** Does not allow crypto games at all
-  > “built on blockchain technology that issue or allow the exchange of
-  > cryptocurrencies or NFTs.”
-- **Download Sites / Your Site -** Depending on the target platform, you can
-  make your dApp available for download on your own site. However, most users
-  are wary of downloading mobile applications from websites.
-- **dApp Store (Solana) -** Solana saw the issues with mobile dApp distribution
-  on other platform app stores and decided to make their own. As part of the SMS
-  stack, they created the
-  [Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store).
+> While traditional app stores impose strict policies around blockchain transactions to protect their revenue and comply with regulations, alternative distribution methods like the Solana dApp Store offers developers a more flexible platform for deploying Solana-based mobile applications. This decentralized approach bypasses many of the restrictions seen in centralized app marketplaces, allowing dApps to thrive in a more blockchain-friendly ecosystem.
 
 ### Conclusion
 
