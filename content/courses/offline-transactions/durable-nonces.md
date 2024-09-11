@@ -26,19 +26,20 @@ description: "Use durable nonces to sign transactions ahead of time."
 ## Overview
 
 Durable Nonces are a way to bypass the expiration date of regular transactions.
-To understand this more clearly, we'll start by looking at the concepts behind
-regular transactions.
+To understand this, we'll start by looking at the concepts behind regular
+transactions.
 
-In Solana, transactions consist of three main parts:
+In Solana, transactions have three main parts:
 
 1. **Instructions**: Instructions are the operations you want to perform on the
    blockchain, like transferring tokens, creating accounts, or calling a
    program. These are executed in order.
 
-2. **Signatures**: Signatures are proof that the transaction was signed by the
-   required signers/authorities. For instance, if you are transferring SOL from
-   your wallet to another, you'll need to sign the transaction so the network
-   can verify that the transaction is valid.
+2. **Signatures**: Signatures are proof that the transaction was made by someone
+   with the signer's private key - which should usually be the signer
+   themselves. For instance, if you are transferring SOL from your wallet to
+   another, you'll need to sign the transaction so the network can verify that
+   the transaction is valid.
 
 3. **Recent Blockhash**: The recent blockhash is a unique identifier for each
    transaction. It is used to prevent replay attacks, where an attacker records
@@ -54,11 +55,10 @@ let's look at the problem that it tries to solve, the
 [double-spend](https://solana.com/developers/guides/advanced/introduction-to-durable-nonces#double-spend)
 problem.
 
-Imagine you're buying an NFT on MagicEden or Tensor. You have to sign a
-transaction that allows the marketplace's program to extract some SOL from your
-wallet. After signing the transaction the marketplace will submit it to the
-network. If the marketplace submits it again, without checks, you could be
-charged twice.
+Imagine you're buying an NFT on MagicEden or Tensor. You must sign a transaction
+that allows the marketplace's program to extract some SOL from your wallet.
+After signing the transaction the marketplace will submit it to the network. If
+the marketplace submits it again, without checks, you could be charged twice.
 
 This is known as the double-spend problem and is one of the core issues that
 blockchains, like Solana, solve. A naive solution could be to crosscheck all
@@ -115,23 +115,48 @@ From the
 
 ### Considerations
 
-Durable transactions should be treated with care, which is why you should always
-trust the transactions you sign.
+### Considerations
 
-For example, imagine you blindly signed a malicious durable transaction. This
-transaction signs away 500 SOL to the attacker and changes the nonce authority
-to the attacker as well. Let's say you don't have this amount yet, but in the
-future, you will. This is insidious, as the attacker would wait to cash this
-check as soon as your balance exceeeds 500 SOL. And you'll have no recollection
-of what you clicked on. It can remain dormant for days, weeks, or years.
+Durable transactions should be treated with care, which is why users should
+always trust the transactions they sign.
 
-This is not meant to provoke hysteria, but serves as a PSA of what's possible.
-This is why you should only keep in hot wallets what you're willing to lose and
-avoid signing with your cold wallet.
+As developers, it's important to inform users that their durable nonce
+transactions may be flagged by wallets. Durable nonces are often used for
+malicious transactions, and understanding the risks can help users make informed
+decisions.
+
+For example, imagine a user blindly signed a malicious durable transaction. This
+transaction could sign away 500 SOL to an attacker and change the nonce
+authority to the attacker as well. Even if the user doesn't have this amount
+yet, the attacker could wait to cash this check as soon as the user's balance
+exceeds 500 SOL. The user would have no recollection of what they clicked on,
+and the transaction could remain dormant for days, weeks, or years.
+
+To mitigate these risks, developers should educate users on the following
+points:
+
+1. **Trust the Source**: Users should only sign transactions from trusted
+   sources. Encourage users to verify the origin of the transaction before
+   signing.
+2. **Use Hot Wallets Cautiously**: Users should only keep in hot wallets what
+   they're willing to lose. Hot wallets are more susceptible to attacks, so it's
+   wise to limit the amount of funds stored in them.
+3. **Protect Cold Wallets**: Users should avoid signing transactions with their
+   cold wallets unless absolutely necessary. Cold wallets are more secure and
+   should be used to store larger amounts of funds.
+4. **Monitor Transactions**: Encourage users to regularly monitor their
+   transaction history and account balances. Promptly reporting any suspicious
+   activity can help mitigate potential losses.
+
+By providing this information, developers can help users understand the
+potential dangers of durable nonce transactions and take appropriate
+precautions. This is not meant to provoke hysteria but serves to show what's
+possible and emphasize the importance of security in handling durable
+transactions.
 
 ### Using Durable Nonces to Overcome the Short Lifespan of Regular Transactions
 
-Durable nonces are a way to sign transactions off-chain and keep them in storage
+Durable nonces are a way to sign transactions offchain and keep them in storage
 until they are ready to be submitted to the network. This allows us to create
 durable transactions.
 
@@ -155,11 +180,11 @@ see this as we deep dive into the technicals.
 Durable transactions differ from regular transactions in the following ways:
 
 1. Durable Nonces replace the recent blockhash with a nonce. This nonce is
-   stored in a `nonce account` and will be used only once in one transaction.
-   The nonce is a unique blockhash.
+   stored in a nonce account and will be used only once in one transaction. The
+   nonce is a unique blockhash.
 2. Each durable transaction must start with the `nonceAdvance` instruction,
-   which will change the nonce in the `nonce account`. This ensures that the
-   nonce is unique and cannot be reused in another transaction.
+   which will change the nonce in the nonce account. This ensures that the nonce
+   is unique and cannot be reused in another transaction.
 
 The nonce account is an account that holds the following values:
 
@@ -229,7 +254,7 @@ const tx = new Transaction().add(
   }),
 );
 
-// send the transaction
+// Send the transaction
 await sendAndConfirmTransaction(connection, tx, [payer, nonceKeypair]);
 ```
 
