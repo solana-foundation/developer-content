@@ -918,42 +918,26 @@ pub mod compressed_notes {
 }
 ```
 
-#### 6. Create `update_note` instruction
+#### 6. Create `update_note` Instruction
 
-The last instruction we’ll make is the `update_note` instruction. This should
-replace an existing leaf with a new hash representing the new updated note data.
+The final instruction we’ll implement is `update_note`, which will replace an existing leaf with a new hash that represents the updated note data.
 
-For this to work, we’ll need the following parameters:
+To perform this update, you’ll need the following parameters:
 
-1. `index` - the index of the leaf we are going to update
-2. `root` - the root hash of the Merkle tree
-3. `old_note` - the string representation of the old note we’re updating
-4. `new_note` - the string representation of the new note we want to update to
+1. **Index**: The index of the leaf to be updated.
+2. **Root**: The root hash of the Merkle tree.
+3. **Old Note**: The string representation of the note that is being updated.
+4. **New Note**: The string representation of the updated note.
 
-Remember, the steps here are similar to `append_note`, but with some minor
-additions and modifications:
+The process for this instruction is similar to `append_note`, with some additional steps:
 
-1. The first step is new. We need to first prove that the `owner` calling this
-   function is the true owner of the leaf at the given index. Since the data is
-   compressed as a hash on the leaf, we can’t simply compare the `owner` public
-   key to a stored value. Instead, we need to compute the previous hash using
-   the old note data and the `owner` listed in the account validation struct. We
-   then build and issue a CPI to the State Compression Program’s `verify_leaf`
-   instruction using our computed hash.
-2. This step is the same as the first step from creating the `append_note`
-   instruction. Use the `hashv` function from the `keccak` crate to hash the new
-   note and its owner, each as their corresponding byte representation.
-3. This step is the same as the second step from creating the `append_note`
-   instruction. Create an instance of the `NoteLog` struct using the hash from
-   step 2, the owner’s public key, and the new note as a string. Then call
-   `wrap_application_data_v1` to issue a CPI to the Noop program, passing the
-   instance of `NoteLog`
-4. This step is slightly different than the last step from creating the
-   `append_note` instruction. Build and issue a CPI to the State Compression
-   Program’s `replace_leaf` instruction. This uses the old hash, the new hash,
-   and the leaf index to replace the data of the leaf at the given index with
-   the new hash. Just as before, this requires the Merkle tree address and the
-   tree authority bump as signature seeds.
+1. **Verify Ownership**: Before updating, prove that the `owner` executing this instruction is the rightful owner of the leaf at the specified index. Since the leaf data is compressed as a hash, you can’t directly compare the `owner`'s public key. Instead, compute the previous hash using the old note data and the `owner` from the account validation struct. Then, use this computed hash to build and issue a CPI to the State Compression Program’s `verify_leaf` instruction.
+
+2. **Hash the New Data**: Hash the new note and the owner’s public key using the `hashv` function from the `keccak` crate, converting each to its byte representation.
+
+3. **Log the New Data**: Create a `NoteLog` instance with the new hash from step 2, the owner’s public key, and the new note. Call `wrap_application_data_v1` to issue a CPI to the Noop program with this `NoteLog` instance, ensuring the updated note data is available to clients.
+
+4. **Replace the Leaf**: Build and issue a CPI to the State Compression Program’s `replace_leaf` instruction. This will replace the old hash with the new hash at the specified leaf index. Ensure the Merkle tree address and the tree authority bump are included as signature seeds.
 
 ```rust
 #[program]
