@@ -1137,25 +1137,18 @@ The `utils.ts` file contains three key components:
 
 3. **`getNoteLog` Function**: This function searches through the transaction logs to locate the Noop program logs, then deserializes and retrieves the corresponding `NoteLog`.
 
-#### 8. Write client tests
+#### 8. Write Client Tests
 
-Now that we’ve got our packages installed and utility file ready, let’s dig into
-the tests themselves. We’re going to create four of them:
+With our packages and utility file set up, we’re ready to dive into writing the tests. We will create four tests for our program:
 
-1. Create Note Tree - this will create the Merkle tree we’ll be using to store
-   note hashes
-2. Add Note - this will call our `append_note` instruction
-3. Add Max Size Note - this will call our `append_note` instruction with a note
-   that maxes out the 1232 bytes allowed in a single transaction
-4. Update First Note - this will call our `update_note` instruction to modify
-   the first note we added
+1. **Create Note Tree**: This test will initialize the Merkle tree for storing note hashes.
+2. **Add Note**: This test will invoke the `append_note` instruction to add a note to the tree.
+3. **Add Max Size Note**: This test will also use the `append_note` instruction, but with a note that reaches the maximum allowable size of 1232 bytes in a single transaction.
+4. **Update First Note**: This test will use the `update_note` instruction to modify the first note that was added.
 
-The first test is mostly just for setup. In the last three tests, we’ll be
-asserting each time that the note hash on the tree matches what we would expect
-given the note text and signer.
+The first test is mainly for setup purposes. For the remaining three tests, we will check that the note hash in the Merkle tree matches the expected value based on the note content and the signer.
 
-Let’s start with our imports. There are quite a few from Anchor,
-`@solana/web3.js`, `@solana/spl-account-compression`, and our own utils file.
+We’ll start by setting up our imports. This includes a variety of components from Anchor, `@solana/web3.js`, `@solana/spl-account-compression`, and our own utility functions.
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
@@ -1179,9 +1172,12 @@ import { getHash, getNoteLog } from "./utils";
 import { assert } from "chai";
 ```
 
-Next, we’ll want to set up the state variables we’ll be using throughout our
-tests. This includes the default Anchor setup as well as generating a Merkle
-tree keypair, the tree authority, and some notes.
+Next, we’ll set up the state variables needed for our tests. This setup will include:
+
+1. **Default Anchor Setup**: Configure the basic environment for Anchor testing.
+2. **Merkle Tree Keypair**: Generate a keypair for the Merkle tree.
+3. **Tree Authority**: Create a keypair for the authority of the Merkle tree.
+4. **Notes**: Define some sample notes to use in the tests.
 
 ```typescript
 describe("compressed-notes", () => {
@@ -1213,12 +1209,10 @@ describe("compressed-notes", () => {
 });
 ```
 
-Finally, let’s start with the tests themselves. First the `Create Note Tree`
-test. This test will do two things:
+Finally, let's dive into the `Create Note Tree` test. This test will accomplish two key tasks:
 
-1. Allocate a new account for the Merkle tree with a max depth of 3, max buffer
-   size of 8, and canopy depth of 0
-2. Initialize this new account using our program’s `createNoteTree` instruction
+1. **Allocate a New Merkle Tree Account**: Create a new account for the Merkle tree, specifying a max depth of 3, a max buffer size of 8, and a canopy depth of 0.
+2. **Initialize the Account**: Use our program’s `createNoteTree` instruction to set up the newly allocated Merkle tree account.
 
 ```typescript
 it("Create Note Tree", async () => {
@@ -1254,9 +1248,10 @@ it("Create Note Tree", async () => {
 });
 ```
 
-Next, we’ll create the `Add Note` test. It should call `append_note` with
-`firstNote`, then check that the onchain hash matches our computed hash and that
-the note log matches the text of the note we passed into the instruction.
+Next, let's set up the `Add Note` test. This test will:
+
+1. **Call `append_note`**: Use the `append_note` instruction with `firstNote` to add the note to the Merkle tree.
+2. **Verify Hash and Log**: Check that the hash stored on-chain matches the computed hash and ensure that the note log reflects the text of the note we submitted.
 
 ```typescript
 it("Add Note", async () => {
@@ -1278,8 +1273,10 @@ it("Add Note", async () => {
 });
 ```
 
-Next, we’ll create the `Add Max Size Note` test. It is the same as the previous
-test, but with the second note.
+Next, let's create the `Add Max Size Note` test. This test will be similar to the previous one, but it will:
+
+1. **Call `append_note`**: Use the `append_note` instruction with the second note, which is designed to be the maximum size allowed (1232 bytes).
+2. **Verify Hash and Log**: Ensure that the on-chain hash matches the computed hash and that the note log accurately reflects the content of the large note.
 
 ```typescript
 it("Add Max Size Note", async () => {
@@ -1302,14 +1299,16 @@ it("Add Max Size Note", async () => {
 });
 ```
 
-Lastly, we’ll create the `Update First Note` test. This is slightly more complex
-than adding a note. We’ll do the following:
+Lastly, let’s create the `Update First Note` test. This test involves a few more steps:
 
-1. Get the Merkle tree root as it’s required by the instruction.
-2. Call the `update_note` instruction of our program, passing in the index 0
-   (for the first note), the Merkle tree root, the first note, and the updated
-   data. Remember, it needs the first note and the root because the program must
-   verify the entire proof path for the note’s leaf before it can be updated.
+1. **Retrieve the Merkle Tree Root**: Obtain the current root hash of the Merkle tree, as it is needed for the update operation.
+2. **Invoke `update_note` Instruction**: Call the `update_note` instruction with the following parameters:
+   - The index `0` (indicating the first note),
+   - The current Merkle tree root hash,
+   - The original note data,
+   - The updated note data.
+   
+   Please nsure that the program uses both the original note and the tree root to verify the proof path for the note's leaf before applying the update.
 
 ```typescript
 it("Update First Note", async () => {
@@ -1340,12 +1339,9 @@ it("Update First Note", async () => {
 });
 ```
 
-That’s it, congrats! Go ahead and run `anchor test` and you should get four
-passing tests.
+That’s a wrap—congratulations! Run `anchor test`, and you should see all four tests passing.
 
-If you’re running into issues, feel free to go back through some of the demo or
-look at the full solution code in the
-[Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
+If you encounter any issues, don’t hesitate to revisit the demo or check out the complete solution code in the [Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
 
 ## Challenge
 
