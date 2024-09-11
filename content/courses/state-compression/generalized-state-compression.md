@@ -1,82 +1,89 @@
 ---
 ---
-title: Generalized State Compression
-objectives:
-  - Explain the flow of Solana's state compression's logic.
-  - Describe and Explain the difference between a Merkle tree and a concurrent Merkle tree
-  - Implement generic state compression in a basic Solana programs
-description:
-  "Understand how state compression and the technology behind compressed NFTs works,
-   and learn how to apply it in your own Solana programs."
+
+title: Generalized State Compression objectives:
+
+- Explain the flow of Solana's state compression's logic.
+- Describe and Explain the difference between a Merkle tree and a concurrent
+  Merkle tree
+- Implement generic state compression in a basic Solana programs description:
+  "Understand how state compression and the technology behind compressed NFTs
+  works, and learn how to apply it in your own Solana programs."
+
 ---
 
 ## Summary
 
-- State compression on Solana is primarily used for compressed NFTs,
-  but it can be applied to any data type
-- State Compression lowers the amount of data you have to store onchain using Merkle trees.
-- A Merkle tree compresses data by hashing pairs of data repeatedly until a single root hash is produced. It's this root hash that's then stored on-chain.
+- State compression on Solana is primarily used for compressed NFTs, but it can
+  be applied to any data type
+- State Compression lowers the amount of data you have to store onchain using
+  Merkle trees.
+- A Merkle tree compresses data by hashing pairs of data repeatedly until a
+  single root hash is produced. It's this root hash that's then stored on-chain.
 - Each leaf on a Merkle tree is a hash of that leaf's data.
-- Concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a standard Merkle tree, it allows multiple updates at the same time without affecting transaction validity.
-- Data in a state-compressed program is not stored onchain. So you have to use indexers to  keep an offchain cache of the data. It's this offchain cache data that's is used to then verify against the onchain Merkle tree.
+- Concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a
+  standard Merkle tree, it allows multiple updates at the same time without
+  affecting transaction validity.
+- Data in a state-compressed program is not stored onchain. So you have to use
+  indexers to keep an offchain cache of the data. It's this offchain cache data
+  that's is used to then verify against the onchain Merkle tree.
 
 ## Lesson
 
-Previously, we discussed state compression in the context of compressed NFTs. At
-the time of writing, compressed NFTs represent the most common use case for
-state compression, but it’s possible to use state compression within any
-program. In this lesson, we’ll discuss state compression in more generalized
-terms so that you can apply it to any of your programs.
+Previous, we talked about state compression in the context of compressed NFTs.
+
+At the moment, compressed NFTs are the main use case for state compression.
+However, you can apply it to any Solana program. In this lesson, we'll discuss
+state compression in general terms so that you can use it across your solana
+projects.
 
 ### A theoretical overview of state compression
 
-In traditional programs, data is serialized (typically using borsh) and then
-stored directly in an account. This allows the data to be easily read and
-written through Solana programs. You can “trust” the data stored in the accounts
-because it can’t be modified except through the mechanisms surfaced by the
-program.
+Normally, data in Solana programs is serialized (usually with borsh) and stored
+directly in an account. This makes it easy to read and write the data through
+the program. The account data is trustworthy because only the program can modify
+it.
 
-State compression effectively asserts that the most important piece of this
-equation is how “trustworthy” the data is. If all we care about is the ability
-to trust that data is what it claims to be, then we can actually get away with
-**_not_** storing the data in an account onchain. Instead, we can store hashes
-of the data where the hashes can be used to prove or verify the data. The data
-hash takes up significantly less storage space than the data itself. We can then
-store the actual data somewhere much cheaper and worry about verifying it
-against the onchain hash when the data is accessed.
+State compression focuses on ensuring that the data is trustworthy. If the goal
+is simply to verify the integrity of the data, then there's no need to store the
+actual data on-chain. Instead, we can store hashes of the data, which can be
+used to prove or verify its accuracy. These hashes take up far less storage
+space than the original data. The full data can be stored in a cheaper,
+off-chain location, and only needs to be verified against the on-chain hash when
+accessed.
 
-The specific data structure used by the Solana State Compression program is a
-special binary tree structure known as a **concurrent Merkle tree**. This tree
-structure hashes pieces of data together in a deterministic way to compute a
-single, final hash that gets stored onchain. This final hash is significantly
-smaller in size than all the original data combined, hence the “compression.”
-The steps to this process are:
+The Solana State Compression program uses a Solana State Compression program
+known as a **concurrent Merkle tree**. A concurrent Merkle tree is a special
+kind of binary tree that hashes data in a predictable way. Hence, deterministic.
 
-1. Take any piece of data
-2. Create a hash of this data
-3. Store this hash as a “leaf” at the bottom of the tree
-4. Each leaf pair is then hashed together, creating a “branch”
-5. Each branch is then hashed together
-6. Continually climb the tree and hash adjacent branches together
-7. Once at the top of the tree, a final ”root hash” is produced
-8. Store the root hash onchain as verifiable proof of the data within each leaf
-9. Anyone wanting to verify that the data they have matches the “source of
-   truth” can go through the same process and compare the final hash without
-   having to store all the data onchain
+The final hash is significantly smaller in size than all the original full data
+set combined. This is why it's called "compression". Ant it's this hash that's
+stored on-chain.
 
-This involves a few rather serious development tradeoffs:
+**Outlined below are the steps to this process, in order:**
 
-1. Since the data is no longer stored in an account onchain, it is more
-   difficult to access.
-2. Once the data has been accessed, developers must decide how often their
-   applications will verify the data against the onchain hash.
-3. Any changes to the data will require sending the entirety of the previously
-   hashed data _and_ the new data into an instruction. Developer may also have
-   to provide additional data relevant to the proofs required to verify the
-   original data against the hash.
+1. Take a piece of data.
+2. Create a hash of that data.
+3. Store the hash as a "leaf" at the bottom of the tree.
+4. Hash pairs of leaves together to create branches.
+5. Hash pairs of branches together.
+6. Repeat this process until you reach the top of the tree.
+7. The top of the tree contains a final "root hash."
+8. Store this root hash on-chain as proof of the data.
+9. To verify the data, recompute the hashes and compare the final hash to the
+   on-chain root hash.
 
-Each of these will be a consideration when determining **if**, **when**, and
-**how** to implement state compression for your program.
+This method comes with some trade-offs:
+
+1. The data isn’t stored on-chain, so it’s harder to access.
+2. Developers must decide how often to verify the data against the on-chain
+   hash.
+3. If the data changes, the entire data set must be sent to the program, along
+   with the new data. You’ll also need proof that the data matches the hash.
+
+These considerations will guide you when deciding whether, when, and how to
+implement state compression in your programs. With that quick overview, let's
+get into the technical bit.
 
 #### Concurrent Merkle trees
 
