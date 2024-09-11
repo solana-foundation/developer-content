@@ -37,7 +37,7 @@ lesson will be spent in the lab.
 
 ### React Native Expo
 
-Expo is an open-source collection of tools and libraries that wrap around React
+Expo is an open-source platform for making universal native apps for Android, iOS, and the web that wrap around React
 Native, much like Next.js is a framework built on top of React.
 
 Expo consists of three main parts:
@@ -64,7 +64,7 @@ with the Solana mobile SDK. Coming from the
 > fully compatible with Expo.
 
 Lastly, and most importantly, Expo does an amazing job providing
-[easy-to-use libraries](https://docs.expo.dev/versions/latest/) that give you
+[comprehensive libraries](https://docs.expo.dev/versions/latest/) that give you
 access to the device's onboard peripherals, such as camera, battery, and
 speakers. The libraries are intuitive and the documentation is phenomenal.
 
@@ -73,12 +73,12 @@ speakers. The libraries are intuitive and the documentation is phenomenal.
 To get started with Expo, you first need the prerequisite setup described in the
 [Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile).
 After that, you'll want to sign up for an
-[Expo Application Services (EAS) account](https://expo.dev/).
+[Expo Application Services (EAS) account](https://expo.dev/eas).
 
 Once you have an EAS account, you can install the EAS CLI and log in:
 
 ```bash
-npm install --global eas-cli
+npm install -g eas-cli
 eas login
 ```
 
@@ -120,13 +120,10 @@ the following inside this file:
 }
 ```
 
-With the EAS config file created, you can build using the
-`npx eas build --local` command plus relevant flags for any additional
-requirements. For example, the following will build the project locally with a
-development profile specifically for Android:
+With the EAS configuration file in place, you can build your project using the ```eas build``` command along with relevant flags to meet any additional requirements. This command submits a job to the EAS Build service, where your APK is built using Expo's cloud infrastructure. If you want to build locally, you can add the ```--local``` flag. For example, the following command builds the project locally with a development profile specifically for Android:
 
 ```bash
-npx eas build --profile development --platform android --local
+eas build --profile development --platform android --message "Developing on Android!" --local
 ```
 
 You then need to install the output APK to your device or emulator. If you're
@@ -168,9 +165,9 @@ JS/TS.
 import { Pedometer } from "expo-sensors";
 ```
 
-Depending on the package, there may be additional setup required. Be sure to
-read the [docs](https://docs.expo.dev/versions/latest/) when working with a new
-package.
+Depending on the package, there may be additional setup required.
+For example, if you're using the ```expo-camera``` package, you not only need to install the package but also configure the appropriate permissions in your ```app.json``` or ```AndroidManifest.xml``` file for Android and request runtime permissions for accessing the camera.
+Be sure to read the [docs](https://docs.expo.dev/versions/latest/) when working with a new package.
 
 ### Integrate ecosystem libraries into your Expo app
 
@@ -204,8 +201,8 @@ For a Solana + Expo app, you'll need the following:
   as `Transaction` and `Uint8Array`.
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
   through the [JSON RPC API](https://docs.solana.com/api/http).
-- `react-native-get-random-values`: Secure random number generator polyfill
-  for `web3.js` underlying Crypto library on React Native.
+- `expo-crypto`: Secure random number generator polyfill.
+  for `web3.js` underlying Crypto library on React Native. (This only works for Expo SDK Version 49+ and Expo Router, so make sure you update)
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
 
 #### Metaplex Polyfills
@@ -213,36 +210,38 @@ For a Solana + Expo app, you'll need the following:
 If you want to use the Metaplex SDK, you'll need to add the Metaplex library
 plus a few additional polyfills:
 
-- `@metaplex-foundation/js@0.19.4` - Metaplex Library
+- `@metaplex-foundation/umi` `@metaplex-foundation/umi-bundle-defaults` `@metaplex-foundation/mpl-core` - Metaplex Library
 - Several more polyfills
   - `assert`
-  - `util`
   - `crypto-browserify`
-  - `stream-browserify`
   - `readable-stream`
-  - `browserify-zlib`
-  - `path-browserify`
+  - `zlib`
   - `react-native-url-polyfill`
-
 All of the libraries that the above polyfills are meant to replace are utilized
-by the Metaplex library in the background. It's unlikely you'll be importing any
+by the Metaplex libraries in the background. It's unlikely you'll be importing any
 of them into your code directly. Because of this, you'll need to register the
 polyfills using a `metro.config.js` file. This will ensure that Metaplex uses
 the polyfills instead of the usual Node.js libraries that aren't supported in
 React Native. Below is an example `metro.config.js` file:
 
 ```js
+// Import the default Expo Metro config
 const { getDefaultConfig } = require("@expo/metro-config");
+
+// Get the default Expo Metro configuration
 const defaultConfig = getDefaultConfig(__dirname);
 
+// Customize the configuration to include your extra node modules
 defaultConfig.resolver.extraNodeModules = {
   crypto: require.resolve("crypto-browserify"),
   stream: require.resolve("readable-stream"),
   url: require.resolve("react-native-url-polyfill"),
   zlib: require.resolve("browserify-zlib"),
   path: require.resolve("path-browserify"),
+  crypto : require.resolve('expo-crypto')
 };
 
+// Export the modified configuration
 module.exports = defaultConfig;
 ```
 
@@ -293,7 +292,7 @@ it to run. We use 5GB of ram on our side.</Callout>
 To simplify the Expo process, you'll want an Expo Application Services (EAS)
 account. This will help you build and run the application.
 
-First sign up for an [EAS account](https://expo.dev/).
+First sign up for an [EAS account](https://expo.dev/eas).
 
 Then, install the EAS CLI and log in:
 
@@ -307,13 +306,13 @@ eas login
 Let’s create our app with the following:
 
 ```bash
-npx create-expo-app -t expo-template-blank-typescript solana-expo
+npx create-expo-app --template blank-typescript solana-expo
 cd solana-expo
+npx expo install expo-dev-client # A library that allows creating a development build and includes useful development tools. It is optional but recommended.
 ```
 
 This uses `create-expo-app` to generate a new scaffold for us based on the
-`expo-template-blank-typescript` template. This is just an empty Typescript
-React Native app.
+`blank-typescript` template. A Blank template with TypeScript enabled.
 
 #### 3. Local build config
 
@@ -351,7 +350,7 @@ Copy and paste the following into the newly created `eas.json`:
 
 #### 4. Build and emulate
 
-Now let's build the project. You will choose `y` for every answer. This will
+Now let's build the project locally. You will choose `y` for every answer. This will
 take a while to complete.
 
 ```bash
@@ -387,15 +386,14 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 
 You'll need a wallet that supports Devnet to test with. In
 [our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
-created one of these. Let's install it from the solution branch in a different
+created one of these. Let's install it from the repo in a different
 directory from our app:
 
 ```bash
 cd ..
-git clone https://github.com/Unboxed-Software/react-native-fake-solana-wallet
+git clone https://github.com/XuananLe/react-native-fake-solana-wallet
 cd react-native-fake-solana-wallet
-git checkout solution
-npm run install
+npm install
 ```
 
 The wallet should be installed on your emulator or device. Make sure to open the
@@ -420,7 +418,7 @@ npm install \
   @solana/web3.js \
   @solana-mobile/mobile-wallet-adapter-protocol-web3js \
   @solana-mobile/mobile-wallet-adapter-protocol \
-  react-native-get-random-values \
+  expo-crypto \
   buffer
 ```
 
@@ -460,18 +458,42 @@ export function MainScreen() {
 }
 ```
 
+Next, create `polyfills.ts` for react-native to work with all solana
+
+```typescript
+import { getRandomValues as expoCryptoGetRandomValues } from "expo-crypto";
+import { Buffer } from "buffer";
+
+global.Buffer = Buffer;
+
+// getRandomValues polyfill
+class Crypto {
+  getRandomValues = expoCryptoGetRandomValues;
+}
+
+const webCrypto = typeof crypto !== "undefined" ? crypto : new Crypto();
+
+(() => {
+  if (typeof crypto === "undefined") {
+    Object.defineProperty(window, "crypto", {
+      configurable: true,
+      enumerable: true,
+      get: () => webCrypto,
+      
+    });
+  }
+})();
+```
+
 Finally, let's change `App.tsx` to wrap our application in the two providers we
 just created:
 
 ```tsx
-import "react-native-get-random-values";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { ConnectionProvider } from "./components/ConnectionProvider";
 import { AuthorizationProvider } from "./components/AuthProvider";
 import { clusterApiUrl } from "@solana/web3.js";
-import { MainScreen } from "./screens/MainScreen";
-global.Buffer = require("buffer").Buffer;
+import { MainScreen } from "./screens/MainScreen"
+import "./polyfills"
 
 export default function App() {
   const cluster = "devnet";
@@ -492,10 +514,25 @@ export default function App() {
 ```
 
 Notice we've added two polyfills above: `buffer` and
-`react-native-get-random-values`. These are necessary for the Solana
+`expo-crypto`. These are necessary for the Solana
 dependencies to run correctly.
 
 #### 4. Build and run Solana boilerplate
+
+Add these run script to your package.json
+
+```json
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "npx eas build --profile development --platform android",
+    "build:local": "npx eas build --profile development --platform android --local",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+
+```
 
 Let's make sure everything is working and compiling correctly. In Expo, anytime
 you change the dependencies, you'll need to rebuild and re-install the app.
@@ -503,10 +540,10 @@ you change the dependencies, you'll need to rebuild and re-install the app.
 **_Optional:_** To avoid possible build version conflicts, you may want to
 _uninstall_ the previous version before you drag and drop the new one in.
 
-Build:
+Build locally:
 
 ```bash
-npx eas build --profile development --platform android --local
+npm run build:local
 ```
 
 Install: **_Drag_** the resulting build file into your emulator.
@@ -514,7 +551,7 @@ Install: **_Drag_** the resulting build file into your emulator.
 Run:
 
 ```bash
-npx expo start --dev-client --android
+npm run android
 ```
 
 Everything should compile and you should have a boilerplate Solana Expo app.
@@ -541,7 +578,9 @@ npm install assert \
   browserify-zlib \
   path-browserify \
   react-native-url-polyfill \
-  @metaplex-foundation/js@0.19.4
+  @metaplex-foundation/umi \
+  @metaplex-foundation/umi-bundle-defaults \
+  @metaplex-foundation/mpl-candy-machine
 ```
 
 #### 2. Polyfill config
@@ -569,10 +608,19 @@ defaultConfig.resolver.extraNodeModules = {
   url: require.resolve("react-native-url-polyfill"),
   zlib: require.resolve("browserify-zlib"),
   path: require.resolve("path-browserify"),
+  crypto : require.resolve('expo-crypto'),
 };
 
 // Export the modified configuration
-module.exports = defaultConfig;
+module.exports = {
+  ...defaultConfig,
+  // See more why we have to do here at: https://github.com/metaplex-foundation/umi/issues/94
+  resolver: {
+    ...defaultConfig.resolver,
+    unstable_enablePackageExports: true,
+  },
+}
+
 ```
 
 #### 3. Metaplex provider
@@ -585,26 +633,15 @@ an `IdentitySigner` for the `Metaplex` object to use. This allows it to call
 several privileged functions on our behalf:
 
 ```tsx
-import {
-  IdentitySigner,
-  Metaplex,
-  MetaplexPlugin,
-} from "@metaplex-foundation/js";
-import {
-  transact,
-  Web3MobileWallet,
-} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
-import { Connection, Transaction } from "@solana/web3.js";
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { mplCandyMachine } from '@metaplex-foundation/mpl-candy-machine';
+import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
+import { transact, Web3MobileWallet } from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
+import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { useMemo } from "react";
 import { Account } from "./AuthProvider";
 
-export const mobileWalletAdapterIdentity = (
-  mwaIdentitySigner: IdentitySigner,
-): MetaplexPlugin => ({
-  install(metaplex: Metaplex) {
-    metaplex.identity().setDriver(mwaIdentitySigner);
-  },
-});
+type Web3JsTransactionOrVersionedTransaction = Transaction | VersionedTransaction;
 
 export const useMetaplex = (
   connection: Connection,
@@ -613,54 +650,46 @@ export const useMetaplex = (
 ) => {
   return useMemo(() => {
     if (!selectedAccount || !authorizeSession) {
-      return { mwaIdentitySigner: null, metaplex: null };
+      return { umi: null };
     }
 
-    const mwaIdentitySigner: IdentitySigner = {
+    const mobileWalletAdapter = {
       publicKey: selectedAccount.publicKey,
       signMessage: async (message: Uint8Array): Promise<Uint8Array> => {
         return await transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
-
           const signedMessages = await wallet.signMessages({
             addresses: [selectedAccount.publicKey.toBase58()],
             payloads: [message],
           });
-
           return signedMessages[0];
         });
       },
-      signTransaction: async (
-        transaction: Transaction,
-      ): Promise<Transaction> => {
+      signTransaction: async <T extends Web3JsTransactionOrVersionedTransaction>(transaction: T): Promise<T> => {
         return await transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
-
           const signedTransactions = await wallet.signTransactions({
             transactions: [transaction],
           });
-
-          return signedTransactions[0];
+          return signedTransactions[0] as T;
         });
       },
-      signAllTransactions: async (
-        transactions: Transaction[],
-      ): Promise<Transaction[]> => {
+      signAllTransactions: async <T extends Web3JsTransactionOrVersionedTransaction>(transactions: T[]): Promise<T[]> => {
         return transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
           const signedTransactions = await wallet.signTransactions({
             transactions: transactions,
           });
-          return signedTransactions;
+          return signedTransactions as T[];
         });
       },
     };
 
-    const metaplex = Metaplex.make(connection).use(
-      mobileWalletAdapterIdentity(mwaIdentitySigner),
-    );
+    const umi = createUmi(connection.rpcEndpoint)
+      .use(mplCandyMachine())
+      .use(walletAdapterIdentity(mobileWalletAdapter));
 
-    return { metaplex };
+    return { umi };
   }, [authorizeSession, selectedAccount, connection]);
 };
 ```
@@ -680,15 +709,20 @@ import "react-native-url-polyfill/auto";
 import { useConnection } from "./ConnectionProvider";
 import { Account, useAuthorization } from "./AuthProvider";
 import React, { ReactNode, createContext, useContext, useState } from "react";
-import { useMetaplex } from "./MetaplexProvider";
+import { useUmi } from "./MetaplexProvider"; // Update this import to match your file structure
+import { Umi } from "@metaplex-foundation/umi";
 
 export interface NFTProviderProps {
   children: ReactNode;
 }
 
-export interface NFTContextState {}
+export interface NFTContextState {
+  umi: Umi | null;
+}
 
-const DEFAULT_NFT_CONTEXT_STATE: NFTContextState = {};
+const DEFAULT_NFT_CONTEXT_STATE: NFTContextState = {
+  umi: null,
+};
 
 const NFTContext = createContext<NFTContextState>(DEFAULT_NFT_CONTEXT_STATE);
 
@@ -698,9 +732,11 @@ export function NFTProvider(props: NFTProviderProps) {
   const { connection } = useConnection();
   const { authorizeSession } = useAuthorization();
   const [account, setAccount] = useState<Account | null>(null);
-  const { metaplex } = useMetaplex(connection, account, authorizeSession);
+  const { umi } = useUmi(connection, account, authorizeSession);
 
-  const state = {};
+  const state: NFTContextState = {
+    umi,
+  };
 
   return <NFTContext.Provider value={state}>{children}</NFTContext.Provider>;
 }
@@ -716,13 +752,11 @@ Notice we've added yet another polyfill to the top
 Now, let's wrap our new `NFTProvider` around `MainScreen` in `App.tsx`:
 
 ```tsx
-import "react-native-get-random-values";
 import { ConnectionProvider } from "./components/ConnectionProvider";
 import { AuthorizationProvider } from "./components/AuthProvider";
 import { clusterApiUrl } from "@solana/web3.js";
-import { MainScreen } from "./screens/MainScreen";
-import { NFTProvider } from "./components/NFTProvider";
-global.Buffer = require("buffer").Buffer;
+import { MainScreen } from "./screens/MainScreen"
+import "./polyfills"
 
 export default function App() {
   const cluster = "devnet";
@@ -735,9 +769,7 @@ export default function App() {
       config={{ commitment: "processed" }}
     >
       <AuthorizationProvider cluster={cluster}>
-        <NFTProvider>
-          <MainScreen />
-        </NFTProvider>
+        <MainScreen />
       </AuthorizationProvider>
     </ConnectionProvider>
   );
@@ -851,7 +883,7 @@ device's URI scheme and turn them into Blobs we can the upload to
 Install it with the following:
 
 ```bash
-npm i rn-fetch-blob
+npm install rn-fetch-blob
 ```
 
 #### 3. Final build
