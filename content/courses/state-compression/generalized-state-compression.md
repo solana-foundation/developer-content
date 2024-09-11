@@ -811,25 +811,16 @@ pub struct NoteAccounts<'info> {
 }
 ```
 
-#### 4. Create `create_note_tree` instruction
+#### 4. Create `create_note_tree` Instruction
 
-Next, let’s create our `create_note_tree` instruction. Remember, clients will
-have already allocated the Merkle tree account but will use this instruction to
-initialize it.
+Next, we’ll set up the `create_note_tree` instruction. This instruction is used to initialize the already allocated Merkle tree account.
 
-All this instruction needs to do is build a CPI to invoke the
-`init_empty_merkle_tree` instruction on the State Compression Program. To do
-this, it needs the accounts listed in the `NoteAccounts` account validation
-struct. It also needs two additional arguments:
+To implement this, you’ll need to build a CPI to invoke the `init_empty_merkle_tree` instruction from the State Compression Program. The `NoteAccounts` struct will provide the necessary accounts, but you’ll also need to include two additional arguments:
 
-1. `max_depth` - the max depth of the Merkle tree
-2. `max_buffer_size` - the max buffer size of the Merkle tree
+1. **`max_depth`** - Specifies the maximum depth of the Merkle tree, indicating the longest path from any leaf to the root.
+2. **`max_buffer_size`** - Defines the maximum buffer size for the Merkle tree, which determines the space allocated for recording tree updates. This buffer is crucial for supporting concurrent updates within the same block.
 
-These values are required for initializing the data on the Merkle tree account.
-Remember, the max depth refers to the maximum number of hops to get from any
-leaf to the root of the tree. Max buffer size refers to the amount of space
-reserved for storing a changelog of tree updates. This changelog is used to
-ensure that your tree can support concurrent updates within the same block.
+These values are essential for properly initializing the Merkle tree’s data structure.
 
 ```rust
 #[program]
@@ -871,8 +862,7 @@ pub mod compressed_notes {
 }
 ```
 
-Ensure that your signer seeds on the CPI include both the Merkle tree address
-and the tree authority bump.
+Make sure that when setting up your CPI, you include both the Merkle tree address and the tree authority bump in the signer seeds.
 
 #### 5. Create `append_note` instruction
 
