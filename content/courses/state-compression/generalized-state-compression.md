@@ -193,54 +193,97 @@ tree, raising the cost of creating the tree.
 
 ### Data Access in a State-Compressed Program
 
-In a state-compressed program, the actual data isn’t stored directly on-chain. Instead, the concurrent Merkle tree structure is stored, while the raw data resides in the blockchain’s more affordable ledger state. This makes accessing the data more challenging, but not impossible.
+In a state-compressed program, the actual data isn’t stored directly on-chain.
+Instead, the concurrent Merkle tree structure is stored, while the raw data
+resides in the blockchain’s more affordable ledger state. This makes accessing
+the data more challenging, but not impossible.
 
-The Solana ledger is essentially a list of entries containing signed transactions, which can be traced back to the genesis block theorectically. This means any data that has ever been included in a transaction is stored in the ledger.
+The Solana ledger is essentially a list of entries containing signed
+transactions, which can be traced back to the genesis block theorectically. This
+means any data that has ever been included in a transaction is stored in the
+ledger.
 
-Since the state compression process happens on-chain, all the data is still in the ledger state. In theory, you could retrieve the original data by replaying the entire chain state from the start. However, it’s far more practical (though still somewhat complex) to use an indexer to track and index the data as the transactions happen. This creates an off-chain "cache" of the data that can be easily accessed and verified against the on-chain root hash.
+Since the state compression process happens on-chain, all the data is still in
+the ledger state. In theory, you could retrieve the original data by replaying
+the entire chain state from the start. However, it’s far more practical (though
+still somewhat complex) to use an indexer to track and index the data as the
+transactions happen. This creates an off-chain "cache" of the data that can be
+easily accessed and verified against the on-chain root hash.
 
 While this process may seem complex at first, it becomes clearer with practice.
 
 ### State Compression Tooling
 
-While understanding the theory behind state compression is crucial, you don’t have to build it all from scratch. Talented engineers have already developed essential tools like the SPL State Compression Program and the Noop Program to simplify the process.
+While understanding the theory behind state compression is crucial, you don’t
+have to build it all from scratch. Talented engineers have already developed
+essential tools like the SPL State Compression Program and the Noop Program to
+simplify the process.
 
 #### SPL State Compression and Noop Programs
 
-The SPL State Compression Program is designed to streamline and standardize the creation and management of concurrent Merkle trees across the Solana ecosystem. It provides instructions for initializing Merkle trees, handling tree leaves (such as adding, updating, or removing data), and verifying the integrity of leaf data.
+The SPL State Compression Program is designed to streamline and standardize the
+creation and management of concurrent Merkle trees across the Solana ecosystem.
+It provides instructions for initializing Merkle trees, handling tree leaves
+(such as adding, updating, or removing data), and verifying the integrity of
+leaf data.
 
-Additionally, the State Compression Program works in conjunction with a separate "Noop" program. The Noop Program’s main function is to make leaf data easier to index by logging it in the ledger state. When you store compressed data, it’s passed to the State Compression Program, which hashes the data and emits it as an "event" to the Noop Program. While the hash is stored in the concurrent Merkle tree, the raw data can still be accessed via the Noop Program’s transaction logs.
+Additionally, the State Compression Program works in conjunction with a separate
+"Noop" program. The Noop Program’s main function is to make leaf data easier to
+index by logging it in the ledger state. When you store compressed data, it’s
+passed to the State Compression Program, which hashes the data and emits it as
+an "event" to the Noop Program. While the hash is stored in the concurrent
+Merkle tree, the raw data can still be accessed via the Noop Program’s
+transaction logs.
 
 ### Indexing Data for Easy Lookup
 
-Typically, accessing on-chain data is as simple as fetching the relevant account. However, with state compression, it’s not that straightforward.
+Typically, accessing on-chain data is as simple as fetching the relevant
+account. However, with state compression, it’s not that straightforward.
 
-As mentioned earlier, the data now resides in the ledger state rather than in an account. The most accessible place to find the complete data is in the logs of the Noop instruction. While this data remains in the ledger state indefinitely, it may become inaccessible through validators after a certain period of time.
+As mentioned earlier, the data now resides in the ledger state rather than in an
+account. The most accessible place to find the complete data is in the logs of
+the Noop instruction. While this data remains in the ledger state indefinitely,
+it may become inaccessible through validators after a certain period of time.
 
-Validators don't store all transactions back to the genesis block in order to save space and improve performance. The length of time you can access Noop instruction logs varies depending on the validator. Eventually, the logs will become unavailable if you're relying on direct access to them.
+Validators don't store all transactions back to the genesis block in order to
+save space and improve performance. The length of time you can access Noop
+instruction logs varies depending on the validator. Eventually, the logs will
+become unavailable if you're relying on direct access to them.
 
-In theory, it’s possible to replay transaction states back to the genesis block, but this approach is impractical for most teams and isn't efficient. Some RPC providers have adopted the [Digital Asset Standard (DAS)](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api) to enable efficient querying of compressed NFTs and other assets. However, as of now, DAS does not support arbitrary state compression. 
+In theory, it’s possible to replay transaction states back to the genesis block,
+but this approach is impractical for most teams and isn't efficient. Some RPC
+providers have adopted the
+[Digital Asset Standard (DAS)](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
+to enable efficient querying of compressed NFTs and other assets. However, as of
+now, DAS does not support arbitrary state compression.
 
 You essentially have two main options:
 
-1. Use an indexing provider to create a custom indexing solution for your program, which will monitor the events sent to the Noop program and store the relevant data off-chain.
+1. Use an indexing provider to create a custom indexing solution for your
+   program, which will monitor the events sent to the Noop program and store the
+   relevant data off-chain.
 2. Build your own indexing solution that stores transaction data off-chain.
 
-For many dApps, option 2 can be a practical choice. Larger-scale applications, however, may need to rely on infrastructure providers to manage their indexing needs.
+For many dApps, option 2 can be a practical choice. Larger-scale applications,
+however, may need to rely on infrastructure providers to manage their indexing
+needs.
 
-### State compression development process
+### State Compression Development Process
 
-#### Create Rust types
+#### Create Rust Types
 
-As with a typical Anchor program, one of the first things you should do is
-define your program’s Rust types. However, Rust types in a traditional Anchor
-program often represent accounts. In a state-compressed program, your account
-state will only store the Merkle tree. The more “usable” data schema will just
-be serialized and logged to the Noop program.
+In a typical Anchor program, the initial step involves defining Rust types that
+represent accounts. For a state-compressed program, however, the focus shifts to
+defining types that align with the Merkle tree structure.
 
-This type should include all the data stored in the leaf node and any contextual
-information needed to make sense of the data. For example, if you were to create
-a simple messaging program, your `Message` struct might look as follows:
+In state compression, your on-chain account will primarily store the Merkle
+tree. The more practical data schema will be serialized and logged to the Noop
+program for easier access and management.
+
+Your Rust types should encompass all data stored in the leaf nodes and any
+contextual information necessary for interpreting that data. For instance, if
+you're developing a simple messaging program, your `Message` struct might look
+something like this:
 
 ```rust
 #[derive(AnchorSerialize)]
@@ -259,10 +302,10 @@ impl MessageLog {
 }
 ```
 
-To be abundantly clear, **this is not an account that you will be able to read
-from**. Your program will be creating an instance of this type from instruction
-inputs, not constructing an instance of this type from account data that it
-reads. We’ll discuss how to read data in a later section.
+To be absolutely clear, **this is not an account you will read from**. Instead,
+your program will create an instance of this type using inputs from
+instructions, rather than constructing it from data read from an account. We
+will cover how to read data from accounts in a later section.
 
 #### Initialize a new tree
 
