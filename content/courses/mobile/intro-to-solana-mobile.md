@@ -84,79 +84,72 @@ Unreal Engine.
 - [Unity](https://docs.solanamobile.com/unity/unity_sdk)
 - [Unreal Engine](https://docs.solanamobile.com/unreal/unreal_sdk)
 
-To keep the development experience as close as possible to other lessons, we'll
+To keep the development experience as close as possible to other lessons, we will
 be working exclusively with React Native.
 
-### Creating a Solana dApp with React Native
+### From React to React Native
+React Native is very similar to React but designed for mobile. Here are some key points to note:
 
-Solana React Native dApps are virtually identical to React dApps. The primary
-difference is in the wallet interaction. Instead of the wallet being available
-in the browser, your dApp will create an MWA session with the wallet app of your
-choosing using a WebSocket. Fortunately, this is abstracted for you in the MWA
-library. The only difference you'll need to know is anytime you need to make a
-call to the wallet you'll be using the `transact` function, which we'll talk
-about soon.
+- React Native compiles down to native Android and iOS apps while React compiles down to a collection of web pages.
+- Instead of using web elements like <div>, you will use mobile-native elements like <View>.
+- React Native allows access to mobile hardware, such as the camera and accelerometer, which React web apps cannot access.
+- Many standard React and Node packages may not be compatible with React Native and setting up React Native can be challenging. Fortunately, their [Official Docs](https://reactnative.dev/docs/environment-setup?guide=native) contains everything you may need.
+- For development, you will need to set up [Android Studio](https://developer.android.com/studio/intro/) for Android apps and an emulator or physical device for testing.
+
+>**NOTE:**There is a learning curve, but if you know React you're not nearly as far from being able to develop mobile apps as you think! It may feel jarring to start, but after a few hours of React Native development, you'll start to feel much more comfortable. We have included a [Lab](#lab) section below to help you.
+
+### Creating a Solana dApp with React Native
+Solana React Native dApps are virtually identical to React dApps. The primary difference is in the wallet interaction. Instead of the wallet being available in the browser, your dApp will create an MWA session with the wallet app of your choosing using a WebSocket. Fortunately, this is abstracted for you in the MWA library. The only difference is that anytime you need to make a call to the wallet, the `transact` function will be used, more details on this function in later parts of this lesson.
 
 ![dApp Flow](/public/assets/courses/unboxed/basic-solana-mobile-flow.png)
 
-#### Reading data
+### Reading Data
 
-Reading data from a Solana cluster in React Native is the exact same as in
-React. You use the `useConnection` hook to grab the `Connection` object. Using
-that, you can get account info. Since reading is free, we don’t need to actually
-connect to the wallet.
+Reading data from a Solana cluster in React Native works the same way as in React. You can use the `useConnection` hook to access the `connection` object, which is responsible for interacting with the Solana network.
 
-```tsx
-const account = await connection.getAccountInfo(account);
+In Solana, an account refers to any object stored on-chain, and is typically referenced by a [public key](https://www.investopedia.com/terms/p/public-key.asp).
+
+Here’s an example of how you can read an account information using the `getAccountInfo` method:
+
+```javascript
+const { connection } = useConnection();
+const publicKey = new PublicKey("your-wallet-public-key-here"); // Replace with a valid public key
+const account = await connection.getAccountInfo(publicKey);
 ```
 
-If you need a refresher on this, check out our
-[lesson on reading data from the blockchain](/content/courses/intro-to-solana/intro-to-reading-data).
+>**NOTE:** If you need a refresher, refer to our [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data).
 
-#### Connecting to a wallet
+### Connecting to a Wallet
 
-Writing data to the blockchain has to happen through a transaction. Transactions
-have to be signed by one or more private keys and sent to an RPC provider. This
-virtually always happens through a wallet application.
+When writing data to the blockchain, it must be done through a **transaction**. Transactions need to be signed by one or more secret keys (previously referred to as private keys) and sent to an [RPC provider](https://academy.subquery.network/subquery_network/node_operators/rpc_providers/introduction.html) for processing. In almost all cases, this interaction is facilitated through a wallet application.
 
-Typical wallet interaction happens by calling out to a browser extension. On
-mobile, you use a WebSocket to start an MWA session. Specifically, you use
-Android intents where the dApp broadcasts its intent with the `solana-wallet://`
-scheme.
-
+#### Web vs. Mobile Wallet Interactions
+On the web, dApps typically interact with wallets via browser extensions. However, on mobile, the process is slightly different. You use a WebSocket to establish a connection between the dApp and the wallet. This is managed using the MWA. Specifically, on Android, this connection is initiated using **Android intents**, with the dApp broadcasting its intent using the `solana-wallet://` scheme.
 ![Connecting](/public/assets/courses/unboxed/basic-solana-mobile-connect.png)
 
-When the wallet app receives this intent, it opens a connection with the dApp
-that initiated the session. Your dApp sends this intent using the `transact`
-function:
+When the wallet application receives the intent broadcast, it opens a WebSocket connection with the dApp that initiated the session. The dApp initiates this connection using the `transact` function, as shown below:
 
 ```tsx
 transact(async (wallet: Web3MobileWallet) => {
-	// Wallet Action code here
-}
+  // Your wallet action code goes here
+});
 ```
-
-This will give you access to the `Web3MobileWallet` object. You can then use
-this to send transactions to the wallet. Again, when you want to access the
-wallet, it has to be through the function `transact` function's callback.
+This function provides access to the `Web3MobileWallet` object, allowing you to perform actions such as [signing transactions(###)] or interacting with wallet data. Remember, all wallet interactions must occur inside the callback of the `transact` function.
 
 #### Signing and sending transactions
 
-Sending a transaction happens inside the `transact` callback. The flow is as
-follows:
+The overall flow for signing and sending a transaction is as follows:
 
-1. Establish a session with a wallet using `transact` which will have a callback
-   of `async (wallet: Web3MobileWallet) => {...}`.
-2. Inside the callback, request authorization with the `wallet.authorize` or
-   `wallet.reauthorize` method depending on the state of the wallet.
-3. Sign the transaction with `wallet.signTransactions` or sign and send with
-   `wallet.signAndSendTransactions`.
+- Use the `transact` function to establish a session with the wallet. This function takes an asynchronous callback: `async (wallet: Web3MobileWallet) => {...}`.
+- Inside the callback, request wallet authorization using `wallet.authorize()` or `wallet.reauthorize()`, depending on the wallet's state (whether it has an active session or requires reauthorization).
+- Once the wallet is authorized, you can either:
+  - Sign the transaction using `wallet.signTransactions()`, or
+  - Sign and send the transaction directly using `wallet.signAndSendTransactions()`.
 
 ![Transacting](/public/assets/courses/unboxed/basic-solana-mobile-transact.png)
+To manage the wallet's authorization state, consider creating a `useAuthorization()` hook. This hook can streamline the process of handling authorization within your app, especially if you have multiple interactions with the wallet.
 
-<Callout type="note">You may want to create a `useAuthorization()` hook to
-manage the wallet's authorization state. We'll practice this in the
-[Lab](#lab).</Callout>
+>We will explore the use of this hook and practice managing the wallet's state in more detail during the lab exercises.
 
 Here is an example of sending a transaction using MWA:
 
