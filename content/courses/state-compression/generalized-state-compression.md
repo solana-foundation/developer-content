@@ -666,7 +666,7 @@ uses custom state compression to power a basic note-taking app. This will give
 you hands-on experience in working with compressed data and help reinforce key
 concepts around state compression on Solana.
 
-#### 1. Project setup
+#### 1. Set up the Project
 
 Start by initializing an Anchor program:
 
@@ -685,7 +685,10 @@ spl-account-compression = { version="0.2.0", features = ["cpi"] }
 solana-program = "1.16.0"
 ```
 
-We'll be running tests locally, but we'll need both the State Compression Program and the Noop Program from the Mainnet to do so. To make sure these programs are available on our local cluster, we need to include them in the `Anchor.toml` file located in the root directory. Here's how you can add them:
+We'll be running tests locally, but we'll need both the State Compression
+Program and the Noop Program from the Mainnet to do so. To make sure these
+programs are available on our local cluster, we need to include them in the
+`Anchor.toml` file located in the root directory. Here's how you can add them:
 
 In `Anchor.toml`, update the programs section with the following entries:
 
@@ -700,7 +703,10 @@ address = "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV"
 address = "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK"
 ```
 
-Finally, let's set up the `lib.rs` file for the remainder of the demo. Start by removing the `initialize` instruction and the `Initialize` accounts struct. Next, add the necessary imports as indicated in the code snippet, making sure to include **_your_** program ID.
+Finally, let's set up the `lib.rs` file for the remainder of the demo. Start by
+removing the `initialize` instruction and the `Initialize` accounts struct.
+Next, add the necessary imports as indicated in the code snippet, making sure to
+include **_your_** program ID.
 
 ```rust
 use anchor_lang::{
@@ -730,19 +736,21 @@ pub mod compressed_notes {
 }
 ```
 
-For the remainder of this demo, we'll be making updates directly in the `lib.rs` file. This approach simplifies the explanations. You can modify the structure as needed.
+For the remainder of this demo, we'll be making updates directly in the `lib.rs`
+file. This approach simplifies the explanations. You can modify the structure as
+needed.
 
-It's a good idea to build your project now to confirm that your environment is set up correctly and to reduce build times in the future.
+It's a good idea to build your project now to confirm that your environment is
+set up correctly and to reduce build times in the future.
 
 #### 2. Define `Note` schema
 
-Next, we’re going to define what a note looks like within our program. Notes
-should have the following properties:
+Next, we’ll define the structure of a note within our program. Each note should
+have the following attributes:
 
-- `leaf_node` - this should be a 32-byte array representing the hash stored on
-  the leaf node
-- `owner` - the public key of the note owner
-- `note` - the string representation of the note
+- `leaf_node` - a 32-byte array representing the hash stored on the leaf node.
+- `owner` - the public key of the note's owner.
+- `note` - a string containing the text of the note.
 
 ```rust
 #[derive(AnchorSerialize)]
@@ -760,10 +768,11 @@ impl NoteLog {
 }
 ```
 
-In a traditional Anchor program, this would be an account struct, but since
-we’re using state compression, our accounts won’t be mirroring our native
-structures. Since we don’t need all the functionality of an account, we can just
-use the `AnchorSerialize` derive macro rather than the `account` macro.
+In a traditional Anchor program, this would typically be represented by an
+account struct. However, our accounts won't directly mirror our native
+structures because we're using state compression. And since we don't need the
+full functionality of an account, we can use the `AnchorSerialize` derive macro
+instead of the `account` macro.
 
 #### 3. Define input accounts and constraints
 
