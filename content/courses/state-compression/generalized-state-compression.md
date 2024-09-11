@@ -1,27 +1,24 @@
 ---
+---
 title: Generalized State Compression
 objectives:
-  - Explain the logic flow behind Solana state compression
-  - Explain the difference between a Merkle tree and a concurrent Merkle tree
-  - Implement generic state compression in basic Solana programs
+  - Explain the flow of Solana's state compression's logic.
+  - Describe and Explain the difference between a Merkle tree and a concurrent Merkle tree
+  - Implement generic state compression in a basic Solana programs
 description:
-  "How state compression - the tech behind compressed NFTs - works, and how to
-  implement it in your own Solana programs."
+  "Understand how state compression and the technology behind compressed NFTs works,
+   and learn how to apply it in your own Solana programs."
 ---
 
 ## Summary
 
-- State Compression on Solana is most commonly used for compressed NFTs, but
-  it's possible to use it for arbitrary data
-- State Compression lowers the amount of data you have to store onchain by
-  leveraging Merkle trees.
-- Merkle trees store a single hash that represents an entire binary tree of
-  hashes. Each leaf on a Merkle tree is a hash of that leaf's data.
-- Concurrent Merkle trees are a specialized version of Merkle trees that allow
-  concurrent updates.
-- Because data in a state-compressed program is not stored onchain, you have to
-  user indexers to keep an offchain cache of the data and then verify that data
-  against the onchain Merkle tree.
+- State compression on Solana is primarily used for compressed NFTs,
+  but it can be applied to any data type
+- State Compression lowers the amount of data you have to store onchain using Merkle trees.
+- A Merkle tree compresses data by hashing pairs of data repeatedly until a single root hash is produced. It's this root hash that's then stored on-chain.
+- Each leaf on a Merkle tree is a hash of that leaf's data.
+- Concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a standard Merkle tree, it allows multiple updates at the same time without affecting transaction validity.
+- Data in a state-compressed program is not stored onchain. So you have to use indexers to  keep an offchain cache of the data. It's this offchain cache data that's is used to then verify against the onchain Merkle tree.
 
 ## Lesson
 
