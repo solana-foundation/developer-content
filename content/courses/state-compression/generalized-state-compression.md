@@ -307,26 +307,28 @@ your program will create an instance of this type using inputs from
 instructions, rather than constructing it from data read from an account. We
 will cover how to read data from accounts in a later section.
 
-#### Initialize a new tree
+#### Initialize a New Tree
 
-Clients will create and initialize the Merkle tree account in two separate
-instructions. The first is simply allocating the account by calling System
-Program. The second will be an instruction that you create on a custom program
-that initializes the new account. This initialization is effectively just
-recording what the max depth and buffer size for the Merkle tree should be.
+To set up a new Merkle tree, clients need to perform two distinct steps.
 
-All this instruction needs to do is build a CPI to invoke the
-`init_empty_merkle_tree` instruction on the State Compression Program. Since
-this requires the max depth and max buffer size, these will need to be passed in
-as arguments to the instruction.
+1. First, they allocate the account by calling the System Program.
+2. Next, they use a custom program to initialize the new account. This
+   initialization involves setting the maximum depth and buffer size for the
+   Merkle tree.
 
-Remember, the max depth refers to the maximum number of hops to get from any
-leaf to the root of the tree. Max buffer size refers to the amount of space
-reserved for storing a changelog of tree updates. This changelog is used to
-ensure that your tree can support concurrent updates within the same block.
+The initialization instruction must create a CPI (Cross-Program Invocation) to
+call the `init_empty_merkle_tree` instruction from the State Compression
+Program. You’ll need to provide the maximum depth and buffer size as arguments
+to this instruction.
 
-For example, if we were initializing a tree for storing messages between users,
-the instruction might look like this:
+- **Max depth**: Defines the maximum number of hops needed to travel from any
+  leaf to the root of the tree.
+- **Max buffer size**: Specifies the space allocated for storing a changelog of
+  tree updates. This changelog is essential for supporting concurrent updates
+  within the same block.
+
+For instance, if you are initializing a tree to store messages between users,
+your instruction might look like this:
 
 ```rust
 pub fn create_messages_tree(
