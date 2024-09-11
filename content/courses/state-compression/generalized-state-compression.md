@@ -191,47 +191,25 @@ tree, raising the cost of creating the tree.
   transaction size limits. Omitting the canopy is discouraged, as it could cause
   issues with transaction size, especially when other programs are involved.
 
-#### Data access on a state-compressed program
+### Data Access in a State-Compressed Program
 
-A state-compressed account doesn’t store the data itself. Rather, it stores the
-concurrent Merkle tree structure discussed above. The raw data itself lives only
-in the blockchain’s cheaper **ledger state.** This makes data access somewhat
-more difficult, but not impossible.
+In a state-compressed program, the actual data isn’t stored directly on-chain. Instead, the concurrent Merkle tree structure is stored, while the raw data resides in the blockchain’s more affordable ledger state. This makes accessing the data more challenging, but not impossible.
 
-The Solana ledger is a list of entries containing signed transactions. In
-theory, this can be traced back to the genesis block. This effectively means any
-data that has ever been put into a transaction exists in the ledger.
+The Solana ledger is essentially a list of entries containing signed transactions, which can be traced back to the genesis block theorectically. This means any data that has ever been included in a transaction is stored in the ledger.
 
-Since the state compression hashing process occurs onchain, all the data exists
-in the ledger state and could theoretically be retrieved from the original
-transaction by replaying the entire chain state from the beginning. However,
-it’s much more straightforward (though still complicated) to have
-an **indexer** track and index this data as the transactions occur. This ensures
-there is an offchain “cache” of the data that anyone can access and subsequently
-verify against the onchain root hash.
+Since the state compression process happens on-chain, all the data is still in the ledger state. In theory, you could retrieve the original data by replaying the entire chain state from the start. However, it’s far more practical (though still somewhat complex) to use an indexer to track and index the data as the transactions happen. This creates an off-chain "cache" of the data that can be easily accessed and verified against the on-chain root hash.
 
-This process is complex, but it will make sense after some practice.
+While this process may seem complex at first, it becomes clearer with practice.
 
-### State compression tooling
+### State Compression Tooling
 
-The theory described above is essential to properly understanding state
-compression. But you don’t have to implement any of it from scratch. Brilliant
-engineers have laid most of the groundwork for you in the form of the SPL State
-Compression Program and the Noop Program.
+While understanding the theory behind state compression is crucial, you don’t have to build it all from scratch. Talented engineers have already developed essential tools like the SPL State Compression Program and the Noop Program to simplify the process.
 
 #### SPL State Compression and Noop Programs
 
-The SPL State Compression Program exists to make the process of creating and
-updating concurrent Merkle trees repeatable and composable throughout the Solana
-ecosystem. It provides instructions for initializing Merkle trees, managing tree
-leafs (i.e. add, update, remove data), and verifying leaf data.
+The SPL State Compression Program is designed to streamline and standardize the creation and management of concurrent Merkle trees across the Solana ecosystem. It provides instructions for initializing Merkle trees, handling tree leaves (such as adding, updating, or removing data), and verifying the integrity of leaf data.
 
-The State Compression Program also leverages a separate “no op” program whose
-primary purpose is to make leaf data easier to index by logging it to the ledger
-state. When you want to store compressed data, you pass it to the State
-Compression program where it gets hashed and emitted as an “event” to the Noop
-program. The hash gets stored in the corresponding concurrent Merkle tree, but
-the raw data remains accessible through the Noop program’s transaction logs.
+Additionally, the State Compression Program works in conjunction with a separate "Noop" program. The Noop Program’s main function is to make leaf data easier to index by logging it in the ledger state. When you store compressed data, it’s passed to the State Compression Program, which hashes the data and emits it as an "event" to the Noop Program. While the hash is stored in the concurrent Merkle tree, the raw data can still be accessed via the Noop Program’s transaction logs.
 
 #### Index data for easy lookup
 
