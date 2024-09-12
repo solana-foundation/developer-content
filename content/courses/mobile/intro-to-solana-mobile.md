@@ -303,13 +303,14 @@ Another significant challenge arises when using cryptocurrency for in-app purcha
 > While traditional app stores impose strict policies around blockchain transactions to protect their revenue and comply with regulations, alternative distribution methods like the Solana dApp Store offers developers a more flexible platform for deploying Solana-based mobile applications. This decentralized approach bypasses many of the restrictions seen in centralized app marketplaces, allowing dApps to thrive in a more blockchain-friendly ecosystem.
 
 ### Conclusion
+Getting started with Solana mobile development is more accessible than ever, thanks to the Solana Mobile Stack (SMS). Although React Native introduces some differences compared to React, much of the code you will write remains familiar, particularly when it comes to structuring the UI and handling state. The main distinction lies in how you interact with wallets, which requires using the `transact` callback to establish wallet sessions, sign transactions, and communicate with Solana’s blockchain.
 
-Getting started with mobile Solana development is fairly straightforward thanks
-to SMS. While React Native is slightly different than React, the code you have
-to write is more similar than different. The primary difference is that the
-portion of your code that interacts with wallets will exist within the
-`transact` callback. Remember to look at our other lessons if you need a
-refresher on Solana development more broadly.
+As you continue building Solana mobile dApps, it's essential to keep learning and refining your skills. Be sure to explore additional resources like:
+
+- [The official Solana Developer Docs](https://solana.com/docs) for in-depth guides on Solana’s core libraries and best practices.
+- [Solana's Discord community](https://discord.com/invite/kBbATFA7PW) forum for troubleshooting, sharing insights, and staying updated on the latest ecosystem changes.
+
+Mastering mobile Solana development will open up new opportunities in decentralized finance (DeFi), gaming, and e-commerce, allowing you to build cutting-edge applications with a seamless user experience. Stay curious and experiment with different tools to push the boundaries of what you can achieve with mobile dApps.
 
 ## Lab
 
