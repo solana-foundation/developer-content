@@ -322,14 +322,14 @@ context.
 That's all the accounts needed for just the randomness request, now let's see
 what it looks like in a Solana program via CPI. To do this, we make use of the
 `VrfRequestRandomness` data struct from the
-[SwitchboardV2 rust crate.](https://github.com/switchboard-xyz/solana-sdk/blob/main/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs)
+[Switchboard-Solana rust crate.](https://github.com/switchboard-xyz/solana-sdk/blob/main/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs)
 This struct has some built-in capabilities to make our lives easier here, most
 notably the account structure is defined for us and we can easily call `invoke`
 or `invoke_signed` on the object.
 
 ```rust
 // our client program
-use switchboard_v2::VrfRequestRandomness;
+use switchboard_solana::VrfRequestRandomness;
 use state::*;
 
 pub fn request_randomness(ctx: Context<RequestRandomness>, request_params: RequestRandomnessParams) -> Result <()> {
@@ -483,9 +483,9 @@ in our `Cargo.toml` file.
 
 ```typescript
 [dependencies]
-anchor-lang = "0.28.0"
-anchor-spl = "0.28.0"
-switchboard-v2 = "0.4.0"
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+switchboard-solana = "0.29"
 ```
 
 ### 3. Lib.rs
@@ -739,7 +739,7 @@ the following accounts:
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
-use switchboard_v2::VrfAccountData;
+use switchboard_solana::VrfAccountData;
 
 pub const ANCHOR_DISCRIMINATOR: usize = 8;
 
@@ -1017,7 +1017,7 @@ three accounts.
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
-use switchboard_v2::VrfAccountData;
+use switchboard_solana::VrfAccountData;
 
 #[derive(Accounts)]
 pub struct ConsumeRandomness<'info> {
@@ -1212,13 +1212,13 @@ file:
 
 ```toml
 ## VRF ACCOUNTS
-[[test.validator.clone]] # Sbv2 attestation programID
+[[test.validator.clone]] # Switchboard solana attestation programID
 address = "sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx"
 
-[[test.validator.clone]] # Sbv2 attestation IDL
+[[test.validator.clone]] # Switchboard solana attestation IDL
 address = "5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz"
 
-[[test.validator.clone]] # Sbv2 SbState
+[[test.validator.clone]] # Switchboard solana SbState
 address = "CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd"
 ```
 
