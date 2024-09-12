@@ -455,18 +455,18 @@ both of these requirements should be met and the counter app installed on your
 Android device/emulator.
 
 If you _haven't_ completed/done the
-[intro to solana mobile](/content/courses/mobile/intro-to-solana-mobile) you
-will need to:
+[intro to solana mobile](https://github.com/solana-developers/react-native-fake-wallet)
+you will need to:
 
 1. Setup an
-   [Android React Native developer environment](https://reactnative.dev/docs/set-up-your-environment)
+   [Android React Native developer environment](https://github.com/solana-developers/react-native-fake-wallet)
    with a device or emulator
 2. Install a
-   [Devnet Solana dApp](https://github.com/Unboxed-Software/solana-react-native-counter.git)
+   [Devnet Solana dApp](https://github.com/solana-developers/react-native-fake-wallet)
    by doing the following steps in your terminal:
 
 ```bash
-git clone https://github.com/Unboxed-Software/solana-react-native-counter.git
+git clone https://github.com/solana-developers/react-native-fake-wallet
 cd solana-react-native-counter
 npm run install
 ```
@@ -559,7 +559,8 @@ Next, in `android/build.gradle`, change the `minSdkVersion` to version `23`.
 ```
 
 Finally, finish the initial setup by building the app. You should get the
-default React Native app showing up on your device.
+default React Native app showing up on your
+device./environment-setup?os=linux&platform=android&guide=native#jdk-studio
 
 ```bash
 npm run android
@@ -1615,7 +1616,7 @@ the Challenge.
 Nice work! Creating a wallet, even a "fake" version, is no small feat. If you
 got stuck anywhere, make sure to go back through it until you understand what's
 happening. Also, feel free to look through the lab's
-[solution code on the `main` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet).
+[solution code on the `main` branch](https://github.com/solana-developers/react-native-fake-wallet).
 
 ## Challenge
 
@@ -1624,7 +1625,7 @@ request types: `SignMessagesRequest` and `SignTransactionsRequest`.
 
 Try to do this without help as it's great practice, but if you get stuck, check
 out the
-[solution code on the `solution` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet/tree/solution).
+[solution code on the `solution` branch](https://github.com/solana-developers/react-native-fake-solana-wallet/tree/solution).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
