@@ -5,12 +5,14 @@ objectives:
   - Create lookup tables
   - Extend lookup tables
   - Use lookup tables with versioned transactions
-description: "Harness a great deal of accounts through the application of lookup tables."
+description:
+  "Harness a great deal of accounts through the application of lookup tables."
 keyword:
-  - address lookup tables
+  - lookup tables
+  - address
   - transaction versions
-  - versioned transactions
-  - legacy transactions
+  - versioned
+  - legacy
 ---
 
 ## Summary
@@ -20,23 +22,23 @@ keyword:
   transaction formats. The old version, known as "legacy," and the new versions
   start from version 0. We made these new versions to work better with a new
   tool called Address Lookup Tables (LUTs).
-- **Address Lookup Tables** are like phone books for addresses. Each
-  address takes up a lot of space (32 bytes). But with LUTs, we can store
-  these addresses in a special account and refer to them using a short code
-  (just 1 byte). This makes it possible to handle more addresses and create
-  more complex transactions than before, kind of like fitting in more ingredients
-  into a smaller recipe!
+- **Address Lookup Tables** are like phone books for addresses. Each address
+  takes up a lot of space (32 bytes). But with LUTs, we can store these
+  addresses in a special account and refer to them using a short code (just 1
+  byte). This makes it possible to handle more addresses and create more complex
+  transactions than before, kind of like fitting in more ingredients into a
+  smaller recipe!
 
 ## Lesson
 
-By design, Solana transactions are limited to 1,232 bytes. Transactions exceeding
-this size will fail. While this enables several network optimizations, it
-can also limit the types of atomic operations that can be performed on the
+By design, Solana transactions are limited to 1,232 bytes. Transactions
+exceeding this size will fail. While this enables several network optimizations,
+it can also limit the types of atomic operations that can be performed on the
 network.
 
 To help get around the transaction size limitation, Solana released a new
-transaction format that allows support for many versions of transaction
-formats. At the time of writing, Solana supports two transaction versions:
+transaction format that allows support for many versions of transaction formats.
+At the time of writing, Solana supports two transaction versions:
 
 1. `legacy` - the original transaction format
 2. `0` - the newest transaction format that includes support for Address Lookup
@@ -56,20 +58,19 @@ versioned transactions and how to use them, including:
 In Solana, one of the biggest space hogs in transactions is the full account
 addresses. Each address takes up 32 bytes. So, if you try to include 39
 accounts, the transaction will be too big. And that’s without even counting
-other stuff like instruction data. Realistically, you hit the limit with
-just about 20 accounts.
+other stuff like instruction data. Realistically, you hit the limit with just
+about 20 accounts.
 
 To fix this, Solana introduced something called versioned transactions, which
-support many formats. Along with this, they released version 0 of
-transactions, which works with Address Lookup Tables (LUTs). Think of LUTs as
-special accounts that store addresses. Instead of using the full 32 bytes for
-each address, LUTs let you use a tiny 1-byte index to reference them. This
-makes the transaction much smaller!
+support many formats. Along with this, they released version 0 of transactions,
+which works with Address Lookup Tables (LUTs). Think of LUTs as special accounts
+that store addresses. Instead of using the full 32 bytes for each address, LUTs
+let you use a tiny 1-byte index to reference them. This makes the transaction
+much smaller!
 
-Even if you don’t plan on using these lookup tables, you still need to make
-sure your client-side code can handle versioned transactions. Luckily,
-everything you need is already in the `@solana/web3.js` library,
-so you're covered!
+Even if you don’t plan on using these lookup tables, you still need to make sure
+your client-side code can handle versioned transactions. Luckily, everything you
+need is already in the `@solana/web3.js` library, so you're covered!
 
 #### Using the @solana/web3.js library
 
@@ -92,8 +93,8 @@ the following parameters:
 You then transform this message object into a version `0` transaction using the
 `compileToV0Message()` method.
 
-Replace the `<YOUR_QUICKNODE_URL_HERE>` placeholder with the URL of your RPC. You
-can get a RPC providers from [Solana RPC](https://solana.com/rpc).
+Replace the `<YOUR_QUICKNODE_URL_HERE>` placeholder with the URL of your RPC.
+You can get a RPC providers from [Solana RPC](https://solana.com/rpc).
 
 ```ts
 import * as web3 from "@solana/web3.js";
@@ -109,8 +110,8 @@ const transferInstruction = [
 
 // Establish a JSON RPC connection
 const connection = new web3.Connection(
-  "<YOUR_QUICKNODE_URL_HERE>",  // Replace with the URL of your RPC provider.
-  'confirmed',
+  "<YOUR_QUICKNODE_URL_HERE>", // Replace with the URL of your RPC provider.
+  "confirmed",
 );
 
 // Get the latest blockhash
@@ -133,8 +134,8 @@ const message = new web3.TransactionMessage({
 </Callout>
 
 Finally, you can use the `VersionedTransaction` constructor to create a new
-versioned transaction from the compiled message. Then, you can sign and send
-the transaction to the network, just like you would with a legacy transaction.
+versioned transaction from the compiled message. Then, you can sign and send the
+transaction to the network, just like you would with a legacy transaction.
 
 ```ts
 // Create the versioned transaction using the message
@@ -149,10 +150,13 @@ const transactionSignature = await connection.sendTransaction(transaction);
 
 ### Address Lookup Table
 
-Address Lookup Tables, or LUTs, are like special accounts that keep a list of other account addresses. These LUTs are managed by the Address Lookup Table Program and help to fit more accounts into a single transaction.
+Address Lookup Tables, or LUTs, are like special accounts that keep a list of
+other account addresses. These LUTs are managed by the Address Lookup Table
+Program and help to fit more accounts into a single transaction.
 
-With versioned transactions, you can use a LUT's address. Then, refer to additional
-accounts with a short 1-byte index instead of their full 32-byte addresses. This makes the transaction much smaller and saves a lot of space.
+With versioned transactions, you can use a LUT's address. Then, refer to
+additional accounts with a short 1-byte index instead of their full 32-byte
+addresses. This makes the transaction much smaller and saves a lot of space.
 
 To simplify the process of working with LUTs, the `@solana/web3.js` library
 includes an `AddressLookupTableProgram` class which provides a set of methods to
@@ -191,7 +195,8 @@ const [lookupTableInst, lookupTableAddress] =
   });
 ```
 
-Under the hood, the lookup table address is simply a [PDA](/docs/terminology.md#program-derived-account-pda) derived using the
+Under the hood, the lookup table address is simply a
+[PDA](/docs/terminology.md#program-derived-account-pda) derived using the
 `authority` and `recentSlot` as seeds.
 
 ```ts
@@ -212,11 +217,12 @@ const [lookupTableAddress, bumpSeed] = web3.PublicKey.findProgramAddressSync(
   encounter an error when sending the transaction, you can try resending the
   transaction.
 
-  ```txt
-  "Program AddressLookupTab1e1111111111111111111111111 invoke [1]",
-  "188115589 is not a recent slot",
-  "Program AddressLookupTab1e1111111111111111111111111 failed: invalid instruction data";
-  ```
+```txt
+"Program AddressLookupTab1e1111111111111111111111111 invoke [1]",
+"188115589 is not a recent slot",
+"Program AddressLookupTab1e1111111111111111111111111 failed: invalid instruction data";
+```
+
 </Callout>
 
 #### Extend a lookup table
@@ -294,10 +300,10 @@ SendTransactionError: failed to send transaction: invalid transaction: Transacti
 ```
 
 If you see the error above, or cannot access addresses in a lookup table after
-extending it, it's likely you are trying to access the table or a specific address
-too soon. You must wait until the warm-up period ends. To avoid this issue, add a
-delay after extending the lookup table before sending a transaction that
-references the table.
+extending it, it's likely you are trying to access the table or a specific
+address too soon. You must wait until the warm-up period ends. To avoid this
+issue, add a delay after extending the lookup table before sending a transaction
+that references the table.
 
 #### Deactivate a lookup table
 
@@ -424,8 +430,8 @@ To begin, download the starter code from the starter branch of this
 Once you have the starter code, run `npm install` in the terminal to install the
 required dependencies.
 
-This project uses [esrun](https://www.npmjs.com/package/@digitak/esrun) for running scripts.
-You can install it globally by running `npm install -g esrun`.
+This project uses [esrun](https://www.npmjs.com/package/@digitak/esrun) for
+running scripts. You can install it globally by running `npm install -g esrun`.
 
 The starter code includes an example of creating a versioned transaction that
 intends to atomically transfer SOL to 22 recipients. The transaction contains 22
@@ -433,8 +439,8 @@ instructions where each instruction transfers SOL from the signer to a different
 recipient.
 
 The purpose of the starter code is to illustrate the limitation on the number of
-addresses that can be included in a versioned transaction. The transaction built in
-the starter code is expected to fail when sent.
+addresses that can be included in a versioned transaction. The transaction built
+in the starter code is expected to fail when sent.
 
 The following starter code can be found in the `index.ts` file.
 
@@ -444,7 +450,10 @@ import * as web3 from "@solana/web3.js";
 
 try {
   // Connect to the devnet cluster
-  const connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
+  const connection = new web3.Connection(
+    web3.clusterApiUrl("devnet"),
+    "confirmed",
+  );
 
   // Initialize the user's keypair
   const user = await initializeKeypair(connection);
@@ -466,7 +475,7 @@ try {
         fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
         toPubkey: address, // The destination account for the transfer
         lamports: web3.LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
-      })
+      }),
     );
   }
 
@@ -528,8 +537,8 @@ In the next steps, we'll go over how to use lookup tables with versioned
 transactions to increase the number of addresses that can be included in a
 single transaction.
 
-Before we start, go ahead and delete the content of the `try-catch` block to leave
-only the following:
+Before we start, go ahead and delete the content of the `try-catch` block to
+leave only the following:
 
 ```ts
 // Connect to the devnet cluster
@@ -710,7 +719,10 @@ to:
 
 ```ts
 // Connect to the devnet cluster
-const connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
+const connection = new web3.Connection(
+  web3.clusterApiUrl("devnet"),
+  "confirmed",
+);
 
 // Initialize the user's keypair
 const user = await initializeKeypair(connection);
@@ -751,13 +763,13 @@ await sendV0Transaction(connection, user, transferInstructions, [
 ]);
 ```
 
-Notice that you created the transfer instructions with the full recipient address
-even though we created a lookup table. That's because by including the lookup
-table in the versioned transaction, you tell the `web3.js` framework to replace
-any recipient addresses that match addresses in the lookup table with pointers
-to the lookup table instead. By the time the transaction is sent to the network,
-addresses that exist in the lookup table will be referenced by a single byte
-rather than the full 32 bytes.
+Notice that you created the transfer instructions with the full recipient
+address even though we created a lookup table. That's because by including the
+lookup table in the versioned transaction, you tell the `web3.js` framework to
+replace any recipient addresses that match addresses in the lookup table with
+pointers to the lookup table instead. By the time the transaction is sent to the
+network, addresses that exist in the lookup table will be referenced by a single
+byte rather than the full 32 bytes.
 
 Use `npm start` in the command line to execute the `main` function. You should
 see an output similar to the following:
