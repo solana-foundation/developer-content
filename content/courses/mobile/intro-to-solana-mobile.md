@@ -436,7 +436,7 @@ npm install \
   text-encoding-polyfill
 ```
 
-### 4. `ConnectionProvider.tsx` file
+### 4. Create `ConnectionProvider.tsx` file
 
 Let’s start adding our Solana functionality. Create a new folder called
 `components` and within it, a file called `ConnectionProvider.tsx`. This
@@ -484,9 +484,9 @@ export const useConnection = (): ConnectionContextState =>
   useContext(ConnectionContext);
 ```
 
-#### 5. Create AuthProvider.tsx
+### 5. Create `AuthProvider.tsx` file
 
-The next Solana provision we’ll need is the auth provider. This is one of the
+The next Solana provision we will need is the **auth provider**. This is one of the
 main differences between mobile and web development. What we’re implementing
 here is roughly equivalent to the `WalletProvider` that we’re used to in web
 apps. However, since we're using Android and its natively installed wallets, the
@@ -506,20 +506,20 @@ We do this by providing the following in our `AuthProvider`:
 - `deauthorizeSession(wallet)`: Deauthorizes the `wallet`.
 - `onChangeAccount`: Acts as a handler when `selectedAccount` is changed.
 
-We’re also going to throw in some utility methods:
+We are also going to throw in some utility methods:
 
 - `getPublicKeyFromAddress(base64Address)`: Creates a new Public Key object from
   the Base64 address given from the `wallet` object
 - `getAuthorizationFromAuthResult`: Handles the authorization result, extracts
   relevant data from the result, and returns the `Authorization` context object
 
-We’ll expose all of this through a `useAuthorization` hook.
+We will expose all of this through a `useAuthorization` hook.
 
-Since this provider is the same across virtually all apps, we're going to give
-you the full implementation that you can copy/paste. We'll dig into the details
+Since this provider is the same across all apps, we are going to give
+you the full implementation that you can copy and paste. We will dig into the details
 of MWA in a future lesson.
 
-Create the file `AuthProvider.tsx` in the `components` and paste in the
+Create the file `AuthProvider.tsx` in the `components` folder and paste in the
 following:
 
 ```tsx
@@ -537,49 +537,30 @@ import { toUint8Array } from "js-base64";
 import { useState, useCallback, useMemo, ReactNode } from "react";
 import React from "react";
 
-export const AuthUtils = {
+const AuthUtils = {
   getAuthorizationFromAuthResult: (
     authResult: AuthorizationResult,
     previousAccount?: Account,
   ): Authorization => {
-    let selectedAccount: Account;
-    if (
-      //no wallet selected yet
-      previousAccount === null ||
-      //the selected wallet is no longer authorized
-      !authResult.accounts.some(
-        ({ address }) => address === previousAccount.address,
-      )
-    ) {
-      const firstAccount = authResult.accounts[0];
-      selectedAccount = AuthUtils.getAccountFromAuthorizedAccount(firstAccount);
-    } else {
-      selectedAccount = previousAccount;
-    }
+    const selectedAccount = previousAccount === undefined || 
+      !authResult.accounts.some(({ address }) => address === previousAccount.address)
+      ? AuthUtils.getAccountFromAuthorizedAccount(authResult.accounts[0])
+      : previousAccount;
+
     return {
-      accounts: authResult.accounts.map(
-        AuthUtils.getAccountFromAuthorizedAccount,
-      ),
+      accounts: authResult.accounts.map(AuthUtils.getAccountFromAuthorizedAccount),
       authToken: authResult.auth_token,
       selectedAccount,
     };
   },
 
-  getAccountFromAuthorizedAccount: (
-    authAccount: AuthorizedAccount,
-  ): Account => {
-    return {
-      ...authAccount,
-      publicKey: AuthUtils.getPublicKeyFromAddress(authAccount.address),
-    };
-  },
-
-  getPublicKeyFromAddress: (address: Base64EncodedAddress) => {
-    return new PublicKey(toUint8Array(address));
-  },
+  getAccountFromAuthorizedAccount: (authAccount: AuthorizedAccount): Account => ({
+    ...authAccount,
+    publicKey: new PublicKey(toUint8Array(authAccount.address)),
+  }),
 };
 
-export type Account = Readonly<{
+type Account = Readonly<{
   address: Base64EncodedAddress;
   label?: string;
   publicKey: PublicKey;
@@ -591,11 +572,11 @@ type Authorization = Readonly<{
   selectedAccount: Account;
 }>;
 
-export const AppIdentity = {
+const APP_IDENTITY = {
   name: "Solana Counter Incrementor",
 };
 
-export type AuthorizationProviderContext = {
+type AuthorizationProviderContext = {
   accounts: Account[] | null;
   authorizeSession: (wallet: AuthorizeAPI & ReauthorizeAPI) => Promise<Account>;
   deauthorizeSession: (wallet: DeauthorizeAPI) => void;
@@ -605,28 +586,25 @@ export type AuthorizationProviderContext = {
 
 const AuthorizationContext = React.createContext<AuthorizationProviderContext>({
   accounts: null,
-  authorizeSession: (_wallet: AuthorizeAPI & ReauthorizeAPI) => {
+  authorizeSession: () => {
     throw new Error("Provider not initialized");
   },
-  deauthorizeSession: (_wallet: DeauthorizeAPI) => {
+  deauthorizeSession: () => {
     throw new Error("Provider not initialized");
   },
-  onChangeAccount: (_nextSelectedAccount: Account) => {
+  onChangeAccount: () => {
     throw new Error("Provider not initialized");
   },
   selectedAccount: null,
 });
 
-export type AuthProviderProps = {
+type AuthProviderProps = {
   children: ReactNode;
   cluster: Cluster;
 };
 
-export function AuthorizationProvider(props: AuthProviderProps) {
-  const { children, cluster } = { ...props };
-  const [authorization, setAuthorization] = useState<Authorization | null>(
-    null,
-  );
+function AuthorizationProvider({ children, cluster }: AuthProviderProps) {
+  const [authorization, setAuthorization] = useState<Authorization | null>(null);
 
   const handleAuthorizationResult = useCallback(
     async (authResult: AuthorizationResult): Promise<Authorization> => {
@@ -635,54 +613,46 @@ export function AuthorizationProvider(props: AuthProviderProps) {
         authorization?.selectedAccount,
       );
       setAuthorization(nextAuthorization);
-
       return nextAuthorization;
     },
-    [authorization, setAuthorization],
+    [authorization],
   );
 
   const authorizeSession = useCallback(
     async (wallet: AuthorizeAPI & ReauthorizeAPI) => {
-      const authorizationResult = await (authorization
-        ? wallet.reauthorize({
+      const authorizationResult = authorization
+        ? await wallet.reauthorize({
             auth_token: authorization.authToken,
-            identity: AppIdentity,
+            identity: APP_IDENTITY,
           })
-        : wallet.authorize({ cluster, identity: AppIdentity }));
-      return (await handleAuthorizationResult(authorizationResult))
-        .selectedAccount;
+        : await wallet.authorize({ cluster, identity: APP_IDENTITY });
+      return (await handleAuthorizationResult(authorizationResult)).selectedAccount;
     },
-    [authorization, handleAuthorizationResult],
+    [authorization, cluster, handleAuthorizationResult],
   );
 
   const deauthorizeSession = useCallback(
     async (wallet: DeauthorizeAPI) => {
-      if (authorization?.authToken === null) {
-        return;
+      if (authorization?.authToken) {
+        await wallet.deauthorize({ auth_token: authorization.authToken });
+        setAuthorization(null);
       }
-
-      await wallet.deauthorize({ auth_token: authorization.authToken });
-      setAuthorization(null);
     },
-    [authorization, setAuthorization],
+    [authorization],
   );
 
   const onChangeAccount = useCallback(
     (nextAccount: Account) => {
       setAuthorization(currentAuthorization => {
-        if (
-          //check if the account is no longer authorized
-          !currentAuthorization?.accounts.some(
-            ({ address }) => address === nextAccount.address,
-          )
-        ) {
-          throw new Error(`${nextAccount.address} is no longer authorized`);
+        if (currentAuthorization?.accounts.some(
+          ({ address }) => address === nextAccount.address,
+        )) {
+          return { ...currentAuthorization, selectedAccount: nextAccount };
         }
-
-        return { ...currentAuthorization, selectedAccount: nextAccount };
+        throw new Error(`${nextAccount.address} is no longer authorized`);
       });
     },
-    [setAuthorization],
+    [],
   );
 
   const value = useMemo(
@@ -703,23 +673,24 @@ export function AuthorizationProvider(props: AuthProviderProps) {
   );
 }
 
-export const useAuthorization = () => React.useContext(AuthorizationContext);
+const useAuthorization = () => React.useContext(AuthorizationContext);
+
+export {
+  AuthorizationProvider,
+  useAuthorization,
+  type Account,
+  type AuthProviderProps,
+  type AuthorizationProviderContext,
+};
 ```
 
-#### 6. Create ProgramProvider.tsx
+### 6. Create `ProgramProvider.tsx`
 
-The last provider we need is our program provider. This will expose the counter
-program we want to interact with.
+The last provider we need is our program provider. This will expose the counter program we want to interact with.
 
-Since we're using the Anchor TS client to interact with our program, we need the
-program's IDL. Start by creating a root-level folder called `models`, then
-create a new file `anchor-counter.ts`. Paste the contents of the
-[Anchor Counter IDL](/public/assets/courses/unboxed/counter-rn-idl.ts) into this
-new file.
+Since we are using the Anchor TS client to interact with our program, we need the program's IDL. Start by creating a root-level folder called `models`, then create a new file `anchor-counter.ts`. Paste the contents of the Anchor Counter IDL into this new file.
 
-Next, create the file `ProgramProvider.tsx` inside of `components`. Inside we will
-create the program provider to surface our program and the counter PDA:
-
+Next, create the file `ProgramProvider.tsx` inside of components. Inside we will create the program provider to surface our program and the counter PDA:
 ```tsx
 import {
   AnchorProvider,
@@ -756,16 +727,20 @@ export type ProgramProviderProps = {
   children: ReactNode;
 };
 
-export function ProgramProvider(props: ProgramProviderProps) {
-  const { children } = props;
+export function ProgramProvider({ children }: ProgramProviderProps) {
   const { connection } = useConnection();
   const [program, setProgram] = useState<Program<AnchorCounter> | null>(null);
   const [counterAddress, setCounterAddress] = useState<PublicKey | null>(null);
 
   const setup = useCallback(async () => {
     const programId = new PublicKey(
-      "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU",
+      "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU" //public key, do not expose anything else
     );
+
+    // MockWallet is a placeholder wallet used for initializing the AnchorProvider.
+    // In a mobile app, we don't need a real wallet here because the actual signing
+    // will be done by the user's mobile wallet app. This mock wallet allows us to
+    // set up the provider without a real wallet instance.
 
     const MockWallet = {
       signTransaction: () => Promise.reject(),
@@ -779,12 +754,12 @@ export function ProgramProvider(props: ProgramProviderProps) {
     const programInstance = new Program<AnchorCounter>(
       IDL,
       programId,
-      provider,
+      provider
     );
 
     const [counterProgramAddress] = PublicKey.findProgramAddressSync(
       [Buffer.from("counter")],
-      programId,
+      programId
     );
 
     setProgram(programInstance);
@@ -800,7 +775,7 @@ export function ProgramProvider(props: ProgramProviderProps) {
       program,
       counterAddress,
     }),
-    [program, counterAddress],
+    [program, counterAddress]
   );
 
   return (
@@ -811,7 +786,7 @@ export function ProgramProvider(props: ProgramProviderProps) {
 export const useProgram = () => useContext(ProgramContext);
 ```
 
-#### 7. Modify App.tsx
+### 7. Modify `App.tsx`
 
 Now that we have all our providers, let’s wrap our app with them. We're going to
 re-write the default `App.tsx` with the following changes:
@@ -843,11 +818,14 @@ export default function App() {
   const endpoint = clusterApiUrl(cluster);
 
   return (
+    // ConnectionProvider: Manages the connection to the Solana network
     <ConnectionProvider
       endpoint={endpoint}
       config={{ commitment: "processed" }}
-    >
+    >  
+      // AuthorizationProvider: Handles wallet authorization
       <AuthorizationProvider cluster={cluster}>
+        // ProgramProvider: Provides access to the Solana program
         <ProgramProvider>
           <MainScreen />
         </ProgramProvider>
@@ -857,7 +835,7 @@ export default function App() {
 }
 ```
 
-#### 8. Create MainScreen.tsx
+### 8. Create `MainScreen.tsx`
 
 Now, let’s put everything together to create our UI. Create a new folder called
 `screens` and a new file called `MainScreen.tsx` inside of it. In this file, we
@@ -871,47 +849,45 @@ to CSS.
 In `screens/MainScreen.tsx` paste the following:
 
 ```tsx
+import React from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { CounterView } from "../components/CounterView";
 import { CounterButton } from "../components/CounterButton";
-import React from "react";
 
-const mainScreenStyles = StyleSheet.create({
+export function MainScreen() {
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="darkblue" />
+      <View style={[styles.container, styles.counterContainer]}>
+        <CounterView />
+      </View>
+      <View style={styles.incrementButtonContainer}>
+        <CounterButton />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
     backgroundColor: "lightgray",
   },
-
-  incrementButtonContainer: { position: "absolute", right: "5%", bottom: "3%" },
+  incrementButtonContainer: { 
+    position: "absolute", 
+    right: "5%", 
+    bottom: "3%" 
+  },
   counterContainer: {
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
   },
 });
-
-export function MainScreen() {
-  return (
-    <View style={mainScreenStyles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="darkblue" />
-      <View
-        style={{
-          ...mainScreenStyles.container,
-          ...mainScreenStyles.counterContainer,
-        }}
-      >
-        <CounterView />
-      </View>
-      <View style={mainScreenStyles.incrementButtonContainer}>
-        <CounterButton />
-      </View>
-    </View>
-  );
-}
 ```
 
-#### 9. Create CounterView.tsx
+### 9. `Create CounterView.tsx`
 
 The `CounterView` is the first of our two program-specific files.
 `CounterView`'s only job is to fetch and listen for updates on our `Counter`
@@ -981,7 +957,7 @@ export function CounterView() {
 }
 ```
 
-#### 10. Create CounterButton.tsx
+### 10. Create `CounterButton.tsx`
 
 Finally, we have our last component, the `CounterButton`. This floating action
 button will do the following in a new function `incrementCounter`:
@@ -1117,7 +1093,7 @@ export function CounterButton() {
 }
 ```
 
-#### 11. Build and Run
+### 11. Build and Run
 
 Now it’s time to test that everything works! Build and run with the following
 command:
@@ -1136,7 +1112,7 @@ test your app:
 If you run into problems, here are some examples of what they could be and how
 to fix them:
 
-- Application does not build → Exit Metro with ctrl+c and try again
+- Application does not build → Exit Metro with *Ctrl+C* and try again
 - Nothing happens when you press the `CounterButton` → Make sure you have Solana
   wallet installed ( like the fake wallet we installed in Prerequisites )
 - You get stuck in a forever loop while calling `increment` → This is likely due
@@ -1151,15 +1127,6 @@ on the `main` branch of the repository.
 
 ## Challenge
 
-Your challenge today is to take our app and add a decrement function. Simply add
-another button and call the `decrement` function on our program. This
-instruction already exists on the program and its IDL, so you simply need to
-write client code to call it.
+Your next challenge is to expand the app by adding a `decrement` function. You need to create another button that will call the `decrement` method on the Solana program. The logic for the decrement function already exists in the program’s **IDL** (**Interface Description Language**), so your task is to write the client-side code that interacts with it.
 
-After you give it a try on your own, feel free to take a look at the
-[solution code on the `solution` branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution).
-
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)!
-</Callout>
+Once you've completed this, you can check your solution against the solution code available on the [solution branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution). If you’ve successfully completed the lab, push your code to GitHub and share your feedback on this lesson through this [form](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)!
