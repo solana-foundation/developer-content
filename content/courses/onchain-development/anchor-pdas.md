@@ -544,7 +544,7 @@ pub mod anchor_movie_review_program{
         description: String,
         rating: u8,
     ) -> Result<()> {
-	// We require that the rating is between 1 and 5
+	      // We require that the rating is between 1 and 5
         require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
 
         // We require that the title is not longer than 20 characters
@@ -592,7 +592,7 @@ public key, and the movie review's rating, title, and description.
 
 ```rust
 #[derive(Accounts)]
-#[instruction(title:String, description:String)]
+#[instruction(title:String)]
 pub struct AddMovieReview<'info> {
     #[account(
         init,
@@ -639,6 +639,16 @@ pub mod anchor_movie_review_program {
         description: String,
         rating: u8,
     ) -> Result<()> {
+
+        // We require that the rating is between 1 and 5
+        require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+
+        // We require that the title is not longer than 20 characters
+        require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
+
+        // We require that the description is not longer than 50 characters
+        require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+
         msg!("Movie review account space reallocated");
         msg!("Title: {}", title);
         msg!("Description: {}", description);
@@ -668,7 +678,7 @@ We'll also still need the `seeds` and `bump` constraints as we had them in
 
 ```rust
 #[derive(Accounts)]
-#[instruction(title:String, description:String)]
+#[instruction(title:String)]
 pub struct UpdateMovieReview<'info> {
     #[account(
         mut,
