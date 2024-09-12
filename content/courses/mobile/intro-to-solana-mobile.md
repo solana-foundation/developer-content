@@ -246,7 +246,7 @@ the wallet.
 Here is an example of sending a transaction using MWA:
 
 ```tsx
-//import required dependencies
+//import required dependencies if any
 
 const { authorizeSession } = useAuthorization();
 const { connection } = useConnection();
@@ -328,13 +328,13 @@ Configure the ANDROID_HOME Environment Variable:
 
 > **NOTE:** You will need to configure the `ANDROID_HOME` environment variable so that your terminal can recognize Android’s SDK tools. This step is critical for running and building your app on Android.
 
-## Project Setup on Android Studio
+## Project Setup
 Create a Sample Project for the Emulator Setup to ensure your Android environment is set up correctly. In your terminal, run the code below within your preferred directory to scaffold a new React Native project, where `SampleProject` is your preferred project name. You can open the project in Android Studio and ensure it runs correctly on the Android emulator.
 ```bash
   npx react-native init SampleProject --npm
 ```
 
-## Cloning and Running MWA
+### Cloning and Running MWA
 
    1. Clone the repo in `SampleProject`
 
@@ -343,22 +343,22 @@ Create a Sample Project for the Emulator Setup to ensure your Android environmen
       ```
 
    2. In Android Studio,
-      `Open project > Navigate to the cloned directory > Select mobile-wallet-adapter/android`
+      *Open project > Navigate to the cloned directory > Select mobile-wallet-adapter/android*
    3. After Android Studio finishes loading the project, select `fakewallet` in
       the build/run configuration dropdown in the top right
 
       ![Fake Wallet](/public/assets/courses/unboxed/basic-solana-mobile-fake-wallet.png)
 
-   4. For easier debugging, use `Logcat`. Check the [official installation guide](https://developer.android.com/studio/debug/logcat) if you are interested.
-   5. Now that your fake wallet is running on the emulator, go to `View -> Tool Windows -> Logcat`. This will open up a console logging out what’s happening with fake wallet.
+   4. For easier debugging, use **Logcat**. Check the [official installation guide](https://developer.android.com/studio/debug/logcat) if you are interested.
+   5. Now that your fake wallet is running on the emulator, go to *View -> Tool Windows -> Logcat*. This will open up a console logging out what’s happening with fake wallet.
 
 3. (Optional) Install other
    [Solana wallets](https://solana.com/ecosystem/explore?categories=wallet) on
    the Google Play store.
 
-Lastly, we recommend installing **java version 11** to avoid dependency errors. To know what version you have installed, run `java --version` in your terminal.
+Lastly, we recommend installing *java version 11* to avoid dependency errors. To know what version you have installed, run `java --version` in your terminal.
 
-#### 1. Plan out the App's Structure
+### 1. Plan out the App's Structure
 
 Before we do any coding, let's conceptualize the outline of the app. Again, this
 app will connect to and interact with the counter program we've already deployed
@@ -373,7 +373,7 @@ to Devnet. To do this, we'll need the following:
 There will be more files and considerations, but these are the most important
 files we'll be creating and working with.
 
-#### 2. Create the App
+### 2. Create the App
 
 Now that we've got some of the basic setup and structure down, let’s scaffold a
 new app with the following command:
@@ -394,11 +394,11 @@ npm run android
 
 This should open and run the app in your Android emulator. If you run into
 problems, check to make sure you’ve accomplished everything in the
-[prerequisites section](#0-prerequisites).
+[*Getting Started*](#getting-started) section.
 
-#### 3. Install Dependencies
+### 3. Install Dependencies
 
-We’ll need to add in our Solana dependencies.
+We will need to add in our Solana dependencies.
 [The Solana Mobile docs provide a nice list of packages](https://docs.solanamobile.com/react-native/setup)
 and explanations for why we need them:
 
@@ -414,14 +414,14 @@ and explanations for why we need them:
   `web3.js` underlying Crypto library on React Native
 - `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
 
-In addition to this list, we'll add two more packages:
+In addition to this list, we will add two more packages:
 
 - `@coral-xyz/anchor`: The Anchor TS client.
 - `assert`: A polyfill that lets Anchor do its thing.
 - `text-encoding-polyfill`: A polyfill needed to create the `Program` object
 
 If you’re not familiar: polyfills actively replace Node-native libraries to make
-them work anywhere Node is not running. We’ll finish our polyfill setup shortly.
+them work anywhere Node is not running. We will finish our polyfill setup shortly.
 For now, install dependencies using the following command:
 
 ```bash
@@ -436,13 +436,14 @@ npm install \
   text-encoding-polyfill
 ```
 
-#### 4. Create ConnectionProvider.tsx
+### 4. `ConnectionProvider.tsx` file
 
 Let’s start adding our Solana functionality. Create a new folder called
 `components` and within it, a file called `ConnectionProvider.tsx`. This
 provider will wrap the entire application and make our `Connection` object
 available throughout. Hopefully, you're noticing a pattern: this is identical to
 the React patterns we've used throughout the course.
+
 
 ```tsx
 import { Connection, ConnectionConfig } from "@solana/web3.js";
@@ -459,18 +460,17 @@ export interface ConnectionContextState {
 }
 
 const ConnectionContext = createContext<ConnectionContextState>(
-  {} as ConnectionContextState,
+  {} as ConnectionContextState
 );
 
-export function ConnectionProvider(props: ConnectionProviderProps) {
-  const {
-    children,
-    endpoint,
-    config = { commitment: "confirmed" },
-  } = { ...props };
+export function ConnectionProvider({
+  children,
+  endpoint,
+  config = { commitment: "confirmed" },
+}: ConnectionProviderProps) {
   const connection = useMemo(
     () => new Connection(endpoint, config),
-    [config, endpoint],
+    [config, endpoint]
   );
 
   return (
@@ -717,7 +717,7 @@ create a new file `anchor-counter.ts`. Paste the contents of the
 [Anchor Counter IDL](/public/assets/courses/unboxed/counter-rn-idl.ts) into this
 new file.
 
-Next, create the file `ProgramProvider.tsx` inside of `components`. Inside we'll
+Next, create the file `ProgramProvider.tsx` inside of `components`. Inside we will
 create the program provider to surface our program and the counter PDA:
 
 ```tsx
