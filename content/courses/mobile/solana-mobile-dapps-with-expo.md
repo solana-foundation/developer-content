@@ -539,7 +539,6 @@ Add the following convenient run scripts to your `package.json` file.
     "web": "expo start --web",
     "build": "npx eas build --profile development --platform android",
     "build:local": "npx eas build --profile development --platform android --local",
-    "build:local:ios": "npx eas build --profile development --platform ios --local",
     "test": "echo \"No tests specified\" && exit 0",
     "clean": "rm -rf node_modules && npm install"
   }
@@ -591,7 +590,9 @@ npm install assert \
   react-native-url-polyfill \
   @metaplex-foundation/umi \
   @metaplex-foundation/umi-bundle-defaults \
-  @metaplex-foundation/mpl-candy-machine
+  @metaplex-foundation/umi-bundle-defaults \
+  @metaplex-foundation/umi-signer-wallet-adapters \
+  @metaplex-foundation/umi-web3js-adapters  \
 ```
 
 #### 2. Polyfill config
@@ -648,7 +649,7 @@ functions on our behalf:
 
 ```tsx
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
+import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
 import {
   transact,
@@ -657,29 +658,21 @@ import {
 import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { useMemo } from "react";
 import { Account } from "./AuthProvider";
-import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 
-// Type definition for transactions that can be either legacy or versioned
 type LegacyOrVersionedTransact = Transaction | VersionedTransaction;
 
-// Custom hook to create and configure a Umi instance
 export const useUmi = (
   connection: Connection,
   selectedAccount: Account | null,
   authorizeSession: (wallet: Web3MobileWallet) => Promise<Account>,
 ) => {
   return useMemo(() => {
-    // If there's no selected account or authorize session function, return null values
     if (!selectedAccount || !authorizeSession) {
       return { mobileWalletAdapter: null, umi: null };
     }
 
-    // Create a mobile wallet adapter object with necessary methods
     const mobileWalletAdapter = {
-      // Public key of the selected account
       publicKey: selectedAccount.publicKey,
-
-      // Method to sign a message
       signMessage: async (message: Uint8Array): Promise<Uint8Array> => {
         return await transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
@@ -690,8 +683,6 @@ export const useUmi = (
           return signedMessages[0];
         });
       },
-
-      // Method to sign a single transaction
       signTransaction: async <T extends LegacyOrVersionedTransact>(
         transaction: T,
       ): Promise<T> => {
@@ -703,8 +694,6 @@ export const useUmi = (
           return signedTransactions[0] as T;
         });
       },
-
-      // Method to sign multiple transactions
       signAllTransactions: async <T extends LegacyOrVersionedTransact>(
         transactions: T[],
       ): Promise<T[]> => {
@@ -717,12 +706,10 @@ export const useUmi = (
         });
       },
     };
-
-    // Create and configure the Umi instance
+    // Add Umi Plugins
     const umi = createUmi(connection.rpcEndpoint)
-      .use(mplCandyMachine()) // Add Candy Machine plugin
-      .use(mplTokenMetadata()) // Add Token Metadata plugin
-      .use(walletAdapterIdentity(mobileWalletAdapter)); // Set wallet adapter
+      .use(mplTokenMetadata())
+      .use(walletAdapterIdentity(mobileWalletAdapter));
 
     return { umi };
   }, [authorizeSession, selectedAccount, connection]);
@@ -982,97 +969,24 @@ This should have the following fields:
   `fetch` and `create`
 - `publicKey: PublicKey | null` - The NFT creator's public key
 - `isLoading: boolean` - Manages loading state
-- `loadedNFTs: (Nft)[] | null` - An array of the user's snapshot NFTs
-- `nftOfTheDay: (Nft) | null` - A reference to the NFT created today
+- `loadedNFTs: (DigitalAsset)[] | null` - An array of the user's snapshot NFTs
+- `nftOfTheDay: (DigitalAsset) | null` - A reference to the NFT created today
 - `connect: () => void` - A function for connecting to the Devnet-enabled wallet
 - `fetchNFTs: () => void` - A function that fetches the user's snapshot NFTs
 - `createNFT: (name: string, description: string, fileUri: string) => void` - A
   function that creates a new snapshot NFT
 
-We need to define the `Nft` type as follow and put it inside a file called
-`types.ts`
-
-```typescript
-import { PublicKey } from "@metaplex-foundation/umi";
-import {
-  Metadata,
-  TokenStandard,
-  CollectionDetails,
-  UseMethod,
-  Creator,
-  Collection,
-  Uses,
-} from "@metaplex-foundation/mpl-token-metadata";
-import { Mint } from "@metaplex-foundation/mpl-toolbox";
-
-type NftEdition = {
-  isOriginal: boolean;
-  largestMintedEdition?: bigint;
-  printEditionMint?: PublicKey;
-  printEditionNum?: bigint;
-};
-
-export type Nft = Omit<Metadata, "model" | "address" | "mintAddress"> & {
-  /** A model identifier to distinguish models in the SDK. */
-  readonly model: "nft";
-
-  /** The mint address of the NFT. */
-  readonly address: PublicKey;
-
-  /** The metadata address of the NFT. */
-  readonly metadataAddress: PublicKey;
-
-  /** The mint account of the NFT. */
-  readonly mint: Mint;
-
-  /**
-   * Defines whether the NFT is an original edition or a
-   * printed edition and provides additional information accordingly.
-   */
-  readonly edition: NftEdition;
-
-  /** The update authority of the NFT. */
-  readonly updateAuthority: PublicKey;
-
-  /** The JSON URI of the NFT. */
-  readonly uri: string;
-
-  /** The name of the NFT. */
-  readonly name: string;
-
-  /** The symbol of the NFT. */
-  readonly symbol: string;
-
-  /** The token standard of the NFT. */
-  readonly tokenStandard: TokenStandard;
-
-  /** The collection details of the NFT, if any. */
-  readonly collectionDetails: CollectionDetails | null;
-
-  /** The use method of the NFT, if any. */
-  readonly useMethod: UseMethod | null;
-
-  /** The creators of the NFT. */
-  readonly creators: Creator[];
-
-  /** The collection the NFT belongs to, if any. */
-  readonly collection: Collection | null;
-
-  /** The uses of the NFT, if any. */
-  readonly uses: Uses | null;
-
-  /** Whether the NFT is mutable. */
-  readonly isMutable: boolean;
-};
-```
+The `DigitalAsset` type comes from `@metaplex-foundation/mpl-token-metadata`
+that have metadata, off chain metadata, collection data, plugins (including
+Attributes), and more
 
 ```tsx
 export interface NFTContextState {
   metaplex: Metaplex | null; // Holds the metaplex object that we use to call `fetch` and `create` on.
   publicKey: PublicKey | null; // The public key of the authorized wallet
   isLoading: boolean; // Loading state
-  loadedNFTs: (Nft | Sft | SftWithToken | NftWithToken)[] | null; // Array of loaded NFTs that contain metadata
-  nftOfTheDay: (Nft | Sft | SftWithToken | NftWithToken) | null; // The NFT snapshot created on the current day
+  loadedNFTs: DigitalAsset[] | null; // Array of loaded NFTs that contain metadata
+  nftOfTheDay: DigitalAsset | null; // The NFT snapshot created on the current day
   connect: () => void; // Connects (and authorizes) us to the Devnet-enabled wallet
   fetchNFTs: () => void; // Fetches the NFTs using the `metaplex` object
   createNFT: (name: string, description: string, fileUri: string) => void; // Creates the NFT
@@ -1102,39 +1016,21 @@ through the code for each of them and then show you the entire file at the end:
 2. `fetchNFTs` - This function will fetch the NFTs using
    `fetchAllDigitalAssetByCreator`:
 
-   ```tsx
-   const fetchNFTs = async () => {
-     if (!metaplex || !account || isLoading) return;
-
-     setIsLoading(true);
-
-     try {
-       const nfts = await metaplex.nfts().findAllByCreator({
-         creator: account.publicKey,
-       });
-
-       const loadedNFTs = await Promise.all(
-         nfts.map(nft => {
-           return metaplex.nfts().load({ metadata: nft as Metadata });
-         }),
-       );
-       setLoadedNFTs(loadedNFTs);
-
-       // Check if we already took a snapshot today
-       const nftOfTheDayIndex = loadedNFTs.findIndex(nft => {
-         return formatDate(new Date(Date.now())) === nft.name;
-       });
-
-       if (nftOfTheDayIndex !== -1) {
-         setNftOfTheDay(loadedNFTs[nftOfTheDayIndex]);
-       }
-     } catch (error) {
-       console.log(error);
-     } finally {
-       setIsLoading(false);
-     }
-   };
-   ```
+```tsx
+const fetchNFTs = useCallback(async () => {
+  if (!umi || !account || isLoading) return;
+  setIsLoading(true);
+  try {
+    const creatorPublicKey = fromWeb3JsPublicKey(account.publicKey);
+    const nfts = await fetchAllDigitalAssetByCreator(umi, creatorPublicKey);
+    setLoadedNFTs(nfts);
+  } catch (error) {
+    console.error("Failed to fetch NFTs:", error);
+  } finally {
+    setIsLoading(false);
+  }
+}, [umi, account, isLoading]);
+```
 
 3. `createNFT` - This function will upload a file to Pinata Cloud, and then use
    `createNft` function from to create and mint an NFT to your wallet. This
@@ -1142,76 +1038,74 @@ through the code for each of them and then show you the entire file at the end:
    minting the NFT.
 
    To upload to Pinata Cloud you need to init `PinataSDK` instance with
-   `pinataJwt` and `pinataGateway`. After that, you can interact with
-   their[API](https://docs.pinata.cloud/web3/sdk/getting-started)
+   `pinataJwt` and `pinataGateway`. After that, you can interact with their
+   [API](https://docs.pinata.cloud/web3/sdk/getting-started)
 
    We'll create two helper functions for uploading the image and metadata
    separately, then tie them together into a single `createNFT` function:
 
-   ```tsx
-   const pinata = new PinataSDK({
-     pinataJwt: process.env.EXPO_PUBLIC_PINATA_JWT,
-     pinataGateway: process.env.EXPO_PUBLIC_PINATA_GATEWAY,
-   });
-   const uploadImage = async (fileUri: string): Promise<string> => {
-     const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
-       fileUri,
-       "base64",
-     );
+```tsx
+const pinata = useMemo(
+  () =>
+    new PinataSDK({
+      pinataJwt: process.env.EXPO_PUBLIC_PINATA_JWT,
+      pinataGateway: process.env.EXPO_PUBLIC_PINATA_GATEWAY,
+    }),
+  [],
+);
+const uploadImage = useCallback(
+  async (fileUri: string): Promise<string> => {
+    const imageBytesInBase64 = await RNFetchBlob.fs.readFile(fileUri, "base64");
+    const upload = await pinata.upload.base64(imageBytesInBase64);
+    return upload.IpfsHash;
+  },
+  [pinata],
+);
 
-     // pinata.upload.base64 is used to send the Base64-encoded image to Pinata Cloud
-     // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/base64#base64
-     const upload = await pinata.upload.base64(imageBytesInBase64);
-
-     // Return the IPFS hash of the uploaded image (IPFS is a decentralized file storage system)
-     return upload.IpfsHash;
-   };
-   const uploadMetadata = async (
-     name: string,
-     description: string,
-     imageCID: string,
-   ): Promise<string> => {
-     // pinata.upload.json is used to send the JSON to Pinata Cloud
-     // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/json
-     const upload = await pinata.upload.json({
-       name: name,
-       description: description,
-       imageCID: imageCID,
-     });
-     return upload.IpfsHash;
-   };
-   ```
+const uploadMetadata = useCallback(
+  async (
+    name: string,
+    description: string,
+    imageCID: string,
+  ): Promise<string> => {
+    const upload = await pinata.upload.json({ name, description, imageCID });
+    return upload.IpfsHash;
+  },
+  [pinata],
+);
+```
 
 Minting the NFT after the image and metadata have been uploaded is as simple as
-calling `metaplex.nfts().create(...)`. Below shows the `createNFT` function
-tying everything together:
+calling ``createNft` from `@metaplex-foundation/mpl-token-metadata`. Below shows
+the `createNFT` function tying everything together:
 
 ```tsx
-const createNFT = async (
-  name: string,
-  description: string,
-  fileUri: string,
-) => {
-  if (!metaplex || !account || isLoading) return;
-
-  setIsLoading(true);
-  try {
-    const imageCID = await uploadImage(fileUri);
-    const metadataCID = await uploadMetadata(name, description, imageCID);
-
-    const nft = await metaplex.nfts().create({
-      uri: `https://ipfs.io/ipfs/${metadataCID}`,
-      name: name,
-      sellerFeeBasisPoints: 0,
-    });
-
-    setNftOfTheDay(nft.nft);
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+const createNFT = useCallback(
+  async (name: string, description: string, fileUri: string) => {
+    if (!umi || !account || isLoading) return;
+    setIsLoading(true);
+    try {
+      console.log(`Creating NFT...`);
+      const imageCID = await uploadImage(fileUri);
+      const metadataCID = await uploadMetadata(name, description, imageCID);
+      const mint = generateSigner(umi);
+      const transaction = createNft(umi, {
+        mint,
+        name,
+        uri: `https://${process.env.EXPO_PUBLIC_NFT_PINATA_GATEWAY_URL}/ipfs/${metadataCID}`,
+        sellerFeeBasisPoints: percentAmount(0),
+      });
+      await transaction.sendAndConfirm(umi);
+      const createdNft = await fetchDigitalAsset(umi, mint.publicKey);
+      setNftOfTheDay(createdNft);
+    } catch (error) {
+      console.error("Failed to create NFT:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  },
+  [umi, account, isLoading, uploadImage, uploadMetadata],
+);
 ```
 
 We'll put all of the above into the `NFTProvider.tsx` file. All together, this
@@ -1219,72 +1113,91 @@ looks as follows:
 
 ```tsx
 import "react-native-url-polyfill/auto";
-import React, { ReactNode, createContext, useContext, useState } from "react";
-import {
-  Metaplex,
-  PublicKey,
-  Metadata,
-  Nft,
-  Sft,
-  SftWithToken,
-  NftWithToken,
-} from "@metaplex-foundation/js";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 import { useConnection } from "./ConnectionProvider";
-import { Connection, clusterApiUrl } from "@solana/web3.js";
-import { transact } from "@solana-mobile/mobile-wallet-adapter-protocol";
 import { Account, useAuthorization } from "./AuthProvider";
+import { useUmi } from "./MetaplexProvider";
+import {
+  publicKey,
+  Umi,
+  PublicKey,
+  generateSigner,
+  percentAmount,
+} from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { clusterApiUrl } from "@solana/web3.js";
+import { transact } from "@solana-mobile/mobile-wallet-adapter-protocol";
+import * as web3 from "@solana/web3.js";
 import RNFetchBlob from "rn-fetch-blob";
-import { useMetaplex } from "./MetaplexProvider";
-import { Nft } from "../types";
+import { fromWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters";
+import {
+  createNft,
+  DigitalAsset,
+  fetchAllDigitalAssetByCreator,
+  fetchDigitalAsset,
+} from "@metaplex-foundation/mpl-token-metadata";
+import { PinataSDK } from "pinata-web3";
 
 export interface NFTProviderProps {
   children: ReactNode;
 }
 
 export interface NFTContextState {
-  metaplex: Metaplex | null;
-  publicKey: PublicKey | null;
-  isLoading: boolean;
-  loadedNFTs: (Nft | Sft | SftWithToken | NftWithToken)[] | null;
-  nftOfTheDay: (Nft | Sft | SftWithToken | NftWithToken) | null;
-  connect: () => void;
-  fetchNFTs: () => void;
-  createNFT: (name: string, description: string, fileUri: string) => void;
+  umi: Umi | null; // Holds the Umi object that we use to call `fetch` and `create` on.
+  publicKey: PublicKey | null; // The public key of the authorized wallet
+  isLoading: boolean; // Loading state
+  loadedNFTs: DigitalAsset[] | null; // Array of loaded NFTs that contain metadata
+  nftOfTheDay: DigitalAsset | null; // The NFT snapshot created on the current day
+  connect: () => void; // Connects (and authorizes) us to the Devnet-enabled wallet
+  fetchNFTs: () => void; // Fetches the NFTs using the `metaplex` object
+  createNFT: (name: string, description: string, fileUri: string) => void; // Creates the NFT
 }
 
 const DEFAULT_NFT_CONTEXT_STATE: NFTContextState = {
-  metaplex: new Metaplex(new Connection(clusterApiUrl("devnet"))),
+  umi: createUmi(clusterApiUrl("devnet")),
   publicKey: null,
   isLoading: false,
   loadedNFTs: null,
   nftOfTheDay: null,
-  connect: () => PublicKey.default,
+  connect: () => publicKey("00000000000000000000000000000000"), // Default PublicKey
   fetchNFTs: () => {},
-  createNFT: (name: string, description: string, fileUri: string) => {},
+  createNFT: () => {},
 };
-
-const NFTContext = createContext<NFTContextState>(DEFAULT_NFT_CONTEXT_STATE);
 
 export function formatDate(date: Date) {
   return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
 }
 
+const NFTContext = createContext<NFTContextState>(DEFAULT_NFT_CONTEXT_STATE);
+
 export function NFTProvider(props: NFTProviderProps) {
-  const { children } = props;
+  const pinata = useMemo(
+    () =>
+      new PinataSDK({
+        pinataJwt: process.env.EXPO_PUBLIC_PINATA_JWT,
+        pinataGateway: process.env.EXPO_PUBLIC_PINATA_GATEWAY,
+      }),
+    [],
+  );
+
+  const ipfsPrefix = `https://${process.env.EXPO_PUBLIC_NFT_PINATA_GATEWAY_URL}/ipfs/`;
   const { connection } = useConnection();
   const { authorizeSession } = useAuthorization();
   const [account, setAccount] = useState<Account | null>(null);
+  const [nftOfTheDay, setNftOfTheDay] = useState<DigitalAsset | null>(null);
+  const [loadedNFTs, setLoadedNFTs] = useState<DigitalAsset[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [nftOfTheDay, setNftOfTheDay] = useState<
-    (Nft | Sft | SftWithToken | NftWithToken) | null
-  >(null);
-  const [loadedNFTs, setLoadedNFTs] = useState<
-    (Nft | Sft | SftWithToken | NftWithToken)[] | null
-  >(null);
+  const { umi } = useUmi(connection, account, authorizeSession);
+  const { children } = props;
 
-  const { metaplex } = useMetaplex(connection, account, authorizeSession);
-
-  const connect = () => {
+  const connect = useCallback(() => {
     if (isLoading) return;
 
     setIsLoading(true);
@@ -1294,102 +1207,85 @@ export function NFTProvider(props: NFTProviderProps) {
     }).finally(() => {
       setIsLoading(false);
     });
-  };
+  }, [isLoading, authorizeSession]);
 
-  const fetchNFTs = async () => {
-    if (!metaplex || !account || isLoading) return;
-
+  const fetchNFTs = useCallback(async () => {
+    if (!umi || !account || isLoading) return;
     setIsLoading(true);
 
     try {
-      const nfts = await metaplex.nfts().findAllByCreator({
-        creator: account.publicKey,
-      });
-
-      const loadedNFTs = await Promise.all(
-        nfts.map(nft => {
-          return metaplex.nfts().load({ metadata: nft as Metadata });
-        }),
+      const creatorPublicKey = fromWeb3JsPublicKey(account.publicKey);
+      const nfts = await fetchAllDigitalAssetByCreator(umi, creatorPublicKey);
+      setLoadedNFTs(nfts);
+    } catch (error) {
+      console.error("Failed to fetch NFTs:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [umi, account, isLoading]);
+  const uploadImage = useCallback(
+    async (fileUri: string): Promise<string> => {
+      const imageBytesInBase64 = await RNFetchBlob.fs.readFile(
+        fileUri,
+        "base64",
       );
-      setLoadedNFTs(loadedNFTs);
+      const upload = await pinata.upload.base64(imageBytesInBase64);
+      return upload.IpfsHash;
+    },
+    [pinata],
+  );
 
-      // Check if we already took a snapshot today
-      const nftOfTheDayIndex = loadedNFTs.findIndex(nft => {
-        return formatDate(new Date(Date.now())) === nft.name;
-      });
+  const uploadMetadata = useCallback(
+    async (
+      name: string,
+      description: string,
+      imageCID: string,
+    ): Promise<string> => {
+      const upload = await pinata.upload.json({ name, description, imageCID });
+      return upload.IpfsHash;
+    },
+    [pinata],
+  );
 
-      if (nftOfTheDayIndex !== -1) {
-        setNftOfTheDay(loadedNFTs[nftOfTheDayIndex]);
+  const createNFT = useCallback(
+    async (name: string, description: string, fileUri: string) => {
+      if (!umi || !account || isLoading) return;
+      setIsLoading(true);
+      try {
+        console.log(`Creating NFT...`);
+        const imageCID = await uploadImage(fileUri);
+        const metadataCID = await uploadMetadata(name, description, imageCID);
+        const mint = generateSigner(umi);
+        const transaction = createNft(umi, {
+          mint,
+          name,
+          uri: ipfsPrefix + metadataCID,
+          sellerFeeBasisPoints: percentAmount(0),
+        });
+        await transaction.sendAndConfirm(umi);
+        const createdNft = await fetchDigitalAsset(umi, mint.publicKey);
+        setNftOfTheDay(createdNft);
+      } catch (error) {
+        console.error("Failed to create NFT:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [umi, account, isLoading, uploadImage, uploadMetadata],
+  );
 
-  const uploadImage = async (fileUri: string): Promise<string> => {
-    const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
-      fileUri,
-      "base64",
-    );
+  const publicKey = useMemo(
+    () =>
+      account?.publicKey
+        ? fromWeb3JsPublicKey(account.publicKey as web3.PublicKey)
+        : null,
+    [account],
+  );
 
-    // pinata.upload.base64 is used to send the Base64-encoded image to Pinata Cloud
-    // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/base64#base64
-    const upload = await pinata.upload.base64(imageBytesInBase64);
-
-    // Return the IPFS hash of the uploaded image (IPFS is a decentralized file storage system)
-    return upload.IpfsHash;
-  };
-
-  const uploadMetadata = async (
-    name: string,
-    description: string,
-    imageCID: string,
-  ): Promise<string> => {
-    // pinata.upload.json is used to send the JSON to Pinata Cloud
-    // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/json
-    const upload = await pinata.upload.json({
-      name: name,
-      description: description,
-      imageCID: imageCID,
-    });
-    return upload.IpfsHash;
-  };
-
-  const createNFT = async (
-    name: string,
-    description: string,
-    fileUri: string,
-  ) => {
-    if (!metaplex || !account || isLoading) return;
-
-    setIsLoading(true);
-    try {
-      const imageCID = await uploadImage(fileUri);
-      const metadataCID = await uploadMetadata(name, description, imageCID);
-
-      const nft = await metaplex.nfts().create({
-        uri: `https://ipfs.io/ipfs/${metadataCID}`,
-        name: name,
-        sellerFeeBasisPoints: 0,
-      });
-
-      setNftOfTheDay(nft.nft);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const publicKey = account?.publicKey ?? null;
-
-  const state = {
+  const state: NFTContextState = {
     isLoading,
-    account,
     publicKey,
-    metaplex,
+    umi,
     nftOfTheDay,
     loadedNFTs,
     connect,
@@ -1530,50 +1426,90 @@ export function MainScreen() {
   const [previousImages, setPreviousImages] =
     React.useState<NFTSnapshot[]>(DEFAULT_IMAGES);
   const todaysDate = new Date(Date.now());
+  const ipfsPrefix = `https://${process.env.EXPO_PUBLIC_NFT_PINATA_GATEWAY_URL}/ipfs/`;
+  type NftMetaResponse = {
+    name: string;
+    description: string;
+    imageCID: string;
+  };
+  const fetchMetadata = async (uri: string) => {
+    try {
+      const response = await fetch(uri);
+      const metadata = await response.json();
+      return metadata as NftMetaResponse;
+    } catch (error) {
+      console.error("Error fetching metadata:", error);
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (!loadedNFTs) return;
 
-    const loadedSnapshots = loadedNFTs.map(loadedNft => {
-      if (!loadedNft.json) return null;
-      if (!loadedNft.json.name) return null;
-      if (!loadedNft.json.description) return null;
-      if (!loadedNft.json.image) return null;
+    const loadSnapshots = async () => {
+      const loadedSnapshots = await Promise.all(
+        loadedNFTs.map(async loadedNft => {
+          if (!loadedNft.metadata.name) return null;
+          if (!loadedNft.metadata.uri) return null;
 
-      const uri = loadedNft.json.image;
-      const unixTime = Number(loadedNft.json.description);
+          const metadata = await fetchMetadata(loadedNft.metadata.uri);
+          if (!metadata) return null;
 
-      if (!uri) return null;
-      if (isNaN(unixTime)) return null;
+          const { imageCID, description } = metadata;
+          if (!imageCID || !description) return null;
 
-      return {
-        uri: loadedNft.json.image,
-        date: new Date(unixTime),
-      } as NFTSnapshot;
-    });
+          const unixTime = Number(description);
+          if (isNaN(unixTime)) return null;
 
-    // Filter out null values
-    const cleanedSnapshots = loadedSnapshots.filter(loadedSnapshot => {
-      return loadedSnapshot !== null;
-    }) as NFTSnapshot[];
+          return {
+            uri: ipfsPrefix + imageCID,
+            date: new Date(unixTime),
+          } as NFTSnapshot;
+        }),
+      );
 
-    // Sort by date
-    cleanedSnapshots.sort((a, b) => {
-      return b.date.getTime() - a.date.getTime();
-    });
+      // Filter out null values
+      const cleanedSnapshots = loadedSnapshots.filter(
+        (snapshot): snapshot is NFTSnapshot => snapshot !== null,
+      );
 
-    setPreviousImages(cleanedSnapshots as NFTSnapshot[]);
+      // Sort by date
+      cleanedSnapshots.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+      setPreviousImages(cleanedSnapshots);
+    };
+
+    loadSnapshots();
   }, [loadedNFTs]);
 
   useEffect(() => {
     if (!nftOfTheDay) return;
 
-    setCurrentImage({
-      uri: nftOfTheDay.json?.image ?? "",
-      date: todaysDate,
-    });
-  }, [nftOfTheDay]);
+    const fetchNftOfTheDayMetadata = async () => {
+      try {
+        if (!nftOfTheDay.metadata.uri) {
+          console.error("No metadata URI found for nftOfTheDay");
+          return;
+        }
 
+        const response = await fetchMetadata(nftOfTheDay.metadata.uri);
+
+        if (!response?.imageCID) {
+          console.error("No image found in nftOfTheDay metadata");
+          return;
+        }
+
+        setCurrentImage({
+          uri: ipfsPrefix + response.imageCID,
+          date: todaysDate,
+        });
+      } catch (error) {
+        console.error("Error fetching nftOfTheDay metadata:", error);
+      }
+    };
+
+    fetchNftOfTheDayMetadata();
+  }, [nftOfTheDay, todaysDate]);
   const mintNFT = async () => {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -1662,7 +1598,7 @@ approve the app. Fetch all of the NFTs by tapping `Fetch NFTs`. Lastly, tap
 Congratulations! That was not an easy or quick lab. You're doing great if you've
 made it this far. If you run into any issues, please go back through the lab
 and/or reference the final solution code on the
-[`main` branch in Github](https://github.com/Unboxed-Software/solana-advance-mobile).
+[`main` branch in Github](https://github.com/XuananLe/solana-advance-mobile).
 
 ## Challenge
 
