@@ -603,7 +603,7 @@ touch metro.config.js
 
 Copy and paste the following into `metro.config.js`:
 
-```js
+```javascript
 // Import the default Expo Metro config
 const { getDefaultConfig } = require("@expo/metro-config");
 
@@ -641,29 +641,25 @@ an `IdentitySigner` for the `Metaplex` object to use. This allows it to call
 several privileged functions on our behalf:
 
 ```tsx
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
-import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
-import {
-  transact,
-  Web3MobileWallet,
-} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { mplCandyMachine } from '@metaplex-foundation/mpl-candy-machine';
+import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
+import { transact, Web3MobileWallet } from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
 import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { useMemo } from "react";
 import { Account } from "./AuthProvider";
+import { mplTokenMetadata } from '@metaplex-foundation/mpl-token-metadata';
 
-type Web3JsTransactionOrVersionedTransaction =
-  | Transaction
-  | VersionedTransaction;
+type LegacyOrVersionedTransact = Transaction | VersionedTransaction;
 
-export const useMetaplex = (
+export const useUmi = (
   connection: Connection,
   selectedAccount: Account | null,
   authorizeSession: (wallet: Web3MobileWallet) => Promise<Account>,
 ) => {
   return useMemo(() => {
     if (!selectedAccount || !authorizeSession) {
-      return { umi: null };
+      return { mobileWalletAdapter: null, umi: null };
     }
 
     const mobileWalletAdapter = {
@@ -678,11 +674,7 @@ export const useMetaplex = (
           return signedMessages[0];
         });
       },
-      signTransaction: async <
-        T extends Web3JsTransactionOrVersionedTransaction,
-      >(
-        transaction: T,
-      ): Promise<T> => {
+      signTransaction: async <T extends LegacyOrVersionedTransact>(transaction: T): Promise<T> => {
         return await transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
           const signedTransactions = await wallet.signTransactions({
@@ -691,11 +683,7 @@ export const useMetaplex = (
           return signedTransactions[0] as T;
         });
       },
-      signAllTransactions: async <
-        T extends Web3JsTransactionOrVersionedTransaction,
-      >(
-        transactions: T[],
-      ): Promise<T[]> => {
+      signAllTransactions: async <T extends LegacyOrVersionedTransact>(transactions: T[]): Promise<T[]> => {
         return transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
           const signedTransactions = await wallet.signTransactions({
@@ -708,6 +696,7 @@ export const useMetaplex = (
 
     const umi = createUmi(connection.rpcEndpoint)
       .use(mplCandyMachine())
+      .use(mplTokenMetadata())
       .use(walletAdapterIdentity(mobileWalletAdapter));
 
     return { umi };
@@ -720,7 +709,7 @@ export const useMetaplex = (
 We're also making a higher-level NFT provider that helps with NFT state
 management. It combines all three of our previous providers:
 `ConnectionProvider`, `AuthProvider`, and `MetaplexProvider` to allow us to
-create our `Metaplex` object. We will fill this out at a later step; for now, it
+create our `Umi` object. We will fill this out at a later step; for now, it
 makes for a good boilerplate.
 
 Let's create the new file `components/NFTProvider.tsx`:
@@ -954,15 +943,91 @@ This should have the following fields:
   `fetch` and `create`
 - `publicKey: PublicKey | null` - The NFT creator's public key
 - `isLoading: boolean` - Manages loading state
-- `loadedNFTs: (Nft | Sft | SftWithToken | NftWithToken)[] | null` - An array of
+- `loadedNFTs: (Nft)[] | null` - An array of
   the user's snapshot NFTs
-- `nftOfTheDay: (Nft | Sft | SftWithToken | NftWithToken) | null` - A reference
+- `nftOfTheDay: (Nft) | null` - A reference
   to the NFT created today
 - `connect: () => void` - A function for connecting to the Devnet-enabled wallet
 - `fetchNFTs: () => void` - A function that fetches the user's snapshot NFTs
 - `createNFT: (name: string, description: string, fileUri: string) => void` - A
   function that creates a new snapshot NFT
 
+We can define the ```Nft``` type as follow and put it inside a file called ```types.ts```
+```typescript
+import { PublicKey } from '@metaplex-foundation/umi';
+import {
+  Metadata,
+  TokenStandard,
+  CollectionDetails,
+  UseMethod,
+  Creator,
+  Collection,
+  Uses,
+} from '@metaplex-foundation/mpl-token-metadata';
+import { Mint } from '@metaplex-foundation/mpl-toolbox';
+
+type NftEdition = {
+  isOriginal: boolean;
+  largestMintedEdition?: bigint;
+  printEditionMint?: PublicKey;
+  printEditionNum?: bigint;
+};
+
+export type Nft = Omit<Metadata, 'model' | 'address' | 'mintAddress'> & {
+  /** A model identifier to distinguish models in the SDK. */
+  readonly model: 'nft';
+
+  /** The mint address of the NFT. */
+  readonly address: PublicKey;
+
+  /** The metadata address of the NFT. */
+  readonly metadataAddress: PublicKey;
+
+  /** The mint account of the NFT. */
+  readonly mint: Mint;
+
+  /** 
+   * Defines whether the NFT is an original edition or a
+   * printed edition and provides additional information accordingly.
+   */
+  readonly edition: NftEdition;
+
+  /** The update authority of the NFT. */
+  readonly updateAuthority: PublicKey;
+
+  /** The JSON URI of the NFT. */
+  readonly uri: string;
+
+  /** The name of the NFT. */
+  readonly name: string;
+
+  /** The symbol of the NFT. */
+  readonly symbol: string;
+
+  /** The token standard of the NFT. */
+  readonly tokenStandard: TokenStandard;
+
+  /** The collection details of the NFT, if any. */
+  readonly collectionDetails: CollectionDetails | null;
+
+  /** The use method of the NFT, if any. */
+  readonly useMethod: UseMethod | null;
+
+  /** The creators of the NFT. */
+  readonly creators: Creator[];
+
+  /** The collection the NFT belongs to, if any. */
+  readonly collection: Collection | null;
+
+  /** The uses of the NFT, if any. */
+  readonly uses: Uses | null;
+
+  /** Whether the NFT is mutable. */
+  readonly isMutable: boolean;
+};
+```
+
+  
 ```tsx
 export interface NFTContextState {
   metaplex: Metaplex | null; // Holds the metaplex object that we use to call `fetch` and `create` on.
@@ -1143,6 +1208,7 @@ import { transact } from "@solana-mobile/mobile-wallet-adapter-protocol";
 import { Account, useAuthorization } from "./AuthProvider";
 import RNFetchBlob from "rn-fetch-blob";
 import { useMetaplex } from "./MetaplexProvider";
+import { Nft } from "../types";
 
 export interface NFTProviderProps {
   children: ReactNode;
