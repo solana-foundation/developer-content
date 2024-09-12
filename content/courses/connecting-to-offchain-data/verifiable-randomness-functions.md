@@ -50,8 +50,8 @@ called a seed and then use mathematical formulas to generate subsequent numbers
 in the sequence. Given the same seed, a PRNG will always produce the same
 sequence of numbers. It's important to seed with something close to true
 entropy: an admin-provided "random" input, the last system log, some combination
-of your system's clock time and other factors, etc.. Fun fact: some older video games
-have been broken because speedrunners found out how their randomness was
+of your system's clock time and other factors, etc.. Fun fact: some older video
+games have been broken because speedrunners found out how their randomness was
 calculated. One game in particular used the number of steps you've taken in the
 game as a seed.
 
@@ -1228,7 +1228,7 @@ imports, and adds a new function called `delay`.
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
-import { Program , BN } from "@coral-xyz/anchor";
+import { Program, BN } from "@coral-xyz/anchor";
 import { BurryEscrow } from "../target/types/burry_escrow";
 import { Big } from "@switchboard-xyz/common";
 import {
@@ -1640,4 +1640,3 @@ If you get stuck, we have the solution in the
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5af49eda-f3e7-407d-8cd7-78d0653ee17c)!
 </Callout>
-
