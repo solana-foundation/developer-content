@@ -1126,7 +1126,7 @@ export function CounterButton() {
   const { connection } = useConnection();
   const [isTransactionInProgress, setIsTransactionInProgress] = useState(false);
 
-  const showNotification = (message: string) => {
+  const showMessage = (message: string) => {
     if (Platform.OS === "android") {
       ToastAndroid.show(message, ToastAndroid.SHORT);
     } else {
@@ -1178,11 +1178,11 @@ export function CounterButton() {
           transactions: [transaction],
         });
 
-        showNotification(`Transaction successful! ${signature}`);
+        showMessage(`Transaction successful! ${signature}`);
       });
     } catch (error) {
       console.error("Transaction failed:", error);
-      showNotification(`Error: ${JSON.stringify(error)}`);
+      showMessage(`Error: ${JSON.stringify(error)}`);
     } finally {
       setIsTransactionInProgress(false);
     }
