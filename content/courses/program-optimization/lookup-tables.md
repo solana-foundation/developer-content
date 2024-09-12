@@ -7,7 +7,7 @@ objectives:
   - Use lookup tables with versioned transactions
 description:
   "Harness a great deal of accounts through the application of lookup tables."
-keyword:
+keywords:
   - lookup tables
   - address
   - transaction versions
