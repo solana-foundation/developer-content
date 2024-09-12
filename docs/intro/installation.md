@@ -296,8 +296,8 @@ Or install a specific version of the Anchor CLI by declaring which version you
 want to install:
 
 ```shell
-avm install 0.31.0
-avm use 0.31.0
+avm install 0.30.1
+avm use 0.30.1
 ```
 
 > Don't forget to run the `avm use` command to declare which Anchor CLI version
