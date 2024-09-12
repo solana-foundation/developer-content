@@ -707,7 +707,7 @@ proc-macro = true
 syn = { version = "2.0", features = ["full"] }
 quote = "1.0.21"
 proc-macro2 = "1.0"
-anchor-lang = "0.29.0"
+anchor-lang = "0.30.1"
 ```
 
 The `proc-macro = true` line defines this crate as containing a procedural
@@ -740,7 +740,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anchor-lang = "0.29.0"
+anchor-lang = "0.30.1"
 custom-macro = { path = "../custom-macro" }
 ```
 
@@ -989,7 +989,7 @@ first add the `custom-macro` crate as a dependency to the program in its
 
 ```text
 [dependencies]
-anchor-lang = "0.29.0"
+anchor-lang = "0.30.1"
 custom-macro = { path = "../../custom-macro" }
 ```
 
