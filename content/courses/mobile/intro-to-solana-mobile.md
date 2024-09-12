@@ -105,7 +105,7 @@ library.
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
-#### Supported Frameworks
+### Supported Frameworks
 
 Solana Mobile supports a number of different frameworks. Officially supported
 are React Native and native Android, with community SDKs for Flutter, Unity, and
@@ -126,7 +126,7 @@ Unreal Engine.
 To keep the development experience as close as possible to other lessons, we
 will be working exclusively with React Native.
 
-### From React to React Native
+## From React to React Native
 
 React Native is very similar to React but designed for mobile. Here are some key
 points to note:
@@ -147,11 +147,11 @@ points to note:
 
 > **NOTE:**There is a learning curve, but if you know React you're not nearly as
 > far from being able to develop mobile apps as you think! It may feel jarring
-> to start, but after a few hours of React Native development, you'll start to
+> to start, but after a few hours of React Native development, you will start to
 > feel much more comfortable. We have included a [Lab](#lab) section below to
 > help you.
 
-### Creating a Solana dApp with React Native
+## Creating a Solana dApp with React Native
 
 Solana React Native dApps are virtually identical to React dApps. The primary
 difference is in the wallet interaction. Instead of the wallet being available
@@ -163,7 +163,7 @@ later parts of this lesson.
 
 ![dApp Flow](/public/assets/courses/unboxed/basic-solana-mobile-flow.png)
 
-### Reading Data
+## Reading Data
 
 Reading data from a Solana cluster in React Native works the same way as in
 React. You can use the `useConnection` hook to access the `connection` object,
@@ -185,7 +185,7 @@ const account = await connection.getAccountInfo(publicKey);
 > **NOTE:** If you need a refresher, refer to our
 > [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data).
 
-### Connecting to a Wallet
+## Connecting to a Wallet
 
 When writing data to the blockchain, it must be done through a **transaction**.
 Transactions need to be signed by one or more secret keys (previously referred
@@ -194,7 +194,7 @@ to as private keys) and sent to an
 for processing. In almost all cases, this interaction is facilitated through a
 wallet application.
 
-#### Web vs. Mobile Wallet Interactions
+### Web vs. Mobile Wallet Interactions
 
 On the web, dApps typically interact with wallets via browser extensions.
 However, on mobile, the process is slightly different. You use a WebSocket to
@@ -219,7 +219,7 @@ perform actions such as [signing transactions(###)] or interacting with wallet
 data. Remember, all wallet interactions must occur inside the callback of the
 `transact` function.
 
-#### Signing and sending transactions
+### Signing and sending transactions
 
 The overall flow for signing and sending a transaction is as follows:
 
@@ -246,9 +246,7 @@ the wallet.
 Here is an example of sending a transaction using MWA:
 
 ```tsx
-import { Transaction } from "@solana/web3.js";
-import { useAuthorization } from "./AuthProvider";
-import { useConnection } from "./ConnectionProvider";
+//import required dependencies
 
 const { authorizeSession } = useAuthorization();
 const { connection } = useConnection();
@@ -284,25 +282,25 @@ const sendTransactions = async (transaction: Transaction) => {
 };
 ```
 
-### Debugging
+## Debugging
 Debugging can be challenging when working with Solana mobile transactions, as two separate applications are involved: your dApp and the mobile wallet. Unlike typical single-application setups, you won't have direct access to the wallet’s logs, which makes tracking issues more complex.
 
 However, Android Studio’s [Logcat](https://developer.android.com/studio/debug/logcat) provides a useful solution - enabling you to view logs from all applications running on your device including the wallet. By leveraging Logcat, you can monitor the interaction between your dApp and the wallet, helping you identify any issues that arise during transaction signing and submission.
 
 If Logcat is not your preferred tool, an alternative approach is to use the wallet solely for signing transactions, while handling the actual transaction submission in your dApp’s code. This method allows for greater control over debugging, as you can inspect the transaction flow more thoroughly on the client side.
 
-### Deploying for Solana Mobile
+## Deploying for Solana Mobile
 Deploying mobile applications can be challenging, and the complexity increases when dealing with crypto-based apps. Two primary factors contribute to this difficulty: customer safety and financial incentives.
 
-#### Customer Safety and Regulatory Uncertainty:
+### Customer Safety and Regulatory Uncertainty:
 Most mobile app marketplaces, such as the Apple App Store and Google Play Store, have policies that restrict blockchain-related apps. Since cryptocurrency is still a relatively new and evolving technology, platforms are cautious about regulatory compliance. They often adopt strict guidelines to protect users from potential risks associated with blockchain apps.
 
-#### In-App Purchases and Platform Fees:
+### In-App Purchases and Platform Fees:
 Another significant challenge arises when using cryptocurrency for in-app purchases. Many platforms impose a transaction fee on purchases made within their apps (ranging from 15% to 30%). Using cryptocurrency as a payment method is often seen as a way to bypass these fees, which is explicitly prohibited by most app stores. These platforms prioritize protecting their revenue streams and therefore enforce strict policies against apps that facilitate crypto payments for in-app purchases.
 
 > While traditional app stores impose strict policies around blockchain transactions to protect their revenue and comply with regulations, alternative distribution methods like the Solana dApp Store offers developers a more flexible platform for deploying Solana-based mobile applications. This decentralized approach bypasses many of the restrictions seen in centralized app marketplaces, allowing dApps to thrive in a more blockchain-friendly ecosystem.
 
-### Conclusion
+## Conclusion
 Getting started with Solana mobile development is more accessible than ever, thanks to the Solana Mobile Stack (SMS). Although React Native introduces some differences compared to React, much of the code you will write remains familiar, particularly when it comes to structuring the UI and handling state. The main distinction lies in how you interact with wallets, which requires using the `transact` callback to establish wallet sessions, sign transactions, and communicate with Solana’s blockchain.
 
 As you continue building Solana mobile dApps, it's essential to keep learning and refining your skills. Be sure to explore additional resources like:
@@ -310,68 +308,35 @@ As you continue building Solana mobile dApps, it's essential to keep learning an
 - [The official Solana Developer Docs](https://solana.com/docs) for in-depth guides on Solana’s core libraries and best practices.
 - [Solana's Discord community](https://discord.com/invite/kBbATFA7PW) forum for troubleshooting, sharing insights, and staying updated on the latest ecosystem changes.
 
-Mastering mobile Solana development will open up new opportunities in decentralized finance (DeFi), gaming, and e-commerce, allowing you to build cutting-edge applications with a seamless user experience. Stay curious and experiment with different tools to push the boundaries of what you can achieve with mobile dApps.
+Mastering mobile Solana development will open up new opportunities in decentralized finance (DeFi), gaming, and e-commerce, allowing you to build cutting-edge applications with a seamless user experience. Stay curious and experiment with different tools to push the boundaries of what you can achieve with mobile dApps. Let's put our knowledge to test by building a counting app with React Native for Android OS!
 
-## Lab
+## Lab: Building a Mobile Counter dApp with React Native
+This dApp will display a counter and allow users to make increments via a transaction on the Solana blockchain. The app will also connect to a wallet for signing transactions.
 
-Let's practice this together by building a simple Android mobile counter dApp
-with React Native. The app will interact with the Anchor counter program that we
-made in the
-[Intro to client-side Anchor development](https://www.soldev.app/course/intro-to-anchor-frontend)
-lesson. This dApp simply displays a counter and allows users to increment the
-count through a Solana program. In this app, we’ll be able to see the current
-count, connect our wallet, and increment the count. We’ll be doing this all on
-Devnet and will be compiling only for Android.
+We will use the **Anchor framework** to interact with the on-chain counter program. The client side has already been developed in one of our previous lessons called [Intro to client-side Anchor development](https://solana.com/developers/courses/onchain-development/intro-to-anchor-frontend), feel free to check out its code for more context.
 
-This program already exists and is already deployed on Devnet. Feel free to
-check out the
-[deployed program's code](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/solution-decrement)
-if you want more context.
+To ensure you fully understand the core concepts, we will write this application in vanilla React Native without a starting template. While Solana Mobile offers templates that handle some boilerplate, building from scratch provides a much deeper understanding.
 
-We’ll write this application in vanilla React Native without a starting
-template. Solana Mobile provides a
-[React Native template](https://docs.solanamobile.com/react-native/react-native-scaffold)
-that shortcuts some of the boilerplate, but there's no better way to learn than
-to do something from scratch.
+### Getting Started
+To get started, you will need to properly set up a React Native development environment if you didn't already. This [article](https://reactnative.dev/docs/set-up-your-environment) shows you how. Remember that this step is not required if you are using a [Framework](https://reactnative.dev/architecture/glossary#react-native-framework).
 
-#### 0. Prerequisites
+Ensure you have Node.js, npm, or yarn installed on your system. These will manage your JavaScript packages.
+Install Android Studio:
 
-React Native allows us to write mobile applications using similar patterns as
-React. However, under the hood, our React code needs to be compiled down to
-languages and frameworks that work with the device's native OS. This requires a
-few prerequisite setup items:
+Android Studio is required to run the Android emulator and to compile your React Native app for Android devices.
+Configure the ANDROID_HOME Environment Variable:
 
-1. [Set up a React Native dev environment](https://reactnative.dev/docs/environment-setup?guide=native#creating-a-new-application).
-   Go through the
-   [**_entire article_**](https://reactnative.dev/docs/environment-setup?guide=native#creating-a-new-application),
-   using Android as the target OS. For convenience, we've typed out the
-   high-level steps below. Keep in mind that the source article might change
-   from the time of writing to when you're reading this. The source article is
-   your source of truth here.
+> **NOTE:** You will need to configure the `ANDROID_HOME` environment variable so that your terminal can recognize Android’s SDK tools. This step is critical for running and building your app on Android.
 
-   1. Install dependencies
-   2. Install Android Studio
-   3. Configure **ANDROID_HOME** environment variable
-   4. Create a new sample project (this is only used to set up the emulator)
+## Project Setup on Android Studio
+Create a Sample Project for the Emulator Setup to ensure your Android environment is set up correctly. In your terminal, run the code below within your preferred directory to scaffold a new React Native project, where `SampleProject` is your preferred project name. You can open the project in Android Studio and ensure it runs correctly on the Android emulator.
+```bash
+  npx react-native init SampleProject --npm
+```
 
-      1. If you run into the error `✖ Copying template`, add the `--npm` flag
-         at the end
+## Cloning and Running MWA
 
-         ```bash
-         npx react-native@latest init AwesomeProject
-         ✔ Downloading template
-         ✖ Copying template
-
-         npx react-native@latest init AwesomeProject --npm
-         ✔ Downloading template
-         ✔ Copying template
-         ```
-
-   5. Run and compile the sample project on your emulator
-
-2. Install and run the Solana fake wallet
-
-   1. Install the repo
+   1. Clone the repo in `SampleProject`
 
       ```bash
       git clone https://github.com/solana-mobile/mobile-wallet-adapter.git
@@ -384,17 +349,14 @@ few prerequisite setup items:
 
       ![Fake Wallet](/public/assets/courses/unboxed/basic-solana-mobile-fake-wallet.png)
 
-   4. For debugging, you’ll want to use `Logcat`. Now that your fake wallet is
-      running on the emulator, go to `View -> Tool Windows -> Logcat`. This will
-      open up a console logging out what’s happening with fake wallet.
+   4. For easier debugging, use `Logcat`. Check the [official installation guide](https://developer.android.com/studio/debug/logcat) if you are interested.
+   5. Now that your fake wallet is running on the emulator, go to `View -> Tool Windows -> Logcat`. This will open up a console logging out what’s happening with fake wallet.
 
 3. (Optional) Install other
    [Solana wallets](https://solana.com/ecosystem/explore?categories=wallet) on
    the Google Play store.
 
-Lastly, if you run into Java versioning issues - you’ll want to be on Java
-version 11. To check what you’re currently running type `java --version` in your
-terminal.
+Lastly, we recommend installing **java version 11** to avoid dependency errors. To know what version you have installed, run `java --version` in your terminal.
 
 #### 1. Plan out the App's Structure
 
