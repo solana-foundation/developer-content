@@ -905,8 +905,8 @@ The last thing we need to do is set up our access to
 as an environment variable, then we need to add one last dependency to convert
 our images into a file type we can upload.
 
-We'll be using Pinata Cloud to host our NFTs with IPFS since they do this for
-free.
+We'll be using Pinata Cloud to host our NFTs with IPFS since they do this for a
+very cheap price compare to other solutions such as Akord,...
 [Sign up, and create an API key](https://app.pinata.cloud/developers/api-keys).
 Keep this API key private.
 
@@ -1099,7 +1099,8 @@ through the code for each of them and then show you the entire file at the end:
    };
    ```
 
-2. `fetchNFTs` - This function will fetch the NFTs using Metaplex:
+2. `fetchNFTs` - This function will fetch the NFTs using
+   `fetchAllDigitalAssetByCreator`:
 
    ```tsx
    const fetchNFTs = async () => {
@@ -1136,94 +1137,82 @@ through the code for each of them and then show you the entire file at the end:
    ```
 
 3. `createNFT` - This function will upload a file to Pinata Cloud, and then use
-   Metaplex to create and mint an NFT to your wallet. This comes in three parts,
-   uploading the image, uploading the metadata and then minting the NFT.
+   `createNft` function from to create and mint an NFT to your wallet. This
+   comes in three parts, uploading the image, uploading the metadata and then
+   minting the NFT.
 
-   To upload to Pinata Cloud you just make a POST with your API key and the
-   image/metadata as the body.
+   To upload to Pinata Cloud you need to init `PinataSDK` instance with
+   `pinataJwt` and `pinataGateway`. After that, you can interact with
+   their[API](https://docs.pinata.cloud/web3/sdk/getting-started)
 
    We'll create two helper functions for uploading the image and metadata
    separately, then tie them together into a single `createNFT` function:
 
    ```tsx
-   // https://docs.pinata.cloud/
+   const pinata = new PinataSDK({
+     pinataJwt: process.env.EXPO_PUBLIC_PINATA_JWT,
+     pinataGateway: process.env.EXPO_PUBLIC_PINATA_GATEWAY,
+   });
    const uploadImage = async (fileUri: string): Promise<string> => {
      const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
        fileUri,
        "base64",
      );
-     const bytes = Buffer.from(imageBytesInBase64, "base64");
 
-     const response = await fetch("https://api.nft.storage/upload", {
-       method: "POST",
-       headers: {
-         Authorization: `Bearer ${process.env.EXPO_PUBLIC_PINANTA_API}`,
-         "Content-Type": "image/jpg",
-       },
-       body: bytes,
-     });
+     // pinata.upload.base64 is used to send the Base64-encoded image to Pinata Cloud
+     // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/base64#base64
+     const upload = await pinata.upload.base64(imageBytesInBase64);
 
-     const data = await response.json();
-     const cid = data.value.cid;
-
-     return cid as string;
+     // Return the IPFS hash of the uploaded image (IPFS is a decentralized file storage system)
+     return upload.IpfsHash;
    };
-
    const uploadMetadata = async (
      name: string,
      description: string,
      imageCID: string,
    ): Promise<string> => {
-     const response = await fetch("https://api.nft.storage/upload", {
-       method: "POST",
-       headers: {
-         Authorization: `Bearer ${process.env.EXPO_PUBLIC_PINATA_API}`,
-       },
-       body: JSON.stringify({
-         name,
-         description,
-         image: `https://ipfs.io/ipfs/${imageCID}`,
-       }),
+     // pinata.upload.json is used to send the JSON to Pinata Cloud
+     // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/json
+     const upload = await pinata.upload.json({
+       name: name,
+       description: description,
+       imageCID: imageCID,
      });
-
-     const data = await response.json();
-     const cid = data.value.cid;
-
-     return cid;
+     return upload.IpfsHash;
    };
    ```
 
-   Minting the NFT after the image and metadata have been uploaded is as simple
-   as calling `metaplex.nfts().create(...)`. Below shows the `createNFT`
-   function tying everything together:
+Minting the NFT after the image and metadata have been uploaded is as simple as
+calling `metaplex.nfts().create(...)`. Below shows the `createNFT` function
+tying everything together:
 
-   ```tsx
-   const createNFT = async (
-     name: string,
-     description: string,
-     fileUri: string,
-   ) => {
-     if (!metaplex || !account || isLoading) return;
+```tsx
+const createNFT = async (
+  name: string,
+  description: string,
+  fileUri: string,
+) => {
+  if (!metaplex || !account || isLoading) return;
 
-     setIsLoading(true);
-     try {
-       const imageCID = await uploadImage(fileUri);
-       const metadataCID = await uploadMetadata(name, description, imageCID);
+  setIsLoading(true);
+  try {
+    const imageCID = await uploadImage(fileUri);
+    const metadataCID = await uploadMetadata(name, description, imageCID);
 
-       const nft = await metaplex.nfts().create({
-         uri: `https://ipfs.io/ipfs/${metadataCID}`,
-         name: name,
-         sellerFeeBasisPoints: 0,
-       });
+    const nft = await metaplex.nfts().create({
+      uri: `https://ipfs.io/ipfs/${metadataCID}`,
+      name: name,
+      sellerFeeBasisPoints: 0,
+    });
 
-       setNftOfTheDay(nft.nft);
-     } catch (error) {
-       console.log(error);
-     } finally {
-       setIsLoading(false);
-     }
-   };
-   ```
+    setNftOfTheDay(nft.nft);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+```
 
 We'll put all of the above into the `NFTProvider.tsx` file. All together, this
 looks as follows:
@@ -1339,27 +1328,18 @@ export function NFTProvider(props: NFTProviderProps) {
     }
   };
 
-  // https://docs.pinata.cloud/
   const uploadImage = async (fileUri: string): Promise<string> => {
     const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
       fileUri,
       "base64",
     );
-    const bytes = Buffer.from(imageBytesInBase64, "base64");
 
-    const response = await fetch("https://api.nft.storage/upload", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINANTA_API}`,
-        "Content-Type": "image/jpg",
-      },
-      body: bytes,
-    });
+    // pinata.upload.base64 is used to send the Base64-encoded image to Pinata Cloud
+    // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/base64#base64
+    const upload = await pinata.upload.base64(imageBytesInBase64);
 
-    const data = await response.json();
-    const cid = data.value.cid;
-
-    return cid as string;
+    // Return the IPFS hash of the uploaded image (IPFS is a decentralized file storage system)
+    return upload.IpfsHash;
   };
 
   const uploadMetadata = async (
@@ -1367,22 +1347,14 @@ export function NFTProvider(props: NFTProviderProps) {
     description: string,
     imageCID: string,
   ): Promise<string> => {
-    const response = await fetch("https://api.nft.storage/upload", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_API}`,
-      },
-      body: JSON.stringify({
-        name,
-        description,
-        image: `https://ipfs.io/ipfs/${imageCID}`,
-      }),
+    // pinata.upload.json is used to send the JSON to Pinata Cloud
+    // This is based on Pinata's Base64 upload API: https://docs.pinata.cloud/web3/sdk/upload/json
+    const upload = await pinata.upload.json({
+      name: name,
+      description: description,
+      imageCID: imageCID,
     });
-
-    const data = await response.json();
-    const cid = data.value.cid;
-
-    return cid;
+    return upload.IpfsHash;
   };
 
   const createNFT = async (
