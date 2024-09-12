@@ -11,10 +11,10 @@ description: "How to use Solana in your Expo apps."
 
 - Expo is an open-source collection of tools and libraries that wrap around
   React Native, much like Next.js is a framework built on top of React.
-- In addition to simplifying the build/deploy process, Expo provides packages
-  that give you access to mobile devices' peripherals and capabilities.
-- A lot of Solana ecosystem libraries don't support React native out of the box,
-  but you can typically use them with the right
+- Along with simplifying the build and deploy process, Expo offers packages that
+  allow access to mobile device peripherals and capabilities.
+- Many Solana ecosystem libraries don't natively support React Native, but you
+  can often use them with the appropriate
   [polyfills](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill).
 
 ## Lesson
@@ -47,15 +47,15 @@ Expo consists of three main parts:
 2. The Expo Go App
 3. A suite of libraries that grant access to various mobile device capabilities.
 
-The Expo CLI is a build and debugging tool that helps make all of the magic
-happen. Chances are, you'll only have to interact with it when you're building
-or starting a development server. It just works.
+The Expo CLI is a powerful tool for building and debugging that simplifies the
+development process. Chances are, you'll only have to interact with it when
+you're building or starting a development server. It just works.
 
 The [Expo Go App](https://expo.dev/client) is a really cool piece of tech that
 allows _most_ apps to be developed without using an emulator or physical device.
 You download the app, you scan the QR from the build output and then you have a
-working dev environment right on your phone. Unfortunately, this will not work
-with the Solana mobile SDK. Coming from the
+working dev environment right on your phone. However, this doesn't work with the
+Solana Mobile SDK. Coming from the
 [Solana Expo setup article](https://docs.solanamobile.com/react-native/expo):
 
 > The traditional Expo Go development flow is only limited to certain
@@ -270,8 +270,8 @@ Let's practice this together by building the Mint-A-Day app, where users will
 able to mint a single NFT snapshot of their lives daily, creating a permanent
 diary of sorts.
 
-To mint the NFTs we'll be using Metaplex's Javascript SDK along with
-[nft.storage](https://nft.storage/) to store images and metadata. All of our
+To mint the NFTs we'll be using Metaplex's Umi libraries along with
+[Pinata Cloud](https://pinata.cloud/) to store images and metadata. All of our
 onchain work will be on Devnet.
 
 The first half of this lab is cobbling together the needed components to make
@@ -469,7 +469,8 @@ export function MainScreen() {
 }
 ```
 
-Next, create `polyfills.ts` for react-native to work with all solana
+Next, create file called `polyfills.ts` for react-native to work with all solana
+dependencies
 
 ```typescript
 import { getRandomValues as expoCryptoGetRandomValues } from "expo-crypto";
@@ -523,24 +524,25 @@ export default function App() {
 }
 ```
 
-Notice we've added two polyfills above: `buffer` and `expo-crypto`. These are
-necessary for the Solana dependencies to run correctly.
+Notice we've added the polyfills file `polyfills.ts`. These are necessary for
+the Solana dependencies to run correctly.
 
 #### 4. Build and run Solana boilerplate
 
-Add these run script to your package.json
+Add the following convenient run scripts to your `package.json` file.
 
 ```json
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build": "npx eas build --profile development --platform android",
     "build:local": "npx eas build --profile development --platform android --local",
-    "test": "echo \"No tests specified\" && exit 0"
-  },
-
+    "build:local:ios": "npx eas build --profile development --platform ios --local",
+    "test": "echo \"No tests specified\" && exit 0",
+    "clean": "rm -rf node_modules && npm install"
+  }
 ```
 
 Let's make sure everything is working and compiling correctly. In Expo, anytime
@@ -574,9 +576,9 @@ you can reference.
 
 #### 1. Install Metaplex dependencies
 
-The Metaplex SDK abstracts away a lot of the minutia of working with NFTs,
-however it was written largely for Node.js, so we'll need several more polyfills
-to make it work:
+[Metaplex programs and tools](https://developers.metaplex.com/programs-and-tools)
+abstracts away a lot of the minutia of working with NFTs, however it was written
+largely for Node.js, so we'll need several more polyfills to make it work:
 
 ```bash
 npm install assert \
@@ -633,12 +635,16 @@ module.exports = {
 
 #### 3. Metaplex provider
 
-We're going to create a Metaplex provider file that will help us access a
-`Metaplex` object. This `Metaplex` object is what gives us access to all of the
-functions we'll need like `fetch` and `create`. To do this we create a new file
-`/components/MetaplexProvider.tsx`. Here we pipe our mobile wallet adapter into
-an `IdentitySigner` for the `Metaplex` object to use. This allows it to call
-several privileged functions on our behalf:
+We're going to create a Metaplex provider file that will help us access an `Umi`
+object (Read more about `umi` at
+[Umi docs](https://developers.metaplex.com/umi)).This `Umi` object, combined
+with other libraries such as `@metaplex-foundation/umi-bundle-defaults`,
+`@metaplex-foundation/mpl-token-metadata`and
+`@metaplex-foundation/mpl-candy-machine`, will give us access to all the
+functions we'll need later, like `fetch` and `create`.. To do this we create a
+new file `/components/MetaplexProvider.tsx`. Here we pipe our mobile wallet
+adapter into the `Umi` object to use. This allows it to call several privileged
+functions on our behalf:
 
 ```tsx
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
@@ -653,20 +659,27 @@ import { useMemo } from "react";
 import { Account } from "./AuthProvider";
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 
+// Type definition for transactions that can be either legacy or versioned
 type LegacyOrVersionedTransact = Transaction | VersionedTransaction;
 
+// Custom hook to create and configure a Umi instance
 export const useUmi = (
   connection: Connection,
   selectedAccount: Account | null,
   authorizeSession: (wallet: Web3MobileWallet) => Promise<Account>,
 ) => {
   return useMemo(() => {
+    // If there's no selected account or authorize session function, return null values
     if (!selectedAccount || !authorizeSession) {
       return { mobileWalletAdapter: null, umi: null };
     }
 
+    // Create a mobile wallet adapter object with necessary methods
     const mobileWalletAdapter = {
+      // Public key of the selected account
       publicKey: selectedAccount.publicKey,
+
+      // Method to sign a message
       signMessage: async (message: Uint8Array): Promise<Uint8Array> => {
         return await transact(async (wallet: Web3MobileWallet) => {
           await authorizeSession(wallet);
@@ -677,6 +690,8 @@ export const useUmi = (
           return signedMessages[0];
         });
       },
+
+      // Method to sign a single transaction
       signTransaction: async <T extends LegacyOrVersionedTransact>(
         transaction: T,
       ): Promise<T> => {
@@ -688,6 +703,8 @@ export const useUmi = (
           return signedTransactions[0] as T;
         });
       },
+
+      // Method to sign multiple transactions
       signAllTransactions: async <T extends LegacyOrVersionedTransact>(
         transactions: T[],
       ): Promise<T[]> => {
@@ -701,10 +718,11 @@ export const useUmi = (
       },
     };
 
+    // Create and configure the Umi instance
     const umi = createUmi(connection.rpcEndpoint)
-      .use(mplCandyMachine())
-      .use(mplTokenMetadata())
-      .use(walletAdapterIdentity(mobileWalletAdapter));
+      .use(mplCandyMachine()) // Add Candy Machine plugin
+      .use(mplTokenMetadata()) // Add Token Metadata plugin
+      .use(walletAdapterIdentity(mobileWalletAdapter)); // Set wallet adapter
 
     return { umi };
   }, [authorizeSession, selectedAccount, connection]);
@@ -726,7 +744,7 @@ import "react-native-url-polyfill/auto";
 import { useConnection } from "./ConnectionProvider";
 import { Account, useAuthorization } from "./AuthProvider";
 import React, { ReactNode, createContext, useContext, useState } from "react";
-import { useUmi } from "./MetaplexProvider"; // Update this import to match your file structure
+import { useUmi } from "./MetaplexProvider";
 import { Umi } from "@metaplex-foundation/umi";
 
 export interface NFTProviderProps {
@@ -818,12 +836,12 @@ npx expo start --dev-client --android
 
 Everything we've done to this point is effectively boilerplate. We need to add
 the functionality we intend for our Mint-A-Day app to have. Mint-A-day is a
-daily snapshot app. It lets users take a snapshot of their life daily in the
+daily snapshot app. It allows users take a snapshot of their life daily in the
 form of minting an NFT.
 
 The app will need access to the device's camera and a place to remotely store
 the captured images. Fortunately, Expo SDK can provide access to the camera and
-[NFT.Storage](https://nft.storage) can store your NFT files for free.
+[Pinata Cloud](https://pinata.cloud/) can store your NFT files safely.
 
 #### 1. Camera setup
 
@@ -855,31 +873,42 @@ as a plugin in `app.json`:
   }
 ```
 
-This particular dependency makes it super simple to use the camera. To allow the
-user to take a picture and return the image all you have to do is call the
-following:
+This dependency makes it incredibly easy to use the camera. To allow the user to
+take a picture and return the image, simply call the following:
 
 ```tsx
+// Launch the camera to take a picture using ImagePicker
 const result = await ImagePicker.launchCameraAsync({
+  // Restrict media types to images only (no videos)
   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+
+  // Allow the user to edit/crop the image after taking it
   allowsEditing: true,
+
+  // Specify the aspect ratio of the cropping frame (1:1 for a square)
   aspect: [1, 1],
+
+  // Set the image quality to maximum (1.0 = highest quality, 0.0 = lowest)
   quality: 1,
 });
+
+// 'result' will contain information about the captured image
+// If the user cancels, result.cancelled will be true, otherwise it will contain the image URI
 ```
 
 No need to add this anywhere yet - we'll get to it in a few steps.
 
-#### 2. NFT.Storage setup
+#### 2. Pinata Cloud setup
 
 The last thing we need to do is set up our access to
-[nft.storage](https://nft.storage). We'll need to get an API key and add it as
-an environment variable, then we need to add one last dependency to convert our
-images into a file type we can upload.
+[Pinata Cloud](https://pinata.cloud/). We'll need to get an API key and add it
+as an environment variable, then we need to add one last dependency to convert
+our images into a file type we can upload.
 
-We'll be using NFT.storage to host our NFTs with IPFS since they do this for
-free. [Sign up, and create an API key](https://nft.storage/manage/). Keep this
-API key private.
+We'll be using Pinata Cloud to host our NFTs with IPFS since they do this for
+free.
+[Sign up, and create an API key](https://app.pinata.cloud/developers/api-keys).
+Keep this API key private.
 
 Best practices suggest keeping API keys in a `.env` file with `.env` added to
 your `.gitignore`. It's also a good idea to create a `.env.example` file that
@@ -889,13 +918,16 @@ for the project.
 Create both files, in the root of your directory and add `.env` to your
 `.gitignore` file.
 
-Then, add your API key to the `.env` file with the name
-`EXPO_PUBLIC_NFT_STORAGE_API`. Now you'll be able to access your API key safely
-in the application.
+Next, add your API key to the `.env` file with the variable name
+`EXPO_PUBLIC_PINATA_API`. This allows you to securely access your API key in the
+application using `process.env.EXPO_PUBLIC_PINATA_API`, unlike traditional
+`import "dotenv/config"` which may require additional polyfills when working
+with Expo. For more information on securely storing secrets, refer to the
+[Expo documentation on environment variables](https://docs.expo.dev/build-reference/variables/#importing-secrets-from-a-dotenv-file)
 
 Lastly, install `rn-fetch-blob`. This package will help us grab images from the
 device's URI scheme and turn them into Blobs we can the upload to
-[NFT.storage](https://nft.storage).
+[Pinata Cloud](https://pinata.cloud/).
 
 Install it with the following:
 
@@ -936,8 +968,8 @@ The app itself is relatively straightforward. The general flow is:
 
 1. The user connects (authorizes) using the `transact` function and by calling
    `authorizeSession` inside the callback
-2. Our code then uses the `Metaplex` object to fetch all of the NFTs created by
-   the user
+2. Our code then uses the `Umi` object to fetch all of the NFTs created by the
+   user
 3. If an NFT has not been created for the current day, allow the user to take a
    picture, upload it, and mint it as an NFT
 
@@ -957,7 +989,7 @@ This should have the following fields:
 - `createNFT: (name: string, description: string, fileUri: string) => void` - A
   function that creates a new snapshot NFT
 
-We can define the `Nft` type as follow and put it inside a file called
+We need to define the `Nft` type as follow and put it inside a file called
 `types.ts`
 
 ```typescript
@@ -1103,18 +1135,18 @@ through the code for each of them and then show you the entire file at the end:
    };
    ```
 
-3. `createNFT` - This function will upload a file to NFT.Storage, and then use
+3. `createNFT` - This function will upload a file to Pinata Cloud, and then use
    Metaplex to create and mint an NFT to your wallet. This comes in three parts,
    uploading the image, uploading the metadata and then minting the NFT.
 
-   To upload to NFT.Storage you just make a POST with your API key and the
+   To upload to Pinata Cloud you just make a POST with your API key and the
    image/metadata as the body.
 
    We'll create two helper functions for uploading the image and metadata
    separately, then tie them together into a single `createNFT` function:
 
    ```tsx
-   // https://nft.storage/api-docs/
+   // https://docs.pinata.cloud/
    const uploadImage = async (fileUri: string): Promise<string> => {
      const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
        fileUri,
@@ -1125,7 +1157,7 @@ through the code for each of them and then show you the entire file at the end:
      const response = await fetch("https://api.nft.storage/upload", {
        method: "POST",
        headers: {
-         Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+         Authorization: `Bearer ${process.env.EXPO_PUBLIC_PINANTA_API}`,
          "Content-Type": "image/jpg",
        },
        body: bytes,
@@ -1145,7 +1177,7 @@ through the code for each of them and then show you the entire file at the end:
      const response = await fetch("https://api.nft.storage/upload", {
        method: "POST",
        headers: {
-         Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+         Authorization: `Bearer ${process.env.EXPO_PUBLIC_PINATA_API}`,
        },
        body: JSON.stringify({
          name,
@@ -1307,7 +1339,7 @@ export function NFTProvider(props: NFTProviderProps) {
     }
   };
 
-  // https://nft.storage/api-docs/
+  // https://docs.pinata.cloud/
   const uploadImage = async (fileUri: string): Promise<string> => {
     const imageBytesInBase64: string = await RNFetchBlob.fs.readFile(
       fileUri,
@@ -1318,7 +1350,7 @@ export function NFTProvider(props: NFTProviderProps) {
     const response = await fetch("https://api.nft.storage/upload", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINANTA_API}`,
         "Content-Type": "image/jpg",
       },
       body: bytes,
@@ -1338,7 +1370,7 @@ export function NFTProvider(props: NFTProviderProps) {
     const response = await fetch("https://api.nft.storage/upload", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_STORAGE_API}`,
+        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_API}`,
       },
       body: JSON.stringify({
         name,
