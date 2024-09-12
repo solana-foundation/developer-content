@@ -50,7 +50,7 @@ called a seed and then use mathematical formulas to generate subsequent numbers
 in the sequence. Given the same seed, a PRNG will always produce the same
 sequence of numbers. It's important to seed with something close to true
 entropy: an admin-provided "random" input, the last system log, some combination
-of your system's clock time and other factors, etc.. Fun fact: older video games
+of your system's clock time and other factors, etc.. Fun fact: some older video games
 have been broken because speedrunners found out how their randomness was
 calculated. One game in particular used the number of steps you've taken in the
 game as a seed.
@@ -329,7 +329,7 @@ or `invoke_signed` on the object.
 
 ```rust
 // our client program
-use switchboard_solana::VrfRequestRandomness;
+use switchboard_v2::VrfRequestRandomness;
 use state::*;
 
 pub fn request_randomness(ctx: Context<RequestRandomness>, request_params: RequestRandomnessParams) -> Result <()> {
@@ -483,9 +483,9 @@ in our `Cargo.toml` file.
 
 ```typescript
 [dependencies]
-anchor-lang = "0.30.1"
-anchor-spl = "0.30.1"
-switchboard-solana = "0.30.4"
+anchor-lang = "0.28.0"
+anchor-spl = "0.28.0"
+switchboard-v2 = "0.4.0"
 ```
 
 ### 3. Lib.rs
@@ -739,7 +739,7 @@ the following accounts:
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
-use switchboard_solana::VrfAccountData;
+use switchboard_v2::VrfAccountData;
 
 pub const ANCHOR_DISCRIMINATOR: usize = 8;
 
@@ -1017,7 +1017,7 @@ three accounts.
 use crate::state::*;
 use crate::errors::*;
 use anchor_lang::prelude::*;
-use switchboard_solana::VrfAccountData;
+use switchboard_v2::VrfAccountData;
 
 #[derive(Accounts)]
 pub struct ConsumeRandomness<'info> {
@@ -1212,13 +1212,13 @@ file:
 
 ```toml
 ## VRF ACCOUNTS
-[[test.validator.clone]] # Switchboard Solana attestation programID
+[[test.validator.clone]] # Sbv2 attestation programID
 address = "sbattyXrzedoNATfc4L31wC9Mhxsi1BmFhTiN8gDshx"
 
-[[test.validator.clone]] # Switchboard Solana attestation IDL
+[[test.validator.clone]] # Sbv2 attestation IDL
 address = "5ExuoQR69trmKQfB95fDsUGsUrrChbGq9PFgt8qouncz"
 
-[[test.validator.clone]] # Switchboard Solana SbState
+[[test.validator.clone]] # Sbv2 SbState
 address = "CyZuD7RPDcrqCGbNvLCyqk6Py9cEZTKmNKujfPi3ynDd"
 ```
 
@@ -1228,7 +1228,7 @@ imports, and adds a new function called `delay`.
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
+import { Program , BN } from "@coral-xyz/anchor";
 import { BurryEscrow } from "../target/types/burry_escrow";
 import { Big } from "@switchboard-xyz/common";
 import {
@@ -1266,7 +1266,7 @@ describe("burry-escrow-vrf", () => {
     );
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      solUsedSwitchboardFeed,
+      solUsdSwitchboardFeed,
     );
 
     // derive escrow state account
@@ -1281,12 +1281,12 @@ describe("burry-escrow-vrf", () => {
     if (solPrice === null) {
       throw new Error("Aggregator holds no value");
     }
-    const failUnlockPrice = solPrice.plus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100);
+    const failUnlockPrice = new BN(solPrice.plus(10).toNumber());
+    const amountToLockUp = new BN(100);
 
     // Send transaction
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .deposit(amountToLockUp, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
@@ -1296,8 +1296,8 @@ describe("burry-escrow-vrf", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx);
+      await provider.connection.confirmTransaction(transaction, "confirmed");
+      console.log("Your transaction signature", transaction);
 
       // Fetch the created account
       const newAccount = await program.account.escrow.fetch(Escrow);
@@ -1310,7 +1310,7 @@ describe("burry-escrow-vrf", () => {
       console.log("Amount in escrow:", escrowBalance);
 
       // Check whether the data onchain is equal to local 'data'
-      assert(failUnlockPrice == newAccount.unlockPrice);
+      assert(failUnlockPrice.eq(newAccount.unlockPrice));
       assert(escrowBalance > 0);
     } catch (error) {
       console.log(error);
@@ -1327,9 +1327,9 @@ describe("burry-escrow-vrf", () => {
       program.programId,
     );
 
-    // send tx
+    // send transaction
     try {
-      const tx = await program.methods
+      const transaction = await program.methods
         .withdraw()
         .accounts({
           user: payer.publicKey,
@@ -1340,13 +1340,13 @@ describe("burry-escrow-vrf", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx);
+      await provider.connection.confirmTransaction(transaction, "confirmed");
+      console.log("Your transaction signature", transaction);
     } catch (error) {
       didFail = true;
 
       assert(
-        error.message.includes(
+        error.errorMessage.includes(
           "Current SOL price is not above Escrow unlock price.",
         ),
         "Unexpected error message: " + error.message,
@@ -1508,7 +1508,7 @@ it("Roll till you can withdraw", async () => {
 
   // initialize vrf client
   try {
-    const tx = await program.methods
+    const transaction = await program.methods
       .initVrfClient()
       .accounts({
         user: payer.publicKey,
@@ -1528,7 +1528,7 @@ it("Roll till you can withdraw", async () => {
   while (!rolledDoubles) {
     try {
       // Request randomness and roll dice
-      const tx = await program.methods
+      const transaction = await program.methods
         .getOutOfJail({
           switchboardStateBump: switchboard.program.programState.bump,
           permissionBump,
@@ -1554,7 +1554,7 @@ it("Roll till you can withdraw", async () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
+      await provider.connection.confirmTransaction(transaction, "confirmed");
       console.log(`Created VrfClient Account: ${vrfClientKey}`);
 
       // wait a few sec for switchboard to generate the random number and invoke callback instruction
@@ -1588,7 +1588,7 @@ it("Roll till you can withdraw", async () => {
     }
   }
 
-  const tx = await program.methods
+  const transaction = await program.methods
     .withdraw()
     .accounts({
       user: payer.publicKey,
@@ -1599,7 +1599,7 @@ it("Roll till you can withdraw", async () => {
     .signers([payer])
     .rpc();
 
-  await provider.connection.confirmTransaction(tx, "confirmed");
+  await provider.connection.confirmTransaction(transaction, "confirmed");
 });
 ```
 
