@@ -21,12 +21,13 @@ description: "Create your first Solana onchain program in Anchor."
 ## Lesson
 
 Before we begin, make sure you have Anchor installed. You can follow this lesson
-on [local-setup](./local-setup.md).
+on [local-setup](/content/onchain-development/local-setup.md).
 
 Solana's capacity to execute arbitrary code is a key part of its power. Solana
-programs, a.k.a "smart contracts", are the very foundation of the Solana
-ecosystem. And as developers and creators continuously conceive and deploy new
-programs, the collection of Solana programs continues to expand daily.
+programs, (sometimes called "smart contracts"), are the very foundation of the
+Solana ecosystem. And as developers and creators continuously conceive and
+deploy new programs, the collection of Solana programs continues to expand
+daily.
 
 Every popular Solana exchange, borrow-lend app, digital art auction house, perps
 platform, and prediction market is a program.
@@ -187,7 +188,7 @@ pub struct InstructionAccounts<'info> {
     #[account(
         init,
         payer = user,
-        space = (DISCRIMINATOR as usize) + AccountStruct::INIT_SPACE
+        space = DISCRIMINATOR + AccountStruct::INIT_SPACE
     )]
     pub account_name: Account<'info, AccountStruct>,
 
@@ -309,7 +310,7 @@ Recall again the `account_name` field from the `InstructionAccounts` example.
 #[account(
     init,
     payer = user,
-    space = (DISCRIMINATOR as usize) + AccountStruct::INIT_SPACE
+    space = DISCRIMINATOR + AccountStruct::INIT_SPACE
 )]
 pub account_name: Account<'info, AccountStruct>,
 #[account(mut)]
@@ -323,15 +324,11 @@ values:
   it (sets its account discriminator)
 - `payer` - specifies the payer for the account initialization to be the `user`
   account defined in the struct
-- `space`- specifies that the space allocated for the account.
-  - `DISCRIMINATOR` is a constant defined in the `AccountStruct` implementation.
-    The first 8 bytes of an account are reserved for the discriminator.
-    Discriminators are used to differentiate between different account types It
-    is of type `u8`.
-  - `INIT_SPACE` is a constant defined in the `AccountStruct` implementation. It
-    is a more convenient and readable way to specify the space required for the
-    account. It includes the total space (in bytes) required for the account. It
-    is of type `usize`.
+- `space`- the space allocated on the blockchain to store the account.
+  - `DISCRIMINATOR` is the first 8 bytes of an account, which Anchor uses to
+    save the type of the account.
+  - `AccountStruct::INIT_SPACE` is the total size of space required for all the
+    items in the `AccountStruct`.
   - The very need of using this `space` constraint can be eliminated by using
     `#[derive(InitSpace)]` macro. We'll see how to use that further in this
     lesson.
@@ -390,7 +387,7 @@ As an example, let's look at `AccountStruct` used by the `account_name` of
 pub struct InstructionAccounts {
     #[account(init,
         payer = user,
-        space = (DISCRIMINATOR as usize) + AnchorStruct::INIT_SPACE
+        space = DISCRIMINATOR + AnchorStruct::INIT_SPACE
     )]
     pub account_name: Account<'info, AccountStruct>,
     ...
@@ -402,7 +399,7 @@ pub struct AccountStruct {
     data: u64
 }
 
-const DISCRIMINATOR: u8 = 8;
+const DISCRIMINATOR: usize = 8;
 ```
 
 The `#[account]` attribute ensures that it can be used as an account in
@@ -414,9 +411,6 @@ When the `account_name` account is initialized:
   `DISCRIMINATOR` constant.
 - The data field of the account will match `AccountStruct`
 - The account owner is set as the `programId` from `declare_id`
-- The account account struct is made with the `[derive(InitSpace)]` macro which
-  provides `INIT_SPACE` constant to the `AccountStruct`. It calculates the space
-  required by the account based on the account's data-structure types.
 
 > It is considered a good practice to use the `#[derive(InitSpace)]` macro which
 > makes the code more readable and maintainable.
@@ -452,7 +446,7 @@ mod program_module_name {
 pub struct InstructionAccounts<'info> {
     #[account(init,
         payer = user,
-        space = (DISCRIMINATOR as usize) + AccountStruct::INIT_SPACE
+        space = DISCRIMINATOR + AccountStruct::INIT_SPACE
     )]
     pub account_name: Account<'info, AccountStruct>,
     #[account(mut)]
@@ -467,7 +461,7 @@ pub struct AccountStruct {
     data: u64
 }
 
-const DISCRIMINATOR: u64 = 8;
+const DISCRIMINATOR: usize = 8;
 ```
 
 #### Key takeaways:
@@ -571,7 +565,7 @@ pub struct Counter {
     pub count: u64,
 }
 
-const DISCRIMINATOR: u8 = 8;
+const DISCRIMINATOR: usize = 8;
 ```
 
 #### 3. Implement `Context` type `Initialize`
@@ -590,7 +584,7 @@ It'll need the following accounts:
 pub struct Initialize<'info> {
     #[account(init,
         payer = user,
-        space = (DISCRIMINATOR as usize) + Counter::INIT_SPACE
+        space = DISCRIMINATOR + Counter::INIT_SPACE
     )]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
@@ -690,7 +684,7 @@ pub mod anchor_counter {
 pub struct Initialize<'info> {
     #[account(init,
         payer = user,
-        space = (DISCRIMINATOR as usize) + Counter::INIT_SPACE
+        space = DISCRIMINATOR + Counter::INIT_SPACE
     )]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
@@ -711,7 +705,7 @@ pub struct Counter {
     pub count: u64,
 }
 
-const DISCRIMINATOR: u8 = 8;
+const DISCRIMINATOR: usize = 8;
 ```
 
 Run `anchor build` to build the program.
