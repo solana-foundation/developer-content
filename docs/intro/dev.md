@@ -107,10 +107,9 @@ can do this with the following command:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-You'll then need to have the
-[Solana CLI installed](https://docs.solanalabs.com/cli/install) to compile and
-deploy your programs. You can install the Solana CLI by running the following
-command:
+You'll then need to have the [Solana CLI installed](/docs/intro/installation.md)
+to compile and deploy your programs. You can install the Solana CLI by running
+the following command:
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
