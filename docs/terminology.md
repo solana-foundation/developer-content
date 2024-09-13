@@ -144,7 +144,7 @@ consensus.
 
 ## drone
 
-An off-chain service that acts as a custodian for a user's private key. It
+An offchain service that acts as a custodian for a user's private key. It
 typically serves to validate and sign transactions.
 
 ## entry

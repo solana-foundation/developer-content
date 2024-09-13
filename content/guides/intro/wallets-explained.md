@@ -270,8 +270,8 @@ signature pens! ✍️.**
 Do you want to start building on Solana?
 
 - A gentle introduction to Solana:
-  [https://solana.com/news/solana-scaffold-part-1-wallet-adapter](https://solana.com/news/solana-scaffold-part-1-wallet-adapter)
-- Tutorials: [https://soldev.app/](https://soldev.app/)
+  [Quick Start guides](/docs/intro/quick-start/index.md)
+- [Install the Solana CLI](/docs/intro/installation.md)
 
 ### Blockchain and blockchain
 

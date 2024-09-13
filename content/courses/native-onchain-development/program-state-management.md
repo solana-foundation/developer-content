@@ -3,66 +3,63 @@ title: Create a Basic Program, Part 2 - State Management
 objectives:
   - Describe the process of creating a new account using a Program Derived
     Address (PDA)
-  - Use seeds to derive a PDA
+  - Demonstrate how to use seeds to derive a PDA
   - Use the space required by an account to calculate the amount of rent (in
     lamports) a user must allocate
   - Use a Cross Program Invocation (CPI) to initialize an account with a PDA as
     the address of the new account
   - Explain how to update the data stored on a new account
 description:
-  "Learn how programs store data, using Solana's inbuilt -key-value store."
+  "Learn how programs store data using Solana's built-in key-value store."
 ---
 
 ## Summary
 
-- Program state is stored in other accounts rather than in the program itself
-- A Program Derived Address (PDA) is derived from a program ID and an optional
-  list of seeds. Once derived, PDAs are subsequently used as the address for a
-  storage account.
-- Creating an account requires that we calculate the space required and the
-  corresponding rent to allocate for the new account
-- Creating a new account requires a Cross Program Invocation (CPI) to the
-  `create_account` instruction on the System Program
-- Updating the data field on an account requires that we serialize (convert to
-  byte array) the data into the account
+- Program state is stored in other accounts, not in the program itself.
+- State is stored in Program Derived Address (PDA) accounts, which are generated
+  from a program ID and optional seeds. The data within a PDA is defined by the
+  programmer.
+- Creating an account requires calculating the necessary space and corresponding
+  rent in lamports.
+- A Cross Program Invocation (CPI) to the `create_account` instruction handler
+  on the System Program is needed to create a new account.
+- Updating the data field on an account involves serializing (converting to a
+  byte array) the data into the account.
 
 ## Lesson
 
-Solana maintains speed, efficiency, and extensibility in part by making programs
-stateless. Rather than having state stored on the program itself, programs use
-Solana's account model to read state from and write state to separate PDA
-accounts.
+Solana maintains speed, efficiency, and extensibility by making programs
+stateless. Instead of storing state alongside the program's executable, programs
+use Solana's account model to read and write state to separate PDA accounts.
 
-While this is an extremely flexible model, it's also a paradigm that can be
-difficult to work in if its unfamiliar. But don't worry! We'll start simple in
-this lesson and work up to more complex programs in the next unit.
+This model provides a simple, user-friendly key-value store for managing data
+and allows programs to be upgraded without affecting their data. However, if
+you're familiar with older blockchains, this might be challenging. In this
+lesson, we'll begin with the basics and gradually introduce more complex onchain
+programs. You'll learn the fundamentals of state management in a Solana program,
+including representing state as a Rust type, creating accounts using PDAs, and
+serializing account data.
 
-In this lesson we'll learn the basics of state management for a Solana program,
-including representing state as a Rust type, creating accounts using Program
-Derived Addresses, and serializing account data.
+### Program State
 
-### Program state
+All Solana accounts have a data field that holds a byte array, making accounts
+as flexible as files on a computer. You can store anything in an account, as
+long as it has the necessary storage space.
 
-All Solana accounts have a `data` field that holds a byte array. This makes
-accounts as flexible as files on a computer. You can store literally anything in
-an account (so long as the account has the storage space for it).
+Just like files in a traditional filesystem conform to specific formats like PDF
+or MP3, data stored in a Solana account must follow a pattern to be retrieved
+and deserialized into something usable.
 
-Just as files in a traditional filesystem conform to specific data formats like
-PDF or MP3, the data stored in a Solana account needs to follow some kind of
-pattern so that the data can be retrieved and deserialized into something
-usable.
-
-#### Represent state as a Rust type
+#### Represent State as a Rust Type
 
 When writing a program in Rust, we typically create this "format" by defining a
-Rust data type. If you went through the
-[first part of this lesson](basic-program-pt-1), this is very similar to what we
-did when we created an enum to represent discrete instructions.
+Rust data type. This is similar to how we created an enum to represent discrete
+instructions in the
+[first part of deserialize instruction data lesson](/content/courses/native-onchain-development/deserialize-instruction-data.md#enumerations).
 
-While this type should reflect the structure of your data, for most use cases a
-simple struct is sufficient. For example, a note-taking program that stores
-notes in separate accounts would likely have data for a title, body, and maybe
-an ID of some kind. We could create a struct to represent that as follows:
+A simple `struct` is usually sufficient for most use cases. For example, a
+note-taking program that stores notes in separate accounts might have fields for
+a title, body, and an ID:
 
 ```rust
 struct NoteState {
@@ -72,17 +69,15 @@ struct NoteState {
 }
 ```
 
-#### Using Borsh for serialization and deserialization
+#### Using Borsh for Serialization and Deserialization
 
-Just as with instruction data, we need a mechanism for converting from our Rust
-data type to a byte array, and vice versa. **Serialization** is the process of
-converting an object into a byte array. **Deserialization** is the process of
-reconstructing an object from a byte array.
+Just as with instruction data, we need to convert our Rust data type to a byte
+array and vice versa. **Serialization** converts an object into a byte array,
+while **deserialization** reconstructs an object from a byte array.
 
-We'll continue to use Borsh for serialization and deserialization. In Rust, we
-can use the `borsh` crate to get access to the `BorshSerialize` and
-`BorshDeserialize` traits. We can then apply those traits using the `derive`
-attribute macro.
+We'll continue using Borsh for serialization and deserialization. In Rust, the
+`borsh` crate provides the `BorshSerialize` and `BorshDeserialize` traits. We
+apply these traits using the `derive` attribute macro:
 
 ```rust
 use borsh::{BorshSerialize, BorshDeserialize};
@@ -95,49 +90,43 @@ struct NoteState {
 }
 ```
 
-These traits will provide methods on `NoteState` that we can use to serialize
-and deserialize the data as needed.
+These traits provide methods on `NoteState` for serializing and deserializing
+data.
 
-### Creating accounts
+### Creating Accounts
 
-Before we can update the data field of an account, we have to first create that
+Before we can update the data field of an account, we must first create the
 account.
 
-To create a new account within our program we must:
+To create a new account in our program, we need to:
 
-1. Calculate the space and rent required for the account
-2. Have an address to assign the new account
-3. Invoke the system program to create the new account
+1. Calculate the space and rent required for the account.
+2. Determine an address for the new account.
+3. Invoke the system program to create the new account.
 
 #### Space and rent
 
-Recall that storing data on the Solana network requires users to allocate rent
-in the form of lamports. The amount of rent required by a new account depends on
-the amount of space you would like allocated to that account. That means we need
-to know before creating the account how much space to allocate.
+Storing data on the Solana network requires users to allocate rent in the form
+of lamports. The required rent depends on the amount of space allocated to the
+account, so we must determine the space needed before creating the account.
 
-Note that rent is more like a deposit. All the lamports allocated for rent can
-be fully refunded when an account is closed. Additionally, all new accounts are
-now required to be
+Note that rent is more like a deposit; all lamports allocated for rent can be
+fully refunded when an account is closed. Additionally, all new accounts must be
 [rent-exempt](https://twitter.com/jacobvcreech/status/1524790032938287105),
-meaning lamports are not deducted from the account over time. An account is
-considered rent-exempt if it holds at least 2 years worth of rent. In other
-words, accounts are stored onchain permanently until the owner closes the
-account and withdraws the rent.
+meaning lamports are not deducted over time. An account is rent-exempt if it
+holds at least 2 years' worth of rent, ensuring accounts are stored onchain
+permanently until the owner closes the account and withdraws the rent.
 
-In our note-taking app example, the `NoteState` struct specifies three fields
-that need to be stored in an account: `title`, `body`, and `id`. To calculate
-the size the account needs to be, you would simply add up the size required to
-store the data in each field.
+In our note-taking app example, the `NoteState` struct has three fields:
+`title`, `body`, and `id`. To calculate the required account size, we add up the
+space needed for each field.
 
-For dynamic data, like strings, Borsh adds an additional 4 bytes at the
-beginning to store the length of that particular field. That means `title` and
-`body` are each 4 bytes plus their respective sizes. The `id` field is a 64-bit
-integer, or 8 bytes.
+For dynamic data like strings, Borsh adds an additional 4 bytes to store the
+field's length. This means `title` and `body` each require 4 bytes plus their
+respective sizes. The `id` field is a 64-bit integer or 8 bytes.
 
-You can add up those lengths and then calculate the rent required for that
-amount of space using the `minimum_balance` function from the `rent` module of
-the `solana_program` crate.
+We can add these lengths and calculate the required rent using the
+`minimum_balance` function from the `rent` module of the `solana_program` crate:
 
 ```rust
 // Calculate account size required for struct NoteState
@@ -150,31 +139,23 @@ let rent_lamports = rent.minimum_balance(account_len);
 
 #### Program Derived Addresses (PDA)
 
-Before creating an account, we also need to have an address to assign the
-account. For program owned accounts, this will be a program derived address
-(PDA) found using the `find_program_address` function.
+Before creating an account, we also need an address to assign the account. For
+program-owned accounts, this will be a Program Derived Address (PDA) found using
+the `find_program_address` function.
 
-As the name implies, PDAs are derived using the program ID (address of the
-program creating the account) and an optional list of “seeds”. Optional seeds
-are additional inputs used in the `find_program_address` function to derive the
-PDA. The function used to derive PDAs will return the same address every time
-when given the same inputs. This gives us the ability to create any number of
-PDA accounts and a deterministic way to find each account.
+PDAs are derived using the program ID (the address of the program creating the
+account) and optional seeds. The `find_program_address` function returns the
+same address every time with the same inputs, allowing us to deterministically
+create and find any number of PDA accounts.
 
-In addition to the seeds you provide for deriving a PDA, the
-`find_program_address` function will provide one additional "bump seed." What
-makes PDAs unique from other Solana account addresses is that they do not have a
-corresponding secret key. This ensures that only the program that owns the
-address can sign on behalf of the PDA. When the `find_program_address` function
-attempts to derive a PDA using the provided seeds, it passes in the number 255
-as the "bump seed." If the resulting address is invalid (i.e. has a
-corresponding secret key), then the function decreases the bump seed by 1 and
-derives a new PDA with that bump seed. Once a valid PDA is found, the function
-returns both the PDA and the bump that was used to derive the PDA.
+The `find_program_address` function also provides a "bump seed" to ensure the
+PDA doesn't have a corresponding secret key, making it secure for program
+ownership. The function starts with a bump seed of 255, decreasing it until a
+valid PDA is found.
 
-For our note-taking program, we will use the note creator's public key and the
-ID as the optional seeds to derive the PDA. Deriving the PDA this way allows us
-to deterministically find the account for each note.
+For our note-taking program, we'll use the note creator's public key and the ID
+as seeds to derive the PDA. This allows us to deterministically find the account
+for each note:
 
 ```rust
 let (note_pda_account, bump_seed) = Pubkey::find_program_address(&[note_creator.key.as_ref(), id.as_bytes().as_ref(),], program_id);
@@ -182,12 +163,10 @@ let (note_pda_account, bump_seed) = Pubkey::find_program_address(&[note_creator.
 
 #### Cross Program Invocation (CPI)
 
-Once we’ve calculated the rent required for our account and found a valid PDA to
-assign as the address of the new account, we are finally ready to create the
-account. Creating a new account within our program requires a Cross Program
-Invocation (CPI). A CPI is when one program invokes an instruction on another
-program. To create a new account within our program, we will invoke the
-`create_account` instruction on the system program.
+Once we've calculated the rent and derived a valid PDA, we can create the
+account using a Cross Program Invocation (CPI). A CPI is when one program
+invokes an instruction on another program. To create a new account, we'll invoke
+the `create_account` instruction on the system program.
 
 CPIs can be done using either `invoke` or `invoke_signed`.
 
@@ -206,17 +185,21 @@ pub fn invoke_signed(
 ) -> ProgramResult
 ```
 
-For this lesson we will use `invoke_signed`. Unlike a regular signature where a
-secret key is used to sign, `invoke_signed` uses the optional seeds, bump seed,
-and program ID to derive a PDA and sign an instruction. This is done by
-comparing the derived PDA against all accounts passed into the instruction. If
-any of the accounts match the PDA, then the signer field for that account is set
-to true.
+In this lesson, we'll explore `invoke_signed`, a function that allows a program
+to authorize actions for a Program Derived Address (PDA) without using a
+traditional secret key. Here's how it operates:
 
-A program can securely sign transactions this way because `invoke_signed`
-generates the PDA used for signing with the program ID of the program invoking
-the instruction. Therefore, it is not possible for one program to generate a
-matching PDA to sign for an account with a PDA derived using another program ID.
+1. `invoke_signed` derives a PDA using seeds, a bump seed, and the program ID.
+2. It compares this derived PDA against all accounts in the instruction.
+3. If an account matches the derived PDA, that account's signer field becomes
+   true.
+
+This method ensures security because `invoke_signed` generates the PDA using the
+invoking program's ID, preventing other programs from producing matching PDAs to
+authorize accounts derived with a different program ID. It's crucial to
+understand that while we describe the PDA as "authorizing," it doesn't use a
+secret key like traditional signatures. Instead, this mechanism enables programs
+to approve actions onchain for PDA accounts they control.
 
 ```rust
 invoke_signed(
@@ -235,24 +218,18 @@ invoke_signed(
 )?;
 ```
 
-### Serializing and deserializing account data
+### Serializing and Deserializing Account Data
 
-Once we've created a new account, we need to access and update the account's
-data field. This means deserializing its byte array into an instance of the type
-we created, updating the fields on that instance, then serializing that instance
-back into a byte array.
+After creating an account, we need to update its data field by deserializing its
+byte array into the Rust type, updating the fields, and then serializing it
+back.
 
-#### Deserialize account data
+#### Deserialize Account Data
 
-The first step to updating an account's data is to deserialize its `data` byte
-array into its Rust type. You can do this by first borrowing the data field on
-the account. This allows you to access the data without taking ownership.
-
-You can then use the `try_from_slice_unchecked` function to deserialize the data
-field of the borrowed account using the format of the type you created to
-represent the data. This gives you an instance of your Rust type so you can
-easily update fields using dot notation. If we were to do this with the
-note-taking app example we've been using, it would look like this:
+To update an account's data, first, deserialize its data byte array into its
+Rust type. Borrow the data field on the account to access it without taking
+ownership. Then, use the `try_from_slice_unchecked()` function to deserialize
+the data into the appropriate Rust type:
 
 ```rust
 let mut account_data = try_from_slice_unchecked::<NoteState>(note_pda_account.data.borrow()).unwrap();
@@ -262,7 +239,7 @@ account_data.body = rating;
 account_data.id = id;
 ```
 
-#### Serialize account data
+#### Serialize Account Data
 
 Once the Rust instance representing the account's data has been updated with the
 appropriate values, you can "save" the data on the account.
@@ -280,7 +257,7 @@ The above example converts the `account_data` object to a byte array and sets it
 to the `data` property on `note_pda_account`. This saves the updated
 `account_data` variable to the data field of the new account. Now when a user
 fetches the `note_pda_account` and deserializes the data, it will display the
-updated data we’ve serialized into the account.
+updated data we've serialized into the account.
 
 ### Iterators
 
@@ -293,49 +270,52 @@ is a Rust trait used to give sequential access to each element in a collection
 of values. Iterators are used in Solana programs to safely iterate over the list
 of accounts passed into the program entry point through the `accounts` argument.
 
-#### Rust iterator
+#### Rust Iterator
 
-The iterator pattern allows you to perform some task on a sequence of items. The
-`iter()` method creates an iterator object that references a collection. An
-iterator is responsible for the logic of iterating over each item and
-determining when the sequence has finished. In Rust, iterators are lazy, meaning
-they have no effect until you call methods that consume the iterator to use it
-up. Once you've created an iterator, you must call the `next()` function on it
-to get the next item.
+The iterator pattern allows you to perform tasks on a sequence of items. The
+`iter()` method creates an iterator object that references a collection. In
+Rust, iterators are lazy and have no effect until methods that consume the
+iterator are called. Use the `next()` function to get the next element in the
+sequence, advancing the iterator each time.
 
 ```rust
 let v1 = vec![1, 2, 3];
 
-// create the iterator over the vec
+// Create the iterator over the vec
 let v1_iter = v1.iter();
 
-// use the iterator to get the first item
+// Use the iterator to get the first item
 let first_item = v1_iter.next();
 
-// use the iterator to get the second item
+// Use the iterator to get the second item
 let second_item = v1_iter.next();
 ```
 
-#### Solana accounts iterator
+#### Solana Accounts Iterator
 
-Recall that the `AccountInfo` for all accounts required by an instruction are
-passing through a single `accounts` argument. To parse through the accounts and
-use them within our instruction, we will need to create an iterator with a
-mutable reference to the `accounts`.
+In Solana programs, the instruction handler receives an `accounts` argument
+containing `AccountInfo` items for all required accounts. To use these accounts
+within your instruction handler, create an iterator with a mutable reference to
+`accounts`. This approach allows you to process the account information
+sequentially and access the data you need for your instruction handler logic.
 
-At that point, instead of using the iterator directly, we pass it to the
+Instead of using the iterator directly, you can pass the iterator to the
 `next_account_info` function from the `account_info` module provided by the
 `solana_program` crate.
 
-For example, the instruction to create a new note in a note-taking program would
-at minimum require the accounts for the user creating the note, a PDA to store
-the note, and the `system_program` to initialize a new account. All three
-accounts would be passed into the program entry point through the `accounts`
-argument. An iterator of `accounts` is then used to separate out the
+For example, consider an instruction to create a new note in a note-taking
+program. This instruction would minimally require the following accounts:
+
+- The account of the user creating the note.
+- A PDA to store the note.
+- The `system_program` account to initialize a new account.
+
+All three accounts would be passed into the program entry point via the
+`accounts` argument. An iterator of `accounts` is then used to separate the
 `AccountInfo` associated with each account to process the instruction.
 
-Note that `&mut` means a mutable reference to the `accounts` argument. You can
-read more about
+Note: The `&mut` keyword indicates a mutable reference to the `accounts`
+argument. For more details, refer to
 [references in Rust](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
 and [the `mut` keyword](https://doc.rust-lang.org/std/keyword.mut.html).
 
@@ -351,98 +331,97 @@ let system_program = next_account_info(account_info_iter)?;
 
 ## Lab
 
-This overview covered a lot of new concepts. Let’s practice them together by
-continuing to work on the Movie Review program from the last lesson. No worries
-if you’re just jumping into this lesson without having done the previous
-lesson - it should be possible to follow along either way. We'll be using the
-[Solana Playground](https://beta.solpg.io) to write, build, and deploy our code.
+This section introduces several new concepts. Let's practice them together by
+continuing with the Movie Review program from the previous lesson. Even if
+you're starting with this lesson, you should be able to follow along. We'll be
+using the [Solana Playground](https://beta.solpg.io) to write, build, and deploy
+our code.
 
-As a refresher, we are building a Solana program which lets users review movies.
-Last lesson, we deserialized the instruction data passed in by the user but we
-have not yet stored this data in an account. Let’s now update our program to
-create new accounts to store the user’s movie review.
+As a refresher, we are building a Solana program that lets users review movies.
+In
+[the previous lesson deserialize instruction data](/content/courses/native-onchain-development/deserialize-instruction-data.md),
+we deserialized the instruction data passed in by the user but did not store
+this data in an account. Let's now update our program to create new accounts to
+store the user's movie review.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
-If you didn’t complete the lab from the last lesson or just want to make sure
-that you didn’t miss anything, you can reference
-[the starter code](https://beta.solpg.io/6295b25b0e6ab1eb92d947f7).
+If you didn't complete the lab from the last lesson or just want to make sure
+that you didn't miss anything, you can reference
+[the starter code](https://beta.solpg.io/66d67d97cffcf4b13384d333).
 
-Our program currently includes the `instruction.rs` file we use to deserialize
-the `instruction_data` passed into the program entry point. We have also
-completed `lib.rs` file to the point where we can print our deserialized
-instruction data to the program log using the `msg!` macro.
+Our program currently includes an `instruction.rs` file used to deserialize the
+`instruction_data` passed into the program entry point. We've also completed the
+`lib.rs` file to the point where we can print our deserialized instruction data
+to the program log using the `msg!` macro.
 
-#### 2. Create struct to represent account data
+### 2. Create struct to represent account data
 
-Let’s begin by creating a new file named `state.rs`.
+Let's begin by creating a new file named `state.rs`.
 
 This file will:
 
-1. Define the struct our program uses to populate the data field of a new
-   account
+1. Define the `struct` used to populate the data field of a new account.
 2. Add `BorshSerialize` and `BorshDeserialize` traits to this struct
 
-First, let’s bring into scope everything we’ll need from the `borsh` crate.
+First, import the necessary items from the `borsh` crate:
 
 ```rust
 use borsh::{BorshSerialize, BorshDeserialize};
 ```
 
-Next, let’s create our `MovieAccountState` struct. This struct will define the
-parameters that each new movie review account will store in its data field. Our
-`MovieAccountState` struct will require the following parameters:
+Next, create the `MovieAccountState` struct, which defines the parameters that
+each new movie review account will store in its data field. The struct includes
+the following fields:
 
-- `is_initialized` - shows whether or not the account has been initialized
-- `rating` - user’s rating of the movie
-- `description` - user’s description of the movie
-- `title` - title of the movie the user is reviewing
+- `is_initialized` - indicates whether the account has been initialized.
+- `rating` - the user's rating of the movie.
+- `description` - the user's description of the movie.
+- `title` - the title of the movie being reviewed.
 
 ```rust
-#[derive(BorshSerialize, BorshDeserialize)]
+#[derive(BorshSerialize, BorshDeserialize, Default)]
 pub struct MovieAccountState {
     pub is_initialized: bool,
     pub rating: u8,
     pub title: String,
-    pub description: String
+    pub description: String,
 }
 ```
 
-#### 3. Update `lib.rs`
+### 3. Update lib.rs
 
-Next, let’s update our `lib.rs` file. First, we’ll bring into scope everything
-we will need to complete our Movie Review program. You can read more about the
-details each item we are using from
+Next, update the `lib.rs` file. Start by importing everything needed to complete
+the Movie Review program. For more details on each item, refer to
 [the `solana_program` crate](https://docs.rs/solana-program/latest/solana_program/).
 
 ```rust
 use solana_program::{
+    account_info::{next_account_info, AccountInfo},
     entrypoint,
     entrypoint::ProgramResult,
-    pubkey::Pubkey,
     msg,
-    account_info::{next_account_info, AccountInfo},
+    program::invoke_signed,
+    pubkey::Pubkey,
+    rent::Rent,
     system_instruction,
-    program_error::ProgramError,
-    sysvar::{rent::Rent, Sysvar},
-    program::{invoke_signed},
-    borsh::try_from_slice_unchecked,
+    sysvar::Sysvar,
 };
-use std::convert::TryInto;
+use borsh::{BorshDeserialize, BorshSerialize};
+
 pub mod instruction;
 pub mod state;
+
 use instruction::MovieInstruction;
 use state::MovieAccountState;
-use borsh::BorshSerialize;
 ```
 
-#### 4. Iterate through `accounts`
+### 4. Iterate through accounts
 
-Next, let’s continue building out our `add_movie_review` function. Recall that
-an array of accounts is passed into the `add_movie_review` function through a
-single `accounts` argument. To process our instruction, we will need to iterate
-through `accounts` and assign the `AccountInfo` for each account to its own
-variable.
+Continue building out the `add_movie_review` function. Recall that an array of
+accounts is passed into the `add_movie_review` function through a single
+`accounts` argument. To process the instruction, iterate through `accounts` and
+assign the `AccountInfo` for each account to a variable.
 
 ```rust
 // Get Account iterator
@@ -454,30 +433,31 @@ let pda_account = next_account_info(account_info_iter)?;
 let system_program = next_account_info(account_info_iter)?;
 ```
 
-#### 5. Derive PDA
+### 5. Derive PDA
 
-Next, within our `add_movie_review` function, let’s independently derive the PDA
-we expect the user to have passed in. We'll need to provide the bump seed for
-the derivation later, so even though `pda_account` should reference the same
-account, we still need to call `find_program_address`.
+Within the `add_movie_review` function, derive the PDA you expect the user to
+have passed in. Even though `pda_account` should reference the same account, you
+still need to call `find_program_address()` as the bump seed is required for the
+derivation.
 
-Note that we derive the PDA for each new account using the initializer’s public
-key and the movie title as optional seeds. Setting up the PDA this way restricts
-each user to only one review for any one movie title. However, it still allows
-the same user to review movies with different titles and different users to
-review movies with the same title.
+The PDA for each new account is derived using the initializer's public key and
+the movie title as seeds. This setup restricts each user to only one review per
+movie title but allows different users to review the same movie and the same
+user to review different movies.
 
 ```rust
 // Derive PDA
-let (pda, bump_seed) = Pubkey::find_program_address(&[initializer.key.as_ref(), title.as_bytes().as_ref(),], program_id);
+let (pda, bump_seed) = Pubkey::find_program_address(
+    &[initializer.key.as_ref(), title.as_bytes().as_ref()],
+    program_id,
+);
 ```
 
-#### 6. Calculate space and rent
+### 6. Calculate space and rent
 
-Next, let’s calculate the rent that our new account will need. Recall that rent
-is the amount of lamports a user must allocate to an account for storing data on
-the Solana network. To calculate rent, we must first calculate the amount of
-space our new account requires.
+Calculate the rent required for the new account. Rent is the amount of lamports
+a user must allocate to an account for storing data on the Solana network. To
+calculate rent, first determine the space required by the new account.
 
 The `MovieAccountState` struct has four fields. We will allocate 1 byte each for
 `rating` and `is_initialized`. For both `title` and `description` we will
@@ -492,14 +472,13 @@ let rent = Rent::get()?;
 let rent_lamports = rent.minimum_balance(account_len);
 ```
 
-#### 7. Create new account
+### 7. Create new account
 
-Once we’ve calculated the rent and verified the PDA, we are ready to create our
-new account. To create a new account, we must call the `create_account`
-instruction from the system program. We do this with a Cross Program Invocation
-(CPI) using the `invoke_signed` function. We use `invoke_signed` because we are
-creating the account using a PDA and need the Movie Review program to “sign” the
-instruction.
+Once rent is calculated and the PDA is verified, create the new account. To do
+this, call the `create_account` instruction from the system program using a
+Cross Program Invocation (CPI) with the `invoke_signed` function. Use
+`invoke_signed` because the account is being created with a PDA and the Movie
+The review program needs to “sign” the instructions.
 
 ```rust
 // Create the account
@@ -511,24 +490,34 @@ invoke_signed(
         account_len.try_into().unwrap(),
         program_id,
     ),
-    &[initializer.clone(), pda_account.clone(), system_program.clone()],
-    &[&[initializer.key.as_ref(), title.as_bytes().as_ref(), &[bump_seed]]],
-)?;
+    &[
+        initializer.clone(),
+        pda_account.clone(),
+        system_program.clone(),
+    ],
+    &[&[
+        initializer.key.as_ref(),
+        title.as_bytes().as_ref(),
+        &[bump_seed],
+    ]],
+  )?;
 
 msg!("PDA created: {}", pda);
 ```
 
-#### 8. Update account data
+### 8. Update account data
 
-Now that we’ve created a new account, we are ready to update the data field of
+Now that we've created a new account, we are ready to update the data field of
 the new account using the format of the `MovieAccountState` struct from our
 `state.rs` file. We first deserialize the account data from `pda_account` using
 `try_from_slice_unchecked`, then set the values of each field.
 
 ```rust
-msg!("unpacking state account");
-let mut account_data = try_from_slice_unchecked::<MovieAccountState>(&pda_account.data.borrow()).unwrap();
-msg!("borrowed account data");
+msg!("Unpacking state account");
+let mut account_data =
+    MovieAccountState::try_from_slice(&pda_account.data.borrow())
+        .unwrap_or(MovieAccountState::default());
+msg!("Borrowed account data");
 
 account_data.title = title;
 account_data.rating = rating;
@@ -536,18 +525,18 @@ account_data.description = description;
 account_data.is_initialized = true;
 ```
 
-Lastly, we serialize the updated `account_data` into the data field of our
+Finally, serialize the updated `account_data` into the data field of
 `pda_account`.
 
 ```rust
-msg!("serializing account");
+msg!("Serializing account");
 account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
-msg!("state account serialized");
+msg!("State account serialized");
 ```
 
-#### 9. Build and deploy
+### 9. Build and deploy
 
-We're ready to build and deploy our program!
+You're now ready to build and deploy your program!
 
 ![Gif Build and Deploy Program](/public/assets/courses/unboxed/movie-review-pt2-build-deploy.gif)
 
@@ -563,18 +552,18 @@ program.
 
 If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in both
 the `MovieList.tsx` and `Form.tsx` components with the address of the program
-you’ve deployed. Then run the frontend, submit a view, and refresh the browser
+you've deployed. Then run the frontend, submit a view, and refresh the browser
 to see the review.
 
 If you need more time with this project to feel comfortable with these concepts,
 have a look at the
-[solution code](https://beta.solpg.io/62b23597f6273245aca4f5b4) before
+[solution code](https://beta.solpg.io/66d67f31cffcf4b13384d334) before
 continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Equipped with the concepts
-intoduced in this lesson, you now know everything you'll need to recreate the
+Now it's your turn to build something independently. Equipped with the concepts
+introduced in this lesson, you now know everything you'll need to recreate the
 entirety of the Student Intro program from Module 1.
 
 The Student Intro program is a Solana Program that lets students introduce
@@ -599,6 +588,7 @@ Try to do this independently if you can! But if you get stuck, feel free to
 reference the [solution code](https://beta.solpg.io/62b11ce4f6273245aca4f5b2).
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=8320fc87-2b6d-4b3a-8b1a-54b55afed781)!
 </Callout>
