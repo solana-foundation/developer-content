@@ -7,8 +7,7 @@ objectives:
   - Explain the entry point to a Solana program
   - Build and deploy a basic Solana program
   - Submit a transaction to invoke our “Hello, world!” program
-description:
-  "Create an onchain program for Solana using native Rust, without Anchor."
+description: "Create an onchain program for Solana using native Rust, without Anchor."
 ---
 
 ## Summary
@@ -123,7 +122,6 @@ types `AccountInfo` and `u8`, respectively. A “slice” is a view into a block
 memory representing a contiguous sequence of elements of a single type, but
 without needing to own the entire data. It’s important because it allows
 functions to handle inputs of varying lengths efficiently.
-
 
 ```rust
 pub fn process_instruction(
@@ -317,9 +315,9 @@ entrypoint!(process_instruction);
 
 // The main function that will be executed when the program is invoked
 pub fn process_instruction(
-    program_id: &Pubkey,             // ID of the program being executed
-    accounts: &[AccountInfo],        // Accounts required for instruction processing
-    instruction_data: &[u8]          // Instruction-specific data
+    _program_id: &Pubkey,             // ID of the program being executed
+    _accounts: &[AccountInfo],        // accounts required for instruction processing
+    _instruction_data: &[u8]          // instruction-specific data
 ) -> ProgramResult {
     // Log a "Hello, world!" message to the program log
     msg!("Hello, world!");
