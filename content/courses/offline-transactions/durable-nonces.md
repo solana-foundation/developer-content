@@ -131,7 +131,7 @@ sign with your cold wallet.
 
 ### Using Durable nonces overcome the short lifespan of regular transactions
 
-Durable nonces are a way to sign transactions off-chain and keep them in storage
+Durable nonces are a way to sign transactions offchain and keep them in storage
 until they are ready to be submitted to the network. And this allows us to
 create durable transactions.
 
@@ -432,8 +432,7 @@ devnet if you'd like. ( If you have issues airdropping on devnet, check out
 [Solana's Faucet](https://faucet.solana.com/) )
 
 To run the local validator, you'll need to have it installed, if you don't you
-can refer to
-[installing the Solana CLI](https://docs.solanalabs.com/cli/install), once you
+can refer to [installing the Solana CLI](/docs/intro/installation.md), once you
 install the CLI you'll have access to the `solana-test-validator`.
 
 In a separate terminal run:

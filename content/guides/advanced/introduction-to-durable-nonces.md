@@ -156,8 +156,8 @@ Now that we know what Durable Nonces are, it's time to use them to send durable
 transactions.
 
 > If you do not have the Solana CLI installed, please go through
-> [this](https://docs.solana.com/cli/install-solana-cli-tools) tutorial and set
-> up the CLI and a keypair with some airdropped SOL on devnet
+> [this tutorial](/docs/intro/installation.md) and set up the Solana CLI and
+> create a keypair with some airdropped SOL on devnet
 
 ### Create Nonce Authority
 
@@ -617,5 +617,5 @@ change will happen on-chain, and the winner can be decided.
 ## References
 
 - [Neodyme Blog: Nonce Upon a Time, or a Total Loss of Funds](https://neodyme.io/blog/nonce-upon-a-time/)
-- [Solana Durable Nonces CLI](https://docs.solana.com/offline-signing/durable-nonce)
-- [Solana Durable Transaction Nonces Proposal](https://docs.solana.com/implemented-proposals/durable-tx-nonces)
+- [Solana Durable Nonces CLI](https://docs.solanalabs.com/cli/examples/durable-nonce)
+- [Solana Durable Transaction Nonces Proposal](https://docs.solanalabs.com/implemented-proposals/durable-tx-nonces)
