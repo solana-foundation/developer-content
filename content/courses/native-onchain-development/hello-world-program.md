@@ -7,7 +7,8 @@ objectives:
   - Explain the entry point to a Solana program
   - Build and deploy a basic Solana program
   - Submit a transaction to invoke our “Hello, world!” program
-description: "Create an onchain program for Solana using native Rust, without Anchor."
+description:
+  "Create an onchain program for Solana using native Rust, without Anchor."
 ---
 
 ## Summary
@@ -74,7 +75,8 @@ The path to `AccountInfo` would be `solana_program::account_info::AccountInfo`.
 
 Absent any other keywords, you would need to reference this entire path to use
 `AccountInfo` in your code. However, with the
-[`use`](https://doc.rust-lang.org/stable/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html) keyword, you can bring an item into scope so it can be reused throughout a file
+[`use`](https://doc.rust-lang.org/stable/book/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html)
+keyword, you can bring an item into scope so it can be reused throughout a file
 without specifying the full path each time. It's common to see a series of `use`
 commands at the top of a Rust file.
 
