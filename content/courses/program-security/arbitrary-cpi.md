@@ -128,8 +128,9 @@ crate provides the address of the SPL Token Program.
 ### Use an Anchor CPI module
 
 A simpler way to manage program checks is to use Anchor CPI modules. We learned
-in a [previous lesson](/content/courses/onchain-development/anchor-cpi.md) that
-Anchor can automatically generate CPI modules to make CPIs into the program
+in a
+[previous lesson](https://github.com/Unboxed-Software/solana-course/blob/main/content/anchor-cpi)
+that Anchor can automatically generate CPI modules to make CPIs into the program
 simpler. These modules also enhance security by verifying the public key of the
 program that’s passed into one of its public instructions.
 
@@ -255,7 +256,7 @@ There is already a test in the `tests` directory for this. It's long, but take a
 minute to look at it before we talk through it together:
 
 ```typescript
-it("Insecure instructions allow attacker to win every time successfully", async () => {
+it("Insecure instructions allow attacker to win every time", async () => {
   // Initialize player one with real metadata program
   await gameplayProgram.methods
     .createCharacterInsecure()
@@ -351,7 +352,7 @@ pub struct CreateCharacterSecure<'info> {
     #[account(
         init,
         payer = authority,
-        space = DISCRIMINATOR_SIZE + Character::INIT_SPACE,
+        space = 8 + 32 + 32 + 64,
         seeds = [authority.key().as_ref()],
         bump
     )]
@@ -403,12 +404,12 @@ new test. This test just needs to attempt to initialize the attacker's character
 and expect an error to be thrown.
 
 ```typescript
-it("Secure character creation with fake program should throw an exception", async () => {
+it("Secure character creation doesn't allow fake program", async () => {
   try {
     await gameplayProgram.methods
       .createCharacterSecure()
       .accounts({
-        metadataProgram: fakeMetadataProgram.programId, // despite the compile error on this line.
+        metadataProgram: fakeMetadataProgram.programId,
         authority: attacker.publicKey,
       })
       .signers([attacker])

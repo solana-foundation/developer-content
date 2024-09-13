@@ -275,7 +275,7 @@ a missing signer check could allow the vault to be drained.
 #### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/solana-developers/solana-signer-auth/tree/starter). The
+[this repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/starter). The
 starter code includes a program with two instructions and the boilerplate setup
 for the test file.
 
@@ -318,7 +318,7 @@ pub mod signer_authorization {
     pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
+        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
@@ -402,30 +402,34 @@ account, but we’ll use a different keypair to sign and send the transaction.
 
 ```typescript
 describe("signer-authorization", () => {
-  ...
-    it("Insecure withdraw should be successful", async () => {
+    ...
+    it("Insecure withdraw", async () => {
     const tx = await program.methods
       .insecureWithdraw()
       .accounts({
+        vault: vaultPDA,
+        tokenAccount: tokenAccount.publicKey,
         withdrawDestination: withdrawDestinationFake,
+        authority: wallet.publicKey,
       })
-      .transaction();
+      .transaction()
 
-    await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+    await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
 
     const balance = await connection.getTokenAccountBalance(
       tokenAccount.publicKey
-    );
-    expect(balance.value.uiAmount).to.eq(0);
-});
+    )
+    expect(balance.value.uiAmount).to.eq(0)
+  })
+})
 ```
 
 Run `anchor test` to see that both transactions will complete successfully.
 
 ```bash
 signer-authorization
-  ✔ Initialize Vault should be successful (810ms)
-  ✔ Insecure withdraw should be successful  (405ms)
+  ✔ Initialize Vault (810ms)
+  ✔ Insecure withdraw  (405ms)
 ```
 
 Since there is no signer check for the `authority` account, the
@@ -457,7 +461,7 @@ pub mod signer_authorization {
     pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[b"vault".as_ref(), &[ctx.bumps.vault]];
+        let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
@@ -504,23 +508,26 @@ transaction to fail the signer check and return an error.
 
 ```typescript
 describe("signer-authorization", () => {
-  ...
-  it("Secure withdraw should throw an exception", async () => {
+    ...
+	it("Secure withdraw", async () => {
     try {
       const tx = await program.methods
         .secureWithdraw()
         .accounts({
+          vault: vaultPDA,
+          tokenAccount: tokenAccount.publicKey,
           withdrawDestination: withdrawDestinationFake,
+          authority: wallet.publicKey,
         })
-        .transaction();
+        .transaction()
 
-      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake]);
+      await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
     } catch (err) {
-      expect(err);
-      console.log(err);
+      expect(err)
+      console.log(err)
     }
-  });
-});
+  })
+})
 ```
 
 Run `anchor test` to see that the transaction will now return a signature
@@ -536,7 +543,7 @@ instructions and make sure that each is a signer on the transaction.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the repository](https://github.com/solana-developers/solana-signer-auth//tree/solution).
+[the repository](https://github.com/Unboxed-Software/solana-signer-auth/tree/solution).
 
 ## Challenge
 

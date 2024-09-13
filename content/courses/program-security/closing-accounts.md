@@ -18,7 +18,8 @@ description:
   exempt. Closing accounts involves transferring the lamports stored in the
   account for rent exemption to another account of your choosing.
 - You can use the Anchor `#[account(close = <address_to_send_lamports>)]`
-  constraint to securely close accounts.
+  constraint to securely close accounts and set the account discriminator to the
+  `CLOSED_ACCOUNT_DISCRIMINATOR`
   ```rust
   #[account(mut, close = receiver)]
   pub data_account: Account<'info, MyData>,
@@ -95,39 +96,58 @@ the program and even drain a protocol.
 
 ### Secure account closing
 
-The two most important things you can do to close this loophole are to change
-the account's ownership and reallocate the size of the account's data with 0
-bytes.
+The two most important things you can do to close this loophole are to zero out
+the account data and add an account discriminator that represents the account
+has been closed. You need _both_ of these things to avoid unintended program
+behavior.
+
+An account with zeroed out data can still be used for some things, especially if
+it's a PDA whose address derivation is used within the program for verification
+purposes. However, the damage may be potentially limited if the attacker can't
+access the previously-stored data.
+
+To further secure the program, however, closed accounts should be given an
+account discriminator that designates it as "closed," and all instructions
+should perform checks on all passed-in accounts that return an error if the
+account is marked closed.
 
 Look at the example below. This program transfers the lamports out of an
-account, changes the account's ownership to the system program, and reallocates
-the size of the account's data with 0 bytes in hopes of preventing a subsequent
-instruction from utilizing th is account again before it has been garbage
-collected. Failing to do any one of these things would result in a security
-vulnerability.
+account, zeroes out the account data, and sets an account discriminator in a
+single instruction in hopes of preventing a subsequent instruction from
+utilizing this account again before it has been garbage collected. Failing to do
+any one of these things would result in a security vulnerability.
 
 ```rust
 use anchor_lang::prelude::*;
+use std::io::Write;
+use std::ops::DerefMut;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
-pub mod closing_accounts_insecure {
+pub mod closing_accounts_insecure_still_still {
     use super::*;
-    use anchor_lang::solana_program::system_program;
-
 
     pub fn close(ctx: Context<Close>) -> ProgramResult {
+        let account = ctx.accounts.account.to_account_info();
+
         let dest_starting_lamports = ctx.accounts.destination.lamports();
-        let account_to_close = tx.accounts.lottery_entry.to_account_info();
 
         **ctx.accounts.destination.lamports.borrow_mut() = dest_starting_lamports
-            .checked_add(account_to_close.lamports())
+            .checked_add(account.lamports())
             .unwrap();
-        **account_to_close.lamports.borrow_mut() = 0;
+        **account.lamports.borrow_mut() = 0;
 
-        account_to_close.assign(&system_program::ID);
-        account_to_close.realloc(0, false)?;
+        let mut data = account.try_borrow_mut_data()?;
+        for byte in data.deref_mut().iter_mut() {
+            *byte = 0;
+        }
+
+        let dst: &mut [u8] = &mut data;
+        let mut cursor = std::io::Cursor::new(dst);
+        cursor
+            .write_all(&anchor_lang::__private::CLOSED_ACCOUNT_DISCRIMINATOR)
+            .unwrap();
 
         Ok(())
     }
@@ -135,7 +155,7 @@ pub mod closing_accounts_insecure {
 
 #[derive(Accounts)]
 pub struct Close<'info> {
-    account_to_close: Account<'info, Data>,
+    account: Account<'info, Data>,
     destination: AccountInfo<'info>,
 }
 
@@ -145,6 +165,73 @@ pub struct Data {
 }
 ```
 
+Note that the example above is using Anchor's `CLOSED_ACCOUNT_DISCRIMINATOR`.
+This is simply an account discriminator where each byte is `255`. The
+discriminator doesn't have any inherent meaning, but if you couple it with
+account validation checks that return errors any time an account with this
+discriminator is passed to an instruction, you'll stop your program from
+unintentionally processing an instruction with a closed account.
+
+#### Manual Force Defund
+
+There is still one small issue. While the practice of zeroing out account data
+and adding a "closed" account discriminator will stop your program from being
+exploited, a user can still keep an account from being garbage collected by
+refunding the account's lamports before the end of an instruction. This results
+in one or potentially many accounts existing in a limbo state where they cannot
+be used but also cannot be garbage collected.
+
+To handle this edge case, you may consider adding an instruction that will allow
+_anyone_ to defund accounts tagged with the "closed" account discriminator. The
+only account validation this instruction would perform is to ensure that the
+account being defunded is marked as closed. It may look something like this:
+
+```rust
+use anchor_lang::__private::CLOSED_ACCOUNT_DISCRIMINATOR;
+use anchor_lang::prelude::*;
+use std::io::{Cursor, Write};
+use std::ops::DerefMut;
+
+...
+
+    pub fn force_defund(ctx: Context<ForceDefund>) -> ProgramResult {
+        let account = &ctx.accounts.account;
+
+        let data = account.try_borrow_data()?;
+        assert!(data.len() > 8);
+
+        let mut discriminator = [0u8; 8];
+        discriminator.copy_from_slice(&data[0..8]);
+        if discriminator != CLOSED_ACCOUNT_DISCRIMINATOR {
+            return Err(ProgramError::InvalidAccountData);
+        }
+
+        let dest_starting_lamports = ctx.accounts.destination.lamports();
+
+        **ctx.accounts.destination.lamports.borrow_mut() = dest_starting_lamports
+            .checked_add(account.lamports())
+            .unwrap();
+        **account.lamports.borrow_mut() = 0;
+
+        Ok(())
+    }
+
+...
+
+#[derive(Accounts)]
+pub struct ForceDefund<'info> {
+    account: AccountInfo<'info>,
+    destination: AccountInfo<'info>,
+}
+```
+
+Since anyone can call this instruction, this can act as a deterrent to attempted
+revival attacks since the attacker is paying for account rent exemption but
+anyone else can claim the lamports in a refunded account for themselves.
+
+While not necessary, this can help eliminate the waste of space and lamports
+associated with these "limbo" accounts.
+
 ### Use the Anchor `close` constraint
 
 Fortunately, Anchor makes all of this much simpler with the
@@ -153,8 +240,7 @@ everything required to securely close an account:
 
 1. Transfers the account’s lamports to the given `<target_account>`
 2. Zeroes out the account data
-3. Assigning the owner of the account to the System Program and rellocating the
-   size of the account with 0 bytes.
+3. Sets the account discriminator to the `CLOSED_ACCOUNT_DISCRIMINATOR` variant
 
 All you have to do is add it in the account validation struct to the account you
 want closed:
@@ -171,6 +257,9 @@ pub struct CloseAccount {
     pub receiver: SystemAccount<'info>
 }
 ```
+
+The `force_defund` instruction is an optional addition that you’ll have to
+implement on your own if you’d like to utilize it.
 
 ## Lab
 
@@ -227,27 +316,22 @@ alive even after claiming rewards and then claim rewards again. That test looks
 like this:
 
 ```typescript
-it("attacker can close + refund lottery acct + claim multiple rewards successfully", async () => {
-  const [attackerLotteryEntry, bump] = PublicKey.findProgramAddressSync(
-    [Buffer.from("test-seed"), authority.publicKey.toBuffer()],
-    program.programId,
-  );
+it("attacker  can close + refund lottery acct + claim multiple rewards", async () => {
   // claim multiple times
   for (let i = 0; i < 2; i++) {
-    let tokenAcct = await getAccount(provider.connection, attackerAta);
-
     const tx = new Transaction();
-
     // instruction claims rewards, program will try to close account
     tx.add(
       await program.methods
         .redeemWinningsInsecure()
         .accounts({
+          lotteryEntry: attackerLotteryEntry,
+          user: attacker.publicKey,
           userAta: attackerAta,
           rewardMint: rewardMint,
-          user: authority.publicKey,
+          mintAuth: mintAuth,
+          tokenProgram: TOKEN_PROGRAM_ID,
         })
-        .signers([authority])
         .instruction(),
     );
 
@@ -259,22 +343,21 @@ it("attacker can close + refund lottery acct + claim multiple rewards successful
       );
     tx.add(
       SystemProgram.transfer({
-        fromPubkey: authority.publicKey,
+        fromPubkey: attacker.publicKey,
         toPubkey: attackerLotteryEntry,
         lamports: rentExemptLamports,
       }),
     );
     // send tx
-    await sendAndConfirmTransaction(provider.connection, tx, [authority]);
+    await sendAndConfirmTransaction(provider.connection, tx, [attacker]);
     await new Promise(x => setTimeout(x, 5000));
   }
 
-  const tokenAcct = await getAccount(provider.connection, attackerAta);
-
+  const ata = await getAccount(provider.connection, attackerAta);
   const lotteryEntry =
     await program.account.lotteryAccount.fetch(attackerLotteryEntry);
 
-  expect(Number(tokenAcct.amount)).to.equal(
+  expect(Number(ata.amount)).to.equal(
     lotteryEntry.timestamp.toNumber() * 10 * 2,
   );
 });
@@ -307,7 +390,7 @@ pub struct RedeemWinningsSecure<'info> {
     // program expects this account to be initialized
     #[account(
         mut,
-        seeds = [DATA_PDA_SEED.as_bytes(),user.key.as_ref()],
+        seeds = [user.key().as_ref()],
         bump = lottery_entry.bump,
         has_one = user,
         close = user
@@ -450,19 +533,16 @@ like this:
 
 ```bash
   closing-accounts
-    ✔ Enter lottery should be successful (451ms)
-    ✔ attacker can close + refund lottery acct + claim multiple rewards successfully (18760ms)
-AnchorError caused by account: lottery_entry. Error Code: AccountOwnedByWrongProgram. Error Number: 3007. Error Message: The given account is owned by a different program than expected.
-Program log: Left:
-Program log: 11111111111111111111111111111111
-Program log: Right:
-Program log: FqETzdh6PsE7aNjrdapuoyFeYGdjPKN8AgG2ZUghje8A
-    ✔ attacker cannot claim multiple rewards with secure claim successfully (414ms)
+    ✔ Enter lottery (451ms)
+    ✔ attacker can close + refund lottery acct + claim multiple rewards (18760ms)
+AnchorError caused by account: lottery_entry. Error Code: AccountDiscriminatorMismatch. Error Number: 3002. Error Message: 8 byte discriminator did not match what was expected.
+    ✔ attacker cannot claim multiple rewards with secure claim (414ms)
 ```
 
 Note, this does not prevent the malicious user from refunding their account
 altogether - it just protects our program from accidentally re-using the account
-when it should be closed.
+when it should be closed. We haven't implemented a `force_defund` instruction so
+far, but we could. If you're feeling up for it, give it a try yourself!
 
 The simplest and most secure way to close accounts is using Anchor's `close`
 constraint. If you ever need more custom behavior and can't use this constraint,

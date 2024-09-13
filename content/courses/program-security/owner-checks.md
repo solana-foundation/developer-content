@@ -314,9 +314,7 @@ The `owner_check` program includes two instructions:
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-declare_id!("2JzQxdnKh6RXwACK6desuPrsbk6Yd3ky4UHAPXQFFC9w");
-
-const DISCRIMINATOR_SIZE: usize = 8;
+declare_id!("HQYNznB3XTqxzuEqqKMAD9XkYE5BGrnv8xmkoDNcqHYB");
 
 #[program]
 pub mod owner_check {
@@ -341,7 +339,7 @@ pub mod owner_check {
 
         let seeds = &[
             b"token".as_ref(),
-            &[ctx.bump.stoken_account],
+            &[*ctx.bumps.get("token_account").unwrap()],
         ];
         let signer = [&seeds[..]];
 
@@ -365,7 +363,7 @@ pub struct InitializeVault<'info> {
     #[account(
         init,
         payer = authority,
-        space = DISCRIMINATOR_SIZE + Vault::INIT_SPACE,
+        space = 8 + 32 + 32,
     )]
     pub vault: Account<'info, Vault>,
     #[account(
@@ -402,7 +400,6 @@ pub struct InsecureWithdraw<'info> {
 }
 
 #[account]
-#[derive(InitSpace)]
 pub struct Vault {
     token_account: Pubkey,
     authority: Pubkey,
@@ -419,9 +416,7 @@ The `clone` program includes a single instruction:
 use anchor_lang::prelude::*;
 use anchor_spl::token::TokenAccount;
 
-declare_id!("7967qGRBusM49RUdBiFU8s9YY3fSwA9rxCSELXgk8Tk1");
-
-const DISCRIMINATOR_SIZE: usize = 8;
+declare_id!("DUN7nniuatsMC7ReCh5eJRQExnutppN1tAfjfXFmGDq3");
 
 #[program]
 pub mod clone {
@@ -439,7 +434,7 @@ pub struct InitializeVault<'info> {
     #[account(
         init,
         payer = authority,
-        space = DISCRIMINATOR_SIZE + Vault::INIT_SPACE,
+        space = 8 + 32 + 32,
     )]
     pub vault: Account<'info, Vault>,
     pub token_account: Account<'info, TokenAccount>,
@@ -449,7 +444,6 @@ pub struct InitializeVault<'info> {
 }
 
 #[account]
-#[derive(InitSpace)]
 pub struct Vault {
     token_account: Pubkey,
     authority: Pubkey,
@@ -477,31 +471,33 @@ authority. The tokens from the `tokenPDA` account will then be withdrawn to the
 ```typescript
 describe("owner-check", () => {
 	...
-    it("Insecure withdraw should be successful", async () => {
+    it("Insecure withdraw", async () => {
     const tx = await program.methods
-      .insecureWithdraw()
-      .accounts({
-        vault: vaultClone.publicKey,
-        withdrawDestination: withdrawDestinationFake,
-        authority: walletFake.publicKey,
-      })
-      .signers([walletFake])
-      .rpc();
+        .insecureWithdraw()
+        .accounts({
+            vault: vaultClone.publicKey,
+            tokenAccount: tokenPDA,
+            withdrawDestination: withdrawDestinationFake,
+            authority: walletFake.publicKey,
+        })
+        .transaction()
 
-    const balance = await connection.getTokenAccountBalance(tokenPDA);
-    expect(balance.value.uiAmount).to.eq(0);
-  });
+        await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
 
-});
+        const balance = await connection.getTokenAccountBalance(tokenPDA)
+        expect(balance.value.uiAmount).to.eq(0)
+    })
+
+})
 ```
 
 Run `anchor test` to see that the `insecure_withdraw` completes successfully.
 
 ```bash
 owner-check
-  ✔ Initialize Vault should be successful (808ms)
-  ✔ Initialize Fake Vault should be successful (404ms)
-  ✔ Insecure withdraw should be successful (409ms)
+  ✔ Initialize Vault (808ms)
+  ✔ Initialize Fake Vault (404ms)
+  ✔ Insecure withdraw (409ms)
 ```
 
 Note that `vaultClone` deserializes successfully even though Anchor
@@ -511,7 +507,6 @@ discriminator is a hash of the account type name.
 
 ```rust
 #[account]
-#[derive(InitSpace)]
 pub struct Vault {
     token_account: Pubkey,
     authority: Pubkey,
@@ -545,7 +540,7 @@ pub mod owner_check {
 
         let seeds = &[
             b"token".as_ref(),
-            &[ctx.bumps.token_account],
+            &[*ctx.bumps.get("token_account").unwrap()],
         ];
         let signer = [&seeds[..]];
 
@@ -595,41 +590,49 @@ account to check that the instruction works as intended.
 ```typescript
 describe("owner-check", () => {
 	...
-  it("Secure withdraw should throw an error", async () => {
-    try {
-      await program.methods
+	it("Secure withdraw, expect error", async () => {
+        try {
+            const tx = await program.methods
+                .secureWithdraw()
+                .accounts({
+                    vault: vaultClone.publicKey,
+                    tokenAccount: tokenPDA,
+                    withdrawDestination: withdrawDestinationFake,
+                    authority: walletFake.publicKey,
+                })
+                .transaction()
+
+            await anchor.web3.sendAndConfirmTransaction(connection, tx, [walletFake])
+        } catch (err) {
+            expect(err)
+            console.log(err)
+        }
+    })
+
+    it("Secure withdraw", async () => {
+        await spl.mintTo(
+            connection,
+            wallet.payer,
+            mint,
+            tokenPDA,
+            wallet.payer,
+            100
+        )
+
+        await program.methods
         .secureWithdraw()
         .accounts({
-          vault: vaultClone.publicKey,
-          withdrawDestination: withdrawDestinationFake,
+            vault: vault.publicKey,
+            tokenAccount: tokenPDA,
+            withdrawDestination: withdrawDestination,
+            authority: wallet.publicKey,
         })
-        .rpc();
-    } catch (err) {
-      expect(err);
-      console.log(err);
-    }
-  });
+        .rpc()
 
-  it("Secure withdraw should be successful", async () => {
-    await spl.mintTo(
-      connection,
-      wallet.payer,
-      mint,
-      tokenPDA,
-      wallet.payer,
-      100
-    );
-    await program.methods
-      .secureWithdraw()
-      .accounts({
-        vault: vault.publicKey,
-        withdrawDestination: withdrawDestination,
-      })
-      .rpc();
-    const balance = await connection.getTokenAccountBalance(tokenPDA);
-    expect(balance.value.uiAmount).to.eq(0);
-  });
-});
+        const balance = await connection.getTokenAccountBalance(tokenPDA)
+        expect(balance.value.uiAmount).to.eq(0)
+    })
+})
 ```
 
 Run `anchor test` to see that the transaction using the `vaultClone` account
@@ -655,8 +658,8 @@ of the logs above say `AnchorError caused by account: vault`). This can be very
 helpful when debugging.
 
 ```bash
-✔ Secure withdraw should throw an error (78ms)
-✔ Secure withdraw should be successful (10063ms)
+✔ Secure withdraw, expect error (78ms)
+✔ Secure withdraw (10063ms)
 ```
 
 That’s all you need to ensure you check the owner on an account! Like some other
