@@ -317,9 +317,9 @@ entrypoint!(process_instruction);
 
 // The main function that will be executed when the program is invoked
 pub fn process_instruction(
-    _program_id: &Pubkey,             // Unused, ID of the program being executed
-    _accounts: &[AccountInfo],        // Unused, accounts required for instruction processing
-    _instruction_data: &[u8]          // Unused, instruction-specific data
+    program_id: &Pubkey,             // ID of the program being executed
+    accounts: &[AccountInfo],        // Accounts required for instruction processing
+    instruction_data: &[u8]          // Instruction-specific data
 ) -> ProgramResult {
     // Log a "Hello, world!" message to the program log
     msg!("Hello, world!");
