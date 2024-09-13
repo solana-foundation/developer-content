@@ -52,8 +52,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ### Download the Solana CLI tools
 
 Next,
-[download the Solana CLI tools](https://docs.solana.com/cli/install-solana-cli-tools).
-the command below will install the stable version of the Solana CLI.
+[download the Solana CLI tools](/docs/intro/installation.md#install-the-solana-cli):
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"

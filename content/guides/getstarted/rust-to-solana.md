@@ -244,10 +244,10 @@ Alternatively,
 [install the Anchor CLI](https://www.anchor-lang.com/docs/installation) locally,
 and then use `anchor init <project-name>` to create a new Anchor project.
 
-## Creating Off-chain Programs
+## Creating offchain Programs
 
 So far, this guide has covered the key details of developing **onchain Solana
-programs** in Rust. However, it’s also possible to develop **off-chain Solana
+programs** in Rust. However, it’s also possible to develop **offchain Solana
 clients** in Rust. This can be done by using the
 [solana_sdk crate](https://docs.rs/solana-sdk/latest/solana_sdk/). This contains
 the [solana_client crate](https://docs.rs/solana-client/latest/solana_client/)
@@ -257,7 +257,7 @@ that allows Rust programs to interact with a Solana node via the
 Another option is to use the
 [anchor_client crate](https://docs.rs/anchor-client/latest/anchor_client/) which
 interacts with Solana programs written in Anchor via RPC. Alternatively,
-consider writing onchain programs in Rust, and off-chain
+consider writing onchain programs in Rust, and offchain
 [clients in JS/TS](https://solana.com/de/docs/clients/javascript-reference).
 
 ## Wrap Up

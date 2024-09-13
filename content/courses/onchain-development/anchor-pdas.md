@@ -599,7 +599,7 @@ pub struct AddMovieReview<'info> {
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = DISCRIMINATOR + MovieAccountState::INIT_SOACE
+        space = DISCRIMINATOR + MovieAccountState::INIT_SPACE
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
@@ -674,7 +674,7 @@ pub struct UpdateMovieReview<'info> {
         mut,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
-        realloc = DISCRIMINATOR + MovieAccountState::INIT_SOACE
+        realloc = DISCRIMINATOR + MovieAccountState::INIT_SPACE,
         realloc::payer = initializer,
         realloc::zero = true,
     )]

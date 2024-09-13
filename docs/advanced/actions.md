@@ -88,7 +88,7 @@ interface.
    an optional list of related actions.
 2. the [POST request](#post-request) returns a signable transaction or message
    that the client then prompts the user's wallet to sign and execute on the
-   blockchain or in another off-chain service.
+   blockchain or in another offchain service.
 
 ### Action Execution and Lifecycle
 
