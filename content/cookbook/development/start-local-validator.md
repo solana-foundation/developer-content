@@ -8,7 +8,8 @@ Testing your program code locally can be a lot more reliable than testing on
 devnet, and can help you test before trying it out on devnet.
 
 You can setup your local-test-validator by installing the
-[solana tool suite](/getting-started/installation.md#install-cli) and running
+[Solana CLI tool suite](/docs/intro/installation.md) and running the following
+command:
 
 ```shell
 solana-test-validator

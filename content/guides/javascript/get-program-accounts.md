@@ -31,10 +31,10 @@ The `getProgramAccounts` RPC method has the following syntax:
 - (optional) `configOrCommitment`: `object` - Configuration parameters
   containing the following optional fields:
   - (optional) `commitment`: `string` -
-    [State commitment](https://docs.solana.com/developing/clients/jsonrpc-api#configuring-state-commitment)
+    [State commitment](/docs/rpc/index.mdx#configuring-state-commitment)
   - (optional) `encoding`: `string` - Encoding for account data, either:
     `base58`, `base64`, or `jsonParsed`. Note, web3js users should instead use
-    [getParsedProgramAccounts](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
+    [`getParsedProgramAccounts`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
   - (optional) `dataSlice`: `object` - Limit the returned account data based on:
     - `offset`: `number` - Number of bytes into account data to begin returning
     - `length`: `number` - Number of bytes of account data to return
@@ -48,7 +48,7 @@ The `getProgramAccounts` RPC method has the following syntax:
     - `dataSize`: `number` - Compares the account data length with the provided
       data size
   - (optional) `withContext`: `boolean` - Wrap the result in an
-    [RpcResponse JSON object](https://docs.solana.com/developing/clients/jsonrpc-api#rpcresponse-structure)
+    [RpcResponse JSON object](/docs/rpc/index.mdx#rpcresponse-structure)
 
 ### Response
 

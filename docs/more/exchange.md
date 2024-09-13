@@ -24,7 +24,7 @@ and high TPS. For specific requirements, please see
 
 To run an api node:
 
-1. [Install the Solana command-line tool suite](https://docs.solanalabs.com/cli/install)
+1. [Install the Solana command-line tool suite](/docs/intro/installation.md)
 2. Start the validator with at least the following parameters:
 
 ```shell
