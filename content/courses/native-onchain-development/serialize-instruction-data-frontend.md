@@ -34,14 +34,14 @@ description: How to deserialize data fetched from Solana accounts.
 ### Transactions
 
 <Callout type="note">This course requires completing
-[Introduction to Solana](/developers/courses/intro-to-solana) or equivalent
+[Introduction to Solana](/content/courses/intro-to-solana) or equivalent
 knowledge. It's also aimed at advanced developers that prefer more control over
 the ease of use and safe defaults Anchor provides. If you're new to developing
 onchain programs you may prefer
-[Anchor](/developers/courses/onchain-development)</Callout>
+[Anchor](/content/courses/onchain-development)</Callout>
 
-In [Introduction to Solana](/developers/courses/intro-to-solana) we learned how
-to create transactions with instructions for common Solana programs.
+In [Introduction to Solana](/content/courses/intro-to-solana) we learned how to
+create transactions with instructions for common Solana programs.
 
 This lessons shows how to create instructions for our own native Solana
 programs, which we will develop in a few lessons. Specifically, we're going to
@@ -195,7 +195,7 @@ equipPlayerSchema.encode(
   buffer,
 );
 
-const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
+const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 ```
 
 Once a buffer is properly created and the data serialized, all that’s left is
@@ -211,7 +211,14 @@ lessons. The example below assumes that:
 
 ```typescript
 import * as borsh from "@coral-xyz/borsh";
-import * as web3 from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Connection,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
 
 const equipPlayerSchema = borsh.struct([
   borsh.u8("variant"),
@@ -225,13 +232,13 @@ equipPlayerSchema.encode(
   buffer,
 );
 
-const instructionBuffer = buffer.slice(0, equipPlayerSchema.getSpan(buffer));
+const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 
-const endpoint = web3.clusterApiUrl("devnet");
-const connection = new web3.Connection(endpoint);
+const endpoint = clusterApiUrl("devnet");
+const connection = new Connection(endpoint);
 
-const transaction = new web3.Transaction();
-const instruction = new web3.TransactionInstruction({
+const transaction = new Transaction();
+const instruction = new TransactionInstruction({
   keys: [
     {
       pubkey: player.publicKey,
@@ -244,7 +251,7 @@ const instruction = new web3.TransactionInstruction({
       isWritable: true,
     },
     {
-      pubkey: web3.SystemProgram.programId,
+      pubkey: SystemProgram.programId,
       isSigner: false,
       isWritable: false,
     },
@@ -255,11 +262,17 @@ const instruction = new web3.TransactionInstruction({
 
 transaction.add(instruction);
 
-web3.sendAndConfirmTransaction(connection, transaction, [player]).then(txid => {
-  console.log(
-    `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
+try {
+  const transactionId = await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [player],
   );
-});
+  const explorerLink = getExplorerLink("transaction", transactionId, "devnet");
+  console.log(`Transaction submitted: ${explorerLink}`);
+} catch (error) {
+  alert(error);
+}
 ```
 
 ## Lab
@@ -269,7 +282,7 @@ submit a movie review and have it stored on Solana’s network. We’ll build th
 app a little bit at a time over the next few lessons, adding new functionality
 each lesson.
 
-![Movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![Movie review frontend](/public/assets/courses/movie-review-dapp.png)
 
 Here's a quick diagram of the program we'll build:
 
@@ -281,7 +294,7 @@ The public key of the Solana program we’ll use for this application is
 #### 1. Download the starter code
 
 Before we get started, go ahead and download the
-[starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/starter).
+[starter code](https://github.com/solana-developers/movie-review-frontend/tree/starter).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -359,9 +372,14 @@ export class Movie {
   ])
 
   serialize(): Buffer {
-    const buffer = Buffer.alloc(1000)
-    this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer)
-    return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer))
+    try {
+      const buffer = Buffer.alloc(1000);
+      this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
+      return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));
+    } catch (error) {
+      console.error('Serialization error:', error);
+      return Buffer.alloc(0);
+    }
   }
 }
 ```
@@ -391,19 +409,12 @@ import { FC } from "react";
 import { Movie } from "../models/Movie";
 import { useState } from "react";
 import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Input,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Textarea,
-} from "@chakra-ui/react";
-import * as web3 from "@solana/web3.js";
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 ```
 
@@ -415,9 +426,15 @@ Next, before the `handleSubmit` function, call `useConnection()` to get a
 import { FC } from 'react'
 import { Movie } from '../models/Movie'
 import { useState } from 'react'
-import { Box, Button, FormControl, FormLabel, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Textarea } from '@chakra-ui/react'
-import * as web3 from '@solana/web3.js'
+import {
+  Connection,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js"
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { getExplorerLink } from "@solana-developers/helpers";
 
 const MOVIE_REVIEW_PROGRAM_ID = 'CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN'
 
@@ -465,7 +482,7 @@ const handleTransactionSubmit = async (movie: Movie) => {
   }
 
   const buffer = movie.serialize();
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 };
 ```
 
@@ -477,14 +494,14 @@ the following, where `pda` is the address to the account where data will be
 stored:
 
 ```typescript
-const [pda] = await web3.PublicKey.findProgramAddress(
+const [pda] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from(movie.title)],
-  new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+  new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
 );
 ```
 
 In addition to this account, the program will also need to read from
-`SystemProgram`, so our array needs to include `web3.SystemProgram.programId` as
+`SystemProgram`, so our array needs to include `SystemProgram.programId` as
 well.
 
 With that, we can finish the remaining steps:
@@ -497,14 +514,14 @@ const handleTransactionSubmit = async (movie: Movie) => {
   }
 
   const buffer = movie.serialize();
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 
-  const [pda] = await web3.PublicKey.findProgramAddress(
+  const [pda] = await PublicKey.findProgramAddressSync(
     [publicKey.toBuffer(), new TextEncoder().encode(movie.title)],
-    new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   );
 
-  const instruction = new web3.TransactionInstruction({
+  const instruction = new TransactionInstruction({
     keys: [
       {
         pubkey: publicKey,
@@ -517,24 +534,27 @@ const handleTransactionSubmit = async (movie: Movie) => {
         isWritable: true,
       },
       {
-        pubkey: web3.SystemProgram.programId,
+        pubkey: SystemProgram.programId,
         isSigner: false,
         isWritable: false,
       },
     ],
     data: buffer,
-    programId: new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    programId: new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
   });
 
   transaction.add(instruction);
 
   try {
-    let txid = await sendTransaction(transaction, connection);
-    console.log(
-      `Transaction submitted: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
+    let transactionId = await sendTransaction(transaction, connection);
+    const explorerLink = getExplorerLink(
+      "transaction",
+      transactionId,
+      "devnet",
     );
-  } catch (e) {
-    alert(JSON.stringify(e));
+    console.log(`Transaction submitted: ${explorerLink}`);
+  } catch (error) {
+    alert(error);
   }
 };
 ```
@@ -546,7 +566,7 @@ successful.
 
 If you need a bit more time with this project to feel comfortable, have a look
 at the complete
-[solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-serialize-instruction-data).
+[solution code](https://github.com/solana-developers/movie-review-frontend/tree/solution-serialize-instruction-data).
 
 ## Challenge
 
@@ -554,10 +574,10 @@ Now it’s your turn to build something independently. Create an application tha
 lets students of this course introduce themselves! The Solana program that
 supports this is at `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](/public/assets/courses/student-intros-frontend.png)
 
 1. You can build this from scratch or you can
-   [download the starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/starter).
+   [download the starter code](https://github.com/solana-developers/solana-student-intro-frontend/tree/starter).
 2. Create the instruction buffer layout in `StudentIntro.ts`. The program
    expects instruction data to contain:
    1. `variant` as an unsigned, 8-bit integer representing the instruction to
@@ -575,7 +595,7 @@ supports this is at `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
    Explorer to verify that it worked.
 
 If you get stumped, you can
-[check out the solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data).
+[check out the solution code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data).
 
 Feel free to get creative with these challenges and take them even further. The
 instructions aren't here to hold you back!

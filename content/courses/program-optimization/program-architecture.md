@@ -78,7 +78,7 @@ You can read about it in
 [the Solana documentation](https://solana.com/docs/intro/rent).</Callout>
 
 Rent etymology aside, putting data on the blockchain can be expensive. It’s why
-NFT attributes and associated files, like the image, are stored off-chain. You
+NFT attributes and associated files, like the image, are stored offchain. You
 ultimately want to strike a balance that leaves your program highly functional
 without becoming so expensive that your users don’t want to pay to open the data
 account.

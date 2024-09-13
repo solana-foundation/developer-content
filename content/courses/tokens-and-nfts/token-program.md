@@ -457,11 +457,11 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We’re going to use the Token Token Program to create a Token Mint, create an
+We’re going to use the Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
-[Cryptography fundamentals](/developers/courses/intro-to-solana/intro-to-cryptography).
+[Cryptography fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 ```bash
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
@@ -766,7 +766,7 @@ account!
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
-[add a second account on devnet](/developers/courses/intro-to-solana/intro-to-cryptography)
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account and send them your token!
 
 As you saw in Explorer, the tokens currently reside in an Associated Token
@@ -852,7 +852,7 @@ approval.
 2. Create a new Token Mint in the `CreateMint` component. If you need a
    refresher on how to send transactions to a wallet for approval, have a look
    at the
-   [Wallets lesson](/developers/courses/intro-to-solana/interact-with-wallets).
+   [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
 
 When creating a new mint, the newly generated `Keypair` will also have to sign
 the transaction. When additional signers are required in addition to the
