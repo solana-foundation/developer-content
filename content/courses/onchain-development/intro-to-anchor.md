@@ -137,9 +137,12 @@ pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
 
 `Context` is a generic type where `T` defines the list of accounts an
 instruction requires. When you use `Context`, you specify the concrete type of
-`T` as a struct that adopts the `Accounts` trait (e.g.
-`Context<AddMovieReviewAccounts>`). Through this `context` argument the
-instruction can then access:
+`T` as a struct that adopts the `Accounts` trait.
+
+The first argument of every instruction handler must be `Context`. `Context` takes a
+generic of your `Accounts` struct, eg, if `AddMovieReview` was the struct holding
+the accounts, the context for the `add_movie_review()` function would be
+`Context<AddMovieReview>`.
 
 Through this context argument the instruction can then access:
 
