@@ -125,7 +125,7 @@ solana-test-validator
 
 This will start a local validator on your machine that you can use to test your
 programs. You can
-[read more about local development in this guide](https://solana.com/docs/intro/installation).
+[read more about local development in this guide](/docs/intro/installation.md).
 
 When building onchain programs, you have a choice to either build with native
 Rust (ie, without a framework) or use the Anchor framework. Anchor is a
