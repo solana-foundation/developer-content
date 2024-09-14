@@ -13,7 +13,7 @@ description: "Design your Solana programs efficiently."
 - If your data accounts are too large for the Stack, wrap them in `Box` to
   allocate them to the Heap
 - Use Zero-Copy to deal with accounts that are too large for `Box` (< 10MB)
-- The size and the order of fields in an account matter; put variable length
+- The size and the order of fields in an account matter; put the variable length
   fields at the end
 - Solana can process in parallel, but you can still run into bottlenecks; be
   mindful of "shared" accounts that all users interacting with the program have
@@ -31,7 +31,7 @@ with the code. And you, as the designer, need to think about:
 
 These questions are even more important when developing for a blockchain. Not
 only are resources more limited than in a typical computing environment, you're
-also dealing with people’s assets; code has a cost now.
+also dealing with people's assets; code has a cost now.
 
 We'll leave most of the asset handling discussion to
 [security course lesson](/content/courses/program-security/security-intro), but
@@ -41,18 +41,18 @@ there are limitations unique to blockchain and Solana development such as how
 much data can be stored in an account, the cost to store that data, and how many
 compute units are available per transaction. You, the program designer, have to
 be mindful of these limitations to create programs that are affordable, fast,
-safe, and functional. Today we will be delving into some of the more advance
+safe, and functional. Today we will be delving into some of the more advanced
 considerations that should be taken when creating Solana programs.
 
 ### Dealing With Large Accounts
 
-In modern application programming, we don’t often have to think about the size
-of the data structures we are using. You want to make a string? You can put a
-4000 character limit on it if you want to avoid abuse, but it's probably not an
-issue. Want an integer? They’re pretty much always 32-bit for convenience.
+In modern application programming, we don't often have to think about the size
+of the data structures we are using. Do you want to make a string? You can put a
+4000-character limit on it if you want to avoid abuse, but it's probably not an
+issue. Want an integer? They're pretty much always 32-bit for convenience.
 
-In high level languages, you are in the data-land-o-plenty! Now, in Solana land,
-we pay per byte stored (rent) and have limits on heap, stack and account sizes.
+In high-level languages, you are in the data-land-o-plenty! Now, in Solana land,
+we pay per byte stored (rent) and have limits on heap, stack, and account sizes.
 We have to be a little more crafty with our bytes. There are two main concerns
 we are going to be looking at in this section:
 
@@ -63,7 +63,7 @@ we are going to be looking at in this section:
 2. When operating on larger data, we run into
    [Stack](https://solana.com/docs/programs/faq#stack) and
    [Heap](https://solana.com/docs/programs/faq#heap-size) constraints - to get
-   around these, we’ll look at using Box and Zero-Copy.
+   around these, we'll look at using Box and Zero-Copy.
 
 #### Sizes
 
@@ -80,7 +80,7 @@ now there's an enforced minimum rent exemption. You can read about it in
 
 Putting data on the blockchain can be expensive, which is why NFT attributes and
 associated files, like images, are stored offchain. The goal is to strike a
-balance between keeping your program highly functional while ensuring that users
+balance between keeping your program highly functional and ensuring that users
 aren't discouraged by the cost of storing data onchain.
 
 The first step in optimizing for space in your program is understanding the size
@@ -108,8 +108,8 @@ of your structs. Below is a helpful reference from the
 
 Knowing these, start thinking about little optimizations you might take in a
 program. For example, if you have an integer field that will only ever reach
-100, don’t use a u64/i64, use a u8. Why? Because a u64 takes up 8 bytes, with a
-max value of 2^64 or 1.84 \* 10^19. Thats a waste of space since you only need
+100, don't use a u64/i64, use a u8. Why? Because a u64 takes up 8 bytes, with a
+max value of 2^64 or 1.84 \* 10^19. That's a waste of space since you only need
 to accommodate numbers up to 100. A single byte will give you a max value of 255
 which, in this case, would be sufficient. Similarly, there's no reason to use i8
 if you'll never have negative numbers.
@@ -126,8 +126,8 @@ If you want to read more about Anchor sizes, take a look at
 
 #### Box
 
-Now that you know a little bit about data sizes, let’s skip forward and look at
-a problem you’ll run into if you want to deal with larger data accounts. Say you
+Now that you know a little bit about data sizes, let's skip forward and look at
+a problem you'll run into if you want to deal with larger data accounts. Say you
 have the following data account:
 
 ```rust
@@ -143,7 +143,7 @@ pub struct SomeFunctionContext<'info> {
 ```
 
 If you try to pass `SomeBigDataStruct` into the function with the
-`SomeFunctionContext` context, you’ll run into the following compiler warning:
+`SomeFunctionContext` context, you'll run into the following compiler warning:
 
 `// Stack offset of XXXX exceeded max offset of 4096 by XXXX bytes, please minimize large stack variables`
 
@@ -175,7 +175,7 @@ pub struct SomeFunctionContext<'info> {
 
 In Anchor, **`Box<T>`** is used to allocate the account to the Heap, not the
 Stack. Which is great since the Heap gives us 32KB to work with. The best part
-is you don’t have to do anything different within the function. All you need to
+is you don't have to do anything different within the function. All you need to
 do is add `Box<…>` around all of your big data accounts.
 
 But Box is not perfect. You can still overflow the stack with sufficiently large
@@ -183,7 +183,7 @@ accounts. We'll learn how to fix this in the next section.
 
 #### Zero Copy
 
-Okay, so now you can deal with medium sized accounts using `Box`. But what if
+Okay, so now you can deal with medium-sized accounts using `Box`. But what if
 you need to use really big accounts like the max size of 10MB? Take the
 following as an example:
 
@@ -221,13 +221,13 @@ To understand what's happening here, take a look at the
 [rust Anchor documentation](https://docs.rs/anchor-lang/latest/anchor_lang/attr.account.html)
 
 > Other than being more efficient, the most salient benefit [`zero_copy`]
-> provides is the ability to define account types larger than the max stack or
-> heap size. When using borsh, the account has to be copied and deserialized
-> into a new data structure and thus is constrained by stack and heap limits
-> imposed by the BPF VM. With zero copy deserialization, all bytes from the
-> account’s backing `RefCell<&mut [u8]>` are simply re-interpreted as a
-> reference to the data structure. No allocations or copies necessary. Hence the
-> ability to get around stack and heap limitations.
+> provides the ability to define account types larger than the max stack or heap
+> size. When using borsh, the account has to be copied and deserialized into a
+> new data structure and thus is constrained by stack and heap limits imposed by
+> the BPF VM. With zero copy deserialization, all bytes from the account's
+> backing `RefCell<&mut [u8]>` are simply re-interpreted as a reference to the
+> data structure. No allocations or copies necessary. Hence the ability to get
+> around stack and heap limitations.
 
 Basically, your program never actually loads zero-copy account data into the
 stack or heap. It instead gets pointer access to the raw data. The
@@ -245,7 +245,7 @@ pub struct ConceptZeroCopy<'info> {
 }
 ```
 
-Instead, your client has to create the large account and pay for it’s rent in a
+Instead, your client has to create a large account and pay for its rent in a
 separate instruction.
 
 ```typescript
@@ -272,16 +272,16 @@ const txHash = await program.methods
   .rpc();
 ```
 
-The second caveat is that your'll have to call one of the following methods from
+The second caveat is that you'll have to call one of the following methods from
 inside your rust instruction function to load the account:
 
 - `load_init` when first initializing an account (this will ignore the missing
-  account discriminator that gets added only after the user’s instruction code)
+  account discriminator that gets added only after the user's instruction code)
 - `load` when the account is not mutable
 - `load_mut` when the account is mutable
 
 For example, if you wanted to init and manipulate the `SomeReallyBigDataStruct`
-from above, you’d call the following in the function
+from above, you'd call the following in the function
 
 ```rust
 let some_really_big_data = &mut ctx.accounts.some_really_big_data.load_init()?;
@@ -290,16 +290,16 @@ let some_really_big_data = &mut ctx.accounts.some_really_big_data.load_init()?;
 After you do that, then you can treat the account like normal! Go ahead and
 experiment with this in the code yourself to see everything in action!
 
-For a better understanding on how this all works, Solana put together a really
+For a better understanding of how this all works, Solana put together a really
 nice [video](https://www.youtube.com/watch?v=zs_yU0IuJxc&feature=youtu.be) and
 [code](https://github.com/solana-developers/anchor-zero-copy-example) explaining
 Box and Zero-Copy in vanilla Solana.
 
 ### Dealing with Accounts
 
-Now that you know the nuts and bolts of space consideration on Solana, let’s
-look at some higher level considerations. In Solana, everything is an account,
-so for the next couple sections we'll look at some account architecture
+Now that you know the nuts and bolts of space consideration on Solana, let's
+look at some higher-level considerations. In Solana, everything is an account,
+so for the next couple sections, we'll look at some account architecture
 concepts.
 
 #### Data Order
@@ -321,7 +321,7 @@ the location of `id` on the memory map.
 
 To make this more clear, observe what this account's data looks like onchain
 when `flags` has four items in the vector vs eight items. If you were to call
-`solana account ACCOUNT_KEY` you’d get a data dump like the following:
+`solana account ACCOUNT_KEY` you'd get a data dump like the following:
 
 ```rust
 0000:   74 e4 28 4e    d9 ec 31 0a  -> Account Discriminator (8)
@@ -345,11 +345,10 @@ the data in the `flags` field took up four more bytes.
 The main problem with this is lookup. When you query Solana, you use filters
 that look at the raw data of an account. These are called a `memcmp` filters, or
 memory compare filters. You give the filter an `offset` and `bytes`, and the
-filter then looks directly at the memory, offsetting from the start by the
-`offset` you provide, and compares the bytes in memory to the `bytes` you
-provide.
+filter then looks directly at the memory, offset from the start by the `offset`
+you provide, and compares the bytes in memory to the `bytes` you provide.
 
-For example, you know that the `flags` struct will always start at address
+For example, you know that the `flags` struct will always start at the address
 0x0008 since the first 8 bytes contain the account discriminator. Querying all
 accounts where the `flags` length is equal to four is possible because we _know_
 that the four bytes at 0x0008 represent the length of the data in `flags`. Since
@@ -368,11 +367,11 @@ const states = await program.account.badState.all([
 
 However, if you wanted to query by the `id`, you wouldn't know what to put for
 the `offset` since the location of `id` is variable based on the length of
-`flags`. That doesn’t seem very helpful. IDs are usually there to help with
+`flags`. That doesn't seem very helpful. IDs are usually there to help with
 queries! The simple fix is to flip the order.
 
 ```rust
-#[account] // Anchor hides the account disriminator
+#[account] // Anchor hides the account discriminator
 pub struct GoodState {
  pub id: u32         // 0xDEAD_BEEF
     pub flags: Vec<u8>, // 0x11, 0x22, 0x33 ...
@@ -386,9 +385,9 @@ structs at the end of the account.
 
 #### For Future Use
 
-In certain cases, consider adding extra, unused bytes to you accounts. These are
-held in reserve for flexibility and backward compatibility. Take the following
-example:
+In certain cases, consider adding extra, unused bytes to your accounts. These
+are held in reserve for flexibility and backward compatibility. Take the
+following example:
 
 ```rust
 #[account]
@@ -454,13 +453,13 @@ add in some `for_future_use` bytes.
 #### Data Optimization
 
 The idea here is to be aware of wasted bits. For example, if you have a field
-that represents the month of the year, don’t use a `u64`. There will only ever
+that represents the month of the year, don't use a `u64`. There will only ever
 be 12 months. Use a `u8`. Better yet, use a `u8` Enum and label the months.
 
 To get even more aggressive on bit savings, be careful with booleans. Look at
 the below struct composed of eight boolean flags. While a boolean _can_ be
 represented as a single bit, borsh deserialization will allocate an entire byte
-to each of these fields. that means that eight booleans winds up being eight
+to each of these fields. That means that eight booleans wind up being eight
 bytes instead of eight bits, an eight times increase in size.
 
 ```rust
@@ -537,10 +536,10 @@ Depending on the seeding you can create all sorts of relationships:
   program. For example, if your program needs a lookup table, you could seed it
   with `seeds=[b"Lookup"]`. Just be careful to provide appropriate access
   restrictions.
-- One-Per-Owner - Say you’re creating a video game player account and you only
-  want one player account per wallet. Then you’d seed the account with
-  `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you’ll always know where
-  to look for a wallet’s player account **and** there can only ever be one of
+- One-Per-Owner - Say you're creating a video game player account and you only
+  want one player account per wallet. Then you'd seed the account with
+  `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
+  to look for a wallet's player account **and** there can only ever be one of
   them.
 - Multiple-Per-Owner - Okay, but what if you want multiple accounts per wallet?
   Say you want to mint podcast episodes. Then you could seed your `Podcast`
@@ -556,8 +555,8 @@ From there you can mix and match in all sorts of clever ways! But the preceding
 list should give you enough to get started.
 
 The big benefit of really paying attention to this aspect of design is answering
-the ‘indexing’ problem. Without PDAs and seeds, all users would have to keep
-track of all of the addresses of all of the accounts they’ve ever used. This
+the ‘indexing' problem. Without PDAs and seeds, all users would have to keep
+track of all of the addresses of all of the accounts they've ever used. This
 isn't feasible for users, so they'd have to depend on a centralized entity to
 store their addresses in a database. In many ways that defeats the purpose of a
 globally distributed network. PDAs are a much better solution.
@@ -584,7 +583,7 @@ seeds=[b"Podcast", channel_account.key().as_ref(), episode_number.to_be_bytes().
 
 You can always find the channel account for a particular owner. And since the
 channel stores the number of episodes created, you always know the upper bound
-of where to search for queries. Additionally you always know what index to
+of where to search for queries. Additionally, you always know what index to
 create a new episode at: `index = episodes_created`.
 
 ```rust
@@ -600,24 +599,24 @@ Podcast X: seeds=[b"Podcast", channel_account.key().as_ref(), X.to_be_bytes().as
 One of the main reasons to choose Solana for your blockchain environment is its
 parallel transaction execution. That is, Solana can run transactions in parallel
 as long as those transactions aren't trying to write data to the same account.
-This improves program throughput out of the box, but with some proper planning
+This improves program throughput out of the box, but with some proper planning,
 you can avoid concurrency issues and really boost your program's performance.
 
 #### Shared Accounts
 
-If you’ve been around crypto for a while, you may have experienced a big NFT
-mint event. A new NFT project is coming out, everyone is really excited for it,
-and then the candymachine goes live. It’s a mad dash to click
+If you've been around crypto for a while, you may have experienced a big NFT
+mint event. A new NFT project is coming out, everyone is really excited about
+it, and then the candymachine goes live. It's a mad dash to click
 `accept transaction` as fast as you can. If you were clever, you may have
-written a bot to enter in the transactions faster that the website’s UI could.
-This mad rush to mint creates a lot of failed transactions. But why? Because
-everyone is trying to write data to the same Candy Machine account.
+written a bot to enter the transactions faster than the website's UI could. This
+mad rush to mint creates a lot of failed transactions. But why? Because everyone
+is trying to write data to the same Candy Machine account.
 
 Take a look at a simple example:
 
 Alice and Bob are trying to pay their friends Carol and Dean respectively. All
-four accounts change, but neither depend on each other. Both transactions can
-run at the same time.
+four accounts change, but neither depends on other. Both transactions can run at
+the same time.
 
 ```rust
 Alice -- pays --> Carol
@@ -635,7 +634,7 @@ Bob   -- pays --- |
 ```
 
 Since both of these transactions write to Carol's token account, only one of
-them can go through at a time. Fortunately, Solana is wicked fast, so it’ll
+them can go through at a time. Fortunately, Solana is wicked fast, so it'll
 probably seem like they get paid at the same time. But what happens if more than
 just Alice and Bob try to pay Carol?
 
@@ -659,7 +658,7 @@ trying to write data to the same account all at once.
 Imagine you create a super popular program and you want to take a fee on every
 transaction you process. For accounting reasons, you want all of those fees to
 go to one wallet. With that setup, on a surge of users, your protocol will
-become slow and or become unreliable. Not great. So what’s the solution?
+become slow and or become unreliable. Not great. So what's the solution?
 Separate the data transaction from the fee transaction.
 
 For example, imagine you have a data account called `DonationTally`. Its only
@@ -676,7 +675,7 @@ pub struct DonationTally {
 }
 ```
 
-First let’s look at the suboptimal solution.
+First, let's look at the suboptimal solution.
 
 ```rust
 pub fn run_concept_shared_account_bottleneck(ctx: Context<ConceptSharedAccountBottleneck>, lamports_to_donate: u64) -> Result<()> {
@@ -708,8 +707,8 @@ pub fn run_concept_shared_account_bottleneck(ctx: Context<ConceptSharedAccountBo
 
 You can see that the transfer to the hardcoded `community_wallet` happens in the
 same function that you update the tally information. This is the most
-straightforward solution, but if you run the tests for this section, you’ll see
-the slowdown.
+straightforward solution, but if you run the tests for this section, you'll see
+a slowdown.
 
 Now look at the optimized solution:
 
@@ -756,21 +755,21 @@ pub fn run_concept_shared_account_redeem(ctx: Context<ConceptSharedAccountRedeem
 ```
 
 Here, in the `run_concept_shared_account` function, instead of transferring to
-the bottleneck, we transfer to the `donation_tally` PDA. This way, we’re only
+the bottleneck, we transfer to the `donation_tally` PDA. This way, we're only
 effecting the donator's account and their PDA - so no bottleneck! Additionally,
 we keep an internal tally of how many lamports need to be redeemed, ie be
 transferred from the PDA to the community wallet at a later time. At some point
 in the future, the community wallet will go around and clean up all the
 straggling lamports (probably a good job for
-[clockwork](https://www.clockwork.xyz/)). It’s important to note that anyone
+[clockwork](https://www.clockwork.xyz/)). It's important to note that anyone
 should be able to sign for the redeem function, since the PDA has permission
 over itself.
 
-If you want to avoid bottlenecks at all costs, this is one way to tackle it.
+If you want to avoid bottlenecks at all costs, this is one way to tackle them.
 Ultimately this is a design decision and the simpler, less optimal solution
 might be okay for some programs. But if your program is going to have high
 traffic, it's worth trying to optimize. You can always run a simulation to see
-your worst, best and median cases.
+your worst, best, and median cases.
 
 ### See it in Action
 
@@ -800,9 +799,9 @@ make it your own.
 
 We've talked about quite a few program architecture considerations: bytes,
 accounts, bottlenecks, and more. Whether you wind up running into any of these
-specific considerations or not, hopefully the examples and discussion sparked
+specific considerations or not, hopefully, the examples and discussion sparked
 some thought. At the end of the day, you're the designer of your system. Your
-job is to weigh the pros and cons of various solutions. Be forward thinking, but
+job is to weigh the pros and cons of various solutions. Be forward-thinking, but
 be practical. There is no "one good way" to design anything. Just know the
 trade-offs.
 
@@ -821,7 +820,7 @@ engine in Solana. This program will have the following features:
 - Spent action points go to a game's treasury as listed in the `Game` account
 
 We'll walk through the tradeoffs of various design decisions as we go to give
-you a sense for why we do things. Let’s get started!
+you a sense of why we do things. Let's get started!
 
 ### 1. Program Setup
 
@@ -1035,8 +1034,8 @@ This struct should store the max items allowed per player and some bytes for
 future use. Again, the bytes for future use here help us avoid complexity in the
 future. Reallocating accounts works best when you're adding fields at the end of
 an account rather than in the middle. If you anticipate adding fields in the
-middle of existing date, it might make sense to add some "future use" bytes up
-front.
+middle of an existing data, it might make sense to add some "future use" bytes
+up front.
 
 ```rust filename="game.rs"
 // ----------- GAME CONFIG ----------
@@ -1086,7 +1085,7 @@ pub struct InventoryItem {
 
 ```
 
-### 4. Create helper function for spending action points
+### 4. Create a helper function for spending action points
 
 The last thing we'll do before writing the program's instructions is create a
 helper function for spending action points. Players will send action points
@@ -1153,10 +1152,12 @@ For one, the `game` account is a PDA using its `treasury` wallet. This ensures
 that the same `game_master` can run multiple games if they use a different
 treasury for each.
 
-Also note that the `treasury` is a signer on the instruction. This is to make
-sure whoever is creating the game has the private keys to the `treasury`. This
-is a design decision rather than "the right way." Ultimately, it's a security
-measure to ensure the game master will be able to retrieve their funds.
+<Callout>
+
+The `treasury` is a signer on the instruction. This is to make sure whoever is
+creating the game has the private keys to the `treasury`. This is a design
+decision rather than "the right way." Ultimately, it's a security measure to
+ensure the game master will be able to retrieve their funds. </Callout>
 
 ```rust filename="create_game.rs"
 // ----------- CREATE GAME ----------
@@ -1273,7 +1274,7 @@ pub fn run_create_player(ctx: Context<CreatePlayer>) -> Result<()> {
 
 Now that we have a way to create players, we need a way to spawn monsters for
 them to fight. This instruction will create a new `Monster` account whose
-address is a PDA derived with the `game` account, `player` account, and an index
+address is a PDA derived from the `game` account, `player` account, and an index
 representing the number of monsters the player has faced. There are two design
 decisions here we should talk about:
 
@@ -1342,7 +1343,7 @@ pub fn run_spawn_monster(ctx: Context<SpawnMonster>) -> Result<()> {
 
 ### 8. Attack Monster
 
-Now! Let’s attack those monsters and start gaining some exp!
+Now! Let's attack those monsters and start gaining some exp!
 
 The logic here is as follows:
 
@@ -1356,10 +1357,10 @@ incrementing experience and kill counts.
 The `saturating_add` function ensures the number will never overflow. Say the
 `kills` was a u8 and my current kill count was 255 (0xFF). If I killed another
 and added normally, e.g. `255 + 1 = 0 (0xFF + 0x01 = 0x00) = 0`, the kill count
-would end up as 0. `saturating_add` will keep it at its max if it’s about to
+would end up as 0. `saturating_add` will keep it at its max if it's about to
 roll over, so `255 + 1 = 255`. The `checked_add` function will throw an error if
-it’s about to overflow. Keep this in mind when doing math in Rust. Even though
-`kills` is a u64 and will never roll with it’s current programming, it’s good
+it's about to overflow. Keep this in mind when doing math in Rust. Even though
+`kills` is a u64 and will never roll with it's current programming, it's good
 practice to use safe math and consider roll-overs.
 
 ```rust filename="attack_monster.rs"
@@ -1630,7 +1631,7 @@ anchor build
 
 Now, let's put everything together and see it in action!
 
-We’ll begin by setting up the `tests/rpg.ts` file. We will be writing each test
+We'll begin by setting up the `tests/rpg.ts` file. We will be writing each test
 step by step. But before diving into the tests, we need to initialize a few
 important accounts, specifically the `gameMaster` and the `treasury` accounts.
 
@@ -1768,7 +1769,7 @@ anchor test
 some `.pnp.*` files and no `node_modules`, you may want to call `rm -rf .pnp.*`
 followed by `npm i` and then `yarn install`. That should work.
 
-Now that everything is running, let’s implement the `creates a new player`,
+Now that everything is running, let's implement the `creates a new player`,
 `spawns a monster`, and `attacks a monster` tests. Run each test as you complete
 them to make sure things are running smoothly.
 
@@ -1860,7 +1861,7 @@ Notice the monster that we choose to attack is
 `playerAccount.nextMonsterIndex.subn(1).toBuffer('le', 8)`. This allows us to
 attack the most recent monster spawned. Anything below the `nextMonsterIndex`
 should be okay. Lastly, since seeds are just an array of bytes we have to turn
-the index into the u64, which is little endian `le` at 8 bytes.
+the index into the u64, which is a little endian `le` at 8 bytes.
 
 Run `anchor test` to deal some damage!
 
@@ -1965,7 +1966,7 @@ RPG game
 
 Congratulations! This was a lot to cover, but you now have a mini RPG game
 engine. If things aren't quite working, go back through the lab and find where
-you went wrong. If you need, you can refer to the
+you went wrong. If you need to, you can refer to the
 [`main` branch of the solution code](https://github.com/Unboxed-Software/anchor-rpg).
 
 Be sure to put these concepts into practice in your own programs. Each little
@@ -1973,8 +1974,8 @@ optimization adds up!
 
 ## Challenge
 
-Now it’s your turn to practice independently. Go back through the lab code
-looking for additional optimizations and/or expansion you can make. Think
+Now it's your turn to practice independently. Go back through the lab code
+looking for additional optimizations and/or expansions you can make. Think
 through new systems and features you would add and how you would optimize them.
 
 You can find some example modifications on the
