@@ -353,7 +353,7 @@ pub struct UpdateProgramConfig<'info> {
 ```
 
 Again, the example above doesn't show the instruction that initializes the
-config account, but it should have the same constraints to ensure that an
+config account, but it should have the same constraints to ensure that the
 attacker can't initialize the account with unexpected values.
 
 If this is the first time you've heard about the program data account, it's
@@ -396,7 +396,7 @@ pub struct UpdateProgramConfig<'info> {
 ```
 
 There's one catch here: in the time between deploying a program and initializing
-the config account, _there is no admin_. Which means that the instruction for
+the config account, _there is no admin_. This means that the instruction for
 initializing the config account can't be constrained to only allow admins as
 callers. That means it could be called by an attacker looking to set themselves
 as the admin.
