@@ -67,26 +67,24 @@ we are going to be looking at in this section:
 
 #### Sizes
 
-In Solana a transaction's fee payer pays for each byte stored onchain. We call
-this [rent](https://solana.com/docs/core/fees).
+In Solana, a transaction's fee payer pays for each byte stored onchain. This is
+called [rent](https://solana.com/docs/core/fees#rent).
 
 <Callout type="note">
 
-Rent is a bit of a misnomer since it never actually gets permanently taken. Once
-you deposit rent into the account, that data can stay there forever or you can
-get refunded the rent if you close the account. Rent used to be an actual thing,
-but now there's an enforced minimum rent exemption. You can read about it in
-[the Solana documentation](https://solana.com/docs/intro/rent).</Callout>
+Rent is a bit of a misnomer since it never gets permanently taken. Once you
+deposit rent into the account, that data can stay there forever, or you can get
+refunded the rent if you close the account. Rent used to be an actual thing, but
+now there's an enforced minimum rent exemption. You can read about it in
+[the Solana documentation](https://solana.com/docs/core/fees#rent-exempt).</Callout>
 
-Rent etymology aside, putting data on the blockchain can be expensive. It’s why
-NFT attributes and associated files, like the image, are stored offchain. You
-ultimately want to strike a balance that leaves your program highly functional
-without becoming so expensive that your users don’t want to pay to open the data
-account.
+Putting data on the blockchain can be expensive, which is why NFT attributes and
+associated files, like images, are stored offchain. The goal is to strike a
+balance between keeping your program highly functional while ensuring that users
+aren't discouraged by the cost of storing data onchain.
 
-The first thing you need to know before you can start optimizing for space in
-your program is the size of each of your structs. Below is a very helpful list
-from the
+The first step in optimizing for space in your program is understanding the size
+of your structs. Below is a helpful reference from the
 [Anchor Book](https://book.anchor-lang.com/anchor_references/space.html).
 
 <!-- Edits note: this very wide table looks awful unless you made your window very wide -->
@@ -159,7 +157,9 @@ where that entire `SomeBigDataStruct` gets stored in memory and since 5000
 bytes, or 5KB, is greater than the 4KB limit, it will throw a stack error. So
 how do we fix this?
 
-The answer is the **`Box<T>`** type!
+The answer is the
+[**`Box<T>`**](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/boxed/index.html)
+type!
 
 ```rust
 #[account]
@@ -325,13 +325,13 @@ when `flags` has four items in the vector vs eight items. If you were to call
 
 ```rust
 0000:   74 e4 28 4e    d9 ec 31 0a  -> Account Discriminator (8)
-0008:	04 00 00 00    11 22 33 44  -> Vec Size (4) | Data 4*(1)
+0008: 04 00 00 00    11 22 33 44  -> Vec Size (4) | Data 4*(1)
 0010:   DE AD BE EF                 -> id (4)
 
 --- vs ---
 
 0000:   74 e4 28 4e    d9 ec 31 0a  -> Account Discriminator (8)
-0008:	08 00 00 00    11 22 33 44  -> Vec Size (8) | Data 4*(1)
+0008: 08 00 00 00    11 22 33 44  -> Vec Size (8) | Data 4*(1)
 0010:   55 66 77 88    DE AD BE EF  -> Data 4*(1) | id (4)
 ```
 
@@ -374,7 +374,7 @@ queries! The simple fix is to flip the order.
 ```rust
 #[account] // Anchor hides the account disriminator
 pub struct GoodState {
-	pub id: u32         // 0xDEAD_BEEF
+ pub id: u32         // 0xDEAD_BEEF
     pub flags: Vec<u8>, // 0x11, 0x22, 0x33 ...
 }
 ```
@@ -425,7 +425,7 @@ reserves some bytes where you expect to need them most.
 pub struct GameState { //V1
     pub health: u64,
     pub mana: u64,
-	pub for_future_use: [u8; 128],
+ pub for_future_use: [u8; 128],
     pub event_log: Vec<string>
 }
 ```
@@ -438,8 +438,8 @@ this and both the old and new accounts are compatible.
 pub struct GameState { //V2
     pub health: u64,
     pub mana: u64,
-	pub experience: u64,
-	pub for_future_use: [u8; 120],
+ pub experience: u64,
+ pub for_future_use: [u8; 120],
     pub event_log: Vec<string>
 }
 ```
@@ -630,7 +630,7 @@ issues.
 
 ```rust
 Alice -- pays --> |
-						-- > Carol
+      -- > Carol
 Bob   -- pays --- |
 ```
 
@@ -641,7 +641,7 @@ just Alice and Bob try to pay Carol?
 
 ```rust
 Alice -- pays --> |
-						-- > Carol
+      -- > Carol
 x1000 -- pays --- |
 Bob   -- pays --- |
 ```
@@ -823,7 +823,7 @@ engine in Solana. This program will have the following features:
 We'll walk through the tradeoffs of various design decisions as we go to give
 you a sense for why we do things. Let’s get started!
 
-#### 1. Program Setup
+### 1. Program Setup
 
 We'll build this from scratch. Start by creating a new Anchor project:
 
@@ -831,54 +831,65 @@ We'll build this from scratch. Start by creating a new Anchor project:
 anchor init rpg
 ```
 
-<Callout type="note">This lab was created with Anchor version `0.28.0` in mind.
-If there are problems compiling, please refer to the
-[solution code](https://github.com/Unboxed-Software/anchor-rpg/tree/challenge-solution)
-for the environment setup.</Callout>
+<Callout type="note">
+
+This lab was created with Anchor version `0.30.1` in mind. If there are problems
+compiling, please refer to the
+[solution code](https://github.com/Unboxed-Software/anchor-rpg/tree/main) for
+the environment setup.</Callout>
 
 Next, replace the program ID in `programs/rpg/lib.rs` and `Anchor.toml` with the
-program ID shown when you run `anchor keys list`.
+program ID shown when you run `anchor keys list`. Alternatively, you can run
+command `anchor keys sync` that will automatically sync your program ID. This
+command will sync the program ids between the program files(including
+`Anchor.toml`) with the actual `pubkey` from the program keypair file.
 
-Finally, let's scaffold out the program in the `lib.rs` file. To make following
-along easier, we're going to keep everything in one file. We'll augment this
-with section comments for better organization and navigation. Copy the following
+Finally, let's scaffold out the program in the `lib.rs` file. Copy the following
 into your file before we get started:
 
-```rust
+```rust filename="lib.rs"
 use anchor_lang::prelude::*;
-use anchor_lang::system_program::{Transfer, transfer};
 use anchor_lang::solana_program::log::sol_log_compute_units;
 
 declare_id!("YOUR_KEY_HERE__YOUR_KEY_HERE");
-
-// ----------- ACCOUNTS ----------
-
-// ----------- GAME CONFIG ----------
-
-// ----------- STATUS ----------
-
-// ----------- INVENTORY ----------
-
-// ----------- HELPER ----------
-
-// ----------- CREATE GAME ----------
-
-// ----------- CREATE PLAYER ----------
-
-// ----------- SPAWN MONSTER ----------
-
-// ----------- ATTACK MONSTER ----------
-
-// ----------- REDEEM TO TREASURY ----------
 
 #[program]
 pub mod rpg {
     use super::*;
 
+    pub fn create_game(ctx: Context<CreateGame>, max_items_per_player: u8) -> Result<()> {
+        run_create_game(ctx, max_items_per_player)?;
+        sol_log_compute_units();
+        Ok(())
+    }
+
+    pub fn create_player(ctx: Context<CreatePlayer>) -> Result<()> {
+        run_create_player(ctx)?;
+        sol_log_compute_units();
+        Ok(())
+    }
+
+    pub fn spawn_monster(ctx: Context<SpawnMonster>) -> Result<()> {
+        run_spawn_monster(ctx)?;
+        sol_log_compute_units();
+        Ok(())
+    }
+
+    pub fn attack_monster(ctx: Context<AttackMonster>) -> Result<()> {
+        run_attack_monster(ctx)?;
+        sol_log_compute_units();
+        Ok(())
+    }
+
+    pub fn deposit_action_points(ctx: Context<CollectActionPoints>) -> Result<()> {
+        run_collect_action_points(ctx)?;
+        sol_log_compute_units();
+        Ok(())
+    }
 }
 ```
 
-#### 2. Create Account Structures
+### 2. Create Account Structures
 
 Now that our initial setup is ready, let's create our accounts. We'll have 3:
 
@@ -913,21 +924,56 @@ Now that our initial setup is ready, let's create our accounts. We'll have 3:
    - `game` - the game the monster is associated with
    - `hitpoints` - how many hit points the monster has left
 
+This is the final project structure:
+
+```bash
+src/
+├── constants.rs              # Constants used throughout the program
+├── error/                    # Error module
+│   ├── errors.rs             # Custom error definitions
+│   └── mod.rs                # Module declarations for error handling
+├── helpers.rs                # Helper functions used across the program
+├── instructions/             # Instruction handlers for different game actions
+│   ├── attack_monster.rs     # Handles attacking a monster
+│   ├── collect_points.rs     # Handles collecting points
+│   ├── create_game.rs        # Handles game creation
+│   ├── create_player.rs      # Handles player creation
+│   ├── mod.rs                # Module declarations for instructions
+│   └── spawn_monster.rs      # Handles spawning a new monster
+├── lib.rs                    # Main entry point for the program
+└── state/                    # State module for game data structures
+    ├── game.rs               # Game state representation
+    ├── mod.rs                # Module declarations for state
+    ├── monster.rs            # Monster state representation
+    └── player.rs             # Player state representation
+```
+
 When added to the program, the accounts should look like this:
 
 ```rust
 // ----------- ACCOUNTS ----------
+
+// Inside `state/game.rs`
+use anchor_lang::prelude::*;
 #[account]
-pub struct Game { // 8 bytes
-    pub game_master: Pubkey,            // 32 bytes
-    pub treasury: Pubkey,               // 32 bytes
-
-    pub action_points_collected: u64,   // 8 bytes
-
+#[derive(InitSpace)]
+pub struct Game {
+    pub game_master: Pubkey,
+    pub treasury: Pubkey,
+    pub action_points_collected: u64,
     pub game_config: GameConfig,
 }
 
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
+pub struct GameConfig {
+    pub max_items_per_player: u8,
+    pub for_future_use: [u64; 16], // Health of Enemies? Experience per item? Action Points per Action?
+}
+
+// Inside `state/player.rs`
+use anchor_lang::prelude::*;
 #[account]
+#[derive(InitSpace)]
 pub struct Player { // 8 bytes
     pub player: Pubkey,                 // 32 bytes
     pub game: Pubkey,                   // 32 bytes
@@ -945,12 +991,22 @@ pub struct Player { // 8 bytes
     pub inventory: Vec<InventoryItem>,  // Max 8 items
 }
 
-#[account]
-pub struct Monster { // 8 bytes
-    pub player: Pubkey,                 // 32 bytes
-    pub game: Pubkey,                   // 32 bytes
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
+pub struct InventoryItem {
+    pub name: [u8; 32], // Fixed Name up to 32 bytes
+    pub amount: u64,
+    pub for_future_use: [u8; 128], // Metadata? Effects? Flags?
+}
 
-    pub hitpoints: u64,                 // 8 bytes
+
+// Inside `state/monster.rs`
+use anchor_lang::prelude::*;
+#[account]
+#[derive(InitSpace)]
+pub struct Monster {
+    pub player: Pubkey,
+    pub game: Pubkey,
+    pub hitpoints: u64,
 }
 ```
 
@@ -968,7 +1024,7 @@ queries and likely couldn't query in a single call based on `inventory`.
 Reallocating and adding a field would move the memory position of `inventory`,
 leaving us to write complex logic to query accounts with various structures.
 
-#### 3. Create ancillary types
+### 3. Create Ancillary Types
 
 The next thing we need to do is add some of the types our accounts reference
 that we haven't created yet.
@@ -982,13 +1038,13 @@ an account rather than in the middle. If you anticipate adding fields in the
 middle of existing date, it might make sense to add some "future use" bytes up
 front.
 
-```rust
+```rust filename="game.rs"
 // ----------- GAME CONFIG ----------
-
-#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
+// Inside `state/game.rs`
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct GameConfig {
     pub max_items_per_player: u8,
-    pub for_future_use: [u64; 16], // Health of Enemies?? Experience per item?? Action Points per Action??
+    pub for_future_use: [u64; 16], // Health of Enemies? Experience per item? Action Points per Action?
 }
 ```
 
@@ -997,35 +1053,40 @@ booleans but we save space by storing multiple flags in a single byte. Each flag
 takes up a different bit within the byte. We can use the `<<` operator to place
 `1` in the correct bit.
 
-```rust
+```rust filename="constants.rs"
 // ----------- STATUS ----------
 
-const IS_FROZEN_FLAG: u8 = 1 << 0;
-const IS_POISONED_FLAG: u8 = 1 << 1;
-const IS_BURNING_FLAG: u8 = 1 << 2;
-const IS_BLESSED_FLAG: u8 = 1 << 3;
-const IS_CURSED_FLAG: u8 = 1 << 4;
-const IS_STUNNED_FLAG: u8 = 1 << 5;
-const IS_SLOWED_FLAG: u8 = 1 << 6;
-const IS_BLEEDING_FLAG: u8 = 1 << 7;
-const NO_EFFECT_FLAG: u8 = 0b00000000;
+pub const IS_FROZEN_FLAG: u8 = 1 << 0;
+pub const IS_POISONED_FLAG: u8 = 1 << 1;
+pub const IS_BURNING_FLAG: u8 = 1 << 2;
+pub const IS_BLESSED_FLAG: u8 = 1 << 3;
+pub const IS_CURSED_FLAG: u8 = 1 << 4;
+pub const IS_STUNNED_FLAG: u8 = 1 << 5;
+pub const IS_SLOWED_FLAG: u8 = 1 << 6;
+pub const IS_BLEEDING_FLAG: u8 = 1 << 7;
+
+pub const NO_EFFECT_FLAG: u8 = 0b00000000;
+pub const ANCHOR_DISCRIMINATOR: usize = 8;
+pub const MAX_INVENTORY_ITEMS: usize = 8;
 ```
 
 Finally, let's create our `InventoryItem`. This should have fields for the
 item's name, amount, and some bytes reserved for future use.
 
-```rust
+```rust filename="player.rs"
 // ----------- INVENTORY ----------
 
-#[derive(Clone, AnchorSerialize, AnchorDeserialize)]
+// Inside `state/player.rs`
+#[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct InventoryItem {
     pub name: [u8; 32], // Fixed Name up to 32 bytes
     pub amount: u64,
-    pub for_future_use: [u8; 128], // Metadata?? // Effects // Flags?
+    pub for_future_use: [u8; 128], // Metadata? Effects? Flags?
 }
+
 ```
 
-#### 4. Create helper function for spending action points
+### 4. Create helper function for spending action points
 
 The last thing we'll do before writing the program's instructions is create a
 helper function for spending action points. Players will send action points
@@ -1041,8 +1102,13 @@ that will send the lamports from that account to the treasury in one fell swoop.
 This alleviates any concurrency issues since every player has their own account,
 but also allows the program to retrieve those lamports at any time.
 
-```rust
+```rust filename="helper.rs"
 // ----------- HELPER ----------
+
+// Inside /src/helpers.rs
+use anchor_lang::{prelude::*, system_program};
+
+use crate::{error::RpgError, Player};
 
 pub fn spend_action_points<'info>(
     action_points: u64,
@@ -1050,17 +1116,26 @@ pub fn spend_action_points<'info>(
     player: &AccountInfo<'info>,
     system_program: &AccountInfo<'info>,
 ) -> Result<()> {
+    player_account.action_points_spent = player_account
+        .action_points_spent
+        .checked_add(action_points)
+        .ok_or(error!(RpgError::ArithmeticOverflow))?;
 
-    player_account.action_points_spent = player_account.action_points_spent.checked_add(action_points).unwrap();
-    player_account.action_points_to_be_collected = player_account.action_points_to_be_collected.checked_add(action_points).unwrap();
+    player_account.action_points_to_be_collected = player_account
+        .action_points_to_be_collected
+        .checked_add(action_points)
+        .ok_or(error!(RpgError::ArithmeticOverflow))?;
 
-    let cpi_context = CpiContext::new(
-        system_program.clone(),
-        Transfer {
-            from: player.clone(),
-            to: player_account.to_account_info().clone(),
-        });
-    transfer(cpi_context, action_points)?;
+    system_program::transfer(
+        CpiContext::new(
+            system_program.to_account_info(),
+            system_program::Transfer {
+                from: player.to_account_info(),
+                to: player_account.to_account_info(),
+            },
+        ),
+        action_points,
+    )?;
 
     msg!("Minus {} action points", action_points);
 
@@ -1068,7 +1143,7 @@ pub fn spend_action_points<'info>(
 }
 ```
 
-#### 5. Create Game
+### 5. Create Game
 
 Our first instruction will create the `game` account. Anyone can be a
 `game_master` and create their own game, but once a game has been created there
@@ -1083,43 +1158,47 @@ sure whoever is creating the game has the private keys to the `treasury`. This
 is a design decision rather than "the right way." Ultimately, it's a security
 measure to ensure the game master will be able to retrieve their funds.
 
-```rust
+```rust filename="create_game.rs"
 // ----------- CREATE GAME ----------
+
+// Inside src/instructions/create_game.rs
+use anchor_lang::prelude::*;
+
+use crate::{error::RpgError, Game, ANCHOR_DISCRIMINATOR};
 
 #[derive(Accounts)]
 pub struct CreateGame<'info> {
     #[account(
         init,
-        seeds=[b"GAME", treasury.key().as_ref()],
+        seeds = [b"GAME", treasury.key().as_ref()],
         bump,
         payer = game_master,
-        space = std::mem::size_of::<Game>()+ 8
+        space = ANCHOR_DISCRIMINATOR + Game::INIT_SPACE
     )]
     pub game: Account<'info, Game>,
-
     #[account(mut)]
     pub game_master: Signer<'info>,
-
-    /// CHECK: Need to know they own the treasury
     pub treasury: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
 pub fn run_create_game(ctx: Context<CreateGame>, max_items_per_player: u8) -> Result<()> {
+    if max_items_per_player == 0 {
+        return Err(error!(RpgError::InvalidGameConfig));
+    }
 
-    ctx.accounts.game.game_master = ctx.accounts.game_master.key().clone();
-    ctx.accounts.game.treasury = ctx.accounts.treasury.key().clone();
-
-    ctx.accounts.game.action_points_collected = 0;
-    ctx.accounts.game.game_config.max_items_per_player = max_items_per_player;
+    let game = &mut ctx.accounts.game;
+    game.game_master = ctx.accounts.game_master.key();
+    game.treasury = ctx.accounts.treasury.key();
+    game.action_points_collected = 0;
+    game.game_config.max_items_per_player = max_items_per_player;
 
     msg!("Game created!");
-
     Ok(())
 }
 ```
 
-#### 6. Create Player
+### 6. Create Player
 
 Our second instruction will create the `player` account. There are three
 tradeoffs to note about this instruction:
@@ -1134,58 +1213,63 @@ tradeoffs to note about this instruction:
    100 lamports, but this could be something added to the game config in the
    future.
 
-```rust
+```rust filename="create_player.rs"
 // ----------- CREATE PLAYER ----------
+
+// Inside src/instructions/create_player.rs
+use anchor_lang::prelude::*;
+
+use crate::{
+    error::RpgError, helpers::spend_action_points, Game, Player, ANCHOR_DISCRIMINATOR,
+    CREATE_PLAYER_ACTION_POINTS, NO_EFFECT_FLAG,
+};
+
 #[derive(Accounts)]
 pub struct CreatePlayer<'info> {
     pub game: Box<Account<'info, Game>>,
-
     #[account(
         init,
-        seeds=[
+        seeds = [
             b"PLAYER",
             game.key().as_ref(),
             player.key().as_ref()
         ],
         bump,
         payer = player,
-        space = std::mem::size_of::<Player>() + std::mem::size_of::<InventoryItem>() * game.game_config.max_items_per_player as usize + 8)
-    ]
+        space = ANCHOR_DISCRIMINATOR + Player::INIT_SPACE
+    )]
     pub player_account: Account<'info, Player>,
-
     #[account(mut)]
     pub player: Signer<'info>,
-
     pub system_program: Program<'info, System>,
 }
 
 pub fn run_create_player(ctx: Context<CreatePlayer>) -> Result<()> {
-
-    ctx.accounts.player_account.player = ctx.accounts.player.key().clone();
-    ctx.accounts.player_account.game = ctx.accounts.game.key().clone();
-
-    ctx.accounts.player_account.status_flag = NO_EFFECT_FLAG;
-    ctx.accounts.player_account.experience = 0;
-    ctx.accounts.player_account.kills = 0;
+    let player_account = &mut ctx.accounts.player_account;
+    player_account.player = ctx.accounts.player.key();
+    player_account.game = ctx.accounts.game.key();
+    player_account.status_flag = NO_EFFECT_FLAG;
+    player_account.experience = 0;
+    player_account.kills = 0;
 
     msg!("Hero has entered the game!");
 
-    {   // Spend 100 lamports to create player
-        let action_points_to_spend = 100;
+    // Spend 100 lamports to create player
+    let action_points_to_spend = CREATE_PLAYER_ACTION_POINTS;
 
-        spend_action_points(
-            action_points_to_spend,
-            &mut ctx.accounts.player_account,
-            &ctx.accounts.player.to_account_info(),
-            &ctx.accounts.system_program.to_account_info()
-        )?;
-    }
+    spend_action_points(
+        action_points_to_spend,
+        player_account,
+        &ctx.accounts.player.to_account_info(),
+        &ctx.accounts.system_program.to_account_info(),
+    )
+    .map_err(|_| error!(RpgError::InsufficientActionPoints))?;
 
     Ok(())
 }
 ```
 
-#### 7. Spawn Monster
+### 7. Spawn Monster
 
 Now that we have a way to create players, we need a way to spawn monsters for
 them to fight. This instruction will create a new `Monster` account whose
@@ -1197,21 +1281,26 @@ decisions here we should talk about:
 2. We wrap both the `game` and `player` accounts in `Box` to allocate them to
    the Heap
 
-```rust
+```rust filename="spawn_monster.rs"
 // ----------- SPAWN MONSTER ----------
+
+// Inside src/instructions/spawn_monster.rs
+use anchor_lang::prelude::*;
+
+use crate::{helpers::spend_action_points, Game, Monster, Player, SPAWN_MONSTER_ACTION_POINTS, ANCHOR_DISCRIMINATOR};
+
 #[derive(Accounts)]
 pub struct SpawnMonster<'info> {
     pub game: Box<Account<'info, Game>>,
-
-    #[account(mut,
+    #[account(
+        mut,
         has_one = game,
         has_one = player,
     )]
     pub player_account: Box<Account<'info, Player>>,
-
     #[account(
         init,
-        seeds=[
+        seeds = [
             b"MONSTER",
             game.key().as_ref(),
             player.key().as_ref(),
@@ -1219,46 +1308,39 @@ pub struct SpawnMonster<'info> {
         ],
         bump,
         payer = player,
-        space = std::mem::size_of::<Monster>() + 8)
-    ]
+        space = ANCHOR_DISCRIMINATOR + Monster::INIT_SPACE
+    )]
     pub monster: Account<'info, Monster>,
-
     #[account(mut)]
     pub player: Signer<'info>,
-
     pub system_program: Program<'info, System>,
 }
 
 pub fn run_spawn_monster(ctx: Context<SpawnMonster>) -> Result<()> {
+    let monster = &mut ctx.accounts.monster;
+    monster.player = ctx.accounts.player.key();
+    monster.game = ctx.accounts.game.key();
+    monster.hitpoints = 100;
 
-    {
-        ctx.accounts.monster.player = ctx.accounts.player.key().clone();
-        ctx.accounts.monster.game = ctx.accounts.game.key().clone();
-        ctx.accounts.monster.hitpoints = 100;
+    let player_account = &mut ctx.accounts.player_account;
+    player_account.next_monster_index = player_account.next_monster_index.checked_add(1).unwrap();
 
-        msg!("Monster Spawned!");
-    }
+    msg!("Monster Spawned!");
 
-    {
-        ctx.accounts.player_account.next_monster_index = ctx.accounts.player_account.next_monster_index.checked_add(1).unwrap();
-    }
-
-    {   // Spend 5 lamports to spawn monster
-        let action_point_to_spend = 5;
-
-        spend_action_points(
-            action_point_to_spend,
-            &mut ctx.accounts.player_account,
-            &ctx.accounts.player.to_account_info(),
-            &ctx.accounts.system_program.to_account_info()
-        )?;
-    }
+    // Spend 5 lamports to spawn monster
+    let action_point_to_spend = SPAWN_MONSTER_ACTION_POINTS;
+    spend_action_points(
+        action_point_to_spend,
+        player_account,
+        &ctx.accounts.player.to_account_info(),
+        &ctx.accounts.system_program.to_account_info(),
+    )?;
 
     Ok(())
 }
 ```
 
-#### 8. Attack Monster
+### 8. Attack Monster
 
 Now! Let’s attack those monsters and start gaining some exp!
 
@@ -1280,133 +1362,227 @@ it’s about to overflow. Keep this in mind when doing math in Rust. Even though
 `kills` is a u64 and will never roll with it’s current programming, it’s good
 practice to use safe math and consider roll-overs.
 
-```rust
+```rust filename="attack_monster.rs"
 // ----------- ATTACK MONSTER ----------
+
+// Inside src/instructions/attack_monster.rs
+use anchor_lang::prelude::*;
+use crate::{helpers::spend_action_points, Monster, Player, ATTACK_ACTION_POINTS, error::RpgError};
+
 #[derive(Accounts)]
 pub struct AttackMonster<'info> {
-
     #[account(
         mut,
         has_one = player,
     )]
     pub player_account: Box<Account<'info, Player>>,
-
     #[account(
         mut,
         has_one = player,
-        constraint = monster.game == player_account.game
+        constraint = monster.game == player_account.game @ RpgError::GameMismatch
     )]
     pub monster: Box<Account<'info, Monster>>,
-
     #[account(mut)]
     pub player: Signer<'info>,
-
     pub system_program: Program<'info, System>,
 }
 
 pub fn run_attack_monster(ctx: Context<AttackMonster>) -> Result<()> {
+    let player_account = &mut ctx.accounts.player_account;
+    let monster = &mut ctx.accounts.monster;
 
-    let mut did_kill = false;
+    let hp_before_attack = monster.hitpoints;
+    let hp_after_attack = monster.hitpoints.saturating_sub(1);
+    let damage_dealt = hp_before_attack.saturating_sub(hp_after_attack);
+    monster.hitpoints = hp_after_attack;
 
-    {
-        let hp_before_attack =  ctx.accounts.monster.hitpoints;
-        let hp_after_attack = ctx.accounts.monster.hitpoints.saturating_sub(1);
-        let damage_dealt = hp_before_attack - hp_after_attack;
-        ctx.accounts.monster.hitpoints = hp_after_attack;
-
-
-
-        if hp_before_attack > 0 && hp_after_attack == 0 {
-            did_kill = true;
-        }
-
-        if  damage_dealt > 0 {
-            msg!("Damage Dealt: {}", damage_dealt);
-        } else {
-            msg!("Stop it's already dead!");
-        }
-    }
-
-    {
-        ctx.accounts.player_account.experience = ctx.accounts.player_account.experience.saturating_add(1);
+    if damage_dealt > 0 {
+        msg!("Damage Dealt: {}", damage_dealt);
+        player_account.experience = player_account.experience.saturating_add(1);
         msg!("+1 EXP");
 
-        if did_kill {
-            ctx.accounts.player_account.kills = ctx.accounts.player_account.kills.saturating_add(1);
+        if hp_after_attack == 0 {
+            player_account.kills = player_account.kills.saturating_add(1);
             msg!("You killed the monster!");
         }
+    } else {
+        msg!("Stop it's already dead!");
     }
 
-    {   // Spend 1 lamports to attack monster
-        let action_point_to_spend = 1;
+    // Spend 1 lamport to attack monster
+    let action_point_to_spend = ATTACK_ACTION_POINTS;
 
-        spend_action_points(
-            action_point_to_spend,
-            &mut ctx.accounts.player_account,
-            &ctx.accounts.player.to_account_info(),
-            &ctx.accounts.system_program.to_account_info()
-        )?;
-    }
+    spend_action_points(
+        action_point_to_spend,
+        player_account,
+        &ctx.accounts.player.to_account_info(),
+        &ctx.accounts.system_program.to_account_info()
+    )?;
 
     Ok(())
 }
 ```
 
-#### Redeem to Treasury
+### 9. Redeem to Treasury
 
 This is our last instruction. This instruction lets anyone send the spent
 `action_points` to the `treasury` wallet.
 
 Again, let's box the rpg accounts and use safe math.
 
-```rust
+```rust filename="collect_points.rs"
 // ----------- REDEEM TO TREASUREY ----------
+
+// Inside src/instructions/collect_points.rs
+use anchor_lang::prelude::*;
+use crate::{error::RpgError, Game, Player};
+
 #[derive(Accounts)]
 pub struct CollectActionPoints<'info> {
-
     #[account(
         mut,
-        has_one=treasury
+        has_one = treasury @ RpgError::InvalidTreasury
     )]
     pub game: Box<Account<'info, Game>>,
-
     #[account(
         mut,
-        has_one=game
+        has_one = game @ RpgError::PlayerGameMismatch
     )]
     pub player: Box<Account<'info, Player>>,
-
     #[account(mut)]
     /// CHECK: It's being checked in the game account
-    pub treasury: AccountInfo<'info>,
-
+    pub treasury: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,
 }
 
-// literally anyone who pays for the TX fee can run this command - give it to a clockwork bot
+// Literally anyone who pays for the TX fee can run this command - give it to a clockwork bot
 pub fn run_collect_action_points(ctx: Context<CollectActionPoints>) -> Result<()> {
-    let transfer_amount: u64 = ctx.accounts.player.action_points_to_be_collected;
+    let transfer_amount = ctx.accounts.player.action_points_to_be_collected;
 
-    **ctx.accounts.player.to_account_info().try_borrow_mut_lamports()? -= transfer_amount;
-    **ctx.accounts.treasury.to_account_info().try_borrow_mut_lamports()? += transfer_amount;
+    // Transfer lamports from player to treasury
+    let player_info = ctx.accounts.player.to_account_info();
+    let treasury_info = ctx.accounts.treasury.to_account_info();
+
+    **player_info.try_borrow_mut_lamports()? = player_info
+        .lamports()
+        .checked_sub(transfer_amount)
+        .ok_or(RpgError::InsufficientFunds)?;
+
+    **treasury_info.try_borrow_mut_lamports()? = treasury_info
+        .lamports()
+        .checked_add(transfer_amount)
+        .ok_or(RpgError::ArithmeticOverflow)?;
 
     ctx.accounts.player.action_points_to_be_collected = 0;
 
-    ctx.accounts.game.action_points_collected = ctx.accounts.game.action_points_collected.checked_add(transfer_amount).unwrap();
+    ctx.accounts.game.action_points_collected = ctx.accounts.game
+        .action_points_collected
+        .checked_add(transfer_amount)
+        .ok_or(RpgError::ArithmeticOverflow)?;
 
-    msg!("The treasury collected {} action points to treasury", transfer_amount);
+    msg!("The treasury collected {} action points", transfer_amount);
 
     Ok(())
 }
 ```
 
-#### Putting it all Together
+### 10. Error Handling
+
+Now, let's add all the errors that we have used till now in `errors.rs` file.
+
+```rust filename="errors.rs"
+// ------------RPG ERRORS--------------
+
+// Inside src/error/errors.rs
+
+use anchor_lang::prelude::*;
+
+#[error_code]
+pub enum RpgError {
+    #[msg("Arithmetic overflow occurred")]
+    ArithmeticOverflow,
+    #[msg("Invalid game configuration")]
+    InvalidGameConfig,
+    #[msg("Player not found")]
+    PlayerNotFound,
+    #[msg("Monster not found")]
+    MonsterNotFound,
+    #[msg("Insufficient action points")]
+    InsufficientActionPoints,
+    #[msg("Invalid attack")]
+    InvalidAttack,
+    #[msg("Maximum inventory size reached")]
+    MaxInventoryReached,
+    #[msg("Invalid item operation")]
+    InvalidItemOperation,
+    #[msg("Monster and player are not in the same game")]
+    GameMismatch,
+    #[msg("Invalid treasury account")]
+    InvalidTreasury,
+    #[msg("Player does not belong to the specified game")]
+    PlayerGameMismatch,
+    #[msg("Insufficient funds for transfer")]
+    InsufficientFunds
+}
+```
+
+### 11. Module Declarations
+
+We need to declare all the modules used in the project as follows:
+
+```rust
+
+// Inside src/error/mod.rs
+pub mod errors;
+pub use errors::RpgError;   // Expose the custom error type
+
+// Inside src/instructions/mod.rs
+pub mod attack_monster;
+pub mod collect_points;
+pub mod create_game;
+pub mod create_player;
+pub mod spawn_monster;
+
+pub use attack_monster::*;   // Expose attack_monster functions
+pub use collect_points::*;    // Expose collect_points functions
+pub use create_game::*;       // Expose create_game functions
+pub use create_player::*;     // Expose create_player functions
+pub use spawn_monster::*;     // Expose spawn_monster functions
+
+// Inside src/state/mod.rs
+pub mod game;
+pub mod monster;
+pub mod player;
+
+pub use game::*;      // Expose game state
+pub use monster::*;   // Expose monster state
+pub use player::*;    // Expose player state
+```
+
+### 12. Putting it all Together
 
 Now that all of our instruction logic is written, let's add these functions to
 actual instructions in the program. It can also be helpful to log compute units
 for each instruction.
 
-```rust
+```rust filename="lib.rs"
+
+// Insider src/lib.rs
+use anchor_lang::prelude::*;
+use anchor_lang::solana_program::log::sol_log_compute_units;
+
+mod state;
+mod instructions;
+mod constants;
+mod helpers;
+mod error;
+
+use state::*;
+use constants::*;
+use instructions::*;
+
+declare_id!("5Sc3gJv4tvPiFzE75boYMJabbNRs44zRhtT23fLdKewz");
+
 #[program]
 pub mod rpg {
     use super::*;
@@ -1440,7 +1616,6 @@ pub mod rpg {
         sol_log_compute_units();
         Ok(())
     }
-
 }
 ```
 
@@ -1451,73 +1626,134 @@ successfully.
 anchor build
 ```
 
-#### Testing
+### Testing
 
-Now, let’s see this baby work!
+Now, let's put everything together and see it in action!
 
-Let’s set up the `tests/rpg.ts` file. We will be filling out each test in turn.
-But first, we needed to set up a couple of different accounts. Mainly the
-`gameMaster` and the `treasury`.
+We’ll begin by setting up the `tests/rpg.ts` file. We will be writing each test
+step by step. But before diving into the tests, we need to initialize a few
+important accounts, specifically the `gameMaster` and the `treasury` accounts.
 
-```typescript
+```typescript filename="rpg.ts"
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { Rpg, IDL } from "../target/types/rpg";
+import { Rpg } from "../target/types/rpg";
 import { assert } from "chai";
+import {
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  TransactionSignature,
+  TransactionConfirmationStrategy,
+} from "@solana/web3.js";
 import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
 
-describe("RPG", () => {
-  // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.AnchorProvider.env());
+const GAME_SEED = "GAME";
+const PLAYER_SEED = "PLAYER";
+const MONSTER_SEED = "MONSTER";
+const MAX_ITEMS_PER_PLAYER = 8;
+const INITIAL_MONSTER_HITPOINTS = 100;
+const AIRDROP_AMOUNT = 10 * LAMPORTS_PER_SOL;
+const CREATE_PLAYER_ACTION_POINTS = 100;
+const SPAWN_MONSTER_ACTION_POINTS = 5;
+const ATTACK_MONSTER_ACTION_POINTS = 1;
+const MONSTER_INDEX_BYTE_LENGTH = 8;
 
-  const program = anchor.workspace.Rpg as Program<Rpg>;
-  const wallet = anchor.workspace.Rpg.provider.wallet
-    .payer as anchor.web3.Keypair;
-  const gameMaster = wallet;
-  const player = wallet;
+const provider = anchor.AnchorProvider.env();
+anchor.setProvider(provider);
 
-  const treasury = anchor.web3.Keypair.generate();
+const program = anchor.workspace.Rpg as Program<Rpg>;
+const wallet = provider.wallet as NodeWallet;
+const gameMaster = wallet;
+const player = wallet;
 
-  it("Create Game", async () => {});
+const treasury = Keypair.generate();
 
-  it("Create Player", async () => {});
+const findProgramAddress = (seeds: Buffer[]): [PublicKey, number] =>
+  PublicKey.findProgramAddressSync(seeds, program.programId);
 
-  it("Spawn Monster", async () => {});
+const confirmTransaction = async (
+  signature: TransactionSignature,
+  provider: anchor.Provider,
+) => {
+  const latestBlockhash = await provider.connection.getLatestBlockhash();
+  const confirmationStrategy: TransactionConfirmationStrategy = {
+    signature,
+    blockhash: latestBlockhash.blockhash,
+    lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+  };
 
-  it("Attack Monster", async () => {});
+  try {
+    const confirmation =
+      await provider.connection.confirmTransaction(confirmationStrategy);
+    if (confirmation.value.err) {
+      throw new Error(
+        `Transaction failed: ${confirmation.value.err.toString()}`,
+      );
+    }
+  } catch (error) {
+    throw new Error(`Transaction confirmation failed: ${error.message}`);
+  }
+};
 
-  it("Deposit Action Points", async () => {});
+const createGameAddress = () =>
+  findProgramAddress([Buffer.from(GAME_SEED), treasury.publicKey.toBuffer()]);
+
+const createPlayerAddress = (gameAddress: PublicKey) =>
+  findProgramAddress([
+    Buffer.from(PLAYER_SEED),
+    gameAddress.toBuffer(),
+    player.publicKey.toBuffer(),
+  ]);
+
+const createMonsterAddress = (
+  gameAddress: PublicKey,
+  monsterIndex: anchor.BN,
+) =>
+  findProgramAddress([
+    Buffer.from(MONSTER_SEED),
+    gameAddress.toBuffer(),
+    player.publicKey.toBuffer(),
+    monsterIndex.toArrayLike(Buffer, "le", MONSTER_INDEX_BYTE_LENGTH),
+  ]);
+
+describe("RPG game", () => {
+  it("creates a new game", async () => {});
+
+  it("creates a new player", async () => {});
+
+  it("spawns a monster", async () => {});
+
+  it("attacks a monster", async () => {});
+
+  it("deposits action points", async () => {});
 });
 ```
 
-Now lets add in the `Create Game` test. Just call `createGame` with eight items,
-be sure to pass in all the accounts, and make sure the `treasury` account signs
-the transaction.
+Now lets add in the `creates a new game` test. Just call `createGame` with eight
+items, be sure to pass in all the accounts, and make sure the `treasury` account
+signs the transaction.
 
 ```typescript
-it("Create Game", async () => {
-  const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
-    program.programId,
-  );
+it("creates a new game", async () => {
+  try {
+    const [gameAddress] = createGameAddress();
 
-  const txHash = await program.methods
-    .createGame(
-      8, // 8 Items per player
-    )
-    .accounts({
-      game: gameKey,
-      gameMaster: gameMaster.publicKey,
-      treasury: treasury.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .signers([treasury])
-    .rpc();
+    const createGameSignature = await program.methods
+      .createGame(MAX_ITEMS_PER_PLAYER)
+      .accounts({
+        game: gameAddress,
+        gameMaster: gameMaster.publicKey,
+        treasury: treasury.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([treasury])
+      .rpc();
 
-  await program.provider.connection.confirmTransaction(txHash);
-
-  // Print out if you'd like
-  // const account = await program.account.game.fetch(gameKey);
+    await confirmTransaction(createGameSignature, provider);
+  } catch (error) {
+    throw new Error(`Failed to create game: ${error.message}`);
+  }
 });
 ```
 
@@ -1532,118 +1768,91 @@ anchor test
 some `.pnp.*` files and no `node_modules`, you may want to call `rm -rf .pnp.*`
 followed by `npm i` and then `yarn install`. That should work.
 
-Now that everything is running, let’s implement the `Create Player`,
-`Spawn Monster`, and `Attack Monster` tests. Run each test as you complete them
-to make sure things are running smoothly.
+Now that everything is running, let’s implement the `creates a new player`,
+`spawns a monster`, and `attacks a monster` tests. Run each test as you complete
+them to make sure things are running smoothly.
 
 ```typescript
-it("Create Player", async () => {
-  const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
-    program.programId,
-  );
+it("creates a new player", async () => {
+  try {
+    const [gameAddress] = createGameAddress();
+    const [playerAddress] = createPlayerAddress(gameAddress);
 
-  const [playerKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("PLAYER"), gameKey.toBuffer(), player.publicKey.toBuffer()],
-    program.programId,
-  );
+    const createPlayerSignature = await program.methods
+      .createPlayer()
+      .accounts({
+        game: gameAddress,
+        playerAccount: playerAddress,
+        player: player.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
 
-  const txHash = await program.methods
-    .createPlayer()
-    .accounts({
-      game: gameKey,
-      playerAccount: playerKey,
-      player: player.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc();
-
-  await program.provider.connection.confirmTransaction(txHash);
-
-  // Print out if you'd like
-  // const account = await program.account.player.fetch(playerKey);
+    await confirmTransaction(createPlayerSignature, provider);
+  } catch (error) {
+    throw new Error(`Failed to create player: ${error.message}`);
+  }
 });
 
-it("Spawn Monster", async () => {
-  const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
-    program.programId,
-  );
+it("spawns a monster", async () => {
+  try {
+    const [gameAddress] = createGameAddress();
+    const [playerAddress] = createPlayerAddress(gameAddress);
 
-  const [playerKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("PLAYER"), gameKey.toBuffer(), player.publicKey.toBuffer()],
-    program.programId,
-  );
+    const playerAccount = await program.account.player.fetch(playerAddress);
+    const [monsterAddress] = createMonsterAddress(
+      gameAddress,
+      playerAccount.nextMonsterIndex,
+    );
 
-  const playerAccount = await program.account.player.fetch(playerKey);
+    const spawnMonsterSignature = await program.methods
+      .spawnMonster()
+      .accounts({
+        game: gameAddress,
+        playerAccount: playerAddress,
+        monster: monsterAddress,
+        player: player.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
 
-  const [monsterKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("MONSTER"),
-      gameKey.toBuffer(),
-      player.publicKey.toBuffer(),
-      playerAccount.nextMonsterIndex.toBuffer("le", 8),
-    ],
-    program.programId,
-  );
-
-  const txHash = await program.methods
-    .spawnMonster()
-    .accounts({
-      game: gameKey,
-      playerAccount: playerKey,
-      monster: monsterKey,
-      player: player.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc();
-
-  await program.provider.connection.confirmTransaction(txHash);
-
-  // Print out if you'd like
-  // const account = await program.account.monster.fetch(monsterKey);
+    await confirmTransaction(spawnMonsterSignature, provider);
+  } catch (error) {
+    throw new Error(`Failed to spawn monster: ${error.message}`);
+  }
 });
 
-it("Attack Monster", async () => {
-  const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
-    program.programId,
-  );
+it("attacks a monster", async () => {
+  try {
+    const [gameAddress] = createGameAddress();
+    const [playerAddress] = createPlayerAddress(gameAddress);
 
-  const [playerKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("PLAYER"), gameKey.toBuffer(), player.publicKey.toBuffer()],
-    program.programId,
-  );
+    const playerAccount = await program.account.player.fetch(playerAddress);
+    const [monsterAddress] = createMonsterAddress(
+      gameAddress,
+      playerAccount.nextMonsterIndex.subn(1),
+    );
 
-  // Fetch the latest monster created
-  const playerAccount = await program.account.player.fetch(playerKey);
-  const [monsterKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("MONSTER"),
-      gameKey.toBuffer(),
-      player.publicKey.toBuffer(),
-      playerAccount.nextMonsterIndex.subn(1).toBuffer("le", 8),
-    ],
-    program.programId,
-  );
+    const attackMonsterSignature = await program.methods
+      .attackMonster()
+      .accounts({
+        playerAccount: playerAddress,
+        monster: monsterAddress,
+        player: player.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
 
-  const txHash = await program.methods
-    .attackMonster()
-    .accounts({
-      playerAccount: playerKey,
-      monster: monsterKey,
-      player: player.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc();
+    await confirmTransaction(attackMonsterSignature, provider);
 
-  await program.provider.connection.confirmTransaction(txHash);
-
-  // Print out if you'd like
-  // const account = await program.account.monster.fetch(monsterKey);
-
-  const monsterAccount = await program.account.monster.fetch(monsterKey);
-  assert(monsterAccount.hitpoints.eqn(99));
+    const monsterAccount = await program.account.monster.fetch(monsterAddress);
+    assert(
+      monsterAccount.hitpoints.eqn(INITIAL_MONSTER_HITPOINTS - 1),
+      "Monster hitpoints should decrease by 1 after attack",
+    );
+  } catch (error) {
+    throw new Error(`Failed to attack monster: ${error.message}`);
+  }
 });
 ```
 
@@ -1663,86 +1872,96 @@ game were running continuously, it probably makes sense to use something like
 [clockwork](https://www.clockwork.xyz/) cron jobs.
 
 ```typescript
-it("Deposit Action Points", async () => {
-  const [gameKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("GAME"), treasury.publicKey.toBuffer()],
-    program.programId,
-  );
+it("deposits action points", async () => {
+  try {
+    const [gameAddress] = createGameAddress();
+    const [playerAddress] = createPlayerAddress(gameAddress);
 
-  const [playerKey] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("PLAYER"), gameKey.toBuffer(), player.publicKey.toBuffer()],
-    program.programId,
-  );
+    // To show that anyone can deposit the action points
+    // Ie, give this to a clockwork bot
+    const clockworkWallet = anchor.web3.Keypair.generate();
 
-  // To show that anyone can deposit the action points
-  // Ie, give this to a clockwork bot
-  const clockworkWallet = anchor.web3.Keypair.generate();
-
-  // To give it a starting balance
-  const clockworkProvider = new anchor.AnchorProvider(
-    program.provider.connection,
-    new NodeWallet(clockworkWallet),
-    anchor.AnchorProvider.defaultOptions(),
-  );
-  const clockworkProgram = new anchor.Program<Rpg>(
-    IDL,
-    program.programId,
-    clockworkProvider,
-  );
-
-  // Have to give the accounts some lamports else the tx will fail
-  const amountToInitialize = 10000000000;
-
-  const clockworkAirdropTx =
-    await clockworkProgram.provider.connection.requestAirdrop(
-      clockworkWallet.publicKey,
-      amountToInitialize,
+    // To give it a starting balance
+    const clockworkProvider = new anchor.AnchorProvider(
+      program.provider.connection,
+      new NodeWallet(clockworkWallet),
+      anchor.AnchorProvider.defaultOptions(),
     );
-  await program.provider.connection.confirmTransaction(
-    clockworkAirdropTx,
-    "confirmed",
-  );
 
-  const treasuryAirdropTx =
-    await clockworkProgram.provider.connection.requestAirdrop(
+    // Have to give the accounts some lamports else the tx will fail
+    const amountToInitialize = 10000000000;
+
+    const clockworkAirdropTx =
+      await clockworkProvider.connection.requestAirdrop(
+        clockworkWallet.publicKey,
+        amountToInitialize,
+      );
+
+    await confirmTransaction(clockworkAirdropTx, clockworkProvider);
+
+    const treasuryAirdropTx = await clockworkProvider.connection.requestAirdrop(
       treasury.publicKey,
       amountToInitialize,
     );
-  await program.provider.connection.confirmTransaction(
-    treasuryAirdropTx,
-    "confirmed",
-  );
 
-  const txHash = await clockworkProgram.methods
-    .depositActionPoints()
-    .accounts({
-      game: gameKey,
-      player: playerKey,
-      treasury: treasury.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .rpc();
+    await confirmTransaction(treasuryAirdropTx, clockworkProvider);
 
-  await program.provider.connection.confirmTransaction(txHash);
+    const depositActionPointsSignature = await program.methods
+      .depositActionPoints()
+      .accounts({
+        game: gameAddress,
+        player: playerAddress,
+        treasury: treasury.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
 
-  const expectedActionPoints = 100 + 5 + 1; // Player Create ( 100 ) + Monster Spawn ( 5 ) + Monster Attack ( 1 )
-  const treasuryBalance = await program.provider.connection.getBalance(
-    treasury.publicKey,
-  );
-  assert(
-    treasuryBalance == amountToInitialize + expectedActionPoints, // Player Create ( 100 ) + Monster Spawn ( 5 ) + Monster Attack ( 1 )
-  );
+    await confirmTransaction(depositActionPointsSignature, provider);
 
-  const gameAccount = await program.account.game.fetch(gameKey);
-  assert(gameAccount.actionPointsCollected.eqn(expectedActionPoints));
+    const expectedActionPoints =
+      CREATE_PLAYER_ACTION_POINTS +
+      SPAWN_MONSTER_ACTION_POINTS +
+      ATTACK_MONSTER_ACTION_POINTS;
+    const treasuryBalance = await provider.connection.getBalance(
+      treasury.publicKey,
+    );
+    assert(
+      treasuryBalance === AIRDROP_AMOUNT + expectedActionPoints,
+      "Treasury balance should match expected action points",
+    );
 
-  const playerAccount = await program.account.player.fetch(playerKey);
-  assert(playerAccount.actionPointsSpent.eqn(expectedActionPoints));
-  assert(playerAccount.actionPointsToBeCollected.eqn(0));
+    const gameAccount = await program.account.game.fetch(gameAddress);
+    assert(
+      gameAccount.actionPointsCollected.eqn(expectedActionPoints),
+      "Game action points collected should match expected",
+    );
+
+    const playerAccount = await program.account.player.fetch(playerAddress);
+    assert(
+      playerAccount.actionPointsSpent.eqn(expectedActionPoints),
+      "Player action points spent should match expected",
+    );
+    assert(
+      playerAccount.actionPointsToBeCollected.eqn(0),
+      "Player should have no action points to be collected",
+    );
+  } catch (error) {
+    throw new Error(`Failed to deposit action points: ${error.message}`);
+  }
 });
 ```
 
 Finally, run `anchor test` to see everything working.
+
+```bash
+
+RPG game
+    ✔ creates a new game (317ms)
+    ✔ creates a new player (399ms)
+    ✔ spawns a monster (411ms)
+    ✔ attacks a monster (413ms)
+    ✔ deposits action points (1232ms)
+```
 
 Congratulations! This was a lot to cover, but you now have a mini RPG game
 engine. If things aren't quite working, go back through the lab and find where
@@ -1758,14 +1977,14 @@ Now it’s your turn to practice independently. Go back through the lab code
 looking for additional optimizations and/or expansion you can make. Think
 through new systems and features you would add and how you would optimize them.
 
-You can find some example modifications on the `challenge-solution` branch of
-the
-[RPG repository](https://github.com/Unboxed-Software/anchor-rpg/tree/challenge-solution).
+You can find some example modifications on the
+[`challenge-solution` branch of the RPG repository](https://github.com/Unboxed-Software/anchor-rpg/tree/challenge-solution).
 
 Finally, go through one of your own programs and think about optimizations you
 can make to improve memory management, storage size, and/or concurrency.
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=4a628916-91f5-46a9-8eb0-6ba453aa6ca6)!
 </Callout>
