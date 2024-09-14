@@ -7,7 +7,7 @@ objectives:
   - Implement signer checks using Anchor’s `Signer` type
   - Implement signer checks using Anchor’s `#[account(signer)]` constraint
 description:
-  "Ensure instructions are only ran by authorized accounts by implmementing
+  "Ensure instructions are only run by authorized accounts by implementing
   Signer checks."
 ---
 
@@ -92,8 +92,8 @@ pub struct Vault {
 
 #### Add signer authorization checks
 
-All you need to do to validate that the `authority` account signed is to add a
-signer check within the instruction. That simply means checking that
+All you need to do to validate that the `authority` account is signed is to add a
+signer check within the instructions. That simply means checking that
 `authority.is_signer` is `true`, and returning a `MissingRequiredSignature`
 error if `false`.
 
@@ -199,7 +199,7 @@ performed.
 #### Use Anchor’s `#[account(signer)]` constraint
 
 While in most cases, the `Signer` account type will suffice to ensure an account
-has signed a transaction, the fact that no other ownership or type checks are
+has signed a transaction, the fact that no other ownership or type of checks are
 performed means that this account can’t really be used for anything else in the
 instruction.
 
@@ -210,7 +210,7 @@ underlying data as well.
 
 As an example of when this would be useful, imagine writing an instruction that
 you expect to be invoked via CPI that expects one of the passed in accounts to
-be both a **\*\***signer**\*\*** on the transaciton and a \***\*\*\*\*\*\***data
+be both a **\*\***signer**\*\*** on the transaction and a \***\*\*\*\*\*\***data
 source\***\*\*\*\*\*\***. Using the `Signer` account type here removes the
 automatic deserialization and type checking you would get with the `Account`
 type. This is both inconvenient, as you need to manually deserialize the account
@@ -299,6 +299,11 @@ While this is somewhat contrived in that any DeFi program with a vault would be
 more sophisticated than this, it will show how the lack of a signer check can
 result in tokens being withdrawn by the wrong party.
 
+additional checks ensure:
+a. The withdraw amount is not zero.
+b. There are sufficient funds in the account.
+c. The withdraw destination is not the same as the vault's token account.
+
 ```rust
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
@@ -316,8 +321,20 @@ pub mod signer_authorization {
     }
 
     pub fn insecure_withdraw(ctx: Context<InsecureWithdraw>) -> Result<()> {
-        let amount = ctx.accounts.token_account.amount;
+          // Check if the amount is greater than zero
+    if amount == 0 {
+        return Err(ProgramError::InvalidArgument.into());
+    }
 
+    // Check if there are enough tokens in the account
+    if ctx.accounts.token_account.amount < amount {
+        return Err(ProgramError::InsufficientFunds.into());
+    }
+
+    // Check if the withdraw destination is different from the vault's token account
+    if ctx.accounts.token_account.key() == ctx.accounts.withdraw_destination.key() {
+        return Err(ProgramError::InvalidArgument.into());
+    }
         let seeds = &[b"vault".as_ref(), &[*ctx.bumps.get("vault").unwrap()]];
         let signer = [&seeds[..]];
 
@@ -424,7 +441,7 @@ describe("signer-authorization", () => {
 })
 ```
 
-Run `anchor test` to see that both transactions will complete successfully.
+Run `anchor test` to see that both transactions will be completed successfully.
 
 ```bash
 signer-authorization
@@ -553,7 +570,7 @@ the remainder of the lessons on security vulnerabilities, the Challenge for each
 lesson will be to audit your own code for the security vulnerability discussed
 in the lesson.
 
-Alternatively, you can find open source programs to audit. There are plenty of
+Alternatively, you can find open-source programs to audit. There are plenty of
 programs you can look at. A good start if you don't mind diving into native Rust
 would be the
 [SPL programs](https://github.com/solana-labs/solana-program-library).
