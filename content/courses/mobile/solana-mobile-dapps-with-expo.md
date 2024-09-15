@@ -81,8 +81,8 @@ Once you have an EAS account, you can install the EAS CLI and log in:
 # For npm users
 npm install --global eas-cli
 
-# For yarn users
-yarn global add eas-cli
+# For pnpm users
+pnpm add --global eas-cli
 
 # After installation, log in with:
 eas login
@@ -222,8 +222,8 @@ npm install @solana-mobile/mobile-wallet-adapter-protocol \
             react-native-get-random-values \
             buffer
 
-# Using yarn
-yarn add @solana-mobile/mobile-wallet-adapter-protocol \
+# Using pnpm
+pnpm add @solana-mobile/mobile-wallet-adapter-protocol \
          @solana-mobile/mobile-wallet-adapter-protocol-web3js \
          @solana/web3.js \
          react-native-get-random-values \
@@ -260,8 +260,8 @@ plus a few additional polyfills:
             path-browserify \
             react-native-url-polyfill \
             react-native-quick-crypto
-  # Using yarn
-  yarn add @metaplex-foundation/js@0.19.4 \
+  # Using pnpm
+  pnpm add @metaplex-foundation/js@0.19.4 \
          assert \
          util \
          crypto-browserify \
@@ -391,8 +391,8 @@ Then, install the EAS CLI and log in:
 # For npm users
 npm install --global eas-cli
 
-# For yarn users
-yarn global add eas-cli
+# For pnpm users
+pnpm add --global eas-cli
 
 # After installation, log in with:
 eas login
@@ -574,8 +574,8 @@ npm install \
   react-native-get-random-values \
   buffer
 
-# Using yarn
-yarn add \
+# Using pnpm
+pnpm add \
   @solana/web3.js \
   @solana-mobile/mobile-wallet-adapter-protocol-web3js \
   @solana-mobile/mobile-wallet-adapter-protocol \
@@ -710,8 +710,8 @@ npm install assert \
   react-native-quick-crypto \
   @metaplex-foundation/js@0.19.4
 
-# Using yarn
-yarn add assert \
+# Using pnpm
+pnpm add assert \
   util \
   crypto-browserify \
   stream-browserify \
@@ -1057,8 +1057,8 @@ Install it with the following:
 # Using npm
 npm i rn-fetch-blob
 
-# Using yarn
-yarn add rn-fetch-blob
+# Using pnpm
+pnpm add rn-fetch-blob
 ```
 
 #### 3. Final build
