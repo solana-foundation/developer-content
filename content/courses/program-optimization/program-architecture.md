@@ -229,8 +229,8 @@ To understand what's happening here, take a look at the
 > new data structure and thus is constrained by stack and heap limits imposed by
 > the BPF VM. With zero copy deserialization, all bytes from the account's
 > backing `RefCell<&mut [u8]>` are simply re-interpreted as a reference to the
-> data structure. No allocations or copies necessary. Hence the ability to get
-> around stack and heap limitations.
+> data structure. No allocations or copies are necessary. Hence the ability to
+> get around stack and heap limitations.
 
 Basically, your program never actually loads zero-copy account data into the
 stack or heap. It instead gets pointer access to the raw data. The
@@ -386,72 +386,145 @@ accounts based on all the fields up to the first variable length field. To echo
 the beginning of this section: As a rule of thumb, keep all variable length
 structs at the end of the account.
 
-#### For Future Use
+#### Account Flexibility and Future-Proofing
 
-In certain cases, consider adding extra, unused bytes to your accounts. These
-are held in reserve for flexibility and backward compatibility. Take the
-following example:
+When developing Solana programs, it's crucial to design your account structures
+with future upgrades and backward compatibility in mind. Solana offers powerful
+features like account resizing and Anchor's `InitSpace` attribute to handle
+these challenges efficiently. Let's explore a more dynamic and flexible approach
+using a game state example:
 
 ```rust
+use anchor_lang::prelude::*;
+
 #[account]
-pub struct GameState {
+#[derive(InitSpace)]
+pub struct GameState {  // V1
+    pub version: u8,
     pub health: u64,
     pub mana: u64,
-    pub event_log: Vec<string>
+    pub experience: Option<u64>,
+    #[max_len(50)]
+    pub event_log: Vec<String>
 }
 ```
 
-In this simple game state, a character has `health`, `mana`, and an event log.
-If at some point you are making game improvements and want to add an
-`experience` field, you'd hit a snag. The `experience` field should be a number
-like a `u64`, which is simple enough to add. You can
-[reallocate the account](/developers/courses/onchain-development/anchor-pdas)
-and add space.
+In this GameState, we have:
 
-However, to keep dynamic length fields, like `event_log`, at the end of the
-struct, you would need to do some memory manipulation on all reallocated
-accounts to move the location of `event_log`. This can be complicated and makes
-querying accounts far more difficult. You'll end up in a state where
-non-migrated accounts have `event_log` in one location and migrated accounts in
-another. The old `GameState` without `experience` and the new `GameState` with
-`experience` in it are no longer compatible. Old accounts won't serialize when
-used where new accounts are expected. Queries will be far more difficult. You'll
-likely need to create a migration system and ongoing logic to maintain backward
-compatibility. Ultimately, it begins to seem like a bad idea.
+- A `version` field to track account structure changes
+- Basic character attributes (`health`, `mana`)
+- An `experience` field as `Option<u64>` for backward compatibility
+- An `event_log` with a specified maximum length
 
-Fortunately, if you think ahead, you can add a `for_future_use` field that
-reserves some bytes where you expect to need them most.
+Key advantages of this approach:
+
+1. **Automatic Space Calculation**: The `InitSpace` attribute automatically
+   calculates the required account space.
+2. **Versioning**: The `version` field allows for easy identification of account
+   structure versions.
+3. **Flexible Fields**: Using `Option<T>` for new fields maintains compatibility
+   with older versions.
+4. **Defined Limits**: The `max_len` attribute on `Vec` fields clearly
+   communicates size constraints.
+
+To handle upgrades and resizing, you can implement methods like this:
 
 ```rust
-#[account]
-pub struct GameState { //V1
-    pub health: u64,
-    pub mana: u64,
-    pub for_future_use: [u8; 128],
-    pub event_log: Vec<string>
+impl GameState {  // V2
+    pub fn upgrade_to_v2(ctx: Context<UpgradeAccount>) -> Result<()> {
+        let game_state = &mut ctx.accounts.game_state;
+        if game_state.version == 1 {
+            // Resize account to V2 size
+            let new_size = GameState::INIT_SPACE;
+            game_state.resize(new_size)?;
+
+            // Resize the account
+            let account_info = &game_state.to_account_info();
+            account_info.realloc(new_size, false)?;
+
+            // Ensure the account is rent-exempt after resizing
+            let rent = Rent::get()?;
+            let new_minimum_balance = rent.minimum_balance(new_size);
+            let lamports_required = new_minimum_balance.saturating_sub(account_info.lamports());
+            if lamports_required > 0 {
+                // Transfer additional lamports to maintain rent exemption
+                anchor_lang::system_program::transfer(
+                    CpiContext::new(
+                        ctx.accounts.system_program.to_account_info(),
+                        anchor_lang::system_program::Transfer {
+                            from: ctx.accounts.payer.to_account_info(),
+                            to: account_info.clone(),
+                        },
+                    ),
+                    lamports_required,
+                )?;
+            }
+
+            // Update version and initialize new field
+            game_state.version = 2;
+            game_state.experience = Some(0);
+        }
+        Ok(())
+    }
+}
+
+#[derive(Accounts)]
+pub struct UpgradeAccount<'info> {
+    #[account(mut)]
+    pub game_state: Account<'info, GameState>,
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    pub system_program: Program<'info, System>,
 }
 ```
 
-That way, when you go to add `experience` or something similar, it looks like
-this and both the old and new accounts are compatible.
+When using
+[`realloc`](https://docs.rs/anchor-lang/latest/anchor_lang/prelude/struct.AccountInfo.html#method.realloc)
+to increase the size of an account, it's crucial to ensure that the account
+remains rent-exempt. This often requires transferring additional lamports to the
+account.
 
-```rust
-#[account]
-pub struct GameState { //V2
-    pub health: u64,
-    pub mana: u64,
-    pub experience: u64,
-    pub for_future_use: [u8; 120],
-    pub event_log: Vec<string>
-}
-```
+If you need to increase the length of `event_log` or add more fields in the
+future, you can:
 
-These extra bytes do add to the cost of using your program. However, it seems
-well worth the benefit in most cases.
+- Update the `max_len` attribute:
 
-So as a general rule of thumb: anytime you think your account types have the
-potential to change in a way that will require some kind of complex migration,
-add in some `for_future_use` bytes.
+  ```rust
+  #[max_len(100)]  // Increased from 50
+  pub event_log: Vec<String>
+  ```
+
+- Create a new upgrade function:
+
+  ```rust
+  pub fn upgrade_to_v3(ctx: Context<UpgradeAccount>) -> Result<()> {
+    let game_state = &mut ctx.accounts.game_state;
+    if game_state.version == 2 {
+        // Resize account to new size
+        let new_size = GameState::INIT_SPACE;
+        game_state.resize(new_size)?;
+
+        ...
+
+        game_state.version = 3;
+    }
+    Ok(())
+  }
+  ```
+
+<Callout type="caution">
+
+While account resizing is powerful, use it judiciously. Consider the trade-offs
+between frequent resizing and initial allocation based on your specific use case
+and expected growth patterns.
+
+- Always ensure your account remains rent-exempt after resizing.
+- The payer of the transaction is responsible for providing the additional
+  lamports.
+- Calculate the lamports required carefully to avoid overcharging or leaving the
+  account non-rent-exempt.
+- Consider the cost implications of frequent resizing in your program design.
+  </Callout>
 
 #### Data Optimization
 
@@ -764,7 +837,7 @@ we keep an internal tally of how many lamports need to be redeemed, i.e. be
 transferred from the PDA to the community wallet at a later time. At some point
 in the future, the community wallet will go around and clean up all the
 straggling lamports. It's important to note that anyone should be able to sign
-for the redeem function, since the PDA has permission over itself.
+for the redeem function since the PDA has permission over itself.
 
 If you want to avoid bottlenecks at all costs, this is one way to tackle them.
 Ultimately this is a design decision and the simpler, less optimal solution
@@ -914,7 +987,6 @@ Now that our initial setup is ready, let's create our accounts. We'll have 3:
    - `experience` - the player's experience
    - `kills` - number of monsters killed
    - `next_monster_index` - the index of the next monster to face
-   - `for_future_use` - 256 bytes reserved for future use
    - `inventory` - a vector of the player's inventory
 3. `Monster` - A PDA account whose address is derived using the game account
    address, the player's wallet address, and an index (the one stored as
@@ -965,8 +1037,7 @@ pub struct Game {
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct GameConfig {
-    pub max_items_per_player: u8,
-    pub for_future_use: [u64; 16], // Health of Enemies? Experience per item? Action Points per Action?
+    pub max_items_per_player: u8
 }
 
 // Inside `state/player.rs`
@@ -985,16 +1056,13 @@ pub struct Player { // 8 bytes
     pub kills: u64,                     // 8 bytes
     pub next_monster_index: u64,        // 8 bytes
 
-    pub for_future_use: [u8; 256],      // Attack/Speed/Defense/Health/Mana?? Metadata??
-
     pub inventory: Vec<InventoryItem>,  // Max 8 items
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct InventoryItem {
     pub name: [u8; 32], // Fixed Name up to 32 bytes
-    pub amount: u64,
-    pub for_future_use: [u8; 128], // Metadata? Effects? Flags?
+    pub amount: u64
 }
 
 
@@ -1010,18 +1078,8 @@ pub struct Monster {
 ```
 
 There aren't a lot of complicated design decisions here, but let's talk about
-the `inventory` and `for_future_use` fields on the `Player` struct. Since
-`inventory` is variable in length we decided to place it at the end of the
-account to make querying easier. We've also decided it's worth spending a little
-extra money on rent exemption to have 256 bytes of reserved space in the
-`for_future_use` field. We could exclude this and simply reallocate accounts if
-we need to add fields in the future, but adding it now simplifies things for us
-in the future.
-
-If we chose to reallocate in the future, we'd need to write more complicated
-queries and likely couldn't query in a single call based on `inventory`.
-Reallocating and adding a field would move the memory position of `inventory`,
-leaving us to write complex logic to query accounts with various structures.
+the `inventory` field on the `Player` struct. Since `inventory` is variable in
+length we decided to place it at the end of the account to make querying easier.
 
 ### 3. Create Ancillary Types
 
@@ -1030,22 +1088,35 @@ that we haven't created yet.
 
 Let's start with the game config struct. Technically, this could have gone in
 the `Game` account, but it's nice to have some separation and encapsulation.
-This struct should store the max items allowed per player and some bytes for
-future use. Again, the bytes for future use here help us avoid complexity in the
-future. Reallocating accounts works best when you're adding fields at the end of
-an account rather than in the middle. If you anticipate adding fields in the
-middle of an existing data, it might make sense to add some "future use" bytes
-up front.
+This struct should store the max items allowed per player.
 
 ```rust filename="game.rs"
 // ----------- GAME CONFIG ----------
 // Inside `state/game.rs`
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct GameConfig {
-    pub max_items_per_player: u8,
-    pub for_future_use: [u64; 16], // Health of Enemies? Experience per item? Action Points per Action?
+    pub max_items_per_player: u8
 }
 ```
+
+Reallocating accounts in Solana programs is now more flexible thanks to Anchor's
+[`InitSpace`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.InitSpace.html)
+attribute and Solana's account resizing capabilities. While it's still generally
+easier to add fields at the end of an account structure, modern practices allow
+for more adaptable designs:
+
+- Use Anchor's `InitSpace` attribute to automatically calculate account space.
+- For variable-length fields like `Vec` or `String`, specify a `max_len`
+  attribute.
+- When adding new fields, consider using `Option<T>` for backward compatibility.
+- Implement a versioning system in your account structure to manage different
+  layouts.
+- Use Solana's `realloc` instruction to resize accounts when needed, ensuring
+  rent-exemption is maintained.
+
+This approach allows for easier account structure evolution, regardless of where
+new fields are added, while maintaining efficient querying and
+serialization/deserialization through Anchor's built-in capabilities.
 
 Next, let's create our status flags. Remember, we _could_ store our flags as
 booleans but we save space by storing multiple flags in a single byte. Each flag
@@ -1070,7 +1141,7 @@ pub const MAX_INVENTORY_ITEMS: usize = 8;
 ```
 
 Finally, let's create our `InventoryItem`. This should have fields for the
-item's name, amount, and some bytes reserved for future use.
+item's name and amount.
 
 ```rust filename="player.rs"
 // ----------- INVENTORY ----------
@@ -1079,8 +1150,7 @@ item's name, amount, and some bytes reserved for future use.
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, InitSpace)]
 pub struct InventoryItem {
     pub name: [u8; 32], // Fixed Name up to 32 bytes
-    pub amount: u64,
-    pub for_future_use: [u8; 128], // Metadata? Effects? Flags?
+    pub amount: u64
 }
 
 ```
