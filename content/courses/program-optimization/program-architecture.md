@@ -427,90 +427,160 @@ Key advantages of this approach:
 4. **Defined Limits**: The `max_len` attribute on `Vec` fields clearly
    communicates size constraints.
 
-To handle upgrades and resizing, you can implement methods like this:
+When you need to upgrade your account structure, such as increasing the length
+of `event_log` or adding new fields, you can use a single upgrade instruction
+with Anchor's `realloc` constraint:
 
-```rust
-impl GameState {  // V2
-    pub fn upgrade_to_v2(ctx: Context<UpgradeAccount>) -> Result<()> {
-        let game_state = &mut ctx.accounts.game_state;
-        if game_state.version == 1 {
-            // Resize account to V2 size
-            let new_size = GameState::INIT_SPACE;
-            game_state.resize(new_size)?;
+1. Update the `GameState` struct with new fields or increased `max_len`
+   attributes:
 
-            // Resize the account
-            let account_info = &game_state.to_account_info();
-            account_info.realloc(new_size, false)?;
+   ```rust
+   #[account]
+   #[derive(InitSpace)]
+   pub struct GameState {
+       pub version: u8,
+       pub health: u64,
+       pub mana: u64,
+       pub experience: Option<u64>,
+       #[max_len(100)]  // Increased from 50
+       pub event_log: Vec<String>,
+       pub new_field: Option<u64>, // Added new field
+   }
+   ```
 
-            // Ensure the account is rent-exempt after resizing
-            let rent = Rent::get()?;
-            let new_minimum_balance = rent.minimum_balance(new_size);
-            let lamports_required = new_minimum_balance.saturating_sub(account_info.lamports());
-            if lamports_required > 0 {
-                // Transfer additional lamports to maintain rent exemption
-                anchor_lang::system_program::transfer(
-                    CpiContext::new(
-                        ctx.accounts.system_program.to_account_info(),
-                        anchor_lang::system_program::Transfer {
-                            from: ctx.accounts.payer.to_account_info(),
-                            to: account_info.clone(),
-                        },
-                    ),
-                    lamports_required,
-                )?;
-            }
+2. Use a single `UpgradeGameState` context for all upgrades with Anchor's
+   `realloc` constraint for `GameState`:
 
-            // Update version and initialize new field
+   ```rust
+   #[derive(Accounts)]
+   pub struct UpgradeGameState<'info> {
+       #[account(
+           mut,
+           realloc = GameState::INIT_SPACE,
+           realloc::payer = payer,
+           realloc::zero = false,
+       )]
+       pub game_state: Account<'info, GameState>,
+       #[account(mut)]
+       pub payer: Signer<'info>,
+       pub system_program: Program<'info, System>,
+   }
+   ```
+
+3. Implement the upgrade logic in a single function:
+
+   ```rust
+   pub fn upgrade_game_state(ctx: Context<UpgradeGameState>) -> Result<()> {
+    let game_state = &mut ctx.accounts.game_state;
+
+    match game_state.version {
+        1 => {
             game_state.version = 2;
             game_state.experience = Some(0);
-        }
-        Ok(())
+            msg!("Upgraded to version 2");
+        },
+        2 => {
+            game_state.version = 3;
+            game_state.new_field = Some(0);
+            msg!("Upgraded to version 3");
+        },
+        _ => return Err(ErrorCode::AlreadyUpgraded.into()),
     }
+
+    Ok(())
+    }
+   ```
+
+The example to demonstrate this approach:
+
+```rust
+use anchor_lang::prelude::*;
+
+#[account]
+#[derive(InitSpace)]
+pub struct GameState {
+    pub version: u8,
+    pub health: u64,
+    pub mana: u64,
+    pub experience: Option<u64>,
+    #[max_len(100)]  // Increased from 50
+    pub event_log: Vec<String>,
+    pub new_field: Option<u64>,
 }
 
 #[derive(Accounts)]
-pub struct UpgradeAccount<'info> {
-    #[account(mut)]
+pub struct UpgradeGameState<'info> {
+    #[account(
+        mut,
+        realloc = GameState::INIT_SPACE,
+        realloc::payer = payer,
+        realloc::zero = false,
+    )]
     pub game_state: Account<'info, GameState>,
     #[account(mut)]
     pub payer: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
+
+#[program]
+pub mod your_program {
+    use super::*;
+
+    // ... other instructions ...
+
+    pub fn upgrade_game_state(ctx: Context<UpgradeGameState>) -> Result<()> {
+        let game_state = &mut ctx.accounts.game_state;
+
+        match game_state.version {
+            1 => {
+                game_state.version = 2;
+                game_state.experience = Some(0);
+                msg!("Upgraded to version 2");
+            },
+            2 => {
+                game_state.version = 3;
+                game_state.new_field = Some(0);
+                msg!("Upgraded to version 3");
+            },
+            _ => return Err(ErrorCode::AlreadyUpgraded.into()),
+        }
+
+        Ok(())
+    }
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Account is already at the latest version")]
+    AlreadyUpgraded,
+}
 ```
 
-When using
-[`realloc`](https://docs.rs/anchor-lang/latest/anchor_lang/prelude/struct.AccountInfo.html#method.realloc)
-to increase the size of an account, it's crucial to ensure that the account
-remains rent-exempt. This often requires transferring additional lamports to the
-account.
+This approach:
 
-If you need to increase the length of `event_log` or add more fields in the
-future, you can:
+- Uses the Anchor's
+  [`realloc`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html#normal-constraints)
+  constraint to automatically handle account resizing.
+- The
+  [`InitSpace`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.InitSpace.html)
+  derive macro automatically implements the `Space` trait for the `GameState`
+  struct. This trait includes the
+  [`INIT_SPACE`](https://docs.rs/anchor-lang/latest/anchor_lang/trait.Space.html#associatedconstant.INIT_SPACE)
+  associated constant , which calculates the total space required for the
+  account.
+- Designates a payer for any additional rent with `realloc::payer = payer`.
+- Keeps existing data with `realloc::zero = false`.
 
-- Update the `max_len` attribute:
+<Callout>
 
-  ```rust
-  #[max_len(100)]  // Increased from 50
-  pub event_log: Vec<String>
-  ```
+Account data can be increased within a single call by up to
+`solana_program::entrypoint::MAX_PERMITTED_DATA_INCREASE` bytes.
 
-- Create a new upgrade function:
-
-  ```rust
-  pub fn upgrade_to_v3(ctx: Context<UpgradeAccount>) -> Result<()> {
-    let game_state = &mut ctx.accounts.game_state;
-    if game_state.version == 2 {
-        // Resize account to new size
-        let new_size = GameState::INIT_SPACE;
-        game_state.resize(new_size)?;
-
-        ...
-
-        game_state.version = 3;
-    }
-    Ok(())
-  }
-  ```
+Memory used to grow is already zero-initialized upon program entrypoint and
+re-zeroing it wastes compute units. If within the same call a program reallocs
+from larger to smaller and back to larger again the new space could contain
+stale data. Pass `true` for `zero_init` in this case, otherwise compute units
+will be wasted re-zero-initializing. </Callout>
 
 <Callout type="caution">
 
@@ -518,13 +588,15 @@ While account resizing is powerful, use it judiciously. Consider the trade-offs
 between frequent resizing and initial allocation based on your specific use case
 and expected growth patterns.
 
-- Always ensure your account remains rent-exempt after resizing.
+- Always ensure your account remains rent-exempt before resizing.
 - The payer of the transaction is responsible for providing the additional
   lamports.
-- Calculate the lamports required carefully to avoid overcharging or leaving the
-  account non-rent-exempt.
 - Consider the cost implications of frequent resizing in your program design.
   </Callout>
+
+In native Rust, you can resize accounts using the `realloc()` method. For more
+details, refer to the
+[account resizing program](/content/cookbook/programs/change-account-size.md).
 
 #### Data Optimization
 
@@ -1099,24 +1171,43 @@ pub struct GameConfig {
 }
 ```
 
-Reallocating accounts in Solana programs is now more flexible thanks to Anchor's
-[`InitSpace`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.InitSpace.html)
-attribute and Solana's account resizing capabilities. While it's still generally
-easier to add fields at the end of an account structure, modern practices allow
-for more adaptable designs:
+Reallocating accounts in Solana programs has become more flexible due to
+Anchor's
+[`realloc`](https://docs.rs/anchor-lang/latest/anchor_lang/derive.Accounts.html#normal-constraints)
+account constraint and Solana's account resizing capabilities. While adding
+fields at the end of an account structure remains straightforward, modern
+practices allow for more adaptable designs:
 
-- Use Anchor's `InitSpace` attribute to automatically calculate account space.
-- For variable-length fields like `Vec` or `String`, specify a `max_len`
-  attribute.
-- When adding new fields, consider using `Option<T>` for backward compatibility.
-- Implement a versioning system in your account structure to manage different
-  layouts.
-- Use Solana's `realloc` instruction to resize accounts when needed, ensuring
-  rent-exemption is maintained.
+1. Use Anchor's `realloc` constraint in the `#[account()]` attribute to specify
+   resizing parameters:
+
+   ```rust
+   #[account(
+       mut,
+       realloc = AccountStruct::INIT_SPACE,
+       realloc::payer = payer,
+       realloc::zero = false,
+   )]
+   ```
+
+2. Use Anchor's `InitSpace` attribute to automatically calculate account space.
+3. For variable-length fields like `Vec` or `String`, use the `max_len`
+   attribute to specify maximum size.
+4. When adding new fields, consider using `Option<T>` for backward
+   compatibility.
+5. Implement a versioning system in your account structure to manage different
+   layouts.
+6. Ensure the payer account is mutable and a signer to cover reallocation costs:
+
+   ```rust
+   #[account(mut)]
+   pub payer: Signer<'info>,
+   ```
 
 This approach allows for easier account structure evolution, regardless of where
 new fields are added, while maintaining efficient querying and
-serialization/deserialization through Anchor's built-in capabilities.
+serialization/deserialization through Anchor's built-in capabilities. It enables
+resizing accounts as needed, automatically handling rent-exemption.
 
 Next, let's create our status flags. Remember, we _could_ store our flags as
 booleans but we save space by storing multiple flags in a single byte. Each flag
