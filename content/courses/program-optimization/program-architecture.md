@@ -31,18 +31,19 @@ with the code. And you, as the designer, need to think about:
 
 These questions are even more important when developing for a blockchain. Not
 only are resources more limited than in a typical computing environment, you're
-also dealing with people's assets; code has a cost now.
+also dealing with people's assets.
 
 We'll leave most of the asset handling discussion to
-[security course lesson](/content/courses/program-security/security-intro), but
-it's important to note the nature of resource limitations in Solana development.
-There are, of course, limitations in a typical development environment, but
-there are limitations unique to blockchain and Solana development such as how
-much data can be stored in an account, the cost to store that data, and how many
-compute units are available per transaction. You, the program designer, have to
-be mindful of these limitations to create programs that are affordable, fast,
-safe, and functional. Today we will be delving into some of the more advanced
-considerations that should be taken when creating Solana programs.
+[security course lesson](/content/courses/program-security/security-intro.md),
+but it's important to note the nature of resource limitations in Solana
+development. There are, of course, limitations in a typical development
+environment, but there are limitations unique to blockchain and Solana
+development such as how much data can be stored in an account, the cost to store
+that data, and how many compute units are available per transaction. You, the
+program designer, have to be mindful of these limitations to create programs
+that are affordable, fast, safe, and functional. Today we will be delving into
+some of the more advanced considerations that should be taken when creating
+Solana programs.
 
 ### Dealing With Large Accounts
 
@@ -74,9 +75,11 @@ called [rent](https://solana.com/docs/core/fees#rent).
 
 Rent is a bit of a misnomer since it never gets permanently taken. Once you
 deposit rent into the account, that data can stay there forever, or you can get
-refunded the rent if you close the account. Rent used to be an actual thing, but
-now there's an enforced minimum rent exemption. You can read about it in
-[the Solana documentation](https://solana.com/docs/core/fees#rent-exempt).</Callout>
+refunded the rent if you close the account. Previously, rent was paid in
+intervals, similar to traditional rent, but now there's an enforced minimum
+balance for rent exemption. You can read more about it in
+[the Solana documentation](https://solana.com/docs/core/fees#rent-exempt).
+</Callout>
 
 Putting data on the blockchain can be expensive, which is why NFT attributes and
 associated files, like images, are stored offchain. The goal is to strike a
@@ -325,13 +328,13 @@ when `flags` has four items in the vector vs eight items. If you were to call
 
 ```rust
 0000:   74 e4 28 4e    d9 ec 31 0a  -> Account Discriminator (8)
-0008: 04 00 00 00    11 22 33 44  -> Vec Size (4) | Data 4*(1)
+0008:   04 00 00 00    11 22 33 44  -> Vec Size (4) | Data 4*(1)
 0010:   DE AD BE EF                 -> id (4)
 
 --- vs ---
 
 0000:   74 e4 28 4e    d9 ec 31 0a  -> Account Discriminator (8)
-0008: 08 00 00 00    11 22 33 44  -> Vec Size (8) | Data 4*(1)
+0008:   08 00 00 00    11 22 33 44  -> Vec Size (8) | Data 4*(1)
 0010:   55 66 77 88    DE AD BE EF  -> Data 4*(1) | id (4)
 ```
 
@@ -373,7 +376,7 @@ queries! The simple fix is to flip the order.
 ```rust
 #[account] // Anchor hides the account discriminator
 pub struct GoodState {
- pub id: u32         // 0xDEAD_BEEF
+    pub id: u32         // 0xDEAD_BEEF
     pub flags: Vec<u8>, // 0x11, 0x22, 0x33 ...
 }
 ```
@@ -424,7 +427,7 @@ reserves some bytes where you expect to need them most.
 pub struct GameState { //V1
     pub health: u64,
     pub mana: u64,
- pub for_future_use: [u8; 128],
+    pub for_future_use: [u8; 128],
     pub event_log: Vec<string>
 }
 ```
@@ -437,8 +440,8 @@ this and both the old and new accounts are compatible.
 pub struct GameState { //V2
     pub health: u64,
     pub mana: u64,
- pub experience: u64,
- pub for_future_use: [u8; 120],
+    pub experience: u64,
+    pub for_future_use: [u8; 120],
     pub event_log: Vec<string>
 }
 ```
@@ -629,18 +632,18 @@ issues.
 
 ```rust
 Alice -- pays --> |
-      -- > Carol
+                      -- > Carol
 Bob   -- pays --- |
 ```
 
 Since both of these transactions write to Carol's token account, only one of
-them can go through at a time. Fortunately, Solana is wicked fast, so it'll
+them can go through at a time. Fortunately, Solana is very fast, so it'll
 probably seem like they get paid at the same time. But what happens if more than
 just Alice and Bob try to pay Carol?
 
 ```rust
 Alice -- pays --> |
-      -- > Carol
+                      -- > Carol
 x1000 -- pays --- |
 Bob   -- pays --- |
 ```
@@ -757,13 +760,11 @@ pub fn run_concept_shared_account_redeem(ctx: Context<ConceptSharedAccountRedeem
 Here, in the `run_concept_shared_account` function, instead of transferring to
 the bottleneck, we transfer to the `donation_tally` PDA. This way, we're only
 effecting the donator's account and their PDA - so no bottleneck! Additionally,
-we keep an internal tally of how many lamports need to be redeemed, ie be
+we keep an internal tally of how many lamports need to be redeemed, i.e. be
 transferred from the PDA to the community wallet at a later time. At some point
 in the future, the community wallet will go around and clean up all the
-straggling lamports (probably a good job for
-[clockwork](https://www.clockwork.xyz/)). It's important to note that anyone
-should be able to sign for the redeem function, since the PDA has permission
-over itself.
+straggling lamports. It's important to note that anyone should be able to sign
+for the redeem function, since the PDA has permission over itself.
 
 If you want to avoid bottlenecks at all costs, this is one way to tackle them.
 Ultimately this is a design decision and the simpler, less optimal solution
@@ -834,14 +835,13 @@ anchor init rpg
 
 This lab was created with Anchor version `0.30.1` in mind. If there are problems
 compiling, please refer to the
-[solution code](https://github.com/Unboxed-Software/anchor-rpg/tree/main) for
+[solution code](https://github.com/solana-developers/anchor-rpg/tree/main) for
 the environment setup.</Callout>
 
-Next, replace the program ID in `programs/rpg/lib.rs` and `Anchor.toml` with the
-program ID shown when you run `anchor keys list`. Alternatively, you can run
-command `anchor keys sync` that will automatically sync your program ID. This
-command will sync the program ids between the program files(including
-`Anchor.toml`) with the actual `pubkey` from the program keypair file.
+Next, run the command `anchor keys sync` that will automatically sync your
+program ID. This command updates the program IDs in your program files
+(including `Anchor.toml`) with the actual `pubkey` from the program keypair
+file.
 
 Finally, let's scaffold out the program in the `lib.rs` file. Copy the following
 into your file before we get started:
@@ -1967,7 +1967,7 @@ RPG game
 Congratulations! This was a lot to cover, but you now have a mini RPG game
 engine. If things aren't quite working, go back through the lab and find where
 you went wrong. If you need to, you can refer to the
-[`main` branch of the solution code](https://github.com/Unboxed-Software/anchor-rpg).
+[`main` branch of the solution code](https://github.com/solana-developers/anchor-rpg).
 
 Be sure to put these concepts into practice in your own programs. Each little
 optimization adds up!
@@ -1979,7 +1979,7 @@ looking for additional optimizations and/or expansions you can make. Think
 through new systems and features you would add and how you would optimize them.
 
 You can find some example modifications on the
-[`challenge-solution` branch of the RPG repository](https://github.com/Unboxed-Software/anchor-rpg/tree/challenge-solution).
+[`challenge-solution` branch of the RPG repository](https://github.com/solana-developers/anchor-rpg/tree/challenge-solution).
 
 Finally, go through one of your own programs and think about optimizations you
 can make to improve memory management, storage size, and/or concurrency.
