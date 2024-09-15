@@ -28,6 +28,8 @@ keywords:
 altRoutes:
   - /developers/guides/hello-world-in-your-browser
   - /developers/guides/solana-playground
+  - /developers/guides/solang/solang-getting-started
+  - /developers/guides/solang-getting-started
 ---
 
 For this "hello world" quickstart guide, we will use
