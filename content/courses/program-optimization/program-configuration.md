@@ -425,7 +425,7 @@ feature flags.
 ### 1. Starter
 
 Download the starter code from
-the [`starter` branch of this repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/starter).
+the [`starter` branch of this repository](https://github.com/solana-developers/admin-instructions/tree/starter).
 The code contains a program with a single instruction handler and a single test
 in the `tests` directory.
 
@@ -565,21 +565,43 @@ the deploy command for the program with an upgradeable loader. To use it, run
 run the deploy command after the test validator has started.
 
 ```typescript
-import { execSync } from "child_process"
+import { execSync } from "child_process";
+import path from "path";
 
 ...
 
 const deploy = () => {
-  const deployCmd = `solana program deploy --url localhost -v --program-id $(pwd)/target/deploy/config-keypair.json $(pwd)/target/deploy/config.so`
-  execSync(deployCmd)
-}
+  const workingDirectory = process.cwd();
+  const programKeypairPath = path.join(
+    workingDirectory,
+    "target",
+    "deploy",
+    "config-keypair.json",
+  );
+  const programBinaryPath = path.join(
+    workingDirectory,
+    "target",
+    "deploy",
+    "config.so",
+  );
+
+  const deploy_command = `solana program deploy --url localhost -v --program-id "${programKeypairPath}" "${programBinaryPath}"`;
+
+  try {
+    execSync(deploy_command, { stdio: "inherit" });
+    console.log("Program deployed successfully");
+  } catch (error) {
+    console.error("Error deploying program:", error.message);
+    throw error;
+  }
+};
 
 ...
 
 before(async () => {
-  deploy()
+  deploy();
   ...
-})
+});
 ```
 
 For example, the command to run the test with features would look like this:
@@ -596,8 +618,29 @@ the file name with the one generated in the previous step.
 let tokenMint: PublicKey;
 
 const deploy = () => {
-  const deployCmd = `solana program deploy --url localhost -v --program-id $(pwd)/target/deploy/config-keypair.json $(pwd)/target/deploy/config.so`;
-  execSync(deployCmd);
+  const workingDirectory = process.cwd();
+  const programKeypairPath = path.join(
+    workingDirectory,
+    "target",
+    "deploy",
+    "config-keypair.json",
+  );
+  const programBinaryPath = path.join(
+    workingDirectory,
+    "target",
+    "deploy",
+    "config.so",
+  );
+
+  const deploy_command = `solana program deploy --url localhost -v --program-id "${programKeypairPath}" "${programBinaryPath}"`;
+
+  try {
+    execSync(deploy_command, { stdio: "inherit" });
+    console.log("Program deployed successfully");
+  } catch (error) {
+    console.error("Error deploying program:", error.message);
+    throw error;
+  }
 };
 
 before(async () => {
@@ -1091,7 +1134,7 @@ Catch the `SendTransactionError` and call `getLogs()` on it for full details.
 
 And that's it! You've made the program a lot easier to work with moving forward.
 If you want to take a look at the final solution code you can find it on
-the [`solution` branch of the same](https://github.com/Unboxed-Software/solana-admin-instructions/tree/solution).
+the [`solution` branch of the same](https://github.com/solana-developers/admin-instructions/tree/solution).
 
 ## Challenge
 
@@ -1101,8 +1144,7 @@ the lab's `initialize_program_config` so that only the upgrade authority can
 call it rather than having a hardcoded `ADMIN`.
 
 Try doing this on your own, but if you get stuck, feel free to reference the
-`challenge` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-admin-instructions/tree/challenge)
+[`challenge` branch of the same repository](https://github.com/solana-developers/admin-instructions/tree/challenge)
 to see one possible solution.
 
 <Callout type="success" title="Completed the lab?">
