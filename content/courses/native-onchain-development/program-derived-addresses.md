@@ -81,7 +81,7 @@ decreases the bump seed by 1 and tries again (`255`, `254`, `253`, et cetera).
 Once a valid PDA is found, the function returns both the PDA and the bump that
 was used to derive the PDA.
 
-#### Under the hood of `find_program_address`
+#### Under the hood of find_program_address
 
 Let's take a look at the source code for `find_program_address`.
 
@@ -182,7 +182,7 @@ System Program to create non-PDA accounts and use those to store data as well,
 PDAs tend to be the way to go.
 
 If you need a refresher on how to store data in PDAs, have a look at the
-[State Management lesson](/content/courses/native-onchain-development/program-state-management).
+[State Management lesson](/content/courses/native-onchain-development/program-state-management.md).
 
 ### Map to data stored in PDA accounts
 
@@ -319,7 +319,7 @@ secure manner. In this lab, we'll add the ability for users to comment on a
 movie review. We'll use building this feature as an opportunity to work through
 how to structure the comment storage using PDA accounts.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
 To begin, you can find
 [the movie program starter code](https://github.com/Unboxed-Software/solana-movie-program/tree/starter)
@@ -349,7 +349,7 @@ You can test the program by using the movie review
 and updating the program ID with the one you’ve just deployed. Make sure you use
 the `solution-update-reviews` branch.
 
-#### 2. Plan out the account structure
+### 2. Plan out the account structure
 
 Adding comments means we need to make a few decisions about how to store the
 data associated with each comment. The criteria for a good structure here are:
@@ -394,7 +394,7 @@ To implement these changes, we'll need to do the following:
   include creating the comment counter account
 - Create a new `add_comment` instruction processing function
 
-#### 3. Define `MovieCommentCounter` and `MovieComment` structs
+### 3. Define MovieCommentCounter and MovieComment structs
 
 Recall that the `state.rs` file defines the structs our program uses to populate
 the data field of a new account.
@@ -498,7 +498,7 @@ impl MovieComment {
 Now everywhere we need the discriminator or account size we can use this
 implementation and not risk unintentional typos.
 
-#### 4. Create `AddComment` instruction
+### 4. Create AddComment instruction
 
 Recall that the `instruction.rs` file defines the instructions our program will
 accept and how to deserialize the data for each. We need to add a new
@@ -606,7 +606,7 @@ pub fn process_instruction(
 }
 ```
 
-#### 5. Update `add_movie_review` to create comment counter account
+### 5. Update add_movie_review to create comment counter account
 
 Before we implement the `add_comment` function, we need to update the
 `add_movie_review` function to create the review's comment counter account.
@@ -724,7 +724,7 @@ Now when a new review is created, two accounts are initialized:
    is unchanged from the version of the program we started with.
 2. The second account stores the counter for comments
 
-#### 6. Implement `add_comment`
+### 6. Implement add_comment
 
 Finally, let’s implement our `add_comment` function to create new comment
 accounts.
@@ -837,7 +837,7 @@ pub fn add_comment(
 }
 ```
 
-#### 7. Build and deploy
+### 7. Build and deploy
 
 We're ready to build and deploy our program!
 
