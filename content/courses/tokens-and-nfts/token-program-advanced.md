@@ -51,7 +51,7 @@ Under the hood, the `burn` function creates a transaction with instructions
 obtained from the `createBurnInstruction` function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { createBurnInstruction } from "@solana/spl-token";
 
 async function buildBurnTransaction(
@@ -105,7 +105,7 @@ Under the hood, the `approve` function creates a transaction with instructions
 obtained from the `createApproveInstruction` function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { createApproveInstruction } from "@solana/spl-token";
 
 async function buildApproveTransaction(
@@ -113,7 +113,7 @@ async function buildApproveTransaction(
   delegate: PublicKey,
   owner: PublicKey,
   amount: number,
-): Promise<web3.Transaction> {
+): Promise<Transaction> {
   const transaction = new Transaction().add(
     createApproveInstruction(account, delegate, owner, amount),
   );
@@ -150,13 +150,13 @@ Under the hood, the `revoke` function creates a transaction with instructions
 obtained from the `createRevokeInstruction` function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { revoke } from "@solana/spl-token";
 
 async function buildRevokeTransaction(
   account: PublicKey,
   owner: PublicKey,
-): Promise<web3.Transaction> {
+): Promise<Transaction> {
   const transaction = new Transaction().add(
     createRevokeInstruction(account, owner),
   );
@@ -231,7 +231,7 @@ const approveTransactionSignature = await approve(
 );
 
 console.log(
-  `Approve Delegate Transaction: ${getExplorerLink(
+ ✅`Approve Delegate Transaction: ${getExplorerLink(
     "transaction",
     approveTransactionSignature,
     "devnet",
@@ -243,12 +243,47 @@ console.log(
 
 Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
 
-Revoke will set delegate for the token account to null and reset the delegated
+Revoke will set delegate for the associated token account to null and reset the delegated
 amount to 0.
 
-All we will need for this function is the token account and user. After the
+Create a new file `revoke-token.ts`
+
 
 ```typescript
+import "dotenv/config";
+import {
+  getExplorerLink,
+  getKeypairFromEnvironment,
+} from "@solana-developers/helpers";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import {
+  approve,
+  getOrCreateAssociatedTokenAccount,
+  revoke,
+} from "@solana/spl-token";
+
+const connection = new Connection(clusterApiUrl("devnet"));
+
+const user = getKeypairFromEnvironment("SECRET_KEY");
+
+console.log(
+  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+);
+
+// Add the delegate public key here.
+const delegate = new PublicKey("YOUR_DELEGATE_HERE");
+
+// Substitute in your token mint account
+const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+
+// Get or create the source and destination token accounts to store this token
+const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  user,
+  tokenMintAccount,
+  user.publicKey,
+);
+
 const revokeTransactionSignature = await revoke(
   connection,
   user,
@@ -257,7 +292,7 @@ const revokeTransactionSignature = await revoke(
 );
 
 console.log(
-  `Revoke Delegate Transaction: ${getExplorerLink(
+  ✅`Revoke Delegate Transaction: ${getExplorerLink(
     "transaction",
     revokeTransactionSignature,
     "devnet",
@@ -315,7 +350,7 @@ const transactionSignature = await burn(
 );
 
 console.log(
-  `Burn Transaction: ${getExplorerLink(
+  ✅`Burn Transaction: ${getExplorerLink(
     "transaction",
     transactionSignature,
     "devnet",
