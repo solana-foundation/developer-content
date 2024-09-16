@@ -253,7 +253,6 @@ test("Insecure withdraw allows unauthorized access", async () => {
   // ... (initialization code here)
 
   // Attempt unauthorized withdrawal
-  // Note: unauthorizedWallet represents an unauthorized wallet trying to withdraw funds
   const tx = await program.methods
     .insecureWithdraw()
     .accounts({
