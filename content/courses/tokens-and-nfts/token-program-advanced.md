@@ -240,20 +240,21 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
   );
 })();
 ```
-Run the script using `npx esrun delegate-tokens.ts`. You should see: 
+
+Run the script using `npx esrun delegate-tokens.ts`. You should see:
 
 ```bash
 ✅ Approve Delegate Transaction: https://explorer.solana.com/tx/31zsmGuX3NM1ip88mowaHT8B3gKDET3b6QnWSRcs2oWXeu9hgGoJunKmbTXZPF1cjpk2aaymf1wuBn58gAp5Q2h?cluster=devnet
 ```
+
 #### 2. Revoke Delegate
 
 Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
 
-Revoke will set delegate for the associated token account to null and reset the delegated
-amount to 0.
+Revoke will set delegate for the associated token account to null and reset the
+delegated amount to 0.
 
 Create a new file `revoke-token.ts`
-
 
 ```typescript
 import "dotenv/config";
@@ -307,7 +308,8 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
   );
 })();
 ```
-Run the script using `npx esrun revoke-tokens.ts`. You should see: 
+
+Run the script using `npx esrun revoke-tokens.ts`. You should see:
 
 ```bash
 ✅ Revoke Delegate Transaction: https://explorer.solana.com/tx/2jFgvXeF19nSFzjGLVoKo8vtGBp7xan3UZkRaGEpXHCuhKYerEiaE6a4oWVvJXjjYLNmt76XSx5U23J89moma31H?cluster=devnet
@@ -372,11 +374,13 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
   );
 })();
 ```
-Run the script using `npx esrun burn-tokens.ts`. You should see: 
+
+Run the script using `npx esrun burn-tokens.ts`. You should see:
 
 ```bash
 ✅ Burn Transaction: https://explorer.solana.com/tx/29jRrkMsnibmW5tNaxv38bZDe2QioZMeAurPdMvdZiqVA6biwYFcn5wGFgm6YC7bAwBufZFhXz4kh9Avsh1Ggn3u?cluster=devnet
 ```
+
 Well done! You've now
 
 <Callout type="success">
