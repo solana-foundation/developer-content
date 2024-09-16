@@ -210,35 +210,41 @@ const delegate = new PublicKey("YOUR_DELEGATE_HERE");
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-// Get or create the source and destination token accounts to store this token
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
+(async () => {
+  // Get or create the source and destination token accounts to store this token
+  const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAccount,
+    user.publicKey,
+  );
 
-// Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+  // Our token has two decimal places
+  const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
-const approveTransactionSignature = await approve(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  delegate,
-  user.publicKey,
-  50 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+  const approveTransactionSignature = await approve(
+    connection,
+    user,
+    sourceTokenAccount.address,
+    delegate,
+    user.publicKey,
+    50 * MINOR_UNITS_PER_MAJOR_UNITS,
+  );
 
-console.log(
- ✅`Approve Delegate Transaction: ${getExplorerLink(
-    "transaction",
-    approveTransactionSignature,
-    "devnet",
-  )}`,
-);
+  console.log(
+  ✅`Approve Delegate Transaction: ${getExplorerLink(
+      "transaction",
+      approveTransactionSignature,
+      "devnet",
+    )}`,
+  );
+})();
 ```
+Run the script using `npx esrun delegate-tokens.ts`. You should see: 
 
+```bash
+✅ Approve Delegate Transaction: https://explorer.solana.com/tx/31zsmGuX3NM1ip88mowaHT8B3gKDET3b6QnWSRcs2oWXeu9hgGoJunKmbTXZPF1cjpk2aaymf1wuBn58gAp5Q2h?cluster=devnet
+```
 #### 2. Revoke Delegate
 
 Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
@@ -276,28 +282,35 @@ const delegate = new PublicKey("YOUR_DELEGATE_HERE");
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-// Get or create the source and destination token accounts to store this token
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
+(async () => {
+  // Get or create the source and destination token accounts to store this token
+  const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAccount,
+    user.publicKey,
+  );
 
-const revokeTransactionSignature = await revoke(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  user.publicKey,
-);
+  const revokeTransactionSignature = await revoke(
+    connection,
+    user,
+    sourceTokenAccount.address,
+    user.publicKey,
+  );
 
-console.log(
-  ✅`Revoke Delegate Transaction: ${getExplorerLink(
-    "transaction",
-    revokeTransactionSignature,
-    "devnet",
-  )}`,
-);
+  console.log(
+    ✅`Revoke Delegate Transaction: ${getExplorerLink(
+      "transaction",
+      revokeTransactionSignature,
+      "devnet",
+    )}`,
+  );
+})();
+```
+Run the script using `npx esrun revoke-tokens.ts`. You should see: 
+
+```bash
+✅ Revoke Delegate Transaction: https://explorer.solana.com/tx/2jFgvXeF19nSFzjGLVoKo8vtGBp7xan3UZkRaGEpXHCuhKYerEiaE6a4oWVvJXjjYLNmt76XSx5U23J89moma31H?cluster=devnet
 ```
 
 #### 3. Burn Tokens
@@ -307,7 +320,7 @@ Finally, let's remove some tokens from circulation by burning them.
 Use the `spl-token` library's `burn` function to remove half of your tokens from
 circulation.
 
-Now call this new function in `main` to burn 25 of the user's tokens.
+Create a new file `burn-tokens.ts`
 
 ```typescript
 import "dotenv/config";
@@ -330,34 +343,40 @@ console.log(
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
 // Get the account where the user stores these tokens
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
+(async () => {
+  const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAccount,
+    user.publicKey,
+  );
 
-// Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+  // Our token has two decimal places
+  const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
-const transactionSignature = await burn(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  tokenMintAccount,
-  user,
-  25 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+  const transactionSignature = await burn(
+    connection,
+    user,
+    sourceTokenAccount.address,
+    tokenMintAccount,
+    user,
+    25 * MINOR_UNITS_PER_MAJOR_UNITS,
+  );
 
-console.log(
-  ✅`Burn Transaction: ${getExplorerLink(
-    "transaction",
-    transactionSignature,
-    "devnet",
-  )}`,
-);
+  console.log(
+    ✅`Burn Transaction: ${getExplorerLink(
+      "transaction",
+      transactionSignature,
+      "devnet",
+    )}`,
+  );
+})();
 ```
+Run the script using `npx esrun burn-tokens.ts`. You should see: 
 
+```bash
+✅ Burn Transaction: https://explorer.solana.com/tx/29jRrkMsnibmW5tNaxv38bZDe2QioZMeAurPdMvdZiqVA6biwYFcn5wGFgm6YC7bAwBufZFhXz4kh9Avsh1Ggn3u?cluster=devnet
+```
 Well done! You've now
 
 <Callout type="success">
