@@ -183,7 +183,7 @@ if you like, or find a friend who has a devnet account!
 
 Create a new file `delegate-tokens.ts`
 
-```typescript
+```typescript filename="delegate-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
@@ -210,7 +210,6 @@ const delegate = new PublicKey("YOUR_DELEGATE_HERE");
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-(async () => {
   // Get or create the source and destination token accounts to store this token
   const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
@@ -238,7 +237,6 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
       "devnet",
     )}`,
   );
-})();
 ```
 
 Run the script using `npx esrun delegate-tokens.ts`. You should see:
@@ -256,7 +254,7 @@ delegated amount to 0.
 
 Create a new file `revoke-token.ts`
 
-```typescript
+```typescript filename="revoke-token.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
@@ -283,7 +281,6 @@ const delegate = new PublicKey("YOUR_DELEGATE_HERE");
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-(async () => {
   // Get or create the source and destination token accounts to store this token
   const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
@@ -306,7 +303,6 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
       "devnet",
     )}`,
   );
-})();
 ```
 
 Run the script using `npx esrun revoke-tokens.ts`. You should see:
@@ -324,7 +320,7 @@ circulation.
 
 Create a new file `burn-tokens.ts`
 
-```typescript
+```typescript filename="burn-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
@@ -345,7 +341,6 @@ console.log(
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
 // Get the account where the user stores these tokens
-(async () => {
   const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
     user,
@@ -372,7 +367,6 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
       "devnet",
     )}`,
   );
-})();
 ```
 
 Run the script using `npx esrun burn-tokens.ts`. You should see:
