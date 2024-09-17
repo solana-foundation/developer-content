@@ -22,9 +22,9 @@ description:
 ## Lesson Overview
 
 In these units, we will develop mobile apps that interact with the Solana
-network, this opens up a whole new paradigm of blockchain use cases and behaviors.
-The **Solana Mobile Stack** (**SMS**) is designed to help developers seamlessly
-create mobile dApps. It includes the
+network, this opens up a whole new paradigm of blockchain use cases and
+behaviors. The **Solana Mobile Stack** (**SMS**) is designed to help developers
+seamlessly create mobile dApps. It includes the
 [Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter)
 -A Solana Mobile SDK that uses React Native,
 [Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault),
@@ -88,8 +88,9 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-> In summary, mobile blockchain transactions opens up many doors. It is important to be informed
-> and learn how one can be part of it, let's explore how.
+> In summary, mobile blockchain transactions opens up many doors. It is
+> important to be informed and learn how one can be part of it, let's explore
+> how.
 
 ### Supported Operating Systems
 
@@ -311,20 +312,20 @@ difficulty: customer safety and financial incentives.
 ### Customer Safety and Regulatory Uncertainty:
 
 Most mobile app marketplaces, such as the Apple App Store and Google Play Store,
-have policies that restrict blockchain-related apps. Since blockchain is
-still a relatively new and evolving technology, platforms are cautious about
-regulatory compliance. They often adopt strict guidelines to protect users from
-potential risks associated with blockchain apps.
+have policies that restrict blockchain-related apps. Since blockchain is still a
+relatively new and evolving technology, platforms are cautious about regulatory
+compliance. They often adopt strict guidelines to protect users from potential
+risks associated with blockchain apps.
 
 ### In-App Purchases and Platform Fees:
 
-Another significant challenge arises when using cryptocurrency for in-app
-purchases. Many platforms impose a transaction fee on purchases made within
-their apps (ranging from 15% to 30%). Payment via the blockchain
-is often seen as a way to bypass these fees, which is explicitly prohibited by
-most app stores. These platforms prioritize protecting their revenue streams and
-therefore enforce strict policies against apps that facilitate blockchain payments
-for in-app purchases.
+Another significant challenge arises when using blockchain transactions for
+in-app purchases. Many platforms impose a transaction fee on purchases made
+within their apps (ranging from 15% to 30%). Payment via the blockchain is often
+seen as a way to bypass these fees, which is explicitly prohibited by most app
+stores. These platforms prioritize protecting their revenue streams and
+therefore enforce strict policies against apps that facilitate blockchain
+payments for in-app purchases.
 
 > While traditional app stores impose strict policies around blockchain
 > transactions to protect their revenue and comply with regulations, alternative
