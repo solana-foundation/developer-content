@@ -103,6 +103,12 @@ Once you’ve fetched accounts with the given data slice, you can use the `sort`
 method to sort the array before mapping it to an array of public keys.
 
 ```tsx
+// account type as returned by getProgramAccounts()
+type ProgramAccount = {
+  pubkey: PublicKey;
+  account: AccountInfo<Buffer>;
+};
+
 // 4 bytes are used to store the current length of a string
 const STRING_LENGTH_SPACE = 4;
 
@@ -115,9 +121,13 @@ const DATA_OFFSET = STRING_LENGTH_SPACE + ACCOUNT_METADATA_SPACE;
 // Length of data we need to retrieve (15 bytes in this case, based on the expected size of the relevant data slice).
 const DATA_LENGTH = 15;
 
-const accounts = await connection.getProgramAccounts(programId, {
+// Get readonly accounts response
+const readOnlyAccounts = await connection.getProgramAccounts(programId, {
   dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH },
 });
+
+// Make a mutable copy of the readonly array
+const accounts: Array<ProgramAccount> = Array.from(readonlyAccounts);
 
 accounts.sort((a, b) => {
   try {
@@ -180,6 +190,11 @@ For example, you could search through a list of contacts by including a `memcmp`
 filter:
 
 ```tsx
+type ProgramAccount = {
+  pubkey: PublicKey;
+  account: AccountInfo<Buffer>;
+};
+
 const DATA_OFFSET = 2; // Skip the first 2 bytes, which store versioning information for the data schema of the account. This versioning ensures that changes to the account's structure can be tracked and managed over time.
 const DATA_LENGTH = 18; // Retrieve 18 bytes of data, including the part of the account's data that stores the user's public key for comparison.
 
@@ -200,16 +215,18 @@ async function fetchMatchingContactAccounts(
     ];
   }
 
-  const accounts = (await connection.getProgramAccounts(
+  // Get readonly accounts response
+  const readonlyAccounts = await connection.getProgramAccounts(
     new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
     {
       dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH }, // Only retrieve the portion of data relevant to the search.
       filters,
     },
-  )) as Array<{
-    pubkey: PublicKey;
-    account: AccountInfo<Buffer>;
-  }>;
+  );
+
+  // Make a mutable copy of the readonly array
+  const accounts: Array<ProgramAccount> = Array.from(readonlyAccounts);
+
   return accounts.map(account => account.account); // Return the account data.
 }
 ```
@@ -442,19 +459,27 @@ Now that we’ve thought through this, let’s modify the implementation of
 `prefetchAccounts` in `MovieCoordinator`:
 
 ```tsx
-static async prefetchAccounts(connection: Connection) {
-    const accounts = (await connection.getProgramAccounts(
-      new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
-      {
-        dataSlice: { offset: 2, length: 18 },
-      }
-    )) as Array<{
-      pubkey: PublicKey;
-      account: AccountInfo<Buffer>;
-    }>;
+// account type as returned by getProgramAccounts()
+type ProgramAccount = {
+  pubkey: PublicKey;
+  account: AccountInfo<Buffer>;
+};
 
-  // Define a constant for the size of the header in each account buffer
-    const HEADER_SIZE = 4; // 4 bytes for length header
+const DATA_OFFSET = 2; // Skip the first 2 bytes, which store versioning information for the data schema of the account. This versioning ensures that changes to the account's structure can be tracked and managed over time.
+const DATA_LENGTH = 18; // Retrieve 18 bytes of data, including the part of the account's data that stores the user's public key for comparison.
+// Define a constant for the size of the header in each account buffer
+const HEADER_SIZE = 4; // 4 bytes for length header
+
+static async prefetchAccounts(connection: Connection) {
+  // Get readonly accounts response
+  const readonlyAccounts = (await connection.getProgramAccounts(
+    new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    {
+      dataSlice:{ offset: DATA_OFFSET, length: DATA_LENGTH },
+    }
+  ))
+
+  const accounts: Array<ProgramAccount> = Array.from(readonlyAccounts);   // Make a mutable copy of the readonly array
 
   accounts.sort((a, b) => {
     try {
@@ -508,10 +533,10 @@ import bs58 from 'bs58'
 ...
 
 static async prefetchAccounts(connection: Connection, search: string) {
-  const accounts = (await connection.getProgramAccounts(
+  const readonlyAccounts = (await connection.getProgramAccounts(
       new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
       {
-        dataSlice: { offset: 2, length: 18 },
+        dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH },
         filters:
           search === ""
             ? []
@@ -524,25 +549,24 @@ static async prefetchAccounts(connection: Connection, search: string) {
                 },
               ],
       }
-    )) as Array<{
-      pubkey: PublicKey;
-      account: AccountInfo<Buffer>;
-    }>;
+  ));
 
- accounts.sort((a, b) => {
+  const accounts: Array<ProgramAccount> = Array.from(readonlyAccounts);  // Make a mutable copy of the readonly array
+
+  accounts.sort((a, b) => {
       try {
         const lengthA = a.account.data.readUInt32LE(0);
         const lengthB = b.account.data.readUInt32LE(0);
 
-        if (
-          a.account.data.length < 4 + lengthA ||
-          b.account.data.length < 4 + lengthB
-        ) {
-          throw new Error("Buffer length is insufficient");
-        }
+      if (
+        a.account.data.length < HEADER_SIZE + lengthA ||
+        b.account.data.length < HEADER_SIZE + lengthB
+      ) {
+        throw new Error('Buffer length is insufficient');
+      }
 
-        const dataA = a.account.data.subarray(4, 4 + lengthA);
-        const dataB = b.account.data.subarray(4, 4 + lengthB);
+      const dataA = a.account.data.subarray(HEADER_SIZE, HEADER_SIZE + lengthA);
+      const dataB = b.account.data.subarray(HEADER_SIZE, HEADER_SIZE + lengthB);
 
         return dataA.compare(dataB);
       } catch (error) {
