@@ -51,7 +51,6 @@ Variable assignment in Rust is done using the `let` keyword.
 let age = 33;
 ```
 
-
 By default, variables in Rust are immutable, meaning their value cannot be
 changed once set. To create a variable that can be changed later, use the `mut`
 keyword. Defining a variable with this keyword allows its stored value to
@@ -617,7 +616,8 @@ or [the frontend](https://github.com/solana-developers/movie-review-frontend) we
 built in the
 [Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md).
 In both cases, make sure you copy and paste the program ID for your program into
-the appropriate area of the source code to make sure you're testing the right program.
+the appropriate area of the source code to make sure you're testing the right
+program.
 
 Take your time with this lab before moving on, and feel free to reference the
 [solution code](https://beta.solpg.io/62aa9ba3b5e36a8f6716d45b) if you get
