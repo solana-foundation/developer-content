@@ -32,9 +32,8 @@ program, take a look at these detailed quick start guides:
 ### 1. Setup your development environment
 
 The most robust way of getting started with Solana development, is
-[installing the Solana CLI](https://docs.solanalabs.com/cli/install) tools on
-your local computer. This will allow you to have the most powerful development
-environment.
+[installing the Solana CLI](/docs/intro/installation.md) tools on your local
+computer. This will allow you to have the most powerful development environment.
 
 Some developers may also opt for using
 [Solana Playground](https://beta.solpg.io/), a browser based IDE. It will let
@@ -57,11 +56,10 @@ byte-code that will then be deployed to the blockchain.
 
 ### 4. Generate the program's public address
 
-Using the [Solana CLI](https://docs.solanalabs.com/cli/install), the developer
-will generate a new unique [Keypair](/docs/terminology.md#keypair) for the new
-program. The public address (aka
-[Pubkey](/docs/terminology.md#public-key-pubkey)) from this Keypair will be used
-on-chain as the program's public address (aka
+Using the [Solana CLI](/docs/intro/installation.md), the developer will generate
+a new unique [Keypair](/docs/terminology.md#keypair) for the new program. The
+public address (aka [Pubkey](/docs/terminology.md#public-key-pubkey)) from this
+Keypair will be used on-chain as the program's public address (aka
 [`programId`](/docs/terminology.md#program-id)).
 
 ### 5. Deploying the program

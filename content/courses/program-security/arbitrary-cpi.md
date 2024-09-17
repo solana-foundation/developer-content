@@ -13,9 +13,9 @@ description: "How to safely invoke Solana programs from other Solana programs."
 ## Summary
 
 - To generate a CPI, the target program must be passed into the invoking
-  instruction as an account. This means that any target program could be passed
-  into the instruction. Your program should check for incorrect or unexpected
-  programs.
+  instruction handler as an account. This means that any target program could be
+  passed into the instruction handler. Your program should check for incorrect
+  or unexpected programs.
 - Perform program checks in native programs by simply comparing the public key
   of the passed-in program to the progam you expected.
 - If a program is written in Anchor, then it may have a publicly available CPI
@@ -25,27 +25,27 @@ description: "How to safely invoke Solana programs from other Solana programs."
 
 ## Lesson
 
-A cross program invocation (CPI) is when one program invokes an instruction on
-another program. An “arbitrary CPI” is when a program is structured to issue a
-CPI to whatever program is passed into the instruction rather than expecting to
-perform a CPI to one specific program. Given that the callers of your program's
-instruction can pass any program they'd like into the instruction's list of
-accounts, failing to verify the address of a passed-in program results in your
-program performing CPIs to arbitrary programs.
+A cross program invocation (CPI) is when one program invokes an instruction
+handler on another program. An “arbitrary CPI” is when a program is structured
+to issue a CPI to whatever program is passed into the instruction handler rather
+than expecting to perform a CPI to one specific program. Given that the callers
+of your program's instruction handler can pass any program they'd like into the
+instruction's list of accounts, failing to verify the address of a passed-in
+program results in your program performing CPIs to arbitrary programs.
 
 This lack of program checks creates an opportunity for a malicious user to pass
 in a different program than expected, causing the original program to call an
-instruction on this mystery program. There’s no telling what the consequences of
-this CPI could be. It depends on the program logic (both that of the original
-program and the unexpected program), as well as what other accounts are passed
-into the original instruction.
+instruction handler on this mystery program. There’s no telling what the
+consequences of this CPI could be. It depends on the program logic (both that of
+the original program and the unexpected program), as well as what other accounts
+are passed into the original instruction handler.
 
-### Missing program checks
+### Missing Program Checks
 
-Take the following program as an example. The `cpi` instruction invokes the
-`transfer` instruction on `token_program`, but there is no code that checks
-whether or not the `token_program` account passed into the instruction is, in
-fact, the SPL Token Program.
+Take the following program as an example. The `cpi` instruction handler invokes
+the `transfer` instruction handler on `token_program`, but there is no code that
+checks whether or not the `token_program` account passed into the instruction
+handler is, in fact, the SPL Token Program.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -85,14 +85,14 @@ pub struct Cpi<'info> {
 }
 ```
 
-An attacker could easily call this instruction and pass in a duplicate token
-program that they created and control.
+An attacker could easily call this instruction handler and pass in a duplicate
+token program that they created and control.
 
-### Add program checks
+### Add Program Checks
 
 It's possible to fix this vulnerabilty by simply adding a few lines to the `cpi`
-instruction to check whether or not `token_program`'s public key is that of the
-SPL Token Program.
+instruction handler to check whether or not `token_program`'s public key is that
+of the SPL Token Program.
 
 ```rust
 pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
@@ -117,19 +117,20 @@ pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
 }
 ```
 
-Now, if an attacker passes in a different token program, the instruction will
-return the `ProgramError::IncorrectProgramId` error.
+Now, if an attacker passes in a different token program, the instruction handler
+will return the `ProgramError::IncorrectProgramId` error.
 
 Depending on the program you’re invoking with your CPI, you can either hard code
 the address of the expected program ID or use the program’s Rust crate to get
 the address of the program, if available. In the example above, the `spl_token`
 crate provides the address of the SPL Token Program.
 
-### Use an Anchor CPI module
+### Use an Anchor CPI Module
 
-A simpler way to manage program checks is to use Anchor CPI modules. We learned
-in a
-[previous lesson](https://github.com/Unboxed-Software/solana-course/blob/main/content/anchor-cpi)
+A simpler way to manage program checks is to use
+[Anchor CPI](https://book.anchor-lang.com/anchor_in_depth/CPIs.html) module. We
+learned in a
+[previous lesson of Anchor CPI](/content/courses/onchain-development/anchor-cpi.md)
 that Anchor can automatically generate CPI modules to make CPIs into the program
 simpler. These modules also enhance security by verifying the public key of the
 program that’s passed into one of its public instructions.
@@ -182,9 +183,12 @@ impl<'info> Cpi<'info> {
 }
 ```
 
-Note that, like the example above, Anchor has created a few
+<Callout>
+
+Like the example above, Anchor has created a few
 [wrappers for popular native programs](https://github.com/coral-xyz/anchor/tree/master/spl/src)
 that allow you to issue CPIs into them as if they were Anchor programs.
+</Callout>
 
 Additionally and depending on the program you’re making the CPI to, you may be
 able to use Anchor’s
@@ -218,10 +222,10 @@ mints, distribution, and transfers, and a separate metadata program is used to
 assign metadata to tokens. So the vulnerability we go through here could also be
 applied to real tokens.
 
-#### 1. Setup
+### 1. Setup
 
-We'll start with the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/starter).
+We'll start with the
+[`starter` branch of this repository](https://github.com/solana-developers/arbitrary-cpi/tree/starter).
 Clone the repository and then open it on the `starter` branch.
 
 Notice that there are three programs:
@@ -242,7 +246,7 @@ look at the program. It has two instructions:
 
 The second program, `character-metadata`, is meant to be the "approved" program
 for handling character metadata. Have a look at this program. It has a single
-instruction for `create_metadata` that creates a new PDA and assigns a
+instruction handler for `create_metadata` that creates a new PDA and assigns a
 pseudo-random value between 0 and 20 for the character's health and power.
 
 The last program, `fake-metadata` is a "fake" metadata program meant to
@@ -250,59 +254,63 @@ illustrate what an attacker might make to exploit our `gameplay` program. This
 program is almost identical to the `character-metadata` program, only it assigns
 a character's initial health and power to be the max allowed: 255.
 
-#### 2. Test `create_character_insecure` instruction
+### 2. Test create_character_insecure Instruction Handler
 
 There is already a test in the `tests` directory for this. It's long, but take a
 minute to look at it before we talk through it together:
 
 ```typescript
-it("Insecure instructions allow attacker to win every time", async () => {
-  // Initialize player one with real metadata program
-  await gameplayProgram.methods
-    .createCharacterInsecure()
-    .accounts({
-      metadataProgram: metadataProgram.programId,
-      authority: playerOne.publicKey,
-    })
-    .signers([playerOne])
-    .rpc();
+it("Insecure instructions allow attacker to win every time successfully", async () => {
+  try {
+    // Initialize player one with real metadata program
+    await gameplayProgram.methods
+      .createCharacterInsecure()
+      .accounts({
+        metadataProgram: metadataProgram.programId,
+        authority: playerOne.publicKey,
+      })
+      .signers([playerOne])
+      .rpc();
 
-  // Initialize attacker with fake metadata program
-  await gameplayProgram.methods
-    .createCharacterInsecure()
-    .accounts({
-      metadataProgram: fakeMetadataProgram.programId,
-      authority: attacker.publicKey,
-    })
-    .signers([attacker])
-    .rpc();
+    // Initialize attacker with fake metadata program
+    await gameplayProgram.methods
+      .createCharacterInsecure()
+      .accounts({
+        metadataProgram: fakeMetadataProgram.programId,
+        authority: attacker.publicKey,
+      })
+      .signers([attacker])
+      .rpc();
 
-  // Fetch both player's metadata accounts
-  const [playerOneMetadataKey] = getMetadataKey(
-    playerOne.publicKey,
-    gameplayProgram.programId,
-    metadataProgram.programId,
-  );
+    // Fetch both player's metadata accounts
+    const [playerOneMetadataKey] = getMetadataKey(
+      playerOne.publicKey,
+      gameplayProgram.programId,
+      metadataProgram.programId,
+    );
 
-  const [attackerMetadataKey] = getMetadataKey(
-    attacker.publicKey,
-    gameplayProgram.programId,
-    fakeMetadataProgram.programId,
-  );
+    const [attackerMetadataKey] = getMetadataKey(
+      attacker.publicKey,
+      gameplayProgram.programId,
+      fakeMetadataProgram.programId,
+    );
 
-  const playerOneMetadata =
-    await metadataProgram.account.metadata.fetch(playerOneMetadataKey);
+    const playerOneMetadata =
+      await metadataProgram.account.metadata.fetch(playerOneMetadataKey);
 
-  const attackerMetadata =
-    await fakeMetadataProgram.account.metadata.fetch(attackerMetadataKey);
+    const attackerMetadata =
+      await fakeMetadataProgram.account.metadata.fetch(attackerMetadataKey);
+    // The regular player should have health and power between 0 and 20
+    expect(playerOneMetadata.health).to.be.lessThan(20);
+    expect(playerOneMetadata.power).to.be.lessThan(20);
 
-  // The regular player should have health and power between 0 and 20
-  expect(playerOneMetadata.health).to.be.lessThan(20);
-  expect(playerOneMetadata.power).to.be.lessThan(20);
-
-  // The attacker will have health and power of 255
-  expect(attackerMetadata.health).to.equal(255);
-  expect(attackerMetadata.power).to.equal(255);
+    // The attacker will have health and power of 255
+    expect(attackerMetadata.health).to.equal(255);
+    expect(attackerMetadata.power).to.equal(255);
+  } catch (error) {
+    console.error("Test failed:", error);
+    throw error;
+  }
 });
 ```
 
@@ -319,12 +327,12 @@ are each 255, making the attacker unbeatable.
 If you haven't already, run `anchor test` to see that this test in fact behaves
 as described.
 
-#### 3. Create a `create_character_secure` instruction
+### 3. Create a create_character_secure Instruction Handler
 
-Let's fix this by creating a secure instruction for creating a new character.
-This instruction should implement proper program checks and use the
-`character-metadata` program's `cpi` crate to do the CPI rather than just using
-`invoke`.
+Let's fix this by creating a secure instruction handler for creating a new
+character. This instruction handler should implement proper program checks and
+use the `character-metadata` program's `cpi` crate to do the CPI rather than
+just using `invoke`.
 
 If you want to test out your skills, try this on your own before moving ahead.
 
@@ -352,7 +360,7 @@ pub struct CreateCharacterSecure<'info> {
     #[account(
         init,
         payer = authority,
-        space = 8 + 32 + 32 + 64,
+        space = DISCRIMINATOR_SIZE + Character::INIT_SPACE,
         seeds = [authority.key().as_ref()],
         bump
     )]
@@ -363,25 +371,27 @@ pub struct CreateCharacterSecure<'info> {
         seeds::program = metadata_program.key(),
         bump,
     )]
-    /// CHECK: manual checks
+    /// CHECK: This account will not be checked by anchor
     pub metadata_account: AccountInfo<'info>,
     pub metadata_program: Program<'info, CharacterMetadata>,
     pub system_program: Program<'info, System>,
 }
 ```
 
-Lastly, we add the `create_character_secure` instruction. It will be the same as
-before but will use the full functionality of Anchor CPIs rather than using
-`invoke` directly:
+Lastly, we add the `create_character_secure` instruction handler. It will be the
+same as before but will use the full functionality of Anchor CPIs rather than
+using `invoke` directly:
 
 ```rust
 pub fn create_character_secure(ctx: Context<CreateCharacterSecure>) -> Result<()> {
+    // Initialize character data
     let character = &mut ctx.accounts.character;
     character.metadata = ctx.accounts.metadata_account.key();
-    character.auth = ctx.accounts.authority.key();
+    character.authority = ctx.accounts.authority.key();
     character.wins = 0;
 
-    let context = CpiContext::new(
+    // Prepare CPI context
+    let cpi_context = CpiContext::new(
         ctx.accounts.metadata_program.to_account_info(),
         CreateMetadata {
             character: ctx.accounts.character.to_account_info(),
@@ -391,20 +401,21 @@ pub fn create_character_secure(ctx: Context<CreateCharacterSecure>) -> Result<()
         },
     );
 
-    create_metadata(context)?;
+    // Perform CPI to create metadata
+    create_metadata(cpi_context)?;
 
     Ok(())
 }
 ```
 
-#### 4. Test `create_character_secure`
+### 4. Test create_character_secure Instruction Handler
 
 Now that we have a secure way of initializing a new character, let's create a
 new test. This test just needs to attempt to initialize the attacker's character
 and expect an error to be thrown.
 
 ```typescript
-it("Secure character creation doesn't allow fake program", async () => {
+it("prevents secure character creation with fake program", async () => {
   try {
     await gameplayProgram.methods
       .createCharacterSecure()
@@ -414,23 +425,25 @@ it("Secure character creation doesn't allow fake program", async () => {
       })
       .signers([attacker])
       .rpc();
+
+    throw new Error("Expected createCharacterSecure to throw an error");
   } catch (error) {
-    expect(error);
+    expect(error).to.be.instanceOf(Error);
     console.log(error);
   }
 });
 ```
 
 Run `anchor test` if you haven't already. Notice that an error was thrown as
-expected, detailing that the program ID passed into the instruction is not the
-expected program ID:
+expected, detailing that the program ID passed into the instruction handler is
+not the expected program ID:
 
 ```bash
 'Program log: AnchorError caused by account: metadata_program. Error Code: InvalidProgramId. Error Number: 3008. Error Message: Program ID was not as expected.',
 'Program log: Left:',
-'Program log: FKBWhshzcQa29cCyaXc1vfkZ5U985gD5YsqfCzJYUBr',
+'Program log: HQqG7PxftCD5BB9WUWcYksrjDLUwCmbV8Smh1W8CEgQm',
 'Program log: Right:',
-'Program log: D4hPnYEsAx4u3EQMrKEXsY3MkfLndXbBKTEYTwwm25TE'
+'Program log: 4FgVd2dgsFnXbSHz8fj9twNbfx8KWcBJkHa6APicU6KS'
 ```
 
 That's all you need to do to protect against arbitrary CPIs!
@@ -440,8 +453,7 @@ certainly won't stop you from architecting the program you need, but please take
 every precaution possible to ensure no vulnerabilities in your program.
 
 If you want to take a look at the final solution code you can find it on the
-`solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/solution).
+[`solution` branch of the same repository](https://github.com/solana-developers/arbitrary-cpi/tree/solution).
 
 ## Challenge
 
@@ -449,13 +461,14 @@ Just as with other lessons in this unit, your opportunity to practice avoiding
 this security exploit lies in auditing your own or other programs.
 
 Take some time to review at least one program and ensure that program checks are
-in place for every program passed into the instructions, particularly those that
-are invoked via CPI.
+in place for every program passed into the instruction handlers, particularly
+those that are invoked via CPI.
 
 Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5bcaf062-c356-4b58-80a0-12cca99c29b0)!
 </Callout>
