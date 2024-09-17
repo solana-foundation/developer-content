@@ -22,7 +22,7 @@ description:
 ## Lesson Overview
 
 In these units, we will develop mobile apps that interact with the Solana
-network, this opens up a whole new paradigm of crypto use cases and behaviors.
+network, this opens up a whole new paradigm of blockchain use cases and behaviors.
 The **Solana Mobile Stack** (**SMS**) is designed to help developers seamlessly
 create mobile dApps. It includes the
 [Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter)
@@ -88,7 +88,7 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-> In summary, mobile crypto opens up many doors. It is important to be informed
+> In summary, mobile blockchain transactions opens up many doors. It is important to be informed
 > and learn how one can be part of it, let's explore how.
 
 ### Supported Operating Systems
@@ -305,13 +305,13 @@ side.
 ## Deploying for Solana Mobile
 
 Deploying mobile applications can be challenging, and the complexity increases
-when dealing with crypto-based apps. Two primary factors contribute to this
+when dealing with blockchain-based apps. Two primary factors contribute to this
 difficulty: customer safety and financial incentives.
 
 ### Customer Safety and Regulatory Uncertainty:
 
 Most mobile app marketplaces, such as the Apple App Store and Google Play Store,
-have policies that restrict blockchain-related apps. Since cryptocurrency is
+have policies that restrict blockchain-related apps. Since blockchain is
 still a relatively new and evolving technology, platforms are cautious about
 regulatory compliance. They often adopt strict guidelines to protect users from
 potential risks associated with blockchain apps.
@@ -320,10 +320,10 @@ potential risks associated with blockchain apps.
 
 Another significant challenge arises when using cryptocurrency for in-app
 purchases. Many platforms impose a transaction fee on purchases made within
-their apps (ranging from 15% to 30%). Using cryptocurrency as a payment method
+their apps (ranging from 15% to 30%). Payment via the blockchain
 is often seen as a way to bypass these fees, which is explicitly prohibited by
 most app stores. These platforms prioritize protecting their revenue streams and
-therefore enforce strict policies against apps that facilitate crypto payments
+therefore enforce strict policies against apps that facilitate blockchain payments
 for in-app purchases.
 
 > While traditional app stores impose strict policies around blockchain
