@@ -8,10 +8,10 @@ the transaction is both processed in a timely manner as well as to avoid paying
 too much in priority fees.
 
 For more information about requesting optimal compute,
-[check out the full guide](https://solana.com/developers/guides/advanced/how-to-request-optimal-compute).
+[check out the full guide](/content/guides/advanced/how-to-request-optimal-compute.md).
 You can also find more information about
-[using priority fees](https://solana.com/developers/guides/advanced/how-to-use-priority-fees)
-in this detailed guide.
+[using priority fees](/content/guides/advanced/how-to-use-priority-fees.md) in
+this detailed guide.
 
 ```typescript filename="optimize-compute.ts"
 // import { ... } from "@solana/web3.js"

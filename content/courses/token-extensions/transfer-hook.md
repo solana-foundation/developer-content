@@ -95,7 +95,7 @@ const [pda] = PublicKey.findProgramAddressSync(
 By storing the extra accounts required by the `Execute` instruction in the
 `extra_account_meta_list` PDA, these accounts can be automatically added to a
 token transfer instruction from the client. We'll see how to do that in the
-off-chain section.
+offchain section.
 
 #### 1. `initialize_extra_account_meta_list` instruction:
 

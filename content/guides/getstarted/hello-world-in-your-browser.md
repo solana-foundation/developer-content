@@ -28,6 +28,8 @@ keywords:
 altRoutes:
   - /developers/guides/hello-world-in-your-browser
   - /developers/guides/solana-playground
+  - /developers/guides/solang/solang-getting-started
+  - /developers/guides/solang-getting-started
 ---
 
 For this "hello world" quickstart guide, we will use
@@ -70,11 +72,10 @@ icon and naming your project `hello_world`.
 
 ### Create a Playground wallet
 
-Normally with
-[local development](/content/guides/getstarted/setup-local-development.md), you
-will need to create a file system wallet for use with the Solana CLI. But with
-the Solana Playground, you only need to click a few buttons to create a
-browser-based wallet.
+Normally with [local development](/docs/intro/installation), you will need to
+create a file system wallet for use with the Solana CLI. But with the Solana
+Playground, you only need to click a few buttons to create a browser-based
+wallet.
 
 > Your _Playground Wallet_ will be saved in your browser's local storage.
 > Clearing your browser cache will remove your saved wallet. When creating a new
@@ -90,9 +91,7 @@ click "**Continue**".
 After your Playground Wallet is created, you will notice the bottom of the
 window now states your wallet's address, your SOL balance, and the Solana
 cluster you are connected to (Devnet is usually the default/recommended, but a
-"localhost"
-[test validator](/content/guides/getstarted/setup-local-development.md) is also
-acceptable).
+"localhost" [test validator](/docs/intro/installation) is also acceptable).
 
 ## Create a Solana program
 
@@ -321,7 +320,7 @@ See the links below to learn more about writing Solana programs, and setting up
 your local development environment:
 
 - [Solana Quick Start Guide](/docs/intro/quick-start.md)
-- [Setup your local development environment](/developers/guides/getstarted/setup-local-development.md)
+- [Setup your local development environment](/docs/intro/installation)
 - [Interacting with Tokens and NFTs](/developers/courses/tokens.md)
 - [Developer Guides](/developers/guides/)
 - [Developing Games](/content/guides/games/getting-started-with-game-development.md)

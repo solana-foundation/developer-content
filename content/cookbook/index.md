@@ -1,10 +1,10 @@
 ---
 sidebarSortOrder: 0
 title: Solana Cookbook
-seoTitle: Code examples for Solana development
+seoTitle: Solana Cookbook - Code examples for Solana development
 description:
-  "The Solana cookbook is a collection of useful examples and references for
-  building on Solana"
+  "The Solana Cookbook is a collection of code snippets, useful examples, and
+  references for building on Solana."
 ---
 
 The _Solana Cookbook_ is a developer resource that provides examples and

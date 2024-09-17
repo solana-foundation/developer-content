@@ -102,7 +102,7 @@ to interact with and respond to real-world events. The Switchboard network is
 made up of many different individual oracles run by third parties to provide
 external data and service requests onchain. To learn more about Switchboard’s
 Oracle network, please refer to our
-[Oracle lesson](/developers/courses/connecting-to-offchain-data/oracles).
+[Oracle lesson](/content/courses/connecting-to-offchain-data/oracles.md)
 
 Switchboard's VRF allows users to request an oracle to produce a randomness
 output onchain. Once an oracle has been assigned the request, the proof of the
@@ -1311,9 +1311,9 @@ describe("burry-escrow-vrf", () => {
       // Check whether the data onchain is equal to local 'data'
       assert(failUnlockPrice == newAccount.unlockPrice);
       assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
+    } catch (error) {
+      console.log(error);
+      assert.fail(error);
     }
   });
 
@@ -1341,13 +1341,14 @@ describe("burry-escrow-vrf", () => {
 
       await provider.connection.confirmTransaction(tx, "confirmed");
       console.log("Your transaction signature", tx);
-    } catch (e) {
-      // verify tx returns expected error
+    } catch (error) {
       didFail = true;
-      console.log(e.error.errorMessage);
+
       assert(
-        e.error.errorMessage ==
+        error.message.includes(
           "Current SOL price is not above Escrow unlock price.",
+        ),
+        "Unexpected error message: " + error.message,
       );
     }
 
@@ -1517,8 +1518,8 @@ it("Roll till you can withdraw", async () => {
       })
       .signers([payer])
       .rpc();
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error);
     assert.fail();
   }
 
@@ -1580,8 +1581,8 @@ it("Roll till you can withdraw", async () => {
         console.log("Resetting die...");
         await delay(5000);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
       assert.fail();
     }
   }

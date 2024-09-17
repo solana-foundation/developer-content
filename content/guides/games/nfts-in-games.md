@@ -56,10 +56,9 @@ other assets for your game. GameShift offers these features:
 
 Using NFTs, you can conditionally gate access to a particular part of a game
 based on owning the NFT. This can form a more tight-knit community within your
-game. In
-[JavaScript](https://docs.solana.com/de/developing/clients/javascript-api) using
-the [Metaplex SDK](https://github.com/metaplex-foundation/js#readme) this would
-look like this:
+game. In [JavaScript](/docs/clients/javascript.md) using the
+[Metaplex SDK](https://github.com/metaplex-foundation/js#readme) this would look
+like this:
 
 ```js
 JSON.parse(

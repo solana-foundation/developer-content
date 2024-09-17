@@ -12,8 +12,8 @@ program, take a look at these detailed quick start guides:
 
 - [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
   No installation needed.
-- [Setup your local environment](/content/guides/getstarted/setup-local-development.md)
-  and use the local test validator.
+- [Setup your local environment](/docs/intro/installation) and use the local
+  test validator.
 
 </Callout>
 
@@ -68,8 +68,7 @@ For example:
 First setup the environment:
 
 - Install the latest Rust stable from https://rustup.rs/
-- Install the latest
-  [Solana command-line tools](https://docs.solanalabs.com/cli/install)
+- Install the latest [Solana command-line tools](/docs/intro/installation.md)
 
 The normal cargo build is available for building programs against your host
 machine which can be used for unit testing:
