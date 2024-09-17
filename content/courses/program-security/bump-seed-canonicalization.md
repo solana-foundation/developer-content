@@ -302,7 +302,7 @@ rewards on time.
 #### 1. Setup
 
 Start by getting the code on the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/starter).
+[this repository](https://github.com/solana-developers/solana-bump-seed-canonicalization/tree/starter).
 
 Notice that there are two instructions on the program and a single test in the
 `tests` directory.
@@ -600,7 +600,7 @@ careful to design your program to explicitly use the canonical bump!
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/solution).
+[the same repository](https://github.com/solana-developers/solana-bump-seed-canonicalization/tree/solution).
 
 ## Challenge
 
