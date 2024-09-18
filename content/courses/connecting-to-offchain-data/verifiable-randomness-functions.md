@@ -451,7 +451,7 @@ is provided for you in
 [the main branch of the lab Github repository](https://github.com/solana-developers/burry-escrow).
 
 The repo contains a "Michael Burry" escrow program. This is a program that
-allows a user to lock up some solana funds in escrow that cannot be withdrawn
+allows a user to lock up some SOL funds in escrow that cannot be withdrawn
 until SOL has reached a predefined price in USD chosen by the user. We will be
 adding VRF functionality to this program to allow the user to "Get out of jail"
 by rolling doubles. Our demo today will allow the user to roll two virtual dice,
@@ -464,7 +464,7 @@ If you are cloning the repo from the previous lesson make sure to do the
 following:
 
 1. `git clone https://github.com/solana-developers/burry-escrow`
-2. `cd michael-burry-escrow`
+2. `cd burry-escrow`
 3. `anchor build`
 4. `anchor keys sync`
 5. `solana config get`
@@ -483,9 +483,9 @@ in our `Cargo.toml` file.
 
 ```typescript
 [dependencies]
-anchor-lang = "0.29.0"
-anchor-spl = "0.29.0"
-switchboard-solana = "0.29"
+anchor-lang = "0.28.0"
+anchor-spl = "0.28.0"
+switchboard-solana = "0.28"
 ```
 
 ### 3. Lib.rs
