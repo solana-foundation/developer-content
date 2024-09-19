@@ -288,7 +288,7 @@ const associatedTokenAccount = await createAssociatedTokenAccount(
   payer,
   mint,
   owner,
-  allowOwnerOffCurve
+  allowOwnerOffCurve,
 );
 ```
 
@@ -299,7 +299,8 @@ requires the following arguments:
 - `payer` - the account of the payer for the transaction
 - `mint` - the token mint that the new token account is associated with
 - `owner` - the account of the owner of the new token account
-- `allowOwnerOffCurve` - defaults to false, used to create associated token accounts for PDAs, necessary for vaults and multi-sig wallets.
+- `allowOwnerOffCurve` - defaults to false, used to create associated token
+  accounts for PDAs, necessary for vaults and multi-sig wallets.
 
 You can also use `getOrCreateAssociatedTokenAccount` to get the Token Account
 associated with a given address or create it if it doesn't exist. For example,
@@ -321,7 +322,7 @@ import * as token from "@solana/spl-token";
 async function buildCreateAssociatedTokenAccountTransaction(
   payer: web3.PublicKey,
   mint: web3.PublicKey,
-  allowOwnerOffCurve: boolean
+  allowOwnerOffCurve: boolean,
 ): Promise<web3.Transaction> {
   const associatedTokenAddress = await token.getAssociatedTokenAddressSync(
     mint,
