@@ -490,13 +490,11 @@ and explanations for why we need them:
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
   through the [JSON RPC API](https://solana.com/docs/rpc)
 - `react-native-get-random-values` Secure random number generator polyfill for
-<<<<<<< HEAD
-  `web3.js` underlying Crypto library on React Native
-- `buffer`: Buffer polyfill; also needed for `web3.js` on React Native.
-=======
+  <<<<<<< HEAD `web3.js` underlying Crypto library on React Native
+- # `buffer`: Buffer polyfill; also needed for `web3.js` on React Native.
   `web3.js` underlying library on React Native
 - `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
->>>>>>> a3ea04e (minor fixes, resolved conflict)
+  > > > > > > > a3ea04e (minor fixes, resolved conflict)
 
 In addition to this list, we will add two more packages:
 

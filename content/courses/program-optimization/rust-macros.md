@@ -9,18 +9,35 @@ description: "Use Rust macros to generate code at compile time."
 
 ## What are Rust macros?
 
-Rust macros (sing. macro) are Rust function-like set of codes that are written so that they can write another set of codes, this concept is called ***metaprogramming*** and is useful to prevent repetitve writing of code that needs to be called multiple times. The downside of macros is that they make the code harder to read and maintain because in truth, writing Rust that writes Rust can be quite daunting. How are macros different from functions? Well, functions are called at runtime while macros are "expanded" even before the compiler interpretes what the other set of code means so there is no runtime cost associated with using a macro.
+Rust macros (sing. macro) are Rust function-like set of codes that are written
+so that they can write another set of codes, this concept is called
+**_metaprogramming_** and is useful to prevent repetitve writing of code that
+needs to be called multiple times. The downside of macros is that they make the
+code harder to read and maintain because in truth, writing Rust that writes Rust
+can be quite daunting. How are macros different from functions? Well, functions
+are called at runtime while macros are "expanded" even before the compiler
+interpretes what the other set of code means so there is no runtime cost
+associated with using a macro.
 
-Another important difference between macros and functions is that you must define macros or bring them into scope ***before*** you call them in a file, as opposed to functions you can define and call anywhere. Check [The little Book of Rust Macros](https://veykril.github.io/tlborm/introduction.html) if you'd like to dive into the rabbit hole, not recommended if you don't know Rust.
-
+Another important difference between macros and functions is that you must
+define macros or bring them into scope **_before_** you call them in a file, as
+opposed to functions you can define and call anywhere. Check
+[The little Book of Rust Macros](https://veykril.github.io/tlborm/introduction.html)
+if you'd like to dive into the rabbit hole, not recommended if you don't know
+Rust.
 
 ## Types of macros
+
 There are two different types of macros: declarative macros and procedural
 macros.
 
 ## Declarative macros
 
-They are defined using the `macro_rules!` macro, which runs expressions iteratively across patterns to find a match. An `Ok` state triggers a series of instructions associated with its corresponding pattern. They re similar to the `match` expression in Rust with a `($matcher) => {$expansion}` rule. Below is a simple macro called `greet!`, let's see what it does
+They are defined using the `macro_rules!` macro, which runs expressions
+iteratively across patterns to find a match. An `Ok` state triggers a series of
+instructions associated with its corresponding pattern. They re similar to the
+`match` expression in Rust with a `($matcher) => {$expansion}` rule. Below is a
+simple macro called `greet!`, let's see what it does
 
 ```rust
 // Define the macro
@@ -40,11 +57,21 @@ fn main() {
 }
 ```
 
->The `#[macro_export]` annotation tells Rust that this macro should be globally available to other files or crates that include it. Without this annotation, the macro would only be usable within the file where it’s defined. 
+> The `#[macro_export]` annotation tells Rust that this macro should be globally
+> available to other files or crates that include it. Without this annotation,
+> the macro would only be usable within the file where it’s defined.
 
-To create the macro, you start by using `macro_rules!` followed by the macro’s name (in this case, `greet`) without the exclamation mark. The body of the macro is enclosed in curly braces `{}`.
+To create the macro, you start by using `macro_rules!` followed by the macro’s
+name (in this case, `greet`) without the exclamation mark. The body of the macro
+is enclosed in curly braces `{}`.
 
-Inside the macro body, there’s a single arguement: `($name:expr)`, the `=>` symbol is followed by the block of code that gets generated when this pattern matches. Since there is only one pattern in this macro, only this specific structure is allowed, and any other pattern will cause an error. More advanced macros may have multiple patterns to handle different inputs and a `_` wildcard to catch patterns that are not explicitly defined. Now you can call `greet!` on any `$name` in the code.
+Inside the macro body, there’s a single arguement: `($name:expr)`, the `=>`
+symbol is followed by the block of code that gets generated when this pattern
+matches. Since there is only one pattern in this macro, only this specific
+structure is allowed, and any other pattern will cause an error. More advanced
+macros may have multiple patterns to handle different inputs and a `_` wildcard
+to catch patterns that are not explicitly defined. Now you can call `greet!` on
+any `$name` in the code.
 
 ## Procedural macros
 
@@ -54,8 +81,10 @@ rest of the code. There are three types of procedural macros:
 
 - Function-like macros - `custom!(...)`
 - Derive macros - `#[derive(CustomDerive)]`
-- Attribute macros - `#[CustomAttribute]`
-For the purpose of this lesson, we would be focusing more on procedural macros (which are commonly used in the Anchor framework) but some underlying concepts have to be discussed before we go into the 3 types, let's go through these concepts
+- Attribute macros - `#[CustomAttribute]` For the purpose of this lesson, we
+  would be focusing more on procedural macros (which are commonly used in the
+  Anchor framework) but some underlying concepts have to be discussed before we
+  go into the 3 types, let's go through these concepts
 
 ## Rust concepts
 
@@ -68,7 +97,8 @@ In the context of Rust programming, a
 [token](https://doc.rust-lang.org/reference/tokens.html) is a basic element of
 the language syntax like an identifier or literal value. Tokens represent the
 smallest unit of source code that are recognized by the Rust compiler, and they
-are used to build up more complex expressions and statements in a program. They can be regarded as the bedrock of Rust programming
+are used to build up more complex expressions and statements in a program. They
+can be regarded as the bedrock of Rust programming
 
 Examples of Rust tokens include:
 
@@ -106,9 +136,9 @@ You can
 
 ### Token Streams
 
-The `TokenStream` type is a data type that represents a sequence of tokens. We see how this
-type is defined in the `proc_macro` crate below and is surfaced as a way for you to
-write macros based on other code in the codebase.
+The `TokenStream` type is a data type that represents a sequence of tokens. We
+see how this type is defined in the `proc_macro` crate below and is surfaced as
+a way for you to write macros based on other code in the codebase.
 
 When defining a procedural macro, the macro input is passed to the macro as a
 `TokenStream`, which can then be parsed and transformed as needed. The resulting
@@ -123,17 +153,26 @@ pub fn my_macro(input: TokenStream) -> TokenStream {
 }
 ```
 
-Before you proceed: You may have noticed that the code above won't compile and returns an `undeclared` error for `proc_macro`, you have to initially create a crate as a library to be able to use it globally, go to your terminal within the project scope and run the code below:
+Before you proceed: You may have noticed that the code above won't compile and
+returns an `undeclared` error for `proc_macro`, you have to initially create a
+crate as a library to be able to use it globally, go to your terminal within the
+project scope and run the code below:
+
 ```rust
 cargo new proc_macro --lib
 ```
-Next, change directory into your newly created `proc_macro` folder, navigate to the `Cargo.toml` file, add the following line under `[lib]` to specify that the crate will provide a procedural macro
+
+Next, change directory into your newly created `proc_macro` folder, navigate to
+the `Cargo.toml` file, add the following line under `[lib]` to specify that the
+crate will provide a procedural macro
+
 ```rust
 [lib]
 proto-macro = true
 ```
 
-Under the `[dependencies]` section, add the two crates `syn` and `quote` as is below, we will discuss them shortly
+Under the `[dependencies]` section, add the two crates `syn` and `quote` as is
+below, we will discuss them shortly
 
 ```rust
 [dependencies]
