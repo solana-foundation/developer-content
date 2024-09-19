@@ -351,7 +351,7 @@ warning: `anchor-cli` (lib) generated 1 warning
 </AccordionItem>
 </Accordion>
 
-To verify that the installation was successful, check the Ancor CLI version:
+To verify that the installation was successful, check the Anchor CLI version:
 
 ```shell
 anchor --version
