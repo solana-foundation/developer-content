@@ -125,7 +125,7 @@ async function buildCreateMintTransaction(
       lamports,
       programId,
     }),
-    token.createInitializeMintInstruction(
+    token.createInitializeMint2Instruction(
       accountKeypair.publicKey,
       decimals,
       payer,
@@ -288,6 +288,7 @@ const associatedTokenAccount = await createAssociatedTokenAccount(
   payer,
   mint,
   owner,
+  allowOwnerOffCurve
 );
 ```
 
@@ -298,6 +299,7 @@ requires the following arguments:
 - `payer` - the account of the payer for the transaction
 - `mint` - the token mint that the new token account is associated with
 - `owner` - the account of the owner of the new token account
+- `allowOwnerOffCurve` - defaults to false, used to create associated token accounts for PDAs, necessary for vaults and multi-sig wallets.
 
 You can also use `getOrCreateAssociatedTokenAccount` to get the Token Account
 associated with a given address or create it if it doesn't exist. For example,
@@ -307,7 +309,7 @@ gets created if it doesn't already exist.
 
 Under the hood, `createAssociatedTokenAccount` is doing two things:
 
-1. Using `getAssociatedTokenAddress` to derive the associated token account
+1. Using `getAssociatedTokenAddressSync` to derive the associated token account
    address from the `mint` and `owner`
 2. Building a transaction using instructions from
    `createAssociatedTokenAccountInstruction`
@@ -319,11 +321,12 @@ import * as token from "@solana/spl-token";
 async function buildCreateAssociatedTokenAccountTransaction(
   payer: web3.PublicKey,
   mint: web3.PublicKey,
+  allowOwnerOffCurve: boolean
 ): Promise<web3.Transaction> {
-  const associatedTokenAddress = await token.getAssociatedTokenAddress(
+  const associatedTokenAddress = await token.getAssociatedTokenAddressSync(
     mint,
     payer,
-    false,
+    allowOwnerOffCurve,
   );
 
   const transaction = new web3.Transaction().add(
