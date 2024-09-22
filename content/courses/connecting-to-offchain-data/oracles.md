@@ -16,7 +16,9 @@ description: Access real-world data inside a Solana program.
 - Solana has a rich ecosystem of oracle providers. Some notable oracle providers
   include [Pyth Network](https://pyth.network),
   [Switchboard](https://switchboard.xyz), [Chainlink](https://chain.link), and
-  [DIA](https://www.diadata.org/solana-price-oracles/).
+  [DIA](https://www.diadata.org/solana-price-oracles/). We'll use Switchboard in
+  this lesson, but the concepts are common to most oracles and you should pick
+  the oracle that best meets your needs.
 - You can build your own oracle to create a custom data feed.
 - When choosing oracle providers, consider reliability, accuracy,
   decentralization, update frequency, and cost. Be aware of security risks:
@@ -147,11 +149,11 @@ can also run offchain custom and confidential computations.
 ### Switchboard Oracles
 
 Switchboard oracles store data on Solana using data feeds, also called
-aggregators. These data feeds consist of multiple jobs that are aggregated to
-produce a single result. Aggregators are represented onchain as regular Solana
-accounts managed by the Switchboard program, with updates written directly to
-these accounts. Let's review some key terms to understand how Switchboard
-operates:
+**aggregators**. These data feeds consist of multiple jobs that are aggregated
+to produce a single result. Aggregators are represented onchain as regular
+Solana accounts managed by the Switchboard program, with updates written
+directly to these accounts. Let's review some key terms to understand how
+Switchboard operates:
 
 - **[Aggregator (Data Feed)](https://github.com/switchboard-xyz/solana-sdk/blob/main/rust/switchboard-solana/src/oracle_program/accounts/aggregator.rs)** -
   Contains the data feed configuration, including how updates are requested,
@@ -317,11 +319,11 @@ reliability of a data feed:
   `min_oracle_results` of these weighted medians and calculates the median of
   those, which is the final result stored in the data feed account.
 
-- The `min_update_delay_seconds` field is related to the feed’s update cadence.
+- The `min_update_delay_seconds` field is related to the feed's update cadence.
   This value must have passed between rounds of updates before the Switchboard
   program will accept results.
 
-It can help to view the jobs tab for a feed in Switchboard’s explorer. For
+It can help to view the jobs tab for a feed in Switchboard's explorer. For
 example, check out the
 [BTC_USD feed in the explorer](https://app.switchboard.xyz/solana/devnet/feed/8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee).
 Each job defines the data sources the oracles fetch from and the weight assigned
@@ -333,33 +335,31 @@ Below are two of the jobs related to the BTC_USD feed, showing data from
 
 ![Oracle Jobs](/public/assets/courses/unboxed/oracle-jobs.png)
 
-Once you’ve chosen a feed, you can start reading the data from that feed by
+Once you've chosen a feed, you can start reading the data from that feed by
 deserializing and reading the state stored in the account. The easiest way to do
 this is by using the `AggregatorAccountData` struct from the
 `switchboard_solana` crate in your program.
 
 ```rust
 // Import anchor and switchboard crates
-use {
-    anchor_lang::prelude::*,
-    switchboard_solana::AggregatorAccountData,
-};
+use {anchor_lang::prelude::*, switchboard_solana::AggregatorAccountData};
 
 ...
 
 #[derive(Accounts)]
 pub struct ConsumeDataAccounts<'info> {
-  // Pass in data feed account and deserialize to AggregatorAccountData
-  pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
-  ...
+    // Pass in data feed account and deserialize to AggregatorAccountData
+    pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+    ...
 }
 ```
 
-Notice that we use the `AccountLoader` type here instead of the regular
-`Account` type to deserialize the aggregator account. Due to the size of
-`AggregatorAccountData`, the account uses zero-copy deserialization. This,
-combined with `AccountLoader`, prevents the account from being fully loaded into
-memory, allowing our program to access the data directly.
+Using zero-copy deserialization with `AccountLoader` allows the program to
+access specific data within large accounts like `AggregatorAccountData` without
+loading the entire account into memory. This improves memory efficiency and
+performance by only accessing the necessary parts of the account. It avoids
+deserializing the whole account, saving both time and resources. This is
+especially useful for large account structures.
 
 When using `AccountLoader`, you can access the data in three ways:
 
@@ -412,6 +412,7 @@ client-side in Typescript.
 ```typescript
 import { AggregatorAccount, SwitchboardProgram } from "@switchboard-xyz/solana.js";
 import { PublicKey, SystemProgram, Connection } from "@solana/web3.js";
+import { Big } from "@switchboard-xyz/common";
 ...
 ...
 
@@ -488,9 +489,9 @@ verify the address passed in matches what is expected.
 
 ```rust
 use {
-  anchor_lang::prelude::*,
-  solana_program::{pubkey, pubkey::Pubkey},
-  switchboard_solana::{AggregatorAccountData},
+    anchor_lang::prelude::*,
+    solana_program::{pubkey, pubkey::Pubkey},
+    switchboard_solana::AggregatorAccountData,
 };
 
 pub static BTC_USDC_FEED: Pubkey = pubkey!("8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W6hesH3Ee");
@@ -500,11 +501,11 @@ pub static BTC_USDC_FEED: Pubkey = pubkey!("8SXvChNYFhRq4EZuZvnhjrB3jJRQCv4k3P4W
 
 #[derive(Accounts)]
 pub struct TestInstruction<'info> {
-  // Switchboard SOL feed aggregator
-  #[account(
-      address = BTC_USDC_FEED
-  )]
-  pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+    // Switchboard SOL feed aggregator
+    #[account(
+        address = BTC_USDC_FEED
+    )]
+    pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
 }
 ```
 
@@ -732,7 +733,7 @@ and we'll proceed from there.
 
 ### 2. Setup lib.rs
 
-Before writing the logic, we’ll set up the necessary boilerplate in `lib.rs`.
+Before writing the logic, we'll set up the necessary boilerplate in `lib.rs`.
 This file acts as the entry point for the program, defining the API endpoints
 that all transactions will pass through. The actual logic will be housed in the
 `/instructions` directory.
@@ -764,7 +765,7 @@ pub mod burry_escrow {
 
 ### 3. Define state.rs
 
-Next, let’s define our program's data account: `Escrow`. This account will store
+Next, let's define our program's data account: `Escrow`. This account will store
 two key pieces of information:
 
 - `unlock_price`: The price of SOL in USD at which withdrawals are allowed
@@ -772,7 +773,6 @@ two key pieces of information:
 - `escrow_amount`: Tracks the amount of lamports held in the escrow account.
 
 ```rust filename="state.rs"
-// Inside state.rs file
 use anchor_lang::prelude::*;
 
 #[account]
@@ -785,7 +785,7 @@ pub struct Escrow {
 
 ### 4. Constants
 
-Next, we’ll define `DISCRIMINATOR_SIZE` as 8, the PDA seed as `"MICHAEL BURRY"`,
+Next, we'll define `DISCRIMINATOR_SIZE` as 8, the PDA seed as `"MICHAEL BURRY"`,
 and hard-code the SOL/USD oracle pubkey as `SOL_USDC_FEED` in the `constants.rs`
 file.
 
@@ -838,7 +838,7 @@ escrow account at a time. The instruction should initialize an account at this
 PDA and transfer the SOL that the user wants to lock up to it. The user will
 need to be a signer.
 
-Let’s first build the `Deposit` context struct. To do this, we need to think
+Let's first build the `Deposit` context struct. To do this, we need to think
 about what accounts will be necessary for this instruction. We start with the
 following:
 
