@@ -121,6 +121,27 @@ pub struct UserConfig {
 To resolve this, add a discriminant field for each account type and set the
 discriminant when initializing an account.
 
+<Callout>
+
+While they sound similar, a
+[Rust **discriminant**](https://doc.rust-lang.org/std/mem/fn.discriminant.html)
+isn't the same thing as an
+[Anchor **discriminator**](https://book.anchor-lang.com/anchor_bts/discriminator.html)!
+
+- **Rust discriminant**: This is an internal value that Rust uses to keep track
+  of which variant an enum currently represents. It's like a behind-the-scenes
+  label for enum variants.
+
+- **Anchor discriminator**: This is a unique 8-byte identifier that Anchor adds
+  to the beginning of each account's data. It helps Solana programs quickly
+  recognize what type of account they're dealing with.
+
+In simple terms:
+
+- Discriminants are Rust's way of organizing enum variants.
+- Discriminators are Anchor's way of labeling different account types in Solana.
+  </Callout>
+
 The example below updates the `AdminConfig` and `UserConfig` account types with
 a `discriminant` field. The `admin_instruction` now includes an additional data
 validation check for the `discriminant` field.
