@@ -20,7 +20,7 @@ description:
 - Concurrent Merkle trees are a specialized version of Merkle trees that allow
   concurrent updates.
 - Because data in a state-compressed program is not stored onchain, you have to
-  user indexers to keep an off-chain cache of the data and then verify that data
+  user indexers to keep an offchain cache of the data and then verify that data
   against the onchain Merkle tree.
 
 ## Lesson
@@ -185,8 +185,8 @@ in the ledger state and could theoretically be retrieved from the original
 transaction by replaying the entire chain state from the beginning. However,
 it’s much more straightforward (though still complicated) to have
 an **indexer** track and index this data as the transactions occur. This ensures
-there is an off-chain “cache” of the data that anyone can access and
-subsequently verify against the onchain root hash.
+there is an offchain “cache” of the data that anyone can access and subsequently
+verify against the onchain root hash.
 
 This process is complex, but it will make sense after some practice.
 
@@ -239,9 +239,9 @@ arbitrary state compression. Instead, you have two primary options:
 
 1. Use an indexing provider that will build a custom indexing solution for your
    program that observes the events sent to the Noop program and stores the
-   relevant data off-chain.
+   relevant data offchain.
 2. Create your own pseudo-indexing solution that stores transaction data
-   off-chain.
+   offchain.
 
 For many dApps, option 2 makes plenty of sense. Larger-scale applications may
 need to rely on infrastructure providers to handle their indexing.

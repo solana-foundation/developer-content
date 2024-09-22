@@ -400,7 +400,7 @@ Since we are directly manipulating the lamports in an account, we want to ensure
 that the signer of the instruction is the same as the owner of the account so
 that only the owner can call this instruction. This is why the following
 validation check was implemented:
-`require!(cash_account.owner = ctx.accounts.signer, ErrorCode::InvalidSigner)`.
+`require!(cash_account.owner == ctx.accounts.signer, ErrorCode::InvalidSigner)`.
 
 For error handling. the `#[error_code]` Anchor macro is used, which generates
 `Error` and `type Result<T> = Result<T, Error> ` types to be used as return

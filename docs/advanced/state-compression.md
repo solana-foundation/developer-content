@@ -3,14 +3,14 @@ sidebarSortOrder: 4
 title: State Compression
 description:
   'State Compression is the method of cheaply and securely storing
-  "fingerprints" of off-chain data in the Solana leger, instead of expensive
+  "fingerprints" of offchain data in the Solana leger, instead of expensive
   accounts.'
 ---
 
 On Solana, [State Compression](/docs/advanced/state-compression.md) is the
-method of creating a "fingerprint" (or hash) of off-chain data and storing this
+method of creating a "fingerprint" (or hash) of offchain data and storing this
 fingerprint on-chain for secure verification. Effectively using the security of
-the Solana ledger to securely validate off-chain data, verifying it has not been
+the Solana ledger to securely validate offchain data, verifying it has not been
 tampered with.
 
 This method of "compression" allows Solana programs and dApps to use cheap
@@ -25,7 +25,7 @@ this final hash on-chain.
 ## What is State Compression?
 
 In simple terms, state compression uses "**_tree_**" structures to
-cryptographically hash off-chain data together, in a deterministic way, to
+cryptographically hash offchain data together, in a deterministic way, to
 compute a single final hash that gets stored on-chain.
 
 These _trees_ are created in this "_deterministic_" process by:
@@ -40,7 +40,7 @@ These _trees_ are created in this "_deterministic_" process by:
 
 This `root hash` is then stored onchain, as a verifiable **_proof_** of all of
 the data within every leaf. Allowing anyone to cryptographically verify all the
-off-chain data within the tree, while only actually storing a **minimal** amount
+offchain data within the tree, while only actually storing a **minimal** amount
 of data on-chain. Therefore, significantly reducing the cost to store/prove
 large amounts of data due to this "state compression".
 
