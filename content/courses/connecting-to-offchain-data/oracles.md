@@ -1187,11 +1187,8 @@ import {
   SwitchboardProgram,
 } from "@switchboard-xyz/solana.js";
 import { PublicKey, SystemProgram, Connection } from "@solana/web3.js";
-import { assert, expect } from "chai";
-import {
-  getExplorerLink,
-  confirmTransaction,
-} from "@solana-developers/helpers";
+import { assert } from "chai";
+import { confirmTransaction } from "@solana-developers/helpers";
 
 const SOL_USD_SWITCHBOARD_FEED = new PublicKey(
   "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
@@ -1260,11 +1257,6 @@ describe("burry-escrow", () => {
 
       assert(unlockPrice === escrowAccount.unlockPrice);
       assert(escrowBalance > 0);
-
-      console.log(
-        "Transaction Explorer Link:",
-        getExplorerLink("transaction", transaction, "devnet"),
-      );
     } catch (error) {
       console.error("Error details:", error);
       throw new Error(`Failed to create escrow: ${error.message}`);
@@ -1287,6 +1279,10 @@ describe("burry-escrow", () => {
       program.programId,
     );
 
+    const userBalanceBefore = await provider.connection.getBalance(
+      payer.publicKey,
+    );
+
     try {
       const transaction = await program.methods
         .withdraw()
@@ -1305,16 +1301,25 @@ describe("burry-escrow", () => {
         CONFIRMATION_COMMITMENT,
       );
 
+      // Verify escrow account is closed
       try {
         await program.account.escrow.fetch(escrow);
         assert.fail("Escrow account should have been closed");
       } catch (error) {
-        // Expected error, account should be closed
+        console.log(error.message);
+        assert(
+          error.message.includes("Account does not exist"),
+          "Unexpected error: " + error.message,
+        );
       }
 
-      console.log(
-        "Transaction Explorer Link:",
-        getExplorerLink("transaction", transaction, "devnet"),
+      // Verify user balance increased
+      const userBalanceAfter = await provider.connection.getBalance(
+        payer.publicKey,
+      );
+      assert(
+        userBalanceAfter > userBalanceBefore,
+        "User balance should have increased",
       );
     } catch (error) {
       throw new Error(`Failed to withdraw from escrow: ${error.message}`);
@@ -1367,22 +1372,20 @@ Once you're confident with the testing logic, run `anchor test` in your
 terminal. You should see four tests pass.
 
 ```bash
-burry-escrow
-Onchain unlock price: 137.38247
+  burry-escrow
+Onchain unlock price: 137.42243
 Amount in escrow: 1058020
-Transaction Explorer Link: https://explorer.solana.com/tx/4AEVbXr5Wts2ePzsi9vfQY29Cf6NpkUS38FhKWC5MdsXZQGxTQPjPC4qD62fjFKtxmhicb8aRJQ91HHXC4ypBBJ4?cluster=devnet
-    ✔ creates Burry Escrow Below Current Price (2423ms)
-Transaction Explorer Link: https://explorer.solana.com/tx/26Rp7iwfvLnP5fJT8jFcn32ycqMTLgf5c8b8zxfTtpc2S4qSLP4xU3Be5Gyc4MY2iTYfB883f9VBKsZrN4Z7v5Gm?cluster=devnet
-    ✔ withdraws from escrow (10259ms)
-Onchain unlock price: 157.48237
+    ✔ creates Burry Escrow Below Current Price (765ms)
+Account does not exist or has no data LxDZ9DXNwSFsu2e6u37o6C2T3k59B6ySEHHVaNDrgBq
+    ✔ withdraws from escrow (353ms)
+Onchain unlock price: 157.42243
 Amount in escrow: 1058020
-Transaction Explorer Link: https://explorer.solana.com/tx/4DYqVUZLmwSMf7SEjyv19yTT3T5b6uVC1Pzyf5NeuAcy8nLT24XpmLxhJ9BQEt2VomQ7jBrv5CjcoHRKZXmgyVud?cluster=devnet
-    ✔ creates Burry Escrow Above Current Price (4630ms)
+    ✔ creates Burry Escrow Above Current Price (406ms)
 AnchorError occurred. Error Code: SolPriceBelowUnlockPrice. Error Number: 6003. Error Message: Current SOL price is not above Escrow unlock price..
-    ✔ fails to withdraw while price is below UnlockPrice (178ms)
+    ✔ fails to withdraw while price is below UnlockPrice
 
 
-  4 passing (17s)
+  4 passing (2s)
 ```
 
 If something goes wrong, review the lab and ensure everything is correct. Focus
