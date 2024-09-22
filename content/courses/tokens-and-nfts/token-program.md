@@ -1,5 +1,5 @@
 ---
-title: Create Tokens With The Token Program
+title: Create tokens with the token program
 objectives:
   - Create token mints
   - Create token metadata
@@ -7,65 +7,67 @@ objectives:
   - Mint tokens
   - Transfer tokens
 description:
-  "Understand how tokens - both regular tokens and NFTs - are created, stored,
-  and transferred on Solana. "
+  "Understand how tokens, including both regular tokens and NFTs, are created,
+  stored, and transferred on Solana."
 ---
 
 ### Summary
 
-- You may recall SOL is the 'native token' of Solana. All other tokens, fungible
-  and non-fungible tokens (NFTs), are called **SPL Tokens**.
-- The **Token Program** contains instructions for creating and interacting with
-  SPL Tokens.
-- **Token Mints** are accounts that define a specific token. This includes
-  information about the token itself (like how many decimals it has), the
-  account allowed to mint more tokens (called the **mint authority**), and where
-  to find more information about the token like a description, image, etc. The
-  mint authority can use the token mint to make more tokens!
-- **Token Accounts** hold tokens of a specific Token Mint. For most users, their
-  balances of each token mint are stored in **Associated Token Accounts** -
-  accounts with addresses made from their wallet address and the token's mint.
-- Creating Token Mints and Token Accounts requires allocating **rent** in SOL.
-  The rent for a Token Account can be refunded when the account is closed.
-  Additionally, tokens created with the
-  [Token Extensions Program](/developers/courses/token-extensions-for-mints/close-mint)
-  can also close Token Mints.
+- SOL is Solana's **native token**. All other tokens, both fungible and
+  non-fungible (NFTs), are called **SPL tokens**.
+- The **[Token Program](https://spl.solana.com/token)** provides instructions
+  for creating and interacting with SPL tokens.
+- **Token Mints** are accounts that define a specific token. They include
+  details like the token's decimal places, the **mint authority** (the account
+  allowed to mint more tokens), and metadata such as descriptions and images.
+  The mint authority can use the token mint to issue new tokens.
+- **Token Accounts** hold balances of a specific token mint. For most users,
+  their balances of each token mint are stored in **Associated Token
+  Accounts** - accounts with addresses derived from their wallet address and the
+  token mint's address.
+- Creating token mints and token accounts requires **rent** in SOL. Rent for a
+  token account can be refunded when the account is closed. Additionally, tokens
+  created with the
+  [Token extensions program](/content/courses/token-extensions/close-mint.md)
+  can also close token mints.
 
 ### Lesson
 
-The Token Program is one of many programs made available by the Solana Program
-Library (SPL). It contains instructions for creating and interacting with SPL
-Tokens. These tokens represent all non-native (i.e. not SOL) tokens on the
-Solana network.
+The Token program is one of many programs available through the Solana Program
+Library (SPL). It provides instructions for creating and interacting with **SPL
+tokens**, which represent all non-native tokens on the Solana network (i.e.,
+tokens other than SOL).
 
-This lesson will focus on the basics of creating and managing a new SPL Token
-using the Token Program:
+This lesson covers the basics of creating and managing a new SPL token using the
+Token program:
 
-1. Creating a new Token Mint
-2. Creating Token Accounts
-3. Minting
-4. Transferring tokens from one holder to another
+1. Creating a new **Token Mint**
+2. Creating **Token Accounts**
+3. **Minting** tokens
+4. **Transferring** tokens between holders
 
-We'll be approaching this from the client side of the development process using
-the `@solana/spl-token` Javascript library.
+We'll be using the
+[`@solana/spl-token`](https://www.npmjs.com/package/@solana/spl-token)
+JavaScript library from the client side to achieve this.
 
 #### Token Mint
 
-To create a new SPL Token you first have to create a Token Mint. A Token Mint is
-an account that holds data about a specific token.
+To create a new SPL Token, you first need to create a **Token Mint**. A Token
+Mint is an account that holds data about a specific token.
 
-As an example, let's look at
-[USD Coin (USDC) on the Solana Explorer](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v).
-USDC's Token Mint address is `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`.
-With the explorer, we can see the particular details about USDC's Token Mint
-such as the current supply of tokens, the addresses of the mint and freeze
-authorities, and the decimal precision of the token:
+For example, take a look at
+[USD Coin (USDC) on Solana Explorer](https://explorer.solana.com/address/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v).
+USDC's token mint address is `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`. In
+the Explorer, you can see specific details about USDC's token mint, including
+the current token supply, the mint and freeze authority addresses, and the
+token's decimal precision.
 
 ![USDC Token Mint](/public/assets/courses/unboxed/token-program-usdc-mint.png)
 
-To create a new Token Mint, you need to send the right transaction instructions
-to the Token Program. To do this, we'll use the `createMint` function from
-`@solana/spl-token`.
+To create a new Token Mint, you need to send the appropriate transaction
+instructions to the Token Program. You can achieve this by using the
+[`createMint()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createMint.html#createMint)
+function from the `@solana/spl-token` library.
 
 ```typescript
 const tokenMint = await createMint(
@@ -77,7 +79,7 @@ const tokenMint = await createMint(
 );
 ```
 
-The `createMint` function returns the `publicKey` of the new token mint. This
+The `createMint()` function returns the `publicKey` of the new token mint. This
 function requires the following arguments:
 
 - `connection` - the JSON-RPC connection to the cluster
@@ -90,47 +92,58 @@ function requires the following arguments:
 - `decimals` - specifies the desired decimal precision of the token
 
 When creating a new mint from a script that has access to your secret key, you
-can simply use the `createMint` function. However, if you were to build a
-website to allow users to create a new token mint, you would need to do so with
-the user's secret key without making them expose it to the browser. In that
-case, you would want to build and submit a transaction with the right
-instructions.
+can use the `createMint()` function. However, if you're building a website where
+users create a new token mint, you'll need to securely handle the user's secret
+key without exposing it in the browser. In this case, you'd build and submit a
+transaction with the correct instructions.
 
-Under the hood, the `createMint` function is simply creating a transaction that
-contains two instructions:
+Under the hood, the `createMint()` function creates a transaction containing two
+instructions:
 
 1. Create a new account
 2. Initialize a new mint
 
-This would look as follows:
+Here's how that would look:
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  Transaction,
+  SystemProgram,
+} from "@solana/web3.js";
+import {
+  TOKEN_PROGRAM_ID,
+  MINT_SIZE,
+  getMinimumBalanceForRentExemptMint,
+  createInitializeMintInstruction,
+} from "@solana/spl-token";
 
 async function buildCreateMintTransaction(
-  connection: web3.Connection,
-  payer: web3.PublicKey,
+  connection: Connection,
+  payer: PublicKey,
   decimals: number,
-): Promise<web3.Transaction> {
-  const lamports = await token.getMinimumBalanceForRentExemptMint(connection);
-  const accountKeypair = web3.Keypair.generate();
-  const programId = token.TOKEN_PROGRAM_ID;
+  mintAuthority: PublicKey,
+  freezeAuthority: PublicKey | null = null,
+): Promise<Transaction> {
+  const lamports = await getMinimumBalanceForRentExemptMint(connection);
+  const mintKeypair = Keypair.generate();
 
-  const transaction = new web3.Transaction().add(
-    web3.SystemProgram.createAccount({
+  const transaction = new Transaction().add(
+    SystemProgram.createAccount({
       fromPubkey: payer,
-      newAccountPubkey: accountKeypair.publicKey,
-      space: token.MINT_SIZE,
+      newAccountPubkey: mintKeypair.publicKey,
+      space: MINT_SIZE,
       lamports,
-      programId,
+      programId: TOKEN_PROGRAM_ID,
     }),
-    token.createInitializeMintInstruction(
-      accountKeypair.publicKey,
+    createInitializeMintInstruction(
+      mintKeypair.publicKey,
       decimals,
-      payer,
-      payer,
-      programId,
+      mintAuthority,
+      freezeAuthority,
+      TOKEN_PROGRAM_ID,
     ),
   );
 
@@ -138,46 +151,44 @@ async function buildCreateMintTransaction(
 }
 ```
 
-When manually building the instructions to create a new token mint, make sure
-you add the instructions for creating the account and initializing the mint to
-the _same transaction_. If you were to do each step in a separate transaction,
-it's theoretically possible for somebody else to take the account you create and
-initialize it for their own mint.
+When manually building the instructions to create a new token mint, ensure you
+add both the account creation and mint initialization instructions to the _same
+transaction_. If you were to split them into separate transactions, someone else
+could potentially take control of the account you create and initialize it for
+their own mint.
 
 #### Rent and Rent Exemption
 
-Note that the first line in the function body of the previous code snippet
-contains a call to `getMinimumBalanceForRentExemptMint`, the result of which is
-passed into the `createAccount` function. This is part of account initialization
-called rent exemption.
+The
+[`getMinimumBalanceForRentExemptMint()`](https://solana-labs.github.io/solana-program-library/token/js/functions/getMinimumBalanceForRentExemptMint.html#getMinimumBalanceForRentExemptMint)
+function in the previous snippet calculates the minimum SOL needed to make an
+account rent-exempt, which is required during account initialization.
 
-Until recently, all accounts on Solana were required to do one of the following
-to avoid being deallocated:
+Previously, Solana accounts had two options to avoid deallocation:
 
-1. Pay rent at specific intervals
-2. Deposit enough SOL upon initialization to be considered rent-exempt
+1. Pay rent periodically
+2. Deposit enough SOL during initialization for rent exemption
 
-Recently, the first option was done away with and it became a requirement to
-deposit enough SOL for rent exemption when initializing a new account.
+The first option is no longer available, so rent exemption is now mandatory for
+all accounts.
 
-In this case, we're creating a new account for a token mint so we use
-`getMinimumBalanceForRentExemptMint` from the `@solana/spl-token` library.
-However, this concept applies to all accounts and you can use the more generic
-`getMinimumBalanceForRentExemption` method on `Connection` for other accounts
-you may need to create.
+For token mints, you'll use the `getMinimumBalanceForRentExemptMint()` from the
+`@solana/spl-token` library. For other account types, use the more general
+[`getMinimumBalanceForRentExemption()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getMinimumBalanceForRentExemption)
+method from the `Connection` object.
 
 #### Token Account
 
-Before you can mint tokens (issue new supply), you need a Token Account to hold
-the newly issued tokens.
+Before minting tokens (issuing new supply), you'll need a Token Account to store
+them.
 
-A Token Account holds tokens of a specific "mint" and has a specified "owner" of
-the account. Only the owner is authorized to decrease the Token Account balance
-(transfer, burn, etc.) while anyone can send tokens to the Token Account to
-increase its balance.
+A Token Account holds tokens of a specific mint and is owned by a specific
+owner. Only the owner can decrease the Token Account balance (e.g., transfer,
+burn), while anyone can send tokens to the account to increase its balance.
 
-You can use the `spl-token` library's `createAccount` function to create the new
-Token Account:
+You can create the Token Account using the `spl-token` library's
+[`createAccount()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createAccount.html#createAccount)
+function:
 
 ```typescript
 const tokenAccount = await createAccount(
@@ -189,68 +200,85 @@ const tokenAccount = await createAccount(
 );
 ```
 
-The `createAccount` function returns the `publicKey` of the new token account.
-This function requires the following arguments:
+The `createAccount()` function returns the `publicKey` of the new token account
+and requires the following arguments:
 
 - `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `mint` - the token mint that the new token account is associated with
-- `owner` - the account of the owner of the new token account
-- `keypair` - this is an optional parameter for specifying the new token account
-  address. If no keypair is provided, the `createAccount` function defaults to a
-  derivation from the associated `mint` and `owner` accounts.
+- `payer` - the account responsible for paying the transaction fees
+- `mint` - the token mint associated with the new token account
+- `owner` - the account that owns the new token account
+- `keypair` - an optional parameter for specifying the new token account
+  address. If not provided, the function defaults to a derivation from the
+  associated `mint` and `owner` accounts.
 
-Please note that this `createAccount` function is different from the
-`createAccount` function shown above when we looked under the hood of the
-`createMint` function. Previously we used the `createAccount` function on
-`SystemProgram` to return the instruction for creating all accounts. The
-`createAccount` function here is a helper function in the `spl-token` library
-that submits a transaction with two instructions. The first creates the account
-and the second initializes the account as a Token Account.
+Note that this `createAccount()` function is different from the
+`createAccount()` used earlier when we manually built the transaction for the
+`createMint` function. Previously, we used
+[`SystemProgram.createAccount()`](https://solana-labs.github.io/solana-web3.js/classes/SystemProgram.html#createAccount)
+to generate the instruction for creating accounts in general.
 
-Like with creating a Token Mint, if we needed to build the transaction for
-`createAccount` manually we could duplicate what the function is doing under the
-hood:
+In contrast, this `createAccount()` function is a helper from the `spl-token`
+library that submits a transaction with two instructions:
 
-1. Use `getMint` to retrieve the data associated with the `mint`
-2. Use `getAccountLenForMint` to calculate the space needed for the token
-   account
-3. Use `getMinimumBalanceForRentExemption` to calculate the lamports needed for
-   rent exemption
-4. Create a new transaction using `SystemProgram.createAccount` and
-   `createInitializeAccountInstruction`. Note that this `createAccount` is from
-   `@solana/web3.js` and used to create a generic new account. The
-   `createInitializeAccountInstruction` uses this new account to initialize the
-   new token account
+1. The first instruction creates the account.
+2. The second initializes the account as a Token Account.
+
+If you were to manually build the transaction for `createAccount()`, you would
+follow these steps:
+
+1. Use
+   [`getMint()`](https://solana-labs.github.io/solana-program-library/token/js/functions/getMint.html#getMint)
+   to retrieve the data associated with the `mint`.
+2. Use
+   [`getAccountLenForMint()`](https://solana-labs.github.io/solana-program-library/token/js/functions/getAccountLenForMint.html#getAccountLenForMint)
+   to calculate the space required for the token account.
+3. Use `getMinimumBalanceForRentExemption()` to calculate the lamports needed
+   for rent exemption.
+4. Create a new transaction using `SystemProgram.createAccount()` and
+   [`createInitializeAccountInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createInitializeAccountInstruction.html#createInitializeAccountInstruction).
+   Note that `SystemProgram.createAccount()` from `@solana/web3.js` is used to
+   create a generic account, while `createInitializeAccountInstruction()`
+   initializes this account as a Token Account.
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import {
+  Connection,
+  Keypair,
+  PublicKey,
+  Transaction,
+  SystemProgram,
+} from "@solana/web3.js";
+import {
+  TOKEN_PROGRAM_ID,
+  getMint,
+  getAccountLenForMint,
+  createInitializeAccountInstruction,
+} from "@solana/spl-token";
 
 async function buildCreateTokenAccountTransaction(
-  connection: web3.Connection,
-  payer: web3.PublicKey,
-  mint: web3.PublicKey,
-): Promise<web3.Transaction> {
-  const mintState = await token.getMint(connection, mint);
-  const accountKeypair = await web3.Keypair.generate();
-  const space = token.getAccountLenForMint(mintState);
+  connection: Connection,
+  payer: PublicKey,
+  mint: PublicKey,
+  owner: PublicKey,
+): Promise<Transaction> {
+  const mintState = await getMint(connection, mint);
+  const tokenAccount = Keypair.generate();
+  const space = getAccountLenForMint(mintState);
   const lamports = await connection.getMinimumBalanceForRentExemption(space);
-  const programId = token.TOKEN_PROGRAM_ID;
 
-  const transaction = new web3.Transaction().add(
-    web3.SystemProgram.createAccount({
+  const transaction = new Transaction().add(
+    SystemProgram.createAccount({
       fromPubkey: payer,
-      newAccountPubkey: accountKeypair.publicKey,
+      newAccountPubkey: tokenAccount.publicKey,
       space,
       lamports,
-      programId,
+      programId: TOKEN_PROGRAM_ID,
     }),
-    token.createInitializeAccountInstruction(
-      accountKeypair.publicKey,
+    createInitializeAccountInstruction(
+      tokenAccount.publicKey,
       mint,
-      payer,
-      programId,
+      owner,
+      TOKEN_PROGRAM_ID,
     ),
   );
 
@@ -260,27 +288,27 @@ async function buildCreateTokenAccountTransaction(
 
 #### Associated Token Accounts
 
-An Associated Token Account stores tokens in an address made from:
+An **Associated Token Account (ATA)** stores tokens in an address derived from
+two components:
 
 - The owner's public key
 - The token mint
 
-For example, Bob's USDC is stored in an Associated Token Account made from Bob's
-public key, and the USDC mint address.
+For instance, if Bob holds USDC, his USDC is stored in an Associated Token
+Account created using Bob's public key and the USDC mint address.
 
-Associated Token Accounts provide a deterministic way to find the Token Account
-owned by a specific `publicKey` for a specific token.
-
-There are other ways to create token accounts (particularly for onchain
-programs), but nearly all the time you want to store tokens for a user, you'll
-want it to be an Associated Token Account. Even if the user doesn't already have
-an ATA for that token, you can simply find the address and make the account for
-them.
+Associated Token Accounts offer a deterministic way to locate the Token Account
+owned by a specific `publicKey` for a given token. While there are alternative
+methods to create token accounts, especially for onchain programs, Associated
+Token Accounts are almost always the preferred choice when storing tokens for a
+user. Even if the user doesn't have an Associated Token Account for a token, you
+can easily determine the address and create the account for them.
 
 ![ATAs are PDAs](/public/assets/courses/unboxed/atas-are-pdas.svg)
 
 You can create an associated token account using the `spl-token` library's
-`createAssociatedTokenAccount` function.
+[`createAssociatedTokenAccount()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createAssociatedTokenAccount.html#createAssociatedTokenAccount)
+function.
 
 ```typescript
 const associatedTokenAccount = await createAssociatedTokenAccount(
@@ -291,46 +319,52 @@ const associatedTokenAccount = await createAssociatedTokenAccount(
 );
 ```
 
-This function returns the `publicKey` of the new associated token account and
-requires the following arguments:
+The function returns the `publicKey` of the new associated token account and
+requires these parameters:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `mint` - the token mint that the new token account is associated with
-- `owner` - the account of the owner of the new token account
+- `connection` – the JSON-RPC connection to the cluster
+- `payer` – the account of the payer for the transaction
+- `mint` – the token mint that the new token account is associated with
+- `owner` – the account of the owner of the new token account
 
-You can also use `getOrCreateAssociatedTokenAccount` to get the Token Account
-associated with a given address or create it if it doesn't exist. For example,
-if you were writing code to airdrop tokens to a given user, you'd likely use
-this function to ensure that the token account associated with the given user
-gets created if it doesn't already exist.
+You can also use
+[`getOrCreateAssociatedTokenAccount()`](https://solana-labs.github.io/solana-program-library/token/js/functions/getOrCreateAssociatedTokenAccount.html#getOrCreateAssociatedTokenAccount)
+to retrieve the Token Account associated with a given address or create it if it
+doesn't exist. For instance, if you're writing code to airdrop tokens to a user,
+you'd likely use this function to ensure that the token account for the user is
+created if it doesn’t already exist.
 
-Under the hood, `createAssociatedTokenAccount` is doing two things:
+Behind the scenes, `createAssociatedTokenAccount()` does the following:
 
-1. Using `getAssociatedTokenAddress` to derive the associated token account
-   address from the `mint` and `owner`
-2. Building a transaction using instructions from
-   `createAssociatedTokenAccountInstruction`
+1. Uses
+   [`getAssociatedTokenAddress()`](https://solana-labs.github.io/solana-program-library/token/js/functions/getAssociatedTokenAddress.html#getAssociatedTokenAddress)
+   to derive the associated token account address from the `mint` and `owner`.
+2. Builds a transaction using instructions from
+   [`createAssociatedTokenAccountInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createAssociatedTokenAccountInstruction.html#createAssociatedTokenAccountInstruction).
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import {
+  getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction,
+} from "@solana/spl-token";
 
 async function buildCreateAssociatedTokenAccountTransaction(
-  payer: web3.PublicKey,
-  mint: web3.PublicKey,
-): Promise<web3.Transaction> {
-  const associatedTokenAddress = await token.getAssociatedTokenAddress(
+  payer: PublicKey,
+  owner: PublicKey,
+  mint: PublicKey,
+): Promise<Transaction> {
+  const associatedTokenAddress = await getAssociatedTokenAddress(
     mint,
-    payer,
+    owner,
     false,
   );
 
-  const transaction = new web3.Transaction().add(
-    token.createAssociatedTokenAccountInstruction(
+  const transaction = new Transaction().add(
+    createAssociatedTokenAccountInstruction(
       payer,
       associatedTokenAddress,
-      payer,
+      owner,
       mint,
     ),
   );
@@ -343,10 +377,12 @@ async function buildCreateAssociatedTokenAccountTransaction(
 
 Minting tokens is the process of issuing new tokens into circulation. When you
 mint tokens, you increase the supply of the token mint and deposit the newly
-minted tokens into a token account. Only the mint authority of a token mint is
-allowed to mint new tokens.
+minted tokens into a token account. Only the **mint authority** of a token mint
+has permission to mint new tokens.
 
-To mint tokens using the `spl-token` library, you can use the `mintTo` function.
+To mint tokens using the `spl-token` library, you can call the
+[`mintTo()`](https://solana-labs.github.io/solana-program-library/token/js/functions/mintTo.html#mintTo)
+function.
 
 ```typescript
 const transactionSignature = await mintTo(
@@ -359,39 +395,37 @@ const transactionSignature = await mintTo(
 );
 ```
 
-The `mintTo` function returns a `TransactionSignature` that can be viewed on the
-Solana Explorer. The `mintTo` function requires the following arguments:
+The `mintTo()` function returns a `TransactionSignature` that can be viewed on
+Solana Explorer. This function requires the following arguments:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `mint` - the token mint that the new token account is associated with
-- `destination` - the token account that tokens will be minted to
-- `authority` - the account authorized to mint tokens
-- `amount` - the raw amount of tokens to mint outside of decimals, e.g. if
-  Scrooge Coin mint's decimals property was set to 2 then to get 1 full Scrooge
-  Coin you would need to set this property to 100
+- `connection`: The JSON-RPC connection to the cluster.
+- `payer`: The account paying for the transaction.
+- `mint`: The token mint associated with the new token account.
+- `destination`: The token account to receive the minted tokens.
+- `authority`: The account authorized to mint tokens.
+- `amount`: The raw token amount, excluding decimals. For example, if the mint’s
+  `decimals` is set to 2, you would mint 100 to create 1 full token.
 
-It's not uncommon to update the mint authority on a token mint to null after the
-tokens have been minted. This would set a maximum supply and ensure no tokens
-can be minted in the future. Conversely, minting authority could be granted to a
-program so tokens could be automatically minted at regular intervals or
-according to programmable conditions.
+It's common to set the mint authority to `null` after tokens are minted,
+establishing a fixed supply and preventing future minting. Alternatively,
+minting authority can be granted to a program for automated minting based on
+conditions.
 
-Under the hood, the `mintTo` function simply creates a transaction with the
-instructions obtained from the `createMintToInstruction` function.
+The `mintTo()` function generates a transaction using instructions from
+[`createMintToInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createMintToInstruction.html#createMintToInstruction).
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { createMintToInstruction } from "@solana/spl-token";
 
 async function buildMintToTransaction(
-  authority: web3.PublicKey,
-  mint: web3.PublicKey,
-  amount: number,
-  destination: web3.PublicKey,
-): Promise<web3.Transaction> {
-  const transaction = new web3.Transaction().add(
-    token.createMintToInstruction(mint, destination, authority, amount),
+  mintAuthority: PublicKey,
+  mint: PublicKey,
+  destination: PublicKey,
+  amount: bigint,
+): Promise<Transaction> {
+  const transaction = new Transaction().add(
+    createMintToInstruction(mint, destination, mintAuthority, amount),
   );
 
   return transaction;
@@ -401,17 +435,17 @@ async function buildMintToTransaction(
 #### Transfer Tokens
 
 SPL Token transfers require both the sender and receiver to have token accounts
-for the mint of the tokens being transferred. The tokens are transferred from
-the sender’s token account to the receiver’s token account.
+for the token mint being transferred. Tokens move from the sender's token
+account to the receiver's token account.
 
-You can use `getOrCreateAssociatedTokenAccount` when obtaining the receiver's
-associated token account to ensure their token account exists before the
-transfer. If the account doesn't exist already, this function will create it and
-the payer on the transaction will be debited the lamports required for the
-account creation.
+To ensure the receiver has a token account, you can use
+`getOrCreateAssociatedTokenAccount()`. This function verifies the receiver's
+associated token account exists, or creates one if it doesn’t, with the payer
+covering the lamports required for account creation.
 
-Once you know the receiver's token account address, you transfer tokens using
-the `spl-token` library's `transfer` function.
+Once the receiver's token account address is confirmed, use the
+[`transfer()`](https://solana-labs.github.io/solana-program-library/token/js/functions/transfer.html#transfer)
+function from the `spl-token` library to transfer tokens.
 
 ```typescript
 const transactionSignature = await transfer(
@@ -424,31 +458,33 @@ const transactionSignature = await transfer(
 );
 ```
 
-The `transfer` function returns a `TransactionSignature` that can be viewed on
-the Solana Explorer. The `transfer` function requires the following arguments:
+The `transfer()` function returns a `TransactionSignature`, which can be tracked
+on Solana Explorer. It requires the following arguments:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `source` - the token account sending tokens
-- `destination` - the token account receiving tokens
-- `owner` - the account of the owner of the `source` token account
-- `amount` - the number of tokens to transfer
+- `connection`: The JSON-RPC connection to the cluster.
+- `payer`: The account responsible for the transaction fees.
+- `source`: The token account sending the tokens.
+- `destination`: The token account receiving the tokens.
+- `owner`: The account that owns the `source` token account.
+- `amount`: The number of tokens to transfer.
 
-Under the hood, the `transfer` function simply creates a transaction with the
-instructions obtained from the `createTransferInstruction` function:
+Internally, the `transfer()` function builds a transaction using instructions
+from the
+[`createTransferInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createTransferInstruction.html#createTransferInstruction)
+function.
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { createTransferInstruction } from "@solana/spl-token";
 
 async function buildTransferTransaction(
-  source: web3.PublicKey,
-  destination: web3.PublicKey,
-  owner: web3.PublicKey,
-  amount: number,
-): Promise<web3.Transaction> {
-  const transaction = new web3.Transaction().add(
-    token.createTransferInstruction(source, destination, owner, amount),
+  source: PublicKey,
+  destination: PublicKey,
+  owner: PublicKey,
+  amount: bigint,
+): Promise<Transaction> {
+  const transaction = new Transaction().add(
+    createTransferInstruction(source, destination, owner, amount),
   );
 
   return transaction;
@@ -457,7 +493,7 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We’re going to use the Token Program to create a Token Mint, create an
+We're going to use the Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
@@ -838,7 +874,7 @@ balance go up!
 
 ### Challenge
 
-Now it’s your turn to build something independently. Create an application that
+Now it's your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
 To interact with the Token Program using the wallet adapter, you will have to
