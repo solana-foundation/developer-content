@@ -111,11 +111,17 @@ Solana has a diverse ecosystem of oracle providers, each with unique offerings.
 Some notable ones include:
 
 - [**Pyth**](https://www.pyth.network/price-feeds)  
-  High-fidelity financial market data for DeFi applications, offering sub-second
-  updates and confidence intervals.
+   Focuses primarily on financial data published by top-tier financial institutions.
+  Pyth's data providers are approved entities that publish market data updates, which
+  are then aggregated and made available onchain via the Pyth program. This data
+  is not fully decentralized since only approved providers can publish it. However,
+  the key advantage is that Pyth offers high-quality, vetted data directly sourced
+  from these institutions.
 - [**Switchboard**](https://switchboard.xyz)  
-  Multi-chain oracle protocol for building and using real-time data feeds,
-  functions, and verifiable randomness.
+   Completely decentralized oracle network with a variety of data feeds. You can
+  explore these feeds on [Switchboard website](https://app.switchboard.xyz/solana/mainnet).
+  Anyone can run a Switchboard oracle or consume its data, but that means users need
+  to be diligent in researching the quality of the feeds they use.
 - [**Chainlink**](https://chain.link)  
   Decentralized oracle network providing secure offchain computations and
   real-world data across multiple blockchains.
@@ -126,21 +132,6 @@ Some notable ones include:
 In this lesson, we'll be using **Switchboard**. However, the concepts are
 applicable to most oracles, so you should select the oracle provider that best
 fits your needs.
-
-[**Pyth**](https://www.pyth.network/price-feeds) focuses primarily on financial
-data published by top-tier financial institutions. Pyth's data providers are
-approved entities that publish market data updates, which are then aggregated
-and made available onchain via the Pyth program. This data is not fully
-decentralized since only approved providers can publish it. However, the key
-advantage is that Pyth offers high-quality, vetted data directly sourced from
-these institutions.
-
-**Switchboard** is a completely decentralized oracle network with a variety of
-data feeds. You can explore these feeds on
-[Switchboard website](https://app.switchboard.xyz/solana/mainnet). Anyone can
-run a Switchboard oracle or consume its data, but that means users need to be
-diligent in researching the quality of the feeds they use. We'll cover what to
-look for later in the lesson.
 
 Switchboard follows a stake-weighted oracle network model, as discussed in the
 previous section, but with an additional layer of security via
