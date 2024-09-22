@@ -15,10 +15,10 @@ description:
 ## Summary
 
 - Most programs support **multiple discrete instruction handlers** (sometimes
-  referred to as 'instructions') - these are functions within your program.
-- Rust **enums** are often used to represent each instruction handler.
-- You can use the `borsh` crate and the `derive` attribute to enable Borsh
-  deserialization and serialization functionality in Rust structs.
+  just referred to as 'instructions') - these are functions inside your program
+- Rust **enums** are often used to represent each instruction handler
+- You can use the `borsh` crate and the `derive` attribute to provide Borsh
+  deserialization and serialization functionality to Rust structs
 - Rust `match` expressions help create conditional code paths based on the
   provided instruction.
 
@@ -143,6 +143,7 @@ using enums in Rust by visiting
 #### Match statements
 
 Match statements are very similar to `switch` statements in other languages. The
+
 [`match`](https://doc.rust-lang.org/rust-by-example/flow_control/match.html)
 statement allows you to compare a value against a series of patterns and then
 execute code based on which pattern matches the value. Patterns can be made of
@@ -603,13 +604,19 @@ is submitted. Build and deploy your program from Solana Playground as in the
 last lesson. If your program ID hasn't changed, it will deploy to the same ID.
 To deploy to a different address, generate a new program ID before deploying.
 
-Test your program by submitting a transaction with the correct instruction data.
-You can use
-[this script](https://github.com/Unboxed-Software/solana-movie-client) or
-[the frontend](https://github.com/Unboxed-Software/solana-movie-frontend) we
+Build and deploy your program from Solana Program just like in the last lesson.
+If you haven't changed the program ID since going through the last lesson, it
+will automatically deploy to the same ID. If you'd like it to have a separate
+address, you can generate a new program ID from the playground before deploying.
+
+You can test your program by submitting a transaction with the right instruction
+data. For that, feel free to use
+[this script](https://github.com/solana-developers/movie-review-program-client)
+or [the frontend](https://github.com/solana-developers/movie-review-frontend) we
 built in the
 [Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md).
-Ensure you update the program ID in the source code to match your deployed
+In both cases, make sure you copy and paste the program ID for your program into
+the appropriate area of the source code to make sure you're testing the right
 program.
 
 Take your time with this lab before moving on, and feel free to reference the
@@ -626,7 +633,7 @@ Using what you've learned, build the Student Intro program to the point where it
 prints the `name` and `message` to the program logs when invoked.
 
 You can test your program by building the
-[frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data)
+[frontend](https://github.com/solana-developers/student-intro-frontend/tree/solution-serialize-instruction-data)
 we created in the
 [Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md)
 and checking the program logs on Solana Explorer. Replace the program ID in the
