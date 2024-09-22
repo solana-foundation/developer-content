@@ -426,8 +426,68 @@ pub struct SecureWithdraw<'info> {
     pub authority: Signer<'info>,
 }
 ```
+#### 4. The contract defines a function to `securely withdraw tokens` from a vault, with added security checks and error handling.
 
-#### 4. Test `secure_withdraw` instruction
+```rust
+use anchor_lang::prelude::*;
+
+#[program]
+mod my_smart_contract {
+    use super::*;
+
+    pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
+        let vault = &mut ctx.accounts.vault;
+        let user_account = &ctx.accounts.user_account;
+
+        // Additional security check: Ensure the admin is not a default Pubkey (0x0)
+        if vault.admin == Pubkey::default() {
+            return Err(ErrorCode::InvalidAdmin.into());
+        }
+
+        // Additional security check: Ensure the amount in the vault is greater than zero
+        if vault.amount <= 0 {
+            return Err(ErrorCode::InsufficientFunds.into());
+        }
+
+        // Log for debugging
+        msg!("Withdrawing {} tokens from vault", vault.amount);
+
+        // Execute the withdrawal
+        vault.amount -= vault.amount; // Assuming withdraws all tokens for simplicity
+
+        Ok(())
+    }
+}
+
+// Context for the SecureWithdraw function
+#[derive(Accounts)]
+pub struct SecureWithdraw<'info> {
+    #[account(mut, has_one = admin)]
+    pub vault: Account<'info, Vault>,
+    pub admin: Signer<'info>,
+    pub user_account: AccountInfo<'info>,
+    pub system_program: Program<'info, System>,
+}
+
+// Vault structure
+#[account]
+pub struct Vault {
+    pub admin: Pubkey,
+    pub amount: u64,
+}
+
+// Custom error codes for better error handling
+#[error_code]
+pub enum ErrorCode {
+    #[msg("The admin is invalid.")]
+    InvalidAdmin,
+    #[msg("Insufficient funds in the vault.")]
+    InsufficientFunds,
+}
+
+```
+
+#### 5. Test `secure_withdraw` instruction
 
 Now let’s test the `secure_withdraw` instruction with two tests: one that uses
 `walletFake` as the authority and one that uses `wallet` as the authority. We
