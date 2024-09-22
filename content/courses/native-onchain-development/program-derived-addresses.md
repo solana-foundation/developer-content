@@ -58,16 +58,16 @@ the same seeds always results in the same Program Derived Address.
 ### Seeds
 
 "Seeds" are inputs in the `find_program_address` function, this method provides
-an additional seed called a "bump seed". The find_program_address method adds a
-numeric seed called a bump seed that ensures the result is _off_ the Ed25519
+an additional seed called a "bump seed". The find*program_address method adds a
+numeric seed called a bump seed that ensures the result is \_off* the Ed25519
 curve, ie, is not a valid public key and does not have a corresponding secret
 key.
 
 While you, the developer, determine the seeds to pass into the
 `find_program_address`, this method provides an additional seed called a "bump
 seed". The cryptographic function for deriving a PDA results in a key that lies
-_on_ the Ed25519 curve about 50% of the time. The find_program_address method
-adds a numeric seed called a bump seed that ensures the result _lies off_ on
+_on_ the Ed25519 curve about 50% of the time. The find*program_address method
+adds a numeric seed called a bump seed that ensures the result \_lies off* on
 the Ed25519 curve. Addresses off the Ed25519 curve lack a secret key.
 
 The method begins with the bump seed value 255 and checks if the output is a

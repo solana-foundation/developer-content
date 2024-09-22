@@ -16,9 +16,7 @@ description: Access real-world data inside a Solana program.
 - Solana has a rich ecosystem of oracle providers. Some notable oracle providers
   include [Pyth Network](https://pyth.network),
   [Switchboard](https://switchboard.xyz), [Chainlink](https://chain.link), and
-  [DIA](https://www.diadata.org/solana-price-oracles/). We'll use Switchboard in
-  this lesson, but the concepts are common to most oracles and you should pick
-  the oracle that best meets your needs.
+  [DIA](https://www.diadata.org/solana-price-oracles/).
 - You can build your own oracle to create a custom data feed.
 - When choosing oracle providers, consider reliability, accuracy,
   decentralization, update frequency, and cost. Be aware of security risks:
@@ -109,12 +107,24 @@ always be accounted for.
 
 ### Oracles on Solana
 
-Solana has a rich ecosystem of oracle providers. Some notable ones include
-[Pyth Network](https://pyth.network), [Switchboard](https://switchboard.xyz),
-[Chainlink](https://chain.link), and
-[DIA](https://www.diadata.org/solana-price-oracles/). Two of the most well-known
-are [Pyth](https://pyth.network) and [Switchboard](https://switchboard.xyz),
-each with unique design choices.
+Solana has a diverse ecosystem of oracle providers, each with unique offerings.
+Some notable ones include:
+
+- [**Pyth**](https://www.pyth.network/price-feeds)  
+  A trusted source for real-time market data, offering price feeds across
+  various asset classes.
+- [**Switchboard**](https://switchboard.xyz)  
+  A decentralized oracle network providing customizable data feeds.
+- [**Chainlink**](https://chain.link)  
+  A widely-used oracle network that connects smart contracts with offchain data
+  sources.
+- [**DIA**](https://www.diadata.org/solana-price-oracles/)  
+  A decentralized data platform for asset prices, providing transparent and
+  verified data.
+
+In this lesson, we'll be using **Switchboard**. However, the concepts are
+applicable to most oracles, so you should select the oracle provider that best
+fits your needs.
 
 [**Pyth**](https://www.pyth.network/price-feeds) focuses primarily on financial
 data published by top-tier financial institutions. Pyth's data providers are
