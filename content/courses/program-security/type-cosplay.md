@@ -43,7 +43,7 @@ description:
 
 - **In Anchor**, program account types automatically implement the
   `Discriminator` trait, which creates an 8-byte unique identifier for a type.
-- Use Anchor’s `Account<'info, T>` type to automatically check the discriminator
+- Use Anchor's `Account<'info, T>` type to automatically check the discriminator
   when deserializing the account data.
 
 ## Lesson
@@ -207,7 +207,7 @@ pub enum AccountDiscriminant {
 }
 ```
 
-### Use Anchor’s Account Wrapper
+### Use Anchor's Account Wrapper
 
 Implementing these checks for every account in every instruction can be tedious.
 Fortunately, Anchor provides a `#[account]` attribute macro for automatically
@@ -229,7 +229,7 @@ discriminator of the `AdminConfig` type.
 The data validation check for the `admin` field is also moved from the
 instruction logic to the account validation struct using the `has_one`
 constraint. `#[account(has_one = admin)]` specifies that the `admin_config`
-account’s `admin` field must match the `admin` account passed into the
+account's `admin` field must match the `admin` account passed into the
 instruction. Note that for the `has_one` constraint to work, the naming of the
 account in the struct must match the naming of the field on the account you are
 validating.
@@ -269,7 +269,7 @@ pub struct UserConfig {
 }
 ```
 
-This vulnerability is something you generally don’t have to worry about when
+This vulnerability is something you generally don't have to worry about when
 using Anchor—that's the whole point! However, after exploring how this issue can
 arise in native Rust programs, you should now have a better understanding of the
 importance of the account discriminator in an Anchor account. Anchor's automatic
@@ -379,7 +379,7 @@ automatically set the first 8 bytes of account data as a unique discriminator
 for the account type.
 
 Add an `update_admin` instruction that validates the `admin_config` account as
-an `AdminConfig` account type using Anchor’s `Account` wrapper. Anchor will
+an `AdminConfig` account type using Anchor's `Account` wrapper. Anchor will
 automatically check that the account discriminator matches the expected account
 type:
 
