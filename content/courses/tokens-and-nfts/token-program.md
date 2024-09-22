@@ -332,7 +332,7 @@ You can also use
 to retrieve the Token Account associated with a given address or create it if it
 doesn't exist. For instance, if you're writing code to airdrop tokens to a user,
 you'd likely use this function to ensure that the token account for the user is
-created if it doesn’t already exist.
+created if it doesn't already exist.
 
 Behind the scenes, `createAssociatedTokenAccount()` does the following:
 
@@ -403,7 +403,7 @@ Solana Explorer. This function requires the following arguments:
 - `mint`: The token mint associated with the new token account.
 - `destination`: The token account to receive the minted tokens.
 - `authority`: The account authorized to mint tokens.
-- `amount`: The raw token amount, excluding decimals. For example, if the mint’s
+- `amount`: The raw token amount, excluding decimals. For example, if the mint's
   `decimals` is set to 2, you would mint 100 to create 1 full token.
 
 It's common to set the mint authority to `null` after tokens are minted,
@@ -440,7 +440,7 @@ account to the receiver's token account.
 
 To ensure the receiver has a token account, you can use
 `getOrCreateAssociatedTokenAccount()`. This function verifies the receiver's
-associated token account exists, or creates one if it doesn’t, with the payer
+associated token account exists, or creates one if it doesn't, with the payer
 covering the lamports required for account creation.
 
 Once the receiver's token account address is confirmed, use the
@@ -493,11 +493,17 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We're going to use the Token Program to create a Token Mint, create an
-Associated Token Account, mint tokens, transfer tokens, and burn tokens.
+In this lab, we'll use the Token Program to:
 
-Assuming you already have a `.env` file with a `SECRET_KEY` setup per
-[Cryptography fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
+- Create a Token Mint
+- Create an Associated Token Account
+- Mint tokens
+- Transfer tokens
+- Burn tokens
+
+Make sure you have a `.env` file set up with a `SECRET_KEY`, following the steps
+in
+[Cryptography Fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 ```bash
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
@@ -505,60 +511,82 @@ npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
 
 #### Create the Token Mint
 
-Create an empty file called `create-token-mint.ts`. After loading our keypairs,
-we'll call `createMint()`, setting our `user` as the `payer`, `mintAuthority`,
-and `freezeAuthority`.
+Create an empty file named `create-token-mint.ts`. After loading the keypairs,
+call `createMint()` and set `user` as the `payer`, `mintAuthority`, and
+`freezeAuthority`.
 
-Think of the token mint as the factory that makes tokens. Our `user`, as the
-`mintAuthority` is the person that runs the factory.
+Think of the token mint as a factory that creates tokens, with `user` as the
+`mintAuthority`, acting as the person running the factory.
 
 ```typescript
 import { createMint } from "@solana/spl-token";
-import "dotenv/config";
+import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
 import {
   getKeypairFromEnvironment,
   getExplorerLink,
 } from "@solana-developers/helpers";
-import { Connection, clusterApiUrl } from "@solana/web3.js";
+import dotenv from "dotenv";
 
-const connection = new Connection(clusterApiUrl("devnet"));
+dotenv.config();
 
-const user = getKeypairFromEnvironment("SECRET_KEY");
+const CLUSTER = "devnet";
+const DECIMAL_PLACES = 2;
 
-console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
-);
+const connection = new Connection(clusterApiUrl(CLUSTER), "confirmed");
 
-// This is a shortcut that runs:
-// SystemProgram.createAccount()
-// token.createInitializeMintInstruction()
-// See https://www.soldev.app/course/token-program
-const tokenMint = await createMint(connection, user, user.publicKey, null, 2);
+let userKeypair: Keypair;
+try {
+  userKeypair = getKeypairFromEnvironment("SECRET_KEY");
+  console.log(
+    `🔑 Loaded keypair. Public key: ${userKeypair.publicKey.toBase58()}`,
+  );
+} catch (error) {
+  throw new Error(
+    `Failed to load keypair: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 
-const link = getExplorerLink("address", tokenMint.toString(), "devnet");
+try {
+  const tokenMintAddress = await createMint(
+    connection,
+    userKeypair,
+    userKeypair.publicKey,
+    null,
+    DECIMAL_PLACES,
+  );
 
-console.log(`✅ Finished! Created token mint: ${link}`);
+  const explorerLink = getExplorerLink(
+    "address",
+    tokenMintAddress.toString(),
+    CLUSTER,
+  );
+  console.log(`✅ Created token mint: ${explorerLink}`);
+} catch (error) {
+  throw new Error(
+    `Failed to create token mint: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
 
 Run the script using `npx esrun create-token-mint.ts`. You should see
 
 ```bash
-✅ Finished! Created token mint: https://explorer.solana.com/address/HYeUCAqdsQBkqQNHRoBPov42QySDhwM7zAqiorToosbz?cluster=devnet
+🔑 Loaded keypair. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+✅ Created token mint: https://explorer.solana.com/address/Gydngxd1wSgkYtfEh87nUU98Sjm5ZcEZsNAtyRdwd5jR?cluster=devnet
 ```
 
-Open up Solana Explorer and look at your new token!
+Open Solana Explorer and check out your new token!
 
-Remember the address of the mint! We'll use this later.
+Be sure to note the mint address, as we'll need it later.
 
-#### Make some token metadata
+#### Add token metadata
 
-You'll notice our token account does not have a pretty symbol and shows up as
-'Unknown Token' in Explorer. That's because our token has no metadata! Let's add
-some.
+You might notice that your token shows up as 'Unknown Token' in the Explorer
+without a symbol or additional details. That’s because your token doesn’t have
+metadata yet! Let’s add some.
 
-We'll use the Metaplex `mpl-token-metadata` Program, version 2. This is the most
-popular version of `mpl-token-metadata` and saves significant complexity
-compared to the newer version 3.
+We'll use version 2 of the Metaplex `mpl-token-metadata` program. This version
+is widely used and simplifies the process compared to version 3.
 
 ```bash
 npm i @metaplex-foundation/mpl-token-metadata@2
