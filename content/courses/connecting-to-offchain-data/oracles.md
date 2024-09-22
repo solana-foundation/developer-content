@@ -111,16 +111,17 @@ Solana has a diverse ecosystem of oracle providers, each with unique offerings.
 Some notable ones include:
 
 - [**Pyth**](https://www.pyth.network/price-feeds)  
-  A trusted source for real-time market data, offering price feeds across
-  various asset classes.
+  High-fidelity financial market data for DeFi applications, offering sub-second
+  updates and confidence intervals.
 - [**Switchboard**](https://switchboard.xyz)  
-  A decentralized oracle network providing customizable data feeds.
+  Multi-chain oracle protocol for building and using real-time data feeds,
+  functions, and verifiable randomness.
 - [**Chainlink**](https://chain.link)  
-  A widely-used oracle network that connects smart contracts with offchain data
-  sources.
+  Decentralized oracle network providing secure offchain computations and
+  real-world data across multiple blockchains.
 - [**DIA**](https://www.diadata.org/solana-price-oracles/)  
-  A decentralized data platform for asset prices, providing transparent and
-  verified data.
+  Open-source oracle platform delivering transparent and verified data for
+  digital assets and traditional financial instruments.
 
 In this lesson, we'll be using **Switchboard**. However, the concepts are
 applicable to most oracles, so you should select the oracle provider that best
