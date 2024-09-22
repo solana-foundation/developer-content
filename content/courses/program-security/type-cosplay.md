@@ -19,20 +19,17 @@ description:
   struct to represent the account type.
 
   ```rust
-  use anchor_lang::prelude::*;
-
-  #[account]
-  #[derive(Default, InitSpace)]
+  #[derive(BorshSerialize, BorshDeserialize)]
   pub struct User {
-    pub discriminant: AccountDiscriminant,
-    pub user: Pubkey,
+      discriminant: AccountDiscriminant,
+      user: Pubkey,
   }
 
-   #[derive(AnchorSerialize, AnchorDeserialize, Clone, PartialEq, InitSpace)]
-   pub enum AccountDiscriminant {
-    User,
-    Admin,
-   }
+  #[derive(BorshSerialize, BorshDeserialize, PartialEq)]
+  pub enum AccountDiscriminant {
+      User,
+      Admin,
+  }
   ```
 
 - **Check the discriminator** in Rust to verify that the deserialized account
@@ -292,7 +289,7 @@ vulnerability:
 ### 1. Starter
 
 To get started, download the starter code from the starter branch of
-[this repository](https://github.com/Unboxed-Software/solana-type-cosplay/tree/starter).
+[this repository](https://github.com/solana-developers/type-cosplay/tree/starter).
 The starter code includes a program with three instructions and some tests.
 
 The three instructions are:
@@ -560,7 +557,7 @@ structs, use the `init` constraint when initializing accounts, and use the
 `Account` type in your account validation structs.
 
 For the final solution code, you can find it on the `solution` branch of
-[the repository](https://github.com/Unboxed-Software/solana-type-cosplay/tree/solution).
+[the repository](https://github.com/solana-developers/type-cosplay/tree/solution).
 
 ## Challenge
 
