@@ -111,17 +111,18 @@ Solana has a diverse ecosystem of oracle providers, each with unique offerings.
 Some notable ones include:
 
 - [**Pyth**](https://www.pyth.network/price-feeds)  
-   Focuses primarily on financial data published by top-tier financial institutions.
-  Pyth's data providers are approved entities that publish market data updates, which
-  are then aggregated and made available onchain via the Pyth program. This data
-  is not fully decentralized since only approved providers can publish it. However,
-  the key advantage is that Pyth offers high-quality, vetted data directly sourced
-  from these institutions.
+  Focuses primarily on financial data published by top-tier financial
+  institutions. Pyth's data providers are approved entities that publish market
+  data updates, which are then aggregated and made available onchain via the
+  Pyth program. This data is not fully decentralized since only approved
+  providers can publish it. However, the key advantage is that Pyth offers
+  high-quality, vetted data directly sourced from these institutions.
 - [**Switchboard**](https://switchboard.xyz)  
-   Completely decentralized oracle network with a variety of data feeds. You can
-  explore these feeds on [Switchboard website](https://app.switchboard.xyz/solana/mainnet).
-  Anyone can run a Switchboard oracle or consume its data, but that means users need
-  to be diligent in researching the quality of the feeds they use.
+  Completely decentralized oracle network with a variety of data feeds. You can
+  explore these feeds on
+  [Switchboard website](https://app.switchboard.xyz/solana/mainnet). Anyone can
+  run a Switchboard oracle or consume its data, but that means users need to be
+  diligent in researching the quality of the feeds they use.
 - [**Chainlink**](https://chain.link)  
   Decentralized oracle network providing secure offchain computations and
   real-world data across multiple blockchains.
