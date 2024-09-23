@@ -35,7 +35,7 @@ handle PDAs, reallocate space, and close accounts.
 
 ### PDAs with Anchor
 
-PDAs store data, at addressed specified by the onchain programmer, using a list
+PDAs store data, at addresses specified by the onchain programmer, using a list
 of seeds, a bump seed, and a program ID.
 
 Anchor provides a convenient way to validate a PDA with the `seeds` and `bump`
@@ -674,7 +674,7 @@ pub struct UpdateMovieReview<'info> {
         mut,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
-        realloc = DISCRIMINATOR + MovieAccountState::INIT_SPACE
+        realloc = DISCRIMINATOR + MovieAccountState::INIT_SPACE,
         realloc::payer = initializer,
         realloc::zero = true,
     )]

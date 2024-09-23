@@ -328,11 +328,10 @@ solana --version
 
 If the version printed out after running `solana --version` is less than
 `1.18.0` then you can update the
-[cli version manually](https://docs.solanalabs.com/cli/install). Note, at the
-time of writing this, you cannot simply run the `solana-install update` command.
-This command will not update the CLI to the correct version for us, so we have
-to explicitly download version `1.18.0`. You can do so with the following
-command:
+[cli version manually](/docs/intro/installation.md). Note, at the time of
+writing this, you cannot simply run the `solana-install update` command. This
+command will not update the CLI to the correct version for us, so we have to
+explicitly download version `1.18.0`. You can do so with the following command:
 
 ```bash
 solana-install init 1.18.0
