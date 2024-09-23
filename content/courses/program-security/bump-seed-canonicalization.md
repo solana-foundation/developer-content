@@ -42,9 +42,9 @@ description:
   #[derive(Accounts)]
   pub struct VerifyAddress<'info> {
       #[account(
-        seeds = [DATA_PDA_SEED.as_bytes()],
-        bump = data.bump
-    )]
+          seeds = [DATA_PDA_SEED.as_bytes()],
+          bump = data.bump
+      )]
       data: Account<'info, Data>,
   }
   ```
