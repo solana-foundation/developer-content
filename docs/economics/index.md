@@ -8,7 +8,7 @@ sidebarSortOrder: 5
 
 **Subject to change.**
 
-Solana’s crypto-economic system is designed to promote a healthy, long term
+Solana's crypto-economic system is designed to promote a healthy, long term
 self-sustaining economy with participant incentives aligned to the security and
 decentralization of the network. The main participants in this economy are
 validation-clients. Their contributions to the network, state validation, and

@@ -116,7 +116,7 @@ export const HomeViewComponent = () => {
           </Link>
           , which contains all the information specific to that validator
           client&apos;s implementation and inner workings. Including{" "}
-          <Link href={"https://docs.solanalabs.com/cli/install"}>
+          <Link href={"https://solana.com/docs/intro/installation"}>
             installing the Solana CLI tool-suite
           </Link>
           , this{" "}

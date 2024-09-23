@@ -303,7 +303,7 @@ esrun src/index.ts
 ```
 
 The non-transferable mint has been set up correctly and will be created when we
-run `npm start`. Let’s move on to the next step and create a source account and
+run `npm start`. Let's move on to the next step and create a source account and
 mint a token to it.
 
 #### 4. Mint token

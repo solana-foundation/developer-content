@@ -402,7 +402,7 @@ async function buildMintToTransaction(
 
 SPL Token transfers require both the sender and receiver to have token accounts
 for the mint of the tokens being transferred. The tokens are transferred from
-the sender’s token account to the receiver’s token account.
+the sender's token account to the receiver's token account.
 
 You can use `getOrCreateAssociatedTokenAccount` when obtaining the receiver's
 associated token account to ensure their token account exists before the
@@ -457,7 +457,7 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We’re going to use the Token Program to create a Token Mint, create an
+We're going to use the Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
@@ -838,7 +838,7 @@ balance go up!
 
 ### Challenge
 
-Now it’s your turn to build something independently. Create an application that
+Now it's your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
 To interact with the Token Program using the wallet adapter, you will have to

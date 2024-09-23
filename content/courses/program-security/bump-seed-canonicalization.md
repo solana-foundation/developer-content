@@ -3,7 +3,7 @@ title: Bump Seed Canonicalization
 objectives:
   - Explain the vulnerabilities associated with using PDAs derived without the
     canonical bump
-  - Initialize a PDA using Anchor’s `seeds` and `bump` constraints to
+  - Initialize a PDA using Anchor's `seeds` and `bump` constraints to
     automatically use the canonical bump
   - Use Anchor's `seeds` and `bump` constraints to ensure the canonical bump is
     always used in future instructions when deriving a PDA
@@ -33,7 +33,7 @@ description:
   using the `bump = <some_bump>` constraint. This ensures that the correct bump
   is used when verifying the PDA.
 - Using `find_program_address` can be computationally expensive due to the
-  process of searching for the highest valid bump. It’s considered best practice
+  process of searching for the highest valid bump. It's considered best practice
   to store the derived bump in an account's data field upon initialization. This
   allows the bump to be referenced in subsequent instruction handlers, avoiding
   the need to repeatedly call `find_program_address` to re-derive the PDA.
@@ -166,12 +166,12 @@ pub fn set_value_secure(
 }
 ```
 
-### Use Anchor’s seeds and bump Constraints
+### Use Anchor's seeds and bump Constraints
 
 Anchor provides a convenient way to derive PDAs in the account validation struct
 using the `seeds` and `bump` constraints. These can even be combined with the
 `init` constraint to initialize the account at the intended address. To protect
-the program from the vulnerability we’ve been discussing throughout this lesson,
+the program from the vulnerability we've been discussing throughout this lesson,
 Anchor does not even allow you to initialize an account at a PDA using anything
 but the canonical bump. Instead, it uses `find_program_address` to derive the
 PDA and subsequently performs the initialization.
@@ -308,7 +308,7 @@ If you don't specify the bump on the `bump` constraint, Anchor will still use
 `find_program_address` to derive the PDA using the canonical bump. As a
 consequence, your instruction handler will incur a variable amount of compute
 budget. Programs that are already at risk of exceeding their compute budget
-should use this with care since there is a chance that the program’s budget may
+should use this with care since there is a chance that the program's budget may
 be occasionally and unpredictably exceeded.
 
 On the other hand, if you only need to verify the address of a PDA passed in
