@@ -80,7 +80,7 @@ pub struct AdminConfig {
 
 The basic Rust approach to solve this problem is to simply compare the passed in
 `admin` key to the `admin` key stored in the `admin_config` account, throwing an
-error if they don’t match.
+error if they don't match.
 
 ```rust
 if ctx.accounts.admin.key() != ctx.accounts.admin_config.admin {
@@ -172,7 +172,7 @@ pub struct AdminConfig {
 
 Alternatively, you can use `constraint` to manually add an expression that must
 evaluate to true in order for execution to continue. This is useful when for
-some reason naming can’t be consistent or when you need a more complex
+some reason naming can't be consistent or when you need a more complex
 expression to fully validate the incoming data.
 
 ```rust
@@ -191,9 +191,9 @@ pub struct UpdateAdmin<'info> {
 
 ## Lab
 
-For this lab we’ll create a simple “vault” program similar to the program we
+For this lab we'll create a simple “vault” program similar to the program we
 used in the Signer Authorization lesson and the Owner Check lesson. Similar to
-those labs, we’ll show in this lab how a missing data validation check could
+those labs, we'll show in this lab how a missing data validation check could
 allow the vault to be drained.
 
 #### 1. Starter
@@ -212,7 +212,7 @@ program. This allows the `vault` account to sign for the transfer of tokens from
 the token account.
 
 The `insecure_withdraw` instruction transfers all the tokens in the `vault`
-account’s token account to a `withdraw_destination` token account.
+account's token account to a `withdraw_destination` token account.
 
 Notice that this instruction \***\*does\*\*** have a signer check for
 `authority` and an owner check for `vault`. However, nowhere in the account
@@ -315,8 +315,8 @@ pub struct Vault {
 
 #### 2. Test `insecure_withdraw` instruction
 
-To prove that this is a problem, let’s write a test where an account other than
-the vault’s `authority` tries to withdraw from the vault.
+To prove that this is a problem, let's write a test where an account other than
+the vault's `authority` tries to withdraw from the vault.
 
 The test file includes the code to invoke the `initialize_vault` instruction
 using the provider wallet as the `authority` and then mints 100 tokens to the
@@ -363,14 +363,14 @@ account-data-matching
 
 #### 3. Add `secure_withdraw` instruction
 
-Let’s go implement a secure version of this instruction called
+Let's go implement a secure version of this instruction called
 `secure_withdraw`.
 
 This instruction will be identical to the `insecure_withdraw` instruction,
-except we’ll use the `has_one` constraint in the account validation struct
+except we'll use the `has_one` constraint in the account validation struct
 (`SecureWithdraw`) to check that the `authority` account passed into the
 instruction matches the `authority` account on the `vault` account. That way
-only the correct authority account can withdraw the vault’s tokens.
+only the correct authority account can withdraw the vault's tokens.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -429,7 +429,7 @@ pub struct SecureWithdraw<'info> {
 
 #### 4. Test `secure_withdraw` instruction
 
-Now let’s test the `secure_withdraw` instruction with two tests: one that uses
+Now let's test the `secure_withdraw` instruction with two tests: one that uses
 `walletFake` as the authority and one that uses `wallet` as the authority. We
 expect the first invocation to return an error and the second to succeed.
 

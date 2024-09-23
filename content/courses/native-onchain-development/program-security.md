@@ -39,7 +39,7 @@ trying to exploit your program, anticipating failure points is essential to
 secure program development.
 
 Remember, **you have no control over the transactions that will be sent to your
-program once it’s deployed**. You can only control how your program handles
+program once it's deployed**. You can only control how your program handles
 them. While this lesson is far from a comprehensive overview of program
 security, we'll cover some of the basic pitfalls to look out for.
 
@@ -281,8 +281,8 @@ To avoid integer overflow and underflow, either:
 
 ## Lab
 
-Let’s practice together with the Movie Review program we've worked on in
-previous lessons. No worries if you’re just jumping into this lesson without
+Let's practice together with the Movie Review program we've worked on in
+previous lessons. No worries if you're just jumping into this lesson without
 having done the previous lesson - it should be possible to follow along either
 way.
 
@@ -325,7 +325,7 @@ Since we'll be allowing updates to movie reviews, we also changed `account_len`
 in the `add_movie_review` function (now in `processor.rs`). Instead of
 calculating the size of the review and setting the account length to only as
 large as it needs to be, we're simply going to allocate 1000 bytes to each
-review account. This way, we don’t have to worry about reallocating size or
+review account. This way, we don't have to worry about reallocating size or
 re-calculating rent when a user updates their movie review.
 
 We went from this:
@@ -343,7 +343,7 @@ let account_len: usize = 1000;
 The [realloc](https://docs.rs/solana-sdk/latest/solana_sdk/account_info/struct.AccountInfo.html#method.realloc) method
 was just recently enabled by Solana Labs which allows you to dynamically change
 the size of your accounts. We will not be using this method for this lab, but
-it’s something to be aware of.
+it's something to be aware of.
 
 Finally, we've also implemented some additional functionality for our
 `MovieAccountState` struct in `state.rs` using the `impl` keyword.
@@ -418,7 +418,7 @@ Note that in addition to adding the error cases, we also added the
 implementation that lets us convert our error into a `ProgramError` type as
 needed.
 
-Before moving on, let’s bring `ReviewError` into scope in the `processor.rs`. We
+Before moving on, let's bring `ReviewError` into scope in the `processor.rs`. We
 will be using these errors shortly when we add our security checks.
 
 ```rust
@@ -455,8 +455,8 @@ if !initializer.is_signer {
 
 Next, let's make sure the `pda_account` passed in by the user is the `pda` we
 expect. Recall we derived the `pda` for a movie review using the `initializer`
-and `title` as seeds. Within our instruction we’ll derive the `pda` again and
-then check if it matches the `pda_account`. If the addresses do not match, we’ll
+and `title` as seeds. Within our instruction we'll derive the `pda` again and
+then check if it matches the `pda_account`. If the addresses do not match, we'll
 return our custom `InvalidPDA` error.
 
 ```rust
@@ -474,7 +474,7 @@ if pda != *pda_account.key {
 Now let's perform some data validation.
 
 We'll start by making sure `rating` falls within the 1 to 5 scale. If the rating
-provided by the user outside of this range, we’ll return our custom
+provided by the user outside of this range, we'll return our custom
 `InvalidRating` error.
 
 ```rust
@@ -484,8 +484,8 @@ if rating > 5 || rating < 1 {
 }
 ```
 
-Next, let’s check that the content of the review does not exceed the 1000 bytes
-we’ve allocated for the account. If the size exceeds 1000 bytes, we’ll return
+Next, let's check that the content of the review does not exceed the 1000 bytes
+we've allocated for the account. If the size exceeds 1000 bytes, we'll return
 our custom `InvalidDataLength` error.
 
 ```rust
@@ -597,7 +597,7 @@ pub fn add_movie_review(
 Now that `add_movie_review` is more secure, let's turn our attention to
 supporting the ability to update a movie review.
 
-Let’s begin by updating `instruction.rs`. We’ll start by adding an
+Let's begin by updating `instruction.rs`. We'll start by adding an
 `UpdateMovieReview` variant to `MovieInstruction` that includes embedded data
 for the new title, rating, and description.
 
@@ -730,11 +730,11 @@ if pda_account.owner != program_id {
 
 #### Signer Check
 
-Next, let’s perform a signer check to verify that the `initializer` of the
+Next, let's perform a signer check to verify that the `initializer` of the
 update instruction has also signed the transaction. Since we are updating the
 data for a movie review, we want to ensure that the original `initializer` of
 the review has approved the changes by signing the transaction. If the
-`initializer` did not sign the transaction, we’ll return an error.
+`initializer` did not sign the transaction, we'll return an error.
 
 ```rust
 if !initializer.is_signer {
@@ -745,9 +745,9 @@ if !initializer.is_signer {
 
 #### Account Validation
 
-Next, let’s check that the `pda_account` passed in by the user is the PDA we
+Next, let's check that the `pda_account` passed in by the user is the PDA we
 expect by deriving the PDA using `initializer` and `title` as seeds. If the
-addresses do not match, we’ll return our custom `InvalidPDA` error. We'll
+addresses do not match, we'll return our custom `InvalidPDA` error. We'll
 implement this the same way we did in the `add_movie_review` function.
 
 ```rust
@@ -787,7 +787,7 @@ if !account_data.is_initialized() {
 Next, we need to validate the `rating`, `title`, and `description` data just
 like in the `add_movie_review` function. We want to limit the `rating` to a
 scale of 1 to 5 and limit the overall size of the review to be fewer than 1000
-bytes. If the rating provided by the user outside of this range, then we’ll
+bytes. If the rating provided by the user outside of this range, then we'll
 return our custom `InvalidRating` error. If the review is too long, then we'll
 return our custom `InvalidDataLength` error.
 
@@ -912,7 +912,7 @@ continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently by building on top of the
+Now it's your turn to build something independently by building on top of the
 Student Intro program that you've used in previous lessons. If you haven't been
 following along or haven't saved your code from before, feel free to use
 [this starter code](https://beta.solpg.io/62b11ce4f6273245aca4f5b2).

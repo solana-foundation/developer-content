@@ -325,6 +325,7 @@ the location of `id` on the memory map.
 To make this more clear, observe what this account's data looks like onchain
 when `flags` has four items in the vector vs eight items. If you were to call
 `solana account ACCOUNT_KEY` you'd get a data dump like the following:
+`solana account ACCOUNT_KEY` you'd get a data dump like the following:
 
 ```rust
 0000:   74 e4 28 4e    d9 ec 31 0a  -> Account Discriminator (8)
@@ -370,6 +371,7 @@ const states = await program.account.badState.all([
 
 However, if you wanted to query by the `id`, you wouldn't know what to put for
 the `offset` since the location of `id` is variable based on the length of
+`flags`. That doesn't seem very helpful. IDs are usually there to help with
 `flags`. That doesn't seem very helpful. IDs are usually there to help with
 queries! The simple fix is to flip the order.
 
@@ -602,6 +604,7 @@ details, refer to the
 
 The idea here is to be aware of wasted bits. For example, if you have a field
 that represents the month of the year, don't use a `u64`. There will only ever
+that represents the month of the year, don't use a `u64`. There will only ever
 be 12 months. Use a `u8`. Better yet, use a `u8` Enum and label the months.
 
 To get even more aggressive on bit savings, be careful with booleans. Look at
@@ -684,6 +687,10 @@ Depending on the seeding you can create all sorts of relationships:
   program. For example, if your program needs a lookup table, you could seed it
   with `seeds=[b"Lookup"]`. Just be careful to provide appropriate access
   restrictions.
+- One-Per-Owner - Say you're creating a video game player account and you only
+  want one player account per wallet. Then you'd seed the account with
+  `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
+  to look for a wallet's player account **and** there can only ever be one of
 - One-Per-Owner - Say you're creating a video game player account and you only
   want one player account per wallet. Then you'd seed the account with
   `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
@@ -903,6 +910,7 @@ pub fn run_concept_shared_account_redeem(ctx: Context<ConceptSharedAccountRedeem
 ```
 
 Here, in the `run_concept_shared_account` function, instead of transferring to
+the bottleneck, we transfer to the `donation_tally` PDA. This way, we're only
 the bottleneck, we transfer to the `donation_tally` PDA. This way, we're only
 effecting the donator's account and their PDA - so no bottleneck! Additionally,
 we keep an internal tally of how many lamports need to be redeemed, i.e. be
@@ -1519,7 +1527,10 @@ The `saturating_add` function ensures the number will never overflow. Say the
 `kills` was a u8 and my current kill count was 255 (0xFF). If I killed another
 and added normally, e.g. `255 + 1 = 0 (0xFF + 0x01 = 0x00) = 0`, the kill count
 would end up as 0. `saturating_add` will keep it at its max if it's about to
+would end up as 0. `saturating_add` will keep it at its max if it's about to
 roll over, so `255 + 1 = 255`. The `checked_add` function will throw an error if
+it's about to overflow. Keep this in mind when doing math in Rust. Even though
+`kills` is a u64 and will never roll with it's current programming, it's good
 it's about to overflow. Keep this in mind when doing math in Rust. Even though
 `kills` is a u64 and will never roll with it's current programming, it's good
 practice to use safe math and consider roll-overs.
