@@ -1,5 +1,5 @@
 ---
-title: Token burning and Delegation
+title: Token Burning and Delegation
 objectives:
   - Understand why and how to burn tokens
   - Allow a token holder to allocate a limited amount of tokens to another
@@ -8,20 +8,34 @@ description:
   "How to burn tokens, and approve/revoke token delegations on Solana."
 ---
 
+### Summary
+
+- **Burning tokens**, which reduces the total supply of a token by removing them
+  from circulation.
+- **Approve a delegate**, allowing another account to transfer or burn a
+  specified amount of tokens from a token account while retaining original
+  ownership.
+- **Revoke a delegate**, removing their authority to act on behalf of the token
+  account owner.
+- Each of these operations is facilitated through the `spl-token` library,
+  utilizing specific functions for each action.
+
 ### Lesson
 
-Finally, we'll cover burning tokens, and delegation. You may not use these in
-your own application, so if you're really excited about NFTs, feel free to skip
-to
+In this lesson, we'll cover burning tokens and delegation. You may not use these
+in your own application, so if you're more interested in NFTs, feel free to skip
+ahead to
 [creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex.md)!
 
-### Burn Tokens
+#### Burn Tokens
 
 Burning tokens is the process of decreasing the token supply of a given token
 mint. Burning tokens removes the tokens from the given token account and from
 broader circulation.
 
-To burn tokens using the `spl-token` library, use the `burn` function.
+To burn tokens using the `spl-token` library, use the
+[`burn()`](https://solana-labs.github.io/solana-program-library/token/js/functions/burn.html#burn)
+function.
 
 ```typescript
 import { burn } from "@solana/spl-token";
@@ -38,20 +52,22 @@ const transactionSignature = await burn(
 );
 ```
 
-The `burn` function requires the following arguments:
+The `burn()` function requires the following arguments:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `account` - the token account to burn tokens from
-- `mint` - the token mint associated with the token account
-- `owner` - the account of the owner of the token account
-- `amount` - the amount of tokens to burn
+- `connection`: JSON-RPC connection to the cluster.
+- `payer`: The account responsible for paying transaction fees.
+- `account`: The token account from which tokens will be burned.
+- `mint`: The token mint associated with the token account.
+- `owner`: The owner of the token account.
+- `amount`: The number of tokens to burn.
 
-Under the hood, the `burn` function creates a transaction with instructions
-obtained from the `createBurnInstruction` function:
+Under the hood, the `burn()` function creates a transaction using the
+instruction obtained from
+[`createBurnInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createBurnInstruction.html#createBurnInstruction)
+function.
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { createBurnInstruction } from "@solana/spl-token";
 
 async function buildBurnTransaction(
@@ -68,16 +84,16 @@ async function buildBurnTransaction(
 }
 ```
 
-### Approve Delegate
+#### Approve Delegate
 
 Approving a delegate is the process of authorizing another account to transfer
-or burn tokens from a token account. When using a delegate, the authority over
-the token account remains with the original owner. The maximum amount of tokens
-a delegate may transfer or burn is specified at the time the owner of the token
-account approves the delegate. Note that there can only be one delegate account
-associated with a token account at any given time.
+or burn tokens from a token account. The authority over the token account
+remains with the original owner. The maximum number of tokens a delegate can
+transfer or burn is defined when the owner approves the delegate. Only one
+delegate can be associated with a token account at a time.
 
-To approve a delegate using the `spl-token` library, you use the `approve`
+To approve a delegate using the `spl-token` library, use the
+[`approve()`](https://solana-labs.github.io/solana-program-library/token/js/functions/approve.html#approve)
 function.
 
 ```typescript
@@ -91,21 +107,23 @@ const transactionSignature = await approve(
 );
 ```
 
-The `approve` function returns a `TransactionSignature` that can be viewed on
-Solana Explorer. The `approve` function requires the following arguments:
+The `approve()` function returns a `TransactionSignature` that can be viewed on
+Solana Explorer. It requires the following arguments:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `account` - the token account to delegate tokens from
-- `delegate` - the account the owner is authorizing to transfer or burn tokens
-- `owner` - the account of the owner of the token account
-- `amount` - the maximum number of tokens the delegate may transfer or burn
+- `connection`: The JSON-RPC connection to the cluster.
+- `payer`: The account of the payer for the transaction.
+- `account`: The token account to delegate tokens from.
+- `delegate`: The account authorized to transfer or burn tokens.
+- `owner`: The account of the owner of the token account.
+- `amount`: The maximum number of tokens the delegate can transfer or burn.
 
-Under the hood, the `approve` function creates a transaction with instructions
-obtained from the `createApproveInstruction` function:
+Under the hood, the `approve()` function creates a transaction with instructions
+obtained from the
+[`createApproveInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createApproveInstruction.html#createApproveInstruction)
+function.
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { createApproveInstruction } from "@solana/spl-token";
 
 async function buildApproveTransaction(
@@ -122,14 +140,15 @@ async function buildApproveTransaction(
 }
 ```
 
-### Revoke Delegate
+#### Revoke Delegate
 
-A previously approved delegate for a token account can be later revoked. Once a
-delegate is revoked, the delegate can no longer transfer tokens from the owner's
-token account. Any remaining amount left untransferred from the previously
-approved amount can no longer be transferred by the delegate.
+A previously approved delegate for a token account can be revoked. Once revoked,
+the delegate can no longer transfer tokens from the owner's token account. Any
+untransferred amount from the previously approved tokens will no longer be
+accessible by the delegate.
 
-To revoke a delegate using the `spl-token` library, you use the `revoke`
+To revoke a delegate using the `spl-token` library, use the
+[`revoke()`](https://solana-labs.github.io/solana-program-library/token/js/functions/revoke.html#revoke)
 function.
 
 ```typescript
@@ -138,20 +157,22 @@ import { revoke } from "@solana/spl-token";
 const transactionSignature = await revoke(connection, payer, account, owner);
 ```
 
-The `revoke` function returns a `TransactionSignature` that can be viewed on
-Solana Explorer. The `revoke` function requires the following arguments:
+The `revoke()` function returns a `TransactionSignature` that can be viewed on
+Solana Explorer. This function requires the following arguments:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `account` - the token account to revoke the delegate authority from
-- `owner` - the account of the owner of the token account
+- `connection`: The JSON-RPC connection to the cluster.
+- `payer`: The account responsible for paying the transaction fees.
+- `account`: The token account from which to revoke the delegate authority.
+- `owner`: The account of the owner of the token account.
 
-Under the hood, the `revoke` function creates a transaction with instructions
-obtained from the `createRevokeInstruction` function:
+Under the hood, the `revoke()` function generates a transaction using the
+instructions from the
+[`createRevokeInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createRevokeInstruction.html#createRevokeInstruction)
+function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
-import { revoke } from "@solana/spl-token";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { createRevokeInstruction } from "@solana/spl-token";
 
 async function buildRevokeTransaction(
   account: PublicKey,
@@ -167,21 +188,21 @@ async function buildRevokeTransaction(
 
 ### Lab
 
-This lab extends the lab from the
-[previous chapter](/content/courses/tokens-and-nfts/token-program.md).
+This lab extends the concepts covered in the previous chapter on the
+[Token Program](/content/courses/tokens-and-nfts/token-program.md).
 
-#### 1. Delegating tokens
+#### 1. Delegating Tokens
 
-Let's use `approve` from `spl-token` to authorize a delegate to transfer or burn
-up to 50 tokens from our token account.
+We will use the `approve()` function from the `spl-token` library to authorize a
+delegate to transfer or burn up to 50 tokens from our token account.
 
-Just like
-[Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md) in the
-previous lab, you can
-[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
-if you like, or find a friend who has a devnet account!
+Similar to the process of
+[Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md#transferring-tokens)
+in the previous lab, you can
+[add a second account on Devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
+if desired or collaborate with a friend who has a Devnet account.
 
-Create a new file `delegate-tokens.ts`
+Create a new file named `delegate-tokens.ts`.
 
 ```typescript
 import "dotenv/config";
@@ -325,9 +346,7 @@ console.log(
 
 Well done! You've now
 
-<Callout type="success">
-
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!
