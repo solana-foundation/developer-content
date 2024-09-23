@@ -1,5 +1,5 @@
 ---
-title: Create tokens with the token program
+title: Create Tokens with the Token Program
 objectives:
   - Create token mints
   - Create token metadata
@@ -577,123 +577,158 @@ Run the script using `npx esrun create-token-mint.ts`. You should see
 
 Open Solana Explorer and check out your new token!
 
+![Token Mint](/public/assets/courses/unboxed/create-token-mint.png)
+
 Be sure to note the mint address, as we'll need it later.
 
 #### Add token metadata
 
-You might notice that your token shows up as 'Unknown Token' in the Explorer
-without a symbol or additional details. That’s because your token doesn’t have
-metadata yet! Let’s add some.
+You might notice that your token shows up as 'Unknown Token' in Explorer without
+a symbol or additional details. This happens because your token doesn't have
+metadata yet! Let's add some metadata.
 
-We'll use version 2 of the Metaplex `mpl-token-metadata` program. This version
-is widely used and simplifies the process compared to version 3.
+First, install the required dependencies for creating token metadata.
 
 ```bash
-npm i @metaplex-foundation/mpl-token-metadata@2
+npm i @metaplex-foundation/mpl-token-metadata
+npm i @metaplex-foundation/umi
+npm i @metaplex-foundation/umi-bundle-defaults
+npm i @metaplex-foundation/umi-web3js-adapters
 ```
 
 Create a new file called `create-token-metadata.ts`
 
 ```typescript
-// This uses "@metaplex-foundation/mpl-token-metadata@2" to create tokens
-import "dotenv/config";
+import {
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { createMetadataAccountV3 } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  fromWeb3JsKeypair,
+  fromWeb3JsPublicKey,
+} from "@metaplex-foundation/umi-web3js-adapters";
+import { createSignerFromKeypair } from "@metaplex-foundation/umi";
+import { base58 } from "@metaplex-foundation/umi/serializers";
 import {
   getKeypairFromEnvironment,
+  airdropIfRequired,
   getExplorerLink,
 } from "@solana-developers/helpers";
-import {
-  Connection,
-  clusterApiUrl,
-  PublicKey,
-  Transaction,
-  sendAndConfirmTransaction,
-} from "@solana/web3.js";
-import { createCreateMetadataAccountV3Instruction } from "@metaplex-foundation/mpl-token-metadata";
+import dotenv from "dotenv";
 
-const user = getKeypairFromEnvironment("SECRET_KEY");
+dotenv.config();
 
-const connection = new Connection(clusterApiUrl("devnet"));
+const CLUSTER = "devnet";
+// Substitute your token mint account address
+const TOKEN_MINT_ADDRESS = "YOUR_TOKEN_MINT_ADDRESS";
 
-console.log(
-  `🔑 We've loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+const endpoint = clusterApiUrl(CLUSTER);
+const umi = createUmi(endpoint);
+const connection = new Connection(endpoint);
+
+let userKeypair;
+try {
+  userKeypair = getKeypairFromEnvironment("SECRET_KEY");
+  console.log(
+    `🔑 Loaded keypair. Public key: ${userKeypair.publicKey.toBase58()}`,
+  );
+} catch (error) {
+  throw new Error(
+    `Failed to load keypair: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
+
+const keypair = fromWeb3JsKeypair(userKeypair);
+const signer = createSignerFromKeypair(umi, keypair);
+umi.identity = signer;
+umi.payer = signer;
+const tokenMintAccount = new PublicKey(TOKEN_MINT_ADDRESS);
+
+await airdropIfRequired(
+  connection,
+  userKeypair.publicKey,
+  1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL,
 );
 
-const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
-  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
-);
-
-// Substitute in your token mint account
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
-
-const metadataData = {
+const offChainMetadata = {
   name: "Solana Training Token",
   symbol: "TRAINING",
-  // Arweave / IPFS / Pinata etc link using metaplex standard for offchain data
-  uri: "https://arweave.net/1234",
-  sellerFeeBasisPoints: 0,
-  creators: null,
-  collection: null,
-  uses: null,
+  description: "A token for Solana training",
+  image: "https://arweave.net/XWpt7HDOFC0wJQcQWgP9n_cxHS0qQik9-27CAAaGP6E",
 };
 
-const metadataPDAAndBump = PublicKey.findProgramAddressSync(
-  [
-    Buffer.from("metadata"),
-    TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-    tokenMintAccount.toBuffer(),
-  ],
-  TOKEN_METADATA_PROGRAM_ID,
-);
+const createMetadataAccountV3Args = {
+  mint: fromWeb3JsPublicKey(tokenMintAccount),
+  mintAuthority: signer,
+  payer: signer,
+  updateAuthority: keypair.publicKey,
+  data: {
+    name: offChainMetadata.name,
+    symbol: offChainMetadata.symbol,
+    // Arweave / IPFS / Pinata etc link using metaplex standard for offchain data
+    uri: "https://arweave.net/1234",
+    sellerFeeBasisPoints: 0,
+    creators: null,
+    collection: null,
+    uses: null,
+  },
+  isMutable: true,
+  collectionDetails: null,
+};
 
-const metadataPDA = metadataPDAAndBump[0];
+try {
+  const instruction = createMetadataAccountV3(umi, createMetadataAccountV3Args);
+  const transaction = await instruction.buildAndSign(umi);
+  const transactionSignature = await umi.rpc.sendTransaction(transaction);
+  const [signature] = base58.deserialize(transactionSignature);
 
-const transaction = new Transaction();
+  console.log(`✅ Metadata created. Signature: ${signature}`);
 
-const createMetadataAccountInstruction =
-  createCreateMetadataAccountV3Instruction(
-    {
-      metadata: metadataPDA,
-      mint: tokenMintAccount,
-      mintAuthority: user.publicKey,
-      payer: user.publicKey,
-      updateAuthority: user.publicKey,
-    },
-    {
-      createMetadataAccountArgsV3: {
-        collectionDetails: null,
-        data: metadataData,
-        isMutable: true,
-      },
-    },
+  const transactionLink = getExplorerLink("transaction", signature, "devnet");
+
+  console.log(
+    `✅ Transaction confirmed, explorer link is: ${transactionLink}!`,
   );
 
-transaction.add(createMetadataAccountInstruction);
+  const tokenMintLink = getExplorerLink(
+    "address",
+    tokenMintAccount.toString(),
+    "devnet",
+  );
 
-const transactionSignature = await sendAndConfirmTransaction(
-  connection,
-  transaction,
-  [user],
-);
+  console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
+} catch (error) {
+  throw new Error(
+    `Failed to create metadata: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
+```
 
-const transactionLink = getExplorerLink(
-  "transaction",
-  transactionSignature,
-  "devnet",
-);
+Replace `YOUR_TOKEN_MINT_ADDRESS` with your token mint address, then run the
+script with:
 
-console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}!`);
+```bash
+npx esrun create-token-metadata.ts
+```
 
-const tokenMintLink = getExplorerLink(
-  "address",
-  tokenMintAccount.toString(),
-  "devnet",
-);
+You should see the output:
 
-console.log(`✅ Look at the token mint again: ${tokenMintLink}!`);
+```bash
+🔑 Loaded keypair. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+✅ Metadata created. Signature: 3mBqNmNBbKdGCuKvRtZfHQrtatqxJxPFAia5m7FLFpBHwZV1TMgbXVzRW9EireFaXtQa63vh2i4waKgeaPqN6nov
+✅ Transaction confirmed, explorer link is: https://explorer.solana.com/tx/3mBqNmNBbKdGCuKvRtZfHQrtatqxJxPFAia5m7FLFpBHwZV1TMgbXVzRW9EireFaXtQa63vh2i4waKgeaPqN6nov?cluster=devnet!
+✅ Look at the token mint again: https://explorer.solana.com/address/FXbnmvUb7CxmSjMhF2g2xVJ2CXAHHp7GormYwwTx4rgj?cluster=devnet
 ```
 
 You'll now see Solana Explorer is updated, showing the token's name and symbol
 on the mint!
+
+![Token Metadata](/public/assets/courses/unboxed/add-token-metadata.png)
 
 Note that Solana Explorer will display a warning like:
 
@@ -703,202 +738,268 @@ Note that Solana Explorer will display a warning like:
 
 This warning is accurate - indeed anyone can make any token have any symbol or
 name they like. However for your reference, if you are making an original token
-that becomes very well known, Solana Explorer uses a whitelist based on the
+that becomes very well-known, Solana Explorer uses a whitelist based on the
 [Unified Token List API](https://github.com/solflare-wallet/utl-api).
 
 #### Create an Associated Token Account to store the tokens
 
 Now that we've created the mint, let's create a new Associated Token Account so
-that someone can store our tokens. This Associated Token Account could be for
-our wallet (if we, as the token mint authority, want to mint tokens to our
-address) or anyone else we know with a devnet wallet!
+someone can store the tokens. This account could be for our wallet (if we, as
+the mint authority, want to mint tokens to ourselves) or for anyone else with a
+devnet wallet!
 
-Create an empty file called `create-token-account.ts`. Then use
+Create an empty file called `create-token-account.ts`. Use
 `getOrCreateAssociatedTokenAccount()` to get an associated token account based
-on a wallet and our mint address, making the account if it needs to.
+on a wallet and our mint address, creating the account if it doesn't exist.
 
-Remember to substitute in your token mint address below!
+Don't forget to substitute your token mint address in the code below!
 
 ```typescript
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
-import "dotenv/config";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import "dotenv/config";
+
 const connection = new Connection(clusterApiUrl("devnet"));
 
+// Load user's keypair from environment variable
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
 console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+  `🔑 Loaded keypair from environment. Public key: ${user.publicKey.toBase58()}`,
 );
 
-// Substitute in your token mint account from create-token-mint.ts
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT");
+// Replace with your actual token mint address from create-token-mint.ts
+const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS");
 
-// Here we are making an associated token account for our own address, but we can
-// make an ATA on any other wallet in devnet!
-// const recipient = new PublicKey("SOMEONE_ELSES_DEVNET_ADDRESS");
+// Define the recipient of the associated token account
+// For this example, we're creating an ATA for the user's own wallet
+// Uncomment the next line to create an ATA for a different wallet
+// const recipient = new PublicKey("RECIPIENT_WALLET_ADDRESS");
 const recipient = user.publicKey;
 
-const tokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  recipient,
-);
+try {
+  // Create or get the associated token account for the recipient
+  const tokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAccount,
+    recipient,
+  );
 
-console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
+  console.log(`Token Account Address: ${tokenAccount.address.toBase58()}`);
 
-const link = getExplorerLink(
-  "address",
-  tokenAccount.address.toBase58(),
-  "devnet",
-);
+  const explorerLink = getExplorerLink(
+    "address",
+    tokenAccount.address.toBase58(),
+    "devnet",
+  );
 
-console.log(`✅ Created token Account: ${link}`);
+  console.log(`✅ Token Account created. Explorer link: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Failed to create token account: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
 
-Run the script using `npx esrun create-token-mint.ts`. You should see:
+Run the script using `npx esrun create-token-account.ts`. You should see:
 
 ```bash
-✅ Success! Created token account: https://explorer.solana.com/address/CTjoLdEeK8rk4YWYW9ZqACyjHexbYKH3hEoagHxLVEFs?cluster=devnet
+🔑 Loaded keypair from environment. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+Token Account Address: FufnDfidkitedX83dkLFuZ2MhP8kKdm6c5W4W5JbnkUm
+✅ Token Account created. Explorer link: https://explorer.solana.com/address/FufnDfidkitedX83dkLFuZ2MhP8kKdm6c5W4W5JbnkUm?cluster=devnet
 ```
 
-Open the token account in Solana Explorer. Look at the owner - it's the account
-you made the ATA for! The balance will be zero, as we haven't sent any tokens
-there yet. Let's mint some tokens there and fix that!
+Open the token account in Solana Explorer. Notice that the owner is the account
+you created the associated token account for. The balance will be zero because
+no tokens have been minted to it yet. Let's mint some tokens to this account to
+update the balance!
 
-#### Mint Tokens
+![Token Account](/public/assets/courses/unboxed/create-token-account.png)
+
+Remember the address of your token account that will be used next to mint
+tokens.
+
+#### Minting Tokens
 
 Now that we have a token mint and a token account, let's mint tokens to the
-token account. Recall that we set the `user` as the `mintAuthority` for the
-`mint` we created.
+token account. Recall that we set the `user` as the `mintAuthority` for the mint
+we created.
 
-Create a function `mintTokens` that uses the `spl-token` function `mintTo` to
-mint tokens:
+Create an empty file called `mint-tokens.ts`. We will be using the `mintTo()`
+function from `spl-token` to mint tokens. Remember to substitute your token mint
+address and token account address in the code below:
 
 ```typescript
 import { mintTo } from "@solana/spl-token";
-import "dotenv/config";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const connection = new Connection(clusterApiUrl("devnet"));
 
 // Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+const TOKEN_DECIMALS = 2;
+const MINOR_UNITS_PER_MAJOR_UNITS = 10 ** TOKEN_DECIMALS;
 
+// Load user's keypair from environment variable
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
-// Substitute in your token mint account from create-token-mint.ts
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ACCOUNT");
+// Replace with your actual token mint address from create-token-mint.ts
+const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS");
 
-// Substitute in your own, or a friend's token account address, based on the previous step.
+// Replace with the recipient's associated token account address
+// This could be your own or another wallet's token account
 const recipientAssociatedTokenAccount = new PublicKey(
   "RECIPIENT_TOKEN_ACCOUNT",
 );
 
-const transactionSignature = await mintTo(
-  connection,
-  user,
-  tokenMintAccount,
-  recipientAssociatedTokenAccount,
-  user,
-  10 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+try {
+  // Mint 10 tokens to the recipient's associated token account
+  const transactionSignature = await mintTo(
+    connection,
+    user,
+    tokenMintAccount,
+    recipientAssociatedTokenAccount,
+    user, // The user is both the payer and the mint authority in this case
+    10 * MINOR_UNITS_PER_MAJOR_UNITS,
+  );
 
-const link = getExplorerLink("transaction", transactionSignature, "devnet");
+  const explorerLink = getExplorerLink(
+    "transaction",
+    transactionSignature,
+    "devnet",
+  );
 
-console.log(`✅ Success! Mint Token Transaction: ${link}`);
+  console.log(
+    `✅ Tokens minted successfully. Transaction explorer link: ${explorerLink}`,
+  );
+} catch (error) {
+  console.error(
+    `Failed to mint tokens: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
 
 Run the script using `npx esrun mint-tokens.ts`. You should see:
 
 ```bash
-✅ Success! Mint Token Transaction: https://explorer.solana.com/tx/36U9ELyJ2VAZSkeJKj64vUh9cEzVKWznESyqFCJ92sj1KgKwrFH5iwQsYmjRQDUN2uVhcbW8AVDsNaiNuPZ7n9m4?cluster=devnet
+✅ Tokens minted successfully. Transaction explorer link: https://explorer.solana.com/tx/4gm5dNoRBipndJTRfUQ5x1v9azTeymDc8UojXdyP6TcZriUgvdr7kZdCJmgdUKnrBMMWKiRKmj3wbjozbpy7znWU?cluster=devnet
 ```
 
 Open Explorer, and see the transaction and the new tokens in the recipient's
 account!
 
-#### Transfer Tokens
+![Mint Tokens](/public/assets/courses/unboxed/mint-tokens.png)
+
+#### Transferring Tokens
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
-library's `transfer` function. You can
+library's `transfer()` function. You can
 [add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account and send them your token!
 
 As you saw in Explorer, the tokens currently reside in an Associated Token
-Account attached to our wallet. We don't have to remember the address for our
-associated token account - we can just look it up using
-`getOrCreateAssociatedTokenAccount()` and provide our wallet address and the
-mint of the token we want to send. Likewise, we can find (or make) an ATA for
+Account (ATA) attached to our wallet. We don't need to remember the address for
+our associated token account — we can just look it up using
+`getOrCreateAssociatedTokenAccount()` by providing our wallet address and the
+mint of the token we want to send. Similarly, we can find (or create) an ATA for
 our recipient to hold this token too.
 
+Create an empty file called `transfer-tokens.ts`. Then replace
+`YOUR_RECIPIENT_HERE` with your recipient public key and replace
+`YOUR_TOKEN_MINT_ADDRESS_HERE` with your token mint address.
+
 ```typescript
-import "dotenv/config";
 import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import { getOrCreateAssociatedTokenAccount, transfer } from "@solana/spl-token";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 const connection = new Connection(clusterApiUrl("devnet"));
 
+// Load sender's keypair from environment variable
 const sender = getKeypairFromEnvironment("SECRET_KEY");
 
 console.log(
   `🔑 Loaded our keypair securely, using an env file! Our public key is: ${sender.publicKey.toBase58()}`,
 );
 
-// Add the recipient public key here.
+// Add the recipient public key here
 const recipient = new PublicKey("YOUR_RECIPIENT_HERE");
 
-// Substitute in your token mint account
+// Replace with your actual token mint address from create-token-mint.ts
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
 // Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+const TOKEN_DECIMALS = 2;
+const MINOR_UNITS_PER_MAJOR_UNITS = 10 ** TOKEN_DECIMALS;
 
 console.log(`💸 Attempting to send 1 token to ${recipient.toBase58()}...`);
 
-// Get or create the source and destination token accounts to store this token
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  sender,
-  tokenMintAccount,
-  sender.publicKey,
-);
+try {
+  // Get or create the source token account
+  const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    sender,
+    tokenMintAccount,
+    sender.publicKey,
+  );
 
-const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  sender,
-  tokenMintAccount,
-  recipient,
-);
+  // Get or create the destination token account
+  const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    sender,
+    tokenMintAccount,
+    recipient,
+  );
 
-// Transfer the tokens
-const signature = await transfer(
-  connection,
-  sender,
-  sourceTokenAccount.address,
-  destinationTokenAccount.address,
-  sender,
-  1 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+  // Transfer the tokens
+  const signature = await transfer(
+    connection,
+    sender,
+    sourceTokenAccount.address,
+    destinationTokenAccount.address,
+    sender,
+    1 * MINOR_UNITS_PER_MAJOR_UNITS,
+  );
 
-const explorerLink = getExplorerLink("transaction", signature, "devnet");
+  const explorerLink = getExplorerLink("transaction", signature, "devnet");
 
-console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}!`);
+  console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Failed to transfer tokens: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
+```
+
+Run the script using `npx esrun transfer-tokens.ts`. You should see:
+
+```bash
+ Loaded our keypair securely, using an env file! Our public key is: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+💸 Attempting to send 1 token to 3oihZhwmbtJwi9J3bgZzfd5uHDBwWr7prFanisgi9mjz...
+✅ Transaction confirmed, explorer link is: https://explorer.solana.com/tx/4m9DA14qg1D2oRXydqCXHPY4UAPEWQgjDvryAUEH1Zn8pEACDMmNj7CP4bxnScPNKuzG6CARwwGpGWVmqCuW3QeC?cluster=devnet
 ```
 
 Open the Explorer link. You see your balance go down, and the recipient's
 balance go up!
+
+![Transfer Tokens](/public/assets/courses/unboxed/transfer-tokens.png)
 
 ### Challenge
 
@@ -911,34 +1012,31 @@ approval.
 
 ![Token Program Challenge Frontend](/public/assets/courses/unboxed/token-program-frontend.png)
 
-1. You can build this from scratch or you can
+1. You can build this from scratch or
    [download the starter code](https://github.com/Unboxed-Software/solana-token-frontend/tree/starter).
 2. Create a new Token Mint in the `CreateMint` component. If you need a
-   refresher on how to send transactions to a wallet for approval, have a look
-   at the
+   refresher on how to send transactions to a wallet for approval, check out the
    [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
 
-When creating a new mint, the newly generated `Keypair` will also have to sign
-the transaction. When additional signers are required in addition to the
-connected wallet, use the following format:
+   When creating a new mint, the newly generated `Keypair` will also have to
+   sign the transaction. When additional signers are required, in addition to
+   the connected wallet, use the following format:
 
-```typescript
-sendTransaction(transaction, connection, {
-  signers: [Keypair],
-});
-```
+   ```typescript
+   sendTransaction(transaction, connection, {
+     signers: [Keypair],
+   });
+   ```
 
 3. Create a new Token Account in the `CreateTokenAccount` component.
 4. Mint tokens in the `MintToForm` component.
 
 If you get stumped, feel free to reference the
-[solution code](https://github.com/ZYJLiu/solana-token-frontend).
+[solution code](https://github.com/Unboxed-Software/solana-token-frontend/tree/main).
 
 And remember, get creative with these challenges and make them your own!
 
-<Callout type="success">
-
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!
