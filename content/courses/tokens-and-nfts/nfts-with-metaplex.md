@@ -84,7 +84,7 @@ that's what we'll be using in this tutorial. </Callout>
 
 Umi is a framework for making JS/TS clients for onchain programs, that was
 created by Metaplex. Umi can create JS/TS clients for many programs, but in
-practice, it's most commonly used to communicate to the Token Metadata program.
+practice, it's most commonly used to communicate with the Token Metadata program.
 
 Note that Umi has different implementations for many concepts than web3.js,
 including Keypairs, PublicKeys, and Connections. However, it is easy to convert
@@ -111,18 +111,18 @@ case, this is the `metaplex-foundation/mpl-token-metadata`.
 import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
 import { keypairIdentity } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { getKeypairFromFile } from "@solana-developers/helpers";
-import { promises as fs } from "fs";
-import { clusterApiUrl } from "@solana/web3.js";
+import fs from "fs";
+import { clusterApiUrl, Keypair } from "@solana/web3.js";
 
 const umi = createUmi(clusterApiUrl("devnet"));
 
 // load keypair from local file system
-// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
-const localKeypair = await getKeypairFromFile();
+const walletFile = JSON.parse(fs.readFileSync(
+  path.resolve(__dirname, '/home/adenijialiyu/.config/solana/id.json'), 'utf-8'
+));
 
 // convert to Umi compatible keypair
-const umiKeypair = umi.eddsa.createKeypairFromSecretKey(localKeypair.secretKey);
+const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
 // load the MPL metadata program plugin and assign a signer to our umi instance
 umi.use(keypairIdentity(umiKeypair)).use(mplTokenMetadata());
@@ -147,7 +147,7 @@ computer.
 In action, uploading an image named `random-image.png` from your computer would
 take the following steps:
 
-1. Reading the file using `readFile` into a buffer.
+1. Reading the file using `readFileSync` into a buffer.
 
 2. Creating a generic file type with the files MIME Type from the buffer and
    filePath.
@@ -155,9 +155,9 @@ take the following steps:
 3. Uploading file to designated storage provider.
 
 ```typescript
-let filePath = "random-image.png";
+let filePath =  path.resolve(__dirname, "collection.png");
 
-const buffer = await fs.readFile(filePath);
+const buffer = await fs.readFileSync(filePath);
 let file = createGenericFile(buffer, filePath, {
   // chose the correct file MIME type https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
   contentType: "image/jpeg",
@@ -345,7 +345,7 @@ Solana.
 To begin, make a new folder and install the relevant dependencies:
 
 ```bash
-npm i @solana/web3.js npm i @solana/web3.js npm i @solana-developers/helpers npm i @metaplex-foundation/mpl-token-metadata npm i @metaplex-foundation/umi-bundle-defaults npm i @metaplex-foundation/umi-uploader-irys npm i --save-dev esrun
+npm i @solana/web3.js npm i @metaplex-foundation/mpl-token-metadata npm i @metaplex-foundation/umi-bundle-defaults npm i @metaplex-foundation/umi-uploader-irys npm i --save-dev esrun
 ```
 
 Then create a file called `create-metaplex-collection.ts`, and add our imports:
@@ -364,13 +364,14 @@ import {
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
 import {
-  airdropIfRequired,
-  getExplorerLink,
-  getKeypairFromFile,
-} from "@solana-developers/helpers";
-import { clusterApiUrl, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { promises as fs } from "fs";
-import * as path from "path";
+  clusterApiUrl,
+  Connection,
+  Keypair,
+  LAMPORTS_PER_SOL
+} from "@solana/web3.js";
+import fs from "fs";
+import path from 'path'
+import { base58 } from "@metaplex-foundation/umi/serializers";
 ```
 
 Connect to devnet, load a user and Airdrop some SOL if needed:
@@ -381,7 +382,10 @@ const connection = new Connection(clusterApiUrl("devnet"));
 
 // load keypair from local file system
 // assumes that the keypair is already generated using `solana-keygen new`
-const user = await getKeypairFromFile();
+const walletFile = JSON.parse(fs.readFileSync(
+  path.resolve(__dirname, '/home/user/.config/solana/id.json'), 'utf-8'
+));
+const user = Keypair.fromSecretKey(new Uint8Array(walletFile));
 
 await airdropIfRequired(
   connection,
@@ -399,10 +403,6 @@ upload our files.
 
 ```typescript
 const umi = createUmi(connection);
-
-// load keypair from local file system
-// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
-const user = await getKeypairFromFile();
 
 // convert to umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
@@ -435,20 +435,22 @@ Upload the offchain metadata to Irys:
 ```typescript
 const collectionImagePath = path.resolve(__dirname, "collection.png");
 
-const buffer = await fs.readFile(collectionImagePath);
+const collectionImagePath = path.resolve(__dirname, "collection.png");
+
+const buffer = fs.readFileSync(collectionImagePath);
 let file = createGenericFile(buffer, collectionImagePath, {
   contentType: "image/png",
 });
 const [image] = await umi.uploader.upload([file]);
-console.log("image uri:", image);
+console.log("imageurl:", image);
 
 // upload offchain json to Arweave using irys
 const uri = await umi.uploader.uploadJson({
   name: "My Collection",
   symbol: "MC",
-  description: "My Collection description",
+  description: 'My Collection description',
   image,
-});
+})
 console.log("Collection offchain metadata URI:", uri);
 ```
 
@@ -459,7 +461,7 @@ Then actually make the collection:
 const collectionMint = generateSigner(umi);
 
 // create and mint NFT
-await createNft(umi, {
+const createTx = await createNft(umi, {
   mint: collectionMint,
   name: "My Collection",
   uri,
@@ -468,13 +470,10 @@ await createNft(umi, {
   isCollection: true,
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 
-let explorerLink = getExplorerLink(
-  "address",
-  collectionMint.publicKey,
-  "devnet",
-);
-console.log(`Collection NFT:  ${explorerLink}`);
-console.log(`Collection NFT address is:`, collectionMint.publicKey);
+const signature = base58.deserialize(createTx.signature)[0]
+
+console.log(`https://explorer.solana.com/tx/${signature}?cluster=devnet`);
+console.log(`https://explorer.solana.com/address/${collectionMint.publicKey}?cluster=devnet`)
 console.log("✅ Finished successfully!");
 ```
 
