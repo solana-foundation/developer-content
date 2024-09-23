@@ -41,11 +41,11 @@ description:
   ```rust
   #[derive(Accounts)]
   pub struct VerifyAddress<'info> {
-    #[account(
+      #[account(
         seeds = [DATA_PDA_SEED.as_bytes()],
         bump = data.bump
     )]
-    data: Account<'info, Data>,
+      data: Account<'info, Data>,
   }
   ```
 
@@ -325,7 +325,7 @@ rewards on time.
 ### 1. Setup
 
 Start by getting the code on the
-[`starter` branch of this repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/starter).
+[`starter` branch of this repository](https://github.com/solana-developers/bump-seed-canonicalization/tree/starter).
 
 Notice that there are two instruction handlers on the program and a single test
 in the `tests` directory.
@@ -366,11 +366,11 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
       connection,
       attacker.publicKey,
       1 * LAMPORTS_PER_SOL,
-      1 * LAMPORTS_PER_SOL,
+      0.5 * LAMPORTS_PER_SOL,
     );
     const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
 
-    let numClaims = 0;
+    let successfulClaimCount = 0;
 
     for (let i = 0; i < 256; i++) {
       try {
@@ -402,7 +402,7 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
           .signers([attacker])
           .rpc();
 
-        numClaims += 1;
+        successfulClaimCount += 1;
       } catch (error) {
         if (
           error instanceof Error &&
@@ -418,12 +418,12 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
     const ata = await getAccount(connection, ataKey);
 
     console.log(
-      `Attacker claimed ${numClaims} times and got ${Number(
+      `Attacker claimed ${successfulClaimCount} times and got ${Number(
         ata.amount,
       )} tokens`,
     );
 
-    expect(numClaims).to.be.greaterThan(1);
+    expect(successfulClaimCount).to.be.greaterThan(1);
     expect(Number(ata.amount)).to.be.greaterThan(10);
   } catch (error) {
     throw new Error(`Test failed: ${error.message}`);
@@ -580,7 +580,7 @@ it("allows attacker to claim only once with secure instruction handlers", async 
       connection,
       attacker.publicKey,
       1 * LAMPORTS_PER_SOL,
-      1 * LAMPORTS_PER_SOL,
+      0.5 * LAMPORTS_PER_SOL,
     );
     const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
     const [userPDA] = anchor.web3.PublicKey.findProgramAddressSync(
@@ -614,7 +614,7 @@ it("allows attacker to claim only once with secure instruction handlers", async 
       .signers([attacker])
       .rpc();
 
-    let numClaims = 1;
+    let successfulClaimCount = 1;
 
     for (let i = 0; i < 256; i++) {
       try {
@@ -648,7 +648,7 @@ it("allows attacker to claim only once with secure instruction handlers", async 
           .signers([attacker])
           .rpc();
 
-        numClaims += 1;
+        successfulClaimCount += 1;
       } catch (error) {
         if (
           error instanceof Error &&
@@ -666,13 +666,13 @@ it("allows attacker to claim only once with secure instruction handlers", async 
     const ata = await getAccount(connection, ataKey);
 
     console.log(
-      `Attacker claimed ${numClaims} times and got ${Number(
+      `Attacker claimed ${successfulClaimCount} times and got ${Number(
         ata.amount,
       )} tokens`,
     );
 
     expect(Number(ata.amount)).to.equal(10);
-    expect(numClaims).to.equal(1);
+    expect(successfulClaimCount).to.equal(1);
   } catch (error) {
     throw new Error(`Test failed: ${error.message}`);
   }
@@ -692,7 +692,7 @@ pretty simple to avoid. However, if you end up doing anything "non-standard," be
 careful to design your program to explicitly use the canonical bump!
 
 If you want to take a look at the final solution code you can find it on the
-[`solution` branch of the same repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/solution).
+[`solution` branch of the same repository](https://github.com/solana-developers/bump-seed-canonicalization/tree/solution).
 
 ## Challenge
 
