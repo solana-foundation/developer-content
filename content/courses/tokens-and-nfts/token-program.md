@@ -518,7 +518,7 @@ call `createMint()` and set `user` as the `payer`, `mintAuthority`, and
 Think of the token mint as a factory that creates tokens, with `user` as the
 `mintAuthority`, acting as the person running the factory.
 
-```typescript
+```typescript filename="create-token-mint.ts"
 import { createMint } from "@solana/spl-token";
 import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
 import {
@@ -598,7 +598,7 @@ npm i @metaplex-foundation/umi-web3js-adapters
 
 Create a new file called `create-token-metadata.ts`
 
-```typescript
+```typescript filename="create-token-metadata.ts"
 import {
   clusterApiUrl,
   Connection,
@@ -754,7 +754,7 @@ on a wallet and our mint address, creating the account if it doesn't exist.
 
 Don't forget to substitute your token mint address in the code below!
 
-```typescript
+```typescript filename="create-token-account.ts"
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
@@ -834,7 +834,7 @@ Create an empty file called `mint-tokens.ts`. We will be using the `mintTo()`
 function from `spl-token` to mint tokens. Remember to substitute your token mint
 address and token account address in the code below:
 
-```typescript
+```typescript filename="mint-tokens.ts"
 import { mintTo } from "@solana/spl-token";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
@@ -919,7 +919,7 @@ Create an empty file called `transfer-tokens.ts`. Then replace
 `YOUR_RECIPIENT_HERE` with your recipient public key and replace
 `YOUR_TOKEN_MINT_ADDRESS_HERE` with your token mint address.
 
-```typescript
+```typescript filename="transfer-tokens.ts"
 import {
   getExplorerLink,
   getKeypairFromEnvironment,
