@@ -30,7 +30,7 @@ ahead to
 #### Burn Tokens
 
 Burning tokens is the process of decreasing the token supply of a given token
-mint. Burning tokens removes the tokens from the given token account and from
+mint. Burning tokens remove the tokens from the given token account and from
 broader circulation.
 
 To burn tokens using the `spl-token` library, use the
@@ -202,100 +202,173 @@ in the previous lab, you can
 [add a second account on Devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if desired or collaborate with a friend who has a Devnet account.
 
-Create a new file named `delegate-tokens.ts`.
+Create a new file named `delegate-tokens.ts`. For this example, we are using the
+System Program ID as a delegate for demonstration, but you can use an actual
+address that you want to delegate.
 
-```typescript
+```typescript filename="delegate-tokens.ts"
+import "dotenv/config";
+import {
+  getExplorerLink,
+  getKeypairFromEnvironment,
+} from "@solana-developers/helpers";
+import {
+  Connection,
+  PublicKey,
+  clusterApiUrl,
+  SystemProgram,
+} from "@solana/web3.js";
+import { approve, getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
+
+const DEVNET_URL = clusterApiUrl("devnet");
+const TOKEN_DECIMALS = 2;
+const DELEGATE_AMOUNT = 50;
+const MINOR_UNITS_PER_MAJOR_UNITS = 10 ** TOKEN_DECIMALS;
+
+// Initialize connection and load user keypair
+const connection = new Connection(DEVNET_URL);
+const user = getKeypairFromEnvironment("SECRET_KEY");
+
+console.log(`🔑 Loaded keypair. Public key: ${user.publicKey.toBase58()}`);
+
+// Replace this with your actual address
+// For this example, we will be using System Program's ID as a delegate
+const delegatePublicKey = new PublicKey(SystemProgram.programId);
+
+// Substitute your token mint address
+const tokenMintAddress = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+
+try {
+  // Get or create the user's token account
+  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAddress,
+    user.publicKey,
+  );
+
+  // Approve the delegate
+  const approveTransactionSignature = await approve(
+    connection,
+    user,
+    userTokenAccount.address,
+    delegatePublicKey,
+    user.publicKey,
+    DELEGATE_AMOUNT * MINOR_UNITS_PER_MAJOR_UNITS,
+  );
+
+  const explorerLink = getExplorerLink(
+    "transaction",
+    approveTransactionSignature,
+    "devnet",
+  );
+
+  console.log(`✅ Delegate approved. Transaction: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
+```
+
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your token mint address obtained
+from the previous lesson
+[Token Program](/content/courses/tokens-and-nfts/token-program.md#create-the-token-mint).
+
+Run the script using `npx esrun delegate-tokens.ts`. You should see:
+
+```bash
+🔑 Loaded keypair. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+✅ Delegate approved. Transaction: https://explorer.solana.com/tx/21tX6L7zk5tkHeoD7V1JYYW25VAWRfQrJPnxDcMXw94yuFbHxX4UZEgS6k6co9dBWe7PqFoMoWEVfbVA92Dk4xsQ?cluster=devnet
+```
+
+Open the Explorer link, you will see the ‌approval information.
+
+![Delegate Tokens](/public/assets/courses/unboxed/delegate-token.png)
+
+#### 2. Revoke Delegate
+
+Let's revoke the `delegate` using the `spl-token` library's `revoke()` function.
+
+Revoke will set the delegate for the token account to null and reset the
+delegated amount to 0.
+
+Create a new file `revoke-approve-tokens.ts`.
+
+```typescript filename="revoke-approve-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
-import {
-  approve,
-  getOrCreateAssociatedTokenAccount,
-  revoke,
-} from "@solana/spl-token";
+import { revoke, getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 
-const connection = new Connection(clusterApiUrl("devnet"));
+const DEVNET_URL = clusterApiUrl("devnet");
+// Substitute your token mint address
+const TOKEN_MINT_ADDRESS = "YOUR_TOKEN_MINT_ADDRESS_HERE";
 
+const connection = new Connection(DEVNET_URL);
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
-console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
-);
+console.log(`🔑 Loaded keypair. Public key: ${user.publicKey.toBase58()}`);
 
-// Add the delegate public key here.
-const delegate = new PublicKey("YOUR_DELEGATE_HERE");
+try {
+  const tokenMintAddress = new PublicKey(TOKEN_MINT_ADDRESS);
 
-// Substitute in your token mint account
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAddress,
+    user.publicKey,
+  );
 
-// Get or create the source and destination token accounts to store this token
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
+  const revokeTransactionSignature = await revoke(
+    connection,
+    user,
+    userTokenAccount.address,
+    user.publicKey,
+  );
 
-// Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
-
-const approveTransactionSignature = await approve(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  delegate,
-  user.publicKey,
-  50 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
-
-console.log(
-  `Approve Delegate Transaction: ${getExplorerLink(
-    "transaction",
-    approveTransactionSignature,
-    "devnet",
-  )}`,
-);
-```
-
-#### 2. Revoke Delegate
-
-Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
-
-Revoke will set delegate for the token account to null and reset the delegated
-amount to 0.
-
-All we will need for this function is the token account and user. After the
-
-```typescript
-const revokeTransactionSignature = await revoke(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  user.publicKey,
-);
-
-console.log(
-  `Revoke Delegate Transaction: ${getExplorerLink(
+  const explorerLink = getExplorerLink(
     "transaction",
     revokeTransactionSignature,
     "devnet",
-  )}`,
-);
+  );
+
+  console.log(`✅ Revoke Delegate Transaction: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
+
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous lesson
+[Token Program](/content/courses/tokens-and-nfts/token-program.md#create-the-token-mint).
+
+Run the script using `npx esrun revoke-approve-tokens.ts`. You should see:
+
+```bash
+🔑 Loaded keypair. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+✅ Revoke Delegate Transaction: https://explorer.solana.com/tx/YTc2Vd41SiGiHf3iEPkBH3y164fMbV2TSH2hbe7WypT6K6Q2b3f31ryFWhypmBK2tXmvGYjXeYbuwxHeJvnZZX8?cluster=devnet
+```
+
+Open the Explorer link, you will see the revoke information.
+
+![Revoke Approve Tokens](/public/assets/courses/unboxed/revoke-approve-tokens.png)
 
 #### 3. Burn Tokens
 
 Finally, let's remove some tokens from circulation by burning them.
 
-Use the `spl-token` library's `burn` function to remove half of your tokens from
-circulation.
+Use the `spl-token` library's `burn()` function to remove half of your tokens
+from circulation. Now, call this function to burn 5 of the user's tokens.
 
-Now call this new function in `main` to burn 25 of the user's tokens.
+Create a new file `burn-tokens.ts`.
 
-```typescript
+```typescript filename="burn-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
@@ -304,47 +377,68 @@ import {
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import { getOrCreateAssociatedTokenAccount, burn } from "@solana/spl-token";
 
-const connection = new Connection(clusterApiUrl("devnet"));
+const DEVNET_URL = clusterApiUrl("devnet");
+const TOKEN_DECIMALS = 2;
+const BURN_AMOUNT = 5;
+// Substitute your token mint address
+const TOKEN_MINT_ADDRESS = "YOUR_TOKEN_MINT_ADDRESS_HERE";
 
+const connection = new Connection(DEVNET_URL);
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
-console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
-);
+console.log(`🔑 Loaded keypair. Public key: ${user.publicKey.toBase58()}`);
 
-// Substitute in your token mint account
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+try {
+  const tokenMintAccount = new PublicKey(TOKEN_MINT_ADDRESS);
 
-// Get the account where the user stores these tokens
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
+  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAccount,
+    user.publicKey,
+  );
 
-// Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+  const burnAmount = BURN_AMOUNT * 10 ** TOKEN_DECIMALS;
 
-const transactionSignature = await burn(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  tokenMintAccount,
-  user,
-  25 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+  const transactionSignature = await burn(
+    connection,
+    user,
+    userTokenAccount.address,
+    tokenMintAccount,
+    user,
+    burnAmount,
+  );
 
-console.log(
-  `Burn Transaction: ${getExplorerLink(
+  const explorerLink = getExplorerLink(
     "transaction",
     transactionSignature,
     "devnet",
-  )}`,
-);
+  );
+
+  console.log(`✅ Burn Transaction: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
 
-Well done! You've now
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter
+[Token Program](/content/courses/tokens-and-nfts/token-program.md#create-the-token-mint).
+
+Run the script using `npx esrun burn-tokens.ts`. You should see:
+
+```bash
+🔑 Loaded keypair. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+✅ Burn Transaction: https://explorer.solana.com/tx/5Ufipgvsi5aLzzcr8QQ7mLXHyCwBDqsPxGTPinvFpjSiARnEDgFiPbD2ZiaDkkmwKDMoQ94bf5uqF2M7wjFWcKuv?cluster=devnet
+```
+
+Open the Explorer link, you will see the burn information.
+
+![Burn Tokens](/public/assets/courses/unboxed/burn-tokens.png)
+
+Well done! You've now completed the lab.
 
 <Callout type="success" title="Completed the lab?">
 
