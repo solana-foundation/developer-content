@@ -87,16 +87,20 @@ and returning an appropriate error code to prevent further processing.
 
 #### Creating Custom Errors
 
-Solana's `solana_program` crate provides a generic `ProgramError` enum for error
-handling. However, custom errors allow you to provide more detailed,
-context-specific information that helps during debugging and testing.
+Solana's
+[`solana_program`](https://docs.rs/solana-program/latest/solana_program/) crate
+provides a generic
+[`ProgramError`](https://docs.rs/solana-program/latest/solana_program/program_error/enum.ProgramError.html)
+enum for error handling. However, custom errors allow you to provide more
+detailed, context-specific information that helps during debugging and testing.
 
 We can define our own errors by creating an enum type listing the errors we want
 to use. For example, the `NoteError` contains variants `Forbidden` and
 `InvalidLength`. The enum is made into a Rust `Error` type by using the `derive`
-attribute macro to implement the `Error` trait from the `thiserror` library.
-Each error type also has its own `#[error("...")]` notation. This lets you
-provide an error message for each particular error type.
+attribute macro to implement the `Error` trait from the
+[`thiserror`](https://docs.rs/thiserror/latest/thiserror/) library. Each error
+type also has its own `#[error("...")]` notation. This lets you provide an error
+message for each particular error type.
 
 Here's an example of how you can define custom errors in your program:
 
@@ -295,12 +299,15 @@ range, it wraps around, leading to unexpected results.
 
 For example, with a `u8` (which holds values between 0 and 255), adding 1 to 255
 results in a value of 0 (overflow). To avoid this, you should use checked math
-functions like `checked_add` and `checked_sub`:
+functions like
+[`checked_add()`](https://doc.rust-lang.org/std/primitive.u8.html#method.checked_add)
+and
+[`checked_sub()`](https://doc.rust-lang.org/std/primitive.u8.html#method.checked_sub):
 
 To avoid integer overflow and underflow, either:
 
 1. Have logic in place that ensures overflow or underflow _cannot_ happen or
-2. Use checked math like `checked_add` instead of `+`
+2. Use checked math like `checked_add()` instead of `+`
 
    ```rust
    let first_int: u8 = 5;
@@ -352,7 +359,7 @@ of code that will let this lab be more focused on security without having you
 write unnecessary boiler plate.
 
 Since we'll be allowing updates to movie reviews, we also changed `account_len`
-in the `add_movie_review` function (now in `processor.rs`). Instead of
+in the `add_movie_review()` function (now in `processor.rs`). Instead of
 calculating the size of the review and setting the account length to only as
 large as it needs to be, we're simply going to allocate 1000 bytes to each
 review account. This way, we don't have to worry about reallocating size or
@@ -387,7 +394,6 @@ that checks the `is_initialized` field on the `MovieAccountState` struct.
 optimizations.
 
 ```rust filename="state.rs"
-// Inside state.rs
 impl Sealed for MovieAccountState {}
 
 impl IsInitialized for MovieAccountState {
@@ -412,7 +418,6 @@ The starter code includes an empty `error.rs` file. Open that file and add
 errors for each of the above cases.
 
 ```rust filename="error.rs"
-// Inside error.rs
 use solana_program::{program_error::ProgramError};
 use thiserror::Error;
 
@@ -445,7 +450,6 @@ that lets us convert our error into a `ProgramError` type as needed.
 After adding the errors, import `ReviewError` in `processor.rs` to use them.
 
 ```rust filename="processor.rs"
-// Inside processor.rs
 use crate::error::ReviewError;
 ```
 
@@ -461,7 +465,7 @@ also a signer on the transaction. This ensures that you can't submit movie
 reviews impersonating somebody else. We'll put this check right after iterating
 through the accounts.
 
-```rust
+```rust filename="processor.rs"
 let account_info_iter = &mut accounts.iter();
 
 let initializer = next_account_info(account_info_iter)?;
@@ -482,7 +486,7 @@ and `title` as seeds. Within our instruction, we'll derive the `pda` again and
 then check if it matches the `pda_account`. If the addresses do not match, we'll
 return our custom `InvalidPDA` error.
 
-```rust
+```rust filename="processor.rs"
 // Derive PDA and check that it matches client
 let (pda, _bump_seed) = Pubkey::find_program_address(&[initializer.key.as_ref(), account_data.title.as_bytes().as_ref(),], program_id);
 
@@ -500,7 +504,7 @@ We'll start by making sure `rating` falls within the 1 to 5 scale. If the rating
 provided by the user outside of this range, we'll return our custom
 `InvalidRating` error.
 
-```rust
+```rust filename="processor.rs"
 if rating > 5 || rating < 1 {
     msg!("Rating cannot be higher than 5");
     return Err(ReviewError::InvalidRating.into())
@@ -511,7 +515,7 @@ Next, let's check that the content of the review does not exceed the 1000 bytes
 we've allocated for the account. If the size exceeds 1000 bytes, we'll return
 our custom `InvalidDataLength` error.
 
-```rust
+```rust filename="processor.rs"
 let total_len: usize = 1 + 1 + (4 + title.len()) + (4 + description.len());
 if total_len > 1000 {
     msg!("Data length is larger than 1000 bytes");
@@ -523,16 +527,16 @@ Lastly, let's check if the account has already been initialized by calling the
 `is_initialized` function we implemented for our `MovieAccountState`. If the
 account already exists, then we will return an error.
 
-```rust
+```rust filename="processor.rs"
 if account_data.is_initialized() {
     msg!("Account already initialized");
     return Err(ProgramError::AccountAlreadyInitialized);
 }
 ```
 
-Altogether, the `add_movie_review` function should look something like this:
+Altogether, the `add_movie_review()` function should look something like this:
 
-```rust
+```rust filename="processor.rs"
 pub fn add_movie_review(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -618,10 +622,9 @@ pub fn add_movie_review(
 ### 4. Support Movie Review Updates in MovieInstruction
 
 Next, we'll modify `instruction.rs` to add support for updating movie reviews.
-We'll introduce a new `UpdateMovieReview` variant in `MovieInstruction`:
+We'll introduce a new `UpdateMovieReview()` variant in `MovieInstruction`:
 
 ```rust filename="instruction.rs"
-// Inside instruction.rs
 pub enum MovieInstruction {
     AddMovieReview {
         title: String,
@@ -637,9 +640,9 @@ pub enum MovieInstruction {
 ```
 
 The payload struct can stay the same since aside from the variant type, the
-instruction data is the same as what we used for `AddMovieReview`.
+instruction data is the same as what we used for `AddMovieReview()`.
 
-We'll also update the `unpack` function to handle `UpdateMovieReview`.
+We'll also update the `unpack()` function to handle `UpdateMovieReview()`.
 
 ```rust filename="instruction.rs"
 // Inside instruction.rs
@@ -665,8 +668,8 @@ impl MovieInstruction {
 ### 5. Define update_movie_review Function
 
 Now that we can unpack our `instruction_data` and determine which instruction of
-the program to run, we can add `UpdateMovieReview` to the match statement in
-the `process_instruction` function in the `processor.rs` file.
+the program to run, we can add `UpdateMovieReview()` to the match statement in
+the `process_instruction()` function in the `processor.rs` file.
 
 ```rust filename="processor.rs"
 // Inside processor.rs
@@ -690,10 +693,10 @@ pub fn process_instruction(
 }
 ```
 
-Next, we can define the new `update_movie_review` function. The definition
+Next, we can define the new `update_movie_review()` function. The definition
 should have the same parameters as the definition of `add_movie_review`.
 
-```rust
+```rust filename="processor.rs"
 pub fn update_movie_review(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -710,11 +713,11 @@ pub fn update_movie_review(
 All that's left now is to fill in the logic for updating a movie review. Only
 let's make it secure from the start.
 
-Just like the `add_movie_review` function, let's start by iterating through the
-accounts. The only accounts we'll need are the first two: `initializer` and
+Just like the `add_movie_review()` function, let's start by iterating through
+the accounts. The only accounts we'll need are the first two: `initializer` and
 `pda_account`.
 
-```rust
+```rust filename="processor.rs"
 pub fn update_movie_review(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -740,7 +743,7 @@ Before we continue, let's implement some basic security checks. We'll start with
 an ownership check on for `pda_account` to verify that it is owned by our
 program. If it isn't, we'll return an `InvalidOwner` error.
 
-```rust
+```rust filename="processor.rs"
 if pda_account.owner != program_id {
     return Err(ProgramError::InvalidOwner)
 }
@@ -754,7 +757,7 @@ data for a movie review, we want to ensure that the original `initializer` of
 the review has approved the changes by signing the transaction. If the
 `initializer` did not sign the transaction, we'll return an error.
 
-```rust
+```rust filename="processor.rs"
 if !initializer.is_signer {
     msg!("Missing required signature");
     return Err(ProgramError::MissingRequiredSignature)
@@ -766,9 +769,9 @@ if !initializer.is_signer {
 Next, let's check that the `pda_account` passed in by the user is the PDA we
 expect by deriving the PDA using `initializer` and `title` as seeds. If the
 addresses do not match, we'll return our custom `InvalidPDA` error. We'll
-implement this the same way we did in the `add_movie_review` function.
+implement this the same way we did in the `add_movie_review()` function.
 
-```rust
+```rust filename="processor.rs"
 // Derive PDA and check that it matches client
 let (pda, _bump_seed) = Pubkey::find_program_address(&[initializer.key.as_ref(), account_data.title.as_bytes().as_ref(),], program_id);
 
@@ -784,7 +787,7 @@ Now that our code ensures we can trust the passed in accounts, let's unpack the
 `pda_account` and perform some data validation. We'll start by unpacking
 `pda_account` and assigning it to a mutable variable `account_data`.
 
-```rust
+```rust filename="processor.rs"
 msg!("unpacking state account");
 let mut account_data = try_from_slice_unchecked::<MovieAccountState>(&pda_account.data.borrow()).unwrap();
 msg!("borrowed account data");
@@ -803,13 +806,13 @@ if !account_data.is_initialized() {
 ```
 
 Next, we need to validate the `rating`, `title`, and `description` data just
-like in the `add_movie_review` function. We want to limit the `rating` to a
+like in the `add_movie_review()` function. We want to limit the `rating` to a
 scale of 1 to 5 and limit the overall size of the review to be fewer than 1000
 bytes. If the rating provided by the user is outside of this range, then we'll
 return our custom `InvalidRating` error. If the review is too long, then we'll
 return our custom `InvalidDataLength` error.
 
-```rust
+```rust filename="processor.rs"
 if rating > 5 || rating < 1 {
     msg!("Rating cannot be higher than 5");
     return Err(ReviewError::InvalidRating.into())
@@ -828,7 +831,7 @@ Now that we've implemented all of the security checks, we can finally update the
 movie review account by updating `account_data` and re-serializing it. At that
 point, we can return `Ok` from our program.
 
-```rust
+```rust filename="processor.rs"
 account_data.rating = rating;
 account_data.description = description;
 
@@ -837,11 +840,11 @@ account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
 Ok(())
 ```
 
-All together, the `update_movie_review` function should look something like the
-code snippet below. We've included some additional logging for clarity in
+All together, the `update_movie_review()` function should look something like
+the code snippet below. We've included some additional logging for clarity in
 debugging.
 
-```rust
+```rust filename="processor.rs"
 pub fn update_movie_review(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
@@ -918,7 +921,7 @@ pub fn update_movie_review(
 We're ready to build and upgrade our program! You can test your program by
 submitting a transaction with the right instruction data. For that, feel free to
 use this
-[frontend](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-update-reviews).
+[frontend](https://github.com/solana-developers/movie-frontend/tree/solution-update-reviews).
 Remember, to make sure you're testing the right program you'll need to replace
 `MOVIE_REVIEW_PROGRAM_ID` with your program ID in `Form.tsx` and
 `MovieCoordinator.ts`.
