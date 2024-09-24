@@ -16,7 +16,7 @@
     "test": "yarn contentlayer:build",
     "lint": "next lint",
     "prettier:i18n": "prettier -cw \"i18n/**/*.{js,jsx,ts,tsx,md,css,md,mdx}\" --ignore-path \"[]\"",
-    "prettier": "prettier -c \"./**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
+    "prettier": "prettier --write \"./**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "crowdin:download": "crowdin download && npm run prettier:i18n",
     "crowdin:upload": "crowdin upload sources",
@@ -44,6 +44,6 @@
   },
   "devDependencies": {
     "contentlayer2": "^0.4.6",
-    "prettier": "^3.2.4"
+    "prettier": "^3.3.3"
   }
 }
