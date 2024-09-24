@@ -57,17 +57,17 @@ the same seeds always results in the same Program Derived Address.
 
 ### Seeds
 
-“Seeds” are inputs in the `find_program_address` function, this method provides
-an additional seed called a “bump seed.” The find*program_address method adds a
-numeric seed called a bump seed that ensures the result is \_off* on the Ed25519
+"Seeds" are inputs in the `find_program_address` function, this method provides
+an additional seed called a "bump seed". The find_program_address method adds a
+numeric seed called a bump seed that ensures the result is _off_ the Ed25519
 curve, ie, is not a valid public key and does not have a corresponding secret
 key.
 
 While you, the developer, determine the seeds to pass into the
-`find_program_address`, this method provides an additional seed called a “bump
-seed.” The cryptographic function for deriving a PDA results in a key that lies
-_on_ the Ed25519 curve about 50% of the time. The find*program_address method
-adds a numeric seed called a bump seed that ensures the result \_lies off* on
+`find_program_address`, this method provides an additional seed called a "bump
+seed". The cryptographic function for deriving a PDA results in a key that lies
+_on_ the Ed25519 curve about 50% of the time. The find_program_address method
+adds a numeric seed called a bump seed that ensures the result _lies off_ on
 the Ed25519 curve. Addresses off the Ed25519 curve lack a secret key.
 
 The method begins with the bump seed value 255 and checks if the output is a
@@ -92,8 +92,8 @@ type has multiple methods that find a PDA within a Solana program:
 2. `try_find_program_address`
 3. `create_program_address`
 
-These methods take an optional list of "_seeds_" and a `program ID` as inputs
-and can return the PDA and a bump seed or an error and a PDA.
+These methods takes an optional list of "seeds" and a `program ID` as inputs and
+can return the PDA and a bump seed or an error and a PDA.
 
 ### 1. find_program_address
 
@@ -120,23 +120,21 @@ and continues the loop until it finds a valid PDA.
 
 ```rust
 pub fn try_find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Option<(Pubkey, u8)> {
-    #[cfg(not(target_os = "solana"))]
-    {
-        let mut bump_seed = [u8::MAX];
-        for _ in 0..u8::MAX {
-            {
-                let mut seeds_with_bump = seeds.to_vec();
-                seeds_with_bump.push(&bump_seed);
-                match Self::create_program_address(&seeds_with_bump, program_id) {
-                    Ok(address) => return Some((address, bump_seed[0])),
-                    Err(PubkeyError::InvalidSeeds) => (),
-                    _ => break,
-                }
+    //..
+    let mut bump_seed = [u8::MAX];
+    for _ in 0..u8::MAX {
+        {
+            let mut seeds_with_bump = seeds.to_vec();
+            seeds_with_bump.push(&bump_seed);
+            match Self::create_program_address(&seeds_with_bump, program_id) {
+                Ok(address) => return Some((address, bump_seed[0])),
+                Err(PubkeyError::InvalidSeeds) => (),
+                _ => break,
             }
-            bump_seed[0] -= 1;
         }
-        None
+        bump_seed[0] -= 1;
     }
+    None
 
     // ...
 }
@@ -147,7 +145,6 @@ We can see that the `try_find_program_address` calls the
 
 ```rust
 pub fn try_find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Option<(Pubkey, u8)> {
-
     // ...
     for _ in 0..std::u8::MAX {
         {
@@ -156,9 +153,8 @@ pub fn try_find_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Option<
                //...
             }
         }
-       //...
+        //...
     }
-
 }
 
 ```
@@ -173,10 +169,7 @@ _off_ the curve), then either the PDA or an error is returned.
 The source code for `create_program_address`:
 
 ```rust
-pub fn create_program_address(
-    seeds: &[&[u8]],
-    program_id: &Pubkey,
-) -> Result<Pubkey, PubkeyError> {
+pub fn create_program_address(seeds: &[&[u8]], program_id: &Pubkey) -> Result<Pubkey, PubkeyError> {
     if seeds.len() > MAX_SEEDS {
         return Err(PubkeyError::MaxSeedLengthExceeded);
     }
@@ -186,39 +179,35 @@ pub fn create_program_address(
         }
     }
 
-    #[cfg(not(target_os = "solana"))]
-    {
-        let mut hasher = crate::hash::Hasher::default();
-        for seed in seeds.iter() {
-            hasher.hash(seed);
-        }
-        hasher.hashv(&[program_id.as_ref(), PDA_MARKER]);
-        let hash = hasher.result();
-
-        if bytes_are_curve_point(hash) {
-            return Err(PubkeyError::InvalidSeeds);
-        }
-
-        Ok(Pubkey::from(hash.to_bytes()))
+    //..
+    let mut hasher = crate::hash::Hasher::default();
+    for seed in seeds.iter() {
+        hasher.hash(seed);
     }
+    hasher.hashv(&[program_id.as_ref(), PDA_MARKER]);
+    let hash = hasher.result();
+
+    if bytes_are_curve_point(hash) {
+        return Err(PubkeyError::InvalidSeeds);
+    }
+
+    Ok(Pubkey::from(hash.to_bytes()))
 
     // ...
 }
 ```
 
-It's crucial to be prepared for potential errors when generating a PDA,
-especially if it's on the Ed25519 curve. When an error occurs during the
-invocation of the `find_program_address` method, it's essential to handle it
-effectively. Though statistically improbable, the system returns the error
-`Unable to find a viable program address bump seed` whenever it finds a PDA that
-lies on the curve. The `try_find_program_address` method is used instead of
-panicking.
+When an error occurs during the invocation of the `find_program_address` method,
+it's essential to handle it effectively. Though statistically improbable, the
+system returns the error `Unable to find a viable program address bump seed`
+whenever it finds a PDA that lies on the curve. The `try_find_program_address`
+method is used instead of panicking.
 
 Locating a valid PDA off the Ed25519 curve can be time-consuming due to the
 iterations on the canonical bump seed. This operation can consume a variable
-amount of the program’s compute budget. Developers can optimize the performance
-and lower the compute budget of programs by passing the
-`bump_seed (canonical bump)`, the user-supplied seeds as part of the instruction
+amount of the program's compute budget. Developers can optimize the performance
+and lower the compute budget of programs by passing the `bump_seed`(also called
+the canonical bump), and the user-supplied seeds as part of the instruction
 data, and then deserialize the seed and canonical bump. These deserialized
 outputs can then be passed to the `create_program_address` method to derive the
 PDA. It's important to note that the `create_program_address` method incurs a
@@ -226,8 +215,8 @@ fixed cost to the compute budget.
 
 Address collisions can occur since the seeds are passed as a slice of bytes,
 meaning that the seeds `{abcdef}`, `{abc, def}` and `{ab, cd, ef}` will result
-in the same PDA being generated. A developer must prevent collisions by adding
-separator characters like hyphens.
+in the same PDA being generated. In some cases, developers may wish to prevent
+collisions by adding separator characters like hyphens.
 
 In summary, the `find_program_address` method passes the input seeds and
 `program_id` to the `try_find_program_address` method. The
@@ -254,14 +243,15 @@ associated with an account that stores data.
 
 ### Use PDA accounts to store data
 
-Solana programs are stateless, so they manage their state through external
-accounts. Although programs can use the System Program to create non-PDA
-accounts for data storage, PDAs are the choice for storing program-related data.
-This choice is popular because the seeds and canonical bump directly map to the
-same PDA, and the program specified as the program ID can sign on its behalf.
+Solana programs are stateless, so state is stored in separate accounts from
+where the program's executable is stored. Although programs can use the System
+Program to create non-PDA accounts for data storage, PDAs are the choice for
+storing program-related data. This choice is popular because the seeds and
+canonical bump directly map to the same PDA, and the program specified as the
+program ID can sign on its behalf.
 
 Program Derived Addresses (PDAs) are account keys only the program can sign on
-its behalf. During cross-program invocations, the program can “sign” for the key
+its behalf. During cross-program invocations, the program can "sign" for the key
 by calling `invoke_signed` and providing the same seeds used to generate the
 address, along with the calculated bump seed. The runtime then verifies that the
 program associated with the address is the caller and thus authorized to sign.
@@ -331,27 +321,23 @@ find a user's review of "Spiderman", you can derive the PDA account's address
 using the user's public key and the text "Spiderman" as seeds.
 
 ```rust
-let (pda, bump_seed) = Pubkey::find_program_address(&[
-        initializer.key.as_ref(),
-        title.as_bytes().as_ref()
-    ],
-    program_id
+let (pda, bump_seed) = Pubkey::find_program_address(
+    &[initializer.key.as_ref(), title.as_bytes().as_ref()],
+    program_id,
 );
 ```
 
 ### Associated token account addresses
 
-Another practical example of this mapping type is determining the associated
-token account (ATA) addresses. An ATA whose address is derived using a wallet
-address and the mint address of a specific token holds tokens. Solana token
-extensions introduced a new
-[token extensions program ID](https://docs.rs/spl-token-2022/latest/spl_token_2022/fn.id.html).
-You can specify how to create tokens using the legacy token or the new token
-extensions program. Use the new token extensions program, now the standard way
-to create tokens on Solana. The
-[get_associated_token_address_with_program_id](https://docs.rs/spl-associated-token-account/latest/spl_associated_token_account/fn.get_associated_token_address_with_program_id.html)
-function finds the ATA account accepts a `wallet_address`, `token_mint_address`
-and the `token_program_id` as arguments.
+Another practical example of this mapping type is determining associated token
+account (ATA) addresses. An ATA is an address used to hold the tokens for a
+specific account - for example, Jane's USDC account. The ATA address is derived
+using:
+
+- the wallet address of the user
+- the mint address of the token
+- the token program used - either the older token program or the newer
+  [token extensions program ID](https://docs.rs/spl-token-2022/latest/spl_token_2022/fn.id.html).
 
 ```toml
 # ...
@@ -416,7 +402,7 @@ structure the comment storage using PDA accounts.
 ### 1. Get the starter code
 
 To begin, you can find
-[the movie program starter code](https://github.com/Unboxed-Software/solana-movie-program/tree/starter)
+[the movie program starter code](https://github.com/solana-developers/movie-program/tree/starter)
 on the `starter` branch.
 
 If you've been following along with the Movie Review labs, you'll notice that
@@ -445,7 +431,7 @@ solana program deploy <PATH>
 ```
 
 You can test the program by using the movie review
-[frontend](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-update-reviews)
+[frontend](https://github.com/solana-developers/movie-frontend/tree/solution-update-reviews)
 and updating the program ID with the one you've just deployed. Make sure you use
 the `solution-update-reviews` branch.
 
@@ -499,13 +485,13 @@ To implement these changes, do the following:
 Recall that the `state.rs` file defines the structs our program uses to populate
 the data field of a new account.
 
-We’ll need to define two new structs to enable commenting.
+We'll need to define two new structs to enable commenting.
 
 1. `MovieCommentCounter` - to store a counter for the number of comments
    associated with a review
 2. `MovieComment` - to store data associated with each comment
 
-Let’s define the structs we’ll be using for our program. We add a
+Let's define the structs we'll be using for our program. We add a
 `discriminator` field to each struct, including the existing
 `MovieAccountState`. Since we now have multiple account types, we only need a
 way to fetch the account type we need from the client. This discriminator is a
@@ -526,7 +512,7 @@ pub struct MovieAccountState {
 pub struct MovieCommentCounter {
     pub discriminator: String,
     pub is_initialized: bool,
-    pub counter: u64
+    pub counter: u64,
 }
 
 #[derive(BorshSerialize, BorshDeserialize)]
@@ -536,7 +522,7 @@ pub struct MovieComment {
     pub review: Pubkey,
     pub commenter: Pubkey,
     pub comment: String,
-    pub count: u64
+    pub count: u64,
 }
 
 impl Sealed for MovieAccountState {}
@@ -600,7 +586,7 @@ account size and not risk unintentional typos.
 
 Recall that the `instruction.rs` file defines the instructions our program will
 accept and how to deserialize the data for each. We need to add a new
-instruction variant for adding comments. Let’s start by adding a new variant
+instruction variant for adding comments. Let's start by adding a new variant
 `AddComment,` to the `MovieInstruction` enum.
 
 ```rust
@@ -608,16 +594,16 @@ pub enum MovieInstruction {
     AddMovieReview {
         title: String,
         rating: u8,
-        description: String
+        description: String,
     },
     UpdateMovieReview {
         title: String,
         rating: u8,
-        description: String
+        description: String,
     },
     AddComment {
-        comment: String
-    }
+        comment: String,
+    },
 }
 ```
 
@@ -629,11 +615,11 @@ only thing we need here is a single field to represent the comment text.
 ```rust
 #[derive(BorshDeserialize)]
 struct CommentPayload {
-    comment: String
+    comment: String,
 }
 ```
 
-Now, update the unpacking of the instruction data. Notice that we’ve moved the
+Now, update the unpacking of the instruction data. Notice that we've moved the
 deserialization of instruction data into each matching case using the associated
 payload struct for each instruction.
 
@@ -647,25 +633,26 @@ impl MovieInstruction {
             0 => {
                 let payload = MovieReviewPayload::try_from_slice(rest).unwrap();
                 Self::AddMovieReview {
-                title: payload.title,
-                rating: payload.rating,
-                description: payload.description }
-            },
+                    title: payload.title,
+                    rating: payload.rating,
+                    description: payload.description,
+                }
+            }
             1 => {
                 let payload = MovieReviewPayload::try_from_slice(rest).unwrap();
                 Self::UpdateMovieReview {
                     title: payload.title,
                     rating: payload.rating,
-                    description: payload.description
+                    description: payload.description,
                 }
-            },
+            }
             2 => {
                 let payload = CommentPayload::try_from_slice(rest).unwrap();
                 Self::AddComment {
-                    comment: payload.comment
+                    comment: payload.comment,
                 }
             }
-            _ => return Err(ProgramError::InvalidInstructionData)
+            _ => return Err(ProgramError::InvalidInstructionData),
         })
     }
 }
@@ -687,20 +674,22 @@ data to the `add_comment` function we will be implementing shortly.
 pub fn process_instruction(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
-    instruction_data: &[u8]
+    instruction_data: &[u8],
 ) -> ProgramResult {
     let instruction = MovieInstruction::unpack(instruction_data)?;
     match instruction {
-        MovieInstruction::AddMovieReview { title, rating, description } => {
- 			add_movie_review(program_id, accounts, title, rating, description)
-        },
-        MovieInstruction::UpdateMovieReview { title, rating, description } => {
- 			update_movie_review(program_id, accounts, title, rating, description)
-        },
+        MovieInstruction::AddMovieReview {
+            title,
+            rating,
+            description,
+        } => add_movie_review(program_id, accounts, title, rating, description),
+        MovieInstruction::UpdateMovieReview {
+            title,
+            rating,
+            description,
+        } => update_movie_review(program_id, accounts, title, rating, description),
 
-        MovieInstruction::AddComment { comment } => {
- 			add_comment(program_id, accounts, comment)
-        }
+        MovieInstruction::AddComment { comment } => add_comment(program_id, accounts, comment),
     }
 }
 ```
@@ -712,12 +701,12 @@ Before implementing the `add_comment` function, we need to update the
 
 Remember that this account will keep track of the total number of comments for
 an associated review. Its address will be a PDA derived using the movie review
-address and the word “comment” as seeds. Note that how we store the counter is
-simply a design choice. We could add a “counter” field to the original movie
+address and the word "comment" as seeds. Note that how we store the counter is
+simply a design choice. We could add a "counter" field to the original movie
 review account.
 
-Within the `add_movie_review` function, let’s add a `pda_counter` to represent
-the new counter account we’ll be initializing along with the movie review
+Within the `add_movie_review` function, let's add a `pda_counter` to represent
+the new counter account we'll be initializing along with the movie review
 account. Now, expect four accounts passed into the `add_movie_review` function
 through the `accounts` argument.
 
@@ -738,7 +727,7 @@ replace `total_len` with a call to `MovieAccountState::get_account_size`:
 let account_len: usize = 1000;
 
 if MovieAccountState::get_account_size(title.clone(), description.clone()) > account_len {
- msg!("Data length is larger than 1000 bytes");
+    msg!("Data length is larger than 1000 bytes");
     return Err(ReviewError::InvalidDataLength.into());
 }
 ```
@@ -746,7 +735,7 @@ if MovieAccountState::get_account_size(title.clone(), description.clone()) > acc
 Remember to update the code within the `update_movie_review` function for that
 instruction to work correctly.
 
-Once we’ve initialized the review account, we’ll also need to update the
+Once we've initialized the review account, we'll also need to update the
 `account_data` with the new fields we specified in the `MovieAccountState`
 struct.
 
@@ -759,7 +748,7 @@ account_data.description = description;
 account_data.is_initialized = true;
 ```
 
-Finally, let’s add the logic to initialize the counter account within the
+Finally, let's add the logic to initialize the counter account within the
 `add_movie_review` function by:
 
 1. Calculating the rent exemption amount for the counter account
@@ -780,7 +769,7 @@ let counter_rent_lamports = rent.minimum_balance(MovieCommentCounter::SIZE);
 let (counter, counter_bump) =
     Pubkey::find_program_address(&[pda.as_ref(), "comment".as_ref()], program_id);
 if counter != *pda_counter.key {
- msg!("Invalid seeds for PDA");
+    msg!("Invalid seeds for PDA");
     return Err(ProgramError::InvalidArgument);
 }
 
@@ -802,11 +791,11 @@ invoke_signed(
 msg!("comment counter created");
 
 let mut counter_data =
- try_from_slice_unchecked::<MovieCommentCounter>(&pda_counter.data.borrow()).unwrap();
+    try_from_slice_unchecked::<MovieCommentCounter>(&pda_counter.data.borrow()).unwrap();
 
 msg!("checking if counter account is already initialized");
 if counter_data.is_initialized() {
- msg!("Account already initialized");
+    msg!("Account already initialized");
     return Err(ProgramError::AccountAlreadyInitialized);
 }
 
@@ -839,10 +828,10 @@ deserialize the counter account, so we have access to the current comment count:
 pub fn add_comment(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
-    comment: String
+    comment: String,
 ) -> ProgramResult {
- msg!("Adding Comment...");
- msg!("Comment: {}", comment);
+    msg!("Adding Comment...");
+    msg!("Comment: {}", comment);
 
     let account_info_iter = &mut accounts.iter();
 
@@ -852,7 +841,8 @@ pub fn add_comment(
     let pda_comment = next_account_info(account_info_iter)?;
     let system_program = next_account_info(account_info_iter)?;
 
-    let mut counter_data = try_from_slice_unchecked::<MovieCommentCounter>(&pda_counter.data.borrow()).unwrap();
+    let mut counter_data =
+        try_from_slice_unchecked::<MovieCommentCounter>(&pda_counter.data.borrow()).unwrap();
 
     Ok(())
 }
@@ -872,10 +862,10 @@ steps:
 pub fn add_comment(
     program_id: &Pubkey,
     accounts: &[AccountInfo],
-    comment: String
+    comment: String,
 ) -> ProgramResult {
- msg!("Adding Comment...");
- msg!("Comment: {}", comment);
+    msg!("Adding Comment...");
+    msg!("Comment: {}", comment);
 
     let account_info_iter = &mut accounts.iter();
 
@@ -885,38 +875,54 @@ pub fn add_comment(
     let pda_comment = next_account_info(account_info_iter)?;
     let system_program = next_account_info(account_info_iter)?;
 
-    let mut counter_data = try_from_slice_unchecked::<MovieCommentCounter>(&pda_counter.data.borrow()).unwrap();
+    let mut counter_data =
+        try_from_slice_unchecked::<MovieCommentCounter>(&pda_counter.data.borrow()).unwrap();
 
     let account_len = MovieComment::get_account_size(comment.clone());
 
     let rent = Rent::get()?;
     let rent_lamports = rent.minimum_balance(account_len);
 
-    let (pda, bump_seed) = Pubkey::find_program_address(&[pda_review.key.as_ref(), counter_data.counter.to_be_bytes().as_ref(),], program_id);
+    let (pda, bump_seed) = Pubkey::find_program_address(
+        &[
+            pda_review.key.as_ref(),
+            counter_data.counter.to_be_bytes().as_ref(),
+        ],
+        program_id,
+    );
     if pda != *pda_comment.key {
- msg!("Invalid seeds for PDA");
-        return Err(ReviewError::InvalidPDA.into())
+        msg!("Invalid seeds for PDA");
+        return Err(ReviewError::InvalidPDA.into());
     }
 
- invoke_signed(
+    invoke_signed(
         &system_instruction::create_account(
-        commenter.key,
-        pda_comment.key,
-        rent_lamports,
-        account_len.try_into().unwrap(),
-        program_id,
+            commenter.key,
+            pda_comment.key,
+            rent_lamports,
+            account_len.try_into().unwrap(),
+            program_id,
         ),
-        &[commenter.clone(), pda_comment.clone(), system_program.clone()],
-        &[&[pda_review.key.as_ref(), counter_data.counter.to_be_bytes().as_ref(), &[bump_seed]]],
+        &[
+            commenter.clone(),
+            pda_comment.clone(),
+            system_program.clone(),
+        ],
+        &[&[
+            pda_review.key.as_ref(),
+            counter_data.counter.to_be_bytes().as_ref(),
+            &[bump_seed],
+        ]],
     )?;
 
- msg!("Created Comment Account");
+    msg!("Created Comment Account");
 
-    let mut comment_data = try_from_slice_unchecked::<MovieComment>(&pda_comment.data.borrow()).unwrap();
+    let mut comment_data =
+        try_from_slice_unchecked::<MovieComment>(&pda_comment.data.borrow()).unwrap();
 
- msg!("checking if comment account is already initialized");
+    msg!("checking if comment account is already initialized");
     if comment_data.is_initialized() {
- msg!("Account already initialized");
+        msg!("Account already initialized");
         return Err(ProgramError::AccountAlreadyInitialized);
     }
 
@@ -927,7 +933,7 @@ pub fn add_comment(
     comment_data.is_initialized = true;
     comment_data.serialize(&mut &mut pda_comment.data.borrow_mut()[..])?;
 
- msg!("Comment Count: {}", counter_data.counter);
+    msg!("Comment Count: {}", counter_data.counter);
     counter_data.counter += 1;
     counter_data.serialize(&mut &mut pda_counter.data.borrow_mut()[..])?;
 
@@ -944,7 +950,7 @@ Build the updated program by running `cargo build-bpf`. Run the command
 
 You can test your program by submitting a transaction with the correct
 instruction data. You can create your script or use
-[this frontend](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-add-comments).
+[this frontend](https://github.com/solana-developers/movie-frontend/tree/solution-add-comments).
 Be sure to use the `solution-add-comments` branch and replace the
 `MOVIE_REVIEW_PROGRAM_ID` in `utils/constants.ts` with your program's ID, or the
 frontend won't work with your program.
@@ -956,13 +962,13 @@ will show on this frontend due to a data mismatch.
 
 If you need more time with this project to feel comfortable with these concepts,
 have a look at
-the [solution code](https://github.com/Unboxed-Software/solana-movie-program/tree/solution-add-comments)
+the [solution code](https://github.com/solana-developers/movie-program/tree/solution-add-comments)
 before continuing. Note that the solution code is on the `solution-add-comments`
 branch of the linked repository.
 
 ## Challenge
 
-Now it’s your turn to build something independently! Go ahead and work with the
+Now it's your turn to build something independently! Go ahead and work with the
 Student Intro program that we've used in past lessons. The Student Intro program
 is a Solana program that lets students introduce themselves. This program takes
 a user's name and a short message as the `instruction_data` and creates an
@@ -973,10 +979,10 @@ account to store the data onchain. For this challenge, you should:
 
 If you haven't been following along with past lessons or haven't saved your work
 from before, feel free to use the starter code on the `starter` branch of
-[solana-student-intro-program](https://github.com/Unboxed-Software/solana-student-intro-program/tree/starter).
+[solana-student-intro-program](https://github.com/solana-developers/student-intro-program/tree/starter).
 
 Try to do this independently! If you get stuck, though, you can reference the
-[solution code](https://github.com/Unboxed-Software/solana-student-intro-program/tree/solution-add-replies).
+[solution code](https://github.com/solana-developers/student-intro-program/tree/solution-add-replies).
 Note that the solution code is on the `solution-add-replies` branch and that
 your code may look slightly different.
 
