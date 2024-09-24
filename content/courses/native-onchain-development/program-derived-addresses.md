@@ -57,23 +57,18 @@ the same seeds always results in the same Program Derived Address.
 
 ### Seeds
 
-"Seeds" are inputs in the `find_program_address` function, this method provides
-an additional seed called a "bump seed". The find_program_address method adds a
-numeric seed called a bump seed that ensures the result is _off_ the Ed25519
-curve, ie, is not a valid public key and does not have a corresponding secret
-key.
+"Seeds" are inputs in the `find_program_address` function. While you, the
+developer, determine the seeds to pass into the `find_program_address` method,
+`find_program_address` method adds an additional numeric seed called a bump seed
+that is used to ensure the address is _off_ the Ed25519 curve, ie, is not a
+valid public key and does not have a corresponding secret key.
 
-While you, the developer, determine the seeds to pass into the
-`find_program_address`, this method provides an additional seed called a "bump
-seed". The cryptographic function for deriving a PDA results in a key that lies
-_on_ the Ed25519 curve about 50% of the time. The find_program_address method
-adds a numeric seed called a bump seed that ensures the result _lies off_ on
-the Ed25519 curve. Addresses off the Ed25519 curve lack a secret key.
-
-The method begins with the bump seed value 255 and checks if the output is a
-valid PDA. If it is not, the method decrements the bump seed by subtracting one
-and tries again (`255`, `254`, `253`, et cetera). When the method finds a valid
-PDA, it returns the PDA and the canonical bump seed that derived it.
+`find_program_address` uses a loop to calculate the off curve address, starting
+with the bump seed value 255 and checks if the output is a public key address
+(on the curve) or not a valid public key (off the curve). If an an off-curve
+address is not found, the method decrements the bump seed by subtracting one and
+tries again (`255`, `254`, `253`, et cetera). When the method finds a valid PDA,
+it returns the PDA and the canonical bump seed that derived it.
 
 If the resulting PDA is on the Ed25519 curve, then an error
 `PubkeyError::InvalidSeeds` is returned.
