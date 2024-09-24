@@ -739,7 +739,7 @@ Look at the owner - it's the account you made the ATA for! The balance will be
 zero, as we haven't sent any tokens there yet. Let's mint some tokens there and
 fix that!
 
-#### Mint Tokens
+#### Minting Tokens
 
 Now that we have a token mint and a token account, let's mint tokens to the
 token account. Recall that we set the `user` as the `mintAuthority` for the
@@ -811,7 +811,7 @@ account!
 ![Mint Token Transaction 1](/public/assets/courses/unboxed/token-program-mint-token-1.png)
 ![Mint Token Transaction 2](/public/assets/courses/unboxed/token-program-mint-token-2.png)
 
-#### Transfer Tokens
+#### Transfering Tokens
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
@@ -910,15 +910,15 @@ approval.
    at the
    [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
 
-When creating a new mint, the newly generated `Keypair` will also have to sign
-the transaction. When additional signers are required in addition to the
-connected wallet, use the following format:
+   When creating a new mint, the newly generated `Keypair` will also have to
+   sign the transaction. When additional signers are required in addition to the
+   connected wallet, use the following format:
 
-```typescript
-sendTransaction(transaction, connection, {
-  signers: [Keypair],
-});
-```
+   ```typescript
+   sendTransaction(transaction, connection, {
+     signers: [Keypair],
+   });
+   ```
 
 3. Create a new Token Account in the `CreateTokenAccount` component.
 4. Mint tokens in the `MintToForm` component.
