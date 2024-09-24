@@ -185,7 +185,7 @@ yarn prettier
   ask them to run `anchor keys sync`.
 
 - Use the
-  [multiple files template](https://www.anchor-lang.com/docs/release-notes#multiple-files-template)
+  [multiple files template](https://www.anchor-lang.com/release-notes/0.29.0#multiple-files-template)
   to organize very large Anchor projects.
 
 ### Heading styles
