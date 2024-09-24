@@ -64,9 +64,9 @@ work with versioned transactions and lookup tables.
 To create a versioned transaction, you first create a `TransactionMessage` with
 the following parameters:
 
-- `payerKey` - The public key of the account that will pay for the transaction
-- `recentBlockhash` - A recent blockhash from the network
-- `instructions` - The instructions to be executed in the transaction.
+- `payerKey` - the public key of the account that will pay for the transaction
+- `recentBlockhash` - a recent blockhash from the network
+- `instructions` - the instructions to be executed in the transaction.
 
 Once the message object is created, you can convert it into a version `0`
 transaction using the `compileToV0Message()` method.
@@ -120,20 +120,20 @@ space used by the transaction.
 The `@solana/web3.js` library offers an `AddressLookupTableProgram` class,
 providing methods to manage LUTs:
 
-- `createLookupTable` - Creates a new LUT account.
-- `freezeLookupTable` - Makes a LUT immutable.
-- `extendLookupTable` - Adds addresses to an existing LUT.
-- `deactivateLookupTable` - Begins the deactivation period for an LUT.
-- `closeLookupTable` - Permanently closes an LUT account.
+- `createLookupTable` - creates a new LUT account.
+- `freezeLookupTable` - makes a LUT immutable.
+- `extendLookupTable` - adds addresses to an existing LUT.
+- `deactivateLookupTable` - begins the deactivation period for an LUT.
+- `closeLookupTable` - permanently closes an LUT account.
 
 #### Create a lookup table
 
 You can use the `createLookupTable` method to construct the instruction for
 creating a lookup table. This requires the following parameters:
 
-- `authority` - The account authorized to modify the lookup table.
-- `payer` - The account responsible for paying the account creation fees.
-- `recentSlot` - A recent slot used to derive the lookup table's address.
+- `authority` - the account authorized to modify the lookup table.
+- `payer` - the account responsible for paying the account creation fees.
+- `recentSlot` - a recent slot used to derive the lookup table's address.
 
 The function returns both the instruction for creating the LUT and its address.
 
@@ -160,10 +160,12 @@ const [lookupTableAddress, bumpSeed] = PublicKey.findProgramAddressSync(
 );
 ```
 
+<Callout>
 Using the most recent slot sometimes results in errors when submitting the
 transaction. To avoid this, it’s recommended to use a slot that is one slot
 before the most recent one (`recentSlot: currentSlot - 1`). If you still
 encounter errors when sending the transaction, try resubmitting it.
+</Callout>
 
 ```
 "Program AddressLookupTab1e1111111111111111111111111 invoke [1]",
@@ -176,11 +178,11 @@ encounter errors when sending the transaction, try resubmitting it.
 The `extendLookupTable` method creates an instruction to add addresses to an
 existing lookup table. It requires the following parameters:
 
-- `payer` - The account responsible for paying transaction fees and any
+- `payer` - the account responsible for paying transaction fees and any
   additional rent.
-- `authority` - The account authorized to modify the lookup table.
-- `lookupTable` - The address of the lookup table to be extended.
-- `addresses` - The list of addresses to add to the lookup table.
+- `authority` - the account authorized to modify the lookup table.
+- `lookupTable` - the address of the lookup table to be extended.
+- `addresses` - the list of addresses to add to the lookup table.
 
 The function returns an instruction to extend the lookup table.
 
@@ -232,7 +234,7 @@ transaction.sign([payer]);
 const transactionSignature = await connection.sendTransaction(transaction);
 ```
 
-Note that After you create or extend a lookup table, it must "warm up" for one
+Note that after you create or extend a lookup table, it must "warm up" for one
 slot before the lookup table or newly added addresses can be used in
 transactions. You can only access lookup tables and addresses added in slots
 prior to the current one.
@@ -258,8 +260,8 @@ LUTs within the same slot.
 To deactivate a LUT, use the `deactivateLookupTable` method with the following
 parameters:
 
-- `lookupTable` - The address of the lookup table to be deactivated.
-- `authority` - The account with the authority to deactivate the LUT.
+- `lookupTable` - the address of the lookup table to be deactivated.
+- `authority` - the account with the authority to deactivate the LUT.
 
 ```typescript
 const deactivateInstruction = AddressLookupTableProgram.deactivateLookupTable({
@@ -274,9 +276,9 @@ Once a LUT has been deactivated and the cool-down period has passed, you can
 close the lookup table to reclaim its rent balance. Use the `closeLookupTable`
 method, which requires the following parameters:
 
-- `lookupTable` - The address of the LUT to be closed.
-- `authority` - The account with the authority to close the LUT.
-- `recipient` - The account that will receive the reclaimed rent balance.
+- `lookupTable` - the address of the LUT to be closed.
+- `authority` - the account with the authority to close the LUT.
+- `recipient` - the account that will receive the reclaimed rent balance.
 
 ```typescript
 const closeInstruction = AddressLookupTableProgram.closeLookupTable({
@@ -303,8 +305,8 @@ makes it immutable so that it can no longer be extended, deactivated, or closed.
 The `freezeLookupTable` method is used for this operation and takes the
 following parameters:
 
-- `lookupTable` - The address of the LUT to freeze.
-- `authority` - The account with the authority to freeze the LUT.
+- `lookupTable` - the address of the LUT to freeze.
+- `authority` - the account with the authority to freeze the LUT.
 
 ```typescript
 const freezeInstruction = AddressLookupTableProgram.freezeLookupTable({
@@ -388,8 +390,7 @@ The key logic can be found in the `index.ts` file of the starter code.
 
 ```typescript
 import * as web3 from "@solana/web3.js";
-import { makeKeypairs, getExplorerLink } from "@solana-developers/helpers";
-import { initializeKeypair } from "./initializeKeypair";
+import { initializeKeypair, makeKeypairs, getExplorerLink } from "@solana-developers/helpers";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -434,11 +435,6 @@ async function main() {
     console.error("Transaction failed:", error);
   }
 }
-
-main().catch(err => {
-  console.error(err);
-  process.exit(1);
-});
 ```
 
 To run the example, execute `npm start`. This process will:
@@ -488,11 +484,11 @@ To handle versioned transactions, we will create a helper function,
 sendV0Transaction, to simplify the process. This function will accept the
 following parameters:
 
-- `connection`: The Solana connection to the cluster (e.g., devnet).
-- `user`: The keypair of the user (payer) signing the transaction.
-- `instructions`: An array of TransactionInstruction objects to include in the
+- `connection`: the Solana connection to the cluster (e.g., devnet).
+- `user`: the keypair of the user (payer) signing the transaction.
+- `instructions`: an array of TransactionInstruction objects to include in the
   transaction.
-- `lookupTableAccounts` (optional): An array of lookup table accounts, if
+- `lookupTableAccounts` (optional): an array of lookup table accounts, if
   applicable, to reference additional addresses.
 
 This helper function will:
@@ -552,8 +548,8 @@ block to be generated.
 
 We will create a `waitForNewBlock` helper function that accepts:
 
-- `connection`: The Solana network connection.
-- `targetBlockHeight`: The target block height to wait for.
+- `connection`: the Solana network connection.
+- `targetBlockHeight`: the target block height to wait for.
 
 This function will:
 
@@ -605,9 +601,9 @@ Next, we need to initialize a lookup table to hold the addresses of the
 recipients. The `initializeLookupTable` function will accept the following
 parameters:
 
-- `user`: The user's keypair (payer and authority).
-- `connection`: The Solana network connection.
-- `addresses`: An array of recipient addresses (public keys) to add to the
+- `user`: the user's keypair (payer and authority).
+- `connection`: the Solana network connection.
+- `addresses`: an array of recipient addresses (public keys) to add to the
   lookup table.
 
 The function will:
