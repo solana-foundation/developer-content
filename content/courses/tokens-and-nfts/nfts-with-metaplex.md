@@ -84,7 +84,8 @@ that's what we'll be using in this tutorial. </Callout>
 
 Umi is a framework for making JS/TS clients for onchain programs, that was
 created by Metaplex. Umi can create JS/TS clients for many programs, but in
-practice, it's most commonly used to communicate with the Token Metadata program.
+practice, it's most commonly used to communicate with the Token Metadata
+program.
 
 Note that Umi has different implementations for many concepts than web3.js,
 including Keypairs, PublicKeys, and Connections. However, it is easy to convert
@@ -117,12 +118,14 @@ import { clusterApiUrl, Keypair } from "@solana/web3.js";
 const umi = createUmi(clusterApiUrl("devnet"));
 
 // load keypair from local file system
-const walletFile = JSON.parse(fs.readFileSync(
-  path.resolve(__dirname, '/home/user/.config/solana/id.json'), 'utf-8'
-));
+const walletFile = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "/home/user/.config/solana/id.json"),
+    "utf-8",
+  ),
+);
 
 const user = Keypair.fromSecretKey(new Uint8Array(walletFile));
-
 
 // convert to Umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
@@ -158,7 +161,7 @@ take the following steps:
 3. Uploading file to designated storage provider.
 
 ```typescript
-let filePath =  path.resolve(__dirname, "collection.png");
+let filePath = path.resolve(__dirname, "collection.png");
 
 const buffer = await fs.readFileSync(filePath);
 let file = createGenericFile(buffer, filePath, {
@@ -212,7 +215,7 @@ const { signature, result } = await createNft(umi, {
   uri,
   updateAuthority: umi.identity.publicKey,
   sellerFeeBasisPoints: percentAmount(0),
-   collection: {
+  collection: {
     key: collectionNftAddress,
     verified: false,
   },
@@ -374,10 +377,10 @@ import {
   clusterApiUrl,
   Connection,
   Keypair,
-  LAMPORTS_PER_SOL
+  LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import fs from "fs";
-import path from 'path'
+import path from "path";
 import { base58 } from "@metaplex-foundation/umi/serializers";
 ```
 
@@ -389,9 +392,12 @@ const connection = new Connection(clusterApiUrl("devnet"));
 
 // load keypair from local file system
 // assumes that the keypair is already generated using `solana-keygen new`
-const walletFile = JSON.parse(fs.readFileSync(
-  path.resolve(__dirname, '/home/user/.config/solana/id.json'), 'utf-8'
-));
+const walletFile = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "/home/user/.config/solana/id.json"),
+    "utf-8",
+  ),
+);
 const user = Keypair.fromSecretKey(new Uint8Array(walletFile));
 
 await airdropIfRequired(
@@ -455,9 +461,9 @@ console.log("imageurl:", image);
 const uri = await umi.uploader.uploadJson({
   name: "My Collection",
   symbol: "MC",
-  description: 'My Collection description',
+  description: "My Collection description",
   image,
-})
+});
 console.log("Collection offchain metadata URI:", uri);
 ```
 
@@ -477,10 +483,12 @@ const createTx = await createNft(umi, {
   isCollection: true,
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 
-const signature = base58.deserialize(createTx.signature)[0]
+const signature = base58.deserialize(createTx.signature)[0];
 
 console.log(`https://explorer.solana.com/tx/${signature}?cluster=devnet`);
-console.log(`https://explorer.solana.com/address/${collectionMint.publicKey}?cluster=devnet`)
+console.log(
+  `https://explorer.solana.com/address/${collectionMint.publicKey}?cluster=devnet`,
+);
 console.log("✅ Finished successfully!");
 ```
 
@@ -540,15 +548,15 @@ import {
 } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
-import { 
-  clusterApiUrl, 
+import {
+  clusterApiUrl,
   Keypair,
-  Connection, 
+  Connection,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import fs from "fs";
 import * as path from "path";
-import { base58} from "@metaplex-foundation/umi/serializers";
+import { base58 } from "@metaplex-foundation/umi/serializers";
 
 // create a new connection to Solana's devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"));
@@ -556,17 +564,17 @@ const connection = new Connection(clusterApiUrl("devnet"));
 // load keypair from local file system
 // assumes that the keypair is already generated using `solana-keygen new`
 
-const walletFile = JSON.parse(fs.readFileSync(
-  path.resolve(__dirname, '/home/user/.config/solana/id.json'), 'utf-8'
-));
+const walletFile = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "/home/user/.config/solana/id.json"),
+    "utf-8",
+  ),
+);
 
 const user = Keypair.fromSecretKey(new Uint8Array(walletFile));
 console.log("Loaded user:", user.publicKey.toBase58());
 
-await connection.requestAirdrop(
-  user.publicKey,
-  1 * LAMPORTS_PER_SOL,
-);
+await connection.requestAirdrop(user.publicKey, 1 * LAMPORTS_PER_SOL);
 
 const umi = createUmi(connection);
 
@@ -640,7 +648,9 @@ await createNft(umi, {
   },
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 
-console.log(`Token Mint: https://explorer.solana.com/address/${mint.publicKey}?cluster=devnet`)
+console.log(
+  `Token Mint: https://explorer.solana.com/address/${mint.publicKey}?cluster=devnet`,
+);
 console.log(`Created NFT address is ${mint.publicKey}`);
 console.log("✅ Finished successfully!");
 ```
@@ -686,20 +696,24 @@ import {
 } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
-import { clusterApiUrl, 
-  Keypair, 
-  Connection, 
-  LAMPORTS_PER_SOL, 
-  } from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Keypair,
+  Connection,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
 
 // create a new connection to Solana's devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"));
 
 // load keypair from local file system
 // assumes that the keypair is already generated using `solana-keygen new`
-const walletFile = JSON.parse(fs.readFileSync(
-    path.resolve(__dirname, '/home/user/.config/solana/id.json'), 'utf-8'
-));
+const walletFile = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "/home/user/.config/solana/id.json"),
+    "utf-8",
+  ),
+);
 
 const user = Keypair.fromSecretKey(new Uint8Array(walletFile));
 console.log("Loaded user:", user.publicKey.toBase58());
@@ -717,9 +731,9 @@ const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
 // load our plugins and signer
 umi
-    .use(keypairIdentity(umiKeypair))
-    .use(mplTokenMetadata())
-    .use(irysUploader());
+  .use(keypairIdentity(umiKeypair))
+  .use(mplTokenMetadata())
+  .use(irysUploader());
 
 // Substitute in your collection NFT address from create-metaplex-collection.ts
 const collectionAddress = UMIPublicKey("");
@@ -745,7 +759,9 @@ await verifyCollectionV1(umi, {
   authority: umi.identity,
 }).sendAndConfirm(umi);
 
-console.log(`verified collection: https://explorer.solana.com/address/${nftAddress}?cluster=devnet`)
+console.log(
+  `verified collection: https://explorer.solana.com/address/${nftAddress}?cluster=devnet`,
+);
 console.log("✅ Finished successfully!");
 ```
 
@@ -779,13 +795,13 @@ to our previous files:
 
 ```typescript
 import {
-    createNft,
-    fetchMetadataFromSeeds,
-    updateV1,
-    findMetadataPda,
-    mplTokenMetadata,
-    fetchAllDigitalAsset,
-    fetchDigitalAsset,
+  createNft,
+  fetchMetadataFromSeeds,
+  updateV1,
+  findMetadataPda,
+  mplTokenMetadata,
+  fetchAllDigitalAsset,
+  fetchDigitalAsset,
 } from "@metaplex-foundation/mpl-token-metadata";
 import {
   createGenericFile,
@@ -796,9 +812,10 @@ import {
 } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
-import { clusterApiUrl, 
-  Keypair, 
-  Connection, 
+import {
+  clusterApiUrl,
+  Keypair,
+  Connection,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 import fs from "fs";
@@ -809,19 +826,18 @@ const connection = new Connection(clusterApiUrl("devnet"));
 
 // load keypair from local file system
 // assumes that the keypair is already generated using `solana-keygen new`
-const walletFile = JSON.parse(fs.readFileSync(
-    path.resolve(__dirname, '/home/user/.config/solana/id.json'), 'utf-8'
-));
+const walletFile = JSON.parse(
+  fs.readFileSync(
+    path.resolve(__dirname, "/home/user/.config/solana/id.json"),
+    "utf-8",
+  ),
+);
 
 const user = Keypair.fromSecretKey(new Uint8Array(walletFile));
 
 console.log("Loaded user:", user.publicKey.toBase58());
 
-await airdropIfRequired(
-  connection,
-  user.publicKey,
-  1 * LAMPORTS_PER_SOL,
-);
+await airdropIfRequired(connection, user.publicKey, 1 * LAMPORTS_PER_SOL);
 
 const umi = createUmi(connection);
 
@@ -830,9 +846,9 @@ const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
 // load our plugins and signer
 umi
-    .use(keypairIdentity(umiKeypair))
-    .use(mplTokenMetadata())
-    .use(irysUploader());
+  .use(keypairIdentity(umiKeypair))
+  .use(mplTokenMetadata())
+  .use(irysUploader());
 ```
 
 Let's load our NFT, specifying the address from the previous example, and set up
@@ -860,7 +876,7 @@ const NFTImagePath = path.resolve(__dirname, "nft.png");
 
 const buffer = await fs.readFileSync(NFTImagePath);
 let file = createGenericFile(buffer, NFTImagePath, {
-    contentType: "image/png",
+  contentType: "image/png",
 });
 
 // upload new image and get image uri
@@ -876,24 +892,26 @@ const uri = await umi.uploader.uploadJson({
 });
 console.log("NFT offchain metadata URI:", uri);
 
-// Load the NFT using the mint address as used in the mint 
+// Load the NFT using the mint address as used in the mint
 //variable we declared earlier
 //const mint = UMIPublicKey("YOUR_NFT_ADDRESS_HERE");
 const nft = await fetchMetadataFromSeeds(umi, { mint });
 
 const updateTx = await updateV1(umi, {
-    mint,
-    authority: umi.identity,
-    data: {
-        ...nft,
-        sellerFeeBasisPoints: 0,
-        name: "Updated Asset",
-    },
-    primarySaleHappened: true,
-    isMutable: true,
+  mint,
+  authority: umi.identity,
+  data: {
+    ...nft,
+    sellerFeeBasisPoints: 0,
+    name: "Updated Asset",
+  },
+  primarySaleHappened: true,
+  isMutable: true,
 }).sendAndConfirm(umi);
 
-console.log(`NFT updated with new metadata URI: https://explorer.solana.com/address/${nft.publicKey}?cluster=devnet`)
+console.log(
+  `NFT updated with new metadata URI: https://explorer.solana.com/address/${nft.publicKey}?cluster=devnet`,
+);
 
 console.log("✅ Finished successfully!");
 ```
