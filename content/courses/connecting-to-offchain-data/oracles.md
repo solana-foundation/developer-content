@@ -14,18 +14,18 @@ description: Access real-world data inside a Solana program.
 
 - Oracles are services that provide external data to a blockchain network
 - There are many
-  [Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+  [Oracle providers on Solana](https://www.alchemy.com/list-of/decentralized-oracles-on-solana).
 - You can build your own Oracle to create a custom data feed
 - You have to be careful when choosing your data feed providers
 
 ## Lesson
 
-[Oracles](https://solana.com/ecosystem/explore?categories=oracle) are services
-that provide external data to a blockchain network. Blockchains by nature are
-siloed environments that do not know the outside world. This constraint
-inherently puts a limit on the use cases for decentralized applications (dApps).
-Oracles provide a solution to this limitation by creating a decentralized way to
-get real-world data onchain.
+[Oracles](https://www.alchemy.com/list-of/decentralized-oracles-on-solana) are
+services that provide external data to a blockchain network. Blockchains by
+nature are siloed environments that do not know the outside world. This
+constraint inherently puts a limit on the use cases for decentralized
+applications (dApps). Oracles provide a solution to this limitation by creating
+a decentralized way to get real-world data onchain.
 
 Oracles can provide just about any type of data onchain. Examples include:
 
@@ -56,14 +56,14 @@ trusting an oracle is understanding how it's implemented.
 Broadly speaking, there are three implementation types:
 
 1. Single, centralized oracle publishes data onchain.
-   1. Pro: It’s simple; there's one source of truth.
-   2. Con: nothing is stopping the oracle provider from providing inaccurate
-      data.
+   - Pro: It’s simple; there's one source of truth.
+   - Con: nothing is stopping the oracle provider from providing inaccurate
+     data.
 2. Network of oracles publish data and a consensus mechanism is used to
    determine the final result.
-   1. Pro: Consensus makes it less likely that bad data is pushed onchain.
-   2. Con: There is no way to disincentivize bad actors from publishing bad data
-      and trying to sway the consensus.
+   - Pro: Consensus makes it less likely that bad data is pushed onchain.
+   - Con: There is no way to disincentivize bad actors from publishing bad data
+     and trying to sway the consensus.
 3. Oracle network with some kind of proof of stake mechanism. I.e. require
    oracles to stake tokens to participate in the consensus mechanism. On every
    response, if an oracle deviates by some threshold from the accepted range of
@@ -105,7 +105,7 @@ functions and worst-case scenarios should be accounted for.
 ### Oracles on Solana
 
 There are many
-[Oracle providers on Solana](https://solana.com/ecosystem/explore?categories=oracle).
+[Oracle providers on Solana](https://www.alchemy.com/list-of/decentralized-oracles-on-solana).
 Two of the most well known are [Pyth](https://pyth.network) and
 [Switchboard](https://switchboard.xyz). They’re each unique and follow slightly
 different design choices.
@@ -414,27 +414,38 @@ You can also view the current value stored in an `AggregatorAccountData` account
 client-side in Typescript.
 
 ```typescript
-import { AggregatorAccount, SwitchboardProgram} from '@switchboard-xyz/solana.js'
+import {
+  AggregatorAccount,
+  SwitchboardProgram,
+} from "@switchboard-xyz/solana.js";
+import { Keypair, Connection } from "@solana/web3.js";
 
-...
-...
-// create keypair for test user
-let user = new anchor.web3.Keypair()
+// Create keypair for test user
+const user = Keypair.generate();
 
-// fetch switchboard devnet program object
-switchboardProgram = await SwitchboardProgram.load(
-  "devnet",
-  new anchor.web3.Connection("https://api.devnet.solana.com"),
-  user
-)
+try {
+  // Fetch Switchboard Devnet program object
+  const switchboardProgram = await SwitchboardProgram.load(
+    "devnet",
+    new Connection("https://api.devnet.solana.com"),
+    user,
+  );
 
-// pass switchboard program object and feed pubkey into AggregatorAccount constructor
-aggregatorAccount = new AggregatorAccount(switchboardProgram, solUsedSwitchboardFeed)
+  // Pass Switchboard program object and feed pubkey into AggregatorAccount constructor
+  const aggregatorAccount = new AggregatorAccount(
+    switchboardProgram,
+    solUsedSwitchboardFeed,
+  );
 
-// fetch latest SOL price
-const solPrice: Big | null = await aggregatorAccount.fetchLatestValue()
-if (solPrice === null) {
-  throw new Error('Aggregator holds no value')
+  // Fetch latest SOL price
+  const solPrice = await aggregatorAccount.fetchLatestValue();
+  if (solPrice === null) {
+    throw new Error("Aggregator holds no value");
+  }
+
+  console.log("Latest SOL price:", solPrice.toString());
+} catch (error) {
+  console.error("Error fetching SOL price:", error);
 }
 ```
 
@@ -652,7 +663,7 @@ oracle from switchboard. The program will have two main instructions:
 - Deposit - Lock up the SOL and set a USD price to unlock it at.
 - Withdraw - Check the USD price and withdraw the SOL if the price is met.
 
-#### 1. Program Setup
+### 1. Program Setup
 
 To get started, let’s create the program with
 
@@ -702,30 +713,30 @@ code to a single `lib.rs` file and call it a day. To keep it more organized
 though, it’s helpful to break it up across different files. Our program will
 have the following files within the `programs/src` directory:
 
-`/instructions/deposit.rs`
+- `/instructions/deposit.rs`
 
-`/instructions/withdraw.rs`
+- `/instructions/withdraw.rs`
 
-`/instructions/mod.rs`
+- `/instructions/mod.rs`
 
-`errors.rs`
+- `errors.rs`
 
-`state.rs`
+- `state.rs`
 
-`lib.rs`
+- `lib.rs`
 
-The `lib.rs` file will still serve as the entry point to our program, but the
-logic for each instruction will be contained in their own separate file. Go
-ahead and create the program architecture described above and we’ll get started.
-
-#### 2. `lib.rs`
+### 2. `lib.rs`
 
 Before we write any logic, we are going to set up all of our boilerplate
 information. Starting with `lib.rs`. Our actual logic will live in the
 `/instructions` directory.
 
-The `lib.rs` file will serve as the entrypoint to our program. It will define
-the API endpoints that all transactions must go through.
+The `lib.rs` file will still serve as the entry point to our program, but the
+logic for each instruction will be contained in their own separate file. It will
+define the API endpoints that all transactions must go through.
+
+Go ahead and create the program architecture described above and we’ll get
+started.
 
 ```rust
 use anchor_lang::prelude::*;
@@ -744,17 +755,19 @@ mod burry_oracle_program {
 
     use super::*;
 
-    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64) -> Result<()> {
-        deposit_handler(ctx, escrow_amt, unlock_price)
+    pub fn deposit(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: u64) -> Result<()> {
+        // Call the deposit handler with the provided context, escrow amount, and unlock price
+        deposit_handler(ctx, escrow_amount, unlock_price)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
+        // Call the withdraw handler with the provided context
         withdraw_handler(ctx)
     }
 }
 ```
 
-#### 3. `state.rs`
+### 3. `state.rs`
 
 Next, let's define our data account for this program: `EscrowState`. Our data
 account will store two pieces of info:
@@ -768,20 +781,22 @@ We will also be defining our PDA seed of `"MICHAEL BURRY"` and our hardcoded
 SOL_USD oracle pubkey `SOL_USDC_FEED`.
 
 ```rust
-// in state.rs
 use anchor_lang::prelude::*;
 
 pub const ESCROW_SEED: &[u8] = b"MICHAEL BURRY";
+
 pub const SOL_USDC_FEED: &str = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR";
 
 #[account]
 pub struct EscrowState {
     pub unlock_price: f64,
+
     pub escrow_amount: u64,
 }
+
 ```
 
-#### 4. Errors
+### 4. Errors
 
 Let’s define the custom errors we’ll use throughout the program. Inside the
 `errors.rs` file, paste the following:
@@ -803,7 +818,7 @@ pub enum EscrowErrorCode {
 }
 ```
 
-#### 5. `mod.rs`
+### 5. `mod.rs`
 
 Let's set up our `instructions/mod.rs` file.
 
@@ -813,7 +828,7 @@ pub mod deposit;
 pub mod withdraw;
 ```
 
-#### 6. **Deposit**
+### 6. Deposit
 
 Now that we have all of the boilerplate out of the way, lets move onto our
 Deposit instruction. This will live in the `/src/instructions/deposit.rs` file.
@@ -833,23 +848,25 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
     system_instruction::transfer,
-    program::invoke
+    program::invoke,
 };
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
+
+    // Account to store SOL in escrow
     #[account(
-      init,
-      seeds = [ESCROW_SEED, user.key().as_ref()],
-      bump,
-      payer = user,
-      space = std::mem::size_of::<EscrowState>() + 8
+        init,
+        seeds = [ESCROW_SEED, user.key().as_ref()],
+        bump,
+        payer = user,
+        space = std::mem::size_of::<EscrowState>() + 8
     )]
     pub escrow_account: Account<'info, EscrowState>,
-		// system program
+
     pub system_program: Program<'info, System>,
 }
 ```
@@ -876,29 +893,33 @@ lamports the user wants to lock up in escrow and invoke the transfer
 instruction.
 
 ```rust
-pub fn deposit_handler(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: u64) -> Result<()> {
-		msg!("Depositing funds in escrow...");
+pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
+    msg!("Initiating deposit into escrow...");
 
+    // Set the escrow state with the provided unlock price and escrow amount
     let escrow_state = &mut ctx.accounts.escrow_account;
     escrow_state.unlock_price = unlock_price;
     escrow_state.escrow_amount = escrow_amount;
 
-    let transfer_ix = transfer(
-      &ctx.accounts.user.key(),
-      &escrow_state.key(),
-      escrow_amount
+    // Prepare the transfer instruction to move funds into the escrow account
+    let transfer_instruction = transfer(
+        &ctx.accounts.user.key(),
+        &escrow_state.key(),
+        escrow_amount,
     );
 
+    // Invoke the transfer instruction to execute the fund transfer
     invoke(
-        &transfer_ix,
+        &transfer_instruction,
         &[
             ctx.accounts.user.to_account_info(),
             ctx.accounts.escrow_account.to_account_info(),
-            ctx.accounts.system_program.to_account_info()
-        ]
+            ctx.accounts.system_program.to_account_info(),
+        ],
     )?;
 
-    msg!("Transfer complete. Escrow will unlock SOL at {}", &ctx.accounts.escrow_account.unlock_price);
+    msg!("Transfer complete. Escrow will unlock SOL at a price of {}", unlock_price);
+
 }
 ```
 
@@ -910,42 +931,46 @@ use crate::state::*;
 use anchor_lang::prelude::*;
 use anchor_lang::solana_program::{
     system_instruction::transfer,
-    program::invoke
+    program::invoke,
 };
 
 pub fn deposit_handler(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
-    msg!("Depositing funds in escrow...");
+    msg!("Initiating deposit into escrow...");
 
+    // Set the escrow state with the provided unlock price and escrow amount
     let escrow_state = &mut ctx.accounts.escrow_account;
     escrow_state.unlock_price = unlock_price;
     escrow_state.escrow_amount = escrow_amount;
 
-    let transfer_ix = transfer(
+    // Prepare the transfer instruction to move funds into the escrow account
+    let transfer_instruction = transfer(
         &ctx.accounts.user.key(),
         &escrow_state.key(),
-        escrow_amount
+        escrow_amount,
     );
 
+    // Invoke the transfer instruction to execute the fund transfer
     invoke(
-        &transfer_ix,
+        &transfer_instruction,
         &[
             ctx.accounts.user.to_account_info(),
             ctx.accounts.escrow_account.to_account_info(),
-            ctx.accounts.system_program.to_account_info()
-        ]
+            ctx.accounts.system_program.to_account_info(),
+        ],
     )?;
 
-    msg!("Transfer complete. Escrow will unlock SOL at {}", &ctx.accounts.escrow_account.unlock_price);
+    msg!("Transfer complete. Escrow will unlock SOL at a price of {}", unlock_price);
 
     Ok(())
 }
 
 #[derive(Accounts)]
 pub struct Deposit<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
-    // account to store SOL in escrow
+
+    // Account to store SOL in escrow
     #[account(
         init,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -959,7 +984,7 @@ pub struct Deposit<'info> {
 }
 ```
 
-**Withdraw**
+### 7. Withdraw
 
 The withdraw instruction will require the same three accounts as the deposit
 instruction plus the SOL_USDC Switchboard feed account. This code will go in the
@@ -975,10 +1000,11 @@ use anchor_lang::solana_program::clock::Clock;
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
-    // escrow account
+
+    // Escrow account
     #[account(
         mut,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -986,11 +1012,13 @@ pub struct Withdraw<'info> {
         close = user
     )]
     pub escrow_account: Account<'info, EscrowState>,
+
     // Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
     )]
     pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+
     pub system_program: Program<'info, System>,
 }
 ```
@@ -1015,22 +1043,25 @@ escrow account back to the user and close the account. If it isn’t, then the
 instruction should finish and return an error.
 
 ```rust
-pub fn withdraw_handler(ctx: Context<Withdraw>, params: WithdrawParams) -> Result<()> {
+pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let feed = &ctx.accounts.feed_aggregator.load()?;
     let escrow_state = &ctx.accounts.escrow_account;
 
-    // get result
-    let val: f64 = feed.get_result()?.try_into()?;
+    // Get the result
+    let feed_value: f64 = feed.get_result()?.try_into()?;
 
-    // check whether the feed has been updated in the last 300 seconds
-    feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
-    .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
+    // Check whether the feed has been updated in the last 300 seconds
+    let current_timestamp = Clock::get().unwrap().unix_timestamp;
+    let staleness_threshold = 300;
+    feed.check_staleness(current_timestamp, staleness_threshold)
+        .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
-    msg!("Current feed result is {}!", val);
+    msg!("Current feed result is {}!", feed_value);
     msg!("Unlock price is {}", escrow_state.unlock_price);
 
-    if val < escrow_state.unlock_price as f64 {
-        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into())
+    // Ensure the feed value is below the unlock price
+    if feed_value < escrow_state.unlock_price as f64 {
+        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into());
     }
 
 	....
@@ -1052,17 +1083,19 @@ add/subtract the amount of lamports stored in each account.
 
 ```rust
 // 'Transfer: `from` must not carry data'
-  **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
-      .to_account_info()
-      .lamports()
-      .checked_sub(escrow_state.escrow_amount)
-      .ok_or(ProgramError::InvalidArgument)?;
+    let escrow_lamports = escrow_state.escrow_amount;
+    **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
+        .to_account_info()
+        .lamports()
+        .checked_sub(escrow_lamports)
+        .ok_or(ProgramError::InvalidArgument)?;
 
-  **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
-      .to_account_info()
-      .lamports()
-      .checked_add(escrow_state.escrow_amount)
-      .ok_or(ProgramError::InvalidArgument)?;
+    **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
+        .to_account_info()
+        .lamports()
+        .checked_add(escrow_lamports)
+        .ok_or(ProgramError::InvalidArgument)?;
+
 ```
 
 The final withdraw method in the `withdraw.rs` file should look like this:
@@ -1079,31 +1112,35 @@ pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
     let feed = &ctx.accounts.feed_aggregator.load()?;
     let escrow_state = &ctx.accounts.escrow_account;
 
-    // get result
-    let val: f64 = feed.get_result()?.try_into()?;
+    // Get the result
+    let feed_value: f64 = feed.get_result()?.try_into()?;
 
-    // check whether the feed has been updated in the last 300 seconds
-    feed.check_staleness(Clock::get().unwrap().unix_timestamp, 300)
-    .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
+    // Check whether the feed has been updated in the last 300 seconds
+    let current_timestamp = Clock::get().unwrap().unix_timestamp;
+    let staleness_threshold = 300;
+    feed.check_staleness(current_timestamp, staleness_threshold)
+        .map_err(|_| error!(EscrowErrorCode::StaleFeed))?;
 
-    msg!("Current feed result is {}!", val);
+    msg!("Current feed result is {}!", feed_value);
     msg!("Unlock price is {}", escrow_state.unlock_price);
 
-    if val < escrow_state.unlock_price as f64 {
-        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into())
+    // Ensure the feed value is below the unlock price
+    if feed_value < escrow_state.unlock_price as f64 {
+        return Err(EscrowErrorCode::SolPriceAboveUnlockPrice.into());
     }
 
-    // 'Transfer: `from` must not carry data'
+    // Transfer funds from the escrow account to the user
+    let escrow_lamports = escrow_state.escrow_amount;
     **escrow_state.to_account_info().try_borrow_mut_lamports()? = escrow_state
         .to_account_info()
         .lamports()
-        .checked_sub(escrow_state.escrow_amount)
+        .checked_sub(escrow_lamports)
         .ok_or(ProgramError::InvalidArgument)?;
 
     **ctx.accounts.user.to_account_info().try_borrow_mut_lamports()? = ctx.accounts.user
         .to_account_info()
         .lamports()
-        .checked_add(escrow_state.escrow_amount)
+        .checked_add(escrow_lamports)
         .ok_or(ProgramError::InvalidArgument)?;
 
     Ok(())
@@ -1111,10 +1148,11 @@ pub fn withdraw_handler(ctx: Context<Withdraw>) -> Result<()> {
 
 #[derive(Accounts)]
 pub struct Withdraw<'info> {
-    // user account
+    // User account
     #[account(mut)]
     pub user: Signer<'info>,
-    // escrow account
+
+    // Escrow account
     #[account(
         mut,
         seeds = [ESCROW_SEED, user.key().as_ref()],
@@ -1122,13 +1160,16 @@ pub struct Withdraw<'info> {
         close = user
     )]
     pub escrow_account: Account<'info, EscrowState>,
+
     // Switchboard SOL feed aggregator
     #[account(
         address = Pubkey::from_str(SOL_USDC_FEED).unwrap()
     )]
     pub feed_aggregator: AccountLoader<'info, AggregatorAccountData>,
+
     pub system_program: Program<'info, System>,
 }
+
 ```
 
 And that’s it for the program! At this point, you should be able to run
@@ -1145,7 +1186,7 @@ Error: Function _ZN86_$LT$switchboard_v2..aggregator..AggregatorAccountData$u20$
 
 </Callout>
 
-#### 7. Testing
+### 8. Testing
 
 Let's write some tests. We should have four of them:
 
@@ -1179,43 +1220,55 @@ export const solUsedSwitchboardFeed = new anchor.web3.PublicKey(
   "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
 );
 
-describe("burry-escrow", () => {
-  // Configure the client to use the local cluster.
+describe("Burry Escrow", () => {
   anchor.setProvider(anchor.AnchorProvider.env());
   const provider = anchor.AnchorProvider.env();
   const program = anchor.workspace.BurryEscrow as Program<BurryEscrow>;
   const payer = (provider.wallet as AnchorWallet).payer;
 
-  it("Create Burry Escrow Below Price", async () => {
-    // fetch switchboard devnet program object
-    const switchboardProgram = await SwitchboardProgram.load(
+  const ESCROW_IDENTIFIER = "MICHAEL BURRY";
+  const SOL_PRICE_DECREMENT = 10;
+  const SOL_PRICE_INCREMENT = 10;
+  const AMOUNT_TO_LOCK_UP = new anchor.BN(100);
+
+  async function fetchSwitchboardProgram() {
+    return await SwitchboardProgram.load(
       "devnet",
       new anchor.web3.Connection("https://api.devnet.solana.com"),
       payer,
     );
+  }
+
+  async function deriveEscrowState() {
+    return await anchor.web3.PublicKey.findProgramAddressSync(
+      [Buffer.from(ESCROW_IDENTIFIER), payer.publicKey.toBuffer()],
+      program.programId,
+    );
+  }
+
+  async function fetchSolPrice(aggregatorAccount: AggregatorAccount) {
+    const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
+    if (solPrice === null) {
+      throw new Error("Aggregator holds no value");
+    }
+    return solPrice;
+  }
+
+  it("Create Burry Escrow Below Price", async () => {
+    const switchboardProgram = await fetchSwitchboardProgram();
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
       solUsedSwitchboardFeed,
     );
 
-    // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
+    const [escrowState] = await deriveEscrowState();
 
-    // fetch latest SOL price
-    const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
-    if (solPrice === null) {
-      throw new Error("Aggregator holds no value");
-    }
-    const failUnlockPrice = solPrice.minus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100);
+    const solPrice = await fetchSolPrice(aggregatorAccount);
+    const failUnlockPrice = solPrice.minus(SOL_PRICE_DECREMENT).toNumber();
 
-    // Send transaction
     try {
-      const tx = await program.methods
-        .deposit(amountToLockUp, failUnlockPrice)
+      const transactionSignature = await program.methods
+        .deposit(AMOUNT_TO_LOCK_UP, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
           escrowAccount: escrowState,
@@ -1224,36 +1277,32 @@ describe("burry-escrow", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
+      await provider.connection.confirmTransaction(
+        transactionSignature,
+        "confirmed",
+      );
 
-      // Fetch the created account
       const newAccount = await program.account.escrowState.fetch(escrowState);
-
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
         "confirmed",
       );
+
       console.log("Onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data onchain is equal to local 'data'
-      assert(failUnlockPrice == newAccount.unlockPrice);
+      assert(failUnlockPrice === newAccount.unlockPrice);
       assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
+    } catch (error) {
+      console.error(error);
+      assert.fail(error);
     }
   });
 
-  it("Withdraw from escrow", async () => {
-    // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
+  it("Withdraw from Escrow", async () => {
+    const [escrowState] = await deriveEscrowState();
 
-    // send tx
-    const tx = await program.methods
+    const transactionSignature = await program.methods
       .withdraw()
       .accounts({
         user: payer.publicKey,
@@ -1264,13 +1313,15 @@ describe("burry-escrow", () => {
       .signers([payer])
       .rpc();
 
-    await provider.connection.confirmTransaction(tx, "confirmed");
+    await provider.connection.confirmTransaction(
+      transactionSignature,
+      "confirmed",
+    );
 
-    // assert that the escrow account has been closed
     let accountFetchDidFail = false;
     try {
       await program.account.escrowState.fetch(escrowState);
-    } catch (e) {
+    } catch (error) {
       accountFetchDidFail = true;
     }
 
@@ -1278,36 +1329,21 @@ describe("burry-escrow", () => {
   });
 
   it("Create Burry Escrow Above Price", async () => {
-    // fetch switchboard devnet program object
-    const switchboardProgram = await SwitchboardProgram.load(
-      "devnet",
-      new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer,
-    );
+    const switchboardProgram = await fetchSwitchboardProgram();
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
       solUsedSwitchboardFeed,
     );
 
-    // derive escrow state account
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
-    console.log("Escrow Account: ", escrowState.toBase58());
+    const [escrowState] = await deriveEscrowState();
+    console.log("Escrow Account:", escrowState.toBase58());
 
-    // fetch latest SOL price
-    const solPrice: Big | null = await aggregatorAccount.fetchLatestValue();
-    if (solPrice === null) {
-      throw new Error("Aggregator holds no value");
-    }
-    const failUnlockPrice = solPrice.plus(10).toNumber();
-    const amountToLockUp = new anchor.BN(100);
+    const solPrice = await fetchSolPrice(aggregatorAccount);
+    const failUnlockPrice = solPrice.plus(SOL_PRICE_INCREMENT).toNumber();
 
-    // Send transaction
     try {
-      const tx = await program.methods
-        .deposit(amountToLockUp, failUnlockPrice)
+      const transactionSignature = await program.methods
+        .deposit(AMOUNT_TO_LOCK_UP, failUnlockPrice)
         .accounts({
           user: payer.publicKey,
           escrowAccount: escrowState,
@@ -1316,40 +1352,36 @@ describe("burry-escrow", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx);
+      await provider.connection.confirmTransaction(
+        transactionSignature,
+        "confirmed",
+      );
+      console.log("Your transaction signature:", transactionSignature);
 
-      // Fetch the created account
       const newAccount = await program.account.escrowState.fetch(escrowState);
-
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
         "confirmed",
       );
+
       console.log("Onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data onchain is equal to local 'data'
-      assert(failUnlockPrice == newAccount.unlockPrice);
+      assert(failUnlockPrice === newAccount.unlockPrice);
       assert(escrowBalance > 0);
-    } catch (e) {
-      console.log(e);
-      assert.fail(e);
+    } catch (error) {
+      console.error(error);
+      assert.fail(error);
     }
   });
 
-  it("Attempt to withdraw while price is below UnlockPrice", async () => {
+  it("Attempt to Withdraw while Price is Below Unlock Price", async () => {
     let didFail = false;
 
-    // derive escrow address
-    const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
-      [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
-    );
+    const [escrowState] = await deriveEscrowState();
 
-    // send tx
     try {
-      const tx = await program.methods
+      const transactionSignature = await program.methods
         .withdraw()
         .accounts({
           user: payer.publicKey,
@@ -1360,14 +1392,16 @@ describe("burry-escrow", () => {
         .signers([payer])
         .rpc();
 
-      await provider.connection.confirmTransaction(tx, "confirmed");
-      console.log("Your transaction signature", tx);
-    } catch (e) {
-      // verify tx returns expected error
+      await provider.connection.confirmTransaction(
+        transactionSignature,
+        "confirmed",
+      );
+      console.log("Your transaction signature:", transactionSignature);
+    } catch (error) {
       didFail = true;
-      console.log(e.error.errorMessage);
+      console.error(error.errorMessage);
       assert(
-        e.error.errorMessage ==
+        error.errorMessage ===
           "Current SOL price is not above Escrow unlock price.",
       );
     }
