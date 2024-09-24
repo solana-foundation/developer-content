@@ -35,35 +35,35 @@ synchronized system:
 - **mainnet-beta**: The main production network
 - **testnet**: For testing new features
 - **devnet**: For application development
-- **localnet**: For local testing
 
-The program that run on Solana - the ones that create tokens, swap tokens, art
+The programs that run on Solana - the ones that create tokens, swap tokens, art
 marketplaces, escrows, market makers, DePIN apps, auctions, retail payments
 platforms, etc - are called **Solana apps**.
 
 The most popular way to build onchain apps is using **Rust** language and the
 **Anchor** framework. There is also another way of developing Solana programs
-that is, by using the **native onchain program development**, however **Anchor**
-makes things a lot simpler and safer. Some pros of using Anchor are:
+which is, by using the **native onchain program development**, however
+**Anchor** makes things a lot simpler and safer. Some pros of using Anchor are:
 
 - Security checks are implemented automatically
 - Automatic routing of incoming instructions to the correct instruction handler
 - Automatic serialization and deserialization of the data inside transactions
 - Account validation, including:
+  - Ensuring that certain accounts have signed the transaction
   - Type checking
   - Ensuring account uniqueness
 
-Regardless of the language and framework you choose, Solana works the same.
-Let's refresh how programs work on Solana.
+Regardless of the language and framework you use, Solana operates in the same
+way. Let’s review how programs function on Solana.
 
 ![Diagram showing a transaction with two instructions](/public/assets/courses/unboxed/transaction-and-instructions.svg)
 
 ### Programs are deployed at addresses
 
-In the same way that we can send tokens to users using their public key, we can
-find programs using the program's public key. When using Anchor, a keypair is
-created during `anchor init`, and the private key is saved in the
-`target/deploy` directory of your project.
+Just as we can send tokens to users using their public key, we can locate
+programs using the program's public key. When using Anchor, a keypair is created
+during `anchor init`, and the private key is saved in the `target/deploy`
+directory of your project.
 
 A program's public key is sometimes called a 'program ID' or 'program address'.
 Which can be seen in the `programs/<insert_project_name>/src/lib.rs` and
@@ -71,25 +71,24 @@ Which can be seen in the `programs/<insert_project_name>/src/lib.rs` and
 
 ### Programs have instruction handlers
 
-For example, a Solana client making a transaction transferring some USDC with a
-memo saying 'thanks' would have two instructions:
+For example, a Solana client making a transaction to transfer USDC with a memo
+saying 'thanks' would have two instructions:
 
-- one instruction for the Token program's `transfer` instruction handler
-- the other instruction for the Memo program's `memo` instruction handler.
+- One instruction for the Token program's `transfer` instruction handler.
+- Another instruction for the Memo program's `memo` instruction handler.
 
-Both these instructions must be completed successfully for the transaction to
-execute.
+Both instructions must be completed successfully for the transaction to execute.
 
-Instruction handlers are how blockchain programs process the instructions from
-clients. Every exchange, lending protocol, escrow, oracle, etc. provides their
-functionality by instruction handlers.
+Instruction handlers are how onchain programs process instructions from clients.
+Every exchange, lending protocol, escrow, oracle, and similar application
+provide their functionality via instruction handlers.
 
 ### Instruction handlers write their state to Solana accounts
 
-If you have done web development before, think of instruction handlers like HTTP
-route handlers, and incoming instructions like HTTP requests.
+If you have experience in web development, you can think of instruction handlers
+like HTTP route handlers and incoming instructions like HTTP requests.
 
-However, unlike HTTP route handlers, Solana instruction handlers don't return
+However, unlike HTTP route handlers, Solana instruction handlers do not return
 data. Instead, they write their data to accounts on Solana.
 
 Programs on Solana can transfer tokens to user wallet addresses (for SOL) or
@@ -102,9 +101,8 @@ This is how Solana programs store their state.
 
 ### Program Derived Addresses (PDAs): Solana's Key-Value Store
 
-Data for Solana programs are stored in **program-derived addresses (PDAs)**.
-Solana's PDAs can be thought of as a **key/value store**. A PDA can be designed
-to store any form of data as required by the program.
+Data for Solana programs are stored in **Program-Derived Addresses (PDAs)**.
+Solana’s PDAs can be viewed as a **key-value store**:
 
 #### Key Concepts
 
@@ -117,9 +115,9 @@ to store any form of data as required by the program.
 
    - **Seed**: chosen by the programmer
    - **Bump**: An additional value to ensure unique PDA creation
-   - **Deterministic**: Same combination of seed and bump always produce the
-     same address. This helps the program and the client to accurately determine
-     the address of the data.
+   - **Deterministic**: The same combination of seed and bump always produces
+     the same address. This helps the program and the client to accurately
+     determine the address of the data.
 
 3. **Data Storage**
 
@@ -131,55 +129,103 @@ to store any form of data as required by the program.
      is a `PublicKey`, PDA addresses are not public keys and do not have a
      matching private key.
    - A program's PDAs are unique so, they won't conflict with other programs.
-   - PDAs can also act as signer in an instruction. We'll learn more about this
+   - PDAs can also act as signers in an instruction. We'll learn more about this
      in further lessons.
 
-#### Examples of PDA Usage
+Key-value stores enable your onchain program and client software to consistently
+determine the address for a data item because the same seeds will always return
+the same address.
 
-| Purpose           | Seeds                      | Resulting PDA                |
-| ----------------- | -------------------------- | ---------------------------- |
-| Exchange Rate     | `"USD"`, `"AUD"`           | Stores USD to AUD rate       |
-| User Relationship | User1 wallet, User2 wallet | Stores relationship data     |
-| Product Review    | User wallet, Product ID    | Stores user's review         |
-| Global Config     | `"config"`                 | Stores program-wide settings |
+#### How PDAs Work
 
-#### Benefits
+1. **Key**: The PDA address, derived from seeds you choose as a developer.
+2. **Value**: The data stored in the account at that address.
 
-1. **Uniqueness**: PDAs are specific to your program, avoiding conflicts
-2. **Determinism**: Consistent address generation across clients and on-chain
-   programs
-3. **Flexibility**: Can store various types of data structures
-4. **Efficiency**: Quick lookup and access to program-specific data
+#### Examples
+
+Here's a table illustrating various use cases for PDAs:
+
+| Use Case          | Seeds                          | PDA (Key)       | Value (Data Stored)                        |
+| ----------------- | ------------------------------ | --------------- | ------------------------------------------ |
+| Exchange Rate     | `["USD", "AUD"]`               | Derived address | Current USD to AUD exchange rate           |
+| User Relationship | `[user1_wallet, user2_wallet]` | Derived address | Relationship data (e.g., friends, blocked) |
+| Movie Review      | `[reviewer_wallet, "titanic"]` | Derived address | Review text, rating, timestamp             |
+| Global Config     | `["config"]`                   | Derived address | Program-wide settings                      |
+
+#### Detailed Explanations
+
+#### 1. Exchange Rate Example
+
+- **Seeds**: `["USD", "AUD"]`
+- **Purpose**: Store the current exchange rate between USD and AUD.
+- **Benefits**: Easy to locate and update the exchange rate for this specific
+  currency pair.
+
+#### 2. User Relationship Example
+
+- **Seeds**: `[user1_wallet, user2_wallet]`
+- **Purpose**: Store information about the relationship between two users.
+- **Benefits**: Quickly retrieve or modify the relationship status between any
+  two users.
+
+#### 3. Movie Review Example
+
+- **Seeds**: `[reviewer_wallet, "titanic"]`
+- **Purpose**: Store a user's review for a specific movie.
+- **Benefits**: Efficiently organize and access reviews by user and movie.
+
+#### 4. Global Config Example
+
+- **Seeds**: `["config"]`
+- **Purpose**: Store global settings for your entire program.
+- **Benefits**: Centralize program-wide configurations in an easily accessible
+  location.
+
+#### Key Benefits of Using PDAs
+
+1. **Consistency**: The same seeds always produce the same address, ensuring
+   data can be reliably located.
+2. **Uniqueness**: PDAs are unique to your program, preventing conflicts with
+   other programs.
+3. **Flexibility**: You can create complex data structures by carefully choosing
+   your seeds.
+4. **Efficiency**: Quick and deterministic access to data based on known
+   parameters (seeds).
 
 ### Solana instructions need to specify all the accounts they will use
 
-As you may already know, Solana is fast because it can process transactions that
-don't overlap at the same time i.e., just like in the real world, Alice sending
-to Bob doesn't stop Chris from sending something to Diana. Your front-end apps
-need to specify the addresses of all the accounts they will use.
+As you may already know, Solana is fast because it can process non-overlapping
+transactions simultaneously. For example, Alice sending tokens to Bob doesn’t
+stop Chris from sending tokens to Diana. Your front-end apps need to specify the
+addresses of all the accounts they will use.
 
-This includes the PDAs you make. Thankfully, you can calculate the address for
-PDAs in your front-end code before you write data there!
+This includes the PDAs you create. Fortunately, you can calculate the address
+for PDAs in your front-end code before writing data to them.
 
 ```typescript
-// There's nothing at this address right now, but we're going to use in our transaction
-const address = findProgramAddressSync(["seed", "another seed"], PROGRAM_ID);
+import { PublicKey } from "@solana/web3.js";
+
+// There's nothing at this address right now, but we'll use it in our transaction
+const [address, bump] = PublicKey.findProgramAddressSync(
+  [Buffer.from("seed"), Buffer.from("another seed")],
+  PROGRAM_ID,
+);
 ```
 
 ### There are multiple ways to build onchain, but we recommend Anchor
 
 You currently have two options for onchain program development:
 
-- We recommend new onchain programmers
-  [start with Anchor](/content/courses/onchain-development/intro-to-anchor).
-  Anchor's defaults make it easy to create safe programs.
-- There's also a separate
-  [native onchain program development](/content/courses/native-onchain-development)
-  course.
+- We recommend new developers
+  [start with Anchor](/content/courses/onchain-development/intro-to-anchor.md).
+  Anchor's defaults make it easy to create secure programs.
+- There is also a course on
+  [native onchain program development](/content/courses/native-onchain-development.md).
 
-Whichever way you pick, Solana Foundation maintains
-[examples in both languages](https://github.com/solana-developers/program-examples),
-and [Solana Stack Exchange](https://solana.stackexchange.com/) is there to help.
+Whichever approach you choose, the Solana Foundation provides
+[examples in both Anchor and native Rust](https://github.com/solana-developers/program-examples),
+and [Solana Stack Exchange](https://solana.stackexchange.com/) is available for
+support.
 
 For now, let's
-[set up your computer](/content/courses/onchain-development/local-setup)!
+[set up your computer](/content/courses/onchain-development/local-setup.md)!
