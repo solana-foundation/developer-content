@@ -139,10 +139,14 @@ pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
 instruction requires. When you use `Context`, you specify the concrete type of
 `T` as a struct that adopts the `Accounts` trait.
 
-The first argument of every instruction handler must be `Context`. `Context` takes a
-generic of your `Accounts` struct, eg, if `AddMovieReview` was the struct holding
-the accounts, the context for the `add_movie_review()` function would be
-`Context<AddMovieReview>`.
+The first argument of every instruction handler must be `Context`. `Context`
+takes a generic of your `Accounts` struct, eg, if `AddMovieReview` was the
+struct holding the accounts, the context for the `add_movie_review()` function
+would be `Context<AddMovieReview>`.
+
+<callout type="info" title="Naming convention">
+  Yes, the Accounts struct is typically named the same thing as the instruction handler, just in TitleCase. Eg, the struct with the accounts for add_movie_review() is called AddMovieReview!
+</callout>
 
 Through this context argument the instruction can then access:
 
