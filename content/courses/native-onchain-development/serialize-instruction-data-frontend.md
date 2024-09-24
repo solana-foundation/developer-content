@@ -354,30 +354,69 @@ Now that we have the buffer layout set up, let’s create a method in `Movie`
 called `serialize()` that will return a `Buffer` with a `Movie` object’s
 properties encoded into the appropriate layout.
 
+Instead of allocating a fixed buffer size, we'll calculate the size dynamically
+using known constants for the space required by each field in the `Movie`
+object. Specifically, we'll use `INIT_SPACE` (to account for string length
+metadata) and `ANCHOR_DISCRIMINATOR` (to account for the 8-byte discriminator
+used by Anchor).
+
 ```typescript
-import * as borsh from '@coral-xyz/borsh'
+import * as borsh from "@coral-xyz/borsh";
+
+// Constants for size calculations
+const ANCHOR_DISCRIMINATOR = 8; // 8 bytes for the account discriminator used by Anchor
+const STRING_LENGTH_SPACE = 4; // 4 bytes to store the length of each string
+
+// Specific sizes for 'title' and 'description' strings
+const TITLE_SIZE = 100; // Allocate 100 bytes for the 'title'
+const DESCRIPTION_SIZE = 500; // Allocate 500 bytes for the 'description'
+
+// Total space calculation for the Movie review structure
+const MOVIE_REVIEW_SPACE =
+  ANCHOR_DISCRIMINATOR + // 8 bytes for the account discriminator
+  STRING_LENGTH_SPACE +
+  TITLE_SIZE + // 4 bytes for the title length + 100 bytes for the title
+  STRING_LENGTH_SPACE +
+  DESCRIPTION_SIZE + // 4 bytes for the description length + 500 bytes for the description
+  1 + // 1 byte for 'variant'
+  1; // 1 byte for 'rating'
 
 export class Movie {
   title: string;
   rating: number;
   description: string;
 
-  ...
+  constructor(title: string, rating: number, description: string) {
+    // Enforce specific sizes for title and description
+    if (title.length > TITLE_SIZE) {
+      throw new Error(`Title cannot exceed ${TITLE_SIZE} characters.`);
+    }
+    if (description.length > DESCRIPTION_SIZE) {
+      throw new Error(
+        `Description cannot exceed ${DESCRIPTION_SIZE} characters.`,
+      );
+    }
+
+    this.title = title;
+    this.rating = rating;
+    this.description = description;
+  }
 
   borshInstructionSchema = borsh.struct([
-    borsh.u8('variant'),
-    borsh.str('title'),
-    borsh.u8('rating'),
-    borsh.str('description'),
-  ])
+    borsh.u8("variant"),
+    borsh.str("title"),
+    borsh.u8("rating"),
+    borsh.str("description"),
+  ]);
 
   serialize(): Buffer {
     try {
-      const buffer = Buffer.alloc(1000);
+      // Allocate a buffer with the exact space needed
+      const buffer = Buffer.alloc(MOVIE_REVIEW_SPACE);
       this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
       return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));
     } catch (error) {
-      console.error('Serialization error:', error);
+      console.error("Serialization error:", error);
       return Buffer.alloc(0);
     }
   }

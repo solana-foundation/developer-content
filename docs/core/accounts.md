@@ -2,8 +2,6 @@
 sidebarSortOrder: 1
 sidebarLabel: Solana Account Model
 title: Solana Account Model
-altRoutes:
-  - /docs/core
 ---
 
 On Solana, all data is stored in what are referred to as "accounts”. The way
