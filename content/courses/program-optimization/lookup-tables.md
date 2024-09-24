@@ -6,7 +6,7 @@ objectives:
   - Extend lookup tables
   - Use lookup tables with versioned transactions
 description:
-  "Harness a great deal of accounts through the application of lookup tables."
+  "Use large amounts of accounts in a transaction by using lookup tables."
 keywords:
   - lookup tables
   - address
@@ -17,17 +17,15 @@ keywords:
 
 ## Summary
 
-- **Versioned Transactions** are like different versions of a recipe that allow
-  us to use both old and new ingredients. In this case, the "recipes" are
-  transaction formats. The old version, known as "legacy," and the new versions
-  start from version 0. We made these new versions to work better with a new
-  tool called Address Lookup Tables (LUTs).
-- **Address Lookup Tables** are like phone books for addresses. Each address
-  takes up a lot of space (32 bytes). But with LUTs, we can store these
-  addresses in a special account and refer to them using a short code (just 1
-  byte). This makes it possible to handle more addresses and create more complex
-  transactions than before, kind of like fitting in more ingredients into a
-  smaller recipe!
+- **Versioned Transactions** refers to a way to support both legacy versions and
+  newer versions of transaction formats. The original transaction format is
+  "legacy" and new transaction versions start at version 0. To use Address Lookup
+  Tables (LUTs), you need versioned transactions.
+- **Address Lookup Tables** are accounts used to store addresses of other
+  accounts, which can then be referenced in versioned transactions using a 1
+  byte index instead of 32 bytes per address stored in the account.
+  This enables the creation of more complex transactions than what was possible
+  prior to the introduction of LUTs.
 
 ## Lesson
 
@@ -93,32 +91,40 @@ the following parameters:
 You then transform this message object into a version `0` transaction using the
 `compileToV0Message()` method.
 
-Replace the `<YOUR_QUICKNODE_URL_HERE>` placeholder with the URL of your RPC.
+Replace the `<YOUR_RPC_URL_HERE>` placeholder with the URL of your RPC.
 You can get a RPC providers from [Solana RPC](https://solana.com/rpc).
 
 ```ts
-import * as web3 from "@solana/web3.js";
+import {
+  SystemProgram,
+  Connection,
+  LAMPORTS_PER_SOL,
+  TransactionMessage,
+  VersionedTransaction,
+  AddressLookupTableProgram,
+  PublicKey,
+} from "@solana/web3.js";
 
 // Example transfer instruction
 const transferInstruction = [
-  web3.SystemProgram.transfer({
+  SystemProgram.transfer({
     fromPubkey: payer.publicKey, // Public key of the account that will send the funds
     toPubkey: toAccount.publicKey, // Public key of the account that will receive the funds
-    lamports: 1 * web3.LAMPORTS_PER_SOL, // Amount of lamports to transfer (in this case, 1 SOL, which is equivalent to 1,000,000,000 lamports)
+    lamports: 1 * LAMPORTS_PER_SOL, // Amount of lamports to transfer (in this case, 1 SOL, which is equivalent to 1,000,000,000 lamports)
   }),
 ];
 
 // Establish a JSON RPC connection
-const connection = new web3.Connection(
-  "<YOUR_QUICKNODE_URL_HERE>", // Replace with the URL of your RPC provider.
-  "confirmed",
+const connection = new Connection(
+  "<YOUR_RPC_URL_HERE>", // Replace with the URL of your RPC provider.
+  "confirmed"
 );
 
 // Get the latest blockhash
 let { blockhash } = await connection.getLatestBlockhash();
 
 // Create the transaction message
-const message = new web3.TransactionMessage({
+const message = new TransactionMessage({
   payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
   recentBlockhash: blockhash, // Latest blockhash
   instructions: transferInstruction, // Instructions included in transaction
@@ -139,7 +145,7 @@ transaction to the network, just like you would with a legacy transaction.
 
 ```ts
 // Create the versioned transaction using the message
-const transaction = new web3.VersionedTransaction(message);
+const transaction = new VersionedTransaction(message);
 
 // Sign the transaction
 transaction.sign([payer]);
@@ -154,7 +160,7 @@ Address Lookup Tables, or LUTs, are like special accounts that keep a list of
 other account addresses. These LUTs are managed by the Address Lookup Table
 Program and help to fit more accounts into a single transaction.
 
-With versioned transactions, you can use a LUT's address. Then, refer to
+With versioned transactions, you can use a LUT address. Then, refer to
 additional accounts with a short 1-byte index instead of their full 32-byte
 addresses. This makes the transaction much smaller and saves a lot of space.
 
@@ -162,12 +168,12 @@ To simplify the process of working with LUTs, the `@solana/web3.js` library
 includes an `AddressLookupTableProgram` class which provides a set of methods to
 create instructions for managing LUTs. These methods include:
 
-- `createLookupTable` - creates a new LUT's account
+- `createLookupTable` - creates a new LUT account
 - `freezeLookupTable` - makes an existing LUT immutable
 - `extendLookupTable` - adds addresses to an existing LUT
 - `deactivateLookupTable` - puts a LUT in a “deactivation” period before it can
   be closed
-- `closeLookupTable` - permanently closes a LUT's account
+- `closeLookupTable` - permanently closes a LUT account
 
 #### Create a lookup table
 
@@ -188,7 +194,7 @@ const slot = await connection.getSlot();
 // Create an instruction for creating a lookup table
 // and retrieve the address of the new lookup table
 const [lookupTableInst, lookupTableAddress] =
-  web3.AddressLookupTableProgram.createLookupTable({
+  AddressLookupTableProgram.createLookupTable({
     authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
     payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     recentSlot: slot - 1, // The recent slot to derive the lookup table's address
@@ -200,7 +206,9 @@ Under the hood, the lookup table address is simply a
 `authority` and `recentSlot` as seeds.
 
 ```ts
-const [lookupTableAddress, bumpSeed] = web3.PublicKey.findProgramAddressSync(
+import { toBufferLE } from 'bigint-buffer';
+
+const [lookupTableAddress, bumpSeed] = PublicKey.findProgramAddressSync(
   [params.authority.toBuffer(), toBufferLE(BigInt(params.recentSlot), 8)],
   this.programId,
 );
@@ -240,13 +248,13 @@ The function returns an instruction to extend the lookup table.
 
 ```ts
 const addresses = [
-  new web3.PublicKey("31Jy3nFeb5hKVdB4GS4Y7MhU7zhNMFxwF7RGVhPc1TzR"),
-  new web3.PublicKey("HKSeapcvwJ7ri6mf3HwBtspLFTDKqaJrMsozdfXfg5y2"),
+  new PublicKey("31Jy3nFeb5hKVdB4GS4Y7MhU7zhNMFxwF7RGVhPc1TzR"),
+  new PublicKey("HKSeapcvwJ7ri6mf3HwBtspLFTDKqaJrMsozdfXfg5y2"),
   // add more addresses
 ];
 
 // Create an instruction to extend a lookup table with the provided addresses
-const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+const extendInstruction = AddressLookupTableProgram.extendLookupTable({
   payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
   authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
   lookupTable: lookupTableAddress, // The address of the lookup table to extend
@@ -256,7 +264,7 @@ const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
 
 <Callout type="info" title="Note">
   Note that when extending a lookup table, the number of addresses that can be
-  added in one instruction is limited by the transaction size limit, which is 1232
+  added in one instruction is limited by the transaction size limit, which is 1,232
   bytes. This means you can add 30 addresses to a lookup table at a time. If you
   need to add more than that, you'll need to send many transactions. Each
   lookup table can store a maximum of 256 addresses.
@@ -272,14 +280,14 @@ to the network.
 let { blockhash } = await connection.getLatestBlockhash();
 
 // Create the transaction message
-const message = new web3.TransactionMessage({
+const message = new TransactionMessage({
   payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
   recentBlockhash: blockhash, // Latest blockhash
   instructions: [lookupTableInst, extendInstruction], // Instructions included in the transaction
 }).compileToV0Message();
 
 // Create the versioned transaction using the message
-const transaction = new web3.VersionedTransaction(message);
+const transaction = new VersionedTransaction(message);
 
 // Sign the transaction
 transaction.sign([payer]);
@@ -322,7 +330,7 @@ following parameters:
 
 ```ts
 const deactivateInstruction =
-  web3.AddressLookupTableProgram.deactivateLookupTable({
+  AddressLookupTableProgram.deactivateLookupTable({
     lookupTable: lookupTableAddress, // The address of the LUT to deactivate
     authority: user.publicKey, // The authority (i.e., the account with permission to change the LUT)
   });
@@ -340,7 +348,7 @@ parameters:
 - `recipient` - the account that will receive the reclaimed rent balance
 
 ```ts
-const closeInstruction = web3.AddressLookupTableProgram.closeLookupTable({
+const closeInstruction = AddressLookupTableProgram.closeLookupTable({
   lookupTable: lookupTableAddress, // The address of the lookup table to close
   authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
   recipient: user.publicKey, // The recipient of closed account lamports
@@ -368,7 +376,7 @@ following parameters:
 - `authority` - the account with permission to freeze the LUT
 
 ```ts
-const freezeInstruction = web3.AddressLookupTableProgram.freezeLookupTable({
+const freezeInstruction = AddressLookupTableProgram.freezeLookupTable({
   lookupTable: lookupTableAddress, // The address of the lookup table to freeze
   authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
 });
@@ -400,14 +408,14 @@ accounts by passing them as an array to the `compileToV0Message()` method. You
 can also provide many lookup table accounts.
 
 ```ts
-const message = new web3.TransactionMessage({
+const message = new TransactionMessage({
   payerKey: payer.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
   recentBlockhash: blockhash, // The blockhash of the most recent block
   instructions: instructions, // The instructions to include in the transaction
 }).compileToV0Message([lookupTableAccount]); // Include lookup table accounts
 
 // Create the versioned transaction using the message
-const transaction = new web3.VersionedTransaction(message);
+const transaction = new VersionedTransaction(message);
 
 // Sign the transaction
 transaction.sign([payer]);
@@ -420,10 +428,10 @@ const transactionSignature = await connection.sendTransaction(transaction);
 
 Let's go ahead and practice using lookup tables!
 
-this lab will guide you through the steps of creating, extending, and then using
+This lab will guide you through the steps of creating, extending, and then using
 a lookup table in a versioned transaction.
 
-#### 1. Get the starter code
+### 1. Get the starter code
 
 To begin, download the starter code from the starter branch of this
 [repository](https://github.com/Unboxed-Software/solana-versioned-transactions/tree/starter).
@@ -446,14 +454,19 @@ The following starter code can be found in the `index.ts` file.
 
 ```ts filename="index.ts"
 import { initializeKeypair } from "./initializeKeypair";
-import * as web3 from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  SystemProgram,
+  TransactionMessage,
+  VersionedTransaction,
+  Connection,
+} from "@solana/web3.js";
 
 try {
   // Connect to the devnet cluster
-  const connection = new web3.Connection(
-    web3.clusterApiUrl("devnet"),
-    "confirmed",
-  );
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   // Initialize the user's keypair
   const user = await initializeKeypair(connection);
@@ -462,7 +475,7 @@ try {
   // Generate 22 addresses
   const recipients = [];
   for (let i = 0; i < 22; i++) {
-    recipients.push(web3.Keypair.generate().publicKey);
+    recipients.push(Keypair.generate().publicKey);
   }
 
   // Create an array of transfer instructions
@@ -471,11 +484,11 @@ try {
   // Add a transfer instruction for each address
   for (const address of recipients) {
     transferInstructions.push(
-      web3.SystemProgram.transfer({
+      SystemProgram.transfer({
         fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
         toPubkey: address, // The destination account for the transfer
-        lamports: web3.LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
-      }),
+        lamports: LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
+      })
     );
   }
 
@@ -484,14 +497,14 @@ try {
     await connection.getLatestBlockhash();
 
   // Create the transaction message
-  const message = new web3.TransactionMessage({
+  const message = new TransactionMessage({
     payerKey: user.publicKey, // Public key of the account that will pay for the transaction
     recentBlockhash: blockhash, // Latest blockhash
     instructions: transferInstructions, // Instructions included in transaction
   }).compileToV0Message();
 
   // Create the versioned transaction using the message
-  const transaction = new web3.VersionedTransaction(message);
+  const transaction = new VersionedTransaction(message);
 
   // Sign the transaction
   transaction.sign([user]);
@@ -519,7 +532,7 @@ to the `.env` file, airdrop devnet SOL to the keypair, and send the transaction
 built in the starter code. The transaction is expected to fail with the error
 message `VersionedTransaction too large`.
 
-```
+```txt
 Creating .env file
 Current balance is 0
 Airdropping 1 SOL...
@@ -529,7 +542,7 @@ VersionedTransaction too large: 1664 bytes
 ```
 
 <Callout>
-By design, Solana transactions are limited to 1232 bytes. Transactions exceeding
+By design, Solana transactions are limited to 1,232 bytes. Transactions exceeding
 this size will fail.
 </Callout>
 
@@ -542,7 +555,7 @@ leave only the following:
 
 ```ts
 // Connect to the devnet cluster
-const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+const connection = new Connection(clusterApiUrl("devnet"));
 
 // Initialize the user's keypair
 const user = await initializeKeypair(connection);
@@ -551,11 +564,11 @@ console.log("Public Key:", user.publicKey.toBase58());
 // Generate 22 addresses
 const addresses = [];
 for (let i = 0; i < 22; i++) {
-  addresses.push(web3.Keypair.generate().publicKey);
+  addresses.push(Keypair.generate().publicKey);
 }
 ```
 
-#### 2. Create a `sendV0Transaction` helper function
+### 2. Create a `sendV0Transaction` helper function
 
 We'll be sending many "version 0" transactions, so let's create a helper
 function to facilitate this.
@@ -575,25 +588,31 @@ The function then performs the following tasks:
 - Logs the transaction URL on the Solana Explorer
 
 ```ts
+import {
+  ...
+  TransactionInstruction,
+  AddressLookupTableAccount
+} from "@solana/web3.js";
+
 async function sendV0Transaction(
-  connection: web3.Connection,
-  user: web3.Keypair,
-  instructions: web3.TransactionInstruction[],
-  lookupTableAccounts?: web3.AddressLookupTableAccount[],
+  connection: Connection,
+  user: Keypair,
+  instructions: TransactionInstruction[],
+  lookupTableAccounts?: AddressLookupTableAccount[],
 ) {
   // Get the latest blockhash and last valid block height
   const { lastValidBlockHeight, blockhash } =
     await connection.getLatestBlockhash();
 
   // Create a new transaction message with the provided instructions
-  const messageV0 = new web3.TransactionMessage({
+  const messageV0 = new TransactionMessage({
     payerKey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     recentBlockhash: blockhash, // The blockhash of the most recent block
     instructions, // The instructions to include in the transaction
   }).compileToV0Message(lookupTableAccounts ? lookupTableAccounts : undefined);
 
   // Create a new transaction object with the message
-  const transaction = new web3.VersionedTransaction(messageV0);
+  const transaction = new VersionedTransaction(messageV0);
 
   // Sign the transaction with the user's keypair
   transaction.sign([user]);
@@ -616,6 +635,11 @@ async function sendV0Transaction(
 }
 ```
 
+<Callout>
+Remember to update the `import` statement at the top of the file to include the
+`TransactionInstruction` and `AddressLookupTableAccount` classes.
+</Callout>
+
 #### 3. Create a `waitForNewBlock` helper function
 
 Recall that lookup tables and the addresses contained in them can't be
@@ -631,7 +655,7 @@ every 1000ms. Once the new block height exceeds the target height, the interval
 is cleared and the promise is resolved.
 
 ```ts
-function waitForNewBlock(connection: web3.Connection, targetHeight: number) {
+function waitForNewBlock(connection: Connection, targetHeight: number) {
   console.log(`Waiting for ${targetHeight} new blocks`);
   return new Promise(async (resolve: any) => {
     // Get the last valid block height of the blockchain
@@ -670,18 +694,23 @@ Now that we have some helper functions ready to go, declare a function named
 5. Return the address of the lookup table
 
 ```ts
+import {
+  ...
+  PublicKey
+} from "@solana/web3.js";
+
 async function initializeLookupTable(
-  user: web3.Keypair,
-  connection: web3.Connection,
-  addresses: web3.PublicKey[],
-): Promise<web3.PublicKey> {
+  user: Keypair,
+  connection: Connection,
+  addresses: PublicKey[],
+): Promise<PublicKey> {
   // Get the current slot
   const slot = await connection.getSlot();
 
   // Create an instruction for creating a lookup table
   // and retrieve the address of the new lookup table
   const [lookupTableInst, lookupTableAddress] =
-    web3.AddressLookupTableProgram.createLookupTable({
+    AddressLookupTableProgram.createLookupTable({
       authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
       payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
       recentSlot: slot - 1, // The recent slot to derive the lookup table's address
@@ -689,7 +718,7 @@ async function initializeLookupTable(
   console.log("lookup table address:", lookupTableAddress.toBase58());
 
   // Create an instruction to extend a lookup table with the provided addresses
-  const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+  const extendInstruction = AddressLookupTableProgram.extendLookupTable({
     payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
     lookupTable: lookupTableAddress, // The address of the lookup table to extend
@@ -705,6 +734,11 @@ async function initializeLookupTable(
 }
 ```
 
+<Callout>
+Remember to update the `import` statement at the top of the file to include the
+`PublicKey` class.
+</Callout>
+
 #### 5. Modify `try-catch` block to use lookup tables
 
 Now that we can initialize a lookup table with all of the recipients' addresses,
@@ -719,8 +753,8 @@ to:
 
 ```ts
 // Connect to the devnet cluster
-const connection = new web3.Connection(
-  web3.clusterApiUrl("devnet"),
+const connection = new Connection(
+  clusterApiUrl("devnet"),
   "confirmed",
 );
 
@@ -731,7 +765,7 @@ console.log("PublicKey:", user.publicKey.toBase58());
 // Generate 22 addresses
 const recipients = [];
 for (let i = 0; i < 22; i++) {
-  recipients.push(web3.Keypair.generate().publicKey);
+  recipients.push(Keypair.generate().publicKey);
 }
 
 const lookupTableAddress = await initializeLookupTable(
@@ -751,10 +785,10 @@ if (!lookupTableAccount) {
 }
 
 const transferInstructions = recipients.map(recipient => {
-  return web3.SystemProgram.transfer({
+  return SystemProgram.transfer({
     fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     toPubkey: recipient, // The destination account for the transfer
-    lamports: web3.LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
+    lamports: LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
   });
 });
 
@@ -810,17 +844,17 @@ All we need to do is go into `initializeLookupTable` and do two things:
 
 ```ts
 async function initializeLookupTable(
-  user: web3.Keypair,
-  connection: web3.Connection,
-  addresses: web3.PublicKey[],
-): Promise<web3.PublicKey> {
+  user: Keypair,
+  connection: Connection,
+  addresses: PublicKey[],
+): Promise<PublicKey> {
   // Get the current slot
   const slot = await connection.getSlot();
 
   // Create an instruction for creating a lookup table
   // and retrieve the address of the new lookup table
   const [lookupTableInst, lookupTableAddress] =
-    web3.AddressLookupTableProgram.createLookupTable({
+    AddressLookupTableProgram.createLookupTable({
       authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
       payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
       recentSlot: slot - 1, // The recent slot to derive the lookup table's address
@@ -828,7 +862,7 @@ async function initializeLookupTable(
   console.log("lookup table address:", lookupTableAddress.toBase58());
 
   // Create an instruction to extend a lookup table with the provided addresses
-  const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+  const extendInstruction = AddressLookupTableProgram.extendLookupTable({
     payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
     lookupTable: lookupTableAddress, // The address of the lookup table to extend
@@ -845,7 +879,7 @@ async function initializeLookupTable(
   while (remaining.length > 0) {
     const toAdd = remaining.slice(0, 30);
     remaining = remaining.slice(30);
-    const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+    const extendInstruction = AddressLookupTableProgram.extendLookupTable({
       payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
       authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
       lookupTable: lookupTableAddress, // The address of the lookup table to extend
