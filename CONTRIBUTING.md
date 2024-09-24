@@ -58,14 +58,12 @@ In particular:
 - Use the terms 'blockchain' or 'web3' rather than 'crypto'.
 - Use 'SOL' rather than 'Sol' to refer to Solana's native token. Don't call the
   native token 'Solana'!
-- Use 'secret key' rather than 'private key' to be consistent with web3.js.
-  **Note**: this will change in a future version of web3.js, but right now the
-  ecosystem uses 'secret key'.
-- Use 'wallet app' for software. 'wallet' for the address that holds value, to
+- Use 'private key' rather than 'secret key' to be consistent with the current web3.js ecosystem.
+- Use 'wallet app' for software, and 'wallet' for the address that holds value, to
   avoid confusion between these two concepts.
 - PDAs are not public keys. It is not possible to have a public key without a
-  secret key. A public key is derived from a secret key, and it is not possible
-  to generate a public key without first generating a secret key.
+  private key. A public key is derived from a private key, and it is not possible
+  to generate a public key without first generating a private key.
 - Be careful about the term 'token account'. A
   ['token account' is any account formatted to hold tokens](https://solana.stackexchange.com/questions/7507/what-is-the-difference-between-a-token-account-and-an-associated-token-account),
   and being specific (rather than, for example, swapping between 'associated
