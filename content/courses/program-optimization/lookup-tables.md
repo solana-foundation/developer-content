@@ -365,41 +365,42 @@ Let's go ahead and practice using lookup tables!
 This lab will guide you through creating, extending, and using a lookup table in
 a versioned transaction.
 
-#### 1. Get the starter code
+#### 1. Create the `try-large-transaction.ts` file
 
-To begin, download the starter code from the "starter" branch of this
-[repository](https://github.com/Unboxed-Software/solana-versioned-transactions/tree/starter).
-Once you have the starter code, open a terminal and run the following command to
-install the necessary dependencies:
-
-```bash
-npm install
-```
-
-The starter code illustrates a scenario where a legacy transaction is created to
-transfer SOL to 22 recipients in a single atomic transaction. The transaction
-includes 22 separate instructions, each transferring SOL from the payer (signer)
-to a different recipient.
+To begin, create a new file named `try-large-transaction.ts` in your project
+directory. This file will contain the code to illustrate a scenario where a
+legacy transaction is created to transfer SOL to 22 recipients in a single
+atomic transaction. The transaction will include 22 separate instructions, each
+transferring SOL from the payer (signer) to a different recipient.
 
 This example highlights a key limitation of legacy transactions when trying to
 accommodate many account addresses within a single transaction. As expected,
 when attempting to send this transaction, it will likely fail due to exceeding
 the transaction size limits.
 
-The key logic can be found in the `index.ts` file of the starter code.
+Here’s the code to include in `try-large-transaction.ts`:
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import { initializeKeypair, makeKeypairs, getExplorerLink } from "@solana-developers/helpers";
+import {
+  Connection,
+  clusterApiUrl,
+  Keypair,
+  Transaction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+  sendAndConfirmTransaction,
+} from "@solana/web3.js";
+import {
+  initializeKeypair,
+  makeKeypairs,
+  getExplorerLink,
+} from "@solana-developers/helpers";
 import dotenv from "dotenv";
 dotenv.config();
 
 async function main() {
   // Connect to the local Solana cluster
-  const connection = new web3.Connection(
-    web3.clusterApiUrl("devnet"),
-    "confirmed",
-  );
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   // Initialize the keypair from the environment variable or create a new one
   const payer = await initializeKeypair(connection);
@@ -408,26 +409,24 @@ async function main() {
   const recipients = makeKeypairs(22).map(keypair => keypair.publicKey);
 
   // Create a legacy transaction
-  const transaction = new web3.Transaction();
+  const transaction = new Transaction();
 
   // Add 22 transfer instructions to the transaction
   recipients.forEach(recipient => {
     transaction.add(
-      web3.SystemProgram.transfer({
+      SystemProgram.transfer({
         fromPubkey: payer.publicKey,
         toPubkey: recipient,
-        lamports: web3.LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
+        lamports: LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
       }),
     );
   });
 
   // Sign and send the transaction
   try {
-    const signature = await web3.sendAndConfirmTransaction(
-      connection,
-      transaction,
-      [payer],
-    );
+    const signature = await sendAndConfirmTransaction(connection, transaction, [
+      payer,
+    ]);
     console.log(
       `Transaction successful with signature: ${getExplorerLink("tx", signature, "devnet")}`,
     );
@@ -437,7 +436,8 @@ async function main() {
 }
 ```
 
-To run the example, execute `npm start`. This process will:
+To run the example, execute `npx esrun try-large-transaction.ts`. This process
+will:
 
 - Generate a new keypair.
 - Store the keypair details in the `.env` file.
@@ -455,20 +455,42 @@ PublicKey: 7YsGYC4EBs6Dxespe4ZM3wfCp856xULWoLw7QUcVb6VG
 Error: Transaction too large: 1244 > 1232
 ```
 
-Next, we'll explore how to use lookup tables in combination with versioned
-transactions to overcome this limitation and include a greater number of
-addresses in a single transaction.
+#### 2. Create the `use-lookup-tables.ts` File
 
-To proceed, first clear the contents of the `main` function, retaining only the
-following basic structure:
+Next, we'll explore how to use lookup tables in combination with versioned
+transactions to overcome the limitation of legacy transactions and include a
+greater number of addresses in a single transaction.
+
+Create a new file named `use-lookup-tables.ts` in your project directory. This
+file will contain the code to demonstrate the use of lookup tables.
+
+Here’s the starter code to include in `use-lookup-tables.ts` file:
 
 ```typescript
+import {
+  Connection,
+  clusterApiUrl,
+  Keypair,
+  TransactionInstruction,
+  AddressLookupTableAccount,
+  SystemProgram,
+  VersionedTransaction,
+  TransactionMessage,
+  AddressLookupTableProgram,
+  LAMPORTS_PER_SOL,
+  getSlot,
+} from "@solana/web3.js";
+import {
+  initializeKeypair,
+  makeKeypairs,
+  getExplorerLink,
+} from "@solana-developers/helpers";
+import dotenv from "dotenv";
+dotenv.config();
+
 async function main() {
   // Connect to the local Solana cluster
-  const connection = new web3.Connection(
-    web3.clusterApiUrl("devnet"),
-    "confirmed",
-  );
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   // Initialize the keypair from the environment variable or create a new one
   const payer = await initializeKeypair(connection);
@@ -478,13 +500,17 @@ async function main() {
 }
 ```
 
-#### 2. Create a `sendV0Transaction` helper function
+Next, we will create a few helper functions that will be crucial for working
+with versioned transactions and lookup tables. These functions will simplify our
+process and make our code more modular and reusable.
 
-To handle versioned transactions, we will create a helper function,
-sendV0Transaction, to simplify the process. This function will accept the
-following parameters:
+#### 3. Create a `sendV0Transaction` helper function
 
-- `connection`: the Solana connection to the cluster (e.g., devnet).
+To handle versioned transactions, we will create a helper function in
+`use-lookup-tables.ts` file, called `sendV0Transaction`, to simplify the
+process. This function will accept the following parameters:
+
+- `connection`: the solana connection to the cluster (e.g., devnet).
 - `user`: the keypair of the user (payer) signing the transaction.
 - `instructions`: an array of TransactionInstruction objects to include in the
   transaction.
@@ -502,24 +528,24 @@ This helper function will:
 
 ```typescript
 async function sendV0Transaction(
-  connection: web3.Connection,
-  user: web3.Keypair,
-  instructions: web3.TransactionInstruction[],
-  lookupTableAccounts?: web3.AddressLookupTableAccount[],
+  connection: Connection,
+  user: Keypair,
+  instructions: TransactionInstruction[],
+  lookupTableAccounts?: AddressLookupTableAccount[],
 ) {
   // Get the latest blockhash and last valid block height
   const { blockhash, lastValidBlockHeight } =
     await connection.getLatestBlockhash();
 
   // Create a new transaction message with the provided instructions
-  const messageV0 = new web3.TransactionMessage({
+  const messageV0 = new TransactionMessage({
     payerKey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     recentBlockhash: blockhash, // The blockhash of the most recent block
     instructions, // The instructions to include in the transaction
   }).compileToV0Message(lookupTableAccounts);
 
   // Create a versioned transaction from the message
-  const transaction = new web3.VersionedTransaction(messageV0);
+  const transaction = new VersionedTransaction(messageV0);
 
   // Use the helper function to send and confirm the transaction
   const txid = await sendAndConfirmTransactionV0(
@@ -539,7 +565,7 @@ async function sendV0Transaction(
 }
 ```
 
-#### 3. Create a `waitForNewBlock` helper function
+#### 4. Create a `waitForNewBlock` helper function
 
 When working with lookup tables, it's important to remember that newly created
 or extended lookup tables cannot be referenced immediately. Therefore, before
@@ -560,7 +586,7 @@ This function will:
 
 ```typescript
 async function waitForNewBlock(
-  connection: web3.Connection,
+  connection: Connection,
   targetHeight: number,
 ): Promise<void> {
   console.log(`Waiting for ${targetHeight} new blocks...`);
@@ -570,7 +596,8 @@ async function waitForNewBlock(
     await connection.getLatestBlockhash();
 
   return new Promise(resolve => {
-    const checkInterval = 1000; // Interval to check for new blocks (1000ms)
+    const SECOND = 1000;
+    const checkInterval = 1 * SECOND; // Interval to check for new blocks (1000ms)
 
     // Set an interval to check for new block heights
     const intervalId = setInterval(async () => {
@@ -595,7 +622,7 @@ async function waitForNewBlock(
 }
 ```
 
-#### 4. Create an `initializeLookupTable` function
+#### 5. Create an `initializeLookupTable` function
 
 Next, we need to initialize a lookup table to hold the addresses of the
 recipients. The `initializeLookupTable` function will accept the following
@@ -625,17 +652,17 @@ by staying within Solana’s transaction size limits.
 
 ```typescript
 async function initializeLookupTable(
-  user: web3.Keypair,
-  connection: web3.Connection,
-  addresses: web3.PublicKey[],
-): Promise<web3.PublicKey> {
-  // Get the current slot using helper function from @solana-developer/helpers
+  user: Keypair,
+  connection: Connection,
+  addresses: PublicKey[],
+): Promise<PublicKey> {
+  // Get the current slot using a helper function from @solana/web3.js
   const slot = await getSlot(connection);
 
   // Create an instruction for creating a lookup table
   // and retrieve the address of the new lookup table
   const [lookupTableInst, lookupTableAddress] =
-    web3.AddressLookupTableProgram.createLookupTable({
+    AddressLookupTableProgram.createLookupTable({
       authority: user.publicKey, // The authority to modify the lookup table
       payer: user.publicKey, // The payer for transaction fees
       recentSlot: slot - 1, // The slot for lookup table address derivation
@@ -644,7 +671,7 @@ async function initializeLookupTable(
   console.log("Lookup Table Address:", lookupTableAddress.toBase58());
 
   // Create an instruction to extend a lookup table with the provided addresses
-  const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
+  const extendInstruction = AddressLookupTableProgram.extendLookupTable({
     payer: user.publicKey, // The payer of transaction fees
     authority: user.publicKey, // The authority to extend the lookup table
     lookupTable: lookupTableAddress, // Address of the lookup table to extend
@@ -661,7 +688,7 @@ async function initializeLookupTable(
 }
 ```
 
-#### 5. Modify `main` to use lookup tables
+#### 6. Modify `main` to use lookup tables
 
 With the helper functions in place, we are now ready to modify the `main`
 function to utilize versioned transactions and address lookup tables. To do so,
@@ -680,11 +707,8 @@ we will follow these steps:
 
 ```typescript
 async function main() {
-  // Connect to the local Solana cluster
-  const connection = new web3.Connection(
-    web3.clusterApiUrl("devnet"),
-    "confirmed",
-  );
+  // Connect to the devnet Solana cluster
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   // Initialize the keypair from the environment variable or create a new one
   const payer = await initializeKeypair(connection);
@@ -713,10 +737,10 @@ async function main() {
 
   // Create transfer instructions for each recipient
   const transferInstructions = recipients.map(recipient =>
-    web3.SystemProgram.transfer({
+    SystemProgram.transfer({
       fromPubkey: user.publicKey, // The payer
       toPubkey: recipient, // The recipient
-      lamports: web3.LAMPORTS_PER_SOL * 0.01, // Amount to transfer
+      lamports: LAMPORTS_PER_SOL * 0.01, // Amount to transfer
     }),
   );
 
@@ -731,8 +755,6 @@ async function main() {
   // Log the transaction link for easy access
   console.log(`Transaction URL: ${getExplorerLink("tx", txid, "devnet")}`);
 }
-
-main().catch(err => console.error(err));
 ```
 
 Even though we will create transfer instructions with full recipient addresses,
@@ -742,8 +764,8 @@ lookup table will be replaced with compact pointers referencing the lookup
 table. By doing this, addresses will be represented using only a single byte in
 the final transaction, significantly reducing the transaction's size.
 
-Use `npm start` in the command line to execute the `main` function. You should
-see an output similar to the following:
+Use `npx esrun use-lookup-tables.ts` in the command line to execute the `main`
+function. You should see an output similar to the following:
 
 ```bash
 Current balance is 1.38866636
@@ -764,7 +786,7 @@ Remember, this same transaction was failing when you first downloaded the
 starter code. Now that we're using lookup tables, we can do all 22 transfers in
 a single transaction.
 
-#### 6. Add more address to the lookup table
+#### 6. Add more addresses to the lookup table
 
 Keep in mind that the solution we've come up with so far only supports transfers
 to up to 30 accounts since we only extend the lookup table once. When you factor
@@ -776,21 +798,21 @@ All we need to do is go into `initializeLookupTable` and do two things:
 
 1. Modify the existing call to `extendLookupTable` to only add the first 30
    addresses (any more than that and the transaction will be too large)
-2. Add a loop that will keep extending a lookup table 30 addresses at a time
+2. Add a loop that will keep extending a lookup table of 30 addresses at a time
    until all addresses have been added
 
 ```typescript
 async function initializeLookupTable(
-  user: web3.Keypair,
-  connection: web3.Connection,
-  addresses: web3.PublicKey[],
-): Promise<web3.PublicKey> {
+  user: Keypair,
+  connection: Connection,
+  addresses: PublicKey[],
+): Promise<PublicKey> {
   // Get the current slot
   const slot = await connection.getSlot();
 
   // Create the lookup table and retrieve its address
   const [lookupTableInst, lookupTableAddress] =
-    web3.AddressLookupTableProgram.createLookupTable({
+    AddressLookupTableProgram.createLookupTable({
       authority: user.publicKey, // The authority to modify the lookup table
       payer: user.publicKey, // The payer for the transaction fees
       recentSlot: slot - 1, // Recent slot to derive lookup table's address
@@ -798,18 +820,17 @@ async function initializeLookupTable(
   console.log("Lookup table address:", lookupTableAddress.toBase58());
 
   // Helper function to extend the lookup table in batches
-  const extendLookupTable = async (remainingAddresses: web3.PublicKey[]) => {
+  const extendLookupTable = async (remainingAddresses: PublicKey[]) => {
     while (remainingAddresses.length > 0) {
       const toAdd = remainingAddresses.slice(0, 30); // Add up to 30 addresses
       remainingAddresses = remainingAddresses.slice(30);
 
-      const extendInstruction =
-        web3.AddressLookupTableProgram.extendLookupTable({
-          payer: user.publicKey,
-          authority: user.publicKey,
-          lookupTable: lookupTableAddress,
-          addresses: toAdd,
-        });
+      const extendInstruction = AddressLookupTableProgram.extendLookupTable({
+        payer: user.publicKey,
+        authority: user.publicKey,
+        lookupTable: lookupTableAddress,
+        addresses: toAdd,
+      });
 
       // Send the transaction to extend the lookup table with the new addresses
       await sendVersionedTransaction(connection, user, [extendInstruction]);
@@ -837,7 +858,7 @@ look at the final solution code you can
 
 ## Challenge
 
-As a challenge, experiment with deactivating, closing and freezing lookup
+As a challenge, experiment with deactivating, closing, and freezing lookup
 tables. Remember that you need to wait for a lookup table to finish deactivating
 before you can close it. Also, if a lookup table is frozen, it cannot be
 modified (deactivated or closed), so you will have to test separately or use
