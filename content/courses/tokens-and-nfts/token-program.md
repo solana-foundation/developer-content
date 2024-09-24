@@ -86,8 +86,11 @@ function requires the following arguments:
   tokens from the token mint.
 - `freezeAuthority` - an account authorized to freeze the tokens in a token
   account. If freezing is not a desired attribute, the parameter can be set to
-  null which disables it. _Note, once disabled it can't be turned back on._
+  null which disables it.
 - `decimals` - specifies the desired decimal precision of the token
+
+<callout type = caution> Once `freezeAuthority` is disabled, it can't be turned
+back on. </callout>
 
 When creating a new mint from a script that has access to your secret key, you
 can simply use the `createMint` function. However, if you were to build a
@@ -163,8 +166,8 @@ deposit enough SOL for rent exemption when initializing a new account.
 In this case, we're creating a new account for a token mint so we use
 `getMinimumBalanceForRentExemptMint` from the `@solana/spl-token` library.
 However, this concept applies to all accounts and you can use the more generic
-`getMinimumBalanceForRentExemption` method on `Connection` for other accounts
-you may need to create.
+`getMinimumBalanceForRentExemption` method on connection for other accounts you
+may need to create.
 
 #### Token Account
 
