@@ -30,9 +30,9 @@ safer:
 - `Pre-built Security Mechanisms`: Anchor implements common security checks
   automatically, reducing the chances of errors.
 - `Automatic Account Validation`: Anchor validates accounts by checking for:
-- `Type correctness`: Ensures that accounts match the expected data types.
-- `Uniqueness`: Ensures that each account is correctly initialized and doesn't
-  conflict with existing ones.
+  - `Type correctness`: Ensures accounts match the expected data types.
+  - `Uniqueness`: Ensures that each account is correctly initialized and doesn't
+    conflict with existing ones.
 - `Simplified Data Handling`: Anchor automatically serializes and deserializes
   the data passed in transactions, making it easier to manage the inputs and
   outputs of your program.
@@ -41,25 +41,24 @@ safer:
 
 Here’s how Anchor works in practice:
 
-Programs are deployed at addresses In the same way, Solana programs can be
-deployed using their program ID, and Anchor programs can also be deployed with a
-unique public key. This keypair is created during the initialization of an
-Anchor project and is stored in the target/deploy directory.
+- Programs are deployed at specific addresses. Solana programs, including
+  Anchor-based programs, are deployed using their program ID. During the
+  initialization of an Anchor project, a unique public key (key-pair) is
+  generated and stored in the `target/deploy` directory.
 
-- When you create a new Anchor program, a keypair is generated via the anchor
-  init command.
-- This keypair is essential for deploying the program and is referenced as the
-  program's ID in multiple places, such as Anchor.toml and your program’s main
-  file (typically lib.rs). Using Anchor The core structure of an Anchor project
-  revolves around:
+- When you create a new Anchor program, a keypair is generated via the
+  `anchor init` command.
+  - This keypair is essential for deploying the program and is referenced as the
+    program's ID in multiple places, such as `Anchor.toml` and your program’s
+    main file (typically `lib.rs`).
+
+The core structure of an Anchor project revolves around:
 
 - `Accounts`: These are user or program-specific accounts that store state and
   data. Anchor makes it easy to define and validate accounts in your program.
 - `Instructions`: These are the actions users and programs can trigger. Anchor
   simplifies instruction handling by automatically mapping the data to specific
-  program logic. For example, consider a program that mints tokens. Anchor
-  allows you to define the instructions and accounts needed for the minting
-  process concisely.
+  program logic.
 
 Regardless of the tools or framework you use, Solana's core concepts remain
 consistent. Anchor provides a higher-level abstraction that streamlines
