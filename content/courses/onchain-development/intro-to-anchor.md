@@ -56,7 +56,7 @@ The core structure of an Anchor project revolves around:
 
 - `Accounts`: These are user or program-specific accounts that store state and
   data. Anchor makes it easy to define and validate accounts in your program.
-- `Instructions`: These are the actions users and programs can trigger. Anchor
+- `Instruction`: These are the actions users and programs can trigger. Anchor
   simplifies instruction handling by automatically mapping the data to specific
   program logic.
 
