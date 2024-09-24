@@ -41,10 +41,9 @@ You can find a dedicated video tutorial for each Token Extension on this
 ## How do I create a token with token extensions?
 
 To get started creating tokens with token extensions, you can use the
-[Solana Tool Suite](https://solana.com/docs/intro/installation) to create tokens
-with a CLI. Based on the extension you want to create, your command flags may be
-different. Below are the flags to add to create tokens with each type of
-extension.
+[Solana Tool Suite](/docs/intro/installation.md) to create tokens with a CLI.
+Based on the extension you want to create, your command flags may be different.
+Below are the flags to add to create tokens with each type of extension.
 
 | Extension                                                                                          | CLI Flag                                  |
 | -------------------------------------------------------------------------------------------------- | ----------------------------------------- |

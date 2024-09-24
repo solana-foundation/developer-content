@@ -86,8 +86,7 @@ Currently supported:
 
 ### Using the Solana CLI
 
-Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC
-provider's URL:
+Specify your [Cluster](/docs/core/clusters.md) to be your RPC provider's URL:
 
 ```shell
 solana config set --url <your RPC url>

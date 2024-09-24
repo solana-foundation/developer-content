@@ -285,10 +285,10 @@ fork.
 If an application has access to RPC nodes behind a load balancer, it can also
 choose to divide its workload amongst specific nodes. RPC nodes that serve
 data-intensive requests such as
-[getProgramAccounts](https://solanacookbook.com/guides/get-program-accounts.html)
-may be prone to falling behind and can be ill-suited for also forwarding
-transactions. For applications that handle time-sensitive transactions, it may
-be prudent to have dedicated nodes that only handle `sendTransaction`.
+[getProgramAccounts](/content//guides/javascript/get-program-accounts.md) may be
+prone to falling behind and can be ill-suited for also forwarding transactions.
+For applications that handle time-sensitive transactions, it may be prudent to
+have dedicated nodes that only handle `sendTransaction`.
 
 ### The Cost of Skipping Preflight
 
