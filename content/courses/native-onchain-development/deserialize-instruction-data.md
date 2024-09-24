@@ -633,7 +633,7 @@ Using what you've learned, build the Student Intro program to the point where it
 prints the `name` and `message` to the program logs when invoked.
 
 You can test your program by building the
-[frontend](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data)
+[frontend](https://github.com/solana-developers/student-intro-frontend/tree/solution-serialize-instruction-data)
 we created in the
 [Serialize Custom Instruction Data lesson](/content/courses/native-onchain-development/serialize-instruction-data-frontend.md)
 and checking the program logs on Solana Explorer. Replace the program ID in the
