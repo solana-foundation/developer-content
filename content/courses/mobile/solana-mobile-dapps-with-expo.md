@@ -211,8 +211,8 @@ For a Solana + Expo app, you'll need the following:
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
   through the [JSON RPC API](https://docs.solana.com/api/http).
 - `expo-crypto`: Secure random number generator polyfill
-  for `web3.js` underlying Crypto library on Expo.
-  through the [JSON RPC API](/docs/rpc/http/index.mdx).
+  for `web3.js` underlying Crypto library on Expo. through
+  the [JSON RPC API](/docs/rpc/http/index.mdx).
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
 
 ```bash
