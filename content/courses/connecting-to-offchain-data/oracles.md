@@ -846,7 +846,11 @@ pub struct Deposit<'info> {
       seeds = [ESCROW_SEED, user.key().as_ref()],
       bump,
       payer = user,
-      space = std::mem::size_of::<EscrowState>() + 8
+      space = 8 + YourStruct::INIT_SPACE,
+      impl YourStruct {
+    pub const INIT_SPACE: usize = /* calculate space */;
+}
+
     )]
     pub escrow_account: Account<'info, EscrowState>,
 		// system program

@@ -25,6 +25,9 @@
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
+    "@metaplex-foundation/mpl-token-metadata": "^3.2.1",
+    "@project-serum/anchor": "^0.26.0",
+    "@solana/web3.js": "^1.95.3",
     "@types/node": "20.11.17",
     "@types/react": "18.2.15",
     "@types/react-dom": "18.2.7",
