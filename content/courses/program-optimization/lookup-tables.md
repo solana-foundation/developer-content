@@ -19,13 +19,13 @@ keywords:
 
 - **Versioned Transactions** refers to a way to support both legacy versions and
   newer versions of transaction formats. The original transaction format is
-  "legacy" and new transaction versions start at version 0. To use Address Lookup
-  Tables (LUTs), you need versioned transactions.
+  "legacy" and new transaction versions start at version 0. To use Address
+  Lookup Tables (LUTs), you need versioned transactions.
 - **Address Lookup Tables** are accounts used to store addresses of other
   accounts, which can then be referenced in versioned transactions using a 1
-  byte index instead of 32 bytes per address stored in the account.
-  This enables the creation of more complex transactions than what was possible
-  prior to the introduction of LUTs.
+  byte index instead of 32 bytes per address stored in the account. This enables
+  the creation of more complex transactions than what was possible prior to the
+  introduction of LUTs.
 
 ## Lesson
 
@@ -91,8 +91,8 @@ the following parameters:
 You then transform this message object into a version `0` transaction using the
 `compileToV0Message()` method.
 
-Replace the `<YOUR_RPC_URL_HERE>` placeholder with the URL of your RPC.
-You can get a RPC providers from [Solana RPC](https://solana.com/rpc).
+Replace the `<YOUR_RPC_URL_HERE>` placeholder with the URL of your RPC. You can
+get a RPC providers from [Solana RPC](https://solana.com/rpc).
 
 ```ts
 import {
@@ -117,7 +117,7 @@ const transferInstruction = [
 // Establish a JSON RPC connection
 const connection = new Connection(
   "<YOUR_RPC_URL_HERE>", // Replace with the URL of your RPC provider.
-  "confirmed"
+  "confirmed",
 );
 
 // Get the latest blockhash
@@ -206,7 +206,7 @@ Under the hood, the lookup table address is simply a
 `authority` and `recentSlot` as seeds.
 
 ```ts
-import { toBufferLE } from 'bigint-buffer';
+import { toBufferLE } from "bigint-buffer";
 
 const [lookupTableAddress, bumpSeed] = PublicKey.findProgramAddressSync(
   [params.authority.toBuffer(), toBufferLE(BigInt(params.recentSlot), 8)],
@@ -329,11 +329,10 @@ following parameters:
 - `authority` - the account with permission to deactivate the LUT
 
 ```ts
-const deactivateInstruction =
-  AddressLookupTableProgram.deactivateLookupTable({
-    lookupTable: lookupTableAddress, // The address of the LUT to deactivate
-    authority: user.publicKey, // The authority (i.e., the account with permission to change the LUT)
-  });
+const deactivateInstruction = AddressLookupTableProgram.deactivateLookupTable({
+  lookupTable: lookupTableAddress, // The address of the LUT to deactivate
+  authority: user.publicKey, // The authority (i.e., the account with permission to change the LUT)
+});
 ```
 
 #### Close a lookup table
@@ -488,7 +487,7 @@ try {
         fromPubkey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
         toPubkey: address, // The destination account for the transfer
         lamports: LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
-      })
+      }),
     );
   }
 
@@ -753,10 +752,7 @@ to:
 
 ```ts
 // Connect to the devnet cluster
-const connection = new Connection(
-  clusterApiUrl("devnet"),
-  "confirmed",
-);
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
 // Initialize the user's keypair
 const user = await initializeKeypair(connection);
