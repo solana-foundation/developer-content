@@ -532,10 +532,6 @@ You'll notice our token account does not have a pretty symbol and shows up as
 'Unknown Token' in Explorer. That's because our token has no metadata! Let's add
 some.
 
-We'll use the Metaplex `mpl-token-metadata` Program, version 2. This is the most
-popular version of `mpl-token-metadata` and saves significant complexity
-compared to the newer version 3.
-
 ```bash
 npm install @metaplex-foundation/mpl-token-metadata
 ```
