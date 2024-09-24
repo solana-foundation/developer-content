@@ -210,8 +210,8 @@ For a Solana + Expo app, you'll need the following:
   as `Transaction` and `Uint8Array`.
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
   through the [JSON RPC API](https://docs.solana.com/api/http).
-- `react-native-get-random-values`: Secure random number generator polyfill
-  for `web3.js` underlying Crypto library on React Native.
+- `expo-crypto`: Secure random number generator polyfill
+  for `web3.js` underlying Crypto library on Expo.
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
 
 ```bash
@@ -219,14 +219,14 @@ For a Solana + Expo app, you'll need the following:
 npm install @solana-mobile/mobile-wallet-adapter-protocol \
             @solana-mobile/mobile-wallet-adapter-protocol-web3js \
             @solana/web3.js \
-            react-native-get-random-values \
+            expo-crypto \
             buffer
 
 # Using pnpm
 pnpm add @solana-mobile/mobile-wallet-adapter-protocol \
          @solana-mobile/mobile-wallet-adapter-protocol-web3js \
          @solana/web3.js \
-         react-native-get-random-values \
+         expo-crypto \
          buffer
 ```
 
@@ -235,42 +235,41 @@ pnpm add @solana-mobile/mobile-wallet-adapter-protocol \
 If you want to use the Metaplex SDK, you'll need to add the Metaplex library
 plus a few additional polyfills:
 
-- `@metaplex-foundation/js@0.19.4` - Metaplex Library
+- `@metaplex-foundation/mpl-token-metadata@3.2.1` - Metaplex Token Metadata
+  Program Library
+- `@metaplex-foundation/umi@0.9.2` - Unified Metaplex Interface (UMI) Core
+  Library
+- `@metaplex-foundation/umi-bundle-defaults@0.9.2` - Default UMI Plugins Bundle
+- `@metaplex-foundation/umi-serializers@0.9.0` - UMI Serializers for Data
+  Encoding/Decoding
+- `@metaplex-foundation/umi-signer-wallet-adapters@0.9.2` - UMI Wallet Adapter
+  Signers
+
 - Several more polyfills
 
-  - `assert`
-  - `util`
-  - `crypto-browserify`
-  - `stream-browserify`
-  - `readable-stream`
+  - `text-encoding`
   - `browserify-zlib`
-  - `path-browserify`
   - `react-native-url-polyfill`
-  - `react-native-quick-crypto`
 
 ```bash
   # Using npm
-  npm install @metaplex-foundation/js@0.19.4 \
-            assert \
-            util \
-            crypto-browserify \
-            stream-browserify \
-            readable-stream \
+  npm install @metaplex-foundation/mpl-token-metadata@3.2.1 \
+            @metaplex-foundation/umi@0.9.2 \
+            @metaplex-foundation/umi-bundle-defaults@0.9.2 \
+            @metaplex-foundation/umi-serializers@0.9.0 \
+            @metaplex-foundation/umi-signer-wallet-adapters@0.9.2 \
+            text-encoding \
             browserify-zlib \
-            path-browserify \
             react-native-url-polyfill \
-            react-native-quick-crypto
   # Using pnpm
-  pnpm add @metaplex-foundation/js@0.19.4 \
-         assert \
-         util \
-         crypto-browserify \
-         stream-browserify \
-         readable-stream \
-         browserify-zlib \
-         path-browserify \
-         react-native-url-polyfill \
-         react-native-quick-crypto
+  pnpm add @metaplex-foundation/mpl-token-metadata@3.2.1 \
+            @metaplex-foundation/umi@0.9.2 \
+            @metaplex-foundation/umi-bundle-defaults@0.9.2 \
+            @metaplex-foundation/umi-serializers@0.9.0 \
+            @metaplex-foundation/umi-signer-wallet-adapters@0.9.2 \
+            text-encoding \
+            browserify-zlib \
+            react-native-url-polyfill \
 ```
 
 All of the libraries that the above polyfills are meant to replace are utilized
@@ -289,24 +288,9 @@ const defaultConfig = getDefaultConfig(__dirname);
 
 // Customize the configuration to include your extra node modules
 defaultConfig.resolver.extraNodeModules = {
-  crypto: require.resolve("crypto-browserify"),
-  stream: require.resolve("readable-stream"),
   url: require.resolve("react-native-url-polyfill"),
   zlib: require.resolve("browserify-zlib"),
-  path: require.resolve("path-browserify"),
-};
-
-defaultConfig.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (moduleName === "crypto") {
-    // when importing crypto, resolve to react-native-quick-crypto
-    return context.resolveRequest(
-      context,
-      "react-native-quick-crypto",
-      platform,
-    );
-  }
-  // otherwise chain to the standard Metro resolver.
-  return context.resolveRequest(context, moduleName, platform);
+  crypto: require.resolve("expo-crypto"),
 };
 
 // Export the modified configuration
@@ -325,9 +309,9 @@ module.exports = function (api) {
         "module-resolver",
         {
           alias: {
-            crypto: "react-native-quick-crypto",
-            stream: "readable-stream",
             buffer: "buffer",
+            "@metaplex-foundation/umi/serializers":
+              "@metaplex-foundation/umi-serializers",
           },
         },
       ],
@@ -351,7 +335,7 @@ able to mint a single NFT snapshot of their lives daily, creating a permanent
 diary of sorts.
 
 To mint the NFTs we'll be using Metaplex's Javascript SDK along with
-[nft.storage](https://nft.storage/) to store images and metadata. All of our
+[pinata.cloud](https://pinata.cloud/) to store images and metadata. All of our
 onchain work will be on Devnet.
 
 The first half of this lab is cobbling together the needed components to make
@@ -567,20 +551,18 @@ incompatible packages to work with React native:
 
 ```bash
 # Using npm
-npm install \
-  @solana/web3.js \
-  @solana-mobile/mobile-wallet-adapter-protocol-web3js \
-  @solana-mobile/mobile-wallet-adapter-protocol \
-  react-native-get-random-values \
-  buffer
+npm install @solana-mobile/mobile-wallet-adapter-protocol \
+            @solana-mobile/mobile-wallet-adapter-protocol-web3js \
+            @solana/web3.js \
+            expo-crypto \
+            buffer
 
 # Using pnpm
-pnpm add \
-  @solana/web3.js \
-  @solana-mobile/mobile-wallet-adapter-protocol-web3js \
-  @solana-mobile/mobile-wallet-adapter-protocol \
-  react-native-get-random-values \
-  buffer
+pnpm add @solana-mobile/mobile-wallet-adapter-protocol \
+         @solana-mobile/mobile-wallet-adapter-protocol-web3js \
+         @solana/web3.js \
+         expo-crypto \
+         buffer
 ```
 
 #### 2. Add Solana boilerplate providers
@@ -608,10 +590,29 @@ then, create file `polyfills.ts` and copy the contents from below to that file.
 This will ensure that few native node.js packages work in our app.
 
 ```js
-import "react-native-get-random-values";
+import "react-native-url-polyfill/auto";
+import { getRandomValues as expoCryptoGetRandomValues } from "expo-crypto";
 import { Buffer } from "buffer";
 
 global.Buffer = Buffer;
+global.TextEncoder = require("text-encoding").TextEncoder;
+
+// getRandomValues polyfill
+class Crypto {
+  getRandomValues = expoCryptoGetRandomValues;
+}
+
+const webCrypto = typeof crypto !== "undefined" ? crypto : new Crypto();
+
+(() => {
+  if (typeof crypto === "undefined") {
+    Object.defineProperty(window, "crypto", {
+      configurable: true,
+      enumerable: true,
+      get: () => webCrypto,
+    });
+  }
+})();
 ```
 
 Now let's create a boilerplate for our main screen in `screens/MainScreen.tsx`:
