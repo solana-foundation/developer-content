@@ -34,7 +34,7 @@ tags:
 - Anchor allows you to **specify a bump** with the `bump = <some_bump>`
   constraint when verifying the address of a PDA
 - Because `find_program_address` can be expensive, best practice is to store the
-  derived bump in an account’s data field to be referenced later on when
+  derived bump in an account's data field to be referenced later on when
   re-deriving the address for verification
   ```rust
   #[derive(Accounts)]

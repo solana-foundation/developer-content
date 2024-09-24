@@ -3,7 +3,7 @@ title: Arbitrary CPI
 objectives:
   - Explain the security risks associated with invoking a CPI to an unknown
     program
-  - Showcase how Anchor’s CPI module prevents this from happening when making a
+  - Showcase how Anchor's CPI module prevents this from happening when making a
     CPI from one Anchor program to another
   - Safely and securely make a CPI from an Anchor program to an arbitrary
     non-anchor program
@@ -35,7 +35,7 @@ program performing CPIs to arbitrary programs.
 
 This lack of program checks creates an opportunity for a malicious user to pass
 in a different program than expected, causing the original program to call an
-instruction on this mystery program. There’s no telling what the consequences of
+instruction on this mystery program. There's no telling what the consequences of
 this CPI could be. It depends on the program logic (both that of the original
 program and the unexpected program), as well as what other accounts are passed
 into the original instruction.
@@ -120,19 +120,18 @@ pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
 Now, if an attacker passes in a different token program, the instruction will
 return the `ProgramError::IncorrectProgramId` error.
 
-Depending on the program you’re invoking with your CPI, you can either hard code
-the address of the expected program ID or use the program’s Rust crate to get
+Depending on the program you're invoking with your CPI, you can either hard code
+the address of the expected program ID or use the program's Rust crate to get
 the address of the program, if available. In the example above, the `spl_token`
 crate provides the address of the SPL Token Program.
 
 ### Use an Anchor CPI module
 
 A simpler way to manage program checks is to use Anchor CPI modules. We learned
-in a
-[previous lesson](https://github.com/Unboxed-Software/solana-course/blob/main/content/anchor-cpi)
-that Anchor can automatically generate CPI modules to make CPIs into the program
-simpler. These modules also enhance security by verifying the public key of the
-program that’s passed into one of its public instructions.
+in a [previous lesson](https://github.com/solana-foundation/developer-content/blob/3c1633ee07205dc5788e72a0d2a0b7255e6d9f7d/content/courses/onchain-development/anchor-cpi.md#L4) that Anchor can automatically generate CPI modules to make CPIs into the program simpler. These modules also
+enhance security by verifying the public key of the program that's passed into
+one of its public instructions using
+[account constraints](https://www.anchor-lang.com/docs/account-constraints).
 
 Every Anchor program uses the `declare_id()` macro to define the address of the
 program. When a CPI module is generated for a specific program, it uses the
@@ -186,8 +185,8 @@ Note that, like the example above, Anchor has created a few
 [wrappers for popular native programs](https://github.com/coral-xyz/anchor/tree/master/spl/src)
 that allow you to issue CPIs into them as if they were Anchor programs.
 
-Additionally and depending on the program you’re making the CPI to, you may be
-able to use Anchor’s
+Additionally and depending on the program you're making the CPI to, you may be
+able to use Anchor's
 [`Program` account type](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/program/struct.Program.html)
 to validate the passed-in program in your account validation struct. Between
 the [`anchor_lang`](https://docs.rs/anchor-lang/latest/anchor_lang) and [`anchor_spl`](https://docs.rs/anchor_spl/latest/) crates,
@@ -221,7 +220,7 @@ applied to real tokens.
 #### 1. Setup
 
 We'll start with the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/starter).
+[this repository](https://github.com/solana-developers/arbitrary-cpi/tree/starter).
 Clone the repository and then open it on the `starter` branch.
 
 Notice that there are three programs:
@@ -441,7 +440,7 @@ every precaution possible to ensure no vulnerabilities in your program.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-arbitrary-cpi/tree/solution).
+[the same repository](https://github.com/solana-developers/arbitrary-cpi/tree/solution).
 
 ## Challenge
 
