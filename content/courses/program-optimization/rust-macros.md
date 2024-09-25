@@ -9,9 +9,9 @@ description: "Use Rust macros to generate code at compile time."
 
 ## What are Rust macros?
 
-Rust macros (sing. macro) are rust function-like set of codes that are written so that they can write another set of codes, this concept is called ***metaprogramming*** and is useful to prevent repetitve writing of code that needs to be called multiple times. The downside of macros is that they make the code harder to read and maintain because in truth, writing Rust that writes Rust can be quite daunting. How are macros different from functions? Well, functions are called at runtime while macros are "expanded" even before the compiler interpretes what the other set of code means so there is no runtime cost associated with using a macro.
+Rust macros (sing. macro) are Rust function-like set of codes that are written so that they can write another set of codes, this concept is called ***metaprogramming*** and is useful to prevent repetitve writing of code that needs to be called multiple times. The downside of macros is that they make the code harder to read and maintain because in truth, writing Rust that writes Rust can be quite daunting. How are macros different from functions? Well, functions are called at runtime while macros are "expanded" even before the compiler interpretes what the other set of code means so there is no runtime cost associated with using a macro.
 
-Another important difference between macros and functions is that you must define macros or bring them into scope ***before*** you call them in a file, as opposed to functions you can define and call anywhere.
+Another important difference between macros and functions is that you must define macros or bring them into scope ***before*** you call them in a file, as opposed to functions you can define and call anywhere. Check [The little Book of Rust Macros](https://veykril.github.io/tlborm/introduction.html) if you'd like to dive into the rabbit hole, not recommended if you don't know Rust.
 
 
 ## Types of macros
@@ -26,6 +26,7 @@ Declarative macros: they are defined using the `macro_rules!` macro, which runs 
 macro_rules! greet {
     // Pattern to match: takes a single argument ($name:expr)
     ($name:expr) => {
+        // note that println! is a macro that expands as a function for printing its argument as strings, writing a function each time is not efficient
         println!("Hello, {}!", $name);
     };
 }
@@ -37,7 +38,7 @@ fn main() {
 }
 ```
 
->The `#[macro_export]` annotation tells Rust that this macro should be globally available to other files or crates that include it. Without this annotation, the macro would only be usable within the file where it’s defined.
+>The `#[macro_export]` annotation tells Rust that this macro should be globally available to other files or crates that include it. Without this annotation, the macro would only be usable within the file where it’s defined. 
 
 To create the macro, you start by using `macro_rules!` followed by the macro’s name (in this case, `greet`) without the exclamation mark. The body of the macro is enclosed in curly braces `{}`.
 
@@ -45,18 +46,18 @@ Inside the macro body, there’s a single arguement: `($name:expr)`, the `=>` sy
 
 Procedural macros: For the purpose of this lesson, we would be focusing more on procedural macros ( which are commonly used in the Anchor framework) but some underlying concepts have to be known, let's go through them
 
-### Rust concepts
+## Rust concepts
 
 Before we dig into macros, specifically, let's talk about some of the important
-terminology, concepts, and tools we'll be using throughout the lesson. Check [The little Book of Rust Macros](https://veykril.github.io/tlborm/introduction.html) for an extensive
+terminologies, concepts, and tools we'll be using throughout the lesson.
 
-#### Token
+### Token
 
 In the context of Rust programming, a
 [token](https://doc.rust-lang.org/reference/tokens.html) is a basic element of
 the language syntax like an identifier or literal value. Tokens represent the
 smallest unit of source code that are recognized by the Rust compiler, and they
-are used to build up more complex expressions and statements in a program.
+are used to build up more complex expressions and statements in a program. They can be regarded as the bedrock of Rust programming
 
 Examples of Rust tokens include:
 
@@ -69,12 +70,12 @@ Examples of Rust tokens include:
   marks, such as `{`, `}`, and `;`, are used to structure and delimit blocks of
   code.
 - [Literals](https://doc.rust-lang.org/reference/tokens.html#literals), such as
-  numbers and strings, represent constant values in a Rust program.
+  numbers and strings, represent constant or mutable values in a Rust program.
 
 You can
 [read more about Rust tokens](https://doc.rust-lang.org/reference/tokens.html).
 
-#### Item
+### Item
 
 Items are named, self-contained pieces of code in Rust. They provide a way to
 group related code together and give it a name by which the group can be
@@ -92,10 +93,10 @@ There are several different kinds of items, such as:
 You can
 [read more about Rust items](https://doc.rust-lang.org/reference/items.html).
 
-#### Token Streams
+### Token Streams
 
-The `TokenStream` type is a data type that represents a sequence of tokens. This
-type is defined in the `proc_macro` crate and is surfaced as a way for you to
+The `TokenStream` type is a data type that represents a sequence of tokens. We see how this
+type is defined in the `proc_macro` crate below and is surfaced as a way for you to
 write macros based on other code in the codebase.
 
 When defining a procedural macro, the macro input is passed to the macro as a
@@ -109,6 +110,11 @@ use proc_macro::TokenStream;
 pub fn my_macro(input: TokenStream) -> TokenStream {
     ...
 }
+```
+
+>Note: you have to initially create `proc_macro` crate as a library to be able to use it globally, go to your terminal within the project scope and run the code below:
+```rust
+cargo new proc_macro --lib
 ```
 
 #### Abstract syntax tree
