@@ -40,12 +40,12 @@ unique client-side network interactions.
 
 The [Solana Pay specification](https://docs.solanapay.com/spec) is a set of
 standards that allow users to request payments and initiate transactions using
-URLs in a uniform way across various Solana apps and wallets.
+URLs in a uniform way across various Solana apps and wallet apps.
 
 Request URLs are prefixed with `solana:` so that platforms can direct the link
-to the appropriate application. For example, on mobile a URL that starts with
+to the appropriate application. For example, on a mobile device, a URL that starts with
 `solana:` will be directed to wallet applications that support the Solana Pay
-specification. From there, the wallet can use the remainder of the URL to
+specification. From there, the wallet app can use the remainder of the URL to
 appropriately handle the request.
 
 There are two types of requests defined by the Solana Pay specification:
@@ -86,33 +86,33 @@ solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1&label=Michael&messag
 And here is a URL describing a transfer request for 0.1 USDC:
 
 ```text
-solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.1&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
 ```
 
 #### Transaction requests
 
 The Solana Pay transaction request is similar to a transfer request in that it
-is simply a URL that can be consumed by a supporting wallet. However, this
+is simply a URL that can be consumed by a supporting wallet app. However, this
 request is interactive and the format is more open-ended:
 
 ```text
 solana:<link>
 ```
 
-The value of `link` should be a URL to which the consuming wallet can make an
+The value of `link` should be a URL to which the consuming wallet app can make an
 HTTP request. Rather than containing all the information needed for a
 transaction, a transaction request uses this URL to fetch the transaction that
 should be presented to the user.
 
-When a wallet receives a transaction Request URL, four things happen:
+When a wallet app receives a transaction Request URL, four things happen:
 
-1. The wallet sends a GET request to the application at the provided `link` URL
+1. The wallet app sends a GET request to your application at the provided `link` URL
    to retrieve a label and icon image to display to the user.
-2. The wallet then sends a POST request with the public key of the end user.
+2. The wallet app then sends a POST request with the public key of the end user.
 3. Using the public key of the end user (and any additional information provided
-   in `link`), the application then builds the transaction and responds with a
+   in `link`), your application then builds the transaction and responds with a
    base64-encoded serialized transaction.
-4. The wallet decodes and deserializes the transaction, then lets the user sign
+4. The wallet app decodes and deserializes the transaction, then lets the user sign
    and send the transaction.
 
 Given that transaction requests are more involved than transfer requests, the
@@ -129,23 +129,21 @@ transaction request. In this lesson, we'll be using
 endpoints, but you're welcome to use whatever stack and tools you're most
 comfortable with.
 
-In Next.js, you do this by adding a file to the `pages/api` folder and exporting
-a function that handles the request and response.
+In this guide, we'll use Next.js API Routes in the new app directory structure which has replaced the traditional `pages/api` directory for API routes in recent versions of Next.js. This shift to `app/api` provides a more organized and scalable approach to handling both server and client-side rendering.
+
+In Next.js, you configure your API endpoint by creating a file within the `app/api` directory. This new structure not only handles API routes but also supports other advanced features like middleware and dynamic routes.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export async function POST(request: NextRequest) {
   // Handle the request
 }
 ```
 
 #### Handle a GET request
 
-The wallet consuming your transaction request URL will first issue a GET request
+The wallet app consuming your transaction request URL will first issue a GET request
 to this endpoint. You'll want your endpoint to return a JSON object with two
 fields:
 
@@ -155,24 +153,14 @@ fields:
 Building on the empty endpoint from before, that may look like this:
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === "GET") {
-    return get(res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-}
 
-function get(res: NextApiResponse) {
-  res.status(200).json({
+export async function GET(request: NextRequest) {
+  return NextResponse.json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-  });
+  }, { status: 200 });
 }
 ```
 
@@ -182,13 +170,13 @@ containing `label` and `icon`.
 
 #### Handle a POST request and build the transaction
 
-After issuing a GET request, the wallet will issue a POST request to the same
+After issuing a GET request, the wallet app will issue a POST request to the same
 URL. Your endpoint should expect the POST request's `body` to contain a JSON
-object with an `account` field provided by the requesting wallet. The value of
+object with an `account` field provided by the requesting wallet app. The value of
 `account` will be a string representing the end user's public key.
 
 With this information and any additional parameters provided, you can build the
-transaction and return it to the wallet for signing by:
+transaction and return it to the wallet app for signing by:
 
 1. Connecting to the Solana network and getting the latest `blockhash`.
 2. Creating a new transaction using the `blockhash`.
@@ -197,29 +185,17 @@ transaction and return it to the wallet for signing by:
    with a message for the user.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === "GET") {
-    return get(res);
-  } else if (req.method === "POST") {
-    return post(req, res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-}
-
-function get(res: NextApiResponse) {
-  res.status(200).json({
+export async function GET(request: NextRequest) {
+  return NextResponse.json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
 }
-async function post(req: PublicKey, res: PublicKey) {
-  const { account, reference } = req.body;
+
+export async function POST(request: NextRequest) {
+  const { account, reference } = await request.json();
 
   const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -227,11 +203,11 @@ async function post(req: PublicKey, res: PublicKey) {
 
   const transaction = new Transaction({
     recentBlockhash: blockhash,
-    feePayer: account,
+    feePayer: new PublicKey(account),
   });
 
   const instruction = SystemProgram.transfer({
-    fromPubkey: account,
+    fromPubkey: new PublicKey(account),
     toPubkey: Keypair.generate().publicKey,
     lamports: 0.001 * LAMPORTS_PER_SOL,
   });
@@ -239,7 +215,7 @@ async function post(req: PublicKey, res: PublicKey) {
   transaction.add(instruction);
 
   transaction.keys.push({
-    pubkey: reference,
+    pubkey: new PublicKey(reference),
     isSigner: false,
     isWritable: false,
   });
@@ -247,11 +223,12 @@ async function post(req: PublicKey, res: PublicKey) {
   const serializedTransaction = transaction.serialize({
     requireAllSignatures: false,
   });
+
   const base64 = serializedTransaction.toString("base64");
 
   const message = "Simple transfer of 0.001 SOL";
 
-  res.send(200).json({
+  return NextResponse.json({
     transaction: base64,
     message,
   });
@@ -261,7 +238,7 @@ async function post(req: PublicKey, res: PublicKey) {
 There is nothing too out of the ordinary here. It's the same transaction
 construction you would use in a standard client-side application. The only
 difference is that instead of signing and submitting to the network, you send
-the transaction as a base64-encoded string back in the HTTP response. The wallet
+the transaction as a base64-encoded string back in the HTTP response. The wallet app
 that issued the request can then present the transaction to the user for
 signing.
 
