@@ -98,11 +98,6 @@ multiple transactions in the same slot attempt to modify leaf data, the
 changelog serves as a reference, enabling concurrent updates to the tree.
 
 
-A concurrent Merkle tree is a Merkle tree that stores a secure changelog of the
-most recent changes along with their root hash and the proof to derive it. When
-multiple transactions in the same slot try to modify leaf data, the changelog
-can be used as a source of truth to allow for concurrent changes to be made to
-the tree.
 
 How does the concurrent Merkle tree achieve this? In a standard Merkle tree,
 only the root hash is stored. However, a concurrent Merkle tree includes extra
