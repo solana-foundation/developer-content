@@ -340,8 +340,8 @@ your instruction might look like this:
 
 /// Initializes an empty Merkle tree for storing messages with a specified depth and buffer size.
 ///
-/// This function creates a CPI (Cross-Program Invocation) call to initialize the Merkle tree account 
-/// using the provided authority and compression program. The PDA (Program Derived Address) seeds are used for 
+/// This function creates a CPI (Cross-Program Invocation) call to initialize the Merkle tree account
+/// using the provided authority and compression program. The PDA (Program Derived Address) seeds are used for
 /// signing the transaction.
 ///
 /// # Arguments
@@ -423,7 +423,7 @@ this:
 
 /// Appends a message to the Merkle tree.
 ///
-/// This function hashes the message and the sender's public key to create a leaf node, 
+/// This function hashes the message and the sender's public key to create a leaf node,
 /// logs the message using the noop program, and appends the leaf node to the Merkle tree.
 ///
 /// # Arguments
@@ -820,7 +820,7 @@ pub mod compressed_notes {
     use super::*;
 
     // Define your program instructions here.
-    
+
     /// Initializes a new Merkle tree for storing messages.
     ///
     /// This function creates a Merkle tree with the specified maximum depth and buffer size.
@@ -973,7 +973,7 @@ pub struct NoteAccounts<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
 
-    /// The PDA (Program Derived Address) authority for the Merkle tree. 
+    /// The PDA (Program Derived Address) authority for the Merkle tree.
     /// This account is only used for signing and is derived from the Merkle tree address.
     #[account(
         seeds = [merkle_tree.key().as_ref()],
@@ -981,14 +981,14 @@ pub struct NoteAccounts<'info> {
     )]
     pub tree_authority: SystemAccount<'info>,
 
-    /// The Merkle tree account, where the notes are stored. 
+    /// The Merkle tree account, where the notes are stored.
     /// This account is validated by the SPL Account Compression program.
-    /// 
+    ///
     /// The `UncheckedAccount` type is used since the account's validation is deferred to the CPI.
     #[account(mut)]
     pub merkle_tree: UncheckedAccount<'info>,
 
-    /// The Noop program used for logging data. 
+    /// The Noop program used for logging data.
     /// This is part of the SPL Account Compression stack and logs the note operations.
     pub log_wrapper: Program<'info, Noop>,
 
@@ -1246,7 +1246,7 @@ pub mod compressed_notes {
 
         // Step 7: Create a NoteLog entry for the new note
         let note_log = NoteLog::new(new_leaf.clone(), ctx.accounts.owner.key().clone(), new_note);
-        
+
         // Step 8: Log the NoteLog data using the Noop program
         wrap_application_data_v1(note_log.try_to_vec()?, &ctx.accounts.log_wrapper)?;
 
@@ -1466,7 +1466,7 @@ describe("compressed-notes", () => {
   anchor.setProvider(provider);
   const connection = new Connection(
     provider.connection.rpcEndpoint,
-    "confirmed", // has to be confirmed for some of the methods below
+    "confirmed",
   );
 
   const wallet = provider.wallet as anchor.Wallet;
@@ -1476,7 +1476,6 @@ describe("compressed-notes", () => {
   const merkleTree = Keypair.generate();
 
   // Derive the PDA to use as the tree authority for the Merkle tree account
-  // This is a PDA derived from the Note program, which allows the program to sign for appends instructions to the tree
   const [treeAuthority] = PublicKey.findProgramAddressSync(
     [merkleTree.publicKey.toBuffer()],
     program.programId,
@@ -1486,7 +1485,104 @@ describe("compressed-notes", () => {
   const secondNote = "0".repeat(917);
   const updatedNote = "updated note";
 
-  // TESTS GO HERE
+  describe("Merkle Tree Operations", () => {
+    it("creates a new note tree", async () => {
+      await program.methods
+        .createNoteTree(5, 1000) // Example max depth and buffer size
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: anchor.web3.SystemProgram.programId, // or your noop program id
+          compressionProgram: SPLAccountCompression.programId,
+        })
+        .signers([merkleTree])
+        .rpc();
+
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.isInitialized,
+        "Merkle tree should be initialized",
+      );
+    });
+
+    it("appends a note to the Merkle tree", async () => {
+      await program.methods
+        .appendNote(firstNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: anchor.web3.SystemProgram.programId,
+          compressionProgram: SPLAccountCompression.programId,
+        })
+        .rpc();
+
+      // Fetch the updated Merkle tree to check if the note was appended
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.noteCount === 1,
+        "Note count should be 1 after appending",
+      );
+    });
+
+    it("updates an existing note in the Merkle tree", async () => {
+      await program.methods
+        .updateNote(
+          0, // Index of the note to update
+          merkleTreeAccount.root, // Assuming you have the root available from previous state
+          firstNote,
+          updatedNote,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: anchor.web3.SystemProgram.programId,
+          compressionProgram: SPLAccountCompression.programId,
+        })
+        .rpc();
+
+      // Check if the note was updated
+      const updatedMerkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        updatedMerkleTreeAccount.notes[0].note === updatedNote,
+        "The note should be updated",
+      );
+    });
+
+    it("fails to update a note that doesn't exist", async () => {
+      try {
+        await program.methods
+          .updateNote(
+            1, // Invalid index
+            merkleTreeAccount.root,
+            firstNote,
+            updatedNote,
+          )
+          .accounts({
+            owner: wallet.publicKey,
+            merkleTree: merkleTree.publicKey,
+            treeAuthority,
+            logWrapper: anchor.web3.SystemProgram.programId,
+            compressionProgram: SPLAccountCompression.programId,
+          })
+          .rpc();
+        assert.fail("Expected an error to be thrown");
+      } catch (err) {
+        assert(
+          err.message.includes("Invalid index"),
+          "Expected 'Invalid index' error message",
+        );
+      }
+    });
+  });
 });
 ```
 
@@ -1500,36 +1596,154 @@ two key tasks:
    set up the newly allocated Merkle tree account.
 
 ```typescript
-it("Create Note Tree", async () => {
-  const maxDepthSizePair: ValidDepthSizePair = {
-    maxDepth: 3,
-    maxBufferSize: 8,
-  };
-
-  const canopyDepth = 0;
-
-  // instruction to create new account with required space for tree
-  const allocTreeIx = await createAllocTreeIx(
-    connection,
-    merkleTree.publicKey,
-    wallet.publicKey,
-    maxDepthSizePair,
-    canopyDepth,
+describe("compressed-notes", () => {
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+  const connection = new Connection(
+    provider.connection.rpcEndpoint,
+    "confirmed",
   );
 
-  // instruction to initialize the tree through the Note program
-  const ix = await program.methods
-    .createNoteTree(maxDepthSizePair.maxDepth, maxDepthSizePair.maxBufferSize)
-    .accounts({
-      merkleTree: merkleTree.publicKey,
-      treeAuthority: treeAuthority,
-      logWrapper: SPL_NOOP_PROGRAM_ID,
-      compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .instruction();
+  const wallet = provider.wallet as anchor.Wallet;
+  const program = anchor.workspace.CompressedNotes as Program<CompressedNotes>;
 
-  const tx = new Transaction().add(allocTreeIx, ix);
-  await sendAndConfirmTransaction(connection, tx, [wallet.payer, merkleTree]);
+  // Generate a new keypair for the Merkle tree account
+  const merkleTree = Keypair.generate();
+
+  // Derive the PDA to use as the tree authority for the Merkle tree account
+  const [treeAuthority] = PublicKey.findProgramAddressSync(
+    [merkleTree.publicKey.toBuffer()],
+    program.programId,
+  );
+
+  const firstNote = "hello world";
+  const secondNote = "0".repeat(917);
+  const updatedNote = "updated note";
+
+  describe("Merkle Tree Operations", () => {
+    it("creates a new note tree", async () => {
+      const maxDepthSizePair: ValidDepthSizePair = {
+        maxDepth: 3,
+        maxBufferSize: 8,
+      };
+
+      const canopyDepth = 0;
+
+      // Instruction to create a new account with the required space for the tree
+      const allocTreeIx = await createAllocTreeIx(
+        connection,
+        merkleTree.publicKey,
+        wallet.publicKey,
+        maxDepthSizePair,
+        canopyDepth,
+      );
+
+      // Instruction to initialize the tree through the Note program
+      const ix = await program.methods
+        .createNoteTree(
+          maxDepthSizePair.maxDepth,
+          maxDepthSizePair.maxBufferSize,
+        )
+        .accounts({
+          owner: wallet.publicKey, // Ensure the owner is correctly accounted
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .instruction();
+
+      const tx = new Transaction().add(allocTreeIx, ix);
+      await sendAndConfirmTransaction(connection, tx, [
+        wallet.payer,
+        merkleTree,
+      ]);
+
+      // Fetch the Merkle tree account to confirm it's initialized
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.isInitialized,
+        "Merkle tree should be initialized",
+      );
+    });
+
+    it("appends a note to the Merkle tree", async () => {
+      await program.methods
+        .appendNote(firstNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      // Fetch the updated Merkle tree to check if the note was appended
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.noteCount === 1,
+        "Note count should be 1 after appending",
+      );
+    });
+
+    it("updates an existing note in the Merkle tree", async () => {
+      await program.methods
+        .updateNote(
+          0, // Index of the note to update
+          merkleTreeAccount.root, // Assuming you have the root available from previous state
+          firstNote,
+          updatedNote,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      // Check if the note was updated
+      const updatedMerkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        updatedMerkleTreeAccount.notes[0].note === updatedNote,
+        "The note should be updated",
+      );
+    });
+
+    it("fails to update a note that doesn't exist", async () => {
+      try {
+        await program.methods
+          .updateNote(
+            1, // Invalid index
+            merkleTreeAccount.root,
+            firstNote,
+            updatedNote,
+          )
+          .accounts({
+            owner: wallet.publicKey,
+            merkleTree: merkleTree.publicKey,
+            treeAuthority,
+            logWrapper: SPL_NOOP_PROGRAM_ID,
+            compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+          })
+          .rpc();
+        assert.fail("Expected an error to be thrown");
+      } catch (err) {
+        assert(
+          err.message.includes("Invalid index"),
+          "Expected 'Invalid index' error message",
+        );
+      }
+    });
+  });
 });
 ```
 
@@ -1542,22 +1756,154 @@ Next, let's set up the `Add Note` test. This test will:
    submitted.
 
 ```typescript
-it("Add Note", async () => {
-  const txSignature = await program.methods
-    .appendNote(firstNote)
-    .accounts({
-      merkleTree: merkleTree.publicKey,
-      treeAuthority: treeAuthority,
-      logWrapper: SPL_NOOP_PROGRAM_ID,
-      compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .rpc();
+describe("compressed-notes", () => {
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+  const connection = new Connection(
+    provider.connection.rpcEndpoint,
+    "confirmed",
+  );
 
-  const noteLog = await getNoteLog(connection, txSignature);
-  const hash = getHash(firstNote, provider.publicKey);
+  const wallet = provider.wallet as anchor.Wallet;
+  const program = anchor.workspace.CompressedNotes as Program<CompressedNotes>;
 
-  assert(hash === Buffer.from(noteLog.leafNode).toString("hex"));
-  assert(firstNote === noteLog.note);
+  // Generate a new keypair for the Merkle tree account
+  const merkleTree = Keypair.generate();
+
+  // Derive the PDA to use as the tree authority for the Merkle tree account
+  const [treeAuthority] = PublicKey.findProgramAddressSync(
+    [merkleTree.publicKey.toBuffer()],
+    program.programId,
+  );
+
+  const firstNote = "hello world";
+  const secondNote = "0".repeat(917);
+  const updatedNote = "updated note";
+
+  describe("Merkle Tree Operations", () => {
+    it("creates a new note tree", async () => {
+      const maxDepthSizePair: ValidDepthSizePair = {
+        maxDepth: 3,
+        maxBufferSize: 8,
+      };
+
+      const canopyDepth = 0;
+
+      // Instruction to create a new account with the required space for the tree
+      const allocTreeIx = await createAllocTreeIx(
+        connection,
+        merkleTree.publicKey,
+        wallet.publicKey,
+        maxDepthSizePair,
+        canopyDepth,
+      );
+
+      // Instruction to initialize the tree through the Note program
+      const ix = await program.methods
+        .createNoteTree(
+          maxDepthSizePair.maxDepth,
+          maxDepthSizePair.maxBufferSize,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .instruction();
+
+      const tx = new Transaction().add(allocTreeIx, ix);
+      await sendAndConfirmTransaction(connection, tx, [
+        wallet.payer,
+        merkleTree,
+      ]);
+
+      // Fetch the Merkle tree account to confirm it's initialized
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.isInitialized,
+        "Merkle tree should be initialized",
+      );
+    });
+
+    it("adds a note to the Merkle tree", async () => {
+      const txSignature = await program.methods
+        .appendNote(firstNote)
+        .accounts({
+          owner: wallet.publicKey, // Include the owner account
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      const noteLog = await getNoteLog(connection, txSignature);
+      const hash = getHash(firstNote, wallet.publicKey); // Use wallet public key as the owner
+
+      assert(
+        hash === Buffer.from(noteLog.leafNode).toString("hex"),
+        "Leaf node hash should match",
+      );
+      assert(firstNote === noteLog.note, "Note should match the appended note");
+    });
+
+    it("updates an existing note in the Merkle tree", async () => {
+      await program.methods
+        .updateNote(
+          0, // Index of the note to update
+          merkleTreeAccount.root, // Assuming you have the root available from previous state
+          firstNote,
+          updatedNote,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      // Check if the note was updated
+      const updatedMerkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        updatedMerkleTreeAccount.notes[0].note === updatedNote,
+        "The note should be updated",
+      );
+    });
+
+    it("fails to update a note that doesn't exist", async () => {
+      try {
+        await program.methods
+          .updateNote(
+            1, // Invalid index
+            merkleTreeAccount.root,
+            firstNote,
+            updatedNote,
+          )
+          .accounts({
+            owner: wallet.publicKey,
+            merkleTree: merkleTree.publicKey,
+            treeAuthority,
+            logWrapper: SPL_NOOP_PROGRAM_ID,
+            compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+          })
+          .rpc();
+        assert.fail("Expected an error to be thrown");
+      } catch (err) {
+        assert(
+          err.message.includes("Invalid index"),
+          "Expected 'Invalid index' error message",
+        );
+      }
+    });
+  });
 });
 ```
 
@@ -1570,23 +1916,179 @@ the previous one, but it will:
    hash and that the note log accurately reflects the content of the large note.
 
 ```typescript
-it("Add Max Size Note", async () => {
-  // Size of note is limited by max transaction size of 1232 bytes, minus additional data required for the instruction
-  const txSignature = await program.methods
-    .appendNote(secondNote)
-    .accounts({
-      merkleTree: merkleTree.publicKey,
-      treeAuthority: treeAuthority,
-      logWrapper: SPL_NOOP_PROGRAM_ID,
-      compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .rpc();
+describe("compressed-notes", () => {
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+  const connection = new Connection(
+    provider.connection.rpcEndpoint,
+    "confirmed",
+  );
 
-  const noteLog = await getNoteLog(connection, txSignature);
-  const hash = getHash(secondNote, provider.publicKey);
+  const wallet = provider.wallet as anchor.Wallet;
+  const program = anchor.workspace.CompressedNotes as Program<CompressedNotes>;
 
-  assert(hash === Buffer.from(noteLog.leafNode).toString("hex"));
-  assert(secondNote === noteLog.note);
+  // Generate a new keypair for the Merkle tree account
+  const merkleTree = Keypair.generate();
+
+  // Derive the PDA to use as the tree authority for the Merkle tree account
+  const [treeAuthority] = PublicKey.findProgramAddressSync(
+    [merkleTree.publicKey.toBuffer()],
+    program.programId,
+  );
+
+  const firstNote = "hello world";
+  const secondNote = "0".repeat(917); // Maximum size note
+  const updatedNote = "updated note";
+
+  describe("Merkle Tree Operations", () => {
+    it("creates a new note tree", async () => {
+      const maxDepthSizePair: ValidDepthSizePair = {
+        maxDepth: 3,
+        maxBufferSize: 8,
+      };
+
+      const canopyDepth = 0;
+
+      // Instruction to create a new account with the required space for the tree
+      const allocTreeIx = await createAllocTreeIx(
+        connection,
+        merkleTree.publicKey,
+        wallet.publicKey,
+        maxDepthSizePair,
+        canopyDepth,
+      );
+
+      // Instruction to initialize the tree through the Note program
+      const ix = await program.methods
+        .createNoteTree(
+          maxDepthSizePair.maxDepth,
+          maxDepthSizePair.maxBufferSize,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .instruction();
+
+      const tx = new Transaction().add(allocTreeIx, ix);
+      await sendAndConfirmTransaction(connection, tx, [
+        wallet.payer,
+        merkleTree,
+      ]);
+
+      // Fetch the Merkle tree account to confirm it's initialized
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.isInitialized,
+        "Merkle tree should be initialized",
+      );
+    });
+
+    it("adds a note to the Merkle tree", async () => {
+      const txSignature = await program.methods
+        .appendNote(firstNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      const noteLog = await getNoteLog(connection, txSignature);
+      const hash = getHash(firstNote, wallet.publicKey);
+
+      assert(
+        hash === Buffer.from(noteLog.leafNode).toString("hex"),
+        "Leaf node hash should match",
+      );
+      assert(firstNote === noteLog.note, "Note should match the appended note");
+    });
+
+    it("adds max size note to the Merkle tree", async () => {
+      const txSignature = await program.methods
+        .appendNote(secondNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      const noteLog = await getNoteLog(connection, txSignature);
+      const hash = getHash(secondNote, wallet.publicKey); // Use wallet public key as the owner
+
+      assert(
+        hash === Buffer.from(noteLog.leafNode).toString("hex"),
+        "Leaf node hash should match",
+      );
+      assert(
+        secondNote === noteLog.note,
+        "Note should match the appended max size note",
+      );
+    });
+
+    it("updates an existing note in the Merkle tree", async () => {
+      await program.methods
+        .updateNote(
+          0, // Index of the note to update
+          merkleTreeAccount.root, // Assuming you have the root available from previous state
+          firstNote,
+          updatedNote,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      // Check if the note was updated
+      const updatedMerkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        updatedMerkleTreeAccount.notes[0].note === updatedNote,
+        "The note should be updated",
+      );
+    });
+
+    it("fails to update a note that doesn't exist", async () => {
+      try {
+        await program.methods
+          .updateNote(
+            1, // Invalid index
+            merkleTreeAccount.root,
+            firstNote,
+            updatedNote,
+          )
+          .accounts({
+            owner: wallet.publicKey,
+            merkleTree: merkleTree.publicKey,
+            treeAuthority,
+            logWrapper: SPL_NOOP_PROGRAM_ID,
+            compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+          })
+          .rpc();
+        assert.fail("Expected an error to be thrown");
+      } catch (err) {
+        assert(
+          err.message.includes("Invalid index"),
+          "Expected 'Invalid index' error message",
+        );
+      }
+    });
+  });
 });
 ```
 
@@ -1607,31 +2109,157 @@ Please be ensure that the program uses both the original note and the tree root
 to verify the proof path for the note's leaf before applying the update.
 
 ```typescript
-it("Update First Note", async () => {
-  const merkleTreeAccount =
-    await ConcurrentMerkleTreeAccount.fromAccountAddress(
-      connection,
-      merkleTree.publicKey,
-    );
+describe("compressed-notes", () => {
+  const provider = anchor.AnchorProvider.env();
+  anchor.setProvider(provider);
+  const connection = new Connection(
+    provider.connection.rpcEndpoint,
+    "confirmed",
+  );
 
-  const rootKey = merkleTreeAccount.tree.changeLogs[0].root;
-  const root = Array.from(rootKey.toBuffer());
+  const wallet = provider.wallet as anchor.Wallet;
+  const program = anchor.workspace.CompressedNotes as Program<CompressedNotes>;
 
-  const txSignature = await program.methods
-    .updateNote(0, root, firstNote, updatedNote)
-    .accounts({
-      merkleTree: merkleTree.publicKey,
-      treeAuthority: treeAuthority,
-      logWrapper: SPL_NOOP_PROGRAM_ID,
-      compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-    })
-    .rpc();
+  // Generate a new keypair for the Merkle tree account
+  const merkleTree = Keypair.generate();
 
-  const noteLog = await getNoteLog(connection, txSignature);
-  const hash = getHash(updatedNote, provider.publicKey);
+  // Derive the PDA to use as the tree authority for the Merkle tree account
+  const [treeAuthority] = PublicKey.findProgramAddressSync(
+    [merkleTree.publicKey.toBuffer()],
+    program.programId,
+  );
 
-  assert(hash === Buffer.from(noteLog.leafNode).toString("hex"));
-  assert(updatedNote === noteLog.note);
+  const firstNote = "hello world";
+  const secondNote = "0".repeat(917); // Maximum size note
+  const updatedNote = "updated note";
+
+  describe("Merkle Tree Operations", () => {
+    it("creates a new note tree", async () => {
+      const maxDepthSizePair: ValidDepthSizePair = {
+        maxDepth: 3,
+        maxBufferSize: 8,
+      };
+
+      const canopyDepth = 0;
+
+      // Instruction to create a new account with the required space for the tree
+      const allocTreeIx = await createAllocTreeIx(
+        connection,
+        merkleTree.publicKey,
+        wallet.publicKey,
+        maxDepthSizePair,
+        canopyDepth,
+      );
+
+      // Instruction to initialize the tree through the Note program
+      const ix = await program.methods
+        .createNoteTree(
+          maxDepthSizePair.maxDepth,
+          maxDepthSizePair.maxBufferSize,
+        )
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .instruction();
+
+      const tx = new Transaction().add(allocTreeIx, ix);
+      await sendAndConfirmTransaction(connection, tx, [
+        wallet.payer,
+        merkleTree,
+      ]);
+
+      // Fetch the Merkle tree account to confirm it's initialized
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      assert(
+        merkleTreeAccount.isInitialized,
+        "Merkle tree should be initialized",
+      );
+    });
+
+    it("adds a note to the Merkle tree", async () => {
+      const txSignature = await program.methods
+        .appendNote(firstNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      const noteLog = await getNoteLog(connection, txSignature);
+      const hash = getHash(firstNote, wallet.publicKey);
+
+      assert(
+        hash === Buffer.from(noteLog.leafNode).toString("hex"),
+        "Leaf node hash should match",
+      );
+      assert(firstNote === noteLog.note, "Note should match the appended note");
+    });
+
+    it("adds max size note to the Merkle tree", async () => {
+      const txSignature = await program.methods
+        .appendNote(secondNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      const noteLog = await getNoteLog(connection, txSignature);
+      const hash = getHash(secondNote, wallet.publicKey);
+
+      assert(
+        hash === Buffer.from(noteLog.leafNode).toString("hex"),
+        "Leaf node hash should match",
+      );
+      assert(
+        secondNote === noteLog.note,
+        "Note should match the appended max size note",
+      );
+    });
+
+    it("updates the first note in the Merkle tree", async () => {
+      const merkleTreeAccount = await program.account.merkleTree.fetch(
+        merkleTree.publicKey,
+      );
+      const rootKey = merkleTreeAccount.tree.changeLogs[0].root;
+      const root = Array.from(rootKey.toBuffer());
+
+      const txSignature = await program.methods
+        .updateNote(0, root, firstNote, updatedNote)
+        .accounts({
+          owner: wallet.publicKey,
+          merkleTree: merkleTree.publicKey,
+          treeAuthority,
+          logWrapper: SPL_NOOP_PROGRAM_ID,
+          compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        })
+        .rpc();
+
+      const noteLog = await getNoteLog(connection, txSignature);
+      const hash = getHash(updatedNote, wallet.publicKey);
+
+      assert(
+        hash === Buffer.from(noteLog.leafNode).toString("hex"),
+        "Leaf node hash should match after update",
+      );
+      assert(
+        updatedNote === noteLog.note,
+        "Updated note should match the logged note",
+      );
+    });
+  });
 });
 ```
 
