@@ -75,8 +75,7 @@ This method comes with some trade-offs:
    with the new data. You’ll also need proof that the data matches the hash.
 
 These considerations will guide you when deciding whether, when, and how to
-implement state compression in your programs. With that quick overview, let's
-get into the technical bit.
+implement state compression in your programs. With that quick overview, let's go into more technical detail.
 
 #### Concurrent Merkle trees
 
