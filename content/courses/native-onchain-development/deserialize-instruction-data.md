@@ -111,7 +111,7 @@ for in depth understanding.
 
 #### Enumerations
 
-Enumerations (or Enums) are a data struct that allows you to define a type by
+[Enumerations](https://doc.rust-lang.org/book/ch06-01-defining-an-enum.html) (or Enums) are a data struct that allows you to define a type by
 enumerating its possible variants. An example of an enum might look like:
 
 ```rust
