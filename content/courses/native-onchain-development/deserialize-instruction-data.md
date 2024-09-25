@@ -74,7 +74,7 @@ simplifies debugging.
 
 #### Structs
 
-A struct (short for structure) is a custom data type that lets you package
+A [struct](https://doc.rust-lang.org/book/ch05-01-defining-structs.html) (short for structure) is a custom data type that lets you package
 together and name multiple related values that make up a meaningful group. Each
 piece of data in a struct can be of different types, and each has a name
 associated with it. These pieces of data are called fields and behave similarly
