@@ -261,9 +261,8 @@ represent accounts. For a state-compressed program, however, the focus shifts to
 defining types that align with the Merkle tree structure.
 
 In state compression, your onchain account will primarily store the Merkle tree.
-The more practical data schema will be serialized and logged to the Noop program
+The more practical data will be serialized and logged to the Noop program
 for easier access and management.
-
 Your Rust types should encompass all data stored in the leaf nodes and any
 contextual information necessary for interpreting that data. For instance, if
 you're developing a simple messaging program, your `Message` struct might look
