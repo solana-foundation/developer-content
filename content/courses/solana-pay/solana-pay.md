@@ -373,7 +373,7 @@ to the scavenger hunt's smart contract that keeps track of user progress.
 
 To get started, download the starter code on the `starter` branch of this
 [repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter)
-The starter code is a Next.js applications that displays a Solana Pay QR code and uses the traditional `pages` in the previous versions of Next.js. Notice
+The starter code is a Next.js applications that displays a Solana Pay QR code and uses the `app` route in the latest versions of Next.js. Notice
 that the menu bar lets you switch between different QR codes. The default option
 is a simple SOL transfer for illustrative purposes. Throughout this lab, we'll
 be adding functionality to the location options in the menu bar.
@@ -391,7 +391,7 @@ this lab, but feel free to check out the
 you'd like to familiarize yourself with the program.
 
 Before moving on, make sure you get familiar with the starter code for the
-Scavenger Hunt application. Looking at `pages/index.tsx`,
+Scavenger Hunt application. Looking at `app/index.tsx`,
 `utils/createQrCode/simpleTransfer`, and `/utils/checkTransaction` will let you
 see how the transaction request for sending SOL is set up. We'll be following a
 similar pattern for the transaction request for checking in at a location.
@@ -454,7 +454,7 @@ you're good to move on!
 Now that you're up and running, it's time to create an endpoint that supports
 transaction requests for location check-in using the Scavenger Hunt program.
 
-Start by opening the file at `pages/api/checkIn.ts`. Notice that it has a helper
+Start by opening the file at `app/api/checkIn/route.ts`. Notice that it has a helper
 function for initializing `eventOrganizer` from a secret key environment
 variable. The first thing we'll do in this file is the following:
 
@@ -464,24 +464,35 @@ variable. The first thing we'll do in this file is the following:
    or return a 405 error based on the HTTP request method
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+// GET and POST request handler
+export async function handler(req: NextRequest): Promise<NextResponse> {
   if (req.method === "GET") {
-    return get(res);
+    return get();
   } else if (req.method === "POST") {
-    return await post(req, res);
+    return await post(req);
   } else {
-    return res.status(405).json({ error: "Method not allowed" });
+    return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
 }
 
-function get(res: NextApiResponse) {}
+// GET request handler
+function get(): NextResponse {
+  return NextResponse.json({ message: "GET request successful" }, { status: 200 });
+}
 
-async function post(req: NextApiRequest, res: NextApiResponse) {}
+// POST request handler
+async function post(req: NextRequest): Promise<NextResponse> {
+  try {
+    const body = await req.json();
+    // Handle POST logic here
+    return NextResponse.json({ message: "POST request successful", data: body }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: "Error processing POST request" }, { status: 500 });
+  }
+}
+
 ```
 
 #### 4. Update `get` function
@@ -491,17 +502,18 @@ endpoint to return a label and icon. Update the `get` function to send a
 response with a "Scavenger Hunt!" label and a Solana logo icon.
 
 ```jsx
-function get(res: NextApiResponse) {
-    res.status(200).json({
-        label: "Scavenger Hunt!",
-        icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-    });
+export async function GET() {
+  return NextResponse.json({
+    label: "Scavenger Hunt!",
+    icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
+  });
 }
+
 ```
 
 #### 5. Update `post` function
 
-After the GET request, a wallet will issue a POST request to the endpoint. The
+After the GET request, a wallet app will issue a POST request to the endpoint. The
 request's `body` will contain a JSON object with an `account` field representing
 the end user's public key.
 
@@ -529,48 +541,81 @@ Note that you'll need to import `PublicKey` and `Transaction` from
 `@solana/web3.js` here as well.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
-import { PublicKey, Transaction } from "@solana/web3.js"
-...
+import { NextRequest, NextResponse } from 'next/server';
+import { PublicKey, Transaction } from '@solana/web3.js';
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-    const { account } = req.body
-    const { reference, id } = req.query
+// Define constants for configuration and utility imports
+import { connection, gameId, program } from '@/utils/programSetup';
 
-    if (!account || !reference || !id) {
-        res.status(400).json({ error: "Missing required parameter(s)" })
-        return
+// Handle POST request logic for transactions
+export async function POST(req: NextRequest) {
+  const { account } = await req.json(); // Extract account from body
+  const { searchParams } = new URL(req.url); // Extract query parameters
+  const reference = searchParams.get('reference');
+  const id = searchParams.get('id');
+
+  // Validate required parameters
+  if (!account || !reference || !id) {
+    return NextResponse.json(
+      { error: 'Missing required parameter(s)' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Call the transaction builder function with appropriate values
+    const transaction = await buildTransaction(
+      new PublicKey(account),
+      new PublicKey(reference),
+      id.toString()
+    );
+
+    // Return the successful transaction with a message
+    return NextResponse.json({
+      transaction: transaction,
+      message: `You've found location ${id}!`,
+    });
+  } catch (err) {
+    console.error(err);
+    const error = err as any;
+
+    // Handle error response based on the error message
+    if (error.message) {
+      return NextResponse.json(
+        { transaction: '', message: error.message },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { error: 'Error creating transaction' },
+        { status: 500 }
+      );
     }
-
-    try {
-        const transaction = await buildTransaction(
-            new PublicKey(account),
-            new PublicKey(reference),
-            id.toString()
-        )
-
-        res.status(200).json({
-            transaction: transaction,
-            message: `You've found location ${id}!`,
-        })
-    } catch (err) {
-        console.log(err)
-        let error = err as any
-        if (error.message) {
-            res.status(200).json({ transaction: "", message: error.message })
-        } else {
-            res.status(500).json({ error: "error creating transaction" })
-        }
-    }
+  }
 }
 
+// Function to build a Solana transaction
 async function buildTransaction(
-    account: PublicKey,
-    reference: PublicKey,
-    id: string
+  account: PublicKey,
+  reference: PublicKey,
+  id: string
 ): Promise<string> {
-    return new Transaction()
+  // Create a new Solana Transaction instance (for demonstration purposes)
+  const transaction = new Transaction();
+
+  // Perform your logic here, for example:
+  // - Fetching the latest blockhash
+  // - Adding instructions to the transaction
+  // - Signing the transaction
+  // This function is just returning an empty transaction string as an example
+
+  // Serialize the transaction to a base64 string
+  const serializedTransaction = transaction.serialize({
+    requireAllSignatures: false,
+  });
+  return serializedTransaction.toString('base64');
 }
+
 ```
 
 #### 6. Implement the `buildTransaction` function
@@ -600,14 +645,14 @@ later for steps 1, 3, 6, and 7-8. We'll call these `fetchUserState`,
 We'll also add the following imports:
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import {
   PublicKey,
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { locationAtIndex, Location, locations } from "../../utils/locations";
-import { connection, gameId, program } from "../../utils/programSetup";
+import { locationAtIndex, Location, locations } from "@/utils/locations";
+import { connection, gameId, program } from "@/utils/programSetup";
 ```
 
 Using the empty helper functions and the new imports, we can fill in the
