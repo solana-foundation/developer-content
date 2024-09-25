@@ -97,7 +97,7 @@ are executed serially i.e. one after the other — all but the first will fail
 since the root hash and proof passed in will have been invalidated by the first
 transaction executed.
 
-In short, a standard Merkle tree can only handle one leaf update per slot. This
+In short, a standard Merkle tree can only handle one leaf update per [slot](https://solana.com/docs/terminology#slot). This
 significantly limits the throughput in a state-compressed program that depends
 on a single Merkle tree for its state.
 

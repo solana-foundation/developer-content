@@ -68,8 +68,7 @@ For example:
 First setup the environment:
 
 - Install the latest Rust stable from https://rustup.rs/
-- Install the latest
-  [Solana command-line tools](https://docs.solanalabs.com/cli/install)
+- Install the latest [Solana command-line tools](/docs/intro/installation.md)
 
 The normal cargo build is available for building programs against your host
 machine which can be used for unit testing:
