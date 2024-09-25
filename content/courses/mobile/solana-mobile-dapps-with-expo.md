@@ -103,7 +103,7 @@ the following inside this file:
 ```json
 {
   "cli": {
-    "version": ">= 5.2.0"
+    "version": ">= 3.12.0"
   },
   "build": {
     "development": {
@@ -237,24 +237,16 @@ plus a few additional polyfills:
     Native. Below is an example `metro.config.js` file:
 
 ```js
-// Import the default Expo Metro config
-const { getDefaultConfig } = require("@expo/metro-config");
+// Learn more https://docs.expo.io/guides/customizing-metro
+const { getDefaultConfig } = require("expo/metro-config");
 
-// Get the default Expo Metro configuration
-const defaultConfig = getDefaultConfig(__dirname);
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname);
 
-// Customize the configuration to include your extra node modules
-defaultConfig.resolver.extraNodeModules = {
-  crypto: require.resolve("crypto-browserify"),
-  stream: require.resolve("readable-stream"),
-  url: require.resolve("react-native-url-polyfill"),
-  zlib: require.resolve("browserify-zlib"),
-  path: require.resolve("path-browserify"),
-  crypto: require.resolve("expo-crypto"),
-};
+// Add polyfill resolvers
+config.resolver.extraNodeModules.crypto = require.resolve("expo-crypto");
 
-// Export the modified configuration
-module.exports = defaultConfig;
+module.exports = config;
 ```
 
 ### Putting it all together
@@ -311,7 +303,7 @@ First sign up for an [EAS account](https://expo.dev/eas).
 Then, install the EAS CLI and log in:
 
 ```bash
-npm install --global eas-cli
+npm install -g eas-cli
 eas login
 ```
 
@@ -405,9 +397,9 @@ from our app:
 
 ```bash
 cd ..
-git clone https://github.com/XuananLe/react-native-fake-solana-wallet
+git clone https://github.com/solana-developers/react-native-fake-solana-wallet
 cd react-native-fake-solana-wallet
-npm install
+yarn
 ```
 
 The wallet should be installed on your emulator or device. Make sure to open the
@@ -428,7 +420,7 @@ all Solana mobile apps. This will include some polyfills that allow otherwise
 incompatible packages to work with React native:
 
 ```bash
-npm install \
+yarn add \
   @solana/web3.js \
   @solana-mobile/mobile-wallet-adapter-protocol-web3js \
   @solana-mobile/mobile-wallet-adapter-protocol \
@@ -445,16 +437,16 @@ Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
 [first Mobile lesson](/content/courses/mobile/basic-solana-mobile). We will be
-copying over `components/AuthProvider.tsx` and
+copying over `components/AuthorizationProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
 
-Create file `components/AuthProvider.tsx` and copy the contents
-[of our existing Auth Provider from Github](https://raw.githubusercontent.com/Unboxed-Software/solana-advance-mobile/main/components/AuthProvider.tsx)
+Create file `components/AuthorizationProvider.tsx` and copy the contents
+[of our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthorizationProvider.tsx)
 into the new file.
 
 Secondly, create file `components/ConnectionProvider.tsx` and copy the contents
-[of our existing Connection Provider from Github](https://raw.githubusercontent.com/Unboxed-Software/solana-advance-mobile/main/components/ConnectionProvider.tsx)
+[of our existing Connection Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/ConnectionProvider.tsx)
 into the new file.
 
 Now let's create a boilerplate for our main screen in `screens/MainScreen.tsx`:
@@ -476,28 +468,31 @@ Next, create file called `polyfills.ts` for react-native to work with all solana
 dependencies
 
 ```typescript
-// In this case, we polyfill the global Crypto object with getRandomValues from expo-crypto.
 import { getRandomValues as expoCryptoGetRandomValues } from "expo-crypto";
 import { Buffer } from "buffer";
 
+// Set global Buffer
 global.Buffer = Buffer;
 
-// getRandomValues polyfill
+// Define Crypto class with getRandomValues method
 class Crypto {
   getRandomValues = expoCryptoGetRandomValues;
 }
 
-const webCrypto = typeof crypto !== "undefined" ? crypto : new Crypto();
+// Check if crypto is already defined in the global scope
+const hasInbuiltWebCrypto = typeof window.crypto !== "undefined";
 
-(() => {
-  if (typeof crypto === "undefined") {
-    Object.defineProperty(window, "crypto", {
-      configurable: true,
-      enumerable: true,
-      get: () => webCrypto,
-    });
-  }
-})();
+// Use existing crypto if available, otherwise create a new Crypto instance
+const webCrypto = hasInbuiltWebCrypto ? window.crypto : new Crypto();
+
+// Polyfill crypto object if it's not already defined
+if (!hasInbuiltWebCrypto) {
+  Object.defineProperty(window, "crypto", {
+    configurable: true,
+    enumerable: true,
+    get: () => webCrypto,
+  });
+}
 ```
 
 Finally, let's change `App.tsx` to wrap our application in the two providers we
@@ -505,7 +500,7 @@ just created:
 
 ```tsx
 import { ConnectionProvider } from "./components/ConnectionProvider";
-import { AuthorizationProvider } from "./components/AuthProvider";
+import { AuthorizationProvider } from "./components/AuthorizationProvider";
 import { clusterApiUrl } from "@solana/web3.js";
 import { MainScreen } from "./screens/MainScreen";
 import "./polyfills";
@@ -544,7 +539,7 @@ Add the following convenient run scripts to your `package.json` file.
     "build": "npx eas build --profile development --platform android",
     "build:local": "npx eas build --profile development --platform android --local",
     "test": "echo \"No tests specified\" && exit 0",
-    "clean": "rm -rf node_modules && npm install"
+    "clean": "rm -rf node_modules && yarn"
   }
 ```
 
@@ -557,7 +552,7 @@ _uninstall_ the previous version before you drag and drop the new one in.
 Build locally:
 
 ```bash
-npm run build:local
+yarn run build:local
 ```
 
 Install: **_Drag_** the resulting build file into your emulator.
@@ -565,7 +560,7 @@ Install: **_Drag_** the resulting build file into your emulator.
 Run:
 
 ```bash
-npm run android
+yarn run android
 ```
 
 Everything should compile and you should have a boilerplate Solana Expo app.
@@ -584,7 +579,7 @@ abstracts away a lot of the minutia of working with NFTs, however it was written
 largely for Node.js, so we'll need several more polyfills to make it work:
 
 ```bash
-npm install assert \
+yarn add assert \
   util \
   crypto-browserify \
   stream-browserify \
@@ -594,9 +589,10 @@ npm install assert \
   react-native-url-polyfill \
   @metaplex-foundation/umi \
   @metaplex-foundation/umi-bundle-defaults \
-  @metaplex-foundation/umi-bundle-defaults \
   @metaplex-foundation/umi-signer-wallet-adapters \
-  @metaplex-foundation/umi-web3js-adapters  \
+  @metaplex-foundation/umi-web3js-adapters \
+  @metaplex-foundation/mpl-token-metadata \
+  @metaplex-foundation/mpl-candy-machine
 ```
 
 #### 2. Polyfill config
@@ -611,33 +607,16 @@ touch metro.config.js
 Copy and paste the following into `metro.config.js`:
 
 ```javascript
-// Import the default Expo Metro config
-const { getDefaultConfig } = require("@expo/metro-config");
+// Learn more https://docs.expo.io/guides/customizing-metro
+const { getDefaultConfig } = require("expo/metro-config");
 
-// Get the default Expo Metro configuration
-const defaultConfig = getDefaultConfig(__dirname);
+/** @type {import('expo/metro-config').MetroConfig} */
+const config = getDefaultConfig(__dirname);
 
-// Customize the configuration to include your extra node modules
-defaultConfig.resolver.extraNodeModules = {
-  crypto: require.resolve("crypto-browserify"),
-  stream: require.resolve("readable-stream"),
-  url: require.resolve("react-native-url-polyfill"),
-  zlib: require.resolve("browserify-zlib"),
-  path: require.resolve("path-browserify"),
-  crypto: require.resolve("expo-crypto"),
-};
+// Add polyfill resolvers
+config.resolver.extraNodeModules.crypto = require.resolve("expo-crypto");
 
-// Export the modified configuration
-module.exports = {
-  ...defaultConfig,
-  resolver: {
-    ...defaultConfig.resolver,
-    // This issue is caused because the @metaplex-foundation/umi package uses Package Exports to export the umi/serializers submodule.
-
-    // See more why we have to do here at: https://github.com/metaplex-foundation/umi/issues/94
-    unstable_enablePackageExports: true,
-  },
-};
+module.exports = config;
 ```
 
 #### 3. Metaplex provider
@@ -647,84 +626,75 @@ We'll be creating NFTs using
 leveraging the `Umi` object, a tool commonly used in many Metaplex applications.
 This combination will give us access to key functions like `fetch` and `create`
 that are essential for NFT creation. To set this up, we will create a new file,
-`/components/MetaplexProvider.tsx`, where we'll connect our mobile wallet
-adapter to the `Umi` object. This allows us to execute privileged actions, such
-as interacting with token metadata, on our behalf.
+`/components/UmiProvider.tsx`, where we'll connect our mobile wallet adapter to
+the `Umi` object. This allows us to execute privileged actions, such as
+interacting with token metadata, on our behalf.
 
 ```tsx
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
-import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
+import { createContext, ReactNode, useContext } from "react";
+import type { Umi } from "@metaplex-foundation/umi";
 import {
-  transact,
-  Web3MobileWallet,
-} from "@solana-mobile/mobile-wallet-adapter-protocol-web3js";
-import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
-import { useMemo } from "react";
-import { Account } from "./AuthProvider";
+  createNoopSigner,
+  publicKey,
+  signerIdentity,
+} from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
+import { mplTokenMetadata } from "@metaplex-foundation/mpl-token-metadata";
+import { mplCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
+import { useAuthorization } from "./AuthorizationProvider";
 
-type LegacyOrVersionedTransact = Transaction | VersionedTransaction;
-
-export const useUmi = (
-  connection: Connection,
-  selectedAccount: Account | null,
-  authorizeSession: (wallet: Web3MobileWallet) => Promise<Account>,
-) => {
-  return useMemo(() => {
-    if (!selectedAccount || !authorizeSession) {
-      return { mobileWalletAdapter: null, umi: null };
-    }
-
-    const mobileWalletAdapter = {
-      publicKey: selectedAccount.publicKey,
-      signMessage: async (message: Uint8Array): Promise<Uint8Array> => {
-        return await transact(async (wallet: Web3MobileWallet) => {
-          await authorizeSession(wallet);
-          const signedMessages = await wallet.signMessages({
-            addresses: [selectedAccount.publicKey.toBase58()],
-            payloads: [message],
-          });
-          return signedMessages[0];
-        });
-      },
-      signTransaction: async <T extends LegacyOrVersionedTransact>(
-        transaction: T,
-      ): Promise<T> => {
-        return await transact(async (wallet: Web3MobileWallet) => {
-          await authorizeSession(wallet);
-          const signedTransactions = await wallet.signTransactions({
-            transactions: [transaction],
-          });
-          return signedTransactions[0] as T;
-        });
-      },
-      signAllTransactions: async <T extends LegacyOrVersionedTransact>(
-        transactions: T[],
-      ): Promise<T[]> => {
-        return transact(async (wallet: Web3MobileWallet) => {
-          await authorizeSession(wallet);
-          const signedTransactions = await wallet.signTransactions({
-            transactions: transactions,
-          });
-          return signedTransactions as T[];
-        });
-      },
-    };
-    // Add Umi Plugins
-    const umi = createUmi(connection.rpcEndpoint)
-      .use(mplTokenMetadata())
-      .use(walletAdapterIdentity(mobileWalletAdapter));
-
-    return { umi };
-  }, [authorizeSession, selectedAccount, connection]);
+type UmiContext = {
+  umi: Umi | null;
 };
+
+const DEFAULT_CONTEXT: UmiContext = {
+  umi: null,
+};
+
+export const UmiContext = createContext<UmiContext>(DEFAULT_CONTEXT);
+
+export const UmiProvider = ({
+  endpoint,
+  children,
+}: {
+  endpoint: string;
+  children: ReactNode;
+}) => {
+  const { selectedAccount } = useAuthorization();
+  console.log("selectedAccount", JSON.stringify(selectedAccount, null, 2));
+  const umi = createUmi(endpoint)
+    .use(mplTokenMetadata())
+    .use(mplCandyMachine());
+  if (selectedAccount === null) {
+    const noopSigner = createNoopSigner(
+      publicKey("11111111111111111111111111111111"),
+    );
+    umi.use(signerIdentity(noopSigner));
+  } else {
+    umi.use(walletAdapterIdentity(selectedAccount));
+  }
+
+  return <UmiContext.Provider value={{ umi }}>{children}</UmiContext.Provider>;
+};
+
+export function useUmi(): Umi {
+  const umi = useContext(UmiContext).umi;
+  if (!umi) {
+    throw new Error(
+      "Umi context was not initialized. " +
+        "Did you forget to wrap your app with <UmiProvider />?",
+    );
+  }
+  return umi;
+}
 ```
 
 #### 4. NFT Provider
 
 We're also making a higher-level NFT provider that helps with NFT state
 management. It combines all three of our previous providers:
-`ConnectionProvider`, `AuthProvider`, and `MetaplexProvider` to allow us to
+`ConnectionProvider`, `AuthorizationProvider`, and `UmiProvider` to allow us to
 create our `Umi` object. We will fill this out at a later step; for now, it
 makes for a good boilerplate.
 
@@ -733,9 +703,9 @@ Let's create the new file `components/NFTProvider.tsx`:
 ```tsx
 import "react-native-url-polyfill/auto";
 import { useConnection } from "./ConnectionProvider";
-import { Account, useAuthorization } from "./AuthProvider";
+import { Account, useAuthorization } from "./AuthorizationProvider";
 import React, { ReactNode, createContext, useContext, useState } from "react";
-import { useUmi } from "./MetaplexProvider";
+import { useUmi } from "./UmiProvider";
 import { Umi } from "@metaplex-foundation/umi";
 
 export interface NFTProviderProps {
@@ -780,7 +750,7 @@ Now, let's wrap our new `NFTProvider` around `MainScreen` in `App.tsx`:
 ```tsx
 import "./polyfills";
 import { ConnectionProvider } from "./components/ConnectionProvider";
-import { AuthorizationProvider } from "./components/AuthProvider";
+import { AuthorizationProvider } from "./components/AuthorizationProvider";
 import { clusterApiUrl } from "@solana/web3.js";
 import { MainScreen } from "./screens/MainScreen";
 import { NFTProvider } from "./components/NFTProvider";
@@ -796,8 +766,7 @@ export default function App() {
       config={{ commitment: "processed" }}
     >
       <AuthorizationProvider cluster={cluster}>
-        <NFTProvider>
-          <MainScreen />
+            <MainScreen />
         </NFTProvider>
       </AuthorizationProvider>
     </ConnectionProvider>
@@ -924,7 +893,7 @@ device's URI scheme and turn them into Blobs we can the upload to
 Install it with the following:
 
 ```bash
-npm install rn-fetch-blob
+yarn add rn-fetch-blob
 ```
 
 #### 3. Final build
@@ -1044,30 +1013,68 @@ const fetchNFTs = useCallback(async () => {
 
    To upload to Pinata Cloud you need to init `PinataSDK` instance with
    `pinataJwt` and `pinataGateway`. After that, you can interact with their
-   [API](https://docs.pinata.cloud/web3/sdk/getting-started)
+   [API](https://docs.pinata.cloud/web3/sdk/getting-started) to perform uploads.
 
    We'll create two helper functions for uploading the image and metadata
    separately, then tie them together into a single `createNFT` function:
 
 ```tsx
 const ipfsPrefix = `https://${process.env.EXPO_PUBLIC_NFT_PINATA_GATEWAY_URL}/ipfs/`;
+async function uploadBase64(base64String: string) {
+  try {
+    const buffer = Buffer.from(base64String, "base64");
+    const blob = new Blob([buffer]);
+    const file = new File([blob], "file");
+    const data = new FormData();
+    data.append("file", file);
 
-const pinata = useMemo(
-  () =>
-    new PinataSDK({
-      pinataJwt: process.env.EXPO_PUBLIC_PINATA_JWT,
-      pinataGateway: process.env.EXPO_PUBLIC_PINATA_GATEWAY,
-    }),
-  [],
-);
-const uploadImage = useCallback(
-  async (fileUri: string): Promise<string> => {
-    const imageBytesInBase64 = await RNFetchBlob.fs.readFile(fileUri, "base64");
-    const upload = await pinata.upload.base64(imageBytesInBase64);
-    return upload.IpfsHash;
-  },
-  [pinata],
-);
+    const upload = await fetch(
+      "https://api.pinata.cloud/pinning/pinFileToIPFS",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+        },
+        body: data,
+      },
+    );
+    const uploadRes = await upload.json();
+    return uploadRes;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function uploadMetadataJson(
+  name: string,
+  description: string,
+  imageCID: string,
+) {
+  const data = JSON.stringify({
+    pinataContent: {
+      name,
+      description,
+      imageCID,
+    },
+  });
+
+  const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+    },
+    body: data,
+  });
+
+  const resData = await res.json();
+  return resData;
+}
+const uploadImage = useCallback(async (fileUri: string): Promise<string> => {
+  const imageBytesInBase64 = await RNFetchBlob.fs.readFile(fileUri, "base64");
+  const upload = await uploadBase64(imageBytesInBase64);
+  return upload.IpfsHash;
+}, []);
 
 const uploadMetadata = useCallback(
   async (
@@ -1075,10 +1082,17 @@ const uploadMetadata = useCallback(
     description: string,
     imageCID: string,
   ): Promise<string> => {
-    const upload = await pinata.upload.json({ name, description, imageCID });
-    return upload.IpfsHash;
+    const data = JSON.stringify({
+      pinataContent: {
+        name,
+        description,
+        imageCID,
+      },
+    });
+    const uploadRes = await uploadMetadataJson(name, description, imageCID);
+    return uploadRes.IpfsHash;
   },
-  [pinata],
+  [],
 );
 ```
 
@@ -1119,6 +1133,7 @@ We'll put all of the above into the `NFTProvider.tsx` file. All together, this
 looks as follows:
 
 ```tsx
+import "react-native-url-polyfill/auto";
 import {
   DigitalAsset,
   createNft,
@@ -1130,13 +1145,9 @@ import {
   Umi,
   generateSigner,
   percentAmount,
-  publicKey,
 } from "@metaplex-foundation/umi";
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { fromWeb3JsPublicKey } from "@metaplex-foundation/umi-web3js-adapters";
-import { transact } from "@solana-mobile/mobile-wallet-adapter-protocol";
 import { clusterApiUrl, PublicKey as solanaPublicKey } from "@solana/web3.js";
-import { PinataSDK } from "pinata-web3";
 import React, {
   ReactNode,
   createContext,
@@ -1145,11 +1156,11 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import "react-native-url-polyfill/auto";
 import RNFetchBlob from "rn-fetch-blob";
-import { Account, useAuthorization } from "./AuthProvider";
 import { useConnection } from "./ConnectionProvider";
-import { useUmi } from "./MetaplexProvider";
+import { useUmi } from "./UmiProvider";
+import { useMobileWallet } from "../utils/useMobileWallet";
+import { Account, useAuthorization } from "./AuthorizationProvider";
 
 export interface NFTProviderProps {
   children: ReactNode;
@@ -1166,53 +1177,74 @@ export interface NFTContextState {
   createNFT: (name: string, description: string, fileUri: string) => void; // Creates the NFT
 }
 
-const DEFAULT_NFT_CONTEXT_STATE: NFTContextState = {
-  umi: createUmi(clusterApiUrl("devnet")),
-  publicKey: null,
-  isLoading: false,
-  loadedNFTs: null,
-  nftOfTheDay: null,
-  connect: () => publicKey("00000000000000000000000000000000"), // Default PublicKey
-  fetchNFTs: () => {},
-  createNFT: () => {},
-};
-
 export function formatDate(date: Date) {
   return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
 }
 
-const NFTContext = createContext<NFTContextState>(DEFAULT_NFT_CONTEXT_STATE);
+const NFTContext = createContext<NFTContextState | null>(null);
 
 export function NFTProvider(props: NFTProviderProps) {
   const ipfsPrefix = `https://${process.env.EXPO_PUBLIC_NFT_PINATA_GATEWAY_URL}/ipfs/`;
-  const pinata = useMemo(
-    () =>
-      new PinataSDK({
-        pinataJwt: process.env.EXPO_PUBLIC_PINATA_JWT,
-        pinataGateway: process.env.EXPO_PUBLIC_PINATA_GATEWAY,
-      }),
-    [],
-  );
   const { connection } = useConnection();
-  const { authorizeSession } = useAuthorization();
+  const { authorizeSession, deauthorizeSession } = useAuthorization();
   const [account, setAccount] = useState<Account | null>(null);
   const [nftOfTheDay, setNftOfTheDay] = useState<DigitalAsset | null>(null);
   const [loadedNFTs, setLoadedNFTs] = useState<DigitalAsset[] | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { umi } = useUmi(connection, account, authorizeSession);
+  const umi = useUmi();
   const { children } = props;
 
-  const connect = useCallback(() => {
-    if (isLoading) return;
+  const { connect } = useMobileWallet();
+  async function uploadBase64(base64String: string) {
+    try {
+      const buffer = Buffer.from(base64String, "base64");
+      const blob = new Blob([buffer]);
+      const file = new File([blob], "file");
+      const data = new FormData();
+      data.append("file", file);
 
-    setIsLoading(true);
-    transact(async wallet => {
-      const auth = await authorizeSession(wallet);
-      setAccount(auth);
-    }).finally(() => {
-      setIsLoading(false);
+      const upload = await fetch(
+        "https://api.pinata.cloud/pinning/pinFileToIPFS",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+          },
+          body: data,
+        },
+      );
+      const uploadRes = await upload.json();
+      return uploadRes;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function uploadMetadataJson(
+    name: string,
+    description: string,
+    imageCID: string,
+  ) {
+    const data = JSON.stringify({
+      pinataContent: {
+        name,
+        description,
+        imageCID,
+      },
     });
-  }, [isLoading, authorizeSession]);
+
+    const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+      },
+      body: data,
+    });
+
+    const resData = await res.json();
+    return resData;
+  }
 
   const fetchNFTs = useCallback(async () => {
     if (!umi || !account || isLoading) return;
@@ -1228,17 +1260,12 @@ export function NFTProvider(props: NFTProviderProps) {
       setIsLoading(false);
     }
   }, [umi, account, isLoading]);
-  const uploadImage = useCallback(
-    async (fileUri: string): Promise<string> => {
-      const imageBytesInBase64 = await RNFetchBlob.fs.readFile(
-        fileUri,
-        "base64",
-      );
-      const upload = await pinata.upload.base64(imageBytesInBase64);
-      return upload.IpfsHash;
-    },
-    [pinata],
-  );
+
+  const uploadImage = useCallback(async (fileUri: string): Promise<string> => {
+    const imageBytesInBase64 = await RNFetchBlob.fs.readFile(fileUri, "base64");
+    const upload = await uploadBase64(imageBytesInBase64);
+    return upload.IpfsHash;
+  }, []);
 
   const uploadMetadata = useCallback(
     async (
@@ -1246,10 +1273,17 @@ export function NFTProvider(props: NFTProviderProps) {
       description: string,
       imageCID: string,
     ): Promise<string> => {
-      const upload = await pinata.upload.json({ name, description, imageCID });
-      return upload.IpfsHash;
+      const data = JSON.stringify({
+        pinataContent: {
+          name,
+          description,
+          imageCID,
+        },
+      });
+      const uploadRes = await uploadMetadataJson(name, description, imageCID);
+      return uploadRes.IpfsHash;
     },
-    [pinata],
+    [],
   );
 
   const createNFT = useCallback(
@@ -1301,7 +1335,13 @@ export function NFTProvider(props: NFTProviderProps) {
   return <NFTContext.Provider value={state}>{children}</NFTContext.Provider>;
 }
 
-export const useNFT = (): NFTContextState => useContext(NFTContext);
+export const useNFT = (): NFTContextState => {
+  const context = useContext(NFTContext);
+  if (!context) {
+    throw new Error("useNFT must be used within an NFTProvider");
+  }
+  return context;
+};
 ```
 
 #### 2. Main Screen
