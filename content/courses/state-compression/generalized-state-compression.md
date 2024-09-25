@@ -757,7 +757,7 @@ instead of the `account` macro.
 
 #### 3. Define Input Accounts and Constraints
 
-In our setup, all instructions will use the same accounts, so we'll create a
+In our setup, all instructions handlers will use the same accounts, so we'll create a
 single `NoteAccounts` struct to handle account validation. This struct will
 include the following accounts:
 
