@@ -227,7 +227,6 @@ applied to real tokens.
 
 We'll start with the
 [`starter` branch of this repository](https://github.com/solana-developers/arbitrary-cpi/tree/starter).
-
 Clone the repository and then open it on the `starter` branch.
 
 Notice that there are three programs:
