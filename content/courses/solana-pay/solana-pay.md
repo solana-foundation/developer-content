@@ -13,14 +13,9 @@ description:
 
 ## Summary
 
-- **Solana Pay** is a specification for encoding Solana transaction requests
-  within URLs, enabling standardized transaction requests across different
-  Solana apps and wallets
-- **Partial signing** of transactions allows for the creation of transactions
-  that require multiple signatures before they are submitted to the network
-- **Transaction gating** involves implementing rules that determine whether
-  certain transactions are allowed to be processed or not, based on certain
-  conditions or the presence of specific data in the transaction
+- **Solana Pay** is a specification for encoding Solana transaction requests within URLs, facilitating standardized transaction requests across various Solana onchain applications and wallet apps.
+- **Partial signing** of transactions enables the creation of transactions that require multiple signatures before they are submitted to the network. This allows for collaborative transaction signing where multiple parties must agree.
+- **Transaction gating** involves setting up rules that determine whether certain transactions can be processed or not, based on predefined conditions or the presence of specific data in the transaction.
 
 ## Lesson
 
