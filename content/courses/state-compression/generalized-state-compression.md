@@ -25,16 +25,16 @@ description:
   standard Merkle tree, it allows multiple updates simultaneously without
   affecting transaction validity.
 - Data in a state-compressed program is not stored onchain. So you have to use
-  indexers to keep an off-chain cache of the data. It's this off-chain cache
+  indexers to keep an offchain cache of the data. It's this offchain cache
   data that is used to then verify against the onchain Merkle tree.
 
 ## Lesson
 
 Previously, we talked about state compression in the context of compressed NFTs.
 
-Currently, compressed NFTs are the main use case for state compression. However,
-you can apply it to any Solana program. In this lesson, we'll discuss state
-compression in general terms so that you can use it across your Solana projects.
+While compressed NFTs are the main use case for state compression, 
+you can apply state compression to any Solana program. In this lesson, we'll discuss state
+compression in general terms so you can use it across your Solana projects.
 
 ### A theoretical overview of state compression
 
@@ -47,7 +47,7 @@ State compression focuses on ensuring that the data is trustworthy. If the goal
 is simply to verify the integrity of the data, then there's no need to store the
 actual data onchain. Instead, we can store hashes of the data, which can be used
 to prove or verify its accuracy. These hashes take up far less storage space
-than the original data. The full data can be stored in a cheaper, off-chain
+than the original data. The full data can be stored in a cheaper, offchain
 location, and only needs to be verified against the onchain hash when accessed.
 
 The Solana State Compression program uses a Solana State Compression program
@@ -207,7 +207,7 @@ Since the state compression process happens onchain, all the data is still in
 the ledger state. In theory, you could retrieve the original data by replaying
 the entire chain state from the start. However, it’s far more practical (though
 still somewhat complex) to use an indexer to track and index the data as the
-transactions happen. This creates an off-chain "cache" of the data that can be
+transactions happen. This creates an offchain "cache" of the data that can be
 easily accessed and verified against the onchain root hash.
 
 While this process may seem complex at first, it becomes clearer with practice.
@@ -261,8 +261,8 @@ You essentially have two main options:
 
 1. Use an indexing provider to create a custom indexing solution for your
    program, which will monitor the events sent to the Noop program and store the
-   relevant data off-chain.
-2. Build your indexing solution that stores transaction data off-chain.
+   relevant data offchain.
+2. Build your indexing solution that stores transaction data offchain.
 
 For many dApps, option 2 can be a practical choice. Larger-scale applications,
 however, may need to rely on infrastructure providers to manage their indexing
@@ -456,7 +456,7 @@ initially appending data to the tree:
 3. **Log the New Data**: As with the initial append operation, create a log
    object to represent the new data, and use `wrap_application_data_v1` to
    invoke the Noop Program via CPI. This ensures that the new uncompressed data
-   is logged and accessible off-chain.
+   is logged and accessible offchain.
 
 4. **Replace the Existing Leaf Hash**: This step is slightly different from
    appending new data. Here, you'll need to invoke a CPI to the State
