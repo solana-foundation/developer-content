@@ -380,7 +380,7 @@ the transaction size limits.
 
 Here’s the code to include in `try-large-transaction.ts`:
 
-```typescript
+```typescript filename="try-large-transaction.ts"
 import {
   Connection,
   clusterApiUrl,
@@ -466,7 +466,7 @@ file will contain the code to demonstrate the use of lookup tables.
 
 Here’s the starter code to include in `use-lookup-tables.ts` file:
 
-```typescript
+```typescript filename="use-lookup-tables.ts"
 import {
   Connection,
   clusterApiUrl,
@@ -526,7 +526,7 @@ This helper function will:
 - Send the transaction to the network.
 - Confirm the transaction and log the transaction's URL using Solana Explorer.
 
-```typescript
+```typescript filename="use-lookup-tables.ts"
 async function sendV0Transaction(
   connection: Connection,
   user: Keypair,
@@ -584,7 +584,7 @@ This function will:
 - Resolve the promise once the current block height exceeds the target block
   height.
 
-```typescript
+```typescript filename="use-lookup-tables.ts"
 async function waitForNewBlock(
   connection: Connection,
   targetHeight: number,
@@ -650,7 +650,7 @@ with pointers to the lookup table.
 This design is crucial for enabling the transaction to support more recipients
 by staying within Solana’s transaction size limits.
 
-```typescript
+```typescript filename="use-lookup-tables.ts"
 async function initializeLookupTable(
   user: Keypair,
   connection: Connection,
@@ -705,7 +705,7 @@ we will follow these steps:
 5. Send the Versioned Transaction: Use `sendV0Transaction` to send a single
    transaction with all transfer instructions, referencing the lookup table.
 
-```typescript
+```typescript filename="use-lookup-tables.ts"
 async function main() {
   // Connect to the devnet Solana cluster
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -801,7 +801,7 @@ All we need to do is go into `initializeLookupTable` and do two things:
 2. Add a loop that will keep extending a lookup table of 30 addresses at a time
    until all addresses have been added
 
-```typescript
+```typescript filename="use-lookup-tables.ts"
 async function initializeLookupTable(
   user: Keypair,
   connection: Connection,
