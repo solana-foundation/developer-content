@@ -48,7 +48,7 @@ location, and only needs to be verified against the onchain hash when accessed.
 
 The Solana State Compression program uses a Solana State Compression program
 known as a **concurrent Merkle tree**. A concurrent Merkle tree is a special
-kind of binary tree that predictably hashes data. Hence, deterministic.
+kind of binary tree that deterministically hashes data, i.e. the same inputs will always produce the same Merkle root.
 
 The final hash is significantly smaller in size than all the original full data
 sets combined. This is why it's called "compression". And it's this hash that's
