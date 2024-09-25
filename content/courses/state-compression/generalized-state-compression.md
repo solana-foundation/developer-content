@@ -81,7 +81,7 @@ implement state compression in your programs. With that quick overview, let's go
 
 
 Since a Merkle tree is represented as a single hash, any change to a leaf node
-alters the entire root hash. This becomes problematic when multiple transactions
+alters the root hash. This becomes problematic when multiple transactions
 in the same slot try to update leaf data in the same slot. Since transactions
 are executed serially i.e. one after the other — all but the first will fail
 since the root hash and proof passed in will have been invalidated by the first
