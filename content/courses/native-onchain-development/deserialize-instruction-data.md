@@ -305,7 +305,7 @@ of the enum with the deserialized data.
 It's standard practice to structure your program to expect the first byte (or
 other fixed number of bytes) to be an identifier for which instruction handler
 the program should run. This could be an integer or a string identifier. For
-this example, we'll use the first byte and map integers 0, 1, and 2 to the
+this example, we'll use the first byte and map integers `0`, `1`, and `2` to the
 instruction handlers for create, update, and delete, respectively.
 
 ```rust
@@ -518,7 +518,7 @@ that takes a byte array and returns a `Result` type. This function should:
 1. Split the first byte from the array using `split_first`.
 2. Deserialize the remaining array into a `MovieReviewPayload` instance.
 3. Use a `match` statement to return the `AddMovieReview` variant of
-   `MovieInstruction` if the first byte is 0, otherwise return a program error.
+   `MovieInstruction` if the first byte is `0`, otherwise return a program error.
 
 ```rust
 impl MovieInstruction {
