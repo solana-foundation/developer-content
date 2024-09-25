@@ -236,8 +236,11 @@ Now that we've covered the Rust basics, let's apply them to Solana programs.
 
 More often than not, programs will have more than one instruction handler. For
 example, you may have a program that acts as the backend for a note-taking app.
-Assume this program accepts instructions for creating a new note, updating an
-existing note, and deleting an existing note.
+
+Assume this program accepts instructions for:
+1. Creating a new note.
+2. Updating an existing note.
+3. Deleting an existing note.
 
 Since instructions have discrete types, they're usually a great fit for an enum
 data type.
