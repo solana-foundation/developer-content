@@ -144,9 +144,7 @@ using enums in Rust by visiting
 
 #### Match statements
 
-Match statements are very similar to `switch` statements in other languages. The
-
-[`match`](https://doc.rust-lang.org/rust-by-example/flow_control/match.html)
+Match statements are very similar to `switch` statements in other languages. The [`match`](https://doc.rust-lang.org/rust-by-example/flow_control/match.html)
 statement allows you to compare a value against a series of patterns and then
 execute code based on which pattern matches the value. Patterns can be made of
 literal values, variable names, wildcards, and more. The match statement must
