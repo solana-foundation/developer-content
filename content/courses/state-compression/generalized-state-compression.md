@@ -25,15 +25,15 @@ description:
   standard Merkle tree, it allows multiple updates simultaneously without
   affecting transaction validity.
 - Data in a state-compressed program is not stored onchain. So you have to use
-  indexers to keep an offchain cache of the data. It's this offchain cache
-  data that is used to then verify against the onchain Merkle tree.
+  indexers to keep an offchain cache of the data. It's this offchain cache data
+  that is used to then verify against the onchain Merkle tree.
 
 ## Lesson
 
 Previously, we talked about state compression in the context of compressed NFTs.
 
-While compressed NFTs are the main use case for state compression, 
-you can apply state compression to any Solana program. In this lesson, we'll discuss state
+While compressed NFTs are the main use case for state compression, you can apply
+state compression to any Solana program. In this lesson, we'll discuss state
 compression in general terms so you can use it across your Solana projects.
 
 ### A theoretical overview of state compression
@@ -52,11 +52,12 @@ location, and only needs to be verified against the onchain hash when accessed.
 
 The Solana State Compression program uses a Solana State Compression program
 known as a **concurrent Merkle tree**. A concurrent Merkle tree is a special
-kind of binary tree that deterministically hashes data, i.e. the same inputs will always produce the same Merkle root.
+kind of binary tree that deterministically hashes data, i.e. the same inputs
+will always produce the same Merkle root.
 
-The final hash, called a *Merkle root*, is significantly smaller in size than all the original full data
-sets combined. This is why it's called "compression". And it's this hash that's
-stored onchain.
+The final hash, called a _Merkle root_, is significantly smaller in size than
+all the original full data sets combined. This is why it's called "compression".
+And it's this hash that's stored onchain.
 
 **Outlined below are the steps to this process, in order:**
 
@@ -79,29 +80,28 @@ This method comes with some trade-offs:
    with the new data. You’ll also need proof that the data matches the hash.
 
 These considerations will guide you when deciding whether, when, and how to
-implement state compression in your programs. With that quick overview, let's go into more technical detail.
+implement state compression in your programs. With that quick overview, let's go
+into more technical detail.
 
 #### Concurrent Merkle trees
 
-
 Since a Merkle tree is represented as a single hash, any change to a leaf node
-alters the root hash. This becomes problematic when multiple transactions
-in the same slot try to update leaf data in the same slot. Since transactions
-are executed serially i.e. one after the other — all but the first will fail
-since the root hash and proof passed in will have been invalidated by the first
+alters the root hash. This becomes problematic when multiple transactions in the
+same slot try to update leaf data in the same slot. Since transactions are
+executed serially i.e. one after the other — all but the first will fail since
+the root hash and proof passed in will have been invalidated by the first
 transaction executed.
 
-In short, a standard Merkle tree can only handle one leaf update per [slot](https://solana.com/docs/terminology#slot). This
-significantly limits the throughput in a state-compressed program that depends
-on a single Merkle tree for its state.
+In short, a standard Merkle tree can only handle one leaf update per
+[slot](https://solana.com/docs/terminology#slot). This significantly limits the
+throughput in a state-compressed program that depends on a single Merkle tree
+for its state.
 
-Thankfully, this issue can be addressed using a *concurrent* Merkle tree. Unlike a
-regular Merkle tree, a concurrent Merkle tree keeps a secure changelog of recent
-updates, along with their root hash and the proof needed to derive it. When
-multiple transactions in the same slot attempt to modify leaf data, the
+Thankfully, this issue can be addressed using a _concurrent_ Merkle tree. Unlike
+a regular Merkle tree, a concurrent Merkle tree keeps a secure changelog of
+recent updates, along with their root hash and the proof needed to derive it.
+When multiple transactions in the same slot attempt to modify leaf data, the
 changelog serves as a reference, enabling concurrent updates to the tree.
-
-
 
 How does the concurrent Merkle tree achieve this? In a standard Merkle tree,
 only the root hash is stored. However, a concurrent Merkle tree includes extra
@@ -216,10 +216,14 @@ It provides instructions for initializing Merkle trees, handling tree leaves
 leaf data.
 
 Additionally, the State Compression Program works in conjunction with a separate
-"Noop" program. A [no-op program](https://en.wikipedia.org/wiki/NOP_(code)) does nothing - literally 'no operation.' The Solana Noop Program only logs data to the ledger state, however that logging is essential to state compression:
+"Noop" program. A [no-op program](<https://en.wikipedia.org/wiki/NOP_(code)>)
+does nothing - literally 'no operation.' The Solana Noop Program only logs data
+to the ledger state, however that logging is essential to state compression:
 
-When you store compressed data, it’s passed to the State Compression Program, which hashes the data and emits it as an "event" to the Noop Program. While the hash is stored in the concurrent Merkle tree, the raw data can still be accessed via the Noop Program’s
-transaction logs.
+When you store compressed data, it’s passed to the State Compression Program,
+which hashes the data and emits it as an "event" to the Noop Program. While the
+hash is stored in the concurrent Merkle tree, the raw data can still be accessed
+via the Noop Program’s transaction logs.
 
 ### Indexing Data for Easy Lookup
 
@@ -263,12 +267,11 @@ represent accounts. For a state-compressed program, however, the focus shifts to
 defining types that align with the Merkle tree structure.
 
 In state compression, your onchain account will primarily store the Merkle tree.
-The more practical data will be serialized and logged to the Noop program
-for easier access and management.
-Your Rust types should encompass all data stored in the leaf nodes and any
-contextual information necessary for interpreting that data. For instance, if
-you're developing a simple messaging program, your `Message` struct might look
-something like this:
+The more practical data will be serialized and logged to the Noop program for
+easier access and management. Your Rust types should encompass all data stored
+in the leaf nodes and any contextual information necessary for interpreting that
+data. For instance, if you're developing a simple messaging program, your
+`Message` struct might look something like this:
 
 ```rust
 #[derive(AnchorSerialize)]
@@ -659,9 +662,9 @@ Start by initializing an Anchor program:
 anchor init compressed-notes
 ```
 
-Next, we'll add the `spl-account-compression` crate with the `cpi `feature enabled.
-To do this, update the `Cargo.toml` file located at `programs/compressed-notes` by
-adding the following dependency:
+Next, we'll add the `spl-account-compression` crate with the `cpi `feature
+enabled. To do this, update the `Cargo.toml` file located at
+`programs/compressed-notes` by adding the following dependency:
 
 ```toml
 [dependencies]
@@ -761,9 +764,9 @@ instead of the `account` macro.
 
 #### 3. Define Input Accounts and Constraints
 
-In our setup, all instructions handlers will use the same accounts, so we'll create a
-single `NoteAccounts` struct to handle account validation. This struct will
-include the following accounts:
+In our setup, all instructions handlers will use the same accounts, so we'll
+create a single `NoteAccounts` struct to handle account validation. This struct
+will include the following accounts:
 
 - `owner` - The creator and owner of the note, who must sign the transaction.
 - `tree_authority` - The authority for the Merkle tree, used for signing
