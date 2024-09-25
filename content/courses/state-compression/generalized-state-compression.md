@@ -17,7 +17,7 @@ objectives:
 - State Compression lowers the amount of data you have to store onchain using
   Merkle trees.
 - A Merkle tree compresses data by hashing pairs of data repeatedly until a
-  single root hash is produced. It's this root hash that's then stored onchain.
+  single root hash is produced. This root hash is then stored onchain.
 - Each leaf on a Merkle tree is a hash of that leaf's data. -A concurrent Merkle
   tree is a specialized version of a Merkle tree. Unlike a standard Merkle tree,
   it allows multiple updates simultaneously without affecting transaction
