@@ -14,7 +14,7 @@ description:
 
 ## Summary
 
-- Most programs support **multiple discrete instruction handlers** (sometimes
+- Most programs support **multiple discrete [instruction handlers](https://solana.com/docs/terminology#instruction-handler)** (sometimes
   just referred to as 'instructions') - these are functions inside your program
 - Rust **enums** are often used to represent each instruction handler
 - You can use the `borsh` crate and the `derive` attribute to provide Borsh
