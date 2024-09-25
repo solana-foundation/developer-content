@@ -18,7 +18,9 @@ Another important difference between macros and functions is that you must defin
 There are two different types of macros: declarative macros and procedural
 macros.
 
-Declarative macros: they are defined using the `macro_rules!` macro, which runs expressions iteratively across patterns to find a match. An `Ok` state triggers a series of instructions associated with its corresponding pattern. They re similar to the `match` expression in Rust with a `($matcher) => {$expansion}` rule. Below is a simple macro called `greet!`, let's see what it does
+## Declarative macros
+
+They are defined using the `macro_rules!` macro, which runs expressions iteratively across patterns to find a match. An `Ok` state triggers a series of instructions associated with its corresponding pattern. They re similar to the `match` expression in Rust with a `($matcher) => {$expansion}` rule. Below is a simple macro called `greet!`, let's see what it does
 
 ```rust
 // Define the macro
@@ -44,7 +46,16 @@ To create the macro, you start by using `macro_rules!` followed by the macro’s
 
 Inside the macro body, there’s a single arguement: `($name:expr)`, the `=>` symbol is followed by the block of code that gets generated when this pattern matches. Since there is only one pattern in this macro, only this specific structure is allowed, and any other pattern will cause an error. More advanced macros may have multiple patterns to handle different inputs and a `_` wildcard to catch patterns that are not explicitly defined. Now you can call `greet!` on any `$name` in the code.
 
-Procedural macros: For the purpose of this lesson, we would be focusing more on procedural macros ( which are commonly used in the Anchor framework) but some underlying concepts have to be known, let's go through them
+## Procedural macros
+
+Procedural macros in Rust are a powerful way to extend the language and create
+custom syntax. These macros are written in Rust and are compiled along with the
+rest of the code. There are three types of procedural macros:
+
+- Function-like macros - `custom!(...)`
+- Derive macros - `#[derive(CustomDerive)]`
+- Attribute macros - `#[CustomAttribute]`
+For the purpose of this lesson, we would be focusing more on procedural macros (which are commonly used in the Anchor framework) but some underlying concepts have to be discussed before we go into the 3 types, let's go through these concepts
 
 ## Rust concepts
 
@@ -104,7 +115,7 @@ When defining a procedural macro, the macro input is passed to the macro as a
 `TokenStream` can then be expanded into the final code output by the macro.
 
 ```rust
-use proc_macro::TokenStream;
+use proc_macro;
 
 #[proc_macro]
 pub fn my_macro(input: TokenStream) -> TokenStream {
@@ -112,12 +123,26 @@ pub fn my_macro(input: TokenStream) -> TokenStream {
 }
 ```
 
->Note: you have to initially create `proc_macro` crate as a library to be able to use it globally, go to your terminal within the project scope and run the code below:
+Before you proceed: You may have noticed that the code above won't compile and returns an `undeclared` error for `proc_macro`, you have to initially create a crate as a library to be able to use it globally, go to your terminal within the project scope and run the code below:
 ```rust
 cargo new proc_macro --lib
 ```
+Next, change directory into your newly created `proc_macro` folder, navigate to the `Cargo.toml` file, add the following line under `[lib]` to specify that the crate will provide a procedural macro
+```rust
+[lib]
+proto-macro = true
+```
 
-#### Abstract syntax tree
+Under the `[dependencies]` section, add the two crates `syn` and `quote` as is below, we will discuss them shortly
+
+```rust
+[dependencies]
+syn = "1.0"
+quote = "1.0"
+
+```
+
+### Abstract syntax tree(AST)
 
 In the context of a Rust procedural macro, an abstract syntax tree (AST) is a
 data structure that represents the hierarchical structure of the input tokens
@@ -130,7 +155,7 @@ as adding or removing tokens, or transforming the meaning of the code in some
 way. It can then use this transformed AST to generate new code, which can be
 returned as the output of the proc macro.
 
-#### The `syn` crate
+### The `syn` crate
 
 The `syn` crate is available to help parse a token stream into an AST that macro
 code can traverse and manipulate. When a procedural macro is invoked in a Rust
@@ -180,7 +205,7 @@ was generated from the input tokens. It shows the string literal value
 (`"hello, world"`) and other metadata about the token, such as its kind (`Str`),
 suffix (`None`), and span.
 
-#### The `quote` crate
+### The `quote` crate
 
 Another important crate is the `quote` crate. This crate is pivotal in the code
 generation portion of the macro.
@@ -224,15 +249,7 @@ The input is: hello, world
 This allows you to create procedural macros that perform powerful code
 generation and metaprogramming tasks.
 
-### Procedural Macro
-
-Procedural macros in Rust are a powerful way to extend the language and create
-custom syntax. These macros are written in Rust and are compiled along with the
-rest of the code. There are three types of procedural macros:
-
-- Function-like macros - `custom!(...)`
-- Derive macros - `#[derive(CustomDerive)]`
-- Attribute macros - `#[CustomAttribute]`
+### Forms of Procedural macros
 
 This section will discuss the three types of procedural macros and provide an
 example implementation of one. The process of writing a procedural macro is
