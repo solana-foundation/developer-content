@@ -142,7 +142,8 @@ When the above code is executed, the Rust compiler passes the input tokens
 
 ```rust
 use proc_macro::TokenStream;
-use syn::parse_macro_input;
+use quote::quote;
+use syn::{parse_macro_input, LitStr};
 
 #[proc_macro]
 pub fn my_macro(input: TokenStream) -> TokenStream {
@@ -459,22 +460,18 @@ use quote::quote;
 use syn::{parse_macro_input, DeriveInput, Data, Fields};
 
 #[proc_macro_derive(Describe)]
-pub fn describe_struct(input: TokenStream) -> TokenStream {
+pub fn describe(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
-    let field_names = match data {
-        syn::Data::Struct(s) => match s.fields {
-            syn::Fields::Named(FieldsNamed { named, .. }) => {
-                let idents = named.iter().map(|f| &f.ident);
-                format!(
-                    "a struct with these named fields: {}",
-                    quote! {#(#idents), *},
-                )
-            }
-            _ => panic!("The syn::Fields variant is not supported"),
+    let fields = match data {
+        Data::Struct(s) => match s.fields {
+            Fields::Named(named) => named.named,
+            _ => panic!("The Fields variant is not supported"),
         },
-        _ => panic!("The syn::Data variant is not supported"),
+        _ => panic!("The Data variant is not supported"),
     };
+
+    let field_names = fields.iter().map(|f| &f.ident);
 
     let expanded = quote! {
         impl #ident {
@@ -790,8 +787,8 @@ use syn::*;
 pub fn instruction_builder(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
-    println!("{:#?}", ident);
-    println!("{:#?}", data);
+    eprintln!("{:#?}", ident);
+    eprintln!("{:#?}", data);
 
     proc_macro::TokenStream::new()
 }
