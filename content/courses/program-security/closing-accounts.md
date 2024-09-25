@@ -1,123 +1,42 @@
 ---
 title: Closing Accounts and Revival Attacks
 objectives:
-  - Explain the various security vulnerabilities associated with closing program
-    accounts incorrectly
-  - Close program accounts safely and securely using native Rust
-  - Close program accounts safely and securely using the Anchor `close`
-    constraint
-description:
-  "How to close program accounts safely and securely in Anchor and native Rust."
+  - Understand the security risks associated with improper account closing
+  - Implement secure account closing techniques in native Rust and Anchor
+  - Recognize and prevent revival attacks
+  - Apply best practices for account management in real-world Solana programs
+description: "Master the art of securely closing accounts in Solana programs to prevent revival attacks and maintain program integrity."
 ---
 
 ## Summary
 
-- **Closing an account** improperly creates an opportunity for
-  reinitialization/revival attacks
-- The Solana runtime **garbage collects accounts** when they are no longer rent
-  exempt. Closing accounts involves transferring the lamports stored in the
-  account for rent exemption to another account of your choosing.
-- You can use the Anchor `#[account(close = <address_to_send_lamports>)]`
-  constraint to securely close accounts and set the account discriminator to the
-  `CLOSED_ACCOUNT_DISCRIMINATOR`
-  ```rust
-  #[account(mut, close = receiver)]
-  pub data_account: Account<'info, MyData>,
-  #[account(mut)]
-  pub receiver: SystemAccount<'info>
-  ```
+- Improper account closing can lead to revival attacks, compromising program security
+- The Solana runtime garbage collects accounts when they are no longer rent exempt
+- Securely close accounts by transferring lamports, zeroing out data, and setting a closed account discriminator
+- Utilize Anchor's `close` constraint for simplified and secure account closing
+- Implement additional safeguards like force defund instructions to handle edge cases
 
 ## Lesson
 
-While it sounds simple, closing accounts properly can be tricky. There are a
-number of ways an attacker could circumvent having the account closed if you
-don't follow specific steps.
+### Understanding Account Closing and Revival Attacks
 
-To get a better understanding of these attack vectors, let’s explore each of
-these scenarios in depth.
+Closing accounts properly is crucial for maintaining the security and integrity of your Solana program. Revival attacks occur when an attacker exploits improperly closed accounts to regain control or access unauthorized funds.
 
-### Insecure account closing
+### Real-World Implications: The Wormhole Hack
 
-At its core, closing an account involves transferring its lamports to a separate
-account, thus triggering the Solana runtime to garbage collect the first
-account. This resets the owner from the owning program to the system program.
+The Wormhole bridge hack, which resulted in the loss of 120,000 wETH, demonstrated the severe consequences of improper account management. While not directly related to account closing, it highlights the importance of robust account handling in DeFi protocols.
 
-Take a look at the example below. The instruction requires two accounts:
+### Secure Account Closing Techniques
 
-1. `account_to_close` - the account to be closed
-2. `destination` - the account that should receive the closed account’s lamports
+#### Native Rust Approach
 
-The program logic is intended to close an account by simply increasing the
-`destination` account’s lamports by the amount stored in the `account_to_close`
-and setting the `account_to_close` lamports to 0. With this program, after a
-full transaction is processed, the `account_to_close` will be garbage collected
-by the runtime.
+To securely close an account:
 
-```rust
-use anchor_lang::prelude::*;
+1. Transfer the account's lamports to a designated receiver
+2. Zero out the account's data
+3. Set a closed account discriminator
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-
-#[program]
-pub mod closing_accounts_insecure {
-    use super::*;
-
-    pub fn close(ctx: Context<Close>) -> ProgramResult {
-        let dest_starting_lamports = ctx.accounts.destination.lamports();
-
-        **ctx.accounts.destination.lamports.borrow_mut() = dest_starting_lamports
-            .checked_add(ctx.accounts.account_to_close.to_account_info().lamports())
-            .unwrap();
-        **ctx.accounts.account_to_close.to_account_info().lamports.borrow_mut() = 0;
-
-        Ok(())
-    }
-}
-
-#[derive(Accounts)]
-pub struct Close<'info> {
-    account_to_close: Account<'info, Data>,
-    destination: AccountInfo<'info>,
-}
-
-#[account]
-pub struct Data {
-    data: u64,
-}
 ```
-
-However, the garbage collection doesn't occur until the transaction completes.
-And since there can be multiple instructions in a transaction, this creates an
-opportunity for an attacker to invoke the instruction to close the account but
-also include in the transaction a transfer to refund the account's rent
-exemption lamports. The result is that the account _will not_ be garbage
-collected, opening up a path for the attacker to cause unintended behavior in
-the program and even drain a protocol.
-
-### Secure account closing
-
-The two most important things you can do to close this loophole are to zero out
-the account data and add an account discriminator that represents the account
-has been closed. You need _both_ of these things to avoid unintended program
-behavior.
-
-An account with zeroed out data can still be used for some things, especially if
-it's a PDA whose address derivation is used within the program for verification
-purposes. However, the damage may be potentially limited if the attacker can't
-access the previously-stored data.
-
-To further secure the program, however, closed accounts should be given an
-account discriminator that designates it as "closed," and all instructions
-should perform checks on all passed-in accounts that return an error if the
-account is marked closed.
-
-Look at the example below. This program transfers the lamports out of an
-account, zeroes out the account data, and sets an account discriminator in a
-single instruction in hopes of preventing a subsequent instruction from
-utilizing this account again before it has been garbage collected. Failing to do
-any one of these things would result in a security vulnerability.
-
-```rust
 use anchor_lang::prelude::*;
 use std::io::Write;
 use std::ops::DerefMut;
@@ -238,7 +157,7 @@ Fortunately, Anchor makes all of this much simpler with the
 `#[account(close = <target_account>)]` constraint. This constraint handles
 everything required to securely close an account:
 
-1. Transfers the account’s lamports to the given `<target_account>`
+1. Transfers the account's lamports to the given `<target_account>`
 2. Zeroes out the account data
 3. Sets the account discriminator to the `CLOSED_ACCOUNT_DISCRIMINATOR` variant
 
@@ -258,8 +177,8 @@ pub struct CloseAccount {
 }
 ```
 
-The `force_defund` instruction is an optional addition that you’ll have to
-implement on your own if you’d like to utilize it.
+The `force_defund` instruction is an optional addition that you'll have to
+implement on your own if you'd like to utilize it.
 
 ## Lab
 
