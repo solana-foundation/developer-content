@@ -128,9 +128,11 @@ crate provides the address of the SPL Token Program.
 ### Use an Anchor CPI module
 
 A simpler way to manage program checks is to use Anchor CPI modules. We learned
-in a [previous lesson](https://github.com/solana-foundation/developer-content/blob/3c1633ee07205dc5788e72a0d2a0b7255e6d9f7d/content/courses/onchain-development/anchor-cpi.md#L4) that Anchor can automatically generate CPI modules to make CPIs into the program simpler. These modules also
-enhance security by verifying the public key of the program that's passed into
-one of its public instructions using
+in a
+[previous lesson](https://github.com/solana-foundation/developer-content/blob/3c1633ee07205dc5788e72a0d2a0b7255e6d9f7d/content/courses/onchain-development/anchor-cpi.md#L4)
+that Anchor can automatically generate CPI modules to make CPIs into the program
+simpler. These modules also enhance security by verifying the public key of the
+program that's passed into one of its public instructions using
 [account constraints](https://www.anchor-lang.com/docs/account-constraints).
 
 Every Anchor program uses the `declare_id()` macro to define the address of the
@@ -206,8 +208,8 @@ use other_program::program::OtherProgram;
 
 ## Lab
 
-To show the importance of checking with program you use for CPIs, we're going to
-work with a simplified and somewhat contrived game. This game represents
+To show the importance of checking the program ID you use for CPIs, we're going
+to work with a simplified and somewhat contrived game. This game represents
 characters with PDA accounts, and uses a separate "metadata" program to manage
 character metadata and attributes like health and power.
 
