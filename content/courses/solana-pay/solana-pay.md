@@ -246,18 +246,18 @@ signing.
 
 You may have noticed that the previous example assumed a `reference` was
 provided as a query parameter. While this is _not_ a value provided by the
-requesting wallet, it _is_ useful to set up your initial transaction request URL
+requesting wallet app, it _is_ useful to set up your initial transaction request URL
 to contain this query parameter.
 
 Since your application isn't the one submitting a transaction to the network,
 your code won't have access to a transaction signature. This would typically be
-how your app can locate a transaction on the network and see its status.
+how your application can locate a transaction on the network and see its status.
 
 To get around this, you can include a `reference` value as a query parameter for
-each transaction request. This value should be a base58-encoded 32 byte array
+each transaction request. This value should be a base58-encoded 32-byte array
 that can be included as a non-signer key on the transaction. This allows your
-app to then use the `getSignaturesForAddress` RPC method to locate the
-transaction. Your app can then tailor its UI according to a transaction's
+application to then use the `getSignaturesForAddress` RPC method to locate the
+transaction. Your application can then tailor its UI according to a transaction's
 status.
 
 If you use the `@solana/pay` library, you can use the `findReference` helper
@@ -372,8 +372,8 @@ to the scavenger hunt's smart contract that keeps track of user progress.
 #### 1. Starter
 
 To get started, download the starter code on the `starter` branch of this
-[repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter).
-The starter code is a Next.js app that displays a Solana Pay QR code. Notice
+[repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter)
+The starter code is a Next.js applications that displays a Solana Pay QR code and uses the traditional `pages` in the previous versions of Next.js. Notice
 that the menu bar lets you switch between different QR codes. The default option
 is a simple SOL transfer for illustrative purposes. Throughout this lab, we'll
 be adding functionality to the location options in the menu bar.
@@ -382,7 +382,7 @@ be adding functionality to the location options in the menu bar.
 
 To do this, we'll be creating a new endpoint for a transaction request that
 builds a transaction for invoking an Anchor program on Devnet. This program has
-been made specifically for this "scavenger hunt" app and has two instructions:
+been made specifically for this "scavenger hunt" application and has two instructions:
 `initialize` and `check_in`. The `initialize` instruction is used to set up the
 user's state, while the `check_in` instruction is used to record a check-in at a
 location in the scavenger hunt. We won't be making any changes to the program in
@@ -391,14 +391,14 @@ this lab, but feel free to check out the
 you'd like to familiarize yourself with the program.
 
 Before moving on, make sure you get familiar with the starter code for the
-Scavenger Hunt app. Looking at `pages/index.tsx`,
+Scavenger Hunt application. Looking at `pages/index.tsx`,
 `utils/createQrCode/simpleTransfer`, and `/utils/checkTransaction` will let you
 see how the transaction request for sending SOL is set up. We'll be following a
 similar pattern for the transaction request for checking in at a location.
 
 #### 2. Setup
 
-Before we move forward, let's make sure you can run the app locally. Start by
+Before we move forward, let's make sure you can run the application locally. Start by
 renaming the `.env.example` file in the frontend directory to `.env`. This file
 contains a keypair that will be used in this lab to partially sign transactions.
 
@@ -789,9 +789,9 @@ async function createCheckInInstruction(
 }
 ```
 
-#### 10. Test the app
+#### 10. Test the application
 
-At this point your app should be working! Go ahead and test it using your mobile
+At this point your application should be working! Go ahead and test it using your mobile
 wallet. Start by scanning the QR code for `Location 1`. Remember to make sure
 your frontend is running using the ngrok URL rather than `localhost`.
 
@@ -816,7 +816,7 @@ It's time to try this out on your own. Feel free to build out an idea of your
 own using Solana Pay. Or, if you need some inspiration, you can use the prompt
 below.
 
-Build out an app using Solana Pay (or modify the one from the lab) to mint an
+Build out an application using Solana Pay (or modify the one from the lab) to mint an
 NFT to users. To take it up a notch, only make the transaction possible if the
 user meets one or more conditions (e.g. holds an NFT from a specific collection,
 is already on a pre-determined list, etc.).
