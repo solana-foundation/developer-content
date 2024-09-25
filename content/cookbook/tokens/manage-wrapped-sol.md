@@ -11,9 +11,9 @@ and creating token accounts specifically on the `NATIVE_MINT` address.
 
 ## Create Token Account
 
-Like
-[Create Token Account](#https://solana.com/developers/cookbook/tokens/create-token-accounts)
-but replace mint with `NATIVE_MINT`
+Like creating
+[SPL token accounts](/content/cookbook/tokens/create-token-account.md) but
+replace mint with `NATIVE_MINT`
 
 ```js
 import { NATIVE_MINT } from "@solana/spl-token";
