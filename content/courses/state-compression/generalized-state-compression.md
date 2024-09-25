@@ -655,8 +655,8 @@ Start by initializing an Anchor program:
 anchor init compressed-notes
 ```
 
-Next, we'll add the spl-account-compression crate with the cpi feature enabled.
-To do this, update the Cargo.toml file located at programs/compressed-notes by
+Next, we'll add the `spl-account-compression` crate with the `cpi `feature enabled.
+To do this, update the `Cargo.toml` file located at `programs/compressed-notes` by
 adding the following dependency:
 
 ```toml
