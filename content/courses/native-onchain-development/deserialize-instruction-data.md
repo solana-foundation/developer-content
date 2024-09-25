@@ -76,7 +76,7 @@ simplifies debugging.
 
 A [struct](https://doc.rust-lang.org/book/ch05-01-defining-structs.html) (short for structure) is a custom data type that lets you package
 together and name multiple related values that make up a meaningful group. Each
-piece of data in a struct can be of a different type, and each has a name
+piece of data in a struct can be of a different type, each with a name
 associated with it. These pieces of data are called fields and behave similarly
 to properties in other languages.
 
@@ -107,7 +107,7 @@ user1.age = 37;
 
 You can check out the
 [struct examples](https://doc.rust-lang.org/rust-by-example/custom_types/structs.html)
-for in depth understanding.
+for in-depth understanding.
 
 #### Enumerations
 
@@ -139,14 +139,13 @@ let light_status = LightStatus::On {
 
 In this example, setting a variable to the `On` variant of `LightStatus`
 requires also setting the value of `color`. You can check out more examples of
-using enums in Rust by visiting
-[this Rust by Example page on enums](https://doc.rust-lang.org/rust-by-example/custom_types/enum.html).
+using enums in Rust by visiting [this Rust by Example page on enums](https://doc.rust-lang.org/rust-by-example/custom_types/enum.html).
 
 #### Match statements
 
 Match statements are very similar to `switch` statements in other languages. The [`match`](https://doc.rust-lang.org/rust-by-example/flow_control/match.html)
 statement allows you to compare a value against a series of patterns and then
-execute code based on which pattern matches the value. Patterns can be made of
+execute code based on which pattern matches the value. Patterns include
 literal values, variable names, wildcards, and more. The match statement must
 include all possible scenarios; otherwise, the code will not compile.
 
@@ -211,7 +210,7 @@ example.answer();
 
 #### Traits and attributes
 
-You won't be creating your own traits or attributes at this stage, so an
+You won't create traits or attributes at this stage, so an
 in-depth explanation isn't necessary. However, you will be using the `derive`
 attribute macro and some traits provided by the `borsh` crate, so it's important
 to have a high-level understanding of each.
@@ -368,7 +367,7 @@ There is Rust syntax in this function that we haven't explained yet. The
 
 - [`?` operator](https://doc.rust-lang.org/rust-by-example/error/result/enter_question_mark.html):
   Unwraps a `Result` or `Option`. If it’s `Ok` or `Some`, it returns the value.
-  If it’s an `Err` or `None`, it propagates the error up to the calling
+  If it’s an `Err` or `None`, it propagates the error to the calling
   function. </Callout>
 
 ### Program logic
@@ -602,12 +601,12 @@ pub fn process_instruction(
 }
 ```
 
-With this, your program should now log the instruction data when a transaction
+With this, your program should log the instruction data when a transaction
 is submitted. Build and deploy your program from Solana Playground as in the
 last lesson. If your program ID hasn't changed, it will deploy to the same ID.
 To deploy to a different address, generate a new program ID before deploying.
 
-Build and deploy your program from Solana Program just like in the last lesson.
+Build and deploy your program from Solana Program like in the last lesson.
 If you haven't changed the program ID since going through the last lesson, it
 will automatically deploy to the same ID. If you'd like it to have a separate
 address, you can generate a new program ID from the playground before deploying.
