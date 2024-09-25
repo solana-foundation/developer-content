@@ -17,28 +17,37 @@ to
 
 ### Burn Tokens
 
-Burning tokens is the process of decreasing the token supply of a given token
-mint. Burning tokens removes the tokens from the given token account and from
-broader circulation.
+When tokens are burned, they are deducted from the specific token account where
+they were held. The tokens are not transferred to any other account but are
+simply removed from circulation, reducing the overall supply.
 
-To burn tokens using the `spl-token` library, use the `burn` function.
+Not just anyone can burn tokens, only the "authority" of the token, or the
+holder of the appropriate keys/permissions, can initiate the burn. The authority
+might be:
+
+- The account holder i.e you holding a token in your wallet.
+- A designated authority account with permission to burn tokens i.e an approved
+  delegate (more on this below).
+
+To burn tokens using the `spl-token` library, use the `burnChecked` function.
 
 ```typescript
-import { burn } from "@solana/spl-token";
+import { burnChecked } from "@solana/spl-token";
 ```
 
 ```typescript
-const transactionSignature = await burn(
+const transactionSignature = await burnChecked(
   connection,
   payer,
   account,
   mint,
   owner,
   amount,
+  decimals,
 );
 ```
 
-The `burn` function requires the following arguments:
+The `burnChecked` function requires the following arguments:
 
 - `connection` - the JSON-RPC connection to the cluster
 - `payer` - the account of the payer for the transaction
@@ -46,22 +55,24 @@ The `burn` function requires the following arguments:
 - `mint` - the token mint associated with the token account
 - `owner` - the account of the owner of the token account
 - `amount` - the amount of tokens to burn
+- `decimals` - the number of decimals for the token
 
-Under the hood, the `burn` function creates a transaction with instructions
-obtained from the `createBurnInstruction` function:
+Under the hood, the `burnChecked` function creates a transaction with
+instructions obtained from the `createBurnInstruction` function:
 
 ```typescript
 import { PublicKey, Transaction } from "@solana/web3";
-import { createBurnInstruction } from "@solana/spl-token";
+import { createBurnCheckedInstruction } from "@solana/spl-token";
 
 async function buildBurnTransaction(
   account: PublicKey,
   mint: PublicKey,
   owner: PublicKey,
   amount: number,
+  decimals: number,
 ): Promise<Transaction> {
   const transaction = new Transaction().add(
-    createBurnInstruction(account, mint, owner, amount),
+    createBurnCheckedInstruction(account, mint, owner, amount, decimals),
   );
 
   return transaction;
@@ -72,27 +83,29 @@ async function buildBurnTransaction(
 
 Approving a delegate is the process of authorizing another account to transfer
 or burn tokens from a token account. When using a delegate, the authority over
-the token account remains with the original owner. The maximum amount of tokens
-a delegate may transfer or burn is specified at the time the owner of the token
-account approves the delegate. Note that there can only be one delegate account
+the token account remains with the original owner. When approving a delegate,
+the token account owner specifies the exact amount of tokens that the delegate
+can transfer or burn. Note that there can only be one delegate account
 associated with a token account at any given time.
 
-To approve a delegate using the `spl-token` library, you use the `approve`
-function.
+To approve a delegate using the `spl-token` library, you use the
+`approveChecked` function.
 
 ```typescript
-const transactionSignature = await approve(
+const transactionSignature = await approveChecked(
   connection,
   payer,
   account,
   delegate,
   owner,
   amount,
+  decimals,
 );
 ```
 
-The `approve` function returns a `TransactionSignature` that can be viewed on
-Solana Explorer. The `approve` function requires the following arguments:
+The `approveChecked` function returns a `TransactionSignature` that can be
+viewed on Solana Explorer. The `approveChecked` function requires the following
+arguments:
 
 - `connection` - the JSON-RPC connection to the cluster
 - `payer` - the account of the payer for the transaction
@@ -100,22 +113,24 @@ Solana Explorer. The `approve` function requires the following arguments:
 - `delegate` - the account the owner is authorizing to transfer or burn tokens
 - `owner` - the account of the owner of the token account
 - `amount` - the maximum number of tokens the delegate may transfer or burn
+- `decimals` - Number of decimals in approve amount
 
-Under the hood, the `approve` function creates a transaction with instructions
-obtained from the `createApproveInstruction` function:
+Under the hood, the `approveChecked` function creates a transaction with
+instructions obtained from the `createApproveCheckedInstruction` function:
 
 ```typescript
 import { PublicKey, Transaction } from "@solana/web3";
-import { createApproveInstruction } from "@solana/spl-token";
+import { createApproveCheckedInstruction } from "@solana/spl-token";
 
 async function buildApproveTransaction(
   account: PublicKey,
   delegate: PublicKey,
   owner: PublicKey,
   amount: number,
+  decimals: number,
 ): Promise<web3.Transaction> {
   const transaction = new Transaction().add(
-    createApproveInstruction(account, delegate, owner, amount),
+    createApproveInstruction(account, delegate, owner, amount, decimals),
   );
 
   return transaction;
@@ -126,8 +141,9 @@ async function buildApproveTransaction(
 
 A previously approved delegate for a token account can be later revoked. Once a
 delegate is revoked, the delegate can no longer transfer tokens from the owner's
-token account. Any remaining amount left untransferred from the previously
-approved amount can no longer be transferred by the delegate.
+token account.any remaining tokens that were within the delegate's approved
+limit cannot be transferred by the delegate. The delegate cannot burn tokens
+either, not just transfer them. The delegate's permissions are fully revoked.
 
 To revoke a delegate using the `spl-token` library, you use the `revoke`
 function.
@@ -172,8 +188,8 @@ This lab extends the lab from the
 
 #### 1. Delegating tokens
 
-Let's use `approve` from `spl-token` to authorize a delegate to transfer or burn
-up to 50 tokens from our token account.
+Let's use `approveChecked` from `spl-token` to authorize a delegate to transfer
+or burn up to 50 tokens from our token account.
 
 Just like
 [Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md) in the
@@ -221,22 +237,28 @@ const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
 // Our token has two decimal places
 const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
-const approveTransactionSignature = await approve(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  delegate,
-  user.publicKey,
-  50 * MINOR_UNITS_PER_MAJOR_UNITS,
-);
+try {
+  const approveTransactionSignature = await approve(
+    connection,
+    user,
+    tokenMintAccount, // The mint account of the SPL token.
+    sourceTokenAccount.address, // The token account holding the tokens you want to approve for delegation.
+    delegate, //The public key of the account that will be allowed to transfer/burn tokens.
+    user.publicKey,
+    50 * MINOR_UNITS_PER_MAJOR_UNITS,
+    2, //The decimal places for the token
+  );
 
-console.log(
-  `Approve Delegate Transaction: ${getExplorerLink(
-    "transaction",
-    approveTransactionSignature,
-    "devnet",
-  )}`,
-);
+  console.log(
+    `Approve Delegate Transaction: ${getExplorerLink(
+      "transaction",
+      approveTransactionSignature,
+      "devnet",
+    )}`,
+  );
+} catch (error) {
+  console.error("Error during delegate approval:", error);
+}
 ```
 
 #### 2. Revoke Delegate
@@ -269,8 +291,8 @@ console.log(
 
 Finally, let's remove some tokens from circulation by burning them.
 
-Use the `spl-token` library's `burn` function to remove half of your tokens from
-circulation.
+Use the `spl-token` library's `burnChecked` function to remove half of your
+tokens from circulation.
 
 Now call this new function in `main` to burn 25 of the user's tokens.
 
@@ -281,7 +303,10 @@ import {
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
-import { getOrCreateAssociatedTokenAccount, burn } from "@solana/spl-token";
+import {
+  getOrCreateAssociatedTokenAccount,
+  burnChecked,
+} from "@solana/spl-token";
 
 const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -305,13 +330,14 @@ const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
 // Our token has two decimal places
 const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
-const transactionSignature = await burn(
+const transactionSignature = await burnChecked(
   connection,
   user,
   sourceTokenAccount.address,
   tokenMintAccount,
   user,
   25 * MINOR_UNITS_PER_MAJOR_UNITS,
+  2,
 );
 
 console.log(
