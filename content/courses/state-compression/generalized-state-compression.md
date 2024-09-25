@@ -276,19 +276,34 @@ data. For instance, if you're developing a simple messaging program, your
 `Message` struct might look something like this:
 
 ```rust
-#[derive(AnchorSerialize)]
+
+/// A log entry for messages sent between two public keys.
+#[derive(AnchorSerialize, AnchorDeserialize)]
 pub struct MessageLog {
-    leaf_node: [u8; 32], // The leaf node hash
-    from: Pubkey,        // Pubkey of the message sender
-    to: Pubkey,          // Pubkey of the message recipient
-    message: String,     // The message to send
+    /// The leaf node hash for message logging.
+    pub leaf_node: [u8; 32],
+    /// The public key of the message sender.
+    pub from: Pubkey,
+    /// The public key of the message recipient.
+    pub to: Pubkey,
+    /// The actual message content.
+    pub message: String,
 }
 
-impl MessageLog {
-    // Constructs a new message log from given leaf node and message
-    pub fn new(leaf_node: [u8; 32], from: Pubkey, to: Pubkey, message: String) -> Self {
-        Self { leaf_node, from, to, message }
- }
+/// Constructs a new `MessageLog`.
+///
+/// # Arguments
+///
+/// * `leaf_node` - A 32-byte array representing the leaf node hash.
+/// * `from` - The public key of the message sender.
+/// * `to` - The public key of the message recipient.
+/// * `message` - The message to be sent.
+///
+/// # Returns
+///
+/// Returns a new `MessageLog` instance.
+pub fn new_message_log(leaf_node: [u8; 32], from: Pubkey, to: Pubkey, message: String) -> MessageLog {
+    MessageLog { leaf_node, from, to, message }
 }
 ```
 
