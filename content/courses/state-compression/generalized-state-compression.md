@@ -5,8 +5,8 @@ objectives:
   - Explain the flow of Solana's state compression logic.
   - Describe and Explain the difference between a Merkle tree and a concurrent
     Merkle tree
-  - Implement generic state compression in a basic Solana program 
-  
+  - Implement generic state compression in a basic Solana program
+
 description:
   Understand how state compression and the technology behind compressed NFTs
   works, and learn how to apply it in your own Solana programs.
@@ -19,11 +19,11 @@ description:
 - State Compression lowers the amount of data you have to store onchain using
   Merkle trees.
 - A Merkle tree compresses data by hashing pairs of data repeatedly until a
-  single root hash is produced. It's this root hash that's then stored onchain.
-- Each leaf on a Merkle tree is a hash of that leaf's data. -A concurrent Merkle
-  tree is a specialized version of a Merkle tree. Unlike a standard Merkle tree,
-  it allows multiple updates simultaneously without affecting transaction
-  validity.
+  single root hash is produced. This root hash is then stored onchain.
+- Each leaf on a Merkle tree is a hash of that leaf's data.
+- A concurrent Merkle tree is a specialized version of a Merkle tree. Unlike a
+  standard Merkle tree, it allows multiple updates simultaneously without
+  affecting transaction validity.
 - Data in a state-compressed program is not stored onchain. So you have to use
   indexers to keep an off-chain cache of the data. It's this off-chain cache
   data that is used to then verify against the onchain Merkle tree.
