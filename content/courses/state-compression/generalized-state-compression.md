@@ -46,9 +46,11 @@ it.
 State compression focuses on ensuring that the data is trustworthy. If the goal
 is simply to verify the integrity of the data, then there's no need to store the
 actual data onchain. Instead, we can store hashes of the data, which can be used
-to prove or verify its accuracy. These hashes take up far less storage space
-than the original data. The full data can be stored in a cheaper, offchain
-location, and only needs to be verified against the onchain hash when accessed.
+to prove or verify its accuracy.
+
+These hashes take up far less storage space than the original data. The full
+data can be stored in a cheaper, offchain location, and only needs to be
+verified against the onchain hash when accessed.
 
 The Solana State Compression program uses a Solana State Compression program
 known as a **concurrent Merkle tree**. A concurrent Merkle tree is a special
