@@ -91,7 +91,7 @@ In short, a standard Merkle tree can only handle one leaf update per [slot](http
 significantly limits the throughput in a state-compressed program that depends
 on a single Merkle tree for its state.
 
-Thankfully, this issue can be addressed using a concurrent Merkle tree. Unlike a
+Thankfully, this issue can be addressed using a *concurrent* Merkle tree. Unlike a
 regular Merkle tree, a concurrent Merkle tree keeps a secure changelog of recent
 updates, along with their root hash and the proof needed to derive it. When
 multiple transactions in the same slot attempt to modify leaf data, the
