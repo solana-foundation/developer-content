@@ -22,9 +22,7 @@ objectives:
   tree is a specialized version of a Merkle tree. Unlike a standard Merkle tree,
   it allows multiple updates simultaneously without affecting transaction
   validity.
-- Data in a state-compressed program is not stored onchain. So you have to use
-  indexers to keep an off-chain cache of the data. It's this off-chain cache
-  data that is used to then verify against the onchain Merkle tree.
+- Data in a state-compressed program is not stored onchain. So you must use **indexers** to keep an offchain cache of the data. This offchain cache is then used to verify the onchain Merkle tree.
 
 ## Lesson
 
