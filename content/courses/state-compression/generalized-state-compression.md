@@ -79,11 +79,6 @@ implement state compression in your programs. With that quick overview, let's go
 
 #### Concurrent Merkle trees
 
-A **Merkle tree** is a binary tree structure represented by a single hash.
-
-- Each leaf node is a hash of its data.
-- Each branch is a hash of its child leaves.
-- The branches are also hashed together, forming one final root hash.
 
 Since a Merkle tree is represented as a single hash, any change to a leaf node
 alters the entire root hash. This becomes problematic when multiple transactions
