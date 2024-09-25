@@ -84,7 +84,7 @@ to properties in other languages.
 struct User {
     active: bool,
     email: String,
-    age: u64
+    age: u64,
 }
 ```
 
@@ -95,7 +95,7 @@ specifying concrete values for each of the fields.
 let mut user1 = User {
     active: true,
     email: String::from("test@test.com"),
-    age: 36
+    age: 36,
 };
 ```
 
@@ -117,7 +117,7 @@ enumerating its possible variants. An example of an enum might look like:
 ```rust
 enum LightStatus {
     On,
-    Off
+    Off,
 }
 ```
 
@@ -128,13 +128,13 @@ struct.
 
 ```rust
 enum LightStatus {
-    On {
-        color: String
-    },
-    Off
+    On { color: String },
+    Off,
 }
 
-let light_status = LightStatus::On { color: String::from("red") };
+let light_status = LightStatus::On {
+    color: String::from("red"),
+};
 ```
 
 In this example, setting a variable to the `On` variant of `LightStatus`
@@ -157,7 +157,7 @@ enum Coin {
     Penny,
     Nickel,
     Dime,
-    Quarter
+    Quarter,
 }
 
 fn value_in_cents(coin: Coin) -> u8 {
@@ -165,7 +165,7 @@ fn value_in_cents(coin: Coin) -> u8 {
         Coin::Penny => 1,
         Coin::Nickel => 5,
         Coin::Dime => 10,
-        Coin::Quarter => 25
+        Coin::Quarter => 25,
     }
 }
 ```
@@ -178,7 +178,7 @@ constants can both be defined in an implementation.
 
 ```rust
 struct Example {
-    number: i32
+    number: i32,
 }
 
 impl Example {
@@ -249,16 +249,16 @@ enum NoteInstruction {
     CreateNote {
         title: String,
         body: String,
-        id: u64
+        id: u64,
     },
     UpdateNote {
         title: String,
         body: String,
-        id: u64
+        id: u64,
     },
     DeleteNote {
-        id: u64
-    }
+        id: u64,
+    },
 }
 ```
 
@@ -291,7 +291,7 @@ array.
 struct NoteInstructionPayload {
     id: u64,
     title: String,
-    body: String
+    body: String,
 }
 ```
 
@@ -486,14 +486,14 @@ an `AddMovieReview` variant that includes `title`, `rating`, and `description`
 values.
 
 ```rust filename="instruction.rs"
-use borsh::{BorshDeserialize};
+use borsh::BorshDeserialize;
 use solana_program::program_error::ProgramError;
 
 pub enum MovieInstruction {
     AddMovieReview {
         title: String,
         rating: u8,
-        description: String
+        description: String,
     }
 }
 ```
@@ -507,7 +507,7 @@ implementation for the `BorshDeserialize` trait.
 struct MovieReviewPayload {
     title: String,
     rating: u8,
-    description: String
+    description: String,
 }
 ```
 
