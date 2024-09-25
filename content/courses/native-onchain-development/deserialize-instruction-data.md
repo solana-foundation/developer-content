@@ -33,10 +33,12 @@ instruction handler to execute.
 
 Since instruction data is provided to your program's entry point as a byte
 array, it's common to create a Rust data type to represent instructions in a
-more usable format throughout your code. This lesson will guide you through
-setting up such a type, deserializing the instruction data into this format, and
-executing the appropriate instruction handler based on the instruction passed
-into the program's entry point.
+more usable format throughout your code.
+
+This lesson involves:
+1. Representing instruction data using a `struct`.
+2. Deserializing instruction data into the `struct`.
+3. Executing the appropriate instruction handler based on the instruction passed into the program's entry point.
 
 ### Rust Basics
 
