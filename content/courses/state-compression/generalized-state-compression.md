@@ -212,11 +212,9 @@ It provides instructions for initializing Merkle trees, handling tree leaves
 leaf data.
 
 Additionally, the State Compression Program works in conjunction with a separate
-"Noop" program. The Noop Program’s main function is to make leaf data easier to
-index by logging it in the ledger state. When you store compressed data, it’s
-passed to the State Compression Program, which hashes the data and emits it as
-an "event" to the Noop Program. While the hash is stored in the concurrent
-Merkle tree, the raw data can still be accessed via the Noop Program’s
+"Noop" program. A [no-op program](https://en.wikipedia.org/wiki/NOP_(code)) does nothing - literally 'no operation.' The Solana Noop Program only logs data to the ledger state, however that logging is essential to state compression:
+
+When you store compressed data, it’s passed to the State Compression Program, which hashes the data and emits it as an "event" to the Noop Program. While the hash is stored in the concurrent Merkle tree, the raw data can still be accessed via the Noop Program’s
 transaction logs.
 
 ### Indexing Data for Easy Lookup
