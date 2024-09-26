@@ -21,17 +21,17 @@ keywords:
 This guide is meant to be a reference for developers who want to implement
 verified builds for their programs on Solana. We will cover what verified builds
 are, how to use them, special considerations, and best practices to ensure the
-authenticity of your program on-chain.
+authenticity of your program onchain.
 
-# What are Verified Builds?
+# What are verified builds?
 
 Verified builds ensure that the executable program you deploy to Solana’s
 network matches the source code in your repository. By doing this, developers
-and users can have confidence that the program running on-chain corresponds
+and users can have confidence that the program running onchain corresponds
 exactly to the public codebase, promoting transparency and security.
 
-The verification process involves comparing the hash of the on-chain program
-with the hash of the locally built program from the source code. This ensures no
+The verification process involves comparing the hash of the onchain program with
+the hash of the locally built program from the source code. This ensures no
 discrepancies between the two versions.
 
 > A verified build should not be considered more secure than a not verified
@@ -41,13 +41,15 @@ discrepancies between the two versions.
 > if something goes wrong.
 
 The verified builds pipeline was thought out and is maintained by
-[Ellipsis Labs](https://ellipsislabs.xyz/) and [OtterSec](https://osec.io/). You
-can find the source from original repository here and soon the verify build
-process will move directly into the [Anza](https://www.anza.xyz/) tool suite.
+[Ellipsis Labs](https://ellipsislabs.xyz/) and [OtterSec](https://osec.io/). For
+more details, follow the guide in the
+[original verified builds](https://github.com/Ellipsis-Labs/solana-verifiable-build)
+repository as well and soon the verify build process will move directly into the
+[Anza](https://www.anza.xyz/) tool suite.
 
 # How does it work?
 
-The verification process is done by comparing the hash of the on-chain program
+The verification process is done by comparing the hash of the onchain program
 with the hash of the locally built program from the source code. You build your
 program in a controlled environment using the Solana Verify CLI and Docker. This
 ensures that the build process is deterministic and consistent across different
@@ -82,20 +84,23 @@ you can see already being used in the
 and
 [SolanaFM](https://solana.fm/address/E1fcPKuV1UJEsTJPpab2Jr8y87ZN73i4CHTPLbWQE6CA/transactions?cluster=mainnet-alpha).
 
-# Why Should I Use Verified Builds?
+# Why should I use verified builds?
 
 Using verified builds provides the following benefits:
 
-Security: Guarantee that the program running on-chain matches the source code,
-preventing malicious alterations. Transparency: Allows other users and
-developers to validate that the on-chain program is trustworthy by comparing it
-with the public codebase. Trust: Increase user confidence, as verified builds
-demonstrate that your program's on-chain behavior is aligned with your public
-code. When building verifiable programs, you minimize risks associated with
-running unauthorized or malicious code. It also ensures you comply with best
-practices and give security researchers an easy way to contact you.
+- Security: Guarantee that the program running onchain matches the source code,
+  preventing malicious alterations.
 
-# How Do I Implement Verified Builds?
+- Transparency: Allows other users and developers to validate that the onchain
+  program is trustworthy by comparing it with the public codebase.
+
+- Trust: Increase user confidence, as verified builds demonstrate that your
+  program's onchain behavior is aligned with your public code. When building
+  verifiable programs, you minimize risks associated with running unauthorized
+  or malicious code. It also ensures you comply with best practices and give
+  security researchers an easy way to contact you.
+
+# How do I implement verified builds?
 
 To implement verified builds, you'll need to follow these steps:
 
@@ -119,7 +124,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
    to verify builds. Solana Verify CLI is currently maintained by
    [Ellipsis Labs](https://ellipsislabs.xyz/) and can be installed using Cargo.
    The verify process will soon move into the [Anza](https://www.anza.xyz/) tool
-   suite. The general way of verifiying builds will stay very similar though.
+   suite. The general way of verifying builds will stay very similar though.
 
 You can install it by running:
 
@@ -204,10 +209,10 @@ To verify the deployed program matches the built executable, run:
 solana-verify get-program-hash -u $NETWORK_URL $PROGRAM_ID
 ```
 
-> Don't forget the network url here. You may have different versions deployed on
+> Don't forget the network URL here. You may have different versions deployed on
 > devnet and mainnet for example.
 
-5. Verifying Against Repositories
+5. Verifying against repositories
 
 To verify a program against its public repository, use:
 
@@ -219,7 +224,7 @@ solana-verify verify-from-repo -u $NETWORK_URL --program-id $PROGRAM_ID https://
 > `verify-from-repo` you need to add the `mount-path`. This will be the path to
 > the folder containing the cargo.toml that contains your programs lib name.
 
-This command compares the on-chain program with the executable built from the
+This command compares the onchain program with the executable built from the
 source at the specified commit hash.
 
 Example
@@ -256,14 +261,6 @@ at last in the
 [Verified Programs Dune Dashboard](https://dune.com/jonashahn/verified-programs/dedf21e1-9b71-42c8-89f9-02ed94628657)
 contributing to a more healthy solana ecosystem.
 
-Special Considerations Deterministic Builds: Ensure you use docker images to
-build verified builds otherwise other users might not be able to verify the
-build. Governance: When deploying verified programs, it's best practice to use
-governance mechanisms like Squads V3 to handle upgrades and deployments safely.
-Cross-platform builds: If you're running builds on different architectures
-(e.g., ARM vs x86), be aware that architecture emulation can slow down the build
-process.
-
 # Conclusion
 
 Using verified builds on Solana ensures the integrity and trustworthiness of
@@ -273,10 +270,10 @@ source code. Always take the necessary precautions to use consistent
 environments, and consider governance solutions for safe upgrades and
 deployments.
 
-# Security.txt for Solana Smart Contracts
+# Security.txt for Solana programs
 
 In addition to verified builds you can also add a security.txt file to your
-program. In the future the Security.txt will hold the verifier public key for
+program. In the future the security.txt will hold the verifier public key for
 easy access to the verification data stored in the verification PDA.
 
 The security.txt feature allows developers to embed contact and security
@@ -285,7 +282,7 @@ securitytxt.org, this approach provides a standardized way for security
 researchers to reach out to project maintainers, even if they only know the
 contract's address.
 
-## Why Use security.txt?
+## Why use security.txt?
 
 For many projects, especially smaller or private ones, identifying the
 developers from just the contract address can be difficult and time-consuming.
@@ -293,7 +290,7 @@ Embedding a security.txt file within the program ensures that security
 researchers can easily contact the correct people, potentially preventing
 exploits and ensuring timely bug reports.
 
-## How to Implement security.txt
+## How to implement security.txt
 
 To add a security.txt to your Solana program, include the following steps:
 
@@ -334,13 +331,15 @@ Once the security.txt information is embedded in your program, it can be easily
 queried via tools like the Solana Explorer, ensuring that your contact and
 security details are available to anyone looking to report potential issues.
 
-## Best Practices
+## Best practices
 
-Use Links: For information likely to change (e.g., contact details), it's
-recommended to link to a web page rather than hard-coding them into the
-contract. This avoids the need for frequent program upgrades. Verification:
-Before deploying, verify the format and content using the query-security-txt
-tool, which can validate both on-chain programs and local binaries:
+- Use Links: For information likely to change (e.g., contact details), it's
+  recommended to link to a web page rather than hard-coding them into the
+  contract. This avoids the need for frequent program upgrades.
+
+- Verification: Before deploying, verify the format and content using the
+  query-security-txt tool, which can validate both onchain programs and local
+  binaries:
 
 ```bash
 query-security-txt target/bpfel-unknown-unknown/release/my_contract.so
@@ -350,8 +349,8 @@ By embedding security contact information directly into your contract, you make
 it easier for researchers to reach you, fostering better security and
 communication within the Solana ecosystem.
 
-Here is
-[an example of how the security.txt looks like in the Solana Explorer](https://explorer.solana.com/address/HPxKXnBN4vJ8RjpdqDCU7gvNQHeeyGnSviYTJ4fBrDt4/security?cluster=devnet)
+This is
+[an example of how security.txt looks in the Solana Explorer](https://explorer.solana.com/address/HPxKXnBN4vJ8RjpdqDCU7gvNQHeeyGnSviYTJ4fBrDt4/security?cluster=devnet)
 
 The security.txt project is maintained by
 [Neodyme Labs](https://github.com/neodyme-labs)
