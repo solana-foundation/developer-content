@@ -5,26 +5,37 @@ objectives:
   - Implement secure account closing techniques in native Rust and Anchor
   - Recognize and prevent revival attacks
   - Apply best practices for account management in real-world Solana programs
-description: "Master the art of securely closing accounts in Solana programs to prevent revival attacks and maintain program integrity."
+description:
+  "Master the art of securely closing accounts in Solana programs to prevent
+  revival attacks and maintain program integrity."
 ---
 
 ## Summary
 
-- Improper account closing can lead to revival attacks, compromising program security
-- The Solana runtime garbage collects accounts when they are no longer rent exempt
-- Securely close accounts by transferring lamports, zeroing out data, and setting a closed account discriminator
+- Improper account closing can lead to revival attacks, compromising program
+  security
+- The Solana runtime garbage collects accounts when they are no longer rent
+  exempt
+- Securely close accounts by transferring lamports, zeroing out data, and
+  setting a closed account discriminator
 - Utilize Anchor's `close` constraint for simplified and secure account closing
-- Implement additional safeguards like force defund instructions to handle edge cases
+- Implement additional safeguards like force defund instructions to handle edge
+  cases
 
 ## Lesson
 
 ### Understanding Account Closing and Revival Attacks
 
-Closing accounts properly is crucial for maintaining the security and integrity of your Solana program. Revival attacks occur when an attacker exploits improperly closed accounts to regain control or access unauthorized funds.
+Closing accounts properly is crucial for maintaining the security and integrity
+of your Solana program. Revival attacks occur when an attacker exploits
+improperly closed accounts to regain control or access unauthorized funds.
 
 ### Real-World Implications: The Wormhole Hack
 
-The Wormhole bridge hack, which resulted in the loss of 120,000 wETH, demonstrated the severe consequences of improper account management. While not directly related to account closing, it highlights the importance of robust account handling in DeFi protocols.
+The Wormhole bridge hack, which resulted in the loss of 120,000 wETH,
+demonstrated the severe consequences of improper account management. While not
+directly related to account closing, it highlights the importance of robust
+account handling in DeFi protocols.
 
 ### Secure Account Closing Techniques
 
@@ -269,7 +280,7 @@ it("attacker  can close + refund lottery acct + claim multiple rewards", async (
     );
     // send tx
     await sendAndConfirmTransaction(provider.connection, tx, [attacker]);
-    await new Promise((x) => setTimeout(x, 5000));
+    await new Promise(x => setTimeout(x, 5000));
   }
 
   const ata = await getAccount(provider.connection, attackerAta);
