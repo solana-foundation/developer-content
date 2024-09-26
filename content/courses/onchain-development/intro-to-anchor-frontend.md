@@ -156,7 +156,7 @@ have been added in anchor 0.30.0
 
 This program contains two instructions (`initialize` and `increment`).
 
-Notice that in addition to specifying the instructions, it species the accounts
+Notice that in addition to specifying the instructions, it specifies the accounts
 and inputs for each instruction. The `initialize` instruction requires three
 accounts:
 
