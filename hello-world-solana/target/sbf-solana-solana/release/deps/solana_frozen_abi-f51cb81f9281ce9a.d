@@ -1,0 +1,10 @@
+/home/torneradf/solana-dev/hello-world-solana/target/sbf-solana-solana/release/deps/libsolana_frozen_abi-f51cb81f9281ce9a.rmeta: /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/lib.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_digester.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_example.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/hash.rs
+
+/home/torneradf/solana-dev/hello-world-solana/target/sbf-solana-solana/release/deps/libsolana_frozen_abi-f51cb81f9281ce9a.rlib: /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/lib.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_digester.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_example.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/hash.rs
+
+/home/torneradf/solana-dev/hello-world-solana/target/sbf-solana-solana/release/deps/solana_frozen_abi-f51cb81f9281ce9a.d: /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/lib.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_digester.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_example.rs /home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/hash.rs
+
+/home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/lib.rs:
+/home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_digester.rs:
+/home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/abi_example.rs:
+/home/torneradf/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-frozen-abi-1.18.23/src/hash.rs:
