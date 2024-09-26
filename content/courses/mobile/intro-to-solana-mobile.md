@@ -34,13 +34,13 @@ Most relevant to your development journey is the Mobile Wallet Adapter (MWA).
 The simplest way to get started is to use the Mobile Wallet Adapter with React
 Native to create a simple Android app. This lesson assumes you're familiar with
 React and Solana programming. If that's not the case,
-[start our course from the beginning](/content/courses/intro-to-solana/intro-to-cryptography)
+[start our course from the beginning](/content/courses/intro-to-solana/intro-to-cryptography.md)
 and come back here when you feel ready!
 
 ### Intro To Solana Mobile
 
 In these units, we'll develop mobile apps that interact with the Solana network.
-This opens up a whole new paradigm of crypto use cases and behaviors.
+This opens up a whole new paradigm of blockchain use cases and behaviors.
 
 #### Solana Mobile Use Cases
 
@@ -66,13 +66,13 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-To summarize, mobile crypto opens up many doors. Let’s dive in and learn how we
-can be part of it:
+To summarize, mobile blockchain opens up many doors. Let’s dive in and learn how
+we can be part of it:
 
 #### How Solana development differs between native mobile apps and web
 
 Solana wallet interaction differs slightly on mobile compared to the web. The
-core wallet functionality is the same: the wallet holds your private keys and
+core wallet functionality is the same: the wallet holds your secret keys and
 uses them to sign and send transactions. To avoid having different interfaces
 between wallets, developers abstracted that functionality into the Solana Wallet
 Adapter standard. This remains the standard on the web. The mobile counterpart
@@ -87,8 +87,8 @@ application to another. The Mobile Wallet Adapter exists to enable any app,
 written in any language, to connect to a native wallet app.
 
 We'll dig into the specifics of the Mobile Wallet Adapter in a
-[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
-a WebSocket between applications to facilitate communication. That way a
+[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively
+opens a WebSocket between applications to facilitate communication. That way a
 separate app can provide the wallet app with the transaction to be signed and
 sent, and the wallet app can respond with appropriate status updates.
 
@@ -205,12 +205,12 @@ const account = await connection.getAccountInfo(account);
 ```
 
 If you need a refresher on this, check out our
-[lesson on reading data from the blockchain](/content/courses/intro-to-solana/intro-to-reading-data).
+[lesson on reading data from the blockchain](/content/courses/intro-to-solana/intro-to-reading-data.md).
 
 #### Connecting to a wallet
 
 Writing data to the blockchain has to happen through a transaction. Transactions
-have to be signed by one or more private keys and sent to an RPC provider. This
+have to be signed by one or more secret keys and sent to an RPC provider. This
 virtually always happens through a wallet application.
 
 Typical wallet interaction happens by calling out to a browser extension. On
@@ -293,34 +293,34 @@ you to better debug the transaction if you’re running into problems.
 #### Releasing
 
 Deploying mobile applications can be difficult on its own. It's often even more
-difficult when it's a crypto app. There are two main reasons for this: customer
-safety and financial incentives.
+difficult when it's a blockchain app. There are two main reasons for this:
+customer safety and financial incentives.
 
 First, most of the mobile app marketplaces have policies restricting blockchain
-involvement. Crypto is new enough that it's a regulatory wildcard. Platforms
+involvement. Blockchain is new enough that it's a regulatory wildcard. Platforms
 feel they're protecting users by being strict with blockchain-related apps.
 
-Second, if you use crypto for "purchases" in-app, you’ll be seen as
-circumnavigating the platform’s fee (anywhere from 15-30%). This is explicitly
-against app store policies as the platform is trying to protect its revenue
-stream.
+Second, in some marketplaces, using blockchain-based apps for in-app "purchases"
+can be seen as circumnavigating the platform’s fee (typically 15-30%). This
+explicitly violates certain app store policies, as these platforms aim to
+protect their revenue streams.
 
 These are hurdles for sure, but there's hope. Here are some things to keep in
 mind for each marketplace:
 
 - **App Store (iOS) -** We only talked about Android today for the technical MWA
-  reason. However, their policies are also some of the most strict and make it
-  hard for Solana dApps to exist. For now, Apple has some pretty strict
-  anti-crypto policies. Wallets seem to be fine, but they'll flag and likely
-  reject anything that seems like a purchase using crypto.
+  reason. However, their policies are also among the strictest, making it
+  difficult for Solana dApps to thrive. Currently, Apple has some pretty strict
+  anti-blockchain and NFT policies, and its In-App Purchase system does not
+  support crypto.
 - **Google Play (Android) -** Google is generally more relaxed, but there are
-  still a few things to be aware of. As of this writing in November ‘23, Google
-  is rolling out
-  [new crypto policies](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
-  to make it more clear what they will and will not allow. Take a look.
-- **Steam -** Does not allow crypto games at all
-  > “built on blockchain technology that issue or allow the exchange of
-  > cryptocurrencies or NFTs.”
+  still a few things to be aware of. In December 2023, Google rolled out new
+  policies for
+  [blockchain-based apps](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
+  to clarify their rules.
+- **Steam -** Does not allow games based on blockchain technology
+  > “games based on blockchain technology that issue or allow the exchange of
+  > cryptocurrencies or NFTs are banned.”
 - **Download Sites / Your Site -** Depending on the target platform, you can
   make your dApp available for download on your own site. However, most users
   are wary of downloading mobile applications from websites.
@@ -377,8 +377,9 @@ few prerequisite setup items:
 
    1. Install dependencies
    2. Install Android Studio
-   3. Configure **ANDROID_HOME** environment variable
-   4. Create a new sample project (this is only used to set up the emulator)
+   3. Install the Android SDK
+   4. Configure the **ANDROID_HOME** environment variable
+   5. Create a new sample project (this is only used to set up the emulator)
 
       1. If you run into the error `✖ Copying template`, add the `--npm` flag
          at the end
@@ -393,7 +394,7 @@ few prerequisite setup items:
          ✔ Copying template
          ```
 
-   5. Run and compile the sample project on your emulator
+   6. Run and compile the sample project on your emulator
 
 2. Install and run the Solana fake wallet
 
@@ -1205,7 +1206,7 @@ to fix them:
   wallet installed ( like the fake wallet we installed in Prerequisites )
 - You get stuck in a forever loop while calling `increment` → This is likely due
   to you reaching a Devnet airdrop rate limit. Take out the airdrop section in
-  `CounterButton` and manually send some Devnet sol to your wallet’s address
+  `CounterButton` and manually send some Devnet SOL to your wallet’s address
   (printed in the console)
 
 That's it! You've made your first Solana Mobile dApp. If you get stuck, feel
