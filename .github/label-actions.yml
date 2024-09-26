@@ -16,3 +16,4 @@ solved:
     close-reason: 'resolved'
     # Lock the discussion
     lock: true
+    

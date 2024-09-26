@@ -38,7 +38,8 @@ examples are self-contained and are available in native Rust (ie, with no
 framework), [Anchor](https://www.anchor-lang.com/docs/installation),
 [Seahorse](https://seahorse-lang.org/) and it also contains a list of examples
 that we would love to
-[see as contributions](https://github.com/solana-developers/program-examples?tab=readme-ov-file#examples-wed-love-to-see).  
+[see as contributions](https://github.com/solana-developers/program-examples?tab=readme-ov-file#examples-wed-love-to-see).
+
 Within the repo you will find the following subfolder, each with assorted
 example programs within them:
 

@@ -1,15 +1,19 @@
 ---
 title: Bump Seed Canonicalization
-objectives:
-  - Explain the vulnerabilities associated with using PDAs derived without the
-    canonical bump
-  - Initialize a PDA using Anchor’s `seeds` and `bump` constraints to
-    automatically use the canonical bump
-  - Use Anchor's `seeds` and `bump` constraints to ensure the canonical bump is
-    always used in future instructions when deriving a PDA
 description:
-  "Understand the need for consistent PDA calculation by storing and reusuing
-  the canonical bump."
+  Learn how to properly use canonical bump seeds when deriving and verifying
+  PDAs to ensure security and consistency in your Solana programs.
+keywords:
+  - canonical bump
+  - PDA
+  - program derived address
+  - Anchor
+  - find_program_address
+  - create_program_address
+tags:
+  - security
+  - pdas
+  - anchor
 ---
 
 ## Summary
@@ -30,7 +34,7 @@ description:
 - Anchor allows you to **specify a bump** with the `bump = <some_bump>`
   constraint when verifying the address of a PDA
 - Because `find_program_address` can be expensive, best practice is to store the
-  derived bump in an account’s data field to be referenced later on when
+  derived bump in an account's data field to be referenced later on when
   re-deriving the address for verification
   ```rust
   #[derive(Accounts)]
@@ -70,6 +74,8 @@ In the example below, the `set_value` instruction uses a `bump` that was passed
 in as instruction data to derive a PDA. The instruction then derives the PDA
 using `create_program_address` function and checks that the `address` matches
 the public key of the `data` account.
+
+Here's an example of an insecure implementation:
 
 ```rust
 use anchor_lang::prelude::*;
@@ -119,12 +125,11 @@ different PDA.
 A simple way around this problem is to have the program expect only the
 canonical bump and use `find_program_address` to derive the PDA.
 
-The
-[`find_program_address`](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.find_program_address)
-_always uses the canonical bump_. This function iterates through calling
-`create_program_address`, starting with a bump of 255 and decrementing the bump
-by one with each iteration. As soon as a valid address is found, the function
-returns both the derived PDA and the canonical bump used to derive it.
+The `find_program_address` function always uses the canonical bump. It iterates
+through calling `create_program_address`, starting with a bump of 255 and
+decrementing the bump by one with each iteration. As soon as a valid address is
+found, the function returns both the derived PDA and the canonical bump used to
+derive it.
 
 This ensures a one-to-one mapping between your input seeds and the address they
 produce.
@@ -151,12 +156,12 @@ pub fn set_value_secure(
 }
 ```
 
-### Use Anchor’s `seeds` and `bump` constraints
+### Use Anchor's `seeds` and `bump` constraints
 
 Anchor provides a convenient way to derive PDAs in the account validation struct
 using the `seeds` and `bump` constraints. These can even be combined with the
 `init` constraint to initialize the account at the intended address. To protect
-the program from the vulnerability we’ve been discussing throughout this lesson,
+the program from the vulnerability we've been discussing throughout this lesson,
 Anchor does not even allow you to initialize an account at a PDA using anything
 but the canonical bump. Instead, it uses `find_program_address` to derive the
 PDA and subsequently performs the initialization.
@@ -280,7 +285,7 @@ If you don't specify the bump on the `bump` constraint, Anchor will still use
 `find_program_address` to derive the PDA using the canonical bump. As a
 consequence, your instruction will incur a variable amount of compute budget.
 Programs that are already at risk of exceeding their compute budget should use
-this with care since there is a chance that the program’s budget may be
+this with care since there is a chance that the program's budget may be
 occasionally and unpredictably exceeded.
 
 On the other hand, if you only need to verify the address of a PDA passed in
@@ -297,7 +302,7 @@ rewards on time.
 #### 1. Setup
 
 Start by getting the code on the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/starter).
+[this repository](https://github.com/solana-developers/solana-bump-seed-canonicalization/tree/starter).
 
 Notice that there are two instructions on the program and a single test in the
 `tests` directory.
@@ -595,7 +600,7 @@ careful to design your program to explicitly use the canonical bump!
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/solution).
+[the same repository](https://github.com/solana-developers/solana-bump-seed-canonicalization/tree/solution).
 
 ## Challenge
 
@@ -609,6 +614,5 @@ Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=d3f6ca7a-11c8-421f-b7a3-d6c08ef1aa8b)!
+Push your code to GitHub and [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=d3f6ca7a-11c8-421f-b7a3-d6c08ef1aa8b)!
 </Callout>
