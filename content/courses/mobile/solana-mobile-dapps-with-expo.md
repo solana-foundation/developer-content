@@ -879,10 +879,11 @@ Create both files, in the root of your directory and add `.env` to your
 `.gitignore` file.
 
 Next, add your API key to the `.env` file with the variable name
-`EXPO_PUBLIC_PINATA_API`. This allows you to securely access your API key in the
-application using `process.env.EXPO_PUBLIC_PINATA_API`, unlike traditional
-`import "dotenv/config"` which may require additional polyfills when working
-with Expo. For more information on securely storing secrets, refer to the
+`EXPO_PUBLIC_NFT_PINATA_JWT`. This allows you to securely access your API key in
+the application using `process.env.EXPO_PUBLIC_NFT_PINATA_JWT`, unlike
+traditional `import "dotenv/config"` which may require additional polyfills when
+working with Expo. For more information on securely storing secrets, refer to
+the
 [Expo documentation on environment variables](https://docs.expo.dev/build-reference/variables/#importing-secrets-from-a-dotenv-file)
 
 #### 3. Final build
@@ -1183,8 +1184,17 @@ export function NFTProvider(props: NFTProviderProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const umi = useUmi();
   const { children } = props;
-  const { connect } = useMobileWallet();
+  const connect = () => {
+    if (isLoading) return;
 
+    setIsLoading(true);
+    transact(async wallet => {
+      const auth = await authorizeSession(wallet);
+      setAccount(auth);
+    }).finally(() => {
+      setIsLoading(false);
+    });
+  };
   async function uploadImageFromURI(fileUri: string) {
     try {
       const form = new FormData();
