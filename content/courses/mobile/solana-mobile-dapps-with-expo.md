@@ -662,7 +662,6 @@ export const UmiProvider = ({
   children: ReactNode;
 }) => {
   const { selectedAccount } = useAuthorization();
-  console.log("selectedAccount", JSON.stringify(selectedAccount, null, 2));
   const umi = createUmi(endpoint)
     .use(mplTokenMetadata())
     .use(mplCandyMachine());
@@ -1010,7 +1009,6 @@ const fetchNFTs = useCallback(async () => {
 const ipfsPrefix = `https://${process.env.EXPO_PUBLIC_NFT_PINATA_GATEWAY_URL}/ipfs/`;
 async function uploadImageFromURI(fileUri: string) {
   try {
-    console.log("fileURI", fileUri);
     const form = new FormData();
     const randomFileName = `image_${Date.now()}_${Math.floor(Math.random() * 10000)}.jpg`;
 
@@ -1189,7 +1187,6 @@ export function NFTProvider(props: NFTProviderProps) {
 
   async function uploadImageFromURI(fileUri: string) {
     try {
-      console.log("fileURI", fileUri);
       const form = new FormData();
       const randomFileName = `image_${Date.now()}_${Math.floor(Math.random() * 10000)}.jpg`;
 
@@ -1260,7 +1257,6 @@ export function NFTProvider(props: NFTProviderProps) {
     setIsLoading(true);
     try {
       const creatorPublicKey = fromWeb3JsPublicKey(account.publicKey);
-      console.log("Creator", creatorPublicKey);
       const nfts = await fetchAllDigitalAssetByCreator(umi, creatorPublicKey);
       setLoadedNFTs(nfts);
     } catch (error) {
@@ -1295,7 +1291,6 @@ export function NFTProvider(props: NFTProviderProps) {
         console.log(`Creating NFT...`);
         const imageCID = await uploadImage(fileUri);
         const metadataCID = await uploadMetadata(name, description, imageCID);
-        console.log(metadataCID);
         const mint = generateSigner(umi);
         const transaction = createNft(umi, {
           mint,
@@ -1304,7 +1299,6 @@ export function NFTProvider(props: NFTProviderProps) {
           sellerFeeBasisPoints: percentAmount(0),
         });
         await transaction.sendAndConfirm(umi);
-        console.log("Hello 999 anh em");
         const createdNft = await fetchDigitalAsset(umi, mint.publicKey);
         setNftOfTheDay(createdNft);
       } catch (error) {
