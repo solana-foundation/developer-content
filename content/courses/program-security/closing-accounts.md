@@ -269,7 +269,7 @@ it("attacker  can close + refund lottery acct + claim multiple rewards", async (
     );
     // send tx
     await sendAndConfirmTransaction(provider.connection, tx, [attacker]);
-    await new Promise(x => setTimeout(x, 5000));
+    await new Promise((x) => setTimeout(x, 5000));
   }
 
   const ata = await getAccount(provider.connection, attackerAta);
