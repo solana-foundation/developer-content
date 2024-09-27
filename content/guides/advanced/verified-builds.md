@@ -44,8 +44,8 @@ The verified builds pipeline was thought out and is maintained by
 [Ellipsis Labs](https://ellipsislabs.xyz/) and [OtterSec](https://osec.io/). For
 more details, follow the guide in the
 [original verified builds](https://github.com/Ellipsis-Labs/solana-verifiable-build)
-repository as well and soon the verify build process will move directly into the
-[Anza](https://www.anza.xyz/) tool suite.
+repository as well and the verify build process directly into the
+[Anza](https://www.anza.xyz/) tool suite, once supported there.
 
 # How does it work?
 
@@ -56,33 +56,22 @@ ensures that the build process is deterministic and consistent across different
 systems. Once you have the executable, you can deploy it to the Solana network.
 During the build process a PDA of the
 [verify program](https://github.com/otter-sec/otter-verify) will be created.
-This PDA contains all the data necessary to verify the program.
-
-```rust
-pub fn initialize(ctx: Context<Initialize>, params: InputParams) -> Result<()> {
-    let otter_verify = &mut ctx.accounts.build_params;
-    otter_verify.address = *ctx.accounts.program_address.key;
-    otter_verify.signer = *ctx.accounts.authority.key;
-    otter_verify.version = params.version;
-    otter_verify.git_url = params.git_url;
-    otter_verify.commit = params.commit;
-    otter_verify.args = params.args;
-    otter_verify.bump = ctx.bumps.build_params;
-    Ok(())
-}
-```
+This PDA contains all the data necessary to verify the program. The PDA contains
+the program address, git url, commit hash and the arguments used to build the
+program.
 
 Using the data in the PDA everyone can run the verify program command locally
 and check if the program was built from the provided source code. Then everyone
 can verify for themselves completely trustlessly or can run their own
 [verify API](https://github.com/otter-sec/solana-verified-programs-api)
 maintained by [OtterSec](https://github.com/otter-sec) to provide an easy access
-point for users to check the verification. This
+point for users to check the verification. You can already see these
 [API calls](https://verify.osec.io/status/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
-you can see already being used in the
+being used in the
 [Solana Explorer](https://explorer.solana.com/address/E1fcPKuV1UJEsTJPpab2Jr8y87ZN73i4CHTPLbWQE6CA/verified-build)
 and
-[SolanaFM](https://solana.fm/address/E1fcPKuV1UJEsTJPpab2Jr8y87ZN73i4CHTPLbWQE6CA/transactions?cluster=mainnet-alpha).
+[SolanaFM](https://solana.fm/address/E1fcPKuV1UJEsTJPpab2Jr8y87ZN73i4CHTPLbWQE6CA/transactions?cluster=mainnet-alpha),
+among other places.
 
 # Why should I use verified builds?
 
@@ -104,27 +93,33 @@ Using verified builds provides the following benefits:
 
 To implement verified builds, you'll need to follow these steps:
 
-1. Install the Necessary Tools Ensure you have Docker and Cargo installed.
-   Docker provides a controlled build environment to ensure consistency, and
-   Cargo is used for managing Rust packages.
+<Steps>
 
-Docker: Follow the steps on the
-[Docker website](https://docs.docker.com/engine/install/) to install Docker for
-your platform. Once installed, ensure the Docker service is running following
-this guide further.
+### Install the Docker and Cargo
 
-Cargo: If you don’t already have Cargo installed, you can install it by running
-the following command:
+Install the Necessary Tools Ensure you have Docker and Cargo installed. Docker
+provides a controlled build environment to ensure consistency, and Cargo is used
+for managing Rust packages.
+
+- Docker: Follow the steps on the
+  [Docker website](https://docs.docker.com/engine/install/) to install Docker
+  for your platform. Once installed, ensure the Docker service is running
+  following this guide further.
+- Cargo: If you don’t already have Cargo installed, you can install it by
+  running the following command:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-2. Install the Solana Verify CLI The Solana Verify CLI is the primary tool used
-   to verify builds. Solana Verify CLI is currently maintained by
-   [Ellipsis Labs](https://ellipsislabs.xyz/) and can be installed using Cargo.
-   The verify process will soon move into the [Anza](https://www.anza.xyz/) tool
-   suite. The general way of verifying builds will stay very similar though.
+### Install the Solana Verify CLI
+
+The Solana Verify CLI is the primary tool used to verify builds. Solana Verify
+CLI is currently maintained by [Ellipsis Labs](https://ellipsislabs.xyz/) and
+can be installed using Cargo.
+
+> The verify process will soon move into the [Anza](https://www.anza.xyz/) tool
+> suite. The general way of verifying builds will stay very similar though.
 
 You can install it by running:
 
@@ -144,10 +139,10 @@ For extra caution, you can install a version directly from a specific commit:
 cargo install solana-verify --git https://github.com/Ellipsis-Labs/solana-verifiable-build --rev 13a1db2
 ```
 
-3. Building Verifiable Programs
+### Building Verifiable Programs
 
-To verify against a repository it needs to have a cargo.lock file in the root
-directory. You can for example use this as a preset:
+To verify against a repository it needs to have a `Cargo.lock` file in the root
+directory of your repo. You can use this `Cargo.toml` example as a preset:
 
 ```toml
 [workspace]
@@ -168,7 +163,7 @@ With this file in place you can then run `cargo generate-lockfile` to create a
 lock file.
 
 To verifiably build your Solana program, navigate to the directory containing
-your workspace's Cargo.toml file and run:
+your workspace's `Cargo.toml` file and run:
 
 ```bash
 solana-verify build
@@ -186,18 +181,19 @@ certain systems (e.g., M1 MacBook) because it is running within a docker
 container. For faster builds, using a Linux machine running x86 architecture is
 recommended.
 
-Once the build completes, you can retrieve the hash of the executable using:
+Once the build completes, you can retrieve the hash of the executable using the
+following command:
 
 ```bash
 solana-verify get-executable-hash target/deploy/$PROGRAM_LIB_NAME.so
 ```
 
-4. Deploying Verifiable Programs
+### Deploying Verifiable Programs
 
 Once you have built your program and retrieved its hash, you can deploy it to
-the Solana network. It is recommended to use a governance solution like
-[Squads V3](https://v3.squads.so/) for safe deployments, but you can also
-directly deploy with:
+the Solana network. It is recommended to use a multi-signature or governance
+solution like [Squads Protocol](https://squads.so/protocol) for safe
+deployments, but you can also directly deploy with:
 
 ```bash
 solana program deploy -u $NETWORK_URL target/deploy/$PROGRAM_LIB_NAME.so --program-id $PROGRAM_ID --upgrade-authority $UPGRADE_AUTHORITY
@@ -209,10 +205,12 @@ To verify the deployed program matches the built executable, run:
 solana-verify get-program-hash -u $NETWORK_URL $PROGRAM_ID
 ```
 
-> Don't forget the network URL here. You may have different versions deployed on
-> devnet and mainnet for example.
+> You may have different versions deployed on different
+> [Solana clusters](/docs/core//clusters.md) (i.e. devnet, testnet, mainnet).
+> Ensure you use the the correct network URL for the desired Solana cluster you
+> want to verify a program against.
 
-5. Verifying against repositories
+### Verifying against repositories
 
 To verify a program against its public repository, use:
 
@@ -222,15 +220,17 @@ solana-verify verify-from-repo -u $NETWORK_URL --program-id $PROGRAM_ID https://
 
 > While you run the verified build in your program directory when running
 > `verify-from-repo` you need to add the `mount-path`. This will be the path to
-> the folder containing the cargo.toml that contains your programs lib name.
+> the folder containing the `Cargo.toml` that contains your programs lib name.
 
 This command compares the onchain program with the executable built from the
 source at the specified commit hash.
 
-Example
+</Steps>
+
+## Example verified build
 
 Here’s an example of verifying the solana-games-preset with the ID
-MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt using the source code from the
+`MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt` using the source code from the
 repository:
 
 ```bash
@@ -254,7 +254,7 @@ Like this your verification will appear validated in the
 and in the
 [Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build)
 and eventually also on the community-run website
-[Solanaverify.org](https://www.solanaverify.org/) maintained by
+[SolanaVerify.org](https://www.solanaverify.org/) maintained by
 [0xDeep](https://x.com/0xDeep) and the
 [OtterSec verified programs API](https://verify.osec.io/verified-programs) and
 at last in the
@@ -263,24 +263,24 @@ contributing to a more healthy solana ecosystem.
 
 # Conclusion
 
-Using verified builds on Solana ensures the integrity and trustworthiness of
-your programs on the network. By leveraging tools like the Solana Verify CLI and
-Docker, you can maintain verifiable and secure builds that align with your
-source code. Always take the necessary precautions to use consistent
-environments, and consider governance solutions for safe upgrades and
-deployments.
+Using [verified builds on Solana](/content/guides/advanced/verified-builds.md)
+ensures the integrity and trustworthiness of your programs on the network. By
+leveraging tools like the Solana Verify CLI and Docker, you can maintain
+verifiable and secure builds that align with your source code. Always take the
+necessary precautions to use consistent environments, and consider governance
+solutions for safe upgrades and deployments.
 
 # Security.txt for Solana programs
 
-In addition to verified builds you can also add a security.txt file to your
-program. In the future the security.txt will hold the verifier public key for
+In addition to verified builds you can also add a `security.txt` file to your
+program. In the future the `security.txt` will hold the verifier public key for
 easy access to the verification data stored in the verification PDA.
 
-The security.txt feature allows developers to embed contact and security
+The `security.txt` feature allows developers to embed contact and security
 information directly within their Solana smart contracts. Inspired by
-securitytxt.org, this approach provides a standardized way for security
-researchers to reach out to project maintainers, even if they only know the
-contract's address.
+[securitytxt.org](https://securitytxt.org), this approach provides a
+standardized way for security researchers to reach out to project maintainers,
+even if they only know the contract's address.
 
 ## Why use security.txt?
 
@@ -294,14 +294,14 @@ exploits and ensuring timely bug reports.
 
 To add a security.txt to your Solana program, include the following steps:
 
-Add the solana-security-txt dependency to your Cargo.toml:
+Add the `solana-security-txt` dependency to your `Cargo.toml`:
 
-```toml
+```toml filename="Cargo.toml"
 [dependencies]
 solana-security-txt = "1.1.1"
 ```
 
-Use the security_txt! macro in your contract to define your security
+Use the `security_txt!` macro in your contract to define your security
 information. You can include contact details, project URLs, and even a security
 policy. Here's an example:
 
@@ -338,7 +338,7 @@ security details are available to anyone looking to report potential issues.
   contract. This avoids the need for frequent program upgrades.
 
 - Verification: Before deploying, verify the format and content using the
-  query-security-txt tool, which can validate both onchain programs and local
+  `query-security-txt` tool, which can validate both onchain programs and local
   binaries:
 
 ```bash
