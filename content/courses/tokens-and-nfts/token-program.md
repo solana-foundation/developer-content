@@ -28,7 +28,7 @@ description:
 - Creating Token Mints and Token Accounts requires allocating **rent** in SOL.
   The rent for a Token Account can be refunded when the account is closed.
   Additionally, tokens created with the
-  [Token Extensions Program](/developers/courses/token-extensions-for-mints/close-mint)
+  [Token Extensions Program](/content/courses/token-extensions/close-mint.md)
   can also close Token Mints.
 
 ### Lesson
@@ -457,7 +457,7 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We’re going to use the Token Program to create a Token Mint, create an
+We’re going to use the Token Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
@@ -617,7 +617,7 @@ const transactionLink = getExplorerLink(
   "devnet",
 );
 
-console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}!`);
+console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
 
 const tokenMintLink = getExplorerLink(
   "address",
@@ -625,8 +625,11 @@ const tokenMintLink = getExplorerLink(
   "devnet",
 );
 
-console.log(`✅ Look at the token mint again: ${tokenMintLink}!`);
+console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
 ```
+
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your address of the mint and Run the
+script using `npx esrun create-token-metadata.ts`.
 
 You'll now see Solana Explorer is updated, showing the token's name and symbol
 on the mint!
@@ -697,7 +700,7 @@ const link = getExplorerLink(
 console.log(`✅ Created token Account: ${link}`);
 ```
 
-Run the script using `npx esrun create-token-mint.ts`. You should see:
+Run the script using `npx esrun create-token-account.ts`. You should see:
 
 ```bash
 ✅ Success! Created token account: https://explorer.solana.com/address/CTjoLdEeK8rk4YWYW9ZqACyjHexbYKH3hEoagHxLVEFs?cluster=devnet
@@ -707,14 +710,17 @@ Open the token account in Solana Explorer. Look at the owner - it's the account
 you made the ATA for! The balance will be zero, as we haven't sent any tokens
 there yet. Let's mint some tokens there and fix that!
 
+Remember the address of your token account ! We'll use it to mint tokens.
+
 #### Mint Tokens
 
 Now that we have a token mint and a token account, let's mint tokens to the
 token account. Recall that we set the `user` as the `mintAuthority` for the
 `mint` we created.
 
-Create a function `mintTokens` that uses the `spl-token` function `mintTo` to
-mint tokens:
+Create an empty file called `mint-tokens.ts`. Then uses the `spl-token` function
+`mintTo()` to mint tokens. Remember to substitute in your token mint address and
+token account address below!
 
 ```typescript
 import { mintTo } from "@solana/spl-token";
@@ -776,6 +782,10 @@ associated token account - we can just look it up using
 mint of the token we want to send. Likewise, we can find (or make) an ATA for
 our recipient to hold this token too.
 
+Create an empty file called `transfer-tokens.ts`. Then replace
+`YOUR_RECIPIENT_HERE` with your recipient public key and replace
+`YOUR_TOKEN_MINT_ADDRESS_HERE` with your token mint address.
+
 ```typescript
 import "dotenv/config";
 import {
@@ -803,7 +813,7 @@ const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
 console.log(`💸 Attempting to send 1 token to ${recipient.toBase58()}...`);
 
-// Get or create the source and destination token accounts to store this token
+// Get or create the source token account to store this token
 const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   sender,
@@ -811,6 +821,7 @@ const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
   sender.publicKey,
 );
 
+// Get or create the destination token account to store this token
 const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   sender,
@@ -830,7 +841,13 @@ const signature = await transfer(
 
 const explorerLink = getExplorerLink("transaction", signature, "devnet");
 
-console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}!`);
+console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}`);
+```
+
+Run the script using `npx esrun transfer-tokens.ts`. You should see:
+
+```bash
+✅ Transaction confirmed, explorer link is: https://explorer.solana.com/tx/SgV2j2DkaErYf7ERiB11USoZzGqAk8HPEqVJLP8HWdz9M61FSFgyEMXJycHQtfCooCAPBom7Vi3akEAwSUHQUsu?cluster=devnet
 ```
 
 Open the Explorer link. You see your balance go down, and the recipient's
@@ -852,7 +869,7 @@ approval.
 2. Create a new Token Mint in the `CreateMint` component. If you need a
    refresher on how to send transactions to a wallet for approval, have a look
    at the
-   [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
+   [Wallets lesson](/developers/courses/intro-to-solana/interact-with-wallets).
 
 When creating a new mint, the newly generated `Keypair` will also have to sign
 the transaction. When additional signers are required in addition to the
