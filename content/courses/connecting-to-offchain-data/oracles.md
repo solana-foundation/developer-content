@@ -63,7 +63,7 @@ Broadly speaking, there are three implementation types:
 
 <br/>
 
-1. **Single, centralized oracle** publishes data on-chain.
+1. **Single, centralized oracle** publishes data onchain.
    - **Pro:** It’s simple; there's one source of truth.
    - **Con:** Nothing prevents the oracle provider from supplying inaccurate
      data.
@@ -72,8 +72,7 @@ Broadly speaking, there are three implementation types:
 
 2. **Network of oracles** publish data with a consensus mechanism determining
    the final result.
-   - **Pro:** Consensus reduces the likelihood of bad data being pushed
-     on-chain.
+   - **Pro:** Consensus reduces the likelihood of bad data being pushed onchain.
    - **Con:** There's no disincentive for bad actors to publish inaccurate data
      and attempt to sway consensus.
 
@@ -783,8 +782,8 @@ mod burry_escrow {
 
     use super::*;
 
-    pub fn deposit(ctx: Context<Deposit>, escrow_amt: u64, unlock_price: f64) -> Result<()> {
-        deposit_handler(ctx, escrow_amt, unlock_price)
+    pub fn deposit(ctx: Context<Deposit>, escrow_amount: u64, unlock_price: f64) -> Result<()> {
+        deposit_handler(ctx, escrow_amount, unlock_price)
     }
 
     pub fn withdraw(ctx: Context<Withdraw>) -> Result<()> {
@@ -1282,10 +1281,10 @@ describe("the burry-escrow program", () => {
         escrowState,
         "confirmed",
       );
-      console.log("On-chain unlock price:", newAccount.unlockPrice);
+      console.log("onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data on-chain is equal to local 'data'
+      // Check whether the data onchain is equal to local 'data'
       assert(failUnlockPrice == newAccount.unlockPrice);
       assert(escrowBalance > 0);
     } catch (e) {
@@ -1393,10 +1392,10 @@ describe("the burry-escrow program", () => {
         escrowState,
         "confirmed",
       );
-      console.log("On-chain unlock price:", newAccount.unlockPrice);
+      console.log("onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
 
-      // Check whether the data on-chain is equal to local 'data'
+      // Check whether the data onchain is equal to local 'data'
       assert(failUnlockPrice == newAccount.unlockPrice);
       assert(escrowBalance > 0);
     } catch (e) {
