@@ -27,10 +27,12 @@ This method requires two parameters:
   - `mint: <string>` - Pubkey of the specific token Mint to limit accounts to, as base-58 encoded string
   - `programId: <string>` - Pubkey of the Token program that owns the accounts, as base-58 encoded string
 </Parameter>
-  base-58 encoded string; or
+
 <Parameter type={"object"} optional={true}>
   Configuration object containing the following fields:
-  [Include existing optional parameters here]
+  - `commitment: <string>` - (optional) Commitment level to use for the request
+  - `encoding: <string>` - (optional) Encoding for Account data, either "base58" (slow), "base64", "base64+zstd", or "jsonParsed"
+  - `minContextSlot: <number>` - (optional) The minimum slot that the request can be evaluated at
 </Parameter>
 
 ### Result
