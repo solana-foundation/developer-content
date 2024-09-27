@@ -544,7 +544,7 @@ pub mod anchor_movie_review_program{
         description: String,
         rating: u8,
     ) -> Result<()> {
-	// We require that the rating is between 1 and 5
+// We require that the rating is between 1 and 5
         require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
 
         // We require that the title is not longer than 20 characters
@@ -630,8 +630,7 @@ need it for account validation of `movie_review` in the next step.
 #[program]
 pub mod anchor_movie_review_program {
     use super::*;
-
-		...
+...
 
     pub fn update_movie_review(
         ctx: Context<UpdateMovieReview>,
@@ -717,7 +716,7 @@ closing itself will be handled by the Anchor constraint in the
 pub mod anchor_movie_review_program {
     use super::*;
 
-		...
+...
 
     pub fn delete_movie_review(_ctx: Context<DeleteMovieReview>, title: String) -> Result<()> {
         msg!("Movie review for {} deleted", title);
@@ -869,6 +868,7 @@ If you need more time with this project to feel comfortable with these concepts,
 feel free to have a look at the
 [solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas)
 before continuing.
+4e767 (fix: Add rating validation to update_movie_review function)
 
 </Steps>
 
@@ -891,8 +891,10 @@ should include instructions to:
 3. Close an existing account
 
 Try to do this independently if you can! But if you get stuck, feel free to
+
 reference the
 [solution code](https://github.com/Unboxed-Software/anchor-student-intro-program).
+ix: Add rating validation to update_movie_review function)
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
