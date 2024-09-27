@@ -73,7 +73,6 @@ macros may have multiple patterns to handle different inputs and a `_` wildcard
 to catch patterns that are not explicitly defined. Now you can call `greet!` on
 any `$name` in the code.
 
-
 ## Procedural macros
 
 Procedural macros in Rust are a powerful way to extend the language and create
@@ -88,7 +87,6 @@ rest of the code. There are three types of procedural macros:
   go into the 3 types, let's go through these concepts
 
 ## Rust concepts
-
 
 Before we dig into macros, specifically, let's talk about some of the important
 terminologies, concepts, and tools we'll be using throughout the lesson.
