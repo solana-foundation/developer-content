@@ -51,7 +51,7 @@ Under the hood, the `burn` function creates a transaction with instructions
 obtained from the `createBurnInstruction` function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { createBurnInstruction } from "@solana/spl-token";
 
 async function buildBurnTransaction(
@@ -105,7 +105,7 @@ Under the hood, the `approve` function creates a transaction with instructions
 obtained from the `createApproveInstruction` function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { createApproveInstruction } from "@solana/spl-token";
 
 async function buildApproveTransaction(
@@ -113,7 +113,7 @@ async function buildApproveTransaction(
   delegate: PublicKey,
   owner: PublicKey,
   amount: number,
-): Promise<web3.Transaction> {
+): Promise<Transaction> {
   const transaction = new Transaction().add(
     createApproveInstruction(account, delegate, owner, amount),
   );
@@ -150,13 +150,13 @@ Under the hood, the `revoke` function creates a transaction with instructions
 obtained from the `createRevokeInstruction` function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
+import { PublicKey, Transaction } from "@solana/web3.js";
 import { revoke } from "@solana/spl-token";
 
 async function buildRevokeTransaction(
   account: PublicKey,
   owner: PublicKey,
-): Promise<web3.Transaction> {
+): Promise<Transaction> {
   const transaction = new Transaction().add(
     createRevokeInstruction(account, owner),
   );
@@ -181,7 +181,8 @@ previous lab, you can
 [add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account!
 
-Create a new file `delegate-tokens.ts`
+Create a new file `delegate-tokens.ts`. We use the system program account as the
+delegate here for demonstration.
 
 ```typescript
 import "dotenv/config";
@@ -204,8 +205,8 @@ console.log(
   `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
 );
 
-// Add the delegate public key here.
-const delegate = new PublicKey("YOUR_DELEGATE_HERE");
+// Use the system program public key
+const delegate = new PublicKey("11111111111111111111111111111111");
 
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
@@ -231,7 +232,7 @@ const approveTransactionSignature = await approve(
 );
 
 console.log(
-  `Approve Delegate Transaction: ${getExplorerLink(
+  `✅ Approve Delegate Transaction: ${getExplorerLink(
     "transaction",
     approveTransactionSignature,
     "devnet",
@@ -239,40 +240,25 @@ console.log(
 );
 ```
 
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter.
+
+Run the script using `npx esrun delegate-tokens.ts`. You should see:
+
+```bash
+✅ Approve Delegate Transaction: https://explorer.solana.com/tx/3sBr62x2VMaoJ4Z3SQMy6ZPzQKaa5Bs9ni9dgwwZZ5qEViKh1gQznCgH489h6pgfruMmqPbc2GgminTPK4UXRRZd?cluster=devnet
+```
+
+Open the Explorer link, you will see the ‌approval information.
+
 #### 2. Revoke Delegate
 
 Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
 
-Revoke will set delegate for the token account to null and reset the delegated
-amount to 0.
+Revoke will set delegate for the associated token account to null and reset the
+delegated amount to 0.
 
-All we will need for this function is the token account and user. After the
-
-```typescript
-const revokeTransactionSignature = await revoke(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  user.publicKey,
-);
-
-console.log(
-  `Revoke Delegate Transaction: ${getExplorerLink(
-    "transaction",
-    revokeTransactionSignature,
-    "devnet",
-  )}`,
-);
-```
-
-#### 3. Burn Tokens
-
-Finally, let's remove some tokens from circulation by burning them.
-
-Use the `spl-token` library's `burn` function to remove half of your tokens from
-circulation.
-
-Now call this new function in `main` to burn 25 of the user's tokens.
+Create a new file `revoke-approve-tokens.ts`.
 
 ```typescript
 import "dotenv/config";
@@ -281,7 +267,7 @@ import {
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
-import { getOrCreateAssociatedTokenAccount, burn } from "@solana/spl-token";
+import { getOrCreateAssociatedTokenAccount, revoke } from "@solana/spl-token";
 
 const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -294,7 +280,75 @@ console.log(
 // Substitute in your token mint account
 const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-// Get the account where the user stores these tokens
+// Get or create the source and destination token accounts to store this token
+const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
+  connection,
+  user,
+  tokenMintAccount,
+  user.publicKey,
+);
+
+const revokeTransactionSignature = await revoke(
+  connection,
+  user,
+  sourceTokenAccount.address,
+  user.publicKey,
+);
+
+console.log(
+  `✅ Revoke Delegate Transaction: ${getExplorerLink(
+    "transaction",
+    revokeTransactionSignature,
+    "devnet",
+  )}`,
+);
+```
+
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter.
+
+Run the script using `npx esrun revoke-approve-tokens.ts`. You should see:
+
+```bash
+✅ Revoke Delegate Transaction: https://explorer.solana.com/tx/5UboxLULHT3pPznBxThfQMc73NNjYNLmvqrB3JVVXPwWxUFWA49WG58sFQP8B5rv4FXxxZm3mur319YNiyYxYgBd?cluster=devnet
+```
+
+Open the Explorer link, you will see the revoke information.
+
+#### 3. Burn Tokens
+
+Finally, let's remove some tokens from circulation by burning them.
+
+Use the `spl-token` library's `burn` function to remove half of your tokens from
+circulation.
+
+Create a new file `burn-tokens.ts`.
+
+```typescript
+import "dotenv/config";
+import {
+  getExplorerLink,
+  getKeypairFromEnvironment,
+} from "@solana-developers/helpers";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import {
+  getOrCreateAssociatedTokenAccount,
+  Account,
+  burn,
+} from "@solana/spl-token";
+
+const connection = new Connection(clusterApiUrl("devnet"));
+
+const user = getKeypairFromEnvironment("SECRET_KEY");
+
+console.log(
+  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+);
+
+// Substitute in your token mint account
+const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+
+// Get or create the source and destination token accounts to store this token
 const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   user,
@@ -315,13 +369,24 @@ const transactionSignature = await burn(
 );
 
 console.log(
-  `Burn Transaction: ${getExplorerLink(
+  `✅ Burn Transaction: ${getExplorerLink(
     "transaction",
     transactionSignature,
     "devnet",
   )}`,
 );
 ```
+
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous chapter.
+
+Run the script using `npx esrun burn-tokens.ts`. You should see:
+
+```bash
+✅ Burn Transaction: https://explorer.solana.com/tx/P9JAK7bSAhycccGunDEThgt12QFiqMr9oexenEmRXXKoXsLKr2x64k9BWNppjTxFeVMUYjBEncRKe3gZsyd29JY?cluster=devnet
+```
+
+Open the Explorer link, you will see the burn information.
 
 Well done! You've now
 
