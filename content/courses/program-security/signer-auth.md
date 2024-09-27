@@ -536,7 +536,7 @@ instructions and make sure that each is a signer on the transaction.
 
 If you want to take a look at the final solution code you can find it on the
 `solution` branch of
-[the repository](https://github.com/solana-developers/solana-signer-auth//tree/solution).
+[the repository](https://github.com/solana-developers/solana-signer-auth/tree/solution).
 
 ## Challenge
 
