@@ -866,9 +866,9 @@ console.
 ```
 
 If you need more time with this project to feel comfortable with these concepts,
-feel free to have a look at
-the [solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas) before
-continuing.
+feel free to have a look at the
+[solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas)
+before continuing.
 
 </Steps>
 
@@ -891,8 +891,8 @@ should include instructions to:
 3. Close an existing account
 
 Try to do this independently if you can! But if you get stuck, feel free to
-reference
-the [solution code](https://github.com/Unboxed-Software/anchor-student-intro-program).
+reference the
+[solution code](https://github.com/Unboxed-Software/anchor-student-intro-program).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
