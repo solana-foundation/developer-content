@@ -61,9 +61,9 @@ we are going to be looking at in this section:
    introduce you to the concept of data sizes here.
 
 2. When operating on larger data, we run into
-   [Stack](https://solana.com/docs/onchain-programs/faq#stack) and
-   [Heap](https://solana.com/docs/onchain-programs/faq#heap-size) constraints -
-   to get around these, we’ll look at using Box and Zero-Copy.
+   [Stack](https://solana.com/docs/programs/faq#stack) and
+   [Heap](https://solana.com/docs/programs/faq#heap-size) constraints - to get
+   around these, we’ll look at using Box and Zero-Copy.
 
 #### Sizes
 
@@ -402,7 +402,7 @@ In this simple game state, a character has `health`, `mana`, and an event log.
 If at some point you are making game improvements and want to add an
 `experience` field, you'd hit a snag. The `experience` field should be a number
 like a `u64`, which is simple enough to add. You can
-[reallocate the account](/developers/courses/onchain-development/anchor-pdas)
+[reallocate the account](/content/courses/onchain-development/anchor-pdas.md)
 and add space.
 
 However, to keep dynamic length fields, like `event_log`, at the end of the
@@ -424,7 +424,7 @@ reserves some bytes where you expect to need them most.
 pub struct GameState { //V1
     pub health: u64,
     pub mana: u64,
-	pub for_future_use: [u8; 128],
+	  pub for_future_use: [u8; 128],
     pub event_log: Vec<string>
 }
 ```
@@ -761,7 +761,7 @@ we keep an internal tally of how many lamports need to be redeemed, ie be
 transferred from the PDA to the community wallet at a later time. At some point
 in the future, the community wallet will go around and clean up all the
 straggling lamports (probably a good job for
-[clockwork](https://www.clockwork.xyz/)). It’s important to note that anyone
+[clockwork](https://docs.clockwork.xyz/)). It’s important to note that anyone
 should be able to sign for the redeem function, since the PDA has permission
 over itself.
 
@@ -787,7 +787,7 @@ code to experiment a little. You can change existing values, try to break the
 program, and generally try to understand how everything works.
 
 You can fork and/or clone
-[this program from Github](https://github.com/Unboxed-Software/advanced-program-architecture.git)
+[this program from Github](https://github.com/ASCorreia/advanced-program-architecture.git)
 to get started. Before building and running the test suite, remember to update
 the `lib.rs` and `Anchor.toml` with your local program ID.
 
@@ -1659,7 +1659,7 @@ may feel complex for what it's doing. That's because we're generating some new
 accounts to show that anyone could call the redeem function
 `depositActionPoints`. We use names like `clockwork` for these because if this
 game were running continuously, it probably makes sense to use something like
-[clockwork](https://www.clockwork.xyz/) cron jobs.
+[clockwork](https://docs.clockwork.xyz/) cron jobs.
 
 ```typescript
 it("Deposit Action Points", async () => {
