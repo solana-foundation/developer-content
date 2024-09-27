@@ -9,11 +9,11 @@ altRoutes:
 Returns all SPL Token accounts by token owner.
 
 This method requires two parameters:
+
 1. The owner's public key
 2. An object specifying either the `mint` or the `programId`
 
 <DocSideBySide>
-
 <DocLeftSide>
 
 ### Parameters
@@ -81,14 +81,10 @@ JSON objects, which will contain:
 - `pubkey: <string>` - the account Pubkey as base-58 encoded string
 - `account: <object>` - a JSON object, with the following sub fields:
   - `lamports: <u64>` - number of lamports assigned to this account, as a u64
-  - `owner: <string>` - base-58 encoded Pubkey of the program this account has
-    been assigned to
-  - `data: <object>` - Token state data associated with the account, either as
-    encoded binary data or in JSON format `{<program>: <state>}`
-  - `executable: <bool>` - boolean indicating if the account contains a program
-    \(and is strictly read-only\)
-  - `rentEpoch: <u64>` - the epoch at which this account will next owe rent, as
-    u64
+  - `owner: <string>` - base-58 encoded Pubkey of the program this account has been assigned to
+  - `data: <object>` - Token state data associated with the account, either as encoded binary data or in JSON format `{<program>: <state>}`
+  - `executable: <bool>` - boolean indicating if the account contains a program (and is strictly read-only)
+  - `rentEpoch: <u64>` - the epoch at which this account will next owe rent, as u64
   - `size: <u64>` - the data size of the account
 
 When the data is requested with the `jsonParsed` encoding a format similar to
