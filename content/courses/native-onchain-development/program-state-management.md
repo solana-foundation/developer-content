@@ -542,19 +542,21 @@ You're now ready to build and deploy your program!
 
 You can test your program by submitting a transaction with the right instruction
 data. For that, feel free to use
-[this script](https://github.com/Unboxed-Software/solana-movie-client) or
-[the frontend](https://github.com/Unboxed-Software/solana-movie-frontend) we
+[this script](https://github.com/solana-developers/movie-review-program-client)
+or [the frontend](https://github.com/solana-developers/movie-review-frontend) we
 built in the
-[Deserialize Custom Instruction Data lesson](deserialize-custom-data). In both
-cases, make sure you copy and paste the program ID for your program into the
-appropriate area of the source code to make sure you're testing the right
+[Deserialize Custom Instruction Data lesson](/content/courses/native-onchain-development/deserialize-custom-data-frontend.md).
+In both cases, set the program ID for your program in the appropriate file
+`web/components/ui/review-form.ts` to make sure you're testing the right
 program.
 
-If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in both
-the `MovieList.tsx` and `Form.tsx` components with the address of the program
-you've deployed. Then run the frontend, submit a view, and refresh the browser
-to see the review.
+- If you're using the script, simply replace the value assigned to
+  `movieProgramId` in the `index.ts` component with the public key of the
+  program you've deployed.
+- If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in the
+  `review-form.tsx` components with the address of the program you’ve deployed.
 
+Then run the frontend, submit a view, and refresh the browser to see the review.
 If you need more time with this project to feel comfortable with these concepts,
 have a look at the
 [solution code](https://beta.solpg.io/66d67f31cffcf4b13384d334) before
@@ -578,7 +580,7 @@ taking a name a short message as instruction data, the program should:
    string in each account
 
 You can test your program by building the
-[frontend](https://github.com/Unboxed-Software/solana-student-intros-frontend)
+[frontend](https://github.com/solana-developers/solana-student-intro-frontend)
 we created in the
 [Page, Order, and Filter Program Data lesson](/content/courses/native-onchain-development/paging-ordering-filtering-data-frontend).
 Remember to replace the program ID in the frontend code with the one you've
