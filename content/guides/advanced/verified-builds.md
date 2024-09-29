@@ -286,13 +286,13 @@ even if they only know the contract's address.
 
 For many projects, especially smaller or private ones, identifying the
 developers from just the contract address can be difficult and time-consuming.
-Embedding a security.txt file within the program ensures that security
+Embedding a `security.txt` file within the program ensures that security
 researchers can easily contact the correct people, potentially preventing
 exploits and ensuring timely bug reports.
 
 ## How to implement security.txt
 
-To add a security.txt to your Solana program, include the following steps:
+To add a `security.txt` to your Solana program, include the following steps:
 
 Add the `solana-security-txt` dependency to your `Cargo.toml`:
 
@@ -327,7 +327,7 @@ security_txt! {
 }
 ```
 
-Once the security.txt information is embedded in your program, it can be easily
+Once the `security.txt` information is embedded in your program, it can be easily
 queried via tools like the Solana Explorer, ensuring that your contact and
 security details are available to anyone looking to report potential issues.
 
@@ -352,5 +352,5 @@ communication within the Solana ecosystem.
 This is
 [an example of how security.txt looks in the Solana Explorer](https://explorer.solana.com/address/HPxKXnBN4vJ8RjpdqDCU7gvNQHeeyGnSviYTJ4fBrDt4/security?cluster=devnet)
 
-The security.txt project is maintained by
+The `security.txt` project is maintained by
 [Neodyme Labs](https://github.com/neodyme-labs)
