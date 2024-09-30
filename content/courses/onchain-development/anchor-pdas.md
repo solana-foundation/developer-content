@@ -544,13 +544,10 @@ pub mod anchor_movie_review_program{
         description: String,
         rating: u8,
     ) -> Result<()> {
-    // We require that the rating is between 1 and 5
         require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
 
-        // We require that the title is not longer than 20 characters
         require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
 
-        // We require that the description is not longer than 50 characters
         require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
 
         msg!("Movie Review Account Created");
@@ -866,9 +863,8 @@ console.
 
 If you need more time with this project to feel comfortable with these concepts,
 feel free to have a look at the
-[solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas)
-before continuing. 4e767 (fix: Add rating validation to update_movie_review
-function)
+[solution code](https://github.com/solana-developers/anchor-movie-review-program)
+before continuing.
 
 </Steps>
 
@@ -893,7 +889,7 @@ should include instructions to:
 Try to do this independently if you can! But if you get stuck, feel free to
 
 reference the
-[solution code](https://github.com/Unboxed-Software/anchor-student-intro-program).
+[solution code](https://github.com/solana-developers/anchor-movie-review-program).
 ix: Add rating validation to update_movie_review function)
 
 <Callout type="success" title="Completed the lab?">
