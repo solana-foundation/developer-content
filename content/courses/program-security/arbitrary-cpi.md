@@ -3,7 +3,7 @@ title: Arbitrary CPI
 objectives:
   - Explain the security risks associated with invoking a CPI to an unknown
     program
-  - Showcase how Anchor’s CPI module prevents this from happening when making a
+  - Showcase how Anchor's CPI module prevents this from happening when making a
     CPI from one Anchor program to another
   - Safely and securely make a CPI from an Anchor program to an arbitrary
     non-anchor program
@@ -35,7 +35,7 @@ program results in your program performing CPIs to arbitrary programs.
 
 This lack of program checks creates an opportunity for a malicious user to pass
 in a different program than expected, causing the original program to call an
-instruction handler on this mystery program. There’s no telling what the
+instruction handler on this mystery program. There's no telling what the
 consequences of this CPI could be. It depends on the program logic (both that of
 the original program and the unexpected program), as well as what other accounts
 are passed into the original instruction handler.
@@ -120,8 +120,8 @@ pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
 Now, if an attacker passes in a different token program, the instruction handler
 will return the `ProgramError::IncorrectProgramId` error.
 
-Depending on the program you’re invoking with your CPI, you can either hard code
-the address of the expected program ID or use the program’s Rust crate to get
+Depending on the program you're invoking with your CPI, you can either hard code
+the address of the expected program ID or use the program's Rust crate to get
 the address of the program, if available. In the example above, the `spl_token`
 crate provides the address of the SPL Token Program.
 
@@ -133,7 +133,7 @@ learned in a
 [previous lesson of Anchor CPI](/content/courses/onchain-development/anchor-cpi.md)
 that Anchor can automatically generate CPI modules to make CPIs into the program
 simpler. These modules also enhance security by verifying the public key of the
-program that’s passed into one of its public instructions.
+program that's passed into one of its public instructions.
 
 Every Anchor program uses the `declare_id()` macro to define the address of the
 program. When a CPI module is generated for a specific program, it uses the
@@ -190,8 +190,8 @@ Like the example above, Anchor has created a few
 that allow you to issue CPIs into them as if they were Anchor programs.
 </Callout>
 
-Additionally and depending on the program you’re making the CPI to, you may be
-able to use Anchor’s
+Additionally and depending on the program you're making the CPI to, you may be
+able to use Anchor's
 [`Program` account type](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/program/struct.Program.html)
 to validate the passed-in program in your account validation struct. Between
 the [`anchor_lang`](https://docs.rs/anchor-lang/latest/anchor_lang) and [`anchor_spl`](https://docs.rs/anchor_spl/latest/) crates,
