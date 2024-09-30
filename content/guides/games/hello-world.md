@@ -195,7 +195,7 @@ Alternatively, you can use the signer's address as an extra seed in the
 
 ### Move Left Instruction
 
-Now that we can initialize a `GameDataAccount` account, let’s implement the
+Now that we can initialize a `GameDataAccount` account, let's implement the
 `move_left` instruction which allows a player update their `player_position`.
 
 In this example, moving left simply means decrementing the `player_position`
@@ -233,8 +233,8 @@ pub struct MoveLeft<'info> {
 
 ### Move Right Instruction
 
-Lastly, let’s implement the `move_right` instruction. Similarly, moving right
-will simply mean incrementing the `player_position` by 1. We’ll also limit the
+Lastly, let's implement the `move_right` instruction. Similarly, moving right
+will simply mean incrementing the `player_position` by 1. We'll also limit the
 maximum position to 3.
 
 Just like before, the only account needed for this instruction is the
@@ -381,7 +381,7 @@ file and add the code snippets from the following sections.
 
 ### Derive the GameDataAccount Account Address
 
-First, let’s derive the PDA for the `GameDataAccount` using the
+First, let's derive the PDA for the `GameDataAccount` using the
 `findProgramAddress` function.
 
 > A [Program Derived Address (PDA)](/docs/core/pda.md) is unique address in the
@@ -398,7 +398,7 @@ const [globalLevel1GameDataAccount, bump] =
 
 ### Initialize the Game State
 
-Next, let’s try to fetch the game data account using the PDA from the previous
+Next, let's try to fetch the game data account using the PDA from the previous
 step. If the account doesn't exist, we'll create it by invoking the `initialize`
 instruction from our program.
 
@@ -460,8 +460,8 @@ console.log("Player position is:", gameDateAccount.playerPosition.toString());
 
 ### Logging the Player's Position
 
-Lastly, let’s use a `switch` statement to log the character's position based on
-the `playerPosition` value stored in the `gameDateAccount`. We’ll use this as a
+Lastly, let's use a `switch` statement to log the character's position based on
+the `playerPosition` value stored in the `gameDateAccount`. We'll use this as a
 visual representation of the character's movement in the game.
 
 ```ts filename="client.ts"

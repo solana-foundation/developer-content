@@ -255,7 +255,7 @@ transact(async (wallet: Web3MobileWallet) => {
 Every time you want to call these methods, you will have to call
 `wallet.authorize()` or `wallet.reauthorize()`.
 
-When invoking `wallet.signAndSendTransactions(...)`, it’s essential to handle
+When invoking `wallet.signAndSendTransactions(...)`, it's essential to handle
 transaction failures gracefully. Transactions can fail due to various reasons
 such as network issues, signature mismatches, or insufficient funds. Proper
 error handling ensures a smooth user experience, even when the transaction

@@ -120,8 +120,8 @@ dropped with an error like:
 > Transaction simulation failed: Attempt to debit an account but found no record of a prior credit.
 ```
 
-If you get this error, it’s because your keypair is brand new and doesn’t have
-any SOL to cover the transaction fees. Let’s fix this by adding the following
+If you get this error, it's because your keypair is brand new and doesn't have
+any SOL to cover the transaction fees. Let's fix this by adding the following
 lines just after we've set up the connection:
 
 ```typescript
@@ -134,7 +134,7 @@ await airdropIfRequired(
 ```
 
 This will deposit 1 SOL into your account which you can use for testing. This
-won’t work on Mainnet where it would have value. But it's incredibly convenient
+won't work on Mainnet where it would have value. But it's incredibly convenient
 for testing locally and on Devnet.
 
 You can also use the Solana CLI command `solana airdrop 1` to get free test SOL
@@ -158,7 +158,7 @@ for that signature in the Solana Explorer, then see:
 
 ## Lab
 
-We’re going to create a script to send SOL to other students.
+We're going to create a script to send SOL to other students.
 
 ### Basic scaffolding
 
