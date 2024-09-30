@@ -235,7 +235,7 @@ To use `init_if_needed`, you must first enable the feature in `Cargo.toml`.
 anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 ```
 
-Once you’ve enabled the feature, you can include the constraint in the
+Once you've enabled the feature, you can include the constraint in the
 `#[account(…)]` attribute macro. The example below demonstrates using the
 `init_if_needed` constraint to initialize a new associated token account if one
 does not already exist.
@@ -348,7 +348,7 @@ The `close` constraint provides a simple and secure way to close an existing
 account.
 
 The `close` constraint marks the account as closed at the end of the
-instruction’s execution by setting its discriminator to a _special value_ called
+instruction's execution by setting its discriminator to a _special value_ called
 `CLOSED_ACCOUNT_DISCRIMINATOR` and sends its lamports to a specified account.
 This _special value_ prevents the account from being reopened because any
 attempt to reinitialize the account will fail the discriminator check.
@@ -372,7 +372,7 @@ pub struct Close<'info> {
 
 ## Lab
 
-Let’s practice the concepts we’ve gone over in this lesson by creating a Movie
+Let's practice the concepts we've gone over in this lesson by creating a Movie
 Review program using the Anchor framework.
 
 This program will allow users to:
@@ -385,7 +385,7 @@ This program will allow users to:
 
 ### Create a new Anchor project
 
-To begin, let’s create a new project using `anchor init`.
+To begin, let's create a new project using `anchor init`.
 
 ```bash
 anchor init anchor-movie-review-program
@@ -428,14 +428,14 @@ pub mod anchor_movie_review_program {
 
 ### MovieAccountState
 
-First, let’s use the `#[account]` attribute macro to define the
+First, let's use the `#[account]` attribute macro to define the
 `MovieAccountState` that will represent the data structure of the movie review
 accounts. As a reminder, the `#[account]` attribute macro implements various
 traits that help with serialization and deserialization of the account, set the
 discriminator for the account, and set the owner of a new account as the program
 ID defined in the `declare_id!` macro.
 
-Within each movie review account, we’ll store the:
+Within each movie review account, we'll store the:
 
 - `reviewer` - user creating the review
 - `rating` - rating for the movie
@@ -504,8 +504,8 @@ more detail in the next chapter.
 
 ### Add Movie Review
 
-Next, let’s implement the `add_movie_review` instruction. The `add_movie_review`
-instruction will require a `Context` of type `AddMovieReview` that we’ll
+Next, let's implement the `add_movie_review` instruction. The `add_movie_review`
+instruction will require a `Context` of type `AddMovieReview` that we'll
 implement shortly.
 
 The instruction will require three additional arguments as instruction data
@@ -515,8 +515,8 @@ provided by a reviewer:
 - `description` - details of the review as a `String`
 - `rating` - rating for the movie as a `u8`
 
-Within the instruction logic, we’ll populate the data of the new `movie_review`
-account with the instruction data. We’ll also set the `reviewer` field as the
+Within the instruction logic, we'll populate the data of the new `movie_review`
+account with the instruction data. We'll also set the `reviewer` field as the
 `initializer` account from the instruction context.
 
 We will also perform some checks, using the `require!` macro, to make sure that:
@@ -568,7 +568,7 @@ pub mod anchor_movie_review_program{
 }
 ```
 
-Next, let’s create the `AddMovieReview` struct that we used as the generic in
+Next, let's create the `AddMovieReview` struct that we used as the generic in
 the instruction's context. This struct will list the accounts the
 `add_movie_review` instruction requires.
 
@@ -610,7 +610,7 @@ pub struct AddMovieReview<'info> {
 
 ### Update Movie Review
 
-Next, let’s implement the `update_movie_review` instruction with a context whose
+Next, let's implement the `update_movie_review` instruction with a context whose
 generic type is `UpdateMovieReview`.
 
 Just as before, the instruction will require three additional arguments as
@@ -620,7 +620,7 @@ instruction data provided by a reviewer:
 - `description` - details of the review
 - `rating` - rating for the movie
 
-Within the instruction logic we’ll update the `rating` and `description` stored
+Within the instruction logic we'll update the `rating` and `description` stored
 on the `movie_review` account.
 
 While the `title` doesn't get used in the instruction function itself, we'll
@@ -654,7 +654,7 @@ pub mod anchor_movie_review_program {
 }
 ```
 
-Next, let’s create the `UpdateMovieReview` struct to define the accounts that
+Next, let's create the `UpdateMovieReview` struct to define the accounts that
 the `update_movie_review` instruction needs.
 
 Since the `movie_review` account will have already been initialized by this
@@ -698,7 +698,7 @@ expanding the space allocated to the account.
 
 ### Delete Movie Review
 
-Lastly, let’s implement the `delete_movie_review` instruction to close an
+Lastly, let's implement the `delete_movie_review` instruction to close an
 existing `movie_review` account.
 
 We'll use a context whose generic type is `DeleteMovieReview` and won't include
@@ -722,7 +722,7 @@ pub mod anchor_movie_review_program {
 }
 ```
 
-Next, let’s implement the `DeleteMovieReview` struct.
+Next, let's implement the `DeleteMovieReview` struct.
 
 ```rust
 #[derive(Accounts)]
@@ -869,7 +869,7 @@ continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Equipped with the concepts
+Now it's your turn to build something independently. Equipped with the concepts
 introduced in this lesson, try to recreate the Student Intro program that we've
 used before using the Anchor framework.
 

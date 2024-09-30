@@ -16,7 +16,7 @@ description:
 - An **IDL** is a file representing the structure of a Solana program. Programs
   written and built using Anchor automatically generate a corresponding IDL. IDL
   stands for Interface Description Language.
-- `@coral-xyz/anchor` is a Typescript client that includes everything you’ll
+- `@coral-xyz/anchor` is a Typescript client that includes everything you'll
   need to interact with Anchor programs
 - An **Anchor `Provider`** object combines a `connection` to a cluster and a
   specified `wallet` to enable transaction signing
@@ -288,7 +288,7 @@ The `Provider` object combines two things:
 - `Wallet` - a specified address used to pay for and sign transactions
 
 The `Provider` is then able to send transactions to the Solana blockchain on
-behalf of a `Wallet` by including the wallet’s signature to outgoing
+behalf of a `Wallet` by including the wallet's signature to outgoing
 transactions. When using a frontend with a Solana wallet provider, all outgoing
 transactions must still be approved by the user via their wallet browser
 extension.
@@ -361,7 +361,7 @@ The `AnchorProvider` constructor takes three parameters:
 - `opts` - optional parameter that specifies the confirmation options, using a
   default setting if one is not provided
 
-Once you’ve created the `Provider` object, you then set it as the default
+Once you've created the `Provider` object, you then set it as the default
 provider using `setProvider`.
 
 ```typescript
@@ -559,7 +559,7 @@ const accounts = await program.account.counter.fetchMultiple([
 
 ## Lab
 
-Let’s practice this together by building a frontend for the Counter program from
+Let's practice this together by building a frontend for the Counter program from
 last lesson. As a reminder, the Counter program has two instructions:
 
 - `initialize` - initializes a new `Counter` account and sets the `count` to `0`
@@ -576,14 +576,14 @@ This project is a simple Next.js application, created using
 `npx create-next-dapp`
 
 The `idl.json` file for the Counter program, and the `Initialize` and
-`Increment` components we’ll be building throughout this lab.
+`Increment` components we'll be building throughout this lab.
 
 #### 2. `Initialize`
 
-To begin, let’s complete the setup to create the `useCounterProgram` hook in
+To begin, let's complete the setup to create the `useCounterProgram` hook in
 `components/counter/counter-data-access.tsx` component.
 
-Remember, we’ll need an instance of `Program` to use the Anchor `MethodsBuilder`
+Remember, we'll need an instance of `Program` to use the Anchor `MethodsBuilder`
 to invoke the instructions on our program. `create-solana-dapp` already creates
 a `getCounterProgram` for us, which will return us the `Program` instance.
 
@@ -607,7 +607,7 @@ const program = getCounterProgram(provider);
 Now that we've the program instance, we can actually invoke the program's
 `initialize` instruction. We'll do this using `useMutation`.
 
-Remember, We’ll need to generate a new `Keypair` for the new `Counter` account
+Remember, We'll need to generate a new `Keypair` for the new `Counter` account
 since we are initializing an account for the first time.
 
 ```typescript
@@ -658,7 +658,7 @@ created. This method internally calls, `getProgramAccounts`.
 
 #### 4. `Increment`
 
-Next, let’s move on the the `useCounterProgramAccount` hook. As we have earlier
+Next, let's move on the the `useCounterProgramAccount` hook. As we have earlier
 already created `program` and `accounts` function in previous hook, we'll call
 the hooks to access them and not redefine them.
 
@@ -673,7 +673,7 @@ export function useCounterProgramAccount({ account }: { account: PublicKey }) {
 
 ```
 
-Next, let’s use the Anchor `MethodsBuilder` to build a new instruction to invoke
+Next, let's use the Anchor `MethodsBuilder` to build a new instruction to invoke
 the `increment` instruction. Again, Anchor can infer the `user` account from the
 wallet so we only need to include the `counter` account.
 
@@ -732,11 +732,11 @@ continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Building on top of what
-we’ve done in the lab, try to create a new component in the frontend that
+Now it's your turn to build something independently. Building on top of what
+we've done in the lab, try to create a new component in the frontend that
 implements a button to decrements the counter.
 
-Before building the component in the frontend, you’ll first need to:
+Before building the component in the frontend, you'll first need to:
 
 1. Build and deploy a new program that implements a `decrement` instruction
 2. Update the IDL file in the frontend with the one from your new program

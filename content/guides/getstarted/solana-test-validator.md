@@ -76,7 +76,7 @@ Once you have the `solana-test-validator` up and running, you can interact with
 it using various Solana CLI (Command Line Interface) commands. These commands
 let you [deploy programs](/docs/programs/deploying.md), manage
 [accounts](/docs/core/accounts.md), send
-[transactions](/docs/core/transactions.md), and much more. Here’s a detailed
+[transactions](/docs/core/transactions.md), and much more. Here's a detailed
 guide on the key commands you will use.
 
 ### Checking the Status of the Test Validator

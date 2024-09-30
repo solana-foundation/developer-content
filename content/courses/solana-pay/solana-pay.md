@@ -603,7 +603,7 @@ async function buildTransaction(
 
 #### 6. Implement the `buildTransaction` function
 
-Next, let’s implement the `buildTransaction` function. It should build,
+Next, let's implement the `buildTransaction` function. It should build,
 partially sign, and return the check-in transaction. The sequence of items it
 needs to perform is:
 
@@ -743,7 +743,7 @@ async function fetchUserState(account: PublicKey): Promise<UserState | null> {
 
 #### 8. Implement `verifyCorrectLocation` function
 
-Next, let’s implement the `verifyCorrectLocation` helper function. This function
+Next, let's implement the `verifyCorrectLocation` helper function. This function
 is used to verify that a user is at the correct location in a scavenger hunt
 game.
 
