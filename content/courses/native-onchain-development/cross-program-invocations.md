@@ -223,7 +223,7 @@ if a signature is required on behalf of a PDA. For that, you'll need to use
 Using `invoke_signed` is a little different just because there is an additional
 field that requires the seeds used to derive any PDAs that must sign the
 transaction. You may recall from previous lessons that PDAs do not lie on the
-Ed25519 curve and, therefore, do not have a corresponding secret key. You’ve
+Ed25519 curve and, therefore, do not have a corresponding secret key. You've
 been told that programs can provide signatures for their PDAs, but have not
 learned how that actually happens - until now. Programs provide signatures for
 their PDAs with the `invoke_signed` function. The first two fields of
@@ -259,9 +259,9 @@ signer.
 #### Security checks
 
 There are some common mistakes and things to remember when utilizing CPIs that
-are important to your program’s security and robustness. The first thing to
+are important to your program's security and robustness. The first thing to
 remember is that, as we know by now, we have no control over what information is
-passed into our programs. For this reason, it’s important to always verify the
+passed into our programs. For this reason, it's important to always verify the
 `program_id`, accounts, and data passed into the CPI. Without these security
 checks, someone could submit a transaction that invokes an instruction on a
 completely different program than was expected, which is not ideal.
@@ -269,7 +269,7 @@ completely different program than was expected, which is not ideal.
 Fortunately, there are inherent checks on the validity of any PDAs that are
 marked as signers within the `invoke_signed` function. All other accounts and
 `instruction_data` should be verified somewhere in your program code before
-making the CPI. It's also important to make sure you’re targeting the intended
+making the CPI. It's also important to make sure you're targeting the intended
 instruction on the program you are invoking. The easiest way to do this is to
 read the source code of the program you will be invoking just as you would if
 you were constructing an instruction from the client side.
@@ -319,11 +319,11 @@ To see this in action, view this
 CPIs are a very important feature of the Solana ecosystem and they make all
 programs deployed interoperable with each other. With CPIs there is no need to
 re-invent the wheel when it comes to development. This creates the opportunity
-for building new protocols and applications on top of what’s already been built,
-just like building blocks or Lego bricks. It’s important to remember that CPIs
+for building new protocols and applications on top of what's already been built,
+just like building blocks or Lego bricks. It's important to remember that CPIs
 are a two-way street and the same is true for any programs that you deploy! If
 you build something cool and useful, developers have the ability to build on top
-of what you’ve done or just plug your protocol into whatever it is that they are
+of what you've done or just plug your protocol into whatever it is that they are
 building. Composability is a big part of what makes crypto so unique and CPIs
 are what makes this possible on Solana.
 
@@ -345,7 +345,7 @@ gone through prior lessons, the Movie Review program allows users to submit
 movie reviews and have them stored in PDA accounts.
 
 Last lesson, we added the ability to leave comments on other movie reviews using
-PDAs. In this lesson, we’re going to work on having the program mint tokens to
+PDAs. In this lesson, we're going to work on having the program mint tokens to
 the reviewer or commenter anytime a review or comment is submitted.
 
 To implement this, we'll have to invoke the SPL Token Program's `MintTo`
@@ -357,7 +357,7 @@ forward with this lab.
 #### 1. Get starter code and add dependencies
 
 To get started, we will be using the final state of the Movie Review program
-from the previous PDA lesson. So, if you just completed that lesson then you’re
+from the previous PDA lesson. So, if you just completed that lesson then you're
 all set and ready to go. If you are just jumping in here, no worries, you can
 [download the starter code here](https://github.com/Unboxed-Software/solana-movie-program/tree/solution-add-comments).
 We'll be using the `solution-add-comments` branch as our starting point.
@@ -386,7 +386,7 @@ to be passed in:
 
 - `token_mint` - the mint address of the token
 - `mint_auth` - address of the authority of the token mint
-- `user_ata` - user’s associated token account for this mint (where the tokens
+- `user_ata` - user's associated token account for this mint (where the tokens
   will be minted)
 - `token_program` - address of the token program
 
@@ -414,7 +414,7 @@ let token_program = next_account_info(account_info_iter)?;
 
 There is no additional `instruction_data` required for the new functionality, so
 no changes need to be made to how data is deserialized. The only additional
-information that’s needed is the extra accounts.
+information that's needed is the extra accounts.
 
 #### 4. Mint tokens to the reviewer in `add_movie_review`
 
@@ -429,7 +429,7 @@ use spl_token::{instruction::initialize_mint, ID as TOKEN_PROGRAM_ID};
 ```
 
 Now we can move on to the logic that handles the actual minting of the tokens!
-We’ll be adding this to the very end of the `add_movie_review` function right
+We'll be adding this to the very end of the `add_movie_review` function right
 before `Ok(())` is returned.
 
 Minting tokens requires a signature by the mint authority. Since the program
@@ -538,7 +538,7 @@ will mint ten tokens to the reviewer when a review is created.
 #### 5. Repeat for `add_comment`
 
 Our updates to the `add_comment` function will be almost identical to what we
-did for the `add_movie_review` function above. The only difference is that we’ll
+did for the `add_movie_review` function above. The only difference is that we'll
 change the amount of tokens minted for a comment from ten to five so that adding
 reviews are weighted above commenting. First, update the accounts with the same
 four additional accounts as in the `add_movie_review` function.
@@ -799,7 +799,7 @@ pub fn initialize_token_mint(program_id: &Pubkey, accounts: &[AccountInfo]) -> P
 
 #### 7. Build and deploy
 
-Now we’re ready to build and deploy our program! You can build the program by
+Now we're ready to build and deploy our program! You can build the program by
 running `cargo build-bpf` and then running the command that is returned, it
 should look something like `solana program deploy <PATH>`.
 
