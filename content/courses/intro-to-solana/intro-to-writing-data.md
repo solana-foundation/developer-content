@@ -235,7 +235,7 @@ console.log(
 console.log(`Transaction signature is ${signature}!`);
 ```
 
-### Experiment!
+### Experiment
 
 Send SOL to other students in the class.
 
