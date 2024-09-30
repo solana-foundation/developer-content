@@ -175,7 +175,7 @@ pub struct SomeFunctionContext<'info> {
 In Anchor, **`Box<T>`** is used to allocate the account to the Heap, not the
 Stack. Which is great since the Heap gives us 32KB to work with. The best part
 is you don't have to do anything different within the function. All you need to
-do is add `Box<…>` around all of your big data accounts.
+do is add `Box<...>` around all of your big data accounts.
 
 But Box is not perfect. You can still overflow the stack with sufficiently large
 accounts. We'll learn how to fix this in the next section.

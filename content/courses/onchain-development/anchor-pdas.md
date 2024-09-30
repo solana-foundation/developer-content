@@ -236,7 +236,7 @@ anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 ```
 
 Once you've enabled the feature, you can include the constraint in the
-`#[account(…)]` attribute macro. The example below demonstrates using the
+`#[account(...)]` attribute macro. The example below demonstrates using the
 `init_if_needed` constraint to initialize a new associated token account if one
 does not already exist.
 
