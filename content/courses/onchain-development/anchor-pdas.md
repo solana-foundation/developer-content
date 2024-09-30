@@ -867,8 +867,8 @@ console.
 If you need more time with this project to feel comfortable with these concepts,
 feel free to have a look at the
 [solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas)
-before continuing.
-4e767 (fix: Add rating validation to update_movie_review function)
+before continuing. 4e767 (fix: Add rating validation to update_movie_review
+function)
 
 </Steps>
 
