@@ -76,7 +76,7 @@ you hold your own keys.
 
 **Mobile Gaming with Solana Micropayments**
 
-Mobile games account for roughly 50% of the video game industry’s total value,
+Mobile games account for roughly 50% of the video game industry's total value,
 largely due to small in-game purchases. However, payment processing fees usually
 mean these in-game purchases have a minimum of $0.99 USD. With Solana, it's
 possible to unlock true micropayments. Need an extra life? That'll be 0.0001
@@ -92,6 +92,7 @@ wallet as seamlessly as you can use Apple Pay.
 > important to be informed and learn how one can be part of it, let's explore
 > how.
 
+
 ### Supported Operating Systems
 
 Currently, the MWA only supports Android OS. A WebSocket connection can persist
@@ -103,6 +104,7 @@ the MWA WebSocket connection. However, this doesn’t mean that Solana dApps can
 run on iOS at all. Developers can still create a Mobile Web App using the
 [Standard Wallet Adapter](https://github.com/solana-labs/wallet-adapter)
 library.
+
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
@@ -454,7 +456,7 @@ files we'll be creating and working with.
 
 ### 2. Create the App
 
-Now that we've got some of the basic setup and structure down, let’s scaffold a
+Now that we've got some of the basic setup and structure down, let's scaffold a
 new app with the following command:
 
 ```bash
@@ -520,7 +522,7 @@ npm install \
 
 ### 4. Create `ConnectionProvider.tsx` file
 
-Let’s start adding our Solana functionality. Create a new folder called
+Let's start adding our Solana functionality. Create a new folder called
 `components` and within it, a file called `ConnectionProvider.tsx`. This
 provider will wrap the entire application and make our `Connection` object
 available throughout. Hopefully, you're noticing a pattern: this is identical to
@@ -884,7 +886,7 @@ export const useProgram = () => useContext(ProgramContext);
 
 ### 7. Modify `App.tsx`
 
-Now that we have all our providers, let’s wrap our app with them. We're going to
+Now that we have all our providers, let's wrap our app with them. We're going to
 re-write the default `App.tsx` with the following changes:
 
 - Import our providers and add in our polyfills
@@ -933,7 +935,7 @@ export default function App() {
 
 ### 8. Create `MainScreen.tsx`
 
-Now, let’s put everything together to create our UI. Create a new folder called
+Now, let's put everything together to create our UI. Create a new folder called
 `screens` and a new file called `MainScreen.tsx` inside of it. In this file, we
 are only structuring the screen to display two yet-to-be-created components:
 `CounterView` and `CounterButton`.
@@ -987,7 +989,7 @@ const styles = StyleSheet.create({
 
 The `CounterView` is the first of our two program-specific files.
 `CounterView`'s only job is to fetch and listen for updates on our `Counter`
-account. Since we’re only listening here, we don’t have to do anything
+account. Since we're only listening here, we don't have to do anything
 MWA-related. It should look identical to a web application. We'll use our
 `Connection` object to listen for the `programAddress` specified in
 `ProgramProvider.tsx`. When the account is changed, we update the UI.
@@ -1191,7 +1193,7 @@ export function CounterButton() {
 
 ### 11. Build and Run
 
-Now it’s time to test that everything works! Build and run with the following
+Now it's time to test that everything works! Build and run with the following
 command:
 
 ```bash
@@ -1213,7 +1215,7 @@ to fix them:
   wallet installed ( like the fake wallet we installed in Prerequisites )
 - You get stuck in a forever loop while calling `increment` → This is likely due
   to you reaching a Devnet airdrop rate limit. Take out the airdrop section in
-  `CounterButton` and manually send some Devnet sol to your wallet’s address
+  `CounterButton` and manually send some Devnet sol to your wallet's address
   (printed in the console)
 
 That's it! You've made your first Solana Mobile dApp. If you get stuck, feel

@@ -27,7 +27,7 @@ and abstractions that make building Solana programs more intuitive and secure.
 The main macros found in an Anchor program include:
 
 - [`declare_id`](#declare_id-macro): Specifies the program's on-chain address
-- [`#[program]`](#program-macro): Specifies the module containing the program’s
+- [`#[program]`](#program-macro): Specifies the module containing the program's
   instruction logic
 - [`#[derive(Accounts)]`](#derive-accounts-macro): Applied to structs to
   indicate a list of accounts required for an instruction

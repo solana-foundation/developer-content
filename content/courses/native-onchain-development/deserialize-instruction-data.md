@@ -66,7 +66,7 @@ let mut mutable_age = 33;
 mutable_age = 34;
 ```
 
-The Rust compiler ensures that immutable variables cannot change, so you don’t
+The Rust compiler ensures that immutable variables cannot change, so you don't
 have to track it yourself. This makes your code easier to reason through and
 simplifies debugging.
 
@@ -86,7 +86,7 @@ struct User {
 }
 ```
 
-To use a struct after it’s defined, create an instance of the struct by
+To use a struct after it's defined, create an instance of the struct by
 specifying concrete values for each of the fields.
 
 ```rust
@@ -364,8 +364,8 @@ There is Rust syntax in this function that we haven't explained yet. The
   leaves the `Ok` value unchanged.
 
 - [`?` operator](https://doc.rust-lang.org/rust-by-example/error/result/enter_question_mark.html):
-  Unwraps a `Result` or `Option`. If it’s `Ok` or `Some`, it returns the value.
-  If it’s an `Err` or `None`, it propagates the error up to the calling
+  Unwraps a `Result` or `Option`. If it's `Ok` or `Some`, it returns the value.
+  If it's an `Err` or `None`, it propagates the error up to the calling
   function. </Callout>
 
 ### Program logic
@@ -441,7 +441,7 @@ pub enum NoteInstruction { ... }
 
 ## Lab
 
-For this lesson’s lab, you'll build the first half of the Movie Review program
+For this lesson's lab, you'll build the first half of the Movie Review program
 from Module 1, focusing on deserializing instruction data. The next lesson will
 cover the remaining implementation.
 

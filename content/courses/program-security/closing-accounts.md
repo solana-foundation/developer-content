@@ -33,7 +33,7 @@ While it sounds simple, closing accounts properly can be tricky. There are a
 number of ways an attacker could circumvent having the account closed if you
 don't follow specific steps.
 
-To get a better understanding of these attack vectors, let’s explore each of
+To get a better understanding of these attack vectors, let's explore each of
 these scenarios in depth.
 
 ### Insecure account closing
@@ -45,10 +45,10 @@ account. This resets the owner from the owning program to the system program.
 Take a look at the example below. The instruction requires two accounts:
 
 1. `account_to_close` - the account to be closed
-2. `destination` - the account that should receive the closed account’s lamports
+2. `destination` - the account that should receive the closed account's lamports
 
 The program logic is intended to close an account by simply increasing the
-`destination` account’s lamports by the amount stored in the `account_to_close`
+`destination` account's lamports by the amount stored in the `account_to_close`
 and setting the `account_to_close` lamports to 0. With this program, after a
 full transaction is processed, the `account_to_close` will be garbage collected
 by the runtime.
@@ -238,7 +238,7 @@ Fortunately, Anchor makes all of this much simpler with the
 `#[account(close = <target_account>)]` constraint. This constraint handles
 everything required to securely close an account:
 
-1. Transfers the account’s lamports to the given `<target_account>`
+1. Transfers the account's lamports to the given `<target_account>`
 2. Zeroes out the account data
 3. Sets the account discriminator to the `CLOSED_ACCOUNT_DISCRIMINATOR` variant
 
@@ -258,8 +258,8 @@ pub struct CloseAccount {
 }
 ```
 
-The `force_defund` instruction is an optional addition that you’ll have to
-implement on your own if you’d like to utilize it.
+The `force_defund` instruction is an optional addition that you'll have to
+implement on your own if you'd like to utilize it.
 
 ## Lab
 

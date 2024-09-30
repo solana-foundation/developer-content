@@ -27,7 +27,7 @@ description:
   [`cfg!` **macro**](https://doc.rust-lang.org/std/macro.cfg.html) to compile
   different code paths based on the enabled features.
 - For environment-like variables post-deployment, create program accounts and
-  admin-only instructions accessible by the program’s upgrade authority.
+  admin-only instructions accessible by the program's upgrade authority.
 
 ## Lesson
 
@@ -59,7 +59,7 @@ effective solution involves a combination of two techniques:
 ### Native Rust Feature Flags
 
 One of the simplest ways to create environments is to use Rust features.
-Features are defined in the `[features]` table of the program’s `Cargo.toml`
+Features are defined in the `[features]` table of the program's `Cargo.toml`
 file. You may define multiple features for different use cases.
 
 ```toml

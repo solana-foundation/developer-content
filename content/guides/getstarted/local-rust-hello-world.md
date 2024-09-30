@@ -306,7 +306,7 @@ await connection.confirmTransaction({
 });
 
 console.log(
-  `Congratulations! Look at your ‘Hello World’ transaction in the Solana Explorer:
+  `Congratulations! Look at your ‘Hello World' transaction in the Solana Explorer:
   https://explorer.solana.com/tx/${txHash}?cluster=custom`,
 );
 ```
@@ -325,7 +325,7 @@ node client.mjs
 You should see the following output:
 
 ```shell
-Congratulations! Look at your ‘Hello World’ transaction in the Solana Explorer:
+Congratulations! Look at your ‘Hello World' transaction in the Solana Explorer:
   https://explorer.solana.com/tx/2fTcQ74z4DVi8WRuf2oNZ36z7k9tGRThaRPXBMYgjMUNUbUSKLrP6djpRUZ8msuTXvZHFe3UXi31dfgytG2aJZbv?cluster=custom
 ```
 
