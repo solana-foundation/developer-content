@@ -14,7 +14,7 @@ genesis block or protocol inflation) minus any tokens that have been burnt (via
 transaction fees or other mechanism) or slashed. At network launch, 500,000,000
 SOL were instantiated in the genesis block. Since then the Total Current Supply
 has been reduced by the burning of transaction fees and a planned token
-reduction event. Solana’s _Total Current Supply_ can be found at
+reduction event. Solana's _Total Current Supply_ can be found at
 https://explorer.solana.com/supply
 
 ### Inflation Rate [%]
@@ -52,7 +52,7 @@ _Inflation Schedule_.
   remaining fee retained by the validator that processes the transaction.
 - Additional factors such as loss of private keys and slashing events should
   also be considered in a holistic analysis of the _Effective Inflation Rate_.
-  For example, it’s estimated that $10-20\%$ of all BTC have been lost and are
+  For example, it's estimated that $10-20\%$ of all BTC have been lost and are
   unrecoverable and that networks may experience similar yearly losses at the
   rate of $1-2\%$.
 

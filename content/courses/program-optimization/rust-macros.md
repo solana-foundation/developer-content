@@ -798,9 +798,9 @@ pub struct Config {
 ### 3. Define the custom macro
 
 Now, in the `custom-macro/src/lib.rs` file, let's add our new macro's
-declaration. In this file, we’ll use the `parse_macro_input!` macro to parse the
+declaration. In this file, we'll use the `parse_macro_input!` macro to parse the
 input `TokenStream` and extract the `ident` and `data` fields from a
-`DeriveInput` struct. Then, we’ll use the `eprintln!` macro to print the values
+`DeriveInput` struct. Then, we'll use the `eprintln!` macro to print the values
 of `ident` and `data`. We will now use `TokenStream::new()` to return an empty
 `TokenStream`.
 
@@ -834,7 +834,7 @@ input `TokenStream` parses correctly, remove the `eprintln!` statements.
 
 ### 4. Get the struct's fields
 
-Next, let’s use `match` statements to get the named fields from the `data` of
+Next, let's use `match` statements to get the named fields from the `data` of
 the struct. Then we'll use the `eprintln!` macro to print the values of the
 fields.
 
@@ -867,7 +867,7 @@ correctly, you can remove the `eprintln!` statement.
 
 ### 5. Build update instructions
 
-Next, let’s iterate over the fields of the struct and generate an update
+Next, let's iterate over the fields of the struct and generate an update
 instruction for each field. The instruction will be generated using the `quote!`
 macro, including the field's name and type and a new function name for the
 update instruction.
@@ -909,7 +909,7 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
 
 ### 6. Return new `TokenStream`
 
-Lastly, let’s use the `quote!` macro to generate an implementation for the
+Lastly, let's use the `quote!` macro to generate an implementation for the
 struct with the name specified by the `ident` variable. The implementation
 includes the update instructions generated for each field in the struct. The
 generated code is then converted to a `TokenStream` using the `into()` method

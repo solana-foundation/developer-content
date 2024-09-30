@@ -304,7 +304,7 @@ eas login
 
 #### 2. Create the app scaffold
 
-Let’s create our app with the following:
+Let's create our app with the following:
 
 ```bash
 npx create-expo-app -t expo-template-blank-typescript solana-expo
