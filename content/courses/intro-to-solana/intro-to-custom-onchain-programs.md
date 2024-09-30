@@ -21,11 +21,6 @@ In previous chapters, we used:
 
 - The `SystemProgram.transfer()` function from `@solana/web3.js` to make an
   instruction for the System program to transfer SOL.
-- The `mintTo()` and `transfer()` functions from `@solana/spl-token`, to make
-  instructions to the Token program to mint and transfer tokens
-- The `createCreateMetadataAccountV3Instruction()` function from
-  `@metaplex-foundation/mpl-token-metadata@2` to make instructions to Metaplex
-  to create token Metadata.
 
 When working with other programs, however, you'll need to create instructions
 manually. With `@solana/web3.js`, you can create instructions with the
