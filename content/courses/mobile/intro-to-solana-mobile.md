@@ -92,7 +92,6 @@ wallet as seamlessly as you can use Apple Pay.
 > important to be informed and learn how one can be part of it, let's explore
 > how.
 
-
 ### Supported Operating Systems
 
 Currently, the MWA only supports Android OS. A WebSocket connection can persist
@@ -104,7 +103,6 @@ the MWA WebSocket connection. However, this doesn’t mean that Solana dApps can
 run on iOS at all. Developers can still create a Mobile Web App using the
 [Standard Wallet Adapter](https://github.com/solana-labs/wallet-adapter)
 library.
-
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
