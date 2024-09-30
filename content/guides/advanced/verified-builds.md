@@ -327,9 +327,9 @@ security_txt! {
 }
 ```
 
-Once the `security.txt` information is embedded in your program, it can be easily
-queried via tools like the Solana Explorer, ensuring that your contact and
-security details are available to anyone looking to report potential issues.
+Once the `security.txt` information is embedded in your program, it can be
+easily queried via tools like the Solana Explorer, ensuring that your contact
+and security details are available to anyone looking to report potential issues.
 
 ## Best practices
 
