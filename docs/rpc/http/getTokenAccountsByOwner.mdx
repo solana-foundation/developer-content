@@ -31,20 +31,24 @@ This method requires two parameters:
 <Parameter type={"object"} optional={true}>
   Configuration object containing the following fields:
 
-  {" "}
+{" "}
 
-  <Field
-    name="commitment"
-    type="string"
-    optional={true}
-    href="/docs/rpc/index.mdx#configuring-state-commitment"
-  />
+{" "}
 
-  {" "}
+<Field
+  name="commitment"
+  type="string"
+  optional={true}
+  href="/docs/rpc/index.mdx#configuring-state-commitment"
+/>
 
-  <Field name="minContextSlot" type="number" optional={true}>
-    The minimum slot that the request can be evaluated at
-  </Field>
+{" "}
+
+{" "}
+
+<Field name="minContextSlot" type="number" optional={true}>
+  The minimum slot that the request can be evaluated at
+</Field>
 
   <Field name="dataSlice" type="object" optional={true}>
     Request a slice of the account's data.
@@ -189,5 +193,6 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 </DocSideBySide>
 
 <Callout type="caution">
-  Note: The second parameter must include either `mint` or `programId`. You cannot omit both or include both simultaneously.
+  Note: The second parameter must include either `mint` or `programId`. You
+  cannot omit both or include both simultaneously.
 </Callout>
