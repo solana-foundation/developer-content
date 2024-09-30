@@ -196,7 +196,7 @@ import idl from "./idl.json";
 
 You would _ideally_ also require types for the IDL which would make it easier to
 interact with the program. The types can be found at `/target/types` folder
-after you have build your program. Here are the types for the above IDL which
+after you have built your program. Here are the types for the above IDL which
 when you notice has the exact same structure as the IDL but are just as type
 helper.
 
