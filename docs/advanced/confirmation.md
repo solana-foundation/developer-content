@@ -341,7 +341,7 @@ of the cluster state with one of the following methods:
 1. Fetch your RPC node's highest processed slot by using the
    [`getSlot`](/docs/rpc/http/getSlot.mdx) RPC API with the `processed`
    commitment level and then call the
-   [`getMaxShredInsertSlot](/docs/rpc/http/getMaxShredInsertSlot.mdx) RPC API to
+   [`getMaxShredInsertSlot`](/docs/rpc/http/getMaxShredInsertSlot.mdx) RPC API to
    get the highest slot that your RPC node has received a “shred” of a block
    for. If the difference between these responses is very large, the cluster is
    producing blocks far ahead of what the RPC node has processed.
