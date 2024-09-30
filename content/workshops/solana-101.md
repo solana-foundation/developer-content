@@ -9,7 +9,7 @@ repoUrl: https://github.com/Solana-Workshops/solana-101
 duration: "2 hours"
 objectives:
   - The Solana Network
-  - Solana’s Programming Model
+  - Solana's Programming Model
   - Tokens & NFTs
 tags:
   - Introduction
@@ -36,7 +36,7 @@ authorGithubUsername: buffalojoec
 - Technical Advantages
 - Network Overview
 
-#### Solana’s Programming Model
+#### Solana's Programming Model
 
 - Accounts
 
@@ -64,19 +64,19 @@ authorGithubUsername: buffalojoec
 
 ### Why Solana?
 
-Let’s talk about the main technological advantages to building a decentralized
+Let's talk about the main technological advantages to building a decentralized
 application on Solana.  
-Solana has extremely fast block confirmation times, so users don’t have to wait
+Solana has extremely fast block confirmation times, so users don't have to wait
 to make sure their action worked.
 
-Solana’s transaction fees are exceptionally low, so developers can build more
+Solana's transaction fees are exceptionally low, so developers can build more
 robust user experiences that cost less.
 
-Let’s take a brief look at how Solana’s network creates blocks and processes
+Let's take a brief look at how Solana's network creates blocks and processes
 transactions.
 
 Like most proof-of-stake networks, Solana elects a leader for each block
-creation cycle, who’s responsible for creating a new block.
+creation cycle, who's responsible for creating a new block.
 
 Unlike Ethereum - Solana does not use a mempool. Instead, it forwards new
 transactions to the next leader in the block creation cycle, which means when
@@ -86,12 +86,12 @@ into a new block.
 Next, Solana leverages a high-throughput engine called Turbine that disseminates
 information about a new block to the rest of the network.
 
-When a block’s transactions are executed, Solana’s runtime actually allows the
+When a block's transactions are executed, Solana's runtime actually allows the
 operations within each transaction to run in parallel wherever possible. The
 combination of these 3 innovations leads to greatly increased speed and
 throughput for the network.
 
-Solana’s most popular innovation is Proof-of-History, which leverages a
+Solana's most popular innovation is Proof-of-History, which leverages a
 Verifiable-Delay Function (VDF) to allow all nodes in the network to agree on
 the passage of time.
 
@@ -100,23 +100,23 @@ Weighted QoS, makes it perfect for high-performance applications.
 
 ### Programming on Solana
 
-Now let’s dive into the concepts you’ll need to know when programming on Solana.
-The first thing we’ll want to understand is the concept of an account.
+Now let's dive into the concepts you'll need to know when programming on Solana.
+The first thing we'll want to understand is the concept of an account.
 
 #### Account
 
 An account on Solana is a slice of data from the blockchain.
 
 Everything on Solana is an account! You can kind of think of it like a
-computer’s file system - where everything is a file!
+computer's file system - where everything is a file!
 
 Every account has a unique address, holds some balance of SOL, and can store
 arbitrary data. Based on the size of that arbitrary data, a user is required to
-pay some value of SOL for what’s called “Rent”.
+pay some value of SOL for what's called “Rent”.
 
 Since this is blockchain data, anyone can read from an account. Also, anyone can
-credit SOL or tokens to an account. However, only an account’s owner can modify
-its data - which includes debiting it’s SOL balance.
+credit SOL or tokens to an account. However, only an account's owner can modify
+its data - which includes debiting it's SOL balance.
 
 ```
 {
@@ -134,9 +134,9 @@ its data - which includes debiting it’s SOL balance.
 If we take a look at what an actual account looks like in raw form, we can see
 some of the fields present on all accounts shown here.
 
-The “key” field is just that account’s address.
+The “key” field is just that account's address.
 
-The “lamports” field simply tracks that account’s current balance of SOL.
+The “lamports” field simply tracks that account's current balance of SOL.
 Lamports are the smaller denomination of SOL.
 
 “Data” is where the arbitrary data is stored inside of an account.
@@ -145,7 +145,7 @@ If that arbitrary data stored in this account is actually an executable program,
 the “is_executable” boolean will be set to true.
 
 Lastly, the “owner” field determines which Solana program has the authority to
-perform changes to this account’s data, including its balance of Lamports.
+perform changes to this account's data, including its balance of Lamports.
 
 #### Programs
 
@@ -157,9 +157,9 @@ we mentioned before. Right now, Solana programs can be written in Rust, C/C++ or
 Python. Soon, we may be able to write programs in other languages - such as
 TypeScript and GoLang.
 
-Unlike Ethereum’s “smart contracts”, programs don’t actually have state of their
+Unlike Ethereum's “smart contracts”, programs don't actually have state of their
 own. Instead, they perform reads and writes on accounts from the blockchain. To
-perform a write, this program must be the designated owner of the account it’s
+perform a write, this program must be the designated owner of the account it's
 attempting to modify. Programs are designed to process what are called
 “instructions”, and they can also send these instructions to other programs on
 the network.

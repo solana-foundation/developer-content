@@ -18,7 +18,7 @@ altRoutes:
 Compressed NFTs on Solana use the
 [Bubblegum](https://docs.metaplex.com/programs/compression/) program from
 Metaplex to cheaply and securely store NFT metadata using
-[State Compression](https://docs.solana.com/learn/state-compression).
+[State Compression](/docs/advanced/state-compression.md).
 
 This developer guide will use JavaScript/TypeScript to demonstrate:
 
@@ -30,10 +30,9 @@ This developer guide will use JavaScript/TypeScript to demonstrate:
 
 ## Intro to Compressed NFTs
 
-Compressed NFTs use
-[State Compression](https://docs.solana.com/learn/state-compression) and
-[merkle trees](https://docs.solana.com/learn/state-compression#what-is-a-merkle-tree)
-to drastically reduce the storage cost for NFTs. Instead of storing an NFT's
+Compressed NFTs use [State Compression](/docs/advanced/state-compression.md) and
+[merkle trees](/docs/advanced/state-compression.md#what-is-a-merkle-tree) to
+drastically reduce the storage cost for NFTs. Instead of storing an NFT's
 metadata in a typical Solana account, compressed NFTs store the metadata within
 the ledger. This allows compressed NFTs to still inherit the security and speed
 of the Solana blockchain, while at the same time reducing the overall storage
@@ -53,10 +52,9 @@ transfer. More on this below.
 ### Compressed NFTs and indexers
 
 Since compressed NFTs store all of their metadata in the
-[ledger](https://docs.solana.com/terminology#ledger), instead of in traditional
-[accounts](https://docs.solana.com/terminology#account) like uncompressed NFTs,
-we will need to help of indexing services to quickly fetch our compressed NFT's
-metadata.
+[ledger](/docs/terminology.md#ledger), instead of in traditional
+[accounts](/docs/terminology.md#account) like uncompressed NFTs, we will need to
+help of indexing services to quickly fetch our compressed NFT's metadata.
 
 Supporting RPC providers are using the Digital Asset Standard Read API (or "Read
 API" for short) to add additional RPC methods that developers can call. These
@@ -90,7 +88,7 @@ happen in 3 primary steps:
 
 - create an NFT collection (or use an existing one)
 - create a
-  [concurrent merkle tree](https://docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
+  [concurrent merkle tree](/docs/advanced/state-compression.md#what-is-a-concurrent-merkle-tree)
   (using the `@solana/spl-account-compression` SDK)
 - mint compressed NFTs into your tree (to any owner's address you want)
 
@@ -168,7 +166,7 @@ actually create them following the same process of creating an
 - store the collection's metadata in an Account on-chain
 
 Since NFT Collections having nothing special to do with
-[State Compression](https://docs.solana.com/learn/state-compression) or
+[State Compression](/docs/advanced/state-compression.md) or
 [compressed NFTs](/content/guides/javascript/compressed-nfts.md), we will not
 cover creating one in this guide.
 
@@ -186,7 +184,7 @@ various addresses for your Collection, including:
 ## Create a tree
 
 One of the most important decisions to make when creating compressed NFTs is
-[how to setup your tree](https://docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree).
+[how to setup your tree](/docs/advanced/state-compression.md#sizing-a-concurrent-merkle-tree).
 Especially since the values used to size your tree will determine the overall
 cost of creation, and **CANNOT** be changed after creation.
 
@@ -218,9 +216,8 @@ Your tree size is set by 3 values, each serving a very specific purpose:
    a large of cost and composability of your compressed NFT collection
 
 > Read more about the details about
-> [State Compression](https://docs.solana.com/learn/state-compression),
-> including
-> [how to size a tree](https://docs.solana.com/learn/state-compression#sizing-a-concurrent-merkle-tree)
+> [State Compression](/docs/advanced/state-compression.md), including
+> [how to size a tree](/docs/advanced/state-compression.md#sizing-a-concurrent-merkle-tree)
 > and potential composability concerns.
 
 Let's assume we are going to create a compressed NFT collection with 10k NFTs in
@@ -254,8 +251,7 @@ node hashes" on-chain. Thus requiring us to always include `4` proof node values
 ### Generate addresses for the tree
 
 When creating a new tree, we need to generate a new
-[Keypair](https://docs.solana.com/terminology#keypair) address for the tree to
-have:
+[Keypair](/docs/terminology.md#keypair) address for the tree to have:
 
 ```ts
 const treeKeypair = Keypair.generate();
@@ -363,7 +359,7 @@ Allowing us to cryptographically verify that our original metadata has not
 changed (unless we want it to).
 
 > Learn more about how State Compression uses
-> [concurrent merkle trees](https://docs.solana.com/learn/state-compression#what-is-a-concurrent-merkle-tree)
+> [concurrent merkle trees](/docs/advanced/state-compression.md#what-is-a-concurrent-merkle-tree)
 > to cryptographically secure offchain data using the Solana ledger.
 
 ### Define our NFT's metadata
@@ -401,8 +397,8 @@ In this demo, the key pieces of our NFT's metadata to note are:
 ### Derive the Bubblegum signer
 
 When minting new compressed NFTs, the Bubblegum program needs a PDA to perform a
-[cross-program invocation](https://docs.solana.com/developing/programming-model/calling-between-programs#cross-program-invocations)
-(`cpi`) to the SPL compression program.
+[cross-program invocation](/docs/core/cpi.md) (`cpi`) to the SPL compression
+program.
 
 > This `bubblegumSigner` PDA is derived using a hard coded seed string of
 > `collection_cpi` and owned by the Bubblegum program. If this hard coded value
@@ -626,8 +622,8 @@ together in a deterministic way to compute the "root hash". Therefore, allowing
 for cryptographic validation of an asset within the merkle tree.
 
 > **NOTE:** While each of these hash values resemble a Solana Account's
-> [address/public key](https://docs.solana.com/terminology#public-key-pubkey),
-> they are not addresses.
+> [address/public key](/docs/terminology.md#public-key-pubkey), they are not
+> addresses.
 
 Transferring ownership of a compressed NFT happens in 5 broad steps:
 
@@ -745,8 +741,7 @@ Since we will use the `createTransferInstruction` helper function from the
 Bubblegum SDK to actually build our transfer instruction, we need to:
 
 - remove the proof values that are already stored on-chain in the
-  [tree's canopy](https://docs.solana.com/learn/state-compression#canopy-depth),
-  and
+  [tree's canopy](/docs/advanced/state-compression.md#canopy-depth), and
 - convert the remaining proof values into the valid `AccountMeta` structure that
   the instruction builder function accepts
 

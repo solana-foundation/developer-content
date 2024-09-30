@@ -9,62 +9,61 @@ description: "Use Rust macros to generate code at compile time."
 
 ## Summary
 
-- **Procedural macros** are a special kind of Rust macros that allow the
+- **Procedural macros** are a special kind of Rust macro that allows the
   programmer to generate code at compile time based on custom input.
-- In the Anchor framework, procedural macros are used to generate code that
-  reduces the amount of boilerplate required when writing Solana programs.
-- An **Abstract Syntax Tree (AST)** is a representation of the syntax and
-  structure of the input code that is passed to a procedural macro. When
-  creating a macro, you use elements of the AST like tokens and items to
-  generate the appropriate code.
-- A **Token** is the smallest unit of source code that can be parsed by the
-  compiler in Rust.
+- In the Anchor framework, procedural macros generate code that reduces the
+  boilerplate required when writing Solana programs.
+- An **Abstract Syntax Tree (AST)** represents the syntax and structure of the
+  input code that is passed to a procedural macro. When creating a macro, you
+  use elements of the AST, like tokens and items, to generate the appropriate
+  code.
+- A **Token** is the smallest source code unit that the Rust compiler can parse.
 - An **Item** is a declaration that defines something that can be used in a Rust
   program, such as a struct, an enum, a trait, a function, or a method.
-- A **TokenStream** is a sequence of tokens that represents a piece of source
-  code, and can be passed to a procedural macro to allow it to access and
-  manipulate the individual tokens in the code.
+- A **TokenStream** is a sequence of tokens representing a piece of source code.
+  It can be passed to a procedural macro, allowing it to access and manipulate
+  the individual tokens in the code.
 
 ## Lesson
 
-In Rust, a macro is a piece of code that you can write once and then "expand" to
-generate code at compile time. This can be useful when you need to generate code
-that is repetitive or complex, or when you want to use the same code in multiple
-places in your program.
+In Rust, a macro is a piece of code you can write once and then "expand" to
+generate code at compile time. This code generation can be helpful when you need
+to generate repetitive or complex code or when you want to use the same code in
+multiple places in your program.
 
 There are two different types of macros: declarative macros and procedural
 macros.
 
 - Declarative macros are defined using the `macro_rules!` macro, which allows
-  you to match against patterns of code and generate code based on the matching
+  you to match against code patterns and generate code based on the matching
   pattern.
 - Procedural macros in Rust are defined using Rust code and operate on the
   abstract syntax tree (AST) of the input TokenStream, which allows them to
   manipulate and generate code at a finer level of detail.
 
-In this lesson, we'll focus on procedural macros, which are commonly used in the
-Anchor framework.
+This lesson will focus on procedural macros, which are standard in the Anchor
+framework.
 
 ### Rust concepts
 
-Before we dig into macros, specifically, let's talk about some of the important
-terminology, concepts, and tools we'll be using throughout the lesson.
+Before we discuss macros specifically, let's review some of the important
+terminology, concepts, and tools we'll use throughout the lesson.
 
-#### Token
+### Token
 
-In the context of Rust programming, a
-[token](https://doc.rust-lang.org/reference/tokens.html) is a basic element of
-the language syntax like an identifier or literal value. Tokens represent the
-smallest unit of source code that are recognized by the Rust compiler, and they
-are used to build up more complex expressions and statements in a program.
+In Rust programming, a [token](https://doc.rust-lang.org/reference/tokens.html)
+is an essential element of the language syntax, like an identifier or literal
+value. Tokens represent the smallest unit of source code recognized by the Rust
+compiler, and they are used to build more complex expressions and statements in
+a program.
 
 Examples of Rust tokens include:
 
 - [Keywords](https://doc.rust-lang.org/reference/keywords.html), such as `fn`,
-  `let`, and `match`, are reserved words in the Rust language that have special
+  `let`, and `match`, are reserved words in the Rust language with special
   meanings.
 - [Identifiers](https://doc.rust-lang.org/reference/identifiers.html), such as
-  variable and function names, are used to refer to values and functions.
+  variable and function names, refer to values and functions.
 - [Punctuation](https://doc.rust-lang.org/reference/tokens.html#punctuation)
   marks, such as `{`, `}`, and `;`, are used to structure and delimit blocks of
   code.
@@ -74,11 +73,11 @@ Examples of Rust tokens include:
 You can
 [read more about Rust tokens](https://doc.rust-lang.org/reference/tokens.html).
 
-#### Item
+### Item
 
-Items are named, self-contained pieces of code in Rust. They provide a way to
-group related code together and give it a name by which the group can be
-referenced. This allows you to reuse and organize your code in a modular way.
+Items are named self-contained pieces of code in Rust. They provide a way to
+group related code and give it a name by which the group can be referenced,
+allowing you to reuse and organize your code modularly.
 
 There are several different kinds of items, such as:
 
@@ -92,14 +91,14 @@ There are several different kinds of items, such as:
 You can
 [read more about Rust items](https://doc.rust-lang.org/reference/items.html).
 
-#### Token Streams
+### Token Streams
 
-The `TokenStream` type is a data type that represents a sequence of tokens. This
-type is defined in the `proc_macro` crate and is surfaced as a way for you to
-write macros based on other code in the codebase.
+The `TokenStream` data type represents a sequence of tokens. It is defined in
+the `proc_macro` crate and is surfaced so that macros can be written based on
+other code in the codebase.
 
 When defining a procedural macro, the macro input is passed to the macro as a
-`TokenStream`, which can then be parsed and transformed as needed. The resulting
+`TokenStream`, which can then be parsed and transformed. The resulting
 `TokenStream` can then be expanded into the final code output by the macro.
 
 ```rust
@@ -111,27 +110,27 @@ pub fn my_macro(input: TokenStream) -> TokenStream {
 }
 ```
 
-#### Abstract syntax tree
+### Abstract syntax tree
 
-In the context of a Rust procedural macro, an abstract syntax tree (AST) is a
-data structure that represents the hierarchical structure of the input tokens
-and their meaning in the Rust language. It's typically used as an intermediate
-representation of the input that can be easily processed and transformed by the
+In a Rust procedural macro context, an abstract syntax tree (AST) is a data
+structure that represents the hierarchical structure of the input tokens and
+their meaning in the Rust language. It's typically used as an intermediate
+representation of the input that can be quickly processed and transformed by the
 procedural macro.
 
 The macro can use the AST to analyze the input code and make changes to it, such
-as adding or removing tokens, or transforming the meaning of the code in some
-way. It can then use this transformed AST to generate new code, which can be
-returned as the output of the proc macro.
+as adding or removing tokens or transforming the meaning of the code. It can
+then use this transformed AST to generate new code, which can be returned as the
+output of the proc macro.
 
-#### The `syn` crate
+### The `syn` crate
 
 The `syn` crate is available to help parse a token stream into an AST that macro
 code can traverse and manipulate. When a procedural macro is invoked in a Rust
 program, the macro function is called with a token stream as the input. Parsing
 this input is the first step to virtually any macro.
 
-Take as an example a proc macro that you invoke using `my_macro!`as follows:
+Take as an example a proc macro that you invoke using `my_macro!` as follows:
 
 ```rust
 my_macro!("hello, world");
@@ -147,42 +146,43 @@ use syn::parse_macro_input;
 #[proc_macro]
 pub fn my_macro(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as syn::LitStr);
-    eprintln! {"{:#?}", ast};
+ eprintln!("{:#?}", ast.token());
     ...
 }
 ```
 
 Inside the proc macro, the code uses the `parse_macro_input!` macro from the
 `syn` crate to parse the input `TokenStream` into an abstract syntax tree (AST).
-Specifically, this example parses it as an instance of `LitStr` that represents
-a string literal in Rust. The `eprintln!` macro is then used to print the
-`LitStr` AST for debugging purposes.
+Specifically, this example parses it as an instance of `LitStr` representing a
+UTF-8 string literal in Rust. Call the `.token()` method to return a
+[Literal](https://docs.rs/proc-macro2/1.0.86/proc_macro2/struct.Literal.html)
+that we pass to the `eprintln!` to print the AST for debugging purposes.
 
 ```rust
-LitStr {
-    token: Literal {
-        kind: Str,
-        symbol: "hello, world",
-        suffix: None,
-        span: #0 bytes(172..186),
-    },
+Literal {
+    kind: Str,
+    symbol: "hello, world",
+    suffix: None,
+    // Shows the byte offsets 31 to 45 of the literal "hello, world"
+    // in the portion of the source code from which the `TokenStream` was parsed.
+    span: #0 bytes(31..45),
 }
 ```
 
-The output of the `eprintln!` macro shows the structure of the `LitStr` AST that
-was generated from the input tokens. It shows the string literal value
+The output of the `eprintln!` macro shows the structure of the `Literal` AST
+that was generated from the input tokens. It shows the string literal value
 (`"hello, world"`) and other metadata about the token, such as its kind (`Str`),
 suffix (`None`), and span.
 
-#### The `quote` crate
+### The `quote` crate
 
-Another important crate is the `quote` crate. This crate is pivotal in the code
+Another important crate is the `quote` crate, which is pivotal in the code
 generation portion of the macro.
 
 Once a proc macro has finished analyzing and transforming the AST, it can use
-the `quote` crate or a similar code generation library to convert the AST back
-into a token stream. After that, it returns the `TokenStream`, which the Rust
-compiler uses to replace the original stream in the source code.
+the `quote` crate or a similar code generation library to convert it back into a
+token stream. After that, it returns the `TokenStream`, which the Rust compiler
+uses to replace the original stream in the source code.
 
 Take the below example of `my_macro`:
 
@@ -194,10 +194,8 @@ use quote::quote;
 #[proc_macro]
 pub fn my_macro(input: TokenStream) -> TokenStream {
     let ast = parse_macro_input!(input as syn::LitStr);
-    eprintln! {"{:#?}", ast};
-    let expanded = {
-        quote! {println!("The input is: {}", #ast)}
-    };
+ eprintln!("{:#?}", ast.token());
+    let expanded = quote! {println!("The input is: {}", #ast)};
     expanded.into()
 }
 ```
@@ -207,33 +205,32 @@ of a `println!` macro call with the `LitStr` AST as its argument.
 
 Note that the `quote!` macro generates a `TokenStream` of type
 `proc_macro2::TokenStream`. To return this `TokenStream` to the Rust compiler,
-you need to use the `.into()` method to convert it to `proc_macro::TokenStream`.
-The Rust compiler will then use this `TokenStream` to replace the original proc
-macro call in the source code.
+use the `.into()` method to convert it to `proc_macro::TokenStream`. The Rust
+compiler will then use this `TokenStream` to replace the original proc macro
+call in the source code.
 
 ```text
 The input is: hello, world
 ```
 
-This allows you to create procedural macros that perform powerful code
-generation and metaprogramming tasks.
+Using procedural macros allows you to create procedural macros that perform
+powerful code generation and metaprogramming tasks.
 
 ### Procedural Macro
 
 Procedural macros in Rust are a powerful way to extend the language and create
-custom syntax. These macros are written in Rust and are compiled along with the
-rest of the code. There are three types of procedural macros:
+custom syntax. These macros are written in Rust and compiled with the rest of
+the code. There are three types of procedural macros:
 
 - Function-like macros - `custom!(...)`
 - Derive macros - `#[derive(CustomDerive)]`
 - Attribute macros - `#[CustomAttribute]`
 
 This section will discuss the three types of procedural macros and provide an
-example implementation of one. The process of writing a procedural macro is
-consistent across all three types, so the example provided can be adapted to the
-other types.
+example implementation of one. Writing a procedural macro is consistent across
+all three types, making this example adaptable to the other types.
 
-#### Function-like macros
+### Function-like macros
 
 Function-like procedural macros are the simplest of the three types of
 procedural macros. These macros are defined using a function preceded by the
@@ -243,13 +240,13 @@ return a new `TokenStream` as output to replace the original code.
 ```rust
 #[proc_macro]
 pub fn my_macro(input: TokenStream) -> TokenStream {
-	...
+    ...
 }
 ```
 
-These macros are invoked using the name of the function followed by the `!`
-operator. They can be used in various places in a Rust program, such as in
-expressions, statements, and function definitions.
+These macros are invoked using the function's name followed by the `!` operator.
+They can be used in various places in a Rust program, such as in expressions,
+statements, and function definitions.
 
 ```rust
 my_macro!(input);
@@ -257,25 +254,24 @@ my_macro!(input);
 
 Function-like procedural macros are best suited for simple code generation tasks
 that require only a single input and output stream. They are easy to understand
-and use, and they provide a straightforward way to generate code at compile
-time.
+and use and provide a straightforward way to generate code at compile time.
 
-#### Attribute macros
+### Attribute macros
 
 Attribute macros define new attributes that are attached to items in a Rust
-program such as functions and structs.
+program, such as functions and structs.
 
 ```rust
 #[my_macro]
 fn my_function() {
-	...
+    ...
 }
 ```
 
 Attribute macros are defined with a function preceded by the
 `#[proc_macro_attribute]` attribute. The function requires two token streams as
-input and returns a single `TokenStream` as output that replaces the original
-item with an arbitrary number of new items.
+input and returns a single `TokenStream` output that replaces the original item
+with an arbitrary number of new items.
 
 ```rust
 #[proc_macro_attribute]
@@ -295,22 +291,21 @@ fn my_function() {
 }
 ```
 
-For example, an attribute macro could process the arguments passed to the
-attribute to enable or disable certain features, and then use the second token
-stream to modify the original item in some way. By having access to both token
-streams, attribute macros can provide greater flexibility and functionality
-compared to using only a single token stream.
+For example, an attribute macro could process the arguments passed to it to turn
+certain features on or off and then use the second token stream to modify the
+original item. With access to both token streams, attribute macros can provide
+greater flexibility and functionality than using only a single token stream.
 
-#### Derive macros
+### Derive macros
 
 Derive macros are invoked using the `#[derive]` attribute on a struct, enum, or
-union. They are typically used to automatically implement traits for the input
-types.
+union. They are typically used to implement traits for the input types
+automatically.
 
 ```rust
 #[derive(MyMacro)]
 struct Input {
-	field: String
+    field: String
 }
 ```
 
@@ -320,20 +315,20 @@ They take a single token stream as input and return a single token stream as
 output.
 
 Unlike the other procedural macros, the returned token stream doesn't replace
-the original code. Rather, the returned token stream gets appended to the module
-or block that the original item belongs to. This allows developers to extend the
-functionality of the original item without modifying the original code.
+the original code. Instead, it gets appended to the module or block to which the
+original item belongs, allowing developers to extend the functionality of the
+original item without modifying the original code.
 
 ```rust
 #[proc_macro_derive(MyMacro)]
 pub fn my_macro(input: TokenStream) -> TokenStream {
-	...
+    ...
 }
 ```
 
 In addition to implementing traits, derive macros can define helper attributes.
-Helper attributes can be used in the scope of the item that the derive macro is
-applied to and customize the code generation process.
+Helper attributes can be used in the scope of the item to which the derive macro
+is applied and customize the code generation process.
 
 ```rust
 #[proc_macro_derive(MyMacro, attributes(helper))]
@@ -342,9 +337,8 @@ pub fn my_macro(body: TokenStream) -> TokenStream {
 }
 ```
 
-Helper attributes are inert, which means they do not have any effect on their
-own, and their only purpose is to be used as input to the derive macro that
-defined them.
+Helper attributes are inert, which means they have no effect on their own. Their
+only purpose is to be used as input to the derive macro that defined them.
 
 ```rust
 #[derive(MyMacro)]
@@ -355,11 +349,11 @@ struct Input {
 ```
 
 For example, a derive macro could define a helper attribute to perform
-additional operations depending on the presence of the attribute. This allows
-developers to further extend the functionality of derive macros and customize
-the code they generate in a more flexible way.
+additional operations depending on its presence, allowing developers to extend
+the functionality of derive macros and customize the code they generate more
+flexibly.
 
-#### Example of a procedural macro
+### Example of a procedural macro
 
 This example shows how to use a derive procedural macro to automatically
 generate an implementation of a `describe()` method for a struct.
@@ -385,9 +379,9 @@ console.
 MyStruct is a struct with these named fields: my_string, my_number.
 ```
 
-The first step is to define the procedural macro using the using the
-`#[proc_macro_derive]` attribute. The input `TokenStream` is parsed using the
-`parse_macro_input!()` macro to extract the struct's identifier and data.
+The first step is to define the procedural macro using the
+`#[proc_macro_derive]` attribute. To extract the struct's identifier and data,
+the input `TokenStream` is parsed using the `parse_macro_input!()` macro.
 
 ```rust
 use proc_macro::{self, TokenStream};
@@ -404,7 +398,7 @@ pub fn describe_struct(input: TokenStream) -> TokenStream {
 The next step is to use the `match` keyword to perform pattern matching on the
 `data` value to extract the names of the fields in the struct.
 
-The first `match` has two arms: one for the `syn::Data::Struct` variant, and one
+The first `match` has two arms: one for the `syn::Data::Struct` variant and one
 for the "catch-all" `_` arm that handles all other variants of `syn::Data`.
 
 The second `match` has two arms as well: one for the `syn::Fields::Named`
@@ -427,9 +421,9 @@ pub fn describe_struct(input: TokenStream) -> TokenStream {
         syn::Data::Struct(s) => match s.fields {
             syn::Fields::Named(FieldsNamed { named, .. }) => {
                 let idents = named.iter().map(|f| &f.ident);
-                format!(
+ 				format!(
                     "a struct with these named fields: {}",
-                    quote! {#(#idents), *},
+ 					quote! {#(#idents), *},
                 )
             }
             _ => panic!("The syn::Fields variant is not supported"),
@@ -440,7 +434,7 @@ pub fn describe_struct(input: TokenStream) -> TokenStream {
 }
 ```
 
-The last step is to implement a `describe()` method for a struct. The `expanded`
+The last step implements a `describe()` method for a struct. The `expanded`
 variable is defined using the `quote!` macro and the `impl` keyword to create an
 implementation for the struct name stored in the `#ident` variable.
 
@@ -463,9 +457,9 @@ pub fn describe(input: TokenStream) -> TokenStream {
         syn::Data::Struct(s) => match s.fields {
             syn::Fields::Named(FieldsNamed { named, .. }) => {
                 let idents = named.iter().map(|f| &f.ident);
-                format!(
+ 				format!(
                     "a struct with these named fields: {}",
-                    quote! {#(#idents), *},
+					 quote! {#(#idents), *},
                 )
             }
             _ => panic!("The syn::Fields variant is not supported"),
@@ -476,7 +470,7 @@ pub fn describe(input: TokenStream) -> TokenStream {
     let expanded = quote! {
         impl #ident {
             fn describe() {
-            println!("{} is {}.", stringify!(#ident), #field_names);
+				 println!("{} is {}.", stringify!(#ident), #field_names);
             }
         }
     };
@@ -497,9 +491,9 @@ struct MyStruct {
 }
 ```
 
-The `cargo expand` command from the `cargo-expand` crate can be used to expand
-Rust code that uses procedural macros. For example, the code for the `MyStruct`
-struct generated using the the `#[derive(Describe)]` attribute looks like this:
+The `cargo expand` command from the `cargo-expand` crate can expand Rust code
+that uses procedural macros. For example, the code for the `MyStruct` struct
+generated using the `#[derive(Describe)]` attribute looks like this:
 
 ```rust
 struct MyStruct {
@@ -527,12 +521,12 @@ impl MyStruct {
 
 ### Anchor procedural macros
 
-Procedural macros are the magic behind the Anchor library that is commonly used
-in Solana development. Anchor macros allow for more succinct code, common
-security checks, and more. Let's go through a few examples of how Anchor uses
-procedural macros.
+Procedural macros are the magic behind the Anchor library commonly used in
+Solana development. Anchor macros allow for more concise code, standard security
+checks, and more. Let's go through a few examples of how Anchor uses procedural
+macros.
 
-#### Function-like macro
+### Function-like macro
 
 The `declare_id` macro shows how function-like macros are used in Anchor. This
 macro takes in a string of characters representing a program's ID as input and
@@ -548,21 +542,30 @@ indicating that it's a function-like proc macro.
 ```rust
 #[proc_macro]
 pub fn declare_id(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    let address = input.clone().to_string();
+
     let id = parse_macro_input!(input as id::Id);
-    proc_macro::TokenStream::from(quote! {#id})
+    let ret = quote! { #id };
+    ...
+        let idl_print = anchor_syn::idl::gen_idl_print_fn_address(address);
+        return proc_macro::TokenStream::from(quote! {
+             #ret
+             #idl_print
+         });
+    ...
 }
 ```
 
-#### Derive macro
+### Derive macro
 
-The `#[derive(Accounts)]` is an example of just one of many derive macros that
-are used in Anchor.
+The `#[derive(Accounts)]` is an example of just one of many derive macros used
+in Anchor.
 
 The `#[derive(Accounts)]` macro generates code that implements the `Accounts`
-trait for the given struct. This trait does a number of things, including
-validating and deserializing the accounts passed into an instruction. This
-allows the struct to be used as a list of accounts required by an instruction in
-an Anchor program.
+trait for the given struct. This trait does several things, including validating
+and deserializing the accounts passed into an instruction, allowing the struct
+to be used as a list of accounts required by an instruction in an Anchor
+program.
 
 Any constraints specified on fields by the `#[account(..)]` attribute are
 applied during deserialization. The `#[instruction(..)]` attribute can also be
@@ -573,7 +576,7 @@ macro.
 #[derive(Accounts)]
 #[instruction(input: String)]
 pub struct Initialize<'info> {
-    #[account(init, payer = payer, space = 8 + input.len())]
+    #[account(init, payer = payer, space = MyData::DISCRIMINATOR.len() + MyData::INIT_SPACE + input.len())]
     pub data_account: Account<'info, MyData>,
     #[account(mut)]
     pub payer: Signer<'info>,
@@ -587,6 +590,25 @@ to be used as a derive macro that can be applied to a struct. The line
 that this is a derive macro that processes `account` and `instruction` helper
 attributes.
 
+The INIT_SPACE is used to calculate the initial size of an account. It is
+implemented by derive macro on `MyData` automatically implementing the
+[anchor_lang::Space](https://docs.rs/anchor-lang/latest/anchor_lang/trait.Space.html#associatedconstant.INIT_SPACE).
+
+```rust
+#[account]
+#[derive(InitSpace)]
+pub struct NewAccount {
+ data: u64,
+}
+```
+
+The `#[account]` macro also automatically derives the _DISCRIMINANT_ of an
+anchor account which implements the
+[anchor_lang::Discriminator](https://docs.rs/anchor-lang/latest/anchor_lang/trait.Discriminator.html)
+trait. This trait exposes an array of 8 bytes containing the discriminator,
+which can be exposed using `NewAccount::DISCRIMINATOR`. Calling the `.len()` on
+this array of 8 bytes gives us the length of the discriminator;
+
 ```rust
 #[proc_macro_derive(Accounts, attributes(account, instruction))]
 pub fn derive_anchor_deserialize(item: TokenStream) -> TokenStream {
@@ -596,9 +618,9 @@ pub fn derive_anchor_deserialize(item: TokenStream) -> TokenStream {
 }
 ```
 
-#### Attribute macro `#[program]`
+### Attribute macro `#[program]`
 
-The `#[program]` attribute macro is an example of an attribute macro used in
+The `#[program]` attribute macro is an example of an attribute macro used in
 Anchor to define the module containing instruction handlers for a Solana
 program.
 
@@ -613,8 +635,8 @@ pub mod my_program {
 }
 ```
 
-In this case, the `#[program]` attribute is applied to a module, and it is used
-to specify that the module contains instruction handlers for a Solana program.
+In this case, the `#[program]` attribute is applied to a module to specify that
+it contains instruction handlers for a Solana program.
 
 ```rust
 #[proc_macro_attribute]
@@ -622,17 +644,17 @@ pub fn program(
     _args: proc_macro::TokenStream,
     input: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {
-    parse_macro_input!(input as anchor_syn::Program)
+	parse_macro_input!(input as anchor_syn::Program)
         .to_token_stream()
         .into()
 }
 ```
 
-Overall, the use of proc macros in Anchor greatly reduces the amount of
-repetitive code that Solana developers have to write. By reducing the amount of
-boilerplate code, developers can focus on their program's core functionality and
-avoid mistakes caused by manual repetition. This ultimately results in a faster
-and more efficient development process.
+Overall, using proc macros in Anchor dramatically reduces the repetitive code
+that Solana developers have to write. By reducing the boilerplate code,
+developers can focus on their program's core functionality and avoid mistakes
+caused by manual repetition, resulting in a faster and more efficient
+development process.
 
 ## Lab
 
@@ -640,21 +662,22 @@ Let's practice this by creating a new derive macro! Our new macro will let us
 automatically generate instruction logic for updating each field on an account
 in an Anchor program.
 
-#### 1. Starter
+### 1. Starter
 
 To get started, download the starter code from the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/anchor-custom-macro/tree/starter).
+[the `anchor-custom-macro` repository](https://github.com/solana-developers/anchor-custom-macro/tree/starter).
 
 The starter code includes a simple Anchor program that allows you to initialize
-and update a `Config` account. This is similar to what we did with the
+and update a `Config` account, similar to what we did with the
 [Program Configuration lesson](/content/courses/program-optimization/program-configuration).
 
 The account in question is structured as follows:
 
 ```rust
-use anchor_lang::prelude::*;
+use anchor_lang::{Discriminator, prelude::*};
 
 #[account]
+#[derive(InitSpace)]
 pub struct Config {
     pub auth: Pubkey,
     pub bool: bool,
@@ -663,7 +686,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub const LEN: usize = 8 + 32 + 1 + 1 + 8;
+    pub const LEN: usize = Config::DISCRIMINATOR.len() + Config::INIT_SPACE;
 }
 ```
 
@@ -674,18 +697,19 @@ field for updating the field.
 
 The `programs/admin/src/admin_config` directory contains the program's
 instruction logic and state. Take a look through each of these files. You'll
-notice that instruction logic for each field is duplicated for each instruction.
+notice that the instruction logic for each field is duplicated for each
+instruction.
 
 The goal of this lab is to implement a procedural macro that will allow us to
 replace all of the instruction logic functions and automatically generate
 functions for each instruction.
 
-#### 2. Set up the custom macro declaration
+### 2. Set up the custom macro declaration
 
-Let's get started by creating a separate crate for our custom macro. In the
-project's root directory, run `cargo new custom-macro`. This will create a new
-`custom-macro` directory with its own `Cargo.toml`. Update the new `Cargo.toml`
-file to be the following:
+Let's get started by creating a separate crate for our custom macro. Run
+`cargo new- lib custom-macro` in the project's root directory. The command
+creates a new `custom-macro` directory with its own `Cargo.toml`. Update the new
+`Cargo.toml` file to be the following:
 
 ```text
 [package]
@@ -697,17 +721,14 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
-syn = "1.0.105"
-quote = "1.0.21"
-proc-macro2 = "0.4"
-anchor-lang = "0.25.0"
+syn = "2.0.77"
+quote = "1.0.73"
+proc-macro2 = "1.0.86"
+anchor-lang.workspace = true
 ```
 
 The `proc-macro = true` line defines this crate as containing a procedural
-macro. The dependencies are all crates we'll be using to create our derive
-macro.
-
-Next, change `src/main.rs` to `src/lib.rs`.
+macro. The dependencies are all crates we'll use to create our derive macro.
 
 Next, update the project root's `Cargo.toml` file's `members` field to include
 `"custom-macro"`:
@@ -715,16 +736,25 @@ Next, update the project root's `Cargo.toml` file's `members` field to include
 ```text
 [workspace]
 members = [
-    "programs/*",
-    "custom-macro"
+ "programs/*",
+ "custom-macro"
 ]
+
+[workspace.dependencies]
+anchor-lang = "0.30.1"
 ```
 
-Now our crate is set up and ready to go. But before we move on, let's create one
-more crate at the root level that we can use to test out our macro as we create
-it. Use `cargo new custom-macro-test` at the project root. Then update the newly
-created `Cargo.toml` to add `anchor-lang` and the `custom-macro` crates as
-dependencies:
+The `[workspace.dependecies]` has _anchor-lang_ as a dependency, which allows us
+to define the version of _anchor-lang_ in the root project configuration and
+then inherit that version in all other members of the workspace that depend on
+it, by registering `<dependency-name>.workspace = true`, like the _custom-macro_
+crate and _custom-macro-test_ crate which will be defined next.
+
+Now, our crate is set up and ready to go. But before we move on, let's create
+one more crate at the root level that we can use to test out our macro as we
+create it. Use `cargo new custom-macro-test` at the project root. Then update
+the newly created `Cargo.toml` to add `anchor-lang` and the `custom-macro`
+crates as dependencies:
 
 ```text
 [package]
@@ -733,7 +763,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-anchor-lang = "0.25.0"
+anchor-lang.workspace = true
 custom-macro = { path = "../custom-macro" }
 ```
 
@@ -743,9 +773,9 @@ Next, update the root project's `Cargo.toml` to include the new
 ```text
 [workspace]
 members = [
-    "programs/*",
-    "custom-macro",
-    "custom-macro-test"
+ "programs/*",
+ "custom-macro",
+ "custom-macro-test"
 ]
 ```
 
@@ -765,14 +795,14 @@ pub struct Config {
 }
 ```
 
-#### 3. Define the custom macro
+### 3. Define the custom macro
 
 Now, in the `custom-macro/src/lib.rs` file, let's add our new macro's
-declaration. In this file, we’ll use the `parse_macro_input!` macro to parse the
+declaration. In this file, we'll use the `parse_macro_input!` macro to parse the
 input `TokenStream` and extract the `ident` and `data` fields from a
-`DeriveInput` struct. Then, we’ll use the `eprintln!` macro to print the values
-of `ident` and `data`. For now, we will use `TokenStream::new()` to return an
-empty `TokenStream`.
+`DeriveInput` struct. Then, we'll use the `eprintln!` macro to print the values
+of `ident` and `data`. We will now use `TokenStream::new()` to return an empty
+`TokenStream`.
 
 ```rust
 use proc_macro::TokenStream;
@@ -783,8 +813,8 @@ use syn::*;
 pub fn instruction_builder(input: TokenStream) -> TokenStream {
     let DeriveInput { ident, data, .. } = parse_macro_input!(input);
 
-    eprintln! {"{:#?}", ident};
-    eprintln! {"{:#?}", data};
+     eprintln! ("{:#?}", ident);
+     eprintln! ("{:#?}", data);
 
     TokenStream::new()
 }
@@ -794,18 +824,17 @@ Let's test what this prints. To do this, you first need to install the
 `cargo-expand` command by running `cargo install cargo-expand`. You'll also need
 to install the nightly version of Rust by running `rustup install nightly`.
 
-Once you've done this, you can see the output of the code described above by
-navigating to the `custom-macro-test` directory and running `cargo expand`.
+Once you've done this, you can see the code output described above by navigating
+to the `custom-macro-test` directory and running `cargo expand`.
 
 This command expands macros in the crate. Since the `main.rs` file uses the
 newly created `InstructionBuilder` macro, this will print the syntax tree for
-the `ident` and `data` of the struct to the console. Once you have confirmed
-that the input `TokenStream` is parsing correctly, feel free to remove the
-`eprintln!` statements.
+the `ident` and `data` of the struct to the console. Once you confirm that the
+input `TokenStream` parses correctly, remove the `eprintln!` statements.
 
-#### 4. Get the struct's fields
+### 4. Get the struct's fields
 
-Next, let’s use `match` statements to get the named fields from the `data` of
+Next, let's use `match` statements to get the named fields from the `data` of
 the struct. Then we'll use the `eprintln!` macro to print the values of the
 fields.
 
@@ -826,7 +855,7 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
         _ => panic!("The syn::Data variant is not supported: {:#?}", data),
     };
 
-    eprintln! {"{:#?}", fields};
+ 	eprintln! ("{:#?}", fields);
 
     TokenStream::new()
 }
@@ -836,12 +865,12 @@ Once again, use `cargo expand` in the terminal to see the output of this code.
 Once you have confirmed that the fields are being extracted and printed
 correctly, you can remove the `eprintln!` statement.
 
-#### 5. Build update instructions
+### 5. Build update instructions
 
-Next, let’s iterate over the fields of the struct and generate an update
+Next, let's iterate over the fields of the struct and generate an update
 instruction for each field. The instruction will be generated using the `quote!`
-macro and will include the field's name and type, as well as a new function name
-for the update instruction.
+macro, including the field's name and type and a new function name for the
+update instruction.
 
 ```rust
 use proc_macro::TokenStream;
@@ -865,7 +894,7 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
         let ty = &f.ty;
         let fname = format_ident!("update_{}", name.clone().unwrap());
 
-        quote! {
+ 		quote! {
             pub fn #fname(ctx: Context<UpdateAdminAccount>, new_value: #ty) -> Result<()> {
                 let admin_account = &mut ctx.accounts.admin_account;
                 admin_account.#name = new_value;
@@ -878,13 +907,13 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
 }
 ```
 
-#### 6. Return new `TokenStream`
+### 6. Return new `TokenStream`
 
-Lastly, let’s use the `quote!` macro to generate an implementation for the
+Lastly, let's use the `quote!` macro to generate an implementation for the
 struct with the name specified by the `ident` variable. The implementation
-includes the update instructions that were generated for each field in the
-struct. The generated code is then converted to a `TokenStream` using the
-`into()` method and returned as the result of the macro.
+includes the update instructions generated for each field in the struct. The
+generated code is then converted to a `TokenStream` using the `into()` method
+and returned as the result of the macro.
 
 ```rust
 use proc_macro::TokenStream;
@@ -908,7 +937,7 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
         let ty = &f.ty;
         let fname = format_ident!("update_{}", name.clone().unwrap());
 
-        quote! {
+ 		quote! {
             pub fn #fname(ctx: Context<UpdateAdminAccount>, new_value: #ty) -> Result<()> {
                 let admin_account = &mut ctx.accounts.admin_account;
                 admin_account.#name = new_value;
@@ -919,7 +948,7 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
 
     let expanded = quote! {
         impl #ident {
-            #(#update_instruction)*
+ 			#(#update_instruction)*
         }
     };
     expanded.into()
@@ -927,7 +956,7 @@ pub fn instruction_builder(input: TokenStream) -> TokenStream {
 ```
 
 To verify that the macro is generating the correct code, use the `cargo expand`
-command to see the expanded form of the macro. The output of this look like the
+command to see the expanded form of the macro. The output of this looks like the
 following:
 
 ```rust
@@ -972,7 +1001,7 @@ impl Config {
 }
 ```
 
-#### 7. Update the program to use your new macro
+### 7. Update the program to use your new macro
 
 To use the new macro to generate update instructions for the `Config` struct,
 first add the `custom-macro` crate as a dependency to the program in its
@@ -980,7 +1009,7 @@ first add the `custom-macro` crate as a dependency to the program in its
 
 ```text
 [dependencies]
-anchor-lang = "0.25.0"
+anchor-lang.workspace = true
 custom-macro = { path = "../../custom-macro" }
 ```
 
@@ -1002,13 +1031,12 @@ pub struct Config {
 }
 
 impl Config {
-    pub const LEN: usize = 8 + 32 + 1 + 1 + 8;
+    pub const LEN: usize = Config::DISCRIMINATOR.len() + Config::INIT_SPACE;
 }
 ```
 
 Next, navigate to the `admin_update.rs` file and delete the existing update
-instructions. This should leave only the `UpdateAdminAccount` context struct in
-the file.
+instructions, leaving only the `UpdateAdminAccount` context struct in the file.
 
 ```rust
 use crate::state::Config;
@@ -1019,7 +1047,7 @@ pub struct UpdateAdminAccount<'info> {
     pub auth: Signer<'info>,
     #[account(
         mut,
-        has_one = auth,
+ 		has_one = auth,
     )]
     pub admin_account: Account<'info, Config>,
 }
@@ -1061,37 +1089,36 @@ pub mod admin {
 }
 ```
 
-Lastly, navigate to the `admin` directory and run `anchor test` to verify that
-the update instructions generated by the `InstructionBuilder` macro are working
-correctly.
+Lastly, navigate to the `admin` directory and run the `anchor test` to verify
+that the update instructions generated by the `InstructionBuilder` macro are
+working correctly.
 
 ```
-  admin
-    ✔ Is initialized! (160ms)
-    ✔ Update bool! (409ms)
-    ✔ Update u8! (403ms)
-    ✔ Update u64! (406ms)
-    ✔ Update Admin! (405ms)
+ admin
+ ✔ Is initialized! (160ms)
+ ✔ Update bool! (409ms)
+ ✔ Update u8! (403ms)
+ ✔ Update u64! (406ms)
+ ✔ Update Admin! (405ms)
 
 
-  5 passing (2s)
+ 5 passing (2s)
 ```
 
 Nice work! At this point, you can create procedural macros to help in your
 development process. We encourage you to make the most of the Rust language and
-use macros where they make sense. But even if you don't, knowing how they work
-helps to understand what's happening with Anchor under the hood.
+use macros where they make sense. But even if you don't know how they work, it
+helps you understand what's happening with Anchor under the hood.
 
-If you need to spend more time with the solution code, feel free to reference
-the `solution` branch of
-[the repository](https://github.com/Unboxed-Software/anchor-custom-macro/tree/solution).
+If you need more time with the solution code, reference the `solution` branch of
+[the `anchor-custom-macro` repository](https://github.com/solana-developers/anchor-custom-macro/tree/solution).
 
 ## Challenge
 
-To solidify what you've learned, go ahead and create another procedural macro on
-your own. Think about code you've written that could be reduced or improved by a
-macro and try it out! Since this is still practice, it's okay if it doesn't work
-out the way you want or expect. Just jump in and experiment!
+To solidify what you've learned: Create another procedural macro. Think about
+code you've written that could be reduced or improved by a macro, and try it
+out! Since this is still practice, it's okay if it doesn't work out how you want
+or expect. Just jump in and experiment!
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
