@@ -890,7 +890,7 @@ Try to do this independently if you can! But if you get stuck, feel free to
 
 reference the
 [solution code](https://github.com/solana-developers/anchor-movie-review-program).
-ix: Add rating validation to update_movie_review function)
+
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
