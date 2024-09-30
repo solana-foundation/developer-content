@@ -18,9 +18,9 @@ Returns all SPL Token accounts by token owner.
   Pubkey of account delegate to query, as base-58 encoded string
 </Parameter>
 
-<Parameter type={"object"} optional={true}>
+<Parameter type={"object"} required={true}>
 
-A JSON object with one of the following fields:
+A JSON object with either one of the following fields:
 
 - `mint: <string>` - Pubkey of the specific token Mint to limit accounts to, as
   base-58 encoded string; or
