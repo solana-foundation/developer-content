@@ -103,7 +103,7 @@ the following inside this file:
 ```json
 {
   "cli": {
-    "version": ">= 3.12.0"
+    "version": ">= 5.12.0"
   },
   "build": {
     "development": {
@@ -121,7 +121,7 @@ the following inside this file:
 }
 ```
 
-With the EAS configuration file in place, you can build your project using the
+With the EAS configuration file in place, you can build your project using
 `eas build`. This submits a job to the EAS Build service, where your APK is
 built using Expo's cloud infrastructure. If you want to build locally, you can
 add the `--local` flag. For example, the following command builds the project
@@ -441,12 +441,13 @@ copying over `components/AuthorizationProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
 
-Create file `components/AuthorizationProvider.tsx` and copy the contents
-[of our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthorizationProvider.tsx)
+Create file `components/AuthorizationProvider.tsx` and copy the contents of
+[our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthorizationProvider.tsx)
 into the new file.
 
 Secondly, create file `components/ConnectionProvider.tsx` and copy the contents
-[of our existing Connection Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/ConnectionProvider.tsx)
+of
+[our existing Connection Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/ConnectionProvider.tsx)
 into the new file.
 
 Now let's create a boilerplate for our main screen in `screens/MainScreen.tsx`:
@@ -464,10 +465,10 @@ export function MainScreen() {
 }
 ```
 
-Next, create file called `polyfills.ts` for react-native to work with all solana
-dependencies
+Next, create file called `polyfills.ts` for react-native to work with all the
+solana dependencies
 
-```typescript
+```typescript filename="polyfills.ts"
 import { getRandomValues as expoCryptoGetRandomValues } from "expo-crypto";
 import { Buffer } from "buffer";
 
@@ -765,7 +766,8 @@ export default function App() {
       config={{ commitment: "processed" }}
     >
       <AuthorizationProvider cluster={cluster}>
-            <MainScreen />
+        <NFTProvider>
+          <MainScreen />
         </NFTProvider>
       </AuthorizationProvider>
     </ConnectionProvider>
@@ -1057,16 +1059,19 @@ async function uploadMetadataJson(
       name: randomFileName,
     },
   });
-  const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
-      Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+  const response = await fetch(
+    "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Accept: "application/json",
+        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+      },
+      body: data,
     },
-    body: data,
-  });
-  const resData = await res.json();
+  );
+  const responseBody = await response.json();
 
   return resData;
 }
@@ -1082,8 +1087,12 @@ const uploadMetadata = useCallback(
     description: string,
     imageCID: string,
   ): Promise<string> => {
-    const uploadRes = await uploadMetadataJson(name, description, imageCID);
-    return uploadRes.IpfsHash;
+    const uploadResponse = await uploadMetadataJson(
+      name,
+      description,
+      imageCID,
+    );
+    return uploadResponse.IpfsHash;
   },
   [],
 );
@@ -1200,6 +1209,7 @@ export function NFTProvider(props: NFTProviderProps) {
       const form = new FormData();
       const randomFileName = `image_${Date.now()}_${Math.floor(Math.random() * 10000)}.jpg`;
 
+      // In React Native, especially when working with form data and files, you may need to send files using an object that contains a URI (file path), especially on Android and iOS platforms. However, this structure may not be recognized by TypeScript's strict type checking
       // @ts-ignore
       form.append("file", {
         uri:
@@ -1233,8 +1243,8 @@ export function NFTProvider(props: NFTProviderProps) {
   }
 
   async function uploadMetadataJson(
-    name = "Pinnie",
-    description = "A really sweet NFT of Pinnie the Pinata",
+    name = "Solanify",
+    description = "A truly sweet NFT of your day.",
     imageCID = "bafkreih5aznjvttude6c3wbvqeebb6rlx5wkbzyppv7garjiubll2ceym4",
   ) {
     const randomFileName = `metadata_${Date.now()}_${Math.floor(Math.random() * 10000)}.json`;
@@ -1248,16 +1258,19 @@ export function NFTProvider(props: NFTProviderProps) {
         name: randomFileName,
       },
     });
-    const res = await fetch("https://api.pinata.cloud/pinning/pinJSONToIPFS", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        Accept: "application/json",
-        Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+    const response = await fetch(
+      "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Accept: "application/json",
+          Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
+        },
+        body: data,
       },
-      body: data,
-    });
-    const resData = await res.json();
+    );
+    const responseBody = await response.json();
 
     return resData;
   }
@@ -1287,8 +1300,12 @@ export function NFTProvider(props: NFTProviderProps) {
       description: string,
       imageCID: string,
     ): Promise<string> => {
-      const uploadRes = await uploadMetadataJson(name, description, imageCID);
-      return uploadRes.IpfsHash;
+      const uploadResponse = await uploadMetadataJson(
+        name,
+        description,
+        imageCID,
+      );
+      return uploadResponse.IpfsHash;
     },
     [],
   );
