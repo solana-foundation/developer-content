@@ -775,8 +775,8 @@ Now, in the `custom-macro/src/lib.rs` file, let's add our new macro's
 declaration. In this file, we’ll use the `parse_macro_input!` macro to parse the
 input `TokenStream` and extract the `ident` and `data` fields from a
 `DeriveInput` struct. Then, we'll use the `eprintln!` macro to print the values
-of `ident` and `data`. We will now use `TokenStream::new()` to return an
-empty `TokenStream`.
+of `ident` and `data`. We will now use `TokenStream::new()` to return an empty
+`TokenStream`.
 
 ```rust
 use proc_macro::TokenStream;
