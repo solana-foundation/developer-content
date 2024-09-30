@@ -144,7 +144,7 @@ token accounts that are owned by our wallet address. When looking at a token
 account, we can see the first two fields stored on a token account are both
 pubkeys, and that each pubkey is 32 bytes in length. Given that `owner` is the
 second field, we should begin our `memcmp` at an `offset` of 32 bytes. From
-here, we’ll be looking for accounts whose owner field matches our wallet
+here, we'll be looking for accounts whose owner field matches our wallet
 address.
 
 ![Account Size](/public/assets/guides/get-program-accounts/memcmp.png)
@@ -217,7 +217,7 @@ Much like `memcmp`, `dataSlice` accepts two arguments:
 - `length`: The number of bytes which should be returned
 
 `dataSlice` is particularly useful when we run queries on a large dataset but
-don’t actually care about the account data itself. An example of this would be
+don't actually care about the account data itself. An example of this would be
 if we wanted to find the number of token accounts (i.e. number of token holders)
 for a particular token mint.
 
@@ -301,7 +301,7 @@ Found 3 token account(s) for mint BUGuuhPsHpk8YZrL2GctsCtXGneL1gmT5zYb7eMHZDWf
 ```
 
 By combining all three parameters (`dataSlice`, `dataSize`, and `memcmp`) we can
-limit the scope of our query and efficiently return only the data we’re
+limit the scope of our query and efficiently return only the data we're
 interested in.
 
 ## Other Resources
