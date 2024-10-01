@@ -239,10 +239,7 @@ async function post(req: PublicKey, res: PublicKey) {
     fromPubkey: new PublicKey(account),
     toPubkey: Keypair.generate().publicKey,
     lamports: 0.001 * LAMPORTS_PER_SOL,
-    });
-
-
-  
+  }); 
 
   transaction.add(instruction);
 
