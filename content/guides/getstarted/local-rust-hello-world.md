@@ -215,8 +215,8 @@ You have successfully setup, built, and deployed a Solana program using the Rust
 language.
 
 <Callout type="success" title="Look at your program!">
-You can use the [Solana Explorer](https://explorer.solana.com/) to look at your newly deployed program. 
-The explorer also works on localnet, you can open the [Solana Explorer on localnet](https://explorer.solana.com/?cluster=custom) and just paste your programId in the search bar. 
+You can use the [Solana Explorer](https://explorer.solana.com/) to look at your newly deployed program.
+The explorer also works on localnet, you can open the [Solana Explorer on localnet](https://explorer.solana.com/?cluster=custom) and just paste your programId in the search bar.
 </Callout>
 
 ## Let's call the Hello World program
