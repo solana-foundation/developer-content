@@ -1,7 +1,7 @@
 // remark-code-import
 // code-import.ts
 // https://github.com/kevin940726/remark-code-import
-import fs from "node:fs";
+import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { EOL } from "node:os";
 import { visit } from "unist-util-visit";
@@ -94,9 +94,8 @@ function codeImport(options: CodeImportOptions = {}) {
     throw new Error(`"rootDir" has to be an absolute path`);
   }
 
-  return function transformer(tree: Root, file: VFile) {
+  return async function transformer(tree: Root, file: VFile) {
     const codes: [Code, number | null, Parent][] = [];
-    const promises: Promise<void>[] = [];
 
     visit(tree, "code", (node, index, parent) => {
       codes.push([node as Code, index as null | number, parent as Parent]);
@@ -125,79 +124,43 @@ function codeImport(options: CodeImportOptions = {}) {
       const normalizedFilePath = path.join(rootDir, filePath.slice(1));
       const fileAbsPath = path.resolve(normalizedFilePath);
 
-      // Check if the path is a directory
-      if (fs.statSync(fileAbsPath).isDirectory()) {
-        throw new Error(
-          `Error processing ${fileAbsPath}: Path is a directory, not a file`,
-        );
-      }
-
-      if (!options.allowImportingFromOutside) {
-        const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
-        if (
-          relativePathFromRootDir.startsWith(`..${path.sep}`) ||
-          path.isAbsolute(relativePathFromRootDir)
-        ) {
-          throw new Error(
-            `Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`,
-          );
+      try {
+        // Check if the path is a directory
+        const stats = await stat(fileAbsPath);
+        if (stats.isDirectory()) {
+          throw new Error(`Path is a directory, not a file`);
         }
-      }
 
-      const ranges = rangeString
-        ? parseLineRanges(rangeString)
-        : [{ from: 1, to: Infinity }];
-
-      if (options.async) {
-        promises.push(
-          new Promise<void>((resolve, reject) => {
-            fs.readFile(fileAbsPath, "utf8", (err, fileContent) => {
-              if (err) {
-                reject(
-                  new Error(
-                    `Error reading file ${fileAbsPath}: ${err.message}`,
-                  ),
-                );
-                return;
-              }
-
-              try {
-                node.value = extractLines(
-                  fileContent,
-                  ranges,
-                  options.preserveTrailingNewline,
-                );
-                if (options.removeRedundantIndentations) {
-                  node.value = stripIndent(node.value);
-                }
-                resolve();
-              } catch (error) {
-                reject(error);
-              }
-            });
-          }),
-        );
-      } else {
-        try {
-          const fileContent = fs.readFileSync(fileAbsPath, "utf8");
-          node.value = extractLines(
-            fileContent,
-            ranges,
-            options.preserveTrailingNewline,
-          );
-          if (options.removeRedundantIndentations) {
-            node.value = stripIndent(node.value);
+        if (!options.allowImportingFromOutside) {
+          const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
+          if (
+            relativePathFromRootDir.startsWith(`..${path.sep}`) ||
+            path.isAbsolute(relativePathFromRootDir)
+          ) {
+            throw new Error(
+              `Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`,
+            );
           }
-        } catch (error) {
-          throw new Error(
-            `Error processing ${fileAbsPath}: ${(error as Error).message}`,
-          );
         }
-      }
-    }
 
-    if (promises.length) {
-      return Promise.all(promises);
+        const ranges = rangeString
+          ? parseLineRanges(rangeString)
+          : [{ from: 1, to: Infinity }];
+
+        const fileContent = await readFile(fileAbsPath, "utf8");
+        node.value = extractLines(
+          fileContent,
+          ranges,
+          options.preserveTrailingNewline,
+        );
+        if (options.removeRedundantIndentations) {
+          node.value = stripIndent(node.value);
+        }
+      } catch (error) {
+        throw new Error(
+          `Error processing ${fileAbsPath}: ${(error as Error).message}`,
+        );
+      }
     }
   };
 }

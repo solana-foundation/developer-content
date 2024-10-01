@@ -166,6 +166,7 @@ const processInChunks = async <T>(
 const watchFiles = async (directory: string): Promise<void> => {
   const watcher = chokidar.watch(["**/*.md", "**/*.mdx"], {
     ignored: [
+      "**.**",
       /(^|[\/\\])\../,
       "**/node_modules/**",
       "**/.git/**",
