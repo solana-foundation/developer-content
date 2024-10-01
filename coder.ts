@@ -106,7 +106,7 @@ const processContent = async (
       .use(remarkFrontmatter)
       // @ts-expect-error
       .use(codeImport, {
-        preserveTrailingNewline: true,
+        preserveTrailingNewline: false,
         removeRedundantIndentations: true,
         rootDir: process.cwd(),
       })

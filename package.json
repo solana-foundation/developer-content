@@ -11,7 +11,7 @@
     "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer2 build --clearCache",
     "code-import": "npx esrun coder.ts",
-    "dev": "concurrently -p \"[{name}]\" -n \"code import,Contentlayer,next dev\" -c \"bgBlue.bold,bgMagenta.bold,bgGreen.bold\" \"yarn code-import --watch\" \"yarn contentlayer:build\" \"next dev -p 3001\"",
+    "dev": "yarn contentlayer:build && concurrently -p \"[{name}]\" -n \"code import,next dev\" -c \"bgBlue.bold,bgGreen.bold\" \"yarn code-import --watch\" \"next dev -p 3001\"",
     "prebuild": "yarn code-import",
     "build": "yarn prettier:i18n && yarn contentlayer:build && next build",
     "start": "next start -p 3001",
@@ -62,6 +62,6 @@
     "vfile": "^6.0.2"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,md,css,md,mdx}": "yarn prettier:fix"
+    "*.{js,jsx,json,ts,tsx,md,css,md,mdx,yml,yaml}": "yarn prettier:fix"
   }
 }

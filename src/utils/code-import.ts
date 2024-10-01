@@ -17,26 +17,74 @@ interface CodeImportOptions {
   allowImportingFromOutside?: boolean;
 }
 
+interface LineRange {
+  from: number;
+  to: number;
+}
+
+function parseLineRanges(rangeString: string): LineRange[] {
+  const rangeRegex = /#L(\d+)(?:-L?(\d+))?/g;
+  const ranges: LineRange[] = [];
+  let match;
+
+  while ((match = rangeRegex.exec(rangeString)) !== null) {
+    const [, from, to] = match;
+    const fromLine = parseInt(from, 10);
+    const toLine = to ? parseInt(to, 10) : fromLine;
+
+    if (fromLine === 0 || toLine === 0) {
+      throw new Error(
+        `Invalid line number: Line numbers must be positive integers`,
+      );
+    }
+
+    if (fromLine > toLine) {
+      throw new Error(
+        `Invalid range: L${fromLine}-L${toLine}. 'from' should be less than or equal to 'to'`,
+      );
+    }
+
+    ranges.push({ from: fromLine, to: toLine });
+  }
+
+  // Sort ranges and check for overlaps
+  ranges.sort((a, b) => a.from - b.from);
+  for (let i = 1; i < ranges.length; i++) {
+    if (ranges[i].from <= ranges[i - 1].to) {
+      throw new Error(`Overlapping or out-of-order ranges are not allowed`);
+    }
+  }
+
+  return ranges;
+}
+
 function extractLines(
   content: string,
-  fromLine: number | undefined,
-  hasDash: boolean,
-  toLine: number | undefined,
+  ranges: LineRange[],
   preserveTrailingNewline = false,
-) {
+): string {
   const lines = content.split(EOL);
-  const start = fromLine || 1;
-  let end: number;
-  if (!hasDash) {
-    end = start;
-  } else if (toLine) {
-    end = toLine;
-  } else if (lines[lines.length - 1] === "" && !preserveTrailingNewline) {
-    end = lines.length - 1;
-  } else {
-    end = lines.length;
+  let result: string[] = [];
+
+  for (const range of ranges) {
+    if (range.to > lines.length) {
+      throw new Error(
+        `Line range exceeds file length of ${lines.length} lines`,
+      );
+    }
+    result = result.concat(lines.slice(range.from - 1, range.to));
   }
-  return lines.slice(start - 1, end).join("\n");
+
+  let finalResult = result.join("\n");
+  if (
+    preserveTrailingNewline &&
+    content.endsWith("\n") &&
+    !finalResult.endsWith("\n")
+  ) {
+    finalResult += "\n";
+  }
+
+  return finalResult;
 }
 
 function codeImport(options: CodeImportOptions = {}) {
@@ -63,35 +111,26 @@ function codeImport(options: CodeImportOptions = {}) {
         continue;
       }
 
-      // if (!file.dirname) {
-      //   throw new Error('"file" should be an instance of VFile');
-      // }
+      const res = /^file=(["'])?(\/.+?)\1?(#.+)?$/.exec(fileMeta);
 
-      // regex to get group of code from line number to line number
-      const res =
-        /^file=(?<path>.+?)(?:(?:#(?:L(?<from>\d+)(?<dash>-)?)?)(?:L(?<to>\d+))?)?$/.exec(
-          fileMeta,
+      if (!res) {
+        throw new Error(
+          `Unable to parse file path ${fileMeta}. File path must start with a forward slash (/)`,
         );
-      if (!res || !res.groups || !res.groups.path) {
-        throw new Error(`Unable to parse file path ${fileMeta}`);
-      }
-      const filePath = res.groups.path;
-      const fromLine = res.groups.from
-        ? Number.parseInt(res.groups.from, 10)
-        : undefined;
-      const hasDash = !!res.groups.dash || fromLine === undefined;
-      const toLine = res.groups.to
-        ? Number.parseInt(res.groups.to, 10)
-        : undefined;
-
-      // Ensure the file path starts with a '/'
-      if (!filePath.startsWith("/")) {
-        throw new Error(`File path must start with '/': ${filePath}`);
       }
 
-      // Remove the leading '/' and resolve the path relative to rootDir
+      const [, , filePath, rangeString = ""] = res;
+
+      // Resolve the path relative to rootDir
       const normalizedFilePath = path.join(rootDir, filePath.slice(1));
       const fileAbsPath = path.resolve(normalizedFilePath);
+
+      // Check if the path is a directory
+      if (fs.statSync(fileAbsPath).isDirectory()) {
+        throw new Error(
+          `Error processing ${fileAbsPath}: Path is a directory, not a file`,
+        );
+      }
 
       if (!options.allowImportingFromOutside) {
         const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
@@ -105,41 +144,54 @@ function codeImport(options: CodeImportOptions = {}) {
         }
       }
 
+      const ranges = rangeString
+        ? parseLineRanges(rangeString)
+        : [{ from: 1, to: Infinity }];
+
       if (options.async) {
         promises.push(
           new Promise<void>((resolve, reject) => {
             fs.readFile(fileAbsPath, "utf8", (err, fileContent) => {
               if (err) {
-                reject(err);
+                reject(
+                  new Error(
+                    `Error reading file ${fileAbsPath}: ${err.message}`,
+                  ),
+                );
                 return;
               }
 
-              node.value = extractLines(
-                fileContent,
-                fromLine,
-                hasDash,
-                toLine,
-                options.preserveTrailingNewline,
-              );
-              if (options.removeRedundantIndentations) {
-                node.value = stripIndent(node.value);
+              try {
+                node.value = extractLines(
+                  fileContent,
+                  ranges,
+                  options.preserveTrailingNewline,
+                );
+                if (options.removeRedundantIndentations) {
+                  node.value = stripIndent(node.value);
+                }
+                resolve();
+              } catch (error) {
+                reject(error);
               }
-              resolve();
             });
           }),
         );
       } else {
-        const fileContent = fs.readFileSync(fileAbsPath, "utf8");
-
-        node.value = extractLines(
-          fileContent,
-          fromLine,
-          hasDash,
-          toLine,
-          options.preserveTrailingNewline,
-        );
-        if (options.removeRedundantIndentations) {
-          node.value = stripIndent(node.value);
+        try {
+          const fileContent = fs.readFileSync(fileAbsPath, "utf8");
+          node.value = extractLines(
+            fileContent,
+            ranges,
+            options.preserveTrailingNewline,
+          );
+          if (options.removeRedundantIndentations) {
+            node.value = stripIndent(node.value);
+          }
+        } catch (error) {
+          throw new Error(
+            `Error processing ${fileAbsPath}: ${(error as Error).message}`,
+          );
         }
       }
     }
