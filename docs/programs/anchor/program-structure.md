@@ -1,6 +1,8 @@
 ---
 title: Anchor Program Structure
-description: Program Structure
+description:
+  Learn about the structure of Anchor programs, including key macros and their
+  roles in simplifying Solana program development
 sidebarLabel: Program Structure
 sidebarSortOrder: 1
 ---
@@ -18,14 +20,15 @@ The main macros found in an Anchor program include:
 - [`#[derive(Accounts)]`](#derive-accounts-macro): Applied to structs to
   indicate a list of accounts required by an instruction
 - [`#[account]`](#account-macro): Applied to structs to create custom account
-  types specific to the program
+  types for the program
 
 ## Example Program
 
-Below is a simple Anchor program that creates an account (`NewAccount` type)
-which stores a `u64` value passed to the `initialize` instruction.
+Let's examine a simple program that demonstrates the usage of the macros
+mentioned above to understand the basic structure of an Anchor program.
 
-We'll use this example to walk through the basic structure of an Anchor program.
+The example program below creates a new account (`NewAccount`) that stores a
+`u64` value passed to the `initialize` instruction.
 
 ```rust filename="lib.rs"
 use anchor_lang::prelude::*;
@@ -57,20 +60,20 @@ pub struct NewAccount {
 }
 ```
 
-## declare_id macro
+## declare_id! macro
 
 The
 [`declare_id`](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/attribute/account/src/lib.rs#L430)
-macro is used to specify the on-chain address of the program (program ID).
-
-By default, the keypair generated for the program ID is found in
-`/target/deploy/your_program_name.json`.
+macro specifies the on-chain address of the program, known as the program ID.
 
 ```rust filename="lib.rs" {3}
 use anchor_lang::prelude::*;
 
 declare_id!("11111111111111111111111111111111");
 ```
+
+By default, the program ID is the public key of the keypair generated at
+`/target/deploy/your_program_name.json`.
 
 To update the value of the program ID in the `declare_id` macro with the public
 key of the keypair in the `/target/deploy/your_program_name.json` file, run the
@@ -80,18 +83,17 @@ following command:
 anchor keys sync
 ```
 
-The `anchor keys sync` command is useful after cloning a Github repo since the
-value of the program ID in a cloned repo's `declare_id` macro won't match the
-one generated when you run `anchor build` locally.
+The `anchor keys sync` command is useful to run when cloning a repository where
+the value of the program ID in a cloned repo's `declare_id` macro won't match
+the one generated when you run `anchor build` locally.
 
-## program macro
+## #[program] macro
 
 The
 [`#[program]`](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/attribute/program/src/lib.rs#L12)
-macro specifies the module containing all of your program's instructions. Each
-public function in the module represents a separate instruction for the program.
-The body of the function is the logic that is executed when the instruction is
-invoked.
+macro defines the module that contains all the instruction handlers for your
+program. Each public function within this module corresponds to an instruction
+that can be invoked.
 
 ```rust filename="lib.rs" {5, 8-12}
 use anchor_lang::prelude::*;
@@ -125,9 +127,10 @@ pub struct NewAccount {
 
 ### Instruction Context
 
-Every instruction in an Anchor program must have a `Context<T>` type as its
-first parameter, where `T` is a struct you define that implements the `Accounts`
-trait and specifies the accounts the instruction requires.
+Instruction handlers are functions that define the logic executed when an
+instruction is invoked. The first parameter of each handler is a `Context<T>`
+type, where `T` is a struct implementing the `Accounts` trait and specifies the
+accounts the instruction requires.
 
 The
 [`Context`](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/src/context.rs#L24)
@@ -151,18 +154,18 @@ pub struct Context<'a, 'b, 'c, 'info, T> {
 
 The `Context` fields can be used in an instruction using dot notation:
 
-- `ctx.accounts`: The instruction's accounts
-- `ctx.program_id`: The address of the program itself
-- `ctx.remaining_accounts`: All accounts provided to the instruction but not
-  specified in the `Accounts` struct
+- `ctx.accounts`: The accounts required for the instruction
+- `ctx.program_id`: The program's public key (address)
+- `ctx.remaining_accounts`: Additional accounts not specified in the `Accounts`
+  struct.
 - `ctx.bumps`: Bump seeds for any
   [Program Derived Address (PDA)](/docs/core/pda.md) accounts specified in the
   `Accounts` struct
 
-Additional parameters are optional and define any additional arguments that need
-to be provided when the instruction is invoked.
+Additional parameters are optional and can be included to specify arguments that
+must be provided when the instruction is invoked.
 
-```rust filename="lib.rs" /Context/
+```rust filename="lib.rs" /Context/ /data/1
 pub fn initialize(ctx: Context<Initialize>, data: u64) -> Result<()> {
     ctx.accounts.new_account.data = data;
     msg!("Changed data to: {}!", data);
@@ -170,8 +173,9 @@ pub fn initialize(ctx: Context<Initialize>, data: u64) -> Result<()> {
 }
 ```
 
-In this example, the `Initialize` struct implements the `Accounts` trait and
-specifies the accounts the `initialize` instruction requires.
+In this example, the `Initialize` struct implements the `Accounts` trait where
+each field in the struct represents an account required by the `initialize`
+instruction.
 
 ```rust filename="lib.rs" /Initialize/ /Accounts/
 #[program]
@@ -194,14 +198,15 @@ pub struct Initialize<'info> {
 }
 ```
 
-## derive(Accounts) macro
+## #[derive(Accounts)] macro
 
 The
 [`#[derive(Accounts)]`](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/derive/accounts/src/lib.rs#L630)
-macro is applied to a struct and implements the
+macro is applied to a struct to specify the accounts that must be provided when
+an instruction is invoked. This macro implements the
 [`Accounts`](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/src/lib.rs#L105)
-trait. A struct annotated with `#[derive(Accounts)]` is used to specify accounts
-required for a particular instruction.
+trait, which simplifies account validation and serialization and deserialization
+of account data.
 
 ```rust /Accounts/ {1}
 #[derive(Accounts)]
@@ -260,7 +265,7 @@ Anchor programs in two ways that are generally used together:
   client matches what the program expects.
 
   You can find the implementation of the account types
-  [here](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/src/accounts.rs).
+  [here](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/src/accounts).
 
   ```rust /Account/2 /Signer/ /Program/
   #[derive(Accounts)]
@@ -273,9 +278,10 @@ Anchor programs in two ways that are generally used together:
   }
   ```
 
-When an Anchor program instruction is invoked, the program first validates the
-accounts passed into the instruction before executing the instruction's logic.
-Accounts are then accessible in an instruction using the `ctx.accounts` syntax.
+When an instruction in an Anchor program is invoked, the program first validates
+the accounts provided before executing the instruction's logic. After
+validation, these accounts can be accessed within the instruction using the
+`ctx.accounts` syntax.
 
 ```rust filename="lib.rs"  /ctx.accounts.new_account/ /new_account/ /Initialize/
 use anchor_lang::prelude::*;
@@ -307,12 +313,12 @@ pub struct NewAccount {
 }
 ```
 
-## account macro
+## #[account] macro
 
 The
 [`#[account]`](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/attribute/account/src/lib.rs#L66)
-macro is applied to structs to defines the data structure for custom accounts
-the program can create.
+macro is applied to structs that define the data stored in custom accounts
+created by your program.
 
 ```rust
 #[account]
@@ -367,11 +373,13 @@ pub struct NewAccount {
 
 ### Account Discriminator
 
-For accounts created in an Anchor program, the account discriminator refers to
-an 8-byte identifier, unique to each account type. This identifier is derived
-using the first 8 bytes of the SHA256 hash of the string
-`account:<account_name>`. The first 8 bytes in an account's data are
-specifically reserved for this discriminator.
+An account discriminator in an Anchor program refers to an 8 byte identifier
+unique to each account type. It's derived from the first 8 bytes of the SHA256
+hash of the string `account:<AccountName>`. This discriminator is stored as the
+first 8 bytes of account data when an account is created.
+
+When creating an account in an Anchor program, 8 bytes must be allocated for the
+discriminator.
 
 ```rust /8/1
 #[account(init, payer = signer, space = 8 + 8)]
@@ -380,10 +388,11 @@ pub new_account: Account<'info, NewAccount>,
 
 The discriminator is used during the following two scenarios:
 
-- Initialization: During the initialization of an account, the discriminator is
-  set with the account type's discriminator.
-- Deserialization: When account data is deserialized, the discriminator within
-  the data is checked against the expected discriminator of the account type.
+- Initialization: When an account is created, the discriminator is set as the
+  first 8 bytes of the account's data.
+- Deserialization: When account data is deserialized, the first 8 bytes of
+  account data is checked against the discriminator of the expected account
+  type.
 
 If there's a mismatch, it indicates that the client has provided an unexpected
 account. This mechanism serves as an account validation check in Anchor

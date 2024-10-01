@@ -1,29 +1,40 @@
 ---
 title: IDL File
-description: IDL File
+description:
+  Learn about the Interface Description Language (IDL) file in Anchor, its
+  purpose, benefits, and how it simplifies program-client interactions
 sidebarLabel: IDL File
 sidebarSortOrder: 2
 ---
 
-The `anchor build` command generates an Interface Description Language (IDL)
-JSON file which can be found at `/target/idl/<program-name>.json`. This IDL
-file:
+An Interface Description Language (IDL) file provides a standardized JSON file
+describing the program's instructions and accounts. This file simplifies the
+process of integrating your on-chain program with client applications.
 
-- Provides a standardized format for describing the program's instructions and
-  accounts
-- Is used to generate the client to interact with the program
+Key Benefits of the IDL:
+
+- Standardization: Provides a consistent format for describing the program's
+  instructions and accounts
+- Client Generation: Used to generate client code to interact with the program
+
+The `anchor build` command generates an IDL file located at
+`/target/idl/<program-name>.json`.
 
 The code snippets below highlights how the program, IDL, and client relate to
 each other.
 
 ## Program Instructions
 
-The `instructions` array in the IDL corresponds with the instructions on the
-program and specify the required accounts and parameters for each instruction.
+The `instructions` array in the IDL corresponds directly to the instructions
+defined in your program. It specifies the required accounts and parameters for
+each instruction.
 
 <!-- prettier-ignore -->
 <Tabs items={['Program', 'IDL', 'Client']}>
 <Tab value="Program">
+
+The program below includes an `initialize` instruction, specifying the accounts
+and parameters it requires.
 
 ```rust {8-12, 15-22}
 use anchor_lang::prelude::*;
@@ -58,7 +69,10 @@ pub struct NewAccount {
 </Tab>
 <Tab value="IDL">
 
-```json filename="JSON" {11, 14-27, 30-33}
+The generated IDL file includes the instruction in a standardized JSON format,
+including its name, accounts, arguments, and discriminator.
+
+```json filename="JSON" {11-12, 14-27, 30-33}
 {
   "address": "BYFW1vhC1ohxwRbYoLbAWs86STa25i9sD5uEusVjTYNd",
   "metadata": {
@@ -120,6 +134,9 @@ pub struct NewAccount {
 
 </Tab>
 <Tab value="Client">
+
+The IDL file is then used to generate a client for interacting with the program,
+simplifying the process of invoking the program instruction.
 
 ```ts {19-26}
 import * as anchor from "@coral-xyz/anchor";
@@ -166,17 +183,16 @@ describe("hello_anchor", () => {
 
 ## Program Accounts
 
-The `accounts` array in the IDL corresponds with structs in the program
-annotated with the `#[account]` macro. These structs define the data structure
-for information stored in accounts that the program can create.
-
-In other words, when the program creates an account, the account's AccountInfo
-data field will store and serialize this data structure, which can later be
-deserialized to read the data back into the same structure.
+The `accounts` array in the IDL corresponds to the structs in a program
+annotated with the `#[account]` macro. These structs define the data stored in
+accounts created by the program.
 
 <!-- prettier-ignore -->
 <Tabs items={['Program', 'IDL', 'Client']}>
 <Tab value="Program">
+
+The program below defines a `NewAccount` struct with a single `data` field of
+type `u64`.
 
 ```rust {24-27}
 use anchor_lang::prelude::*;
@@ -211,7 +227,10 @@ pub struct NewAccount {
 </Tab>
 <Tab value="IDL">
 
-```json filename="JSON" {39, 45-54}
+The generated IDL file includes the account in a standardized JSON format,
+including its name, discriminator, and fields.
+
+```json filename="JSON" {39-40, 45-54}
 {
   "address": "BYFW1vhC1ohxwRbYoLbAWs86STa25i9sD5uEusVjTYNd",
   "metadata": {
@@ -274,6 +293,9 @@ pub struct NewAccount {
 </Tab>
 <Tab value="Client">
 
+The IDL file is then used to generate a client for interacting with the program,
+simplifying the process of fetching and deserializing account data.
+
 ```ts {29-31}
 import * as anchor from "@coral-xyz/anchor";
 import { Program, BN } from "@coral-xyz/anchor";
@@ -319,17 +341,17 @@ describe("hello_anchor", () => {
 
 ## Discriminators
 
-Anchor assigns a unique 8-byte discriminator to each instruction and account
+Anchor assigns a unique 8 byte discriminator to each instruction and account
 type in a program. These discriminators serve as identifiers to distinguish
 between different instructions or account types.
-
-Note that when working with Anchor, you typically won't need to interact
-directly with these discriminators. This section is primarily to provide context
-on how the discriminator is generated and used.
 
 The discriminator is generated using the first 8 bytes of the Sha256 hash of a
 prefix combined with the instruction or account name. As of Anchor v0.30, these
 discriminators are included in the IDL file.
+
+Note that when working with Anchor, you typically won't need to interact
+directly with these discriminators. This section is primarily to provide context
+on how the discriminator is generated and used.
 
 <!-- prettier-ignore -->
 <Tabs items={['Instructions', 'Accounts']}>
@@ -402,7 +424,7 @@ deserializing on-chain data and is set when the account is created.
 ```
 
 The discriminator for an account is the first 8 bytes of the Sha256 hash of the
-prefix 'account' plus the account name.
+prefix `account` plus the account name.
 
 For example:
 

@@ -1,35 +1,43 @@
 ---
 title: PDAs with Anchor
+description:
+  Learn how to use Program Derived Addresses (PDAs) in Anchor programs, using
+  constraints, and implementing common PDA patterns
 sidebarLabel: PDAs with Anchor
 sidebarSortOrder: 4
 ---
 
 [Program Derived Addresses (PDA)](/docs/core/pda) refer to a feature of Solana
 development that allows you to create a unique address derived deterministically
-from optional pre-defined inputs (seeds) and a program ID.
+from pre-defined inputs (seeds) and a program ID.
 
 This section will cover basic examples of how to use PDAs in an Anchor program.
 
 ## Anchor PDA Constraints
 
 When using PDAs in an Anchor program, you generally use Anchor's account
-constraints to define the seeds that are used to derive the PDA. Defining the
-seeds serves as a security check to ensure that correct address is derived.
+constraints to define the seeds used to derive the PDA. These constraints serve
+as security checks to ensure that the correct address is derived.
 
 The constraints used to define the PDA seeds include:
 
-- `seeds`: The optional seeds used to derive the PDA
-- `bump`: The bump seed used to derive the PDA
-- `seeds::program` - The program ID used to derive the PDA address. This
-  constraint is only used to derive a PDA where the program ID is not the
+- `seeds`: An array of optional seeds used to derive the PDA. Seeds can be
+  static values or dynamic references to account data.
+- `bump`: The bump seed used to derive the PDA. Used to ensure the address falls
+  off the Ed25519 curve and is a valid PDA.
+- `seeds::program` - (Optional) The program ID used to derive the PDA address.
+  This constraint is only used to derive a PDA where the program ID is not the
   current program.
 
 The `seeds` and `bump` constraints are required to be used together.
 
 ### Usage Examples
 
+Below are examples demonstrating how to use PDA constraints in an Anchor
+program.
+
 <!-- prettier-ignore -->
-<Tabs items={['seeds', 'bump', 'seeds::program']}>
+<Tabs items={['seeds', 'bump', 'seeds::program', 'init']}>
 <Tab value="seeds">
 
 The `seeds` constraint specifies the optional values used to derive the PDA.
@@ -91,7 +99,7 @@ The `bump` constraint specifies the bump seed used to derive the PDA.
 
 #### Automatic Bump Calculation
 
-When using the `bump` constraint without an value, the bump is automatically
+When using the `bump` constraint without a value, the bump is automatically
 calculated each time the instruction is invoked.
 
 ```rs
@@ -107,9 +115,9 @@ pub struct InstructionAccounts<'info> {
 
 #### Specify Bump Value
 
-You can specify the bump seed value, which can be stored on an account. This
-assumes that the account is already created and the bump seed is stored as a
-field in the account's data.
+You can explicitly provide the bump value, which is useful for optimizing
+compute unit usage. This assumes that the PDA account has been created and the
+bump seed is stored as a field on an existing account.
 
 ```rs
 #[derive(Accounts)]
@@ -127,17 +135,15 @@ pub struct CustomAccount {
 }
 ```
 
-Specifying the bump seed value can reduce Compute Units (CU) usage when the
-instruction is invoked. This is because the program does not need to derive the
-PDA to determine the correct bump. The saved bump value can be stored on the
+By storing the bump value in the account's data, the program doesn't need to
+recalculate it, saving compute units. The saved bump value can be stored on the
 account itself or another account.
 
 </Tab>
 <Tab value="seeds::program">
 
 The `seeds::program` constraint specifies the program ID used to derive the PDA.
-This constraint is only used when deriving a PDA for a program other than the
-current one.
+This constraint is only used when deriving a PDA from a different program.
 
 Use this constraint when your instruction needs to interact with PDA accounts
 created by another program.
@@ -156,7 +162,7 @@ pub struct InstructionAccounts<'info> {
 ```
 
 </Tab>
-</Tabs>
+<Tab value="init">
 
 The `init` constraint is commonly used with `seeds` and `bump` to create a new
 account with an address that is a PDA. Under the hood, the `init` constraint
@@ -184,23 +190,23 @@ pub struct CustomAccount {
 }
 ```
 
-## PDA seeds in IDL
+</Tab>
+</Tabs>
+
+## PDA seeds in the IDL
 
 Program Derived Address (PDA) seeds defined in the `seeds` constraint are
-included in the program's IDL file. This enables the Anchor client to
-automatically resolve accounts using the seeds specified in the IDL when
-constructing an instruction.
+included in the program's IDL file. This allows the Anchor client to
+automatically resolve accounts using these seeds when constructing instructions.
 
-This example below demonstrates how to define a PDA with both static and dynamic
-seeds in an Anchor program, showing the relationship between the program, IDL,
-and client.
+This example below shows the relationship between the program, IDL, and client.
 
 <!-- prettier-ignore -->
 <Tabs items={['Program', 'IDL', 'Client']}>
 <Tab value="Program">
 
-The program defines a `pda_account` using a static seed (`b"hello_world"`) and
-the signer's public key as a dynamic seed.
+The program below defines a `pda_account` using a static seed (`b"hello_world"`)
+and the signer's public key as a dynamic seed.
 
 ```rs {18} /signer/
 use anchor_lang::prelude::*;
@@ -233,7 +239,7 @@ pub struct InstructionAccounts<'info> {
 The program's IDL file includes the PDA seeds defined in the `seeds` constraint.
 
 - The static seed `b"hello_world"` is converted to byte values.
-- The dynamic seed is specified as an account reference to the signer.
+- The dynamic seed is included as reference to the signer account.
 
 ```json {22-29}
 {
@@ -279,8 +285,11 @@ The program's IDL file includes the PDA seeds defined in the `seeds` constraint.
 <Tab value="Client">
 
 The Anchor client can automatically resolve the PDA address using the IDL file.
-This means the PDA does not need to be explicitly specified when the instruction
-is built.
+
+In the example below, Anchor automatically resolves the PDA address using the
+provider wallet as the signer, and its public key as the dynamic seed for PDA
+derivation. This removes the need to explicitly derive the PDA when building the
+instruction.
 
 ```ts {13}
 import * as anchor from "@coral-xyz/anchor";

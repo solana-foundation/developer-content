@@ -5,15 +5,30 @@ sidebarLabel: Anchor Framework
 sidebarSortOrder: 0
 ---
 
-Anchor is a framework for building Solana programs. Whether you're new to
-blockchain development or an experienced programmer, Anchor simplifies the
-process of writing Solana programs.
+The Anchor framework is a tool that simplifies the process of building Solana
+programs. Whether you're new to blockchain development or an experienced
+programmer, Anchor simplifies the process of writing, testing, and deploying
+Solana programs.
 
-Before proceeding, make sure you have completed all the required
-[installations](/docs/intro/installation). This includes installing Rust, Solana
-CLI, and the Anchor CLI.
+In this section, we'll walk through:
 
-To check your version of the Anchor CLI, run the following command:
+- Creating a new Anchor project
+- Building and testing your program
+- Deploying to Solana clusters
+- Understanding the project file structure
+
+## Prerequisites
+
+For detailed installation instructions, visit the
+[installation](/docs/intro/installation) page.
+
+Before you begin, ensure you have the following installed:
+
+- Rust: The programming language for building Solana programs.
+- Solana CLI: Command-line tool for Solana development.
+- Anchor CLI: Command-line tool for the Anchor framework.
+
+To verify Anchor CLI installation, open your terminal and run:
 
 ```shell filename="Terminal"
 anchor --version
@@ -28,34 +43,33 @@ anchor-cli 0.30.1
 ## Getting Started
 
 This section covers the basic steps to create, build, and test your first local
-Anchor project.
+Anchor program.
 
 <Steps>
 
 ### Create a new Project
 
-To create a new Anchor project, run the command `anchor init <NAME>`. This
-command creates a new Anchor project with the specified `<NAME>`, setting up a
+To start a new project, use the `anchor init` command followed by your project's
+name. This command creates a new directory with the specified name and sets up a
 default program and test file.
 
 ```shell filename="Terminal"
 anchor init my-program
 ```
 
-After creating the project, navigate to the newly created project directory and
-open it in your code editor.
+Navigate to the new project directory and open it in your code editor.
 
 ```shell filename="Terminal" copy
 cd my-project
 ```
 
-The default Anchor program is found in `/programs/my-project/src/lib.rs`.
+The default Anchor program is located at `/programs/my-project/src/lib.rs`.
 
 <Accordion>
 <AccordionItem title="Default Program">
 
-The value in `declare_id!` is the program ID. The program ID is a unique
-identifier for your program.
+The value in the `declare_id!` macro is the program ID, a unique identifier for
+your program.
 
 By default, it is the public key of the keypair generated in
 `/target/deploy/my_project-keypair.json`.
@@ -82,10 +96,13 @@ pub struct Initialize {}
 </AccordionItem>
 </Accordion>
 
-The default Typescript test file is found in `/tests/my-project.ts`.
+The default Typescript test file is located at `/tests/my-project.ts`.
 
 <Accordion>
 <AccordionItem title="Default Test File">
+
+This file demonstrates how to invoke the default program's `initialize`
+instruction in Typescript.
 
 ```ts filename="my-project.ts"
 import * as anchor from "@coral-xyz/anchor";
@@ -109,14 +126,14 @@ describe("my-project", () => {
 </AccordionItem>
 </Accordion>
 
-If you prefer working exclusively with Rust, you can create a project with a
-Rust test file by using the command `anchor init --test-template rust <NAME>`.
+If you prefer Rust for testing, initialize your project with the
+`--test-template rust` flag.
 
 ```shell
 anchor init --test-template rust my-program
 ```
 
-The Rust test file is found in `/tests/src/test_initialize.rs`.
+The Rust test file will be at `/tests/src/test_initialize.rs`.
 
 <Accordion>
 <AccordionItem title="Rust Test File">
@@ -157,18 +174,15 @@ fn test_initialize() {
 
 ### Build the Program
 
-The next step is to build the program. The build process compiles your Anchor
-program, generating the files necessary for deployment. Build the program by
-running `anchor build`.
+Build the program by running `anchor build`.
 
 ```shell filename="Terminal" copy
 anchor build
 ```
 
-The compiled program is found in the `/target/deploy/my_project.so` file.
-
-When you deploy your program to a Solana cluster, the contents of this `.so`
-file are stored on the network in an executable account.
+The compiled program will be at `/target/deploy/my_project.so`. The content of
+this file is what gets stored on the Solana network (as an executable account)
+when you deploy your program.
 
 ### Test the Program
 
@@ -192,13 +206,14 @@ iterate on your program. It allows you to inspect accounts and transaction logs
 on the [Solana Explorer](https://explorer.solana.com/?cluster=custom) while
 developing locally.
 
-First, open a new terminal and start a local Solana validator.
+Open a new terminal and start a local Solana validator by running the
+`solana-test-validator` command.
 
 ```shell filename="Terminal" copy
 solana-test-validator
 ```
 
-In a new terminal, run the tests against the local cluster. Use the
+In a separate terminal, run the tests against the local cluster. Use the
 `--skip-local-validator` flag to skip starting the local validator since it's
 already running.
 
@@ -208,7 +223,7 @@ anchor test --skip-local-validator
 
 ### Deploy to Devnet
 
-By default, the Anchor.toml config file in an Anchor project specifies the
+By default, the `Anchor.toml` config file in an Anchor project specifies the
 localnet cluster.
 
 ```toml filename="Anchor.toml" {14}
@@ -232,8 +247,9 @@ wallet = "~/.config/solana/id.json"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
 ```
 
-To deploy your program to the devnet cluster, update the `Anchor.toml` file to
-specify the devnet cluster.
+To deploy your program to devnet, change the `cluster` value to `Devnet`. Note
+that this requires your wallet to have enough SOL on Devnet to cover deployment
+cost.
 
 ```diff
 -cluster = "Localnet"
@@ -247,14 +263,12 @@ wallet = "~/.config/solana/id.json"
 ```
 
 Now when you run `anchor deploy`, your program will be deployed to the devnet
-cluster.
+cluster. The `anchor test` command will also use the cluster specified in the
+`Anchor.toml` file.
 
 ```shell
 anchor deploy
 ```
-
-The `anchor test` command will also use the cluster specified in the
-`Anchor.toml` file.
 
 To deploy to mainnet, simply update the `Anchor.toml` file to specify the
 mainnet cluster.
@@ -295,8 +309,8 @@ example:
 solana program close 3ynNB373Q3VAzKp7m4x238po36hjAGFXFJB4ybN2iTyg --bypass-warning
 ```
 
-Note that once a program is closed, it the program ID cannot be reused to deploy
-a new program.
+Note that once a program is closed, the program ID cannot be reused to deploy a
+new program.
 
 </Steps>
 
@@ -332,17 +346,17 @@ Below is an overview of default file structure in an Anchor workspace:
 
 ### Programs Folder
 
-The programs folder contains your project's Anchor programs. A single workspace
-can contain multiple programs.
+The `/programs` folder contains your project's Anchor programs. A single
+workspace can contain multiple programs.
 
 ### Tests Folder
 
-The tests folder contains test files for your project. A default test file is
+The `/tests` folder contains test files for your project. A default test file is
 created for you when you create your project.
 
 ### Target Folder
 
-The target directory contains build outputs. The main subfolders include:
+The `/target` folder contains build outputs. The main subfolders include:
 
 - `/deploy`: Contains the keypair and program binary for your programs.
 - `/idl`: Contains the JSON IDL for your programs.
@@ -350,14 +364,14 @@ The target directory contains build outputs. The main subfolders include:
 
 ### Anchor.toml File
 
-The `Anchor.toml`file configures workspace settings for your programs.
+The `Anchor.toml` file configures workspace settings for your project.
 
 ### .anchor Folder
 
-Includes a `program-logs` file that contains the program's transaction logs from
-the last run of test files in the `tests` folder.
+Includes a `program-logs` file that contains transaction logs from the last run
+of test files.
 
 ### App Folder
 
-The app folder is an empty folder that can be optionally used for your frontend
-code.
+The `/app` folder is an empty folder that can be optionally used for your
+frontend code.

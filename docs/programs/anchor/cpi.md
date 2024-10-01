@@ -1,14 +1,17 @@
 ---
 title: CPIs with Anchor
+description:
+  Learn how to implement Cross Program Invocations (CPIs) in Anchor programs,
+  enabling interaction between different programs on Solana
 sidebarLabel: CPIs with Anchor
 sidebarSortOrder: 5
 ---
 
-[Cross Program Invocations (CPI)](/docs/core/cpi.md) refer a feature of Solana
-development where one program invokes instructions of another program. This
-capability enables the composibility of programs on Solana.
+[Cross Program Invocations (CPI)](/docs/core/cpi.md) refer to the process of one
+program invoking instructions of another program, which enables the
+composibility of programs on Solana.
 
-This section will cover the basics of implementing CPIs in an Anchor program
+This section will cover the basics of implementing CPIs in an Anchor program,
 using a simple SOL transfer instruction as a practical example. Once you
 understand the basics of how to implement a CPI, you can apply the same concepts
 for any instruction.
@@ -21,7 +24,7 @@ instruction. Here is the example program on
 
 The `lib.rs` file includes a single `sol_transfer` instruction. When the
 `sol_transfer` instruction on the Anchor program is invoked, the program
-internally invokes the transfer instruction on the System Program.
+internally invokes the transfer instruction of the System Program.
 
 ```rs filename="lib.rs" /sol_transfer/ /transfer/ {23}
 use anchor_lang::prelude::*;
@@ -126,8 +129,7 @@ details of the CPI.
 <Tab value="1">
 
 The `sol_transfer` instruction included in the example code shows a typical
-approach for constructing CPIs using the
-[Anchor framework](https://www.anchor-lang.com/).
+approach for constructing CPIs using the Anchor framework.
 
 This approach involves creating a
 [`CpiContext`](https://docs.rs/anchor-lang/latest/anchor_lang/context/struct.CpiContext.html),
@@ -172,7 +174,7 @@ let cpi_context = CpiContext::new(
 ```
 
 The `cpi_context` and `amount` are then passed into the `transfer` function to
-execute the CPI invoking the transfer instruction on the System Program.
+execute the CPI invoking the transfer instruction of the System Program.
 
 ```rust
 transfer(cpi_context, amount)?;
@@ -183,7 +185,8 @@ transfer(cpi_context, amount)?;
 
 This example shows a different approach to implementing a CPI using the `invoke`
 function and
-[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881).
+[`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881),
+which is generally seen in native Rust programs.
 
 Under the hood, the previous example is an abstraction of this implementation.
 The example below is functionally equivalent to the previous example.
@@ -369,8 +372,8 @@ it("Fund PDA with SOL", async () => {
 ```
 
 Once the PDA is funded with SOL, invoke the `sol_transfer` instruction. This
-instruction transfers SOL from the PDA back to the `wallet` account via a CPI to
-the System Program, which is "signed" for by the program.
+instruction transfers SOL from the PDA account back to the `wallet` account via
+a CPI to the System Program, which is "signed" for by the program.
 
 ```ts
 it("SOL Transfer with PDA signer", async () => {
@@ -501,8 +504,8 @@ transfer(cpi_context, amount)?;
 
 When the CPI is processed, the Solana runtime will validate that the provided
 seeds and caller program ID derive a valid PDA. The PDA is then added as a
-signer on the invocation. This mechanism allows for programs to programmatically
-sign for PDAs that are derived from their program ID.
+signer on the invocation. This mechanism allows for programs to sign for PDAs
+that are derived from their program ID.
 
 </Tab>
 <Tab value="2">
