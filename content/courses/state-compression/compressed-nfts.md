@@ -177,10 +177,10 @@ instruction, but while this data will in a sense exist in the ledger state
 forever, it will likely be inaccessible through validators after a certain
 period of time.
 
-To save space and be more performant, validators don’t retain every transaction
-back to the genesis block. The specific amount of time you’ll be able to access
+To save space and be more performant, validators don't retain every transaction
+back to the genesis block. The specific amount of time you'll be able to access
 the Noop instruction logs related to your data will vary based on the validator,
-but eventually you’ll lose access to it if you’re relying directly on
+but eventually you'll lose access to it if you're relying directly on
 instruction logs.
 
 Technically, it is possible to replay the entire transaction history back to the
@@ -195,7 +195,7 @@ Now that we've covered the theory, let’s focus on the main point of this lesso
 how to create a cNFT collection.
 
 Fortunately, you can use tools created by Solana Foundation, the Solana
-developer community, and Metaplex to simplify the process. Specifically, we’ll
+developer community, and Metaplex to simplify the process. Specifically, we'll
 be using the `@solana/spl-account-compression` SDK, the Metaplex Bubblegum
 program, and the Bubblegum program’s corresponding typescript SDK
 `@metaplex-foundation/mpl-bugglegum` alongside the Metaplex umi library
@@ -370,19 +370,19 @@ the max depth, while the buffer size will determine the number of concurrent
 changes (mints, transfers, etc.) within the same slot that can occur to the
 tree. In other words, choose the max depth that corresponds to the number of
 NFTs you need the tree to hold, then choose one of the options for max buffer
-size based on the traffic you expect you’ll need to support.
+size based on the traffic you expect you'll need to support.
 
 Next, choose the canopy depth. Increasing the canopy depth increases the
 composability of your cNFTs. Any time you or another developer’s code attempts
 to verify a cNFT down the road, the code will have to pass in as many proof
-nodes as there are “layers” in your tree. So for a max depth of 20, you’ll need
+nodes as there are “layers” in your tree. So for a max depth of 20, you'll need
 to pass in 20 proof nodes. Not only is this tedious, but since each proof node
-is 32 bytes it’s possible to max out transaction sizes very quickly.
+is 32 bytes it's possible to max out transaction sizes very quickly.
 
 For example, if your tree has a very low canopy depth, an NFT marketplace may
 only be able to support simple NFTs transfers rather than support an onchain
 bidding system for your cNFTs. The canopy effectively caches proof nodes onchain
-so you don’t have to pass all of them into the transaction, allowing for more
+so you don't have to pass all of them into the transaction, allowing for more
 complex transactions.
 
 Increasing any of these three values increases the size of the account, which
@@ -393,6 +393,7 @@ Once you know these values, you can use the `createTree` method from the
 @metaplex-foundation/mpl-bubblegum package to create your tree.
 
 ```typescript
+
 import { createTree } from "@metaplex-foundation/mpl-bubblegum";
 import {
   ValidDepthSizePair,
@@ -491,7 +492,7 @@ NFT to which the cNFT will be part.
 
 ### Interact with cNFTs
 
-It’s important to note that cNFTs _are not_ SPL tokens. That means your code
+It's important to note that cNFTs _are not_ SPL tokens. That means your code
 needs to follow different conventions to handle cNFT functionality like
 fetching, querying, transferring, etc.
 
@@ -500,7 +501,7 @@ fetching, querying, transferring, etc.
 The simplest way to fetch data from an existing cNFT is to use the
 [Digital Asset Standard Read API](https://solana.com/developers/guides/javascript/compressed-nfts#reading-compressed-nfts-metadata)
 (Read API). Note that this is separate from the standard JSON RPC. To use the
-Read API, you’ll need to use a supporting RPC Provider. Metaplex maintains a
+Read API, you'll need to use a supporting RPC Provider. Metaplex maintains a
 (likely non-exhaustive)
 [list of RPC providers](https://developers.metaplex.com/bubblegum/rpcs) that
 support the Read API.
@@ -516,11 +517,11 @@ have at most two pieces of information:
 1. The transaction signature
 2. The leaf index (possibly)
 
-The only real guarantee is that you’ll have the transaction signature. It is
+The only real guarantee is that you'll have the transaction signature. It is
 **possible** to locate the leaf index from there, but it involves some fairly
 complex parsing. The short story is you must retrieve the relevant instruction
-logs from the Noop program and parse them to find the leaf index. We’ll cover
-this more in depth in a future lesson. For now, we’ll assume you know the leaf
+logs from the Noop program and parse them to find the leaf index. We'll cover
+this more in depth in a future lesson. For now, we'll assume you know the leaf
 index.
 
 This is a reasonable assumption for most mints given that the minting will be
@@ -528,7 +529,7 @@ controlled by your code and can be set up sequentially so that your code can
 track which index is going to be used for each mint. that is, the first mint
 will use index 0, the second index 1, etc.
 
-Once you have the leaf index, you can derive the cNFT’s corresponding asset ID.
+Once you have the leaf index, you can derive the cNFT's corresponding asset ID.
 When using Bubblegum, the asset ID is a PDA derived using the Bubblegum program
 ID and the following seeds:
 
@@ -578,7 +579,7 @@ and more. For example, Helius supports the following methods:
 - `getAssetsByCreator`
 - `getAssetsByGroup`
 
-We won’t go over most of these directly, but be sure to look through the
+We won't go over most of these directly, but be sure to look through the
 [Helius docs](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
 to learn how to use them correctly.
 
@@ -598,7 +599,7 @@ this, you can’t simply tell the program what account to look at and have it
 compare that account’s `authority` or `owner` field to the transaction signer.
 
 Instead, you need to provide the entirety of the cNFT data and any of the Merkle
-tree’s proof information that isn’t stored in the canopy. That way, the program
+tree's proof information that isn't stored in the canopy. That way, the program
 can independently prove that the provided cNFT data, and therefore the cNFT
 owner, is accurate. Only then can the program safely determine if the
 transaction signer should, in fact, be allowed to transfer the cNFT.
@@ -631,6 +632,7 @@ console.log(asset);
 Then we can use the transfer method from the
 `@metaplex-foundation/mpl-bubblegum` package. This method requires two
 arguments: the `umi` instance and an object containing the following fields:
+=======
 
 - `assetWithProof` - Data representing the asset and its associated Merkle
   proof.
@@ -651,9 +653,9 @@ await transfer(umi, {
 
 ### Conclusion
 
-We’ve covered the primary skills needed to interact with cNFTs, but haven’t been
+We've covered the primary skills needed to interact with cNFTs, but haven't been
 fully comprehensive. You can also use Bubblegum to do things like burn, verify,
-delegate, and more. We won’t go through these, but these instructions are
+delegate, and more. We won't go through these, but these instructions are
 similar to the mint and transfer process. If you need this additional
 functionality, take a look at the
 [Bubblegum client source code](https://github.com/metaplex-foundation/mpl-bubblegum/tree/main/clients/js-solita)
@@ -662,12 +664,12 @@ and leverage the helper functions it provides.
 Keep in mind that compression is still new. Available tooling will improve
 quickly but the principles you’ve learned in this lesson will likely remain the
 same. These principles can also be broadened to arbitrary state compression, so
-be sure to master them here so you’re ready for more fun stuff in future
+be sure to master them here so you're ready for more fun stuff in future
 lessons!
 
 ## Lab
 
-Let’s jump in and practice creating and working with cNFTs. Together, we’ll
+Let's jump in and practice creating and working with cNFTs. Together, we'll
 build as simple a script as possible that will let us mint a cNFT collection
 from a Merkle tree.
 
@@ -688,24 +690,24 @@ in `uri.ts`.
 
 The `uri.ts` file provides 1k URIs that you can use for the offchain portion of
 your NFT metadata. You can, of course, create your own metadata. But this lesson
-isn’t explicitly about preparing metadata so we’ve provided some for you.
+isn't explicitly about preparing metadata so we've provided some for you.
 
 The `utils.ts` file has a few helper functions to keep you from writing
 unnecessary boilerplate code. They are as follows:
 
 - `getOrCreateKeypair` will create a new keypair for you and save it to a `.env`
-  file, or if there’s already a private key in the `.env` file it will
+  file, or if there's already a private key in the `.env` file it will
   initialize a keypair from that.
 - `airdropSolIfNeeded` will airdrop some Devnet SOL to a specified address if
-  that address’s balance is below 1 SOL.
+  that address's balance is below 1 SOL.
 - `createNftMetadata` will create the NFT metadata for a given creator public
-  key and index. The metadata it’s getting is just dummy metadata using the URI
+  key and index. The metadata it's getting is just dummy metadata using the URI
   corresponding to the provided index from the `uri.ts` list of URIs.
 - `getOrCreateCollectionNFT` will fetch the collection NFT from the address
   specified in `.env` or if there is none it will create a new one and add the
   address to `.env`.
 
-Finally, there’s some boilerplate in `index.ts` that calls creates a new Devnet
+Finally, there's some boilerplate in `index.ts` that calls creates a new Devnet
 connection, calls `getOrCreateKeypair` to initialize a “wallet,” and calls
 `airdropSolIfNeeded` to fund the wallet if its balance is low all wrapped in a
 function named `initializeUmi` that can be used throughout the codebase
@@ -715,13 +717,14 @@ function named `initializeUmi` that can be used throughout the codebase
 We’ll start by creating the Merkle tree account. Let’s wrap this in a function
 that will eventually create _and_ initialize the account. We’ll create a new
 file called `create-and-initialize-tree.ts` and call our function
+=======
 `createAndInitializeTree`. For this function to work, it will need the following
 parameters:
 
 - `umi` - our umi instance
 - `payer` - a `Keypair` that will pay for transactions.
 - `maxDepthSizePair` - a `ValidDepthSizePair`. This type comes from
-  `@solana/spl-account-compression`. It’s a simple object with properties
+  `@solana/spl-account-compression`. It's a simple object with properties
   `maxDepth` and `maxBufferSize` that enforces a valid combination of the two
   values.
 
@@ -919,7 +922,7 @@ Your output should look like this
 
 #### 5. Read existing cNFT data
 
-Now that we’ve written code to mint cNFTs, let’s see if we can actually fetch
+Now that we've written code to mint cNFTs, let's see if we can actually fetch
 their data. This is tricky because the onchain data is just the Merkle tree
 account, the data from which can be used to verify existing information as
 accurate but is useless in conveying what the information is.
@@ -938,9 +941,9 @@ function from `@metaplex-foundation/mpl-bubblegum` to get the asset ID.
 
 Finally, we can use an RPC that supports the
 [Read API](https://solana.com/developers/guides/javascript/compressed-nfts) to
-fetch the asset. We’ll be using
+fetch the asset. We'll be using
 [Helius](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api),
-but feel free to choose your own RPC provider. To use Helius, you’ll need to get
+but feel free to choose your own RPC provider. To use Helius, you'll need to get
 a free API Key from [the Helius website](https://dev.helius.xyz/). Then add your
 `RPC_URL` to your `.env` file. For example:
 
@@ -1072,35 +1075,18 @@ attributes, files, ownership and creator information, and more.
 Remember, the Read API also includes ways to get multiple assets, query by
 owner, creator, etc., and more. Be sure to look through the
 [Helius docs](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
-to see what’s available.
+to see what's available.
 
 #### 6. Transfer a cNFT
 
 The last thing we’re going to add to our script is a cNFT transfer. To do this,
 we are going to use the
 
-Let’s start by declaring a `transferNft` function that takes the following:
+Let's start by declaring a `transferNft` function that takes the following:
 
 - `assetId` - a `PublicKey` object
 - `sender` - a `Keypair` object so we can sign the transaction
 - `receiver` - a `PublicKey` object representing the new owner
-
-Inside that function, let’s fetch the asset data again then also fetch the asset
-proof. For proper error handling let’s wrap everything in a `try catch`.
-
-```typescript
-import dotenv from "dotenv";
-import { transfer } from "@metaplex-foundation/mpl-bubblegum";
-import {
-  base58,
-  generateSigner,
-  publicKey,
-  PublicKey,
-} from "@metaplex-foundation/umi";
-import { getExplorerLink } from "@solana-developers/helpers";
-import { Keypair } from "@solana/web3.js";
-import { initializeUmi } from ".";
-import { getLeafAssetId } from "./get-leaf-assetId";
 
 dotenv.config();
 
@@ -1148,10 +1134,10 @@ transferNft(
 );
 ```
 
-Lets transfer our first compressed NFT at index 0 to someone else. First we’ll
+Lets transfer our first compressed NFT at index 0 to someone else. First we'll
 need to spin up another wallet with some funds, then grab the assetID at index 0
-using `getLeafAssetId`. Then we’ll do the transfer. Finally, we’ll print out the
-entire collection using our function `logNftDetails`. You’ll note that the NFT
+using `getLeafAssetId`. Then we'll do the transfer. Finally, we'll print out the
+entire collection using our function `logNftDetails`. You'll note that the NFT
 at index zero will now belong to our new wallet in the `ownership` field.
 
 ```typescript
@@ -1199,8 +1185,8 @@ It’s your turn to apply these concepts on your own! We’re not going to give 
 detailed instructions at this point, but here are some ideas:
 
 1. Create your own production cNFT collection
-2. Build a UI for this lesson’s lab that will let you mint a cNFT and display it
-3. See if you can replicate some of the lab script’s functionality in an onchain
+2. Build a UI for this lesson's lab that will let you mint a cNFT and display it
+3. See if you can replicate some of the lab script's functionality in an onchain
    program, i.e. write a program that can mint cNFTs
 
 <Callout type="success" title="Completed the lab?">

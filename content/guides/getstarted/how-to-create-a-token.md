@@ -49,7 +49,7 @@ instead.
 ## Installing Solana Tools
 
 First we need to download Solana tools to our system. Follow this guide to
-[install the Solana CLI](https://docs.solanalabs.com/cli/install).
+[install the Solana CLI](/docs/intro/installation.md).
 
 ## Create folder
 

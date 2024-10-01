@@ -203,7 +203,7 @@ For a Solana + Expo app, you'll need the following:
   from [@solana/web3.js](https://github.com/solana-labs/solana-web3.js) – such
   as `Transaction` and `Uint8Array`.
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
-  through the [JSON RPC API](https://docs.solana.com/api/http).
+  through the [JSON RPC API](/docs/rpc/http/index.mdx).
 - `react-native-get-random-values`: Secure random number generator polyfill
   for `web3.js` underlying Crypto library on React Native.
 - `buffer`: Buffer polyfill needed for `web3.js` on React Native.
@@ -304,7 +304,7 @@ eas login
 
 #### 2. Create the app scaffold
 
-Let’s create our app with the following:
+Let's create our app with the following:
 
 ```bash
 npx create-expo-app -t expo-template-blank-typescript solana-expo

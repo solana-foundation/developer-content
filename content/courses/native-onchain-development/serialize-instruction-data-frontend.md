@@ -27,7 +27,7 @@ description: How to deserialize data fetched from Solana accounts.
   buffer. To facilitate this process of serialization, we will be using
   [Borsh](https://borsh.io/).
 - Transactions can fail to be processed by the blockchain for any number of
-  reasons, we’ll discuss some of the most common ones here.
+  reasons, we'll discuss some of the most common ones here.
 
 ## Lesson
 
@@ -86,14 +86,14 @@ if every instruction succeeds then the transaction as a whole will be
 successful, but if a single instruction fails then the entire transaction will
 fail immediately with no side-effects.
 
-The account array is not just an array of the accounts’ public keys. Each object
-in the array includes the account’s public key, whether or not it is a signer on
+The account array is not just an array of the accounts' public keys. Each object
+in the array includes the account's public key, whether or not it is a signer on
 the transaction, and whether or not it is writable. Including whether or not an
 account is writable during the execution of an instruction allows the runtime to
 facilitate parallel processing of smart contracts. Because you must define which
 accounts are read-only and which you will write to, the runtime can determine
 which transactions are non-overlapping or read-only and allow them to execute
-concurrently. To learn more about Solana’s runtime, check out this
+concurrently. To learn more about Solana's runtime, check out this
 [blog post on Sealevel](https://solana.com/news/sealevel---parallel-processing-thousands-of-smart-contracts).
 
 #### Instruction Data
@@ -104,17 +104,17 @@ an HTTP request lets you build dynamic and flexible REST APIs.
 
 Just as the structure of the body of an HTTP request is dependent on the
 endpoint you intend to call, the structure of the byte buffer used as
-instruction data is entirely dependent on the recipient program. If you’re
-building a full-stack dApp on your own, then you’ll need to copy the same
+instruction data is entirely dependent on the recipient program. If you're
+building a full-stack dApp on your own, then you'll need to copy the same
 structure that you used when building the program over to the client-side code.
-If you’re working with another developer who is handling the program
+If you're working with another developer who is handling the program
 development, you can coordinate to ensure matching buffer layouts.
 
-Let’s think about a concrete example. Imagine working on a Web3 game and being
+Let's think about a concrete example. Imagine working on a Web3 game and being
 responsible for writing client-side code that interacts with a player inventory
 program. The program was designed to allow the client to:
 
-- Add inventory based on a player’s game-play results
+- Add inventory based on a player's game-play results
 - Transfer inventory from one player to another
 - Equip a player with selected inventory items
 
@@ -125,11 +125,11 @@ Each program, however, only has one entry point. You would instruct the program
 on which of these functions to run through the instruction data.
 
 You would also include in the instruction data any information the function
-needs to execute properly, e.g. an inventory item’s ID, a player to transfer
+needs to execute properly, e.g. an inventory item's ID, a player to transfer
 inventory to, etc.
 
 Exactly _how_ this data would be structured would depend on how the program was
-written, but it’s common to have the first field in instruction data be a number
+written, but it's common to have the first field in instruction data be a number
 that the program can map to a function, after which additional fields act as
 function arguments.
 
@@ -145,10 +145,10 @@ in Solana is [Borsh](https://borsh.io). Per the website:
 
 Borsh maintains a [JS library](https://github.com/near/borsh-js) that handles
 serializing common types into a buffer. There are also other packages built on
-top of Borsh that try to make this process even easier. We’ll be using the
+top of Borsh that try to make this process even easier. We'll be using the
 `@coral-xyz/borsh` library which can be installed using `npm`.
 
-Building off of the previous game inventory example, let’s look at a
+Building off of the previous game inventory example, let's look at a
 hypothetical scenario where we are instructing the program to equip a player
 with a given item. Assume the program is designed to accept a buffer that
 represents a struct with the following properties:
@@ -176,9 +176,9 @@ const equipPlayerSchema = borsh.struct([
 
 You can then encode data using this schema with the `encode` method. This method
 accepts as arguments an object representing the data to be serialized and a
-buffer. In the below example, we allocate a new buffer that’s much larger than
+buffer. In the below example, we allocate a new buffer that's much larger than
 needed, then encode the data into that buffer and slice the original buffer down
-into a new buffer that’s only as large as needed.
+into a new buffer that's only as large as needed.
 
 ```typescript
 import * as borsh from "@coral-xyz/borsh";
@@ -198,13 +198,13 @@ equipPlayerSchema.encode(
 const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
 ```
 
-Once a buffer is properly created and the data serialized, all that’s left is
-building the transaction. This is similar to what you’ve done in previous
+Once a buffer is properly created and the data serialized, all that's left is
+building the transaction. This is similar to what you've done in previous
 lessons. The example below assumes that:
 
 - `player`, `playerInfoAccount`, and `PROGRAM_ID` are already defined somewhere
   outside the code snippet
-- `player` is a user’s public key
+- `player` is a user's public key
 - `playerInfoAccount` is the public key of the account where inventory changes
   will be written
 - `SystemProgram` will be used in the process of executing the instruction.
@@ -277,8 +277,8 @@ try {
 
 ## Lab
 
-Let’s practice this together by building a Movie Review app that lets users
-submit a movie review and have it stored on Solana’s network. We’ll build this
+Let's practice this together by building a Movie Review app that lets users
+submit a movie review and have it stored on Solana's network. We'll build this
 app a little bit at a time over the next few lessons, adding new functionality
 each lesson.
 
@@ -288,7 +288,7 @@ Here's a quick diagram of the program we'll build:
 
 ![Solana stores data items in PDAs, which can be found using their seeds](/public/assets/courses/unboxed/movie-review-program.svg)
 
-The public key of the Solana program we’ll use for this application is
+The public key of the Solana program we'll use for this application is
 `CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN`.
 
 #### 1. Download the starter code
@@ -303,8 +303,8 @@ list, a `Form` component for submitting a new review, and a `Movie.ts` file that
 contains a class definition for a `Movie` object.
 
 Note that for now, the movies displayed on the page when you run `npm run dev`
-are mocks. In this lesson, we’ll focus on adding a new review but we won’t be
-able to see that review displayed. Next lesson, we’ll focus on deserializing
+are mocks. In this lesson, we'll focus on adding a new review but we won't be
+able to see that review displayed. Next lesson, we'll focus on deserializing
 custom data from onchain accounts.
 
 #### 2. Create the buffer layout
@@ -322,7 +322,7 @@ data to contain:
 4. `description` as a string representing the written portion of the review you
    are leaving for the movie.
 
-Let’s configure a `borsh` layout in the `Movie` class. Start by importing
+Let's configure a `borsh` layout in the `Movie` class. Start by importing
 `@coral-xyz/borsh`. Next, create a `borshInstructionSchema` property and set it
 to the appropriate `borsh` struct containing the properties listed above.
 
@@ -350,34 +350,73 @@ how the program is structured, the transaction will fail.
 
 #### 3. Create a method to serialize data
 
-Now that we have the buffer layout set up, let’s create a method in `Movie`
-called `serialize()` that will return a `Buffer` with a `Movie` object’s
+Now that we have the buffer layout set up, let's create a method in `Movie`
+called `serialize()` that will return a `Buffer` with a `Movie` object's
 properties encoded into the appropriate layout.
 
+Instead of allocating a fixed buffer size, we'll calculate the size dynamically
+using known constants for the space required by each field in the `Movie`
+object. Specifically, we'll use `INIT_SPACE` (to account for string length
+metadata) and `ANCHOR_DISCRIMINATOR` (to account for the 8-byte discriminator
+used by Anchor).
+
 ```typescript
-import * as borsh from '@coral-xyz/borsh'
+import * as borsh from "@coral-xyz/borsh";
+
+// Constants for size calculations
+const ANCHOR_DISCRIMINATOR = 8; // 8 bytes for the account discriminator used by Anchor
+const STRING_LENGTH_SPACE = 4; // 4 bytes to store the length of each string
+
+// Specific sizes for 'title' and 'description' strings
+const TITLE_SIZE = 100; // Allocate 100 bytes for the 'title'
+const DESCRIPTION_SIZE = 500; // Allocate 500 bytes for the 'description'
+
+// Total space calculation for the Movie review structure
+const MOVIE_REVIEW_SPACE =
+  ANCHOR_DISCRIMINATOR + // 8 bytes for the account discriminator
+  STRING_LENGTH_SPACE +
+  TITLE_SIZE + // 4 bytes for the title length + 100 bytes for the title
+  STRING_LENGTH_SPACE +
+  DESCRIPTION_SIZE + // 4 bytes for the description length + 500 bytes for the description
+  1 + // 1 byte for 'variant'
+  1; // 1 byte for 'rating'
 
 export class Movie {
   title: string;
   rating: number;
   description: string;
 
-  ...
+  constructor(title: string, rating: number, description: string) {
+    // Enforce specific sizes for title and description
+    if (title.length > TITLE_SIZE) {
+      throw new Error(`Title cannot exceed ${TITLE_SIZE} characters.`);
+    }
+    if (description.length > DESCRIPTION_SIZE) {
+      throw new Error(
+        `Description cannot exceed ${DESCRIPTION_SIZE} characters.`,
+      );
+    }
+
+    this.title = title;
+    this.rating = rating;
+    this.description = description;
+  }
 
   borshInstructionSchema = borsh.struct([
-    borsh.u8('variant'),
-    borsh.str('title'),
-    borsh.u8('rating'),
-    borsh.str('description'),
-  ])
+    borsh.u8("variant"),
+    borsh.str("title"),
+    borsh.u8("rating"),
+    borsh.str("description"),
+  ]);
 
   serialize(): Buffer {
     try {
-      const buffer = Buffer.alloc(1000);
+      // Allocate a buffer with the exact space needed
+      const buffer = Buffer.alloc(MOVIE_REVIEW_SPACE);
       this.borshInstructionSchema.encode({ ...this, variant: 0 }, buffer);
       return buffer.subarray(0, this.borshInstructionSchema.getSpan(buffer));
     } catch (error) {
-      console.error('Serialization error:', error);
+      console.error("Serialization error:", error);
       return Buffer.alloc(0);
     }
   }
@@ -398,7 +437,7 @@ send the transaction when a user submits the form. Open `Form.tsx` and locate
 the `handleTransactionSubmit` function. This gets called by `handleSubmit` each
 time a user submits the Movie Review form.
 
-Inside this function, we’ll be creating and sending the transaction that
+Inside this function, we'll be creating and sending the transaction that
 contains the data submitted through the form.
 
 Start by importing `@solana/web3.js` and importing `useConnection` and
@@ -456,7 +495,7 @@ export const Form: FC = () => {
 }
 ```
 
-Before we implement `handleTransactionSubmit`, let’s talk about what needs to be
+Before we implement `handleTransactionSubmit`, let's talk about what needs to be
 done. We need to:
 
 1. Check that `publicKey` exists to ensure that the user has connected their
@@ -467,12 +506,12 @@ done. We need to:
 4. Get all of the accounts that the transaction will read or write.
 5. Create a new `Instruction` object that includes all of these accounts in the
    `keys` argument, includes the buffer in the `data` argument, and includes the
-   program’s public key in the `programId` argument.
+   program's public key in the `programId` argument.
 6. Add the instruction from the last step to the transaction.
 7. Call `sendTransaction`, passing in the assembled transaction.
 
-That’s quite a lot to process! But don’t worry, it gets easier the more you do
-it. Let’s start with the first 3 steps from above:
+That's quite a lot to process! But don't worry, it gets easier the more you do
+it. Let's start with the first 3 steps from above:
 
 ```typescript
 const handleTransactionSubmit = async (movie: Movie) => {
@@ -488,8 +527,8 @@ const handleTransactionSubmit = async (movie: Movie) => {
 
 The next step is to get all of the accounts that the transaction will read or
 write. In past lessons, the account where data will be stored has been given to
-you. This time, the account’s address is more dynamic, so it needs to be
-computed. We’ll cover this in-depth in the next lesson, but for now, you can use
+you. This time, the account's address is more dynamic, so it needs to be
+computed. We'll cover this in-depth in the next lesson, but for now, you can use
 the following, where `pda` is the address to the account where data will be
 stored:
 
@@ -559,9 +598,9 @@ const handleTransactionSubmit = async (movie: Movie) => {
 };
 ```
 
-And that’s it! You should now be able to use the form on the site to submit a
-movie review. While you won’t see the UI update to reflect the new review, you
-can look at the transaction’s program logs on Solana Explorer to see that it was
+And that's it! You should now be able to use the form on the site to submit a
+movie review. While you won't see the UI update to reflect the new review, you
+can look at the transaction's program logs on Solana Explorer to see that it was
 successful.
 
 If you need a bit more time with this project to feel comfortable, have a look
@@ -570,7 +609,7 @@ at the complete
 
 ## Challenge
 
-Now it’s your turn to build something independently. Create an application that
+Now it's your turn to build something independently. Create an application that
 lets students of this course introduce themselves! The Solana program that
 supports this is at `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 

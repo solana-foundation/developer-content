@@ -107,10 +107,9 @@ can do this with the following command:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-You'll then need to have the
-[Solana CLI installed](https://docs.solanalabs.com/cli/install) to compile and
-deploy your programs. You can install the Solana CLI by running the following
-command:
+You'll then need to have the [Solana CLI installed](/docs/intro/installation.md)
+to compile and deploy your programs. You can install the Solana CLI by running
+the following command:
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
@@ -126,7 +125,7 @@ solana-test-validator
 
 This will start a local validator on your machine that you can use to test your
 programs. You can
-[read more about local development in this guide](https://solana.com/docs/intro/installation).
+[read more about local development in this guide](/docs/intro/installation.md).
 
 When building onchain programs, you have a choice to either build with native
 Rust (ie, without a framework) or use the Anchor framework. Anchor is a

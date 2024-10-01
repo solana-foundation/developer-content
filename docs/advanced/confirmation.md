@@ -40,7 +40,7 @@ where the magic happens and at a high level it consists of four components:
 - a **list of accounts** to load, and
 - a **“recent blockhash.”**
 
-In this article, we’re going to be focusing a lot on a transaction’s
+In this article, we're going to be focusing a lot on a transaction's
 [recent blockhash](/docs/terminology.md#blockhash) because it plays a big role
 in transaction confirmation.
 
@@ -65,14 +65,14 @@ touch on everything except steps 1 and 4.
 
 A [“blockhash”](/docs/terminology.md#blockhash) refers to the last Proof of
 History (PoH) hash for a [“slot”](/docs/terminology.md#slot) (description
-below). Since Solana uses PoH as a trusted clock, a transaction’s recent
+below). Since Solana uses PoH as a trusted clock, a transaction's recent
 blockhash can be thought of as a **timestamp**.
 
 ### Proof of History refresher
 
-Solana’s Proof of History mechanism uses a very long chain of recursive SHA-256
+Solana's Proof of History mechanism uses a very long chain of recursive SHA-256
 hashes to build a trusted clock. The “history” part of the name comes from the
-fact that block producers hash transaction id’s into the stream to record which
+fact that block producers hash transaction id's into the stream to record which
 transactions were processed in their block.
 
 [PoH hash calculation](https://github.com/anza-xyz/agave/blob/aa0922d6845e119ba466f88497e8209d1c82febc/entry/src/poh.rs#L79):
@@ -123,7 +123,7 @@ the runtime.
 
 ### Example of transaction expiration
 
-Let’s walk through a quick example:
+Let's walk through a quick example:
 
 1. A validator is actively producing a new block for the current slot
 2. The validator receives a transaction from a user with the recent blockhash
@@ -138,26 +138,26 @@ Let’s walk through a quick example:
    then starts producing the block for the next slot (validators get to produce
    blocks for 4 consecutive slots)
 6. The validator checks that same transaction again and finds it is now 152
-   blockhashes old and rejects it because it’s too old :(
+   blockhashes old and rejects it because it's too old :(
 
 ## Why do transactions expire?
 
-There’s a very good reason for this actually, it’s to help validators avoid
+There's a very good reason for this actually, it's to help validators avoid
 processing the same transaction twice.
 
 A naive brute force approach to prevent double processing could be to check
-every new transaction against the blockchain’s entire transaction history. But
+every new transaction against the blockchain's entire transaction history. But
 by having transactions expire after a short amount of time, validators only need
 to check if a new transaction is in a relatively small set of _recently_
 processed transactions.
 
 ### Other blockchains
 
-Solana’s approach of prevent double processing is quite different from other
+Solana's approach of prevent double processing is quite different from other
 blockchains. For example, Ethereum tracks a counter (nonce) for each transaction
 sender and will only process transactions that use the next valid nonce.
 
-Ethereum’s approach is simple for validators to implement, but it can be
+Ethereum's approach is simple for validators to implement, but it can be
 problematic for users. Many people have encountered situations when their
 Ethereum transactions got stuck in a _pending_ state for a long time and all the
 later transactions, which used higher nonce values, were blocked from
@@ -165,12 +165,12 @@ processing.
 
 ### Advantages on Solana
 
-There are a few advantages to Solana’s approach:
+There are a few advantages to Solana's approach:
 
 1. A single fee payer can submit multiple transactions at the same time that are
-   allowed to be processed in any order. This might happen if you’re using
+   allowed to be processed in any order. This might happen if you're using
    multiple applications at the same time.
-2. If a transaction doesn’t get committed to a block and expires, users can try
+2. If a transaction doesn't get committed to a block and expires, users can try
    again knowing that their previous transaction will NOT ever be processed.
 
 By not using counters, the Solana wallet experience may be easier for users to
@@ -181,7 +181,7 @@ quickly and avoid annoying pending states.
 
 Of course there are some disadvantages too:
 
-1. Validators have to actively track a set of all processed transaction id’s to
+1. Validators have to actively track a set of all processed transaction id's to
    prevent double processing.
 2. If the expiration time period is too short, users might not be able to submit
    their transaction before it expires.
@@ -189,7 +189,7 @@ Of course there are some disadvantages too:
 These disadvantages highlight a tradeoff in how transaction expiration is
 configured. If the expiration time of a transaction is increased, validators
 need to use more memory to track more transactions. If expiration time is
-decreased, users don’t have enough time to submit their transaction.
+decreased, users don't have enough time to submit their transaction.
 
 Currently, Solana clusters require that transactions use blockhashes that are no
 more than 151 blocks old.
@@ -208,27 +208,27 @@ target time of 400ms.
 
 One minute is not a lot of time considering that a client needs to fetch a
 recent blockhash, wait for the user to sign, and finally hope that the
-broadcasted transaction reaches a leader that is willing to accept it. Let’s go
+broadcasted transaction reaches a leader that is willing to accept it. Let's go
 through some tips to help avoid confirmation failures due to transaction
 expiration!
 
 ### Fetch blockhashes with the appropriate commitment level
 
-Given the short expiration time frame, it’s imperative that clients and
+Given the short expiration time frame, it's imperative that clients and
 applications help users create transactions with a blockhash that is as recent
 as possible.
 
 When fetching blockhashes, the current recommended RPC API is called
 [`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx). By default, this
 API uses the `finalized` commitment level to return the most recently finalized
-block’s blockhash. However, you can override this behavior by
+block's blockhash. However, you can override this behavior by
 [setting the `commitment` parameter](/docs/rpc/index.mdx#configuring-state-commitment)
 to a different commitment level.
 
 **Recommendation**
 
 The `confirmed` commitment level should almost always be used for RPC requests
-because it’s usually only a few slots behind the `processed` commitment and has
+because it's usually only a few slots behind the `processed` commitment and has
 a very low chance of belonging to a dropped
 [fork](https://docs.solanalabs.com/consensus/fork-generation).
 
@@ -237,10 +237,10 @@ But feel free to consider the other options:
 - Choosing `processed` will let you fetch the most recent blockhash compared to
   other commitment levels and therefore gives you the most time to prepare and
   process a transaction. But due to the prevalence of forking in the Solana
-  blockchain, roughly 5% of blocks don’t end up being finalized by the cluster
-  so there’s a real chance that your transaction uses a blockhash that belongs
+  blockchain, roughly 5% of blocks don't end up being finalized by the cluster
+  so there's a real chance that your transaction uses a blockhash that belongs
   to a dropped fork. Transactions that use blockhashes for abandoned blocks
-  won’t ever be considered recent by any blocks that are in the finalized
+  won't ever be considered recent by any blocks that are in the finalized
   blockchain.
 - Using the [default commitment](/docs/rpc#default-commitment) level `finalized`
   will eliminate any risk that the blockhash you choose will belong to a dropped
@@ -259,22 +259,22 @@ into issues due to one node lagging behind the other.
 When RPC nodes receive a `sendTransaction` request, they will attempt to
 determine the expiration block of your transaction using the most recent
 finalized block or with the block selected by the `preflightCommitment`
-parameter. A **VERY** common issue is that a received transaction’s blockhash
+parameter. A **VERY** common issue is that a received transaction's blockhash
 was produced after the block used to calculate the expiration for that
-transaction. If an RPC node can’t determine when your transaction expires, it
+transaction. If an RPC node can't determine when your transaction expires, it
 will only forward your transaction **one time** and afterwards will then
 **drop** the transaction.
 
 Similarly, when RPC nodes receive a `simulateTransaction` request, they will
 simulate your transaction using the most recent finalized block or with the
 block selected by the `preflightCommitment` parameter. If the block chosen for
-simulation is older than the block used for your transaction’s blockhash, the
+simulation is older than the block used for your transaction's blockhash, the
 simulation will fail with the dreaded “blockhash not found” error.
 
 **Recommendation**
 
 Even if you use `skipPreflight`, **ALWAYS** set the `preflightCommitment`
-parameter to the same commitment level used to fetch your transaction’s
+parameter to the same commitment level used to fetch your transaction's
 blockhash for both `sendTransaction` and `simulateTransaction` requests.
 
 ### Be wary of lagging RPC nodes when sending transactions
@@ -290,18 +290,18 @@ lagging behind the first.
 
 For `sendTransaction` requests, clients should keep resending a transaction to a
 RPC node on a frequent interval so that if an RPC node is slightly lagging
-behind the cluster, it will eventually catch up and detect your transaction’s
+behind the cluster, it will eventually catch up and detect your transaction's
 expiration properly.
 
 For `simulateTransaction` requests, clients should use the
 [`replaceRecentBlockhash`](/docs/rpc/http/simulateTransaction.mdx) parameter to
-tell the RPC node to replace the simulated transaction’s blockhash with a
+tell the RPC node to replace the simulated transaction's blockhash with a
 blockhash that will always be valid for simulation.
 
 ### Avoid reusing stale blockhashes
 
 Even if your application has fetched a very recent blockhash, be sure that
-you’re not reusing that blockhash in transactions for too long. The ideal
+you're not reusing that blockhash in transactions for too long. The ideal
 scenario is that a recent blockhash is fetched right before a user signs their
 transaction.
 
@@ -309,19 +309,19 @@ transaction.
 
 Poll for new recent blockhashes on a frequent basis to ensure that whenever a
 user triggers an action that creates a transaction, your application already has
-a fresh blockhash that’s ready to go.
+a fresh blockhash that's ready to go.
 
 **Recommendation for wallets**
 
-Poll for new recent blockhashes on a frequent basis and replace a transaction’s
+Poll for new recent blockhashes on a frequent basis and replace a transaction's
 recent blockhash right before they sign the transaction to ensure the blockhash
 is as fresh as possible.
 
 ### Use healthy RPC nodes when fetching blockhashes
 
 By fetching the latest blockhash with the `confirmed` commitment level from an
-RPC node, it’s going to respond with the blockhash for the latest confirmed
-block that it’s aware of. Solana’s block propagation protocol prioritizes
+RPC node, it's going to respond with the blockhash for the latest confirmed
+block that it's aware of. Solana's block propagation protocol prioritizes
 sending blocks to staked nodes so RPC nodes naturally lag about a block behind
 the rest of the cluster. They also have to do more work to handle application
 requests and can lag a lot more under heavy user traffic.
@@ -338,11 +338,11 @@ still return a blockhash that is just about to expire.
 Monitor the health of your RPC nodes to ensure that they have an up-to-date view
 of the cluster state with one of the following methods:
 
-1. Fetch your RPC node’s highest processed slot by using the
+1. Fetch your RPC node's highest processed slot by using the
    [`getSlot`](/docs/rpc/http/getSlot.mdx) RPC API with the `processed`
    commitment level and then call the
-   [`getMaxShredInsertSlot](/docs/rpc/http/getMaxShredInsertSlot.mdx) RPC API to
-   get the highest slot that your RPC node has received a “shred” of a block
+   [`getMaxShredInsertSlot`](/docs/rpc/http/getMaxShredInsertSlot.mdx) RPC API
+   to get the highest slot that your RPC node has received a “shred” of a block
    for. If the difference between these responses is very large, the cluster is
    producing blocks far ahead of what the RPC node has processed.
 2. Call the `getLatestBlockhash` RPC API with the `confirmed` commitment level
@@ -373,25 +373,25 @@ To start using durable transactions, a user first needs to submit a transaction
 that
 [invokes instructions that create a special on-chain “nonce” account](https://docs.rs/solana-program/latest/solana_program/system_instruction/fn.create_nonce_account.html)
 and stores a “durable blockhash” inside of it. At any point in the future (as
-long as the nonce account hasn’t been used yet), the user can create a durable
+long as the nonce account hasn't been used yet), the user can create a durable
 transaction by following these 2 rules:
 
 1. The instruction list must start with an
    [“advance nonce” system instruction](https://docs.rs/solana-program/latest/solana_program/system_instruction/fn.advance_nonce_account.html)
    which loads their on-chain nonce account
-2. The transaction’s blockhash must be equal to the durable blockhash stored by
+2. The transaction's blockhash must be equal to the durable blockhash stored by
    the on-chain nonce account
 
-Here’s how these durable transactions are processed by the Solana runtime:
+Here's how these durable transactions are processed by the Solana runtime:
 
-1. If the transaction’s blockhash is no longer “recent”, the runtime checks if
-   the transaction’s instruction list begins with an “advance nonce” system
+1. If the transaction's blockhash is no longer “recent”, the runtime checks if
+   the transaction's instruction list begins with an “advance nonce” system
    instruction
 2. If so, it then loads the nonce account specified by the “advance nonce”
    instruction
-3. Then it checks that the stored durable blockhash matches the transaction’s
+3. Then it checks that the stored durable blockhash matches the transaction's
    blockhash
-4. Lastly it makes sure to advance the nonce account’s stored blockhash to the
+4. Lastly it makes sure to advance the nonce account's stored blockhash to the
    latest recent blockhash to ensure that the same transaction can never be
    processed again
 
