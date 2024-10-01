@@ -627,7 +627,7 @@ need it for account validation of `movie_review` in the next step.
 #[program]
 pub mod anchor_movie_review_program {
     use super::*;
-...
+    ...
 
     pub fn update_movie_review(
         ctx: Context<UpdateMovieReview>,
