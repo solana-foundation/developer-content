@@ -2,8 +2,8 @@
 title: Compressed NFTs
 objectives:
   - Create a compressed NFT collection using Metaplex’s Bubblegum program
-  - Mint compressed NFTs using the Bubblegum TS SDK
-  - Transfer compressed NFTs using the Bubblegum TS SDK
+  - Mint compressed NFTs using the Bubblegum program
+  - Transfer compressed NFTs using the Bubblegum program
   - Read compressed NFT data using the Read API
 description:
   "How to mint, transfer and read large-scale NFT collections using Metaplex's
@@ -247,6 +247,7 @@ framework for building and using JavaScript clients for Solana onchain programs
 that was created by Metaplex. Note that Umi provides distinct implementations
 for many components compared to web3.js, such as Keypairs, PublicKeys, and
 Connections, but converting from web3.js versions to Umi equivalents is simple.
+
 To begin, we first need to initialize an Umi instance.
 
 ```typescript
@@ -256,7 +257,11 @@ import { clusterApiUrl } from "@solana/web3.js";
 const umi = createUmi(clusterApiUrl("devnet"));
 ```
 
-Next we have to attach a signer to our Umi instance
+The above code initializes an empty Umi instance and connects to the devnet
+cluster with no signer or plugin attached.
+
+After we have done this we will add in imports then attach a signer to the Umi
+instance
 
 ```typescript
 import { clusterApiUrl } from "@solana/web3.js";
@@ -411,7 +416,7 @@ import {
 
 In the code above, we define an object of type `ValidDepthSizePair` from the
 `@solana/spl-account-compression` program, setting maxDepth to 3 and
-maxBufferSize to 8 to define valid liimits for the Merkle tree. We then generate
+maxBufferSize to 8 to define valid limits for the Merkle tree. We then generate
 a merkleTree signer using `generateSigner` with the umi instance, after we've
 done this, we now invoke `createTree`, passing the umi instance, the merkleTree
 signer, and the parameters from maxDepthSizePair to configure the tree's maximum
@@ -442,7 +447,7 @@ config account initialized, its time to mint cNFTs to the tree, we use `mintV1`
 or `mintToCollectionV1` from the `@metaplex-foundation/mpl-bubblegum` package,
 depending on whether we want the minted cNFT to be part of a collection.
 
-1. mintV1
+### 1. mintV1
 
 ```typescript
 await mintV1(umi, {
@@ -459,6 +464,8 @@ await mintV1(umi, {
   },
 }).sendAndConfirm(umi);
 ```
+
+### 2. mintToCollectionV1
 
 ```typescript
 await mintToCollectionV1(umi, {
@@ -479,8 +486,8 @@ await mintToCollectionV1(umi, {
 
 Both functions require you to pass the NFT metadata and the accounts required to
 mint the NFT `leafOwner`, `merkleTree`, but the mintToCollectionV1 requires an
-addition collectionMint account which is the mint address of the Collection NFT
-to which the cNFT will be part.
+additional collectionMint account which is the mint address of the Collection
+NFT to which the cNFT will be part.
 
 ### Interact with cNFTs
 
@@ -609,31 +616,21 @@ the `getAsset` and `getAssetProof` methods to fetch the asset data and proof,
 respectively.
 
 ```typescript
-const assetDataResponse = await fetch(process.env.RPC_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    jsonrpc: "2.0",
-    id: "my-id",
-    method: "getAsset",
-    params: {
-      id: assetId,
-    },
-  }),
-});
-const assetData = (await assetDataResponse.json()).result;
+import { publicKey } from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
 
-import {
-  getAssetWithProof,
-  transfer,
-} from "@metaplex-foundation/mpl-bubblegum";
+const umi = createUmi("<ENDPOINT>").use(dasApi());
+const assetId = publicKey("8TrvJBRa6Pzb9BDadqroHhWTHxaxK8Ws8r91oZ2jxaVV");
 
-const assetWithProof = await getAssetWithProof(umi, assetId);
+const asset = await umi.rpc.getAsset(assetId);
+
+console.log(asset);
 ```
 
-You can use the transfer method from the `@metaplex-foundation/mpl-bubblegum`
-package. The method requires two arguments: the `umi` instance and an object
-containing the following fields:
+Then we can use the transfer method from the
+`@metaplex-foundation/mpl-bubblegum` package. This method requires two
+arguments: the `umi` instance and an object containing the following fields:
 
 - `assetWithProof` - Data representing the asset and its associated Merkle
   proof.
@@ -689,7 +686,7 @@ Take some time to familiarize yourself with the starter code provided. Most
 important are the helper functions provided in `utils.ts` and the URIs provided
 in `uri.ts`.
 
-The `uri.ts` file provides 10k URIs that you can use for the offchain portion of
+The `uri.ts` file provides 1k URIs that you can use for the offchain portion of
 your NFT metadata. You can, of course, create your own metadata. But this lesson
 isn’t explicitly about preparing metadata so we’ve provided some for you.
 
@@ -710,80 +707,55 @@ unnecessary boilerplate code. They are as follows:
 
 Finally, there’s some boilerplate in `index.ts` that calls creates a new Devnet
 connection, calls `getOrCreateKeypair` to initialize a “wallet,” and calls
-`airdropSolIfNeeded` to fund the wallet if its balance is low.
-
-We will be writing all of our code in the `index.ts`.
+`airdropSolIfNeeded` to fund the wallet if its balance is low all wrapped in a
+function named `initializeUmi` that can be used throughout the codebase
 
 ### 2. Create the Merkle tree account
 
 We’ll start by creating the Merkle tree account. Let’s wrap this in a function
-that will eventually create _and_ initialize the account. We’ll put it below in
-our `index.ts`. Let’s call it `createAndInitializeTree`. For this function to
-work, it will need the following parameters:
+that will eventually create _and_ initialize the account. We’ll create a new
+file called `create-and-initialize-tree.ts` and call our function
+`createAndInitializeTree`. For this function to work, it will need the following
+parameters:
 
-- `connection` - a `Connection` to use for interacting with the network.
+- `umi` - our umi instance
 - `payer` - a `Keypair` that will pay for transactions.
 - `maxDepthSizePair` - a `ValidDepthSizePair`. This type comes from
   `@solana/spl-account-compression`. It’s a simple object with properties
   `maxDepth` and `maxBufferSize` that enforces a valid combination of the two
   values.
 
-```typescript
-async function createAndInitializeTree(
-  connection: Connection,
-  payer: Keypair,
-  maxDepthSizePair: ValidDepthSizePair,
-  canopyDepth: number,
-) {
-  const treeKeypair = Keypair.generate();
-}
-```
-
-### 2. Use Bubblegum to initialize the Merkle tree and create the tree config account
-
-Now that the instruction for creating the tree is ready, we can create an
-instruction for invoking `create_tree` on the Bubblegum program. This will
-initialize the Merkle tree account _and_ create a new tree config account on the
-Bubblegum program.
-
-This instruction needs us to provide the following:
-
-- `accounts` - an object of required accounts; this includes:
-  - `treeAuthority` - this should be a PDA derived with the Merkle tree address
-    and the Bubblegum program
-  - `merkleTree` - the address of the Merkle tree
-  - `payer` - the transaction fee payer
-  - `treeCreator` - the address of the tree creator; we’ll make this the same as
-    `payer`
-  - `maxBufferSize` - the buffer size from our function’s `maxDepthSizePair`
-    parameter
-  - `maxDepth` - the max depth from our function’s `maxDepthSizePair` parameter
-  - `public` - whether or no the tree should be public; we’ll set this to
-    `false`
-
-Finally, we can add both instructions to a transaction and submit the
-transaction. Keep in mind that the transaction needs to be signed by both the
-`payer` and the `treeKeypair`.
+This will initialize the Merkle tree account _and_ create a new tree config
+account on the Bubblegum program.
 
 ```typescript
-async function createAndInitializeTree(
-  payer: Keypair,
+import * as fs from "fs";
+import dotenv from "dotenv";
+import { createTree } from "@metaplex-foundation/mpl-bubblegum";
+import { generateSigner, publicKey } from "@metaplex-foundation/umi";
+import { getExplorerLink } from "@solana-developers/helpers";
+import { ValidDepthSizePair } from "@solana/spl-account-compression";
+import { initializeUmi } from ".";
+
+const umi = await initializeUmi();
+
+export async function createAndInitializeTree(
+  umi: Umi,
   maxDepthSizePair: ValidDepthSizePair,
 ) {
-  const merkleTree = generateSigner(umi);
-
-  const builder = await createTree(umi, {
-    merkleTree,
-    maxDepth: maxDepthSizePair.maxDepth, // Max depth of the tree,
-    maxBufferSize: maxDepthSizePair.maxBufferSize, // Max buffer size,
-    public: false, // Set to false to restrict minting to the tree creator/delegate
-  });
-
-  builder.sendAndConfirm(umi);
-
-  const merkleTreeAddress = merkleTree.publicKey;
-
   try {
+    const merkleTree = generateSigner(umi);
+    const builder = await createTree(umi, {
+      merkleTree,
+      maxDepth: maxDepthSizePair.maxDepth, // Max depth of the tree,
+      maxBufferSize: maxDepthSizePair.maxBufferSize, // Max buffer size,
+      public: false, // Set to false to restrict minting to the tree creator/delegate
+    });
+
+    builder.sendAndConfirm(umi);
+
+    const merkleTreeAddress = merkleTree.publicKey;
+
     const explorerLink = getExplorerLink(
       "transaction",
       merkleTreeAddress,
@@ -792,134 +764,158 @@ async function createAndInitializeTree(
 
     console.log(`Transaction submitted: ${explorerLink}`);
     console.log("Tree Address:", merkleTreeAddress);
+    console.log("Created Merkle Tree Successfully ✅");
+
+    fs.appendFileSync(".env", `\nMERKLE_TREE_ADDRESS=${merkleTreeAddress}`);
 
     return merkleTreeAddress;
   } catch (error: any) {
-    console.error("\nFailed to create merkle tree:", error);
+    console.error("\nFailed to create merkle tree:", error, "❌");
     throw error;
   }
 }
 ```
 
-To test what you have so far, call `createAndInitializeTree` and provide small
-values for the max depth and max buffer size.
+Then you now call `createAndInitializeTree` and provide small values for the max
+depth and max buffer size.
 
 ```typescript
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-const wallet = await getOrCreateKeypair("Wallet1");
-await airdropSolIfNeeded(wallet.publicKey);
-
-const maxDepthSizePair: ValidDepthSizePair = {
-  maxDepth: 3,
-  maxBufferSize: 8,
+export const maxDepthSizePair: ValidDepthSizePair = {
+  maxDepth: 14,
+  maxBufferSize: 64,
 };
 
-const canopyDepth = 0;
+export async function createAndInitializeTree(
+  umi:Umi,
+  maxDepthSizePair: ValidDepthSizePair) {
+    ...
+}
 
-const treeAddress = await createAndInitializeTree(
-  connection,
-  wallet,
-  maxDepthSizePair,
-  canopyDepth,
-);
+createAndInitializeTree(maxDepthSizePair);
+
 ```
 
-Remember that Devnet SOL is limited so if you test too many times you might run
-out of Devnet SOL before we get to minting. To test, in your terminal run the
-following:
+To test, run the command in your terminal:
 
-`npm run start`
+`npx esrun create-and-initialize-tree.ts`
+
+Your output should look like this
+
+```typescript
+
+```
+
+in the body of the createAndInitializeTree function we have a line of code
+
+```typescript
+fs.appendFileSync(".env", `\nMERKLE_TREE_ADDRESS=${merkleTreeAddress}`);
+```
+
+this creates a variable called `MERKLE_TREE_ADDRESS` and appends the
+merkleTreeAddress we just initialized to our .env file so we do not need to
+bother remembering the merkleTreeAddress, in subsequent steps, we just load our
+merkleTreeAddress from the .env file.
 
 #### 4. Mint cNFTs to your tree
 
 Believe it or not, that’s all it takes to set up your tree to compressed NFTs!
 Now let’s focus on the minting process.
 
-First, let’s declare a function called `mintCompressedNftToCollection`. It will
-need the following parameters:
+First, let’s create a new file called `mint-compressed-nfts.ts` and declare a
+function called `mintCompressedNftToCollection`. It will need the following
+parameters:
 
-- `connection` - a `Connection` to use for interacting with the network.
-- `payer` - a `Keypair` that will pay for transactions.
-- `treeAddress` - the Merkle tree’s address
+- `payer` - a `Publickey` that will pay for transactions, fees, rent, etc.
 - `collectionDetails` - the details of the collection as type
   `CollectionDetails` from `utils.ts`
 - `amount` - the number of cNFTs to mint
 
 The body of this function will do the following:
 
-1. Derive the tree authority just like before. Again, this is a PDA derived from
-   the Merkle tree address and the Bubblegum program.
-2. Derive the `bubblegumSigner`. This is a PDA derived from the string
-   `"collection_cpi"` and the Bubblegum program and is essential for minting to
-   a collection.
-3. Create the cNFT metadata by calling `createNftMetadata` from our `utils.ts`
+1. Create the cNFT metadata by calling `createNftMetadata` from our `utils.ts`
    file.
-4. Create the mint instruction by calling `createMintToCollectionV1Instruction`
-   from the Bubblegum SDK.
-5. Build and send a transaction with the mint instruction
-6. Repeat steps 3-6 `amount` number of times
+2. Create the mint instruction by calling `mintToCollectionV1` from the
+   Bubblegum SDK.
+3. Build and send a transaction with the mint instruction
+4. Repeat steps 1-4 `amount` number of times
 
-The `createMintToCollectionV1Instruction` takes two arguments: `accounts` and
-`args`. The latter is simply the NFT metadata. As with all complex instructions,
-the primary hurdle is knowing which accounts to provide. So let’s go through
-them real quick:
-
-- `payer` - the account that will pay for the transaction fees, rent, etc.
-- `merkleTree` - the Merkle tree account
-- `treeAuthority` - the tree authority; sh When you put it all together, this is
-  what it’ll look like:
+This is what it’ll look like:
 
 ```typescript
-function mintCompressedNftToCollection(
-  connection: Connection,
-  payer: Keypair,
-  treeAddress: PublicKey,
+import dotenv from "dotenv";
+import { mintToCollectionV1 } from "@metaplex-foundation/mpl-bubblegum";
+import { CollectionDetails } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  base58,
+  Keypair,
+  publicKey,
+  PublicKey,
+} from "@metaplex-foundation/umi";
+import { getExplorerLink } from "@solana-developers/helpers";
+import { createNftMetadata, getOrCreateCollectionNFT } from "./utils";
+import { initializeUmi } from ".";
+import { maxDepthSizePair } from "./create-and-initialize-tree";
+
+const umi = await initializeUmi();
+
+export async function mintCompressedNftToCollection(
+  payer: Publickey,
   collectionDetails: CollectionDetails,
   amount: number,
 ) {
-  // Derive the Bubblegum signer, used by the Bubblegum program to handle "collection verification"
-  // Only used for `createMintToCollectionV1` instruction
-  const [bubblegumSigner] = PublicKey.findProgramAddressSync(
-    [Buffer.from("collection_cpi", "utf8")],
-    BUBBLEGUM_PROGRAM_ID,
-  );
+  if (!process.env.MERKLE_TREE_ADDRESS) {
+    throw new Error("No MERKLE_TREE_ADDRESS found");
+  }
+  const treeAddress = process.env["MERKLE_TREE_ADDRESS"];
+  const mintAddress = collectionDetails.mint;
+  for (let i = 0; i < amount; i++) {
+    const compressedNFTMetadata = createNftMetadata(payer, i, mintAddress);
+
+    const { signature } = await mintToCollectionV1(umi, {
+      leafOwner: payer.publicKey,
+      merkleTree: publicKey(treeAddress),
+      collectionMint: mintAddress,
+      metadata: compressedNFTMetadata,
+    }).sendAndConfirm(umi, { confirm: { commitment: "confirmed" } });
+
+    const transactionSignature = base58.deserialize(signature);
+    try {
+      const explorerLink = getExplorerLink(
+        "transaction",
+        transactionSignature[0],
+        "devnet",
+      );
+      console.log(`Transaction submitted: ${explorerLink} '\n'`);
+      console.log("Address:", transactionSignature[0]);
+    } catch (err) {
+      console.error("\nFailed to mint compressed NFT: '\n'", err);
+      throw err;
+    }
+  }
 }
 ```
 
-This is a great point to test with a small tree. Simply update `index.ts` to
-call `getOrCreateCollectionNFT` then `mintCompressedNftToCollection`:
+Now let us mint cNFTs to our merkle tree. Simply update
+`mint-compressed-nfts.ts` to call `getOrCreateCollectionNFT` then
+`mintCompressedNftToCollection`:
 
 ```typescript
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-const wallet = await getOrCreateKeypair("Wallet1");
-await airdropSolIfNeeded(wallet.publicKey);
-
-const maxDepthSizePair: ValidDepthSizePair = {
-  maxDepth: 3,
-  maxBufferSize: 8,
-};
-
-const canopyDepth = 0;
-
-const treeAddress = await createAndInitializeTree(
-  connection,
-  wallet,
-  maxDepthSizePair,
-  canopyDepth,
-);
-
-const collectionNft = await getOrCreateCollectionNFT(connection, wallet);
+const collectionNft = await getOrCreateCollectionNFT(umi);
 
 await mintCompressedNftToCollection(
-  connection,
-  wallet,
-  treeAddress,
+  umi.identity.publicKey,
   collectionNft,
   2 ** maxDepthSizePair.maxDepth,
 );
 ```
 
-Again, to run, in your terminal type: `npm run start`
+To run, in your terminal type: `npx esrun mint-compressed-nfts.ts`
+
+Your output should look like this
+
+```typescript
+
+```
 
 #### 5. Read existing cNFT data
 
@@ -928,8 +924,8 @@ their data. This is tricky because the onchain data is just the Merkle tree
 account, the data from which can be used to verify existing information as
 accurate but is useless in conveying what the information is.
 
-Let’s start by declaring a function `logNftDetails` that takes two parameters
-`treeAddress` and `nftsMinted`.
+Let’s start by creating a new file called `log-nft-details.ts` declaring a
+function `logNftDetails` that takes a parameter `nftsMinted`.
 
 Since theres no direct identifier of any kind that points to our cNFT, we need
 to know the leaf index that was used when we minted our cNFT. We can then use
@@ -953,28 +949,22 @@ a free API Key from [the Helius website](https://dev.helius.xyz/). Then add your
 RPC_URL=https://devnet.helius-rpc.com/?api-key=YOUR_API_KEY
 ```
 
-Then simply issue a POST request to your provided RPC URL and put the `getAsset`
-information in the body:
+Then simply call the getAsset method and pass the `assetId` as a parameter
 
 ```typescript
 function logNftDetails(treeAddress: PublicKey, nftsMinted: number) {
+  if (!process.env.RPC_URL) {
+    throw new Error("RPC_URL environment variable is not defined.");
+  }
+  if (!process.env.MERKLE_TREE_ADDRESS) {
+    throw new Error("No MERKLE_TREE_ADDRESS found");
+  }
   for (let i = 0; i < nftsMinted; i++) {
     const assetId = await getLeafAssetId(treeAddress, new BN(i));
-    console.log("Asset ID:", assetId.toBase58());
-    const response = await fetch(process.env.RPC_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: "my-id",
-        method: "getAsset",
-        params: {
-          id: assetId,
-        },
-      }),
-    });
-    const { result } = await response.json();
-    console.log(JSON.stringify(result, null, 2));
+    console.log("Asset ID:", assetId);
+    const umi = createUmi(process.env.RPC_URL).use(dasApi());
+    const asset = await umi.rpc.getAsset(assetId);
+    return asset;
   }
 }
 ```
@@ -983,11 +973,10 @@ Helius monitors transaction logs in real time and stores the NFT metadata that
 was hashed and stored in the Merkle tree. This enables them to display that data
 when requested.
 
-If we add a call to this function at the end of `main` and re-run your script,
-the data we get back in the console is very detailed. It includes all of the
-data you’d expect in both the onchain and offchain portion of a traditional NFT.
-You can find the cNFT’s attributes, files, ownership and creator information,
-and more.
+If you now call this function and re-run your script, the data we get back in
+the console is very detailed. It includes all of the data you’d expect in both
+the onchain and offchain portion of a traditional NFT. You can find the cNFT’s
+attributes, files, ownership and creator information, and more.
 
 ```json
 {
@@ -1087,156 +1076,76 @@ to see what’s available.
 
 #### 6. Transfer a cNFT
 
-The last thing we’re going to add to our script is a cNFT transfer. Just as with
-a standard SPL token transfer, security is important. Unlike regular standard
-SPL token transfer, however, to build a secure transfer with state compression
-of any kind, the program performing the transfer needs the entire asset data.
-
-The program, Bubblegum in this case, needs to be provided with the entire data
-that was hashed and stored on the corresponding leaf _and_ needs to be given the
-“proof path” for the leaf in question. That makes cNFT transfers a bit more
-complicated than SPL token transfers.
-
-Remember, the general steps are:
-
-1. Fetch the cNFT's asset data from the indexer
-2. Fetch the cNFT's proof from the indexer
-3. Fetch the Merkle tree account from the Solana blockchain
-4. Prepare the asset proof as a list of `AccountMeta` objects
-5. Build and send the Bubblegum transfer instruction
+The last thing we’re going to add to our script is a cNFT transfer. To do this,
+we are going to use the
 
 Let’s start by declaring a `transferNft` function that takes the following:
 
-- `connection` - a `Connection` object
 - `assetId` - a `PublicKey` object
 - `sender` - a `Keypair` object so we can sign the transaction
 - `receiver` - a `PublicKey` object representing the new owner
 
 Inside that function, let’s fetch the asset data again then also fetch the asset
-proof. For good measure, let’s wrap everything in a `try catch`.
+proof. For proper error handling let’s wrap everything in a `try catch`.
 
 ```typescript
-function transferNft(
-  connection: Connection,
+import dotenv from "dotenv";
+import { transfer } from "@metaplex-foundation/mpl-bubblegum";
+import {
+  base58,
+  generateSigner,
+  publicKey,
+  PublicKey,
+} from "@metaplex-foundation/umi";
+import { getExplorerLink } from "@solana-developers/helpers";
+import { Keypair } from "@solana/web3.js";
+import { initializeUmi } from ".";
+import { getLeafAssetId } from "./get-leaf-assetId";
+
+dotenv.config();
+
+const umi = await initializeUmi();
+
+async function transferNft(
   assetId: PublicKey,
   sender: Keypair,
   receiver: PublicKey,
 ) {
+  if (!process.env.RPC_URL) {
+    throw new Error("RPC_URL environment variable is not defined.");
+  }
   try {
-    const assetDataResponse = await fetch(process.env.RPC_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: "my-id",
-        method: "getAsset",
-        params: {
-          id: assetId,
-        },
-      }),
-    });
-    const assetData = (await assetDataResponse.json()).result;
+    const assetWithProof = umi.rpc.getAssetWithProof(assetId);
 
-    const assetProofResponse = await fetch(process.env.RPC_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: "my-id",
-        method: "getAssetProof",
-        params: {
-          id: assetId,
-        },
-      }),
-    });
-    const assetProof = (await assetProofResponse.json()).result;
+    const { signature } = await transfer(umi, {
+      ...assetWithProof,
+      leafOwner: umi.identity.publicKey,
+      newLeafOwner: receiver,
+    }).sendAndConfirm(umi, { confirm: { commitment: "confirmed" } });
+    //  TO DO
+    const transactionSignature = base58.deserialize(signature);
+
+    const explorerLink = getExplorerLink(
+      "transaction",
+      transactionSignature.toLocaleString(),
+      "devnet",
+    );
+
+    console.log(`Transaction submitted: ${explorerLink}`);
   } catch (error: any) {
     console.error("\nFailed to transfer nft:", error);
     throw error;
   }
 }
-```
 
-Next, let’s fetch the Merkle tree account from the chain, get the canopy depth,
-and assemble the proof path. We do this by mapping the asset proof we got from
-Helius to a list of `AccountMeta` objects, then removing any proof nodes at the
-end that are already cached onchain in the canopy.
+// Transfer first cNFT to random receiver to illustrate transfers
+const receiver = Keypair.generate();
 
-```typescript
- function transferNft(
-  connection: Connection,
-  assetId: PublicKey,
-  sender: Keypair,
-  receiver: PublicKey
-) {
-  try {
-    ...
-
-    const treePublicKey = new PublicKey(assetData.compression.tree)
-
-    const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
-      connection,
-      treePublicKey
-    )
-
-    const canopyDepth = treeAccount.getCanopyDepth() || 0
-
-    const proofPath: AccountMeta[] = assetProof.proof
-      .map((node: string) => ({
-        pubkey: new PublicKey(node),
-        isSigner: false,
-        isWritable: false,
-      }))
-      .slice(0, assetProof.proof.length - canopyDepth)
-  } catch (error: any) {
-    console.error("\nFailed to transfer nft:", err)
-    throw error
-  }
-}
-```
-
-Finally, we build the instruction using `createTransferInstruction`, add it to a
-transaction, then sign and send the transaction. This is what the entire
-`transferNft` function looks like when finished:
-
-```typescript
-function transferNft(
-  connection: Connection,
-  assetId: PublicKey,
-  sender: Keypair,
-  receiver: PublicKey,
-) {
-  try {
-    const assetDataResponse = await fetch(process.env.RPC_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: "my-id",
-        method: "getAsset",
-        params: {
-          id: assetId,
-        },
-      }),
-    });
-    const assetData = (await assetDataResponse.json()).result;
-
-    const assetProofResponse = await fetch(process.env.RPC_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        id: "my-id",
-        method: "getAssetProof",
-        params: {
-          id: assetId,
-        },
-      }),
-    });
-    const assetProof = (await assetProofResponse.json()).result;
-  }
-
-}
+transferNft(
+  await getLeafAssetId(publicKey(treeAddress), new BN(0)),
+  wallet,
+  publicKey(receiver.publicKey),
+);
 ```
 
 Lets transfer our first compressed NFT at index 0 to someone else. First we’ll
@@ -1246,49 +1155,30 @@ entire collection using our function `logNftDetails`. You’ll note that the NFT
 at index zero will now belong to our new wallet in the `ownership` field.
 
 ```typescript
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-const wallet = await getOrCreateKeypair("Wallet1");
-await airdropSolIfNeeded(wallet.publicKey);
-
-const maxDepthSizePair: ValidDepthSizePair = {
-  maxDepth: 3,
-  maxBufferSize: 8,
-};
-
-const canopyDepth = 0;
-
-const treeAddress = await createAndInitializeTree(
-  connection,
-  wallet,
-  maxDepthSizePair,
-  canopyDepth,
-);
-
 const collectionNft = await getOrCreateCollectionNFT(connection, wallet);
 
 await mintCompressedNftToCollection(
-  connection,
   wallet,
   treeAddress,
   collectionNft,
   2 ** maxDepthSizePair.maxDepth,
 );
 
-const recieverWallet = await getOrCreateKeypair("Wallet2");
+const receiverWallet = await getOrCreateKeypair("Wallet2");
 const assetId = await getLeafAssetId(treeAddress, new BN(0));
-await airdropSolIfNeeded(recieverWallet.publicKey);
+await airdropSolIfNeeded(receiverWallet.publicKey);
 
 console.log(
-  `Transfering ${assetId.toString()} from ${wallet.publicKey.toString()} to ${recieverWallet.publicKey.toString()}`,
+  `Transferring ${assetId.toString()} from ${wallet.publicKey.toString()} to ${recieverWallet.publicKey.toString()}`,
 );
 
-await transferNft(connection, assetId, wallet, recieverWallet.publicKey);
+await transferNft(assetId, wallet, recieverWallet.publicKey);
 
-await logNftDetails(treeAddress, 8);
+await logNftDetails(8);
 ```
 
-Go ahead and run your script. The whole thing should execute without failing,
-and all for close to 0.01 SOL!
+Go ahead and run your script. Type the command The whole thing should execute
+without failing, and all for close to 0.01 SOL!
 
 Congratulations! Now you know how to mint, read, and transfer cNFTs. If you
 wanted, you could update the max depth, max buffer size, and canopy depth to
