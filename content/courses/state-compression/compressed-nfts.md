@@ -716,8 +716,7 @@ function named `initializeUmi` that can be used throughout the codebase
 
 We’ll start by creating the Merkle tree account. Let’s wrap this in a function
 that will eventually create _and_ initialize the account. We’ll create a new
-file called `create-and-initialize-tree.ts` and call our function
-=======
+file called `create-and-initialize-tree.ts` and call our function =======
 `createAndInitializeTree`. For this function to work, it will need the following
 parameters:
 
@@ -1080,7 +1079,8 @@ to see what's available.
 #### 6. Transfer a cNFT
 
 The last thing we’re going to add to our script is a cNFT transfer. To do this,
-we are going to use the
+we are going to use the `transfer` method from the
+`@metaplex-foundation/mpl-bubblegum` library.
 
 Let's start by declaring a `transferNft` function that takes the following:
 
@@ -1088,6 +1088,7 @@ Let's start by declaring a `transferNft` function that takes the following:
 - `sender` - a `Keypair` object so we can sign the transaction
 - `receiver` - a `PublicKey` object representing the new owner
 
+```typescript
 dotenv.config();
 
 const umi = await initializeUmi();
@@ -1108,7 +1109,6 @@ async function transferNft(
       leafOwner: umi.identity.publicKey,
       newLeafOwner: receiver,
     }).sendAndConfirm(umi, { confirm: { commitment: "confirmed" } });
-    //  TO DO
     const transactionSignature = base58.deserialize(signature);
 
     const explorerLink = getExplorerLink(
