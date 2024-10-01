@@ -713,7 +713,7 @@ closing itself will be handled by the Anchor constraint in the
 pub mod anchor_movie_review_program {
     use super::*;
 
-...
+    ...
 
     pub fn delete_movie_review(_ctx: Context<DeleteMovieReview>, title: String) -> Result<()> {
         msg!("Movie review for {} deleted", title);
