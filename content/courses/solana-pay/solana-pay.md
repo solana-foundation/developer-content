@@ -236,10 +236,10 @@ async function post(req: PublicKey, res: PublicKey) {
   });
 
   const instruction = SystemProgram.transfer({
-    fromPubkey: account,
+    fromPubkey: new PublicKey(account),
     toPubkey: Keypair.generate().publicKey,
     lamports: 0.001 * LAMPORTS_PER_SOL,
-  });
+  }); 
 
   transaction.add(instruction);
 
