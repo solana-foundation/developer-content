@@ -2,7 +2,7 @@
 title: Getting Started with Anchor
 description: Getting Started with Anchor
 sidebarLabel: Anchor Framework
-sidebarSortOrder: 0
+sidebarSortOrder: 1
 ---
 
 The Anchor framework is a tool that simplifies the process of building Solana

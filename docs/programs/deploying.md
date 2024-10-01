@@ -4,6 +4,7 @@ description:
   "Deploying onchain programs can be done using the Solana CLI using the
   Upgradable BPF loader to upload the compiled byte-code to the Solana
   blockchain."
+sidebarSortOrder: 4
 ---
 
 Solana onchain programs (otherwise known as "smart contracts") are stored in
@@ -139,19 +140,6 @@ a deposit of ~0.7 SOL per 100KB stored. These costs can have an outsized impact
 on developers who deploy their own programs since
 [program accounts](/docs/core/accounts.md#custom-programs) are among the largest
 we typically see on Solana.
-
-#### Example of how much data is used for programs
-
-As a data point of the number of accounts and potential data stored on-chain,
-below is the distribution of the largest accounts (at least 100KB) at slot
-`103,089,804` on `mainnet-beta` by assigned on-chain program:
-
-1. **Serum Dex v3**: 1798 accounts
-2. **Metaplex Candy Machine**: 1089 accounts
-3. **Serum Dex v2**: 864 accounts
-4. **Upgradeable BPF Program Loader**: 824 accounts
-5. **BPF Program Loader v2**: 191 accounts
-6. **BPF Program Loader v1**: 150 accounts
 
 ### Reclaiming buffer accounts
 
