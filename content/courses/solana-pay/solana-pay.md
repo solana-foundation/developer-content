@@ -235,7 +235,7 @@ async function post(req: PublicKey, res: PublicKey) {
     feePayer: account,
   });
 
-    const instruction = SystemProgram.transfer({
+  const instruction = SystemProgram.transfer({
     fromPubkey: new PublicKey(account),
     toPubkey: Keypair.generate().publicKey,
     lamports: 0.001 * LAMPORTS_PER_SOL,
