@@ -13,14 +13,9 @@ description:
 
 ## Summary
 
-- **Solana Pay** is a specification for encoding Solana transaction requests
-  within URLs, enabling standardized transaction requests across different
-  Solana apps and wallets
-- **Partial signing** of transactions allows for the creation of transactions
-  that require multiple signatures before they are submitted to the network
-- **Transaction gating** involves implementing rules that determine whether
-  certain transactions are allowed to be processed or not, based on certain
-  conditions or the presence of specific data in the transaction
+- **Solana Pay** is a specification for encoding Solana transaction requests within URLs, facilitating standardized transaction requests across various Solana onchain applications and wallet apps.
+- **Partial signing** of transactions enables the creation of transactions that require multiple signatures before they are submitted to the network. This allows for collaborative transaction signing where multiple parties must agree.
+- **Transaction gating** involves setting up rules that determine whether certain transactions can be processed or not, based on predefined conditions or the presence of specific data in the transaction.
 
 ## Lesson
 
@@ -45,12 +40,12 @@ unique client-side network interactions.
 
 The [Solana Pay specification](https://docs.solanapay.com/spec) is a set of
 standards that allow users to request payments and initiate transactions using
-URLs in a uniform way across various Solana apps and wallets.
+URLs in a uniform way across various Solana apps and wallet apps.
 
 Request URLs are prefixed with `solana:` so that platforms can direct the link
-to the appropriate application. For example, on mobile a URL that starts with
+to the appropriate application. For example, on a mobile device, a URL that starts with
 `solana:` will be directed to wallet applications that support the Solana Pay
-specification. From there, the wallet can use the remainder of the URL to
+specification. From there, the wallet app can use the remainder of the URL to
 appropriately handle the request.
 
 There are two types of requests defined by the Solana Pay specification:
@@ -91,33 +86,33 @@ solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=1&label=Michael&messag
 And here is a URL describing a transfer request for 0.1 USDC:
 
 ```text
-solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.01&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
+solana:mvines9iiHiQTysrwkJjGf2gb9Ex9jXJX8ns3qwf2kN?amount=0.1&spl-token=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v
 ```
 
 #### Transaction requests
 
 The Solana Pay transaction request is similar to a transfer request in that it
-is simply a URL that can be consumed by a supporting wallet. However, this
+is simply a URL that can be consumed by a supporting wallet app. However, this
 request is interactive and the format is more open-ended:
 
 ```text
 solana:<link>
 ```
 
-The value of `link` should be a URL to which the consuming wallet can make an
+The value of `link` should be a URL to which the consuming wallet app can make an
 HTTP request. Rather than containing all the information needed for a
 transaction, a transaction request uses this URL to fetch the transaction that
 should be presented to the user.
 
-When a wallet receives a transaction Request URL, four things happen:
+When a wallet app receives a transaction Request URL, four things happen:
 
-1. The wallet sends a GET request to the application at the provided `link` URL
+1. The wallet app sends a GET request to your application at the provided `link` URL
    to retrieve a label and icon image to display to the user.
-2. The wallet then sends a POST request with the public key of the end user.
+2. The wallet app then sends a POST request with the public key of the end user.
 3. Using the public key of the end user (and any additional information provided
-   in `link`), the application then builds the transaction and responds with a
+   in `link`), your application then builds the transaction and responds with a
    base64-encoded serialized transaction.
-4. The wallet decodes and deserializes the transaction, then lets the user sign
+4. The wallet app decodes and deserializes the transaction, then lets the user sign
    and send the transaction.
 
 Given that transaction requests are more involved than transfer requests, the
@@ -134,23 +129,21 @@ transaction request. In this lesson, we'll be using
 endpoints, but you're welcome to use whatever stack and tools you're most
 comfortable with.
 
-In Next.js, you do this by adding a file to the `pages/api` folder and exporting
-a function that handles the request and response.
+In this guide, we'll use Next.js API Routes in the new app directory structure which has replaced the traditional `pages/api` directory for API routes in recent versions of Next.js. This shift to `app/api` provides a more organized and scalable approach to handling both server and client-side rendering.
+
+In Next.js, you configure your API endpoint by creating a file within the `app/api` directory. This new structure not only handles API routes but also supports other advanced features like middleware and dynamic routes.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export async function POST(request: NextRequest) {
   // Handle the request
 }
 ```
 
 #### Handle a GET request
 
-The wallet consuming your transaction request URL will first issue a GET request
+The wallet app consuming your transaction request URL will first issue a GET request
 to this endpoint. You'll want your endpoint to return a JSON object with two
 fields:
 
@@ -160,24 +153,14 @@ fields:
 Building on the empty endpoint from before, that may look like this:
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === "GET") {
-    return get(res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-}
 
-function get(res: NextApiResponse) {
-  res.status(200).json({
+export async function GET(request: NextRequest) {
+  return NextResponse.json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-  });
+  }, { status: 200 });
 }
 ```
 
@@ -187,13 +170,13 @@ containing `label` and `icon`.
 
 #### Handle a POST request and build the transaction
 
-After issuing a GET request, the wallet will issue a POST request to the same
+After issuing a GET request, the wallet app will issue a POST request to the same
 URL. Your endpoint should expect the POST request's `body` to contain a JSON
-object with an `account` field provided by the requesting wallet. The value of
+object with an `account` field provided by the requesting wallet app. The value of
 `account` will be a string representing the end user's public key.
 
 With this information and any additional parameters provided, you can build the
-transaction and return it to the wallet for signing by:
+transaction and return it to the wallet app for signing by:
 
 1. Connecting to the Solana network and getting the latest `blockhash`.
 2. Creating a new transaction using the `blockhash`.
@@ -202,29 +185,17 @@ transaction and return it to the wallet for signing by:
    with a message for the user.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from 'next/server';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
-  if (req.method === "GET") {
-    return get(res);
-  } else if (req.method === "POST") {
-    return post(req, res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-}
-
-function get(res: NextApiResponse) {
-  res.status(200).json({
+export async function GET(request: NextRequest) {
+  return NextResponse.json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
 }
-async function post(req: PublicKey, res: PublicKey) {
-  const { account, reference } = req.body;
+
+export async function POST(request: NextRequest) {
+  const { account, reference } = await request.json();
 
   const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -232,7 +203,7 @@ async function post(req: PublicKey, res: PublicKey) {
 
   const transaction = new Transaction({
     recentBlockhash: blockhash,
-    feePayer: account,
+    feePayer: new PublicKey(account),
   });
 
   const instruction = SystemProgram.transfer({
@@ -244,7 +215,7 @@ async function post(req: PublicKey, res: PublicKey) {
   transaction.add(instruction);
 
   transaction.keys.push({
-    pubkey: reference,
+    pubkey: new PublicKey(reference),
     isSigner: false,
     isWritable: false,
   });
@@ -252,11 +223,12 @@ async function post(req: PublicKey, res: PublicKey) {
   const serializedTransaction = transaction.serialize({
     requireAllSignatures: false,
   });
+
   const base64 = serializedTransaction.toString("base64");
 
   const message = "Simple transfer of 0.001 SOL";
 
-  res.send(200).json({
+  return NextResponse.json({
     transaction: base64,
     message,
   });
@@ -266,7 +238,7 @@ async function post(req: PublicKey, res: PublicKey) {
 There is nothing too out of the ordinary here. It's the same transaction
 construction you would use in a standard client-side application. The only
 difference is that instead of signing and submitting to the network, you send
-the transaction as a base64-encoded string back in the HTTP response. The wallet
+the transaction as a base64-encoded string back in the HTTP response. The wallet app
 that issued the request can then present the transaction to the user for
 signing.
 
@@ -274,18 +246,18 @@ signing.
 
 You may have noticed that the previous example assumed a `reference` was
 provided as a query parameter. While this is _not_ a value provided by the
-requesting wallet, it _is_ useful to set up your initial transaction request URL
+requesting wallet app, it _is_ useful to set up your initial transaction request URL
 to contain this query parameter.
 
 Since your application isn't the one submitting a transaction to the network,
 your code won't have access to a transaction signature. This would typically be
-how your app can locate a transaction on the network and see its status.
+how your application can locate a transaction on the network and see its status.
 
 To get around this, you can include a `reference` value as a query parameter for
-each transaction request. This value should be a base58-encoded 32 byte array
+each transaction request. This value should be a base58-encoded 32-byte array
 that can be included as a non-signer key on the transaction. This allows your
-app to then use the `getSignaturesForAddress` RPC method to locate the
-transaction. Your app can then tailor its UI according to a transaction's
+application to then use the `getSignaturesForAddress` RPC method to locate the
+transaction. Your application can then tailor its UI according to a transaction's
 status.
 
 If you use the `@solana/pay` library, you can use the `findReference` helper
@@ -400,8 +372,8 @@ to the scavenger hunt's smart contract that keeps track of user progress.
 #### 1. Starter
 
 To get started, download the starter code on the `starter` branch of this
-[repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter).
-The starter code is a Next.js app that displays a Solana Pay QR code. Notice
+[repository](https://github.com/Unboxed-Software/solana-scavenger-hunt-app/tree/starter)
+The starter code is a Next.js applications that displays a Solana Pay QR code and uses the `app` route in the latest versions of Next.js. Notice
 that the menu bar lets you switch between different QR codes. The default option
 is a simple SOL transfer for illustrative purposes. Throughout this lab, we'll
 be adding functionality to the location options in the menu bar.
@@ -410,7 +382,7 @@ be adding functionality to the location options in the menu bar.
 
 To do this, we'll be creating a new endpoint for a transaction request that
 builds a transaction for invoking an Anchor program on Devnet. This program has
-been made specifically for this "scavenger hunt" app and has two instructions:
+been made specifically for this "scavenger hunt" application and has two instructions:
 `initialize` and `check_in`. The `initialize` instruction is used to set up the
 user's state, while the `check_in` instruction is used to record a check-in at a
 location in the scavenger hunt. We won't be making any changes to the program in
@@ -419,14 +391,14 @@ this lab, but feel free to check out the
 you'd like to familiarize yourself with the program.
 
 Before moving on, make sure you get familiar with the starter code for the
-Scavenger Hunt app. Looking at `pages/index.tsx`,
+Scavenger Hunt application. Looking at `app/index.tsx`,
 `utils/createQrCode/simpleTransfer`, and `/utils/checkTransaction` will let you
 see how the transaction request for sending SOL is set up. We'll be following a
 similar pattern for the transaction request for checking in at a location.
 
 #### 2. Setup
 
-Before we move forward, let's make sure you can run the app locally. Start by
+Before we move forward, let's make sure you can run the application locally. Start by
 renaming the `.env.example` file in the frontend directory to `.env`. This file
 contains a keypair that will be used in this lab to partially sign transactions.
 
@@ -482,7 +454,7 @@ you're good to move on!
 Now that you're up and running, it's time to create an endpoint that supports
 transaction requests for location check-in using the Scavenger Hunt program.
 
-Start by opening the file at `pages/api/checkIn.ts`. Notice that it has a helper
+Start by opening the file at `app/api/checkIn/route.ts`. Notice that it has a helper
 function for initializing `eventOrganizer` from a secret key environment
 variable. The first thing we'll do in this file is the following:
 
@@ -492,24 +464,35 @@ variable. The first thing we'll do in this file is the following:
    or return a 405 error based on the HTTP request method
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+// GET and POST request handler
+export async function handler(req: NextRequest): Promise<NextResponse> {
   if (req.method === "GET") {
-    return get(res);
+    return get();
   } else if (req.method === "POST") {
-    return await post(req, res);
+    return await post(req);
   } else {
-    return res.status(405).json({ error: "Method not allowed" });
+    return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
 }
 
-function get(res: NextApiResponse) {}
+// GET request handler
+function get(): NextResponse {
+  return NextResponse.json({ message: "GET request successful" }, { status: 200 });
+}
 
-async function post(req: NextApiRequest, res: NextApiResponse) {}
+// POST request handler
+async function post(req: NextRequest): Promise<NextResponse> {
+  try {
+    const body = await req.json();
+    // Handle POST logic here
+    return NextResponse.json({ message: "POST request successful", data: body }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ error: "Error processing POST request" }, { status: 500 });
+  }
+}
+
 ```
 
 #### 4. Update `get` function
@@ -519,17 +502,18 @@ endpoint to return a label and icon. Update the `get` function to send a
 response with a "Scavenger Hunt!" label and a Solana logo icon.
 
 ```jsx
-function get(res: NextApiResponse) {
-    res.status(200).json({
-        label: "Scavenger Hunt!",
-        icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
-    });
+export async function GET() {
+  return NextResponse.json({
+    label: "Scavenger Hunt!",
+    icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
+  });
 }
+
 ```
 
 #### 5. Update `post` function
 
-After the GET request, a wallet will issue a POST request to the endpoint. The
+After the GET request, a wallet app will issue a POST request to the endpoint. The
 request's `body` will contain a JSON object with an `account` field representing
 the end user's public key.
 
@@ -557,48 +541,81 @@ Note that you'll need to import `PublicKey` and `Transaction` from
 `@solana/web3.js` here as well.
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next"
-import { PublicKey, Transaction } from "@solana/web3.js"
-...
+import { NextRequest, NextResponse } from 'next/server';
+import { PublicKey, Transaction } from '@solana/web3.js';
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-    const { account } = req.body
-    const { reference, id } = req.query
+// Define constants for configuration and utility imports
+import { connection, gameId, program } from '@/utils/programSetup';
 
-    if (!account || !reference || !id) {
-        res.status(400).json({ error: "Missing required parameter(s)" })
-        return
+// Handle POST request logic for transactions
+export async function POST(req: NextRequest) {
+  const { account } = await req.json(); // Extract account from body
+  const { searchParams } = new URL(req.url); // Extract query parameters
+  const reference = searchParams.get('reference');
+  const id = searchParams.get('id');
+
+  // Validate required parameters
+  if (!account || !reference || !id) {
+    return NextResponse.json(
+      { error: 'Missing required parameter(s)' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    // Call the transaction builder function with appropriate values
+    const transaction = await buildTransaction(
+      new PublicKey(account),
+      new PublicKey(reference),
+      id.toString()
+    );
+
+    // Return the successful transaction with a message
+    return NextResponse.json({
+      transaction: transaction,
+      message: `You've found location ${id}!`,
+    });
+  } catch (err) {
+    console.error(err);
+    const error = err as any;
+
+    // Handle error response based on the error message
+    if (error.message) {
+      return NextResponse.json(
+        { transaction: '', message: error.message },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { error: 'Error creating transaction' },
+        { status: 500 }
+      );
     }
-
-    try {
-        const transaction = await buildTransaction(
-            new PublicKey(account),
-            new PublicKey(reference),
-            id.toString()
-        )
-
-        res.status(200).json({
-            transaction: transaction,
-            message: `You've found location ${id}!`,
-        })
-    } catch (err) {
-        console.log(err)
-        let error = err as any
-        if (error.message) {
-            res.status(200).json({ transaction: "", message: error.message })
-        } else {
-            res.status(500).json({ error: "error creating transaction" })
-        }
-    }
+  }
 }
 
+// Function to build a Solana transaction
 async function buildTransaction(
-    account: PublicKey,
-    reference: PublicKey,
-    id: string
+  account: PublicKey,
+  reference: PublicKey,
+  id: string
 ): Promise<string> {
-    return new Transaction()
+  // Create a new Solana Transaction instance (for demonstration purposes)
+  const transaction = new Transaction();
+
+  // Perform your logic here, for example:
+  // - Fetching the latest blockhash
+  // - Adding instructions to the transaction
+  // - Signing the transaction
+  // This function is just returning an empty transaction string as an example
+
+  // Serialize the transaction to a base64 string
+  const serializedTransaction = transaction.serialize({
+    requireAllSignatures: false,
+  });
+  return serializedTransaction.toString('base64');
 }
+
 ```
 
 #### 6. Implement the `buildTransaction` function
@@ -628,14 +645,14 @@ later for steps 1, 3, 6, and 7-8. We'll call these `fetchUserState`,
 We'll also add the following imports:
 
 ```typescript
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import {
   PublicKey,
   Transaction,
   TransactionInstruction,
 } from "@solana/web3.js";
-import { locationAtIndex, Location, locations } from "../../utils/locations";
-import { connection, gameId, program } from "../../utils/programSetup";
+import { locationAtIndex, Location, locations } from "@/utils/locations";
+import { connection, gameId, program } from "@/utils/programSetup";
 ```
 
 Using the empty helper functions and the new imports, we can fill in the
@@ -817,9 +834,9 @@ async function createCheckInInstruction(
 }
 ```
 
-#### 10. Test the app
+#### 10. Test the application
 
-At this point your app should be working! Go ahead and test it using your mobile
+At this point your application should be working! Go ahead and test it using your mobile
 wallet. Start by scanning the QR code for `Location 1`. Remember to make sure
 your frontend is running using the ngrok URL rather than `localhost`.
 
@@ -844,7 +861,7 @@ It's time to try this out on your own. Feel free to build out an idea of your
 own using Solana Pay. Or, if you need some inspiration, you can use the prompt
 below.
 
-Build out an app using Solana Pay (or modify the one from the lab) to mint an
+Build out an application using Solana Pay (or modify the one from the lab) to mint an
 NFT to users. To take it up a notch, only make the transaction possible if the
 user meets one or more conditions (e.g. holds an NFT from a specific collection,
 is already on a pre-determined list, etc.).
