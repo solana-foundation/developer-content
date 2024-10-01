@@ -271,7 +271,7 @@ const txHash = await program.methods
   .rpc();
 ```
 
-The second caveat is that your'll have to call one of the following methods from
+The second caveat is that you'll have to call one of the following methods from
 inside your rust instruction function to load the account:
 
 - `load_init` when first initializing an account (this will ignore the missing
