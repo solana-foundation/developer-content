@@ -90,7 +90,7 @@ In summary, mobile blockchain transactions opens up many opportunities. Let's st
 
 ### Supported Operating Systems
 
-Currently, the MWA only supports Android OS. A WebSocket connection can persist
+Currently, the MWA only supports Android. On Android, a WebSocket connection can persist
 between apps, even when the wallet app is in the background.
 
 A prominent limitation to the adoption of MWAs in iOS is that it is designed to
