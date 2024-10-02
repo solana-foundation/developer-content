@@ -17,8 +17,8 @@ invoked in the onchain program.
 
 ### Instructions
 
-In previous lessons, we used the `SystemProgram.transfer()` function from 
-`@solana/web3.js`, which creates an instruction for the System program to 
+In previous lessons, we used the `SystemProgram.transfer()` function from
+`@solana/web3.js`, which creates an instruction for the System program to
 transfer SOL.
 
 When working with other programs, however, you'll need to create instructions
