@@ -10,18 +10,21 @@ description:
 
 ### Summary
 
-- **Burning tokens** reduces the total supply of a token by removing them
-  from circulation.
-- **Approving a delegate**, allows another account to transfer or burn a specified amount of tokens from a token account while retaining original account ownership.
-- **Revoking a delegate**, removes their authority to act on behalf of the token account owner.
+- **Burning tokens** reduces the total supply of a token by removing them from
+  circulation.
+- **Approving a delegate**, allows another account to transfer or burn a
+  specified amount of tokens from a token account while retaining original
+  account ownership.
+- **Revoking a delegate**, removes their authority to act on behalf of the token
+  account owner.
 - Each of these operations is facilitated through the `spl-token` library,
   utilizing specific functions for each action.
 
 ### Lesson
 
-In this lesson, we'll cover burning tokens and delegation. You may not have a need for these
-in your own application, so if you're more interested in NFTs, feel free to skip
-ahead to
+In this lesson, we'll cover burning tokens and delegation. You may not have a
+need for these in your own application, so if you're more interested in NFTs,
+feel free to skip ahead to
 [creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex.md)!
 
 #### Burn Tokens
