@@ -830,7 +830,7 @@ export function ProgramProvider({ children }: ProgramProviderProps) {
 
   const setup = useCallback(async () => {
     const programId = new PublicKey(
-      "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU", //public key, do not expose anything else
+      "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU",
     );
 
     // MockWallet is a placeholder wallet used for initializing the AnchorProvider.
