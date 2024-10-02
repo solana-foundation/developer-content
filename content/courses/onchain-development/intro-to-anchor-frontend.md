@@ -154,7 +154,7 @@ counter program you built previously:
 Inspecting the IDL, you can see the `programId` and the `metadata` object which
 have been added in anchor 0.30.0
 
-This program contains two instructions (`initialize` and `increment`).
+This program contains two instruction handlers, `initialize` and `increment`.
 
 Notice that in addition to specifying the instructions, it specifies the
 accounts and inputs for each instruction. The `initialize` instruction requires
