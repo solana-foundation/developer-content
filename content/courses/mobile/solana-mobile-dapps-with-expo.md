@@ -1073,7 +1073,7 @@ async function uploadMetadataJson(
   );
   const responseBody = await response.json();
 
-  return resData;
+  return responseBody;
 }
 
 const uploadImage = useCallback(async (fileUri: string): Promise<string> => {
