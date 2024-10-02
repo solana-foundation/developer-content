@@ -559,12 +559,12 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { PublicKey, Transaction } from "@solana/web3.js"
 ...
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-  const { account } = req.body;
-  const { reference, id } = req.query;
+async function post(request: NextApiRequest, response: NextApiResponse) {
+  const { account } = request.body;
+  const { reference, id } = request.query;
 
   if (!account || !reference || !id) {
-    res.status(400).json({ error: "Missing required parameter(s)" });
+    response.status(400).json({ error: "Missing required parameter(s)" });
     return;
   }
 
@@ -575,14 +575,13 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
       id.toString(),
     );
 
-    res.status(200).json({
+    response.status(200).json({
       transaction: transaction,
       message: `You've found location ${id}!`,
     });
-  } catch (err) {
-    console.log(err);
-    let error = err as Error;
-    res.status(500).json({ transaction: "", message: error.message });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ transaction: "", message: error.message });
     return;
   }
 }
