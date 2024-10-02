@@ -195,7 +195,7 @@ main point of this lesson: how to create a cNFT collection.
 Fortunately, you can use tools created by Solana Foundation, the Solana
 developer community, and Metaplex to simplify the process. Specifically, we’ll
 be using the `@solana/spl-account-compression` SDK, the Metaplex Bubblegum
-program `@metaplex-foundation/mpl-bugglegum` through the Umi library from
+program `@metaplex-foundation/mpl-bubblegum` through the Umi library from
 Metaplex.
 
 #### Prepare metadata
@@ -235,15 +235,17 @@ the example above.
 
 #### Create Collection NFT
 
-If you want your cNFTs to be part of a collection, you’ll need to create a
-Collection NFT **before** you start minting cNFTs. This is a traditional NFT
-that acts as the reference binding your cNFTs together into a single collection.
-This will be a Token Metadata program NFT with the fields `isCollection` set to
-`true` created using the `@metaplex-foundation/mpl-token-metadata` library. You
-can check out more on this in the
-[NFTs with Metaplex lesson](https://github.com/solana-foundation/developer-content/blob/main/content/courses/tokens-and-nfts/nfts-with-metaplex.md)
+NFTs are intrinsically unique, compared to fungible tokens which have a supply.
+However, it is important to bind NFTs produced by the same series together,
+using a Collection. Collections allow people to discover other NFTs in the same
+collection, and verify that individual NFTs are actually members of the
+Collection (and not look-alikes produced by someone else).
 
-<!-- todo! update above link once lesson goes live -->
+To have your cNFTs to be part of a collection, you’ll need to create a
+Collection NFT **before** you start minting cNFTs. This is a traditional Token
+Metadata Program NFT that acts as the reference binding your cNFTs together into
+a single collection. The procedure to create this NFT is outlined in our
+[NFTs with Metaplex lesson](https://solana.com/developers/courses/tokens-and-nfts/nfts-with-metaplex#add-the-nft-to-a-collection)
 
 ```typescript
 const collectionMint = generateSigner(umi);
@@ -330,20 +332,20 @@ when choosing the values.
 
 Once you know these values, you can use the `createTree` method from the
 `@metaplex-foundation/mpl-bubblegum` package to create your tree. This
-instruction creates and initializes two accounts
+instruction creates and initializes two accounts:
 
-1. `Merkle Tree` account that holds the merkle hash and used to verify the
-   authenticity of data stored.
-2. `Tree Config` account that holds additional data specific to compressed NFTs
-   such as the tree creator, whether the tree is public. Find mnore fileds about
-   the fields the account stores on the
-   [program source code.](https://github.com/metaplex-foundation/mpl-bubblegum/blob/42ffed35da6b2a673efacd63030a360eac3ae64e/programs/bubblegum/program/src/state/mod.rs#L17)
+1. A `Merkle Tree` account - this holds the merkle hash and is used to verify
+   the authenticity of data stored.
+
+2. A `Tree Config` account - this holds additional data specific to compressed
+   NFTs such as the tree creator, whether the tree is public, and
+   [other fields - see the Bubblehum program source](https://github.com/metaplex-foundation/mpl-bubblegum/blob/42ffed35da6b2a673efacd63030a360eac3ae64e/programs/bubblegum/program/src/state/mod.rs#L17).
 
 #### Setting up Umi
 
 The `mpl-bubblegum` package is a plugin and cannot be used without the Umi
 library from Metaplex. Umi is a framework for making JS/TS clients for onchain
-programs, that was created by Metaplex.
+programs that was created by Metaplex.
 
 Note that Umi has different implementations for many concepts than web3.js,
 including Keypairs, PublicKeys, and Connections. However, it is easy to convert
@@ -362,7 +364,7 @@ The above code initializes an empty Umi instance without any signer or plugin
 attached to it. You can find the exhaustive list of the plugins available
 [on this Metaplex docs page](https://developers.metaplex.com/umi/metaplex-umi-plugins)
 
-The nxt part is to add in our imports and attach a signer to our Umi instance.
+The next part is to add in our imports and attach a signer to our Umi instance.
 
 ```typescript
 import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
@@ -384,7 +386,7 @@ const umiKeypair = umi.eddsa.createKeypairFromSecretKey(localKeypair.secretKey);
 // load the MPL Bubblegum program, dasApi plugin and assign a signer to our umi instance
 umi.use(keypairIdentity(umiKeypair)).use(mplBubblegum()).use(dasApi());
 
-console.log("everythying is fine");
+console.log("Loaded UMI with Bubblegum");
 ```
 
 #### Use Bubblegum to Initialize Your Tree
@@ -402,7 +404,7 @@ const builder = await createTree(umi, {
 await builder.sendAndConfirm(umi);
 ```
 
-The three values supplied i.e the `merkleTree`, `maxDepth` and `maxBufferSize`
+The three values supplied i.e. the `merkleTree`, `maxDepth` and `maxBufferSize`
 are required in order to create the tree while the rest are optional. For
 example, the`tree creator` defaults to the Umi instance identity, while the
 `public field to false.
@@ -410,17 +412,16 @@ example, the`tree creator` defaults to the Umi instance identity, while the
 When set to true, `public` allows anyone to mint from the initialized tree and
 if false, only the tree creator will be able to mint from the tree.
 
-Feel free to take a look at the program code for the
-[accounts](https://github.com/metaplex-foundation/mpl-bubblegum/blob/42ffed35da6b2a673efacd63030a360eac3ae64e/programs/bubblegum/program/src/processor/create_tree.rs#L20)
-and the
-[arguments](https://github.com/metaplex-foundation/mpl-bubblegum/blob/42ffed35da6b2a673efacd63030a360eac3ae64e/programs/bubblegum/program/src/processor/create_tree.rs#L40)
-the instruction takes.
+Feel free to look at the code for the
+[create_tree instruction handler](https://github.com/metaplex-foundation/mpl-bubblegum/blob/42ffed35da6b2a673efacd63030a360eac3ae64e/programs/bubblegum/program/src/processor/create_tree.rs#L40)
+and
+[create_tree's expected accounts](https://github.com/metaplex-foundation/mpl-bubblegum/blob/42ffed35da6b2a673efacd63030a360eac3ae64e/programs/bubblegum/program/src/processor/create_tree.rs#L20).
 
 #### Mint cNFTs
 
 With the Merkle tree account and its corresponding Bubblegum tree config account
 initialized, it’s possible to mint cNFTs to the tree. The Bubblegum library,
-provides two instruction we can make use of depending on whether the minted
+provides two instructions we can make use of depending on whether the minted
 asset will belong to a collection.
 
 The two instructions are
@@ -464,7 +465,7 @@ await mintToCollectionV1(umi, {
 
 Both functions will require you to pass in the NFT metadata and a list of
 accounts required to mint the cNFT such as the `leafOwner`, `merkleTree` account
-e.t.c
+etc.
 
 ### Interact with cNFTs
 
@@ -479,8 +480,7 @@ The simplest way to fetch data from an existing cNFT is to use the
 API). Note that this is separate from the standard JSON RPC. To use the Read
 API, you’ll need to use a supporting RPC Provider. Metaplex maintains a (likely
 non-exhaustive)
-[list of RPC providers](https://developers.metaplex.com/rpc-providers#rpcs-with-das-support)
-that support the Read API.
+[list of RPC providers that support the DAS Read API](https://developers.metaplex.com/rpc-providers#rpcs-with-das-support).
 
 In this lesson we’ll be using
 [Helius](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
@@ -503,7 +503,7 @@ ID. However, after minting cNFTs, you’ll have at most two pieces of informatio
 The only real guarantee is that you’ll have the transaction signature. It is
 **possible** to locate the leaf index from there, but it involves some fairly
 complex parsing. The short story is you must retrieve the relevant instruction
-logs from the Noop program and parse them to find the leaf index. We’ll cover
+logs from the `Noop program` and parse them to find the leaf index. We’ll cover
 this more in depth in a future lesson. For now, we’ll assume you know the leaf
 index.
 
@@ -520,13 +520,13 @@ ID and the following seeds:
 2. The Merkle tree address
 3. The leaf index
 
-The indexer essentially observes transaction logs from the Noop program as they
-happen and stores the cNFT metadata that was hashed and stored in the Merkle
-tree. This enables them to surface that data when requested. This asset id is
-what the indexer uses to identify the particular asset.
+The indexer essentially observes transaction logs from the `Noop program` as
+they happen and stores the cNFT metadata that was hashed and stored in the
+Merkle tree. This enables them to surface that data when requested. This asset
+ID is what the indexer uses to identify the particular asset.
 
 For simplicity, you can just use the `findLeafAssetIdPda` helper function from
-the bubblegum library.
+the Bubblegum library.
 
 ```typescript
 const [assetId, bump] = await findLeafAssetIdPda(umi, {
@@ -634,16 +634,21 @@ from a Merkle tree.
 
 #### 1. Get the starter code
 
-To begin create and initialize an empty NPM project.
+To begin create and initialize an empty NPM project and change directory into
+it.
 
 ```bash
-mkdir cnft-demo && npm init -y
+mkdir cnft-demo
+npm init -y
+cd cnft-demo
 ```
 
 Install all the required dependencies
 
 ```bash
-npm i @solana/web3.js npm i @solana-developers/helpers@2.5.2 npm i @metaplex-foundation/mpl-token-metadata npm i @metaplex-foundation/mpl-bubblegum @metaplex-foundation/digital-asset-standard-api npm i @metaplex-foundation/umi-bundle-defaults  && npm i --save-dev esrun
+npm i @solana/web3.js @solana-developers/helpers@2.5.2 @metaplex-foundation/mpl-token-metadata @metaplex-foundation/mpl-bubblegum @metaplex-foundation/digital-asset-standard-api @metaplex-foundation/umi-bundle-defaults
+
+npm i --save-dev esrun
 ```
 
 In this first script, we will learn about creating a tree, hence let's create
@@ -654,9 +659,9 @@ mkdir src && touch src/create-tree.ts
 ```
 
 This Umi instantiation code will be repated in a lot of files, so feel free to
-create a wrapper file to instantiate if,
+create a wrapper file to instantiate it:
 
-```typescript
+```typescript filename="crate-tree.ts"
 import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
 import { createTree, mplBubblegum } from "@metaplex-foundation/mpl-bubblegum";
 import { generateSigner, keypairIdentity } from "@metaplex-foundation/umi";
@@ -694,7 +699,7 @@ This function takes in three default values
 
 - `merkleTree` - The Merkle tree account address
 - `maxDepth` - Determines the max number of leaves the tree will hold and
-  therefore the max no. of cNFTs that the tree can contain.
+  therefore the max number of cNFTs that the tree can contain.
 - `maxBufferSize` - Determines how many concurrent changes can occur in the tree
   in parallel.
 
@@ -705,7 +710,7 @@ You can also supply in optional fields such as
 - `public` - Determines whether anyone else apart from the tree creator will be
   able to mint cNFTs from the tree.
 
-```typescript
+```typescript filename="crate-tree.ts"
 const merkleTree = generateSigner(umi);
 const builder = await createTree(umi, {
   merkleTree,
@@ -715,7 +720,7 @@ const builder = await createTree(umi, {
 await builder.sendAndConfirm(umi);
 
 let explorerLink = getExplorerLink("address", merkleTree.publicKey, "devnet");
-console.log(`explorer link: ${explorerLink}`);
+console.log(`Explorer link: ${explorerLink}`);
 console.log("Merkle tree address is :", merkleTree.publicKey);
 console.log("✅ Finished successfully!");
 ```
@@ -732,15 +737,15 @@ step when minting compressed NFTs.
 Your output will be similar to this
 
 ```bash
-explorer link: https://explorer.solana.com/address/ZwzNxXw83PUmWSypXmqRH669gD3hF9rEjHWPpVghr5h?cluster=devnet
+Explorer link: https://explorer.solana.com/address/ZwzNxXw83PUmWSypXmqRH669gD3hF9rEjHWPpVghr5h?cluster=devnet
 Merkle tree address is : ZwzNxXw83PUmWSypXmqRH669gD3hF9rEjHWPpVghr5h
 ✅ Finished successfully!
 ```
 
-Congratulations! You've created a Bubblegum tree. Follow the explorer link to
+Congratulations! You've created a Bubblegum tree. Follow the Explorer link to
 make sure that the process finished successfully,
 
-![Solana Explorer with details about created Merkle tree](/public/assets/courses/unboxed/solana-explorer-cretae-tree.png)
+![Solana Explorer with details about created Merkle tree](/public/assets/courses/unboxed/solana-explorer-create-tree.png)
 
 #### 3. Mint cNFTs to your tree
 
@@ -750,7 +755,7 @@ NFTs! Now let’s turn our attention to minting.
 First, let's create a new file called `mint-compressed-nft-to-collection.ts`,
 add our imports and instantiate Umi
 
-```typescript
+```typescript filename="mint-compressed-nft-to-collection.ts"
 import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
 import {
   findLeafAssetIdPda,
@@ -786,7 +791,9 @@ I already created in the NFTs with Metaplex lesson, but if you'd like to create
 a new collection for this lesson, check out the code
 [on this repo](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/create-collection.ts)
 
-<!-- todo(should there be a section for creating a collection with MPL metadata) -->
+<Callout>
+Find the code to create a Metaplex Collection NFT in our [NFTs with Metaplex lesson](https://solana.com/developers/courses/tokens-and-nfts/nfts-with-metaplex#add-the-nft-to-a-collection).
+</Callout>
 
 To mint a compressed NFT to a collection we will need
 
@@ -794,16 +801,16 @@ To mint a compressed NFT to a collection we will need
 
 - `merkleTree` - The Merkle tree address we created in the previous step
 
-- `collection` - The collection our cNFT will belong to. This is not required
+- `collection` - The collection our cNFT will belong to. This is not required,
   and you can leave it out if your cNFT doesn't belong to a collection.
 
-- `metadata` - Your off-chain metadata. This lesson won't focus onto how to
-  prepare your metadata but you can check out the
+- `metadata` - Your offchain metadata. This lesson won't focus onto how to
+  prepare your metadata, but you can check out the
   [recommended structure from Metaplex](https://developers.metaplex.com/token-metadata/token-standard#the-non-fungible-standard).
 
 Our cNFT will use this structure we already prepared earlier.
 
-```json
+```json filename="nft.json"
 {
   "name": "My NFT",
   "symbol": "MN",
@@ -824,7 +831,7 @@ Our cNFT will use this structure we already prepared earlier.
 
 Putting it all into code, we will have
 
-```typescript
+```typescript filename="mint-compressed-nft-to-collection.ts"
 const merkleTree = UMIPublicKey("ZwzNxXw83PUmWSypXmqRH669gD3hF9rEjHWPpVghr5h");
 
 const collectionMint = UMIPublicKey(
@@ -862,7 +869,7 @@ array representing the transaction signature.
 We need this has in order to be able to get the leaf schema and with this schema
 derive the asset ID.
 
-```typescript
+```typescript filename="mint-compressed-nft-to-collection.ts"
 const leaf: LeafSchema = await parseLeafFromMintToCollectionV1Transaction(
   umi,
   uintSig,
@@ -887,7 +894,7 @@ asset id: D4A8TYkKE5NzkqBQ4mPybgFbAUDN53fwJ64b8HwEEuUS
 ✅ Finished successfully!
 ```
 
-We aren't returning the explorer link because this address won't exists on the
+We aren't returning the Explorer link because this address won't exists on the
 Solana state but is indexed by RPCs that support the DAS API.
 
 In the next step we will query this address to fetch out cNFT details.
@@ -912,7 +919,7 @@ endpoint and use an RPC that supports the DAS API.
 Be sure to update this with your Helius API keys which you can get from the
 [developer dashboard page](https://dashboard.helius.dev/signup?redirectTo=onboarding)
 
-```typescript
+```typescript filename="fetch-cnft-details.ts"
 import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
 import { mplBubblegum } from "@metaplex-foundation/mpl-bubblegum";
 import {
@@ -940,7 +947,7 @@ umi.use(keypairIdentity(umiKeypair)).use(mplBubblegum()).use(dasApi());
 Fetching a compressed NFT details is as simple as calling the `getAsset` method
 with the `assetId` from the previous step.
 
-```typescript
+```typescript filename="fetch-cnft-details.ts"
 const assetId = UMIPublicKey("D4A8TYkKE5NzkqBQ4mPybgFbAUDN53fwJ64b8HwEEuUS");
 
 // @ts-ignore
@@ -1039,11 +1046,7 @@ Fortunately for us can get the asset data with the `getAssetWithProof` method.
 Le't first create a new file `transfer-asset.ts`, and populate it with the code
 for instantiating a new Umi client.
 
-```bash
-touch transfer-asset.ts
-```
-
-```typescript
+```typescript filename="transfer-asset.ts"
 import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
 import {
   getAssetWithProof,
@@ -1078,7 +1081,7 @@ umi.use(keypairIdentity(umiKeypair)).use(mplBubblegum()).use(dasApi());
 We are not ready to transfer our asset. Using the `assetId` for our cNFT, we can
 call the `transfer` method from the Bubblegum library
 
-```typescript
+```typescript filename="transfer-asset.ts"
 const assetId = UMIPublicKey("D4A8TYkKE5NzkqBQ4mPybgFbAUDN53fwJ64b8HwEEuUS");
 
 //@ts-ignore
@@ -1095,7 +1098,7 @@ let uintSig = await(
 const b64sig = base58.deserialize(uintSig);
 
 let explorerLink = getExplorerLink("transaction", b64sig, "devnet");
-console.log(`explorer link: ${explorerLink}`);
+console.log(`Explorer link: ${explorerLink}`);
 console.log("✅ Finished successfully!");
 ```
 
@@ -1103,7 +1106,7 @@ Running our script with `npx esrun transfer-asset.ts`, should output something
 similar to this if successful:
 
 ```bash
-explorer link: https://explorer.solana.com/tx/3sNgN7Gnh5FqcJ7ZuUEXFDw5WeojpwkDjdfvTNWy68YCEJUF8frpnUJdHhHFXAtoopsytzkKewh39Rf7phFQ2hCF?cluster=devnet
+Explorer link: https://explorer.solana.com/tx/3sNgN7Gnh5FqcJ7ZuUEXFDw5WeojpwkDjdfvTNWy68YCEJUF8frpnUJdHhHFXAtoopsytzkKewh39Rf7phFQ2hCF?cluster=devnet
 ✅ Finished successfully!
 ```
 
@@ -1117,8 +1120,8 @@ larger values and as long as you have enough Devnet SOL, this script will let
 you mint up to 10k cNFTs for a small fraction of what it would cost to mint 10k
 traditional NFTs.
 
-Inspect the updated NFT on Solana Explorer! Just like previously, if you have
-any issues, you should fix them yourself, but if needed the
+Inspect the cNFT on Solana Explorer! Just like previously, if you have any
+issues, you should fix them yourself, but if needed the
 [solution code](<!-- todo(Jimii) -->) is available.
 
 ### Challenge
