@@ -1272,7 +1272,7 @@ export function NFTProvider(props: NFTProviderProps) {
     );
     const responseBody = await response.json();
 
-    return resData;
+    return responseBody;
   }
 
   const fetchNFTs = useCallback(async () => {
