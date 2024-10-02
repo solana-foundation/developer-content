@@ -215,8 +215,8 @@ You have successfully setup, built, and deployed a Solana program using the Rust
 language.
 
 <Callout type="success" title="Look at your program!">
-You can use the [Solana Explorer](https://explorer.solana.com/) to look at your newly deployed program. 
-The explorer also works on localnet, you can open the [Solana Explorer on localnet](https://explorer.solana.com/?cluster=custom) and just paste your programId in the search bar. 
+You can use the [Solana Explorer](https://explorer.solana.com/) to look at your newly deployed program.
+The explorer also works on localnet, you can open the [Solana Explorer on localnet](https://explorer.solana.com/?cluster=custom) and just paste your programId in the search bar.
 </Callout>
 
 ## Let's call the Hello World program
@@ -228,8 +228,8 @@ library.
 ### Install Node.js
 
 To use node in WSL2 on Windows, please follow this  
-[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl)
-to install node.
+[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl) to
+install node.
 
 ```shell
 sudo apt-get install curl
