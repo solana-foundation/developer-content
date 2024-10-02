@@ -129,7 +129,7 @@ node adds 32 bytes to a transaction, so large trees would quickly exceed the
 maximum transaction size limit without caching proof nodes onchain.
 
 Each of these three values, max depth, max buffer size, and canopy depth, comes
-with a tradeoff. Increasing the value of these values increases the size of the
+with a tradeoff. Increasing any of these values increases the size of the
 account used to store the tree, thus increasing the cost to create the tree.
 
 Choosing the max depth is fairly straightforward as it directly relates to the
