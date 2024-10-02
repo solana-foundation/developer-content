@@ -21,7 +21,7 @@ description:
 
 ## Lesson Overview
 
-In these units, we will develop mobile apps that interact with the Solana
+In these lessons, we will develop mobile apps that interact with the Solana
 network, this opens up a whole new paradigm of blockchain use cases and
 behaviors. The **Solana Mobile Stack** (**SMS**) is designed to help developers
 seamlessly create mobile dApps. It includes the
