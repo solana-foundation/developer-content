@@ -3,13 +3,12 @@ title: Generalized State Compression objectives
 
 objectives:
   - Explain the flow of Solana's state compression logic.
-  - Explain the difference between a Merkle tree and a concurrent
-    Merkle tree
+  - Explain the difference between a Merkle tree and a concurrent Merkle tree
   - Implement generic state compression in a basic Solana program
 
 description:
-  Understand how state compression - the technology behind compressed NFTs
-  works - and learn how to apply it in your own Solana programs.
+  Understand how state compression - the technology behind compressed NFTs works
+  - and learn how to apply it in your Solana programs.
 ---
 
 ## Summary
@@ -45,7 +44,7 @@ it.
 
 However to verify the integrity of the data, then there's no need to store the
 actual data onchain. Instead, we can store hashes of the data, which can be used
-to prove or verify its accuracy. This is called *state compression*.
+to prove or verify its accuracy. This is called _state compression_.
 
 These hashes take up far less storage space than the original data. The full
 data can be stored in a cheaper, offchain location, and only needs to be
@@ -119,9 +118,9 @@ This includes:
 
 ### Key Parameters for Configuring a Concurrent Merkle Tree
 
-As a developer, you are responsible for controlling three key parameters
-that directly affect the tree’s size, cost, and the number of concurrent changes
-it can handle:
+As a developer, you are responsible for controlling three key parameters that
+directly affect the tree’s size, cost, and the number of concurrent changes it
+can handle:
 
 1. **Max Depth**
 2. **Max Buffer Size**
@@ -148,8 +147,8 @@ const getMaxDepth = (itemCount: number) => {
 };
 ```
 
-A max depth of 20 would allow for over one million leaves, making
-it suitable for storing large datasets like NFTs.
+A max depth of 20 would allow for over one million leaves, making it suitable
+for storing large datasets like NFTs.
 
 #### Max Buffer Size
 
@@ -169,9 +168,12 @@ given proof path. To verify any leaf in the tree, you need a complete proof
 path, which includes one proof node for every layer of the tree. For a tree with
 a max depth of 14, there will be 14 proof nodes in total. Each proof node adds
 32 bytes to the transaction, and without careful management, large trees could
-exceed the transaction size limit. Storing proof nodes onchain via the canopy
-helps optimize composability, allowing other programs to interact with your
-state-compressed program without exceeding transaction size limits.
+exceed the transaction size limit.
+
+Storing more proof nodes onchain (i.e., having a deeper canopy) allows other
+programs to interact with your tree without exceeding transaction limits, but it
+also uses more onchain storage. Consider the complexity of interactions with
+your tree when deciding on an appropriate canopy depth.
 
 ### Balancing Trade-offs
 
@@ -223,7 +225,7 @@ simplify the process.
 
 The SPL State Compression Program is designed to streamline and standardize the
 creation and management of concurrent Merkle trees across the Solana ecosystem.
-It provides instructions for initializing Merkle trees, handling tree leaves
+It provides Instruction Handlers for initializing Merkle trees, handling tree leaves
 (such as adding, updating, or removing data), and verifying the integrity of
 leaf data.
 
@@ -274,9 +276,9 @@ needs.
 
 #### Create Rust Types
 
-In a typical Anchor program, developers often start by defining the Rust types that
-represent accounts. For a state-compressed program, however, the focus shifts to
-defining types that align with the Merkle tree structure.
+In a typical Anchor program, developers often start by defining the Rust types
+that represent accounts. For a state-compressed program, however, the focus
+shifts to defining types that align with the Merkle tree structure.
 
 In state compression, your onchain account will primarily store the Merkle tree.
 The more practical data will be serialized and logged to the Noop program for
@@ -318,11 +320,10 @@ pub fn new_message_log(leaf_node: [u8; 32], from: Pubkey, to: Pubkey, message: S
 
 ```
 
-To be absolutely clear, the **`MessageLog` is not an account you will read from**.
-Instead, your program will create an instance of `MessageLog` using inputs from
-instructions, rather than constructing it from data read from an account. We
-will cover how to read data from compressed accounts.
-
+To be absolutely clear, the **`MessageLog` is not an account you will read
+from**. Instead, your program will create an instance of `MessageLog` using
+inputs from Instructions Handler, rather than constructing it from data read from an
+account. We will cover how to read data from compressed accounts later.
 
 #### Initialize a New Tree
 
@@ -333,10 +334,10 @@ To set up a new Merkle tree, clients need to perform two distinct steps.
    initialization involves setting the maximum depth and buffer size for the
    Merkle tree.
 
-The initialization instruction must create a CPI (Cross-Program Invocation) to
+The initialization Instruction Handler must create a CPI (Cross-Program Invocation) to
 call the `init_empty_merkle_tree` instruction from the State Compression
 Program. You’ll need to provide the maximum depth and buffer size as arguments
-to this instruction.
+to this instruction Handler.
 
 - **Max depth**: Defines the maximum number of hops needed to travel from any
   leaf to the root of the tree.
@@ -345,7 +346,7 @@ to this instruction.
   within the same block.
 
 For instance, if you are initializing a tree to store messages between users,
-your instruction might look like this:
+your Instruction Handler might look like this:
 
 ```rust
 
@@ -384,7 +385,7 @@ pub fn create_messages_tree(
         ],
     ];
 
-    // Create CPI context for `init_empty_merkle_tree` instruction
+    // Create CPI context for `init_empty_merkle_tree` instruction handler
     let cpi_ctx = CpiContext::new_with_signer(
         ctx.accounts.compression_program.to_account_info(), // The SPL account compression program
         Initialize {
@@ -406,10 +407,10 @@ pub fn create_messages_tree(
 #### Adding Hashes to the Tree
 
 Once the Merkle tree is initialized, you can begin adding data hashes to it.
-This process involves passing the uncompressed data to an instruction within
+This process involves passing the uncompressed data to an Instruction handler within
 your program, which will hash the data, log it to the Noop Program, and then use
 the State Compression Program's `append` instruction to add the hash to the
-tree. Here's how the instruction operates in detail:
+tree. Here's how the Instruction Handler operates in detail:
 
 1. **Hash the Data**: Use the `hashv` function from the `keccak` crate to hash
    the data. It's recommended to include the data owner or authority in the hash
@@ -422,7 +423,7 @@ tree. Here's how the instruction operates in detail:
    for your application specifically.
 
 3. **Append the Hash**: Construct and issue a CPI to the State Compression
-   Program’s `append` instruction. This will take the hash generated in step 1
+   Program’s `append` Instruction. This will take the hash generated in step 1
    and append it to the next available leaf on the Merkle tree. As with previous
    steps, this requires the Merkle tree address and tree authority bump as
    signature seeds.
@@ -956,11 +957,14 @@ pub fn create_note_log(leaf_node: [u8; 32], owner: Pubkey, note: String) -> Note
 
 ```
 
-In a traditional Anchor program, a note would typically be represented by a `Note` struct using the `account` macro. However, because we're using state compression we use `NoteLog`, a struct with the `AnchorSerialize` macro applied.
+In a traditional Anchor program, a note would typically be represented by a
+`Note` struct using the `account` macro. However, because we're using state
+compression we use `NoteLog`, a struct with the `AnchorSerialize` macro applied.
 
 #### 3. Define Account Constraints
 
-All our instruction handlers will use the same [account constraints](https://www.anchor-lang.com/docs/account-constraints):
+All our instruction handlers will use the same
+[account constraints](https://www.anchor-lang.com/docs/account-constraints):
 
 - `owner` - The creator and owner of the note, who must sign the transaction.
 - `tree_authority` - The authority for the Merkle tree, used for signing
@@ -1004,7 +1008,8 @@ pub struct NoteAccounts<'info> {
 
 #### 4. Create `create_note_tree` Instruction handler
 
-Next, we’ll make the `create_note_tree` instruction handler, to initialize the already allocated Merkle tree account.
+Next, we’ll make the `create_note_tree` instruction handler, to initialize the
+already allocated Merkle tree account.
 
 To implement this, you’ll need to build a CPI to invoke the
 `init_empty_merkle_tree` instruction from the State Compression Program. The
@@ -1069,9 +1074,11 @@ pub mod compressed_notes {
 Make sure that when setting up your CPI, you include both the Merkle tree
 address and the tree authority bump in the signer seeds.
 
-#### 5. Create `append_note` Instruction
+#### 5. Create `append_note` Instruction h
 
-Let's create the `append_note` instruction handler. This  will compress a raw note into a hash and store it on the Merkle tree, while also logging the note to the Noop program to ensure all data remains available onchain.
+Let's create the `append_note` instruction handler. This will compress a raw
+note into a hash and store it on the Merkle tree, while also logging the note to
+the Noop program to ensure all data remains available onchain.
 
 Here’s how to accomplish this:
 
@@ -1148,7 +1155,7 @@ pub mod compressed_notes {
 }
 ```
 
-#### 6. Create `update_note` Instruction
+#### 6. Create `update_note` Instruction Handler
 
 The final instruction we’ll implement is `update_note`, which will replace an
 existing leaf with a new hash that represents the updated note data.
@@ -1414,11 +1421,11 @@ tests. We will create four tests for our program:
    note hashes.
 2. **Add Note**: This test will invoke the `append_note` instruction to add a
    note to the tree.
-3. **adds max size note to the Merkle tree**: This test will also use the `append_note` instruction,
-   but with a note that reaches the maximum allowable size of 1232 bytes in a
-   single transaction.
-4. **Updates the first note in the Merkle tree**: This test will use the `update_note` instruction to
-   modify the first note that was added.
+3. **adds max size note to the Merkle tree**: This test will also use the
+   `append_note` instruction, but with a note that reaches the maximum allowable
+   size of 1232 bytes in a single transaction.
+4. **Updates the first note in the Merkle tree**: This test will use the
+   `update_note` instruction to modify the first note that was added.
 
 The first test is mainly for setup purposes. For the remaining three tests, we
 will check that the note hash in the Merkle tree matches the expected value
@@ -1905,8 +1912,8 @@ describe("compressed-notes", () => {
 });
 ```
 
-Next, let's create the `adds max size note to the Merkle tree` test. This test will be similar to
-the previous one, but it will:
+Next, let's create the `adds max size note to the Merkle tree` test. This test
+will be similar to the previous one, but it will:
 
 1. **Call `append_note`**: Use the `append_note` instruction with the second
    note, which is designed to be the maximum size allowed (1232 bytes).
@@ -2090,8 +2097,8 @@ describe("compressed-notes", () => {
 });
 ```
 
-Lastly, let’s create the `Updates the first note in the Merkle tree` test. This test involves a few more
-steps:
+Lastly, let’s create the `Updates the first note in the Merkle tree` test. This
+test involves a few more steps:
 
 1. **Retrieve the Merkle Tree Root**: Obtain the current root hash of the Merkle
    tree, as it is needed for the update operation.
