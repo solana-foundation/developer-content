@@ -152,7 +152,7 @@ pub struct Context<'a, 'b, 'c, 'info, T> {
 }
 ```
 
-The `Context` fields can be used in an instruction using dot notation:
+The `Context` fields can be accessed in an instruction using dot notation:
 
 - `ctx.accounts`: The accounts required for the instruction
 - `ctx.program_id`: The program's public key (address)
@@ -335,7 +335,7 @@ The key functionalities of the `#[account]` macro include:
   When creating an account, the program owner of the account is automatically
   set to the program specified in `declare_id`.
 - [Set Discriminator](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/attribute/account/src/lib.rs#L101-L117):
-  A unique 8-byte discriminator, specific to the account type, is added as the
+  A unique 8 byte discriminator, specific to the account type, is added as the
   first 8 bytes of account data during its initialization. This helps in
   differentiating account types and is used for account validation.
 - [Data Serialization and Deserialization](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/attribute/account/src/lib.rs#L202-L246):

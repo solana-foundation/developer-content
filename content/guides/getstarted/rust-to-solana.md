@@ -265,9 +265,6 @@ consider writing onchain programs in Rust, and offchain
 This guide has covered the basics of developing for Solana with Rust, from setup
 details and restrictions to development environments and frameworks.
 
-For more Rust-related Solana resources, check out the
-[Developing with Rust page](https://solana.com/docs/programs/lang-rust).
-
 For other Solana program examples written with Rust, check out these
 [examples on GitHub](https://github.com/solana-labs/solana-program-library/tree/master/examples/rust).
 

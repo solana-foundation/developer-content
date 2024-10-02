@@ -153,9 +153,6 @@ account, developers might retry their deployment with a new buffer and not
 realize that they stored a good chunk of SOL in a forgotten buffer account from
 an earlier deploy.
 
-> As of slot `103,089,804` on `mainnet-beta` there are 276 abandoned buffer
-> accounts that could be reclaimed!
-
 Developers can check if they own any abandoned buffer accounts by using the
 Solana CLI:
 
