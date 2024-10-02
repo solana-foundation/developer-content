@@ -10,7 +10,7 @@ description:
 
 ### Summary
 
-- **Burning tokens**, which reduces the total supply of a token by removing them
+- **Burning tokens** reduces the total supply of a token by removing them
   from circulation.
 - **Approve a delegate**, allowing another account to transfer or burn a
   specified amount of tokens from a token account while retaining original
