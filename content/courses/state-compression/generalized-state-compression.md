@@ -43,10 +43,9 @@ directly in an account. This makes it easy to read and write the data through
 the program. The account data is trustworthy because only the program can modify
 it.
 
-State compression focuses on ensuring that the data is trustworthy. If the goal
-is simply to verify the integrity of the data, then there's no need to store the
+However to verify the integrity of the data, then there's no need to store the
 actual data onchain. Instead, we can store hashes of the data, which can be used
-to prove or verify its accuracy.
+to prove or verify its accuracy. This is called *state compression*.
 
 These hashes take up far less storage space than the original data. The full
 data can be stored in a cheaper, offchain location, and only needs to be
