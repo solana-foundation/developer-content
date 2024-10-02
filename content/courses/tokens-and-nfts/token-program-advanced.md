@@ -27,7 +27,7 @@ ahead to
 #### Burn Tokens
 
 Burning tokens is the process of decreasing the token supply of a given token
-mint. Burning tokens remove the tokens from the given token account and from
+mint. Burning tokens removes the tokens from the given token account and from
 broader circulation.
 
 To burn tokens using the `spl-token` library, use the
