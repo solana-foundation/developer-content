@@ -1641,7 +1641,7 @@ Good luck, and happy coding!
 
 For a straightforward example of how to implement a delete function, check out
 the
-[`solution` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/solution).
+[`main` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/main).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and [let us know what you think of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
