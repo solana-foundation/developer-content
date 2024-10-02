@@ -24,19 +24,12 @@ This method requires two parameters:
 
 <Parameter type={"object"} required={true}>
 
-A JSON object containing EITHER:
-
-- `mint: <string>` - Pubkey of the specific token Mint to limit accounts to, as
-  base-58 encoded string
-- `programId: <string>` - Pubkey of the Token program that owns the accounts, as
-  base-58 encoded string
-
 A JSON object with either one of the following fields:
 
 - `mint: <string>` - Pubkey of the specific token Mint to limit accounts to, as
-  base-58 encoded string; or
+  a base58 encoded string
 - `programId: <string>` - Pubkey of the Token program that owns the accounts, as
-  base-58 encoded string
+  a base58 encoded string
 
 </Parameter>
 
@@ -139,7 +132,6 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
         "mint": "3wyAj7Rt1TWVPZVteFJPLa26JmLvdb1CAKEFZm3NY75E"
         // Alternatively, you can use "programId" instead of "mint":
         // "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-        "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
       },
       {
         "encoding": "jsonParsed"
