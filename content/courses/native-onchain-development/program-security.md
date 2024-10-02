@@ -329,7 +329,7 @@ deploy our program.
 ### 1. Get the starter code
 
 To begin, you can find
-[the movie review starter code](https://beta.solpg.io/62b552f3f6273245aca4f5c9).
+[the movie review starter code](https://beta.solpg.io/62b552f3f6273245aca4f5c9).
 If you've been following along with the Movie Review labs, you'll notice that
 we've refactored our program.
 
