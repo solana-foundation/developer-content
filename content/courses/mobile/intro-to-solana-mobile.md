@@ -26,7 +26,7 @@ network, this opens up a whole new paradigm of blockchain use cases and
 behaviors. The **Solana Mobile Stack** (**SMS**) is designed to help developers
 seamlessly create mobile dApps. It includes the
 [Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter)
--A Solana Mobile SDK that uses React Native,
+, a Solana Mobile SDK that uses React Native,
 [Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault),
 and the
 [Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store).
