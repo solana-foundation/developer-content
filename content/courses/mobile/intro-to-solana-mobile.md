@@ -130,7 +130,7 @@ points to note:
   and an emulator or physical device for testing.
 
 
-<Callout type="caution">
+<Callout type="info">
 **NOTE:** There is a learning curve, but if you know React you're not nearly as far from being able to develop mobile apps as you think! It may feel jarring to start, but after a few hours of React Native development, you will start to feel much more comfortable. We have included a [Lab](#lab) section below to help you.
 </Callout>
 
@@ -417,7 +417,7 @@ Android Studio and ensure it runs correctly on the Android emulator.
 Lastly, we recommend installing _java version 11_ to avoid dependency errors. To
 know what version you have installed, run `java --version` in your terminal.
 
-### 1. Plan out the App's Structure
+### 1. Plan out the App Structure
 
 Before we do any coding, let's conceptualize the outline of the app. Again, this
 app will connect to and interact with the counter program we've already deployed
@@ -457,7 +457,7 @@ problems, check to make sure you’ve accomplished everything in the
 
 ### 3. Install Dependencies
 
-We will need to add in our Solana dependencies.
+We will need to import our Solana dependencies.
 [The Solana Mobile docs provide a nice list of packages](https://docs.solanamobile.com/react-native/setup)
 and explanations for why we need them:
 
@@ -467,14 +467,10 @@ and explanations for why we need them:
   to use common primitives from
   [@solana/web3.js](https://github.com/solana-labs/solana-web3.js), such as
   `Transaction` and `Uint8Array`
-- `@solana/web3.js`: Solana Web Library for interacting with the Solana network
-  through the [JSON RPC API](https://solana.com/docs/rpc)
-- `react-native-get-random-values` Secure random number generator polyfill for
-  <<<<<<< HEAD `web3.js` underlying Crypto library on React Native
-- # `buffer`: Buffer polyfill; also needed for `web3.js` on React Native.
-  `web3.js` underlying library on React Native
+- `@solana/web3.js`: Solana Web Library for interacting with the Solana network through th [JSON RPC API](https://github.com/solana-foundation/developer-content/blob/main/docs/rpc/http/index.mdx)
+- `@react-native-get-random-values` Secure random number generator polyfill for
+- `web3.js` underlying library on React Native
 - `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
-  > > > > > > > a3ea04e (minor fixes, resolved conflict)
 
 In addition to this list, we will add two more packages:
 
@@ -482,7 +478,7 @@ In addition to this list, we will add two more packages:
 - `assert`: A polyfill that lets Anchor do its thing.
 - `text-encoding-polyfill`: A polyfill needed to create the `Program` object
 
-If you’re not familiar: polyfills actively replace Node-native libraries to make
+If you’re not familiar: polyfills provide Node-native libraries to make
 them work anywhere Node is not running. We will finish our polyfill setup
 shortly. For now, install dependencies using the following command:
 
@@ -498,7 +494,7 @@ npm install \
   text-encoding-polyfill
 ```
 
-### 4. Create `ConnectionProvider.tsx` file
+### 4. Create ConnectionProvider.tsx file
 
 Let's start adding our Solana functionality. Create a new folder called
 `components` and within it, a file called `ConnectionProvider.tsx`. This
@@ -545,7 +541,7 @@ export const useConnection = (): ConnectionContextState =>
   useContext(ConnectionContext);
 ```
 
-### 5. Create `AuthProvider.tsx` file
+### 5. Create AuthProvider.tsx file
 
 The next Solana provision we will need is the **auth provider**. This is one of
 the main differences between mobile and web development. What we’re implementing
@@ -754,7 +750,7 @@ export {
 };
 ```
 
-### 6. Create `ProgramProvider.tsx`
+### 6. Create ProgramProvider.tsx file
 
 The last provider we need is our program provider. This will expose the counter
 program we want to interact with.
@@ -862,7 +858,7 @@ export function ProgramProvider({ children }: ProgramProviderProps) {
 export const useProgram = () => useContext(ProgramContext);
 ```
 
-### 7. Modify `App.tsx`
+### 7. Modify App.tsx file
 
 Now that we have all our providers, let's wrap our app with them. We're going to
 re-write the default `App.tsx` with the following changes:
@@ -911,7 +907,7 @@ export default function App() {
 }
 ```
 
-### 8. Create `MainScreen.tsx`
+### 8. Create MainScreen.tsx file
 
 Now, let's put everything together to create our UI. Create a new folder called
 `screens` and a new file called `MainScreen.tsx` inside of it. In this file, we
@@ -963,7 +959,7 @@ const styles = StyleSheet.create({
 });
 ```
 
-### 9. `Create CounterView.tsx`
+### 9. Create CounterView.tsx file
 
 The `CounterView` is the first of our two program-specific files.
 `CounterView`'s only job is to fetch and listen for updates on our `Counter`
@@ -1033,7 +1029,7 @@ export function CounterView() {
 }
 ```
 
-### 10. Create `CounterButton.tsx`
+### 10. Create CounterButton.tsx file
 
 Finally, we have our last component, the `CounterButton`. This floating action
 button will do the following in a new function `incrementCounter`:
