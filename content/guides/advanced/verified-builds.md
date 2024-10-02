@@ -1,7 +1,7 @@
 ---
 date: 2024-09-26T00:00:00Z
 difficulty: intermediate
-title: "How to verify a program"
+title: "How to Verify a Program"
 description:
   "Verified builds is a way to link your program to its source code and let
   everyone independently verify that the program was indeed built from that
@@ -34,11 +34,10 @@ The verification process involves comparing the hash of the onchain program with
 the hash of the locally built program from the source code. This ensures no
 discrepancies between the two versions.
 
-> A verified build should not be considered more secure than a not verified
-> build. But it gives the user the ability to verify that the program was built
-> from the provided source code and by that everyone can verify the program does
-> what it is supposed to do and easily contact the developer and open an issue
-> if something goes wrong.
+> A While a verified build should not be considered more secure than an
+> unverified build, the build enables developers to self verify the source code
+> matches what is deployed onchain. Using the source code, a developer can then
+> validate what the code executes when sending a transaction.
 
 The verified builds pipeline was thought out and is maintained by
 [Ellipsis Labs](https://ellipsislabs.xyz/) and [OtterSec](https://osec.io/). For
@@ -89,9 +88,9 @@ Using verified builds provides the following benefits:
   or malicious code. It also ensures you comply with best practices and give
   security researchers an easy way to contact you.
 
-# How do I implement verified builds?
+# How do I create verified builds?
 
-To implement verified builds, you'll need to follow these steps:
+To create verified builds, you'll need to follow these steps:
 
 <Steps>
 
