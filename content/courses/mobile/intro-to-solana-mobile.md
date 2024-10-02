@@ -41,12 +41,10 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-The Solana wallet interaction differs slightly on mobile compared to the web.
-The core wallet functionality is the same: the wallet holds your private keys
-and uses them to sign and send transactions. To avoid having different
-interfaces between wallets, developers abstracted that functionality into the
-SWA standard. This remains the standard on the web while its mobile counterpart
-is the MWA.
+Native mobile wallets hold your private keys
+and use them to sign and send transactions just like web extension wallets.
+
+However native mobile wallets use the [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter) (MWA) standard instead of the [Wallet Adapter](https://github.com/anza-xyz/wallet-adapter) to ensure any apps can work with any wallet.
 
 The differences between the two standards are due to the different construction
 of web vs mobile wallets. Web wallets are just browser extensions that inject
