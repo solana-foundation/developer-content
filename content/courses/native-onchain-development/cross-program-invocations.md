@@ -880,13 +880,126 @@ the command.
 
 </Callout>
 
-Before you can start testing whether or not adding a review or comment sends you
-tokens, you need to initialize the program's token mint. You can use
-[this script](https://github.com/Unboxed-Software/solana-movie-token-client) to
-do that. Once you'd cloned that repository, replace the `PROGRAM_ID` in
-`index.ts` with your program's ID. Then run `npm install` and then `npm start`.
-The script assumes you're deploying to localnet. If you're deploying devnet,
-then make sure to tailor the script accordingly.
+Before testing whether adding a review or comment sends tokens, you need to
+initialize the program's token mint.
+
+First, create and initialize an empty NPM project, then change into the project
+directory:
+
+```bash
+mkdir movie-token-client
+cd movie-token-client
+npm init -y
+```
+
+Install all the required dependencies.
+
+```bash
+npm i @solana/web3.js @solana-developers/helpers@2.5.2
+
+npm i --save-dev esrun
+```
+
+Create a new file named `initialize-review-token-mint.ts`:
+
+```bash
+touch initialize-review-token-mint.ts
+```
+
+Copy the code below into the newly created file.
+
+```typescript filename="initialize-review-token-mint.ts"
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import {
+  Connection,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+} from "@solana/web3.js";
+import {
+  initializeKeypair,
+  airdropIfRequired,
+  getExplorerLink,
+} from "@solana-developers/helpers";
+
+const PROGRAM_ID = new PublicKey(
+  "AzKatnACpNwQxWRs2YyPovsGhgsYVBiTmC3TL4t72eJW",
+);
+
+const LOCALHOST_RPC_URL = "http://localhost:8899";
+const AIRDROP_AMOUNT = 2 * LAMPORTS_PER_SOL;
+const MINIMUM_BALANCE_FOR_RENT_EXEMPTION = 1 * LAMPORTS_PER_SOL;
+
+const connection = new Connection(LOCALHOST_RPC_URL);
+const userKeypair = await initializeKeypair(connection);
+
+await airdropIfRequired(
+  connection,
+  userKeypair.publicKey,
+  AIRDROP_AMOUNT,
+  MINIMUM_BALANCE_FOR_RENT_EXEMPTION,
+);
+
+const [tokenMintPDA] = PublicKey.findProgramAddressSync(
+  [Buffer.from("token_mint")],
+  PROGRAM_ID,
+);
+
+const [tokenAuthPDA] = PublicKey.findProgramAddressSync(
+  [Buffer.from("token_auth")],
+  PROGRAM_ID,
+);
+
+const INITIALIZE_MINT_INSTRUCTION = 3;
+
+const initializeMintInstruction = new TransactionInstruction({
+  keys: [
+    { pubkey: userKeypair.publicKey, isSigner: true, isWritable: false },
+    { pubkey: tokenMintPDA, isSigner: false, isWritable: true },
+    { pubkey: tokenAuthPDA, isSigner: false, isWritable: false },
+    { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+    { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
+    { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
+  ],
+  programId: PROGRAM_ID,
+  data: Buffer.from([INITIALIZE_MINT_INSTRUCTION]),
+});
+
+const transaction = new Transaction().add(initializeMintInstruction);
+
+try {
+  const transactionSignature = await sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [userKeypair],
+  );
+  const explorerLink = getExplorerLink("transaction", transactionSignature);
+
+  console.log(`Transaction submitted: ${explorerLink}`);
+} catch (error) {
+  if (error instanceof Error) {
+    throw new Error(
+      `Failed to initialize program token mint: ${error.message}`,
+    );
+  } else {
+    throw new Error("An unknown error occurred");
+  }
+}
+```
+
+Replace `PROGRAM_ID` in `initialize-review-token-mint.ts` with your program ID.
+Then run the file with:
+
+```bash
+npx esrun initialize-review-token-mint.ts
+```
+
+Your token mint will now be created. The script assumes you're deploying to
+localnet. If you're deploying to devnet, update the script accordingly.
 
 Once you've initialized your token mint, you can use the
 [Movie Review frontend](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-add-tokens)
