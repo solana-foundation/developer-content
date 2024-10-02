@@ -41,9 +41,13 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-Native mobile wallets hold your private keys
-and use them to sign and send transactions just like web extension wallets.
-However native mobile wallets use the [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter) (MWA) standard instead of the [Wallet Adapter](https://github.com/anza-xyz/wallet-adapter) to ensure any apps can work with any wallet.
+Native mobile wallets hold your private keys and use them to sign and send
+transactions just like web extension wallets. However native mobile wallets use
+the
+[Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
+(MWA) standard instead of the
+[Wallet Adapter](https://github.com/anza-xyz/wallet-adapter) to ensure any apps
+can work with any wallet.
 
 We will dig into the specifics of the MWA in a
 [later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
@@ -77,15 +81,18 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-In summary, mobile blockchain transactions can open many opportunities. Let's start building!
+In summary, mobile blockchain transactions can open many opportunities. Let's
+start building!
 
 ### Supported Operating Systems
 
-Currently, the MWA only supports Android. On Android, a WebSocket connection can persist
-between apps, even when the wallet app is in the background.
+Currently, the MWA only supports Android. On Android, a WebSocket connection can
+persist between apps, even when the wallet app is in the background.
 
-On iOS, the OS quickly suspends websocket connections when an app is backgrounded, so the standard  
-[Wallet Adapter](https://github.com/solana-labs/wallet-adapter) library is used instead.
+On iOS, the OS quickly suspends websocket connections when an app is
+backgrounded, so the standard  
+[Wallet Adapter](https://github.com/solana-labs/wallet-adapter) library is used
+instead.
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
@@ -117,23 +124,21 @@ points to note:
 
 - React Native compiles down to native Android and iOS apps while React compiles
   down to a collection of web pages.
-- Instead of using web elements like `<div>`, you will use mobile-native elements
-  like `<View>`.
+- Instead of using web elements like `<div>`, you will use mobile-native
+  elements like `<View>`.
 - React Native allows access to mobile hardware, such as the camera and
   accelerometer, which React web apps cannot access.
 - Many standard React and Node packages may not be compatible with React Native
   and setting up React Native can be challenging. Fortunately, the
   [React Native Docs](https://reactnative.dev/docs/environment-setup?guide=native)
-  contains everything you may need.  
+  contains everything you may need.
 - For development, you will need to set up
   [Android Studio](https://developer.android.com/studio/intro/) for Android apps
   and an emulator or physical device for testing.
 
-
 <Callout type="info">
 **NOTE:** There is a learning curve, but if you know React you're not nearly as far from being able to develop mobile apps as you think! It may feel jarring to start, but after a few hours of React Native development, you will start to feel much more comfortable. We have included a [Lab](#lab) section below to help you.
 </Callout>
-
 
 ## Creating a React Native App on Solana
 
@@ -180,9 +185,9 @@ wallet application.
 
 ### Web vs. Mobile Wallet Interactions
 
-The websocket that connects the app and the wallet is managed using the MWA, and initiated using **Android
-intents**, with the dApp broadcasting its intent using the `solana-wallet://`
-scheme.
+The websocket that connects the app and the wallet is managed using the MWA, and
+initiated using **Android intents**, with the dApp broadcasting its intent using
+the `solana-wallet://` scheme.
 ![Connecting](/public/assets/courses/unboxed/basic-solana-mobile-connect.png)
 
 When the wallet app receives the intent broadcast, it opens a WebSocket
@@ -196,8 +201,8 @@ transact(async (wallet: Web3MobileWallet) => {
 ```
 
 This function provides access to the `Web3MobileWallet` object, allowing you to
-perform actions such as signing transactions or interacting with wallet
-data. Remember, all wallet interactions must occur inside the callback of the
+perform actions such as signing transactions or interacting with wallet data.
+Remember, all wallet interactions must occur inside the callback of the
 `transact` function.
 
 ### Signing and sending transactions
@@ -325,8 +330,8 @@ distinction lies in how you interact with wallets, which requires using the
 `transact` callback to establish wallet sessions, sign transactions, and
 communicate with Solana’s blockchain.
 
-As you continue building Solana mobile apps, it's essential to keep learning
-and refining your skills. Be sure to explore additional resources like:
+As you continue building Solana mobile apps, it's essential to keep learning and
+refining your skills. Be sure to explore additional resources like:
 
 - [The official Solana Developer Docs](https://solana.com/docs) for in-depth
   guides on Solana’s core libraries and best practices.
@@ -411,8 +416,8 @@ Android Studio and ensure it runs correctly on the Android emulator.
     with fake wallet.
 
 6.  (Optional) Install other
-    [Solana wallets](https://play.google.com/store/search?q=solana%20wallet&c=apps) on
-    the Google Play store.
+    [Solana wallets](https://play.google.com/store/search?q=solana%20wallet&c=apps)
+    on the Google Play store.
 
 Lastly, we recommend installing _java version 11_ to avoid dependency errors. To
 know what version you have installed, run `java --version` in your terminal.
@@ -467,7 +472,9 @@ and explanations for why we need them:
   to use common primitives from
   [@solana/web3.js](https://github.com/solana-labs/solana-web3.js), such as
   `Transaction` and `Uint8Array`
-- `@solana/web3.js`: Solana Web Library for interacting with the Solana network through th [JSON RPC API](https://github.com/solana-foundation/developer-content/blob/main/docs/rpc/http/index.mdx)
+- `@solana/web3.js`: Solana Web Library for interacting with the Solana network
+  through th
+  [JSON RPC API](https://github.com/solana-foundation/developer-content/blob/main/docs/rpc/http/index.mdx)
 - `@react-native-get-random-values` Secure random number generator polyfill for
 - `web3.js` underlying library on React Native
 - `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
@@ -478,9 +485,9 @@ In addition to this list, we will add two more packages:
 - `assert`: A polyfill that lets Anchor do its thing.
 - `text-encoding-polyfill`: A polyfill needed to create the `Program` object
 
-If you’re not familiar: polyfills provide Node-native libraries to make
-them work anywhere Node is not running. We will finish our polyfill setup
-shortly. For now, install dependencies using the following command:
+If you’re not familiar: polyfills provide Node-native libraries to make them
+work anywhere Node is not running. We will finish our polyfill setup shortly.
+For now, install dependencies using the following command:
 
 ```bash
 npm install \
@@ -1192,8 +1199,8 @@ to fix them:
   `CounterButton` and manually send some Devnet sol to your wallet's address
   (printed in the console)
 
-That's it! You've made your first Solana Mobile app. If you get stuck, feel
-free to check out the
+That's it! You've made your first Solana Mobile app. If you get stuck, feel free
+to check out the
 [full solution code](https://github.com/Unboxed-Software/solana-react-native-counter)
 on the `main` branch of the repository.
 
