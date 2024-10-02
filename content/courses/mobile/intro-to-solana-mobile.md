@@ -404,14 +404,14 @@ Android Studio and ensure it runs correctly on the Android emulator.
     ![Fake Wallet](/public/assets/courses/unboxed/basic-solana-mobile-fake-wallet.png)
 
 4.  For easier debugging, use **Logcat**. Check the
-    [official installation guide](https://developer.android.com/studio/debug/logcat)
+    [Logcat installation guide](https://developer.android.com/studio/debug/logcat)
     if you are interested.
 5.  Now that your fake wallet is running on the emulator, go to _View -> Tool
     Windows -> Logcat_. This will open up a console logging out what’s happening
     with fake wallet.
 
 6.  (Optional) Install other
-    [Solana wallets](https://solana.com/ecosystem/explore?categories=wallet) on
+    [Solana wallets](https://play.google.com/store/search?q=solana%20wallet&c=apps) on
     the Google Play store.
 
 Lastly, we recommend installing _java version 11_ to avoid dependency errors. To
@@ -1208,6 +1208,8 @@ the client-side code that interacts with it.
 Once you've completed this, you can check your solution against the solution
 code available on the
 [solution branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution).
+
+<Callout type="success" title="Good Job!">
 If you’ve successfully completed the lab, push your code to GitHub and share
-your feedback on this lesson through this
-[form](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)!
+your feedback on this lesson through this [form](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)
+</Callout>
