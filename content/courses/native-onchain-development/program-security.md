@@ -11,10 +11,8 @@ objectives:
   - Conduct basic data validation to prevent invalid or malicious input from
     compromising your program.
 description:
-  "This lesson emphasizes securing your Solana program by implementing key
-  validation checks. You'll learn how to perform ownership and signer checks,
-  validate accounts to ensure they match your program's expectations, and
-  confirm that instruction data follows the required rules."
+  "Learn how to secure your Solana program with ownership, signer, and account
+  validation checks."
 ---
 
 ## Summary
@@ -53,8 +51,7 @@ security, we'll cover some of the basic pitfalls to look out for.
 
 A fundamental principle in secure programming is adopting an "attacker's
 mindset." This means considering every possible angle someone might use to break
-or exploit your program, especially in scenarios where you may not have direct
-control over how users or third parties interact with your deployed code.
+or exploit your program.
 
 In their presentation at Breakpoint 2021,
 [Neodyme](https://workshop.neodyme.io/) emphasized that secure program
@@ -118,12 +115,9 @@ pub enum NoteError {
 }
 ```
 
-<Callout>
-
 In this example, we create custom errors for unauthorized access and invalid
 data input (such as note length). Defining custom errors gives us greater
 flexibility when debugging or explaining what went wrong during execution.
-</Callout>
 
 #### Returning Errors
 
@@ -166,12 +160,12 @@ For instance, if your program relies on PDAs (Program Derived Addresses), you
 want to ensure that those PDAs are controlled by your program and not by an
 external party.
 
-Let's use the note-taking app example that we've referenced in previous lessons
+Let's use the note-taking app example that we've referenced in the
 [deserialize instruction data](/content/courses/native-onchain-development/deserialize-instruction-data.md)
 and
-[program state management](/content/courses/native-onchain-development/program-state-management.md).
-In this app, users can create, update, and delete notes that are stored by the
-program in PDA accounts.
+[program state management](/content/courses/native-onchain-development/program-state-management.md)
+lessons. In this app, users can create, update, and delete notes that are stored
+by the program in PDA accounts.
 
 When a user invokes the `update` instruction handler, they also provide a
 `pda_account`. We presume the provided `pda_account` is for the particular note
@@ -200,9 +194,9 @@ entities from tampering with critical accounts.
 
 <Callout>
 
-PDAs, in particular, are more secure than externally-owned accounts because the
-program has full control over them. Ensuring ownership is a fundamental way to
-prevent malicious behavior. </Callout>
+PDAs are often considered to be trusted stores of a program's state. Ensuring
+the correct program owns the PDAs is a fundamental way to prevent malicious
+behavior.</Callout>
 
 #### Signer Checks
 
@@ -356,7 +350,7 @@ defining custom errors. The complete file structure is as follows:
 
 In addition to some changes to the file structure, we've updated a small amount
 of code that will let this lab be more focused on security without having you
-write unnecessary boiler plate.
+write unnecessary boilerplate.
 
 Since we'll be allowing updates to movie reviews, we also changed `account_len`
 in the `add_movie_review()` function (now in `processor.rs`). Instead of
@@ -403,7 +397,7 @@ impl IsInitialized for MovieAccountState {
 }
 ```
 
-Before moving on, make sure you have a solid grasp on the current state of the
+Before moving on, make sure you have a solid grasp of the current state of the
 program. Look through the code and spend some time thinking through any spots
 that are confusing to you. It may be helpful to compare the starter code to the
 [solution code from the previous lesson](https://beta.solpg.io/62b23597f6273245aca4f5b4).
