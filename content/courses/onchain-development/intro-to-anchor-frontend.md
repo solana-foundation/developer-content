@@ -154,11 +154,11 @@ counter program you built previously:
 Inspecting the IDL, you can see the `programId` and the `metadata` object which
 have been added in anchor 0.30.0
 
-This program contains two instructions (`initialize` and `increment`).
+This program contains two instruction handlers, `initialize` and `increment`.
 
-Notice that in addition to specifying the instructions, it species the accounts
-and inputs for each instruction. The `initialize` instruction requires three
-accounts:
+Notice that in addition to specifying the instruction handlers, it specifies the
+accounts and inputs for each instruction. The `initialize` instruction requires
+three accounts:
 
 1. `counter` - the new account being initialized in the instruction
 2. `user` - the payer for the transaction and initialization
