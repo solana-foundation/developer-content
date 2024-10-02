@@ -84,8 +84,8 @@ In particular:
   have `instruction handlers` that process `instructions`. Do not refer to
   [instruction handlers](https://solana.com/docs/terminology#instruction-handler)
   as instructions! The reason is simple: an instruction cannot process an
-  instruction. The `multiple` template in Anchor also calls the functions
-  `handler`.
+  instruction. The `multiple` template in Anchor also calls these functions
+  `handler`s.
 
 ### Code
 
@@ -236,8 +236,8 @@ The heading above is invalid since it skips the `h3` heading (`###`)
 ### Links
 
 When linking to other developer content pages (i.e. docs, guides, etc) or
-images, the markdown link should use the absolute path to the file relative
-to the repo root. Include the file extension.
+images, the markdown link should use the absolute path to the file relative to
+the repo root. Include the file extension.
 
 For example: `/docs/index.md` (good) vs `https://solana.com/docs` (bad)
 

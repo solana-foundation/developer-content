@@ -562,7 +562,7 @@ Running tests...
 </Accordion>
 
 You can then inspect the SolanFM links to view the transaction details, where
-you’ll find the CPIs for the transfer instructions within the update and delete
+you'll find the CPIs for the transfer instructions within the update and delete
 instructions.
 
 ![Update CPI](/assets/docs/intro/quickstart/cpi-update.png)

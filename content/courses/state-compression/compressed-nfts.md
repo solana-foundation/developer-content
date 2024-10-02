@@ -30,7 +30,7 @@ structure takes up less account storage than traditional NFTs. Compressed NFTs
 leverage a concept called **State Compression** to store data in a way that
 drastically reduces costs.
 
-Solana’s transaction costs are so cheap that most users never think about how
+Solana's transaction costs are so cheap that most users never think about how
 expensive minting NFTs can be at scale. The cost to set up and mint 1 million
 traditional NFTs using the Token Metadata Program is approximately 24,000 SOL.
 By comparison, cNFTs can be structured to where the same setup and mint costs 10
@@ -40,8 +40,8 @@ SOL or less. That means anyone using NFTs at scale could cut costs by more than
 However, cNFTs can be tricky to work with. Eventually, the tooling required to
 work with them will be sufficiently abstracted from the underlying technology
 that the developer experience between traditional NFTs and cNFTs will be
-negligible. But for now, you’ll still need to understand the low level puzzle
-pieces, so let’s dig in!
+negligible. But for now, you'll still need to understand the low level puzzle
+pieces, so let's dig in!
 
 ### A theoretical overview of cNFTs
 
@@ -70,11 +70,11 @@ original data combined, hence the “compression.” The steps to this process a
    truth” can go through the same process and compare the final hash without
    having to store all the data onchain
 
-One problem not addressed in the above is how to make data available if it can’t
+One problem not addressed in the above is how to make data available if it can't
 be fetched from an account. Since this hashing process occurs onchain, all the
 data exists in the ledger state and could theoretically be retrieved from the
 original transaction by replaying the entire chain state from origin. However,
-it’s much more straightforward (though still complicated) to have an **indexer**
+it's much more straightforward (though still complicated) to have an **indexer**
 track and index this data as the transactions occur. This ensures there is an
 offchain “cache” of the data that anyone can access and subsequently verify
 against the onchain root hash.
@@ -166,7 +166,7 @@ forever exist on the ledger state.
 #### Index data for easy lookup
 
 Under normal conditions, you would typically access onchain data by fetching the
-appropriate account. When using state compression, however, it’s not so
+appropriate account. When using state compression, however, it's not so
 straightforward.
 
 As mentioned above, the data now exists in the ledger state rather than in an
@@ -175,32 +175,34 @@ instruction, but while this data will in a sense exist in the ledger state
 forever, it will likely be inaccessible through validators after a certain
 period of time.
 
-To save space and be more performant, validators don’t retain every transaction
-back to the genesis block. The specific amount of time you’ll be able to access
+To save space and be more performant, validators don't retain every transaction
+back to the genesis block. The specific amount of time you'll be able to access
 the Noop instruction logs related to your data will vary based on the validator,
-but eventually you’ll lose access to it if you’re relying directly on
+but eventually you'll lose access to it if you're relying directly on
 instruction logs.
 
 Technically, you _can_ replay transaction state back to the genesis block, but
 the average team isn’t going to do that, and it certainly won’t be performant.
+
 Instead, you should use an indexer that will observe the events sent to the Noop
-program and store the relevant data off chain. That way you don’t need to worry
+program and store the relevant data off chain. That way you don't need to worry
 about old data becoming inaccessible.
 
 ### Create a cNFT Collection
 
-With the theoretical background out of the way, let’s turn our attention to the
+With the theoretical background out of the way, let's turn our attention to the
 main point of this lesson: how to create a cNFT collection.
 
 Fortunately, you can use tools created by Solana Foundation, the Solana
-developer community, and Metaplex to simplify the process. Specifically, we’ll
+developer community, and Metaplex to simplify the process. Specifically, we'll
 be using the `@solana/spl-account-compression` SDK, the Metaplex Bubblegum
 program `@metaplex-foundation/mpl-bubblegum` through the Umi library from
 Metaplex.
 
+
 #### Prepare metadata
 
-Prior to starting, you’ll prepare your NFT metadata similarly to how you would
+Prior to starting, you'll prepare your NFT metadata similarly to how you would
 if you were using a Candy Machine. At its core, an NFT is simply a token with
 metadata that follows the NFT standard. In other words, it should be shaped
 something like this:
@@ -311,14 +313,14 @@ the max depth, while the buffer size will determine the number of concurrent
 changes (mints, transfers, etc.) within the same slot that can occur to the
 tree. In other words, choose the max depth that corresponds to the number of
 NFTs you need the tree to hold, then choose one of the options for max buffer
-size based on the traffic you expect you’ll need to support.
+size based on the traffic you expect you'll need to support.
 
 Next, choose the canopy depth. Increasing the canopy depth increases the
-composability of your cNFTs. Any time your or another developer’s code attempts
+composability of your cNFTs. Any time your or another developer's code attempts
 to verify a cNFT down the road, the code will have to pass in as many proof
-nodes as there are “layers” in your tree. So for a max depth of 20, you’ll need
+nodes as there are “layers” in your tree. So for a max depth of 20, you'll need
 to pass in 20 proof nodes. Not only is this tedious, but since each proof node
-is 32 bytes it’s possible to max out transaction sizes very quickly.
+is 32 bytes it's possible to max out transaction sizes very quickly.
 
 For example, if your tree has a very low canopy depth, an NFT marketplace may
 only be able to support simple NFTs transfers rather than support an onchain
@@ -469,7 +471,7 @@ etc.
 
 ### Interact with cNFTs
 
-It’s important to note that cNFTs _are not_ SPL tokens. That means your code
+It's important to note that cNFTs _are not_ SPL tokens. That means your code
 needs to follow different conventions to handle cNFT functionality like
 fetching, querying, transferring, etc.
 
@@ -500,7 +502,7 @@ ID. However, after minting cNFTs, you’ll have at most two pieces of informatio
 1. The transaction signature
 2. The leaf index (possibly)
 
-The only real guarantee is that you’ll have the transaction signature. It is
+The only real guarantee is that you'll have the transaction signature. It is
 **possible** to locate the leaf index from there, but it involves some fairly
 complex parsing. The short story is you must retrieve the relevant instruction
 logs from the `Noop program` and parse them to find the leaf index. We’ll cover
@@ -512,7 +514,7 @@ controlled by your code and can be set up sequentially so that your code can
 track which index is going to be used for each mint. I.e. the first mint will
 use index 0, the second index 1, etc.
 
-Once you have the leaf index, you can derive the cNFT’s corresponding asset ID.
+Once you have the leaf index, you can derive the cNFT's corresponding asset ID.
 When using Bubblegum, the asset ID is a PDA derived using the Bubblegum program
 ID and the following seeds:
 
@@ -548,7 +550,7 @@ const [assetId, bump] = await findLeafAssetIdPda(umi, {
 const rpcAsset = await umi.rpc.getAsset(assetId);
 ```
 
-This will return a JSON object that is comprehensive of what a traditional NFT’s
+This will return a JSON object that is comprehensive of what a traditional NFT's
 on- and offchain metadata would look like combined. For example, you can find
 the cNFT attributes at `content.metadata.attributes` or the image at
 `content.files.uri`.
@@ -567,30 +569,30 @@ and more. For example, Helius supports the following methods:
 - `getAssetsByCreator`
 - `getAssetsByGroup`
 
-We won’t go over most of these directly, but be sure to look through the
+We won't go over most of these directly, but be sure to look through the
 [Helius docs](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
 to learn how to use them correctly.
 
 #### Transfer cNFTs
 
 Just as with a standard SPL token transfer, security is paramount. An SPL token
-transfer, however, makes verifying transfer authority very easy. It’s built into
-the SPL Token program and standard signing. A compressed token’s ownership is
+transfer, however, makes verifying transfer authority very easy. It's built into
+the SPL Token program and standard signing. A compressed token's ownership is
 more difficult to verify. The actual verification will happen program-side, but
 your client-side code needs to provide additional information to make it
 possible.
 
 While there is a Bubblegum `createTransferInstruction` helper function, there is
 more assembly required than usual. Specifically, the Bubblegum program needs to
-verify that the entirety of the cNFT’s data is what the client asserts before a
+verify that the entirety of the cNFT's data is what the client asserts before a
 transfer can occur. The entirety of the cNFT data has been hashed and stored as
 a single leaf on the Merkle tree, and the Merkle tree is simply a hash of all
-the tree’s leafs and branches. Because of this, you can’t simply tell the
-program what account to look at and have it compare that account’s `authority`
+the tree's leafs and branches. Because of this, you can't simply tell the
+program what account to look at and have it compare that account's `authority`
 or `owner` field to the transaction signer.
 
 Instead, you need to provide the entirety of the cNFT data and any of the Merkle
-tree’s proof information that isn’t stored in the canopy. That way, the program
+tree's proof information that isn't stored in the canopy. That way, the program
 can independently prove that the provided cNFT data, and therefore the cNFT
 owner, is accurate. Only then can the program safely determine if the
 transaction signer should, in fact, be allowed to transfer the cNFT.
@@ -618,17 +620,17 @@ await transfer(umi, {
 
 ### Conclusion
 
-We’ve covered the primary skills needed to interact with cNFTs, but haven’t been
+We've covered the primary skills needed to interact with cNFTs, but haven't been
 fully comprehensive. You can also use Bubblegum to do things like burn, verify,
-delegate, and more. We won’t go through these, but these instructions are
+delegate, and more. We won't go through these, but these instructions are
 similar to the mint and transfer process. If you need this additional
-functionality, take a look at the
+functionality, take a look at the 
 [Bubblegum docs](https://developers.metaplex.com/bubblegum) on how to leverage
 the helper functions it provides.
 
 ## Lab
 
-Let’s jump in and practice creating and working with cNFTs. Together, we’ll
+Let's jump in and practice creating and working with cNFTs. Together, we'll
 build as simple a script as possible that will let us mint a cNFT collection
 from a Merkle tree.
 
@@ -691,7 +693,7 @@ the keypair to it. We also assign the Bubblegum and dasApi plugins to it as
 well.
 
 #### 2. Create the Merkle tree account
-
+ 
 We’ll start by creating the Merkle tree account. To do this we will use the
 `createTree` method from Metaplex Bubblegum program.
 
@@ -749,8 +751,8 @@ make sure that the process finished successfully,
 
 #### 3. Mint cNFTs to your tree
 
-Believe it or not, that’s all you needed to do to set up your tree to compressed
-NFTs! Now let’s turn our attention to minting.
+Believe it or not, that's all you needed to do to set up your tree to compressed
+NFTs! Now let's turn our attention to minting.
 
 First, let's create a new file called `mint-compressed-nft-to-collection.ts`,
 add our imports and instantiate Umi
@@ -905,7 +907,7 @@ Now that we’ve written code to mint cNFTs, let’s see if we can actually fetc
 their data.
 
 Create a new file `fetch-cnft-details.ts`
-
+ 
 ```bash
 fetch-cnft-details.ts
 ```
@@ -1032,11 +1034,11 @@ The output of our console.log would output
 Remember, the Read API also includes ways to get multiple assets, query by
 owner, creator, etc., and more. Be sure to look through the
 [Helius docs](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
-to see what’s available.
+to see what's available.
 
 #### 5. Transfer a cNFT
 
-The last thing we’re going to add to our script is a cNFT transfer. Just as with
+The last thing we're going to add to our script is a cNFT transfer. Just as with
 a standard SPL token transfer, security is paramount. Unlike with a standard SPL
 token transfer, however, to build a secure transfer with state compression of
 any kind, the program performing the transfer needs the entire asset data.
@@ -1126,12 +1128,12 @@ issues, you should fix them yourself, but if needed the
 
 ### Challenge
 
-It’s your turn to take these concepts for a spin on your own! We’re not going to
+It's your turn to take these concepts for a spin on your own! We're not going to
 be overly prescriptive at this point, but here are some ideas:
 
 1. Create your own production cNFT collection
-2. Build a UI for this lesson’s lab that will let you mint a cNFT and display it
-3. See if you can replicate some of the lab script’s functionality in an onchain
+2. Build a UI for this lesson's lab that will let you mint a cNFT and display it
+3. See if you can replicate some of the lab script's functionality in an onchain
    program, i.e. write a program that can mint cNFTs
 
 <Callout type="success" title="Completed the lab?">
