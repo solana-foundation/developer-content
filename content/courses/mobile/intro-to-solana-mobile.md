@@ -86,9 +86,7 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-> In summary, mobile blockchain transactions opens up many doors. It is
-> important to be informed and learn how one can be part of it, let's explore
-> how.
+In summary, mobile blockchain transactions opens up many opportunities. Let's start to build!
 
 ### Supported Operating Systems
 
