@@ -15,8 +15,11 @@ description: "Learn how to invoke functions in other Solana programs."
 - CPIs are performed using the commands `invoke` or `invoke_signed`, with the
   latter enabling programs to sign on behalf of Program Derived Addresses (PDAs)
   they own.
-- CPIs allow Solana programs to be fully interoperable, as any public
-  instruction in a program can be invoked by another program via a CPI.
+- CPIs enable Solana programs to be fully interoperable, allowing any
+  instruction handler to be invoked by another program via a CPI.
+- CPIs are commonly used. For example, if your program transfers tokens, it will
+  perform a CPI to the Token or Token Extensions programs to execute the
+  transfer.
 - Since the calling program in a CPI does not have control over the accounts or
   data passed to the invoked program, it's crucial for the invoked program to
   verify all parameters. This ensures that malicious or incorrect data doesn't
@@ -28,10 +31,10 @@ description: "Learn how to invoke functions in other Solana programs."
 
 A **Cross-Program Invocation (CPI)** is when one program directly calls another
 program's instruction, similar to how a client makes calls to programs using the
-JSON RPC. In a CPI, your program can call native programs, third-party programs,
-or programs you've created. CPIs allow for seamless interaction between
-programs, effectively making the entire Solana ecosystem function as one large
-API for developers.
+JSON RPC API. In a CPI, your program can call native programs, third-party
+programs, or programs you've created. CPIs allow for seamless interaction
+between programs, effectively making the entire Solana ecosystem one large API
+for developers.
 
 To invoke an instruction on another program, you need to construct the
 instruction correctly. The process of creating a CPI is similar to creating
@@ -62,14 +65,16 @@ pub fn invoke(
 pub fn invoke_signed(
     instruction: &Instruction,
     account_infos: &[AccountInfo<'_>],
+    // An array of signing PDAs, each with an array of seeds, which are an array of `u8` bytes.
     signers_seeds: &[&[&[u8]]]
 ) -> ProgramResult
 ```
 
-When you make a Cross-Program Invocation (CPI), the privileges of the caller are
-extended to the callee. If an account in the callee program's instruction was
-marked as a signer or writable when initially passed to the caller program, it
-retains that status in the invoked program.
+When you make a Cross-Program Invocation (CPI), the privileges of the invoking
+program are extended to the invoked program. If the invoking program's
+instruction handler had accounts marked as a signer or writable when calling the
+invoked program, those accounts retain their signer or writable status in the
+invoked program.
 
 <Callout>
 
@@ -93,8 +98,8 @@ invoke(
 - `program_id` - The public key of the program you're invoking.
 - `account` - A list of account metadata as a vector. Include every account the
   invoked program will read or write.
-- `data` - A byte buffer representing the data passed to the callee program as a
-  vector.
+- `data` - A byte buffer representing the data passed to the invoked program as
+  a vector.
 
 The `Instruction` struct has the following definition:
 
@@ -109,10 +114,7 @@ pub struct Instruction {
 Depending on the program you're calling, there may be a crate available with
 helper functions for creating the `Instruction` object. Many individuals and
 organizations provide publicly available crates alongside their programs that
-expose these functions, simplifying program interaction. This is similar to the
-TypeScript libraries we've used in this course (e.g.,
-[@solana/web3.js](https://solana-labs.github.io/solana-web3.js/),
-[@solana/spl-token](https://solana-labs.github.io/solana-program-library/token/js/)).
+expose these functions, simplifying program interaction.
 
 For example, in this lesson's lab, we'll be using the `spl_token` crate to
 create minting instructions. In cases where no such crate is available, you'll
@@ -157,15 +159,16 @@ vec![
 ]
 ```
 
-The final field of the `Instruction` object is the data, which is a byte buffer.
-You can create a byte buffer in Rust using the `vec` macro, which provides a
-function to create a vector of a certain length. Once you've initialized an
-empty vector, you can construct the byte buffer similar to how you would on the
-client side.
+The final field of the `Instruction` object is the data, represented as a byte
+buffer. In Rust, you can create this buffer by using
+[`Vec::with_capacity()`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.with_capacity)
+to allocate space, and then populate the vector by pushing values or extending
+it with slices. This allows you to construct the byte buffer incrementally,
+similar to how you would on the client side.
 
-Determine the data required by the callee program and the serialization format
+Determine the data required by the invoked program and the serialization format
 used, then write your code to match. Feel free to read up on some of the
-[features of the `vec` macro available to you here](https://doc.rust-lang.org/alloc/vec/struct.Vec.html#).
+[features of the `vec` macro](https://doc.rust-lang.org/alloc/vec/struct.Vec.html#).
 
 ```rust
 let mut vec = Vec::with_capacity(3);
@@ -185,7 +188,7 @@ input, iterates over the slice, clones each element, and then appends it to the
 In addition to the instruction, both `invoke` and `invoke_signed` also require a
 list of `account_info` objects. Just like the list of `AccountMeta` objects you
 added to the instruction, you must include all the accounts that the program
-you're calling will read or write.
+you're invoking will read or write.
 
 By the time you make a CPI in your program, you should have already grabbed all
 the `account_info` objects that were passed into your program and stored them in
@@ -258,7 +261,7 @@ The Solana runtime will internally call
 using the seeds provided and the `program_id` of the calling program. It will
 then compare the result against the addresses supplied in the instruction. If
 any of the addresses match, the runtime knows that the program associated with
-the address is the caller and is authorized to be a signer.
+the address is the invoking and is authorized to be a signer.
 
 ### Best practices and common pitfalls
 
@@ -352,7 +355,7 @@ the prior ones, the Movie Review program allows users to submit movie reviews,
 which are stored in PDA accounts.
 
 In the
-[last lesson program derived addresses](/content/courses/native-onchain-development/program-derived-addresses.md),
+[program derived addresses lesson](/content/courses/native-onchain-development/program-derived-addresses.md),
 we added the ability to leave comments on movie reviews using PDAs. In this
 lesson, we'll work on having the program mint tokens to reviewers or commenters
 whenever a review or comment is submitted.
@@ -366,10 +369,11 @@ moving forward with this lab.
 ### 1. Get starter code and add dependencies
 
 To get started, we'll be using the final state of the Movie Review program from
-the previous PDA lesson. If you just completed that lesson, you're all set and
-ready to go. If you're jumping in at this point, no worries! You can download
 the
-[starter code from the `solution-add-comments` branch](https://github.com/Unboxed-Software/solana-movie-program/tree/solution-add-comments).
+[previous PDA lesson](/content/courses/native-onchain-development/program-derived-addresses.md).
+If you just completed that lesson, you're all set and ready to go. If you're
+jumping in at this point, no worries! You can download the
+[starter code from the `solution-add-comments` branch](https://github.com/solana-developers/movie-program/tree/solution-add-comments).
 
 ### 2. Add dependencies to Cargo.toml
 
@@ -894,8 +898,8 @@ add a comment, you should receive 5 tokens. They won't have a fancy name or
 image since we didn't add any metadata to the token, but you get the idea.
 
 If you need more time with the concepts from this lesson or got stuck along the
-way, feel free to
-[take a look at the solution code in `solution-add-tokens` branch](https://github.com/Unboxed-Software/solana-movie-program/tree/solution-add-tokens).
+way, feel free to take a look at the
+[solution code in `solution-add-tokens` branch](https://github.com/solana-developers/movie-program/tree/solution-add-tokens).
 
 ## Challenge
 
