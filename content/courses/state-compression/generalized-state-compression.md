@@ -119,7 +119,7 @@ This includes:
 
 ### Key Parameters for Configuring a Concurrent Merkle Tree
 
-As a program architect, you are responsible for controlling three key parameters
+As a developer, you are responsible for controlling three key parameters
 that directly affect the tree’s size, cost, and the number of concurrent changes
 it can handle:
 
@@ -137,7 +137,18 @@ trees, where each leaf is paired with only one other leaf, the max depth can be
 used to calculate the total number of nodes in the tree with the formula:
 `2^maxDepth`.
 
-For example, a max depth of 20 would allow for over one million leaves, making
+Here's a quick TypeScript function for illustration:
+
+```typescript
+const getMaxDepth = (itemCount: number) => {
+  if (itemCount === 0) {
+    return 0;
+  }
+  return Math.ceil(Math.log2(itemCount));
+};
+```
+
+A max depth of 20 would allow for over one million leaves, making
 it suitable for storing large datasets like NFTs.
 
 #### Max Buffer Size
@@ -263,7 +274,7 @@ needs.
 
 #### Create Rust Types
 
-In a typical Anchor program, the initial step involves defining Rust types that
+In a typical Anchor program, developers often start by defining the Rust types that
 represent accounts. For a state-compressed program, however, the focus shifts to
 defining types that align with the Merkle tree structure.
 
@@ -307,10 +318,11 @@ pub fn new_message_log(leaf_node: [u8; 32], from: Pubkey, to: Pubkey, message: S
 
 ```
 
-To be absolutely clear, **this is not an account you will read from**. Instead,
-your program will create an instance of this type using inputs from
+To be absolutely clear, the **`MessageLog` is not an account you will read from**.
+Instead, your program will create an instance of `MessageLog` using inputs from
 instructions, rather than constructing it from data read from an account. We
-will cover how to read data from accounts in a later section.
+will cover how to read data from compressed accounts.
+
 
 #### Initialize a New Tree
 
@@ -364,8 +376,8 @@ pub fn create_messages_tree(
     // Get the address for the Merkle tree account
     let merkle_tree = ctx.accounts.merkle_tree.key();
 
-    // Define the seeds for PDA signing
-    let signer_seeds: &[&[&[u8]]] = &[
+    // The seeds for PDAs signing
+    let signers_seeds: &[&[&[u8]]] = &[
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the PDA
@@ -380,7 +392,7 @@ pub fn create_messages_tree(
             merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be initialized
             noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
         },
-        signer_seeds // The seeds for PDA signing
+        signers_seeds // The seeds for PDAs signing
     );
 
     // CPI to initialize an empty Merkle tree with the given max depth and buffer size
@@ -455,8 +467,8 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
     // Get the Merkle tree account address
     let merkle_tree = ctx.accounts.merkle_tree.key();
 
-    // Define the seeds for PDA signing
-    let signer_seeds: &[&[&[u8]]] = &[
+    // The seeds for PDAs signing
+    let signers_seeds: &[&[&[u8]]] = &[
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the PDA
@@ -471,7 +483,7 @@ pub fn append_message(ctx: Context<MessageAccounts>, message: String) -> Result<
             merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
             noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
         },
-        signer_seeds, // The seeds for PDA signing
+        signers_seeds, // The seeds for PDAs signing
     );
 
     // CPI call to append the leaf node to the Merkle tree
@@ -559,8 +571,8 @@ pub fn update_message(
     // Get the Merkle tree account address
     let merkle_tree = ctx.accounts.merkle_tree.key();
 
-    // Define the seeds for PDA signing
-    let signer_seeds: &[&[&[u8]]] = &[
+    // The seeds for PDAs signing
+    let signers_seeds: &[&[&[u8]]] = &[
         &[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the PDA
@@ -581,7 +593,7 @@ pub fn update_message(
             VerifyLeaf {
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be verified
             },
-            signer_seeds, // The seeds for PDA signing
+            signers_seeds, // The seeds for PDAs signing
         );
 
         // Verify the old leaf node in the Merkle tree
@@ -610,7 +622,7 @@ pub fn update_message(
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
                 noop: ctx.accounts.log_wrapper.to_account_info(), // The noop program to log data
             },
-            signer_seeds, // The seeds for PDA signing
+            signers_seeds, // The seeds for PDAs signing
         );
 
         // Replace the old leaf node with the new one in the Merkle tree
@@ -811,7 +823,7 @@ use spl_account_compression::{
 };
 
 // Replace with your program ID
-declare_id!("YOUR_KEY_GOES_HERE");
+declare_id!("PROGRAM_PUBLIC_KEY_GOES_HERE");
 
 /// A program that manages compressed notes using a Merkle tree for efficient storage and verification.
 #[program]
@@ -944,17 +956,11 @@ pub fn create_note_log(leaf_node: [u8; 32], owner: Pubkey, note: String) -> Note
 
 ```
 
-In a traditional Anchor program, this would typically be represented by an
-account struct. However, our accounts won't directly mirror our native
-structures because we're using state compression. And since we don't need the
-full functionality of an account, we can use the `AnchorSerialize` derive macro
-instead of the `account` macro.
+In a traditional Anchor program, a note would typically be represented by a `Note` struct using the `account` macro. However, because we're using state compression we use `NoteLog`, a struct with the `AnchorSerialize` macro applied.
 
-#### 3. Define Input Accounts and Constraints
+#### 3. Define Account Constraints
 
-In our setup, all instructions handlers will use the same accounts, so we'll
-create a single `NoteAccounts` struct to handle account validation. This struct
-will include the following accounts:
+All our instruction handlers will use the same [account constraints](https://www.anchor-lang.com/docs/account-constraints):
 
 - `owner` - The creator and owner of the note, who must sign the transaction.
 - `tree_authority` - The authority for the Merkle tree, used for signing
@@ -996,10 +1002,9 @@ pub struct NoteAccounts<'info> {
 }
 ```
 
-#### 4. Create `create_note_tree` Instruction
+#### 4. Create `create_note_tree` Instruction handler
 
-Next, we’ll set up the `create_note_tree` instruction. This instruction is used
-to initialize the already allocated Merkle tree account.
+Next, we’ll make the `create_note_tree` instruction handler, to initialize the already allocated Merkle tree account.
 
 To implement this, you’ll need to build a CPI to invoke the
 `init_empty_merkle_tree` instruction from the State Compression Program. The
@@ -1011,9 +1016,6 @@ to include two additional arguments:
 2. **`max_buffer_size`** - Defines the maximum buffer size for the Merkle tree,
    which determines the space allocated for recording tree updates. This buffer
    is crucial for supporting concurrent updates within the same block.
-
-These values are essential for properly initializing the Merkle tree’s data
-structure.
 
 ```rust
 #[program]
@@ -1037,8 +1039,8 @@ pub mod compressed_notes {
         // Get the address for the Merkle tree account
         let merkle_tree = ctx.accounts.merkle_tree.key();
 
-        // Define the seeds for PDA (Program Derived Address) signing
-        let signer_seeds: &[&[&[u8]]] = &[&[
+        // The seeds for PDAs signing
+        let signers_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The Merkle tree account address as the seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the tree authority PDA
         ]];
@@ -1051,7 +1053,7 @@ pub mod compressed_notes {
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(),  // The Merkle tree account
                 noop: ctx.accounts.log_wrapper.to_account_info(),        // The Noop program for logging data
             },
-            signer_seeds, // The seeds for PDA signing
+            signers_seeds, // The seeds for PDAs signing
         );
 
         // CPI call to initialize an empty Merkle tree with the specified depth and buffer size.
@@ -1069,10 +1071,7 @@ address and the tree authority bump in the signer seeds.
 
 #### 5. Create `append_note` Instruction
 
-Let’s move on to creating the `append_note` instruction. This instruction will
-compress a raw note into a hash and store it on the Merkle tree, while also
-logging the note to the Noop program to ensure all data remains available
-onchain.
+Let's create the `append_note` instruction handler. This  will compress a raw note into a hash and store it on the Merkle tree, while also logging the note to the Noop program to ensure all data remains available onchain.
 
 Here’s how to accomplish this:
 
@@ -1122,8 +1121,8 @@ pub mod compressed_notes {
         // Step 4: Get the Merkle tree account key (address)
         let merkle_tree = ctx.accounts.merkle_tree.key();
 
-        // Step 5: Define the seeds for PDA (Program Derived Address) signing
-        let signer_seeds: &[&[&[u8]]] = &[&[
+        // Step 5: The seeds for PDAs signing
+        let signers_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the PDA
         ]];
@@ -1136,7 +1135,7 @@ pub mod compressed_notes {
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(),  // The Merkle tree account to modify
                 noop: ctx.accounts.log_wrapper.to_account_info(),        // The Noop program for logging data
             },
-            signer_seeds, // Seeds for PDA signing
+            signers_seeds, // Seeds for PDAs with that will sign the transaction
         );
 
         // Step 7: Append the leaf node to the Merkle tree using CPI
@@ -1217,8 +1216,8 @@ pub mod compressed_notes {
         // Step 2: Get the address of the Merkle tree account
         let merkle_tree = ctx.accounts.merkle_tree.key();
 
-        // Step 3: Define the seeds for PDA signing
-        let signer_seeds: &[&[&[u8]]] = &[&[
+        // Step 3: The seeds for PDAs signing
+        let signers_seeds: &[&[&[u8]]] = &[&[
             merkle_tree.as_ref(), // The address of the Merkle tree account as a seed
             &[*ctx.bumps.get("tree_authority").unwrap()], // The bump seed for the PDA
         ]];
@@ -1235,7 +1234,7 @@ pub mod compressed_notes {
             VerifyLeaf {
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
             },
-            signer_seeds, // The seeds for PDA signing
+            signers_seeds, // The seeds for PDAs signing
         );
         // Verify or fail
         verify_leaf(verify_cpi_ctx, root, old_leaf, index)?;
@@ -1257,7 +1256,7 @@ pub mod compressed_notes {
                 merkle_tree: ctx.accounts.merkle_tree.to_account_info(), // The Merkle tree account to be modified
                 noop: ctx.accounts.log_wrapper.to_account_info(), // The Noop program to log data
             },
-            signer_seeds, // The seeds for PDA signing
+            signers_seeds, // The seeds for PDAs signing
         );
 
         // Step 10: Replace the old leaf node with the new leaf node in the Merkle tree
@@ -1415,10 +1414,10 @@ tests. We will create four tests for our program:
    note hashes.
 2. **Add Note**: This test will invoke the `append_note` instruction to add a
    note to the tree.
-3. **Add Max Size Note**: This test will also use the `append_note` instruction,
+3. **adds max size note to the Merkle tree**: This test will also use the `append_note` instruction,
    but with a note that reaches the maximum allowable size of 1232 bytes in a
    single transaction.
-4. **Update First Note**: This test will use the `update_note` instruction to
+4. **Updates the first note in the Merkle tree**: This test will use the `update_note` instruction to
    modify the first note that was added.
 
 The first test is mainly for setup purposes. For the remaining three tests, we
@@ -1906,7 +1905,7 @@ describe("compressed-notes", () => {
 });
 ```
 
-Next, let's create the `Add Max Size Note` test. This test will be similar to
+Next, let's create the `adds max size note to the Merkle tree` test. This test will be similar to
 the previous one, but it will:
 
 1. **Call `append_note`**: Use the `append_note` instruction with the second
@@ -2091,7 +2090,7 @@ describe("compressed-notes", () => {
 });
 ```
 
-Lastly, let’s create the `Update First Note` test. This test involves a few more
+Lastly, let’s create the `Updates the first note in the Merkle tree` test. This test involves a few more
 steps:
 
 1. **Retrieve the Merkle Tree Root**: Obtain the current root hash of the Merkle
@@ -2285,5 +2284,5 @@ the
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
+[let us know what you think of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
 </Callout>
