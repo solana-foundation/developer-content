@@ -3,13 +3,13 @@ title: Generalized State Compression objectives
 
 objectives:
   - Explain the flow of Solana's state compression logic.
-  - Describe and Explain the difference between a Merkle tree and a concurrent
+  - Explain the difference between a Merkle tree and a concurrent
     Merkle tree
   - Implement generic state compression in a basic Solana program
 
 description:
-  Understand how state compression and the technology behind compressed NFTs
-  works, and learn how to apply it in your own Solana programs.
+  Understand how state compression - the technology behind compressed NFTs
+  works - and learn how to apply it in your own Solana programs.
 ---
 
 ## Summary
