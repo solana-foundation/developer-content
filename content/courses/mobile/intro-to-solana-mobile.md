@@ -1,10 +1,10 @@
 ---
 title: Introduction to Solana Mobile
 objectives:
-  - Explain the benefits of creating mobile-first dApp experiences
+  - Explain the benefits of creating mobile-first App experiences
   - Explain the high-level Mobile Wallet Adapter (MWA) flow
   - Explain the high-level differences between React and React Native
-  - Create a simple Android Solana dApp using React Native
+  - Create a simple Android Solana App using React Native
 description:
   "Learn how to build native mobile apps using blockchain functionality"
 ---
@@ -21,15 +21,15 @@ description:
 
 ## Lesson Overview
 
-In these units, we will develop mobile apps that interact with the Solana
+In these lessons, we will develop mobile apps that interact with the Solana
 network, this opens up a whole new paradigm of blockchain use cases and
 behaviors. The **Solana Mobile Stack** (**SMS**) is designed to help developers
-seamlessly create mobile dApps. It includes the
+seamlessly create mobile apps. It includes the
 [Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter)
--A Solana Mobile SDK that uses React Native,
+, a Solana Mobile SDK that uses React Native,
 [Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault),
 and the
-[Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store).
+[Solana app Store](https://docs.solanamobile.com/getting-started/overview#solana-app-store).
 These resources simplify mobile development with a similar experience but with
 mobile-specific features.
 
@@ -41,20 +41,9 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-The Solana wallet interaction differs slightly on mobile compared to the web.
-The core wallet functionality is the same: the wallet holds your private keys
-and uses them to sign and send transactions. To avoid having different
-interfaces between wallets, developers abstracted that functionality into the
-SWA standard. This remains the standard on the web while its mobile counterpart
-is the MWA.
-
-The differences between the two standards are due to the different construction
-of web vs mobile wallets. Web wallets are just browser extensions that inject
-wallet adapter functions into the `window` object of your webpage. This gives
-your site access to them. Mobile wallets, however, are native applications on a
-mobile operating system. There's no way to surface functions from one native
-application to another. The Mobile Wallet Adapter exists to enable any app,
-written in any language, to connect to a native wallet app.
+Native mobile wallets hold your private keys
+and use them to sign and send transactions just like web extension wallets.
+However native mobile wallets use the [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter) (MWA) standard instead of the [Wallet Adapter](https://github.com/anza-xyz/wallet-adapter) to ensure any apps can work with any wallet.
 
 We will dig into the specifics of the MWA in a
 [later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
@@ -88,21 +77,15 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-> In summary, mobile blockchain transactions opens up many doors. It is
-> important to be informed and learn how one can be part of it, let's explore
-> how.
+In summary, mobile blockchain transactions can open many opportunities. Let's start building!
 
 ### Supported Operating Systems
 
-Currently, the MWA only supports Android OS. A WebSocket connection can persist
+Currently, the MWA only supports Android. On Android, a WebSocket connection can persist
 between apps, even when the wallet app is in the background.
 
-A prominent limitation to the adoption of MWAs in iOS is that it is designed to
-quickly suspend connections when an app is pushed to the background. This kills
-the MWA WebSocket connection. However, this doesn’t mean that Solana dApps can’t
-run on iOS at all. Developers can still create a Mobile Web App using the
-[Standard Wallet Adapter](https://github.com/solana-labs/wallet-adapter)
-library.
+On iOS, the OS quickly suspends websocket connections when an app is backgrounded, so the standard  
+[Wallet Adapter](https://github.com/solana-labs/wallet-adapter) library is used instead.
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
@@ -134,35 +117,35 @@ points to note:
 
 - React Native compiles down to native Android and iOS apps while React compiles
   down to a collection of web pages.
-- Instead of using web elements like <div>, you will use mobile-native elements
-  like <View>.
+- Instead of using web elements like `<div>`, you will use mobile-native elements
+  like `<View>`.
 - React Native allows access to mobile hardware, such as the camera and
   accelerometer, which React web apps cannot access.
 - Many standard React and Node packages may not be compatible with React Native
-  and setting up React Native can be challenging. Fortunately, their
-  [Official Docs](https://reactnative.dev/docs/environment-setup?guide=native)
-  contains everything you may need.
+  and setting up React Native can be challenging. Fortunately, the
+  [React Native Docs](https://reactnative.dev/docs/environment-setup?guide=native)
+  contains everything you may need.  
 - For development, you will need to set up
   [Android Studio](https://developer.android.com/studio/intro/) for Android apps
   and an emulator or physical device for testing.
 
-> **NOTE:**There is a learning curve, but if you know React you're not nearly as
-> far from being able to develop mobile apps as you think! It may feel jarring
-> to start, but after a few hours of React Native development, you will start to
-> feel much more comfortable. We have included a [Lab](#lab) section below to
-> help you.
 
-## Creating a Solana dApp with React Native
+<Callout type="caution">
+**NOTE:** There is a learning curve, but if you know React you're not nearly as far from being able to develop mobile apps as you think! It may feel jarring to start, but after a few hours of React Native development, you will start to feel much more comfortable. We have included a [Lab](#lab) section below to help you.
+</Callout>
 
-Solana React Native dApps are virtually identical to React dApps. The primary
+
+## Creating a React Native App on Solana
+
+Solana React Native apps are virtually identical to React apps. The primary
 difference is in the wallet interaction. Instead of the wallet being available
-in the browser, your dApp will create an MWA session with the wallet app of your
+in the browser, your app will create an MWA session with the wallet app of your
 choosing using a WebSocket. Fortunately, this is abstracted for you in the MWA
 library. The only difference is that anytime you need to make a call to the
 wallet, the `transact` function will be used, more details on this function in
 later parts of this lesson.
 
-![dApp Flow](/public/assets/courses/unboxed/basic-solana-mobile-flow.png)
+![App Flow](/public/assets/courses/unboxed/basic-solana-mobile-flow.png)
 
 ## Reading Data
 
@@ -172,7 +155,7 @@ which is responsible for interacting with the Solana network.
 
 In Solana, an account refers to any object stored on-chain, and is typically
 referenced by a
-[public key](https://www.investopedia.com/terms/p/public-key.asp).
+[public key](https://solana.com/docs/terminology#public-key-pubkey).
 
 Here’s an example of how you can read an account information using the
 `getAccountInfo` method:
@@ -197,16 +180,13 @@ wallet application.
 
 ### Web vs. Mobile Wallet Interactions
 
-On the web, dApps typically interact with wallets via browser extensions.
-However, on mobile, the process is slightly different. You use a WebSocket to
-establish a connection between the dApp and the wallet. This is managed using
-the MWA. Specifically, on Android, this connection is initiated using **Android
+The websocket that connects the app and the wallet is managed using the MWA, and initiated using **Android
 intents**, with the dApp broadcasting its intent using the `solana-wallet://`
 scheme.
 ![Connecting](/public/assets/courses/unboxed/basic-solana-mobile-connect.png)
 
-When the wallet application receives the intent broadcast, it opens a WebSocket
-connection with the dApp that initiated the session. The dApp initiates this
+When the wallet app receives the intent broadcast, it opens a WebSocket
+connection with the app that initiated the session. The app initiates this
 connection using the `transact` function, as shown below:
 
 ```tsx
@@ -216,7 +196,7 @@ transact(async (wallet: Web3MobileWallet) => {
 ```
 
 This function provides access to the `Web3MobileWallet` object, allowing you to
-perform actions such as [signing transactions(###)] or interacting with wallet
+perform actions such as signing transactions or interacting with wallet
 data. Remember, all wallet interactions must occur inside the callback of the
 `transact` function.
 
@@ -286,7 +266,7 @@ const sendTransactions = async (transaction: Transaction) => {
 ## Debugging
 
 Debugging can be challenging when working with Solana mobile transactions, as
-two separate applications are involved: your dApp and the mobile wallet. Unlike
+two separate applications are involved: your app and the mobile wallet. Unlike
 typical single-application setups, you won't have direct access to the wallet’s
 logs, which makes tracking issues more complex.
 
@@ -294,12 +274,12 @@ However, Android Studio’s
 [Logcat](https://developer.android.com/studio/debug/logcat) provides a useful
 solution - enabling you to view logs from all applications running on your
 device including the wallet. By leveraging Logcat, you can monitor the
-interaction between your dApp and the wallet, helping you identify any issues
+interaction between your app and the wallet, helping you identify any issues
 that arise during transaction signing and submission.
 
 If Logcat is not your preferred tool, an alternative approach is to use the
 wallet solely for signing transactions, while handling the actual transaction
-submission in your dApp’s code. This method allows for greater control over
+submission in your app’s code. This method allows for greater control over
 debugging, as you can inspect the transaction flow more thoroughly on the client
 side.
 
@@ -329,10 +309,10 @@ payments for in-app purchases.
 
 > While traditional app stores impose strict policies around blockchain
 > transactions to protect their revenue and comply with regulations, alternative
-> distribution methods like the Solana dApp Store offers developers a more
+> distribution methods like the Solana app Store offers developers a more
 > flexible platform for deploying Solana-based mobile applications. This
 > decentralized approach bypasses many of the restrictions seen in centralized
-> app marketplaces, allowing dApps to thrive in a more blockchain-friendly
+> app marketplaces, allowing apps to thrive in a more blockchain-friendly
 > ecosystem.
 
 ## Conclusion
@@ -345,7 +325,7 @@ distinction lies in how you interact with wallets, which requires using the
 `transact` callback to establish wallet sessions, sign transactions, and
 communicate with Solana’s blockchain.
 
-As you continue building Solana mobile dApps, it's essential to keep learning
+As you continue building Solana mobile apps, it's essential to keep learning
 and refining your skills. Be sure to explore additional resources like:
 
 - [The official Solana Developer Docs](https://solana.com/docs) for in-depth
@@ -358,12 +338,12 @@ Mastering mobile Solana development will open up new opportunities in
 decentralized finance (DeFi), gaming, and e-commerce, allowing you to build
 cutting-edge applications with a seamless user experience. Stay curious and
 experiment with different tools to push the boundaries of what you can achieve
-with mobile dApps. Let's put our knowledge to test by building a counting app
+with mobile apps. Let's put our knowledge to test by building a counting app
 with React Native for Android OS!
 
-## Lab: Building a Mobile Counter dApp with React Native
+## Lab: Building a Mobile Counter app with React Native
 
-This dApp will display a counter and allow users to make increments via a
+This app will display a counter and allow users to make increments via a
 transaction on the Solana blockchain. The app will also connect to a wallet for
 signing transactions.
 
@@ -1216,7 +1196,7 @@ to fix them:
   `CounterButton` and manually send some Devnet sol to your wallet's address
   (printed in the console)
 
-That's it! You've made your first Solana Mobile dApp. If you get stuck, feel
+That's it! You've made your first Solana Mobile app. If you get stuck, feel
 free to check out the
 [full solution code](https://github.com/Unboxed-Software/solana-react-native-counter)
 on the `main` branch of the repository.
