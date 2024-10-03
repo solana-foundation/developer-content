@@ -223,7 +223,7 @@ You may have noticed in the previous example that one of the accounts in
 was of type `Program`.
 
 Anchor provides a number of account types that can be used to represent
-accounts. Each type implements different account validation. We’ll go over a few
+accounts. Each type implements different account validation. We'll go over a few
 of the common types you may encounter, but be sure to look through the
 [full list of account types](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/index.html).
 
@@ -377,8 +377,8 @@ from the first 8 bytes of the SHA256 hash of the account type's name. The first
 8 bytes are reserved for the account discriminator when implementing account
 serialization traits (which is almost always in an Anchor program).
 
-As a result, any calls to `AccountDeserialize`’s `try_deserialize` will check
-this discriminator. If it doesn’t match, an invalid account was given, and the
+As a result, any calls to `AccountDeserialize`'s `try_deserialize` will check
+this discriminator. If it doesn't match, an invalid account was given, and the
 account deserialization will exit with an error.
 
 The `#[account]` attribute also implements the `Owner` trait for a struct using
@@ -577,7 +577,7 @@ const DISCRIMINATOR: usize = 8;
 
 #### 3. Implement `Context` type `Initialize`
 
-Next, using the `#[derive(Accounts)]` macro, let’s implement the `Initialize`
+Next, using the `#[derive(Accounts)]` macro, let's implement the `Initialize`
 type that lists and validates the accounts used by the `initialize` instruction.
 It'll need the following accounts:
 
@@ -602,10 +602,10 @@ pub struct Initialize<'info> {
 
 #### 4. Add the `initialize` instruction
 
-Now that we have our `Counter` account and `Initialize` type , let’s implement
+Now that we have our `Counter` account and `Initialize` type , let's implement
 the `initialize` instruction within `#[program]`. This instruction requires a
 `Context` of type `Initialize` and takes no additional instruction data. In the
-instruction logic, we are simply setting the `counter` account’s `count` field
+instruction logic, we are simply setting the `counter` account's `count` field
 to `0`.
 
 ```rust
@@ -620,14 +620,14 @@ pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
 
 #### 5. Implement `Context` type `Update`
 
-Now, using the `#[derive(Accounts)]` macro again, let’s create the `Update` type
+Now, using the `#[derive(Accounts)]` macro again, let's create the `Update` type
 that lists the accounts that the `increment` instruction requires. It'll need
 the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
 
-Again, we’ll need to specify any constraints using the `#[account(..)]`
+Again, we'll need to specify any constraints using the `#[account(..)]`
 attribute:
 
 ```rust
@@ -641,11 +641,11 @@ pub struct Update<'info> {
 
 #### 6. Add `increment` instruction
 
-Lastly, within `#[program]`, let’s implement an `increment` instruction to
+Lastly, within `#[program]`, let's implement an `increment` instruction to
 increment the `count` once a `counter` account is initialized by the first
 instruction. This instruction requires a `Context` of type `Update` (implemented
 in the next step) and takes no additional instruction data. In the instruction
-logic, we are simply incrementing an existing `counter` account’s `count` field
+logic, we are simply incrementing an existing `counter` account's `count` field
 by `1`.
 
 ```rust
@@ -799,7 +799,7 @@ if you need some more time with it.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Because we're starting with
+Now it's your turn to build something independently. Because we're starting with
 simple programs, yours will look almost identical to what we just created. It's
 useful to try and get to the point where you can write it from scratch without
 referencing prior code, so try not to copy and paste here.

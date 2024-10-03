@@ -10,7 +10,7 @@ description:
 ## Overview
 
 This course aims to introduce you to a range of common security exploits unique
-to Solana development. We’ve modeled this course heavily on Coral's
+to Solana development. We've modeled this course heavily on Coral's
 [Sealevel Attacks](https://github.com/coral-xyz/sealevel-attacks) repository.
 
 Program security is covered in our
@@ -32,7 +32,7 @@ While the first few lessons in this course cover topics similar to those in the
 [Anchor course](/content/courses/onchain-development/intro-to-anchor.md) or
 [Program Security lesson](/content/courses/native-onchain-development/program-security.md)
 in the [Native Course](/content/courses/native-onchain-development.md), but as
-you progress, you’ll encounter new types of attacks. We encourage you to explore
+you progress, you'll encounter new types of attacks. We encourage you to explore
 all of them.
 
 <Callout>

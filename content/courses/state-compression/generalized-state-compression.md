@@ -27,8 +27,8 @@ description:
 
 Previously, we discussed state compression in the context of compressed NFTs. At
 the time of writing, compressed NFTs represent the most common use case for
-state compression, but it’s possible to use state compression within any
-program. In this lesson, we’ll discuss state compression in more generalized
+state compression, but it's possible to use state compression within any
+program. In this lesson, we'll discuss state compression in more generalized
 terms so that you can apply it to any of your programs.
 
 ### A theoretical overview of state compression
@@ -36,7 +36,7 @@ terms so that you can apply it to any of your programs.
 In traditional programs, data is serialized (typically using borsh) and then
 stored directly in an account. This allows the data to be easily read and
 written through Solana programs. You can “trust” the data stored in the accounts
-because it can’t be modified except through the mechanisms surfaced by the
+because it can't be modified except through the mechanisms surfaced by the
 program.
 
 State compression effectively asserts that the most important piece of this
@@ -113,7 +113,7 @@ subsequent writes to successfully occur. This includes:
    successful.
 3. A canopy - When performing an update action on any given leaf, you need the
    entire proof path from that leaf to the root hash. The canopy stores
-   intermediate proof nodes along that path so they don’t all have to be passed
+   intermediate proof nodes along that path so they don't all have to be passed
    into the program from the client.
 
 As a program architect, you control three values directly related to these three
@@ -163,17 +163,17 @@ The answer is 20.
 Choosing a max buffer size is effectively a question of throughput: how many
 concurrent writes do you need? The larger the buffer, the higher the throughput.
 
-Lastly, the canopy depth will determine your program’s composability. State
+Lastly, the canopy depth will determine your program's composability. State
 compression pioneers have made it clear that omitting a canopy is a bad idea.
-Program A can’t call your state-compressed program B if doing so maxes out the
+Program A can't call your state-compressed program B if doing so maxes out the
 transaction size limits. Remember, program A also has required accounts and data
 in addition to required proof paths, each of which take up transaction space.
 
 #### Data access on a state-compressed program
 
-A state-compressed account doesn’t store the data itself. Rather, it stores the
+A state-compressed account doesn't store the data itself. Rather, it stores the
 concurrent Merkle tree structure discussed above. The raw data itself lives only
-in the blockchain’s cheaper **ledger state.** This makes data access somewhat
+in the blockchain's cheaper **ledger state.** This makes data access somewhat
 more difficult, but not impossible.
 
 The Solana ledger is a list of entries containing signed transactions. In
@@ -183,7 +183,7 @@ data that has ever been put into a transaction exists in the ledger.
 Since the state compression hashing process occurs onchain, all the data exists
 in the ledger state and could theoretically be retrieved from the original
 transaction by replaying the entire chain state from the beginning. However,
-it’s much more straightforward (though still complicated) to have
+it's much more straightforward (though still complicated) to have
 an **indexer** track and index this data as the transactions occur. This ensures
 there is an offchain “cache” of the data that anyone can access and subsequently
 verify against the onchain root hash.
@@ -193,7 +193,7 @@ This process is complex, but it will make sense after some practice.
 ### State compression tooling
 
 The theory described above is essential to properly understanding state
-compression. But you don’t have to implement any of it from scratch. Brilliant
+compression. But you don't have to implement any of it from scratch. Brilliant
 engineers have laid most of the groundwork for you in the form of the SPL State
 Compression Program and the Noop Program.
 
@@ -209,12 +209,12 @@ primary purpose is to make leaf data easier to index by logging it to the ledger
 state. When you want to store compressed data, you pass it to the State
 Compression program where it gets hashed and emitted as an “event” to the Noop
 program. The hash gets stored in the corresponding concurrent Merkle tree, but
-the raw data remains accessible through the Noop program’s transaction logs.
+the raw data remains accessible through the Noop program's transaction logs.
 
 #### Index data for easy lookup
 
 Under normal conditions, you would typically access onchain data by fetching the
-appropriate account. When using state compression, however, it’s not so
+appropriate account. When using state compression, however, it's not so
 straightforward.
 
 As mentioned above, the data now exists in the ledger state rather than in an
@@ -223,18 +223,18 @@ instruction. Unfortunately, while this data will in a sense exist in the ledger
 state forever, it will likely be inaccessible through validators after a certain
 period of time.
 
-To save space and be more performant, validators don’t retain every transaction
-back to the genesis block. The specific amount of time you’ll be able to access
+To save space and be more performant, validators don't retain every transaction
+back to the genesis block. The specific amount of time you'll be able to access
 the Noop instruction logs related to your data will vary based on the validator.
-Eventually, you’ll lose access to it if you’re relying directly on instruction
+Eventually, you'll lose access to it if you're relying directly on instruction
 logs.
 
 Technically, you *can* replay the transaction state back to the genesis block
-but the average team isn’t going to do that, and it certainly won’t be
+but the average team isn't going to do that, and it certainly won't be
 performant. The
 [Digital Asset Standard (DAS)](https://docs.helius.dev/compression-and-das-api/digital-asset-standard-das-api)
 has been adopted by many RPC providers to enable efficient queries of compressed
-NFTs and other assets. However, at the time of writing, it doesn’t support
+NFTs and other assets. However, at the time of writing, it doesn't support
 arbitrary state compression. Instead, you have two primary options:
 
 1. Use an indexing provider that will build a custom indexing solution for your
@@ -251,7 +251,7 @@ need to rely on infrastructure providers to handle their indexing.
 #### Create Rust types
 
 As with a typical Anchor program, one of the first things you should do is
-define your program’s Rust types. However, Rust types in a traditional Anchor
+define your program's Rust types. However, Rust types in a traditional Anchor
 program often represent accounts. In a state-compressed program, your account
 state will only store the Merkle tree. The more “usable” data schema will just
 be serialized and logged to the Noop program.
@@ -280,7 +280,7 @@ impl MessageLog {
 To be abundantly clear, **this is not an account that you will be able to read
 from**. Your program will be creating an instance of this type from instruction
 inputs, not constructing an instance of this type from account data that it
-reads. We’ll discuss how to read data in a later section.
+reads. We'll discuss how to read data in a later section.
 
 #### Initialize a new tree
 
@@ -339,14 +339,14 @@ pub fn create_messages_tree(
 
 #### Add hashes to the tree
 
-With an initialized Merkle tree, it’s possible to start adding data hashes. This
+With an initialized Merkle tree, it's possible to start adding data hashes. This
 involves passing the uncompressed data to an instruction on your program that
 will hash the data, log it to the Noop program, and use the State Compression
-Program’s `append` instruction to add the hash to the tree. The following
+Program's `append` instruction to add the hash to the tree. The following
 discuss what your instruction needs to do in depth:
 
 1. Use the `hashv` function from the `keccak` crate to hash the data. In most
-   cases, you’ll want to also hash the owner or authority of the data as well to
+   cases, you'll want to also hash the owner or authority of the data as well to
    ensure that it can only be modified by the proper authority.
 2. Create a log object representing the data you wish to log to the Noop
    Program, then call `wrap_application_data_v1` to issue a CPI to the Noop
@@ -354,7 +354,7 @@ discuss what your instruction needs to do in depth:
    available to any client looking for it. For broad use cases like cNFTs, that
    would be indexers. You might also create your own observing client to
    simulate what indexers are doing but specific to your application.
-3. Build and issue a CPI to the State Compression Program’s `append`
+3. Build and issue a CPI to the State Compression Program's `append`
    instruction. This takes the hash computed in step 1 and adds it to the next
    available leaf on your Merkle tree. Just as before, this requires the Merkle
    tree address and the tree authority bump as signature seeds.
@@ -413,11 +413,11 @@ as those used to append the initial data to the tree:
 1. **Verify update authority** - The first step is new. In most cases, you want
    to verify update authority. This typically involves proving that the signer
    of the `update` transaction is the true owner or authority of the leaf at the
-   given index. Since the data is compressed as a hash on the leaf, we can’t
+   given index. Since the data is compressed as a hash on the leaf, we can't
    simply compare the `authority` public key to a stored value. Instead, we need
    to compute the previous hash using the old data and the `authority` listed in
    the account validation struct. We then build and issue a CPI to the State
-   Compression Program’s `verify_leaf` instruction using our computed hash.
+   Compression Program's `verify_leaf` instruction using our computed hash.
 2. **Hash the new data** - This step is the same as the first step from
    appending initial data. Use the `hashv` function from the `keccak` crate to
    hash the new data and the update authority, each as their corresponding byte
@@ -427,7 +427,7 @@ as those used to append the initial data to the tree:
    `wrap_application_data_v1` to issue a CPI to the Noop program.
 4. **Replace the existing leaf hash** - This step is slightly different than the
    last step of appending initial data. Build and issue a CPI to the State
-   Compression Program’s `replace_leaf` instruction. This uses the old hash, the
+   Compression Program's `replace_leaf` instruction. This uses the old hash, the
    new hash, and the leaf index to replace the data of the leaf at the given
    index with the new hash. Just as before, this requires the Merkle tree
    address and the tree authority bump as signature seeds.
@@ -504,8 +504,8 @@ pub fn update_message(
 
 #### Delete hashes
 
-At the time of writing, the State Compression Program doesn’t provide an
-explicit `delete` instruction. Instead, you’ll want to update leaf data with
+At the time of writing, the State Compression Program doesn't provide an
+explicit `delete` instruction. Instead, you'll want to update leaf data with
 data that indicates the data as “deleted.” The specific data will depend on your
 use case and security concerns. Some may opt to set all data to 0, whereas
 others might store a static string that all “deleted” items will have in common.
@@ -513,13 +513,13 @@ others might store a static string that all “deleted” items will have in com
 #### Access data from a client
 
 The discussion so far has covered 3 of the 4 standard CRUD procedures: Create,
-Update, and Delete. What’s left is one of the more difficult concepts in state
+Update, and Delete. What's left is one of the more difficult concepts in state
 compression: reading data.
 
-Accessing data from a client is tricky primarily because the data isn’t stored
+Accessing data from a client is tricky primarily because the data isn't stored
 in a format that is easy to access. The data hashes stored in the Merkle tree
-account can’t be used to reconstruct the initial data, and the data logged to
-the Noop program isn’t available indefinitely.
+account can't be used to reconstruct the initial data, and the data logged to
+the Noop program isn't available indefinitely.
 
 Your best bet is one of two options:
 
@@ -531,18 +531,18 @@ Your best bet is one of two options:
 If your project is truly decentralized such that many participants will interact
 with your program through means other than your own frontend, then option 2
 might not be sufficient. However, depending on the scale of the project or
-whether or not you’ll have control over most program access, it can be a viable
+whether or not you'll have control over most program access, it can be a viable
 approach.
 
 There is no “right” way to do this. Two potential approaches are:
 
 1. Store the raw data in a database at the same time as sending it to the
    program, along with the leaf that the data is hashed and stored to.
-2. Create a server that observes your program’s transactions, looks up the
+2. Create a server that observes your program's transactions, looks up the
    associated Noop logs, decodes the logs, and stores them.
 
-We’ll do a little bit of both when writing tests in this lesson’s lab (though we
-won’t persist data in a db - it will only live in memory for the duration of the
+We'll do a little bit of both when writing tests in this lesson's lab (though we
+won't persist data in a db - it will only live in memory for the duration of the
 tests).
 
 The setup for this is somewhat tedious. Given a particular transaction, you can
@@ -619,7 +619,7 @@ development experience, please share with the community!
 
 ## Lab
 
-Let’s practice generalized state compression by creating a new Anchor program.
+Let's practice generalized state compression by creating a new Anchor program.
 This program will use custom state compression to power a simple note-taking
 app.
 
@@ -631,8 +631,8 @@ Start by initializing an Anchor program:
 anchor init compressed-notes
 ```
 
-We’ll be using the `spl-account-compression` crate with the `cpi` feature
-enabled. Let’s add it as a dependency in `programs/compressed-notes/Cargo.toml`.
+We'll be using the `spl-account-compression` crate with the `cpi` feature
+enabled. Let's add it as a dependency in `programs/compressed-notes/Cargo.toml`.
 
 ```toml
 [dependencies]
@@ -641,8 +641,8 @@ spl-account-compression = { version="0.2.0", features = ["cpi"] }
 solana-program = "1.16.0"
 ```
 
-We’ll be testing locally but we need both the Compression program and the Noop
-program from Mainnet. We’ll need to add these to the `Anchor.toml` in the root
+We'll be testing locally but we need both the Compression program and the Noop
+program from Mainnet. We'll need to add these to the `Anchor.toml` in the root
 directory so they get cloned to our local cluster.
 
 ```toml
@@ -656,7 +656,7 @@ address = "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV"
 address = "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK"
 ```
 
-Lastly, let’s prepare the `lib.rs` file for the rest of the Demo. Remove the
+Lastly, let's prepare the `lib.rs` file for the rest of the Demo. Remove the
 `initialize` instruction and the `Initialize` accounts struct, then add the
 imports shown in the code snippet below (be sure to put in **_your_** program
 id):
@@ -689,8 +689,8 @@ pub mod compressed_notes {
 }
 ```
 
-For the rest of this Demo, we’ll be making updates to the program code directly
-in the `lib.rs` file. This simplifies the explanations a bit. You’re welcome to
+For the rest of this Demo, we'll be making updates to the program code directly
+in the `lib.rs` file. This simplifies the explanations a bit. You're welcome to
 modify the structure as you will.
 
 Feel free to build before continuing. This ensures your environment is working
@@ -698,7 +698,7 @@ properly and shortens future build times.
 
 #### 2. Define `Note` schema
 
-Next, we’re going to define what a note looks like within our program. Notes
+Next, we're going to define what a note looks like within our program. Notes
 should have the following properties:
 
 - `leaf_node` - this should be a 32-byte array representing the hash stored on
@@ -723,15 +723,15 @@ impl NoteLog {
 ```
 
 In a traditional Anchor program, this would be an account struct, but since
-we’re using state compression, our accounts won’t be mirroring our native
-structures. Since we don’t need all the functionality of an account, we can just
+we're using state compression, our accounts won't be mirroring our native
+structures. Since we don't need all the functionality of an account, we can just
 use the `AnchorSerialize` derive macro rather than the `account` macro.
 
 #### 3. Define input accounts and constraints
 
 As luck would have it, every one of our instructions will be using the same
-accounts. We’ll create a single `NoteAccounts` struct for our account
-validation. It’ll need the following accounts:
+accounts. We'll create a single `NoteAccounts` struct for our account
+validation. It'll need the following accounts:
 
 - `owner` - this is the creator and owner of the note; should be a signer on the
   transaction
@@ -771,7 +771,7 @@ pub struct NoteAccounts<'info> {
 
 #### 4. Create `create_note_tree` instruction
 
-Next, let’s create our `create_note_tree` instruction. Remember, clients will
+Next, let's create our `create_note_tree` instruction. Remember, clients will
 have already allocated the Merkle tree account but will use this instruction to
 initialize it.
 
@@ -834,25 +834,25 @@ and the tree authority bump.
 
 #### 5. Create `append_note` instruction
 
-Now, let’s create our `append_note` instruction. This instruction needs to take
-the raw note as a String and compress it into a hash that we’ll store on the
-Merkle tree. We’ll also log the note to the Noop program so the entirety of the
-data exists within the chain’s state.
+Now, let's create our `append_note` instruction. This instruction needs to take
+the raw note as a String and compress it into a hash that we'll store on the
+Merkle tree. We'll also log the note to the Noop program so the entirety of the
+data exists within the chain's state.
 
 The steps here are as follows:
 
 1. Use the `hashv` function from the `keccak` crate to hash the note and owner,
-   each as their corresponding byte representation. It’s **_crucial_** that you
-   hash the owner as well as the note. This is how we’ll verify note ownership
+   each as their corresponding byte representation. It's **_crucial_** that you
+   hash the owner as well as the note. This is how we'll verify note ownership
    before updates in the update instruction.
 2. Create an instance of the `NoteLog` struct using the hash from step 1, the
-   owner’s public key, and the raw note as a String. Then call
+   owner's public key, and the raw note as a String. Then call
    `wrap_application_data_v1` to issue a CPI to the Noop program, passing the
    instance of `NoteLog`. This ensures the entirety of the note (not just the
    hash) is readily available to any client looking for it. For broad use cases
    like cNFTs, that would be indexers. You might create your observing client to
    simulate what indexers are doing but for your own application.
-3. Build and issue a CPI to the State Compression Program’s `append`
+3. Build and issue a CPI to the State Compression Program's `append`
    instruction. This takes the hash computed in step 1 and adds it to the next
    available leaf on your Merkle tree. Just as before, this requires the Merkle
    tree address and the tree authority bump as signature seeds.
@@ -901,14 +901,14 @@ pub mod compressed_notes {
 
 #### 6. Create `update_note` instruction
 
-The last instruction we’ll make is the `update_note` instruction. This should
+The last instruction we'll make is the `update_note` instruction. This should
 replace an existing leaf with a new hash representing the new updated note data.
 
-For this to work, we’ll need the following parameters:
+For this to work, we'll need the following parameters:
 
 1. `index` - the index of the leaf we are going to update
 2. `root` - the root hash of the Merkle tree
-3. `old_note` - the string representation of the old note we’re updating
+3. `old_note` - the string representation of the old note we're updating
 4. `new_note` - the string representation of the new note we want to update to
 
 Remember, the steps here are similar to `append_note`, but with some minor
@@ -916,22 +916,22 @@ additions and modifications:
 
 1. The first step is new. We need to first prove that the `owner` calling this
    function is the true owner of the leaf at the given index. Since the data is
-   compressed as a hash on the leaf, we can’t simply compare the `owner` public
+   compressed as a hash on the leaf, we can't simply compare the `owner` public
    key to a stored value. Instead, we need to compute the previous hash using
    the old note data and the `owner` listed in the account validation struct. We
-   then build and issue a CPI to the State Compression Program’s `verify_leaf`
+   then build and issue a CPI to the State Compression Program's `verify_leaf`
    instruction using our computed hash.
 2. This step is the same as the first step from creating the `append_note`
    instruction. Use the `hashv` function from the `keccak` crate to hash the new
    note and its owner, each as their corresponding byte representation.
 3. This step is the same as the second step from creating the `append_note`
    instruction. Create an instance of the `NoteLog` struct using the hash from
-   step 2, the owner’s public key, and the new note as a string. Then call
+   step 2, the owner's public key, and the new note as a string. Then call
    `wrap_application_data_v1` to issue a CPI to the Noop program, passing the
    instance of `NoteLog`
 4. This step is slightly different than the last step from creating the
    `append_note` instruction. Build and issue a CPI to the State Compression
-   Program’s `replace_leaf` instruction. This uses the old hash, the new hash,
+   Program's `replace_leaf` instruction. This uses the old hash, the new hash,
    and the leaf index to replace the data of the leaf at the given index with
    the new hash. Just as before, this requires the Merkle tree address and the
    tree authority bump as signature seeds.
@@ -1009,19 +1009,19 @@ pub mod compressed_notes {
 
 #### 7. Client test setup
 
-We’re going to write a few tests to ensure that our program works as expected.
-First, let’s do some setup.
+We're going to write a few tests to ensure that our program works as expected.
+First, let's do some setup.
 
-We’ll be using the `@solana/spl-account-compression` package. Go ahead and
+We'll be using the `@solana/spl-account-compression` package. Go ahead and
 install it:
 
 ```bash
 yarn add @solana/spl-account-compression
 ```
 
-Next, we’re going to give you the contents of a utility file we’ve created to
+Next, we're going to give you the contents of a utility file we've created to
 make testing easier. Create a `utils.ts` file in the `tests` directory, add in
-the below, then we’ll explain it.
+the below, then we'll explain it.
 
 ```typescript
 import {
@@ -1132,21 +1132,21 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
 
 There are 3 main things in the above file:
 
-1. `NoteLog` - a class representing the note log we’ll find in the Noop program
-   logs. We’ve also added the borsh schema as `NoteLogBorshSchema` for
+1. `NoteLog` - a class representing the note log we'll find in the Noop program
+   logs. We've also added the borsh schema as `NoteLogBorshSchema` for
    deserialization.
 2. `getHash` - a function that creates a hash of the note and note owner so we
    can compare it to what we find on the Merkle tree
-3. `getNoteLog` - a function that looks through the provided transaction’s logs,
+3. `getNoteLog` - a function that looks through the provided transaction's logs,
    finds the Noop program logs, then deserializes and returns the corresponding
    Note log.
 
 #### 8. Write client tests
 
-Now that we’ve got our packages installed and utility file ready, let’s dig into
-the tests themselves. We’re going to create four of them:
+Now that we've got our packages installed and utility file ready, let's dig into
+the tests themselves. We're going to create four of them:
 
-1. Create Note Tree - this will create the Merkle tree we’ll be using to store
+1. Create Note Tree - this will create the Merkle tree we'll be using to store
    note hashes
 2. Add Note - this will call our `append_note` instruction
 3. Add Max Size Note - this will call our `append_note` instruction with a note
@@ -1154,11 +1154,11 @@ the tests themselves. We’re going to create four of them:
 4. Update First Note - this will call our `update_note` instruction to modify
    the first note we added
 
-The first test is mostly just for setup. In the last three tests, we’ll be
+The first test is mostly just for setup. In the last three tests, we'll be
 asserting each time that the note hash on the tree matches what we would expect
 given the note text and signer.
 
-Let’s start with our imports. There are quite a few from Anchor,
+Let's start with our imports. There are quite a few from Anchor,
 `@solana/web3.js`, `@solana/spl-account-compression`, and our own utils file.
 
 ```typescript
@@ -1183,7 +1183,7 @@ import { getHash, getNoteLog } from "./utils";
 import { assert } from "chai";
 ```
 
-Next, we’ll want to set up the state variables we’ll be using throughout our
+Next, we'll want to set up the state variables we'll be using throughout our
 tests. This includes the default Anchor setup as well as generating a Merkle
 tree keypair, the tree authority, and some notes.
 
@@ -1217,12 +1217,12 @@ describe("compressed-notes", () => {
 });
 ```
 
-Finally, let’s start with the tests themselves. First the `Create Note Tree`
+Finally, let's start with the tests themselves. First the `Create Note Tree`
 test. This test will do two things:
 
 1. Allocate a new account for the Merkle tree with a max depth of 3, max buffer
    size of 8, and canopy depth of 0
-2. Initialize this new account using our program’s `createNoteTree` instruction
+2. Initialize this new account using our program's `createNoteTree` instruction
 
 ```typescript
 it("Create Note Tree", async () => {
@@ -1258,7 +1258,7 @@ it("Create Note Tree", async () => {
 });
 ```
 
-Next, we’ll create the `Add Note` test. It should call `append_note` with
+Next, we'll create the `Add Note` test. It should call `append_note` with
 `firstNote`, then check that the onchain hash matches our computed hash and that
 the note log matches the text of the note we passed into the instruction.
 
@@ -1282,7 +1282,7 @@ it("Add Note", async () => {
 });
 ```
 
-Next, we’ll create the `Add Max Size Note` test. It is the same as the previous
+Next, we'll create the `Add Max Size Note` test. It is the same as the previous
 test, but with the second note.
 
 ```typescript
@@ -1306,14 +1306,14 @@ it("Add Max Size Note", async () => {
 });
 ```
 
-Lastly, we’ll create the `Update First Note` test. This is slightly more complex
-than adding a note. We’ll do the following:
+Lastly, we'll create the `Update First Note` test. This is slightly more complex
+than adding a note. We'll do the following:
 
-1. Get the Merkle tree root as it’s required by the instruction.
+1. Get the Merkle tree root as it's required by the instruction.
 2. Call the `update_note` instruction of our program, passing in the index 0
    (for the first note), the Merkle tree root, the first note, and the updated
    data. Remember, it needs the first note and the root because the program must
-   verify the entire proof path for the note’s leaf before it can be updated.
+   verify the entire proof path for the note's leaf before it can be updated.
 
 ```typescript
 it("Update First Note", async () => {
@@ -1344,19 +1344,19 @@ it("Update First Note", async () => {
 });
 ```
 
-That’s it, congrats! Go ahead and run `anchor test` and you should get four
+That's it, congrats! Go ahead and run `anchor test` and you should get four
 passing tests.
 
-If you’re running into issues, feel free to go back through some of the demo or
+If you're running into issues, feel free to go back through some of the demo or
 look at the full solution code in the
 [Compressed Notes repository](https://github.com/unboxed-software/anchor-compressed-notes).
 
 ## Challenge
 
-Now that you’ve practiced the basics of state compression, add a new instruction
+Now that you've practiced the basics of state compression, add a new instruction
 to the Compressed Notes program. This new instruction should allow users to
-delete an existing note. keep in mind that you can’t remove a leaf from the
-tree, so you’ll need to decide what “deleted” looks like for your program. Good
+delete an existing note. keep in mind that you can't remove a leaf from the
+tree, so you'll need to decide what “deleted” looks like for your program. Good
 luck!
 
 If you'd like a very simple example of a delete function, check out the
