@@ -554,7 +554,7 @@ program.
   `movieProgramId` in the `index.ts` component with the public key of the
   program you've deployed.
 - If you use the frontend, simply replace the `MOVIE_REVIEW_PROGRAM_ID` in the
-  `review-form.tsx` components with the address of the program you’ve deployed.
+  `review-form.tsx` components with the address of the program you've deployed.
 
 Then run the frontend, submit a view, and refresh the browser to see the review.
 If you need more time with this project to feel comfortable with these concepts,

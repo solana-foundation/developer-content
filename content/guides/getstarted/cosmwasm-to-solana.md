@@ -408,7 +408,7 @@ pub fn process_reset(
 ## Solana Program Advantages
 
 1. Performance Efficiency:
-   - Solana’s binary instruction data and direct account manipulation provide
+   - Solana's binary instruction data and direct account manipulation provide
      high performance and low latency.
    - This is critical for high-throughput applications like decentralized
      exchanges (DEXes) and other performance-sensitive use cases.
@@ -424,6 +424,6 @@ pub fn process_reset(
      specialized logic.
 
 In conclusion, Solana is ideal for applications that require high performance,
-low latency, and fine-grained control over execution. It’s better suited for
+low latency, and fine-grained control over execution. It's better suited for
 developers comfortable with lower-level programming and those who need to
 optimize for specific use cases.
