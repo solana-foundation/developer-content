@@ -199,7 +199,6 @@ be using the `@solana/spl-account-compression` SDK, the Metaplex Bubblegum
 program `@metaplex-foundation/mpl-bubblegum` through the Umi library from
 Metaplex.
 
-
 #### Prepare metadata
 
 Prior to starting, you'll prepare your NFT metadata similarly to how you would
@@ -624,7 +623,7 @@ We've covered the primary skills needed to interact with cNFTs, but haven't been
 fully comprehensive. You can also use Bubblegum to do things like burn, verify,
 delegate, and more. We won't go through these, but these instructions are
 similar to the mint and transfer process. If you need this additional
-functionality, take a look at the 
+functionality, take a look at the
 [Bubblegum docs](https://developers.metaplex.com/bubblegum) on how to leverage
 the helper functions it provides.
 
@@ -634,7 +633,7 @@ Let's jump in and practice creating and working with cNFTs. Together, we'll
 build as simple a script as possible that will let us mint a cNFT collection
 from a Merkle tree.
 
-#### 1. Get the starter code
+#### 1. Create a new project
 
 To begin create and initialize an empty NPM project and change directory into
 it.
@@ -693,7 +692,7 @@ the keypair to it. We also assign the Bubblegum and dasApi plugins to it as
 well.
 
 #### 2. Create the Merkle tree account
- 
+
 We’ll start by creating the Merkle tree account. To do this we will use the
 `createTree` method from Metaplex Bubblegum program.
 
@@ -907,7 +906,7 @@ Now that we’ve written code to mint cNFTs, let’s see if we can actually fetc
 their data.
 
 Create a new file `fetch-cnft-details.ts`
- 
+
 ```bash
 fetch-cnft-details.ts
 ```
@@ -1124,7 +1123,8 @@ traditional NFTs.
 
 Inspect the cNFT on Solana Explorer! Just like previously, if you have any
 issues, you should fix them yourself, but if needed the
-[solution code](https://github.com/solana-foundation/compressed-nfts) is available.
+[solution code](https://github.com/solana-foundation/compressed-nfts) is
+available.
 
 ### Challenge
 
