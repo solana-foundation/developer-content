@@ -140,8 +140,8 @@ a function that handles the request and response.
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
   // Handle the request
 }
@@ -162,17 +162,17 @@ Building on the empty endpoint from before, that may look like this:
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
-  if (req.method === "GET") {
-    return get(res);
+  if (request.method === "GET") {
+    return get(response);
   }
-  return res.status(405).json({ error: "Method not allowed" });
+  return response.status(405).json({ error: "Method not allowed" });
 }
 
-function get(res: NextApiResponse) {
-  res.status(200).json({
+function get(response: NextApiResponse) {
+  response.status(200).json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
@@ -203,26 +203,26 @@ transaction and return it to the wallet for signing by:
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
-  if (req.method === "GET") {
-    return get(res);
+  if (request.method === "GET") {
+    return get(response);
   }
-  if (req.method === "POST") {
-    return post(req, res);
+  if (request.method === "POST") {
+    return post(request, response);
   }
-  return res.status(405).json({ error: "Method not allowed" });
+  return response.status(405).json({ error: "Method not allowed" });
 }
 
-function get(res: NextApiResponse) {
-  res.status(200).json({
+function get(response: NextApiResponse) {
+  response.status(200).json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
 }
-async function post(req: NextApiRequest, res: NextApiResponse) {
-  const { account, reference } = req.body;
+async function post(request: NextApiRequest, response: NextApiResponse) {
+  const { account, reference } = request.body;
 
   const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -254,7 +254,7 @@ async function post(req: NextApiRequest, res: NextApiResponse) {
 
   const message = "Simple transfer of 0.001 SOL";
 
-  res.status(200).json({
+  response.status(200).json({
     transaction: base64,
     message,
   });
@@ -493,21 +493,21 @@ variable. The first thing we'll do in this file is the following:
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
-  if (req.method === "GET") {
-    return get(res);
+  if (request.method === "GET") {
+    return get(response);
   }
-  if (req.method === "POST") {
-    return await post(req, res);
+  if (request.method === "POST") {
+    return await post(request, response);
   }
-  return res.status(405).json({ error: "Method not allowed" });
+  return response.status(405).json({ error: "Method not allowed" });
 }
 
-function get(res: NextApiResponse) {}
+function get(response: NextApiResponse) {}
 
-async function post(req: NextApiRequest, res: NextApiResponse) {}
+async function post(request: NextApiRequest, response: NextApiResponse) {}
 ```
 
 #### 4. Update `get` function
@@ -517,8 +517,8 @@ endpoint to return a label and icon. Update the `get` function to send a
 response with a "Scavenger Hunt!" label and a Solana logo icon.
 
 ```jsx
-function get(res: NextApiResponse) {
-    res.status(200).json({
+function get(response: NextApiResponse) {
+    response.status(200).json({
         label: "Scavenger Hunt!",
         icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
     });
