@@ -371,7 +371,7 @@ environment if you didn't already. This
 Remember that this step is not required if you are using a
 [Framework](https://reactnative.dev/architecture/glossary#react-native-framework).
 
-Ensure you have Node.js, npm, or yarn installed on your system. These will
+Ensure you have [Node.js](https://nodejs.org/en/download) installed on your system. These will
 manage your JavaScript packages. Install Android Studio:
 
 Android Studio is required to run the Android emulator and to compile your React
