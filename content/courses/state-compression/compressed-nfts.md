@@ -659,10 +659,10 @@ the file `create-tree.ts`
 mkdir src && touch src/create-tree.ts
 ```
 
-This Umi instantiation code will be repated in a lot of files, so feel free to
+This Umi instantiation code will be repeated in a lot of files, so feel free to
 create a wrapper file to instantiate it:
 
-```typescript filename="crate-tree.ts"
+```typescript filename="create-tree.ts"
 import { dasApi } from "@metaplex-foundation/digital-asset-standard-api";
 import { createTree, mplBubblegum } from "@metaplex-foundation/mpl-bubblegum";
 import { generateSigner, keypairIdentity } from "@metaplex-foundation/umi";
