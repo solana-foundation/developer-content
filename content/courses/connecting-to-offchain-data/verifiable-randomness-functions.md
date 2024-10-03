@@ -448,7 +448,7 @@ lesson's codebase.
 
 If you don't want to complete the Oracle lesson, the starter code for this lab
 is provided for you in
-[the main branch of the lab Github repository](https://github.com/Unboxed-Software/michael-burry-escrow).
+[the main branch of the lab Github repository](https://github.com/solana-developers/burry-escrow).
 
 The repo contains a "Michael Burry" escrow program. This is a program that
 allows a user to lock up some solana funds in escrow that cannot be withdrawn
@@ -463,8 +463,8 @@ from escrow regardless of the SOL price.
 If you are cloning the repo from the previous lesson make sure to do the
 following:
 
-1. `git clone https://github.com/Unboxed-Software/michael-burry-escrow`
-2. `cd michael-burry-escrow`
+1. `git clone https://github.com/solana-developers/burry-escrow`
+2. `cd burry-escrow`
 3. `anchor build`
 4. `anchor keys list`
    1. Take the resulting key and put it into `Anchor.toml` and
@@ -1620,7 +1620,7 @@ And there you have it! You should be able to run and pass all of the tests using
 
 If something is not working, go back and find where you went wrong.
 Alternatively feel free to try out the
-[solution code on the `vrf` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/vrf).
+[solution code on the `vrf` branch](https://github.com/solana-developers/burry-escrow/tree/vrf).
 Remember to update your program keys and wallet path like we did in the
 [the Setup step](#1-program-setup).
 
@@ -1633,7 +1633,7 @@ they roll 3 times without rolling doubles, they should be able to withdraw their
 funds, just like getting out of jail in Monopoly.
 
 If you get stuck, we have the solution in the
-[`vrf-challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/vrf-challenge-solution).
+[`vrf-challenge-solution` branch](https://github.com/solana-developers/burry-escrow/tree/vrf-challenge-solution).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
