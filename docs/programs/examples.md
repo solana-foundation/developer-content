@@ -27,7 +27,7 @@ sidebarSortOrder: 2
 ---
 
 The
-"[Solana Program Examples](https://github.com/solana-developers/program-examples)"
+[Solana Program Examples](https://github.com/solana-developers/program-examples)
 repository on GitHub offers several subfolders, each containing code examples
 for different Solana programming paradigms and languages, designed to help
 developers learn and experiment with Solana blockchain development.
