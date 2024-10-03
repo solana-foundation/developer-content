@@ -1124,7 +1124,7 @@ traditional NFTs.
 
 Inspect the cNFT on Solana Explorer! Just like previously, if you have any
 issues, you should fix them yourself, but if needed the
-[solution code](<!-- todo(Jimii) -->) is available.
+[solution code](https://github.com/solana-foundation/compressed-nfts) is available.
 
 ### Challenge
 
