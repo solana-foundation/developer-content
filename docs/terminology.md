@@ -82,7 +82,7 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf)
+[BPF](/docs/core/programs#berkeley-packet-filter-bpf)
 [onchain programs](#onchain-program), allowing the program to interface with the
 runtime.
 

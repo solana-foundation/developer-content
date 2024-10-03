@@ -149,8 +149,7 @@ your program based on your language preference:
 If you do not want to develop your programs locally, there's also the
 [online IDE Solana Playground](https://beta.solpg.io). Solana Playground allows
 you to write, test, and deploy programs on Solana. You can get started with
-Solana Playground by
-[following our guide](https://solana.com/developers/guides/getstarted/hello-world-in-your-browser).
+Solana Playground by [following our quick start guide](/docs/intro/quick-start).
 
 ### Developer Environments
 
@@ -191,8 +190,4 @@ problem can find your question!
 
 ## Next steps
 
-You're now ready to get started building on Solana!
-
-- [Deploy your first Solana program in the browser](/content/guides/getstarted/hello-world-in-your-browser.md)
-- [Get started building programs locally with Rust](/content/guides/getstarted/local-rust-hello-world.md)
-- [Overview of writing Solana programs](/docs/programs/index.md)
+[You're now ready to get started building on Solana!](/docs/intro/quick-start)
