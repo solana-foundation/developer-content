@@ -711,7 +711,7 @@ You can also supply in optional fields such as
 - `public` - Determines whether anyone else apart from the tree creator will be
   able to mint cNFTs from the tree.
 
-```typescript filename="crate-tree.ts"
+```typescript filename="create-tree.ts"
 const merkleTree = generateSigner(umi);
 const builder = await createTree(umi, {
   merkleTree,
