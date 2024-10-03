@@ -335,7 +335,7 @@ refining your skills. Be sure to explore additional resources like:
 
 - [The official Solana Developer Docs](https://solana.com/docs) for in-depth
   guides on Solana’s core libraries and best practices.
-- [Solana's Discord community](https://discord.com/invite/kBbATFA7PW) forum for
+- [Solana Stack Exchange](https://solana.stackexchange.com/) forum for
   troubleshooting, sharing insights, and staying updated on the latest ecosystem
   changes.
 
