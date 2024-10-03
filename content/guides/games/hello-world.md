@@ -25,9 +25,9 @@ keywords:
 In this development guide, we will walkthrough a simple on-chain game using the
 Solana blockchain. This game, lovingly called _Tiny Adventure_, is a
 beginner-friendly Solana program created using the
-[Anchor framework](/content/guides/getstarted/intro-to-anchor.md). The goal of
-this program is to show you how to create a simple game that allows players to
-track their position and move left or right.
+[Anchor framework](/docs/programs/anchor). The goal of this program is to show
+you how to create a simple game that allows players to track their position and
+move left or right.
 
 > You can find the complete source code, available to deploy from your browser,
 > in this
