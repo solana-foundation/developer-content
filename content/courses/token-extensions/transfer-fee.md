@@ -167,9 +167,9 @@ said token. In Solana programming, we always specify amounts to be transferred,
 minted or burned in their smallest unit. To send one SOL to someone, we actually
 send `1 * 10 ^ 9` lamports. Another way to look at it is if you wanted to send
 one US dollar, you're actually sending 100 pennies. Let's make this dollar a
-token with a 500 basis points (5%) transfer fee. Sending one dollar, would result
-in a five cent fee. Now let's say we have a max fee of 10 cents, this will
-always be the highest fee, even if we send $10,000.
+token with a 500 basis points (5%) transfer fee. Sending one dollar, would
+result in a five cent fee. Now let's say we have a max fee of 10 cents, this
+will always be the highest fee, even if we send $10,000.
 
 The calculation can be summed up like this:
 
