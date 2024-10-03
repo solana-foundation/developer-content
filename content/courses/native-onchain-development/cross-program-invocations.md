@@ -998,7 +998,7 @@ Then run the file with:
 npx esrun initialize-review-token-mint.ts
 ```
 
-Your token mint will now be created. The script assumes you're deploying to
+Your token mint will now be initialized. The script assumes you're deploying to
 localnet. If you're deploying to devnet, update the script accordingly.
 
 Once you've initialized your token mint, you can use the
