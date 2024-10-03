@@ -1,6 +1,7 @@
 ---
 title: "Testing with NodeJS"
 description: "Testing native solana programs written with rust using NodeJS"
+sidebarSortOrder: 5
 ---
 
 When developing programs on Solana, ensuring their correctness and reliability
@@ -232,16 +233,3 @@ This is how the output looks like after running the tests for
 ℹ todo 0
 ℹ duration_ms 63.52616
 ```
-
-## Next Steps
-
-- Checkout more testing examples from the
-  [Program Examples](/docs/programs/examples.md)
-- You can also
-  use [anchor-bankrun](https://kevinheavey.github.io/solana-bankrun/tutorial/#anchor-integration) to
-  write tests in NodeJS for Anchor programs
-- [Writing and testing your Solana programs using Rust](https://solana.com/docs/programs/lang-rust#how-to-test)
-  is possible with
-  [solana_program_test](https://docs.rs/solana-program-test/1.18.14/solana_program_test/)
-- You can also write test with python for Solana programs written in Rust with
-  [solders.bankrun](https://kevinheavey.github.io/solders/api_reference/bankrun.html)
