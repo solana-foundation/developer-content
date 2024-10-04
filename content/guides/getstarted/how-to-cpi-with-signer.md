@@ -14,9 +14,8 @@ keywords:
   - tutorial
 ---
 
-This guide uses the
-[Anchor framework](/content/guides/getstarted/intro-to-anchor.md) to demonstrate
-how to transfer SOL using a [Cross-Program Invocation (CPI)](/docs/core/cpi.md)
+This guide uses the [Anchor framework](/docs/programs/anchor) to demonstrate how
+to transfer SOL using a [Cross-Program Invocation (CPI)](/docs/core/cpi.md)
 where the sender is a PDA that the program must sign for.
 
 A typical use case for this scenario is a program that manages

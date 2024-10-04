@@ -84,8 +84,8 @@ In particular:
   have `instruction handlers` that process `instructions`. Do not refer to
   [instruction handlers](https://solana.com/docs/terminology#instruction-handler)
   as instructions! The reason is simple: an instruction cannot process an
-  instruction. The `multiple` template in Anchor also calls the function's
-  `handler`.
+  instruction. The `multiple` template in Anchor also calls these functions
+  `handler`s.
 
 ### Code
 
