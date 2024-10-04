@@ -1201,7 +1201,7 @@ to fix them:
 
 That's it! You've made your first Solana Mobile app. If you get stuck, feel free
 to check out the
-[full solution code](https://github.com/Unboxed-Software/solana-react-native-counter)
+[full solution code](https://github.com/solana-developers/react-native-counter)
 on the `main` branch of the repository.
 
 ## Challenge
@@ -1214,7 +1214,7 @@ the client-side code that interacts with it.
 
 Once you've completed this, you can check your solution against the solution
 code available on the
-[solution branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution).
+[solution branch](https://github.com/solana-developers/react-native-counter).
 
 <Callout type="success" title="Good Job!">
 If you’ve successfully completed the lab, push your code to GitHub and share
