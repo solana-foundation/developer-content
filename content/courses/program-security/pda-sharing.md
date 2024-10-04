@@ -3,7 +3,7 @@ title: PDA Sharing
 objectives:
   - Explain the security risks associated with PDA sharing
   - Derive PDAs that have discrete authority domains
-  - Use Anchor’s `seeds` and `bump` constraints to validate PDA accounts
+  - Use Anchor's `seeds` and `bump` constraints to validate PDA accounts
 description:
   "Understand the potential problems of reusing PDAs by using user and domain
   specific PDAs."
@@ -15,7 +15,7 @@ description:
   possibility of users accessing data and funds that don't belong to them
 - Prevent the same PDA from being used for multiple accounts by using seeds that
   are user and/or domain-specific
-- Use Anchor’s `seeds` and `bump` constraints to validate that a PDA is derived
+- Use Anchor's `seeds` and `bump` constraints to validate that a PDA is derived
   using the expected seeds and bump
 
 ## Lesson
@@ -155,7 +155,7 @@ pub struct TokenPool {
 }
 ```
 
-### Anchor’s seeds and bump Constraints
+### Anchor's seeds and bump Constraints
 
 PDAs can be used as both the address of an account and allow programs to sign
 for the PDAs they own.
@@ -165,7 +165,7 @@ the address of the `pool` account and the owner of the `vault` token account.
 This means that only the `pool` account associated with the correct `vault` and
 `withdraw_destination` can be used in the `withdraw_tokens` instruction handler.
 
-You can use Anchor’s `seeds` and `bump` constraints with the
+You can use Anchor's `seeds` and `bump` constraints with the
 [`#[account(...)]`](https://www.anchor-lang.com/docs/account-constraints)
 attribute to validate the `pool` account PDA. Anchor derives a PDA using the
 `seeds` and `bump` specified and compares it against the account passed into the
@@ -234,8 +234,8 @@ pub struct TokenPool {
 
 ## Lab
 
-Let’s practice by creating a simple program to demonstrate how PDA sharing can
-allow an attacker to withdraw tokens that don’t belong to them. This lab expands
+Let's practice by creating a simple program to demonstrate how PDA sharing can
+allow an attacker to withdraw tokens that don't belong to them. This lab expands
 on the examples above by including the instruction handlers to initialize the
 required program accounts.
 
@@ -517,7 +517,7 @@ it("prevents secure withdrawal to incorrect destination", async () => {
 ```
 
 Lastly, since the `pool` account is a PDA derived using the
-`withdraw_destination` token account, we can’t create a fake `pool` account
+`withdraw_destination` token account, we can't create a fake `pool` account
 using the same PDA. Add one more test showing that the new
 `initialize_pool_secure` instruction handler won't let an attacker put in the
 wrong vault.

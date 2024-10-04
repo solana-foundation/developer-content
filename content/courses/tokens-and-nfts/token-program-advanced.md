@@ -1,5 +1,5 @@
 ---
-title: Token burning and Delegation
+title: Token Burning and Delegation
 objectives:
   - Understand why and how to burn tokens
   - Allow a token holder to allocate a limited amount of tokens to another
@@ -8,18 +8,31 @@ description:
   "How to burn tokens, and approve/revoke token delegations on Solana."
 ---
 
+### Summary
+
+- **Burning tokens** reduces the total supply of a token by removing them from
+  circulation.
+- **Approving a delegate**, allows another account to transfer or burn a
+  specified amount of tokens from a token account while retaining original
+  account ownership.
+- **Revoking a delegate**, removes their authority to act on behalf of the token
+  account owner.
+- Each of these operations is facilitated through the `spl-token` library,
+  utilizing specific functions for each action.
+
 ### Lesson
 
-Finally, we'll cover burning tokens, and delegation. You may not use these in
-your own application, so if you're really excited about NFTs, feel free to skip
-to
+In this lesson, we'll cover burning tokens and delegation. You may not have a
+need for these in your own application, so if you're more interested in NFTs,
+feel free to skip ahead to
 [creating NFTs with Metaplex](/content/courses/tokens-and-nfts/nfts-with-metaplex.md)!
 
-### Burn Tokens
+#### Burn Tokens
 
 When tokens are burned, they are deducted from the specific token account where
 they were held. The tokens are not transferred to any other account but are
 simply removed from circulation, reducing the overall supply.
+
 
 Not just anyone can burn tokens, only the "authority" of the token, or the
 holder of the appropriate keys/permissions, can initiate the burn. The authority
@@ -46,7 +59,6 @@ const transactionSignature = await burnChecked(
   decimals,
 );
 ```
-
 There are two functions used to burn tokens, you could either choose to use
 `burn` or choose its better version `burnChecked`. `burnChecked` ensures that
 the amount of tokens being burned matches the expected number of decimals in the
@@ -86,7 +98,7 @@ async function buildBurnTransaction(
 }
 ```
 
-### Approve Delegate
+#### Approve Delegate
 
 Approving a delegate is the process of authorizing another account to transfer
 or burn tokens from a token account. When using a delegate, the authority over
@@ -110,6 +122,7 @@ const transactionSignature = await approveChecked(
 );
 ```
 
+
 The `approveChecked` function returns a `TransactionSignature` that can be
 viewed on Solana Explorer. The `approveChecked` function requires the following
 arguments:
@@ -128,6 +141,7 @@ instructions obtained from the `createApproveCheckedInstruction` function:
 ```typescript
 import { PublicKey, Transaction } from "@solana/web3";
 import { createApproveCheckedInstruction } from "@solana/spl-token";
+
 
 async function buildApproveTransaction(
   account: PublicKey,
@@ -156,7 +170,8 @@ token account.any remaining tokens that were within the delegate's approved
 limit cannot be transferred by the delegate. The delegate cannot burn tokens
 either, not just transfer them. The delegate's permissions are fully revoked.
 
-To revoke a delegate using the `spl-token` library, you use the `revoke`
+To revoke a delegate using the `spl-token` library, use the
+[`revoke()`](https://solana-labs.github.io/solana-program-library/token/js/functions/revoke.html#revoke)
 function.
 
 ```typescript
@@ -165,20 +180,22 @@ import { revoke } from "@solana/spl-token";
 const transactionSignature = await revoke(connection, payer, account, owner);
 ```
 
-The `revoke` function returns a `TransactionSignature` that can be viewed on
-Solana Explorer. The `revoke` function requires the following arguments:
+The `revoke()` function returns a `TransactionSignature` that can be viewed on
+Solana Explorer. This function requires the following arguments:
 
-- `connection` - the JSON-RPC connection to the cluster
-- `payer` - the account of the payer for the transaction
-- `account` - the token account to revoke the delegate authority from
-- `owner` - the account of the owner of the token account
+- `connection`: The JSON-RPC connection to the cluster.
+- `payer`: The account responsible for paying the transaction fees.
+- `account`: The token account from which to revoke the delegate authority.
+- `owner`: The account of the owner of the token account.
 
-Under the hood, the `revoke` function creates a transaction with instructions
-obtained from the `createRevokeInstruction` function:
+Under the hood, the `revoke()` function generates a transaction using the
+instructions from the
+[`createRevokeInstruction()`](https://solana-labs.github.io/solana-program-library/token/js/functions/createRevokeInstruction.html#createRevokeInstruction)
+function:
 
 ```typescript
-import { PublicKey, Transaction } from "@solana/web3";
-import { revoke } from "@solana/spl-token";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { createRevokeInstruction } from "@solana/spl-token";
 
 async function buildRevokeTransaction(
   account: PublicKey,
@@ -194,29 +211,30 @@ async function buildRevokeTransaction(
 
 ### Lab
 
-This lab extends the lab from the
-[previous chapter](/content/courses/tokens-and-nfts/token-program.md).
+This lab extends the concepts covered in the previous lesson on the
+[Token Program](/content/courses/tokens-and-nfts/token-program.md).
 
-#### 1. Delegating tokens
+#### 1. Delegating Tokens
 
 Let's use `approveChecked` from `spl-token` to authorize a delegate to transfer
 or burn up to 50 tokens from our token account.
 
-Just like
-[Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md) in the
-previous lab, you can
-[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
-if you like, or find a friend who has a devnet account!
+Similar to the process of
+[Transferring Tokens](/content/courses/tokens-and-nfts/token-program.md#transferring-tokens)
+in the previous lab, you can
+[add a second account on Devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
+if desired or collaborate with a friend who has a Devnet account.
 
-Create a new file `delegate-tokens.ts`
+Create a new file named `delegate-tokens.ts`. For this example, we are using the
+System Program ID as a delegate for demonstration, but you can use an actual
+address that you want to delegate.
 
-```typescript
+```typescript filename="delegate-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
   getKeypairFromEnvironment,
 } from "@solana-developers/helpers";
-import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
   approveChecked,
   getOrCreateAssociatedTokenAccount,
@@ -226,26 +244,23 @@ const connection = new Connection(clusterApiUrl("devnet"));
 
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
-console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
-);
+console.log(`🔑 Loaded keypair. Public key: ${user.publicKey.toBase58()}`);
 
-// Add the delegate public key here.
-const delegate = new PublicKey("YOUR_DELEGATE_HERE");
+// Replace this with your actual address
+// For this example, we will be using System Program's ID as a delegate
+const delegatePublicKey = new PublicKey(SystemProgram.programId);
 
-// Substitute in your token mint account
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+// Substitute your token mint address
+const tokenMintAddress = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
 
-// Get or create the source and destination token accounts to store this token
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
-
-// Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+try {
+  // Get or create the user's token account
+  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAddress,
+    user.publicKey,
+  );
 
 try {
   const approveTransactionSignature = await approveChecked(
@@ -282,29 +297,76 @@ Approve Delegate Transaction: https://explorer.solana.com/tx/2JUuBw7naMTP4vNsKJD
 
 #### 2. Revoke Delegate
 
-Lets revoke the `delegate` using the `spl-token` library's `revoke` function.
+Let's revoke the `delegate` using the `spl-token` library's `revoke()` function.
 
-Revoke will set delegate for the token account to null and reset the delegated
-amount to 0.
+Revoke will set the delegate for the token account to null and reset the
+delegated amount to 0.
 
-All we will need for this function is the token account and user. After the
+Create a new file `revoke-approve-tokens.ts`.
 
-```typescript
-const revokeTransactionSignature = await revoke(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  user.publicKey,
-);
+```typescript filename="revoke-approve-tokens.ts"
+import "dotenv/config";
+import {
+  getExplorerLink,
+  getKeypairFromEnvironment,
+} from "@solana-developers/helpers";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import { revoke, getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 
-console.log(
-  `Revoke Delegate Transaction: ${getExplorerLink(
+const DEVNET_URL = clusterApiUrl("devnet");
+// Substitute your token mint address
+const TOKEN_MINT_ADDRESS = "YOUR_TOKEN_MINT_ADDRESS_HERE";
+
+const connection = new Connection(DEVNET_URL);
+const user = getKeypairFromEnvironment("SECRET_KEY");
+
+console.log(`🔑 Loaded keypair. Public key: ${user.publicKey.toBase58()}`);
+
+try {
+  const tokenMintAddress = new PublicKey(TOKEN_MINT_ADDRESS);
+
+  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAddress,
+    user.publicKey,
+  );
+
+  const revokeTransactionSignature = await revoke(
+    connection,
+    user,
+    userTokenAccount.address,
+    user.publicKey,
+  );
+
+  const explorerLink = getExplorerLink(
     "transaction",
     revokeTransactionSignature,
     "devnet",
-  )}`,
-);
+  );
+
+  console.log(`✅ Revoke Delegate Transaction: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
+
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your mint token address obtained
+from the previous lesson
+[Token Program](/content/courses/tokens-and-nfts/token-program.md#create-the-token-mint).
+
+Run the script using `npx esrun revoke-approve-tokens.ts`. You should see:
+
+```bash
+🔑 Loaded keypair. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
+✅ Revoke Delegate Transaction: https://explorer.solana.com/tx/YTc2Vd41SiGiHf3iEPkBH3y164fMbV2TSH2hbe7WypT6K6Q2b3f31ryFWhypmBK2tXmvGYjXeYbuwxHeJvnZZX8?cluster=devnet
+```
+
+Open the Explorer link, you will see the revoke information.
+
+![Revoke Approve Tokens](/public/assets/courses/unboxed/revoke-approve-tokens.png)
 
 #### 3. Burn Tokens
 
@@ -313,9 +375,9 @@ Finally, let's remove some tokens from circulation by burning them.
 Use the `spl-token` library's `burnChecked` function to remove half of your
 tokens from circulation.
 
-Now call this new function in `main` to burn 25 of the user's tokens.
+Create a new file `burn-tokens.ts`.
 
-```typescript
+```typescript filename="burn-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
@@ -327,27 +389,28 @@ import {
   burnChecked,
 } from "@solana/spl-token";
 
-const connection = new Connection(clusterApiUrl("devnet"));
+const DEVNET_URL = clusterApiUrl("devnet");
+const TOKEN_DECIMALS = 2;
+const BURN_AMOUNT = 5;
+// Substitute your token mint address
+const TOKEN_MINT_ADDRESS = "YOUR_TOKEN_MINT_ADDRESS_HERE";
 
+const connection = new Connection(DEVNET_URL);
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
-console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
-);
+console.log(`🔑 Loaded keypair. Public key: ${user.publicKey.toBase58()}`);
 
-// Substitute in your token mint account
-const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ADDRESS_HERE");
+try {
+  const tokenMintAccount = new PublicKey(TOKEN_MINT_ADDRESS);
 
-// Get the account where the user stores these tokens
-const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
-  connection,
-  user,
-  tokenMintAccount,
-  user.publicKey,
-);
+  const userTokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    tokenMintAccount,
+    user.publicKey,
+  );
 
-// Our token has two decimal places
-const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
+  const burnAmount = BURN_AMOUNT * 10 ** TOKEN_DECIMALS;
 
 const transactionSignature = await burnChecked(
   connection,
@@ -359,13 +422,18 @@ const transactionSignature = await burnChecked(
   2,
 );
 
-console.log(
-  `Burn Transaction: ${getExplorerLink(
+  const explorerLink = getExplorerLink(
     "transaction",
     transactionSignature,
     "devnet",
-  )}`,
-);
+  );
+
+  console.log(`✅ Burn Transaction: ${explorerLink}`);
+} catch (error) {
+  console.error(
+    `Error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+}
 ```
 
 You should see something like this:
@@ -384,9 +452,9 @@ This means you have to mint more tokens to be able to burn tokens or alternative
 
 Well done! You've now'
 
-<Callout type="success">
+Well done! You've now completed the lab.
 
-### Completed the lab?
+<Callout type="success" title="Completed the lab?">
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!

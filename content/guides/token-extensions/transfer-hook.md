@@ -790,7 +790,7 @@ create_account(
 )?;
 ```
 
-Once we’ve created the account, we initialize the account data to store the list
+Once we've created the account, we initialize the account data to store the list
 of ExtraAccountMetas.
 
 ```rust
@@ -810,7 +810,7 @@ ExtraAccountMetas account.
 
 ### Custom Transfer Hook Instruction
 
-Next, let’s implement the custom `transfer_hook` instruction. This is the
+Next, let's implement the custom `transfer_hook` instruction. This is the
 instruction the Token Extension program will invoke on every token transfer.
 
 In this example, we will require a fee paid in wSOL for every token transfer.

@@ -46,9 +46,9 @@ character's stats or inventory).
 ## Building the on-chain program
 
 In this developer guide, we will demonstrate how to build these Token Extension
-based NFTs and custom metadata using an
-[Anchor program](/content/guides/getstarted/intro-to-anchor.md). This program
-will save the level and the collected resources of a game player within an NFT.
+based NFTs and custom metadata using an [Anchor program](/docs/programs/anchor).
+This program will save the level and the collected resources of a game player
+within an NFT.
 
 This NFT will be created by the Anchor program so it is very easy to mint from
 the JavaScript client. Each NFT will have some basic structure provided via the
