@@ -84,14 +84,16 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 ### Define instruction logic
 
 The `#[program]` attribute macro defines the module containing all of your
-program's instruction handlers. This is where you implement the business logic for each
-operation in your program.
+program's instruction handlers. This is where you implement the business logic
+for each operation in your program.
 
 Each public function in the module with the `#[program]` attribute will be
 treated as a separate instruction handler.
 
-Each instruction handler (function) requires a parameter of type `Context` and can include more parameters as needed. Anchor will automatically handle instruction data
-deserialization so that you can work with instruction data as Rust types.
+Each instruction handler (function) requires a parameter of type `Context` and
+can include more parameters as needed. Anchor will automatically handle
+instruction data deserialization so that you can work with instruction data as
+Rust types.
 
 ```rust
 #[program]
@@ -135,8 +137,8 @@ pub struct Context<'a, 'b, 'c, 'info, T: Bumps> {
 ```
 
 `Context` is a generic type where `T` defines the list of accounts an
-instruction handler requires. When you use `Context`, you specify the concrete type of
-`T` as a struct that adopts the `Accounts` trait.
+instruction handler requires. When you use `Context`, you specify the concrete
+type of `T` as a struct that adopts the `Accounts` trait.
 
 The first argument of every instruction handler must be `Context`. `Context`
 takes a generic of your `Accounts` struct, eg, if `AddMovieReview` was the
@@ -152,8 +154,8 @@ Through this context argument the instruction can then access:
 - The accounts passed into the instruction (`ctx.accounts`)
 - The program ID (`ctx.program_id`) of the executing program
 - The remaining accounts (`ctx.remaining_accounts`). The `remaining_accounts` is
-  a vector that contains all accounts that were passed into the instruction handler but
-  are not declared in the `Accounts` struct.
+  a vector that contains all accounts that were passed into the instruction
+  handler but are not declared in the `Accounts` struct.
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
 - The seeds for any PDA accounts in tha `Accounts` struct (`ctx.seeds`)
 
@@ -207,8 +209,8 @@ pub struct InstructionAccounts<'info> {
 
 When `instruction_one` is invoked, the program:
 
-- Checks that the accounts passed into the instruction handler match the account types
-  specified in the `InstructionAccounts` struct
+- Checks that the accounts passed into the instruction handler match the account
+  types specified in the `InstructionAccounts` struct
 - Checks the accounts against any additional constraints specified
 
 > If any accounts passed into `instruction_one` fail the account validation or
@@ -602,9 +604,10 @@ pub struct Initialize<'info> {
 #### 4. Add the `initialize` instruction handler
 
 Now that we have our `Counter` account and `Initialize` type , let's implement
-the `initialize` instruction handler within `#[program]`. This instruction handler requires a `Context` of type `Initialize` and takes no additional instruction data. 
-In the instruction logic, we are simply setting the `counter` account's `count` field
-to `0`.
+the `initialize` instruction handler within `#[program]`. This instruction
+handler requires a `Context` of type `Initialize` and takes no additional
+instruction data. In the instruction logic, we are simply setting the `counter`
+account's `count` field to `0`.
 
 ```rust
 pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
@@ -619,8 +622,8 @@ pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
 #### 5. Implement `Context` type `Update`
 
 Now, using the `#[derive(Accounts)]` macro again, let's create the `Update` type
-that lists the accounts that the `increment` instruction handler requires. It'll need
-the following accounts:
+that lists the accounts that the `increment` instruction handler requires. It'll
+need the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
@@ -639,9 +642,12 @@ pub struct Update<'info> {
 
 #### 6. Add `increment` instruction handler
 
-Lastly, within `#[program]`, let's implement an `increment` instruction handler to
-increment the `count` once a `counter` account is initialized by the first
-instruction handler. This instruction handler requires a `Context` of type `Update` (implemented in the next step) and takes no additional instruction data. In the instruction logic, we are simply incrementing an existing `counter` account's `count` field by `1`.
+Lastly, within `#[program]`, let's implement an `increment` instruction handler
+to increment the `count` once a `counter` account is initialized by the first
+instruction handler. This instruction handler requires a `Context` of type
+`Update` (implemented in the next step) and takes no additional instruction
+data. In the instruction logic, we are simply incrementing an existing `counter`
+account's `count` field by `1`.
 
 ```rust
 pub fn increment(ctx: Context<Update>) -> Result<()> {
