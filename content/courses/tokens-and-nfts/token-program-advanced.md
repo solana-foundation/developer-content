@@ -47,6 +47,13 @@ const transactionSignature = await burnChecked(
 );
 ```
 
+There are two functions used to burn tokens, you could either choose to use
+`burn` or choose its better version `burnChecked`. `burnChecked` ensures that
+the amount of tokens being burned matches the expected number of decimals in the
+token mint, adding an extra layer of validation compared to the standard `burn`
+function. This reduces the chances of accidentally burning the wrong amount of
+tokens due to decimal mismatches.
+
 The `burnChecked` function requires the following arguments:
 
 - `connection` - the JSON-RPC connection to the cluster
@@ -137,6 +144,10 @@ async function buildApproveTransaction(
 }
 ```
 
+Just like `burnChecked`, the `approveChecked` also has a less safe twin namely
+`approve` that does not ensure the amount being approved matches the token's
+decimal precision.
+
 ### Revoke Delegate
 
 A previously approved delegate for a token account can be later revoked. Once a
@@ -207,9 +218,8 @@ import {
 } from "@solana-developers/helpers";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import {
-  approve,
+  approveChecked,
   getOrCreateAssociatedTokenAccount,
-  revoke,
 } from "@solana/spl-token";
 
 const connection = new Connection(clusterApiUrl("devnet"));
@@ -238,7 +248,7 @@ const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
 const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
 
 try {
-  const approveTransactionSignature = await approve(
+  const approveTransactionSignature = await approveChecked(
     connection,
     user,
     tokenMintAccount, // The mint account of the SPL token.
@@ -260,6 +270,15 @@ try {
   console.error("Error during delegate approval:", error);
 }
 ```
+
+You will see something similar to this:
+
+```bash
+🔑 Loaded our keypair securely, using an env file! Our public key is: FN7XXRhzP5GmgQkYLMdGGeV2HvYJtjeZVXuVYyoAFRyi
+Approve Delegate Transaction: https://explorer.solana.com/tx/2JUuBw7naMTP4vNsKJDEDyvxrs42bT4NbURt4wSp4x6qSNro2upWzFLpbzrYatcggc3xgzZuqqiKPsSoh9YttnUG?cluster=devnet6CkQmVQM7yMhebnQKdKAxV9nzdBRPqSjiBgrSq2iombe
+```
+
+![Delegating tokens](/public/assets/courses/unboxed/token-program-advanced-delegating-tokens.png)
 
 #### 2. Revoke Delegate
 
@@ -349,7 +368,21 @@ console.log(
 );
 ```
 
-Well done! You've now
+You should see something like this:
+
+```bash
+🔑 Loaded our keypair securely, using an env file! Our public key is: FN7XXRhzP5GmgQkYLMdGGeV2HvYJtjeZVXuVYyoAFRyi
+Burn Transaction: https://explorer.solana.com/tx/4cfiDc1LpeRpLG7wfGrWZaXsVWqN4eL1im8EJ1keGFcf4RFLBgnZM4FwRCMXEVsUSxmxTNcten4qr9CVg71iey4c?cluster=devnet
+```
+
+![Delegating tokens](/public/assets/courses/unboxed/token-program-advanced-burn-tokens.png)
+
+<callout type="info">
+Sometimes you might get an error in passing your transaction especially when trying to burn after you have delegated some tokens to a delegate account. 
+This means you have to mint more tokens to be able to burn tokens or alternatively reduce the amount you want to burn.
+</callout>
+
+Well done! You've now'
 
 <Callout type="success">
 
