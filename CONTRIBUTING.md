@@ -45,9 +45,7 @@ In particular:
   and save the person reviewing your PR some time. We recommend
   [Grammarly](https://grammarly.com/). In
   [your Grammarly dictionary](https://account.grammarly.com/customize), you may
-  wish to add Solana-specific words like `lamport`, `blockhash`, etc. For VScode
-  users, there is a
-  [VScode extension for Grammarly](https://marketplace.visualstudio.com/items?itemName=znck.grammarly).
+  wish to add Solana-specific words like `lamport`, `blockhash`, etc.
 - Use US English rather than British English. Grammarly will catch this for you.
 - Use 'onchain' (not on-chain, definitely not smart contract) when referring to
   onchain apps. This comes from the Solana Foundation style guide, and is
