@@ -33,7 +33,6 @@ When tokens are burned, they are deducted from the specific token account where
 they were held. The tokens are not transferred to any other account but are
 simply removed from circulation, reducing the overall supply.
 
-
 Not just anyone can burn tokens, only the "authority" of the token, or the
 holder of the appropriate keys/permissions, can initiate the burn. The authority
 might be:
@@ -59,6 +58,7 @@ const transactionSignature = await burnChecked(
   decimals,
 );
 ```
+
 There are two functions used to burn tokens, you could either choose to use
 `burn` or choose its better version `burnChecked`. `burnChecked` ensures that
 the amount of tokens being burned matches the expected number of decimals in the
@@ -122,7 +122,6 @@ const transactionSignature = await approveChecked(
 );
 ```
 
-
 The `approveChecked` function returns a `TransactionSignature` that can be
 viewed on Solana Explorer. The `approveChecked` function requires the following
 arguments:
@@ -141,7 +140,6 @@ instructions obtained from the `createApproveCheckedInstruction` function:
 ```typescript
 import { PublicKey, Transaction } from "@solana/web3";
 import { createApproveCheckedInstruction } from "@solana/spl-token";
-
 
 async function buildApproveTransaction(
   account: PublicKey,
@@ -275,7 +273,7 @@ try {
   );
 
   console.log(
-    `Approve Delegate Transaction: ${getExplorerLink(
+    `✅ Approve Delegate Transaction: ${getExplorerLink(
       "transaction",
       approveTransactionSignature,
       "devnet",
@@ -290,7 +288,7 @@ You will see something similar to this:
 
 ```bash
 🔑 Loaded our keypair securely, using an env file! Our public key is: FN7XXRhzP5GmgQkYLMdGGeV2HvYJtjeZVXuVYyoAFRyi
-Approve Delegate Transaction: https://explorer.solana.com/tx/2JUuBw7naMTP4vNsKJDEDyvxrs42bT4NbURt4wSp4x6qSNro2upWzFLpbzrYatcggc3xgzZuqqiKPsSoh9YttnUG?cluster=devnet6CkQmVQM7yMhebnQKdKAxV9nzdBRPqSjiBgrSq2iombe
+✅ Approve Delegate Transaction: https://explorer.solana.com/tx/2JUuBw7naMTP4vNsKJDEDyvxrs42bT4NbURt4wSp4x6qSNro2upWzFLpbzrYatcggc3xgzZuqqiKPsSoh9YttnUG?cluster=devnet6CkQmVQM7yMhebnQKdKAxV9nzdBRPqSjiBgrSq2iombe
 ```
 
 ![Delegating tokens](/public/assets/courses/unboxed/token-program-advanced-delegating-tokens.png)
@@ -412,15 +410,15 @@ try {
 
   const burnAmount = BURN_AMOUNT * 10 ** TOKEN_DECIMALS;
 
-const transactionSignature = await burnChecked(
-  connection,
-  user,
-  sourceTokenAccount.address,
-  tokenMintAccount,
-  user,
-  25 * MINOR_UNITS_PER_MAJOR_UNITS,
-  2,
-);
+  const transactionSignature = await burnChecked(
+    connection,
+    user,
+    sourceTokenAccount.address,
+    tokenMintAccount,
+    user,
+    25 * MINOR_UNITS_PER_MAJOR_UNITS,
+    2,
+  );
 
   const explorerLink = getExplorerLink(
     "transaction",
@@ -440,7 +438,7 @@ You should see something like this:
 
 ```bash
 🔑 Loaded our keypair securely, using an env file! Our public key is: FN7XXRhzP5GmgQkYLMdGGeV2HvYJtjeZVXuVYyoAFRyi
-Burn Transaction: https://explorer.solana.com/tx/4cfiDc1LpeRpLG7wfGrWZaXsVWqN4eL1im8EJ1keGFcf4RFLBgnZM4FwRCMXEVsUSxmxTNcten4qr9CVg71iey4c?cluster=devnet
+✅ Burn Transaction: https://explorer.solana.com/tx/4cfiDc1LpeRpLG7wfGrWZaXsVWqN4eL1im8EJ1keGFcf4RFLBgnZM4FwRCMXEVsUSxmxTNcten4qr9CVg71iey4c?cluster=devnet
 ```
 
 ![Delegating tokens](/public/assets/courses/unboxed/token-program-advanced-burn-tokens.png)
