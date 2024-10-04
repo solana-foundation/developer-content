@@ -1,5 +1,5 @@
 ---
-title: admin configuration
+title: Admin configuration
 objectives:
   - Define program features in the `Cargo.toml` file
   - Use the Rust `cfg` attribute to conditionally compile code based on which
