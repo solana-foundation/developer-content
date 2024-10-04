@@ -22,7 +22,7 @@ description:
   }
   ```
 
-- In Anchor, you can use
+- In Anchor, you can use a
   [`constraint`](https://www.anchor-lang.com/docs/account-constraints) to check
   whether the given expression evaluates to true. Alternatively, you can use
   `has_one` to check that a target account field stored on the account matches
