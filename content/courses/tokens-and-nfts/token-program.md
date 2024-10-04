@@ -467,11 +467,8 @@ Assuming you already have a `.env` file with a `SECRET_KEY` setup per
 [Cryptography fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 ```bash
-npm i @solana/web3.js @solana/spl-token @solana-developers/helpers
+npm i @solana/web3.js @solana/spl-token @solana-developers/helpers@2.2.0 esrun
 ```
-
-> If you don't have ts-node installed, you should add `ts-node` at the end to
-> install it on your machine.
 
 #### Create the Token Mint
 
@@ -516,7 +513,7 @@ main().catch(err => {
 });
 ```
 
-Run the script using `ts-node create-token-mint.ts`. You should see something
+Run the script using `npx esrun create-token-mint.ts`. You should see something
 similar to:
 
 ```bash
@@ -724,7 +721,7 @@ main().catch(err => {
 });
 ```
 
-Run the script using `ts-node create-token-mint.ts`. You should see something
+Run the script using `npx esrun create-token-mint.ts`. You should see something
 like this:
 
 ```bash
@@ -798,8 +795,8 @@ main().catch(err => {
 });
 ```
 
-Run the script using `ts-node mint-tokens.ts`. You should see something similar
-to this:
+Run the script using `npx esrun mint-tokens.ts`. You should see something
+similar to this:
 
 ```bash
 ✅ Success! Mint Token Transaction: https://explorer.solana.com/tx/3fk8FyqmChg7TV5RZiNVHSDJVCt2rTMAFypxA3jiikRBC211nx9L7qJzh5LEhNZnxbHHHGW8j8PTeWF87iyGbPGE?cluster=devnet
