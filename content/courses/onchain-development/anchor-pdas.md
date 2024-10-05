@@ -133,7 +133,7 @@ pub struct AccountType {
 const DISCRIMINATOR: usize = 8;
 ```
 
-When using `init` for non-PDA accounts, Anchor defaults to setting the owner of
+When using `init` for non-PDA accounts, Anchor defaults to setting the owner of
 the initialized account to be the program currently executing the instruction.
 
 However, when using `init` in combination with `seeds` and `bump`, the owner
@@ -333,9 +333,9 @@ The `realloc` constraint from the above example can be broken down as follows:
 > efficiently and compactly serialize and deserialize data structures.
 
 If the change in account data length is additive, lamports will be transferred
-from the `realloc::payer` to the account to maintain rent exemption. Likewise,
+from the `realloc::payer` to the account to maintain rent exemption. Likewise,
 if the change is subtractive, lamports will be transferred from the account back
-to the `realloc::payer`.
+to the `realloc::payer`.
 
 The `realloc::zero` constraint ensures that any new memory allocated during
 reallocation is set to zero. This should be set to true if you expect the memory
@@ -544,13 +544,10 @@ pub mod anchor_movie_review_program{
         description: String,
         rating: u8,
     ) -> Result<()> {
-	// We require that the rating is between 1 and 5
         require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
 
-        // We require that the title is not longer than 20 characters
         require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
 
-        // We require that the description is not longer than 50 characters
         require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
 
         msg!("Movie Review Account Created");
@@ -630,8 +627,7 @@ need it for account validation of `movie_review` in the next step.
 #[program]
 pub mod anchor_movie_review_program {
     use super::*;
-
-		...
+    ...
 
     pub fn update_movie_review(
         ctx: Context<UpdateMovieReview>,
@@ -639,6 +635,11 @@ pub mod anchor_movie_review_program {
         description: String,
         rating: u8,
     ) -> Result<()> {
+        require!(
+            rating >= MIN_RATING && rating <= MAX_RATING,
+            MovieReviewError::InvalidRating
+        );
+
         msg!("Movie review account space reallocated");
         msg!("Title: {}", title);
         msg!("Description: {}", description);
@@ -712,7 +713,7 @@ closing itself will be handled by the Anchor constraint in the
 pub mod anchor_movie_review_program {
     use super::*;
 
-		...
+    ...
 
     pub fn delete_movie_review(_ctx: Context<DeleteMovieReview>, title: String) -> Result<()> {
         msg!("Movie review for {} deleted", title);
@@ -861,9 +862,9 @@ console.
 ```
 
 If you need more time with this project to feel comfortable with these concepts,
-feel free to have a look at
-the [solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas) before
-continuing.
+feel free to have a look at the
+[solution code](https://github.com/solana-developers/anchor-movie-review-program)
+before continuing.
 
 </Steps>
 
@@ -886,8 +887,9 @@ should include instructions to:
 3. Close an existing account
 
 Try to do this independently if you can! But if you get stuck, feel free to
-reference
-the [solution code](https://github.com/Unboxed-Software/anchor-student-intro-program).
+
+reference the
+[solution code](https://github.com/solana-developers/anchor-movie-review-program).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and

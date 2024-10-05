@@ -519,13 +519,10 @@ pub fn add_movie_review(
     description: String,
     rating: u8
 ) -> Result<()> {
-    // We require that the rating is between 1 and 5
     require!(
         rating >= MIN_RATING && rating <= MAX_RATING,
         MovieReviewError::InvalidRating
     );
-
-    // We require that the title is not longer than 20 characters
     require!(
         title.len() <= MAX_TITLE_LENGTH,
         MovieReviewError::TitleTooLong
@@ -581,13 +578,11 @@ pub fn update_movie_review(
     description: String,
     rating: u8
 ) -> Result<()> {
-    // We require that the rating is between 1 and 5
     require!(
         rating >= MIN_RATING && rating <= MAX_RATING,
         MovieReviewError::InvalidRating
     );
 
-    // We require that the description is not longer than 50 characters
     require!(
         description.len() <= MAX_DESCRIPTION_LENGTH,
         MovieReviewError::DescriptionTooLong
