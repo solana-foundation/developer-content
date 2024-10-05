@@ -168,6 +168,13 @@ your workspace's `Cargo.toml` file and run:
 solana-verify build
 ```
 
+This will copy your environment into a docker container and build it in a
+deterministic way.
+
+> Make sure that you actually deploy the verified build and don't accidentally
+> overwrite it with `anchor build` or `cargo build-sbf` since these will most
+> likely not result into the same hash and though your verification will fail.
+
 For projects with multiple programs, you can build a specific program by using
 the library name (not the package name):
 
@@ -233,8 +240,13 @@ Here’s an example of verifying the solana-games-preset with the ID
 repository:
 
 ```bash
-solana-verify verify-from-repo -url https://api.mainnet-beta.solana.com --program-id MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt https://github.com/solana-developers/solana-game-preset --commit-hash e8682fa6f49e1fb2fabde68696772d1502022649 --library-name lumberjack --mount-path program
+solana-verify verify-from-repo -url https://api.mainnet-beta.solana.com --program-id MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt https://github.com/solana-developers/solana-game-preset --library-name lumberjack --mount-path program
 ```
+
+By default the `verify-from-repo` command takes the last commit on the main
+branch. You can also define a certain commit in case you want to continue
+working on the repository by using the `commit-hash` parameter:
+`--commit-hash eaf772fd1f21fe03a9974587f5680635e970be38`
 
 You can also verify using Docker images for faster verification:
 
@@ -248,7 +260,13 @@ Finally you can also directly verify the program against the OtterSec API:
 solana-verify verify-from-repo --remote -um --program-id PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY https://github.com/Ellipsis-Labs/phoenix-v1
 ```
 
-Like this your verification will appear validated in the
+The `--remote` command sends a build request to the OtterSec API, which triggers
+a remote build of your program. Once the build is complete, the system verifies
+that the onchain hash of your program matches the hash of the generated build
+artifact from your repository.
+
+Once the build is done, which takes a while, and was successful you will be able
+to see your program as verified in the
 [OtterSec API for single programs](https://verify.osec.io/status/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
 and in the
 [Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build)
@@ -272,8 +290,12 @@ solutions for safe upgrades and deployments.
 # Security.txt for Solana programs
 
 In addition to verified builds you can also add a `security.txt` file to your
-program. In the future the `security.txt` will hold the verifier public key for
-easy access to the verification data stored in the verification PDA.
+program. In the future, once implemented, the `security.txt` will hold the
+verifier public key for easy access to the verification data stored in the
+verification PDA. The PDA containing all the information needed to build and
+verify a program is derived from the programs address and the verifier pubkey.
+By default this is the same pubkey that built and deployed the program. But it
+can also be another pubkey that can be specified in the `security.txt`.
 
 The `security.txt` feature allows developers to embed contact and security
 information directly within their Solana smart contracts. Inspired by
