@@ -1,5 +1,5 @@
 ---
 metaOnly: true
-title: Advanced Concepts
+title: Advanced Topics
 sidebarSortOrder: 3
 ---

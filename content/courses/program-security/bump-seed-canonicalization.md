@@ -8,40 +8,52 @@ objectives:
   - Use Anchor's `seeds` and `bump` constraints to ensure the canonical bump is
     always used in future instructions when deriving a PDA
 description:
-  "Understand the need for consistent PDA calculation by storing and reusuing
-  the canonical bump."
+  "Understand the need for consistent PDA calculation by storing and reusing the
+  canonical bump."
 ---
 
 ## Summary
 
 - The
   [**`create_program_address`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.create_program_address)
-  function derives a PDA without searching for the **canonical bump**. This
-  means there are multiple valid bumps, all of which will produce different
-  addresses.
+  function derives a PDA but does so without searching for the canonical bump.
+  It allows multiple valid bumps to produce different addresses. While this can
+  still generate a valid PDA, it lacks determinism, as multiple bumps may yield
+  different addresses for the same set of seeds.
 - Using
   [**`find_program_address`**](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.find_program_address)
-  ensures that the highest valid bump, or canonical bump, is used for the
-  derivation, thus creating a deterministic way to find an address given
-  specific seeds.
-- Upon initialization, you can use Anchor's `seeds` and `bump` constraint to
-  ensure that PDA derivations in the account validation struct always use the
-  canonical bump
-- Anchor allows you to **specify a bump** with the `bump = <some_bump>`
-  constraint when verifying the address of a PDA
-- Because `find_program_address` can be expensive, best practice is to store the
-  derived bump in an account's data field to be referenced later on when
-  re-deriving the address for verification
+  ensures that the **highest valid bump**, often referred to as the **canonical
+  bump**, is used in the PDA derivation. This provides a deterministic way to
+  compute an address for a given set of seeds, ensuring consistency across the
+  program.
+- In Anchor, you can specify the `seeds` and the `bump` to ensure that PDA
+  derivations in your account validation struct always align with the correct
+  canonical bump.
+- Anchor also allows you to specify a bump directly in the validation struct
+  using the `bump = <some_bump>` constraint. This ensures that the correct bump
+  is used when verifying the PDA.
+- Using `find_program_address` can be computationally expensive due to the
+  process of searching for the highest valid bump. It's considered best practice
+  to store the derived bump in an account's data field upon initialization. This
+  allows the bump to be referenced in subsequent instruction handlers, avoiding
+  the need to repeatedly call `find_program_address` to re-derive the PDA.
+
   ```rust
   #[derive(Accounts)]
   pub struct VerifyAddress<'info> {
-  	#[account(
-      	seeds = [DATA_PDA_SEED.as_bytes()],
-  	    bump = data.bump
-  	)]
-  	data: Account<'info, Data>,
+      #[account(
+          seeds = [DATA_PDA_SEED.as_bytes()],
+          bump = data.bump
+      )]
+      data: Account<'info, Data>,
   }
   ```
+
+- In summary, while `create_program_address` can generate a PDA,
+  `find_program_address` ensures consistency and reliability by always producing
+  the canonical bump, which is critical for deterministic program execution.
+  This helps maintain integrity in onchain apps, especially when validating PDAs
+  across multiple instruction handlers.
 
 ## Lesson
 
@@ -52,37 +64,39 @@ is a valid PDA. The **canonical bump** is the highest bump value that produces a
 valid PDA. The standard in Solana is to _always use the canonical bump_ when
 deriving PDAs, both for security and convenience.
 
-### Insecure PDA derivation using `create_program_address`
+### Insecure PDA Derivation using create_program_address
 
 Given a set of seeds, the `create_program_address` function will produce a valid
 PDA about 50% of the time. The bump seed is an additional byte added as a seed
-to "bump" the derived address into valid territory. Since there are 256 possible
-bump seeds and the function produces valid PDAs approximately 50% of the time,
-there are many valid bumps for a given set of input seeds.
+to "bump" the derived address into a valid territory. Since there are 256
+possible bump seeds and the function produces valid PDAs approximately 50% of
+the time, there are many valid bumps for a given set of input seeds.
 
-You can imagine that this could cause confusion for locating accounts when using
+You can imagine that this could cause confusion in locating accounts when using
 seeds as a way of mapping between known pieces of information to accounts. Using
 the canonical bump as the standard ensures that you can always find the right
 account. More importantly, it avoids security exploits caused by the open-ended
 nature of allowing multiple bumps.
 
-In the example below, the `set_value` instruction uses a `bump` that was passed
-in as instruction data to derive a PDA. The instruction then derives the PDA
-using `create_program_address` function and checks that the `address` matches
-the public key of the `data` account.
+In the example below, the `set_value` instruction handler uses a `bump` that was
+passed in as instruction data to derive a PDA. The instruction handler then
+derives the PDA using `create_program_address` function and checks that the
+`address` matches the public key of the `data` account.
 
 ```rust
 use anchor_lang::prelude::*;
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("ABQaKhtpYQUUgZ9m2sAY7ZHxWv6KyNdhUJW8Dh8NQbkf");
 
 #[program]
 pub mod bump_seed_canonicalization_insecure {
     use super::*;
 
+    // Insecure PDA Derivation using create_program_address
     pub fn set_value(ctx: Context<BumpSeed>, key: u64, new_value: u64, bump: u8) -> Result<()> {
         let address =
-            Pubkey::create_program_address(&[key.to_le_bytes().as_ref(), &[bump]], ctx.program_id).unwrap();
+            Pubkey::create_program_address(&[key.to_le_bytes().as_ref(), &[bump]], ctx.program_id)
+                .unwrap();
         if address != ctx.accounts.data.key() {
             return Err(ProgramError::InvalidArgument.into());
         }
@@ -95,33 +109,34 @@ pub mod bump_seed_canonicalization_insecure {
 
 #[derive(Accounts)]
 pub struct BumpSeed<'info> {
-    data: Account<'info, Data>,
+    #[account(mut)]
+    pub data: Account<'info, Data>,
 }
 
 #[account]
 pub struct Data {
-    value: u64,
+    pub value: u64,
 }
 ```
 
-While the instruction derives the PDA and checks the passed-in account, which is
-good, it allows the caller to pass in an arbitrary bump. Depending on the
-context of your program, this could result in undesired behavior or potential
-exploit.
+While the instruction handler derives the PDA and checks the passed-in account,
+which is good, it allows the caller to pass in an arbitrary bump. Depending on
+the context of your program, this could result in undesired behavior or
+potential exploit.
 
 If the seed mapping was meant to enforce a one-to-one relationship between PDA
 and user, for example, this program would not properly enforce that. A user
 could call the program multiple times with many valid bumps, each producing a
 different PDA.
 
-### Recommended derivation using `find_program_address`
+### Recommended Derivation using find_program_address
 
 A simple way around this problem is to have the program expect only the
 canonical bump and use `find_program_address` to derive the PDA.
 
 The
 [`find_program_address`](https://docs.rs/solana-program/latest/solana_program/pubkey/struct.Pubkey.html#method.find_program_address)
-_always uses the canonical bump_. This function iterates through calling
+_always uses the canonical bump_. This function iterates by calling
 `create_program_address`, starting with a bump of 255 and decrementing the bump
 by one with each iteration. As soon as a valid address is found, the function
 returns both the derived PDA and the canonical bump used to derive it.
@@ -151,7 +166,7 @@ pub fn set_value_secure(
 }
 ```
 
-### Use Anchor's `seeds` and `bump` constraints
+### Use Anchor's seeds and bump Constraints
 
 Anchor provides a convenient way to derive PDAs in the account validation struct
 using the `seeds` and `bump` constraints. These can even be combined with the
@@ -166,6 +181,8 @@ use anchor_lang::prelude::*;
 
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
+pub const DISCRIMINATOR_SIZE: usize = 8;
+
 #[program]
 pub mod bump_seed_canonicalization_recommended {
     use super::*;
@@ -175,28 +192,29 @@ pub mod bump_seed_canonicalization_recommended {
         Ok(())
     }
 }
-
-// initialize account at PDA
+// Initialize account at PDA
 #[derive(Accounts)]
 #[instruction(key: u64)]
 pub struct BumpSeed<'info> {
-  #[account(mut)]
-  payer: Signer<'info>,
-  #[account(
-    init,
-    seeds = [key.to_le_bytes().as_ref()],
-    // derives the PDA using the canonical bump
-    bump,
-    payer = payer,
-    space = 8 + 8
-  )]
-  data: Account<'info, Data>,
-  system_program: Program<'info, System>
+    #[account(mut)]
+    pub payer: Signer<'info>,
+    #[account(
+        init,
+        seeds = [key.to_le_bytes().as_ref()],
+        // Derives the PDA using the canonical bump
+        bump,
+        payer = payer,
+        space = DISCRIMINATOR_SIZE + Data::INIT_SPACE
+    )]
+    pub data: Account<'info, Data>,
+
+    pub system_program: Program<'info, System>,
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct Data {
-    value: u64,
+    pub value: u64,
 }
 ```
 
@@ -210,7 +228,7 @@ arbitrary bumps, but rather to let you optimize your program. The iterative
 nature of `find_program_address` makes it expensive, so best practice is to
 store the canonical bump in the PDA account's data upon initializing a PDA,
 allowing you to reference the bump stored when validating the PDA in subsequent
-instructions.
+instruction handlers.
 
 When you specify the bump to use, Anchor uses `create_program_address` with the
 provided bump instead of `find_program_address`. This pattern of storing the
@@ -222,66 +240,76 @@ use anchor_lang::prelude::*;
 
 declare_id!("CVwV9RoebTbmzsGg1uqU1s4a3LvTKseewZKmaNLSxTqc");
 
+// Constant for account space calculation
+pub const DISCRIMINATOR_SIZE: usize = 8;
+
 #[program]
 pub mod bump_seed_canonicalization_recommended {
     use super::*;
 
+    // Instruction handler to set a value and store the bump
     pub fn set_value(ctx: Context<BumpSeed>, _key: u64, new_value: u64) -> Result<()> {
         ctx.accounts.data.value = new_value;
-        // store the bump on the account
-        ctx.accounts.data.bump = *ctx.bumps.get("data").unwrap();
+
+        // Store the canonical bump on the account
+        // This bump is automatically derived by Anchor
+        ctx.accounts.data.bump = ctx.bumps.data;
+
         Ok(())
     }
 
+    // Instruction handler to verify the PDA address
     pub fn verify_address(ctx: Context<VerifyAddress>, _key: u64) -> Result<()> {
         msg!("PDA confirmed to be derived with canonical bump: {}", ctx.accounts.data.key());
         Ok(())
     }
 }
 
-// initialize account at PDA
+// Account validation struct for initializing the PDA account
 #[derive(Accounts)]
 #[instruction(key: u64)]
 pub struct BumpSeed<'info> {
-  #[account(mut)]
-  payer: Signer<'info>,
-  #[account(
-    init,
-    seeds = [key.to_le_bytes().as_ref()],
-    // derives the PDA using the canonical bump
-    bump,
-    payer = payer,
-    space = 8 + 8 + 1
-  )]
-  data: Account<'info, Data>,
-  system_program: Program<'info, System>
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    #[account(
+        init,
+        seeds = [key.to_le_bytes().as_ref()],
+        bump,  // Anchor automatically uses the canonical bump
+        payer = payer,
+        space = DISCRIMINATOR_SIZE + Data::INIT_SPACE
+    )]
+    pub data: Account<'info, Data>,
+
+    pub system_program: Program<'info, System>
 }
 
+// Account validation struct for verifying the PDA address
 #[derive(Accounts)]
 #[instruction(key: u64)]
 pub struct VerifyAddress<'info> {
-  #[account(
-    seeds = [key.to_le_bytes().as_ref()],
-    // guranteed to be the canonical bump every time
-    bump = data.bump
-  )]
-  data: Account<'info, Data>,
+    #[account(
+        seeds = [key.to_le_bytes().as_ref()],
+        bump = data.bump  // Use the stored bump, guaranteed to be canonical
+    )]
+    pub data: Account<'info, Data>,
 }
 
+// Data structure for the PDA account
 #[account]
+#[derive(InitSpace)]
 pub struct Data {
-    value: u64,
-    // bump field
-    bump: u8
+    pub value: u64,
+    pub bump: u8  // Stores the canonical bump
 }
 ```
 
 If you don't specify the bump on the `bump` constraint, Anchor will still use
 `find_program_address` to derive the PDA using the canonical bump. As a
-consequence, your instruction will incur a variable amount of compute budget.
-Programs that are already at risk of exceeding their compute budget should use
-this with care since there is a chance that the program's budget may be
-occasionally and unpredictably exceeded.
+consequence, your instruction handler will incur a variable amount of compute
+budget. Programs that are already at risk of exceeding their compute budget
+should use this with care since there is a chance that the program's budget may
+be occasionally and unpredictably exceeded.
 
 On the other hand, if you only need to verify the address of a PDA passed in
 without initializing an account, you'll be forced to either let Anchor derive
@@ -294,35 +322,35 @@ To demonstrate the security exploits possible when you don't check for the
 canonical bump, let's work with a program that lets each program user "claim"
 rewards on time.
 
-#### 1. Setup
+### 1. Setup
 
-Start by getting the code on the `starter` branch of
-[this repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/starter).
+Start by getting the code on the
+[`starter` branch of this repository](https://github.com/solana-developers/bump-seed-canonicalization/tree/starter).
 
-Notice that there are two instructions on the program and a single test in the
-`tests` directory.
+Notice that there are two instruction handlers on the program and a single test
+in the `tests` directory.
 
-The instructions on the program are:
+The instruction handlers on the program are:
 
 1. `create_user_insecure`
 2. `claim_insecure`
 
-The `create_user_insecure` instruction simply creates a new account at a PDA
-derived using the signer's public key and a passed-in bump.
+The `create_user_insecure` instruction handler simply creates a new account at a
+PDA derived using the signer's public key and a passed-in bump.
 
-The `claim_insecure` instruction mints 10 tokens to the user and then marks the
-account's rewards as claimed so that they can't claim again.
+The `claim_insecure` instruction handler mints 10 tokens to the user and then
+marks the account's rewards as claimed so that they can't claim again.
 
 However, the program doesn't explicitly check that the PDAs in question are
 using the canonical bump.
 
 Have a look at the program to understand what it does before proceeding.
 
-#### 2. Test insecure instructions
+### 2. Test Insecure Instruction Handlers
 
-Since the instructions don't explicitly require the `user` PDA to use the
-canonical bump, an attacker can create multiple accounts per wallet and claim
-more rewards than should be allowed.
+Since the instruction handlers don't explicitly require the `user` PDA to use
+the canonical bump, an attacker can create multiple accounts per wallet and
+claim more rewards than should be allowed.
 
 The test in the `tests` directory creates a new keypair called `attacker` to
 represent an attacker. It then loops through all possible bumps and calls
@@ -331,156 +359,188 @@ the attacker has been able to claim rewards multiple times and has earned more
 than the 10 tokens allotted per user.
 
 ```typescript
-it("Attacker can claim more than reward limit with insecure instructions", async () => {
-  const attacker = Keypair.generate();
-  await safeAirdrop(attacker.publicKey, provider.connection);
-  const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
+it("allows attacker to claim more than reward limit with insecure instruction handlers", async () => {
+  try {
+    const attacker = Keypair.generate();
+    await airdropIfRequired(
+      connection,
+      attacker.publicKey,
+      1 * LAMPORTS_PER_SOL,
+      0.5 * LAMPORTS_PER_SOL,
+    );
+    const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
 
-  let numClaims = 0;
+    let successfulClaimCount = 0;
 
-  for (let i = 0; i < 256; i++) {
-    try {
-      const pda = createProgramAddressSync(
-        [attacker.publicKey.toBuffer(), Buffer.from([i])],
-        program.programId,
-      );
-      await program.methods
-        .createUserInsecure(i)
-        .accounts({
-          user: pda,
-          payer: attacker.publicKey,
-        })
-        .signers([attacker])
-        .rpc();
-      await program.methods
-        .claimInsecure(i)
-        .accounts({
-          user: pda,
-          mint,
-          payer: attacker.publicKey,
-          userAta: ataKey,
-        })
-        .signers([attacker])
-        .rpc();
+    for (let i = 0; i < 256; i++) {
+      try {
+        const pda = anchor.web3.PublicKey.createProgramAddressSync(
+          [attacker.publicKey.toBuffer(), Buffer.from([i])],
+          program.programId,
+        );
+        await program.methods
+          .createUserInsecure(i)
+          .accounts({
+            user: pda,
+            payer: attacker.publicKey,
+          })
+          .signers([attacker])
+          .rpc();
+        await program.methods
+          .claimInsecure(i)
+          .accounts({
+            user: pda,
+            mint,
+            payer: attacker.publicKey,
+            userAta: ataKey,
+            mintAuthority,
+            tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+            associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          })
+          .signers([attacker])
+          .rpc();
 
-      numClaims += 1;
-    } catch (error) {
-      if (error.message !== "Invalid seeds, address must fall off the curve") {
-        console.log(error);
+        successfulClaimCount += 1;
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          !error.message.includes(
+            "Invalid seeds, address must fall off the curve",
+          )
+        ) {
+          console.error(error);
+        }
       }
     }
+
+    const ata = await getAccount(connection, ataKey);
+
+    console.log(
+      `Attacker claimed ${successfulClaimCount} times and got ${Number(
+        ata.amount,
+      )} tokens`,
+    );
+
+    expect(successfulClaimCount).to.be.greaterThan(1);
+    expect(Number(ata.amount)).to.be.greaterThan(10);
+  } catch (error) {
+    throw new Error(`Test failed: ${error.message}`);
   }
-
-  const ata = await getAccount(provider.connection, ataKey);
-
-  console.log(
-    `Attacker claimed ${numClaims} times and got ${Number(ata.amount)} tokens`,
-  );
-
-  expect(numClaims).to.be.greaterThan(1);
-  expect(Number(ata.amount)).to.be.greaterThan(10);
 });
 ```
 
 Run `anchor test` to see that this test passes, showing that the attacker is
-successful. Since the test calles the instructions for every valid bump, it
-takes a bit to run, so be patient.
+successful. Since the test calls the instruction handlers for every valid bump,
+it takes a bit to run, so be patient.
 
 ```bash
-  bump-seed-canonicalization
-Attacker claimed 129 times and got 1290 tokens
-    ✔ Attacker can claim more than reward limit with insecure instructions (133840ms)
+  Bump seed canonicalization
+Attacker claimed 121 times and got 1210 tokens
+    ✔ allows attacker to claim more than reward limit with insecure instructions (119994ms)
 ```
 
-#### 3. Create secure instructions
+### 3. Create Secure Instruction Handler
 
-Let's demonstrate patching the vulnerability by creating two new instructions:
+Let's demonstrate patching the vulnerability by creating two new instruction
+handlers:
 
 1. `create_user_secure`
 2. `claim_secure`
 
-Before we write the account validation or instruction logic, let's create a new
-user type, `UserSecure`. This new type will add the canonical bump as a field on
-the struct.
+Before we write the account validation or instruction handler logic, let's
+create a new user type, `UserSecure`. This new type will add the canonical bump
+as a field on the struct.
 
 ```rust
+// Secure user account structure
 #[account]
+#[derive(InitSpace)]
 pub struct UserSecure {
-    auth: Pubkey,
-    bump: u8,
-    rewards_claimed: bool,
+    pub auth: Pubkey,
+    pub bump: u8,
+    pub rewards_claimed: bool,
 }
 ```
 
-Next, let's create account validation structs for each of the new instructions.
-They'll be very similar to the insecure versions but will let Anchor handle the
-derivation and deserialization of the PDAs.
+Next, let's create account validation structs for each of the new instruction
+handlers. They'll be very similar to the insecure versions but will let Anchor
+handle the derivation and deserialization of the PDAs.
 
 ```rust
+// Account validation struct for securely creating a user account
 #[derive(Accounts)]
 pub struct CreateUserSecure<'info> {
     #[account(mut)]
-    payer: Signer<'info>,
+    pub payer: Signer<'info>,
     #[account(
         init,
-        seeds = [payer.key().as_ref()],
-        // derives the PDA using the canonical bump
-        bump,
         payer = payer,
-        space = 8 + 32 + 1 + 1
+        space = DISCRIMINATOR_SIZE + UserSecure::INIT_SPACE,
+        seeds = [payer.key().as_ref()],
+        bump
     )]
-    user: Account<'info, UserSecure>,
-    system_program: Program<'info, System>,
+    pub user: Account<'info, UserSecure>,
+    pub system_program: Program<'info, System>,
 }
 
+// Account validation struct for secure claiming of rewards
 #[derive(Accounts)]
 pub struct SecureClaim<'info> {
     #[account(
+        mut,
         seeds = [payer.key().as_ref()],
         bump = user.bump,
         constraint = !user.rewards_claimed @ ClaimError::AlreadyClaimed,
         constraint = user.auth == payer.key()
     )]
-    user: Account<'info, UserSecure>,
+    pub user: Account<'info, UserSecure>,
     #[account(mut)]
-    payer: Signer<'info>,
+    pub payer: Signer<'info>,
     #[account(
         init_if_needed,
         payer = payer,
         associated_token::mint = mint,
         associated_token::authority = payer
     )]
-    user_ata: Account<'info, TokenAccount>,
+    pub user_ata: Account<'info, TokenAccount>,
     #[account(mut)]
-    mint: Account<'info, Mint>,
-    /// CHECK: mint auth PDA
-    #[account(seeds = ["mint".as_bytes().as_ref()], bump)]
+    pub mint: Account<'info, Mint>,
+    /// CHECK: This is the mint authority PDA, checked by seeds constraint
+    #[account(seeds = [b"mint"], bump)]
     pub mint_authority: UncheckedAccount<'info>,
-    token_program: Program<'info, Token>,
-    associated_token_program: Program<'info, AssociatedToken>,
-    system_program: Program<'info, System>,
-    rent: Sysvar<'info, Rent>,
+    pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
 }
 ```
 
-Finally, let's implement the instruction logic for the two new instructions. The
-`create_user_secure` instruction simply needs to set the `auth`, `bump` and
-`rewards_claimed` fields on the `user` account data.
+Finally, let's implement the instruction handler logic for the two new
+instruction handlers. The `create_user_secure` instruction handler simply needs
+to set the `auth`, `bump` and `rewards_claimed` fields on the `user` account
+data.
 
 ```rust
+// Secure instruction to create a user account
 pub fn create_user_secure(ctx: Context<CreateUserSecure>) -> Result<()> {
-    ctx.accounts.user.auth = ctx.accounts.payer.key();
-    ctx.accounts.user.bump = *ctx.bumps.get("user").unwrap();
-    ctx.accounts.user.rewards_claimed = false;
+    ctx.accounts.user.set_inner(UserSecure {
+        auth: ctx.accounts.payer.key(),
+        bump: ctx.bumps.user,
+        rewards_claimed: false,
+    });
     Ok(())
 }
 ```
 
-The `claim_secure` instruction needs to mint 10 tokens to the user and set the
-`user` account's `rewards_claimed` field to `true`.
+The `claim_secure` instruction handler needs to mint 10 tokens to the user and
+set the `user` account's `rewards_claimed` field to `true`.
 
 ```rust
+// Secure instruction to claim rewards
 pub fn claim_secure(ctx: Context<SecureClaim>) -> Result<()> {
+    // Mint tokens to the user's associated token account
     token::mint_to(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
@@ -489,104 +549,142 @@ pub fn claim_secure(ctx: Context<SecureClaim>) -> Result<()> {
                 to: ctx.accounts.user_ata.to_account_info(),
                 authority: ctx.accounts.mint_authority.to_account_info(),
             },
-            &[&[
-                    b"mint".as_ref(),
-                &[*ctx.bumps.get("mint_authority").unwrap()],
-            ]],
+            &[&[b"mint", &[ctx.bumps.mint_authority]]],
         ),
         10,
     )?;
 
+    // Mark rewards as claimed
     ctx.accounts.user.rewards_claimed = true;
 
     Ok(())
 }
 ```
 
-#### 4. Test secure instructions
+### 4. Test Secure Instruction Handlers
 
 Let's go ahead and write a test to show that the attacker can no longer claim
-more than once using the new instructions.
+more than once using the new instruction handlers.
 
 Notice that if you start to loop through using multiple PDAs like the old test,
-you can't even pass the non-canonical bump to the instructions. However, you can
-still loop through using the various PDAs and at the end check that only 1 claim
-happened for a total of 10 tokens. Your final test will look something like
-this:
+you can't even pass the non-canonical bump to the instruction handlers. However,
+you can still loop through using the various PDAs and at the end check that only
+1 claim happened for a total of 10 tokens. Your final test will look something
+like this:
 
 ```typescript
-it.only("Attacker can only claim once with secure instructions", async () => {
-  const attacker = Keypair.generate();
-  await safeAirdrop(attacker.publicKey, provider.connection);
-  const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
-  const [userPDA] = findProgramAddressSync(
-    [attacker.publicKey.toBuffer()],
-    program.programId,
-  );
+it("allows attacker to claim only once with secure instruction handlers", async () => {
+  try {
+    const attacker = Keypair.generate();
+    await airdropIfRequired(
+      connection,
+      attacker.publicKey,
+      1 * LAMPORTS_PER_SOL,
+      0.5 * LAMPORTS_PER_SOL,
+    );
+    const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
+    const [userPDA] = anchor.web3.PublicKey.findProgramAddressSync(
+      [attacker.publicKey.toBuffer()],
+      program.programId,
+    );
 
-  await program.methods
-    .createUserSecure()
-    .accounts({
-      payer: attacker.publicKey,
-    })
-    .signers([attacker])
-    .rpc();
+    await program.methods
+      .createUserSecure()
+      .accounts({
+        payer: attacker.publicKey,
+        user: userPDA,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([attacker])
+      .rpc();
 
-  await program.methods
-    .claimSecure()
-    .accounts({
-      payer: attacker.publicKey,
-      userAta: ataKey,
-      mint,
-      user: userPDA,
-    })
-    .signers([attacker])
-    .rpc();
+    await program.methods
+      .claimSecure()
+      .accounts({
+        payer: attacker.publicKey,
+        user: userPDA,
+        userAta: ataKey,
+        mint,
+        mintAuthority,
+        tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+        associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+      })
+      .signers([attacker])
+      .rpc();
 
-  let numClaims = 1;
+    let successfulClaimCount = 1;
 
-  for (let i = 0; i < 256; i++) {
-    try {
-      const pda = createProgramAddressSync(
-        [attacker.publicKey.toBuffer(), Buffer.from([i])],
-        program.programId,
-      );
-      await program.methods
-        .createUserSecure()
-        .accounts({
-          user: pda,
-          payer: attacker.publicKey,
-        })
-        .signers([attacker])
-        .rpc();
+    for (let i = 0; i < 256; i++) {
+      try {
+        const pda = anchor.web3.PublicKey.createProgramAddressSync(
+          [attacker.publicKey.toBuffer(), Buffer.from([i])],
+          program.programId,
+        );
+        await program.methods
+          .createUserSecure()
+          .accounts({
+            user: pda,
+            payer: attacker.publicKey,
+            systemProgram: anchor.web3.SystemProgram.programId,
+          })
+          .signers([attacker])
+          .rpc();
 
-      await program.methods
-        .claimSecure()
-        .accounts({
-          payer: attacker.publicKey,
-          userAta: ataKey,
-          mint,
-          user: pda,
-        })
-        .signers([attacker])
-        .rpc();
+        await program.methods
+          .claimSecure()
+          .accounts({
+            payer: attacker.publicKey,
+            user: pda,
+            userAta: ataKey,
+            mint,
+            mintAuthority,
+            tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+            associatedTokenProgram: anchor.utils.token.ASSOCIATED_PROGRAM_ID,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          })
+          .signers([attacker])
+          .rpc();
 
-      numClaims += 1;
-    } catch {}
+        successfulClaimCount += 1;
+      } catch (error) {
+        if (
+          error instanceof Error &&
+          !error.message.includes("Error Number: 2006") &&
+          !error.message.includes(
+            "Invalid seeds, address must fall off the curve",
+          )
+        ) {
+          // Comment console error logs to see the test outputs properly
+          console.error(error);
+        }
+      }
+    }
+
+    const ata = await getAccount(connection, ataKey);
+
+    console.log(
+      `Attacker claimed ${successfulClaimCount} times and got ${Number(
+        ata.amount,
+      )} tokens`,
+    );
+
+    expect(Number(ata.amount)).to.equal(10);
+    expect(successfulClaimCount).to.equal(1);
+  } catch (error) {
+    throw new Error(`Test failed: ${error.message}`);
   }
-
-  const ata = await getAccount(provider.connection, ataKey);
-
-  expect(Number(ata.amount)).to.equal(10);
-  expect(numClaims).to.equal(1);
 });
 ```
 
 ```bash
-  bump-seed-canonicalization
+  Bump seed canonicalization
 Attacker claimed 119 times and got 1190 tokens
-    ✔ Attacker can claim more than reward limit with insecure instructions (128493ms)
-    ✔ Attacker can only claim once with secure instructions (1448ms)
+    ✔ allows attacker to claim more than reward limit with insecure instruction handlers (117370ms)
+Attacker claimed 1 times and got 10 tokens
+    ✔ allows attacker to claim only once with secure instruction handlers (16362ms)
 ```
 
 If you use Anchor for all of the PDA derivations, this particular exploit is
@@ -594,8 +692,7 @@ pretty simple to avoid. However, if you end up doing anything "non-standard," be
 careful to design your program to explicitly use the canonical bump!
 
 If you want to take a look at the final solution code you can find it on the
-`solution` branch of
-[the same repository](https://github.com/Unboxed-Software/solana-bump-seed-canonicalization/tree/solution).
+[`solution` branch of the same repository](https://github.com/solana-developers/bump-seed-canonicalization/tree/solution).
 
 ## Challenge
 
@@ -609,6 +706,7 @@ Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
 <Callout type="success" title="Completed the lab?">
+
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=d3f6ca7a-11c8-421f-b7a3-d6c08ef1aa8b)!
 </Callout>

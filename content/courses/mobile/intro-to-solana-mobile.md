@@ -335,7 +335,8 @@ refining your skills. Be sure to explore additional resources like:
 
 - [The official Solana Developer Docs](https://solana.com/docs) for in-depth
   guides on Solana’s core libraries and best practices.
-- [Solana's Discord community](https://discord.com/invite/kBbATFA7PW) forum for
+
+- [Solana Stack Exchange](https://solana.stackexchange.com/) forum for
   troubleshooting, sharing insights, and staying updated on the latest ecosystem
   changes.
 
@@ -371,8 +372,9 @@ environment if you didn't already. This
 Remember that this step is not required if you are using a
 [Framework](https://reactnative.dev/architecture/glossary#react-native-framework).
 
-Ensure you have Node.js, npm, or yarn installed on your system. These will
-manage your JavaScript packages. Install Android Studio:
+
+Ensure you have [Node.js](https://nodejs.org/en/download) installed on your
+system. These will manage your JavaScript packages. Install Android Studio:
 
 Android Studio is required to run the Android emulator and to compile your React
 Native app for Android devices. Configure the ANDROID_HOME Environment Variable:
@@ -1201,7 +1203,8 @@ to fix them:
 
 That's it! You've made your first Solana Mobile app. If you get stuck, feel free
 to check out the
-[full solution code](https://github.com/Unboxed-Software/solana-react-native-counter)
+
+[full solution code](https://github.com/solana-developers/react-native-counter)
 on the `main` branch of the repository.
 
 ## Challenge
@@ -1214,7 +1217,8 @@ the client-side code that interacts with it.
 
 Once you've completed this, you can check your solution against the solution
 code available on the
-[solution branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution).
+
+[solution branch](https://github.com/solana-developers/react-native-counter).
 
 <Callout type="success" title="Good Job!">
 If you’ve successfully completed the lab, push your code to GitHub and share

@@ -346,6 +346,8 @@ using in this lab.
 
 ### Download the starter code
 
+<!-- TODO: this uses old Unboxed starter repos, we could move it to use `create-solana-dapp` eg https://github.com/solana-developers/anchor-ping-frontend/tree/main/web -->
+
 Download the
 [starter code for this project](https://github.com/Unboxed-Software/solana-ping-frontend/tree/starter).
 This project is a simple Next.js application. It's mostly empty except for the

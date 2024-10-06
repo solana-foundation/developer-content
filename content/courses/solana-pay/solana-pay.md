@@ -3,10 +3,9 @@ title: Solana Pay
 objectives:
   - Use the Solana Pay specification to build payment requests and initiate
     transactions using URLs encoded as QR codes
-  - Use the `@solana/pay` library to help with the creation of Solana Pay
-    transaction requests
+  - Use the `@solana/pay` library to create Solana Pay transaction requests
   - Partially sign transactions and implement transaction gating based on
-    certain conditions
+    specific conditions
 description:
   "How to create Solana Pay payment requests using links and QR codes."
 ---
@@ -15,19 +14,19 @@ description:
 
 - **Solana Pay** is a specification for encoding Solana transaction requests
   within URLs, enabling standardized transaction requests across different
-  Solana apps and wallets
-- **Partial signing** of transactions allows for the creation of transactions
-  that require multiple signatures before they are submitted to the network
+  Solana apps and wallets.
+- **Partial signing** of transactions allows the creation of transactions that
+  require multiple signatures before they are submitted to the network.
 - **Transaction gating** involves implementing rules that determine whether
-  certain transactions are allowed to be processed or not, based on certain
-  conditions or the presence of specific data in the transaction
+  certain transactions are allowed to be processed, based on specific conditions
+  or the presence of particular data in the transaction.
 
 ## Lesson
 
 The Solana community is continually improving and expanding the network's
-functionality. But that doesn't always mean developing brand new technology.
+functionality. But that doesn't always mean developing brand-new technology.
 Sometimes it means leveraging the network's existing features in new and
-interesting ways.
+innovative ways.
 
 Solana Pay is a great example of this. Rather than adding new functionality to
 the network, Solana Pay uses the network's existing signing features in a unique
@@ -38,17 +37,17 @@ Throughout this lesson, you'll learn how to use Solana Pay to create transfer
 and transaction requests, encode these requests as a QR code, partially sign
 transactions, and gate transactions based on conditions you choose. Rather than
 leaving it at that, we hope you'll see this as an example of leveraging existing
-features in new and interesting ways, using it as a launching pad for your own
+features in new and innovative ways, using it as a launching pad for your own
 unique client-side network interactions.
 
 ### Solana Pay
 
 The [Solana Pay specification](https://docs.solanapay.com/spec) is a set of
 standards that allow users to request payments and initiate transactions using
-URLs in a uniform way across various Solana apps and wallets.
+URLs uniformly across various Solana apps and wallets.
 
 Request URLs are prefixed with `solana:` so that platforms can direct the link
-to the appropriate application. For example, on mobile a URL that starts with
+to the appropriate application. For example, on mobile, a URL that starts with
 `solana:` will be directed to wallet applications that support the Solana Pay
 specification. From there, the wallet can use the remainder of the URL to
 appropriately handle the request.
@@ -141,8 +140,8 @@ a function that handles the request and response.
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
   // Handle the request
 }
@@ -163,18 +162,17 @@ Building on the empty endpoint from before, that may look like this:
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
-  if (req.method === "GET") {
-    return get(res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (request.method === "GET") {
+    return get(response);
   }
+  return response.status(405).json({ error: "Method not allowed" });
 }
 
-function get(res: NextApiResponse) {
-  res.status(200).json({
+function get(response: NextApiResponse) {
+  response.status(200).json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
@@ -205,26 +203,26 @@ transaction and return it to the wallet for signing by:
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
-  if (req.method === "GET") {
-    return get(res);
-  } else if (req.method === "POST") {
-    return post(req, res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (request.method === "GET") {
+    return get(response);
   }
+  if (request.method === "POST") {
+    return post(request, response);
+  }
+  return response.status(405).json({ error: "Method not allowed" });
 }
 
-function get(res: NextApiResponse) {
-  res.status(200).json({
+function get(response: NextApiResponse) {
+  response.status(200).json({
     label: "Store Name",
     icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
   });
 }
-async function post(req: PublicKey, res: PublicKey) {
-  const { account, reference } = req.body;
+async function post(request: NextApiRequest, response: NextApiResponse) {
+  const { account, reference } = request.body;
 
   const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -236,18 +234,18 @@ async function post(req: PublicKey, res: PublicKey) {
   });
 
   const instruction = SystemProgram.transfer({
-    fromPubkey: account,
+    fromPubkey: new PublicKey(account),
     toPubkey: Keypair.generate().publicKey,
     lamports: 0.001 * LAMPORTS_PER_SOL,
   });
 
-  transaction.add(instruction);
-
-  transaction.keys.push({
+  instruction.keys.push({
     pubkey: reference,
     isSigner: false,
     isWritable: false,
   });
+
+  transaction.add(instruction);
 
   const serializedTransaction = transaction.serialize({
     requireAllSignatures: false,
@@ -256,7 +254,7 @@ async function post(req: PublicKey, res: PublicKey) {
 
   const message = "Simple transfer of 0.001 SOL";
 
-  res.send(200).json({
+  response.status(200).json({
     transaction: base64,
     message,
   });
@@ -495,21 +493,21 @@ variable. The first thing we'll do in this file is the following:
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  request: NextApiRequest,
+  response: NextApiResponse,
 ) {
-  if (req.method === "GET") {
-    return get(res);
-  } else if (req.method === "POST") {
-    return await post(req, res);
-  } else {
-    return res.status(405).json({ error: "Method not allowed" });
+  if (request.method === "GET") {
+    return get(response);
   }
+  if (request.method === "POST") {
+    return await post(request, response);
+  }
+  return response.status(405).json({ error: "Method not allowed" });
 }
 
-function get(res: NextApiResponse) {}
+function get(response: NextApiResponse) {}
 
-async function post(req: NextApiRequest, res: NextApiResponse) {}
+async function post(request: NextApiRequest, response: NextApiResponse) {}
 ```
 
 #### 4. Update `get` function
@@ -519,8 +517,8 @@ endpoint to return a label and icon. Update the `get` function to send a
 response with a "Scavenger Hunt!" label and a Solana logo icon.
 
 ```jsx
-function get(res: NextApiResponse) {
-    res.status(200).json({
+function get(response: NextApiResponse) {
+    response.status(200).json({
         label: "Scavenger Hunt!",
         icon: "https://solana.com/src/img/branding/solanaLogoMark.svg",
     });
@@ -561,35 +559,31 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { PublicKey, Transaction } from "@solana/web3.js"
 ...
 
-async function post(req: NextApiRequest, res: NextApiResponse) {
-    const { account } = req.body
-    const { reference, id } = req.query
+async function post(request: NextApiRequest, response: NextApiResponse) {
+  const { account } = request.body;
+  const { reference, id } = request.query;
 
-    if (!account || !reference || !id) {
-        res.status(400).json({ error: "Missing required parameter(s)" })
-        return
-    }
+  if (!account || !reference || !id) {
+    response.status(400).json({ error: "Missing required parameter(s)" });
+    return;
+  }
 
-    try {
-        const transaction = await buildTransaction(
-            new PublicKey(account),
-            new PublicKey(reference),
-            id.toString()
-        )
+  try {
+    const transaction = await buildTransaction(
+      new PublicKey(account),
+      new PublicKey(reference),
+      id.toString(),
+    );
 
-        res.status(200).json({
-            transaction: transaction,
-            message: `You've found location ${id}!`,
-        })
-    } catch (err) {
-        console.log(err)
-        let error = err as any
-        if (error.message) {
-            res.status(200).json({ transaction: "", message: error.message })
-        } else {
-            res.status(500).json({ error: "error creating transaction" })
-        }
-    }
+    response.status(200).json({
+      transaction: transaction,
+      message: `You've found location ${id}!`,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ transaction: "", message: error.message });
+    return;
+  }
 }
 
 async function buildTransaction(
@@ -769,9 +763,8 @@ function verifyCorrectLocation(
 
   if (!lastLocation || currentLocation.index !== lastLocation.index + 1) {
     return false;
-  } else {
-    return true;
   }
+  return true;
 }
 ```
 

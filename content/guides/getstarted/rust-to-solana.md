@@ -237,8 +237,7 @@ boilerplate code, speeding up the development cycle. Additionally, it provides
 some security checks by default, making Solana programs more secure.
 
 To create a new program, simply
-[create a new Anchor project](https://solana.com/developers/guides/getstarted/intro-to-anchor)
-in the Solana playground.
+[create a new Anchor project](/docs/programs/anchor) in the Solana playground.
 
 Alternatively,
 [install the Anchor CLI](https://www.anchor-lang.com/docs/installation) locally,
@@ -264,9 +263,6 @@ consider writing onchain programs in Rust, and offchain
 
 This guide has covered the basics of developing for Solana with Rust, from setup
 details and restrictions to development environments and frameworks.
-
-For more Rust-related Solana resources, check out the
-[Developing with Rust page](https://solana.com/docs/programs/lang-rust).
 
 For other Solana program examples written with Rust, check out these
 [examples on GitHub](https://github.com/solana-labs/solana-program-library/tree/master/examples/rust).
