@@ -830,7 +830,7 @@ const signature = await transfer(
 
 const explorerLink = getExplorerLink("transaction", signature, "devnet");
 
-console.log(`✅ Transaction confirmed, explorer link is: ${explorerLink}!`);
+console.log(`✅ Transaction confirmed, explorer link is 🔍: ${explorerLink}!`);
 ```
 
 Open the Explorer link. You see your balance go down, and the recipient's
