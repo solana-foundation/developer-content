@@ -265,7 +265,7 @@ writing Solana programs.
 
 There are two ways to install the Anchor CLI and tooling:
 
-1. Using Anchor Version Manager (AVM) - the is the **recommended installation**
+1. Using Anchor Version Manager (AVM) - is the **recommended installation**
    method since it simplifies updating Anchor versions in the future
 2. Without AVM - this requires more a manual process to update Anchor versions
    later
