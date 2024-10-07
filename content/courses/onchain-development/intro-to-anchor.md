@@ -35,6 +35,11 @@ platform, and prediction market is a program.
 This lesson will give you a basic introduction to writing and deploying a Solana
 program using the Rust programming language and the Anchor framework.
 
+> This and the further lessons in this course will give a good base to start
+> building Solana programs with Anchor, however if you want to get more into
+> Anchor, we would recommend checking out the
+> [The Anchor Book](https://book.anchor-lang.com/).
+
 ### What is Anchor?
 
 Anchor makes writing Solana programs easier, faster, and more secure, making it
@@ -61,7 +66,7 @@ Some important macros provided by Anchor are:
 
 - `declare_id` - a macro for declaring the program’s onchain address
 - `#[program]` - an attribute macro used to denote the module containing the
-  program’s instruction handlers. program’s instruction logic
+  program’s instruction handlers.
 - `Accounts` - a trait applied to structs representing the list of accounts
   required for an instruction.
 - `#[account]` - an attribute macro used to define custom account types for the
@@ -145,9 +150,9 @@ takes a generic of your `Accounts` struct, eg, if `AddMovieReview` was the
 struct holding the accounts, the context for the `add_movie_review()` function
 would be `Context<AddMovieReview>`.
 
-<callout type="info" title="Naming convention">
-  Yes, the Accounts struct is typically named the same thing as the instruction handler, just in TitleCase. Eg, the struct with the accounts for add_movie_review() is called AddMovieReview!
-</callout>
+> Yes, the Accounts struct is typically named the same thing as the instruction
+> handler, just in TitleCase. Eg, the struct with the accounts for
+> add_movie_review() is called AddMovieReview!
 
 Through this context argument the instruction can then access:
 
@@ -497,12 +502,10 @@ counter program for Solana.
 `solana-cli` can be installed by following this
 [installation guide](https://solana.com/docs/intro/installation).
 
-<Callout type="info" title="Notes for installing solana-cli">
-Our counter program will use the `agave` fork of `solana`, found at
-https://github.com/anza-xyz/agave. The latest mainnet-beta release as of
-9/25/2024 is v1.18.23.
-
-To install it on any Linux distribution, you can follow these commands below:
+> Our counter program will use the `agave` fork of `solana`, found at
+> https://github.com/anza-xyz/agave. The latest mainnet-beta release as of
+> 9/25/2024 is v1.18.23. To install it on any Linux distribution, you can follow
+> these commands below:
 
 ```shell
 curl -O https://raw.githubusercontent.com/anza-xyz/agave/v1.18.23/scripts/agave-install-init-x86_64-unknown-linux-gnu
@@ -513,8 +516,6 @@ solana --version
 echo 'export PATH="$HOME/.agave/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 ```
-
-</Callout>
 
 Go to your terminal and ensure that the following commands output usable
 versions. Anchor will fail to create the tests directory if you don't have npm
@@ -529,9 +530,10 @@ solana --version
 rustc --version
 ```
 
-<Callout type="warning" title="Don't forget about npm">
-The Anchor documentation doesn't mention [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), but it is critical for `anchor init` to generate the tests directory and the package.json.
-</Callout>
+> The Anchor documentation doesn't mention
+> [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), but
+> it is critical for `anchor init` to generate the tests directory and the
+> package.json.
 
 The output for the latest versions as of 09/25/24 is:
 
@@ -548,11 +550,10 @@ rustc 1.81.0 (eeb90cda1 2024-09-04)
 To install anchor, follow the
 [instructions](https://www.anchor-lang.com/docs/installation).
 
-<Callout type="warning" title="Don't fear!">
-The most recent version of anchor (v0.30.1) has a minor conflict with rust
-versions ^1.79.0, so it might be necessary to follow this [solution](https://github.com/coral-xyz/anchor/issues/3131#issuecomment-2264178262) during
-installation. Don't
-worry, it's an extremely fast and easy fix.
+> The most recent version of anchor (v0.30.1) has a minor conflict with rust
+> versions ^1.79.0, so it might be necessary to follow this
+> [solution](https://github.com/coral-xyz/anchor/issues/3131#issuecomment-2264178262)
+> during installation. Don't worry, it's an extremely fast and easy fix.
 
 If you'd rather just downgrade rust, you can set the development environment's
 rust version to 1.79.0 using rustup:
@@ -561,8 +562,6 @@ rust version to 1.79.0 using rustup:
 rustup install 1.79.0
 rustup default 1.79.0
 ```
-
-</Callout>
 
 Verify you've installed avm and the latest anchor versions:
 
@@ -736,12 +735,9 @@ It'll need the following accounts:
 - `system_program` - the system program is required for the initialization of
   any new accounts
 
-<Callout type="info" title="Calculating space allocation">
-You'll see `INIT_SPACE` accessed here, thanks to the `derive(InitSpace)` macro
-from earlier. You can read more about the mechanics of
-space allocation from the official
-[anchor documentation](https://www.anchor-lang.com/docs/space).
-</Callout>
+> You'll see `INIT_SPACE` accessed here, thanks to the `derive(InitSpace)` macro
+> from earlier. You can read more about the mechanics of space allocation from
+> the official [anchor documentation](https://www.anchor-lang.com/docs/space).
 
 Inside of `instructions/initialize.rs`, adjust the code to match the following:
 
@@ -1001,7 +997,7 @@ connect to it by running
 
 Now it’s your turn to build something independently. Because we're starting with
 simple programs, yours will look almost identical to what we just created. It's
-useful to try and get to the point where you can write it from scratch without
+useful to try to get to the point where you can write it from scratch without
 referencing prior code, so try not to copy and paste here.
 
 1. Write a new program that initializes a `counter` account
@@ -1017,7 +1013,5 @@ instructions if you want - and have fun!
 Try to do this independently if you can! But if you get stuck, feel free to
 the [solution code](https://github.com/shawazi/anchor-counter).
 
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!
-</Callout>
+> Push your code to GitHub and
+> [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!
