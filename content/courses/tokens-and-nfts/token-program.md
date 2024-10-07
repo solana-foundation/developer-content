@@ -105,7 +105,7 @@ contains two instructions:
 This would look as follows:
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildCreateMintTransaction(
@@ -224,7 +224,7 @@ hood:
    new token account
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildCreateTokenAccountTransaction(
@@ -313,7 +313,7 @@ Under the hood, `createAssociatedTokenAccount` is doing two things:
    `createAssociatedTokenAccountInstruction`
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildCreateAssociatedTokenAccountTransaction(
@@ -381,7 +381,7 @@ Under the hood, the `mintTo` function simply creates a transaction with the
 instructions obtained from the `createMintToInstruction` function.
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildMintToTransaction(
@@ -402,7 +402,7 @@ async function buildMintToTransaction(
 
 SPL Token transfers require both the sender and receiver to have token accounts
 for the mint of the tokens being transferred. The tokens are transferred from
-the sender’s token account to the receiver’s token account.
+the sender's token account to the receiver's token account.
 
 You can use `getOrCreateAssociatedTokenAccount` when obtaining the receiver's
 associated token account to ensure their token account exists before the
@@ -438,7 +438,7 @@ Under the hood, the `transfer` function simply creates a transaction with the
 instructions obtained from the `createTransferInstruction` function:
 
 ```typescript
-import * as web3 from "@solana/web3";
+import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
 async function buildTransferTransaction(
@@ -457,11 +457,11 @@ async function buildTransferTransaction(
 
 ### Lab
 
-We’re going to use the Token Token Program to create a Token Mint, create an
+We're going to use the Token Program to create a Token Mint, create an
 Associated Token Account, mint tokens, transfer tokens, and burn tokens.
 
 Assuming you already have a `.env` file with a `SECRET_KEY` setup per
-[Cryptography fundamentals](/developers/courses/intro-to-solana/intro-to-cryptography).
+[Cryptography fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 ```bash
 npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
@@ -766,7 +766,7 @@ account!
 
 Next, let's transfer some of the tokens we just minted using the `spl-token`
 library's `transfer` function. You can
-[add a second account on devnet](/developers/courses/intro-to-solana/intro-to-cryptography)
+[add a second account on devnet](/content/courses/intro-to-solana/intro-to-cryptography.md)
 if you like, or find a friend who has a devnet account and send them your token!
 
 As you saw in Explorer, the tokens currently reside in an Associated Token
@@ -838,7 +838,7 @@ balance go up!
 
 ### Challenge
 
-Now it’s your turn to build something independently. Create an application that
+Now it's your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
 To interact with the Token Program using the wallet adapter, you will have to
@@ -852,7 +852,7 @@ approval.
 2. Create a new Token Mint in the `CreateMint` component. If you need a
    refresher on how to send transactions to a wallet for approval, have a look
    at the
-   [Wallets lesson](/developers/courses/intro-to-solana/interact-with-wallets).
+   [Wallets lesson](/content/courses/intro-to-solana/interact-with-wallets.md).
 
 When creating a new mint, the newly generated `Keypair` will also have to sign
 the transaction. When additional signers are required in addition to the

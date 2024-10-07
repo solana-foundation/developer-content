@@ -16,7 +16,7 @@ key more easily identifiable.
 **Note**: The more characters in your vanity address, the longer it will take.
 
 You can generate a vanity address using the
-[Solana CLI](https://docs.solanalabs.com/cli):
+[Solana CLI](/docs/intro/installation.md):
 
 ```bash
 solana-keygen grind --starts-with e1v1s:1

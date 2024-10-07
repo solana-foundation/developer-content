@@ -180,7 +180,7 @@ displays the starting message.
 The `initialize_level_one` instruction requires 4 accounts:
 
 - `new_game_data_account` - the `GameDataAccount` we are initializing to store
-  the player’s position
+  the player's position
 - `chest_vault` - the `ChestVaultAccount` we are initializing to store the SOL
   reward
 - `signer` - the player paying for the initialization of the accounts

@@ -35,9 +35,22 @@ The key may be one of:
 The address of the program that owns the account. Only the owning program is
 capable of modifying the account.
 
+See also [authority](#authority).
+
 ## app
 
 A front-end application that interacts with a Solana cluster.
+
+## authority
+
+The address of a user that has some kind of permission over an account.
+
+For example:
+
+- The ability to mint new tokens is given to the account that is the 'mint
+  authority' for the token mint.
+- The ability to upgrade a prigram is given to the account that is the 'upgrade
+  authority' of a program.
 
 ## bank state
 
@@ -69,7 +82,7 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf)
+[BPF](/docs/core/programs#berkeley-packet-filter-bpf)
 [onchain programs](#onchain-program), allowing the program to interface with the
 runtime.
 
@@ -131,7 +144,7 @@ consensus.
 
 ## drone
 
-An off-chain service that acts as a custodian for a user's private key. It
+An offchain service that acts as a custodian for a user's private key. It
 typically serves to validate and sign transactions.
 
 ## entry
@@ -434,7 +447,7 @@ non-overlapping, comprising roughly equal real-world time as per
 
 See [onchain program](#onchain-program).
 
-## sol
+## SOL
 
 The [native token](#native-token) of a Solana [cluster](#cluster).
 
@@ -489,6 +502,11 @@ program ID `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` and includes all the
 same features as the [Token Program](#token-program), but comes with extensions
 such as confidential transfers, custom transfer logic, extended metadata, and
 much more.
+
+## token mint
+
+An account that can produce (or 'mint') tokens. Different tokens are
+distinguished by their unique token mint addresses.
 
 ## Token Program
 

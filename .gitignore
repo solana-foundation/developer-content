@@ -106,8 +106,12 @@ package-lock.json
 # translations are stored in the `i18n` via crowdin
 i18n
 
+
 # code-import
 code/node_modules  
 code/package-lock.json  
 code/yarn.lock  
 code/pnpm-lock.yaml  
+
+# vscode configuration
+.vscode

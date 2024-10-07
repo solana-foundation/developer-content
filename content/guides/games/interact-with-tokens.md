@@ -1,7 +1,7 @@
 ---
 date: 2024-04-25T00:00:00Z
 difficulty: intermediate
-title: How interact with tokens in programs
+title: How to interact with tokens in programs
 description: Learn how to use tokens in Solana games with an on-chain tutorial
 tags:
   - games
@@ -88,13 +88,13 @@ pub mod anchor_token {
 ```
 
 Here we are simply bringing into scope the crates and corresponding modules we
-will be using for this program. We’ll be using the `anchor_spl` and
+will be using for this program. We'll be using the `anchor_spl` and
 `mpl_token_metadata` crates to help us interact with the SPL Token program and
 Metaplex's Token Metadata program.
 
 ## Create Mint instruction
 
-First, let’s implement an instruction to create a new token mint and its
+First, let's implement an instruction to create a new token mint and its
 metadata account. The on-chain token metadata, including the name, symbol, and
 URI, will be provided as parameters to the instruction.
 
@@ -107,7 +107,7 @@ The `create_mint` instruction requires the following accounts:
 - `admin` - the `ADMIN_PUBKEY` that signs the transaction and pays for the
   initialization of the accounts
 - `reward_token_mint` - the new token mint we are initializing, using a PDA as
-  both the mint account’s address and its mint authority
+  both the mint account's address and its mint authority
 - `metadata_account` - the metadata account we are initializing for the token
   mint
 - `token_program` - required for interacting with instructions on the Token
@@ -211,7 +211,7 @@ pub struct CreateMint<'info> {
 
 The `create_mint` instruction creates a new token mint, using a Program Derived
 Address (PDA) as both the address of the token mint and its mint authority. The
-instruction takes a URI (off-chain metadata), name, and symbol as parameters.
+instruction takes a URI (offchain metadata), name, and symbol as parameters.
 
 This instruction then creates a metadata account for the token mint through a
 [Cross-Program Invocation (CPI)](/docs/core/cpi.md) calling the
@@ -295,7 +295,7 @@ health by 10 and mints 1 token to the player's token account as a reward.
 The `kill_enemy` instruction requires the following accounts:
 
 - `player` - the player receiving the token
-- `player_data` - the player data account storing the player’s current health
+- `player_data` - the player data account storing the player's current health
 - `player_token_account` - the player's associated token account where tokens
   will be minted
 - `reward_token_mint` - the token mint account, specifying the type of token
@@ -389,7 +389,7 @@ pub enum ErrorCode {
 ```
 
 The player's health is reduced by 10 to represent the “battle with the enemy”.
-We’ll also check the player's current health and return a custom Anchor error if
+We'll also check the player's current health and return a custom Anchor error if
 the player has 0 health.
 
 The instruction then uses a cross-program invocation (CPI) to call the `mint_to`
@@ -409,7 +409,7 @@ token and restore their health to its maximum value.
 The `heal` instruction requires the following accounts:
 
 - `player` - the player executing the healing action
-- `player_data` - the player data account storing the player’s current health
+- `player_data` - the player data account storing the player's current health
 - `player_token_account` - the player's associated token account where the
   tokens will be burned
 - `reward_token_mint` - the token mint account, specifying the type of token

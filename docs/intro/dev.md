@@ -2,7 +2,7 @@
 sidebarLabel: Intro to Development
 title: "Getting Started with Solana Development"
 description: "Learn how to get started building on Solana"
-sidebarSortOrder: 3
+sidebarSortOrder: 2
 keywords:
   - solana basics
   - tutorial
@@ -68,16 +68,16 @@ If you're developing on the client-side, you can work with any programming
 language you're comfortable with. Solana has community-contributed SDKs to help
 developers interact with the Solana network in most popular languages :
 
-| Language   | SDK                                                                                         |
-| ---------- | ------------------------------------------------------------------------------------------- |
-| RUST       | [solana_sdk](https://docs.rs/solana-sdk/latest/solana_sdk/)                                 |
-| Typescript | [@solana/web3.js](https://github.com/solana-labs/solana-web3.js)                            |
-| Python     | [solders](https://github.com/kevinheavey/solders)                                           |
-| Java       | [solanaj](https://github.com/skynetcap/solanaj)                                             |
-| C++        | [solcpp](https://github.com/mschneider/solcpp)                                              |
-| Go         | [solana-go](https://github.com/gagliardetto/solana-go)                                      |
-| Kotlin     | [solanaKT](https://github.com/metaplex-foundation/SolanaKT)                                 |
-| Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana) |
+| Language   | SDK                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------------------ |
+| RUST       | [solana_sdk](https://docs.rs/solana-sdk/latest/solana_sdk/)                                            |
+| Typescript | [@solana/web3.js](https://github.com/solana-labs/solana-web3.js)                                       |
+| Python     | [solders](https://github.com/kevinheavey/solders)                                                      |
+| Java       | [solanaj](https://github.com/skynetcap/solanaj)                                                        |
+| C++        | [solcpp](https://github.com/mschneider/solcpp)                                                         |
+| Go         | [solana-go](https://github.com/gagliardetto/solana-go)                                                 |
+| Kotlin     | [solanaKT](https://github.com/metaplex-foundation/SolanaKT) or [sol4k](https://github.com/sol4k/sol4k) |
+| Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana)            |
 
 You'll also need a connection with an RPC to interact with the network. You can
 either work with a [RPC infrastructure provider](https://solana.com/rpc) or
@@ -107,10 +107,9 @@ can do this with the following command:
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-You'll then need to have the
-[Solana CLI installed](https://docs.solanalabs.com/cli/install) to compile and
-deploy your programs. You can install the Solana CLI by running the following
-command:
+You'll then need to have the [Solana CLI installed](/docs/intro/installation.md)
+to compile and deploy your programs. You can install the Solana CLI by running
+the following command:
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
@@ -126,7 +125,7 @@ solana-test-validator
 
 This will start a local validator on your machine that you can use to test your
 programs. You can
-[read more about local development in this guide](https://solana.com/developers/guides/getstarted/setup-local-development).
+[read more about local development in this guide](/docs/intro/installation.md).
 
 When building onchain programs, you have a choice to either build with native
 Rust (ie, without a framework) or use the Anchor framework. Anchor is a
@@ -150,8 +149,7 @@ your program based on your language preference:
 If you do not want to develop your programs locally, there's also the
 [online IDE Solana Playground](https://beta.solpg.io). Solana Playground allows
 you to write, test, and deploy programs on Solana. You can get started with
-Solana Playground by
-[following our guide](https://solana.com/developers/guides/getstarted/hello-world-in-your-browser).
+Solana Playground by [following our quick start guide](/docs/intro/quick-start).
 
 ### Developer Environments
 
@@ -192,9 +190,4 @@ problem can find your question!
 
 ## Next steps
 
-You're now ready to get started building on Solana!
-
-- [Deploy your first Solana program in the browser](/content/guides/getstarted/hello-world-in-your-browser.md)
-- [Setup your local development environment](/content/guides/getstarted/setup-local-development.md)
-- [Get started building programs locally with Rust](/content/guides/getstarted/local-rust-hello-world.md)
-- [Overview of writing Solana programs](/docs/programs/index.md)
+[You're now ready to get started building on Solana!](/docs/intro/quick-start)

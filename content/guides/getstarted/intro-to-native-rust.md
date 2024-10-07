@@ -16,7 +16,7 @@ To write Solana programs without leveraging the Anchor framework, we use the
 This is the base library for writing onchain programs in Rust.
 
 For beginners, it is recommended to start with the
-[Anchor framework](/content/guides/getstarted/intro-to-anchor.md).
+[Anchor framework](/docs/programs/anchor).
 
 ## Program
 
