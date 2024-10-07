@@ -81,7 +81,7 @@ without specifying the full path each time. It's common to see a series of `use`
 commands at the top of a Rust file.
 
 ```rust
-use solana_program::account_info::AccountInfo
+use solana_program::account_info::AccountInfo;
 ```
 
 #### Declaring Functions in Rust
@@ -119,11 +119,11 @@ then references the values passed in by the user, guaranteeing that each value
 is the correct data type specified in the function.
 
 Additionally, note the brackets `[]` around `&[AccountInfo]` and `&[u8]`. This
-indicates that the `accounts` and `instruction_data` arguments expect "slices"
-of types `AccountInfo` and `u8`, respectively. A “slice” is similar to an array
-(a collection of objects of the same type), except the length is not known at
-compile time. In other words, the `accounts` and `instruction_data` arguments
-expect inputs of unknown length.
+means that the `accounts` and `instruction_data` arguments expect “slices” of
+types `AccountInfo` and `u8`, respectively. A “slice” is a view into a block of
+memory representing a contiguous sequence of elements of a single type, but
+without needing to own the entire data. It’s important because it allows
+functions to handle inputs of varying lengths efficiently.
 
 ```rust
 pub fn process_instruction(
@@ -305,27 +305,46 @@ Putting it all together, our complete “Hello, world!” program looks like thi
 
 ```rust
 use solana_program::{
-    account_info::AccountInfo,
-    entrypoint,
-    entrypoint::ProgramResult,
-    pubkey::Pubkey,
-    msg
+    account_info::AccountInfo,  // A Solana account
+    entrypoint,                 // Macro to define the program entry
+    entrypoint::ProgramResult,  // Return type for program execution
+    pubkey::Pubkey,             // Public key type
+    msg                         // Macro for logging messages
 };
 
+// Define the program's entry point
 entrypoint!(process_instruction);
 
+// The main function that will be executed when the program is invoked
 pub fn process_instruction(
-    _program_id: &Pubkey,
-    _accounts: &[AccountInfo],
-    _instruction_data: &[u8],
+    _program_id: &Pubkey,             // ID of the program being executed
+    _accounts: &[AccountInfo],        // accounts required for instruction processing
+    _instruction_data: &[u8]          // instruction-specific data
 ) -> ProgramResult {
+    // Log a "Hello, world!" message to the program log
     msg!("Hello, world!");
 
+    // Return success
     Ok(())
 }
+
 ```
 
-### 4. Build and Deploy
+The `msg!` macro is a convenient way to log messages within your Solana program.
+These messages are invaluable for debugging and tracking the flow of execution,
+especially when deployed on-chain.
+
+In our example, the `msg!("Hello, world!");` line logs a simple "Hello, world!"
+message. For more complex programs, you would likely include additional logs at
+critical points in your logic.
+
+Additionally, while this example returns `Ok(())` to indicate success, in more
+advanced programs, you may encounter or need to handle errors. You would then
+return an `Err(ProgramError::CustomErrorCode)` or similar to signal failure.
+Proper error handling ensures your program behaves predictably, even in
+unexpected situations.
+
+#### 4. Build and Deploy
 
 Now, let's build and deploy our program using Solana Playground.
 
