@@ -68,16 +68,16 @@ If you're developing on the client-side, you can work with any programming
 language you're comfortable with. Solana has community-contributed SDKs to help
 developers interact with the Solana network in most popular languages :
 
-| Language   | SDK                                                                                         |
-| ---------- | ------------------------------------------------------------------------------------------- |
-| RUST       | [solana_sdk](https://docs.rs/solana-sdk/latest/solana_sdk/)                                 |
-| Typescript | [@solana/web3.js](https://github.com/solana-labs/solana-web3.js)                            |
-| Python     | [solders](https://github.com/kevinheavey/solders)                                           |
-| Java       | [solanaj](https://github.com/skynetcap/solanaj)                                             |
-| C++        | [solcpp](https://github.com/mschneider/solcpp)                                              |
-| Go         | [solana-go](https://github.com/gagliardetto/solana-go)                                      |
-| Kotlin     | [solanaKT](https://github.com/metaplex-foundation/SolanaKT)                                 |
-| Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana) |
+| Language   | SDK                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------------------ |
+| RUST       | [solana_sdk](https://docs.rs/solana-sdk/latest/solana_sdk/)                                            |
+| Typescript | [@solana/web3.js](https://github.com/solana-labs/solana-web3.js)                                       |
+| Python     | [solders](https://github.com/kevinheavey/solders)                                                      |
+| Java       | [solanaj](https://github.com/skynetcap/solanaj)                                                        |
+| C++        | [solcpp](https://github.com/mschneider/solcpp)                                                         |
+| Go         | [solana-go](https://github.com/gagliardetto/solana-go)                                                 |
+| Kotlin     | [solanaKT](https://github.com/metaplex-foundation/SolanaKT) or [sol4k](https://github.com/sol4k/sol4k) |
+| Dart       | [solana](https://github.com/espresso-cash/espresso-cash-public/tree/master/packages/solana)            |
 
 You'll also need a connection with an RPC to interact with the network. You can
 either work with a [RPC infrastructure provider](https://solana.com/rpc) or
@@ -149,8 +149,7 @@ your program based on your language preference:
 If you do not want to develop your programs locally, there's also the
 [online IDE Solana Playground](https://beta.solpg.io). Solana Playground allows
 you to write, test, and deploy programs on Solana. You can get started with
-Solana Playground by
-[following our guide](https://solana.com/developers/guides/getstarted/hello-world-in-your-browser).
+Solana Playground by [following our quick start guide](/docs/intro/quick-start).
 
 ### Developer Environments
 
@@ -191,8 +190,4 @@ problem can find your question!
 
 ## Next steps
 
-You're now ready to get started building on Solana!
-
-- [Deploy your first Solana program in the browser](/content/guides/getstarted/hello-world-in-your-browser.md)
-- [Get started building programs locally with Rust](/content/guides/getstarted/local-rust-hello-world.md)
-- [Overview of writing Solana programs](/docs/programs/index.md)
+[You're now ready to get started building on Solana!](/docs/intro/quick-start)

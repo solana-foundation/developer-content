@@ -105,7 +105,7 @@ make sense to combine:
 - Confidential transfer + permanent delegate
 
 Other than these, you have the option to customize with any combination of token
-extensions that suit your project’s needs.
+extensions that suit your project's needs.
 
 ## How do I add custom logic to my tokens with token extensions?
 
@@ -125,7 +125,7 @@ It is important to note that while transfer hooks give the capability to insert
 custom logic within a transfer, all accounts from the initial transfer are
 converted to read-only accounts. This means that the signer privileges of the
 sender do not extend to the Transfer Hook program. This is to avoid potential
-unexpected logic executing on someone’s wallet who interacts with a token with
+unexpected logic executing on someone's wallet who interacts with a token with
 transfer hooks, protecting the users.
 
 You can
