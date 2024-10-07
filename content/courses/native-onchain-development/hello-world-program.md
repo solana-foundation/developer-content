@@ -330,7 +330,6 @@ pub fn process_instruction(
 
 ```
 
-```markdown
 The `msg!` macro is a convenient way to log messages within your Solana program.
 These messages are invaluable for debugging and tracking the flow of execution,
 especially when deployed on-chain.
@@ -344,7 +343,7 @@ advanced programs, you may encounter or need to handle errors. You would then
 return an `Err(ProgramError::CustomErrorCode)` or similar to signal failure.
 Proper error handling ensures your program behaves predictably, even in
 unexpected situations.
-```
+
 
 #### 4. Build and Deploy
 
