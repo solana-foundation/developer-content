@@ -344,7 +344,6 @@ return an `Err(ProgramError::CustomErrorCode)` or similar to signal failure.
 Proper error handling ensures your program behaves predictably, even in
 unexpected situations.
 
-
 #### 4. Build and Deploy
 
 Now, let's build and deploy our program using Solana Playground.
