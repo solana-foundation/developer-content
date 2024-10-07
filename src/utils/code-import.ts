@@ -87,14 +87,14 @@ function extractLines(
   return finalResult;
 }
 
-function codeImport(options: CodeImportOptions = {}) {
+function importCode(options: CodeImportOptions = {}) {
   const rootDir = options.rootDir || process.cwd();
 
   if (!path.isAbsolute(rootDir)) {
     throw new Error(`"rootDir" has to be an absolute path`);
   }
 
-  return async function transformer(tree: Root, file: VFile) {
+  return async function transform(tree: Root, file: VFile) {
     const codes: [Code, number | null, Parent][] = [];
 
     visit(tree, "code", (node, index, parent) => {
@@ -165,5 +165,5 @@ function codeImport(options: CodeImportOptions = {}) {
   };
 }
 
-export { codeImport };
-export default codeImport;
+export { importCode };
+export default importCode;

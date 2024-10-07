@@ -7,7 +7,7 @@ import remarkStringify from "remark-stringify";
 import remarkFrontmatter from "remark-frontmatter";
 import { visit } from "unist-util-visit";
 import ignore, { type Ignore } from "ignore";
-import codeImport from "./src/utils/code-import";
+import importCode from "./src/utils/code-import";
 import chokidar from "chokidar";
 
 let debugMode = false;
@@ -45,6 +45,10 @@ const getIgnore = async (directory: string): Promise<Ignore> => {
       "utf8",
     );
     ig.add(gitignoreContent);
+    // ignore all dotfiles
+    ig.add([".*"]);
+    // ignore CONTRIBUTING.md because it mentions the code component example
+    ig.add("CONTRIBUTING.md");
   } catch (error) {
     // If .gitignore doesn't exist, just continue without it
     if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
@@ -104,8 +108,7 @@ const processContent = async (
     const file = await unified()
       .use(remarkParse)
       .use(remarkFrontmatter)
-      // @ts-expect-error
-      .use(codeImport, {
+      .use(importCode, {
         preserveTrailingNewline: false,
         removeRedundantIndentations: true,
         rootDir: process.cwd(),
@@ -194,7 +197,7 @@ const main = async (): Promise<void> => {
     console.log("Debug mode enabled");
   }
 
-  if (filePath && !watchMode) {
+  if (filePath && !watchMode && !debugMode) {
     // Process single file
     const absolutePath = path.resolve(process.cwd(), filePath);
     console.log(`Processing single file: ${absolutePath}`);

@@ -107,4 +107,7 @@ package-lock.json
 i18n
 
 # code-import
-code/node_modules
+code/node_modules  
+code/package-lock.json  
+code/yarn.lock  
+code/pnpm-lock.yaml  
