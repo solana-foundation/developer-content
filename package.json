@@ -23,7 +23,7 @@
     "crowdin:download": "crowdin download && npm run prettier:i18n",
     "crowdin:upload": "crowdin upload sources",
     "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
-    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install"
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install",
     "dev:sync": "yarn dev & (sleep 5 && yarn browser-sync)"
   },
   "dependencies": {
