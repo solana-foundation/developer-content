@@ -544,7 +544,7 @@ pub mod anchor_movie_review_program{
         description: String,
         rating: u8,
     ) -> Result<()> {
-	  // We require that the rating is between 1 and 5
+	// We require that the rating is between 1 and 5
         require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
 
         // We require that the title is not longer than 20 characters
