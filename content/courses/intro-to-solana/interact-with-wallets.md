@@ -16,8 +16,8 @@ description: "Connect with installed browser wallets from your React apps."
   software wallets are often **browser extensions** that add the ability to
   connect to a wallet from a website. On mobile, wallet apps have their own
   browsers.
-- Solana’s **Wallet Adapter** allows you to build websites that can request a
-  user’s wallet address and propose transactions for them to sign
+- Solana's **Wallet Adapter** allows you to build websites that can request a
+  user's wallet address and propose transactions for them to sign
 
 ## Lesson
 
@@ -26,7 +26,7 @@ description: "Connect with installed browser wallets from your React apps."
 In the previous two lessons, we discussed keypairs. Keypairs are used to locate
 accounts and sign transactions. While the public key of a keypair is perfectly
 safe to share, the secret key should always be kept in a secure location. If a
-user’s secret key is exposed, then a malicious actor could execute transactions
+user's secret key is exposed, then a malicious actor could execute transactions
 with the authority of that user, allowing them to transfer all the assets
 inside.
 
@@ -42,7 +42,7 @@ existing device(s).
 
 Both techniques allow websites to interact easily with the wallet, for example:
 
-1. Seeing the wallet’s wallet address (their public key)
+1. Seeing the wallet's wallet address (their public key)
 2. Submitting transactions for a user's approval to sign
 3. Sending signed transactions to the network
 
@@ -51,20 +51,20 @@ transaction to your wallet and having the wallet handle the signing, you ensure
 that you never expose your secret key to the website. Instead, you only share
 the secret key with the wallet application.
 
-Unless you’re creating a wallet application yourself, your code should never
+Unless you're creating a wallet application yourself, your code should never
 need to ask a user for their secret key. Instead, you can ask users to connect
 to your site using a reputable wallet.
 
-## Solana’s Wallet Adapter
+## Solana's Wallet Adapter
 
 If you build web apps, and need users to be able to connect to their wallets and
-sign transactions through your apps, you'll want Solana’s Wallet Adapter. Wallet
+sign transactions through your apps, you'll want Solana's Wallet Adapter. Wallet
 Adapter is a suite of modular packages:
 
 - The core functionality is found in `@solana/wallet-adapter-base`.
 - React support is added by `@solana/wallet-adapter-react`.
 - Additional packages provide components for common UI frameworks. In this
-  lesson, and throughout this course, we’ll be using components from
+  lesson, and throughout this course, we'll be using components from
   `@solana/wallet-adapter-react-ui`.
 
 Finally, some packages are adapters for specific wallet apps. These are now no
@@ -73,7 +73,7 @@ longer necessary in most cases - see below.
 ### Install Wallet-Adapter Libraries for React
 
 When adding wallet support to an existing React app, you start by installing the
-appropriate packages. You’ll need `@solana/wallet-adapter-base`,
+appropriate packages. You'll need `@solana/wallet-adapter-base`,
 `@solana/wallet-adapter-react`. If you plan to use the provided React
 components, you'll also need to add `@solana/wallet-adapter-react-ui`.
 
@@ -135,7 +135,7 @@ export const Home: NextPage = props => {
 ```
 
 Note that `ConnectionProvider` requires an `endpoint` property and that
-`WalletProvider` requires a `wallets` property. We’re continuing to use the
+`WalletProvider` requires a `wallets` property. We're continuing to use the
 endpoint for the Devnet cluster, and since all major Solana wallet applications
 support the Wallet Standard, we don't need any wallet-specific adapters. At this
 point, you can connect with `wallet.connect()`, which will instruct the wallet
@@ -144,9 +144,9 @@ for transactions.
 
 ![wallet connection prompt](/public/assets/courses/unboxed/wallet-connect-prompt.png)
 
-While you could do this in a `useEffect` hook, you’ll usually want to provide
+While you could do this in a `useEffect` hook, you'll usually want to provide
 more sophisticated functionality. For example, you may want users to be able to
-choose from a list of supported wallet applications or disconnect after they’ve
+choose from a list of supported wallet applications or disconnect after they've
 already connected.
 
 ### @solana/wallet-adapter-react-ui
@@ -194,7 +194,7 @@ export default Home;
 ```
 
 The `WalletModalProvider` adds functionality for presenting a modal screen for
-users to select which wallet they’d like to use. The `WalletMultiButton` changes
+users to select which wallet they'd like to use. The `WalletMultiButton` changes
 behavior to match the connection status:
 
 ![multi button select wallet option](/public/assets/courses/unboxed/multi-button-select-wallet.png)
@@ -219,7 +219,7 @@ functionality:
 Once your site is connected to a wallet, `useConnection` will retrieve a
 `Connection` object and `useWallet` will get the `WalletContextState`.
 `WalletContextState` has a property `publicKey` that is `null` when not
-connected to a wallet and has the public key of the user’s account when a wallet
+connected to a wallet and has the public key of the user's account when a wallet
 is connected. With a public key and a connection, you can fetch account info and
 more.
 
@@ -312,14 +312,14 @@ const sendSol = async event => {
 ```
 
 When this function is called, the connected wallet will display the transaction
-for the user’s approval. If approved, then the transaction will be sent.
+for the user's approval. If approved, then the transaction will be sent.
 
 ![wallet transaction approval prompt](/public/assets/courses/unboxed/wallet-transaction-approval-prompt.png)
 
 ## Lab
 
-Let’s take the Ping program from the last lesson and build a frontend that lets
-users approve a transaction that pings the program. As a reminder, the program’s
+Let's take the Ping program from the last lesson and build a frontend that lets
+users approve a transaction that pings the program. As a reminder, the program's
 public key is `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa` and the public key
 for the data account is `Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod`.
 
@@ -341,25 +341,27 @@ Then set your wallet to use Devnet, for example:
 - In Solflare, click **Settings** -> **General** -> **Network** -> **DevNet**
 - In Backpack, click **Preferences** -> **Developer Mode**
 
-This ensures that your wallet app will be connected to the same network we’ll be
+This ensures that your wallet app will be connected to the same network we'll be
 using in this lab.
 
 ### Download the starter code
 
+<!-- TODO: this uses old Unboxed starter repos, we could move it to use `create-solana-dapp` eg https://github.com/solana-developers/anchor-ping-frontend/tree/main/web -->
+
 Download the
 [starter code for this project](https://github.com/Unboxed-Software/solana-ping-frontend/tree/starter).
-This project is a simple Next.js application. It’s mostly empty except for the
-`AppBar` component. We’ll build the rest throughout this lab.
+This project is a simple Next.js application. It's mostly empty except for the
+`AppBar` component. We'll build the rest throughout this lab.
 
 You can see its current state with the command `npm run dev` in the console.
 
 ### Wrap the app in context providers
 
-To start, we’re going to create a new component to contain the various
-Wallet-Adapter providers that we’ll be using. Create a new file inside the
+To start, we're going to create a new component to contain the various
+Wallet-Adapter providers that we'll be using. Create a new file inside the
 `components` folder called `WalletContextProvider.tsx`.
 
-Let’s start with some of the boilerplate for a functional component:
+Let's start with some of the boilerplate for a functional component:
 
 ```tsx
 import { FC, ReactNode } from "react";
@@ -373,7 +375,7 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 export default WalletContextProvider;
 ```
 
-To properly connect to the user’s wallet, we’ll need a `ConnectionProvider`,
+To properly connect to the user's wallet, we'll need a `ConnectionProvider`,
 `WalletProvider`, and `WalletModalProvider`. Start by importing these components
 from `@solana/wallet-adapter-react` and `@solana/wallet-adapter-react-ui`. Then
 add them to the `WalletContextProvider` component. Note that
@@ -405,9 +407,9 @@ export default WalletContextProvider;
 The last things we need are an actual endpoint for `ConnectionProvider` and the
 supported wallets for `WalletProvider`.
 
-For the endpoint, we’ll use the same `clusterApiUrl` function from the
-`@solana/web3.js` library that we’ve used before so you’ll need to import it.
-For the array of wallets you’ll also need to import the
+For the endpoint, we'll use the same `clusterApiUrl` function from the
+`@solana/web3.js` library that we've used before so you'll need to import it.
+For the array of wallets you'll also need to import the
 `@solana/wallet-adapter-wallets` library.
 
 After importing these libraries, create a constant `endpoint` that uses the
@@ -450,10 +452,10 @@ export default WalletContextProvider;
 
 ### Add wallet multi-button
 
-Next, let’s set up the Connect button. The current button is just a placeholder
+Next, let's set up the Connect button. The current button is just a placeholder
 because rather than using a standard button or creating a custom component,
-we’ll be using Wallet-Adapter’s “multi-button.” This button interfaces with the
-providers we set up in `WalletContextProvider` and let’s users choose a wallet,
+we'll be using Wallet-Adapter's “multi-button.” This button interfaces with the
+providers we set up in `WalletContextProvider` and let's users choose a wallet,
 connect to a wallet, and disconnect from a wallet. If you ever need more custom
 functionality, you can create a custom component to handle this.
 
@@ -492,7 +494,7 @@ export default Home;
 If you run the app, everything should still look the same since the current
 button on the top right is still just a placeholder. To remedy this, open
 `AppBar.tsx` and replace `<button>Connect</button>` with `<WalletMultiButton/>`.
-You’ll need to import `WalletMultiButton` from
+You'll need to import `WalletMultiButton` from
 `@solana/wallet-adapter-react-ui`.
 
 ```tsx
@@ -519,17 +521,17 @@ button to connect your wallet to the site.
 
 ### Create button to ping program
 
-Now that our app can connect to our wallet, let’s make the “Ping!” button
+Now that our app can connect to our wallet, let's make the “Ping!” button
 actually do something.
 
-Start by opening the `PingButton.tsx` file. We’re going to replace the
+Start by opening the `PingButton.tsx` file. We're going to replace the
 `console.log` inside of `onClick` with code that will create a transaction and
-submit it to the wallet app for the end user’s approval.
+submit it to the wallet app for the end user's approval.
 
-First, we need a connection, the wallet’s public key, and Wallet-Adapter’s
+First, we need a connection, the wallet's public key, and Wallet-Adapter's
 `sendTransaction` function. To get this, we need to import `useConnection` and
-`useWallet` from `@solana/wallet-adapter-react`. While we’re here, let’s also
-import `@solana/web3.js` since we’ll need it to create our transaction.
+`useWallet` from `@solana/wallet-adapter-react`. While we're here, let's also
+import `@solana/web3.js` since we'll need it to create our transaction.
 
 ```tsx
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
@@ -588,7 +590,7 @@ export const PingButton: FC = () => {
 With that, we can fill in the body of `onClick`.
 
 First, check that both `connection` and `publicKey` exist (if either does not
-then the user’s wallet isn’t connected yet).
+then the user's wallet isn't connected yet).
 
 Next, construct two instances of `PublicKey`, one for the program ID
 `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa` and one for the data account
@@ -633,17 +635,17 @@ const onClick = async () => {
 };
 ```
 
-And that’s it! If you refresh the page, connect your wallet, and click the ping
+And that's it! If you refresh the page, connect your wallet, and click the ping
 button, your wallet should present you with a popup to confirm the transaction.
 
 ### Add some polish
 
-There’s a lot you could do to make the user experience here even better. For
+There's a lot you could do to make the user experience here even better. For
 example, you could change the UI to only show you the Ping button when a wallet
 is connected and display some other prompt otherwise. You could link to the
 transaction on Solana Explorer after a user confirms a transaction so they can
 easily go look at the transaction details. The more you experiment with it, the
-more comfortable you’ll get, so get creative!
+more comfortable you'll get, so get creative!
 
 You can also download the
 [full source code from this lab](https://github.com/Unboxed-Software/solana-ping-frontend)
@@ -651,7 +653,7 @@ to understand all of this in context.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Create an application that
+Now it's your turn to build something independently. Create an application that
 lets a user connect their wallet and send SOL to another account.
 
 ![Send SOL App](/public/assets/courses/unboxed/solana-send-sol-app.png)
@@ -659,7 +661,7 @@ lets a user connect their wallet and send SOL to another account.
 1. You can build this from scratch or you can
    [download the starter code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/starter).
 2. Wrap the starter application in the appropriate context providers.
-3. In the form component, set up the transaction and send it to the user’s
+3. In the form component, set up the transaction and send it to the user's
    wallet for approval.
 4. Get creative with the user experience. Add a link to let the user view the
    transaction on Solana Explorer or something else that seems cool to you!

@@ -82,7 +82,7 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf)
+[BPF](/docs/core/programs#berkeley-packet-filter-bpf)
 [onchain programs](#onchain-program), allowing the program to interface with the
 runtime.
 
@@ -144,7 +144,7 @@ consensus.
 
 ## drone
 
-An off-chain service that acts as a custodian for a user's private key. It
+An offchain service that acts as a custodian for a user's private key. It
 typically serves to validate and sign transactions.
 
 ## entry

@@ -20,6 +20,9 @@ description: "Understand asymmetric cryptography and how Solana uses it."
 
 ## Lesson
 
+In this lesson, we will explore the basics of cryptography and how it's applied
+within the Solana ecosystem.
+
 ### Symmetric and Asymmetric Cryptography
 
 'Cryptography' the study of hiding information. There are two main types of
@@ -102,7 +105,7 @@ to install `@solana/web3.js`
 npm i @solana/web3.js
 ```
 
-We’ll cover a lot of
+We'll cover a lot of
 [web3.js](https://solana.com/docs/clients/javascript-reference) gradually
 throughout this course, but you can also check out the
 [official web3.js documentation](https://solana.com/docs/clients/javascript-reference).
@@ -135,7 +138,7 @@ store secret keys in source code. Instead, we:
 
 ### Loading an existing keypair
 
-If you already have a keypair you’d like to use, you can load a `Keypair` from
+If you already have a keypair you'd like to use, you can load a `Keypair` from
 an existing secret key stored in the filesystem or an `.env` file. In node.js,
 the `@solana-developers/helpers` npm package includes some extra functions:
 
@@ -153,9 +156,12 @@ import { getKeypairFromEnvironment } from "@solana-developers/helpers";
 const keypair = getKeypairFromEnvironment("SECRET_KEY");
 ```
 
-You know how to make and load keypairs! Let’s practice what we’ve learned.
+You know how to make and load keypairs! Let's practice what we've learned.
 
 ## Lab
+
+In this lab we will learn about keypairs, and how to store secret keys securely
+on solana
 
 ### Installation
 
