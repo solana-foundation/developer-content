@@ -330,10 +330,10 @@ pub enum MyError {
 
 ## Lab
 
-Let’s practice the concepts we’ve gone over in this lesson by building on top of
+Let's practice the concepts we've gone over in this lesson by building on top of
 the Movie Review program from previous lessons.
 
-In this lab we’ll update the program to mint tokens to users when they submit a
+In this lab we'll update the program to mint tokens to users when they submit a
 new movie review.
 
 <Steps>
@@ -342,7 +342,7 @@ new movie review.
 
 To get started, we will be using the final state of the Anchor Movie Review
 program from the previous lesson. So, if you just completed that lesson then
-you’re all set and ready to go. If you are just jumping in here, no worries, you
+you're all set and ready to go. If you are just jumping in here, no worries, you
 can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
 
@@ -410,7 +410,7 @@ pub fn initialize_token_mint(_ctx: Context<InitializeMint>) -> Result<()> {
 
 ### Anchor Error
 
-Next, let’s create an Anchor Error that we’ll use to validate the following:
+Next, let's create an Anchor Error that we'll use to validate the following:
 
 - The `rating` passed to either the `add_movie_review` or `update_movie_review`
   instruction.
@@ -432,7 +432,7 @@ enum MovieReviewError {
 
 ### Update add_movie_review instruction
 
-Now that we've done some setup, let’s update the `add_movie_review` instruction
+Now that we've done some setup, let's update the `add_movie_review` instruction
 and `AddMovieReview` context type to mint tokens to the reviewer.
 
 Next, update the `AddMovieReview` context type to add the following accounts:
@@ -485,7 +485,7 @@ been initialized, it will be initialized as an associated token account for the
 specified mint and authority. Also, the payer for the costs related with the
 account initialization will be set under the constraint `payer`.
 
-Next, let’s update the `add_movie_review` instruction to do the following:
+Next, let's update the `add_movie_review` instruction to do the following:
 
 - Check that `rating` is valid. If it is not a valid rating, return the
   `InvalidRating` error.
@@ -493,7 +493,7 @@ Next, let’s update the `add_movie_review` instruction to do the following:
   `TitleTooLong` error.
 - Check that `description` length is valid. If it is not a valid length, return
   the `DescriptionTooLong` error.
-- Make a CPI to the token program’s `mint_to` instruction using the mint
+- Make a CPI to the token program's `mint_to` instruction using the mint
   authority PDA as a signer. Note that we'll mint 10 tokens to the user but need
   to adjust for the mint decimals by making it `10*10^6`.
 
@@ -608,7 +608,7 @@ pub fn update_movie_review(
 
 ### Test
 
-Those are all of the changes we need to make to the program! Now, let’s update
+Those are all of the changes we need to make to the program! Now, let's update
 our tests.
 
 Start by making sure your imports and `describe` function look like this:

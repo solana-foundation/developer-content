@@ -233,7 +233,7 @@ let uri = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/mas
 let asset: Asset = await loader.load(uri);
 let gltf: GlTf = asset.gltf;
 console.log(gltf);
-// -> {asset: {…}, scene: 0, scenes: Array(1), nodes: Array(2), meshes: Array(1), …}
+// -> {asset: {...}, scene: 0, scenes: Array(1), nodes: Array(2), meshes: Array(1), ...}
 
 let data = await asset.accessorData(0); // fetches BoxTextured0.bin
 let image: Image = await asset.imageData.get(0) // fetches CesiumLogoFlat.png

@@ -57,7 +57,7 @@ If you haven't installed Solana CLI, Rust, or Anchor before, you can easily do
 so by
 [following our helpful installation guide](https://solana.com/docs/intro/installation)
 
-> This scaffolds only supports TypeScript for now, but don’t worry, TypeScript
+> This scaffolds only supports TypeScript for now, but don't worry, TypeScript
 > simply extends on the JavaScript you already know to add helpful type
 > definitions.
 
