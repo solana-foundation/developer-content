@@ -198,7 +198,7 @@ transact(async (wallet: Web3MobileWallet) => {
 Note that the above example does not handle errors or user rejections. In
 production, it's a good idea to wrap the authorization state and methods with a
 custom `useAuthorization` hook. For reference, we built this
-[in the previous lesson](/content/courses/mobile/intro-to-solana-mobile).
+[in the previous lesson](/content/courses/mobile/intro-to-solana-mobile.md).
 
 #### Interact with a wallet
 
@@ -450,7 +450,7 @@ app-wallet relationship.
 Before we start programming our wallet, we need to do some setup. You will need
 a React Native development environment and a Solana dApp to test on. If you have
 completed the
-[Introduction to Solana Mobile lab](/content/courses/mobile/intro-to-solana-mobile),
+[Introduction to Solana Mobile lab](/content/courses/mobile/intro-to-solana-mobile.md),
 both of these requirements should be met and the counter app installed on your
 Android device/emulator.
 
@@ -1625,7 +1625,7 @@ request types: `SignMessagesRequest` and `SignTransactionsRequest`.
 
 Try to do this without help as it's great practice, but if you get stuck, check
 out the
-[solution code on the `solution` branch](https://github.com/solana-developers/react-native-fake-solana-wallet/tree/solution).
+[solution code on the `solution` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet/tree/solution).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
