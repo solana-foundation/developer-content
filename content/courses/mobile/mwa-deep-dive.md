@@ -23,10 +23,10 @@ description:
 ## Lesson
 
 Wallets exist to protect your secret keys. While some applications might have
-app-specific keys, many blockchain use cases rely on a single identity used across
-multiple apps. In these cases, you very much want to be careful about how you
-expose signing across these apps. You don't want to share your secret key with
-all of them, which means you need a standard for allowing apps to submit
+app-specific keys, many blockchain use cases rely on a single identity used
+across multiple apps. In these cases, you very much want to be careful about how
+you expose signing across these apps. You don't want to share your secret key
+with all of them, which means you need a standard for allowing apps to submit
 transactions for signature to a secure wallet app that holds your secret key.
 This is where the Mobile Wallet Adapter (MWA) comes in. It's the transport layer
 to connect your mobile dApps to your wallet.
@@ -598,8 +598,8 @@ provider should generate and store a keypair. The `WalletProvider` will then
 return its context including the `wallet` and `connection`. The rest of the app
 can access this context using the `useWallet()` hook.
 
-**_AGAIN_**, async storage is not fit to store secret keys in production.
-Please use something like
+**_AGAIN_**, async storage is not fit to store secret keys in production. Please
+use something like
 [Android's keystore system](https://developer.android.com/privacy-and-security/keystore).
 
 Let's create the `WalletProvider.tsx` within a new directory named `components`:
