@@ -182,7 +182,7 @@ the local RPC URL.
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 ```
 
-Alternatively, if you’d like to use testnet or devnet, import the
+Alternatively, if you'd like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
 ```typescript
@@ -360,7 +360,7 @@ const signature = await sendAndConfirmTransaction(connection, transaction, [
 return signature;
 ```
 
-Now that we’ve added the functionality for `token-helper`, we can create our
+Now that we've added the functionality for `token-helper`, we can create our
 test token accounts. One of the two test token accounts will be created by
 calling `createTokenAccountWithImmutableOwner`. The other will be created with
 the baked-in SPL helper function `createAssociatedTokenAccount`. This helper
@@ -475,7 +475,7 @@ Now we can run `npx esrun src/index.ts`. This test should log a failure message
 similar to the one from the previous test. This means that both of our token
 accounts are in fact immutable and working as intended.
 
-Congratulations! We’ve just created token accounts and tested the immutable
+Congratulations! We've just created token accounts and tested the immutable
 owner extension! If you are stuck at any point, you can find the working code on
 the `solution` branch of
 [this repository](https://github.com/Unboxed-Software/solana-lab-immutable-owner/tree/solution).

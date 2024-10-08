@@ -1406,7 +1406,7 @@ the data feed account does not exist anymore, withdraw the user's escrowed
 funds.
 
 A potential solution to this challenge can be found
-[in the Github repository on the `challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/challenge-solution).
+[in the Github repository on the `challenge-solution` branch](https://github.com/solana-developers/burry-escrow/tree/challenge-solution).
 
 <Callout type="success" title="Completed the lab?">
 
