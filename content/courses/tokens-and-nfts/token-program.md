@@ -628,7 +628,7 @@ const tokenMintLink = getExplorerLink(
 console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
 ```
 
-Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your address of the mint and Run the
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your address of the mint and run the
 script using `npx esrun create-token-metadata.ts`.
 
 You'll now see Solana Explorer is updated, showing the token's name and symbol
