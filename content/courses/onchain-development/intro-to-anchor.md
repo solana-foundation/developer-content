@@ -59,7 +59,12 @@ Some important macros provided by Anchor are:
 > with Rust, if not, we recommend you to check out
 > [The Rust Book](https://doc.rust-lang.org/book/).
 
-- `declare_id!` - a macro for declaring the program’s onchain address
+- `declare_id!` - a macro for declaring the program’s onchain address Anchor
+  uses macros and traits to generate boilerplate Rust code for you. These
+  provide a clear structure to your program so you can more easily reason about
+  your code. The main high-level macros and attributes are:
+
+- `declare_id` - a macro for declaring the program’s onchain address
 - `#[program]` - an attribute macro used to denote the module containing the
   program’s instruction handlers.
 - `Accounts` - a trait applied to structs representing the list of accounts
@@ -145,9 +150,9 @@ takes a generic of your `Accounts` struct, eg, if `AddMovieReview` was the
 struct holding the accounts, the context for the `add_movie_review()` function
 would be `Context<AddMovieReview>`.
 
-<callout type="info" title="Naming convention">
-  Yes, the Accounts struct is typically named the same thing as the instruction handler, just in TitleCase. Eg, the struct with the accounts for add_movie_review() is called AddMovieReview!
-</callout>
+> Yes, the Accounts struct is typically named the same thing as the instruction
+> handler, just in TitleCase. Eg, the struct with the accounts for
+> add_movie_review() is called AddMovieReview!
 
 Through this context argument the instruction can then access:
 
@@ -202,8 +207,8 @@ pub struct InstructionAccounts<'info> {
 
     #[account(mut)]
     pub user: Signer<'info>,
-
     pub system_program: Program<'info, System>,
+
 }
 ```
 
@@ -224,7 +229,7 @@ You may have noticed in the previous example that one of the accounts in
 was of type `Program`.
 
 Anchor provides a number of account types that can be used to represent
-accounts. Each type implements different account validation. We'll go over a few
+accounts. Each type implements different account validation. We’ll go over a few
 of the common types you may encounter, but be sure to look through the
 [full list of account types](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/index.html).
 
@@ -378,8 +383,8 @@ from the first 8 bytes of the SHA256 hash of the account type's name. The first
 8 bytes are reserved for the account discriminator when implementing account
 serialization traits (which is almost always in an Anchor program).
 
-As a result, any calls to `AccountDeserialize`'s `try_deserialize` will check
-this discriminator. If it doesn't match, an invalid account was given, and the
+As a result, any calls to `AccountDeserialize`’s `try_deserialize` will check
+this discriminator. If it doesn’t match, an invalid account was given, and the
 account deserialization will exit with an error.
 
 The `#[account]` attribute also implements the `Owner` trait for a struct using
@@ -487,99 +492,242 @@ You are now ready to build your own Solana program using the Anchor framework!
 
 ## Lab
 
-Before we begin, install Anchor by
-[following the steps from the Anchor docs](https://www.anchor-lang.com/docs/installation).
+### Making an Anchor v0.30.1 counter program for Solana
 
-For this lab we'll create a simple counter program with two instructions:
+We'll put the information from this course into practice by creating a basic
+counter program for Solana.
 
-- The first instruction will initialize an account to store our counter
-- The second instruction will increment the count stored in the counter
+#### Setting up the development environment
 
-#### 1. Setup
+`solana-cli` can be installed by following this
+[installation guide](https://solana.com/docs/intro/installation).
 
-Create a new project called `anchor-counter` by running `anchor init`:
+> Our counter program will use the `agave` fork of `solana`, found at
+> https://github.com/anza-xyz/agave. The latest mainnet-beta release as of
+> 9/25/2024 is v1.18.23. To install it on any Linux distribution, you can follow
+> these commands below:
 
 ```shell
-anchor init anchor-counter
+curl -O https://raw.githubusercontent.com/anza-xyz/agave/v1.18.23/scripts/agave-install-init-x86_64-unknown-linux-gnu
+chmod +x agave-install-init-x86_64-unknown-linux-gnu
+./agave-install-init-x86_64-unknown-linux-gnu v1.18.23
+solana --version
+# if solana --version isn't recognized, try adding agave to your path:
+echo 'export PATH="$HOME/.agave/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
 ```
 
-Change into the new directory, then run `anchor build`
+Go to your terminal and ensure that the following commands output usable
+versions. Anchor will fail to create the tests directory if you don't have npm
+installed on your OS, so ensure npm is installed alongside the other
+dependencies:
+
+```shell
+node --version
+npm --version
+yarn --version
+solana --version
+rustc --version
+```
+
+> The Anchor documentation doesn't mention
+> [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm), but
+> it is critical for `anchor init` to generate the tests directory and the
+> package.json.
+
+The output for the latest versions as of 09/25/24 is:
+
+```shell
+v22.9.0
+10.8.3
+1.22.22
+solana-cli 1.18.18 (src:83047136; feat:4215500110, client:SolanaLabs)
+# if you're using agave, the latest version of solana-cli should show as of 09/25/24:
+solana-cli 1.18.23 (src:e5d267d9; feat:4215500110, client:Agave)
+rustc 1.81.0 (eeb90cda1 2024-09-04)
+```
+
+To install anchor, follow the
+[instructions](https://www.anchor-lang.com/docs/installation).
+
+> The most recent version of anchor (v0.30.1) has a minor conflict with rust
+> versions ^1.79.0, so it might be necessary to follow this
+> [solution](https://github.com/coral-xyz/anchor/issues/3131#issuecomment-2264178262)
+> during installation. Don't worry, it's an extremely fast and easy fix.
+
+If you'd rather just downgrade rust, you can set the development environment's
+rust version to 1.79.0 using rustup:
+
+```shell
+rustup install 1.79.0
+rustup default 1.79.0
+```
+
+Verify you've installed avm and the latest anchor versions:
+
+```shell
+avm --version
+anchor --version
+```
+
+The outputs should be similar to:
+
+```shell
+avm 0.30.1
+anchor-cli 0.30.1
+```
+
+#### Creating a new Anchor project with the multiple files template
+
+```shell
+anchor init anchor-counter --template multiple
+```
+
+This will create the anchor-counter directory with the necessary files, which
+we'll adjust to work as a counter program.
+
+#### Writing the code for the counter program
+
+The resulting `tree` (excluding the `node_modules` directory) from the above
+command will be:
+
+```shell
+tree -I 'node_modules'
+.
+├── Anchor.toml
+├── app
+├── Cargo.toml
+├── migrations
+│   └── deploy.ts
+├── package.json
+├── programs
+│   └── anchor-counter
+│       ├── Cargo.toml
+│       ├── src
+│       │   ├── constants.rs
+│       │   ├── error.rs
+│       │   ├── instructions
+│       │   │   ├── initialize.rs
+│       │   │   └── mod.rs
+│       │   ├── lib.rs
+│       │   └── state
+│       │       └── mod.rs
+│       └── Xargo.toml
+├── target
+│   └── deploy
+│       └── anchor_counter-keypair.json
+├── tests
+│   └── anchor-counter.ts
+├── tsconfig.json
+└── yarn.lock
+
+11 directories, 16 files
+```
+
+The `app` directory is where you can add frontend code for your program, if
+you'd like. The `migrations` directory is where you can add scripts to deploy
+your program. The `tests` directory is where you can add tests for your program.
+The `programs` directory is where the bulk of the anchor code will go.
+
+#### Writing the program code
+
+Let's navigate to the `programs/anchor-counter` directory, and open the
+src/lib.rs file.
+
+Anchor build will generate a keypair for your new program - the keys are saved
+in the `target/deploy` directory.
 
 ```shell
 cd anchor-counter
 anchor build
 ```
 
-Anchor build will also generate a keypair for your new program - the keys are
-saved in the `target/deploy` directory.
+Keep your declare_id! line as is, because that is specific to your instance of
+the program.
 
-Open the file `lib.rs` and look at `declare_id!`:
-
-```rust
-declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
-```
-
-and then run...
+To ensure that your program ID is correctly set, you can run the following
+command:
 
 ```shell
 anchor keys sync
 ```
 
-You'll see the Anchor updates both:
+This will update your Anchor.toml and src/lib.rs files with the correct program
+ID.
 
-- The key used in `declare_id!()` in `lib.rs`
-- The key in `Anchor.toml`
-
-To match the key generated during `anchor build`:
-
-```shell
-Found incorrect program id declaration in "anchor-counter/programs/anchor-counter/src/lib.rs"
-Updated to BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr
-
-Found incorrect program id declaration in Anchor.toml for the program `anchor_counter`
-Updated to BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr
-
-All program id declarations are synced.
-```
-
-Finally, delete the default code in `lib.rs` until all that is left is the
-following:
+Update the src/lib.rs file with the following (but keep your declare_id as it is
+after running `anchor keys sync`):
 
 ```rust
 use anchor_lang::prelude::*;
 
-declare_id!("your-private-key");
+pub mod instructions;
+pub mod state;
+pub mod constants;
+
+use instructions::*;
+
+declare_id!("GHmQT2iEwiw3hZvWsYt94mWtEDhK5kBktYhhddLH1e4c");
 
 #[program]
 pub mod anchor_counter {
     use super::*;
+
+    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+        instructions::initialize::handler(ctx)
+    }
+
+    pub fn increment(ctx: Context<IncrementUpdate>) -> Result<()> {
+        instructions::increment::increment_handler(ctx)
+    }
+
+    pub fn decrement(ctx: Context<DecrementUpdate>) -> Result<()> {
+        instructions::decrement::decrement_handler(ctx)
+    }
 }
 ```
 
-#### 2. Implement `Counter`
+Let's use the `#[account]` attribute to define a new `Counter` account type. The
+`Counter` struct defines one `count` field of type `u64`. This means that we can
+expect any new accounts initialized as a `Counter` type to have a matching data
+structure. The `#[account]` attribute also automatically sets the discriminator
+for a new account and sets the owner of the account as the `programId` from the
+`declare_id!` macro.
 
-First, let's use the `#[account]` attribute to define a new `Counter` account
-type. The `Counter` struct defines one `count` field of type `u64`. This means
-that we can expect any new accounts initialized as a `Counter` type to have a
-matching data structure. The `#[account]` attribute also automatically sets the
-discriminator for a new account and sets the owner of the account as the
-`programId` from the `declare_id!` macro. We also use the `#[derive(InitSpace)]`
-macro for convenient space allocation.
+Now, let's update the `state/mod.rs` file. Note the use of the InitSpace
+attribute, which automatically calculates the lamports needed for the account:
 
 ```rust
+use anchor_lang::prelude::*;
+
 #[account]
 #[derive(InitSpace)]
 pub struct Counter {
     pub count: u64,
 }
-
-const DISCRIMINATOR: usize = 8;
 ```
 
-#### 3. Implement `Context` type `Initialize`
+This Counter struct will be used to define the counter account's data
+structure - a simple u64 count.
 
-Next, using the `#[derive(Accounts)]` macro, let's implement the `Initialize`
-type that lists and validates the accounts used by the `initialize` instruction.
+Next, let's update the `instructions/mod.rs` file, which defines the modules for
+each instruction and allows them to be imported into the lib.rs file:
+
+```rust
+pub mod initialize;
+pub mod increment;
+pub mod decrement;
+
+pub use initialize::*;
+pub use increment::*;
+pub use decrement::*;
+```
+
+Now we'll implement `Context` type `Initialize` to handle the initialization of
+our counter.
+
+Using the `#[derive(Accounts)]` macro, let’s implement the `Initialize` type
+that lists and validates the accounts used by the `initialize` instruction.
 It'll need the following accounts:
 
 - `counter` - the counter account initialized in the instruction
@@ -587,226 +735,274 @@ It'll need the following accounts:
 - `system_program` - the system program is required for the initialization of
   any new accounts
 
+> You'll see `INIT_SPACE` accessed here, thanks to the `derive(InitSpace)` macro
+> from earlier. You can read more about the mechanics of space allocation from
+> the official [anchor documentation](https://www.anchor-lang.com/docs/space).
+
+Inside of `instructions/initialize.rs`, adjust the code to match the following:
+
 ```rust
+use crate::state::Counter;
+use anchor_lang::prelude::*;
+
+const DISCRIMINATOR: usize = 8;
+
 #[derive(Accounts)]
 pub struct Initialize<'info> {
-    #[account(init,
-        payer = user,
-        space = DISCRIMINATOR + Counter::INIT_SPACE
-    )]
+    #[account(init, payer = user, space = DISCRIMINATOR + Counter::INIT_SPACE)]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
-```
 
-#### 4. Add the `initialize` instruction handler
-
-Now that we have our `Counter` account and `Initialize` type , let's implement
-the `initialize` instruction handler within `#[program]`. This instruction
-handler requires a `Context` of type `Initialize` and takes no additional
-instruction data. In the instruction logic, we are simply setting the `counter`
-account's `count` field to `0`.
-
-```rust
-pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
+pub fn handler(ctx: Context<Initialize>) -> Result<()> {
     let counter = &mut ctx.accounts.counter;
     counter.count = 0;
-    msg!("Counter Account Created");
-    msg!("Current Count: { }", counter.count);
+    msg!("Counter initialized. Initial count: {}.", counter.count);
+    Ok(())
+}
+
+```
+
+Within instructions/increment.rs, let’s implement an `increment` instruction
+handler to increment the `count` once a `counter` account is initialized by the
+first instruction handler. This instruction handler requires a `Context` of type
+`Update` (implemented in a previous step) and takes no additional instruction
+data. In the instruction handler's logic, we are simply tracking the current
+state, and then incrementing the existing `counter` account’s `count` field by
+`1`.
+
+```rust
+use crate::state::Counter;
+use anchor_lang::prelude::*;
+
+#[derive(Accounts)]
+pub struct IncrementUpdate<'info> {
+    #[account(mut)]
+    pub counter: Account<'info, Counter>,
+    pub user: Signer<'info>,
+}
+
+pub fn increment_handler(ctx: Context<IncrementUpdate>) -> Result<()> {
+    let counter = &mut ctx.accounts.counter;
+    let previous_count = counter.count;
+    counter.count += 1;
+    msg!(
+        "Counter incremented. Previous count: {}; New count: {}.",
+        previous_count,
+        counter.count
+    );
     Ok(())
 }
 ```
 
-#### 5. Implement `Context` type `Update`
+Finally, let's create the `instructions/decrement.rs` file to handle
+decrementing the counter, which functions in the same way as the incrementation
+instruction handler, but to subtract 1 instead.
 
-Now, using the `#[derive(Accounts)]` macro again, let's create the `Update` type
-that lists the accounts that the `increment` instruction handler requires. It'll
-need the following accounts:
+We'll be using the `#[derive(Accounts)]` macro again to create the
+`DecrementUpdate` type that lists the accounts that the `decrement` instruction
+handler requires. It'll need the following accounts:
 
 - `counter` - an existing counter account to increment
 - `user` - payer for the transaction fee
 
-Again, we'll need to specify any constraints using the `#[account(..)]`
-attribute:
+Just like in the previous step with the increment instruction handler, we’ll
+need to specify any constraints using the `#[account(..)]` attribute:
 
 ```rust
+use crate::state::Counter;
+use anchor_lang::prelude::*;
+
 #[derive(Accounts)]
-pub struct Update<'info> {
+pub struct DecrementUpdate<'info> {
     #[account(mut)]
     pub counter: Account<'info, Counter>,
     pub user: Signer<'info>,
 }
-```
 
-#### 6. Add `increment` instruction handler
-
-Lastly, within `#[program]`, let's implement an `increment` instruction handler
-to increment the `count` once a `counter` account is initialized by the first
-instruction handler. This instruction handler requires a `Context` of type
-`Update` (implemented in the next step) and takes no additional instruction
-data. In the instruction logic, we are simply incrementing an existing `counter`
-account's `count` field by `1`.
-
-```rust
-pub fn increment(ctx: Context<Update>) -> Result<()> {
+pub fn decrement_handler(ctx: Context<DecrementUpdate>) -> Result<()> {
     let counter = &mut ctx.accounts.counter;
-    msg!("Previous counter: {}", counter.count);
-    counter.count = counter.count.checked_add(1).unwrap();
-    msg!("Counter incremented. Current count: {}", counter.count);
+    let previous_count = counter.count;
+    counter.count -= 1;
+    msg!(
+        "Counter decremented. Previous count: {}; New count: {}.",
+        previous_count,
+        counter.count
+    );
     Ok(())
 }
 ```
 
-#### 7. Build
+Now, we can navigate back to the `anchor-counter` directory and build the
+completed program:
 
-All together, the complete program will look like this:
-
-```rust
-use anchor_lang::prelude::*;
-
-declare_id!("BouTUP7a3MZLtXqMAm1NrkJSKwAjmid8abqiNjUyBJSr");
-
-#[program]
-pub mod anchor_counter {
-    use super::*;
-
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        let counter = &mut ctx.accounts.counter;
-        counter.count = 0;
-        msg!("Counter account created. Current count: {}", counter.count);
-        Ok(())
-    }
-
-    pub fn increment(ctx: Context<Update>) -> Result<()> {
-        let counter = &mut ctx.accounts.counter;
-        msg!("Previous counter: {}", counter.count);
-        counter.count = counter.count.checked_add(1).unwrap();
-        msg!("Counter incremented. Current count: {}", counter.count);
-        Ok(())
-    }
-}
-
-#[derive(Accounts)]
-pub struct Initialize<'info> {
-    #[account(init,
-        payer = user,
-        space = DISCRIMINATOR + Counter::INIT_SPACE
-    )]
-    pub counter: Account<'info, Counter>,
-    #[account(mut)]
-    pub user: Signer<'info>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct Update<'info> {
-    #[account(mut)]
-    pub counter: Account<'info, Counter>,
-    pub user: Signer<'info>,
-}
-
-#[account]
-#[derive(InitSpace)]
-pub struct Counter {
-    pub count: u64,
-}
-
-const DISCRIMINATOR: usize = 8;
+```shell
+anchor build
 ```
 
-Run `anchor build` to build the program.
+This will create a `target` directory with the build artifacts.
 
-#### 8. Testing
+You can validate the program ID matches your keypair by running the following
+command:
 
-Anchor tests are typically Typescript integration tests that use the mocha test
-framework. We'll learn more about testing later, but for now navigate to
-`anchor-counter.ts` and replace the default test code with the following:
+```shell
+anchor keys list
+```
+
+Then go to the root Anchor.toml and src/lib.rs to ensure that the program ID
+matches the output of `anchor keys list`.
+
+#### Setting up the test environment
+
+Navigate to the root `anchor-counter` directory and run the following commands:
+
+```shell
+yarn install
+```
+
+This will install the dependencies for testing with typescript.
+
+Let's also update the tsconfig.json to use commonjs and node's module
+resolution, as well as ES2022.
+
+```json
+{
+  "compilerOptions": {
+    "types": ["mocha", "chai"],
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["ES2022", "DOM"],
+    "module": "commonjs",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@coral-xyz/anchor": ["node_modules/@coral-xyz/anchor"]
+    }
+  },
+  "include": ["tests/**/*"],
+  "exclude": ["node_modules"]
+}
+```
+
+Then, go to anchor-counter/tests/anchor-counter.ts and update the code:
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import { expect } from "chai";
 import { AnchorCounter } from "../target/types/anchor_counter";
+import { expect } from "chai";
 
 describe("anchor-counter", () => {
-  // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
   const program = anchor.workspace.AnchorCounter as Program<AnchorCounter>;
+  const counterKeypair = anchor.web3.Keypair.generate();
 
-  const counter = anchor.web3.Keypair.generate();
+  it("Initializes the counter", async () => {
+    const tx = await program.methods
+      .initialize()
+      .accounts({
+        counter: counterKeypair.publicKey,
+        user: provider.wallet.publicKey,
+      })
+      .signers([counterKeypair])
+      .rpc();
 
-  it("Is initialized!", async () => {});
+    const account = await program.account.counter.fetch(
+      counterKeypair.publicKey,
+    );
+    expect(account.count.toNumber()).to.equal(0);
+  });
 
-  it("Incremented the count", async () => {});
+  it("Increments the counter", async () => {
+    await program.methods
+      .increment()
+      .accounts({
+        counter: counterKeypair.publicKey,
+        user: provider.wallet.publicKey,
+      })
+      .rpc();
+
+    const account = await program.account.counter.fetch(
+      counterKeypair.publicKey,
+    );
+    expect(account.count.toNumber()).to.equal(1);
+  });
+
+  it("Decrements the counter", async () => {
+    await program.methods
+      .decrement()
+      .accounts({
+        counter: counterKeypair.publicKey,
+        user: provider.wallet.publicKey,
+      })
+      .rpc();
+
+    const account = await program.account.counter.fetch(
+      counterKeypair.publicKey,
+    );
+    expect(account.count.toNumber()).to.equal(0);
+  });
 });
 ```
 
-The above code generates a new keypair for the `counter` account we'll be
-initializing and creates placeholders for a test of each instruction.
+This creates a provider using the environment's wallet, sets the localnet
+(localhost) provider for anchor, and creates a program instance using the
+workspace. It also generates a keypair for the counter. This will allow
+`anchor test` to run the tests where we check that the counter is initializing,
+incrementing, and decrementing as expected.
 
-Next, create the first test for the `initialize` instruction:
-
-```typescript
-it("Is initialized!", async () => {
-  // Add your test here.
-  const tx = await program.methods
-    .initialize()
-    .accounts({ counter: counter.publicKey })
-    .signers([counter])
-    .rpc();
-
-  const account = await program.account.counter.fetch(counter.publicKey);
-  expect(account.count.toNumber()).to.equal(0);
-});
-```
-
-Next, create the second test for the `increment` instruction:
-
-```typescript
-it("Incremented the count", async () => {
-  const tx = await program.methods
-    .increment()
-    .accounts({ counter: counter.publicKey, user: provider.wallet.publicKey })
-    .rpc();
-
-  const account = await program.account.counter.fetch(counter.publicKey);
-  expect(account.count.toNumber()).to.equal(1);
-});
-```
-
-Lastly, run `anchor test` and you should see the following output:
+Let's try running them now! Get back to your root `anchor-counter` directory and
+run the following command:
 
 ```shell
-anchor-counter
-✔ Is initialized! (290ms)
-✔ Incremented the count (403ms)
-
-
-2 passing (696ms)
+anchor test
 ```
 
-Running `anchor test` automatically spins up a local test validator, deploys
-your program, and runs your mocha tests against it. Don't worry if you're
-confused by the tests for now - we'll dig in more later.
+If all goes well, you should see the following output:
 
-Congratulations, you just built a Solana program using the Anchor framework!
-Feel free to reference the
-[solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-increment)
-if you need some more time with it.
+```shell
+  anchor-counter
+    ✔ Initializes the counter (151ms)
+    ✔ Increments the counter (410ms)
+    ✔ Decrements the counter (401ms)
+```
+
+#### Conclusion and deployment
+
+Congratulations! You've created a basic counter program for Solana using Anchor!
+
+When you're ready to deploy a Solana program, run the following command:
+
+```shell
+anchor deploy
+```
+
+Keep in mind, this will require SOL to pay for rent and transaction fees
+associated with the deployment. You can check which cluster you're connected to
+by running `solana config get`. If you're not connected to the devnet, you can
+connect to it by running
+`solana config set --url https://api.devnet.solana.com`.
 
 ## Challenge
 
-Now it's your turn to build something independently. Because we're starting with
+Now it’s your turn to build something independently. Because we're starting with
 simple programs, yours will look almost identical to what we just created. It's
-useful to try and get to the point where you can write it from scratch without
+useful to try to get to the point where you can write it from scratch without
 referencing prior code, so try not to copy and paste here.
 
 1. Write a new program that initializes a `counter` account
-2. Implement both an `increment` and `decrement` instruction
+2. Implement both an `increment` and `decrement` instruction for intervals of
+   both 1 and 5
 3. Build and deploy your program like we did in the lab
 4. Test your newly deployed program and use Solana Explorer to check the program
    logs
@@ -815,10 +1011,7 @@ As always, get creative with these challenges and take them beyond the basic
 instructions if you want - and have fun!
 
 Try to do this independently if you can! But if you get stuck, feel free to
-reference
-the [solution code](https://github.com/Unboxed-Software/anchor-counter-program/tree/solution-decrement).
+the [solution code](https://github.com/shawazi/anchor-counter).
 
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!
-</Callout>
+> Push your code to GitHub and
+> [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=334874b7-b152-4473-b5a5-5474c3f8f3f1)!
