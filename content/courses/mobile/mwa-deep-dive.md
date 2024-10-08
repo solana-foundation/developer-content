@@ -41,7 +41,7 @@ app-wallet connection differently.
 
 At its core, a wallet app is fairly straightforward. It's a secure wrapper
 around your keypair. External applications can request that the wallet sign
-transactions without ever having access to your private key. Both the web and
+transactions without ever having access to your secret key. Both the web and
 mobile wallet adapters define this interaction for their respective platforms.
 
 #### How does a web wallet work?
@@ -598,7 +598,7 @@ provider should generate and store a keypair. The `WalletProvider` will then
 return its context including the `wallet` and `connection`. The rest of the app
 can access this context using the `useWallet()` hook.
 
-**_AGAIN_**, async storage is not fit to store private keys in production.
+**_AGAIN_**, async storage is not fit to store secret keys in production.
 Please use something like
 [Android's keystore system](https://developer.android.com/privacy-and-security/keystore).
 
