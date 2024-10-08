@@ -30,11 +30,11 @@ Account Model. For more details, refer to the
 
 ## Fetch Playground Wallet
 
-<Steps>
-
 Let's start by looking at a familiar account - your own Playground Wallet! We'll
 fetch this account and examine its structure to understand what a basic Solana
 account looks like.
+
+<Steps>
 
 ### Open Example 1
 

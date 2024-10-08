@@ -1,50 +1,65 @@
 ---
 title: Introduction to Solana Mobile
 objectives:
-  - Explain the benefits of creating mobile-first dApp experiences
+  - Explain the benefits of creating mobile-first App experiences
   - Explain the high-level Mobile Wallet Adapter (MWA) flow
   - Explain the high-level differences between React and React Native
-  - Create a simple Android Solana dApp using React Native
+  - Create a simple Android Solana App using React Native
 description:
   "Learn how to build native mobile apps using blockchain functionality"
 ---
 
 ## Summary
 
-- The Solana Mobile Wallet Adapter (MWA) creates a web socket connection between
-  mobile apps and mobile wallets, allowing native mobile apps to submit
-  transactions for signing
-- The simplest way to get started creating Solana mobile applications is with
-  Solana Mobile's
-  [React Native packages](https://docs.solanamobile.com/react-native/setup)
+- The **Solana Mobile Wallet Adapter** (**MWA**) allows mobile apps to submit
+  transactions for signing via a WebSocket connection to mobile wallets.
+- The easiest way to start building Solana mobile applications is by using
+  Solana Mobile’s
+  [React Native packages](https://docs.solanamobile.com/react-native/setup) -
   `@solana-mobile/mobile-wallet-adapter-protocol` and
   `@solana-mobile/mobile-wallet-adapter-protocol-web3js`
-- React Native is very similar to React with a few mobile quirks
 
-## Lesson
+## Lesson Overview
 
-Solana Mobile Stack (SMS) is designed to help developers create mobile dApps
-with a seamless UX. It consists of the
-[Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter),
+In these lessons, we will develop mobile apps that interact with the Solana
+network, this opens up a whole new paradigm of blockchain use cases and
+behaviors. The **Solana Mobile Stack** (**SMS**) is designed to help developers
+seamlessly create mobile apps. It includes the
+[Mobile Wallet Adapter (MWA)](https://docs.solanamobile.com/getting-started/overview#mobile-wallet-adapter)
+, a Solana Mobile SDK that uses React Native,
 [Seed Vault](https://docs.solanamobile.com/getting-started/overview#seed-vault),
 and the
-[Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store).
+[Solana app Store](https://docs.solanamobile.com/getting-started/overview#solana-app-store).
+These resources simplify mobile development with a similar experience but with
+mobile-specific features.
 
-Most relevant to your development journey is the Mobile Wallet Adapter (MWA).
-The simplest way to get started is to use the Mobile Wallet Adapter with React
-Native to create a simple Android app. This lesson assumes you're familiar with
-React and Solana programming. If that's not the case,
-[start our course from the beginning](/content/courses/intro-to-solana/intro-to-cryptography)
-and come back here when you feel ready!
+This lesson focuses on using React Native to create a simple Android app that
+integrates with the Solana network. If you're not familiar with programming in
+React or Solana, we recommend starting with our
+[Intro to Solana lesson](https://github.com/solana-foundation/developer-content/tree/main/content/courses/intro-to-solana)
+and returning when you're ready. If you are, let's dive in!
 
-### Intro To Solana Mobile
+## Intro to Solana Mobile
 
-In these units, we'll develop mobile apps that interact with the Solana network.
-This opens up a whole new paradigm of crypto use cases and behaviors.
+Native mobile wallets hold your private keys and use them to sign and send
+transactions just like web extension wallets. However native mobile wallets use
+the
+[Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
+(MWA) standard instead of the
+[Wallet Adapter](https://github.com/anza-xyz/wallet-adapter) to ensure any apps
+can work with any wallet.
 
-#### Solana Mobile Use Cases
+We will dig into the specifics of the MWA in a
+[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
+a WebSocket between applications to facilitate communication. That way a
+separate app can provide the wallet app with the transaction to be signed and
+sent, and the wallet app can respond with appropriate status updates.
 
-Here are a few examples of what Solana mobile development can unlock:
+### Mobile Use Cases with Solana
+
+Before development, it is important to understand the current landscape of Web3
+mobile development to foresee potential blockers and opportunities. Here are a
+few examples of what Solana mobile development can unlock:
 
 **Mobile Banking and Trading (DeFi)**
 
@@ -54,7 +69,7 @@ you hold your own keys.
 
 **Mobile Gaming with Solana Micropayments**
 
-Mobile games account for roughly 50% of the video game industry’s total value,
+Mobile games account for roughly 50% of the video game industry's total value,
 largely due to small in-game purchases. However, payment processing fees usually
 mean these in-game purchases have a minimum of $0.99 USD. With Solana, it's
 possible to unlock true micropayments. Need an extra life? That'll be 0.0001
@@ -66,55 +81,22 @@ SMS can enable a new wave of mobile e-commerce shoppers to pay directly from
 their favorite Solana wallet. Imagine a world where you can use your Solana
 wallet as seamlessly as you can use Apple Pay.
 
-To summarize, mobile crypto opens up many doors. Let’s dive in and learn how we
-can be part of it:
+In summary, mobile blockchain transactions can open many opportunities. Let's
+start building!
 
-#### How Solana development differs between native mobile apps and web
+### Supported Operating Systems
 
-Solana wallet interaction differs slightly on mobile compared to the web. The
-core wallet functionality is the same: the wallet holds your private keys and
-uses them to sign and send transactions. To avoid having different interfaces
-between wallets, developers abstracted that functionality into the Solana Wallet
-Adapter standard. This remains the standard on the web. The mobile counterpart
-is the Mobile Wallet Adapter (MWA).
+Currently, the MWA only supports Android. On Android, a WebSocket connection can
+persist between apps, even when the wallet app is in the background.
 
-The differences between the two standards are due to the different construction
-of web vs mobile wallets. Web wallets are just browser extensions that inject
-wallet adapter functions into the `window` object of your webpage. This gives
-your site access to them. Mobile wallets, however, are native applications on a
-mobile operating system. There's no way to surface functions from one native
-application to another. The Mobile Wallet Adapter exists to enable any app,
-written in any language, to connect to a native wallet app.
-
-We'll dig into the specifics of the Mobile Wallet Adapter in a
-[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
-a WebSocket between applications to facilitate communication. That way a
-separate app can provide the wallet app with the transaction to be signed and
-sent, and the wallet app can respond with appropriate status updates.
-
-#### Supported Operating Systems
-
-At the time of writing, Android is the only mobile OS supported by the Mobile
-Wallet Adapter.
-
-On Android, a WebSocket connection can persist between apps, even when the
-wallet app is in the background.
-
-On iOS, the lifetime of a connection between apps is purposefully limited by the
-operating system. Specifically, iOS will quickly suspend connections when an app
-is pushed to the background. This kills the MWA WebSocket connection. This is an
-inherent design difference between iOS and Android (probably made to preserve
-battery, network usage, etc).
-
-However, this doesn’t mean that Solana dApps can’t run on iOS at all. You can
-still create a Mobile Web App using the
-[standard wallet adapter](https://github.com/solana-labs/wallet-adapter)
-library. Your users can then install a mobile-friendly wallet like
-the [Glow Wallet](https://glow.app/).
+On iOS, the OS quickly suspends websocket connections when an app is
+backgrounded, so the standard  
+[Wallet Adapter](https://github.com/solana-labs/wallet-adapter) library is used
+instead.
 
 The remainder of this lesson will focus on developing Android apps with the MWA.
 
-#### Supported Frameworks
+### Supported Frameworks
 
 Solana Mobile supports a number of different frameworks. Officially supported
 are React Native and native Android, with community SDKs for Flutter, Unity, and
@@ -132,297 +114,315 @@ Unreal Engine.
 - [Unity](https://docs.solanamobile.com/unity/unity_sdk)
 - [Unreal Engine](https://docs.solanamobile.com/unreal/unreal_sdk)
 
-To keep the development experience as close as possible to other lessons, we'll
-be working exclusively with React Native.
+To keep the development experience as close as possible to other lessons, we
+will be working exclusively with React Native.
 
-### From React to React Native
+## From React to React Native
 
-React Native takes the React web framework and applies it to mobile
-applications. However, while React and React Native feel very similar, there are
-differences. The best way to understand these differences is to experience them
-while coding. But, to give you a head start here is a list of some differences
-to keep in mind:
+React Native is very similar to React but designed for mobile. Here are some key
+points to note:
 
-- React Native compiles down to native iOS and Android applications while React
-  compiles down to a collection of web pages.
-- In React, you use JSX to program with HTML and CSS. With React Native, you use
-  similar syntax to manipulate native UI components. It's more like using a UI
-  library like Chakra or Tailwind UI. Instead of `<div>`, `<p>`, and `<img>`
-  you'll be using `<View>`, `<Text>`, and `<Image>`.
-- Interactions are different. Instead of `onClick`, you'll use `onPress` and
-  other gestures.
-- Many standard React and Node packages may not be compatible with React Native.
-  Fortunately, there are React Native counterparts to the most popular libraries
-  and you can often use polyfills to make Node packages available. If you're not
-  familiar with polyfills, take a look at the
-  [MDN docs](https://developer.mozilla.org/en-US/docs/Glossary/Polyfill). In
-  short, polyfills actively replace Node-native libraries to make them work
-  anywhere Node is not running.
-- Setting up a development environment in React Native can be challenging. This
-  will require setting up Android Studio to compile to Android and XCode for
-  iOS. React Native has a
-  [really good guide](https://reactnative.dev/docs/environment-setup?guide=native)
-  for this.
-- For regular development and testing, you'll use a physical mobile device or an
-  emulator to run your code. This relies on a tool called Metro that comes
-  pre-installed. React Native's setup guide also covers this.
-- React Native gives you access to the phone's hardware that React can't
-  provide. This includes things like the phone's camera, accelerometer, and
-  more.
-- React Native introduces new config files and build folders. For example, the
-  `ios` and `android` directories contain platform-specific information.
-  Additionally, there are config files like `Gemfile` and `metro.config.js`.
-  Generally, leave all configurations alone and just worry about writing your
-  code, the starting point for which will be in `App.tsx`.
+- React Native compiles down to native Android and iOS apps while React compiles
+  down to a collection of web pages.
+- Instead of using web elements like `<div>`, you will use mobile-native
+  elements like `<View>`.
+- React Native allows access to mobile hardware, such as the camera and
+  accelerometer, which React web apps cannot access.
+- Many standard React and Node packages may not be compatible with React Native
+  and setting up React Native can be challenging. Fortunately, the
+  [React Native Docs](https://reactnative.dev/docs/environment-setup?guide=native)
+  contains everything you may need.
+- For development, you will need to set up
+  [Android Studio](https://developer.android.com/studio/intro/) for Android apps
+  and an emulator or physical device for testing.
 
-There is a learning curve, but if you know React you're not nearly as far from
-being able to develop mobile apps as you think! It may feel jarring to start,
-but after a few hours of React Native development, you'll start to feel much
-more comfortable. You'll likely feel much more confident even after
-[this lesson's lab](#lab).
+<Callout type="info">
+**NOTE:** There is a learning curve, but if you know React you're not nearly as far from being able to develop mobile apps as you think! It may feel jarring to start, but after a few hours of React Native development, you will start to feel much more comfortable. We have included a [Lab](#lab) section below to help you.
+</Callout>
 
-### Creating a Solana dApp with React Native
+## Creating a React Native App on Solana
 
-Solana React Native dApps are virtually identical to React dApps. The primary
+Solana React Native apps are virtually identical to React apps. The primary
 difference is in the wallet interaction. Instead of the wallet being available
-in the browser, your dApp will create an MWA session with the wallet app of your
+in the browser, your app will create an MWA session with the wallet app of your
 choosing using a WebSocket. Fortunately, this is abstracted for you in the MWA
-library. The only difference you'll need to know is anytime you need to make a
-call to the wallet you'll be using the `transact` function, which we'll talk
-about soon.
+library. The only difference is that anytime you need to make a call to the
+wallet, the `transact` function will be used, more details on this function in
+later parts of this lesson.
 
-![dApp Flow](/public/assets/courses/unboxed/basic-solana-mobile-flow.png)
+![App Flow](/public/assets/courses/unboxed/basic-solana-mobile-flow.png)
 
-#### Reading data
+## Reading Data
 
-Reading data from a Solana cluster in React Native is the exact same as in
-React. You use the `useConnection` hook to grab the `Connection` object. Using
-that, you can get account info. Since reading is free, we don’t need to actually
-connect to the wallet.
+Reading data from a Solana cluster in React Native works the same way as in
+React. You can use the `useConnection` hook to access the `connection` object,
+which is responsible for interacting with the Solana network.
 
-```tsx
-const account = await connection.getAccountInfo(account);
+In Solana, an account refers to any object stored on-chain, and is typically
+referenced by a
+[public key](https://solana.com/docs/terminology#public-key-pubkey).
+
+Here’s an example of how you can read an account information using the
+`getAccountInfo` method:
+
+```javascript
+const { connection } = useConnection();
+const publicKey = new PublicKey("your-wallet-public-key-here"); // Replace with a valid public key
+const account = await connection.getAccountInfo(publicKey);
 ```
 
-If you need a refresher on this, check out our
-[lesson on reading data from the blockchain](/content/courses/intro-to-solana/intro-to-reading-data).
+> **NOTE:** If you need a refresher, refer to our
+> [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data).
 
-#### Connecting to a wallet
+## Connecting to a Wallet
 
-Writing data to the blockchain has to happen through a transaction. Transactions
-have to be signed by one or more private keys and sent to an RPC provider. This
-virtually always happens through a wallet application.
+When writing data to the blockchain, it must be done through a **transaction**.
+Transactions need to be signed by one or more secret keys (previously referred
+to as private keys) and sent to an
+[RPC provider](https://academy.subquery.network/subquery_network/node_operators/rpc_providers/introduction.html)
+for processing. In almost all cases, this interaction is facilitated through a
+wallet application.
 
-Typical wallet interaction happens by calling out to a browser extension. On
-mobile, you use a WebSocket to start an MWA session. Specifically, you use
-Android intents where the dApp broadcasts its intent with the `solana-wallet://`
-scheme.
+### Web vs. Mobile Wallet Interactions
 
+The websocket that connects the app and the wallet is managed using the MWA, and
+initiated using **Android intents**, with the dApp broadcasting its intent using
+the `solana-wallet://` scheme.
 ![Connecting](/public/assets/courses/unboxed/basic-solana-mobile-connect.png)
 
-When the wallet app receives this intent, it opens a connection with the dApp
-that initiated the session. Your dApp sends this intent using the `transact`
-function:
+When the wallet app receives the intent broadcast, it opens a WebSocket
+connection with the app that initiated the session. The app initiates this
+connection using the `transact` function, as shown below:
 
 ```tsx
 transact(async (wallet: Web3MobileWallet) => {
-	// Wallet Action code here
-}
+  // Your wallet action code goes here
+});
 ```
 
-This will give you access to the `Web3MobileWallet` object. You can then use
-this to send transactions to the wallet. Again, when you want to access the
-wallet, it has to be through the function `transact` function's callback.
+This function provides access to the `Web3MobileWallet` object, allowing you to
+perform actions such as signing transactions or interacting with wallet data.
+Remember, all wallet interactions must occur inside the callback of the
+`transact` function.
 
-#### Signing and sending transactions
+### Signing and sending transactions
 
-Sending a transaction happens inside the `transact` callback. The flow is as
-follows:
+The overall flow for signing and sending a transaction is as follows:
 
-1. Establish a session with a wallet using `transact` which will have a callback
-   of `async (wallet: Web3MobileWallet) => {...}`.
-2. Inside the callback, request authorization with the `wallet.authorize` or
-   `wallet.reauthorize` method depending on the state of the wallet.
-3. Sign the transaction with `wallet.signTransactions` or sign and send with
-   `wallet.signAndSendTransactions`.
+- Use the `transact` function to establish a session with the wallet. This
+  function takes an asynchronous callback:
+  `async (wallet: Web3MobileWallet) => {...}`.
+- Inside the callback, request wallet authorization using `wallet.authorize()`
+  or `wallet.reauthorize()`, depending on the wallet's state (whether it has an
+  active session or requires reauthorization).
+- Once the wallet is authorized, you can either:
+  - Sign the transaction using `wallet.signTransactions()`, or
+  - Sign and send the transaction directly using
+    `wallet.signAndSendTransactions()`.
 
 ![Transacting](/public/assets/courses/unboxed/basic-solana-mobile-transact.png)
+To manage the wallet's authorization state, consider creating a
+`useAuthorization()` hook. This hook can streamline the process of handling
+authorization within your app, especially if you have multiple interactions with
+the wallet.
 
-<Callout type="note">You may want to create a `useAuthorization()` hook to
-manage the wallet's authorization state. We'll practice this in the
-[Lab](#lab).</Callout>
+> We will explore the use of this hook and practice managing the wallet's state
+> in more detail during the lab exercises.
 
 Here is an example of sending a transaction using MWA:
 
 ```tsx
+//import required dependencies if any
+
 const { authorizeSession } = useAuthorization();
 const { connection } = useConnection();
 
-const sendTransactions = (transaction: Transaction) => {
-  transact(async (wallet: Web3MobileWallet) => {
-    const latestBlockhashResult = await connection.getLatestBlockhash();
-    const authResult = await authorizeSession(wallet);
+const sendTransactions = async (transaction: Transaction) => {
+  try {
+    // Start a session with the wallet
+    await transact(async (wallet: Web3MobileWallet) => {
+      // Get the latest blockhash for the transaction
+      const { blockhash, lastValidBlockHeight } =
+        await connection.getLatestBlockhash();
 
-    const updatedTransaction = new Transaction({
-      ...transaction,
-      ...latestBlockhashResult,
-      feePayer: authResult.publicKey,
-    });
+      // Authorize the wallet session
+      const authResult = await authorizeSession(wallet);
 
-    const signature = await wallet.signAndSendTransactions({
-      transactions: [transaction],
+      // Create an updated transaction with the latest blockhash and feePayer
+      const updatedTransaction = new Transaction({
+        recentBlockhash: blockhash,
+        feePayer: authResult.publicKey,
+      }).add(transaction);
+
+      // Sign and send the transaction via the wallet
+      const signatures = await wallet.signAndSendTransactions({
+        transactions: [updatedTransaction],
+      });
+
+      console.log(`Transaction successful! Signature: ${signatures[0]}`);
     });
-  });
+  } catch (error) {
+    console.error("Error sending transaction:", error);
+    throw new Error("Transaction failed");
+  }
 };
 ```
 
-#### Debugging
+## Debugging
 
-Since two applications are involved in sending transactions, debugging can be
-tricky. Specifically, you won’t be able to see the wallet's debug logs the way
-you can see your dApps logs.
+Debugging can be challenging when working with Solana mobile transactions, as
+two separate applications are involved: your app and the mobile wallet. Unlike
+typical single-application setups, you won't have direct access to the wallet’s
+logs, which makes tracking issues more complex.
 
-Fortunately,
-[Logcat on Android Studio](https://developer.android.com/studio/debug/logcat)
-makes it possible to see logs from all applications on your device.
+However, Android Studio’s
+[Logcat](https://developer.android.com/studio/debug/logcat) provides a useful
+solution - enabling you to view logs from all applications running on your
+device including the wallet. By leveraging Logcat, you can monitor the
+interaction between your app and the wallet, helping you identify any issues
+that arise during transaction signing and submission.
 
-If you prefer not to use Logcat, the other method you could try is to only use
-the wallet to sign transactions, and then send them in your code. This allows
-you to better debug the transaction if you’re running into problems.
+If Logcat is not your preferred tool, an alternative approach is to use the
+wallet solely for signing transactions, while handling the actual transaction
+submission in your app’s code. This method allows for greater control over
+debugging, as you can inspect the transaction flow more thoroughly on the client
+side.
 
-#### Releasing
+## Deploying for Solana Mobile
 
-Deploying mobile applications can be difficult on its own. It's often even more
-difficult when it's a crypto app. There are two main reasons for this: customer
-safety and financial incentives.
+Deploying mobile applications can be challenging, and the complexity increases
+when dealing with blockchain-based apps. Two primary factors contribute to this
+difficulty: customer safety and financial incentives.
 
-First, most of the mobile app marketplaces have policies restricting blockchain
-involvement. Crypto is new enough that it's a regulatory wildcard. Platforms
-feel they're protecting users by being strict with blockchain-related apps.
+### Customer Safety and Regulatory Uncertainty:
 
-Second, if you use crypto for "purchases" in-app, you’ll be seen as
-circumnavigating the platform’s fee (anywhere from 15-30%). This is explicitly
-against app store policies as the platform is trying to protect its revenue
-stream.
+Most mobile app marketplaces, such as the Apple App Store and Google Play Store,
+have policies that restrict blockchain-related apps. Since blockchain is still a
+relatively new and evolving technology, platforms are cautious about regulatory
+compliance. They often adopt strict guidelines to protect users from potential
+risks associated with blockchain apps.
 
-These are hurdles for sure, but there's hope. Here are some things to keep in
-mind for each marketplace:
+### In-App Purchases and Platform Fees:
 
-- **App Store (iOS) -** We only talked about Android today for the technical MWA
-  reason. However, their policies are also some of the most strict and make it
-  hard for Solana dApps to exist. For now, Apple has some pretty strict
-  anti-crypto policies. Wallets seem to be fine, but they'll flag and likely
-  reject anything that seems like a purchase using crypto.
-- **Google Play (Android) -** Google is generally more relaxed, but there are
-  still a few things to be aware of. As of this writing in November ‘23, Google
-  is rolling out
-  [new crypto policies](https://www.theverge.com/2023/7/12/23792720/android-google-play-blockchain-crypto-nft-apps)
-  to make it more clear what they will and will not allow. Take a look.
-- **Steam -** Does not allow crypto games at all
-  > “built on blockchain technology that issue or allow the exchange of
-  > cryptocurrencies or NFTs.”
-- **Download Sites / Your Site -** Depending on the target platform, you can
-  make your dApp available for download on your own site. However, most users
-  are wary of downloading mobile applications from websites.
-- **dApp Store (Solana) -** Solana saw the issues with mobile dApp distribution
-  on other platform app stores and decided to make their own. As part of the SMS
-  stack, they created the
-  [Solana dApp Store](https://docs.solanamobile.com/getting-started/overview#solana-dapp-store).
+Another significant challenge arises when using blockchain transactions for
+in-app purchases. Many platforms impose a transaction fee on purchases made
+within their apps (ranging from 15% to 30%). Payment via the blockchain is often
+seen as a way to bypass these fees, which is explicitly prohibited by most app
+stores. These platforms prioritize protecting their revenue streams and
+therefore enforce strict policies against apps that facilitate blockchain
+payments for in-app purchases.
 
-### Conclusion
+> While traditional app stores impose strict policies around blockchain
+> transactions to protect their revenue and comply with regulations, alternative
+> distribution methods like the Solana app Store offers developers a more
+> flexible platform for deploying Solana-based mobile applications. This
+> decentralized approach bypasses many of the restrictions seen in centralized
+> app marketplaces, allowing apps to thrive in a more blockchain-friendly
+> ecosystem.
 
-Getting started with mobile Solana development is fairly straightforward thanks
-to SMS. While React Native is slightly different than React, the code you have
-to write is more similar than different. The primary difference is that the
-portion of your code that interacts with wallets will exist within the
-`transact` callback. Remember to look at our other lessons if you need a
-refresher on Solana development more broadly.
+## Conclusion
 
-## Lab
+Getting started with Solana mobile development is more accessible than ever,
+thanks to the Solana Mobile Stack (SMS). Although React Native introduces some
+differences compared to React, much of the code you will write remains familiar,
+particularly when it comes to structuring the UI and handling state. The main
+distinction lies in how you interact with wallets, which requires using the
+`transact` callback to establish wallet sessions, sign transactions, and
+communicate with Solana’s blockchain.
 
-Let's practice this together by building a simple Android mobile counter dApp
-with React Native. The app will interact with the Anchor counter program that we
-made in the
-[Intro to client-side Anchor development](https://www.soldev.app/course/intro-to-anchor-frontend)
-lesson. This dApp simply displays a counter and allows users to increment the
-count through a Solana program. In this app, we’ll be able to see the current
-count, connect our wallet, and increment the count. We’ll be doing this all on
-Devnet and will be compiling only for Android.
+As you continue building Solana mobile apps, it's essential to keep learning and
+refining your skills. Be sure to explore additional resources like:
 
-This program already exists and is already deployed on Devnet. Feel free to
-check out the
-[deployed program's code](https://github.com/Unboxed-Software/anchor-ping-frontend/tree/solution-decrement)
-if you want more context.
+- [The official Solana Developer Docs](https://solana.com/docs) for in-depth
+  guides on Solana’s core libraries and best practices.
+- [Solana Stack Exchange](https://solana.stackexchange.com/) forum for
+  troubleshooting, sharing insights, and staying updated on the latest ecosystem
+  changes.
 
-We’ll write this application in vanilla React Native without a starting
-template. Solana Mobile provides a
-[React Native template](https://docs.solanamobile.com/react-native/react-native-scaffold)
-that shortcuts some of the boilerplate, but there's no better way to learn than
-to do something from scratch.
+Mastering mobile Solana development will open up new opportunities in
+decentralized finance (DeFi), gaming, and e-commerce, allowing you to build
+cutting-edge applications with a seamless user experience. Stay curious and
+experiment with different tools to push the boundaries of what you can achieve
+with mobile apps. Let's put our knowledge to test by building a counting app
+with React Native for Android OS!
 
-#### 0. Prerequisites
+## Lab: Building a Mobile Counter app with React Native
 
-React Native allows us to write mobile applications using similar patterns as
-React. However, under the hood, our React code needs to be compiled down to
-languages and frameworks that work with the device's native OS. This requires a
-few prerequisite setup items:
+This app will display a counter and allow users to make increments via a
+transaction on the Solana blockchain. The app will also connect to a wallet for
+signing transactions.
 
-1. [Set up a React Native dev environment](https://reactnative.dev/docs/environment-setup?guide=native#creating-a-new-application).
-   Go through the
-   [**_entire article_**](https://reactnative.dev/docs/environment-setup?guide=native#creating-a-new-application),
-   using Android as the target OS. For convenience, we've typed out the
-   high-level steps below. Keep in mind that the source article might change
-   from the time of writing to when you're reading this. The source article is
-   your source of truth here.
+We will use the **Anchor framework** to interact with the on-chain counter
+program. The client side has already been developed in one of our previous
+lessons called
+[Intro to client-side Anchor development](https://solana.com/developers/courses/onchain-development/intro-to-anchor-frontend),
+feel free to check out its code for more context.
 
-   1. Install dependencies
-   2. Install Android Studio
-   3. Configure **ANDROID_HOME** environment variable
-   4. Create a new sample project (this is only used to set up the emulator)
+To ensure you fully understand the core concepts, we will write this application
+in vanilla React Native without a starting template. While Solana Mobile offers
+templates that handle some boilerplate, building from scratch provides a much
+deeper understanding.
 
-      1. If you run into the error `✖ Copying template`, add the `--npm` flag
-         at the end
+### Getting Started
 
-         ```bash
-         npx react-native@latest init AwesomeProject
-         ✔ Downloading template
-         ✖ Copying template
+To get started, you will need to properly set up a React Native development
+environment if you didn't already. This
+[article](https://reactnative.dev/docs/set-up-your-environment) shows you how.
+Remember that this step is not required if you are using a
+[Framework](https://reactnative.dev/architecture/glossary#react-native-framework).
 
-         npx react-native@latest init AwesomeProject --npm
-         ✔ Downloading template
-         ✔ Copying template
-         ```
+Ensure you have [Node.js](https://nodejs.org/en/download) installed on your
+system. These will manage your JavaScript packages. Install Android Studio:
 
-   5. Run and compile the sample project on your emulator
+Android Studio is required to run the Android emulator and to compile your React
+Native app for Android devices. Configure the ANDROID_HOME Environment Variable:
 
-2. Install and run the Solana fake wallet
+> **NOTE:** You will need to configure the `ANDROID_HOME` environment variable
+> so that your terminal can recognize Android’s SDK tools. This step is critical
+> for running and building your app on Android.
 
-   1. Install the repo
+## Project Setup
 
-      ```bash
-      git clone https://github.com/solana-mobile/mobile-wallet-adapter.git
-      ```
+Create a Sample Project for the Emulator Setup to ensure your Android
+environment is set up correctly. In your terminal, run the code below within
+your preferred directory to scaffold a new React Native project, where
+`SampleProject` is your preferred project name. You can open the project in
+Android Studio and ensure it runs correctly on the Android emulator.
 
-   2. In Android
-      Studio, `Open project > Navigate to the cloned directory > Select mobile-wallet-adapter/android`
-   3. After Android Studio finishes loading the project, select `fakewallet` in
-      the build/run configuration dropdown in the top right
+```bash
+  npx react-native init SampleProject --npm
+```
 
-      ![Fake Wallet](/public/assets/courses/unboxed/basic-solana-mobile-fake-wallet.png)
+### Cloning and Running MWA
 
-   4. For debugging, you’ll want to use `Logcat`. Now that your fake wallet is
-      running on the emulator, go to `View -> Tool Windows -> Logcat`. This will
-      open up a console logging out what’s happening with fake wallet.
+1.  Clone the repo in `SampleProject`
 
-3. (Optional) Install other
-   [Solana wallets](https://solana.com/ecosystem/explore?categories=wallet) on
-   the Google Play store.
+    ```bash
+    git clone https://github.com/solana-mobile/mobile-wallet-adapter.git
+    ```
 
-Lastly, if you run into Java versioning issues - you’ll want to be on Java
-version 11. To check what you’re currently running type `java --version` in your
-terminal.
+2.  In Android Studio, _Open project > Navigate to the cloned directory > Select
+    mobile-wallet-adapter/android_
+3.  After Android Studio finishes loading the project, select `fakewallet` in
+    the build/run configuration dropdown in the top right
 
-#### 1. Plan out the App's Structure
+    ![Fake Wallet](/public/assets/courses/unboxed/basic-solana-mobile-fake-wallet.png)
+
+4.  For easier debugging, use **Logcat**. Check the
+    [Logcat installation guide](https://developer.android.com/studio/debug/logcat)
+    if you are interested.
+5.  Now that your fake wallet is running on the emulator, go to _View -> Tool
+    Windows -> Logcat_. This will open up a console logging out what’s happening
+    with fake wallet.
+
+6.  (Optional) Install other
+    [Solana wallets](https://play.google.com/store/search?q=solana%20wallet&c=apps)
+    on the Google Play store.
+
+Lastly, we recommend installing _java version 11_ to avoid dependency errors. To
+know what version you have installed, run `java --version` in your terminal.
+
+### 1. Plan out the App Structure
 
 Before we do any coding, let's conceptualize the outline of the app. Again, this
 app will connect to and interact with the counter program we've already deployed
@@ -437,9 +437,9 @@ to Devnet. To do this, we'll need the following:
 There will be more files and considerations, but these are the most important
 files we'll be creating and working with.
 
-#### 2. Create the App
+### 2. Create the App
 
-Now that we've got some of the basic setup and structure down, let’s scaffold a
+Now that we've got some of the basic setup and structure down, let's scaffold a
 new app with the following command:
 
 ```bash
@@ -458,34 +458,35 @@ npm run android
 
 This should open and run the app in your Android emulator. If you run into
 problems, check to make sure you’ve accomplished everything in the
-[prerequisites section](#0-prerequisites).
+[_Getting Started_](#getting-started) section.
 
-#### 3. Install Dependencies
+### 3. Install Dependencies
 
-We’ll need to add in our Solana dependencies.
+We will need to import our Solana dependencies.
 [The Solana Mobile docs provide a nice list of packages](https://docs.solanamobile.com/react-native/setup)
 and explanations for why we need them:
 
 - `@solana-mobile/mobile-wallet-adapter-protocol`: A React Native/Javascript API
   enabling interaction with MWA-compatible wallets
 - `@solana-mobile/mobile-wallet-adapter-protocol-web3js`: A convenience wrapper
-  to use common primitives
-  from [@solana/web3.js](https://github.com/solana-labs/solana-web3.js), such
-  as `Transaction` and `Uint8Array`
+  to use common primitives from
+  [@solana/web3.js](https://github.com/solana-labs/solana-web3.js), such as
+  `Transaction` and `Uint8Array`
 - `@solana/web3.js`: Solana Web Library for interacting with the Solana network
-  through the [JSON RPC API](https://docs.solana.com/api/http)
-- `react-native-get-random-values` Secure random number generator polyfill
-  for `web3.js` underlying Crypto library on React Native
-- `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
+  through th
+  [JSON RPC API](https://github.com/solana-foundation/developer-content/blob/main/docs/rpc/http/index.mdx)
+- `@react-native-get-random-values` Secure random number generator polyfill for
+- `web3.js` underlying library on React Native
+- `buffer`: Buffer polyfill; also needed for `web3.js` on React Native
 
-In addition to this list, we'll add two more packages:
+In addition to this list, we will add two more packages:
 
 - `@coral-xyz/anchor`: The Anchor TS client.
 - `assert`: A polyfill that lets Anchor do its thing.
 - `text-encoding-polyfill`: A polyfill needed to create the `Program` object
 
-If you’re not familiar: polyfills actively replace Node-native libraries to make
-them work anywhere Node is not running. We’ll finish our polyfill setup shortly.
+If you’re not familiar: polyfills provide Node-native libraries to make them
+work anywhere Node is not running. We will finish our polyfill setup shortly.
 For now, install dependencies using the following command:
 
 ```bash
@@ -500,9 +501,9 @@ npm install \
   text-encoding-polyfill
 ```
 
-#### 4. Create ConnectionProvider.tsx
+### 4. Create ConnectionProvider.tsx file
 
-Let’s start adding our Solana functionality. Create a new folder called
+Let's start adding our Solana functionality. Create a new folder called
 `components` and within it, a file called `ConnectionProvider.tsx`. This
 provider will wrap the entire application and make our `Connection` object
 available throughout. Hopefully, you're noticing a pattern: this is identical to
@@ -526,12 +527,11 @@ const ConnectionContext = createContext<ConnectionContextState>(
   {} as ConnectionContextState,
 );
 
-export function ConnectionProvider(props: ConnectionProviderProps) {
-  const {
-    children,
-    endpoint,
-    config = { commitment: "confirmed" },
-  } = { ...props };
+export function ConnectionProvider({
+  children,
+  endpoint,
+  config = { commitment: "confirmed" },
+}: ConnectionProviderProps) {
   const connection = useMemo(
     () => new Connection(endpoint, config),
     [config, endpoint],
@@ -548,10 +548,10 @@ export const useConnection = (): ConnectionContextState =>
   useContext(ConnectionContext);
 ```
 
-#### 5. Create AuthProvider.tsx
+### 5. Create AuthProvider.tsx file
 
-The next Solana provision we’ll need is the auth provider. This is one of the
-main differences between mobile and web development. What we’re implementing
+The next Solana provision we will need is the **auth provider**. This is one of
+the main differences between mobile and web development. What we’re implementing
 here is roughly equivalent to the `WalletProvider` that we’re used to in web
 apps. However, since we're using Android and its natively installed wallets, the
 flow to connect and utilize them is a bit different. Most notably, we need to
@@ -570,20 +570,20 @@ We do this by providing the following in our `AuthProvider`:
 - `deauthorizeSession(wallet)`: Deauthorizes the `wallet`.
 - `onChangeAccount`: Acts as a handler when `selectedAccount` is changed.
 
-We’re also going to throw in some utility methods:
+We are also going to throw in some utility methods:
 
 - `getPublicKeyFromAddress(base64Address)`: Creates a new Public Key object from
   the Base64 address given from the `wallet` object
 - `getAuthorizationFromAuthResult`: Handles the authorization result, extracts
   relevant data from the result, and returns the `Authorization` context object
 
-We’ll expose all of this through a `useAuthorization` hook.
+We will expose all of this through a `useAuthorization` hook.
 
-Since this provider is the same across virtually all apps, we're going to give
-you the full implementation that you can copy/paste. We'll dig into the details
-of MWA in a future lesson.
+Since this provider is the same across all apps, we are going to give you the
+full implementation that you can copy and paste. We will dig into the details of
+MWA in a future lesson.
 
-Create the file `AuthProvider.tsx` in the `components` and paste in the
+Create the file `AuthProvider.tsx` in the `components` folder and paste in the
 following:
 
 ```tsx
@@ -601,25 +601,19 @@ import { toUint8Array } from "js-base64";
 import { useState, useCallback, useMemo, ReactNode } from "react";
 import React from "react";
 
-export const AuthUtils = {
+const AuthUtils = {
   getAuthorizationFromAuthResult: (
     authResult: AuthorizationResult,
     previousAccount?: Account,
   ): Authorization => {
-    let selectedAccount: Account;
-    if (
-      //no wallet selected yet
-      previousAccount === null ||
-      //the selected wallet is no longer authorized
+    const selectedAccount =
+      previousAccount === undefined ||
       !authResult.accounts.some(
         ({ address }) => address === previousAccount.address,
       )
-    ) {
-      const firstAccount = authResult.accounts[0];
-      selectedAccount = AuthUtils.getAccountFromAuthorizedAccount(firstAccount);
-    } else {
-      selectedAccount = previousAccount;
-    }
+        ? AuthUtils.getAccountFromAuthorizedAccount(authResult.accounts[0])
+        : previousAccount;
+
     return {
       accounts: authResult.accounts.map(
         AuthUtils.getAccountFromAuthorizedAccount,
@@ -631,19 +625,13 @@ export const AuthUtils = {
 
   getAccountFromAuthorizedAccount: (
     authAccount: AuthorizedAccount,
-  ): Account => {
-    return {
-      ...authAccount,
-      publicKey: AuthUtils.getPublicKeyFromAddress(authAccount.address),
-    };
-  },
-
-  getPublicKeyFromAddress: (address: Base64EncodedAddress) => {
-    return new PublicKey(toUint8Array(address));
-  },
+  ): Account => ({
+    ...authAccount,
+    publicKey: new PublicKey(toUint8Array(authAccount.address)),
+  }),
 };
 
-export type Account = Readonly<{
+type Account = Readonly<{
   address: Base64EncodedAddress;
   label?: string;
   publicKey: PublicKey;
@@ -655,11 +643,11 @@ type Authorization = Readonly<{
   selectedAccount: Account;
 }>;
 
-export const AppIdentity = {
+const APP_IDENTITY = {
   name: "Solana Counter Incrementor",
 };
 
-export type AuthorizationProviderContext = {
+type AuthorizationProviderContext = {
   accounts: Account[] | null;
   authorizeSession: (wallet: AuthorizeAPI & ReauthorizeAPI) => Promise<Account>;
   deauthorizeSession: (wallet: DeauthorizeAPI) => void;
@@ -669,25 +657,24 @@ export type AuthorizationProviderContext = {
 
 const AuthorizationContext = React.createContext<AuthorizationProviderContext>({
   accounts: null,
-  authorizeSession: (_wallet: AuthorizeAPI & ReauthorizeAPI) => {
+  authorizeSession: () => {
     throw new Error("Provider not initialized");
   },
-  deauthorizeSession: (_wallet: DeauthorizeAPI) => {
+  deauthorizeSession: () => {
     throw new Error("Provider not initialized");
   },
-  onChangeAccount: (_nextSelectedAccount: Account) => {
+  onChangeAccount: () => {
     throw new Error("Provider not initialized");
   },
   selectedAccount: null,
 });
 
-export type AuthProviderProps = {
+type AuthProviderProps = {
   children: ReactNode;
   cluster: Cluster;
 };
 
-export function AuthorizationProvider(props: AuthProviderProps) {
-  const { children, cluster } = { ...props };
+function AuthorizationProvider({ children, cluster }: AuthProviderProps) {
   const [authorization, setAuthorization] = useState<Authorization | null>(
     null,
   );
@@ -699,55 +686,47 @@ export function AuthorizationProvider(props: AuthProviderProps) {
         authorization?.selectedAccount,
       );
       setAuthorization(nextAuthorization);
-
       return nextAuthorization;
     },
-    [authorization, setAuthorization],
+    [authorization],
   );
 
   const authorizeSession = useCallback(
     async (wallet: AuthorizeAPI & ReauthorizeAPI) => {
-      const authorizationResult = await (authorization
-        ? wallet.reauthorize({
+      const authorizationResult = authorization
+        ? await wallet.reauthorize({
             auth_token: authorization.authToken,
-            identity: AppIdentity,
+            identity: APP_IDENTITY,
           })
-        : wallet.authorize({ cluster, identity: AppIdentity }));
+        : await wallet.authorize({ cluster, identity: APP_IDENTITY });
       return (await handleAuthorizationResult(authorizationResult))
         .selectedAccount;
     },
-    [authorization, handleAuthorizationResult],
+    [authorization, cluster, handleAuthorizationResult],
   );
 
   const deauthorizeSession = useCallback(
     async (wallet: DeauthorizeAPI) => {
-      if (authorization?.authToken === null) {
-        return;
+      if (authorization?.authToken) {
+        await wallet.deauthorize({ auth_token: authorization.authToken });
+        setAuthorization(null);
       }
-
-      await wallet.deauthorize({ auth_token: authorization.authToken });
-      setAuthorization(null);
     },
-    [authorization, setAuthorization],
+    [authorization],
   );
 
-  const onChangeAccount = useCallback(
-    (nextAccount: Account) => {
-      setAuthorization(currentAuthorization => {
-        if (
-          //check if the account is no longer authorized
-          !currentAuthorization?.accounts.some(
-            ({ address }) => address === nextAccount.address,
-          )
-        ) {
-          throw new Error(`${nextAccount.address} is no longer authorized`);
-        }
-
+  const onChangeAccount = useCallback((nextAccount: Account) => {
+    setAuthorization(currentAuthorization => {
+      if (
+        currentAuthorization?.accounts.some(
+          ({ address }) => address === nextAccount.address,
+        )
+      ) {
         return { ...currentAuthorization, selectedAccount: nextAccount };
-      });
-    },
-    [setAuthorization],
-  );
+      }
+      throw new Error(`${nextAccount.address} is no longer authorized`);
+    });
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -767,21 +746,28 @@ export function AuthorizationProvider(props: AuthProviderProps) {
   );
 }
 
-export const useAuthorization = () => React.useContext(AuthorizationContext);
+const useAuthorization = () => React.useContext(AuthorizationContext);
+
+export {
+  AuthorizationProvider,
+  useAuthorization,
+  type Account,
+  type AuthProviderProps,
+  type AuthorizationProviderContext,
+};
 ```
 
-#### 6. Create ProgramProvider.tsx
+### 6. Create ProgramProvider.tsx file
 
 The last provider we need is our program provider. This will expose the counter
 program we want to interact with.
 
-Since we're using the Anchor TS client to interact with our program, we need the
-program's IDL. Start by creating a root-level folder called `models`, then
-create a new file `anchor-counter.ts`. Paste the contents of the
-[Anchor Counter IDL](/public/assets/courses/unboxed/counter-rn-idl.ts) into this
-new file.
+Since we are using the Anchor TS client to interact with our program, we need
+the program's IDL. Start by creating a root-level folder called `models`, then
+create a new file `anchor-counter.ts`. Paste the contents of the Anchor Counter
+IDL into this new file.
 
-Next, create the file `ProgramProvider.tsx` inside of `components`. Inside we'll
+Next, create the file `ProgramProvider.tsx` inside of components. Inside we will
 create the program provider to surface our program and the counter PDA:
 
 ```tsx
@@ -820,8 +806,7 @@ export type ProgramProviderProps = {
   children: ReactNode;
 };
 
-export function ProgramProvider(props: ProgramProviderProps) {
-  const { children } = props;
+export function ProgramProvider({ children }: ProgramProviderProps) {
   const { connection } = useConnection();
   const [program, setProgram] = useState<Program<AnchorCounter> | null>(null);
   const [counterAddress, setCounterAddress] = useState<PublicKey | null>(null);
@@ -830,6 +815,11 @@ export function ProgramProvider(props: ProgramProviderProps) {
     const programId = new PublicKey(
       "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU",
     );
+
+    // MockWallet is a placeholder wallet used for initializing the AnchorProvider.
+    // In a mobile app, we don't need a real wallet here because the actual signing
+    // will be done by the user's mobile wallet app. This mock wallet allows us to
+    // set up the provider without a real wallet instance.
 
     const MockWallet = {
       signTransaction: () => Promise.reject(),
@@ -875,9 +865,9 @@ export function ProgramProvider(props: ProgramProviderProps) {
 export const useProgram = () => useContext(ProgramContext);
 ```
 
-#### 7. Modify App.tsx
+### 7. Modify App.tsx file
 
-Now that we have all our providers, let’s wrap our app with them. We're going to
+Now that we have all our providers, let's wrap our app with them. We're going to
 re-write the default `App.tsx` with the following changes:
 
 - Import our providers and add in our polyfills
@@ -907,11 +897,14 @@ export default function App() {
   const endpoint = clusterApiUrl(cluster);
 
   return (
+    // ConnectionProvider: Manages the connection to the Solana network
     <ConnectionProvider
       endpoint={endpoint}
       config={{ commitment: "processed" }}
     >
+      // AuthorizationProvider: Handles wallet authorization
       <AuthorizationProvider cluster={cluster}>
+        // ProgramProvider: Provides access to the Solana program
         <ProgramProvider>
           <MainScreen />
         </ProgramProvider>
@@ -921,9 +914,9 @@ export default function App() {
 }
 ```
 
-#### 8. Create MainScreen.tsx
+### 8. Create MainScreen.tsx file
 
-Now, let’s put everything together to create our UI. Create a new folder called
+Now, let's put everything together to create our UI. Create a new folder called
 `screens` and a new file called `MainScreen.tsx` inside of it. In this file, we
 are only structuring the screen to display two yet-to-be-created components:
 `CounterView` and `CounterButton`.
@@ -935,51 +928,49 @@ to CSS.
 In `screens/MainScreen.tsx` paste the following:
 
 ```tsx
+import React from "react";
 import { StatusBar, StyleSheet, View } from "react-native";
 import { CounterView } from "../components/CounterView";
 import { CounterButton } from "../components/CounterButton";
-import React from "react";
 
-const mainScreenStyles = StyleSheet.create({
+export function MainScreen() {
+  return (
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="darkblue" />
+      <View style={[styles.container, styles.counterContainer]}>
+        <CounterView />
+      </View>
+      <View style={styles.incrementButtonContainer}>
+        <CounterButton />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
     backgroundColor: "lightgray",
   },
-
-  incrementButtonContainer: { position: "absolute", right: "5%", bottom: "3%" },
+  incrementButtonContainer: {
+    position: "absolute",
+    right: "5%",
+    bottom: "3%",
+  },
   counterContainer: {
     alignContent: "center",
     alignItems: "center",
     justifyContent: "center",
   },
 });
-
-export function MainScreen() {
-  return (
-    <View style={mainScreenStyles.container}>
-      <StatusBar barStyle="light-content" backgroundColor="darkblue" />
-      <View
-        style={{
-          ...mainScreenStyles.container,
-          ...mainScreenStyles.counterContainer,
-        }}
-      >
-        <CounterView />
-      </View>
-      <View style={mainScreenStyles.incrementButtonContainer}>
-        <CounterButton />
-      </View>
-    </View>
-  );
-}
 ```
 
-#### 9. Create CounterView.tsx
+### 9. Create CounterView.tsx file
 
 The `CounterView` is the first of our two program-specific files.
 `CounterView`'s only job is to fetch and listen for updates on our `Counter`
-account. Since we’re only listening here, we don’t have to do anything
+account. Since we're only listening here, we don't have to do anything
 MWA-related. It should look identical to a web application. We'll use our
 `Connection` object to listen for the `programAddress` specified in
 `ProgramProvider.tsx`. When the account is changed, we update the UI.
@@ -1045,7 +1036,7 @@ export function CounterView() {
 }
 ```
 
-#### 10. Create CounterButton.tsx
+### 10. Create CounterButton.tsx file
 
 Finally, we have our last component, the `CounterButton`. This floating action
 button will do the following in a new function `incrementCounter`:
@@ -1181,9 +1172,9 @@ export function CounterButton() {
 }
 ```
 
-#### 11. Build and Run
+### 11. Build and Run
 
-Now it’s time to test that everything works! Build and run with the following
+Now it's time to test that everything works! Build and run with the following
 command:
 
 ```bash
@@ -1200,30 +1191,32 @@ test your app:
 If you run into problems, here are some examples of what they could be and how
 to fix them:
 
-- Application does not build → Exit Metro with ctrl+c and try again
+- Application does not build → Exit Metro with _Ctrl+C_ and try again
 - Nothing happens when you press the `CounterButton` → Make sure you have Solana
   wallet installed ( like the fake wallet we installed in Prerequisites )
 - You get stuck in a forever loop while calling `increment` → This is likely due
   to you reaching a Devnet airdrop rate limit. Take out the airdrop section in
-  `CounterButton` and manually send some Devnet sol to your wallet’s address
+  `CounterButton` and manually send some Devnet sol to your wallet's address
   (printed in the console)
 
-That's it! You've made your first Solana Mobile dApp. If you get stuck, feel
-free to check out the
-[full solution code](https://github.com/Unboxed-Software/solana-react-native-counter)
+That's it! You've made your first Solana Mobile app. If you get stuck, feel free
+to check out the
+[full solution code](https://github.com/solana-developers/react-native-counter)
 on the `main` branch of the repository.
 
 ## Challenge
 
-Your challenge today is to take our app and add a decrement function. Simply add
-another button and call the `decrement` function on our program. This
-instruction already exists on the program and its IDL, so you simply need to
-write client code to call it.
+Your next challenge is to expand the app by adding a `decrement` function. You
+need to create another button that will call the `decrement` method on the
+Solana program. The logic for the decrement function already exists in the
+program’s **IDL** (**Interface Description Language**), so your task is to write
+the client-side code that interacts with it.
 
-After you give it a try on your own, feel free to take a look at the
-[solution code on the `solution` branch](https://github.com/Unboxed-Software/solana-react-native-counter/tree/solution).
+Once you've completed this, you can check your solution against the solution
+code available on the
+[solution branch](https://github.com/solana-developers/react-native-counter).
 
-<Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)!
+<Callout type="success" title="Good Job!">
+If you’ve successfully completed the lab, push your code to GitHub and share
+your feedback on this lesson through this [form](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)
 </Callout>

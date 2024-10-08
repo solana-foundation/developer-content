@@ -17,19 +17,22 @@ description:
 
 ## Lesson
 
-There's no formal lesson here! Let's get hands-on by installing the Solana CLI
-tools, the Rust SDK, and Anchor, and create a test program to verify that
-everything is set up correctly.
+This lesson is a guide to installing the tools required for developing onchain
+programs. Let's install Solana CLI tools, the Rust SDK, and Anchor, and create a
+test program to ensure that our setup works.
 
 ## Lab
 
 ### Extra steps for Windows users
 
-First, install
-[Windows Terminal](https://apps.microsoft.com/detail/9N0DX20HK701) from the
-Microsoft store.
+> macOS and Linux users can skip this section. If you're on Windows, you can
+> follow along with these extra steps.
 
-Next,
+Firstly, make sure you have Windows Terminal installed, otherwise you can
+install Windows Terminal from the
+[Microsoft store](https://apps.microsoft.com/detail/9N0DX20HK701).
+
+Then,
 [install Windows Subsystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/install).
 WSL provides a Linux environment that launches instantly when needed without
 slowing down your computer.
@@ -49,7 +52,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ### Download the Solana CLI tools
 
 Next,
-[download the Solana CLI tools](https://docs.solana.com/cli/install-solana-cli-tools):
+[download the Solana CLI tools](/docs/intro/installation.md#install-the-solana-cli):
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
@@ -105,6 +108,19 @@ Finally, [download Anchor](https://www.anchor-lang.com/docs/installation):
 
 ```bash
 cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
+```
+
+you may need to install additional dependencies in Linux (or WSL):
+
+```bash
+sudo apt-get update && \
+sudo apt-get upgrade && \
+sudo apt-get install -y pkg-config build-essential libudev-dev libssl-dev
+```
+
+proceed...
+
+```bash
 avm install latest
 avm use latest
 ```
@@ -124,11 +140,15 @@ cd temp-project
 anchor test
 ```
 
-**The `anchor test` command should complete without errors or warnings**. If you
-encounter issues, we’ll address them below:
+**The `anchor test` command should complete with no errors or warnings**.
 
-#### Error: `package 'solana-program v1.18.12' cannot be built because it requires rustc 1.75.0 or newer`
+**However you may encounter issues, and we'll fix them below:**
 
+#### `package `solana-program
+
+v1.18.12` cannot be built because it requires rustc 1.75.0 or newer` error
+
+This error is due to incompatible versions of `solana-program` and `solana-cli`.
 Run `cargo add solana-program@"=1.18.x"`, where `x` matches your version of
 `solana-cli`. Then re-run `anchor test`.
 
@@ -139,6 +159,39 @@ Add a keypair to `.config/solana/id.json`. You can either copy a keypair from an
 `solana-keygen new --no-bip39-passphrase` to create a new keypair file. Then
 re-run `anchor test`.
 
+#### error: no such command: `build-sbf`
+
+If you see this message, this error typically occurs because the relevant
+binaries are not in your shell's PATH variable.
+
+Run this command to add this folder to your shell, and also add this to your
+`~/.zshrc` or `~/.bashrc` file to make the change permanent.
+
+```bash
+export PATH=~"/.local/share/solana/install/active_release/bin:$PATH"
+```
+
+#### Unable to get latest blockhash. Test validator does not look started.
+
+There's multiple versions of the 'tar' (tape archiver) command Solana used for
+archiving. macOS comes with BSD tar, but Solana CLI wants the GNU version
+installed.
+
+- Install [Homebrew](https://brew.sh/) and use it to install GNU tar:
+
+  ```bash
+  # Install Homebrew; you can skip this step if you already have Homebrew installed
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # Install GNU tar
+  brew install gnu-tar
+  ```
+
+- Add this to your ~/.zshrc or ~/.bashrc file to make the change permanent.
+
+  ```bash
+  export PATH=/opt/homebrew/opt/gnu-tar/libexec/gnubin:$PATH
+  ```
+
 #### Error: `Your configured rpc port: 8899 is already in use`
 
 If you are running `solana-test-validator`, you may encounter the error
@@ -146,7 +199,7 @@ If you are running `solana-test-validator`, you may encounter the error
 `anchor test`. To resolve this, stop the `solana-test-validator` before running
 `anchor test`.
 
-#### All done?
+### All done?
 
 Ensure `anchor test` completes successfully - with no warnings and no errors -
 before continuing.
