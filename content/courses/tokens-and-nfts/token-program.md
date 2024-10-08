@@ -476,7 +476,7 @@ and `freezeAuthority`.
 Think of the token mint as the factory that makes tokens. Our `user`, as the
 `mintAuthority` is the person that runs the factory.
 
-```typescript
+```typescript filename="create-token-mint.ts"
 import { createMint } from "@solana/spl-token";
 import "dotenv/config";
 import {
@@ -530,7 +530,7 @@ npm i @metaplex-foundation/mpl-token-metadata@2
 
 Create a new file called `create-token-metadata.ts`
 
-```typescript
+```typescript filename="create-token-metadata.ts"
 // This uses "@metaplex-foundation/mpl-token-metadata@2" to create tokens
 import "dotenv/config";
 import {
@@ -658,7 +658,7 @@ on a wallet and our mint address, making the account if it needs to.
 
 Remember to substitute in your token mint address below!
 
-```typescript
+```typescript filename="create-token-account.ts"
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import "dotenv/config";
 import {
@@ -722,7 +722,7 @@ Create an empty file called `mint-tokens.ts`. Then uses the `spl-token` function
 `mintTo()` to mint tokens. Remember to substitute in your token mint address and
 token account address below!
 
-```typescript
+```typescript filename="mint-tokens.ts.ts"
 import { mintTo } from "@solana/spl-token";
 import "dotenv/config";
 import {
@@ -786,7 +786,7 @@ Create an empty file called `transfer-tokens.ts`. Then replace
 `YOUR_RECIPIENT_HERE` with your recipient public key and replace
 `YOUR_TOKEN_MINT_ADDRESS_HERE` with your token mint address.
 
-```typescript
+```typescript filename="transfer-tokens.ts"
 import "dotenv/config";
 import {
   getExplorerLink,
