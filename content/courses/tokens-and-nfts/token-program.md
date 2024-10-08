@@ -722,7 +722,7 @@ Create an empty file called `mint-tokens.ts`. Then uses the `spl-token` function
 `mintTo()` to mint tokens. Remember to substitute in your token mint address and
 token account address below!
 
-```typescript filename="mint-tokens.ts.ts"
+```typescript filename="mint-tokens.ts"
 import { mintTo } from "@solana/spl-token";
 import "dotenv/config";
 import {
