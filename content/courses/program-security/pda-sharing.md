@@ -233,7 +233,7 @@ program accounts.
 #### 1. Starter
 
 To get started, download the starter code on the `starter` branch of
-[this repository](https://github.com/solana-developers/pda-sharing/tree/starter).
+[the `pda-sharing` repository](https://github.com/solana-developers/pda-sharing/tree/starter).
 The starter code includes a program with two instructions and the boilerplate
 setup for the test file.
 
