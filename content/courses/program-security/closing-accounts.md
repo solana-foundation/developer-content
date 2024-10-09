@@ -338,7 +338,7 @@ pub struct RedeemWinningsSecure<'info> {
 It should be the exact same as the original `RedeemWinnings` account validation
 struct, except there is an additional `close = user` constraint on the
 `lottery_entry` account. This will tell Anchor to close the account by zeroing
-out the data, Assigning the owner to the System Program, transferring its
+out the data, assigning the owner to the System Program, transferring its
 lamports to the `user` account. This last step is what will prevent the account
 from being used again if the program has attempted to close it already.
 
