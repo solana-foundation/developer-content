@@ -1,5 +1,5 @@
 ---
-title: Admin configuration
+title: admin configuration
 objectives:
   - Define program features in the `Cargo.toml` file
   - Use the Rust `cfg` attribute to conditionally compile code based on which
@@ -696,6 +696,10 @@ pub struct InitializeAdminConfig<'info> {
     pub fee_destination: Account<'info, TokenAccount>,
     #[account(mut,address = ADMIN_PUBKEY)]
     pub authority: Signer<'info>,
+        #[account(constraint = program.programdata_address()? == Some(program_data.key()))]
+    pub program: Program<'info, Config>,
+    #[account(constraint = program_data.upgrade_authority_address == Some(authority.key()))]
+    pub program_data: Account<'info, ProgramData>,
     pub system_program: Program<'info, System>,
 }
 

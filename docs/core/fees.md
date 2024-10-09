@@ -197,9 +197,8 @@ syscalls, etc), each may consume a
 of compute units.
 
 > A program can log details about its compute usage, including how much remains
-> in its alloted compute budget. See
-> [program debugging](/docs/programs/debugging.md#monitoring-compute-budget-consumption)
-> for more information. You can also find more information in this guide for
+> in its alloted compute budget. You can also find more information in this
+> guide for
 > [optimizing your compute usage](/content/guides/advanced/how-to-optimize-compute.md).
 
 Each transaction is alloted a [compute unit limit](#compute-unit-limit), either

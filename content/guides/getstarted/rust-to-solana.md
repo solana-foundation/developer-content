@@ -35,13 +35,13 @@ need to know to start their Solana journeys.
 ## Understanding the Core Differences
 
 First, note that this guide aims at understanding the differences in using Rust
-as a language when working with Solana. It won’t cover
+as a language when working with Solana. It won't cover
 [Blockchain or Solana basics](https://solana.com/learn/blockchain-basics).
 
-It also won’t cover core Solana concepts that must be understood in order to
+It also won't cover core Solana concepts that must be understood in order to
 program in Solana, such as:
 
-- [Programs](https://solana.com/docs/core/programs) - Solana’s version of smart
+- [Programs](https://solana.com/docs/core/programs) - Solana's version of smart
   contracts
 - [Accounts](https://solana.com/docs/core/accounts) - A record in the Solana
   ledger that either holds data (a data account) or is an executable program
@@ -53,7 +53,7 @@ program in Solana, such as:
 For more information on those core concepts, check out the
 [Solana developer documentation](https://solana.com/docs).
 
-Let’s now look at the differences in **project setup**.
+Let's now look at the differences in **project setup**.
 
 ## Key Setup Details
 
@@ -152,7 +152,7 @@ Using an additional crate that depends on `rand` will also cause compile errors.
 
 However, if the crate used simply depends on `rand` but does not actually
 generate random numbers, then it is possible to work around this by adding the
-following to the program’s Cargo.toml:
+following to the program's Cargo.toml:
 
 ```toml
 [dependencies]
@@ -222,7 +222,7 @@ allows developers to develop and deploy Solana programs.
 
 ![Solana Playground](/assets/guides/rust-to-solana/solana-playground.png)
 
-It’s the easiest way to begin developing with Solana, and it supports building,
+It's the easiest way to begin developing with Solana, and it supports building,
 testing, and deploying Solana Rust programs. Additionally, a number of built-in
 tutorials are available to guide learning.
 
@@ -237,17 +237,16 @@ boilerplate code, speeding up the development cycle. Additionally, it provides
 some security checks by default, making Solana programs more secure.
 
 To create a new program, simply
-[create a new Anchor project](https://solana.com/developers/guides/getstarted/intro-to-anchor)
-in the Solana playground.
+[create a new Anchor project](/docs/programs/anchor) in the Solana playground.
 
 Alternatively,
 [install the Anchor CLI](https://www.anchor-lang.com/docs/installation) locally,
 and then use `anchor init <project-name>` to create a new Anchor project.
 
-## Creating Off-chain Programs
+## Creating offchain Programs
 
 So far, this guide has covered the key details of developing **onchain Solana
-programs** in Rust. However, it’s also possible to develop **off-chain Solana
+programs** in Rust. However, it's also possible to develop **offchain Solana
 clients** in Rust. This can be done by using the
 [solana_sdk crate](https://docs.rs/solana-sdk/latest/solana_sdk/). This contains
 the [solana_client crate](https://docs.rs/solana-client/latest/solana_client/)
@@ -257,16 +256,13 @@ that allows Rust programs to interact with a Solana node via the
 Another option is to use the
 [anchor_client crate](https://docs.rs/anchor-client/latest/anchor_client/) which
 interacts with Solana programs written in Anchor via RPC. Alternatively,
-consider writing onchain programs in Rust, and off-chain
+consider writing onchain programs in Rust, and offchain
 [clients in JS/TS](https://solana.com/de/docs/clients/javascript-reference).
 
 ## Wrap Up
 
 This guide has covered the basics of developing for Solana with Rust, from setup
 details and restrictions to development environments and frameworks.
-
-For more Rust-related Solana resources, check out the
-[Developing with Rust page](https://solana.com/docs/programs/lang-rust).
 
 For other Solana program examples written with Rust, check out these
 [examples on GitHub](https://github.com/solana-labs/solana-program-library/tree/master/examples/rust).

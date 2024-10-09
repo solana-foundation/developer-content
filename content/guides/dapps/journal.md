@@ -212,10 +212,9 @@ In the above code, we used the following macros:
 - `#[account(...)]` attribute macro then specifies additional constraints on the
   accounts
 
-Each journal entry is a Program Derived Address (
-[PDA](https://solanacookbook.com/core-concepts/pdas.html#facts)) that stores the
-entries state on-chain. Since we are creating a new journal entry here, it needs
-to be initialized using the `init_if_needed` constraint.
+Each journal entry is a Program Derived Address ( [PDA](/docs/core/pda.md)) that
+stores the entries state on-chain. Since we are creating a new journal entry
+here, it needs to be initialized using the `init_if_needed` constraint.
 
 With Anchor, a PDA is initialized with the `seeds`, `bumps`, and
 `init_if_needed` constraints. The `init_if_needed` constraint also requires the

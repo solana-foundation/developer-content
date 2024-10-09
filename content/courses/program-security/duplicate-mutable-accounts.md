@@ -172,7 +172,7 @@ pub struct User {
 
 ## Lab
 
-Let’s practice by creating a simple Rock Paper Scissors program to demonstrate
+Let's practice by creating a simple Rock Paper Scissors program to demonstrate
 how failing to check for duplicate mutable accounts can cause undefined behavior
 within your program.
 
@@ -360,9 +360,9 @@ pub struct RockPaperScissorsSecure<'info> {
 
 ### Test rock_paper_scissors_shoot_secure instruction
 
-To test the `rock_paper_scissors_shoot_secure` instruction, we’ll invoke the
-instruction twice. First, we’ll invoke the instruction using two different
-player accounts to check that the instruction works as intended. Then, we’ll
+To test the `rock_paper_scissors_shoot_secure` instruction, we'll invoke the
+instruction twice. First, we'll invoke the instruction using two different
+player accounts to check that the instruction works as intended. Then, we'll
 invoke the instruction using the `playerOne.publicKey` as both player accounts,
 which we expect to fail.
 
