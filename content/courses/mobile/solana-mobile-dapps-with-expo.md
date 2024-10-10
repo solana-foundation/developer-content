@@ -943,7 +943,7 @@ This should have the following fields:
   function that creates a new snapshot NFT
 
 The `DigitalAsset` type comes from `@metaplex-foundation/mpl-token-metadata`
-that have metadata, off-chain metadata, collection data, plugins (including
+which has metadata, off-chain metadata, collection data, plugins (including
 Attributes), and more.
 
 ```tsx
