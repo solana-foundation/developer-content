@@ -391,7 +391,7 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 #### 0. Install a Devnet-enabled Solana wallet
 
 You'll need a wallet that supports Devnet to test with. In
-[our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
+our [Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive.md) we
 created one of these. Let's install it from the repo in a different directory
 from our app:
 
