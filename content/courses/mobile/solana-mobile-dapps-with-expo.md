@@ -71,7 +71,8 @@ speakers. The libraries are intuitive and the documentation is phenomenal.
 
 #### How to create an Expo app
 
-To begin using Expo, first follow the setup instructions described in the Getting Started section of the
+To begin using Expo, first follow the setup instructions described in the
+Getting Started section of the
 [Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md).
 After that, you'll want to sign up for an
 [Expo Application Services (EAS) account](https://expo.dev/eas).
@@ -390,8 +391,8 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 
 #### 0. Install a Devnet-enabled Solana wallet
 
-You'll need a wallet that supports Devnet to test with. In
-our [Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive.md) we
+You'll need a wallet that supports Devnet to test with. In our
+[Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive.md) we
 created one of these. Let's install it from the repo in a different directory
 from our app:
 
@@ -436,8 +437,8 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We will be
-copying over `components/AuthorizationProvider.tsx` and
+[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We
+will be copying over `components/AuthorizationProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
 
