@@ -548,7 +548,7 @@ following:
 ```rust
 use anchor_lang::prelude::*;
 
-declare_id!("your-private-key");
+declare_id!("onchain-program-address");
 
 #[program]
 pub mod anchor_counter {
