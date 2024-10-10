@@ -266,7 +266,7 @@ diary of sorts.
 To mint the NFTs we'll be using Metaplex's Umi libraries along with
 [Pinata Cloud](https://pinata.cloud/) to store images and metadata. We are using
 Pinata in this tutorial, but
-[there are many good solutions for store images for long-term storage](https://solana.com/developers/guides/getstarted/how-to-create-a-token#create-and-upload-image-and-offchain-metadata).
+[there are many good solutions for long-term image storage](https://solana.com/developers/guides/getstarted/how-to-create-a-token#create-and-upload-image-and-offchain-metadata).
 All of our onchain work will be on Devnet.
 
 The first half of this lab is cobbling together the needed components to make
