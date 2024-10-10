@@ -1625,7 +1625,7 @@ request types: `SignMessagesRequest` and `SignTransactionsRequest`.
 
 Try to do this without help as it's great practice, but if you get stuck, check
 out the
-[solution code on the `solution` branch](https://github.com/Unboxed-Software/react-native-fake-solana-wallet/tree/solution).
+[solution code on the repo](https://github.com/solana-developers/react-native-fake-solana-wallet).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
