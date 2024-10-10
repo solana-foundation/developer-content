@@ -335,6 +335,7 @@ refining your skills. Be sure to explore additional resources like:
 
 - [The official Solana Developer Docs](https://solana.com/docs) for in-depth
   guides on Solana’s core libraries and best practices.
+
 - [Solana Stack Exchange](https://solana.stackexchange.com/) forum for
   troubleshooting, sharing insights, and staying updated on the latest ecosystem
   changes.
@@ -370,6 +371,7 @@ environment if you didn't already. This
 [article](https://reactnative.dev/docs/set-up-your-environment) shows you how.
 Remember that this step is not required if you are using a
 [Framework](https://reactnative.dev/architecture/glossary#react-native-framework).
+
 
 Ensure you have [Node.js](https://nodejs.org/en/download) installed on your
 system. These will manage your JavaScript packages. Install Android Studio:
@@ -1201,6 +1203,7 @@ to fix them:
 
 That's it! You've made your first Solana Mobile app. If you get stuck, feel free
 to check out the
+
 [full solution code](https://github.com/solana-developers/react-native-counter)
 on the `main` branch of the repository.
 
@@ -1214,6 +1217,7 @@ the client-side code that interacts with it.
 
 Once you've completed this, you can check your solution against the solution
 code available on the
+
 [solution branch](https://github.com/solana-developers/react-native-counter).
 
 <Callout type="success" title="Good Job!">
