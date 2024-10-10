@@ -436,7 +436,7 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](/content/courses/mobile/basic-solana-mobile). We will be
+[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We will be
 copying over `components/AuthorizationProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
