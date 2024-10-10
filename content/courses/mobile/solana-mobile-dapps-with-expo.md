@@ -442,7 +442,7 @@ copying over `components/AuthorizationProvider.tsx` and
 object as well as some helper functions that authorize our dapp.
 
 Create file `components/AuthorizationProvider.tsx` and copy the contents of
-[our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthorizationProvider.tsx)
+[our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthProvider.tsx)
 into the new file.
 
 Secondly, create file `components/ConnectionProvider.tsx` and copy the contents
