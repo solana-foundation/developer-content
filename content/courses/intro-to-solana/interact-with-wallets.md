@@ -119,6 +119,7 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { clusterApiUrl } from "@solana/web3.js";
+import '@solana/wallet-adapter-react-ui/styles.css'
 
 export const Home: NextPage = props => {
   const endpoint = clusterApiUrl("devnet");
@@ -173,6 +174,7 @@ import {
   PublicKey,
   SystemProgram,
 } from "@solana/web3.js";
+import '@solana/wallet-adapter-react-ui/styles.css'
 
 const Home: NextPage = props => {
   const endpoint = clusterApiUrl("devnet");
