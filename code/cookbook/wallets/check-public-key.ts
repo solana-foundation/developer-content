@@ -1,17 +1,3 @@
----
-title: How to Validate a Public Key
-sidebarSortOrder: 4
-description:
-  "Public keys on Solana can be validated with a small amount of code. Learn how
-  to validate public keys on Solana."
----
-
-In certain special cases (e.g. a Program Derived Address), public keys may not
-have a private key associated with them. You can check this by looking to see if
-the public key lies on the ed25519 curve. Only public keys that lie on the curve
-can be controlled by users with wallets.
-
-```javascript file=/code/cookbook/wallets/check-public-key.ts#L1-L2,#L3-L19
 import { PublicKey } from "@solana/web3.js";
 
 // Note that Keypair.generate() will always give a public key that is valid for users
@@ -31,4 +17,3 @@ console.log(PublicKey.isOnCurve(offCurveAddress.toBytes()));
 
 // Not a valid public key
 const errorPubkey = new PublicKey("testPubkey");
-```
