@@ -24,7 +24,7 @@ and high TPS. For specific requirements, please see
 
 To run an api node:
 
-1. [Install the Solana command-line tool suite](https://docs.solanalabs.com/cli/install)
+1. [Install the Solana command-line tool suite](/docs/intro/installation.md)
 2. Start the validator with at least the following parameters:
 
 ```shell
@@ -767,7 +767,7 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 
 ## Prioritization Fees and Compute Units
 
-In periods of high demand, it’s possible for a transaction to expire before a
+In periods of high demand, it's possible for a transaction to expire before a
 validator has included such transactions in their block because they chose other
 transactions with higher economic value. Valid Transactions on Solana may be
 delayed or dropped if Prioritization Fees are not implemented properly.
@@ -817,7 +817,7 @@ may only return the lowest fee for each block. This will often be zero, which is
 not a fully useful approximation of what Prioritization Fee to use in order to
 avoid being rejected by validator nodes.
 
-The `getRecentPrioritizationFees` API takes accounts’ pubkeys as parameters, and
+The `getRecentPrioritizationFees` API takes accounts' pubkeys as parameters, and
 then returns the highest of the minimum prioritization fees for these accounts.
 When no account is specified, the API will return the lowest fee to land to
 block, which is usually zero (unless the block is full).

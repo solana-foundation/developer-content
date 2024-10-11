@@ -148,7 +148,7 @@ import the provided standard CSS styles required for these react components to
 be displayed properly in our application. Each of these styles can be easily
 overridden to customize the look.
 
-Let’s import these dependencies and use them further in the context/provider
+Let's import these dependencies and use them further in the context/provider
 component we are building:
 
 ```tsx filename=AppWalletProvider.tsx
@@ -340,7 +340,7 @@ side of your app that is a child of your `AppWalletAdapter` context. In this
 example guide, it will be your entire application.
 
 - the `useWallet` hook has details like `publicKey` and state of the wallet,
-  whether it’s `connecting` or it’s `connected`.
+  whether it's `connecting` or it's `connected`.
 - the `useConnection` hook will facilitate your application's connection to the
   Solana blockchain, via your RPC endpoint
 
@@ -397,7 +397,7 @@ const getAirdropOnClick = async () => {
 
 ### Getting a wallet balance
 
-Here’s an example of getting the SOL balance of the wallet connected using the
+Here's an example of getting the SOL balance of the wallet connected using the
 `useConnection` and `useWallet` hooks.
 
 [`getBalance`](https://solana.com/docs/rpc/http/getbalance#parameters) is an RPC
@@ -425,7 +425,7 @@ With functions like these and the ones provided within the wallet adapter
 packages, you can detect whether the user's wallet is connected or not, create a
 button to get an airdrop of devnet or SOL in the network defined, and more.
 
-Let’s make another page now to demonstrate how we can use each of these hooks to
+Let's make another page now to demonstrate how we can use each of these hooks to
 access actually access the `connection` object and your user's wallet state to
 send or sign transactions, read the wallet balance, and test functionality.
 
