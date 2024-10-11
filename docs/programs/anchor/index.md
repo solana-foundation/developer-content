@@ -3,6 +3,13 @@ title: Getting Started with Anchor
 description: Getting Started with Anchor
 sidebarLabel: Anchor Framework
 sidebarSortOrder: 1
+altRoutes:
+  - /docs/programs/debugging
+  - /docs/programs/faq
+  - /docs/programs/lang-c
+  - /docs/programs/lang-rust
+  - /docs/programs/limitations
+  - /docs/programs/overview
 ---
 
 The Anchor framework is a tool that simplifies the process of building Solana
