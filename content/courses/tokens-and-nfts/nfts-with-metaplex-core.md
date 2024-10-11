@@ -5,7 +5,7 @@ objectives:
   - Explain Collections and how do they differ between the Core Program and the Token Metadata Program
   - Explain the role of the Metaplex Core program
   - Create and update a Collection using the Metaplex JS SDK
-  - Create and update NFTs using the Metaplex JS SDK
+  - Create and update Assets using the Metaplex JS SDK
 description:
   "How to create NFTs in TypeScript with Metaplex Core program and Irys
   permanent storage service."
@@ -28,7 +28,16 @@ keywords:
 
 ### Summary
 
-**Todo + remember to change the objectives too!**
+- **Non-Fungible Tokens (NFTs)** are Digital Assets with 0 decimals, and 
+  a maximum supply of 1
+- **Metadata** attaches additional properties to Assets and Collection. 
+  Metadata includes the token name and a link to an offchain JSON file. 
+  This JSON file contains links to artwork and other media files, any 
+  special traits the NFT has, and more.
+- The [Metaplex Core Program](https://developers.metaplex.com/core) is an 
+  onchain program that sheds the complexity and technical debt of previous 
+  standards and provides a clean and simple core spec for digital assets 
+  using a single account design
 
 ### Lesson
 
