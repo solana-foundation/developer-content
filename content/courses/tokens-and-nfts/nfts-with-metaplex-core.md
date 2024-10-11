@@ -34,7 +34,8 @@ keywords:
 
 Solana Non-Fungible Tokens (NFTs) used to be represented as SPL tokens 
 
-In this lesson, we'll explore how Core Assets are represented and demonstrate how to create and update them using the mpl-core npm module.
+In this lesson, we'll explore how Core Assets are represented and demonstrate 
+how to create and update them using the mpl-core npm module.
 
 Solana Non-Fungible Tokens (NFTs) used to be represented as SPL tokens 
 with an additional metadata account associated with each token mint and 
@@ -58,7 +59,7 @@ All NFTs must meet the following characteristics:
 4. Have an associated **metadata** to store things like a name, images, etc.
 
 While all this properties were previously achievable with a combination of 
-the SPL Token Program and the Metaplex  Token Metadata Program, it came with 
+the SPL Token Program and the Metaplex Token Metadata Program, it came with 
 a big overhead and lots of inefficiencies for a market as big as NFTs and Digital 
 Asset in general.
 
@@ -67,18 +68,18 @@ This is exaclty why the **Metaplex Core Program** was created!
 #### The Metaplex Core program
 
 The [Metaplex Core Program](https://developers.metaplex.com/core) is the new 
-standard for NFTs on Solana
+standard for NFTs and Digital Assets on Solana
 
 [image needed (?) ...]
 
 - Differently from the Token Metadata Program, Collection are different accounts,
-  that requires different data, from the Asset they group together. Collections 
+  model that requires different data, from the Asset they group together. Collections 
   store only collection specific metadata such as collection name and collection 
   image.
-- Assets don't rely on multiple accounts such as Associated Token Accounts or 
-  Metadata Accounts. Instead, when a Core Assets is created, the Metaplex Core 
-  Program stores ownership metadata (like the URI pointing to an offchain `.json` 
-  that follow a [certain standard](https://developers.metaplex.com/token-metadata/token-standard)), 
+- Assets are now a single account model and design that don't rely on additional
+  accounts such as Associated Token Accounts or Metadata Accounts. Instead, when 
+  a Core Assets is created, the Metaplex Core Program stores ownership metadata 
+  (like the URI pointing to an offchain `.json` that follow a [certain standard](https://developers.metaplex.com/token-metadata/token-standard)), 
   directly on the Asset.
 - Both Assets and Collections can hook into lifecycle events, such as create
   transfer and burn, allowing custom behaviors via **Plugins**. For example, 
@@ -92,7 +93,7 @@ visit the [Metaplex Developer Docs](https://developers.metaplex.com/core).
 
 #### Umi
 
-Umi is a framework built by Metaplex for creating JS/TS clients that interact with 
+Umi is a framework built by Metaplex for registering JS/TS clients that interact with 
 on-chain programs. While it can create clients for various programs, it's most commonly 
 used with all the Metaplex program.
 
@@ -126,7 +127,7 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
 import { promises as fs } from "fs";
 import { clusterApiUrl } from "@solana/web3.js";
 
-const umi = createUmi(clusterApiUrl("devnet"));
+const umi = createUmi(clusterApiUrl("devnet")).use(mplCore());
 
 // load keypair from local file system
 // See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
@@ -136,7 +137,7 @@ const localKeypair = await getKeypairFromFile();
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(localKeypair.secretKey);
 
 // load the MPL metadata program plugin and assign a signer to our umi instance
-umi.use(keypairIdentity(umiKeypair)).use(mplCore());
+umi.use(keypairIdentity(umiKeypair));
 ```
 
 #### Uploading images
@@ -192,7 +193,7 @@ accepts a metadata object and returns a uri that points to the uploaded metadata
 const metadata = {
   name: 'My NFT',
   description: 'This is an NFT on Solana',
-  image: imageUri[0],
+  image,
   external_url: 'https://example.com',
   properties: {
     files: [
@@ -284,8 +285,9 @@ const { signature, result } = await create(umi, {
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 ```
 
-**Note**: once you add an Asset to a Collection, you'll need to pass it in every instruction
-as `CollectionV1`, you will not be able to leave the `collection` field empty
+**Note**: once you add an Asset to a Collection you'll need to pass in a `CollectionV1` object in 
+the collection field (can be obtained by using the `fetchCollection()` function) of subsequent instructions. 
+Leaving the collection field empty will cause invalidations during transactions causing them to fail.
 
 #### Updating the Asset & Collection
 
@@ -305,13 +307,13 @@ const { signature, result } = await update(umi, {
   name: 'My new NFT'
   uri: newAssetUri
   newCollection: publicKey("NEW_CORE_COLLECTION_ADDRESS")
-  newUpdateAuthority: updateAuthority("Address", [publicKey("NEW_UPDATE_AUTHORITY_ADDRESS")])
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 ```
 
-When we add an Asset to a Collection, to not waste any additional bytes, it gets stored in the 
-`updateAuthority`. So if you want to change the collection address for the asset, you can update
-the `updateAuthority` field instead of using the `newCollection` field
+When we add an Asset to a Collection, to not waste any additional bytes, the collection gets stored 
+in the `updateAuthority` field of the asset. So if you want to change the collection address for the 
+asset, you can update the `updateAuthority` field of the `update` function, instead of using the 
+`newCollection` field, like this:
 
 ```typescript
 const asset = await fetchAsset(umi, publickey("CORE_ASSET_ADDRESS"));
@@ -324,10 +326,12 @@ const { signature, result } = await update(umi, {
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 ```
 
-**Note**: We can use the same method to add the Asset to a Collection if it didn't have it before
+**Note**: We can use the same method to add the Asset to a Collection if it isn't part of a 
+collection currently.
 
-Differently from the `token-metadata` program, it's impossible to create an immutable with the 
-`create` method. The only way to make an asset immutable is to change the `updateAuthority` to None
+A noted difference from the `token-metadata` program is that it not impossible to create an immutable 
+`Asset` using the `create` method. The only way to make an asset immutable is to change the `updateAuthority` 
+to `None` in a futher update.
 
 ```typescript
 const asset = await fetchAsset(umi, publickey("CORE_ASSET_ADDRESS"));
@@ -408,7 +412,9 @@ to interact with the metadata program and `irysUploader` to upload our files.
 
 ```typescript
 // create a new connection to Solana's devnet cluster
-const umi = createUmi(connection);
+const umi = createUmi(connection)
+  .use(mplCore())
+  .use(irysUploader());
 
 // load keypair from local file system
 // See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
@@ -418,10 +424,7 @@ const user = await getKeypairFromFile();
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
 // assigns a signer to our umi instance, and loads the MPL metadata program and Irys uploader plugins.
-umi
-  .use(keypairIdentity(umiKeypair))
-  .use(mplCore())
-  .use(irysUploader());
+umi.use(keypairIdentity(umiKeypair))
 ```
 
 Download the image assets the collection image from the links below and save them 
@@ -443,7 +446,7 @@ about making this on our own.
 Upload the offchain metadata to Irys:
 
 ```typescript
-const collectionImagePath = path.resolve(__dirname, "collection.png");
+const collectionImagePath = "collection.png";
 
 const buffer = await fs.readFile(collectionImagePath);
 let file = createGenericFile(buffer, collectionImagePath, {
@@ -479,7 +482,7 @@ Then actually create the collection:
 // generate mint keypair
 const collection = generateSigner(umi);
 
-// create and mint NFT
+// create and mint a Collection
 await createCollection(umi, {
   collection,
   name: 'My Collection',
@@ -573,22 +576,21 @@ await airdropIfRequired(
   0.1 * LAMPORTS_PER_SOL,
 );
 
-const umi = createUmi(connection);
+const umi = createUmi(connection)
+  .use(mplCore())
+  .use(irysUploader());
 
 // convert to umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
 // assigns a signer to our umi instance, and loads the MPL metadata program and Irys uploader plugins.
-umi
-  .use(keypairIdentity(umiKeypair))
-  .use(mplCore())
-  .use(irysUploader());
+umi.use(keypairIdentity(umiKeypair))
 ```
 
 We can then put out files into Irys:
 
 ```typescript
-const assetImagePath = path.resolve(__dirname, "nft.png");
+const assetImagePath = "asset.png";
 
 const buffer = await fs.readFile(assetImagePath);
 let file = createGenericFile(buffer, assetImagePath, {
@@ -719,7 +721,9 @@ await airdropIfRequired(
 );
 
 // create a new connection to Solana's devnet cluster
-const umi = createUmi(connection);
+const umi = createUmi(connection)
+  .use(mplCore())
+  .use(irysUploader());
 
 // load keypair from local file system
 // See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
@@ -731,17 +735,14 @@ console.log("Loaded user:", user.publicKey.toBase58());
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
 // assigns a signer to our umi instance, and loads the MPL metadata program and Irys uploader plugins.
-umi
-  .use(keypairIdentity(umiKeypair))
-  .use(mplCore())
-  .use(irysUploader());
+umi.use(keypairIdentity(umiKeypair))
 ```
 
 Fetch both Asset and Collection, using the address from the previous example and
 try to update the uri and the name of the Asset:
 
 ```typescript
-const assetImagePath = path.resolve(__dirname, "nft.png");
+const assetImagePath = "asset.png";
 
 const buffer = await fs.readFile(assetImagePath);
 let file = createGenericFile(buffer, assetImagePath, {
@@ -793,20 +794,16 @@ await update(umi, {
   uri,
 }).sendAndConfirm(umi);
 
-let explorerLink = getExplorerLink(
-  "address", 
-  asset, 
-  "devnet"
-);
+let explorerLink = getExplorerLink("address", asset, "devnet");
 console.log(`Asset updated with new metadata URI: ${explorerLink}`);
 
 console.log("✅ Finished successfully!");
 ```
 
-Run `npx esrun update-metaplex-nft.ts`. You should see something like:
+Run `npx esrun update-metaplex-core-assetft.ts`. You should see something like:
 
 ``` // TODO
-% npx esrun update-metaplex-nft.ts
+% npx esrun update-metaplex-core-asset.ts
 
 Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
 image uri: https://arweave.net/dboiAebucLGhprtknDQnp-yMj348cpJF4aQul406odg
