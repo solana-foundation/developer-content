@@ -28,6 +28,8 @@ keywords:
 altRoutes:
   - /developers/guides/hello-world-in-your-browser
   - /developers/guides/solana-playground
+  - /developers/guides/solang/solang-getting-started
+  - /developers/guides/solang-getting-started
 ---
 
 For this "hello world" quickstart guide, we will use
@@ -115,9 +117,8 @@ use solana_program::{
 ### Write your program logic
 
 Every Solana program must define an `entrypoint` that tells the Solana runtime
-where to start executing your onchain code. Your program's
-[entrypoint](/docs/programs/lang-rust.md#program-entrypoint) should provide a
-public function named `process_instruction`:
+where to start executing your onchain code. Your program's entrypoint should
+provide a public function named `process_instruction`:
 
 ```rust
 // declare and export the program's entrypoint
@@ -141,8 +142,7 @@ Every onchain program should return the `Ok`
 [result enum](https://doc.rust-lang.org/std/result/) with a value of `()`. This
 tells the Solana runtime that your program executed successfully without errors.
 
-Our program above will simply
-[log a message](/docs/programs/debugging.md#logging) of "_Hello, world!_" to the
+Our program above will simply log a message of "_Hello, world!_" to the
 blockchain cluster, then gracefully exit with `Ok(())`.
 
 ### Build your program
@@ -322,4 +322,3 @@ your local development environment:
 - [Interacting with Tokens and NFTs](/developers/courses/tokens.md)
 - [Developer Guides](/developers/guides/)
 - [Developing Games](/content/guides/games/getting-started-with-game-development.md)
-- [Learn more about developing Solana programs with Rust](/docs/programs/lang-rust.md)

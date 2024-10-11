@@ -2,6 +2,8 @@
 title: How to Create a Token
 sidebarSortOrder: 1
 description: "Learn how to create tokens on Solana."
+altRoutes:
+  - /developers/cookbook/tokens
 ---
 
 Creating tokens is done by creating what is called a "mint account". This mint

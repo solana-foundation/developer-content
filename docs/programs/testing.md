@@ -1,6 +1,7 @@
 ---
 title: "Testing with NodeJS"
 description: "Testing native solana programs written with rust using NodeJS"
+sidebarSortOrder: 5
 ---
 
 When developing programs on Solana, ensuring their correctness and reliability
@@ -18,7 +19,7 @@ There are two ways to test programs on Solana:
 2. The various
    [BanksClient-based](https://docs.rs/solana-banks-client/latest/solana_banks_client/)
    test frameworks for SBF (Solana Bytecode Format) programs: Bankrun is a
-   framework that simulates a Solana bank’s operations, enabling developers to
+   framework that simulates a Solana bank's operations, enabling developers to
    deploy, interact with, and assess the behavior of programs under test
    conditions that mimic the mainnet. It helps set up the test environment and
    offers tools for detailed transaction insights, enhancing debugging and
@@ -38,13 +39,13 @@ There are two ways to test programs on Solana:
 In this guide, we are using Solana Bankrun. `Bankrun` is a superfast, powerful,
 and lightweight framework for testing Solana programs in Node.js.
 
-- The biggest advantage of using Solana Bankrun is that you don’t have to set
+- The biggest advantage of using Solana Bankrun is that you don't have to set
   up  
-  an environment to test programs like you’d have to do while using the  
+  an environment to test programs like you'd have to do while using the  
   `solana-test-validator`. Instead, you can do that with a piece of code,
   inside  
   the tests.
-- It also dynamically sets time and account data, which isn’t possible with  
+- It also dynamically sets time and account data, which isn't possible with  
   `solana-test-validator`
 
 ## Installation
@@ -66,7 +67,7 @@ directories:
 - `./tests/fixtures` (just create this directory if it doesn't exist already).
 - Your current working directory.
 - A directory you define in the `BPF_OUT_DIR` or `SBF_OUT_DIR` environment
-  variables. `export BPF_OUT_DIR=’/path/to/binary’`
+  variables. `export BPF_OUT_DIR='/path/to/binary'`
 - Build your program specifying the correct directory so that library can pick
   the file up from directory just from the name.
   `cargo build-sbf --manifest-path=./program/Cargo.toml --sbf-out-dir=./tests/fixtures`
@@ -151,7 +152,7 @@ let transaction = await client.processTransaction(tx);
 
 ## Example
 
-Here’s an example to write test for
+Here's an example to write test for
 a [hello world program](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/native) :
 
 ```typescript
@@ -232,16 +233,3 @@ This is how the output looks like after running the tests for
 ℹ todo 0
 ℹ duration_ms 63.52616
 ```
-
-## Next Steps
-
-- Checkout more testing examples from the
-  [Program Examples](/docs/programs/examples.md)
-- You can also
-  use [anchor-bankrun](https://kevinheavey.github.io/solana-bankrun/tutorial/#anchor-integration) to
-  write tests in NodeJS for Anchor programs
-- [Writing and testing your Solana programs using Rust](https://solana.com/docs/programs/lang-rust#how-to-test)
-  is possible with
-  [solana_program_test](https://docs.rs/solana-program-test/1.18.14/solana_program_test/)
-- You can also write test with python for Solana programs written in Rust with
-  [solders.bankrun](https://kevinheavey.github.io/solders/api_reference/bankrun.html)

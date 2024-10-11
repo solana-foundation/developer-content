@@ -599,7 +599,7 @@ The `Delete` struct defines the accounts required for the `delete` instruction:
 </AccordionItem>
 </Accordion>
 
-Next, implement the logic for the `update` instruction.
+Next, implement the logic for the `delete` instruction.
 
 ```rs filename="lib.rs"
 pub fn delete(_ctx: Context<Delete>) -> Result<()> {
