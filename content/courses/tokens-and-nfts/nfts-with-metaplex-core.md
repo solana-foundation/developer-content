@@ -394,6 +394,7 @@ Connect to devnet, load a user and Airdrop some SOL if needed:
 const connection = new Connection(clusterApiUrl("devnet"));
 
 // load keypair from local file system
+// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
 // assumes that the keypair is already generated using `solana-keygen new`
 const user = await getKeypairFromFile();
 
@@ -416,10 +417,6 @@ const umi = createUmi(connection)
   .use(mplCore())
   .use(irysUploader());
 
-// load keypair from local file system
-// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
-const user = await getKeypairFromFile();
-
 // convert to umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 
@@ -427,13 +424,13 @@ const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
 umi.use(keypairIdentity(umiKeypair))
 ```
 
-Download the image assets the collection image from the links below and save them 
+Download the assets and collection image from the links below and save them 
 inside your working directory:
 
-1. collection image:
+1. Collection image:
    https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/collection.png
 
-2. NFT image:
+2. Asset image:
    https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/nft.png
 
 We will use these images as our collection and asset cover images respectively.
@@ -506,28 +503,24 @@ function.
 Run the `create-metaplex-core-collection.ts` script
 
 ```
-npx esrun create-metaplex-nft-collection.ts
+npx esrun create-metaplex-core-collection.ts
 ```
 
 The output should look like this:
 
-``` // TODO
-% npx esrun create-metaplex-nft-collection.ts
+```
+% npx esrun create-metaplex-core-collection.ts
 
-Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
-image uri: https://arweave.net/XWpt7HDOFC0wJQcQWgP9n_cxHS0qQik9-27CAAaGP6E
-Collection offchain metadata URI: https://arweave.net/atIf58t3FHa3heoOtNqPkVvEGC_9WzAduY0GQE-LnFI
-Collection: https://explorer.solana.com/address/D2zi1QQmtZR5fk7wpA1Fmf6hTY2xy8xVMyNgfq6LsKy1?cluster=devnet
-Collection address is: D2zi1QQmtZR5fk7wpA1Fmf6hTY2xy8xVMyNgfq6LsKy1
+Loaded user: 2YkGRHjwD3jqcu4ie6pL9Axpdx5AKa6KDyj8bF473Vk5
+image uri: https://arweave.net/EBRzcUrhbiTfSnx2oD1SZacGMbq2WeFtLUWSD5tAuP7
+Collection offchain metadata URI: https://gateway.irys.xyz/HTK7UZsUqiVcnZ9ez2eNKPQLiU3Xg1hyic1ghwj6gXXE
+Collection: https://explorer.solana.com/address/ACJgjrstigNsgukPuZWZay1L2DXeJPwTn6EyxB5hwWrK?cluster=devnet
+Collection address is:  ACJgjrstigNsgukPuZWZay1L2DXeJPwTn6EyxB5hwWrK
 ✅ Finished successfully!
 ```
 
 Congratulations! You've created a Metaplex Core Collection. Check this out on Solana Explorer 
-using the URL above which should resemble 
-![Solana Explorer with details about created collection](/public/assets/courses/unboxed/solana-explorer-metaplex-collection.png) // TODO
-
-If you have any trouble, try and fix it yourself, but if you need to you can also check out the
-[solution code](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/create-collection.ts). // TODO
+using the URL above!
 
 Keep the Collection addres since we're going to use it in the next step.
 
@@ -540,7 +533,7 @@ look the same as the previous file, with slightly different imports:
 
 ```typescript
 import { 
-  mplCore
+  mplCore,
   create, 
   fetchCollection 
 } from '@metaplex-foundation/mpl-core'
@@ -548,7 +541,7 @@ import {
   createGenericFile,
   generateSigner,
   keypairIdentity,
-  publickey as UMIPublicKey
+  publicKey as UMIPublicKey
 } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { irysUploader } from "@metaplex-foundation/umi-uploader-irys";
@@ -636,7 +629,7 @@ Then we create an Asset and we add it to the Collection we just created:
 
 ```typescript
 // Substitute in your collection NFT address from create-metaplex-nft-collection.ts
-const collection = fetchCollection(umi, UMIPublicKey("YOUR_COLLECTION_ADDRESS_HERE"))
+const collection = await fetchCollection(umi, UMIPublicKey("YOUR_COLLECTION_ADDRESS_HERE"))
 const asset = generateSigner(umi);
 
 // create and mint NFT
@@ -656,25 +649,21 @@ console.log(`Asset: ${explorerLink}`);
 console.log(`Asset address: ${asset.publicKey}`);
 ```
 
-Run `npx esrun create-metaplex-nft.ts`. If all goes well, you will see the
+Run `npx esrun create-metaplex-core-asset`. If all goes well, you will see the
 following:
 
-``` // TODO
-% npx esrun create-metaplex-nft.ts
+```
+% npx esrun create-metaplex-core-asset
 
-Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
-image uri: https://arweave.net/XgTss3uKlddlMFjRTIvDiDLBv6Pptm-Vx9mz6Oe5f-o
-Asset offchain metadata URI: https://arweave.net/PK3Url31k4BYNvYOgTuYgWuCLrNjl5BrrF5lbY9miR8
-Asset:  https://explorer.solana.com/address/CymscdAwuTRjCz1ezsNZa15MnwGNrxhGUEToLFcyijMT?cluster=devnet
-Asset address: CymscdAwuTRjCz1ezsNZa15MnwGNrxhGUEToLFcyijMT
+Loaded user: 2YkGRHjwD3jqcu4ie6pL9Axpdx5AKa6KDyj8bF473Vk5
+image uri: https://arweave.net/79wKgR6VAuS3RfneBCNx3RMxzhAPUdqBaK4Ah4KQuWAr
+Asset offchain metadata URI: https://gateway.irys.xyz/7F7YdG9mGFXaq51qPbog5QmymovansiipABtM2nDNLAV
+Asset: https://explorer.solana.com/address/BXfRBtgVRmEnwQaLqCAproeuSMNdkgWYptHvjvHekHht?cluster=devnet
+Asset address: BXfRBtgVRmEnwQaLqCAproeuSMNdkgWYptHvjvHekHht
 ✅ Finished successfully!
 ```
 
-Inspect your Asset at the address given! If you have any trouble, try and fix it yourself, 
-but if you need to you can also check out the [solution code](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/create-nft.ts). // TODO
-
-You should have something similar to this image on your explorer page
-![Solana Explorer with details about created NFT](/public/assets/courses/unboxed/solana-explorer-metaplex-nft.png) // TODO
+Inspect your Asset at the address given to confirm that the asset has been minted!
 
 #### 3. Update the NFT
 
@@ -682,7 +671,7 @@ Create a new file, called `update-metaplex-core-asset.ts`. The imports will be s
 
 ```typescript
 import { 
-  mplCore
+  mplCore,
   update, 
   fetchAsset, 
   fetchCollection 
@@ -709,6 +698,7 @@ import * as path from "path";
 const connection = new Connection(clusterApiUrl("devnet"));
 
 // load keypair from local file system
+// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
 // assumes that the keypair is already generated using `solana-keygen new`
 const user = await getKeypairFromFile();
 console.log("Loaded user:", user.publicKey.toBase58());
@@ -724,12 +714,6 @@ await airdropIfRequired(
 const umi = createUmi(connection)
   .use(mplCore())
   .use(irysUploader());
-
-// load keypair from local file system
-// See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
-const user = await getKeypairFromFile();
-
-console.log("Loaded user:", user.publicKey.toBase58());
 
 // convert to umi compatible keypair
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
@@ -784,40 +768,35 @@ const uri = await umi.uploader.uploadJson(metadata);
 console.log("Asset offchain metadata URI:", uri);
 
 // Fetch the accounts using the address
-const asset = fetchAsset(umi, UMIPublicKey("YOUR_ASSET_ADDRESS_HERE"))
-const collecition = fetchCollection(umi, UMIPublicKey("YOUR_COLLECTION_ADDRESS_HERE"))
+const asset = await fetchAsset(umi, UMIPublicKey("YOUR_ASSET_ADDRESS_HERE"))
+const collection = await fetchCollection(umi, UMIPublicKey("YOUR_COLLECTION_ADDRESS_HERE"))
 
 await update(umi, {
   asset,
   collection,
-  name: "My Updated Asset"
+  name: "My Updated Asset",
   uri,
 }).sendAndConfirm(umi);
 
-let explorerLink = getExplorerLink("address", asset, "devnet");
+let explorerLink = getExplorerLink("address", asset.publicKey, "devnet");
 console.log(`Asset updated with new metadata URI: ${explorerLink}`);
 
 console.log("✅ Finished successfully!");
 ```
 
-Run `npx esrun update-metaplex-core-assetft.ts`. You should see something like:
+Run `npx esrun update-metaplex-core-asset.ts`. You should see something like:
 
-``` // TODO
+```
 % npx esrun update-metaplex-core-asset.ts
 
-Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
-image uri: https://arweave.net/dboiAebucLGhprtknDQnp-yMj348cpJF4aQul406odg
-Asset offchain metadata URI: https://arweave.net/XEjo-44GHRFNOEtPUdDsQlW5z1Gtpk2Wv0HvR8ll1Bw
-Asset updated with new metadata URI: https://explorer.solana.com/address/Zxd9TmtBHQNti6tJxtx1AKYJFykNUwJL4rth441CjRd?cluster=devnet
+Loaded user: 2YkGRHjwD3jqcu4ie6pL9Axpdx5AKa6KDyj8bF473Vk5
+image uri: https://arweave.net/DtdF6YbCbSV6y5eeet6Hk2oJq2afFwKzZmrLpfFkyLym
+Asset offchain metadata URI: https://gateway.irys.xyz/DQysfQZ9CuGveSYDWKZwhjUX7VnRSzfaPtvojo44rhJw
+Asset updated with new metadata URI: https://explorer.solana.com/address/BXfRBtgVRmEnwQaLqCAproeuSMNdkgWYptHvjvHekHht?cluster=devnet
 ✅ Finished successfully!
 ```
 
-Inspect the updated NFT on Solana Explorer! Just like previously, if you have any issues, 
-you should fix them yourself, but if needed the
-[solution code](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/update-nft.ts) // TODO
-is available.
-
-![Solana Explorer with details about the updated NFT](/public/assets/courses/unboxed/solana-explorer-with-updated-NFT.png) //TODO
+Inspect the updated NFT on Solana Explorer!
 
 Congratulations! You've successfully learned how to use the Metaplex SDK to create, update, 
 and add an Asset to a Collection. That's everything you need to build out your own collection 
