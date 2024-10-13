@@ -71,8 +71,9 @@ speakers. The libraries are intuitive and the documentation is phenomenal.
 
 #### How to create an Expo app
 
-To get started with Expo, you first need the prerequisite setup described in the
-[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile).
+To begin using Expo, first follow the setup instructions described in the
+Getting Started section of the
+[Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md).
 After that, you'll want to sign up for an
 [Expo Application Services (EAS) account](https://expo.dev/eas).
 
@@ -266,7 +267,7 @@ diary of sorts.
 To mint the NFTs we'll be using Metaplex's Umi libraries along with
 [Pinata Cloud](https://pinata.cloud/) to store images and metadata. We are using
 Pinata in this tutorial, but
-[there are many good solutions for store images for long-term storage](https://solana.com/developers/guides/getstarted/how-to-create-a-token#create-and-upload-image-and-offchain-metadata).
+[there are many good solutions for long-term image storage](https://solana.com/developers/guides/getstarted/how-to-create-a-token#create-and-upload-image-and-offchain-metadata).
 All of our onchain work will be on Devnet.
 
 The first half of this lab is cobbling together the needed components to make
@@ -390,8 +391,8 @@ already have a Devnet-enabled wallet installed you can skip step 0.
 
 #### 0. Install a Devnet-enabled Solana wallet
 
-You'll need a wallet that supports Devnet to test with. In
-[our Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive) we
+You'll need a wallet that supports Devnet to test with. In our
+[Mobile Wallet Adapter lesson](/content/courses/mobile/mwa-deep-dive.md) we
 created one of these. Let's install it from the repo in a different directory
 from our app:
 
@@ -436,13 +437,13 @@ Solana-based apps.
 Create two new folders: `components` and `screens`.
 
 We are going to use some boilerplate code from the
-[first Mobile lesson](/content/courses/mobile/basic-solana-mobile). We will be
-copying over `components/AuthorizationProvider.tsx` and
+[first Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md). We
+will be copying over `components/AuthorizationProvider.tsx` and
 `components/ConnectionProvider.tsx`. These files provide us with a `Connection`
 object as well as some helper functions that authorize our dapp.
 
 Create file `components/AuthorizationProvider.tsx` and copy the contents of
-[our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthorizationProvider.tsx)
+[our existing Auth Provider from Github](https://raw.githubusercontent.com/solana-developers/mobile-apps-with-expo/main/components/AuthProvider.tsx)
 into the new file.
 
 Secondly, create file `components/ConnectionProvider.tsx` and copy the contents
@@ -943,7 +944,7 @@ This should have the following fields:
   function that creates a new snapshot NFT
 
 The `DigitalAsset` type comes from `@metaplex-foundation/mpl-token-metadata`
-that have metadata, off-chain metadata, collection data, plugins (including
+which has metadata, off-chain metadata, collection data, plugins (including
 Attributes), and more.
 
 ```tsx
