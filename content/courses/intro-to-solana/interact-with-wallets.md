@@ -426,7 +426,7 @@ To complete this component, add
 ensure proper styling and behavior of the Wallet Adapter library components.
 
 ```tsx
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
