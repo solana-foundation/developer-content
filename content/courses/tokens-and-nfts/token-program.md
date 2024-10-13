@@ -809,8 +809,7 @@ try {
 }
 ```
 
-Run the script using `npx esrun create-token-account.ts`. You should see: Run
-the script using `npx esrun create-token-account.ts`. You should see:
+Run the script using `npx esrun create-token-account.ts`. You should see:
 
 ```bash
 🔑 Loaded keypair from environment. Public key: GprrWv9r8BMxQiWea9MrbCyK7ig7Mj8CcseEbJhDDZXM
@@ -1007,7 +1006,6 @@ balance go up!
 
 ### Challenge
 
-Now it's your turn to build something independently. Create an application that
 Now it's your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 
