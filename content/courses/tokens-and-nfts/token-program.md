@@ -518,7 +518,6 @@ call `createMint()` and set `user` as the `payer`, `mintAuthority`, and
 Think of the token mint as a factory that creates tokens, with `user` as the
 `mintAuthority`, acting as the person running the factory.
 
-````typescript filename="create-token-mint.ts"
 ```typescript filename="create-token-mint.ts"
 import { createMint } from "@solana/spl-token";
 import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
@@ -567,7 +566,7 @@ try {
     `Failed to create token mint: ${error instanceof Error ? error.message : String(error)}`,
   );
 }
-````
+```
 
 Run the script using `npx esrun create-token-mint.ts`. You should see
 
@@ -758,7 +757,6 @@ on a wallet and our mint address, creating the account if it doesn't exist.
 
 Don't forget to substitute your token mint address in the code below!
 
-````typescript filename="create-token-account.ts"
 ```typescript filename="create-token-account.ts"
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
@@ -809,7 +807,7 @@ try {
     `Failed to create token account: ${error instanceof Error ? error.message : String(error)}`,
   );
 }
-````
+```
 
 Run the script using `npx esrun create-token-account.ts`. You should see: Run
 the script using `npx esrun create-token-account.ts`. You should see:
