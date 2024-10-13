@@ -525,7 +525,7 @@ The body of the function then:
 </AccordionItem>
 </Accordion>
 
-Rebuld the program
+Rebuild the program
 
 ```shell filename="Terminal"
 build
