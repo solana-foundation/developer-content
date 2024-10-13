@@ -113,7 +113,7 @@ ensure this is to wrap your entire app in `ConnectionProvider` and
 
 ```tsx
 import { NextPage } from "next";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -159,7 +159,7 @@ full-featured wallet experience is to use `WalletModalProvider` and
 
 ```tsx
 import { NextPage } from "next";
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -267,7 +267,7 @@ export const BalanceDisplay: FC = () => {
 
   return (
     <div>
-      <p>{publicKey ? `Balance: ${balance / LAMPORTS_PER_SOL} SOL` : ""}</p>
+      <p>{publicKey ? `Balance: ${balance} SOL` : ""}</p>
     </div>
   );
 };
