@@ -435,8 +435,8 @@ async function buildMintToTransaction(
 #### Transfer Tokens
 
 SPL Token transfers require both the sender and receiver to have token accounts
-for the token mint being transferred. Tokens move from the sender's token
-account to the receiver's token account.
+for the mint of the tokens being transferred. The tokens are transferred from
+the sender's token account to the receiver's token account.
 
 To ensure the receiver has a token account, you can use
 `getOrCreateAssociatedTokenAccount()`. This function verifies the receiver's
@@ -518,6 +518,7 @@ call `createMint()` and set `user` as the `payer`, `mintAuthority`, and
 Think of the token mint as a factory that creates tokens, with `user` as the
 `mintAuthority`, acting as the person running the factory.
 
+```typescript filename="create-token-mint.ts"
 ```typescript filename="create-token-mint.ts"
 import { createMint } from "@solana/spl-token";
 import { Connection, clusterApiUrl, Keypair } from "@solana/web3.js";
@@ -725,6 +726,9 @@ You should see the output:
 ✅ Look at the token mint again: https://explorer.solana.com/address/FXbnmvUb7CxmSjMhF2g2xVJ2CXAHHp7GormYwwTx4rgj?cluster=devnet
 ```
 
+Replace `YOUR_TOKEN_MINT_ADDRESS_HERE` with your address of the mint and run the
+script using `npx esrun create-token-metadata.ts`.
+
 You'll now see Solana Explorer is updated, showing the token's name and symbol
 on the mint!
 
@@ -754,6 +758,7 @@ on a wallet and our mint address, creating the account if it doesn't exist.
 
 Don't forget to substitute your token mint address in the code below!
 
+```typescript filename="create-token-account.ts"
 ```typescript filename="create-token-account.ts"
 import { getOrCreateAssociatedTokenAccount } from "@solana/spl-token";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
@@ -806,6 +811,7 @@ try {
 }
 ```
 
+Run the script using `npx esrun create-token-account.ts`. You should see:
 Run the script using `npx esrun create-token-account.ts`. You should see:
 
 ```bash
@@ -1003,6 +1009,7 @@ balance go up!
 
 ### Challenge
 
+Now it's your turn to build something independently. Create an application that
 Now it's your turn to build something independently. Create an application that
 allows a user to create a new mint, create a token account, and mint tokens.
 

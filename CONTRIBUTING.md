@@ -21,6 +21,9 @@ transparent as possible, whether it's:
 - publicly displayed via the UI of [solana.com](https://solana.com) (located in
   a different repo)
 - content translations are supported via Crowdin
+- code blocks must use code-import for file snippets (via filesystem)
+- code file should be [tests](https://nodejs.org/api/test.html) and should add
+  code ranges instead of whole test file
 
 ## Style guidelines
 
@@ -45,9 +48,7 @@ In particular:
   and save the person reviewing your PR some time. We recommend
   [Grammarly](https://grammarly.com/). In
   [your Grammarly dictionary](https://account.grammarly.com/customize), you may
-  wish to add Solana-specific words like `lamport`, `blockhash`, etc. For VScode
-  users, there is a
-  [VScode extension for Grammarly](https://marketplace.visualstudio.com/items?itemName=znck.grammarly).
+  wish to add Solana-specific words like `lamport`, `blockhash`, etc.
 - Use US English rather than British English. Grammarly will catch this for you.
 - Use 'onchain' (not on-chain, definitely not smart contract) when referring to
   onchain apps. This comes from the Solana Foundation style guide, and is
@@ -84,8 +85,8 @@ In particular:
   have `instruction handlers` that process `instructions`. Do not refer to
   [instruction handlers](https://solana.com/docs/terminology#instruction-handler)
   as instructions! The reason is simple: an instruction cannot process an
-  instruction. The `multiple` template in Anchor also calls the function's
-  `handler`.
+  instruction. The `multiple` template in Anchor also calls these functions
+  `handler`s.
 
 ### Code
 
@@ -272,6 +273,52 @@ For images, you can use the path starting with `/public` like this:
 > Note: When the content pages are generated and deployed on solana.com, the
 > links will be automatically adjusted to function on the website. Including
 > making the images viewable and removing `.md` file extensions.
+
+### Code Blocks
+
+In addition to standard markdown "fenced" code blocks (i.e. using triple
+backticks), the developer content repo requires the use of code-import for file
+snippets. This ensures that code examples are always up-to-date with the actual
+source files.
+
+#### Using code-import
+
+To use code-import, follow these steps:
+
+Ensure your code file is a test file located in the appropriate directory within
+the repo. Use the following syntax to import code snippets:
+
+```javascript file="/path/to/your/file.ts#L1-L10,#L15-L20"
+
+```
+
+This will import lines 1-10 and 15-20 from the specified file.
+
+Always use code ranges instead of importing whole files. This helps keep
+examples concise and focused.
+
+#### Code-import Rules
+
+- The file path must start with a forward slash (/).
+- You can specify multiple line ranges, separated by commas.
+- Line ranges should be in ascending order and not overlap.
+- Invalid ranges (e.g., #L4-L3) are not allowed.
+- Line numbers start at 1, so #L0 is invalid.
+- Trailing commas in the range specification are not allowed.
+
+Example of a valid code-import:
+
+```javascript file="/code/cookbook/wallets/check-public-key.ts#L1-L2,#L3-L18"
+
+```
+
+Example of an invalid code-import:
+
+```javascript file=/code/cookbook/wallets/check-public-key.ts#L1-L2,#L3-L19,#L1-L3
+
+```
+
+This is invalid because the ranges are not in ascending order and overlap.
 
 ### Table of contents
 
@@ -519,7 +566,7 @@ a list of available components
   content
 - [images](#images) - details about how to include images in a piece of content
 - [code blocks](#code-blocks) - additional functionality on top of standard
-  markdown code blocks
+  markdown code blocks, these support code file import from filesystem
 - [blockquote](#blockquote) - additional functionality on top of the standard
   HTML `blockquote` element
 - [Callout](#callout) - custom component used to render message to the reader in

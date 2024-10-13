@@ -3,8 +3,8 @@ title: Signer Authorization
 objectives:
   - Explain the security risks of not performing appropriate signer checks.
   - Implement signer checks using native Rust
-  - Implement signer checks using Anchor’s `Signer` type
-  - Implement signer checks using Anchor’s `#[account(signer)]` constraint
+  - Implement signer checks using Anchor's `Signer` type
+  - Implement signer checks using Anchor's `#[account(signer)]` constraint
 description:
   "Ensure instructions are only executed by authorized accounts by implementing
   signer checks."
@@ -52,7 +52,7 @@ the instruction handler matches the `authority` field on the `vault` account,
 there is no verification that the `authority` account actually authorized the
 transaction.
 
-This omission allows an attacker to pass in the `authority` account’s public key
+This omission allows an attacker to pass in the `authority` account's public key
 and their own public key as the `new_authority` account, effectively reassigning
 themselves as the new authority of the `vault` account. Once they have control,
 they can interact with the program as the new authority.
@@ -146,7 +146,7 @@ pub struct Vault {
 }
 ```
 
-### Use Anchor’s Signer Account Type
+### Use Anchor's Signer Account Type
 
 Incorporating the
 [`signer`](https://docs.rs/anchor-lang/latest/anchor_lang/accounts/signer/struct.Signer.html)
@@ -195,7 +195,7 @@ When you use the `Signer` type, no other ownership or type checks are
 performed.
 </Callout>
 
-### Using Anchor’s `#[account(signer)]` Constraint
+### Using Anchor's `#[account(signer)]` Constraint
 
 While the `Signer` account type is useful, it doesn't perform other ownership or
 type checks, limiting its use in instruction handler logic. The
@@ -277,7 +277,7 @@ authority. The `vault` PDA will be the authority of the token account, enabling
 the program to sign off on token transfers.
 
 The `insecure_withdraw` instruction handler transfers tokens from the `vault`
-account’s token account to a `withdraw_destination` token account. However, the
+account's token account to a `withdraw_destination` token account. However, the
 `authority` account in the `InsecureWithdraw` struct is of type
 `UncheckedAccount`, a wrapper around `AccountInfo` that explicitly indicates the
 account is unchecked.

@@ -7,7 +7,3 @@ lessons:
   - mwa-deep-dive
   - solana-mobile-dapps-with-expo
 priority: 99
-# Uses deprecated @metaplex-foundation/js library for NFTs
-# which also uses old RPC methods and no longer functions.
-# TODO: Superteam to update
-isHidden: true

@@ -645,7 +645,7 @@ debugging.
 
 Ensuring account ownership checks is critical to avoid security vulnerabilities.
 This example demonstrates how simple it is to implement proper validation, but
-it’s vital to always verify which accounts are owned by specific programs.
+it's vital to always verify which accounts are owned by specific programs.
 
 If you'd like to review the final solution code, it's available on the
 [`solution` branch of the repository](https://github.com/solana-developers/owner-checks/tree/solution).
