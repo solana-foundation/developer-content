@@ -24,7 +24,7 @@ their own custom rebroadcasting logic.
 - Developers should enable preflight checks to raise errors before transactions
   are submitted
 - Before re-signing any transaction, it is **very important** to ensure that the
-  initial transaction’s blockhash has expired
+  initial transaction's blockhash has expired
 
 ## The Journey of a Transaction
 
@@ -59,13 +59,13 @@ forwarding it to the relevant leaders. UDP allows validators to quickly
 communicate with one another, but does not provide any guarantees regarding
 transaction delivery.
 
-Because Solana’s leader schedule is known in advance of every
+Because Solana's leader schedule is known in advance of every
 [epoch](/docs/terminology.md#epoch) (~2 days), an RPC node will broadcast its
 transaction directly to the current and next leaders. This is in contrast to
 other gossip protocols such as Ethereum that propagate transactions randomly and
 broadly across the entire network. By default, RPC nodes will try to forward
 transactions to leaders every two seconds until either the transaction is
-finalized or the transaction’s blockhash expires (150 blocks or ~1 minute 19
+finalized or the transaction's blockhash expires (150 blocks or ~1 minute 19
 seconds as of the time of this writing). If the outstanding rebroadcast queue
 size is greater than
 [10,000 transactions](https://github.com/solana-labs/solana/blob/bfbbc53dac93b3a5c6be9b4b65f679fdb13e41d9/send-transaction-service/src/send_transaction_service.rs#L20),
@@ -75,7 +75,7 @@ that RPC operators can adjust to change the default behavior of this retry
 logic.
 
 When an RPC node broadcasts a transaction, it will attempt to forward the
-transaction to a leader’s
+transaction to a leader's
 [Transaction Processing Unit (TPU)](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/validator.rs#L867).
 The TPU processes transactions in five distinct phases:
 
@@ -105,7 +105,7 @@ For more information on the TPU, please refer to
 
 ## How Transactions Get Dropped
 
-Throughout a transaction’s journey, there are a few scenarios in which the
+Throughout a transaction's journey, there are a few scenarios in which the
 transaction can be unintentionally dropped from the network.
 
 ### Before a transaction is processed
@@ -113,7 +113,7 @@ transaction can be unintentionally dropped from the network.
 If the network drops a transaction, it will most likely do so before the
 transaction is processed by a leader. UDP
 [packet loss](https://en.wikipedia.org/wiki/Packet_loss) is the simplest reason
-why this might occur. During times of intense network load, it’s also possible
+why this might occur. During times of intense network load, it's also possible
 for validators to become overwhelmed by the sheer number of transactions
 required for processing. While validators are equipped to forward surplus
 transactions via `tpu_forwards`, there is a limit to the amount of data that can
@@ -127,7 +127,7 @@ There are also two lesser known reasons why a transaction may be dropped before
 it is processed. The first scenario involves transactions that are submitted via
 an RPC pool. Occasionally, part of the RPC pool can be sufficiently ahead of the
 rest of the pool. This can cause issues when nodes within the pool are required
-to work together. In this example, the transaction’s
+to work together. In this example, the transaction's
 [recentBlockhash](/docs/core/transactions.md#recent-blockhash) is queried from
 the advanced part of the pool (Backend A). When the transaction is submitted to
 the lagging part of the pool (Backend B), the nodes will not recognize the
@@ -139,7 +139,7 @@ transaction submission if developers enable
 
 Temporarily network forks can also result in dropped transactions. If a
 validator is slow to replay its blocks within the Banking Stage, it may end up
-creating a minority fork. When a client builds a transaction, it’s possible for
+creating a minority fork. When a client builds a transaction, it's possible for
 the transaction to reference a `recentBlockhash` that only exists on the
 minority fork. After the transaction is submitted, the cluster can then switch
 away from its minority fork before the transaction is processed. In this
@@ -150,7 +150,7 @@ scenario, the transaction is dropped due to the blockhash not being found.
 ### After a transaction is processed and before it is finalized
 
 In the event a transaction references a `recentBlockhash` from a minority fork,
-it’s still possible for the transaction to be processed. In this case, however,
+it's still possible for the transaction to be processed. In this case, however,
 it would be processed by the leader on the minority fork. When this leader
 attempts to share its processed transactions with the rest of the network, it
 would fail to reach consensus with the majority of validators that do not
@@ -201,8 +201,8 @@ the transaction will be processed or finalized by the cluster.
 ## Customizing Rebroadcast Logic
 
 In order to develop their own rebroadcasting logic, developers should take
-advantage of `sendTransaction`’s `maxRetries` parameter. If provided,
-`maxRetries` will override an RPC node’s default retry logic, allowing
+advantage of `sendTransaction`'s `maxRetries` parameter. If provided,
+`maxRetries` will override an RPC node's default retry logic, allowing
 developers to manually control the retry process
 [within reasonable bounds](https://github.com/solana-labs/solana/blob/98707baec2385a4f7114d2167ef6dfb1406f954f/validator/src/main.rs#L1258-L1274).
 
@@ -210,9 +210,9 @@ A common pattern for manually retrying transactions involves temporarily storing
 the `lastValidBlockHeight` that comes from
 [getLatestBlockhash](/docs/rpc/http/getLatestBlockhash.mdx). Once stashed, an
 application can then
-[poll the cluster’s blockheight](/docs/rpc/http/getBlockHeight.mdx) and manually
+[poll the cluster's blockheight](/docs/rpc/http/getBlockHeight.mdx) and manually
 retry the transaction at an appropriate interval. In times of network
-congestion, it’s advantageous to set `maxRetries` to 0 and manually rebroadcast
+congestion, it's advantageous to set `maxRetries` to 0 and manually rebroadcast
 via a custom algorithm. While some applications may employ an
 [exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
 algorithm, others such as [Mango](https://www.mango.markets/) opt to
@@ -285,10 +285,10 @@ fork.
 If an application has access to RPC nodes behind a load balancer, it can also
 choose to divide its workload amongst specific nodes. RPC nodes that serve
 data-intensive requests such as
-[getProgramAccounts](https://solanacookbook.com/guides/get-program-accounts.html)
-may be prone to falling behind and can be ill-suited for also forwarding
-transactions. For applications that handle time-sensitive transactions, it may
-be prudent to have dedicated nodes that only handle `sendTransaction`.
+[getProgramAccounts](/content//guides/javascript/get-program-accounts.md) may be
+prone to falling behind and can be ill-suited for also forwarding transactions.
+For applications that handle time-sensitive transactions, it may be prudent to
+have dedicated nodes that only handle `sendTransaction`.
 
 ### The Cost of Skipping Preflight
 
@@ -310,7 +310,7 @@ for, it is recommended that developers keep `skipPreflight` set to `false`.
 
 Despite all attempts to rebroadcast, there may be times in which a client is
 required to re-sign a transaction. Before re-signing any transaction, it is
-**very important** to ensure that the initial transaction’s blockhash has
+**very important** to ensure that the initial transaction's blockhash has
 expired. If the initial blockhash is still valid, it is possible for both
 transactions to be accepted by the network. To an end-user, this would appear as
 if they unintentionally sent the same transaction twice.

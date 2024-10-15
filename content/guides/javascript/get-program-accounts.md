@@ -17,22 +17,24 @@ altRoutes:
 ---
 
 An RPC method that returns all accounts owned by a program. Currently pagination
-is not supported. Requests to `getProgramAccounts` should include the
-`dataSlice` and/or `filters` parameters to improve response time and return only
-intended results.
+is not supported. Requests to
+[`getProgramAccounts`](/docs/rpc//http/getProgramAccounts.mdx) should include
+the `dataSlice` and/or `filters` parameters to improve response time and return
+only intended results.
 
-## getProgramAccounts has the following syntax:
+## getProgramAccounts RPC Method
 
-```md
+The `getProgramAccounts` RPC method has the following syntax:
+
 - `programId`: `string` - Pubkey of the program to query, provided as a base58
   encoded string
 - (optional) `configOrCommitment`: `object` - Configuration parameters
   containing the following optional fields:
   - (optional) `commitment`: `string` -
-    [State commitment](https://docs.solana.com/developing/clients/jsonrpc-api#configuring-state-commitment)
+    [State commitment](/docs/rpc/index.mdx#configuring-state-commitment)
   - (optional) `encoding`: `string` - Encoding for account data, either:
     `base58`, `base64`, or `jsonParsed`. Note, web3js users should instead use
-    [getParsedProgramAccounts](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
+    [`getParsedProgramAccounts`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
   - (optional) `dataSlice`: `object` - Limit the returned account data based on:
     - `offset`: `number` - Number of bytes into account data to begin returning
     - `length`: `number` - Number of bytes of account data to return
@@ -46,8 +48,7 @@ intended results.
     - `dataSize`: `number` - Compares the account data length with the provided
       data size
   - (optional) `withContext`: `boolean` - Wrap the result in an
-    [RpcResponse JSON object](https://docs.solana.com/developing/clients/jsonrpc-api#rpcresponse-structure)
-```
+    [RpcResponse JSON object](/docs/rpc/index.mdx#rpcresponse-structure)
 
 ### Response
 
@@ -143,7 +144,7 @@ token accounts that are owned by our wallet address. When looking at a token
 account, we can see the first two fields stored on a token account are both
 pubkeys, and that each pubkey is 32 bytes in length. Given that `owner` is the
 second field, we should begin our `memcmp` at an `offset` of 32 bytes. From
-here, we’ll be looking for accounts whose owner field matches our wallet
+here, we'll be looking for accounts whose owner field matches our wallet
 address.
 
 ![Account Size](/public/assets/guides/get-program-accounts/memcmp.png)
@@ -192,7 +193,7 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
 
 The output should look like:
 
-```text
+```shell
     Found 2 token account(s) for wallet FriELggez2Dy3phZeHHAdpcoEXkKQVkv6tx3zDtCVP8T:
     -- Token Account Address 0:  H12yCcKLHFJFfohkeKiN8v3zgaLnUMwRcnJTyB4igAsy --
     Mint: CKKDsBT6KiT4GDKs3e39Ue9tDkhuGUKM3cC2a7pmV9YK
@@ -216,7 +217,7 @@ Much like `memcmp`, `dataSlice` accepts two arguments:
 - `length`: The number of bytes which should be returned
 
 `dataSlice` is particularly useful when we run queries on a large dataset but
-don’t actually care about the account data itself. An example of this would be
+don't actually care about the account data itself. An example of this would be
 if we wanted to find the number of token accounts (i.e. number of token holders)
 for a particular token mint.
 
@@ -255,7 +256,7 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
 })();
 ```
 
-The output should look like (notice the empty <Buffer > at acccount.data):
+The output should look like (notice the empty `<Buffer >` at `account.data`):
 
 ```text
 Found 3 token account(s) for mint BUGuuhPsHpk8YZrL2GctsCtXGneL1gmT5zYb7eMHZDWf
@@ -300,7 +301,7 @@ Found 3 token account(s) for mint BUGuuhPsHpk8YZrL2GctsCtXGneL1gmT5zYb7eMHZDWf
 ```
 
 By combining all three parameters (`dataSlice`, `dataSize`, and `memcmp`) we can
-limit the scope of our query and efficiently return only the data we’re
+limit the scope of our query and efficiently return only the data we're
 interested in.
 
 ## Other Resources

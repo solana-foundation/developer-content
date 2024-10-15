@@ -57,10 +57,10 @@ game as a seed.
 
 Unfortunately, neither type of randomness is natively available in Solana
 programs, because these programs have to be deterministic. All validators need
-to come to the same conclusion. There is no way they’d all draw the same random
-number, and if they used a seed, it’d be prone to attacks. See the
+to come to the same conclusion. There is no way they'd all draw the same random
+number, and if they used a seed, it'd be prone to attacks. See the
 [Solana FAQs](https://solana.com/docs/programs/lang-rust#depending-on-rand) for
-more. So we’ll have to look outside of the blockchain for randomness with VRFs.
+more. So we'll have to look outside of the blockchain for randomness with VRFs.
 
 ### What is Verifiable Randomness?
 
@@ -68,7 +68,7 @@ A Verifiable Random Function (VRF) is a public-key pseudorandom function that
 provides proofs that its outputs were calculated correctly. This means we can
 use a cryptographic keypair to generate a random number with a proof, which can
 then be validated by anyone to ensure the value was calculated correctly without
-the possibility of leaking the producer’s secret key. Once validated, the random
+the possibility of leaking the producer's secret key. Once validated, the random
 value is stored onchain in an account.
 
 VRFs are a crucial component for achieving verifiable and unpredictable
@@ -100,7 +100,7 @@ Switchboard is a decentralized Oracle network that offers VRFs on Solana.
 Oracles are services that provide external data to a blockchain, allowing them
 to interact with and respond to real-world events. The Switchboard network is
 made up of many different individual oracles run by third parties to provide
-external data and service requests onchain. To learn more about Switchboard’s
+external data and service requests onchain. To learn more about Switchboard's
 Oracle network, please refer to our
 [Oracle lesson](/content/courses/connecting-to-offchain-data/oracles.md)
 
@@ -112,13 +112,13 @@ verified, the Switchboard program will execute a onchain callback defined by the
 VRF Account during account creation. From there the program can consume the
 random data.
 
-You might be wondering how they get paid. In Switchboard’s VRF implementation,
+You might be wondering how they get paid. In Switchboard's VRF implementation,
 you actually pay per request.
 
 ### Requesting and Consuming VRF
 
 Now that we know what a VRF is and how it fits into the Switchboard Oracle
-network, let’s take a closer look at how to actually request and consume
+network, let's take a closer look at how to actually request and consume
 randomness from a Solana program. At a high level, the process for requesting
 and consuming randomness from Switchboard looks like this:
 
@@ -137,7 +137,7 @@ and consuming randomness from Switchboard looks like this:
    pseudorandom number returned from the Oracle.
 7. Program consumes the random number and can execute business logic with it!
 
-There are a lot of steps here, but don’t worry, we'll be going through each step
+There are a lot of steps here, but don't worry, we'll be going through each step
 of the process in detail.
 
 First there are a couple of accounts that we will have to create ourselves to
@@ -191,8 +191,8 @@ Some important fields on this account are `authority`, `oracle_queue`, and
 `callback`. The `authority` should be a PDA of the program that has the ability
 to request randomness on this `vrf` account. That way, only that program can
 provide the signature needed for the vrf request. The `oracle_queue` field
-allows you to specify which specific oracle queue you’d like to service the vrf
-requests made with this account. If you aren’t familiar with oracle queues on
+allows you to specify which specific oracle queue you'd like to service the vrf
+requests made with this account. If you aren't familiar with oracle queues on
 Switchboard, checkout the
 [Oracles lesson in the Connecting to Offchain Data course](/content/courses/connecting-to-offchain-data/oracles)!
 Lastly, the `callback` field is where you define the callback instruction the
@@ -254,7 +254,7 @@ Now, you can create the `vrf` account.
 Now that we have all of our needed accounts we can finally call the
 `request_randomness` instruction on the Switchboard program. It's important to
 note you can invoke the `request_randomness` in a client or within a program
-with a cross program invocation (CPI). Let’s take a look at what accounts are
+with a cross program invocation (CPI). Let's take a look at what accounts are
 required for this request by checking out the Account struct definition in the
 actual
 [Switchboard program](https://github.com/switchboard-xyz/solana-sdk/blob/fbef37e4a78cbd8b8b6346fcb96af1e20204b861/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs#L8).
@@ -296,7 +296,7 @@ pub struct VrfRequestRandomness<'info> {
 }
 ```
 
-That’s a lot of accounts, let’s walk through each one and give them some
+That's a lot of accounts, let's walk through each one and give them some
 context.
 
 - `authority` - PDA derived from our program
@@ -320,7 +320,7 @@ context.
   [Recent Blockhashes Solana program](https://docs.rs/solana-program/latest/solana_program/sysvar/recent_blockhashes/index.html)
 - Token Program - Solana Token Program
 
-That’s all the accounts needed for just the randomness request, now let's see
+That's all the accounts needed for just the randomness request, now let's see
 what it looks like in a Solana program via CPI. To do this, we make use of the
 `VrfRequestRandomness` data struct from the
 [SwitchboardV2 rust crate.](https://github.com/switchboard-xyz/solana-sdk/blob/main/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs)
@@ -367,7 +367,7 @@ Ok(())
 ```
 
 Once the Switchboard program is invoked, it does some logic on its end and
-assigns an oracle in the `vrf` account’s defined oracle queue to serve the
+assigns an oracle in the `vrf` account's defined oracle queue to serve the
 randomness request. The assigned oracle then calculates a random value and sends
 it back to the Switchboard program.
 
@@ -415,7 +415,7 @@ pub fn handler(ctx: Context<ConsumeRandomness>) -> Result <()> {
 ```
 
 Now you have randomness! Hooray! But there is one last thing we have not talked
-about yet and that’s how the randomness is returned. Switchboard, gives you your
+about yet and that's how the randomness is returned. Switchboard, gives you your
 randomness calling
 `[get_result()](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/vrf.rs#L122)`.
 This method returns the `current_round.result` field of the `vrf` account
@@ -440,15 +440,15 @@ the steps involved in a VRF request, review this diagram.
 
 ## Lab
 
-For this lesson’s lab, we will be picking up where we left off in the
+For this lesson's lab, we will be picking up where we left off in the
 [Oracle lesson](/content/courses/connecting-to-offchain-data/oracles). If you
 haven't completed the Oracle lesson and demo, we strongly recommend you do as
-there are a lot of overlapping concepts and we’ll be starting from the Oracle
-lesson’s codebase.
+there are a lot of overlapping concepts and we'll be starting from the Oracle
+lesson's codebase.
 
 If you don't want to complete the Oracle lesson, the starter code for this lab
 is provided for you in
-[the main branch of the lab Github repository](https://github.com/Unboxed-Software/michael-burry-escrow).
+[the main branch of the lab Github repository](https://github.com/solana-developers/burry-escrow).
 
 The repo contains a "Michael Burry" escrow program. This is a program that
 allows a user to lock up some solana funds in escrow that cannot be withdrawn
@@ -463,8 +463,8 @@ from escrow regardless of the SOL price.
 If you are cloning the repo from the previous lesson make sure to do the
 following:
 
-1. `git clone https://github.com/Unboxed-Software/michael-burry-escrow`
-2. `cd michael-burry-escrow`
+1. `git clone https://github.com/solana-developers/burry-escrow`
+2. `cd burry-escrow`
 3. `anchor build`
 4. `anchor keys list`
    1. Take the resulting key and put it into `Anchor.toml` and
@@ -475,8 +475,8 @@ following:
 6. `yarn install`
 7. `anchor test`
 
-When all tests pass we’re ready to begin. We will start by filling in some
-boilerplate stuff, then we’ll implement the functions.
+When all tests pass we're ready to begin. We will start by filling in some
+boilerplate stuff, then we'll implement the functions.
 
 #### 2. Cargo.toml
 
@@ -681,7 +681,7 @@ pub mod consume_randomness;
 Lastly, let's update our `deposit.rs` and `withdraw.rs` files to reflect our
 soon-to-be new powers.
 
-First, let’s initialize our `out_of_jail` flag to `false` in `deposit.rs`.
+First, let's initialize our `out_of_jail` flag to `false` in `deposit.rs`.
 
 ```rust
 // in deposit.rs
@@ -720,8 +720,8 @@ check, going straight to our withdrawal.
 
 #### 8. Using VRF
 
-Now that we have the boilerplate out of the way, let’s move on to our first
-addition: initializing our VRF Client. Let’s create a new file called
+Now that we have the boilerplate out of the way, let's move on to our first
+addition: initializing our VRF Client. Let's create a new file called
 `init_vrf_client.rs` in the `/instructions` folder.
 
 We'll add the needed crates, then create the `InitVrfClient` context. We'll need
@@ -731,7 +731,7 @@ the following accounts:
 - `escrow_account` - the burry escrow account created when the user locked their
   funds up.
 - `vrf_client_state` - account we will be creating in this instruction to hold
-  state about the user’s dice rolls.
+  state about the user's dice rolls.
 - `vrf` - Our VRF owned by the Switchboard program, we will create this account
   client-side before we call `init_vrf_client`.
 - `system_program` - The system program since we use the init macro for
@@ -786,7 +786,7 @@ only have one `escrow_account`. Since there is only one, If you wanted to be
 thorough, you might want to implement a `close_vrf_state` function to get your
 rent back.
 
-Now, let’s write some basic initialization logic for this function. First we
+Now, let's write some basic initialization logic for this function. First we
 load and initialize our `vrf_state` account by calling `load_init()`. Then we
 fill in the values for each field.
 
@@ -926,7 +926,7 @@ pub struct RequestRandomness<'info> {
 }
 ```
 
-Lastly, we'll create a new struct `RequestRandomnessParams`. We’ll be passing in
+Lastly, we'll create a new struct `RequestRandomnessParams`. We'll be passing in
 some account's bumps client-side.
 
 ```rust
@@ -1006,7 +1006,7 @@ If doubles are rolled, set the `out_of_jail` field on `vrf_state` to true.
 First, let's create the `ConsumeRandomness` context. Fortunately, it only takes
 three accounts.
 
-- `escrow_account` - state account for user’s escrowed funds.
+- `escrow_account` - state account for user's escrowed funds.
 - `vrf_state` - state account to hold information about dice roll.
 - `vrf` - account with the random number that was just calculated by the
   Switchboard network.
@@ -1092,7 +1092,7 @@ pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()
 }
 ```
 
-Now it’s time to actually use the random result. Since we only use two dice we
+Now it's time to actually use the random result. Since we only use two dice we
 only need the first two bytes of the buffer. To convert these random values into
 “dice rolls”, we use modular arithmetic. For anyone not familiar with modular
 arithmetic,
@@ -1201,12 +1201,12 @@ Please make sure your program builds successfully by running `anchor build`.
 
 #### 11. Testing
 
-Alright, let’s test our program. Historically, we'd need to test the VRF on
+Alright, let's test our program. Historically, we'd need to test the VRF on
 Devnet. Fortunately, the folks at Switchboard have created some really nice
-functions to let us run our own VRF oracle locally. For this, we’ll need to set
+functions to let us run our own VRF oracle locally. For this, we'll need to set
 up our local server, grab all of the right accounts, and then call our program.
 
-The first thing we’ll do is pull in some more accounts in our `Anchor.toml`
+The first thing we'll do is pull in some more accounts in our `Anchor.toml`
 file:
 
 ```toml
@@ -1620,7 +1620,7 @@ And there you have it! You should be able to run and pass all of the tests using
 
 If something is not working, go back and find where you went wrong.
 Alternatively feel free to try out the
-[solution code on the `vrf` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/vrf).
+[solution code on the `vrf` branch](https://github.com/solana-developers/burry-escrow/tree/vrf).
 Remember to update your program keys and wallet path like we did in the
 [the Setup step](#1-program-setup).
 
@@ -1633,7 +1633,7 @@ they roll 3 times without rolling doubles, they should be able to withdraw their
 funds, just like getting out of jail in Monopoly.
 
 If you get stuck, we have the solution in the
-[`vrf-challenge-solution` branch](https://github.com/Unboxed-Software/michael-burry-escrow/tree/vrf-challenge-solution).
+[`vrf-challenge-solution` branch](https://github.com/solana-developers/burry-escrow/tree/vrf-challenge-solution).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and

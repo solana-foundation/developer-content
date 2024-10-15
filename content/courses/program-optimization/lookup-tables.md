@@ -17,35 +17,33 @@ keywords:
 
 ## Summary
 
-- **Versioned Transactions** refers to a way to support both legacy versions and
-  newer versions of transaction formats. The original transaction format is
-  "legacy" and new transaction versions start at version 0. To use Address
-  Lookup Tables (LUTs), you need versioned transactions.
-- **Address Lookup Tables** are accounts used to store addresses of other
-  accounts, which can then be referenced in versioned transactions using a 1
-  byte index instead of 32 bytes per address stored in the account. This enables
-  the creation of more complex transactions than what was possible prior to the
-  introduction of LUTs.
+- **Versioned Transactions** in Solana allows support for both legacy and newer
+  transaction formats. The original format is referred to as "legacy," while new
+  formats begin at version 0. Versioned transactions were introduced to
+  accommodate the use of Address Lookup Tables (LUTs).
+- **Address Lookup Tables** are special accounts that store the addresses of
+  other accounts. In versioned transactions, these addresses can be referenced
+  by a 1-byte index instead of the full 32-byte address. This optimization
+  enables more complex transactions than previously possible.
 
 ## Lesson
 
-By design, Solana transactions are limited to 1,232 bytes. Transactions
-exceeding this size will fail. While this enables several network optimizations,
-it can also limit the types of atomic operations that can be performed on the
-network.
+By design, Solana transactions are limited to 1232 bytes. Transactions exceeding
+this limit will fail, which restricts the size of atomic operations that can be
+performed. While this limit allows for optimizations at the network level, it
+imposes restrictions on transaction complexity.
 
-To help get around the transaction size limitation, Solana released a new
-transaction format that allows support for many versions of transaction formats.
-At the time of writing, Solana supports two transaction versions:
+To address transaction size limitations, Solana introduced a new transaction
+format supporting multiple versions. Currently, two transaction versions are
+supported:
 
-1. `legacy` - the original transaction format
-2. `0` - the newest transaction format that includes support for Address Lookup
-   Tables
+1. `legacy` - The original transaction format
+2. `0` - The latest format, which supports Address Lookup Tables.
 
-Versioned transactions don't require any modifications to existing Solana
-programs, but any client-side code created before the release of versioned
-transactions should be updated. In this lesson, we'll cover the basics of
-versioned transactions and how to use them, including:
+Existing Solana programs do not require changes to support versioned
+transactions. However, client-side code created prior to their introduction
+should be updated. In this lesson, we'll cover the basics of versioned
+transactions and how to use them, including:
 
 - Creating versioned transactions.
 - Creating and managing lookup tables.
@@ -53,22 +51,20 @@ versioned transactions and how to use them, including:
 
 ### Versioned Transactions
 
-In Solana, one of the biggest space hogs in transactions is the full account
-addresses. Each address takes up 32 bytes. So, if you try to include 39
-accounts, the transaction will be too big. And that’s without even counting
-other stuff like instruction data. Realistically, you hit the limit with just
-about 20 accounts.
+In Solana transactions, one of the largest space consumers is account addresses,
+which are 32 bytes each. For transactions with 39 accounts, the size limit is
+exceeded even before accounting for instruction data. Typically, transactions
+become too large with around 20 accounts.
 
-To fix this, Solana introduced something called versioned transactions, which
-support many formats. Along with this, they released version 0 of transactions,
-which works with Address Lookup Tables (LUTs). Think of LUTs as special accounts
-that store addresses. Instead of using the full 32 bytes for each address, LUTs
-let you use a tiny 1-byte index to reference them. This makes the transaction
-much smaller!
+Versioned transactions address this issue by introducing Address Lookup Tables,
+which allow addresses to be stored separately and referenced via a 1-byte index.
+This greatly reduces transaction size by minimizing the space needed for account
+addresses.
 
-Even if you don’t plan on using these lookup tables, you still need to make sure
-your client-side code can handle versioned transactions. Luckily, everything you
-need is already in the `@solana/web3.js` library, so you're covered!
+Even if Address Lookup Tables are not required for your use case, understanding
+versioned transactions is crucial for maintaining compatibility with the latest
+Solana features. The `@solana/web3.js` library provides all necessary tools to
+work with versioned transactions and lookup tables.
 
 #### Using the @solana/web3.js library
 
@@ -81,15 +77,15 @@ npm install @solana/web3.js
 
 #### Create versioned transactions
 
-To create a versioned transaction, you simply create a `TransactionMessage` with
+To create a versioned transaction, you first create a `TransactionMessage` with
 the following parameters:
 
 - `payerKey` - the public key of the account that will pay for the transaction
 - `recentBlockhash` - a recent blockhash from the network
-- `instructions` - the instructions to include in the transaction
+- `instructions` - the instructions to be executed in the transaction.
 
-You then transform this message object into a version `0` transaction using the
-`compileToV0Message()` method.
+Once the message object is created, you can convert it into a version `0`
+transaction using the `compileToV0Message()` method.
 
 Replace the `<YOUR_RPC_URL_HERE>` placeholder with the URL of your RPC. You can
 get a RPC providers from [Solana RPC](https://solana.com/rpc).
@@ -106,13 +102,11 @@ import {
 } from "@solana/web3.js";
 
 // Example transfer instruction
-const transferInstruction = [
-  SystemProgram.transfer({
-    fromPubkey: payer.publicKey, // Public key of the account that will send the funds
-    toPubkey: toAccount.publicKey, // Public key of the account that will receive the funds
-    lamports: 1 * LAMPORTS_PER_SOL, // Amount of lamports to transfer (in this case, 1 SOL, which is equivalent to 1,000,000,000 lamports)
-  }),
-];
+const transferInstruction = SystemProgram.transfer({
+  fromPubkey: payer.publicKey, // Public key of the sender account
+  toPubkey: toAccount.publicKey, // Public key of the receiver account
+  lamports: 1 * LAMPORTS_PER_SOL, // Amount to transfer in lamports
+});
 
 // Establish a JSON RPC connection
 const connection = new Connection(
@@ -121,13 +115,13 @@ const connection = new Connection(
 );
 
 // Get the latest blockhash
-let { blockhash } = await connection.getLatestBlockhash();
+const { blockhash } = await connection.getLatestBlockhash();
 
 // Create the transaction message
 const message = new TransactionMessage({
   payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
   recentBlockhash: blockhash, // Latest blockhash
-  instructions: transferInstruction, // Instructions included in transaction
+  instructions: [transferInstruction], // Instructions included in transaction
 }).compileToV0Message();
 ```
 
@@ -147,52 +141,48 @@ transaction to the network, just like you would with a legacy transaction.
 // Create the versioned transaction using the message
 const transaction = new VersionedTransaction(message);
 
-// Sign the transaction
+// Sign the transaction with the payer's keypair
 transaction.sign([payer]);
 
 // Send the signed transaction to the network
-const transactionSignature = await connection.sendTransaction(transaction);
+const signature = await connection.sendTransaction(transaction);
 ```
 
 ### Address Lookup Table
 
-Address Lookup Tables, or LUTs, are like special accounts that keep a list of
-other account addresses. These LUTs are managed by the Address Lookup Table
-Program and help to fit more accounts into a single transaction.
+Address Lookup Tables (LUTs) are accounts that store references to other account
+addresses. These LUT accounts, owned by the Address Lookup Table Program,
+increase the number of accounts that can be included in a transaction.
 
-With versioned transactions, you can use a LUT address. Then, refer to
-additional accounts with a short 1-byte index instead of their full 32-byte
-addresses. This makes the transaction much smaller and saves a lot of space.
+In versioned transactions, LUT addresses are included, and additional accounts
+are referenced with a 1-byte index instead of the full 32-byte address, reducing
+space used by the transaction.
 
-To simplify the process of working with LUTs, the `@solana/web3.js` library
-includes an `AddressLookupTableProgram` class which provides a set of methods to
-create instructions for managing LUTs. These methods include:
+The `@solana/web3.js` library offers an `AddressLookupTableProgram` class,
+providing methods to manage LUTs:
 
-- `createLookupTable` - creates a new LUT account
-- `freezeLookupTable` - makes an existing LUT immutable
-- `extendLookupTable` - adds addresses to an existing LUT
-- `deactivateLookupTable` - puts a LUT in a “deactivation” period before it can
-  be closed
-- `closeLookupTable` - permanently closes a LUT account
+- `createLookupTable` - creates a new LUT account.
+- `freezeLookupTable` - makes a LUT immutable.
+- `extendLookupTable` - adds addresses to an existing LUT.
+- `deactivateLookupTable` - begins the deactivation period for an LUT.
+- `closeLookupTable` - permanently closes an LUT account.
 
 #### Create a lookup table
 
-You use the `createLookupTable` method to construct the instruction that creates
-a lookup table. The function requires the following parameters:
+You can use the `createLookupTable` method to construct the instruction for
+creating a lookup table. This requires the following parameters:
 
-- `authority` - the account that will have permission to change the lookup table
-- `payer` - the account that will pay for the account creation
-- `recentSlot` - a recent slot to derive the lookup table's address
+- `authority` - the account authorized to modify the lookup table.
+- `payer` - the account responsible for paying the account creation fees.
+- `recentSlot` - a recent slot used to derive the lookup table's address.
 
-The function returns both the instruction to create the lookup table and the
-address of the lookup table.
+The function returns both the instruction for creating the LUT and its address.
 
 ```ts
 // Fetch the current slot that the node is processing
 const slot = await connection.getSlot();
 
-// Create an instruction for creating a lookup table
-// and retrieve the address of the new lookup table
+// Create the lookup table creation instruction and retrieve its address
 const [lookupTableInst, lookupTableAddress] =
   AddressLookupTableProgram.createLookupTable({
     authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
@@ -235,14 +225,14 @@ const [lookupTableAddress, bumpSeed] = PublicKey.findProgramAddressSync(
 
 #### Extend a lookup table
 
-You use the `extendLookupTable` method to create an instruction that adds
-addresses to an existing lookup table. It takes the following parameters:
+The `extendLookupTable` method creates an instruction to add addresses to an
+existing lookup table. It requires the following parameters:
 
-- `payer` - the account that will pay for the transaction fees and any increased
-  rent
-- `authority` - the account that has permission to change the lookup table
-- `lookupTable` - the address of the lookup table to extend
-- `addresses` - the addresses to add to the lookup table
+- `payer` - the account responsible for paying transaction fees and any
+  additional rent.
+- `authority` - the account authorized to modify the lookup table.
+- `lookupTable` - the address of the lookup table to be extended.
+- `addresses` - the list of addresses to add to the lookup table.
 
 The function returns an instruction to extend the lookup table.
 
@@ -250,7 +240,7 @@ The function returns an instruction to extend the lookup table.
 const addresses = [
   new PublicKey("31Jy3nFeb5hKVdB4GS4Y7MhU7zhNMFxwF7RGVhPc1TzR"),
   new PublicKey("HKSeapcvwJ7ri6mf3HwBtspLFTDKqaJrMsozdfXfg5y2"),
-  // add more addresses
+  // Add more addresses here
 ];
 
 // Create an instruction to extend a lookup table with the provided addresses
@@ -273,20 +263,20 @@ const extendInstruction = AddressLookupTableProgram.extendLookupTable({
 #### Send Transaction
 
 After creating the instructions, you can add them to a transaction and send it
-to the network.
+to the network:
 
 ```ts
 // Get the latest blockhash
-let { blockhash } = await connection.getLatestBlockhash();
+const { blockhash } = await connection.getLatestBlockhash();
 
 // Create the transaction message
 const message = new TransactionMessage({
-  payerKey: payer.publicKey, // Public key of the account that will pay for the transaction
+  payerKey: payer.publicKey, // Account paying for the transaction
   recentBlockhash: blockhash, // Latest blockhash
-  instructions: [lookupTableInst, extendInstruction], // Instructions included in the transaction
+  instructions: [lookupTableInst, extendInstruction], // Instructions to be included in the transaction
 }).compileToV0Message();
 
-// Create the versioned transaction using the message
+// Create the versioned transaction from the message
 const transaction = new VersionedTransaction(message);
 
 // Sign the transaction
@@ -309,55 +299,55 @@ SendTransactionError: failed to send transaction: invalid transaction: Transacti
 
 If you see the error above, or cannot access addresses in a lookup table after
 extending it, it's likely you are trying to access the table or a specific
-address too soon. You must wait until the warm-up period ends. To avoid this
+address too soon. You must wait until the warm-up period ends.
+
+To avoid this
 issue, add a delay after extending the lookup table before sending a transaction
 that references the table.
 
 #### Deactivate a lookup table
 
-When a lookup table is no longer needed, you can deactivate and close it to
-reclaim its rent balance. Address lookup tables can be deactivated at any time,
-but they can continue to be used by transactions until a specified
-"deactivation" slot is no longer "recent". This "cool-down" period ensures that
-in-flight transactions can't be censored by LUTs being closed and recreated in
-the same slot. The deactivation period is approximately 513 slots.
+When a lookup table (LUT) is no longer needed, you can deactivate it to reclaim
+its rent balance. Deactivating a LUT puts it into a "cool-down" period
+(approximately 513 slots) during which it can still be used by transactions.
+This prevents transactions from being censored by deactivating and recreating
+LUTs within the same slot.
 
-To deactivate a LUT, use the `deactivateLookupTable` method and pass in the
-following parameters:
+To deactivate a LUT, use the `deactivateLookupTable` method with the following
+parameters:
 
-- `lookupTable` - the address of the LUT to be deactivated
-- `authority` - the account with permission to deactivate the LUT
+- `lookupTable` - the address of the lookup table to be deactivated.
+- `authority` - the account with the authority to deactivate the LUT.
 
-```ts
+```typescript
 const deactivateInstruction = AddressLookupTableProgram.deactivateLookupTable({
-  lookupTable: lookupTableAddress, // The address of the LUT to deactivate
-  authority: user.publicKey, // The authority (i.e., the account with permission to change the LUT)
+  lookupTable: lookupTableAddress, // Address of the lookup table to deactivate
+  authority: user.publicKey, // Authority to modify the lookup table
 });
 ```
 
 #### Close a lookup table
 
-To close a lookup table after its deactivation period, use the
-`closeLookupTable` method. This method creates an instruction to close a
-deactivated lookup table and reclaim its rent balance. It takes the following
-parameters:
+Once a LUT has been deactivated and the cool-down period has passed, you can
+close the lookup table to reclaim its rent balance. Use the `closeLookupTable`
+method, which requires the following parameters:
 
-- `lookupTable` - the address of the LUT to be closed
-- `authority` - the account with permission to close the LUT
-- `recipient` - the account that will receive the reclaimed rent balance
+- `lookupTable` - the address of the LUT to be closed.
+- `authority` - the account with the authority to close the LUT.
+- `recipient` - the account that will receive the reclaimed rent balance.
 
-```ts
+```typescript
 const closeInstruction = AddressLookupTableProgram.closeLookupTable({
-  lookupTable: lookupTableAddress, // The address of the lookup table to close
-  authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
-  recipient: user.publicKey, // The recipient of closed account lamports
+  lookupTable: lookupTableAddress, // Address of the lookup table to close
+  authority: user.publicKey, // Authority to close the LUT
+  recipient: user.publicKey, // Recipient of the reclaimed rent balance
 });
 ```
 
-Attempting to close a lookup table before it's been fully deactivated will
-result in an error.
+Attempting to close a LUT before it has been fully deactivated will result in
+the following error:
 
-```
+```txt
 "Program AddressLookupTab1e1111111111111111111111111 invoke [1]",
 "Table cannot be closed until it's fully deactivated in 513 blocks",
 "Program AddressLookupTab1e1111111111111111111111111 failed: invalid program argument";
@@ -368,23 +358,23 @@ result in an error.
 In addition to standard CRUD operations, you can "freeze" a lookup table. This
 makes it immutable so that it can no longer be extended, deactivated, or closed.
 
-You freeze a lookup table with the `freezeLookupTable` method. It takes the
+The `freezeLookupTable` method is used for this operation and takes the
 following parameters:
 
-- `lookupTable` - the address of the LUT to freeze
-- `authority` - the account with permission to freeze the LUT
+- `lookupTable` - the address of the LUT to freeze.
+- `authority` - the account with the authority to freeze the LUT.
 
-```ts
+```typescript
 const freezeInstruction = AddressLookupTableProgram.freezeLookupTable({
-  lookupTable: lookupTableAddress, // The address of the lookup table to freeze
-  authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
+  lookupTable: lookupTableAddress, // Address of the lookup table to freeze
+  authority: user.publicKey, // Authority to freeze the LUT
 });
 ```
 
-Once you freeze a LUT, any further attempts to change it will result in an
-error.
+Once a LUT is frozen, any attempt to modify it will result in an error like the
+following:
 
-```
+```txt
 "Program AddressLookupTab1e1111111111111111111111111 invoke [1]",
 "Lookup table is frozen",
 "Program AddressLookupTab1e1111111111111111111111111 failed: Account is immutable";
@@ -392,29 +382,30 @@ error.
 
 #### Using lookup tables in versioned transactions
 
-To use a lookup table in a versioned transaction, you need to retrieve the
-lookup table account using its address.
+To utilize a lookup table in a versioned transaction, first retrieve the lookup
+table account using its address:
 
-```ts
+```typescript
+// Fetch the lookup table account from the blockchain using its address
 const lookupTableAccount = (
-  await connection.getAddressLookupTable(lookupTableAddress)
+  await connection.getAddressLookupTable(new PublicKey(lookupTableAddress))
 ).value;
 ```
 
-You can then create a list of instructions to include in a transaction as usual.
-When creating the `TransactionMessage`, you can include any lookup table
-accounts by passing them as an array to the `compileToV0Message()` method. You
-can also provide many lookup table accounts.
+Once you have the lookup table account, you can create the list of instructions
+for the transaction. When constructing the `TransactionMessage`, pass the lookup
+table accounts as an array to the `compileToV0Message()` method. You can include
+multiple lookup table accounts if needed.
 
-```ts
-const message = new TransactionMessage({
-  payerKey: payer.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-  recentBlockhash: blockhash, // The blockhash of the most recent block
-  instructions: instructions, // The instructions to include in the transaction
+```typescript
+const message = new web3.TransactionMessage({
+  payerKey: payer.publicKey, // Public key of the account paying for the transaction
+  recentBlockhash: blockhash, // Blockhash of the most recent block
+  instructions: instructions, // Instructions to be included in the transaction
 }).compileToV0Message([lookupTableAccount]); // Include lookup table accounts
 
-// Create the versioned transaction using the message
-const transaction = new VersionedTransaction(message);
+// Create a versioned transaction using the compiled message
+const transaction = new web3.VersionedTransaction(message);
 
 // Sign the transaction
 transaction.sign([payer]);
@@ -427,15 +418,16 @@ const transactionSignature = await connection.sendTransaction(transaction);
 
 Let's go ahead and practice using lookup tables!
 
-This lab will guide you through the steps of creating, extending, and then using
-a lookup table in a versioned transaction.
+This lab will guide you through creating, extending, and using a lookup table in
+a versioned transaction.
 
-### 1. Get the starter code
+#### 1. Create the `try-large-transaction.ts` file
 
-To begin, download the starter code from the starter branch of this
-[repository](https://github.com/Unboxed-Software/solana-versioned-transactions/tree/starter).
-Once you have the starter code, run `npm install` in the terminal to install the
-required dependencies.
+To begin, create a new file named `try-large-transaction.ts` in your project
+directory. This file will contain the code to illustrate a scenario where a
+legacy transaction is created to transfer SOL to 22 recipients in a single
+atomic transaction. The transaction will include 22 separate instructions, each
+transferring SOL from the payer (signer) to a different recipient.
 
 This project uses [esrun](https://www.npmjs.com/package/@digitak/esrun) for
 running scripts. You can install it globally by running `npm install -g esrun`.
@@ -477,8 +469,8 @@ try {
     recipients.push(Keypair.generate().publicKey);
   }
 
-  // Create an array of transfer instructions
-  const transferInstructions = [];
+  // Create a legacy transaction
+  const transaction = new Transaction();
 
   // Add a transfer instruction for each address
   for (const address of recipients) {
@@ -552,7 +544,7 @@ single transaction.
 Before we start, go ahead and delete the content of the `try-catch` block to
 leave only the following:
 
-```ts
+```ts filename="index.ts"
 // Connect to the devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"));
 
@@ -572,21 +564,20 @@ for (let i = 0; i < 22; i++) {
 We'll be sending many "version 0" transactions, so let's create a helper
 function to facilitate this.
 
-This function should take parameters for a connection, a user's keypair, an
-array of transaction instructions, and an optional array of lookup table
-accounts.
+To handle versioned transactions, we will create a helper function in
+`index.ts` file, called `sendV0Transaction`, to simplify the
+process. This function will accept the following parameters:
 
-The function then performs the following tasks:
+- `connection`: the solana connection to the cluster (e.g., devnet).
+- `user`: the keypair of the user (payer) signing the transaction.
+- `instructions`: an array of TransactionInstruction objects to include in the
+  transaction.
+- `lookupTableAccounts` (optional): an array of lookup table accounts, if
+  applicable, to reference additional addresses.
 
-- Retrieves the latest blockhash and last valid block height from the Solana
-  network
-- Creates a new transaction message using the provided instructions
-- Signs the transaction using the user's keypair
-- Sends the transaction to the Solana network
-- Confirms the transaction
-- Logs the transaction URL on the Solana Explorer
+This helper function will:
 
-```ts
+```ts filename="index.ts"
 import {
   ...
   TransactionInstruction,
@@ -600,7 +591,7 @@ async function sendV0Transaction(
   lookupTableAccounts?: AddressLookupTableAccount[],
 ) {
   // Get the latest blockhash and last valid block height
-  const { lastValidBlockHeight, blockhash } =
+  const { blockhash, lastValidBlockHeight } =
     await connection.getLatestBlockhash();
 
   // Create a new transaction message with the provided instructions
@@ -608,29 +599,26 @@ async function sendV0Transaction(
     payerKey: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
     recentBlockhash: blockhash, // The blockhash of the most recent block
     instructions, // The instructions to include in the transaction
-  }).compileToV0Message(lookupTableAccounts ? lookupTableAccounts : undefined);
+  }).compileToV0Message(lookupTableAccounts);
 
   // Create a new transaction object with the message
   const transaction = new VersionedTransaction(messageV0);
 
-  // Sign the transaction with the user's keypair
-  transaction.sign([user]);
-
-  // Send the transaction to the cluster
-  const txid = await connection.sendTransaction(transaction);
-
-  // Confirm the transaction
-  await connection.confirmTransaction(
+  // Use the helper function to send and confirm the transaction
+  const txid = await sendAndConfirmTransactionV0(
+    connection,
+    transaction,
+    [user],
     {
-      blockhash: blockhash,
-      lastValidBlockHeight: lastValidBlockHeight,
-      signature: txid,
+      commitment: "finalized", // Ensures the transaction is confirmed at the highest level
     },
-    "finalized",
   );
 
-  // Log the transaction URL on the Solana Explorer
-  console.log(`https://explorer.solana.com/tx/${txid}?cluster=devnet`);
+  // Log the transaction URL on the Solana Explorer using the helper
+  const explorerLink = getExplorerLink("tx", txid, "devnet");
+  console.log(
+    `Transaction successful! View it on Solana Explorer: ${explorerLink}`,
+  );
 }
 ```
 
@@ -641,19 +629,24 @@ Remember to update the `import` statement at the top of the file to include the
 
 #### 3. Create a `waitForNewBlock` helper function
 
-Recall that lookup tables and the addresses contained in them can't be
-referenced immediately after creation or extension. This means we'll end up
-needing to wait for a new block before submitting transactions that reference
-the newly created or extended lookup table. To make this simpler down the road,
-let's create a `waitForNewBlock` helper function that we'll use to wait for
-lookup tables to activate between sending transactions.
+When working with lookup tables, it's important to remember that newly created
+or extended lookup tables cannot be referenced immediately. Therefore, before
+submitting transactions that reference these tables, we need to wait for a new
+block to be generated.
 
-This function will have parameters for a connection and a target block height.
-It then starts an interval that checks the current block height of the network
-every 1000ms. Once the new block height exceeds the target height, the interval
-is cleared and the promise is resolved.
+We will create a `waitForNewBlock` helper function that accepts:
 
-```ts
+- `connection`: the Solana network connection.
+- `targetHeight`: the target block height to wait for.
+
+This function will:
+
+- Start an interval that checks the current block height of the network every
+  second (1000ms).
+- Resolve the promise once the current block height exceeds the target block
+  height.
+
+```ts filename="index.ts"
 function waitForNewBlock(connection: Connection, targetHeight: number) {
   console.log(`Waiting for ${targetHeight} new blocks`);
   return new Promise(async (resolve: any) => {
@@ -680,19 +673,16 @@ function waitForNewBlock(connection: Connection, targetHeight: number) {
 
 #### 4. Create an `initializeLookupTable` function
 
-Now that we have some helper functions ready to go, declare a function named
-`initializeLookupTable`. This function has parameters `user`, `connection`, and
-`addresses`. The function will:
+Next, we need to initialize a lookup table to hold the addresses of the
+recipients. The `initializeLookupTable` function will accept the following
+parameters:
 
-1. Retrieve the current slot
-2. Generate an instruction for creating a lookup table
-3. Generate an instruction for extending the lookup table with the provided
-   addresses
-4. Send and confirm a transaction with the instructions for creating and
-   extending the lookup table
-5. Return the address of the lookup table
+- `user`: the user's keypair (payer and authority).
+- `connection`: the Solana network connection.
+- `addresses`: an array of recipient addresses (public keys) to add to the
+  lookup table.
 
-```ts
+```ts filename="index.ts"
 import {
   ...
   PublicKey
@@ -701,7 +691,7 @@ import {
 async function initializeLookupTable(
   user: Keypair,
   connection: Connection,
-  addresses: PublicKey[],
+  addresses: PublicKey[]
 ): Promise<PublicKey> {
   // Get the current slot
   const slot = await connection.getSlot();
@@ -710,7 +700,7 @@ async function initializeLookupTable(
   // and retrieve the address of the new lookup table
   const [lookupTableInst, lookupTableAddress] =
     AddressLookupTableProgram.createLookupTable({
-      authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
+      authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
       payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
       recentSlot: slot - 1, // The recent slot to derive the lookup table's address
     });
@@ -719,7 +709,7 @@ async function initializeLookupTable(
   // Create an instruction to extend a lookup table with the provided addresses
   const extendInstruction = AddressLookupTableProgram.extendLookupTable({
     payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
-    authority: user.publicKey, // The authority (i.e., the account with permission to change the lookup table)
+    authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
     lookupTable: lookupTableAddress, // The address of the lookup table to extend
     addresses: addresses.slice(0, 30), // The addresses to add to the lookup table
   });
@@ -728,6 +718,21 @@ async function initializeLookupTable(
     lookupTableInst,
     extendInstruction,
   ]);
+
+  var remaining = addresses.slice(30);
+
+  while (remaining.length > 0) {
+    const toAdd = remaining.slice(0, 30);
+    remaining = remaining.slice(30);
+    const extendInstruction = AddressLookupTableProgram.extendLookupTable({
+      payer: user.publicKey, // The payer (i.e., the account that will pay for the transaction fees)
+      authority: user.publicKey, // The authority (i.e., the account with permission to modify the lookup table)
+      lookupTable: lookupTableAddress, // The address of the lookup table to extend
+      addresses: toAdd, // The addresses to add to the lookup table
+    });
+
+    await sendV0Transaction(connection, user, [extendInstruction]);
+  }
 
   return lookupTableAddress;
 }
@@ -740,9 +745,9 @@ Remember to update the `import` statement at the top of the file to include the
 
 #### 5. Modify `try-catch` block to use lookup tables
 
-Now that we can initialize a lookup table with all of the recipients' addresses,
-let's update `main` to use versioned transactions and lookup tables. We'll need
-to:
+With the helper functions in place, we are now ready to modify the `main`
+function to utilize versioned transactions and address lookup tables. To do so,
+we will follow these steps:
 
 1. Call `initializeLookupTable`
 2. Call `waitForNewBlock`
@@ -750,7 +755,7 @@ to:
 4. Create the transfer instructions for each recipient
 5. Send the v0 transaction with all of the transfer instructions
 
-```ts
+```ts filename="index.ts"
 // Connect to the devnet cluster
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
@@ -801,8 +806,8 @@ pointers to the lookup table instead. By the time the transaction is sent to the
 network, addresses that exist in the lookup table will be referenced by a single
 byte rather than the full 32 bytes.
 
-Use `npm start` in the command line to execute the `main` function. You should
-see an output similar to the following:
+Use `npx start` in the command line to execute the `main`
+function. You should see an output similar to the following:
 
 ```bash
 Current balance is 1.38866636
@@ -835,10 +840,10 @@ All we need to do is go into `initializeLookupTable` and do two things:
 
 1. Modify the existing call to `extendLookupTable` to only add the first 30
    addresses (any more than that and the transaction will be too large)
-2. Add a loop that will keep extending a lookup table 30 addresses at a time
+2. Add a loop that will keep extending a lookup table of 30 addresses at a time
    until all addresses have been added
 
-```ts
+```ts filename="index.ts"
 async function initializeLookupTable(
   user: Keypair,
   connection: Connection,
@@ -909,7 +914,7 @@ separate lookup tables.
 
 You can reuse the functions we created in the lab for sending the transaction
 and waiting for the lookup table to activate/deactivate. Feel free to reference
-this [solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
+this [solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
