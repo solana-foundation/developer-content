@@ -301,9 +301,8 @@ If you see the error above, or cannot access addresses in a lookup table after
 extending it, it's likely you are trying to access the table or a specific
 address too soon. You must wait until the warm-up period ends.
 
-To avoid this
-issue, add a delay after extending the lookup table before sending a transaction
-that references the table.
+To avoid this issue, add a delay after extending the lookup table before sending
+a transaction that references the table.
 
 #### Deactivate a lookup table
 
@@ -564,9 +563,9 @@ for (let i = 0; i < 22; i++) {
 We'll be sending many "version 0" transactions, so let's create a helper
 function to facilitate this.
 
-To handle versioned transactions, we will create a helper function in
-`index.ts` file, called `sendV0Transaction`, to simplify the
-process. This function will accept the following parameters:
+To handle versioned transactions, we will create a helper function in `index.ts`
+file, called `sendV0Transaction`, to simplify the process. This function will
+accept the following parameters:
 
 - `connection`: the solana connection to the cluster (e.g., devnet).
 - `user`: the keypair of the user (payer) signing the transaction.
@@ -806,8 +805,8 @@ pointers to the lookup table instead. By the time the transaction is sent to the
 network, addresses that exist in the lookup table will be referenced by a single
 byte rather than the full 32 bytes.
 
-Use `npx start` in the command line to execute the `main`
-function. You should see an output similar to the following:
+Use `npx start` in the command line to execute the `main` function. You should
+see an output similar to the following:
 
 ```bash
 Current balance is 1.38866636
@@ -914,7 +913,8 @@ separate lookup tables.
 
 You can reuse the functions we created in the lab for sending the transaction
 and waiting for the lookup table to activate/deactivate. Feel free to reference
-this [solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
+this
+[solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
