@@ -50,10 +50,10 @@ These hashes take up far less storage space than the original data. The full
 data can be stored in a cheaper, offchain location, and only needs to be
 verified against the onchain hash when accessed.
 
-The Solana State Compression program uses a program
-known as a **concurrent Merkle tree**. A concurrent Merkle tree is a special
-kind of binary tree that deterministically hashes data, i.e. the same inputs
-will always produce the same Merkle root.
+The Solana State Compression program uses a program known as a **concurrent
+Merkle tree**. A concurrent Merkle tree is a special kind of binary tree that
+deterministically hashes data, i.e. the same inputs will always produce the same
+Merkle root.
 
 The final hash, called a _Merkle root_, is significantly smaller in size than
 all the original full data sets combined. This is why it’s called "compression".
