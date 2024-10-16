@@ -5,10 +5,7 @@ sidebarLabel: Anchor Framework
 sidebarSortOrder: 1
 altRoutes:
   - /docs/programs/debugging
-  - /docs/programs/faq
   - /docs/programs/lang-c
-  - /docs/programs/lang-rust
-  - /docs/programs/limitations
   - /docs/programs/overview
 ---
 

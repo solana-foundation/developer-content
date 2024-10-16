@@ -4,7 +4,7 @@ description:
   "Deploying onchain programs can be done using the Solana CLI using the
   Upgradable BPF loader to upload the compiled byte-code to the Solana
   blockchain."
-sidebarSortOrder: 4
+sidebarSortOrder: 3
 ---
 
 Solana onchain programs (otherwise known as "smart contracts") are stored in
