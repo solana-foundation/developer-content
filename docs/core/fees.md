@@ -422,7 +422,7 @@ allocates, the higher the withheld rent deposit will be.
 
 ### Rent exempt
 
-Accounts must maintain a lamport balance greater the minimum required to store
+Accounts must maintain a lamport balance greater than the minimum required to store
 its respective data on-chain. This is called "_rent exempt_" and that balance is
 called the "_minimum balance for rent exemption_".
 
