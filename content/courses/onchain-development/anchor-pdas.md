@@ -24,22 +24,20 @@ In this lesson you'll learn how to work with PDAs, reallocate accounts, and
 close accounts in Anchor.
 
 Recall that Anchor programs separate instruction logic from account validation.
-Account validation primarily happens within structs that represent the list of
-accounts needed for a given instruction. Each field of the struct represents a
-different account, and you can customize the validation performed on the account
-using the `#[account(...)]` attribute macro.
+Account validation happens in structs that list the accounts needed for an
+instruction. Each field in the struct represents an account, and you can
+customize the validation using the `#[account(...)]` attribute macro.
 
-In addition to using constraints for account validation, some constraints can
-handle repeatable tasks that would otherwise require a lot of boilerplate inside
-our instruction logic. This lesson will introduce the `seeds`, `bump`,
-`realloc`, and `close` constraints to help you initialize and validate PDAs,
-reallocate accounts, and close accounts.
+In addition to validating accounts, some constraints can automate tasks that
+would otherwise require repetitive code in our instructions. This lesson will
+cover the `seeds`, `bump`, `realloc`, and `close` constraints to help you easily
+handle PDAs, reallocate space, and close accounts.
 
 ### PDAs with Anchor
 
-Recall that
-[PDAs](https://github.com/Unboxed-Software/solana-course/blob/main/content/pda)
-are derived using a list of optional seeds, a bump seed, and a program ID.
+PDAs store data, at addresses specified by the onchain programmer, using a list
+of seeds, a bump seed, and a program ID.
+
 Anchor provides a convenient way to validate a PDA with the `seeds` and `bump`
 constraints.
 
@@ -54,31 +52,38 @@ struct ExampleAccounts {
 }
 ```
 
-During account validation, Anchor will derive a PDA using the seeds specified in
-the `seeds` constraint and verify that the account passed into the instruction
-matches the PDA found using the specified `seeds`.
+During account validation, Anchor will use the specified seeds to derive a PDA
+and check if the provided account matches the derived PDA.
 
 When the `bump` constraint is included without specifying a specific bump,
-Anchor will default to using the canonical bump (the first bump that results in
-a valid PDA). In most cases you should use the canonical bump.
+Anchor will use the canonical bump (the first bump that results in a valid PDA,
+with a value of 255). Typically, you should use the canonical bump.
 
-You can access other fields from within the struct from constraints, so you can
-specify seeds that are dependent on other accounts like the signer's public key.
+You can also use other fields from within the struct as seeds, such as the
+signer's public key.
 
 You can also reference the deserialized instruction data if you add the
 `#[instruction(...)]` attribute macro to the struct.
 
-For example, the following example shows a list of accounts that include
-`pda_account` and `user`. The `pda_account` is constrained such that the seeds
-must be the string "example_seed," the public key of `user`, and the string
-passed into the instruction as `instruction_data`.
+For example, the following example shows a list of accounts that include:
+
+- `pda_account`
+- `user`
+
+The `pda_account` is constrained such that the seeds must be the string
+"example_seed," the public key of `user`, and the string passed into the
+instruction as `instruction_data`.
 
 ```rust
 #[derive(Accounts)]
 #[instruction(instruction_data: String)]
 pub struct Example<'info> {
     #[account(
-        seeds = [b"example_seed", user.key().as_ref(), instruction_data.as_ref()],
+        seeds = [
+            b"example_seed",
+            user.key().as_ref(),
+            instruction_data.as_ref()
+        ],
         bump
     )]
     pub pda_account: Account<'info, AccountType>,
@@ -96,11 +101,12 @@ validation will fail.
 You can combine the `seeds` and `bump` constraints with the `init` constraint to
 initialize an account using a PDA.
 
-Recall that the `init` constraint must be used in combination with the `payer`
-and `space` constraints to specify the account that will pay for account
-initialization and the space to allocate on the new account. Additionally, you
-must include `system_program` as one of the fields of the account validation
-struct.
+Recall that the `init` constraint must be used with the `payer` and `space`
+constraints to specify who pays for the account initialization and how much
+space to allocate.
+
+Additionally, you need to include `system_program` to handle the creation and
+funding of the new account.
 
 ```rust
 #[derive(Accounts)]
@@ -110,7 +116,7 @@ pub struct InitializePda<'info> {
         seeds = [b"example_seed", user.key().as_ref()],
         bump,
         payer = user,
-        space = 8 + 8
+        space = DISCRIMINATOR + Accountype::INIT_SPACE
     )]
     pub pda_account: Account<'info, AccountType>,
     #[account(mut)]
@@ -119,9 +125,12 @@ pub struct InitializePda<'info> {
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct AccountType {
     pub data: u64,
 }
+
+const DISCRIMINATOR: usize = 8;
 ```
 
 When using `init` for non-PDA accounts, Anchor defaults to setting the owner of
@@ -134,18 +143,11 @@ words, the signature verification for the initialization of the PDA account
 would fail if the program ID used to derive the PDA did not match the program ID
 of the executing program.
 
-When determining the value of `space` for an account initialized and owned by
-the executing Anchor program, remember that the first 8 bytes are reserved for
-the account discriminator. This is an 8-byte value that Anchor calculates and
-uses to identify the program account types. You can use this
-[reference](https://www.anchor-lang.com/docs/space) to calculate how much space
-you should allocate for an account.
-
 #### Seed inference
 
 The account list for an instruction can get really long for some programs. To
 simplify the client-side experience when invoking an Anchor program instruction,
-we can turn on seed inference.
+we can turn on **seed inference**.
 
 Seed inference adds information about PDA seeds to the IDL so that Anchor can
 infer PDA seeds from existing call-site information. In the previous example,
@@ -230,11 +232,11 @@ To use `init_if_needed`, you must first enable the feature in `Cargo.toml`.
 
 ```rust
 [dependencies]
-anchor-lang = { version = "0.25.0", features = ["init-if-needed"] }
+anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 ```
 
-Once you’ve enabled the feature, you can include the constraint in the
-`#[account(…)]` attribute macro. The example below demonstrates using the
+Once you've enabled the feature, you can include the constraint in the
+`#[account(...)]` attribute macro. The example below demonstrates using the
 `init_if_needed` constraint to initialize a new associated token account if one
 does not already exist.
 
@@ -299,7 +301,7 @@ pub struct ReallocExample<'info> {
         mut,
         seeds = [b"example_seed", user.key().as_ref()],
         bump,
-        realloc = 8 + 4 + instruction_data.len(),
+        realloc = DISCRIMINATOR + STRING_SIZE_SPACE + instruction_data.len(),
         realloc::payer = user,
         realloc::zero = false,
     )]
@@ -310,29 +312,35 @@ pub struct ReallocExample<'info> {
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct AccountType {
     pub data: String,
 }
+
+const DISCRIMINATOR: usize = 8;
+const STRING_SIZE_SPACE: usize = 4;
 ```
 
-Notice that `realloc` is set to `8 + 4 + instruction_data.len()`. This breaks
-down as follows:
+The `realloc` constraint from the above example can be broken down as follows:
 
-- `8` is for the account discriminator
-- `4` is for the 4 bytes of space that BORSH uses to store the length of the
-  string
+- the `DISCRIMINATOR` is `8`
+- the `STRING_SIZE_SPACE` is `4` for the space required to store the length of
+  the string. As required by BORSH serialization
 - `instruction_data.len()` is the length of the string itself
+
+> [BORSH](https://solanacookbook.com/guides/serialization.html) stands for
+> _Binary Object Representation Serializer for Hashing_ and is used to
+> efficiently and compactly serialize and deserialize data structures.
 
 If the change in account data length is additive, lamports will be transferred
 from the `realloc::payer` to the account to maintain rent exemption. Likewise,
 if the change is subtractive, lamports will be transferred from the account back
 to the `realloc::payer`.
 
-The `realloc::zero` constraint is required to determine whether the new memory
-should be zero initialized after reallocation. This constraint should be set to
-true in cases where you expect the memory of an account to shrink and expand
-multiple times. That way you zero out space that would otherwise show as stale
-data.
+The `realloc::zero` constraint ensures that any new memory allocated during
+reallocation is set to zero. This should be set to true if you expect the memory
+of an account to change size frequently. This way, you clear out any old data
+that might otherwise remain.
 
 ### Close
 
@@ -340,12 +348,10 @@ The `close` constraint provides a simple and secure way to close an existing
 account.
 
 The `close` constraint marks the account as closed at the end of the
-instruction’s execution by setting its discriminator to
-the `CLOSED_ACCOUNT_DISCRIMINATOR` and sends its lamports to a specified
-account. Setting the discriminator to a special variant makes account revival
-attacks (where a subsequent instruction adds the rent exemption lamports again)
-impossible. If someone tries to reinitialize the account, the reinitialization
-will fail the discriminator check and be considered invalid by the program.
+instruction's execution by setting its discriminator to a _special value_ called
+`CLOSED_ACCOUNT_DISCRIMINATOR` and sends its lamports to a specified account.
+This _special value_ prevents the account from being reopened because any
+attempt to reinitialize the account will fail the discriminator check.
 
 The example below uses the `close` constraint to close the `data_account` and
 sends the lamports allocated for rent to the `receiver` account.
@@ -366,7 +372,7 @@ pub struct Close<'info> {
 
 ## Lab
 
-Let’s practice the concepts we’ve gone over in this lesson by creating a Movie
+Let's practice the concepts we've gone over in this lesson by creating a Movie
 Review program using the Anchor framework.
 
 This program will allow users to:
@@ -379,9 +385,9 @@ This program will allow users to:
 
 ### Create a new Anchor project
 
-To begin, let’s create a new project using `anchor init`.
+To begin, let's create a new project using `anchor init`.
 
-```shell
+```bash
 anchor init anchor-movie-review-program
 ```
 
@@ -422,14 +428,14 @@ pub mod anchor_movie_review_program {
 
 ### MovieAccountState
 
-First, let’s use the `#[account]` attribute macro to define the
+First, let's use the `#[account]` attribute macro to define the
 `MovieAccountState` that will represent the data structure of the movie review
 accounts. As a reminder, the `#[account]` attribute macro implements various
 traits that help with serialization and deserialization of the account, set the
 discriminator for the account, and set the owner of a new account as the program
 ID defined in the `declare_id!` macro.
 
-Within each movie review account, we’ll store the:
+Within each movie review account, we'll store the:
 
 - `reviewer` - user creating the review
 - `rating` - rating for the movie
@@ -448,45 +454,32 @@ pub mod anchor_movie_review_program {
 }
 
 #[account]
+#[derive(InitSpace)]
 pub struct MovieAccountState {
     pub reviewer: Pubkey,    // 32
     pub rating: u8,          // 1
+    #[max_len(20)]
     pub title: String,       // 4 + len()
+    #[max_len(50)]
     pub description: String, // 4 + len()
 }
+
+const DISCRIMINATOR: usize = 8;
 ```
 
-For this account struct, we will be implementing the space trait:
+Using the `#[derive(InitSpace)]` macro on the `AccountStruct` automatically
+calculates the `INIT_SPACE` constant which represents the space required for the
+account fields, including fixed-size fields and the length-prefixed strings.
 
-```rust
-/*
-    For the MovieAccountState account, since it is dynamic, we implement the Space trait to calculate the space required for the account.
-    We add the STRING_LENGTH_PREFIX twice to the space to account for the title and description string prefix.
-    We need to add the length of the title and description to the space upon initialization.
- */
-impl Space for MovieAccountState {
-    const INIT_SPACE: usize = ANCHOR_DISCRIMINATOR + PUBKEY_SIZE + U8_SIZE + STRING_LENGTH_PREFIX + STRING_LENGTH_PREFIX;
-}
-```
-
-The `Space` trait will force us to define the space of our account for
-initialization, by defining the `INIT_SPACE` constant. This constant can then be
-used during the account initalization.
-
-Note that, in this case, since the account state is dynamic (`title` and
-`description` are strings without a fixed size), we will add
-`STRING_LENGTH_PREFIX` that represents 4 bytes (required to store their length)
-but we still need to add the length of the actual context of both strings during
-our account initialization (You will see that in the following steps).
-
-In sum, our `INIT_SPACE` constant will be 8 bytes for the anchor discriminator +
-32 bytes for the reviewer Pubkey + 1 byte for the rating + 4 bytes for the title
-length storage + 4 bytes for the description length storage.
+In cases of dynamic fields like strings, we can use the `#[max_len]` macro to
+specify the maximum length of these fields to determining the space needed for
+the account during initialization. Here, we have chosen the `title` string to be
+of length 20 (max), and the `description` string to be of length 50 (max).
 
 ### Custom error codes
 
 During our implementation, we will be doing some checks and throwing some custom
-errors in case those checks are bot successful.
+errors in case those checks are not successful.
 
 For, that let's go ahead and create an enum that will contain the different type
 of errors as well as the error messages associated:
@@ -511,8 +504,8 @@ more detail in the next chapter.
 
 ### Add Movie Review
 
-Next, let’s implement the `add_movie_review` instruction. The `add_movie_review`
-instruction will require a `Context` of type `AddMovieReview` that we’ll
+Next, let's implement the `add_movie_review` instruction. The `add_movie_review`
+instruction will require a `Context` of type `AddMovieReview` that we'll
 implement shortly.
 
 The instruction will require three additional arguments as instruction data
@@ -522,8 +515,8 @@ provided by a reviewer:
 - `description` - details of the review as a `String`
 - `rating` - rating for the movie as a `u8`
 
-Within the instruction logic, we’ll populate the data of the new `movie_review`
-account with the instruction data. We’ll also set the `reviewer` field as the
+Within the instruction logic, we'll populate the data of the new `movie_review`
+account with the instruction data. We'll also set the `reviewer` field as the
 `initializer` account from the instruction context.
 
 We will also perform some checks, using the `require!` macro, to make sure that:
@@ -536,6 +529,11 @@ The `require!` macro will perform a check and throw a custom error in case that
 check is not successful.
 
 ```rust
+const MIN_RATING: u8 = 1;
+const MAX_RATING: u8 = 5;
+const MAX_TITLE_LENGTH: usize = 20;
+const MAX_DESCRIPTION_LENGTH: usize = 50;
+
 #[program]
 pub mod anchor_movie_review_program{
     use super::*;
@@ -570,7 +568,7 @@ pub mod anchor_movie_review_program{
 }
 ```
 
-Next, let’s create the `AddMovieReview` struct that we used as the generic in
+Next, let's create the `AddMovieReview` struct that we used as the generic in
 the instruction's context. This struct will list the accounts the
 `add_movie_review` instruction requires.
 
@@ -585,9 +583,7 @@ Remember, you'll need the following macros:
 
 The `movie_review` account is a PDA that needs to be initialized, so we'll add
 the `seeds` and `bump` constraints as well as the `init` constraint with its
-required `payer` and `space` constraints. Regarding the required space, we will
-be using the `INIT_SPACE` constant that we defined in the account struct, and we
-will add the string length of the both the title and the description.
+required `payer` and `space` constraints.
 
 For the PDA seeds, we'll use the movie title and the reviewer's public key. The
 payer for the initialization should be the reviewer, and the space allocated on
@@ -596,14 +592,14 @@ public key, and the movie review's rating, title, and description.
 
 ```rust
 #[derive(Accounts)]
-#[instruction(title:String, description:String)]
+#[instruction(title:String)]
 pub struct AddMovieReview<'info> {
     #[account(
         init,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = MovieAccountState::INIT_SPACE + title.len() + description.len() // We add the length of the title and description to the init space
+        space = DISCRIMINATOR + MovieAccountState::INIT_SPACE
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
@@ -614,7 +610,7 @@ pub struct AddMovieReview<'info> {
 
 ### Update Movie Review
 
-Next, let’s implement the `update_movie_review` instruction with a context whose
+Next, let's implement the `update_movie_review` instruction with a context whose
 generic type is `UpdateMovieReview`.
 
 Just as before, the instruction will require three additional arguments as
@@ -624,7 +620,7 @@ instruction data provided by a reviewer:
 - `description` - details of the review
 - `rating` - rating for the movie
 
-Within the instruction logic we’ll update the `rating` and `description` stored
+Within the instruction logic we'll update the `rating` and `description` stored
 on the `movie_review` account.
 
 While the `title` doesn't get used in the instruction function itself, we'll
@@ -643,6 +639,16 @@ pub mod anchor_movie_review_program {
         description: String,
         rating: u8,
     ) -> Result<()> {
+
+        // We require that the rating is between 1 and 5
+        require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+
+        // We require that the title is not longer than 20 characters
+        require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
+
+        // We require that the description is not longer than 50 characters
+        require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+
         msg!("Movie review account space reallocated");
         msg!("Title: {}", title);
         msg!("Description: {}", description);
@@ -658,7 +664,7 @@ pub mod anchor_movie_review_program {
 }
 ```
 
-Next, let’s create the `UpdateMovieReview` struct to define the accounts that
+Next, let's create the `UpdateMovieReview` struct to define the accounts that
 the `update_movie_review` instruction needs.
 
 Since the `movie_review` account will have already been initialized by this
@@ -672,13 +678,13 @@ We'll also still need the `seeds` and `bump` constraints as we had them in
 
 ```rust
 #[derive(Accounts)]
-#[instruction(title:String, description:String)]
+#[instruction(title:String)]
 pub struct UpdateMovieReview<'info> {
     #[account(
         mut,
         seeds = [title.as_bytes(), initializer.key().as_ref()],
         bump,
-        realloc = MovieAccountState::INIT_SPACE + title.len() + description.len(), // We add the length of the title and description to the init space
+        realloc = DISCRIMINATOR + MovieAccountState::INIT_SPACE,
         realloc::payer = initializer,
         realloc::zero = true,
     )]
@@ -702,7 +708,7 @@ expanding the space allocated to the account.
 
 ### Delete Movie Review
 
-Lastly, let’s implement the `delete_movie_review` instruction to close an
+Lastly, let's implement the `delete_movie_review` instruction to close an
 existing `movie_review` account.
 
 We'll use a context whose generic type is `DeleteMovieReview` and won't include
@@ -726,7 +732,7 @@ pub mod anchor_movie_review_program {
 }
 ```
 
-Next, let’s implement the `DeleteMovieReview` struct.
+Next, let's implement the `DeleteMovieReview` struct.
 
 ```rust
 #[derive(Accounts)]
@@ -854,7 +860,7 @@ it("Deletes a movie review", async () => {
 Lastly, run `anchor test` and you should see the following output in the
 console.
 
-```shell
+```bash
   anchor-movie-review-program
     ✔ Movie review is added` (139ms)
     ✔ Movie review is updated` (404ms)
@@ -873,7 +879,7 @@ continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Equipped with the concepts
+Now it's your turn to build something independently. Equipped with the concepts
 introduced in this lesson, try to recreate the Student Intro program that we've
 used before using the Anchor framework.
 

@@ -10,10 +10,11 @@
   "scripts": {
     "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer2 build --clearCache",
-    "dev": "yarn contentlayer:build && next dev -p 3001",
-    "build": "yarn prettier:i18n && yarn contentlayer:build && next build",
+    "code-import": "npx esrun coder.ts",
+    "dev": "yarn code-import && yarn contentlayer:build && concurrently -p \"[{name}]\" -n \"code import,next dev\" -c \"bgBlue.bold,bgGreen.bold\" \"yarn code-import --watch\" \"next dev -p 3001\"",
+    "build": "yarn code-import && yarn prettier:i18n && yarn contentlayer:build && next build",
     "start": "next start -p 3001",
-    "test": "yarn contentlayer:build",
+    "test": "yarn code-import && yarn prettier && && yarn contentlayer:build",
     "lint": "next lint",
     "prettier:i18n": "prettier -cw \"i18n/**/*.{js,jsx,ts,tsx,md,css,md,mdx}\" --ignore-path \"[]\"",
     "prettier": "prettier -c \"./**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
@@ -21,7 +22,8 @@
     "crowdin:download": "crowdin download && npm run prettier:i18n",
     "crowdin:upload": "crowdin upload sources",
     "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
-    "dev:sync": "yarn dev & (sleep 3 && yarn browser-sync)"
+    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install",
+    "dev:sync": "yarn dev & (sleep 5 && yarn browser-sync)"
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
@@ -40,7 +42,25 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
+    "@types/mdast": "^4.0.4",
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2",
     "contentlayer2": "^0.4.6",
-    "prettier": "^3.2.4"
+    "husky": "^9.1.4",
+    "ignore": "^5.3.1",
+    "lint-staged": "^15.2.7",
+    "mdast": "^3.0.0",
+    "prettier": "^3.2.4",
+    "remark": "^15.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "strip-indent": "^4.0.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
+    "vfile": "^6.0.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,json,ts,tsx,md,css,md,mdx,yml,yaml}": "yarn prettier:fix"
   }
 }

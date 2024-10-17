@@ -227,24 +227,43 @@ directly use it in the game.
 ```js
 useEffect(() => {
   if (!publicKey) {
+    console.log("Missing public key");
     return;
   }
+
   const [pda] = PublicKey.findProgramAddressSync(
     [Buffer.from("player", "utf8"), publicKey.toBuffer()],
     new PublicKey(LUMBERJACK_PROGRAM_ID),
   );
-  try {
-    program.account.playerData.fetch(pda).then(data => {
-      setGameState(data);
-    });
-  } catch (e) {
-    window.alert("No player data found, please init!");
-  }
 
-  connection.onAccountChange(pda, account => {
-    setGameState(program.coder.accounts.decode("playerData", account.data));
-  });
+  const fetchPlayerData = async () => {
+    try {
+      const data = await program.account.playerData.fetch(pda);
+      setGameState(data);
+    } catch (error) {
+      console.error("Error fetching player data:", error);
+      window.alert("No player data found, please init!");
+    }
+  };
+
+  fetchPlayerData();
+
+  const handleAccountChange = (account: AccountInfo<Buffer>) => {
+    try {
+      const decodedData = program.coder.accounts.decode("playerData", account.data);
+      setGameState(decodedData);
+    } catch (error) {
+      console.error("Error decoding account data:", error);
+    }
+  };
+
+  const subscriptionId = connection.onAccountChange(pda, handleAccountChange);
+
+  return () => {
+    connection.removeAccountChangeListener(subscriptionId);
+  };
 }, [publicKey]);
+
 ```
 
 ### Calculate energy and show count down

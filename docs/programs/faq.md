@@ -1,23 +1,10 @@
 ---
 title: "FAQ"
+sidebarSortOrder: 7
 ---
 
-When writing or interacting with Solana programs, there are common questions or
-challenges that often come up. Below are resources to help answer these
-questions.
-
-If not addressed here, ask on
-[StackExchange](https://solana.stackexchange.com/questions/ask?tags=solana-program)
-with the `solana-program` tag.
-
-## Limitations
-
-Developing programs on the Solana blockchain have some inherent limitation
-associated with them. Below is a list of common limitation that you may run
-into.
-
-See [limitations of developing programs](/docs/programs/limitations.md) for more
-details
+Post your questions on
+[StackExchange](https://solana.stackexchange.com/questions/ask).
 
 ## Berkeley Packet Filter (BPF)
 
@@ -77,19 +64,10 @@ Some instructions require the account to be a signer; this error is returned if
 an account is expected to be signed but is not.
 
 An implementation of a program might also cause this error when performing a
-cross-program invocation that requires a signed program address, but the passed
-signer seeds passed to [`invoke_signed`](/docs/core/cpi.md) don't match the
+[cross-program invocation](/docs/core/cpi.md) that requires a signed program
+address, but the passed signer seeds passed to `invoke_signed` don't match the
 signer seeds used to create the program address
 [`create_program_address`](/docs/core/pda.md#createprogramaddress).
-
-## `rand` Rust dependency causes compilation failure
-
-See
-[Rust Project Dependencies](/docs/programs/lang-rust.md#project-dependencies)
-
-## Rust restrictions
-
-See [Rust restrictions](/docs/programs/lang-rust.md#restrictions)
 
 ## Stack
 
@@ -106,7 +84,7 @@ Error: Function _ZN16curve25519_dalek7edwards21EdwardsBasepointTable6create17h17
 ```
 
 The message identifies which symbol is exceeding its stack frame, but the name
-might be mangled if it is a Rust or C++ symbol.
+might be mangled.
 
 > To demangle a Rust symbol use [rustfilt](https://github.com/luser/rustfilt).
 
@@ -117,8 +95,6 @@ rustfilt _ZN16curve25519_dalek7edwards21EdwardsBasepointTable6create17h178b3d241
 curve25519_dalek::edwards::EdwardsBasepointTable::create
 ```
 
-To demangle a C++ symbol use `c++filt` from binutils.
-
 The reason a warning is reported rather than an error is because some dependent
 crates may include functionality that violates the stack frame restrictions even
 if the program doesn't use that functionality. If the program violates the stack
@@ -128,16 +104,16 @@ SBF stack frames occupy a virtual address range starting at `0x200000000`.
 
 ## Heap size
 
-Programs have access to a runtime heap either directly in C or via the Rust
-`alloc` APIs. To facilitate fast allocations, a simple 32KB bump heap is
-utilized. The heap does not support `free` or `realloc` so use it wisely.
+Programs have access to a runtime heap via the Rust `alloc` APIs. To facilitate
+fast allocations, a simple 32KB bump heap is utilized. The heap does not support
+`free` or `realloc`.
 
 Internally, programs have access to the 32KB memory region starting at virtual
 address 0x300000000 and may implement a custom heap based on the program's
 specific needs.
 
-- [Rust program heap usage](/docs/programs/lang-rust.md#heap)
-- [C program heap usage](/docs/programs/lang-c.md#heap)
+Rust programs implement the heap directly by defining a custom
+[`global_allocator`](https://github.com/solana-labs/solana/blob/d9b0fc0e3eec67dfe4a97d9298b15969b2804fab/sdk/program/src/entrypoint.rs#L72)
 
 ## Loaders
 
@@ -157,11 +133,7 @@ For all practical purposes program should always be written to target the latest
 BPF loader and the latest loader is the default for the command-line interface
 and the javascript APIs.
 
-For language specific information about implementing a program for a particular
-loader see:
-
 - [Rust program entrypoints](/docs/programs/lang-rust.md#program-entrypoint)
-- [C program entrypoints](/docs/programs/lang-c.md#program-entrypoint)
 
 ### Deployment
 
@@ -193,10 +165,7 @@ results in various parameters falling on aligned offsets within the aligned byte
 array. This allows deserialization implementations to directly reference the
 byte array and provide aligned pointers to the program.
 
-For language specific information about serialization see:
-
 - [Rust program parameter deserialization](/docs/programs/lang-rust.md#parameter-deserialization)
-- [C program parameter deserialization](/docs/programs/lang-c.md#parameter-deserialization)
 
 The latest loader serializes the program input parameters as follows (all
 encoding is little endian):

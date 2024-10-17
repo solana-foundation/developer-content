@@ -159,7 +159,7 @@ There are a couple of notes when transferring tokens with the `transfer fee`
 extension.
 
 First, the recipient is the one who "pays" for the fee. If I send 100 tokens
-with basis points of 50 (5%), the recipient will receive 95 tokens (five
+with basis points of 500 (5%), the recipient will receive 95 tokens (five
 withheld)
 
 Second, the fee is calculated not by the tokens sent, but the smallest unit of
@@ -167,9 +167,9 @@ said token. In Solana programming, we always specify amounts to be transferred,
 minted or burned in their smallest unit. To send one SOL to someone, we actually
 send `1 * 10 ^ 9` lamports. Another way to look at it is if you wanted to send
 one US dollar, you're actually sending 100 pennies. Let's make this dollar a
-token with a 50 basis points (5%) transfer fee. Sending one dollar, would result
-in a five cent fee. Now let's say we have a max fee of 10 cents, this will
-always be the highest fee, even if we send $10,000.
+token with a 500 basis points (5%) transfer fee. Sending one dollar, would
+result in a five cent fee. Now let's say we have a max fee of 10 cents, this
+will always be the highest fee, even if we send $10,000.
 
 The calculation can be summed up like this:
 
@@ -535,7 +535,7 @@ the local RPC URL.
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 ```
 
-Alternatively, if you’d like to use testnet or devnet, import the
+Alternatively, if you'd like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
 ```typescript

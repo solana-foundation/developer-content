@@ -61,13 +61,13 @@ Here's a list of the tools you'll need to have installed:
 - [Node.js](https://nodejs.org/en/download/)
 - [Yarn](https://classic.yarnpkg.com/en/docs/install)
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Solana CLI](/content/guides/getstarted/setup-local-development.md#3-install-solana-cli)
+- [Solana CLI](/docs/intro/installation)
 - [Anchor](https://www.anchor-lang.com/docs/installation)
 
 You can download Node and Yarn from their setup pages which I've linked above.
 For the rest, check out the
-[Solana Local development guide](/content/guides/getstarted/setup-local-development.md)
-which has detailed instructions for different operating systems.
+[Solana Local development guide](/docs/intro/installation) which has detailed
+instructions for different operating systems.
 
 **We'll be using Anchor 0.29 for this guide**. You can make sure you're using it
 with `avm use 0.29.0`.
@@ -489,7 +489,7 @@ pub struct Counter {
 
 Make sure you go over the comments!
 
-The `initialize` instruction instruction does only one this: it creates a new
+The `initialize` instruction does only one thing: it creates a new
 account of the `Counter` type. To do this, we need to know who's paying, details
 of the account we're creating like the space and the address, and which program
 to use to create the account.
@@ -1227,20 +1227,33 @@ export default function CounterState() {
   const [counterData, setCounterData] = useState<CounterData | null>(null);
 
   useEffect(() => {
-    // Fetch initial account data
-    program.account.counter.fetch(counterPDA).then(data => {
-      setCounterData(data);
-    });
+    const fetchCounterData = async () => {
+      try {
+        // Fetch initial account data
+        const data = await program.account.counter.fetch(counterPDA);
+        setCounterData(data);
+      } catch (error) {
+        console.error("Error fetching counter data:", error);
+      }
+    };
+
+    fetchCounterData();
 
     // Subscribe to account change
     const subscriptionId = connection.onAccountChange(
       // The address of the account we want to watch
       counterPDA,
-      // callback for when the account changes
+      // Callback for when the account changes
       accountInfo => {
-        setCounterData(
-          program.coder.accounts.decode("counter", accountInfo.data),
-        );
+        try {
+          const decodedData = program.coder.accounts.decode(
+            "counter",
+            accountInfo.data,
+          );
+          setCounterData(decodedData);
+        } catch (error) {
+          console.error("Error decoding account data:", error);
+        }
       },
     );
 
@@ -1248,8 +1261,9 @@ export default function CounterState() {
       // Unsubscribe from account change
       connection.removeAccountChangeListener(subscriptionId);
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program]);
+  }, [program, counterPDA, connection]);
 
   // Render the value of the counter
   return <p className="text-lg">Count: {counterData?.count?.toString()}</p>;
