@@ -363,42 +363,6 @@ You should see output similar to the following:
 anchor-cli 0.30.1
 ```
 
-If you encounter the error `type annotations needed for Box<_>` when installing
-the Anchor CLI, try changing your Rust version to 1.79.0 and attempt the
-installation again.
-
-<Accordion>
-<AccordionItem title={"error[E0282]: type annotations needed for `Box<_>`"}>
-
-```
-   Compiling time v0.3.29
-error[E0282]: type annotations needed for `Box<_>`
-  --> /home/x/.cargo/registry/src/index.crates.io-6f17d22bba15001f/time-0.3.29/src/format_description/parse/mod.rs:83:9
-   |
-83 |     let items = format_items
-   |         ^^^^^
-...
-86 |     Ok(items.into())
-   |              ---- type must be known at this point
-   |
-help: consider giving `items` an explicit type, where the placeholders `_` are specified
-   |
-83 |     let items: Box<_> = format_items
-   |              ++++++++
-```
-
-You can find more context regarding this error
-[here](https://github.com/coral-xyz/anchor/pull/3143)
-
-</AccordionItem>
-</Accordion>
-
-Run the following command to install Rust 1.79.0:
-
-```shell
-rustup default 1.79.0
-```
-
 When installing the Anchor CLI on Linux or WSL, you may encounter this error:
 
 ```
