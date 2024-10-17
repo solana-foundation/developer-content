@@ -422,9 +422,9 @@ allocates, the higher the withheld rent deposit will be.
 
 ### Rent exempt
 
-Accounts must maintain a lamport balance greater than the minimum required to store
-its respective data on-chain. This is called "_rent exempt_" and that balance is
-called the "_minimum balance for rent exemption_".
+Accounts must maintain a lamport balance greater than the minimum required to
+store its respective data on-chain. This is called "_rent exempt_" and that
+balance is called the "_minimum balance for rent exemption_".
 
 > New accounts (and programs) on Solana are **REQUIRED** to be initialized with
 > enough lamports to become _rent exempt_. This was not always the case.

@@ -489,10 +489,10 @@ pub struct Counter {
 
 Make sure you go over the comments!
 
-The `initialize` instruction does only one thing: it creates a new
-account of the `Counter` type. To do this, we need to know who's paying, details
-of the account we're creating like the space and the address, and which program
-to use to create the account.
+The `initialize` instruction does only one thing: it creates a new account of
+the `Counter` type. To do this, we need to know who's paying, details of the
+account we're creating like the space and the address, and which program to use
+to create the account.
 
 Let's go line by line:
 
