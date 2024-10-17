@@ -414,13 +414,13 @@ pub fn handler(ctx: Context<ConsumeRandomness>) -> Result <()> {
 }
 ```
 
-Now you have randomness! Hooray! But there is one last thing we have not talked
-about yet and that's how the randomness is returned. Switchboard, gives you your
+Now you have randomness! Hooray! But there is one last thing we have not discussed 
+yet and that's how the randomness is returned. Switchboard, gives you your
 randomness calling
-`[get_result()](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/vrf.rs#L122)`.
+[`get_result()`](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/vrf.rs#L122).
 This method returns the `current_round.result` field of the `vrf` account
 SwitchboardDecimal format, which is really just a buffer of 32 random
-`[u8](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L65C26-L65C26)`
+[`u8`](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L65C26-L65C26)
 unsigned-integers. You can use these unsigned-integers however you see fit in
 your program, but a very common method is to treat each integer in the buffer as
 its own random number. For example, if you need a dice roll (1-6) just take the
