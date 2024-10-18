@@ -471,7 +471,7 @@ export async function handler(req: NextRequest): Promise<NextResponse> {
   if (req.method === "GET") {
     return get();
   } else if (req.method === "POST") {
-    return await post(req);
+    return post(req);
   } else {
     return NextResponse.json({ error: "Method not allowed" }, { status: 405 });
   }
