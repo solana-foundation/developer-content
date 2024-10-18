@@ -105,27 +105,38 @@ contains two instructions:
 This would look as follows:
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import {
+  Transaction,
+  PublicKey,
+  Connection,
+  Keypair,
+  SystemProgram,
+} from "@solana/web3.js";
+import {
+  getMinimumBalanceForRentExemptAccount,
+  TOKEN_PROGRAM_ID,
+  MINT_SIZE,
+  createInitializeMint2Instruction,
+} from "@solana/spl-token";
 
 async function buildCreateMintTransaction(
-  connection: web3.Connection,
-  payer: web3.PublicKey,
+  connection: Connection,
+  payer: PublicKey,
   decimals: number,
-): Promise<web3.Transaction> {
-  const lamports = await token.getMinimumBalanceForRentExemptMint(connection);
-  const accountKeypair = web3.Keypair.generate();
-  const programId = token.TOKEN_PROGRAM_ID;
+): Promise<Transaction> {
+  const lamports = await getMinimumBalanceForRentExemptMint(connection);
+  const accountKeypair = Keypair.generate();
+  const programId = TOKEN_PROGRAM_ID;
 
-  const transaction = new web3.Transaction().add(
-    web3.SystemProgram.createAccount({
+  const transaction = new Transaction().add(
+    SystemProgram.createAccount({
       fromPubkey: payer,
       newAccountPubkey: accountKeypair.publicKey,
-      space: token.MINT_SIZE,
+      space: MINT_SIZE,
       lamports,
       programId,
     }),
-    token.createInitializeMint2Instruction(
+    createInitializeMint2Instruction(
       accountKeypair.publicKey,
       decimals,
       payer,
@@ -224,29 +235,41 @@ hood:
    new token account
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import {
+  Transaction,
+  PublicKey,
+  Connection,
+  Keypair,
+  SystemProgram,
+} from "@solana/web3.js";
+import {
+  getMinimumBalanceForRentExemption,
+  TOKEN_PROGRAM_ID,
+  getMint,
+  getAccountLenForMint,
+  createInitializeAccountInstruction,
+} from "@solana/spl-token";
 
 async function buildCreateTokenAccountTransaction(
-  connection: web3.Connection,
-  payer: web3.PublicKey,
-  mint: web3.PublicKey,
-): Promise<web3.Transaction> {
-  const mintState = await token.getMint(connection, mint);
-  const accountKeypair = await web3.Keypair.generate();
-  const space = token.getAccountLenForMint(mintState);
+  connection: Connection,
+  payer: PublicKey,
+  mint: PublicKey,
+): Promise<Transaction> {
+  const mintState = await getMint(connection, mint);
+  const accountKeypair = await Keypair.generate();
+  const space = getAccountLenForMint(mintState);
   const lamports = await connection.getMinimumBalanceForRentExemption(space);
-  const programId = token.TOKEN_PROGRAM_ID;
+  const programId = TOKEN_PROGRAM_ID;
 
-  const transaction = new web3.Transaction().add(
-    web3.SystemProgram.createAccount({
+  const transaction = new Transaction().add(
+    SystemProgram.createAccount({
       fromPubkey: payer,
       newAccountPubkey: accountKeypair.publicKey,
       space,
       lamports,
       programId,
     }),
-    token.createInitializeAccountInstruction(
+    createInitializeAccountInstruction(
       accountKeypair.publicKey,
       mint,
       payer,
@@ -316,22 +339,25 @@ Under the hood, `createAssociatedTokenAccount` is doing two things:
    `createAssociatedTokenAccountInstruction`
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import { Transaction, PublicKey } from "@solana/web3.js";
+import {
+  getAssociatedTokenAddressSync,
+  createAssociatedTokenAccountInstruction,
+} from "@solana/spl-token";
 
 async function buildCreateAssociatedTokenAccountTransaction(
-  payer: web3.PublicKey,
-  mint: web3.PublicKey,
+  payer: PublicKey,
+  mint: PublicKey,
   allowOwnerOffCurve: boolean,
-): Promise<web3.Transaction> {
-  const associatedTokenAddress = await token.getAssociatedTokenAddressSync(
+): Promise<Transaction> {
+  const associatedTokenAddress = await getAssociatedTokenAddressSync(
     mint,
     payer,
     allowOwnerOffCurve,
   );
 
-  const transaction = new web3.Transaction().add(
-    token.createAssociatedTokenAccountInstruction(
+  const transaction = new Transaction().add(
+    createAssociatedTokenAccountInstruction(
       payer,
       associatedTokenAddress,
       payer,
@@ -385,17 +411,17 @@ Under the hood, the `mintTo` function simply creates a transaction with the
 instructions obtained from the `createMintToInstruction` function.
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import { Transaction, PublicKey } from "@solana/web3.js";
+import { createMintToInstruction } from "@solana/spl-token";
 
 async function buildMintToTransaction(
-  authority: web3.PublicKey,
-  mint: web3.PublicKey,
+  authority: PublicKey,
+  mint: PublicKey,
   amount: number,
-  destination: web3.PublicKey,
-): Promise<web3.Transaction> {
-  const transaction = new web3.Transaction().add(
-    token.createMintToInstruction(mint, destination, authority, amount),
+  destination: PublicKey,
+): Promise<Transaction> {
+  const transaction = new Transaction().add(
+    createMintToInstruction(mint, destination, authority, amount),
   );
 
   return transaction;
@@ -442,17 +468,17 @@ Under the hood, the `transfer` function simply creates a transaction with the
 instructions obtained from the `createTransferInstruction` function:
 
 ```typescript
-import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
+import { Transaction, PublicKey } from "@solana/web3.js";
+import { createTransferInstruction } from "@solana/spl-token";
 
 async function buildTransferTransaction(
-  source: web3.PublicKey,
-  destination: web3.PublicKey,
-  owner: web3.PublicKey,
+  source: PublicKey,
+  destination: PublicKey,
+  owner: PublicKey,
   amount: number,
-): Promise<web3.Transaction> {
-  const transaction = new web3.Transaction().add(
-    token.createTransferInstruction(source, destination, owner, amount),
+): Promise<Transaction> {
+  const transaction = new Transaction().add(
+    createTransferInstruction(source, destination, owner, amount),
   );
 
   return transaction;
