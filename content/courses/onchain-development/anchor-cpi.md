@@ -495,7 +495,7 @@ Next, let's update the `add_movie_review` instruction to do the following:
   the `DescriptionTooLong` error.
 - Make a CPI to the token program's `mint_to` instruction using the mint
   authority PDA as a signer. Note that we'll mint 10 tokens to the user but need
-  to adjust for the mint decimals by making it `10*10^6`.
+  to adjust for the mint decimals by making it `10 * 10u64.pow(6)`.
 
 Fortunately, we can use the `anchor_spl` crate to access helper functions and
 types like `mint_to` and `MintTo` for constructing our CPI to the Token Program.
@@ -561,7 +561,7 @@ pub fn add_movie_review(
                 &[ctx.bumps.mint]
             ]]
         ),
-        10*10^6
+        10 * 10u64.pow(6)
     )?;
 
     msg!("Minted tokens");
@@ -691,7 +691,7 @@ it("Movie review is added`", async () => {
   );
 
   const userAta = await getAccount(provider.connection, tokenAccount);
-  expect(Number(userAta.amount)).to.equal((10 * 10) ^ 6);
+  expect(Number(userAta.amount)).to.equal(10 * 10 ** 6);
 });
 ```
 
