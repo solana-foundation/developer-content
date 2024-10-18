@@ -380,7 +380,7 @@ pub struct InitializeMint<'info> {
         bump,
         payer = user,
         mint::decimals = 6,
-        mint::authority = user,
+        mint::authority = mint,
     )]
     pub mint: Account<'info, Mint>,
     #[account(mut)]
