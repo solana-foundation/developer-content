@@ -53,11 +53,12 @@ with the hash of the locally built program from the source code. You build your
 program in a controlled environment using the Solana Verify CLI and Docker. This
 ensures that the build process is deterministic and consistent across different
 systems. Once you have the executable, you can deploy it to the Solana network.
-During the build process a PDA of the
-[verify program](https://github.com/otter-sec/otter-verify) will be created.
-This PDA contains all the data necessary to verify the program. The PDA contains
-the program address, git url, commit hash and the arguments used to build the
-program.
+During the build process a
+[PDA](https://explorer.solana.com/address/63XDCHrwZu3mXsw2RUFb4tbNpChuUHx4eA5aJMnHkpQQ/anchor-account)
+of the [verify program](https://github.com/otter-sec/otter-verify) will be
+created. This PDA contains all the data necessary to verify the program. The PDA
+contains the program address, git url, commit hash and the arguments used to
+build the program.
 
 Using the data in the PDA everyone can run the verify program command locally
 and check if the program was built from the provided source code. Then everyone
@@ -91,6 +92,17 @@ Using verified builds provides the following benefits:
 # How do I create verified builds?
 
 To create verified builds, you'll need to follow these steps:
+
+Summary:
+
+- Commit your code to a public repository
+- Build a verified build in docker
+- Deploy the verified build
+- Verify the deployed program against public API
+
+If you verify your program which is not build in a docker container it will most
+likely fail because Solana program builds are not deterministic across different
+systems.
 
 <Steps>
 
@@ -132,7 +144,7 @@ If you need a specific version of the CLI, you can pin the version with:
 cargo install solana-verify --version $VERSION
 ```
 
-For extra caution, you can install a version directly from a specific commit:
+If desired, you can install a version directly from a specific commit:
 
 ```bash
 cargo install solana-verify --git https://github.com/Ellipsis-Labs/solana-verifiable-build --rev 13a1db2
@@ -143,7 +155,7 @@ cargo install solana-verify --git https://github.com/Ellipsis-Labs/solana-verifi
 To verify against a repository it needs to have a `Cargo.lock` file in the root
 directory of your repo. You can use this `Cargo.toml` example as a preset:
 
-```toml
+```toml filename="Cargo.toml"
 [workspace]
 members = ["program/programs/*"]
 resolver = "2"
@@ -231,6 +243,36 @@ solana-verify verify-from-repo -u $NETWORK_URL --program-id $PROGRAM_ID https://
 This command compares the onchain program with the executable built from the
 source at the specified commit hash.
 
+### Verify against public API
+
+Finally you can also directly verify the program against anyone that is running
+the verify API::
+
+```bash
+solana-verify verify-from-repo --remote -um --program-id PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY https://github.com/Ellipsis-Labs/phoenix-v1
+```
+
+The `--remote` flag sends a build request to the OtterSec API, which triggers a
+remote build of your program. Once the build is complete, the system verifies
+that the onchain hash of your program matches the hash of the generated build
+artifact from your repository.
+
+The default is the the
+[OtterSec API](https://github.com/otter-sec/solana-verified-programs-api).
+
+Once the build is done, which takes a while, and was successful you will be able
+to see your program as verified in the
+[OtterSec API for single programs](https://verify.osec.io/status/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
+and in the
+[Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build)
+and eventually also on the community-run website
+[SolanaVerify.org](https://www.solanaverify.org/) maintained by
+[0xDeep](https://x.com/0xDeep) and the
+[OtterSec verified programs API](https://verify.osec.io/verified-programs) and
+at last in the
+[Verified Programs Dune Dashboard](https://dune.com/jonashahn/verified-programs/dedf21e1-9b71-42c8-89f9-02ed94628657)
+contributing to a more healthy solana ecosystem.
+
 </Steps>
 
 ## Example verified build
@@ -240,7 +282,7 @@ Here’s an example of verifying the solana-games-preset with the ID
 repository:
 
 ```bash
-solana-verify verify-from-repo -url https://api.mainnet-beta.solana.com --program-id MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt https://github.com/solana-developers/solana-game-preset --library-name lumberjack --mount-path program
+solana-verify verify-from-repo -url https://api.mainnet-beta.solana.com --program-id MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt https://github.com/solana-developers/solana-game-preset --library-name lumberjack --mount-path program --commit-hash eaf772fd1f21fe03a9974587f5680635e970be38
 ```
 
 By default the `verify-from-repo` command takes the last commit on the main
@@ -265,19 +307,6 @@ a remote build of your program. Once the build is complete, the system verifies
 that the onchain hash of your program matches the hash of the generated build
 artifact from your repository.
 
-Once the build is done, which takes a while, and was successful you will be able
-to see your program as verified in the
-[OtterSec API for single programs](https://verify.osec.io/status/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
-and in the
-[Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build)
-and eventually also on the community-run website
-[SolanaVerify.org](https://www.solanaverify.org/) maintained by
-[0xDeep](https://x.com/0xDeep) and the
-[OtterSec verified programs API](https://verify.osec.io/verified-programs) and
-at last in the
-[Verified Programs Dune Dashboard](https://dune.com/jonashahn/verified-programs/dedf21e1-9b71-42c8-89f9-02ed94628657)
-contributing to a more healthy solana ecosystem.
-
 # Conclusion
 
 Using [verified builds on Solana](/content/guides/advanced/verified-builds.md)
@@ -286,6 +315,45 @@ leveraging tools like the Solana Verify CLI and Docker, you can maintain
 verifiable and secure builds that align with your source code. Always take the
 necessary precautions to use consistent environments, and consider governance
 solutions for safe upgrades and deployments.
+
+## Security + Disclaimer
+
+While verified builds are a powerful tool for ensuring the integrity of your
+Solana programs it is not completely trustless in the default setup. The docker
+images are build and hosted by the Ellipsis Labs team and the Solana Foundation.
+
+Be aware that you are building your project in a downloaded docker image and
+that your whole setup gets copied into that docker image for building including
+potentially sensitive information.
+
+If you want to have a completely trustless setup you can build the docker images
+yourself and host them on your own infrastructure. This way you can be sure that
+the docker images are not tampered with. You can find the scripts to create your
+own docker images in the
+[Verified builds repository](https://github.com/Ellipsis-Labs/solana-verifiable-build).
+
+Furthermore for the remote verification you are trusting the OtterSec API and
+the
+[Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
+to a certain degree.
+
+The API and the Solana Explorer could potentially be compromised and show you
+false information.
+
+If you want to have a completely trustless setup you can run the
+[Verify API](https://github.com/otter-sec/solana-verified-programs-api) yourself
+or run the program verification locally yourself using the `verify-from-repo`
+command using the on chain verify data that is saved in a
+[PDA](https://explorer.solana.com/address/63XDCHrwZu3mXsw2RUFb4tbNpChuUHx4eA5aJMnHkpQQ/anchor-account)
+that is derived from the programs deploy authority and the
+[verify program](https://explorer.solana.com/address/verifycLy8mB96wd9wqq3WDXQwM4oU6r42Th37Db9fC).
+
+The verify program is deployed by the [OtterSec team](https://osec.io/) and is
+not yet frozen so it can be upgraded at any time.
+
+The Solana Foundation, OtterSec and the Ellipsis Labs team are not responsible
+for any losses or damages that may occur from using the verified builds
+pipeline.
 
 # Security.txt for Solana programs
 
