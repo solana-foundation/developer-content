@@ -1,6 +1,6 @@
 ---
 date: 2024-06-29T00:00:00Z
-difficulty: intermediate
+difficulty: advanced
 title: "Durable & Offline Transaction Signing using Nonces"
 description:
   "One-stop shop for Solana's Durable Nonces: an easy way to power your Solana
@@ -219,7 +219,7 @@ AkrQn5QWLACSP5EMT2R1ZHyKaGWVFrDHJ6NL89HKtwjQ
 This is the base58 encoded hash that will be used in place of recent blockhashes
 while signing a transaction.
 
-### Displace Nonce Account
+### Display Nonce Account
 
 We can inspect the details of a Nonce Account in a prettier formatted version
 
@@ -479,19 +479,21 @@ Voila, we've gone through a very real-life use case of Durable Nonces. Now let's
 see how to use them in transactions using JavaScript and the
 [`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/) package.
 
-## Durable Nonces with Solana `web3.js`
+## Durable Nonces with Solana Web3.js
 
 We'll use a similar example of making a simple transfer to demonstrate how to
 send transactions using durable nonces.
 
-### Create Nonce Authority
+### Create Nonce Authority (Web3.js)
 
 ```ts
 const nonceAuthKP = Keypair.generate();
-// airdrop some SOL into this account from https://solfaucet.com/
 ```
 
-### Create Nonce Accounts
+_If you need SOL, you can use the
+[faucet.solana.com](https://faucet.solana.com/)_ to get some.
+
+### Create Nonce Accounts (Web3.js)
 
 ```ts
 const nonceKeypair = Keypair.generate();
@@ -533,7 +535,7 @@ const sig = await sendAndConfirmRawTransaction(
 console.log("Nonce initiated: ", sig);
 ```
 
-### Fetch Initialised Nonce Account
+### Fetch Nonce Account (Web3.js)
 
 ```ts
 const accountInfo = await connection.getAccountInfo(nonceKeypair.publicKey);
