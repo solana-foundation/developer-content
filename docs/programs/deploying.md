@@ -4,6 +4,7 @@ description:
   "Deploying onchain programs can be done using the Solana CLI using the
   Upgradable BPF loader to upload the compiled byte-code to the Solana
   blockchain."
+sidebarSortOrder: 3
 ---
 
 Solana onchain programs (otherwise known as "smart contracts") are stored in
@@ -140,19 +141,6 @@ on developers who deploy their own programs since
 [program accounts](/docs/core/accounts.md#custom-programs) are among the largest
 we typically see on Solana.
 
-#### Example of how much data is used for programs
-
-As a data point of the number of accounts and potential data stored on-chain,
-below is the distribution of the largest accounts (at least 100KB) at slot
-`103,089,804` on `mainnet-beta` by assigned on-chain program:
-
-1. **Serum Dex v3**: 1798 accounts
-2. **Metaplex Candy Machine**: 1089 accounts
-3. **Serum Dex v2**: 864 accounts
-4. **Upgradeable BPF Program Loader**: 824 accounts
-5. **BPF Program Loader v2**: 191 accounts
-6. **BPF Program Loader v1**: 150 accounts
-
 ### Reclaiming buffer accounts
 
 Buffer accounts are used by the Upgradeable BPF loader to temporarily store
@@ -164,9 +152,6 @@ Unfortunately, deploys fail occasionally and instead of reusing the buffer
 account, developers might retry their deployment with a new buffer and not
 realize that they stored a good chunk of SOL in a forgotten buffer account from
 an earlier deploy.
-
-> As of slot `103,089,804` on `mainnet-beta` there are 276 abandoned buffer
-> accounts that could be reclaimed!
 
 Developers can check if they own any abandoned buffer accounts by using the
 Solana CLI:

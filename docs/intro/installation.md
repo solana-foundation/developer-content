@@ -1,11 +1,15 @@
 ---
 title: Installation
+seoTitle: Install the Solana CLI and Anchor
 sidebarSortOrder: 1
 description:
   "Easily setup your local development environment for Solana development on
   Linux, Mac or Windows. Including installing Rust, the Solana CLI, and Anchor."
 altRoutes:
   - /developers/guides/getstarted/setup-local-development
+  - /docs/install
+  - /install
+  - /setup
 ---
 
 This section covers the steps to set up your local environment for Solana
@@ -190,8 +194,7 @@ Close and reopen your terminal to apply the PATH changes or run the following in
 export PATH="/Users/test/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
-<!-- prettier-ignore -->
-<Tabs groupId="language" items={['Linux', 'Mac']}>
+<Tabs groupId="language" items="Linux, Mac">
 <Tab value="Linux">
 
 If you are using a Linux or WSL terminal, you can add the PATH environment
@@ -260,11 +263,65 @@ agave-install update
 programs. The Anchor framework leverages Rust macros to simplify the process of
 writing Solana programs.
 
-Install the Anchor CLI with the following command:
+There are two ways to install the Anchor CLI and tooling:
+
+1. Using Anchor Version Manager (AVM) - is the **recommended installation**
+   method since it simplifies updating Anchor versions in the future
+2. Without AVM - this requires more a manual process to update Anchor versions
+   later
+
+<Tabs groupId="anchor" items="AVM, Without AVM">
+<Tab value="AVM">
+
+The Anchor version manager (AVM) allows you to install and manage different
+Anchor versions on your system, including more easily updating Anchor versions
+in the future.
+
+Install AVM with the following command:
+
+```shell
+cargo install --git https://github.com/coral-xyz/anchor avm --force
+```
+
+Test to ensure AVM was installed and is accessible:
+
+```shell
+avm --version
+```
+
+Install the latest version of Anchor CLI using AVM:
+
+```shell
+avm install latest
+avm use latest
+```
+
+Or install a specific version of the Anchor CLI by declaring which version you
+want to install:
+
+```shell
+avm install 0.30.1
+avm use 0.30.1
+```
+
+> Don't forget to run the `avm use` command to declare which Anchor CLI version
+> should be used on your system.
+>
+> - If you installed the `latest` version, run `avm use latest`.
+> - If you installed the version `0.30.1`, run `avm use 0.30.1`.
+
+</Tab>
+
+<Tab value="Without AVM">
+
+Install a specific version of the Anchor CLI with the following command:
 
 ```shell
 cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.1 anchor-cli
 ```
+
+</Tab>
+</Tabs>
 
 You may see the following warning during installation. However, it does not
 affect the installation process.
@@ -294,7 +351,7 @@ warning: `anchor-cli` (lib) generated 1 warning
 </AccordionItem>
 </Accordion>
 
-To verify that the installation was successful, check the Ancor CLI version:
+To verify that the installation was successful, check the Anchor CLI version:
 
 ```shell
 anchor --version
@@ -304,42 +361,6 @@ You should see output similar to the following:
 
 ```
 anchor-cli 0.30.1
-```
-
-If you encounter the error `type annotations needed for Box<_>` when installing
-the Anchor CLI, try changing your Rust version to 1.79.0 and attempt the
-installation again.
-
-<Accordion>
-<AccordionItem title="error[E0282]: type annotations needed for `Box<_>`">
-
-```
-   Compiling time v0.3.29
-error[E0282]: type annotations needed for `Box<_>`
-  --> /home/x/.cargo/registry/src/index.crates.io-6f17d22bba15001f/time-0.3.29/src/format_description/parse/mod.rs:83:9
-   |
-83 |     let items = format_items
-   |         ^^^^^
-...
-86 |     Ok(items.into())
-   |              ---- type must be known at this point
-   |
-help: consider giving `items` an explicit type, where the placeholders `_` are specified
-   |
-83 |     let items: Box<_> = format_items
-   |              ++++++++
-```
-
-You can find more context regarding this error
-[here](https://github.com/coral-xyz/anchor/pull/3143)
-
-</AccordionItem>
-</Accordion>
-
-Run the following command to install Rust 1.79.0:
-
-```shell
-rustup default 1.79.0
 ```
 
 When installing the Anchor CLI on Linux or WSL, you may encounter this error:

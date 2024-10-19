@@ -242,7 +242,7 @@ the local RPC URL.
 
 `const connection = new Connection("http://127.0.0.1:8899", "confirmed");`
 
-Alternatively, if you’d like to use testnet or devnet, import the
+Alternatively, if you'd like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
 ```typescript
@@ -600,7 +600,7 @@ extension.
 npx esrun src/index.ts
 ```
 
-Congratulations! We’ve just tested the required memo extension!
+Congratulations! We've just tested the required memo extension!
 
 ## Challenge
 

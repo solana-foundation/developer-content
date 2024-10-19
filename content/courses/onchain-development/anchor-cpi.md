@@ -121,14 +121,16 @@ One key benefit of `CpiContext` is that the `accounts` argument is a generic
 type, allowing you to pass any object implementing the `ToAccountMetas` and
 `ToAccountInfos<'info>` traits.
 
-These traits are added by the `#[derive(Accounts)]` attribute macro, which
-you've used for structuring instruction accounts. You can reuse these structs
-with `CpiContext`, improving code organization and type safety.
+These traits are added by the `#[derive(Accounts)]` attribute macro you've used
+before, to specify the accounts required by your instruction handlers. You can
+use also use `#[derive(Accounts)]` structs with `CpiContext`.
 
-#### Invoking an instruction on another Anchor program
+This helps with code organization and type safety.
 
-When the program you're calling is an Anchor program with a published crate,
-Anchor can generate instruction builders and CPI helper functions automatically.
+#### Invoke an instruction handler on another Anchor program
+
+When calling another Anchor program with a published crate, Anchor can generate
+instruction builders and CPI helper functions for you.
 
 To declare your program's dependency on another program, add the following to
 your program's [`Cargo.toml`](https://www.anchor-lang.com/docs/manifest):
@@ -399,14 +401,14 @@ pub struct InitializeMint<'info> {
         bump,
         payer = user,
         mint::decimals = 6,
-        mint::authority = mint,
+        mint::authority = user,
     )]
     pub mint: Account<'info, Mint>,
     #[account(mut)]
     pub user: Signer<'info>,
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
-    pub system_program: Program<'info, System>
+    pub system_program: Program<'info, System>,
 }
 ```
 
@@ -473,7 +475,7 @@ pub struct AddMovieReview<'info> {
         seeds=[title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = MovieAccountState::INIT_SPACE + title.len() + description.len()
+        space = DISCRIMINATOR + MovieAccountState::INIT_SPACE
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
@@ -538,15 +540,29 @@ use anchor_spl::associated_token::AssociatedToken;
 Next, update the `add_movie_review` instruction handler to:
 
 ```rust
-pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description: String, rating: u8) -> Result<()> {
+pub fn add_movie_review(
+    ctx: Context<AddMovieReview>,
+    title: String,
+    description: String,
+    rating: u8
+) -> Result<()> {
     // We require that the rating is between 1 and 5
-    require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+    require!(
+        rating >= MIN_RATING && rating <= MAX_RATING,
+        MovieReviewError::InvalidRating
+    );
 
     // We require that the title is not longer than 20 characters
-    require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
+    require!(
+        title.len() <= MAX_TITLE_LENGTH,
+        MovieReviewError::TitleTooLong
+    );
 
     // We require that the description is not longer than 50 characters
-    require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+    require!(
+        description.len() <= MAX_DESCRIPTION_LENGTH,
+        MovieReviewError::DescriptionTooLong
+    );
 
     msg!("Movie review account created");
     msg!("Title: {}", title);
@@ -586,12 +602,23 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
 Here we are only adding the check that `rating` and `description` are valid.
 
 ```rust
-pub fn update_movie_review(ctx: Context<UpdateMovieReview>, title: String, description: String, rating: u8) -> Result<()> {
+pub fn update_movie_review(
+    ctx: Context<UpdateMovieReview>,
+    title: String,
+    description: String,
+    rating: u8
+) -> Result<()> {
     // We require that the rating is between 1 and 5
-    require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+    require!(
+        rating >= MIN_RATING && rating <= MAX_RATING,
+        MovieReviewError::InvalidRating
+    );
 
     // We require that the description is not longer than 50 characters
-    require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+    require!(
+        description.len() <= MAX_DESCRIPTION_LENGTH,
+        MovieReviewError::DescriptionTooLong
+    );
 
     msg!("Movie review account space reallocated");
     msg!("Title: {}", title);

@@ -11,7 +11,7 @@ have a private key associated with them. You can check this by looking to see if
 the public key lies on the ed25519 curve. Only public keys that lie on the curve
 can be controlled by users with wallets.
 
-```javascript file="check-public-key.ts"
+```javascript file=/code/cookbook/wallets/check-public-key.ts#L1-L2,#L3-L19
 import { PublicKey } from "@solana/web3.js";
 
 // Note that Keypair.generate() will always give a public key that is valid for users

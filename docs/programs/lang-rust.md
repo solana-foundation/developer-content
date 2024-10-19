@@ -1,21 +1,13 @@
 ---
 title: "Developing with Rust"
+sidebarSortOrder: 4
 ---
 
 Solana supports writing onchain programs using the
 [Rust](https://www.rust-lang.org/) programming language.
 
-<Callout title="Hello World: Get started with Solana development">
-
-To quickly get started with Solana development and build your first Rust
-program, take a look at these detailed quick start guides:
-
-- [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
-  No installation needed.
 - [Setup your local environment](/docs/intro/installation) and use the local
   test validator.
-
-</Callout>
 
 ## Project Layout
 
@@ -68,8 +60,7 @@ For example:
 First setup the environment:
 
 - Install the latest Rust stable from https://rustup.rs/
-- Install the latest
-  [Solana command-line tools](https://docs.solanalabs.com/cli/install)
+- Install the latest [Solana command-line tools](/docs/intro/installation.md)
 
 The normal cargo build is available for building programs against your host
 machine which can be used for unit testing:
@@ -296,14 +287,10 @@ can emulate `println!` by using `format!`:
 msg!("Some variable: {:?}", variable);
 ```
 
-The [debugging](/docs/programs/debugging.md#logging) section has more
-information about working with program logs the [Rust examples](#examples)
-contains a logging example.
-
 ## Panicking
 
 Rust's `panic!`, `assert!`, and internal panic results are printed to the
-[program logs](/docs/programs/debugging.md#logging) by default.
+program logs by default.
 
 ```shell
 INFO  solana_runtime::message_processor] Finalized account CGLhHSuWsp1gT4B7MY2KACqp9RUwQRhcUFfVSuxpSajZ
