@@ -364,7 +364,7 @@ new movie review.
 To get started, we will be using the final state of the Anchor Movie Review
 program from the previous lesson. So, if you just completed that lesson then
 you're all set and ready to go. If you are just jumping in here, no worries, you
-can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
+can [download the starter code](https://github.com/solana-developers/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
 
 ### Add dependencies to Cargo.toml
@@ -372,7 +372,7 @@ We'll be using the `solution-pdas` branch as our starting point.
 Before we get started we need to enable the `init-if-needed` feature and add the
 `anchor-spl` crate to the dependencies in `Cargo.toml`. If you need to brush up
 on the `init-if-needed` feature take a look at the
-[Anchor PDAs and Accounts lesson](/content/courses/onchain-development/anchor-pdas.md)).
+[Anchor PDAs and Accounts lesson](/content/courses/onchain-development/anchor-pdas.md).
 
 ```rust
 [dependencies]
@@ -745,7 +745,7 @@ Anchor Movie Review Program
 
 If you need more time with the concepts from this lesson or got stuck along the
 way, feel free to take a look at the
-[solution code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-add-tokens).
+[solution code](https://github.com/solana-developers/anchor-movie-review-program/tree/solution-add-tokens).
 Note that the solution to this lab is on the `solution-add-tokens` branch.
 
 ## Challenge
@@ -757,7 +757,7 @@ to users when they introduce themselves.
 
 Try to do this independently if you can! But if you get stuck, feel free to
 reference
-this [solution code](https://github.com/Unboxed-Software/anchor-student-intro-program/tree/cpi-challenge).
+this [solution code](https://github.com/solana-developers/anchor-student-intro-program/tree/cpi-challenge).
 Note that your code may look slightly different than the solution code depending
 on your implementation.
 
