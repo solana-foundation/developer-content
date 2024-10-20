@@ -414,10 +414,10 @@ const wallet = useAnchorWallet();
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 
-const program = new Program(idl as Idl) as Program<CounterProgram>;
+const program = new Program(idl as CounterProgram); 
 
 // we can also explicitly mention the provider
-const program = new Program(idl as Idl, provider) as Program<CounterProgram>;
+const program = new Program(idl as CounterProgram, provider);
 ```
 
 ### Anchor `MethodsBuilder`
