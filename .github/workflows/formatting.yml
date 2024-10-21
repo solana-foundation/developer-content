@@ -11,18 +11,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Use Node.js node
-        uses: actions/setup-node@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: 20
+          cache: "pnpm"
       - name: before_install
         run:
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
           && sudo sysctl -p
-
-      - name: installing yarn
-        run: yarn install
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: installing node modules
+        run: pnpm install
       - name: prettier:check
-        run: yarn prettier
+        run: pnpm prettier
       - name: lint
-        run: yarn lint
+        run: pnpm lint

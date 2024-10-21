@@ -44,10 +44,10 @@ jobs:
           && sudo sysctl -p
 
       # perform steps to modify as desired
-      - name: yarn install
-        run: yarn install
-      - name: yarn prettier:fix
-        run: yarn prettier:fix
+      - name: pnpm install
+        run: pnpm install
+      - name: pnpm prettier:fix
+        run: pnpm prettier:fix
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
