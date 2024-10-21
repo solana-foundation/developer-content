@@ -49,7 +49,7 @@ For example:
 
 - The ability to mint new tokens is given to the account that is the 'mint
   authority' for the token mint.
-- The ability to upgrade a prigram is given to the account that is the 'upgrade
+- The ability to upgrade a program is given to the account that is the 'upgrade
   authority' of a program.
 
 ## bank state
