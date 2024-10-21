@@ -414,7 +414,7 @@ const wallet = useAnchorWallet();
 const provider = new AnchorProvider(connection, wallet, {});
 setProvider(provider);
 
-const program = new Program(idl as CounterProgram); 
+const program = new Program(idl as CounterProgram);
 
 // we can also explicitly mention the provider
 const program = new Program(idl as CounterProgram, provider);
