@@ -8,21 +8,26 @@ jobs:
   Format:
     name: Test formatting via prettier/lint...
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Install Node.js
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - name: before_install
         run:
           echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
           && sudo sysctl -p
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-      - name: installing node modules
+      - name: Install dependencies
         run: pnpm install
       - name: prettier:check
         run: pnpm prettier
