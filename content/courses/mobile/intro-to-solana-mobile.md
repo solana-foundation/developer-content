@@ -50,7 +50,7 @@ the
 can work with any wallet.
 
 We will dig into the specifics of the MWA in a
-[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
+[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively opens
 a WebSocket between applications to facilitate communication. That way a
 separate app can provide the wallet app with the transaction to be signed and
 sent, and the wallet app can respond with appropriate status updates.
@@ -172,7 +172,7 @@ const account = await connection.getAccountInfo(publicKey);
 ```
 
 > **NOTE:** If you need a refresher, refer to our
-> [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data).
+> [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data.md).
 
 ## Connecting to a Wallet
 
