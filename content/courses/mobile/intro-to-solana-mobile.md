@@ -41,7 +41,7 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-Native mobile wallets hold your private keys and use them to sign and send
+Native mobile wallets hold your secret keys (previously referred to as private keys) and use them to sign and send
 transactions just like web extension wallets. However native mobile wallets use
 the
 [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
@@ -177,8 +177,7 @@ const account = await connection.getAccountInfo(publicKey);
 ## Connecting to a Wallet
 
 When writing data to the blockchain, it must be done through a **transaction**.
-Transactions need to be signed by one or more secret keys (previously referred
-to as private keys) and sent to an
+Transactions need to be signed by one or more secret keys and sent to an
 [RPC provider](https://academy.subquery.network/subquery_network/node_operators/rpc_providers/introduction.html)
 for processing. In almost all cases, this interaction is facilitated through a
 wallet application.
