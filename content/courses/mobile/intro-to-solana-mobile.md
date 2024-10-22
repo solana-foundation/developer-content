@@ -41,8 +41,7 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-Native mobile wallets hold your secret keys (previously referred to as private
-keys) and use them to sign and send transactions just like web extension
+Native mobile wallets hold your secret keys and use them to sign and send transactions just like web extension
 wallets. However native mobile wallets use the
 [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
 (MWA) standard instead of the
