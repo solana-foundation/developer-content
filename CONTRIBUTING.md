@@ -154,14 +154,14 @@ If your editor is not configured to auto-format on save using prettier, then you
 can run the following command to auto-format all files in your local repo/PR:
 
 ```shell
-yarn prettier:fix
+pnpm prettier:fix
 ```
 
 You can also run the prettier check command to see which files do not follow the
 prettier formatting guidelines.
 
 ```shell
-yarn prettier
+pnpm prettier
 ```
 
 #### Rust & Anchor
@@ -999,16 +999,16 @@ git clone https://github.com/solana-foundation/developer-content.git
 cd developer-content
 ```
 
-2. Install the dependencies via `yarn`:
+2. Install the dependencies via `pnpm`:
 
 ```shell
-yarn install
+pnpm install
 ```
 
 3. Run the developer content API locally:
 
 ```shell
-yarn dev
+pnpm dev
 ```
 
 > Note: The developer content API normally runs locally on port `3001`
