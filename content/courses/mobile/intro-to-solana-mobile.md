@@ -41,17 +41,17 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-Native mobile wallets hold your secret keys (previously referred to as private keys) and use them to sign and send
-transactions just like web extension wallets. However native mobile wallets use
-the
+Native mobile wallets hold your secret keys (previously referred to as private
+keys) and use them to sign and send transactions just like web extension
+wallets. However native mobile wallets use the
 [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
 (MWA) standard instead of the
 [Wallet Adapter](https://github.com/anza-xyz/wallet-adapter) to ensure any apps
 can work with any wallet.
 
 We will dig into the specifics of the MWA in a
-[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively opens
-a WebSocket between applications to facilitate communication. That way a
+[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively
+opens a WebSocket between applications to facilitate communication. That way a
 separate app can provide the wallet app with the transaction to be signed and
 sent, and the wallet app can respond with appropriate status updates.
 
