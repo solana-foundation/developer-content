@@ -12,10 +12,6 @@ jobs:
   snippets-tests:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./code # Set working directory to code folder
-
     strategy:
       matrix:
         node-version: [20]
@@ -34,20 +30,20 @@ jobs:
           files: |
             code/**/*.test.ts
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: false
-
       - name: Install dependencies
         run: pnpm install
+
+      - name: Change Directory
+        run: cd code
 
       - name: Run tests on changed files
         if: github.event_name == 'pull_request'
