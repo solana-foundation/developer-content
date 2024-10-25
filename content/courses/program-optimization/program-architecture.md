@@ -934,7 +934,7 @@ Each concept has an accompanying program and test file. For example, the
 
 **program -** `programs/architecture/src/concepts/sizes.rs`
 
-**test -** `cd tests/sizes.ts`
+**test -** `tests/sizes.ts`
 
 Now that you've read about each of these concepts, feel free to jump into the
 code to experiment a little. You can change existing values, try to break the
