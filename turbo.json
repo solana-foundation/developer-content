@@ -34,10 +34,18 @@
     },
     "test": {
       "dependsOn": ["build"],
-      "inputs": ["src/**/*.tsx", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"]
+      "inputs": ["code/**/*.test.ts"]
     },
     "code-import": {
-      "outputs": ["code/**/*"]
+      "inputs": ["code/**/*"],
+      "outputs": [
+        "content/**/*.md",
+        "content/**/*.mdx",
+        "docs/**/*.md",
+        "docs/**/*.mdx",
+        "i8n/**/*.md",
+        "i8n/**/*.mdx"
+      ]
     }
   },
   "extends": ["//"]
