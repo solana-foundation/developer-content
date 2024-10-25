@@ -59,51 +59,30 @@ jobs:
             exit 0
           fi
 
-          # Convert the space-separated list to an array
-          readarray -t test_files <<< "$CHANGED_FILES"
+          # Create array for test files
+          declare -a test_files=()
 
-          # Print the files we're going to test
-          echo "Running tests for the following files:"
-          printf '%s\n' "${test_files[@]}"
+          # Collect only .test.ts files
+          for file in $CHANGED_FILES; do
+            if [[ $file == *.test.ts ]]; then
+              test_files+=("$file")
+              echo "Added test file: $file"
+            fi
+          done
 
-          # Run all test files in a single command
-          node --import tsx --test "${test_files[@]}" || exit 1
+          # If we found test files, run them together
+          if [ ${#test_files[@]} -gt 0 ]; then
+            echo "Running tests for the following files:"
+            printf '%s\n' "${test_files[@]}"
+            
+            # Run all test files in a single command
+            node --import tsx --test "${test_files[@]}" || exit 1
+          else
+            echo "No test files to run"
+          fi
 
       - name: Run all tests
         if: github.event_name == 'schedule'
         run: |
           echo "Running all tests in code directory"
           pnpm turbo test
-
-      - name: Report test results
-        if: always() && github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const { context, github } = require('@actions/github');
-
-            const testStatus = process.env.TEST_SUCCESS === 'true' ? '✅' : '❌';
-            const summary = [];
-
-            summary.push(`# Test Results ${testStatus}`);
-            summary.push('');
-
-            const changedFiles = '${{ steps.changed-files.outputs.all_changed_files }}'.split(' ');
-            if (changedFiles.length > 0 && changedFiles[0] !== '') {
-              summary.push('## Changed Test Files:');
-              changedFiles.forEach(file => {
-                summary.push(`- \`${file}\``);
-              });
-            } else {
-              summary.push('No test files were changed in this PR.');
-            }
-
-            const body = summary.join('\n');
-
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: body
-            });
