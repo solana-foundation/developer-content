@@ -466,7 +466,15 @@ export interface Action<T extends ActionType> {
     client should not render a button for the contents of the root `label`.
 
 ```ts filename="LinkedAction"
+export type LinkedActionType =
+  | "transaction"
+  | "message"
+  | "post"
+  | "external-link";
+
 export interface LinkedAction {
+  /** Type of action to be performed by user */
+  type: LinkedActionType;
   /** URL endpoint for an action */
   href: string;
   /** button text rendered to the user */
@@ -479,6 +487,16 @@ export interface LinkedAction {
   parameters?: Array<TypedActionParameter>;
 }
 ```
+- `type` - the type of action that will be performed by the user
+
+  - `transaction` - This tells blink client that the action endpoint will return
+    a transaction type response.
+  - `message` - This tells blink client that the action endpoint will return a
+    sign message type response.
+  - `post` - This tells blink client, that the action endpoint will not return a
+    transaction object.
+  - `external-link` - This tells blink client, that the action endpoint will
+    return an external link to allow the user to click and navigate to.
 
 The `ActionParameter` allows declaring what input the Action API is requesting
 from the user:
@@ -800,20 +818,62 @@ of:
 /**
  * Response body payload returned from the Action POST Request
  */
-export interface ActionPostResponse<T extends ActionType = ActionType> {
-  /** base64 encoded serialized transaction */
-  transaction: string;
-  /** describes the nature of the transaction */
+
+export type PostActionType = LinkedActionType;
+
+/**
+ * Generic response from an Action API request
+ */
+export interface ActionResponse {
+  type?: PostActionType;
   message?: string;
   links?: {
-    /**
-     * The next action in a successive chain of actions to be obtained after
-     * the previous was successful.
-     */
     next: NextActionLink;
   };
 }
+
+/**
+ * Response body payload returned from the Action POST Request if the action is a transaction
+ */
+export interface TransactionResponse extends ActionResponse {
+  type?: Extract<PostActionType, "transaction">;
+  transaction: string;
+}
+
+/**
+ * Response body payload returned from the Action POST Request if the action is a POST request
+ */
+export interface PostResponse extends ActionResponse {
+  type: Extract<PostActionType, "post">;
+}
+
+/**
+ * Response body payload returned from the Action POST Request if the action is an External Link
+ */
+export interface ExternalLinkResponse extends ActionResponse {
+  type: Extract<PostActionType, "external-link">;
+  externalLink: string;
+}
+
+export interface SignMessageResponse extends ActionResponse {
+  type: Extract<PostActionType, "message">;
+  // See Message Signing for more details
+}
+
+/**
+ * Response body payload returned from the Action POST Request
+ */
+export type ActionPostResponse =
+  | TransactionResponse
+  | SignMessageResponse
+  | PostResponse
+  | ExternalLinkResponse;
 ```
+- `type` - If this is of type
+
+  - `transaction` then client will pop-up the user to sign the `transaction` and
+    then after confirmation render `links.next`.
+  - `post` then client will skip the pop-up and render the `links.next`.
 
 - `transaction` - The value must be a base64-encoded
   [serialized transaction](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#serialize).
