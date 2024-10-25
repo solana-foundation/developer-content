@@ -945,7 +945,8 @@ You can fork and/or clone
 to get started. Before building and running the test suite, remember to update
 the `lib.rs` and `Anchor.toml` with your local program ID.
 
-You can run the entire test suite or add `.only` to the `describe` call in a
+You can run the entire test suite or
+[add `.only` to the `describe` call](https://mochajs.org/#exclusive-tests) in a
 specific test file to only run that file's tests. Feel free to customize it and
 make it your own.
 
