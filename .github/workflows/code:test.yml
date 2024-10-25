@@ -3,37 +3,48 @@ name: Code Snippets testing
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "code/**/*.test.ts" # Only trigger on test file changes
   schedule:
     - cron: "0 0 * * *" # Run daily at midnight UTC
 
 jobs:
-  code-import-test:
+  snippets-tests:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./code # Set working directory to code folder
 
     strategy:
       matrix:
         node-version: [20]
+      fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history for all branches and tags
+          fetch-depth: 0
 
-      - name: Get changed files
+      - name: Get changed test files
         id: changed-files
         uses: tj-actions/changed-files@v39
         with:
-          files: "**/*.ts"
+          files: |
+            code/**/*.test.ts
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
-
-      - run: cd code
+        with:
+          version: 8
+          run_install: false
 
       - name: Install dependencies
         run: pnpm install
@@ -41,21 +52,58 @@ jobs:
       - name: Run tests on changed files
         if: github.event_name == 'pull_request'
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            if [[ $file == *.test.ts ]]; then
-              echo "Running tests for $file"
-              node --import tsx --test $file
-            elif [[ $file == *.ts ]]; then
-              test_file="${file%.ts}.test.ts"
-              if [ -f "$test_file" ]; then
-                echo "Running tests for $test_file"
-                node --import tsx --test $test_file
-              else
-                echo "No test file found for $file"
-              fi
-            fi
-          done
+          CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No test files were changed"
+            exit 0
+          fi
+
+          # Convert the space-separated list to an array
+          readarray -t test_files <<< "$CHANGED_FILES"
+
+          # Print the files we're going to test
+          echo "Running tests for the following files:"
+          printf '%s\n' "${test_files[@]}"
+
+          # Run all test files in a single command
+          node --import tsx --test "${test_files[@]}" || exit 1
 
       - name: Run all tests
         if: github.event_name == 'schedule'
-        run: pnpm turbo test
+        run: |
+          echo "Running all tests in code directory"
+          pnpm turbo test
+
+      - name: Report test results
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { context, github } = require('@actions/github');
+
+            const testStatus = process.env.TEST_SUCCESS === 'true' ? '✅' : '❌';
+            const summary = [];
+
+            summary.push(`# Test Results ${testStatus}`);
+            summary.push('');
+
+            const changedFiles = '${{ steps.changed-files.outputs.all_changed_files }}'.split(' ');
+            if (changedFiles.length > 0 && changedFiles[0] !== '') {
+              summary.push('## Changed Test Files:');
+              changedFiles.forEach(file => {
+                summary.push(`- \`${file}\``);
+              });
+            } else {
+              summary.push('No test files were changed in this PR.');
+            }
+
+            const body = summary.join('\n');
+
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
