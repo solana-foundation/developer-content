@@ -11,7 +11,7 @@ are [connecting to a wallet](/content/cookbook/wallets/connect-wallet-react),
 you do not need to worry about the keypair. Otherwise a keypair must be
 generated for signing transactions.
 
-```javascript
+```javascript file=/code/content/cookbook/wallets/create-keypair.ts#L1-L3
 import { Keypair } from "@solana/web3.js";
 
 const keypair = Keypair.generate();

@@ -1,0 +1,63 @@
+name: Code Snippets testing
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * *" # Run daily at midnight UTC
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for all branches and tags
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v39
+        with:
+          files: "**/*.ts"
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - run: cd code
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests on changed files
+        if: github.event_name == 'pull_request'
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            if [[ $file == *.test.ts ]]; then
+              echo "Running tests for $file"
+              node --import tsx --test $file
+            elif [[ $file == *.ts ]]; then
+              test_file="${file%.ts}.test.ts"
+              if [ -f "$test_file" ]; then
+                echo "Running tests for $test_file"
+                node --import tsx --test $test_file
+              else
+                echo "No test file found for $file"
+              fi
+            fi
+          done
+
+      - name: Run all tests
+        if: github.event_name == 'schedule'
+        run: pnpm turbo test

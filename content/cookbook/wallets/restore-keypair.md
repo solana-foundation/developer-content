@@ -9,7 +9,7 @@ secret to test out your dApp.
 
 ## From Bytes
 
-```typescript filename="restore-keypair-from-bytes.ts"
+```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/cookbook/wallets/restore-keypair-from-bytes.ts#L1-L10
 import { Keypair } from "@solana/web3.js";
 
 const keypair = Keypair.fromSecretKey(
@@ -24,13 +24,13 @@ const keypair = Keypair.fromSecretKey(
 
 ## From base58 String
 
-```typescript filename="restore-keypair-from-base58.ts
+```typescript filename="restore-keypair-from-base58.ts file=/code/content/cookbook/wallets/restore-keypair-from-bs58.ts#L1-L8
 import { Keypair } from "@solana/web3.js";
-import * as bs58 from "bs58";
+import bs58 from "bs58";
 
 const keypair = Keypair.fromSecretKey(
   bs58.decode(
-    "5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG",
+    "4UzFMkVbk1q6ApxvDS8inUxg4cMBxCQRVXRx5msqQyktbi1QkJkt574Jda6BjZThSJi54CHfVoLFdVFX8XFn233L",
   ),
 );
 ```

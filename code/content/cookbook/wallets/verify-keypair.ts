@@ -1,13 +1,3 @@
----
-title: How to Verify a Keypair
-sidebarSortOrder: 3
-description: "Learn how to verify keypairs on Solana."
----
-
-If you are given a keypair, you can verify whether or not the secret matches the
-given public key
-
-```typescript filename="verify-keypair.ts" file=/code/content/cookbook/wallets/verify-keypair.ts#L1-L15
 import { Keypair, PublicKey } from "@solana/web3.js";
 
 const publicKey = new PublicKey("24PNhTaNtomHhoy3fTRaMhAFCRj4uHqhZEEoWrKDbR5p");
@@ -23,4 +13,5 @@ const keypair = Keypair.fromSecretKey(
 
 console.log(keypair.publicKey.toBase58() === publicKey.toBase58());
 // output: true
-```
+
+export { keypair };
