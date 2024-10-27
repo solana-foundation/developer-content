@@ -717,7 +717,7 @@ within the `programs/burry-escrow` directory:
     ├── Xargo.toml
     └── src
         ├── constants.rs
-        ├── errors.rs
+        ├── error.rs
         ├── instructions
         │   ├── deposit.rs
         │   ├── mod.rs
@@ -798,9 +798,9 @@ pub const SOL_USDC_FEED: &str = "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR";
 ### 5. Errors
 
 Next, let's define the custom errors we'll use throughout the program. Inside
-the `errors.rs` file, paste the following:
+the `error.rs` file, paste the following:
 
-```rust filename="errors.rs"
+```rust filename="error.rs"
 use anchor_lang::prelude::*;
 
 #[error_code]

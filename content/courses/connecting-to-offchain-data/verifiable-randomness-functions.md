@@ -638,10 +638,10 @@ pub struct VrfClientState {
 }
 ```
 
-#### 5. Errors.rs
+#### 5. Error.rs
 
 Next, let's take a quick pit stop and add one last error
-`InvalidVrfAuthorityError` to `errors.rs`. We'll use this when the VRF authority
+`InvalidVrfAuthorityError` to `error.rs`. We'll use this when the VRF authority
 is incorrect.
 
 ```rust
