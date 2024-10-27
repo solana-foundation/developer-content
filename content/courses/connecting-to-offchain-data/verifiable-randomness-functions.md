@@ -485,8 +485,8 @@ in our `Cargo.toml` file.
 
 ```typescript
 [dependencies]
-anchor-lang = "0.28.0"
-anchor-spl = "0.28.0"
+anchor-lang = "0.30.1"
+anchor-spl = "0.30.1"
 switchboard-v2 = "0.4.0"
 ```
 
