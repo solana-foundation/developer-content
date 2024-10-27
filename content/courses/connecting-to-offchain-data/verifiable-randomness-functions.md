@@ -939,7 +939,7 @@ pub struct RequestRandomnessParams {
 
 Now, we can work on the logic of this instruction. The logic should gather all
 of the accounts needed and pass them to
-`[VrfRequestRandomness](https://github.com/switchboard-xyz/solana-sdk/blob/fbef37e4a78cbd8b8b6346fcb96af1e20204b861/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs#L8)`,
+[VrfRequestRandomness](https://github.com/switchboard-xyz/solana-sdk/blob/fbef37e4a78cbd8b8b6346fcb96af1e20204b861/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs#L8),
 which is a really nice struct from Switchboard. Then we'll sign the request and
 send it on it's way.
 
