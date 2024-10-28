@@ -511,10 +511,7 @@ pub mod owner_check {
     pub fn secure_withdraw(ctx: Context<SecureWithdraw>) -> Result<()> {
         let amount = ctx.accounts.token_account.amount;
 
-        let seeds = &[
-            b"token".as_ref(),
-            &[*ctx.bumps.get("token_account").unwrap()],
-        ];
+        let seeds = &[b"token".as_ref(), &[ctx.bumps.token_account]];
         let signer = [&seeds[..]];
 
         let cpi_ctx = CpiContext::new_with_signer(
