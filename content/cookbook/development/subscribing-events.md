@@ -35,7 +35,7 @@ import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
 
   // Register a callback to listen to the wallet (ws subscription)
   connection.onAccountChange(
-    wallet.publicKey(),
+    wallet.publicKey,
     (updatedAccountInfo, context) =>
       console.log("Updated account info: ", updatedAccountInfo),
     "confirmed",
