@@ -123,7 +123,7 @@ version ^1.18.15 is recommended.
 Example command deploying a program with the Solana CLI:
 
 ```shell
-program deploy target/deploy/your_program.so --with-compute-unit-price 10000 --max-sign-attempts 1000 --use-rpc
+solana program deploy target/deploy/your_program.so --with-compute-unit-price 10000 --max-sign-attempts 1000 --use-rpc
 ```
 
 </Callout>
