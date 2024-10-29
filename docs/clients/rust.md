@@ -2,6 +2,7 @@
 sidebarLabel: Rust
 title: Rust Client for Solana
 sidebarSortOrder: 1
+description: Learn how to use Solana's Rust crates for development.
 ---
 
 Solana's Rust crates are

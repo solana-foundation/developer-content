@@ -2,6 +2,10 @@
 sidebarLabel: Quick Start
 title: Solana Quick Start Guide
 sidebarSortOrder: 0
+description:
+  Learn Solana development basics. Create your first program, understand
+  accounts, send transactions, and explore PDAs and CPIs using Solana Playground
+  - no installation required.
 ---
 
 Welcome to the Solana Quick Start Guide! This hands-on guide will introduce you

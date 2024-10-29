@@ -2,6 +2,10 @@
 sidebarLabel: Clusters & Endpoints
 title: Clusters and Public RPC Endpoints
 sidebarSortOrder: 8
+description:
+  Learn about Solana's network clusters (Devnet, Testnet, and Mainnet Beta),
+  their public RPC endpoints, rate limits, and use cases. Learn how to connect
+  to different Solana networks for development, testing, and production.
 ---
 
 The Solana blockchain has several different groups of validators, known as

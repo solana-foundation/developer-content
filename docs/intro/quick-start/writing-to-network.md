@@ -2,6 +2,10 @@
 sidebarLabel: Writing to Network
 title: Writing to Network
 sidebarSortOrder: 2
+description:
+  Learn how to interact with the Solana network by sending transactions and
+  instructions. Follow step-by-step examples to transfer SOL tokens and create
+  new tokens using the System Program and Token Extensions Program.
 ---
 
 Now that we've explored reading from the Solana network, let's learn how to

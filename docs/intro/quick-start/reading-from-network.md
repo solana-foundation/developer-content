@@ -2,6 +2,11 @@
 sidebarLabel: Reading from Network
 title: Reading from Network
 sidebarSortOrder: 1
+description:
+  Learn how to read data from the Solana blockchain network. This guide covers
+  fetching wallet accounts, program accounts, and token mint accounts using
+  JavaScript/TypeScript, with practical examples using the Solana web3.js
+  library.
 ---
 
 Now, let's explore how to read data from the Solana network. We'll fetch a few

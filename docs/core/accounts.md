@@ -2,6 +2,11 @@
 sidebarSortOrder: 1
 sidebarLabel: Solana Account Model
 title: Solana Account Model
+description:
+  Learn about Solana's account model, including how accounts store data and
+  programs, rent mechanics, account ownership, and the relationship between
+  programs and data accounts. Understand the core concepts of Solana's key-value
+  storage system.
 ---
 
 On Solana, all data is stored in what are referred to as "accounts”. The way
