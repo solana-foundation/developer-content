@@ -1,6 +1,10 @@
 ---
 title: "Tokens on Solana"
 sidebarSortOrder: 7
+description:
+  Learn about Solana tokens (SPL Tokens) including fungible and non-fungible
+  tokens, Token Program, Token Extensions Program, mint accounts, token
+  accounts, and practical examples for creating and managing tokens on Solana.
 ---
 
 Tokens are digital assets that represent ownership over diverse categories of

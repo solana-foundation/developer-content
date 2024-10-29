@@ -1,6 +1,9 @@
 ---
 title: Getting Started with Anchor
-description: Getting Started with Anchor
+description:
+  Learn how to build Solana programs using the Anchor framework. This
+  comprehensive guide covers creating, building, testing, and deploying Solana
+  smart contracts with Anchor.
 sidebarLabel: Anchor Framework
 sidebarSortOrder: 1
 altRoutes:

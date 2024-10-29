@@ -2,8 +2,9 @@
 title: Core Concepts
 sidebarSortOrder: 2
 description:
-  "Understanding these core concepts are very important to maximize your success
-  as a Solana blockchain developer."
+  Learn essential Solana blockchain concepts including accounts, transactions,
+  programs, programd derived addresses, cross program invocations, and how
+  tokens work on Solana.
 ---
 
 Build a strong understanding of the core concepts that make Solana different

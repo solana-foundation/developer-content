@@ -2,6 +2,10 @@
 sidebarLabel: JavaScript / TypeScript
 title: JavaScript Client for Solana
 sidebarSortOrder: 2
+description:
+  Learn how to interact with Solana using the JavaScript/TypeScript client
+  library (@solana/web3.js). This guide covers wallet connections, transactions,
+  and custom program interactions with code examples.
 ---
 
 ## What is Solana-Web3.js?
