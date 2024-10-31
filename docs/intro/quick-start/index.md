@@ -73,6 +73,10 @@ You should now see your wallet's address, SOL balance, and connected cluster
   your browser cache will remove your saved wallet.
 </Callout>
 
+Some definitions you may find helpful:
+- *wallet address*: a unique identifier for a digital wallet, used to send or receive crypto assets on a blockchain. Each wallet address is a string of alphanumeric characters that represents a specific destination on the network. Think of it like an email address or bank account number—if someone wants to send you cryptocurrency, they need your wallet address to direct the funds.
+- *connected cluster*: a set of network nodes that work together to maintain a synchronized copy of the blockchain. These clusters are essential for providing a decentralized, distributed ledger and powering the Solana network by validating transactions, securing the chain, and executing programs (smart contracts).
+
 ### Get Devnet SOL
 
 Before we start building, we first need some devnet SOL.
