@@ -30,7 +30,7 @@ operations.
 Push all the English based content to the Crowdin platform to
 
 ```shell
-yarn crowdin:upload
+pnpm crowdin:upload
 ```
 
 ### Download the current translations
@@ -38,7 +38,7 @@ yarn crowdin:upload
 You can download the latest translations using the crowdin cli:
 
 ```shell
-yarn crowdin:download
+pnpm crowdin:download
 ```
 
 This will store all the translated content files inside the `i18n` directory,
@@ -67,7 +67,7 @@ the translation path (`-t` flag). Be sure to include the `%locale%` wildcard in
 the translation path:
 
 ```shell
-yarn crowdin upload -s docs/intro/installation.md -t i18n/%locale%/docs/intro/installation.md
+pnpm crowdin upload -s docs/intro/installation.md -t i18n/%locale%/docs/intro/installation.md
 ```
 
 To download the Crowdin formatted content, download the entire locale using the
@@ -75,7 +75,7 @@ To download the Crowdin formatted content, download the entire locale using the
 German (DE) translated content:
 
 ```shell
-yarn crowdin download -l de
+pnpm crowdin download -l de
 ```
 
 It may be helpful to also run the prettier formatter on the translation files,
@@ -83,5 +83,5 @@ since this is normally performed by a GitHub action on deployment to catch and
 fix many formatting issues that Crowdin causes due to altering content:
 
 ```shell
-yarn prettier:i18n
+pnpm prettier:i18n
 ```

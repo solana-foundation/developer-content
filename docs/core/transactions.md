@@ -1,6 +1,10 @@
 ---
 title: "Transactions and Instructions"
 sidebarSortOrder: 2
+description:
+  Learn about Solana transactions and instructions - the fundamental building
+  blocks for interacting with the Solana blockchain. Understand transaction
+  structure and instruction composition with practical examples.
 ---
 
 On Solana, we send [transactions](/docs/core/transactions#transaction) to

@@ -52,10 +52,11 @@ The `CpiContext` type specifies non-argument inputs for cross program
 invocations:
 
 - `accounts` - the list of accounts required for the instruction being invoked
-- `remaining_accounts` - any remaining accounts
+- `remaining_accounts` - accounts that are not part of this instruction but may
+  be used elsewhere (for example, by inner instructions)
 - `program` - the program ID of the program being invoked
-- `signer_seeds` - if a PDA is signing, include the seeds required to derive the
-  PDA
+- `signer_seeds` - if one or more PDAs are signing the transaction, the seeds
+  required to derive the PDAs
 
 ```rust
 pub struct CpiContext<'a, 'b, 'c, 'info, T>
@@ -140,11 +141,11 @@ callee = { path = "../callee", features = ["cpi"]}
 By adding `features = ["cpi"]`, you enable the `cpi` feature and your program
 gains access to the `callee::cpi` module.
 
-The `cpi` module turns `callee`'s instructions into Rust functions. These
-functions take a `CpiContext` and any extra data needed for the instruction.
-They work just like the instruction functions in your Anchor programs, but use
-`CpiContext` instead of `Context`. The `cpi` module also provides the account
-structs needed for these instruction handler.
+The `cpi` module turns `callee`'s instruction handlers into Rust functions.
+These functions take a `CpiContext` and any extra data needed for the
+instruction. They work just like the instruction handlers in your Anchor
+programs, but use `CpiContext` instead of `Context`. The `cpi` module also
+provides the account structs needed for these instruction handler.
 
 For example, if `callee` has the instruction `do_something` that requires the
 accounts defined in the `DoSomething` struct, you could invoke `do_something` as
@@ -179,14 +180,15 @@ pub mod lootbox_program {
 When the program you're calling is _not_ an Anchor program, there are two
 possible options:
 
-1. It's possible that the program maintainers have published a crate with their
-   own helper functions for calling into their program. For example, the
-   `anchor_spl` crate provides helper functions that are virtually identical
-   from a call-site perspective to what you would get with the `cpi` module of
-   an Anchor program. E.g. you can mint using the
+1. The program maintainers may have published a crate with their own helper
+   functions for calling into their program. For example, the `anchor_spl` crate
+   provides virtually identical helper functions from a call-site perspective to
+   what you would get with the `cpi` module of an Anchor program. E.g. you can
+   mint using the
    [`mint_to` helper function](https://docs.rs/anchor-spl/latest/src/anchor_spl/token.rs.html#36-58)
    and use the
    [`MintTo` accounts struct](https://docs.rs/anchor-spl/latest/anchor_spl/token/struct.MintTo.html).
+
    ```rust
    token::mint_to(
        CpiContext::new_with_signer(
@@ -204,12 +206,14 @@ possible options:
        amount,
    )?;
    ```
+
 2. If there is no helper module for the program whose instruction(s) you need to
    invoke, you can fall back to using `invoke` and `invoke_signed`. In fact, the
    source code of the `mint_to` helper function referenced above shows an
    example using `invoke_signed` when given a `CpiContext`. You can follow a
-   similar pattern if you decide to use an accounts struct and `CpiContext` to
-   organize and prepare your CPI.
+   similar pattern if you use an accounts struct and `CpiContext` to organize
+   and prepare your CPI.
+
    ```rust
    pub fn mint_to<'info>(
        ctx: CpiContext<'_foo, '_bar, '_baz, 'info, MintTo<'info>>,
@@ -238,12 +242,12 @@ possible options:
 
 ### Throw errors in Anchor
 
-We're deep enough into Anchor at this point that it's important to know how to
+We're deep enough into Anchor at this point that it's essential to know how to
 create custom errors.
 
 Ultimately, all programs return the same error type: 
 [`ProgramError`](https://docs.rs/solana-program/latest/solana_program/program_error/enum.ProgramError.html).
-However, when writing a program using Anchor you can use `AnchorError` as an
+However, when writing a program using Anchor, you can use `AnchorError` as an
 abstraction on top of `ProgramError`. This abstraction provides additional
 information when a program fails, including:
 
@@ -264,13 +268,13 @@ pub struct AnchorError {
 Anchor Errors can be divided into:
 
 - Anchor Internal Errors that the framework returns from inside its own code
-- Custom errors that you the developer can create
+- Custom errors that you, the developer, can create
 
 You can add errors unique to your program by using the `error_code` attribute.
-Simply add this attribute to a custom `enum` type. You can then use the variants
-of the `enum` as errors in your program. Additionally, you can add an error
-message to each variant using the `msg` attribute. Clients can then display this
-error message if the error occurs.
+Simply add this attribute to a custom `enum` type. You can then use the `enum`
+variants as errors in your program. Additionally, you can add an error message
+to each variant using the `msg` attribute. Clients can then display this error
+message if the error occurs.
 
 ```rust
 #[error_code]
@@ -280,11 +284,10 @@ pub enum MyError {
 }
 ```
 
-To return a custom error you can use
-the [err](https://docs.rs/anchor-lang/latest/anchor_lang/macro.err.html) or
-the [error](https://docs.rs/anchor-lang/latest/anchor_lang/prelude/macro.error.html)
-macro from an instruction function. These add file and line information to the
-error that is then logged by Anchor to help you with debugging.
+To return a custom error from an instruction handler you can use
+the [err](https://docs.rs/anchor-lang/latest/anchor_lang/macro.err.html) or [error](https://docs.rs/anchor-lang/latest/anchor_lang/prelude/macro.error.html)
+macro. These add helpful file and line information to the error that Anchor logs
+to help with debugging:
 
 ```rust
 #[program]
@@ -341,7 +344,7 @@ new movie review.
 ### Starter
 
 To get started, we will be using the final state of the Anchor Movie Review
-program from the previous lesson. So, if you just completed that lesson then
+program from the previous lesson. So, if you just completed that lesson, then
 you're all set and ready to go. If you are just jumping in here, no worries, you
 can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
@@ -380,7 +383,7 @@ pub struct InitializeMint<'info> {
         bump,
         payer = user,
         mint::decimals = 6,
-        mint::authority = user,
+        mint::authority = mint,
     )]
     pub mint: Account<'info, Mint>,
     #[account(mut)]
@@ -552,7 +555,7 @@ pub fn add_movie_review(
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
             MintTo {
-                authority: ctx.accounts.mint.to_account_info(),
+                authority: ctx.accounts.initializer.to_account_info(),
                 to: ctx.accounts.token_account.to_account_info(),
                 mint: ctx.accounts.mint.to_account_info()
             },

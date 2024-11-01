@@ -1,7 +1,10 @@
 ---
 sidebarSortOrder: 4
 title: Address Lookup Tables
-description: ""
+description:
+  Learn how to use Solana Address Lookup Tables (ALTs) to efficiently handle up
+  to 64 addresses per transaction. Create, extend, and utilize lookup tables
+  using web3.js.
 ---
 
 Address Lookup Tables, commonly referred to as "_lookup tables_" or "_ALTs_" for

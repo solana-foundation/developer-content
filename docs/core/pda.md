@@ -2,6 +2,10 @@
 title: Program Derived Address (PDA)
 sidebarLabel: Program Derived Address
 sidebarSortOrder: 5
+description:
+  Learn about Program Derived Addresses (PDAs) on Solana - deterministic account
+  addresses that enable secure program signing. Understand PDA derivation,
+  canonical bumps, and how to create PDA accounts.
 ---
 
 Program Derived Addresses (PDAs) provide developers on Solana with two main use

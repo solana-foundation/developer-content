@@ -1,5 +1,8 @@
 ---
 title: Web3.js API Examples
+description:
+  Learn how to interact with the Solana blockchain using the @solana/web3.js
+  library through practical code samples and explanations.
 ---
 
 ## Web3 API Reference Guide

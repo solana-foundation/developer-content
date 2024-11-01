@@ -2,9 +2,9 @@
 title: Fees on Solana
 sidebarSortOrder: 3
 description:
-  "Your guide to transaction fees on Solana -- small fees paid to process
-  instructions on the network, based on computation and an optional
-  prioritization fee."
+  Learn about Solana's fee structure including transaction fees, prioritization
+  fees, and rent costs. Understand how fees are calculated, collected and
+  distributed across the network.
 keywords:
   - instruction fee
   - processing fee

@@ -41,7 +41,7 @@ and returning when you're ready. If you are, let's dive in!
 
 ## Intro to Solana Mobile
 
-Native mobile wallets hold your private keys and use them to sign and send
+Native mobile wallets hold your secret keys and use them to sign and send
 transactions just like web extension wallets. However native mobile wallets use
 the
 [Mobile Wallet Adapter](https://github.com/solana-mobile/mobile-wallet-adapter)
@@ -50,8 +50,8 @@ the
 can work with any wallet.
 
 We will dig into the specifics of the MWA in a
-[later lesson](/content/courses/mobile/mwa-deep-dive), but it effectively opens
-a WebSocket between applications to facilitate communication. That way a
+[later lesson](/content/courses/mobile/mwa-deep-dive.md), but it effectively
+opens a WebSocket between applications to facilitate communication. That way a
 separate app can provide the wallet app with the transaction to be signed and
 sent, and the wallet app can respond with appropriate status updates.
 
@@ -172,13 +172,12 @@ const account = await connection.getAccountInfo(publicKey);
 ```
 
 > **NOTE:** If you need a refresher, refer to our
-> [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data).
+> [Intro to Reading Data lesson](/content/courses/intro-to-solana/intro-to-reading-data.md).
 
 ## Connecting to a Wallet
 
 When writing data to the blockchain, it must be done through a **transaction**.
-Transactions need to be signed by one or more secret keys (previously referred
-to as private keys) and sent to an
+Transactions need to be signed by one or more secret keys and sent to an
 [RPC provider](https://academy.subquery.network/subquery_network/node_operators/rpc_providers/introduction.html)
 for processing. In almost all cases, this interaction is facilitated through a
 wallet application.
@@ -1197,7 +1196,7 @@ to fix them:
   wallet installed ( like the fake wallet we installed in Prerequisites )
 - You get stuck in a forever loop while calling `increment` → This is likely due
   to you reaching a Devnet airdrop rate limit. Take out the airdrop section in
-  `CounterButton` and manually send some Devnet sol to your wallet's address
+  `CounterButton` and manually send some Devnet SOL to your wallet's address
   (printed in the console)
 
 That's it! You've made your first Solana Mobile app. If you get stuck, feel free

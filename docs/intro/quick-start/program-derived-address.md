@@ -2,6 +2,12 @@
 sidebarLabel: Program Derived Address
 title: Program Derived Address
 sidebarSortOrder: 4
+description:
+  Learn how to build a CRUD (Create, Read, Update, Delete) Solana program using
+  Program Derived Addresses (PDAs) and the Anchor framework. This step-by-step
+  guide demonstrates how to create, update, and delete on-chain message accounts
+  using PDAs, implement account validation, and write tests. Perfect for
+  developers looking to understand how to use PDAs in Solana programs.
 ---
 
 In this section, we'll walk through how to build a basic CRUD (Create, Read,

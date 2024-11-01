@@ -11,10 +11,10 @@
     "runner": "npx ts-node -r tsconfig-paths/register",
     "contentlayer:build": "npx contentlayer2 build --clearCache",
     "code-import": "npx esrun coder.ts",
-    "dev": "yarn code-import && yarn contentlayer:build && concurrently -p \"[{name}]\" -n \"code import,next dev\" -c \"bgBlue.bold,bgGreen.bold\" \"yarn code-import --watch\" \"next dev -p 3001\"",
-    "build": "yarn code-import && yarn prettier:i18n && yarn contentlayer:build && next build",
+    "dev": "pnpm code-import && pnpm contentlayer:build && concurrently -p \"[{name}]\" -n \"code import,next dev\" -c \"bgBlue.bold,bgGreen.bold\" \"pnpm code-import --watch\" \"next dev -p 3001\"",
+    "build": "pnpm code-import && pnpm prettier:i18n && pnpm contentlayer:build && next build",
     "start": "next start -p 3001",
-    "test": "yarn code-import && yarn prettier && && yarn contentlayer:build",
+    "test": "pnpm code-import && pnpm prettier && pnpm contentlayer:build",
     "lint": "next lint",
     "prettier:i18n": "prettier -cw \"i18n/**/*.{js,jsx,ts,tsx,md,css,md,mdx}\" --ignore-path \"[]\"",
     "prettier": "prettier -c \"./**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
@@ -22,8 +22,8 @@
     "crowdin:download": "crowdin download && npm run prettier:i18n",
     "crowdin:upload": "crowdin upload sources",
     "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
-    "prepare": "node -e \"if (process.env.NODE_ENV !== 'production'){process.exit(1)} \" || husky install",
-    "dev:sync": "yarn dev & (sleep 5 && yarn browser-sync)"
+    "prepare": "husky",
+    "dev:sync": "pnpm dev & (sleep 5 && pnpm browser-sync)"
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
@@ -61,6 +61,6 @@
     "vfile": "^6.0.2"
   },
   "lint-staged": {
-    "*.{js,jsx,json,ts,tsx,md,css,md,mdx,yml,yaml}": "yarn prettier:fix"
+    "*.{js,jsx,json,ts,tsx,md,css,md,mdx,yml,yaml}": "pnpm prettier:fix"
   }
 }
