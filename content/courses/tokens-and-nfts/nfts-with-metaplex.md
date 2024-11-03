@@ -698,6 +698,15 @@ await airdropIfRequired(
 
 const umi = createUmi(connection);
 
+// convert to umi compatible keypair
+const umiKeypair = umi.eddsa.createKeypairFromSecretKey(user.secretKey);
+
+// load our plugins and signer
+umi
+  .use(keypairIdentity(umiKeypair))
+  .use(mplTokenMetadata())
+  .use(irysUploader());
+
 // Substitute in your collection NFT address from create-metaplex-collection.ts
 const collectionAddress = UMIPublicKey("");
 
