@@ -768,6 +768,7 @@ import {
   updateV1,
   findMetadataPda,
   mplTokenMetadata,
+  fetchDigitalAsset
 } from "@metaplex-foundation/mpl-token-metadata";
 import {
   createGenericFile,
