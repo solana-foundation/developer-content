@@ -728,7 +728,7 @@ Run `npx esrun verify-metaplex-nft.ts`. If all goes well, you will see the
 following:
 
 ```
-% npx esrun create-metaplex-nft.ts
+% npx esrun verify-metaplex-nft.ts
 
 Loaded user: 4kg8oh3jdNtn7j2wcS7TrUua31AgbLzDVkBZgTAe44aF
 verified collection: https://explorer.solana.com/address/CymscdAwuTRjCz1ezsNZa15MnwGNrxhGUEToLFcyijMT?cluster=devnet
