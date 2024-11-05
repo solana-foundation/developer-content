@@ -1,25 +1,282 @@
 ---
 title: "Deploying Programs"
 description:
-  "Deploying onchain programs can be done using the Solana CLI using the
+  Deploying onchain programs can be done using the Solana CLI using the
   Upgradable BPF loader to upload the compiled byte-code to the Solana
-  blockchain."
-sidebarSortOrder: 3
+  blockchain.
+sidebarSortOrder: 2
 ---
 
-Solana onchain programs (otherwise known as "smart contracts") are stored in
-"executable" accounts on Solana. These accounts are identical to any other
-account but with the exception of:
+Solana programs are stored in "executable" accounts on the network. These
+accounts contain the program's compiled bytecode that define the instructions
+users invoke to interact with the program.
 
-- having the "executable" flag enabled, and
-- the owner being assigned to a BPF loader
+## CLI Commands
 
-Besides those exceptions, they are governed by the same runtime rules as
-non-executable accounts, hold SOL tokens for rent fees, and store a data buffer
-which is managed by the BPF loader program. The latest BPF loader is called the
-"Upgradeable BPF Loader".
+The section is intented as a reference for the basic CLI commands for building
+and deploying Solana programs. For a step-by-step guide on creating your first
+program, start with [Developing Programs in Rust](/docs/programs/rust).
 
-## Overview of the Upgradeable BPF Loader
+### Build Program
+
+To build your program, use the `cargo build-sbf` command.
+
+```shell
+cargo build-sbf
+```
+
+This command will:
+
+1. Compile your program
+2. Create a `target/deploy` directory
+3. Generate a `<program-name>.so` file, where `<program-name>` matches your
+   program's name in `Cargo.toml`
+
+The output `.so` file contains your program's compiled bytecode that will be
+stored in a Solana account when you deploy your program.
+
+### Deploy Program
+
+To deploy your program, use the `solana program deploy` command followed by the
+path to the `.so` file created by the `cargo build-sbf` command.
+
+```shell
+solana program deploy ./target/deploy/your_program.so
+```
+
+During times of congestion, there are a few additional flags you can use to help
+with program deployment.
+
+- `--with-compute-unit-price`: Set compute unit price for transaction, in
+  increments of 0.000001 lamports (micro-lamports) per compute unit.
+- `--max-sign-attempts`: Maximum number of attempts to sign or resign
+  transactions after blockhash expiration. If any transactions sent during the
+  program deploy are still unconfirmed after the initially chosen recent
+  blockhash expires, those transactions will be resigned with a new recent
+  blockhash and resent. Use this setting to adjust the maximum number of
+  transaction signing iterations. Each blockhash is valid for about 60 seconds,
+  which means using the default value of 5 will lead to sending transactions for
+  at least 5 minutes or until all transactions are confirmed,whichever comes
+  first. [default: 5]
+- `--use-rpc`: Send write transactions to the configured RPC instead of
+  validator TPUs. This flag requires a stake-weighted RPC connection.
+
+You can use the flags individually or combine them together. For example:
+
+```shell
+solana program deploy ./target/deploy/your_program.so --with-compute-unit-price 10000 --max-sign-attempts 1000 --use-rpc
+```
+
+- Use the
+  [Priority Fee API by Helius](https://docs.helius.dev/guides/priority-fee-api)
+  to get an estimate of the priority fee to set with the
+  `--with-compute-unit-price` flag.
+
+- Get a
+  [stake-weighted](https://solana.com/developers/guides/advanced/stake-weighted-qos)
+  RPC connection from [Helius](https://www.helius.dev/) or
+  [Trition](https://triton.one/) to use with the `--use-rpc` flag. The
+  `--use-rpc` flag should only be used with a stake-weighted RPC connection.
+
+To update your default RPC URL with a custom RPC endpoint, use the
+`solana config set` command.
+
+```shell
+solana config set --url <RPC_URL>
+```
+
+You can view the list of programs you've deployed using the
+`solana program show --programs` command.
+
+```shell
+solana program show --programs
+```
+
+Example output:
+
+```
+Program Id                                   | Slot      | Authority                                    | Balance
+2w3sK6CW7Hy1Ljnz2uqPrQsg4KjNZxD4bDerXDkSX3Q1 | 133132    | 4kh6HxYZiAebF8HWLsUWod2EaQQ6iWHpHYCz8UcmFbM1 | 0.57821592 SOL
+```
+
+### Update Program
+
+A program's update authority can modify an existing Solana program by deploying
+a new `.so` file to the same program ID.
+
+To update an existing Solana program:
+
+- Make changes to your program source code
+- Run `cargo build-sbf` to generate an updated `.so` file
+- Run `solana program deploy ./target/deploy/your_program.so` to deploy the
+  updated `.so` file
+
+The update authority can be changed using the
+`solana program set-upgrade-authority` command.
+
+```shell
+solana program set-upgrade-authority <PROGRAM_ADDRESS> --new-upgrade-authority <NEW_UPGRADE_AUTHORITY>
+```
+
+### Immutable Program
+
+A program can be made immutable by removing its update authority. This is an
+irreversible action.
+
+```shell
+solana program set-upgrade-authority <PROGRAM_ADDRESS> --final
+```
+
+You can specify that program should be immutable on deployment by setting the
+`--final` flag when deploying the program.
+
+```shell
+solana program deploy ./target/deploy/your_program.so --final
+```
+
+### Close Program
+
+You can close your Solana program to reclaim the SOL allocated to the account.
+Closing a program is irreversible, so it should be done with caution. To close a
+program, use the `solana program close <PROGRAM_ID>` command. For example:
+
+```shell filename="Terminal"
+solana program close 4Ujf5fXfLx2PAwRqcECCLtgDxHKPznoJpa43jUBxFfMz
+--bypass-warning
+```
+
+Example output:
+
+```
+Closed Program Id 4Ujf5fXfLx2PAwRqcECCLtgDxHKPznoJpa43jUBxFfMz, 0.1350588 SOL
+reclaimed
+```
+
+Note that once a program is closed, its program ID cannot be reused. Attempting
+to deploy a program with a previously closed program ID will result in an error.
+
+```
+Error: Program 4Ujf5fXfLx2PAwRqcECCLtgDxHKPznoJpa43jUBxFfMz has been closed, use
+a new Program Id
+```
+
+If you need to redeploy a program after closing it, you must generate a new
+program ID. To generate a new keypair for the program, run the following
+command:
+
+```shell filename="Terminal"
+solana-keygen new -o ./target/deploy/your_program-keypair.json --force
+```
+
+Alternatively, you can delete the existing keypair file and run
+`cargo build-sbf` again, which will generate a new keypair file.
+
+### Program Buffer Accounts
+
+Deploying a program requires multiple transactions due to the 1232 byte limit
+for transactions on Solana. An intermediate step of the deploy process involves
+writing the program's byte-code to temporary "buffer account".
+
+This buffer account is automatically closed after successful program deployment.
+However, if the deployment fails, the buffer account remains and you can either:
+
+- Continue the deployment using the existing buffer account
+- Close the buffer account to reclaim the allocated SOL (rent)
+
+You can check if you have any open buffer accounts by using the
+`solana program show --buffers` command.
+
+```shell
+solana program show --buffers
+```
+
+Example output:
+
+```
+Buffer Address                               | Authority                                    | Balance
+5TRm1DxYcXLbSEbbxWcQbEUCce7L4tVgaC6e2V4G82pM | 4kh6HxYZiAebF8HWLsUWod2EaQQ6iWHpHYCz8UcmFbM1 | 0.57821592 SOL
+```
+
+You can continue to the deployment using
+`solana program deploy --buffer <BUFFER_ADDRESS>`.
+
+For example:
+
+```shell
+solana program deploy --buffer 5TRm1DxYcXLbSEbbxWcQbEUCce7L4tVgaC6e2V4G82pM
+```
+
+Expected output on successful deployment:
+
+```
+Program Id: 2w3sK6CW7Hy1Ljnz2uqPrQsg4KjNZxD4bDerXDkSX3Q1
+
+Signature: 3fsttJFskUmvbdL5F9y8g43rgNea5tYZeVXbimfx2Up5viJnYehWe3yx45rQJc8Kjkr6nY8D4DP4V2eiSPqvWRNL
+```
+
+To close buffer accounts, use the `solana program close --buffers` command.
+
+```shell
+solana program close --buffers
+```
+
+### ELF Dump
+
+The SBF shared object internals can be dumped to a text file to gain more
+insight into a program's composition and what it may be doing at runtime. The
+dump will contain both the ELF information as well as a list of all the symbols
+and the instructions that implement them. Some of the BPF loader's error log
+messages will reference specific instruction numbers where the error occurred.
+These references can be looked up in the ELF dump to identify the offending
+instruction and its context.
+
+```shell
+cargo build-bpf --dump
+```
+
+The file will be output to `/target/deploy/your_program-dump.txt`.
+
+## Program Deployment Process
+
+Deploying a program on Solana requires multiple transactions, due to the max
+size limit of 1232 bytes for Solana transactions. The Solana CLI sends these
+transactions with the `solana program deploy` subcommand. The process can be
+broken down into the following 3 phases:
+
+1. [Buffer initialization](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L2113):
+   First, the CLI sends a transaction which
+   [creates a buffer account](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L1903)
+   large enough for the byte-code being deployed. It also invokes the
+   [initialize buffer instruction](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L320)
+   to set the buffer authority to restrict writes to the deployer's chosen
+   address.
+2. [Buffer writes](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L2129):
+   Once the buffer account is initialized, the CLI
+   [breaks up the program byte-code](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L1940)
+   into ~1KB chunks and
+   [sends transactions at a rate of 100 transactions per second](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/client/src/tpu_client.rs#L133)
+   to write each chunk with
+   [the write buffer instruction](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L334).
+   These transactions are sent directly to the current leader's transaction
+   processing (TPU) port and are processed in parallel with each other. Once all
+   transactions have been sent, the CLI
+   [polls the RPC API with batches of transaction signatures](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/client/src/tpu_client.rs#L216)
+   to ensure that every write was successful and confirmed.
+3. [Finalization](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L1807):
+   Once writes are completed, the CLI
+   [sends a final transaction](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L2150)
+   to either
+   [deploy a new program](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L362)
+   or
+   [upgrade an existing program](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L513).
+   In either case, the byte-code written to the buffer account will be copied
+   into a program data account and verified.
+
+## Upgradeable BPF Loader Program
+
+The BPF loader program is the program that "owns" all executable accounts on
+Solana. When you deploy a program, the owner of the program account is set to
+the the BPF loader program.
 
 ### State accounts
 
@@ -74,182 +331,3 @@ instructions supported by the Upgradeable BPF Loader program:
 6. [Close](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/sdk/program/src/loader_upgradeable_instruction.rs#L127):
    Clears the data of a program data account or buffer account and reclaims the
    SOL used for the rent exemption deposit.
-
-## How `solana program deploy` works
-
-Deploying a program on Solana requires hundreds, if not thousands of
-transactions, due to the max size limit of 1232 bytes for Solana transactions.
-The Solana CLI takes care of this rapid firing of transactions with the
-`solana program deploy` subcommand. The process can be broken down into the
-following 3 phases:
-
-1. [Buffer initialization](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L2113):
-   First, the CLI sends a transaction which
-   [creates a buffer account](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L1903)
-   large enough for the byte-code being deployed. It also invokes the
-   [initialize buffer instruction](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L320)
-   to set the buffer authority to restrict writes to the deployer's chosen
-   address.
-2. [Buffer writes](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L2129):
-   Once the buffer account is initialized, the CLI
-   [breaks up the program byte-code](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L1940)
-   into ~1KB chunks and
-   [sends transactions at a rate of 100 transactions per second](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/client/src/tpu_client.rs#L133)
-   to write each chunk with
-   [the write buffer instruction](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L334).
-   These transactions are sent directly to the current leader's transaction
-   processing (TPU) port and are processed in parallel with each other. Once all
-   transactions have been sent, the CLI
-   [polls the RPC API with batches of transaction signatures](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/client/src/tpu_client.rs#L216)
-   to ensure that every write was successful and confirmed.
-3. [Finalization](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L1807):
-   Once writes are completed, the CLI
-   [sends a final transaction](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/cli/src/program.rs#L2150)
-   to either
-   [deploy a new program](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L362)
-   or
-   [upgrade an existing program](https://github.com/solana-labs/solana/blob/7409d9d2687fba21078a745842c25df805cdf105/programs/bpf_loader/src/lib.rs#L513).
-   In either case, the byte-code written to the buffer account will be copied
-   into a program data account and verified.
-
-<Callout type="info">
-
-During times of congestion it is helpful to add priority fees and increase the
-max sign attempts. Using a rpc url which has
-[stake weighted quality of service](https://solana.com/developers/guides/advanced/stake-weighted-qos)
-enabled can also help to make program deploys more reliable. Using Solana
-version ^1.18.15 is recommended.
-
-Example command deploying a program with the Solana CLI:
-
-```shell
-program deploy target/deploy/your_program.so --with-compute-unit-price 10000 --max-sign-attempts 1000 --use-rpc
-```
-
-</Callout>
-
-## Reclaim rent from program accounts
-
-The storage of data on the Solana blockchain requires the payment of
-[rent](/docs/intro/rent.md), including for the byte-code for onchain programs.
-Therefore as you deploy more or larger programs, the amount of rent paid to
-remain rent-exempt will also become larger.
-
-Using the current rent cost model configuration, a rent-exempt account requires
-a deposit of ~0.7 SOL per 100KB stored. These costs can have an outsized impact
-on developers who deploy their own programs since
-[program accounts](/docs/core/accounts.md#custom-programs) are among the largest
-we typically see on Solana.
-
-### Reclaiming buffer accounts
-
-Buffer accounts are used by the Upgradeable BPF loader to temporarily store
-byte-code that is in the process of being deployed on-chain. This temporary
-buffer is required when upgrading programs because the currently deployed
-program's byte-code cannot be affected by an in-progress upgrade.
-
-Unfortunately, deploys fail occasionally and instead of reusing the buffer
-account, developers might retry their deployment with a new buffer and not
-realize that they stored a good chunk of SOL in a forgotten buffer account from
-an earlier deploy.
-
-Developers can check if they own any abandoned buffer accounts by using the
-Solana CLI:
-
-```shell
-solana program show --buffers --keypair ~/.config/solana/MY_KEYPAIR.json
-
-Buffer Address                               | Authority                                    | Balance
-9vXW2c3qo6DrLHa1Pkya4Mw2BWZSRYs9aoyoP3g85wCA | 2nr1bHFT86W9tGnyvmYW4vcHKsQB3sVQfnddasz4kExM | 3.41076888 SOL
-```
-
-And they can close those buffers to reclaim the SOL balance with the following
-command:
-
-```shell
-solana program close --buffers --keypair ~/.config/solana/MY_KEYPAIR.json
-```
-
-#### Fetch the owners of buffer accounts via RPC API
-
-The owners of all abandoned program deploy buffer accounts can be fetched via
-the RPC API:
-
-```shell
-curl http://api.mainnet-beta.solana.com -H "Content-Type: application/json" \
---data-binary @- << EOF | jq --raw-output '.result | .[] | .account.data[0]'
-{
-    "jsonrpc":"2.0", "id":1, "method":"getProgramAccounts",
-    "params":[
-        "BPFLoaderUpgradeab1e11111111111111111111111",
-        {
-            "dataSlice": {"offset": 5, "length": 32},
-            "filters": [{"memcmp": {"offset": 0, "bytes": "2UzHM"}}],
-            "encoding": "base64"
-        }
-    ]
-}
-EOF
-```
-
-After re-encoding the base64 encoded keys into base58 and grouping by key, we
-see some accounts have over 10 buffer accounts they could close, yikes!
-
-```shell
-'BE3G2F5jKygsSNbPFKHHTxvKpuFXSumASeGweLcei6G3' => 10 buffer accounts
-'EsQ179Q8ESroBnnmTDmWEV4rZLkRc3yck32PqMxypE5z' => 10 buffer accounts
-'6KXtB89kAgzW7ApFzqhBg5tgnVinzP4NSXVqMAWnXcHs' => 12 buffer accounts
-'FinVobfi4tbdMdfN9jhzUuDVqGXfcFnRGX57xHcTWLfW' => 15 buffer accounts
-'TESAinbTL2eBLkWqyGA82y1RS6kArHvuYWfkL9dKkbs' => 42 buffer accounts
-```
-
-### Reclaiming program data accounts
-
-You may now realize that program data accounts (the accounts that store the
-executable byte-code for an on-chain program) can also be closed.
-
-> **Note:** This does _not_ mean that _program accounts_ can be closed (those
-> are immutable and can never be reclaimed, but it's fine they're pretty small).
-> It's also important to keep in mind that once program data accounts are
-> deleted, they can never be recreated for an existing program. Therefore, the
-> corresponding program (and its program id) for any closed program data account
-> is effectively disabled forever and may not be re-deployed
-
-While it would be uncommon for developers to need to close program data accounts
-since they can be rewritten during upgrades, one potential scenario is that
-since program data accounts can't be _resized_. You may wish to deploy your
-program at a new address to accommodate larger executables.
-
-The ability to reclaim program data account rent deposits also makes testing and
-experimentation on the `mainnet-beta` cluster a lot less costly since you could
-reclaim everything except the transaction fees and a small amount of rent for
-the program account. Lastly, this could help developers recover most of their
-funds if they mistakenly deploy a program at an unintended address or on the
-wrong cluster.
-
-To view the programs which are owned by your wallet address, you can run:
-
-```shell
-solana -V # must be 1.7.11 or higher!
-solana program show --programs --keypair ~/.config/solana/MY_KEYPAIR.json
-
-Program Id                                   | Slot      | Authority                                    | Balance
-CN5x9WEusU6pNH66G22SnspVx4cogWLqMfmb85Z3GW7N | 53796672  | 2nr1bHFT86W9tGnyvmYW4vcHKsQB3sVQfnddasz4kExM | 0.54397272 SOL
-```
-
-To close those program data accounts and reclaim their SOL balance, you can run:
-
-```shell
-solana program close --programs --keypair ~/.config/solana/MY_KEYPAIR.json
-```
-
-You might be concerned about this feature allowing malicious actors to close a
-program in a way that negatively impacts end users. While this is a valid
-concern in general, closing program data accounts doesn't make this any more
-exploitable than was already possible.
-
-Even without the ability to close a program data account, any upgradeable
-program could be upgraded to a no-op implementation and then have its upgrade
-authority cleared to make it immutable forever. This new feature for closing
-program data accounts merely adds the ability to reclaim the rent deposit,
-disabling a program was already technically possible.

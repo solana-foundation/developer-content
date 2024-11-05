@@ -5,7 +5,7 @@ description:
   comprehensive guide covers creating, building, testing, and deploying Solana
   smart contracts with Anchor.
 sidebarLabel: Anchor Framework
-sidebarSortOrder: 1
+sidebarSortOrder: 0
 altRoutes:
   - /docs/programs/debugging
   - /docs/programs/lang-c
