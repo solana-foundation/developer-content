@@ -1,9 +1,9 @@
 ---
 title: "Deploying Programs"
 description:
-  "Deploying onchain programs can be done using the Solana CLI using the
+  Deploying onchain programs can be done using the Solana CLI using the
   Upgradable BPF loader to upload the compiled byte-code to the Solana
-  blockchain."
+  blockchain.
 sidebarSortOrder: 2
 ---
 
