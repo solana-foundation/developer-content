@@ -85,7 +85,7 @@ Install these packages to your Next.js project using your preferred node package
 manager:
 
 ```shell
-npm install @solana/web3.js \
+npm install @solana/web3.js@1 \
     @solana/wallet-adapter-base \
     @solana/wallet-adapter-react \
     @solana/wallet-adapter-react-ui \

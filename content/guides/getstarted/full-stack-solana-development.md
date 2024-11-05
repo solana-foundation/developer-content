@@ -1085,7 +1085,7 @@ Throw this command into your terminal to install all the `wallet-adapter` stuff
 we need:
 
 ```shell
-yarn add react @solana/web3.js \
+yarn add react @solana/web3.js@1 \
   @solana/wallet-adapter-base @solana/wallet-adapter-react \
   @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets
 ```

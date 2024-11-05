@@ -139,7 +139,7 @@ Using your preferred package manager (e.g. npm, yarn, pnpm, etc), install these
 packages into your project:
 
 ```shell
-yarn add @solana/web3.js @solana/spl-token @solana/spl-account-compression
+yarn add @solana/web3.js@1 @solana/spl-token @solana/spl-account-compression
 ```
 
 ```shell
