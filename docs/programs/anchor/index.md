@@ -2,7 +2,7 @@
 title: Getting Started with Anchor
 description: Getting Started with Anchor
 sidebarLabel: Anchor Framework
-sidebarSortOrder: 1
+sidebarSortOrder: 0
 altRoutes:
   - /docs/programs/debugging
   - /docs/programs/lang-c
