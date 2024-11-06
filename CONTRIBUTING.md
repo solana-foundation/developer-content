@@ -23,7 +23,7 @@ transparent as possible, whether it's:
 - content translations are supported via Crowdin
 - code blocks must use code-import for file snippets (via filesystem)
 - code file should be [tests](https://nodejs.org/api/test.html) and should add
-  code ranges instead of whole test file
+  code ranges instead of whole file
 
 ## Style guidelines
 
@@ -285,8 +285,8 @@ source files.
 
 To use code-import, follow these steps:
 
-Ensure your code file is a test file located in the appropriate directory within
-the repo. Use the following syntax to import code snippets:
+Ensure your code file is located in the appropriate directory within the repo.
+Use the following syntax to import code snippets:
 
 ```javascript file="/path/to/your/file.ts#L1-L10,#L15-L20"
 
@@ -1012,3 +1012,67 @@ pnpm dev
 ```
 
 > Note: The developer content API normally runs locally on port `3001`
+
+## Testing
+
+The repository uses Node's native test runner for testing code examples. This
+ensures all code snippets are correct and working as expected.
+
+### Test Structure
+
+There are two supported ways to structure your tests:
+
+1. **Adjacent test files** - For simpler modules with a single code file:
+
+   ```
+   pda/
+   ├── index.ts
+   └── index.test.ts
+   ```
+
+2. **Tests directory** - For modules with multiple code files or complex test
+   cases:
+   ```
+   pda/
+   ├── index.ts
+   ├── utils.ts
+   └── tests/
+       ├── index.test.ts
+       └── utils.test.ts
+   ```
+
+Choose the structure that best fits your needs:
+
+- Use adjacent test files (`index.test.ts`) when you have a simple 1:1
+  relationship between code and test files
+- Use a `tests` directory when you have multiple code files that need testing or
+  need multiple test files for a single code file
+
+### Running Tests
+
+You can run tests in two ways:
+
+1. Test the entire codebase:
+
+   ```shell
+   pnpm install
+   pnpm turbo test
+   ```
+
+2. Test specific code imports:
+   ```shell
+   cd code
+   pnpm install
+   pnpm turbo test
+   ```
+
+### Writing Tests
+
+We use [Behavior-Driven Development (BDD)](https://cucumber.io/docs/bdd/) style
+testing, which uses `describe` and `it` blocks to create readable test
+descriptions. When tests run, they read like natural sentences.
+
+Example:
+[generate-mnemonic.test.ts](https://github.com/solana-foundation/developer-content/blob/master/code/content/cookbook/wallets/tests/generate-mnemonic.test.ts)
+
+All tests should handle both success and failure cases appropriately.

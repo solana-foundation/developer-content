@@ -66,13 +66,21 @@ function extractLines(
   const lines = content.split(EOL);
   let result: string[] = [];
 
-  for (const range of ranges) {
-    if (range.to > lines.length) {
-      throw new Error(
-        `Line range exceeds file length of ${lines.length} lines`,
-      );
+  if (
+    ranges.length === 1 &&
+    ranges[0].from === 1 &&
+    ranges[0].to === Infinity
+  ) {
+    result = result.concat(lines);
+  } else {
+    for (const range of ranges) {
+      if (range.to > lines.length) {
+        throw new Error(
+          `Line range exceeds file length of ${lines.length} lines`,
+        );
+      }
+      result = result.concat(lines.slice(range.from - 1, range.to));
     }
-    result = result.concat(lines.slice(range.from - 1, range.to));
   }
 
   let finalResult = result.join("\n");

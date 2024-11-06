@@ -18,6 +18,6 @@ key more easily identifiable.
 You can generate a vanity address using the
 [Solana CLI](/docs/intro/installation.md):
 
-```bash
+```bash file=/code/content/cookbook/wallets/generate-vanity-address.sh
 solana-keygen grind --starts-with e1v1s:1
 ```

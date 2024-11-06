@@ -1,17 +1,3 @@
----
-title: How to Sign and Verify a Message
-sidebarSortOrder: 6
-description: "Learn how to sign messages on Solana."
----
-
-The primary function of a keypair is to sign messages and enable verification of
-the signature. Verification of a signature allows the recipient to be sure that
-the data was signed by the owner of a specific private key.
-
-To do so, we can use the [TweetNaCl](https://www.npmjs.com/package/tweetnacl)
-crypto library:
-
-```typescript filename="sign-message.ts" file=/code/content/cookbook/wallets/sign-message.ts#L1-L25
 import { Keypair } from "@solana/web3.js";
 import * as ed from "@noble/ed25519";
 import { sha512 } from "@noble/hashes/sha512";
@@ -37,4 +23,5 @@ const signature = ed.sign(messageBytes, keypair.secretKey.slice(0, 32));
 
 // Verify using noble-ed25519
 const result = ed.verify(signature, messageBytes, keypair.publicKey.toBytes());
-```
+
+export { keypair, message, messageBytes, signature, result };
