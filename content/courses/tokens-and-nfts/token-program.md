@@ -464,7 +464,7 @@ Assuming you already have a `.env` file with a `SECRET_KEY` setup per
 [Cryptography fundamentals](/content/courses/intro-to-solana/intro-to-cryptography.md).
 
 ```bash
-npm i @solana/web3.js @solana/spl-token @solana-developers/helpers esrun
+npm i @solana/web3.js@1 @solana/spl-token @solana-developers/helpers@2 esrun
 ```
 
 #### Create the Token Mint

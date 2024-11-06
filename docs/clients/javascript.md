@@ -34,13 +34,13 @@ For the full list of terms, see
 #### yarn
 
 ```shell
-yarn add @solana/web3.js
+yarn add @solana/web3.js@1
 ```
 
 #### npm
 
 ```shell
-npm install --save @solana/web3.js
+npm install --save @solana/web3.js@1
 ```
 
 #### Bundle

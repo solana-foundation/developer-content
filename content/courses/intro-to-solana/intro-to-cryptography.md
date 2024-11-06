@@ -102,7 +102,7 @@ You can use the Solana blockchain from either the browser or node.js with the
 to install `@solana/web3.js`
 
 ```shell
-npm i @solana/web3.js
+npm i @solana/web3.js@1
 ```
 
 We'll cover a lot of
@@ -171,7 +171,7 @@ Make a new directory, install TypeScript, Solana web3.js and esrun:
 mkdir generate-keypair
 cd generate-keypair
 npm init -y
-npm install typescript @solana/web3.js esrun @solana-developers/helpers
+npm install typescript @solana/web3.js@1 esrun @solana-developers/helpers@2
 ```
 
 Make a new file called `generate-keypair.ts`
