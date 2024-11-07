@@ -477,7 +477,7 @@ as we discussed before. This is done to avoid using the same nonce again.
 
 Voila, we've gone through a very real-life use case of Durable Nonces. Now let's
 see how to use them in transactions using JavaScript and the
-[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/) package.
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) package.
 
 ## Durable Nonces with Solana Web3.js
 

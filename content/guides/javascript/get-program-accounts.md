@@ -34,7 +34,7 @@ The `getProgramAccounts` RPC method has the following syntax:
     [State commitment](/docs/rpc/index.mdx#configuring-state-commitment)
   - (optional) `encoding`: `string` - Encoding for account data, either:
     `base58`, `base64`, or `jsonParsed`. Note, web3js users should instead use
-    [`getParsedProgramAccounts`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
+    [`getParsedProgramAccounts`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getParsedProgramAccounts)
   - (optional) `dataSlice`: `object` - Limit the returned account data based on:
     - `offset`: `number` - Number of bytes into account data to begin returning
     - `length`: `number` - Number of bytes of account data to return
@@ -307,5 +307,5 @@ interested in.
 ## Other Resources
 
 - [RPC API Documentation](https://solana.com/docs/rpc/http/getprogramaccounts)
-- [web3.js documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getProgramAccounts)
-- [getParsedProgramAccounts documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getParsedProgramAccounts)
+- [web3.js documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getProgramAccounts)
+- [getParsedProgramAccounts documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getParsedProgramAccounts)

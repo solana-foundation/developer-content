@@ -279,7 +279,7 @@ package, developers can use the
 function to calculate the required space for a given tree size parameters.
 
 Then using the
-[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getMinimumBalanceForRentExemption)
+[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getMinimumBalanceForRentExemption)
 function to get the final cost (in lamports) to allocate the required space for
 the tree on-chain.
 

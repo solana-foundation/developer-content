@@ -43,7 +43,7 @@ connection.requestAirdrop();
 ```
 
 See more:
-[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop)
+[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#requestAirdrop)
 documentation inside web3.js.
 
 ## 2. Web Faucet
