@@ -11,13 +11,13 @@ The `@solana/web3.js` library is a package that has coverage over the
 [Solana JSON RPC API](/docs/rpc).
 
 You can find the full documentation for the `@solana/web3.js` library
-[here](https://solana-labs.github.io/solana-web3.js/).
+[here](https://solana-labs.github.io/solana-web3.js/v1.x/).
 
 ## General
 
 ### Connection
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Connection.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
 
 Connection is used to interact with the [Solana JSON RPC](/docs/rpc). You can
 use Connection to confirm transactions, get account info, and more.
@@ -62,12 +62,12 @@ console.log(slotLeader);
 ```
 
 The above example shows only a few of the methods on Connection. Please see the
-[source generated docs](https://solana-labs.github.io/solana-web3.js/classes/Connection.html)
+[source generated docs](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
 for the full list.
 
 ### Transaction
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html)
 
 A transaction is used to interact with programs on the Solana blockchain. These
 transactions are constructed with TransactionInstructions, containing all the
@@ -142,7 +142,7 @@ await web3.sendAndConfirmRawTransaction(connection, rawTransaction);
 
 ### Keypair
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Keypair.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Keypair.html)
 
 The keypair is used to create an account with a public key and secret key within
 Solana. You can either generate, generate from a seed, or create from a secret
@@ -214,7 +214,7 @@ entropy. Do not share your seed. Treat the seed like you would a private key.
 
 ### PublicKey
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/PublicKey.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/PublicKey.html)
 
 PublicKey is used throughout `@solana/web3.js` in transactions, keypairs, and
 programs. You require publickey when listing each account in a transaction and
@@ -260,7 +260,7 @@ console.log(`Valid Program Address: ${validProgramAddress}`);
 
 ### SystemProgram
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/SystemProgram.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/SystemProgram.html)
 
 The SystemProgram grants the ability to create accounts, allocate account data,
 assign an account to programs, work with nonce accounts, and transfer lamports.
@@ -358,7 +358,7 @@ await web3.sendAndConfirmTransaction(connection, assignTransaction, [
 
 ### Secp256k1Program
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Secp256k1Program.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Secp256k1Program.html)
 
 The Secp256k1Program is used to verify Secp256k1 signatures, which are used by
 both Bitcoin and Ethereum.
@@ -421,7 +421,7 @@ await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 
 ### Message
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Message.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Message.html)
 
 Message is used as another way to construct transactions. You can construct a
 message using the accounts, header, instructions, and recentBlockhash that are a
@@ -487,7 +487,7 @@ await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 
 ### Struct
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Struct.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Struct.html)
 
 The struct class is used to create Rust compatible structs in javascript. This
 class is only compatible with Borsh encoded Rust structs.
@@ -517,7 +517,7 @@ export class Fee extends Struct {
 
 ### Enum
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Enum.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Enum.html)
 
 The Enum class is used to represent a Rust compatible Enum in javascript. The
 enum will just be a string representation if logged but can be properly
@@ -547,7 +547,7 @@ export class AccountType extends Enum {}
 
 ### NonceAccount
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/NonceAccount.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/NonceAccount.html)
 
 Normally a transaction is rejected if a transaction's `recentBlockhash` field is
 too old. To provide for certain custodial services, Nonce Accounts are used.
@@ -637,7 +637,7 @@ offline with the nonce in place of the `recentBlockhash`.
 
 ### VoteAccount
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/VoteAccount.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/VoteAccount.html)
 
 Vote account is an object that grants the capability of decoding vote accounts
 from the native vote account program on the network.
@@ -711,7 +711,7 @@ VoteAccount {
 
 ### StakeProgram
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/StakeProgram.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/StakeProgram.html)
 
 The StakeProgram facilitates staking SOL and delegating them to any validators
 on the network. You can use StakeProgram to create a stake account, stake some
@@ -811,7 +811,7 @@ await web3.sendAndConfirmTransaction(connection, withdrawTransaction, [
 
 ### Authorized
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Authorized.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Authorized.html)
 
 Authorized is an object used when creating an authorized account for staking
 within Solana. You can designate a `staker` and `withdrawer` separately,
@@ -822,7 +822,7 @@ You can find more usage of the `Authorized` object under
 
 ### Lockup
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/classes/Lockup.html)
+[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Lockup.html)
 
 Lockup is used in conjunction with the
 [StakeProgram](/docs/clients/javascript.md#StakeProgram) to create an account.

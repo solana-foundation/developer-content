@@ -326,7 +326,7 @@ pub struct NewAccount {
 
 Interacting with Solana programs written in native Rust involves directly
 building the
-[`TransactionInstruction`](https://solana-labs.github.io/solana-web3.js/classes/TransactionInstruction.html).
+[`TransactionInstruction`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/TransactionInstruction.html).
 
 Similarly, fetching and deserializing account data requires creating a schema
 compatible with the on-chain program's data structures.

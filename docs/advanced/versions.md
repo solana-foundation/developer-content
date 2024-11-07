@@ -45,12 +45,12 @@ transaction is returned when `legacy` is selected)
 ## How to set max supported version
 
 You can set the `maxSupportedTransactionVersion` using both the
-[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/) library and
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) library and
 JSON formatted requests directly to an RPC endpoint.
 
 ### Using web3.js
 
-Using the [`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/)
+Using the [`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/)
 library, you can retrieve the most recent block or get a specific transaction:
 
 ```js

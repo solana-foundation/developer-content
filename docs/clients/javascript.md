@@ -14,7 +14,7 @@ The Solana-Web3.js library aims to provide complete coverage of Solana. The
 library was built on top of the [Solana JSON RPC API](/docs/rpc).
 
 You can find the full documentation for the `@solana/web3.js` library
-[here](https://solana-labs.github.io/solana-web3.js/).
+[here](https://solana-labs.github.io/solana-web3.js/v1.x/).
 
 ## Common Terminology
 
