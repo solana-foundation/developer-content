@@ -157,7 +157,7 @@ Through this context argument the instruction can then access:
   a vector that contains all accounts that were passed into the instruction
   handler but are not declared in the `Accounts` struct.
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
-- The seeds for any PDA accounts in tha `Accounts` struct (`ctx.seeds`)
+- The seeds for any PDA accounts in the `Accounts` struct (`ctx.seeds`)
 
 > The design of Contexts can be different across different programs to serve
 > their purpose; and the name of the context could be anything (not limited to
