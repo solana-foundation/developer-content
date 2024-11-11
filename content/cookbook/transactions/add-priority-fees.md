@@ -29,6 +29,121 @@ compute budget. The value provided will replace the default value. Transactions
 should request the minimum amount of CU required for execution to maximize
 throughput, or minimize fees.
 
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+
+<Tab value="web3.js v2">
+
+```typescript filename="add-memo.ts" {61-72} {37-38} {77-87}
+import {
+  airdropFactory,
+  appendTransactionMessageInstructions,
+  createSolanaRpc,
+  createSolanaRpcSubscriptions,
+  createTransactionMessage,
+  devnet,
+  generateKeyPairSigner,
+  getComputeUnitEstimateForTransactionMessageFactory,
+  getSignatureFromTransaction,
+  lamports,
+  pipe,
+  prependTransactionMessageInstructions,
+  sendAndConfirmTransactionFactory,
+  setTransactionMessageFeePayerSigner,
+  setTransactionMessageLifetimeUsingBlockhash,
+  signTransactionMessageWithSigners,
+} from "@solana/web3.js";
+import {
+  getSetComputeUnitLimitInstruction,
+  getSetComputeUnitPriceInstruction,
+} from "@solana-program/compute-budget";
+import { getAddMemoInstruction } from "@solana-program/memo";
+
+async function writeMemoWithPriorityFees(message: string) {
+  // Create an RPC.
+  const CLUSTER = "devnet";
+  const rpc = createSolanaRpc(devnet(`https://api.${CLUSTER}.solana.com`));
+  const rpcSubscriptions = createSolanaRpcSubscriptions(
+    devnet(`wss://api.${CLUSTER}.solana.com`),
+  );
+
+  // Create an airdrop function.
+  const airdrop = airdropFactory({ rpc, rpcSubscriptions });
+
+  // Create a utility that estimates a transaction message's compute consumption.
+  const getComputeUnitEstimate =
+    getComputeUnitEstimateForTransactionMessageFactory({ rpc });
+
+  // Create a transaction sending function.
+  const sendAndConfirmTransaction = sendAndConfirmTransactionFactory({
+    rpc,
+    rpcSubscriptions,
+  });
+
+  // Create and fund an account.
+  const keypairSigner = await generateKeyPairSigner();
+  console.log("Created an account with address", keypairSigner.address);
+  console.log("Requesting airdrop");
+  await airdrop({
+    commitment: "confirmed",
+    lamports: lamports(1000_000n),
+    recipientAddress: keypairSigner.address,
+  });
+  console.log("Airdrop confirmed");
+
+  // Create a memo transaction.
+  console.log("Creating a memo transaction");
+  const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
+  const transactionMessage = pipe(
+    createTransactionMessage({ version: "legacy" }),
+    m => setTransactionMessageFeePayerSigner(keypairSigner, m),
+    m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    m =>
+      appendTransactionMessageInstructions(
+        [
+          getSetComputeUnitPriceInstruction({ microLamports: 5000n }),
+          getAddMemoInstruction({ memo: message }),
+        ],
+        m,
+      ),
+  );
+
+  // Figure out how many compute units to budget for this transaction
+  // so that you can right-size the compute budget to maximize the
+  // chance that it will be selected for inclusion into a block.
+  console.log("Estimating the compute consumption of the transaction");
+  const estimatedComputeUnits =
+    await getComputeUnitEstimate(transactionMessage);
+  console.log(
+    `Transaction is estimated to consume ${estimatedComputeUnits} compute units`,
+  );
+  const budgetedTransactionMessage = prependTransactionMessageInstructions(
+    [getSetComputeUnitLimitInstruction({ units: estimatedComputeUnits })],
+    transactionMessage,
+  );
+
+  // Sign and send the transaction.
+  console.log("Signing and sending the transaction");
+  const signedTx = await signTransactionMessageWithSigners(
+    budgetedTransactionMessage,
+  );
+  const signature = getSignatureFromTransaction(signedTx);
+  console.log(
+    "Sending transaction https://explorer.solana.com/tx/" +
+      signature +
+      "/?cluster=" +
+      CLUSTER,
+  );
+  await sendAndConfirmTransaction(signedTx, { commitment: "confirmed" });
+  console.log("Transaction confirmed");
+}
+
+writeMemoWithPriorityFees("Hello, priority fees!");
+```
+
+</Tab>
+
+<Tab value="web3.js v1">
+
 ```typescript filename="add-priority-fees.ts" {25-28, 30-33}
 import { BN } from "@coral-xyz/anchor";
 import {
@@ -85,3 +200,7 @@ import {
   console.log(result);
 })();
 ```
+
+</Tab>
+
+</Tabs>
