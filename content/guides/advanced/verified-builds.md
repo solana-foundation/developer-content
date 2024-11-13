@@ -34,10 +34,10 @@ The verification process involves comparing the hash of the onchain program with
 the hash of the locally built program from the source code. This ensures no
 discrepancies between the two versions.
 
-> A While a verified build should not be considered more secure than an
-> unverified build, the build enables developers to self verify the source code
-> matches what is deployed onchain. Using the source code, a developer can then
-> validate what the code executes when sending a transaction.
+> While a verified build should not be considered more secure than an unverified
+> build, the build enables developers to self verify the source code matches
+> what is deployed onchain. Using the source code, a developer can then validate
+> what the code executes when sending a transaction.
 
 The verified builds pipeline was thought out and is maintained by
 [Ellipsis Labs](https://ellipsislabs.xyz/) and [OtterSec](https://osec.io/). For
@@ -87,7 +87,13 @@ Using verified builds provides the following benefits:
   program's onchain behavior is aligned with your public code. When building
   verifiable programs, you minimize risks associated with running unauthorized
   or malicious code. It also ensures you comply with best practices and give
-  security researchers an easy way to contact you.
+  security researchers an easy way to contact you. Also wallets and other tools
+  can allow transactions from your program more easily as long as it is
+  verified.
+
+- Discoverability: When you provide a verified build of you program everyone can
+  find your source code, docs, program SDK or IDL and they can also easily
+  contact your via github in case there is an issue.
 
 # How do I create verified builds?
 
@@ -225,8 +231,8 @@ solana-verify get-program-hash -u $NETWORK_URL $PROGRAM_ID
 
 > You may have different versions deployed on different
 > [Solana clusters](/docs/core//clusters.md) (i.e. devnet, testnet, mainnet).
-> Ensure you use the the correct network URL for the desired Solana cluster you
-> want to verify a program against.
+> Ensure you use the correct network URL for the desired Solana cluster you want
+> to verify a program against.
 
 ### Verifying against repositories
 
@@ -243,6 +249,12 @@ solana-verify verify-from-repo -u $NETWORK_URL --program-id $PROGRAM_ID https://
 This command compares the onchain program with the executable built from the
 source at the specified commit hash.
 
+At the end the command will ask you if you want to upload your verification data
+on chain. If you do that the Solana Explorer will immidiatelly show your
+programs verification data. Until it was verified by a remote build it will show
+as unverified. Learn how you can verify your program against a public API in the
+next step.
+
 ### Verify against public API
 
 Finally you can also directly verify the program against anyone that is running
@@ -251,6 +263,10 @@ the verify API::
 ```bash
 solana-verify verify-from-repo --remote -um --program-id PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY https://github.com/Ellipsis-Labs/phoenix-v1
 ```
+
+> It is recommended to use a payed RPC Url because otherwise you may run into
+> rate limits of the free RPCs. So instead of `-um` you can use
+> `--url yourRpcUrl` for a more reliable verification.
 
 The `--remote` flag sends a build request to the OtterSec API, which triggers a
 remote build of your program. Once the build is complete, the system verifies
@@ -271,7 +287,7 @@ and eventually also on the community-run website
 [OtterSec verified programs API](https://verify.osec.io/verified-programs) and
 at last in the
 [Verified Programs Dune Dashboard](https://dune.com/jonashahn/verified-programs/dedf21e1-9b71-42c8-89f9-02ed94628657)
-contributing to a more healthy solana ecosystem.
+contributing to a more healthy Solana ecosystem.
 
 </Steps>
 
@@ -310,7 +326,8 @@ artifact from your repository.
 # Conclusion
 
 Using [verified builds on Solana](/content/guides/advanced/verified-builds.md)
-ensures the integrity and trustworthiness of your programs on the network. By
+ensures the integrity and trustworthiness of your programs on the network and
+allow developers to find your SDKs directly from a Solana Explorer. By
 leveraging tools like the Solana Verify CLI and Docker, you can maintain
 verifiable and secure builds that align with your source code. Always take the
 necessary precautions to use consistent environments, and consider governance
@@ -320,7 +337,7 @@ solutions for safe upgrades and deployments.
 
 While verified builds are a powerful tool for ensuring the integrity of your
 Solana programs it is not completely trustless in the default setup. The docker
-images are build and hosted by the Ellipsis Labs team and the Solana Foundation.
+images are build and hosted by the Solana Foundation.
 
 Be aware that you are building your project in a downloaded docker image and
 that your whole setup gets copied into that docker image for building including
@@ -330,7 +347,9 @@ If you want to have a completely trustless setup you can build the docker images
 yourself and host them on your own infrastructure. This way you can be sure that
 the docker images are not tampered with. You can find the scripts to create your
 own docker images in the
-[Verified builds repository](https://github.com/Ellipsis-Labs/solana-verifiable-build).
+[Verified builds repository](https://github.com/Ellipsis-Labs/solana-verifiable-build)
+and you can fork it and run the github actions yourself or validate that they
+are correct.
 
 Furthermore for the remote verification you are trusting the OtterSec API and
 the
