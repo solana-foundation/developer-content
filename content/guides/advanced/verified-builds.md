@@ -93,7 +93,7 @@ Using verified builds provides the following benefits:
 
 - Discoverability: When you provide a verified build of you program everyone can
   find your source code, docs, program SDK or IDL and they can also easily
-  contact your via github in case there is an issue.
+  contact you via github in case there is an issue.
 
 # How do I create verified builds?
 
@@ -250,9 +250,9 @@ This command compares the onchain program with the executable built from the
 source at the specified commit hash.
 
 At the end the command will ask you if you want to upload your verification data
-on chain. If you do that the Solana Explorer will immidiatelly show your
-programs verification data. Until it was verified by a remote build it will show
-as unverified. Learn how you can verify your program against a public API in the
+on chain. If you do that the Solana Explorer will immediately show your programs
+verification data. Until it was verified by a remote build it will show as
+unverified. Learn how you can verify your program against a public API in the
 next step.
 
 ### Verify against public API
@@ -356,8 +356,8 @@ the
 [Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
 to a certain degree.
 
-The API and the Solana Explorer could potentially be compromised and show you
-false information.
+The API or Solana Explorer may potentially display incorrect information if
+compromised.
 
 If you want to have a completely trustless setup you can run the
 [Verify API](https://github.com/otter-sec/solana-verified-programs-api) yourself
