@@ -460,4 +460,57 @@ same discriminator. When deserializing account data, Anchor programs will also
 check an account is owned by the expected program for a specified account type.
 
 </Tab>
+<Tab value="Events">
+
+The event discriminator is used to identify the specific event type when
+deserializing on-chain data on event emission.
+
+```json filename="IDL"  {4}
+  "events": [
+    {
+      "name": "NewEvent",
+      "discriminator": [113, 21, 185, 70, 164, 99, 232, 201]
+    }
+  ]
+```
+
+The discriminator for an event is the first 8 bytes of the Sha256 hash of the
+prefix `event` plus the event name.
+
+For example:
+
+```
+sha256("event:NewEvent")
+```
+
+Hexadecimal output:
+
+```
+71 15 b9 46 a4 63 e8 c9 2a 3c 4d 83 87 16 cd 9b 66 28 cb e2 cb 7c 5d 70 59 f3 42 2b dc 35 03 53
+```
+
+The first 8 bytes are used as the discriminator for the account.
+
+Hex to decimal gives us:
+
+```
+71 = 113
+15 = 21
+b9 = 185
+46 = 70
+a4 = 164
+63 = 99
+e8 = 232
+c9 = 201
+```
+
+You can find the implementation of the discriminator generation in the Anchor
+codebase
+[here](https://github.com/coral-xyz/anchor/blob/v0.30.1/lang/attribute/event/src/lib.rs#L23-L27).
+
+Note that different programs using identical event names will generate the same
+discriminator. When deserializing event data, Anchor programs will also check an
+event is owned by the expected program for a specified event type.
+
+</Tab>
 </Tabs>
