@@ -112,9 +112,9 @@ systems.
 
 <Steps>
 
-### Install the Docker and Cargo
+### Install Docker and Cargo
 
-Install the Necessary Tools Ensure you have Docker and Cargo installed. Docker
+Install the necessary tools ensure you have Docker and Cargo installed. Docker
 provides a controlled build environment to ensure consistency, and Cargo is used
 for managing Rust packages.
 
