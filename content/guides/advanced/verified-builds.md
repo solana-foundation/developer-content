@@ -250,7 +250,7 @@ This command compares the onchain program with the executable built from the
 source at the specified commit hash.
 
 At the end the command will ask you if you want to upload your verification data
-on chain. If you do that the Solana Explorer will immediately show your programs
+onchain. If you do that the Solana Explorer will immediately show your program's
 verification data. Until it was verified by a remote build it will show as
 unverified. Learn how you can verify your program against a public API in the
 next step.
