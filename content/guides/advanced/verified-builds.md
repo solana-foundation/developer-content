@@ -337,7 +337,7 @@ solutions for safe upgrades and deployments.
 
 While verified builds are a powerful tool for ensuring the integrity of your
 Solana programs it is not completely trustless in the default setup. The docker
-images are build and hosted by the Solana Foundation.
+images are built and hosted by the Solana Foundation.
 
 Be aware that you are building your project in a downloaded docker image and
 that your whole setup gets copied into that docker image for building including
