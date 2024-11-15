@@ -145,12 +145,8 @@ also have. Let's add the string versions of both of those as constants at the
 top of the file:
 
 ```typescript
-const PING_PROGRAM_ADDRESS = new web3.PublicKey(
-  "ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa",
-);
-const PING_PROGRAM_DATA_ADDRESS = new web3.PublicKey(
-  "Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod",
-);
+const PING_PROGRAM_ADDRESS = "ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa";
+const PING_PROGRAM_DATA_ADDRESS = "Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod";
 ```
 
 Now let's create a new transaction, then initialize a `PublicKey` for the
