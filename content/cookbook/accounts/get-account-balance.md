@@ -22,7 +22,7 @@ async function getBalance() {
 
   try {
     const result = await rpc.getBalance(addressToRequest).send();
-    console.log(`Balance: ${Number(result.value) / LAMPORTS_PER_SOL} lamports`);
+    console.log(`Balance: ${Number(result.value) / LAMPORTS_PER_SOL} sol.`);
   } catch (err) {
     console.error("Error fetching balance:", err);
   }

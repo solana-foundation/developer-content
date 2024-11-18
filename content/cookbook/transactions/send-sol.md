@@ -39,8 +39,8 @@ import {
 import { getAddMemoInstruction } from "@solana-program/memo";
 import { getTransferSolInstruction } from "@solana-program/system";
 
-async function transferSol(message: string) {
-  // Create an RPC. Use localnet for solana-test-validator. This will get your easier airdrops.
+async function transferSol() {
+  // Create an RPC. Use localnet for solana-test-validator. This will get you easier airdrops.
   const CLUSTER = "devnet";
   const rpc = createSolanaRpc(devnet(`https://api.${CLUSTER}.solana.com`));
   const rpcSubscriptions = createSolanaRpcSubscriptions(
@@ -122,9 +122,7 @@ async function transferSol(message: string) {
   console.log("Transaction confirmed");
 }
 
-transferSol(
-  "I transfered some sol to: web3Qm5PuFapMJqe6PWRWfRBarkeqE2ZC8Eew3zwHH2!",
-);
+transferSol();
 ```
 
 </Tab>

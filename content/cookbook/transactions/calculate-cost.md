@@ -78,12 +78,6 @@ async function calculateCost(message: string) {
   });
   console.log("Airdrop confirmed");
 
-  // Create and fund an account.
-  console.log("Created an account with address", signer.address);
-  console.log("Requesting airdrop");
-
-  console.log("Airdrop confirmed");
-
   // Create a memo transaction.
   console.log("Creating a memo transaction");
   const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();

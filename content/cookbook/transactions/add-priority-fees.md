@@ -33,7 +33,7 @@ throughput, or minimize fees.
 
 <Tab value="web3.js v2">
 
-```typescript filename="add-memo.ts" {61-72} {37-38} {77-87}
+```typescript filename="add-priority-fees.ts" {61-72} {37-38} {77-87}
 import {
   airdropFactory,
   appendTransactionMessageInstructions,

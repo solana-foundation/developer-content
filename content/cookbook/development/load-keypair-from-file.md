@@ -83,13 +83,5 @@ export async function loadKeypairFromFile(
   return keypair;
 }
 
-async function logPublicKey(path: string) {
-  const keypair = await loadKeypairFromFile(path);
-  const publicAddress = await getAddressFromPublicKey(keypair.publicKey);
-
-  console.log(`Public key from bytes: ${publicAddress}`);
-}
-
 createKeypair();
-logPublicKey("~/.config/solana/id.json");
 ```
