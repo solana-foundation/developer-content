@@ -295,7 +295,7 @@ solana-verify verify-from-repo -u $NETWORK_URL --program-id $PROGRAM_ID https://
 
 > While you run the verified build in your program directory, when running
 > `verify-from-repo` you need to add the `--mount-path` flag. This will be the
-> path to the folder containing the `Cargo.toml` that contains your programs
+> path to the folder containing the `Cargo.toml` that contains your program's
 > library name.
 
 This command compares the onchain program hash with the executable hash built
