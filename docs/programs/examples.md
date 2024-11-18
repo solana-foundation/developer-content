@@ -23,7 +23,7 @@ keywords:
   - blockchain tutorial
   - web3 developer
   - anchor
-sidebarSortOrder: 2
+sidebarSortOrder: 3
 ---
 
 The

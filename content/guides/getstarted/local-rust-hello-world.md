@@ -251,7 +251,7 @@ For macOS you can
 Install the Solana web3.js library and the Solana helpers library:
 
 ```shell
-npm install @solana/web3.js @solana-developers/helpers
+npm install @solana/web3.js@1 @solana-developers/helpers@2
 ```
 
 Create a new file called `client.mjs` and add the following code:

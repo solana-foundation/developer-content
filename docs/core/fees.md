@@ -338,7 +338,7 @@ let instruction = ComputeBudgetInstruction::set_compute_unit_price(1);
 #### Javascript
 
 The `@solana/web3.js` library includes functions within the
-[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/classes/ComputeBudgetProgram.html)
+[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/ComputeBudgetProgram.html)
 class to craft instructions for setting the _compute unit limit_ and _compute
 unit price_:
 

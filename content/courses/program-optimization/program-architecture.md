@@ -691,11 +691,6 @@ Depending on the seeding you can create all sorts of relationships:
   want one player account per wallet. Then you'd seed the account with
   `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
   to look for a wallet's player account **and** there can only ever be one of
-- One-Per-Owner - Say you're creating a video game player account and you only
-  want one player account per wallet. Then you'd seed the account with
-  `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
-  to look for a wallet's player account **and** there can only ever be one of
-  them.
 - Multiple-Per-Owner - Okay, but what if you want multiple accounts per wallet?
   Say you want to mint podcast episodes. Then you could seed your `Podcast`
   account like this:

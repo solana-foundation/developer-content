@@ -57,7 +57,7 @@ Solana. We'll also install TypeScript and `esrun`, so we can run `.ts` files on
 the command line:
 
 ```bash
-npm install typescript @solana/web3.js esrun
+npm install typescript @solana/web3.js@1 esrun
 ```
 
 ### Connect to the Network
