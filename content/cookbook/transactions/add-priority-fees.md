@@ -111,8 +111,15 @@ async function writeMemoWithPriorityFees(message: string) {
   // so that you can right-size the compute budget to maximize the
   // chance that it will be selected for inclusion into a block.
   console.log("Estimating the compute consumption of the transaction");
-  const estimatedComputeUnits =
-    await getComputeUnitEstimate(transactionMessage);
+  var estimatedComputeUnits = await getComputeUnitEstimate(transactionMessage);
+  // While these estimates are quite accurate they are not perfect. So you may want to add a
+  // buffer if you expect that the transaction may consume more compute units than estimated.
+  // You would need to invent time travel to exactly know what the transaction will consume when
+  // you send it in the future. You can add a buffer to the estimate to account for this.
+  // estimatedComputeUnits += 1000;
+  // estimatedComputeUnits *= 1.1;
+  // You can read more about the issue here: https://github.com/solana-labs/solana-web3.js/tree/master/packages/library#getcomputeunitestimatefortransactionmessagefactoryrpc
+
   console.log(
     `Transaction is estimated to consume ${estimatedComputeUnits} compute units`,
   );
