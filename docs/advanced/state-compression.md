@@ -193,14 +193,14 @@ sized and set at tree creation via this `maxBufferSize` value.
 
 ### Canopy depth
 
-The "canopy depth", sometimes called the canopy size, is the number of proof
-nodes that are cached/stored on-chain for any given proof path.
+The "canopy depth," also known as the canopy size, refers to the number of proof
+node levels that are cached or stored onchain for a given proof path.
 
 When performing an update action on a `leaf`, like transferring ownership (e.g.
 selling a compressed NFT), the **complete** proof path must be used to verify
 original ownership of the leaf and therefore allow for the update action. This
 verification is performed using the **complete** proof path to correctly compute
-the current `root hash` (or any cached `root hash` via the on-chain "concurrent
+the current `root hash` (or any cached `root hash` via the onchain "concurrent
 buffer").
 
 The larger a tree's max depth is, the more proof nodes are required to perform
@@ -221,6 +221,18 @@ below the limit.
 For example, a tree with a max depth of `14` would require `14` total proof
 nodes. With a canopy of `10`, only `4` proof nodes are required to be submitted
 per update transaction.
+
+![Canopy depth of 1 for a Concurrent Merkle Tree of max depth of 3](/assets/docs/compression/canopy-depth-1.png)
+
+Consider another example, this time with a tree of max depth `3`. If we want to
+apply an action to one of the tree’s leaves—such as updating `R4`—we need to
+provide proofs for `L4` and `R2`. However, we can omit `R1` since it is already
+cached/stored onchain due to our canopy depth of `1`, which ensures that all
+nodes at level 1 (`L1` and `R1`) are stored onchain. This results in a total of
+2 required proofs.
+
+Therefore, the number of proofs required to update a leaf is equal to the max
+depth minus the canopy depth. In this example, `3 - 1 = 2`.
 
 #### The larger the canopy depth value, the higher the cost
 
@@ -267,7 +279,7 @@ package, developers can use the
 function to calculate the required space for a given tree size parameters.
 
 Then using the
-[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getMinimumBalanceForRentExemption)
+[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getMinimumBalanceForRentExemption)
 function to get the final cost (in lamports) to allocate the required space for
 the tree on-chain.
 

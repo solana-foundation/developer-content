@@ -318,6 +318,14 @@ To read the `data` field from any account, you need to deserialize the data
 buffer into the expected data type. This is often done using helper functions
 from client libraries for a particular program.
 
+**Deserialization** is the process of converting data from a stored format (like
+raw bytes or JSON) back into a usable, structured format in a program. In
+blockchain, it involves taking raw, encoded data from the network and
+transforming it back into objects, classes, or readable structures so developers
+can access and manipulate specific information within a program. Deserialization
+is essential for interpreting account or transaction data received from a
+network in a form that a program can process and display meaningfully.
+
 Open this next [example](https://beta.solpg.io/6671cd8acffcf4b13384d19b) in
 Solana Playground. You'll see this code:
 

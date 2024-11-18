@@ -647,7 +647,7 @@ cd cnft-demo
 Install all the required dependencies
 
 ```bash
-npm i @solana/web3.js @solana-developers/helpers@2.5.2 @metaplex-foundation/mpl-token-metadata @metaplex-foundation/mpl-bubblegum @metaplex-foundation/digital-asset-standard-api @metaplex-foundation/umi-bundle-defaults
+npm i @solana/web3.js@1 @solana-developers/helpers@2.5.2 @metaplex-foundation/mpl-token-metadata @metaplex-foundation/mpl-bubblegum @metaplex-foundation/digital-asset-standard-api @metaplex-foundation/umi-bundle-defaults
 
 npm i --save-dev esrun
 ```
