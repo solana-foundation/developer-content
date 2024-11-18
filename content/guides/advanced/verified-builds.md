@@ -282,7 +282,7 @@ Now you can already get the hash of your program and compare it to your binary
 hash from earlier if you want:
 
 ```bash
-solana-verify get-program-hash yourProgramId
+solana-verify get-program-hash $PROGRAM_ID
 ```
 
 ### Verifying against repositories
