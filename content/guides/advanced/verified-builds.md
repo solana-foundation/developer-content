@@ -307,7 +307,7 @@ verification data. Until it was verified by a remote build it will show as
 unverified. Learn how you can verify your program against a public API in the
 next step.
 
-If you want to lock the verification to certain a release you can append the
+If you want to lock the verification to a certain release, you can append the
 `--commit-hash` flag to the command.
 
 ### Verify against public API
