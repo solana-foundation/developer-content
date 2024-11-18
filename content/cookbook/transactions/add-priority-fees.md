@@ -114,8 +114,8 @@ async function writeMemoWithPriorityFees(message: string) {
   var estimatedComputeUnits = await getComputeUnitEstimate(transactionMessage);
   // While these estimates are quite accurate they are not perfect. So you may want to add a
   // buffer if you expect that the transaction may consume more compute units than estimated.
-  // You would need to invent time travel to exactly know what the transaction will consume when
-  // you send it in the future. You can add a buffer to the estimate to account for this.
+  // Its not possible to exactly know what the transaction will consume when
+  // you send it in the future. The state may change. You can add a buffer to the estimate to account for this.
   // estimatedComputeUnits += 1000;
   // estimatedComputeUnits *= 1.1;
   // You can read more about the issue here: https://github.com/solana-labs/solana-web3.js/tree/master/packages/library#getcomputeunitestimatefortransactionmessagefactoryrpc
