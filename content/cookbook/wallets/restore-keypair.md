@@ -53,7 +53,7 @@ const keypair = Keypair.fromSecretKey(
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
 
-<Tab value="web3.js v2 from base58">
+<Tab value="web3.js v2">
 
 ```typescript
 import { createKeyPairFromBytes } from "@solana/keys";
