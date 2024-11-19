@@ -14,7 +14,7 @@ secret to test out your dApp.
 <Tab value="web3.js v2">
 
 ```typescript
-import { createKeyPairFromBytes } from "@solana/keys";
+import { createKeyPairFromBytes } from "@solana/web3.js";
 
 const keypair = await createKeyPairFromBytes(
   new Uint8Array([
