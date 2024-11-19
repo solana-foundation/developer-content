@@ -14,20 +14,15 @@ account. Rent can be reclaimed in full if the account is closed.
 
 <Tab value="web3.js v2">
 
-```typescript
+```typescript filename="calculate-rent.ts"
 import { createSolanaRpc } from "@solana/web3.js";
 
-(async () => {
-  const rpc = createSolanaRpc("https://api.devnet.solana.com");
-  // length of data in bytes in the account to calculate rent for
-  const dataLength = 1500;
-  const rentExemptionAmount = await rpc
-    .getMinimumBalanceForRentExemption(BigInt(dataLength))
-    .send();
-  console.log({
-    rentExemptionAmount,
-  });
-})();
+const rpc = createSolanaRpc("https://api.devnet.solana.com");
+// 1.5k bytes
+const space = 1500n;
+
+const lamports = await rpc.getMinimumBalanceForRentExemption(space).send();
+console.log("Minimum balance for rent exception:", lamports);
 ```
 
 </Tab>
@@ -37,17 +32,15 @@ import { createSolanaRpc } from "@solana/web3.js";
 ```typescript
 import { Connection, clusterApiUrl } from "@solana/web3.js";
 
-(async () => {
-  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-  // length of data in bytes in the account to calculate rent for
-  const dataLength = 1500;
-  const rentExemptionAmount =
-    await connection.getMinimumBalanceForRentExemption(dataLength);
-  console.log({
-    rentExemptionAmount,
-  });
-})();
+// length of data in bytes in the account to calculate rent for
+const dataLength = 1500;
+const rentExemptionAmount =
+  await connection.getMinimumBalanceForRentExemption(dataLength);
+console.log({
+  rentExemptionAmount,
+});
 ```
 
 </Tab>
