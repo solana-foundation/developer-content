@@ -422,6 +422,28 @@ verifiable and secure builds that align with your source code. Always take the
 necessary precautions to use consistent environments, and consider governance
 solutions for safe upgrades and deployments.
 
+## Frequently Asked Questions
+
+### My program compiles locally with `solana-verify build ...`, but fails with `solana-verify verify-from-repo <github> --remote ...`
+
+If you get the error `The provided GitHub build does not match the on-chain hash` then there are two scenarios to consider.
+
+- In the scenario where you built your program with `solana-verify build` before deploying (for example via Github Actions), then it is just a matter of finding the correct commit hash to use with `--remote`. You can specify this like so, `-solana-verify verify-from-repo --remote --commit-hash <my-commit-hash>`  
+
+- In the scenario where you built your program locally before deploying, you may have to redeploy your program. Build it by running `solana-verify build` before deploying.
+
+However, if you get the error `Error: Error verifying program. Err(Failed to parse output)` while attempting to verify your program, 
+then it is likely that you need to specify the mount path to your program's workspace.
+This can be set by specifying `--mount-path <path/to/program-dir>`.
+
+### My program is not verifying with `--remote`, how do I debug?
+
+Make sure that you are running the latest version of `solana-verify` (at least as recent as 0.3.0 or higher). You can update by running `cargo install solana-verify`. 
+Now run `solana-verify verify-from-repo --remote ...` again. 
+Now on failure you should see a logs url (like `https://verify.osec.io/logs/<uuid>`) that may help debug your build.
+If there is still a problem, please open an issue on https://github.com/Ellipsis-Labs/solana-verifiable-build with your logs url.
+
+
 ## Security + Disclaimer
 
 While verified builds are a powerful tool for ensuring the integrity of your
