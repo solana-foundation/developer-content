@@ -42,17 +42,18 @@ An example of some of these Solana blockchain explorers include:
 ## On a high level
 
 - Mainnet: Live production environment for deployed applications.
-- Devnet: Testing with public accessibility for developers experimenting with their applications.
+- Devnet: Testing with public accessibility for developers experimenting with
+  their applications.
 - Testnet: Stress-testing for network upgrades and validator performance.
 
-**Example use cases**: You may want to debug a new program on Devnet or verify performance metrics on Testnet before Mainnet deployment.
+**Example use cases**: You may want to debug a new program on Devnet or verify
+performance metrics on Testnet before Mainnet deployment.
 
-| **Cluster**   | **Endpoint**                     | **Purpose**                                 | **Notes**                          |
-|---------------|----------------------------------|---------------------------------------------|-------------------------------------|
-| Mainnet       | `https://api.mainnet-beta.solana.com` | Live production environment                 | Requires SOL for transactions      |
-| Devnet        | `https://api.devnet.solana.com`      | Public testing and development              | Free SOL airdrop for testing       |
-| Testnet       | `https://api.testnet.solana.com`     | Validator and stress testing                | May have intermittent downtime     |
-
+| **Cluster** | **Endpoint**                          | **Purpose**                    | **Notes**                      |
+| ----------- | ------------------------------------- | ------------------------------ | ------------------------------ |
+| Mainnet     | `https://api.mainnet-beta.solana.com` | Live production environment    | Requires SOL for transactions  |
+| Devnet      | `https://api.devnet.solana.com`       | Public testing and development | Free SOL airdrop for testing   |
+| Testnet     | `https://api.testnet.solana.com`      | Validator and stress testing   | May have intermittent downtime |
 
 ## Devnet
 
