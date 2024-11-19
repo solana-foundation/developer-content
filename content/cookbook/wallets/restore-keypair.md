@@ -70,7 +70,7 @@ console.log(keypair);
 
 </Tab>
 
-<Tab value="web3.js v1 from base58">
+<Tab value="web3.js v1">
 
 ```typescript
 import { Keypair } from "@solana/web3.js";
