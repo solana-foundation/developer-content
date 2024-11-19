@@ -16,17 +16,17 @@ details and usage examples.
 
 ### Development
 
-| Page Title                                                                                                                | Client Code |
-| ------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| [How to Start a Local Validator](https://solana.com/developers/cookbook/development/start-local-validator)                | Solana CLI  |
-| [Connecting to a Solana Environment](https://solana.com/developers/cookbook/development/connect-environment)              | Web3.js     |
-| [Getting Test SOL](https://solana.com/developers/cookbook/development/test-sol)                                           | Web3.js     |
-| [Subscribing to Events](https://solana.com/developers/cookbook/development/subscribing-events)                            | Web3.js     |
-| [Using Mainnet Accounts and Programs](https://solana.com/developers/cookbook/development/using-mainnet-accounts-programs) | Solana CLI  |
+| Page Title                                                                                                                | Client     |
+| ------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| [How to Start a Local Validator](https://solana.com/developers/cookbook/development/start-local-validator)                | Solana CLI |
+| [Connecting to a Solana Environment](https://solana.com/developers/cookbook/development/connect-environment)              | Web3.js    |
+| [Getting Test SOL](https://solana.com/developers/cookbook/development/test-sol)                                           | Web3.js    |
+| [Subscribing to Events](https://solana.com/developers/cookbook/development/subscribing-events)                            | Web3.js    |
+| [Using Mainnet Accounts and Programs](https://solana.com/developers/cookbook/development/using-mainnet-accounts-programs) | Solana CLI |
 
 ### Wallets
 
-| Page Title                                                                                                       | Client Code         |
+| Page Title                                                                                                       | Client              |
 | ---------------------------------------------------------------------------------------------------------------- | ------------------- |
 | [How to Create a Keypair](https://solana.com/developers/cookbook/wallets/create-keypair)                         | Web3.js             |
 | [How to Restore a Keypair](https://solana.com/developers/cookbook/wallets/restore-keypair)                       | Web3.js             |
@@ -40,7 +40,7 @@ details and usage examples.
 
 ### Transactions
 
-| Page Title                                                                                                         | Client Code       |
+| Page Title                                                                                                         | Client            |
 | ------------------------------------------------------------------------------------------------------------------ | ----------------- |
 | [How to Send SOL](https://solana.com/developers/cookbook/transactions/send-sol)                                    | Web3.js           |
 | [How to Send Tokens](https://solana.com/developers/cookbook/transactions/send-tokens)                              | Web3.js           |
@@ -52,7 +52,7 @@ details and usage examples.
 
 ### Accounts
 
-| Page Title                                                                                               | Client Code   |
+| Page Title                                                                                               | Client        |
 | -------------------------------------------------------------------------------------------------------- | ------------- |
 | [How to Create an Account](https://solana.com/developers/cookbook/accounts/create-account)               | Web3.js       |
 | [How to Calculate Account Creation Cost](https://solana.com/developers/cookbook/accounts/calculate-rent) | Web3.js       |
@@ -63,7 +63,7 @@ details and usage examples.
 
 ### Writing Programs
 
-| Page Title                                                                                                     | Client Code  |
+| Page Title                                                                                                     | Client       |
 | -------------------------------------------------------------------------------------------------------------- | ------------ |
 | [How to Transfer SOL in a Solana Program](https://solana.com/developers/cookbook/programs/transfer-sol)        | Rust         |
 | [How to Get Clock in a Program](https://solana.com/developers/cookbook/programs/clock)                         | Rust         |
@@ -76,7 +76,7 @@ details and usage examples.
 
 ### Tokens
 
-| Page Title                                                                                                                  | Client Code        |
+| Page Title                                                                                                                  | Client             |
 | --------------------------------------------------------------------------------------------------------------------------- | ------------------ |
 | [How to Create a Token](https://solana.com/developers/cookbook/tokens/create-mint-account)                                  | Web3.js, spl-token |
 | [How to Get a Token Mint](https://solana.com/developers/cookbook/tokens/get-token-mint)                                     | Web3.js, spl-token |
