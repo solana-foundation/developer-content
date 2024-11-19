@@ -2,8 +2,8 @@
 title: How to Calculate Account Creation Cost
 sidebarSortOrder: 2
 description:
-  "Every time you create an account, that creation costs a small amount of SOL.
-  Learn how to calculate how much an account costs at creation."
+  "Every time you create an account, that creation costs an amount of SOL. Learn
+  how to calculate how much an account costs at creation."
 ---
 
 Keeping accounts alive on Solana incurs a storage cost called rent. For the
@@ -29,7 +29,7 @@ console.log("Minimum balance for rent exception:", lamports);
 
 <Tab value="web3.js v1">
 
-```typescript filename="calculate-rent.ts"
+```typescript
 import { Connection, clusterApiUrl } from "@solana/web3.js";
 
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
