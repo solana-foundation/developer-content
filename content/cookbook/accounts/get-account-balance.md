@@ -10,32 +10,22 @@ description:
 
 <Tab value="web3.js v2">
 
-```typescript filename="get-account-balance.ts" {13}
+```typescript filename="get-account-balance.ts"
 import { address, createSolanaRpc } from "@solana/web3.js";
-const LAMPORTS_PER_SOL = 1000000000;
 
-async function getBalance() {
-  const rpc = createSolanaRpc("https://api.devnet.solana.com");
-  const addressToRequest = address(
-    "web3Qm5PuFapMJqe6PWRWfRBarkeqE2ZC8Eew3zwHH2",
-  );
+const rpc = createSolanaRpc("https://api.devnet.solana.com");
+const LAMPORTS_PER_SOL = 1_000_000_000; // 1 billion lamports per SOL
 
-  try {
-    const result = await rpc.getBalance(addressToRequest).send();
-    console.log(`Balance: ${Number(result.value) / LAMPORTS_PER_SOL} sol.`);
-  } catch (err) {
-    console.error("Error fetching balance:", err);
-  }
-}
-
-getBalance();
+const wallet = address("nicktrLHhYzLmoVbuZQzHUTicd2sfP571orwo9jfc8c");
+const { value: balance } = await rpc.getBalance(wallet).send();
+console.log(`Balance: ${Number(balance) / LAMPORTS_PER_SOL} SOL`);
 ```
 
 </Tab>
 
 <Tab value="web3.js v1">
 
-```typescript filename="get-account-balance.ts" {13}
+```typescript filename="get-account-balance.ts"
 import {
   clusterApiUrl,
   Connection,
@@ -43,14 +33,11 @@ import {
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
 
-(async () => {
-  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+const wallet = new PublicKey("nicktrLHhYzLmoVbuZQzHUTicd2sfP571orwo9jfc8c");
 
-  let wallet = new PublicKey("G2FAbFQPFa5qKXCetoFZQEvF9BVvCKbvUZvodpVidnoY");
-  console.log(
-    `${(await connection.getBalance(wallet)) / LAMPORTS_PER_SOL} SOL`,
-  );
-})();
+const balance = await connection.getBalance(wallet);
+console.log(`Balance: ${balance / LAMPORTS_PER_SOL} SOL`);
 ```
 
 </Tab>
