@@ -93,7 +93,7 @@ The result will be a JSON object with `value` equal to an array of:
     \(and is strictly read-only\)
   - `rentEpoch: <u64>` - the epoch at which this account will next owe rent, as
     u64
-  - `space: <u64>` - the data size of the account
+  - `size: <u64>` - the data size of the account
 
 </DocLeftSide>
 
@@ -126,24 +126,22 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 {
   "jsonrpc": "2.0",
   "result": {
-    "context": {
-      "slot": 1
-    },
+    "context": { "apiVersion": "2.0.15", "slot": 341197247 },
     "value": [
       {
-        "data": ["", "base64"],
+        "data": ["", "base58"],
         "executable": false,
-        "lamports": 1000000000,
+        "lamports": 88849814690250,
         "owner": "11111111111111111111111111111111",
-        "rentEpoch": 2,
-        "space": 16
+        "rentEpoch": 18446744073709551615,
+        "space": 0
       },
       {
-        "data": ["", "base64"],
+        "data": ["", "base58"],
         "executable": false,
-        "lamports": 5000000000,
-        "owner": "11111111111111111111111111111111",
-        "rentEpoch": 2,
+        "lamports": 998763433,
+        "owner": "2WRuhE4GJFoE23DYzp2ij6ZnuQ8p9mJeU6gDgfsjR4or",
+        "rentEpoch": 18446744073709551615,
         "space": 0
       }
     ]
