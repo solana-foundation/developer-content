@@ -30,44 +30,44 @@ using various tools and clients.
 Learn how to create, restore, and manage Solana wallets using various tools and
 libraries.
 
-| Guide                                                                                          | Client             | Description                         |
-| ---------------------------------------------------------------------------------------------- | ------------------ | ----------------------------------- |
-| [How to Create a Keypair](/content/cookbook/wallets/create-keypair.md)                         | web3.js            | Generate new Solana keypairs        |
-| [How to Restore a Keypair](/content/cookbook/wallets/restore-keypair.md)                       | web3.js            | Recover existing keypairs           |
-| [How to Verify a Keypair](/content/cookbook/wallets/verify-keypair.md)                         | web3.js            | Validate keypair authenticity       |
-| [How to Validate a Public Key](/content/cookbook/wallets/check-publickey.md)                   | web3.js            | Check public key validity           |
-| [How to Generate Mnemonics for Keypairs](/content/cookbook/wallets/generate-mnemonic.md)       | bip39              | Create seed phrases                 |
-| [How to Restore a Keypair from a Mnemonic](/content/cookbook/wallets/restore-from-mnemonic.md) | web3.js, bip39     | Recover keypairs using seed phrases |
-| [How to Generate a Vanity Address](/content/cookbook/wallets/generate-vanity-address.md)       | Solana CLI         | Create custom addresses             |
-| [How to Sign and Verify a Message](/content/cookbook/wallets/sign-message.md)                  | web3.js, tweetNaCl | Message signing and verification    |
-| [How to Connect a Wallet with React](/content/cookbook/wallets/connect-wallet-react.md)        | React, web3.js     | Integrate wallets in React apps     |
+| Guide                                                                                          | Client         | Description                         |
+| ---------------------------------------------------------------------------------------------- | -------------- | ----------------------------------- |
+| [How to Create a Keypair](/content/cookbook/wallets/create-keypair.md)                         | web3.js        | Generate new Solana keypairs        |
+| [How to Restore a Keypair](/content/cookbook/wallets/restore-keypair.md)                       | web3.js        | Recover existing keypairs           |
+| [How to Verify a Keypair](/content/cookbook/wallets/verify-keypair.md)                         | web3.js        | Validate keypair authenticity       |
+| [How to Validate a Public Key](/content/cookbook/wallets/check-publickey.md)                   | web3.js        | Check public key validity           |
+| [How to Generate Mnemonics for Keypairs](/content/cookbook/wallets/generate-mnemonic.md)       | bip39          | Create seed phrases                 |
+| [How to Restore a Keypair from a Mnemonic](/content/cookbook/wallets/restore-from-mnemonic.md) | web3.js, bip39 | Recover keypairs using seed phrases |
+| [How to Generate a Vanity Address](/content/cookbook/wallets/generate-vanity-address.md)       | Solana CLI     | Create custom addresses             |
+| [How to Sign and Verify a Message](/content/cookbook/wallets/sign-message.md)                  | web3.js        | Message signing and verification    |
+| [How to Connect a Wallet with React](/content/cookbook/wallets/connect-wallet-react.md)        | React, web3.js | Integrate wallets in React apps     |
 
 ## Transaction Operations
 
 Explore various transaction-related operations on the Solana blockchain.
 
-| Guide                                                                                            | Client             | Description                    |
-| ------------------------------------------------------------------------------------------------ | ------------------ | ------------------------------ |
-| [How to Send SOL](/content/cookbook/transactions/send-sol.md)                                    | web3.js            | Transfer SOL between accounts  |
-| [How to Send Tokens](/content/cookbook/transactions/send-tokens.md)                              | web3.js            | Transfer SPL tokens            |
-| [How to Calculate Transaction Cost](/content/cookbook/transactions/calculate-cost.md)            | web3.js            | Estimate transaction fees      |
-| [How to Add a Memo to a Transaction](/content/cookbook/transactions/add-memo.md)                 | web3.js            | Include memos in transactions  |
-| [How to Add Priority Fees to a Transaction](/content/cookbook/transactions/add-priority-fees.md) | web3.js            | Set transaction priorities     |
-| [How to Optimize Compute Requested](/content/cookbook/transactions/optimize-compute.md)          | web3.js            | Improve transaction efficiency |
-| [Offline Transactions](/content/cookbook/transactions/offline-transactions.md)                   | web3.js, tweetNaCl | Handle offline operations      |
+| Guide                                                                                            | Client  | Description                    |
+| ------------------------------------------------------------------------------------------------ | ------- | ------------------------------ |
+| [How to Send SOL](/content/cookbook/transactions/send-sol.md)                                    | web3.js | Transfer SOL between accounts  |
+| [How to Send Tokens](/content/cookbook/transactions/send-tokens.md)                              | web3.js | Transfer SPL tokens            |
+| [How to Calculate Transaction Cost](/content/cookbook/transactions/calculate-cost.md)            | web3.js | Estimate transaction fees      |
+| [How to Add a Memo to a Transaction](/content/cookbook/transactions/add-memo.md)                 | web3.js | Include memos in transactions  |
+| [How to Add Priority Fees to a Transaction](/content/cookbook/transactions/add-priority-fees.md) | web3.js | Set transaction priorities     |
+| [How to Optimize Compute Requested](/content/cookbook/transactions/optimize-compute.md)          | web3.js | Improve transaction efficiency |
+| [Offline Transactions](/content/cookbook/transactions/offline-transactions.md)                   | web3.js | Handle offline operations      |
 
 ## Account Management
 
 Learn how to manage Solana accounts effectively.
 
-| Guide                                                                                     | Client        | Description                |
-| ----------------------------------------------------------------------------------------- | ------------- | -------------------------- |
-| [How to Create an Account](/content/cookbook/accounts/create-account.md)                  | web3.js       | Create new Solana accounts |
-| [How to Calculate Account Creation Cost](/content/cookbook/accounts/calculate-account.md) | web3.js       | Estimate account costs     |
-| [How to Create a PDA's Account](/content/cookbook/accounts/create-pda.md)                 | web3.js, Rust | Work with PDAs             |
-| [How to Sign with a PDA's Account](/content/cookbook/accounts/sign-with-pda.md)           | Rust          | PDA signing operations     |
-| [How to Close an Account](/content/cookbook/accounts/close-account.md)                    | Rust          | Remove accounts            |
-| [How to Get Account Balance](/content/cookbook/accounts/get-account-balance.md)           | web3.js       | Check account balances     |
+| Guide                                                                                  | Client        | Description                |
+| -------------------------------------------------------------------------------------- | ------------- | -------------------------- |
+| [How to Create an Account](/content/cookbook/accounts/create-account.md)               | web3.js       | Create new Solana accounts |
+| [How to Calculate Account Creation Cost](/content/cookbook/accounts/calculate-rent.md) | web3.js       | Estimate account costs     |
+| [How to Create a PDA's Account](/content/cookbook/accounts/create-pda-account.md)      | web3.js, Rust | Work with PDAs             |
+| [How to Sign with a PDA's Account](/content/cookbook/accounts/sign-with-pda.md)        | Rust          | PDA signing operations     |
+| [How to Close an Account](/content/cookbook/accounts/close-account.md)                 | Rust          | Remove accounts            |
+| [How to Get Account Balance](/content/cookbook/accounts/get-account-balance.md)        | web3.js       | Check account balances     |
 
 ## Program Development
 
@@ -88,23 +88,23 @@ Develop Solana programs with these comprehensive guides.
 
 Comprehensive guides for working with tokens on Solana.
 
-| Guide                                                                                                     | Client             | Description                    |
-| --------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------ |
-| [How to Create a Token](/content/cookbook/tokens/create-token.md)                                         | web3.js, spl-token | Create new tokens              |
-| [How to Get a Token Mint](/content/cookbook/tokens/get-token-mint.md)                                     | web3.js, spl-token | Access token mints             |
-| [How to Create a Token Account](/content/cookbook/tokens/create-token-account.md)                         | web3.js, spl-token | Set up token accounts          |
-| [How to Get a Token Account](/content/cookbook/tokens/get-token-account.md)                               | web3.js, spl-token | Retrieve token accounts        |
-| [How to Get a Token Account's Balance](/content/cookbook/tokens/get-token-balance.md)                     | web3.js, rust      | Check token balances           |
-| [How to Mint Tokens](/content/cookbook/tokens/mint-tokens.md)                                             | web3.js, spl-token | Create new tokens              |
-| [How to Transfer Tokens](/content/cookbook/tokens/transfer-tokens.md)                                     | web3.js, spl-token | Move tokens between accounts   |
-| [How to Burn Tokens](/content/cookbook/tokens/burn-tokens.md)                                             | web3.js, spl-token | Remove tokens from circulation |
-| [How to Close Token Accounts](/content/cookbook/tokens/close-token-accounts.md)                           | web3.js, spl-token | Clean up token accounts        |
-| [How to Set Authority on Token Accounts or Mints](/content/cookbook/tokens/set-update-token-authority.md) | web3.js            | Manage token permissions       |
-| [How to Delegate Token Accounts](/content/cookbook/tokens/approve-token-delegate.md)                      | web3.js, spl-token | Set up token delegation        |
-| [How to Revoke a Token Delegate](/content/cookbook/tokens/revoke-token-delegate.md)                       | web3.js, spl-token | Remove delegates               |
-| [How to Use Wrapped SOL](/content/cookbook/tokens/manage-wrapped-sol.md)                                  | web3.js, spl-token | Work with wrapped SOL          |
-| [How to Get All Token Accounts by Authority](/content/cookbook/tokens/get-all-token-accounts.md)          | web3.js, spl-token | List token accounts            |
-| [How to Create an NFT](/content/cookbook/tokens/create-nft.md)                                            | Metaplex, web3.js  | Mint NFTs                      |
-| [How to Fetch the NFT Metadata](/content/cookbook/tokens/fetch-nft-metadata.md)                           | Metaplex           | Access NFT metadata            |
-| [How to Get the Owner of an NFT](/content/cookbook/tokens/get-nft-owner.md)                               | web3.js            | Find NFT ownership             |
-| [How to Get All NFTs from a Wallet](/content/cookbook/tokens/fetch-all-nfts.md)                           | Metaplex, web3.js  | List wallet NFTs               |
+| Guide                                                                                                     | Client        | Description                    |
+| --------------------------------------------------------------------------------------------------------- | ------------- | ------------------------------ |
+| [How to Create a Token](/content/cookbook/tokens/create-mint-account.md)                                  | web3.js       | Create new tokens              |
+| [How to Get a Token Mint](/content/cookbook/tokens/get-token-mint.md)                                     | web3.js       | Access token mints             |
+| [How to Create a Token Account](/content/cookbook/tokens/create-token-account.md)                         | web3.js       | Set up token accounts          |
+| [How to Get a Token Account](/content/cookbook/tokens/get-token-account.md)                               | web3.js       | Retrieve token accounts        |
+| [How to Get a Token Account's Balance](/content/cookbook/tokens/get-token-balance.md)                     | web3.js, rust | Check token balances           |
+| [How to Mint Tokens](/content/cookbook/tokens/mint-tokens.md)                                             | web3.js       | Create new tokens              |
+| [How to Transfer Tokens](/content/cookbook/tokens/transfer-tokens.md)                                     | web3.js       | Move tokens between accounts   |
+| [How to Burn Tokens](/content/cookbook/tokens/burn-tokens.md)                                             | web3.js       | Remove tokens from circulation |
+| [How to Close Token Accounts](/content/cookbook/tokens/close-token-accounts.md)                           | web3.js       | Clean up token accounts        |
+| [How to Set Authority on Token Accounts or Mints](/content/cookbook/tokens/set-update-token-authority.md) | web3.js       | Manage token permissions       |
+| [How to Delegate Token Accounts](/content/cookbook/tokens/approve-token-delegate.md)                      | web3.js       | Set up token delegation        |
+| [How to Revoke a Token Delegate](/content/cookbook/tokens/revoke-token-delegate.md)                       | web3.js       | Remove delegates               |
+| [How to Use Wrapped SOL](/content/cookbook/tokens/manage-wrapped-sol.md)                                  | web3.js       | Work with wrapped SOL          |
+| [How to Get All Token Accounts by Authority](/content/cookbook/tokens/get-all-token-accounts.md)          | web3.js       | List token accounts            |
+| [How to Create an NFT](/content/cookbook/tokens/create-nft.md)                                            | web3.js       | Mint NFTs                      |
+| [How to Fetch the NFT Metadata](/content/cookbook/tokens/fetch-nft-metadata.md)                           | Javascript    | Fetch NFT metadata             |
+| [How to Get the Owner of an NFT](/content/cookbook/tokens/get-nft-owner.md)                               | web3.js       | Find NFT ownership             |
+| [How to Get All NFTs from a Wallet](/content/cookbook/tokens/fetch-all-nfts.md)                           | web3.js       | List wallet NFTs               |
