@@ -73,15 +73,13 @@ console.log(keypair);
 <Tab value="web3.js v1">
 
 ```typescript
-import { createKeyPairFromBytes } from "@solana/keys";
-import { getBase58Encoder } from "@solana/codecs-base58";
+import { createKeyPairFromBytes, getBase58Encoder } from "@solana/web3.js";
 
 const keypair = await createKeyPairFromBytes(
     getBase58Encoder().decode("5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG")
 );
 
 console.log(keypair);
-
 ```
 
 </Tab>
