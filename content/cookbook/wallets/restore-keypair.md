@@ -56,7 +56,7 @@ const keypair = Keypair.fromSecretKey(
 <Tab value="web3.js v2">
 
 ```typescript
-import { createKeyPairFromBytes } from "@solana/keys";
+import { createKeyPairFromBytes } from "@solana/web3.js";
 import bs58 from "bs58";
 
 const keypair = await createKeyPairFromBytes(
