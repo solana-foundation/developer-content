@@ -21,6 +21,12 @@ const { value: balance } = await rpc.getBalance(wallet).send();
 console.log(`Balance: ${Number(balance) / LAMPORTS_PER_SOL} SOL`);
 ```
 
+> As of `v2.0.0`, developers can use the default configurations within the main
+> library (`@solana/web3.js`) or import any of its subpackages where better
+> composition or more granular control over the imports is desired. See
+> [Tree-Shakability](https://github.com/solana-labs/solana-web3.js?tab=readme-ov-file#tree-shakability)
+> for more information.
+
 </Tab>
 
 <Tab value="web3.js v1">
