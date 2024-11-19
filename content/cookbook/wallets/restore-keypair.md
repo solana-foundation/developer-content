@@ -51,7 +51,7 @@ const keypair = Keypair.fromSecretKey(
 
 ## From base58 String
 
-<Tabs groupId="language" items={['web3.js v2 from base58', 'web3.js v1 from base58']}>
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
 
 <Tab value="web3.js v2 from base58">
 
