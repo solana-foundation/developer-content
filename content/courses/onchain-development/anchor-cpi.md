@@ -362,10 +362,10 @@ anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 anchor-spl = "0.30.1"
 ```
 
-Since we are adding `anchor-spl` as a dependency we also need to add the `idl-build`
-for it in the features section of `Cargo.toml`. This is because all types that will be
-used in the `Accounts` structures that we are adding in this lesson require the `IdlBuild`
-trait implementation to generate an IDL.
+Since we are adding `anchor-spl` as a dependency we also need to add the
+`idl-build` for it in the features section of `Cargo.toml`. This is because all
+types that will be used in the `Accounts` structures that we are adding in this
+lesson require the `IdlBuild` trait implementation to generate an IDL.
 
 ```rust
 [features]
