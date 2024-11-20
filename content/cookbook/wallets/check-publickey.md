@@ -65,4 +65,3 @@ console.log(PublicKey.isOnCurve(errorPubkey.toBytes()));
 
 </Tab>
 </Tabs>
-```
