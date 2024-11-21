@@ -66,7 +66,7 @@ async function transferSol() {
   console.log("Requesting airdrop");
   await airdrop({
     commitment: "confirmed",
-    lamports: lamports(1000_000n),
+    lamports: lamports(1_000_000_000n),
     recipientAddress: keypairSigner.address,
   });
   console.log("Airdrop confirmed");
@@ -85,7 +85,7 @@ async function transferSol() {
           getTransferSolInstruction({
             source: keypairSigner,
             destination: address("web3Qm5PuFapMJqe6PWRWfRBarkeqE2ZC8Eew3zwHH2"),
-            amount: lamports(1_000n),
+            amount: lamports(1_000_000n),
           }),
         ],
         m,
