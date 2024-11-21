@@ -3,10 +3,10 @@
 # These global owners will be the default owners for everything in
 # the repo. Unless a later match takes precedence, will be requested for
 # review when someone opens a pull request.
-*       @nickfrosty
+*       @ZYJLiu
 
 # This list owns any file in the `/docs` directory in the root of 
 # the repository and any of its subdirectories.
 # /docs/ @nickfrosty
 
-/content/courses/ @mikemaccana
+/docs/ @ZYJLiu
