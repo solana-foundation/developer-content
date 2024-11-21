@@ -11,6 +11,11 @@ makes it easy to manage wallet connections client-side. For a full length guide,
 check out
 [Add Solana Wallet Adapter to a NextJS application](/content/guides/wallets/add-solana-wallet-adapter-to-nextjs.md).
 
+> For web3.js v2, please reference the
+> [react example](https://github.com/solana-labs/solana-web3.js/tree/master/examples/react-app)
+> from the
+> [Anza Web3js v2 Blog](https://www.anza.xyz/blog/solana-web3-js-2-release).
+
 ## How to Connect to a Wallet with React
 
 > Currently, `create-solana-dapp` only works with Solana Web3.js v1.

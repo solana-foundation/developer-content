@@ -12,12 +12,13 @@ and use this one for your projects using the `loadKeypairFromFile` function.
 ```typescript filename="load-keypair-from-file.ts"
 import {
   airdropFactory,
-  createKeyPairFromBytes,
+  createKeyPairSignerFromBytes,
   createSolanaRpc,
   createSolanaRpcSubscriptions,
   devnet,
   generateKeyPair,
   getAddressFromPublicKey,
+  KeyPairSigner,
   lamports,
 } from "@solana/web3.js";
 import fs from "fs";
@@ -35,22 +36,20 @@ async function createKeypair() {
   console.log(`Public key: ${publicAddress}`);
 }
 
-export async function loadDefaultKeypair(): Promise<CryptoKeyPair> {
+export async function loadDefaultKeypair(): Promise<KeyPairSigner<string>> {
   return await loadKeypairFromFile("~/.config/solana/id.json");
 }
 
 export async function loadDefaultKeypairWithAirdrop(
   cluster: string,
-): Promise<CryptoKeyPair> {
+): Promise<KeyPairSigner<string>> {
   const keypair = await loadDefaultKeypair();
   const rpc = createSolanaRpc(devnet(`https://api.${cluster}.solana.com`));
   const rpcSubscriptions = createSolanaRpcSubscriptions(
     devnet(`wss://api.${cluster}.solana.com`),
   );
   try {
-    const result = await rpc
-      .getBalance(await getAddressFromPublicKey(keypair.publicKey))
-      .send();
+    const result = await rpc.getBalance(keypair.address).send();
 
     console.log(`Balance: ${result.value} lamports`);
     if (result.value < lamports(500_000n)) {
@@ -58,8 +57,8 @@ export async function loadDefaultKeypairWithAirdrop(
       const airdrop = airdropFactory({ rpc, rpcSubscriptions });
       await airdrop({
         commitment: "confirmed",
-        lamports: lamports(1000_000n),
-        recipientAddress: await getAddressFromPublicKey(keypair.publicKey),
+        lamports: lamports(1_000_000_000n),
+        recipientAddress: keypair.address,
       });
     }
   } catch (err) {
@@ -70,7 +69,7 @@ export async function loadDefaultKeypairWithAirdrop(
 
 export async function loadKeypairFromFile(
   filePath: string,
-): Promise<CryptoKeyPair> {
+): Promise<KeyPairSigner<string>> {
   // This is here so you can also load the default keypair from the file system.
   const resolvedPath = path.resolve(
     filePath.startsWith("~") ? filePath.replace("~", os.homedir()) : filePath,
@@ -79,8 +78,8 @@ export async function loadKeypairFromFile(
     JSON.parse(fs.readFileSync(resolvedPath, "utf8")),
   );
   // Here you can also set the second parameter to true in case you need to extract your private key.
-  const keypair = await createKeyPairFromBytes(loadedKeyBytes);
-  return keypair;
+  const keypairSigner = await createKeyPairSignerFromBytes(loadedKeyBytes);
+  return keypairSigner;
 }
 
 createKeypair();
