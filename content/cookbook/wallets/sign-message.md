@@ -4,14 +4,40 @@ sidebarSortOrder: 6
 description: "Learn how to sign messages on Solana."
 ---
 
-The primary function of a keypair is to sign messages and enable verification of
-the signature. Verification of a signature allows the recipient to be sure that
-the data was signed by the owner of a specific private key.
+The primary function of a keypair is to sign messages, transactions and enable
+verification of the signature. Verification of a signature allows the recipient
+to be sure that the data was signed by the owner of a specific private key.
 
-To do so, we can use the [TweetNaCl](https://www.npmjs.com/package/tweetnacl)
-crypto library:
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}> <Tab value="web3.js v2">
 
-```typescript filename="sign-message.ts"
+```typescript
+import {
+  generateKeyPair,
+  signBytes,
+  verifySignature,
+  getUtf8Encoder,
+  getBase58Decoder,
+} from "@solana/web3.js";
+
+const keys = await generateKeyPair();
+const message = getUtf8Encoder().encode("Hello, World!");
+const signedBytes = await signBytes(keys.privateKey, message);
+
+const decoded = getBase58Decoder().decode(signedBytes);
+console.log("Signature:", decoded);
+
+const verified = await verifySignature(keys.publicKey, signedBytes, message);
+console.log("Verified:", verified);
+```
+
+</Tab>
+
+<Tab value="web3.js v1">
+
+In Solana Web3.js v1, we can use the
+[TweetNaCl](https://www.npmjs.com/package/tweetnacl) crypto library:
+
+```typescript
 import { Keypair } from "@solana/web3.js";
 import nacl from "tweetnacl";
 import { decodeUTF8 } from "tweetnacl-util";
@@ -37,3 +63,6 @@ const result = nacl.sign.detached.verify(
 
 console.log(result);
 ```
+
+</Tab>
+</Tabs>
