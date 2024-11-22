@@ -156,15 +156,23 @@ If desired, you can install a version directly from a specific commit:
 cargo install solana-verify --git https://github.com/Ellipsis-Labs/solana-verifiable-build --rev 13a1db2
 ```
 
-### Building Verifiable Programs
+### Prepare project
 
 To verify against a repository it needs to have a `Cargo.lock` file in the root
-directory of your repo. You can use this `Cargo.toml` example as a preset:
+directory of your repository. If you only have one program in your repository
+and a `cargo.lock` file in your root you can directly go to the next step and
+build your program.
+
+If your program is in a subfolder and you have a rust workspace you need to
+create a workspace `Cargo.toml` file in the root directory of your repository.
+
+You can use this `Cargo.toml` example as a preset:
 
 ```toml filename="Cargo.toml"
 [workspace]
 members = ["program/programs/*"]
 resolver = "2"
+
 [profile.release]
 overflow-checks = true
 lto = "fat"
@@ -176,8 +184,41 @@ incremental = false
 codegen-units = 1
 ```
 
-With this file in place you can then run `cargo generate-lockfile` to create a
-lock file.
+Make sure that your program is in the `workspace/members` array and that the
+`Cargo.toml` of your program has the correct `lib` name configured.
+
+> Important is the `lib name` not the package name!
+
+Something like this:
+
+```toml filename="waffle/Cargo.toml"
+[package]
+name = "waffle"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "waffle"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+solana-program = "2.1.0"
+```
+
+In this [repository](https://github.com/solana-developers/verified-program) you
+can see an example of a workspace with a program in a subfolder. Notice also
+that when the program is in a subfolder you later need to add this folder as
+`--mount-path` to the `verify-from-repo` command.
+
+In this [repository](https://github.com/solana-developers/solana-game-preset)
+you can find an anchor example. In this
+[repository](https://github.com/solana-developers/verified-program-root) you can
+find a native rust example.
+
+With this `Cargo.toml` file in place you can then run `cargo generate-lockfile`
+to create a lock file and continue to building your program.
+
+### Building Verifiable Programs
 
 To verifiably build your Solana program, navigate to the directory containing
 your workspace's `Cargo.toml` file and run:
@@ -220,8 +261,11 @@ solution like [Squads Protocol](https://squads.so/protocol) for safe
 deployments, but you can also directly deploy with:
 
 ```bash
-solana program deploy -u $NETWORK_URL target/deploy/$PROGRAM_LIB_NAME.so --program-id $PROGRAM_ID --upgrade-authority $UPGRADE_AUTHORITY
+solana program deploy -u $NETWORK_URL target/deploy/$PROGRAM_LIB_NAME.so --program-id $PROGRAM_ID --with-compute-unit-price 50000 --max-sign-attempts 100 --use-rpc
 ```
+
+A currently fitting low priority fee you can request from your rpc provider for
+example [Quicknode](https://www.quicknode.com/gas-tracker/solana).
 
 To verify the deployed program matches the built executable, run:
 
@@ -232,7 +276,14 @@ solana-verify get-program-hash -u $NETWORK_URL $PROGRAM_ID
 > You may have different versions deployed on different
 > [Solana clusters](/docs/core//clusters.md) (i.e. devnet, testnet, mainnet).
 > Ensure you use the correct network URL for the desired Solana cluster you want
-> to verify a program against.
+> to verify a program against. Remote verification will only work on mainnet.
+
+Now you can already get the hash of your program and compare it to your binary
+hash from earlier if you want:
+
+```bash
+solana-verify get-program-hash $PROGRAM_ID
+```
 
 ### Verifying against repositories
 
@@ -242,18 +293,22 @@ To verify a program against its public repository, use:
 solana-verify verify-from-repo -u $NETWORK_URL --program-id $PROGRAM_ID https://github.com/$REPO_PATH --commit-hash $COMMIT_HASH --library-name $PROGRAM_LIB_NAME --mount-path $MOUNT_PATH
 ```
 
-> While you run the verified build in your program directory when running
-> `verify-from-repo` you need to add the `mount-path`. This will be the path to
-> the folder containing the `Cargo.toml` that contains your programs lib name.
+> While you run the verified build in your program directory, when running
+> `verify-from-repo` you need to add the `--mount-path` flag. This will be the
+> path to the folder containing the `Cargo.toml` that contains your program's
+> library name.
 
-This command compares the onchain program with the executable built from the
-source at the specified commit hash.
+This command compares the onchain program hash with the executable hash built
+from the source at the specified commit hash.
 
 At the end the command will ask you if you want to upload your verification data
 onchain. If you do that the Solana Explorer will immediately show your program's
 verification data. Until it was verified by a remote build it will show as
 unverified. Learn how you can verify your program against a public API in the
 next step.
+
+If you want to lock the verification to a certain release, you can append the
+`--commit-hash` flag to the command.
 
 ### Verify against public API
 
@@ -265,7 +320,7 @@ solana-verify verify-from-repo --remote -um --program-id PhoeNiXZ8ByJGLkxNfZRnkU
 ```
 
 > It is recommended to use a payed RPC Url because otherwise you may run into
-> rate limits of the free RPCs. So instead of `-um` you can use
+> rate limits of the free RPCs. So instead of `-um` you should use
 > `--url yourRpcUrl` for a more reliable verification.
 
 The `--remote` flag sends a build request to the OtterSec API, which triggers a
@@ -273,14 +328,16 @@ remote build of your program. Once the build is complete, the system verifies
 that the onchain hash of your program matches the hash of the generated build
 artifact from your repository.
 
-The default is the the
+The default is the
 [OtterSec API](https://github.com/otter-sec/solana-verified-programs-api).
 
 Once the build is done, which takes a while, and was successful you will be able
 to see your program as verified in the
 [OtterSec API for single programs](https://verify.osec.io/status/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
 and in the
-[Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build)
+[Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build),
+[SolanaFM](https://solana.fm/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY?cluster=mainnet-alpha),
+[SolScan](https://solscan.io/account/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY#programVerification)
 and eventually also on the community-run website
 [SolanaVerify.org](https://www.solanaverify.org/) maintained by
 [0xDeep](https://x.com/0xDeep) and the
@@ -291,31 +348,63 @@ contributing to a more healthy Solana ecosystem.
 
 </Steps>
 
-## Example verified build
+## Verify from docker image
 
-Here’s an example of verifying the solana-games-preset with the ID
-`MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt` using the source code from the
-repository:
+You can also verify your program against a docker image by running the following
+command:
 
 ```bash
-solana-verify verify-from-repo -url https://api.mainnet-beta.solana.com --program-id MkabCfyUD6rBTaYHpgKBBpBo5qzWA2pK2hrGGKMurJt https://github.com/solana-developers/solana-game-preset --library-name lumberjack --mount-path program --commit-hash eaf772fd1f21fe03a9974587f5680635e970be38
+solana-verify verify-from-image -e
+examples/hello_world/target/deploy/hello_world.so -i
+ellipsislabs/hello_world_verifiable_build:latest -p
+2ZrriTQSVekoj414Ynysd48jyn4AX6ZF4TTJRqHfbJfn
+```
+
+This command loads up the image stored at
+`ellipsislabs/hello_world_verifiable_build:latest`, and verifies that the hash
+of the executable path in the container is the same as the hash of the on-chain
+program supplied to the command. Because the build was already uploaded to an
+image, there is no need for a full rebuild of the executable which can take a
+long time.
+
+The Dockerfile that creates the image
+`ellipsislabs/hello_world_verifiable_build:latest` can be found in the ellipsis
+labs repository
+[/examples/hello_world](https://github.com/Ellipsis-Labs/solana-verifiable-build/tree/master/examples/hello_world).
+
+Below is the expected output:
+
+```bash
+Verifying image: "ellipsislabs/hello_world_verifiable_build:latest", on network
+"https://api.mainnet-beta.solana.com" against program ID
+2ZrriTQSVekoj414Ynysd48jyn4AX6ZF4TTJRqHfbJfn Executable path in container:
+"examples/hello_world/target/deploy/hello_world.so"
+
+Executable hash:
+08d91368d349c2b56c712422f6d274a1e8f1946ff2ecd1dc3efc3ebace52a760 Program hash:
+08d91368d349c2b56c712422f6d274a1e8f1946ff2ecd1dc3efc3ebace52a760 Executable
+matches on-chain program data ✅
+```
+
+## Example verified build
+
+Here’s an example of verifying an example program with the ID
+`FWEYpBAf9WsemQiNbAewhyESfR38GBBHLrCaU3MpEKWv` using the source code from this
+[repository](https://github.com/solana-developers/verified-program):
+
+```bash
+solana-verify verify-from-repo https://github.com/solana-developers/verified-program --url YOUR-RPC-URL --program-id FWEYpBAf9WsemQiNbAewhyESfR38GBBHLrCaU3MpEKWv --mount-path waffle --library-name waffle --commit-hash 5b82b86f02afbde330dff3e1847bed2d42069f4e
 ```
 
 By default the `verify-from-repo` command takes the last commit on the main
 branch. You can also define a certain commit in case you want to continue
 working on the repository by using the `commit-hash` parameter:
-`--commit-hash eaf772fd1f21fe03a9974587f5680635e970be38`
-
-You can also verify using Docker images for faster verification:
-
-```bash
-solana-verify verify-from-image -e examples/hello_world/target/deploy/hello_world.so -i ellipsislabs/hello_world_verifiable_build:latest -p 2ZrriTQSVekoj414Ynysd48jyn4AX6ZF4TTJRqHfbJfn
-```
+`--commit-hash 5b82b86f02afbde330dff3e1847bed2d42069f4e`
 
 Finally you can also directly verify the program against the OtterSec API:
 
 ```bash
-solana-verify verify-from-repo --remote -um --program-id PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY https://github.com/Ellipsis-Labs/phoenix-v1
+solana-verify verify-from-repo https://github.com/solana-developers/verified-program --url YOUR-RPC-URL --remote --program-id FWEYpBAf9WsemQiNbAewhyESfR38GBBHLrCaU3MpEKWv --mount-path waffle --library-name waffle --commit-hash 5b82b86f02afbde330dff3e1847bed2d42069f4e
 ```
 
 The `--remote` command sends a build request to the OtterSec API, which triggers

@@ -1526,8 +1526,6 @@ would end up as 0. `saturating_add` will keep it at its max if it's about to
 roll over, so `255 + 1 = 255`. The `checked_add` function will throw an error if
 it's about to overflow. Keep this in mind when doing math in Rust. Even though
 `kills` is a u64 and will never roll with it's current programming, it's good
-it's about to overflow. Keep this in mind when doing math in Rust. Even though
-`kills` is a u64 and will never roll with it's current programming, it's good
 practice to use safe math and consider roll-overs.
 
 ```rust filename="attack_monster.rs"
