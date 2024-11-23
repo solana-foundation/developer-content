@@ -36,7 +36,7 @@ fields:
 Example using curl:
 
 ```shell
-curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -s -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,
@@ -64,7 +64,7 @@ The commitment parameter should be included as the last element in the `params`
 array:
 
 ```shell
-curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -s -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,
