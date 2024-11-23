@@ -145,7 +145,7 @@ The `cpi` module turns `callee`'s instruction handlers into Rust functions.
 These functions take a `CpiContext` and any extra data needed for the
 instruction. They work just like the instruction handlers in your Anchor
 programs, but use `CpiContext` instead of `Context`. The `cpi` module also
-provides the account structs needed for these instruction handler.
+provides the account structs needed for these instruction handlers.
 
 For example, if `callee` has the instruction `do_something` that requires the
 accounts defined in the `DoSomething` struct, you could invoke `do_something` as
@@ -394,7 +394,7 @@ pub struct InitializeMint<'info> {
         bump,
         payer = user,
         mint::decimals = 6,
-        mint::authority = mint,
+        mint::authority = user,
     )]
     pub mint: Account<'info, Mint>,
     #[account(mut)]
@@ -672,7 +672,7 @@ it("Initializes the reward token", async () => {
 });
 ```
 
-Notice that we didn't have to add `.accounts` because they call be inferred,
+Notice that we didn't have to add `.accounts` because they can be inferred,
 including the `mint` account (assuming you have seed inference enabled).
 
 Next, update the test for the `addMovieReview` instruction. The primary
