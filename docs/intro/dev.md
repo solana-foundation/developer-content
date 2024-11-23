@@ -55,7 +55,7 @@ interact with your application onchain instead of just on the frontend.
 Developing on Solana still has CI/CD pipelines, testing, debugging tools, a
 frontend and backend, and anything you'd find in a normal development flow.
 
-## What You'll Need Get Started
+## What You'll Need to Get Started
 
 To get started with Solana development, you'll need different tools based on
 whether you are developing for client-side, onchain programs, or both.
