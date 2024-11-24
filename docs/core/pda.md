@@ -46,8 +46,8 @@ anything built at that location.
 - PDAs are addresses that fall off the Ed25519 curve and have no corresponding
   private key.
 
-- Solana programs can programmatically "sign" on behalf of PDAs that are derived using
-  its program ID.
+- Solana programs can programmatically "sign" on behalf of PDAs that are derived
+  using its program ID.
 
 - Deriving a PDA does not automatically create an on-chain account.
 

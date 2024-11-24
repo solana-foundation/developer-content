@@ -487,6 +487,7 @@ export interface LinkedAction {
   parameters?: Array<TypedActionParameter>;
 }
 ```
+
 - `type` - the type of action that will be performed by the user
 
   - `transaction` - This tells blink client that the action endpoint will return
@@ -869,6 +870,7 @@ export type ActionPostResponse =
   | PostResponse
   | ExternalLinkResponse;
 ```
+
 - `type` - If this is of type
 
   - `transaction` then client will pop-up the user to sign the `transaction` and
