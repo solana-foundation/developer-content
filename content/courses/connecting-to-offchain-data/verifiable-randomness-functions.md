@@ -199,7 +199,7 @@ Lastly, the `callback` field is where you define the callback instruction the
 Switchboard program should invoke once the randomness result has be verified.
 
 The `callback` field is of type
-`[CallbackZC](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L25)`.
+[CallbackZC](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L25).
 
 ```rust
 #[zero_copy(unsafe)]
