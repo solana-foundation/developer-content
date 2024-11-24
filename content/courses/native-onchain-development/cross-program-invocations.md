@@ -895,7 +895,7 @@ npm init -y
 Install all the required dependencies.
 
 ```bash
-npm i @solana/web3.js @solana-developers/helpers@2.5.2
+npm i @solana/web3.js@1 @solana-developers/helpers@2.5.2
 
 npm i --save-dev esrun
 ```

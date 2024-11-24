@@ -876,9 +876,9 @@ export type ActionPostResponse =
   - `post` then client will skip the pop-up and render the `links.next`.
 
 - `transaction` - The value must be a base64-encoded
-  [serialized transaction](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#serialize).
+  [serialized transaction](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#serialize).
   The client must base64-decode the transaction and
-  [deserialize it](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#from).
+  [deserialize it](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#from).
 
 - `message` - The value must be a UTF-8 string that describes the nature of the
   transaction included in the response. The client should display this value to
@@ -899,16 +899,16 @@ export type ActionPostResponse =
 #### POST Response - Transaction
 
 If the transaction
-[`signatures`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#signatures)
+[`signatures`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#signatures)
 are empty or the transaction has NOT been partially signed:
 
 - The client must ignore the
-  [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
+  [`feePayer`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#feePayer)
   in the transaction and set the `feePayer` to the `account` in the request.
 - The client must ignore the
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
+  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#recentBlockhash)
   in the transaction and set the `recentBlockhash` to the
-  [latest blockhash](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getLatestBlockhash).
+  [latest blockhash](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getLatestBlockhash).
 - The client must serialize and deserialize the transaction before signing it.
   This ensures consistent ordering of the account keys, as a workaround for
   [this issue](https://github.com/solana-labs/solana/issues/21722).
@@ -916,9 +916,9 @@ are empty or the transaction has NOT been partially signed:
 If the transaction has been partially signed:
 
 - The client must NOT alter the
-  [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
+  [`feePayer`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#feePayer)
   or
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
+  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#recentBlockhash)
   as this would invalidate any existing signatures.
 - The client must verify existing signatures, and if any are invalid, the client
   must reject the transaction as **malformed**.
@@ -1249,7 +1249,7 @@ string with each separated by a semi-colon.
 No other data should be included with Identifier Message's Memo instruction.
 
 The `identity` and the `reference` should be included as read-only, non-signer
-[keys](https://solana-labs.github.io/solana-web3.js/classes/TransactionInstruction.html#keys)
+[keys](https://solana-labs.github.io/solana-web3.js/v1.x/classes/TransactionInstruction.html#keys)
 in the transaction on an instruction that is NOT the Identifier Message Memo
 instruction.
 

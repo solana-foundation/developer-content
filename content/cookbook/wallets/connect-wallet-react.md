@@ -7,11 +7,18 @@ description:
 ---
 
 Solana's [wallet-adapter](https://github.com/anza-xyz/wallet-adapter) library
-make it easy to manage wallet connections client-side. For a full length guide,
+makes it easy to manage wallet connections client-side. For a full length guide,
 check out
-[how to add wallet-adapter to nextjs](/content/guides/wallets/add-solana-wallet-adapter-to-nextjs.md).
+[Add Solana Wallet Adapter to a NextJS application](/content/guides/wallets/add-solana-wallet-adapter-to-nextjs.md).
+
+> For web3.js v2, please reference the
+> [react example](https://github.com/solana-labs/solana-web3.js/tree/master/examples/react-app)
+> from the
+> [Anza Web3js v2 Blog](https://www.anza.xyz/blog/solana-web3-js-2-release).
 
 ## How to Connect to a Wallet with React
+
+> Currently, `create-solana-dapp` only works with Solana Web3.js v1.
 
 For quick setup with React use:
 
@@ -28,7 +35,7 @@ npm install --save \
     @solana/wallet-adapter-react \
     @solana/wallet-adapter-react-ui \
     @solana/wallet-adapter-wallets \
-    @solana/web3.js \
+    @solana/web3.js@1 \
     react
 ```
 
@@ -59,18 +66,6 @@ export const Wallet: FC = () => {
 
     const wallets = useMemo(
         () => [
-            /**
-             * Wallets that implement either of these standards will be available automatically.
-             *
-             *   - Solana Mobile Stack Mobile Wallet Adapter Protocol
-             *     (https://github.com/solana-mobile/mobile-wallet-adapter)
-             *   - Solana Wallet Standard
-             *     (https://github.com/anza-xyz/wallet-standard)
-             *
-             * If you wish to support a wallet that supports neither of those standards,
-             * instantiate its legacy wallet adapter here. Common legacy adapters can be found
-             * in the npm package `@solana/wallet-adapter-wallets`.
-             */
             new UnsafeBurnerWalletAdapter(),
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps

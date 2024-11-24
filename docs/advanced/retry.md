@@ -3,6 +3,11 @@ sidebarSortOrder: 2
 title: Retrying Transactions
 altRoutes:
   - /docs/core/transactions/retry
+description:
+  Learn how to handle dropped transactions and implement custom retry logic on
+  Solana. This guide covers transaction rebroadcasting, preflight checks, and
+  best practices for managing transaction retries to ensure reliable transaction
+  processing on the Solana blockchain.
 ---
 
 # Retrying Transactions

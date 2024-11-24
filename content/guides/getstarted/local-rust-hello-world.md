@@ -228,8 +228,8 @@ library.
 ### Install Node.js
 
 To use node in WSL2 on Windows, please follow this  
-[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl)
-to install node.
+[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl) to
+install node.
 
 ```shell
 sudo apt-get install curl
@@ -251,7 +251,7 @@ For macOS you can
 Install the Solana web3.js library and the Solana helpers library:
 
 ```shell
-npm install @solana/web3.js @solana-developers/helpers
+npm install @solana/web3.js@1 @solana-developers/helpers@2
 ```
 
 Create a new file called `client.mjs` and add the following code:

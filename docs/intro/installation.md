@@ -3,8 +3,10 @@ title: Installation
 seoTitle: Install the Solana CLI and Anchor
 sidebarSortOrder: 1
 description:
-  "Easily setup your local development environment for Solana development on
-  Linux, Mac or Windows. Including installing Rust, the Solana CLI, and Anchor."
+  A comprehensive guide to setting up your local Solana development environment.
+  Learn how to install Rust, the Solana CLI, and Anchor Framework on Windows
+  (WSL), Linux, and Mac. Includes step-by-step instructions for creating
+  wallets, requesting airdrops, and running a local validator.
 altRoutes:
   - /developers/guides/getstarted/setup-local-development
   - /docs/install

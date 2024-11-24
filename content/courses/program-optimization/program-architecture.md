@@ -691,11 +691,6 @@ Depending on the seeding you can create all sorts of relationships:
   want one player account per wallet. Then you'd seed the account with
   `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
   to look for a wallet's player account **and** there can only ever be one of
-- One-Per-Owner - Say you're creating a video game player account and you only
-  want one player account per wallet. Then you'd seed the account with
-  `seeds=[b"PLAYER", owner.key().as_ref()]`. This way, you'll always know where
-  to look for a wallet's player account **and** there can only ever be one of
-  them.
 - Multiple-Per-Owner - Okay, but what if you want multiple accounts per wallet?
   Say you want to mint podcast episodes. Then you could seed your `Podcast`
   account like this:
@@ -934,7 +929,7 @@ Each concept has an accompanying program and test file. For example, the
 
 **program -** `programs/architecture/src/concepts/sizes.rs`
 
-**test -** `cd tests/sizes.ts`
+**test -** `tests/sizes.ts`
 
 Now that you've read about each of these concepts, feel free to jump into the
 code to experiment a little. You can change existing values, try to break the
@@ -945,7 +940,8 @@ You can fork and/or clone
 to get started. Before building and running the test suite, remember to update
 the `lib.rs` and `Anchor.toml` with your local program ID.
 
-You can run the entire test suite or add `.only` to the `describe` call in a
+You can run the entire test suite or
+[add `.only` to the `describe` call](https://mochajs.org/#exclusive-tests) in a
 specific test file to only run that file's tests. Feel free to customize it and
 make it your own.
 
@@ -1529,8 +1525,6 @@ and added normally, e.g. `255 + 1 = 0 (0xFF + 0x01 = 0x00) = 0`, the kill count
 would end up as 0. `saturating_add` will keep it at its max if it's about to
 would end up as 0. `saturating_add` will keep it at its max if it's about to
 roll over, so `255 + 1 = 255`. The `checked_add` function will throw an error if
-it's about to overflow. Keep this in mind when doing math in Rust. Even though
-`kills` is a u64 and will never roll with it's current programming, it's good
 it's about to overflow. Keep this in mind when doing math in Rust. Even though
 `kills` is a u64 and will never roll with it's current programming, it's good
 practice to use safe math and consider roll-overs.

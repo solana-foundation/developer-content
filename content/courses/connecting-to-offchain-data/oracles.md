@@ -28,11 +28,8 @@ description: Access real-world data inside a Solana program.
 
 Oracles are services that provide external data to a blockchain network.
 Blockchains are siloed environments that do not inherently know the outside
-world. This constraint limits the use cases for decentralized applications
-(dApps). Oracles solve this limitation by offering a decentralized way to get
-real-world data onchain.
-
-Oracles can provide various types of data onchain, such as:
+world. Oracles solve this limitation by offering a decentralized way to get
+various types of data onchain, such as:
 
 - Results of sporting events
 - Weather data

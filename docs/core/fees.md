@@ -2,9 +2,9 @@
 title: Fees on Solana
 sidebarSortOrder: 3
 description:
-  "Your guide to transaction fees on Solana -- small fees paid to process
-  instructions on the network, based on computation and an optional
-  prioritization fee."
+  Learn about Solana's fee structure including transaction fees, prioritization
+  fees, and rent costs. Understand how fees are calculated, collected and
+  distributed across the network.
 keywords:
   - instruction fee
   - processing fee
@@ -338,7 +338,7 @@ let instruction = ComputeBudgetInstruction::set_compute_unit_price(1);
 #### Javascript
 
 The `@solana/web3.js` library includes functions within the
-[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/classes/ComputeBudgetProgram.html)
+[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/ComputeBudgetProgram.html)
 class to craft instructions for setting the _compute unit limit_ and _compute
 unit price_:
 

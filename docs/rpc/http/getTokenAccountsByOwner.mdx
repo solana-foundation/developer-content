@@ -101,7 +101,7 @@ JSON objects, which will contain:
     \(and is strictly read-only\)
   - `rentEpoch: <u64>` - the epoch at which this account will next owe rent, as
     u64
-  - `size: <u64>` - the data size of the account
+  - `space: <u64>` - the data size of the account
 
 When the data is requested with the `jsonParsed` encoding a format similar to
 that of the [Token Balances Structure](/docs/rpc/json-structures#token-balances)
@@ -115,7 +115,7 @@ can be expected inside the structure, both for the `tokenAmount` and the
 ### Code sample
 
 ```shell
-curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -s -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc": "2.0",
     "id": 1,
@@ -137,13 +137,9 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 
 ```json
 {
-  "id": 1,
   "jsonrpc": "2.0",
   "result": {
-    "context": {
-      "apiVersion": "2.0.8",
-      "slot": 329669901
-    },
+    "context": { "apiVersion": "2.0.15", "slot": 341197933 },
     "value": [
       {
         "account": {
@@ -151,14 +147,14 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
             "parsed": {
               "info": {
                 "isNative": false,
-                "mint": "BejB75Gmq8btLboHx7yffWcurHVBv5xvKcnY1fBYxnvf",
+                "mint": "2cHr7QS3xfuSV8wdxo3ztuF4xbiarF6Nrgx3qpx3HzXR",
                 "owner": "A1TMhSGzQxMr1TboBKtgixKz1sS6REASMxPo1qsyTSJd",
                 "state": "initialized",
                 "tokenAmount": {
-                  "amount": "10000000000000",
-                  "decimals": 9,
-                  "uiAmount": 10000,
-                  "uiAmountString": "10000"
+                  "amount": "420000000000000",
+                  "decimals": 6,
+                  "uiAmount": 420000000.0,
+                  "uiAmountString": "420000000"
                 }
               },
               "type": "account"
@@ -172,7 +168,7 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
           "rentEpoch": 18446744073709551615,
           "space": 165
         },
-        "pubkey": "5HvuXcy57o41qtGBBJM7dRN9DS6G3jd9KEhHt4eYqJmB"
+        "pubkey": "BGocb4GEpbTFm8UFV2VsDSaBXHELPfAXrvd4vtt8QWrA"
       },
       {
         "account": {
@@ -180,13 +176,13 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
             "parsed": {
               "info": {
                 "isNative": false,
-                "mint": "FSX34rYUJ4zfdD7z4p3L1Fd1pGiiErusaSNTfgKqhep6",
+                "mint": "4KVSsAtsG8JByKfB2jYWgGwvVR9WcBSUfsqpTSL9c3Jr",
                 "owner": "A1TMhSGzQxMr1TboBKtgixKz1sS6REASMxPo1qsyTSJd",
                 "state": "initialized",
                 "tokenAmount": {
                   "amount": "10000000000000",
                   "decimals": 9,
-                  "uiAmount": 10000,
+                  "uiAmount": 10000.0,
                   "uiAmountString": "10000"
                 }
               },
@@ -201,10 +197,11 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
           "rentEpoch": 18446744073709551615,
           "space": 165
         },
-        "pubkey": "HvTGvCP4tg2wVdFtqZCTdMPHDXmkYwNAxaTBCHabqh2X"
+        "pubkey": "9PwCPoWJ75LSgZeGMubXBdufYMVd66HrcF78QzW6ZHkV"
       }
     ]
-  }
+  },
+  "id": 1
 }
 ```
 

@@ -345,10 +345,11 @@ Solana.
 To begin, make a new folder and install the relevant dependencies:
 
 ```bash
-npm i @solana/web3.js npm i @solana/web3.js npm i @solana-developers/helpers npm i @metaplex-foundation/mpl-token-metadata npm i @metaplex-foundation/umi-bundle-defaults npm i @metaplex-foundation/umi-uploader-irys npm i --save-dev esrun
+npm i @solana/web3.js@1 @solana-developers/helpers@2 @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-uploader-irys esrun
 ```
 
-Then create a file called `create-metaplex-collection.ts`, and add our imports:
+Then create a file called `create-metaplex-nft-collection.ts`, and add our
+imports:
 
 ```typescript
 import {
@@ -698,7 +699,7 @@ await airdropIfRequired(
 
 const umi = createUmi(connection);
 
-// Substitute in your collection NFT address from create-metaplex-collection.ts
+// Substitute in your collection NFT address from create-metaplex-nft-collection.ts
 const collectionAddress = UMIPublicKey("");
 
 // Substitute in your NFT address from create-metaplex-nft.ts
