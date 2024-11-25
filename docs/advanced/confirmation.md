@@ -153,7 +153,7 @@ processed transactions.
 
 ### Other blockchains
 
-Solana's approach of prevent double processing is quite different from other
+Solana's approach to prevent double processing is quite different from other
 blockchains. For example, Ethereum tracks a counter (nonce) for each transaction
 sender and will only process transactions that use the next valid nonce.
 
