@@ -1,0 +1,64 @@
+name: Prettier Formatting on Label
+
+env:
+  GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  prettier-format:
+    # Only run if the 'prettier' label is added
+    if: ${{ contains(github.event.pull_request.labels.*.name, 'prettier') }}
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the PR branch
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          # Use a token that allows pushing to the PR branch
+          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+
+      # Setup Node.js (required for Prettier)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      # Install Prettier
+      - name: Install Prettier
+        run: npm install --save-dev --save-exact prettier
+
+      # Run Prettier using the repo's config
+      - name: Run Prettier
+        run: npx prettier --write .
+
+      # Check if there are any changes
+      - name: Check for changes
+        id: check-changes
+        run: |
+          git diff --quiet || echo "changes=true" >> $GITHUB_OUTPUT
+
+      # Commit and push changes if any
+      - name: Commit changes
+        if: steps.check-changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "[chore] automatic prettier formatting"
+          git push
+
+      # Remove the label after formatting
+      - name: Remove formatting label
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          script: |
+            github.rest.issues.removeLabel({
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              issue_number: context.issue.number,
+              name: 'prettier'
+            })
