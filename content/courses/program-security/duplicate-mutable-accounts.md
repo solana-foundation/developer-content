@@ -216,6 +216,8 @@ use constants::DISCRIMINATOR_SIZE;
 
 declare_id!("Lo5sj2wWy4BHbe8kCSUvgdhzFbv9c6CEERfgAXusBj9");
 
+const DISCRIMINATOR_SIZE: usize = 8;
+
 #[program]
 pub mod duplicate_mutable_accounts {
     use super::*;
@@ -259,13 +261,15 @@ pub struct RockPaperScissorsInsecure<'info> {
 }
 
 #[account]
-#[derive(Default, InitSpace)]
+#[derive(InitSpace)]
 pub struct PlayerState {
-    pub player: Pubkey,
-    pub choice: Option<RockPaperScissors>,
+    player: Pubkey,
+    choice: Option<RockPaperScissors>,
 }
 
-#[derive(AnchorSerialize, AnchorDeserialize, Clone, Copy, PartialEq, Eq, InitSpace)]
+
+#[derive(Clone, Copy, AnchorDeserialize, AnchorSerialize)]
+#[derive(InitSpace)]
 pub enum RockPaperScissors {
     Rock,
     Paper,
@@ -283,8 +287,8 @@ passing in the `playerOne.publicKey` for as both `playerOne` and `playerTwo`.
 
 ```typescript
 describe("duplicate-mutable-accounts", () => {
-    ...
-    it("Invokes insecure instruction", async () => {
+	...
+	it("Invoke insecure instruction with the same player should be successful", async () => {
         await program.methods
         .rockPaperScissorsShootInsecure({ rock: {} }, { scissors: {} })
         .accounts({
@@ -308,9 +312,9 @@ incorrectly as `scissors`.
 
 ```bash
 duplicate-mutable-accounts
-  ✔ Initialized Player One (461ms)
-  ✔ Initialized Player Two (404ms)
-  ✔ Invoke insecure instruction (406ms)
+  ✔ Initialized Player One should be successful (461ms)
+  ✔ Initialized Player Two should be successful (404ms)
+  ✔ Invoke insecure instruction with the same player should be successful (406ms)
 ```
 
 Not only does allowing duplicate accounts do not make a whole lot of sense for
@@ -364,36 +368,36 @@ which we expect to fail.
 
 ```typescript
 describe("duplicate-mutable-accounts", () => {
-    ...
-    it("Invokes secure instruction", async () => {
-        await program.methods
+	...
+    it("Invoke secure instruction with different players should be successful", async () => {
+    await program.methods
+      .rockPaperScissorsShootSecure({ rock: {} }, { scissors: {} })
+      .accounts({
+        playerOne: playerOne.publicKey,
+        playerTwo: playerTwo.publicKey,
+      })
+      .rpc();
+
+    const p1 = await program.account.playerState.fetch(playerOne.publicKey);
+    const p2 = await program.account.playerState.fetch(playerTwo.publicKey);
+    assert.equal(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }));
+    assert.equal(JSON.stringify(p2.choice), JSON.stringify({ scissors: {} }));
+  });
+
+  it("Invoke secure instruction with the same player should throw an expection", async () => {
+    try {
+      await program.methods
         .rockPaperScissorsShootSecure({ rock: {} }, { scissors: {} })
         .accounts({
-            playerOne: playerOne.publicKey,
-            playerTwo: playerTwo.publicKey,
+          playerOne: playerOne.publicKey,
+          playerTwo: playerOne.publicKey,
         })
-        .rpc()
-
-        const p1 = await program.account.playerState.fetch(playerOne.publicKey)
-        const p2 = await program.account.playerState.fetch(playerTwo.publicKey)
-        assert.equal(JSON.stringify(p1.choice), JSON.stringify({ rock: {} }))
-        assert.equal(JSON.stringify(p2.choice), JSON.stringify({ scissors: {} }))
-    })
-
-    it("Invoke secure instruction - expect error", async () => {
-        try {
-        await program.methods
-            .rockPaperScissorsShootSecure({ rock: {} }, { scissors: {} })
-            .accounts({
-                playerOne: playerOne.publicKey,
-                playerTwo: playerOne.publicKey,
-            })
-            .rpc()
-        } catch (err) {
-            expect(err)
-            console.log(err)
-        }
-    })
+        .rpc();
+    } catch (err) {
+      expect(err);
+      console.log(err);
+    }
+  });
 })
 ```
 
