@@ -1,8 +1,5 @@
 name: "Label Actions"
 
-env:
-  GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-
 on:
   issues:
     types: [labeled, unlabeled]
@@ -15,5 +12,5 @@ jobs:
     steps:
       - uses: dessant/label-actions@v3
         with:
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           config-path: .github/label-actions.yml

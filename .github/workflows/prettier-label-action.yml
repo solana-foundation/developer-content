@@ -1,7 +1,7 @@
 name: Prettier Formatting on Label
 
 env:
-  GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+  GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   pull_request:
@@ -18,7 +18,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           # Use a token that allows pushing to the PR branch
-          token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # Setup Node.js (required for Prettier)
       - uses: actions/setup-node@v4
@@ -54,7 +54,7 @@ jobs:
         if: always()
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.removeLabel({
               owner: context.repo.owner,
