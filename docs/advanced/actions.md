@@ -510,7 +510,7 @@ export interface ActionParameter {
 
 The `pattern` should be a string equivalent of a valid regular expression. This
 regular expression pattern should by used by blink-clients to validate user
-input before before making the POST request. If the `pattern` is not a valid
+input before making the POST request. If the `pattern` is not a valid
 regular expression, it should be ignored by clients.
 
 The `patternDescription` is a human readable description of the expected input
@@ -592,7 +592,7 @@ user input elements are also supported:
 
 - `textarea` - equivalent of HTML
   [textarea element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea).
-  Allowing the user provide multi-line input.
+  Allowing the user to provide multi-line input.
 - `select` - equivalent of HTML
   [select element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select),
   allowing the user to experience a “dropdown” style field. The Action API
@@ -971,7 +971,7 @@ clients in one of the following ways:
   UI with the included Action metadata, but will not allow the user to execute
   further actions.
 
-If no `links.next` is not provided, blink clients should assume the current
+If `links.next` is not provided, blink clients should assume the current
 action is final action in the chain, presenting their "completed" UI state after
 the transaction is confirmed.
 
@@ -1070,7 +1070,7 @@ The following table outlines the syntax for path matching patterns:
 
 ### Rules Examples
 
-The following example demonstrates an exact match rule to map requests requests
+The following example demonstrates an exact match rule to map requests
 to `/buy` from your site's root to the exact path `/api/buy` relative to your
 site's root:
 
@@ -1210,7 +1210,7 @@ associated with the Action Provider in a multi-step process:
 3. Verify the specific transaction is the first on-chain occurrence of the
    `reference` on-chain:
    - If this transaction is the first occurrence, the transaction is considered
-     verified and can a safely attributed to the Action Provider.
+     verified and can be safely attributed to the Action Provider.
    - If this transaction is NOT the first occurrence, it is considered invalid
      and therefore not attributed to the Action Provider.
 
