@@ -60,7 +60,7 @@ import bs58 from "bs58";
       mintPubkey, // mint
       tokenAccountYPubkey, // to (should be a token account)
       alice, // from's owner
-      1e8, // amount, if your deciamls is 8, send 10^8 for 1 token
+      1e8, // amount, if your decimals is 8, send 10^8 for 1 token
       8, // decimals
     );
     console.log(`txhash: ${txhash}`);
@@ -76,7 +76,7 @@ import bs58 from "bs58";
         mintPubkey, // mint
         tokenAccountYPubkey, // to (should be a token account)
         alice.publicKey, // from's owner
-        1e8, // amount, if your deciamls is 8, send 10^8 for 1 token
+        1e8, // amount, if your decimals is 8, send 10^8 for 1 token
         8, // decimals
       ),
     );

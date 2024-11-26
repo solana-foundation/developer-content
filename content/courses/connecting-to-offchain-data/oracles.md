@@ -1268,7 +1268,7 @@ describe("burry-escrow", () => {
     if (solPrice === null) {
       throw new Error("Aggregator holds no value");
     }
-    // Although `SOL_USD_SWITCHBOARD_FEED` is not changing we are changing the unlockPrice in test as given below to simulate the escrow behaviour
+    // Although `SOL_USD_SWITCHBOARD_FEED` is not changing we are changing the unlockPrice in test as given below to simulate the escrow behavior
     const unlockPrice = solPrice.minus(PRICE_OFFSET).toNumber();
 
     await createAndVerifyEscrow(unlockPrice);
@@ -1332,7 +1332,7 @@ describe("burry-escrow", () => {
     if (solPrice === null) {
       throw new Error("Aggregator holds no value");
     }
-    // Although `SOL_USD_SWITCHBOARD_FEED` is not changing we are changing the unlockPrice in test as given below to simulate the escrow behaviour
+    // Although `SOL_USD_SWITCHBOARD_FEED` is not changing we are changing the unlockPrice in test as given below to simulate the escrow behavior
     const unlockPrice = solPrice.plus(PRICE_OFFSET).toNumber();
     await createAndVerifyEscrow(unlockPrice);
   });
