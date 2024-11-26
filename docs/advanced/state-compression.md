@@ -32,9 +32,9 @@ These _trees_ are created in this "_deterministic_" process by:
 
 - taking any piece of data
 - creating a hash of this data
-- storing this hash as a `leaf` the bottom of the tree
-- each `leaf` pair is then hash together, creating a `branch`
-- each `branch` is then hash together
+- storing this hash as a `leaf` at the bottom of the tree
+- each `leaf` pair is then hashed together, creating a `branch`
+- each `branch` is then hashed together
 - continually climbing the tree and hashing adjacent branches together
 - once at the top of the tree, a final `root hash` is produced
 
@@ -94,7 +94,7 @@ In high throughput applications, like within the
 [Solana runtime](/docs/core/fees.md), requests to change an on-chain
 _traditional merkle tree_ could be received by validators in relatively rapid
 succession (e.g. within the same slot). Each leaf data change would still be
-required to performed in series. Resulting in each subsequent request for change
+required to be performed in series. Resulting in each subsequent request for change
 to fail, due to the root hash and proof being invalidated by the previous change
 request in the slot.
 
@@ -175,7 +175,7 @@ We must use a `maxDepth` of `14` to ensure we can store all of our data.
 
 The `maxDepth` value will be one of the primary drivers of cost when creating a
 tree since you will pay this cost upfront at tree creation. The higher the max
-tree depth depth, the more data fingerprints (aka hashes) you can store, the
+tree depth, the more data fingerprints (aka hashes) you can store, the
 higher the cost.
 
 ### Max buffer size

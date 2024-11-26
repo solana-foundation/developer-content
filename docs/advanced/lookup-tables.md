@@ -147,7 +147,7 @@ utilize the onchain lookup capabilities.
 Just like older `legacy` transactions, you can create all the
 [instructions](/docs/terminology.md#instruction) your transaction will execute
 onchain. You can then provide an array of these instructions to the
-[Message](/docs/terminology.md#message) used in the `v0 transaction.
+[Message](/docs/terminology.md#message) used in the `v0` transaction.
 
 > NOTE: The instructions used inside a `v0` transaction can be constructed using
 > the same methods and functions used to create the instructions in the past.

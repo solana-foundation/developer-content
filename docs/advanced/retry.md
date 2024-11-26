@@ -142,7 +142,7 @@ transaction submission if developers enable
 
 ![Transaction dropped via an RPC Pool](/assets/docs/rt-dropped-via-rpc-pool.png)
 
-Temporarily network forks can also result in dropped transactions. If a
+Temporary network forks can also result in dropped transactions. If a
 validator is slow to replay its blocks within the Banking Stage, it may end up
 creating a minority fork. When a client builds a transaction, it's possible for
 the transaction to reference a `recentBlockhash` that only exists on the
