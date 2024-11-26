@@ -63,7 +63,7 @@ jobs:
           script: |
             github.rest.issues.removeLabel({
               owner: context.repo.owner,
-              repo: context.repo.name,
+              repo: context.repo.repo,
               issue_number: context.issue.number,
               name: 'prettier'
             })
