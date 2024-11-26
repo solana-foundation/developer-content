@@ -129,9 +129,11 @@ Let's break down the fields in the output:
 - `data` - This field contains what we generally refer to as the account "data".
   For a wallet, it's empty (0 bytes), but other accounts use this field to store
   any arbitrary data as a serialized buffer of bytes.
+
 > When data is "buffered" in this way, it maintains its integrity and can be
 > later deserialized back into its original form for use in applications. This
 > process is widely used in blockchain for efficient data handling.
+
 - `executable` - A flag that indicates whether the account is an executable
   program. For wallets and any accounts that store state, this is `false`.
 - `owner` - This field shows which program controls the account. For wallets,
