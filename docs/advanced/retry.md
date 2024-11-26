@@ -142,13 +142,13 @@ transaction submission if developers enable
 
 ![Transaction dropped via an RPC Pool](/assets/docs/rt-dropped-via-rpc-pool.png)
 
-Temporary network forks can also result in dropped transactions. If a
-validator is slow to replay its blocks within the Banking Stage, it may end up
-creating a minority fork. When a client builds a transaction, it's possible for
-the transaction to reference a `recentBlockhash` that only exists on the
-minority fork. After the transaction is submitted, the cluster can then switch
-away from its minority fork before the transaction is processed. In this
-scenario, the transaction is dropped due to the blockhash not being found.
+Temporary network forks can also result in dropped transactions. If a validator
+is slow to replay its blocks within the Banking Stage, it may end up creating a
+minority fork. When a client builds a transaction, it's possible for the
+transaction to reference a `recentBlockhash` that only exists on the minority
+fork. After the transaction is submitted, the cluster can then switch away from
+its minority fork before the transaction is processed. In this scenario, the
+transaction is dropped due to the blockhash not being found.
 
 ![Transaction dropped due to minority fork (before processed)](/assets/docs/rt-dropped-minority-fork-pre-process.png)
 

@@ -510,8 +510,8 @@ export interface ActionParameter {
 
 The `pattern` should be a string equivalent of a valid regular expression. This
 regular expression pattern should by used by blink-clients to validate user
-input before making the POST request. If the `pattern` is not a valid
-regular expression, it should be ignored by clients.
+input before making the POST request. If the `pattern` is not a valid regular
+expression, it should be ignored by clients.
 
 The `patternDescription` is a human readable description of the expected input
 requests from the user. If `pattern` is provided, the `patternDescription` is
@@ -971,9 +971,9 @@ clients in one of the following ways:
   UI with the included Action metadata, but will not allow the user to execute
   further actions.
 
-If `links.next` is not provided, blink clients should assume the current
-action is final action in the chain, presenting their "completed" UI state after
-the transaction is confirmed.
+If `links.next` is not provided, blink clients should assume the current action
+is final action in the chain, presenting their "completed" UI state after the
+transaction is confirmed.
 
 ## actions.json
 
@@ -1070,9 +1070,8 @@ The following table outlines the syntax for path matching patterns:
 
 ### Rules Examples
 
-The following example demonstrates an exact match rule to map requests
-to `/buy` from your site's root to the exact path `/api/buy` relative to your
-site's root:
+The following example demonstrates an exact match rule to map requests to `/buy`
+from your site's root to the exact path `/api/buy` relative to your site's root:
 
 ```json filename="actions.json"
 {

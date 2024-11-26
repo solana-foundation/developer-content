@@ -94,9 +94,9 @@ In high throughput applications, like within the
 [Solana runtime](/docs/core/fees.md), requests to change an on-chain
 _traditional merkle tree_ could be received by validators in relatively rapid
 succession (e.g. within the same slot). Each leaf data change would still be
-required to be performed in series. Resulting in each subsequent request for change
-to fail, due to the root hash and proof being invalidated by the previous change
-request in the slot.
+required to be performed in series. Resulting in each subsequent request for
+change to fail, due to the root hash and proof being invalidated by the previous
+change request in the slot.
 
 Enter, Concurrent merkle trees.
 
@@ -175,8 +175,8 @@ We must use a `maxDepth` of `14` to ensure we can store all of our data.
 
 The `maxDepth` value will be one of the primary drivers of cost when creating a
 tree since you will pay this cost upfront at tree creation. The higher the max
-tree depth, the more data fingerprints (aka hashes) you can store, the
-higher the cost.
+tree depth, the more data fingerprints (aka hashes) you can store, the higher
+the cost.
 
 ### Max buffer size
 
