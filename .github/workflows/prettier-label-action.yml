@@ -1,7 +1,9 @@
 name: Prettier Formatting on Label
 
-env:
-  GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Explicitly set permissions
+permissions:
+  contents: write
+  pull-requests: write
 
 on:
   pull_request:
@@ -16,9 +18,12 @@ jobs:
       # Checkout the PR branch
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
-          # Use a token that allows pushing to the PR branch
+          # Use the full PR head reference
+          ref: ${{ github.event.pull_request.head.ref }}
+          # Use the full repository name
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       # Setup Node.js (required for Prettier)
       - uses: actions/setup-node@v4
@@ -47,7 +52,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git commit -m "[chore] automatic prettier formatting"
-          git push
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       # Remove the label after formatting
       - name: Remove formatting label
