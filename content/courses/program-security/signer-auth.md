@@ -198,8 +198,8 @@ performed.
 ### Using Anchor's `#[account(signer)]` Constraint
 
 While the `Signer` account type is useful, it doesn't perform other ownership or
-type checks, limiting its use in instruction handler logic. The
-[anchor's `#[account(signer)]`](https://www.anchor-lang.com/docs/account-constraints)
+type checks, limiting its use in instruction handler logic.
+[Anchor's `#[account(signer)]`](https://www.anchor-lang.com/docs/account-constraints)
 constraint addresses this by verifying that the account signed the transaction
 while allowing access to its underlying data.
 
