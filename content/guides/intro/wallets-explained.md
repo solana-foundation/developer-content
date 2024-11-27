@@ -26,7 +26,7 @@ here to access the blockchain and build!
 ## Puzzle Piece 1: The Balance Myth
 
 🤫 Tell you a secret, wallets are misleading. They do not store your crypto. In
-fact, they do not hold anything. So why do we need even them in dapps and
+fact, they do not hold anything. So why do we even need them in dapps and
 blockchain?
 
 ![A screenshot of a wallet balance](/assets/guides/wallets-explained/Wallets---1-Phantom-Balance.png)
