@@ -18,10 +18,10 @@ The main channels of participant remittances are referred to as protocol-based
 rewards and transaction fees. Protocol-based rewards are generated from
 inflationary issuances from a protocol-defined inflation schedule. These rewards
 will constitute the total protocol-based reward delivered to validation clients,
-with the remaining sourced from transaction fees. In the early days of the network,
-it is likely that protocol-based rewards, deployed based on predefined issuance
-schedule, will drive the majority of participant incentives to participate in
-the network.
+with the remaining sourced from transaction fees. In the early days of the
+network, it is likely that protocol-based rewards, deployed based on predefined
+issuance schedule, will drive the majority of participant incentives to
+participate in the network.
 
 These protocol-based rewards are calculated per epoch and distributed across the
 active delegated stake and validator set (per validator commission). As

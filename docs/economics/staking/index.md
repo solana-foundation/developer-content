@@ -23,8 +23,8 @@ The more stake delegated to a validator, the more often this validator is chosen
 to write new transactions to the ledger. The more transactions the validator
 writes, the more rewards the validator and its delegators earn. Validators who
 configure their systems to be able to process more transactions earn
-proportionally more rewards because they keep the network running as fast
-and as smoothly as possible.
+proportionally more rewards because they keep the network running as fast and as
+smoothly as possible.
 
 Validators incur costs by running and maintaining their systems, and this is
 passed on to delegators in the form of a fee collected as a percentage of
@@ -72,8 +72,8 @@ information about potentially performant validators from the links below. The
 Solana Foundation does not recommend any particular validator.
 
 The site solanabeach.io is built and maintained by one of our validators,
-Staking Facilities. It provides some high-level graphical information about
-the network as a whole, as well as a list of each validator and some recent
+Staking Facilities. It provides some high-level graphical information about the
+network as a whole, as well as a list of each validator and some recent
 performance statistics about each one.
 
 - https://solanabeach.io
