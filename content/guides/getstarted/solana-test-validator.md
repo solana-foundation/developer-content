@@ -48,7 +48,7 @@ you have Solana's command-line tools installed. You can install them using the
 following command:
 
 ```shell
-sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
 You can replace `stable` with the release tag matching the software version of

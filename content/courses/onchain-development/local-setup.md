@@ -55,7 +55,7 @@ Next,
 [download the Solana CLI tools](/docs/intro/installation.md#install-the-solana-cli):
 
 ```bash
-sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
 After installation, `solana -V` should display `solana-cli 1.18.x` (where `x`
