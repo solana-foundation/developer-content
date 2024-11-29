@@ -9,7 +9,7 @@ sidebarSortOrder: 5
 
 [Cross Program Invocations (CPI)](/docs/core/cpi.md) refer to the process of one
 program invoking instructions of another program, which enables the
-composibility of programs on Solana.
+composability of programs on Solana.
 
 This section will cover the basics of implementing CPIs in an Anchor program,
 using a simple SOL transfer instruction as a practical example. Once you
@@ -125,7 +125,7 @@ functionally equivalent. The main purpose is to illustrate the implementation
 details of the CPI.
 
 <!-- prettier-ignore -->
-<Tabs groupId="language" items={['1', '2', '3']}>
+<Tabs groupId="language" items={['1', '2', '3']}></Tabs>
 <Tab value="1">
 
 The `sol_transfer` instruction included in the example code shows a typical
@@ -440,7 +440,7 @@ functionally equivalent. The main purpose is to illustrate the implementation
 details of the CPI.
 
 <!-- prettier-ignore -->
-<Tabs groupId="language" items={['1', '2']}>
+<Tabs groupId="language" items={['1', '2']}></Tabs>
 <Tab value="1">
 
 The `sol_transfer` instruction included in the example code shows a typical
