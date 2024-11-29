@@ -3,7 +3,7 @@ title: Core Concepts
 sidebarSortOrder: 2
 description:
   Learn essential Solana blockchain concepts including accounts, transactions,
-  programs, programd derived addresses, cross program invocations, and how
+  programs, program derived addresses, cross program invocations, and how
   tokens work on Solana.
 ---
 
