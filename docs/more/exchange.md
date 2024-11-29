@@ -716,7 +716,7 @@ The following code sample assumes you're using the Maven.
       <artifactId>curve25519-elisabeth</artifactId>
       <version>0.1.0</version>
   </dependency>
-<dependencies>
+</dependencies>
 ```
 
 ```java
@@ -746,7 +746,7 @@ public class PubkeyValidator
 
 Every deposit and withdrawal of SOL must be greater or equal to the minimum
 rent-exempt balance for the account at the wallet address (a basic SOL account
-holding no data), currently: 0.000890880 SOL
+holding no data), currently: 0.00089088 SOL
 
 Similarly, every deposit account must contain at least this balance.
 
