@@ -121,7 +121,7 @@ $$
 Y_{adj} =  \frac{ 1 + I(t)/P_s(t) }{ 1 + I(t) } - 1\\
 $$
 
-So we see that the _Adjusted Staked Yield_ a function of the inflation rate and
+So we see that the _Adjusted Staked Yield_ is a function of the inflation rate and
 the percent of staked tokens on the network. We can see this plotted for various
 staking fractions here:
 
