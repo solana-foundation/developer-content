@@ -197,11 +197,11 @@ syscalls, etc), each may consume a
 of compute units.
 
 > A program can log details about its compute usage, including how much remains
-> in its alloted compute budget. You can also find more information in this
+> in its allotted compute budget. You can also find more information in this
 > guide for
 > [optimizing your compute usage](/content/guides/advanced/how-to-optimize-compute.md).
 
-Each transaction is alloted a [compute unit limit](#compute-unit-limit), either
+Each transaction is allotted a [compute unit limit](#compute-unit-limit), either
 with the default limit set by the runtime or by explicitly requesting a higher
 limit. After a transaction exceeds its compute unit limit, its processing is
 halted resulting in a transaction failure.
