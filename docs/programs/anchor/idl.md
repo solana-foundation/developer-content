@@ -1,13 +1,13 @@
 ---
 title: IDL File
 description:
-  Learn about the Interface Description Language (IDL) file in Anchor, its
+  Learn about the Interface Definition Language (IDL) file in Anchor, its
   purpose, benefits, and how it simplifies program-client interactions
 sidebarLabel: IDL File
 sidebarSortOrder: 2
 ---
 
-An Interface Description Language (IDL) file provides a standardized JSON file
+An Interface Definition Language (IDL) file provides a standardized JSON file
 describing the program's instructions and accounts. This file simplifies the
 process of integrating your on-chain program with client applications.
 
