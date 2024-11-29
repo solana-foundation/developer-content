@@ -27,7 +27,7 @@ An `AnchorProvider` is an abstraction that combines two things:
 - `Wallet` - (optional) a default wallet used to pay and sign transactions
 
 <!-- prettier-ignore -->
-<Tabs items={['Frontend/Node', 'Test File']}>
+<Tabs items={['Frontend/Node', 'Test File']}></Tabs>
 <Tab value="Frontend/Node">
 
 When integrating with a frontend using the
@@ -118,7 +118,7 @@ to:
 The basic format looks like the following:
 
 <!-- prettier-ignore -->
-<Tabs items={['methods', 'instruction', 'accounts', `signers`]}>
+<Tabs items={['methods', 'instruction', 'accounts', 'signers']}></Tabs>
 <Tab value="methods">
 
 `program.methods` - This is the builder API for creating instruction calls from
@@ -191,7 +191,7 @@ before sending.
 Anchor provides multiple methods for building program instructions:
 
 <!-- prettier-ignore -->
-<Tabs items={['.rpc', '.transaction', '.instruction']}>
+<Tabs items={['.rpc', '.transaction', '.instruction']}></Tabs>
 <Tab value=".rpc">
 
 The
@@ -292,7 +292,7 @@ Use `program.account` followed by the name of the account type defined in the
 IDL. Anchor provides multiple methods for fetching accounts.
 
 <!-- prettier-ignore -->
-<Tabs items={['all', 'memcmp', 'fetch', 'fetchMultiple']}>
+<Tabs items={['all', 'memcmp', 'fetch', 'fetchMultiple']}></Tabs>
 <Tab value="all">
 
 Use
