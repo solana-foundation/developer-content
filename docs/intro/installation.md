@@ -504,7 +504,7 @@ Keypair Path: /Users/test/.config/solana/id.json
 Commitment: confirmed
 ```
 
-The RPC URL and Websocket URL specific the Solana cluster the CLI will make
+The RPC URL and Websocket URL specify the Solana cluster the CLI will make
 requests to. By default this will be mainnet-beta.
 
 You can update the Solana CLI cluster using the following commands:
