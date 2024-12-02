@@ -57,7 +57,7 @@ If you haven't installed Solana CLI, Rust, or Anchor before, you can easily do
 so by
 [following our helpful installation guide](https://solana.com/docs/intro/installation)
 
-> This scaffolds only supports TypeScript for now, but don’t worry, TypeScript
+> This scaffolds only supports TypeScript for now, but don't worry, TypeScript
 > simply extends on the JavaScript you already know to add helpful type
 > definitions.
 
@@ -255,7 +255,7 @@ supports shared layouts, nested routing, loading states, and error handling.
 The `solana-provider.tsx` already has all the wallet features you need, It
 handles auto connects of Solana wallet easily, and you can move to multiple
 components of your web application with the wallet states managed. This NextJS
-app is using `[@tanstack/react-query](`https://tanstack.com/query/latest)` to
+app is using [`@tanstack/react-query`](https://tanstack.com/query/latest) to
 fetch, cache, synchronize, and update server state in your web applications
 easily. React-Query here is used for all the data fetching needs, like a hook
 for `useGetBalance` to get the balance of your wallet, `useTransferSol` to

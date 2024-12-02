@@ -1,11 +1,17 @@
 ---
 title: Installation
+seoTitle: Install the Solana CLI and Anchor
 sidebarSortOrder: 1
 description:
-  "Easily setup your local development environment for Solana development on
-  Linux, Mac or Windows. Including installing Rust, the Solana CLI, and Anchor."
+  A comprehensive guide to setting up your local Solana development environment.
+  Learn how to install Rust, the Solana CLI, and Anchor Framework on Windows
+  (WSL), Linux, and Mac. Includes step-by-step instructions for creating
+  wallets, requesting airdrops, and running a local validator.
 altRoutes:
   - /developers/guides/getstarted/setup-local-development
+  - /docs/install
+  - /install
+  - /setup
 ---
 
 This section covers the steps to set up your local environment for Solana
@@ -190,8 +196,7 @@ Close and reopen your terminal to apply the PATH changes or run the following in
 export PATH="/Users/test/.local/share/solana/install/active_release/bin:$PATH"
 ```
 
-<!-- prettier-ignore -->
-<Tabs groupId="language" items={['Linux', 'Mac']}>
+<Tabs groupId="language" items="Linux, Mac">
 <Tab value="Linux">
 
 If you are using a Linux or WSL terminal, you can add the PATH environment
@@ -260,11 +265,65 @@ agave-install update
 programs. The Anchor framework leverages Rust macros to simplify the process of
 writing Solana programs.
 
-Install the Anchor CLI with the following command:
+There are two ways to install the Anchor CLI and tooling:
+
+1. Using Anchor Version Manager (AVM) - is the **recommended installation**
+   method since it simplifies updating Anchor versions in the future
+2. Without AVM - this requires more a manual process to update Anchor versions
+   later
+
+<Tabs groupId="anchor" items="AVM, Without AVM">
+<Tab value="AVM">
+
+The Anchor version manager (AVM) allows you to install and manage different
+Anchor versions on your system, including more easily updating Anchor versions
+in the future.
+
+Install AVM with the following command:
+
+```shell
+cargo install --git https://github.com/coral-xyz/anchor avm --force
+```
+
+Test to ensure AVM was installed and is accessible:
+
+```shell
+avm --version
+```
+
+Install the latest version of Anchor CLI using AVM:
+
+```shell
+avm install latest
+avm use latest
+```
+
+Or install a specific version of the Anchor CLI by declaring which version you
+want to install:
+
+```shell
+avm install 0.30.1
+avm use 0.30.1
+```
+
+> Don't forget to run the `avm use` command to declare which Anchor CLI version
+> should be used on your system.
+>
+> - If you installed the `latest` version, run `avm use latest`.
+> - If you installed the version `0.30.1`, run `avm use 0.30.1`.
+
+</Tab>
+
+<Tab value="Without AVM">
+
+Install a specific version of the Anchor CLI with the following command:
 
 ```shell
 cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.1 anchor-cli
 ```
+
+</Tab>
+</Tabs>
 
 You may see the following warning during installation. However, it does not
 affect the installation process.
@@ -294,7 +353,7 @@ warning: `anchor-cli` (lib) generated 1 warning
 </AccordionItem>
 </Accordion>
 
-To verify that the installation was successful, check the Ancor CLI version:
+To verify that the installation was successful, check the Anchor CLI version:
 
 ```shell
 anchor --version
@@ -383,6 +442,29 @@ You should the following output:
 </AccordionItem>
 </Accordion>
 
+When running `anchor build`, if you encounter `error: not a directory` similar
+following:
+
+```
+error: not a directory: '.../solana-release/bin/sdk/sbf/dependencies/platform-tools/rust/lib'
+```
+
+Try these solutions:
+
+1. Force install using the following command:
+
+```shell
+cargo build-sbf --force-tools-install
+```
+
+2. If the above doesn't work, clear the Solana cache:
+
+```shell
+rm -rf ~/.cache/solana/*
+```
+
+After applying either solution, attempt to run `anchor build` again.
+
 If you are on Linux or WSL and encounter the following errors when running
 `anchor test` after creating a new Anchor project, it's may be due to missing
 Node.js or Yarn:
@@ -422,7 +504,7 @@ Keypair Path: /Users/test/.config/solana/id.json
 Commitment: confirmed
 ```
 
-The RPC URL and Websocket URL specific the Solana cluster the CLI will make
+The RPC URL and Websocket URL specify the Solana cluster the CLI will make
 requests to. By default this will be mainnet-beta.
 
 You can update the Solana CLI cluster using the following commands:

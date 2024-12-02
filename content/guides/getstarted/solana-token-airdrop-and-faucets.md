@@ -43,7 +43,7 @@ connection.requestAirdrop();
 ```
 
 See more:
-[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop)
+[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#requestAirdrop)
 documentation inside web3.js.
 
 ## 2. Web Faucet
@@ -86,8 +86,7 @@ Currently supported:
 
 ### Using the Solana CLI
 
-Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC
-provider's URL:
+Specify your [Cluster](/docs/core/clusters.md) to be your RPC provider's URL:
 
 ```shell
 solana config set --url <your RPC url>

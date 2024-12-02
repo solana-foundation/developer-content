@@ -22,7 +22,7 @@ import {
 import * as nacl from "tweetnacl";
 import * as bs58 from "bs58";
 
-// to complete a offline transaction, I will seperate them into four steps
+// to complete a offline transaction, I will separate them into four steps
 // 1. Create Transaction
 // 2. Sign Transaction
 // 3. Recover Transaction
@@ -65,7 +65,7 @@ import * as bs58 from "bs58";
   );
   let aliceSignature = nacl.sign.detached(realDataNeedToSign, alice.secretKey);
 
-  // 3. Recover Tranasction
+  // 3. Recover Transaction
 
   // you can verify signatures before you recovering the transaction
   let verifyFeePayerSignatureResult = nacl.sign.detached.verify(
@@ -83,7 +83,7 @@ import * as bs58 from "bs58";
   console.log(`verify alice signature: ${verifyAliceSignatureResult}`);
 
   // there are two ways you can recover the tx
-  // 3.a Recover Tranasction (use populate then addSignauture)
+  // 3.a Recover Transaction (use populate then addSignature)
   {
     let recoverTx = Transaction.populate(Message.from(realDataNeedToSign));
     recoverTx.addSignature(feePayer.publicKey, Buffer.from(feePayerSignature));
@@ -97,7 +97,7 @@ import * as bs58 from "bs58";
 
   // or
 
-  // 3.b. Recover Tranasction (use populate with signature)
+  // 3.b. Recover Transaction (use populate with signature)
   {
     let recoverTx = Transaction.populate(Message.from(realDataNeedToSign), [
       bs58.encode(feePayerSignature),

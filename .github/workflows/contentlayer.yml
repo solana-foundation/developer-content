@@ -1,8 +1,6 @@
 name: Contentlayer Markdown Formatting
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -12,14 +10,20 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm -g i yarn
-      - run: yarn install
-      - run: yarn contentlayer:build
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build contentlayer
+        run: pnpm contentlayer:build

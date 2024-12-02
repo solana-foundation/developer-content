@@ -2,6 +2,10 @@
 sidebarLabel: Clusters & Endpoints
 title: Clusters and Public RPC Endpoints
 sidebarSortOrder: 8
+description:
+  Learn about Solana's network clusters (Devnet, Testnet, and Mainnet Beta),
+  their public RPC endpoints, rate limits, and use cases. Learn how to connect
+  to different Solana networks for development, testing, and production.
 ---
 
 The Solana blockchain has several different groups of validators, known as
@@ -34,6 +38,22 @@ An example of some of these Solana blockchain explorers include:
 - [http://solscan.io/](https://solscan.io/).
 - [http://solanabeach.io/](http://solanabeach.io/).
 - [http://validators.app/](http://validators.app/).
+
+## On a high level
+
+- Mainnet: Live production environment for deployed applications.
+- Devnet: Testing with public accessibility for developers experimenting with
+  their applications.
+- Testnet: Stress-testing for network upgrades and validator performance.
+
+**Example use cases**: You may want to debug a new program on Devnet or verify
+performance metrics on Testnet before Mainnet deployment.
+
+| **Cluster** | **Endpoint**                          | **Purpose**                    | **Notes**                      |
+| ----------- | ------------------------------------- | ------------------------------ | ------------------------------ |
+| Mainnet     | `https://api.mainnet-beta.solana.com` | Live production environment    | Requires SOL for transactions  |
+| Devnet      | `https://api.devnet.solana.com`       | Public testing and development | Free SOL airdrop for testing   |
+| Testnet     | `https://api.testnet.solana.com`      | Validator and stress testing   | May have intermittent downtime |
 
 ## Devnet
 

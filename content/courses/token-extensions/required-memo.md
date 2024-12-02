@@ -177,7 +177,7 @@ Next, we'll need to add our dependencies. Run the following to install the
 required packages:
 
 ```bash
-npm i @solana-developers/helpers @solana/spl-token @solana/web3.js esrun dotenv typescript
+npm i @solana-developers/helpers@2 @solana/spl-token @solana/web3.js@1 esrun dotenv typescript
 ```
 
 Create a directory named `src`. In this directory, create a file named
@@ -242,7 +242,7 @@ the local RPC URL.
 
 `const connection = new Connection("http://127.0.0.1:8899", "confirmed");`
 
-Alternatively, if you’d like to use testnet or devnet, import the
+Alternatively, if you'd like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
 ```typescript
@@ -600,7 +600,7 @@ extension.
 npx esrun src/index.ts
 ```
 
-Congratulations! We’ve just tested the required memo extension!
+Congratulations! We've just tested the required memo extension!
 
 ## Challenge
 

@@ -2,6 +2,12 @@
 sidebarLabel: Program Derived Address
 title: Program Derived Address
 sidebarSortOrder: 4
+description:
+  Learn how to build a CRUD (Create, Read, Update, Delete) Solana program using
+  Program Derived Addresses (PDAs) and the Anchor framework. This step-by-step
+  guide demonstrates how to create, update, and delete on-chain message accounts
+  using PDAs, implement account validation, and write tests. Perfect for
+  developers looking to understand how to use PDAs in Solana programs.
 ---
 
 In this section, we'll walk through how to build a basic CRUD (Create, Read,
@@ -525,7 +531,7 @@ The body of the function then:
 </AccordionItem>
 </Accordion>
 
-Rebuld the program
+Rebuild the program
 
 ```shell filename="Terminal"
 build
@@ -599,7 +605,7 @@ The `Delete` struct defines the accounts required for the `delete` instruction:
 </AccordionItem>
 </Accordion>
 
-Next, implement the logic for the `update` instruction.
+Next, implement the logic for the `delete` instruction.
 
 ```rs filename="lib.rs"
 pub fn delete(_ctx: Context<Delete>) -> Result<()> {

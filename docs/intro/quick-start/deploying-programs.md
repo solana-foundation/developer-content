@@ -2,6 +2,11 @@
 sidebarLabel: Deploying Programs
 title: Deploying Your First Solana Program
 sidebarSortOrder: 3
+description:
+  Learn how to build, deploy, and test your first Solana program using the
+  Anchor framework and Solana Playground. This beginner-friendly guide walks
+  through creating a simple program, deploying it to devnet, running tests, and
+  closing the program.
 ---
 
 In this section, we'll build, deploy, and test a simple Solana program using the

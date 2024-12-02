@@ -2,6 +2,7 @@
 sidebarLabel: Rust
 title: Rust Client for Solana
 sidebarSortOrder: 1
+description: Learn how to use Solana's Rust crates for development.
 ---
 
 Solana's Rust crates are
@@ -30,7 +31,7 @@ development:
   SBF. This crate contains many fundamental data types and is re-exported from
   [`solana-sdk`], which cannot be imported from a Solana program.
 
-- [`solana-sdk`] &mdash; The basic off-chain SDK, it re-exports
+- [`solana-sdk`] &mdash; The basic offchain SDK, it re-exports
   [`solana-program`] and adds more APIs on top of that. Most Solana programs
   that do not run on-chain will import this.
 

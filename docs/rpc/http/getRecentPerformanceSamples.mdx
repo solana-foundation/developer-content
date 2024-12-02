@@ -31,14 +31,14 @@ An array of `RpcPerfSample<object>` with the following fields:
   period
 - `numSlots: <u64>` - Number of slots completed during the sample period
 - `samplePeriodSecs: <u16>` - Number of seconds in a sample window
-- `numNonVoteTransaction: <u64>` - Number of non-vote transactions processed
+- `numNonVoteTransactions: <u64>` - Number of non-vote transactions processed
   during the sample period.
 
 <Callout type={"info"}>
-  `numNonVoteTransaction` is present starting with v1.15. To get a number of
+  `numNonVoteTransactions` is present starting with v1.15. To get a number of
   voting transactions compute:
   <br />
-  `numTransactions - numNonVoteTransaction`
+  `numTransactions - numNonVoteTransactions`
 </Callout>
 
 </DocLeftSide>
@@ -48,11 +48,12 @@ An array of `RpcPerfSample<object>` with the following fields:
 ### Code sample
 
 ```shell
-curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -s -X POST -H "Content-Type: application/json" -d '
   {
     "jsonrpc":"2.0", "id":1,
     "method": "getRecentPerformanceSamples",
-    "params": [4]}
+    "params": [4]
+  }
 '
 ```
 
@@ -65,28 +66,28 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
     {
       "numSlots": 126,
       "numTransactions": 126,
-      "numNonVoteTransaction": 1,
+      "numNonVoteTransactions": 1,
       "samplePeriodSecs": 60,
       "slot": 348125
     },
     {
       "numSlots": 126,
       "numTransactions": 126,
-      "numNonVoteTransaction": 1,
+      "numNonVoteTransactions": 1,
       "samplePeriodSecs": 60,
       "slot": 347999
     },
     {
       "numSlots": 125,
       "numTransactions": 125,
-      "numNonVoteTransaction": 0,
+      "numNonVoteTransactions": 0,
       "samplePeriodSecs": 60,
       "slot": 347873
     },
     {
       "numSlots": 125,
       "numTransactions": 125,
-      "numNonVoteTransaction": 0,
+      "numNonVoteTransactions": 0,
       "samplePeriodSecs": 60,
       "slot": 347748
     }

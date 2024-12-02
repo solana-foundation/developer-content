@@ -3,14 +3,14 @@ sidebarSortOrder: 4
 title: State Compression
 description:
   'State Compression is the method of cheaply and securely storing
-  "fingerprints" of off-chain data in the Solana leger, instead of expensive
+  "fingerprints" of offchain data in the Solana leger, instead of expensive
   accounts.'
 ---
 
 On Solana, [State Compression](/docs/advanced/state-compression.md) is the
-method of creating a "fingerprint" (or hash) of off-chain data and storing this
+method of creating a "fingerprint" (or hash) of offchain data and storing this
 fingerprint on-chain for secure verification. Effectively using the security of
-the Solana ledger to securely validate off-chain data, verifying it has not been
+the Solana ledger to securely validate offchain data, verifying it has not been
 tampered with.
 
 This method of "compression" allows Solana programs and dApps to use cheap
@@ -25,22 +25,22 @@ this final hash on-chain.
 ## What is State Compression?
 
 In simple terms, state compression uses "**_tree_**" structures to
-cryptographically hash off-chain data together, in a deterministic way, to
+cryptographically hash offchain data together, in a deterministic way, to
 compute a single final hash that gets stored on-chain.
 
 These _trees_ are created in this "_deterministic_" process by:
 
 - taking any piece of data
 - creating a hash of this data
-- storing this hash as a `leaf` the bottom of the tree
-- each `leaf` pair is then hash together, creating a `branch`
-- each `branch` is then hash together
+- storing this hash as a `leaf` at the bottom of the tree
+- each `leaf` pair is then hashed together, creating a `branch`
+- each `branch` is then hashed together
 - continually climbing the tree and hashing adjacent branches together
 - once at the top of the tree, a final `root hash` is produced
 
 This `root hash` is then stored onchain, as a verifiable **_proof_** of all of
 the data within every leaf. Allowing anyone to cryptographically verify all the
-off-chain data within the tree, while only actually storing a **minimal** amount
+offchain data within the tree, while only actually storing a **minimal** amount
 of data on-chain. Therefore, significantly reducing the cost to store/prove
 large amounts of data due to this "state compression".
 
@@ -94,9 +94,9 @@ In high throughput applications, like within the
 [Solana runtime](/docs/core/fees.md), requests to change an on-chain
 _traditional merkle tree_ could be received by validators in relatively rapid
 succession (e.g. within the same slot). Each leaf data change would still be
-required to performed in series. Resulting in each subsequent request for change
-to fail, due to the root hash and proof being invalidated by the previous change
-request in the slot.
+required to be performed in series. Resulting in each subsequent request for
+change to fail, due to the root hash and proof being invalidated by the previous
+change request in the slot.
 
 Enter, Concurrent merkle trees.
 
@@ -175,8 +175,8 @@ We must use a `maxDepth` of `14` to ensure we can store all of our data.
 
 The `maxDepth` value will be one of the primary drivers of cost when creating a
 tree since you will pay this cost upfront at tree creation. The higher the max
-tree depth depth, the more data fingerprints (aka hashes) you can store, the
-higher the cost.
+tree depth, the more data fingerprints (aka hashes) you can store, the higher
+the cost.
 
 ### Max buffer size
 
@@ -193,14 +193,14 @@ sized and set at tree creation via this `maxBufferSize` value.
 
 ### Canopy depth
 
-The "canopy depth", sometimes called the canopy size, is the number of proof
-nodes that are cached/stored on-chain for any given proof path.
+The "canopy depth," also known as the canopy size, refers to the number of proof
+node levels that are cached or stored onchain for a given proof path.
 
 When performing an update action on a `leaf`, like transferring ownership (e.g.
 selling a compressed NFT), the **complete** proof path must be used to verify
 original ownership of the leaf and therefore allow for the update action. This
 verification is performed using the **complete** proof path to correctly compute
-the current `root hash` (or any cached `root hash` via the on-chain "concurrent
+the current `root hash` (or any cached `root hash` via the onchain "concurrent
 buffer").
 
 The larger a tree's max depth is, the more proof nodes are required to perform
@@ -221,6 +221,18 @@ below the limit.
 For example, a tree with a max depth of `14` would require `14` total proof
 nodes. With a canopy of `10`, only `4` proof nodes are required to be submitted
 per update transaction.
+
+![Canopy depth of 1 for a Concurrent Merkle Tree of max depth of 3](/assets/docs/compression/canopy-depth-1.png)
+
+Consider another example, this time with a tree of max depth `3`. If we want to
+apply an action to one of the tree’s leaves—such as updating `R4`—we need to
+provide proofs for `L4` and `R2`. However, we can omit `R1` since it is already
+cached/stored onchain due to our canopy depth of `1`, which ensures that all
+nodes at level 1 (`L1` and `R1`) are stored onchain. This results in a total of
+2 required proofs.
+
+Therefore, the number of proofs required to update a leaf is equal to the max
+depth minus the canopy depth. In this example, `3 - 1 = 2`.
 
 #### The larger the canopy depth value, the higher the cost
 
@@ -267,7 +279,7 @@ package, developers can use the
 function to calculate the required space for a given tree size parameters.
 
 Then using the
-[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getMinimumBalanceForRentExemption)
+[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getMinimumBalanceForRentExemption)
 function to get the final cost (in lamports) to allocate the required space for
 the tree on-chain.
 

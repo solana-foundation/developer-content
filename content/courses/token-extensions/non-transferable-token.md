@@ -127,7 +127,7 @@ Next, we'll need to add our dependencies. Run the following to install the
 required packages:
 
 ```bash
-npm i @solana-developers/helpers @solana/spl-token @solana/web3.js esrun dotenv typescript
+npm i @solana-developers/helpers@2 @solana/spl-token @solana/web3.js@1 esrun dotenv typescript
 ```
 
 Create a directory named `src`. In this directory, create a file named
@@ -303,7 +303,7 @@ esrun src/index.ts
 ```
 
 The non-transferable mint has been set up correctly and will be created when we
-run `npm start`. Let’s move on to the next step and create a source account and
+run `npm start`. Let's move on to the next step and create a source account and
 mint a token to it.
 
 #### 4. Mint token

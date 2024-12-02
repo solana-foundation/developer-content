@@ -52,10 +52,11 @@ The `CpiContext` type specifies non-argument inputs for cross program
 invocations:
 
 - `accounts` - the list of accounts required for the instruction being invoked
-- `remaining_accounts` - any remaining accounts
+- `remaining_accounts` - accounts that are not part of this instruction but may
+  be used elsewhere (for example, by inner instructions)
 - `program` - the program ID of the program being invoked
-- `signer_seeds` - if a PDA is signing, include the seeds required to derive the
-  PDA
+- `signer_seeds` - if one or more PDAs are signing the transaction, the seeds
+  required to derive the PDAs
 
 ```rust
 pub struct CpiContext<'a, 'b, 'c, 'info, T>
@@ -114,21 +115,20 @@ pub fn new_with_signer(
 
 #### CPI accounts
 
-One of the main things about `CpiContext` that simplifies cross-program
-invocations is that the `accounts` argument is a generic type that lets you pass
-in any object that adopts the `ToAccountMetas` and `ToAccountInfos<'info>`
-traits.
+One of the key features of `CpiContext` is that the `accounts` argument is
+generic, allowing you to pass in any object that implements the `ToAccountMetas`
+and `ToAccountInfos<'info>` traits.
 
-These traits are added by the `#[derive(Accounts)]` attribute macro that you've
-used before when creating structs to represent instruction accounts. That means
-you can use similar structs with `CpiContext`.
+These traits are added by the `#[derive(Accounts)]` attribute macro you've used
+before, to specify the accounts required by your instruction handlers. You can
+use also use `#[derive(Accounts)]` structs with `CpiContext`.
 
 This helps with code organization and type safety.
 
-#### Invoke an instruction on another Anchor program
+#### Invoke an instruction handler on another Anchor program
 
-When the program you're calling is an Anchor program with a published crate,
-Anchor can generate instruction builders and CPI helper functions for you.
+When calling another Anchor program with a published crate, Anchor can generate
+instruction builders and CPI helper functions for you.
 
 Simply declare your program's dependency on the program you're calling in your
 program's `Cargo.toml` file as follows:
@@ -141,11 +141,11 @@ callee = { path = "../callee", features = ["cpi"]}
 By adding `features = ["cpi"]`, you enable the `cpi` feature and your program
 gains access to the `callee::cpi` module.
 
-The `cpi` module exposes `callee`'s instructions as a Rust function that takes
-as arguments a `CpiContext` and any additional instruction data. These functions
-use the same format as the instruction functions in your Anchor programs, only
-with `CpiContext` instead of `Context`. The `cpi` module also exposes the
-accounts structs required for calling the instructions.
+The `cpi` module turns `callee`'s instruction handlers into Rust functions.
+These functions take a `CpiContext` and any extra data needed for the
+instruction. They work just like the instruction handlers in your Anchor
+programs, but use `CpiContext` instead of `Context`. The `cpi` module also
+provides the account structs needed for these instruction handlers.
 
 For example, if `callee` has the instruction `do_something` that requires the
 accounts defined in the `DoSomething` struct, you could invoke `do_something` as
@@ -180,14 +180,15 @@ pub mod lootbox_program {
 When the program you're calling is _not_ an Anchor program, there are two
 possible options:
 
-1. It's possible that the program maintainers have published a crate with their
-   own helper functions for calling into their program. For example, the
-   `anchor_spl` crate provides helper functions that are virtually identical
-   from a call-site perspective to what you would get with the `cpi` module of
-   an Anchor program. E.g. you can mint using the
+1. The program maintainers may have published a crate with their own helper
+   functions for calling into their program. For example, the `anchor_spl` crate
+   provides virtually identical helper functions from a call-site perspective to
+   what you would get with the `cpi` module of an Anchor program. E.g. you can
+   mint using the
    [`mint_to` helper function](https://docs.rs/anchor-spl/latest/src/anchor_spl/token.rs.html#36-58)
    and use the
    [`MintTo` accounts struct](https://docs.rs/anchor-spl/latest/anchor_spl/token/struct.MintTo.html).
+
    ```rust
    token::mint_to(
        CpiContext::new_with_signer(
@@ -205,18 +206,20 @@ possible options:
        amount,
    )?;
    ```
+
 2. If there is no helper module for the program whose instruction(s) you need to
    invoke, you can fall back to using `invoke` and `invoke_signed`. In fact, the
    source code of the `mint_to` helper function referenced above shows an
    example using `invoke_signed` when given a `CpiContext`. You can follow a
-   similar pattern if you decide to use an accounts struct and `CpiContext` to
-   organize and prepare your CPI.
+   similar pattern if you use an accounts struct and `CpiContext` to organize
+   and prepare your CPI.
+
    ```rust
-   pub fn mint_to<'a, 'b, 'c, 'info>(
-       ctx: CpiContext<'a, 'b, 'c, 'info, MintTo<'info>>,
+   pub fn mint_to<'info>(
+       ctx: CpiContext<'_foo, '_bar, '_baz, 'info, MintTo<'info>>,
        amount: u64,
    ) -> Result<()> {
-       let ix = spl_token::instruction::mint_to(
+       let instruction_handler = spl_token::instruction::mint_to(
            &spl_token::ID,
            ctx.accounts.mint.key,
            ctx.accounts.to.key,
@@ -224,12 +227,12 @@ possible options:
            &[],
            amount,
        )?;
-       solana_program::program::invoke_signed(
-           &ix,
+       anchor_lang::solana_program::program::invoke_signed(
+           &instruction_handler,
            &[
-               ctx.accounts.to.clone(),
-               ctx.accounts.mint.clone(),
-               ctx.accounts.authority.clone(),
+               ctx.accounts.to,
+               ctx.accounts.mint,
+               ctx.accounts.authority
            ],
            ctx.signer_seeds,
        )
@@ -239,12 +242,12 @@ possible options:
 
 ### Throw errors in Anchor
 
-We're deep enough into Anchor at this point that it's important to know how to
+We're deep enough into Anchor at this point that it's essential to know how to
 create custom errors.
 
-Ultimately, all programs return the same error
-type: [`ProgramError`](https://docs.rs/solana-program/latest/solana_program/program_error/enum.ProgramError.html).
-However, when writing a program using Anchor you can use `AnchorError` as an
+Ultimately, all programs return the same error type: 
+[`ProgramError`](https://docs.rs/solana-program/latest/solana_program/program_error/enum.ProgramError.html).
+However, when writing a program using Anchor, you can use `AnchorError` as an
 abstraction on top of `ProgramError`. This abstraction provides additional
 information when a program fails, including:
 
@@ -265,13 +268,13 @@ pub struct AnchorError {
 Anchor Errors can be divided into:
 
 - Anchor Internal Errors that the framework returns from inside its own code
-- Custom errors that you the developer can create
+- Custom errors that you, the developer, can create
 
 You can add errors unique to your program by using the `error_code` attribute.
-Simply add this attribute to a custom `enum` type. You can then use the variants
-of the `enum` as errors in your program. Additionally, you can add an error
-message to each variant using the `msg` attribute. Clients can then display this
-error message if the error occurs.
+Simply add this attribute to a custom `enum` type. You can then use the `enum`
+variants as errors in your program. Additionally, you can add an error message
+to each variant using the `msg` attribute. Clients can then display this error
+message if the error occurs.
 
 ```rust
 #[error_code]
@@ -281,11 +284,10 @@ pub enum MyError {
 }
 ```
 
-To return a custom error you can use
-the [err](https://docs.rs/anchor-lang/latest/anchor_lang/macro.err.html) or
-the [error](https://docs.rs/anchor-lang/latest/anchor_lang/prelude/macro.error.html)
-macro from an instruction function. These add file and line information to the
-error that is then logged by Anchor to help you with debugging.
+To return a custom error from an instruction handler you can use
+the [err](https://docs.rs/anchor-lang/latest/anchor_lang/macro.err.html) or [error](https://docs.rs/anchor-lang/latest/anchor_lang/prelude/macro.error.html)
+macro. These add helpful file and line information to the error that Anchor logs
+to help with debugging:
 
 ```rust
 #[program]
@@ -331,10 +333,10 @@ pub enum MyError {
 
 ## Lab
 
-Let’s practice the concepts we’ve gone over in this lesson by building on top of
+Let's practice the concepts we've gone over in this lesson by building on top of
 the Movie Review program from previous lessons.
 
-In this lab we’ll update the program to mint tokens to users when they submit a
+In this lab we'll update the program to mint tokens to users when they submit a
 new movie review.
 
 <Steps>
@@ -342,8 +344,8 @@ new movie review.
 ### Starter
 
 To get started, we will be using the final state of the Anchor Movie Review
-program from the previous lesson. So, if you just completed that lesson then
-you’re all set and ready to go. If you are just jumping in here, no worries, you
+program from the previous lesson. So, if you just completed that lesson, then
+you're all set and ready to go. If you are just jumping in here, no worries, you
 can [download the starter code](https://github.com/Unboxed-Software/anchor-movie-review-program/tree/solution-pdas).
 We'll be using the `solution-pdas` branch as our starting point.
 
@@ -352,12 +354,23 @@ We'll be using the `solution-pdas` branch as our starting point.
 Before we get started we need enable the `init-if-needed` feature and add the
 `anchor-spl` crate to the dependencies in `Cargo.toml`. If you need to brush up
 on the `init-if-needed` feature take a look at the
-[Anchor PDAs and Accounts lesson](anchor-pdas).
+[Anchor PDAs and Accounts lesson](/content/courses/onchain-development/anchor-pdas.md)).
 
 ```rust
 [dependencies]
 anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
 anchor-spl = "0.30.1"
+```
+
+Since we are adding `anchor-spl` as a dependency we also need to add the
+`idl-build` for it in the features section of `Cargo.toml`. This is because all
+types that will be used in the `Accounts` structures that we are adding in this
+lesson require the `IdlBuild` trait implementation to generate an IDL.
+
+```rust
+[features]
+# All lines remain unchanged, except for this idl-build line
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 ```
 
 ### Initialize reward token
@@ -381,14 +394,14 @@ pub struct InitializeMint<'info> {
         bump,
         payer = user,
         mint::decimals = 6,
-        mint::authority = mint,
+        mint::authority = user,
     )]
     pub mint: Account<'info, Mint>,
     #[account(mut)]
     pub user: Signer<'info>,
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
-    pub system_program: Program<'info, System>
+    pub system_program: Program<'info, System>,
 }
 ```
 
@@ -411,7 +424,7 @@ pub fn initialize_token_mint(_ctx: Context<InitializeMint>) -> Result<()> {
 
 ### Anchor Error
 
-Next, let’s create an Anchor Error that we’ll use to validate the following:
+Next, let's create an Anchor Error that we'll use to validate the following:
 
 - The `rating` passed to either the `add_movie_review` or `update_movie_review`
   instruction.
@@ -433,7 +446,7 @@ enum MovieReviewError {
 
 ### Update add_movie_review instruction
 
-Now that we've done some setup, let’s update the `add_movie_review` instruction
+Now that we've done some setup, let's update the `add_movie_review` instruction
 and `AddMovieReview` context type to mint tokens to the reviewer.
 
 Next, update the `AddMovieReview` context type to add the following accounts:
@@ -455,7 +468,7 @@ pub struct AddMovieReview<'info> {
         seeds=[title.as_bytes(), initializer.key().as_ref()],
         bump,
         payer = initializer,
-        space = MovieAccountState::INIT_SPACE + title.len() + description.len()
+        space = DISCRIMINATOR + MovieAccountState::INIT_SPACE
     )]
     pub movie_review: Account<'info, MovieAccountState>,
     #[account(mut)]
@@ -486,13 +499,7 @@ been initialized, it will be initialized as an associated token account for the
 specified mint and authority. Also, the payer for the costs related with the
 account initialization will be set under the constraint `payer`.
 
-If you're unfamiliar with the `INIT_SPACE` constant used for the `movie_review`
-account space allocation, please refer to the
-[`solution-pdas`](https://github.com/solana-foundation/developer-content/blob/4c8eada3053061e66b907c9b49701b064544681d/content/courses/onchain-development/anchor-pdas.md?plain=1#L467)
-branch that is being used as our starting point. In there, we discuss the
-implementation of the `Space` trait and the `INIT_SPACE` constant.
-
-Next, let’s update the `add_movie_review` instruction to do the following:
+Next, let's update the `add_movie_review` instruction to do the following:
 
 - Check that `rating` is valid. If it is not a valid rating, return the
   `InvalidRating` error.
@@ -500,7 +507,7 @@ Next, let’s update the `add_movie_review` instruction to do the following:
   `TitleTooLong` error.
 - Check that `description` length is valid. If it is not a valid length, return
   the `DescriptionTooLong` error.
-- Make a CPI to the token program’s `mint_to` instruction using the mint
+- Make a CPI to the token program's `mint_to` instruction using the mint
   authority PDA as a signer. Note that we'll mint 10 tokens to the user but need
   to adjust for the mint decimals by making it `10*10^6`.
 
@@ -520,15 +527,29 @@ use anchor_spl::associated_token::AssociatedToken;
 Next, update the `add_movie_review` function to:
 
 ```rust
-pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description: String, rating: u8) -> Result<()> {
+pub fn add_movie_review(
+    ctx: Context<AddMovieReview>,
+    title: String,
+    description: String,
+    rating: u8
+) -> Result<()> {
     // We require that the rating is between 1 and 5
-    require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+    require!(
+        rating >= MIN_RATING && rating <= MAX_RATING,
+        MovieReviewError::InvalidRating
+    );
 
     // We require that the title is not longer than 20 characters
-    require!(title.len() <= MAX_TITLE_LENGTH, MovieReviewError::TitleTooLong);
+    require!(
+        title.len() <= MAX_TITLE_LENGTH,
+        MovieReviewError::TitleTooLong
+    );
 
     // We require that the description is not longer than 50 characters
-    require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+    require!(
+        description.len() <= MAX_DESCRIPTION_LENGTH,
+        MovieReviewError::DescriptionTooLong
+    );
 
     msg!("Movie review account created");
     msg!("Title: {}", title);
@@ -545,7 +566,7 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
         CpiContext::new_with_signer(
             ctx.accounts.token_program.to_account_info(),
             MintTo {
-                authority: ctx.accounts.mint.to_account_info(),
+                authority: ctx.accounts.initializer.to_account_info(),
                 to: ctx.accounts.token_account.to_account_info(),
                 mint: ctx.accounts.mint.to_account_info()
             },
@@ -568,12 +589,23 @@ pub fn add_movie_review(ctx: Context<AddMovieReview>, title: String, description
 Here we are only adding the check that `rating` and `description` are valid.
 
 ```rust
-pub fn update_movie_review(ctx: Context<UpdateMovieReview>, title: String, description: String, rating: u8) -> Result<()> {
+pub fn update_movie_review(
+    ctx: Context<UpdateMovieReview>,
+    title: String,
+    description: String,
+    rating: u8
+) -> Result<()> {
     // We require that the rating is between 1 and 5
-    require!(rating >= MIN_RATING && rating <= MAX_RATING, MovieReviewError::InvalidRating);
+    require!(
+        rating >= MIN_RATING && rating <= MAX_RATING,
+        MovieReviewError::InvalidRating
+    );
 
     // We require that the description is not longer than 50 characters
-    require!(description.len() <= MAX_DESCRIPTION_LENGTH, MovieReviewError::DescriptionTooLong);
+    require!(
+        description.len() <= MAX_DESCRIPTION_LENGTH,
+        MovieReviewError::DescriptionTooLong
+    );
 
     msg!("Movie review account space reallocated");
     msg!("Title: {}", title);
@@ -590,7 +622,7 @@ pub fn update_movie_review(ctx: Context<UpdateMovieReview>, title: String, descr
 
 ### Test
 
-Those are all of the changes we need to make to the program! Now, let’s update
+Those are all of the changes we need to make to the program! Now, let's update
 our tests.
 
 Start by making sure your imports and `describe` function look like this:
@@ -640,7 +672,7 @@ it("Initializes the reward token", async () => {
 });
 ```
 
-Notice that we didn't have to add `.accounts` because they call be inferred,
+Notice that we didn't have to add `.accounts` because they can be inferred,
 including the `mint` account (assuming you have seed inference enabled).
 
 Next, update the test for the `addMovieReview` instruction. The primary
@@ -682,7 +714,7 @@ After that, neither the test for `updateMovieReview` nor the test for
 
 At this point, run `anchor test` and you should see the following output
 
-```shell
+```bash
 anchor-movie-review-program
     ✔ Initializes the reward token (458ms)
     ✔ Movie review is added (410ms)

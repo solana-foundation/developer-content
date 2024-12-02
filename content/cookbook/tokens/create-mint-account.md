@@ -2,6 +2,8 @@
 title: How to Create a Token
 sidebarSortOrder: 1
 description: "Learn how to create tokens on Solana."
+altRoutes:
+  - /developers/cookbook/tokens
 ---
 
 Creating tokens is done by creating what is called a "mint account". This mint
@@ -46,7 +48,7 @@ import bs58 from "bs58";
 
   // 1) use build-in function
   let mintPubkey = await createMint(
-    connection, // conneciton
+    connection, // connection
     feePayer, // fee payer
     alice.publicKey, // mint authority
     alice.publicKey, // freeze authority (you can use `null` to disable it. when you disable it, you can't turn it on again)

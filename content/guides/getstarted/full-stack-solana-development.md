@@ -489,10 +489,10 @@ pub struct Counter {
 
 Make sure you go over the comments!
 
-The `initialize` instruction instruction does only one this: it creates a new
-account of the `Counter` type. To do this, we need to know who's paying, details
-of the account we're creating like the space and the address, and which program
-to use to create the account.
+The `initialize` instruction does only one thing: it creates a new account of
+the `Counter` type. To do this, we need to know who's paying, details of the
+account we're creating like the space and the address, and which program to use
+to create the account.
 
 Let's go line by line:
 
@@ -1085,7 +1085,7 @@ Throw this command into your terminal to install all the `wallet-adapter` stuff
 we need:
 
 ```shell
-yarn add react @solana/web3.js \
+yarn add react @solana/web3.js@1 \
   @solana/wallet-adapter-base @solana/wallet-adapter-react \
   @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets
 ```
@@ -1227,20 +1227,33 @@ export default function CounterState() {
   const [counterData, setCounterData] = useState<CounterData | null>(null);
 
   useEffect(() => {
-    // Fetch initial account data
-    program.account.counter.fetch(counterPDA).then(data => {
-      setCounterData(data);
-    });
+    const fetchCounterData = async () => {
+      try {
+        // Fetch initial account data
+        const data = await program.account.counter.fetch(counterPDA);
+        setCounterData(data);
+      } catch (error) {
+        console.error("Error fetching counter data:", error);
+      }
+    };
+
+    fetchCounterData();
 
     // Subscribe to account change
     const subscriptionId = connection.onAccountChange(
       // The address of the account we want to watch
       counterPDA,
-      // callback for when the account changes
+      // Callback for when the account changes
       accountInfo => {
-        setCounterData(
-          program.coder.accounts.decode("counter", accountInfo.data),
-        );
+        try {
+          const decodedData = program.coder.accounts.decode(
+            "counter",
+            accountInfo.data,
+          );
+          setCounterData(decodedData);
+        } catch (error) {
+          console.error("Error decoding account data:", error);
+        }
       },
     );
 
@@ -1248,8 +1261,9 @@ export default function CounterState() {
       // Unsubscribe from account change
       connection.removeAccountChangeListener(subscriptionId);
     };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [program]);
+  }, [program, counterPDA, connection]);
 
   // Render the value of the counter
   return <p className="text-lg">Count: {counterData?.count?.toString()}</p>;

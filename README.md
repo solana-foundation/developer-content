@@ -7,6 +7,22 @@ These markdown based content posts are gathered from contributors from around
 the Solana ecosystem and displayed on
 [solana.com/developers](https://solana.com/developers) for all to learn from.
 
+## Setup Instructions
+
+This repository contains only the markdown files for content. The content is
+rendered through a separate UI repository.
+
+1. Clone this repository (developer-content)
+2. Clone the UI repository:
+   [solana-com](https://github.com/solana-foundation/solana-com)
+3. Run both repositories locally to view the rendered content
+
+In the solana-com repo, you must add the following `.env` variable:
+
+```
+NEXT_PUBLIC_DEVELOPER_CONTENT_API_URL="http://localhost:3001"
+```
+
 ## Structure
 
 There are a few primary types of Solana Developer content within this repo:

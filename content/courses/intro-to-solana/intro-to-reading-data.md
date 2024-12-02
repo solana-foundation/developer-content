@@ -10,9 +10,9 @@ description:
 
 ## Summary
 
-- **SOL** is the name of Solana’s native token. Each SOL is made from 1 billion
+- **SOL** is the name of Solana's native token. Each SOL is made from 1 billion
   **Lamports**.
-- **Accounts** store tokens, NFTs, programs, and data. For now, we’ll focus on
+- **Accounts** store tokens, NFTs, programs, and data. For now, we'll focus on
   accounts that store SOL.
 - **Addresses** point to accounts on the Solana network. Anyone can read the
   data at a given address. Most addresses are also **public keys**.
@@ -57,7 +57,7 @@ Solana. We'll also install TypeScript and `esrun`, so we can run `.ts` files on
 the command line:
 
 ```bash
-npm install typescript @solana/web3.js esrun
+npm install typescript @solana/web3.js@1 esrun
 ```
 
 ### Connect to the Network
@@ -127,7 +127,7 @@ The balance of the account at CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN is 0.
 
 ## Lab
 
-Let’s practice what we’ve learned, and check the balance at a particular
+Let's practice what we've learned, and check the balance at a particular
 address.
 
 ### Load a keypair

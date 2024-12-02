@@ -2,6 +2,12 @@
 sidebarLabel: Cross Program Invocation
 title: Cross Program Invocation
 sidebarSortOrder: 5
+description:
+  Learn how to implement Cross Program Invocations (CPIs) in Solana programs
+  using the Anchor framework. This tutorial demonstrates how to transfer SOL
+  between accounts, interact with the System Program, and handle Program Derived
+  Addresses (PDAs) in CPIs. Perfect for developers looking to build composable
+  Solana programs.
 ---
 
 In this section, we'll update the CRUD program from the previous PDA section to
@@ -562,7 +568,7 @@ Running tests...
 </Accordion>
 
 You can then inspect the SolanFM links to view the transaction details, where
-you’ll find the CPIs for the transfer instructions within the update and delete
+you'll find the CPIs for the transfer instructions within the update and delete
 instructions.
 
 ![Update CPI](/assets/docs/intro/quickstart/cpi-update.png)

@@ -17,17 +17,11 @@ invoked in the onchain program.
 
 ### Instructions
 
-In previous chapters, we used:
+In previous lessons, we used the `SystemProgram.transfer()` function from
+`@solana/web3.js`, which creates an instruction for the System program to
+transfer SOL.
 
-- The `SystemProgram.transfer()` function from `@solana/web3.js` to make an
-  instruction for the System program to transfer SOL.
-- The `mintTo()` and `transfer()` functions from `@solana/spl-token`, to make
-  instructions to the Token program to mint and transfer tokens
-- The `createCreateMetadataAccountV3Instruction()` function from
-  `@metaplex-foundation/mpl-token-metadata@2` to make instructions to Metaplex
-  to create token Metadata.
-
-When working with other programs, however, you’ll need to create instructions
+When working with other programs, however, you'll need to create instructions
 manually. With `@solana/web3.js`, you can create instructions with the
 `TransactionInstruction` constructor:
 
@@ -47,7 +41,7 @@ const instruction = new TransactionInstruction({
 
 `TransactionInstruction()` takes 3 fields:
 
-- The `programId` field is fairly self-explanatory: it’s the public key (also
+- The `programId` field is fairly self-explanatory: it's the public key (also
   called the 'address' or 'program ID') of the program.
 
 - `keys` is an array of accounts and how they will be used during the
@@ -60,7 +54,7 @@ const instruction = new TransactionInstruction({
   - `isWritable` - a boolean representing whether or not the account is written
     to during the transaction's execution
 
-- an optional `Buffer` containing data to pass to the program. We’ll be ignoring
+- an optional `Buffer` containing data to pass to the program. We'll be ignoring
   the `data` field for now, but we will revisit it in a future lesson.
 
 After making our instruction, we add it to a transaction, send the transaction
@@ -99,7 +93,7 @@ for that signature in Solana Explorer, then see:
 
 ### Writing transactions for the ping counter program
 
-We’re going to create a script to ping an onchain program that increments a
+We're going to create a script to ping an onchain program that increments a
 counter each time it has been pinged. This program exists on the Solana Devnet
 at address `ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa`. The program stores
 its data in a specific account at the address
@@ -147,19 +141,16 @@ Now let's talk to the Ping program! To do this, we need to:
 Remember, the most challenging piece here is including the right information in
 the instructions. We know the address of the program that we are calling. We
 also know that the program writes data to a separate account whose address we
-also have. Let’s add the string versions of both of those as constants at the
+also have. Let's add the string versions of both of those as constants at the
 top of the file:
 
 ```typescript
-const PING_PROGRAM_ADDRESS = new web3.PublicKey(
-  "ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa",
-);
-const PING_PROGRAM_DATA_ADDRESS = new web3.PublicKey(
-  "Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod",
-);
+const PING_PROGRAM_ADDRESS = "ChT1B39WKLS8qUrkLvFDXMhEJ4F1XZzwUNHUt4AU9aVa";
+const PING_PROGRAM_DATA_ADDRESS =
+  "Ah9K7dQ8EHaZqcAsgBW8w37yN2eAy3koFmUn4x3CJtod";
 ```
 
-Now let’s create a new transaction, then initialize a `PublicKey` for the
+Now let's create a new transaction, then initialize a `PublicKey` for the
 program account, and another for the data account.
 
 ```typescript
@@ -168,7 +159,7 @@ const programId = new web3.PublicKey(PING_PROGRAM_ADDRESS);
 const pingProgramDataId = new web3.PublicKey(PING_PROGRAM_DATA_ADDRESS);
 ```
 
-Next, let’s create the instruction. Remember, the instruction needs to include
+Next, let's create the instruction. Remember, the instruction needs to include
 the public key for the Ping program and it also needs to include an array with
 all the accounts that will be read from or written to. In this example program,
 only the data account referenced above is needed.
@@ -190,9 +181,9 @@ const instruction = new web3.TransactionInstruction({
 });
 ```
 
-Next, let’s add this instruction to the transaction we created. Then, call
+Next, let's add this instruction to the transaction we created. Then, call
 `sendAndConfirmTransaction()` by passing in the connection, transaction, and
-payer. Finally, let’s log the result of that function call so we can look it up
+payer. Finally, let's log the result of that function call so we can look it up
 on Solana Explorer.
 
 ```typescript
@@ -251,10 +242,10 @@ console.log(
 );
 ```
 
-And just like that you’re calling programs on the Solana network and writing
+And just like that you're calling programs on the Solana network and writing
 data onchain!
 
-In the next few lessons, you’ll learn how to
+In the next few lessons, you'll learn how to
 
 1. Send transactions safely from the browser instead of running a script
 2. Add custom data to your instructions

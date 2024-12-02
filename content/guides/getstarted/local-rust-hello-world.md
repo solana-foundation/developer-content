@@ -57,9 +57,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ## Run your localhost validator
 
 The Solana CLI comes with the
-[test validator](https://docs.solana.com/developing/test-validator) built in.
-This command line tool will allow you to run a full blockchain cluster on your
-machine.
+[test validator](https://docs.solanalabs.com/cli/examples/test-validator) built
+in. This command line tool will allow you to run a full blockchain cluster on
+your machine.
 
 ```shell
 solana-test-validator
@@ -81,8 +81,8 @@ solana config set --url localhost
 ## Create a new Rust library with Cargo
 
 Solana programs written in Rust are _libraries_ which are compiled to
-[BPF bytecode](https://docs.solana.com/developing/on-chain-programs/faq#berkeley-packet-filter-bpf)
-and saved in the `.so` format.
+[BPF bytecode](/docs/programs/faq.md#berkeley-packet-filter-bpf) and saved in
+the `.so` format.
 
 Initialize a new Rust library named `hello_world` via the Cargo command line:
 
@@ -143,8 +143,8 @@ use solana_program::{
 
 Every Solana program must define an `entrypoint` that tells the Solana runtime
 where to start executing your onchain code. Your program's
-[entrypoint](https://docs.solana.com/developing/on-chain-programs/developing-rust#program-entrypoint)
-should provide a public function named `process_instruction`:
+[entrypoint](/docs/programs/lang-rust.md#program-entrypoint) should provide a
+public function named `process_instruction`:
 
 ```rust
 // declare and export the program's entrypoint
@@ -169,9 +169,8 @@ Every onchain program should return the `Ok`
 tells the Solana runtime that your program executed successfully without errors.
 
 This program above will simply
-[log a message](https://docs.solana.com/developing/on-chain-programs/debugging#logging)
-of "_Hello, world!_" to the blockchain cluster, then gracefully exit with
-`Ok(())`.
+[log a message](/docs/programs/debugging.md#logging) of "_Hello, world!_" to the
+blockchain cluster, then gracefully exit with `Ok(())`.
 
 ## Build your Rust program
 
@@ -202,8 +201,8 @@ solana program deploy ./target/deploy/hello_world.so
 ```
 
 Once your Solana program has been deployed (and the transaction
-[finalized](https://docs.solana.com/cluster/commitments)), the above command
-will output your program's public address (aka its "program id").
+[finalized](https://docs.solanalabs.com/consensus/commitments)), the above
+command will output your program's public address (aka its "program id").
 
 ```shell
 # example output
@@ -229,8 +228,8 @@ library.
 ### Install Node.js
 
 To use node in WSL2 on Windows, please follow this  
-[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl)
-to install node.
+[guide to installing node in WSL2](https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl) to
+install node.
 
 ```shell
 sudo apt-get install curl
@@ -252,7 +251,7 @@ For macOS you can
 Install the Solana web3.js library and the Solana helpers library:
 
 ```shell
-npm install @solana/web3.js @solana-developers/helpers
+npm install @solana/web3.js@1 @solana-developers/helpers@2
 ```
 
 Create a new file called `client.mjs` and add the following code:
@@ -307,7 +306,7 @@ await connection.confirmTransaction({
 });
 
 console.log(
-  `Congratulations! Look at your ‘Hello World’ transaction in the Solana Explorer:
+  `Congratulations! Look at your ‘Hello World' transaction in the Solana Explorer:
   https://explorer.solana.com/tx/${txHash}?cluster=custom`,
 );
 ```
@@ -326,7 +325,7 @@ node client.mjs
 You should see the following output:
 
 ```shell
-Congratulations! Look at your ‘Hello World’ transaction in the Solana Explorer:
+Congratulations! Look at your ‘Hello World' transaction in the Solana Explorer:
   https://explorer.solana.com/tx/2fTcQ74z4DVi8WRuf2oNZ36z7k9tGRThaRPXBMYgjMUNUbUSKLrP6djpRUZ8msuTXvZHFe3UXi31dfgytG2aJZbv?cluster=custom
 ```
 
@@ -363,7 +362,7 @@ transaction on the Solana blockchain.
 
 See the links below to learn more about writing Rust based Solana programs:
 
-- [Overview of writing Solana programs](https://docs.solana.com/developing/on-chain-programs/overview)
+- [Overview of writing Solana programs](/docs/programs/overview.md)
 - [Solana Quick Start Guide](https://solana.com/docs/intro/quick-start)
-- [Learn more about developing Solana programs with Rust](https://docs.solana.com/developing/on-chain-programs/developing-rust)
-- [Debugging onchain programs](https://docs.solana.com/developing/on-chain-programs/debugging)
+- [Learn more about developing Solana programs with Rust](/docs/programs/lang-rust.md)
+- [Debugging onchain programs](/docs/programs/debugging.md)

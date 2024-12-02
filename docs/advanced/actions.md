@@ -88,7 +88,7 @@ interface.
    an optional list of related actions.
 2. the [POST request](#post-request) returns a signable transaction or message
    that the client then prompts the user's wallet to sign and execute on the
-   blockchain or in another off-chain service.
+   blockchain or in another offchain service.
 
 ### Action Execution and Lifecycle
 
@@ -510,8 +510,8 @@ export interface ActionParameter {
 
 The `pattern` should be a string equivalent of a valid regular expression. This
 regular expression pattern should by used by blink-clients to validate user
-input before before making the POST request. If the `pattern` is not a valid
-regular expression, it should be ignored by clients.
+input before making the POST request. If the `pattern` is not a valid regular
+expression, it should be ignored by clients.
 
 The `patternDescription` is a human readable description of the expected input
 requests from the user. If `pattern` is provided, the `patternDescription` is
@@ -592,7 +592,7 @@ user input elements are also supported:
 
 - `textarea` - equivalent of HTML
   [textarea element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/textarea).
-  Allowing the user provide multi-line input.
+  Allowing the user to provide multi-line input.
 - `select` - equivalent of HTML
   [select element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select),
   allowing the user to experience a “dropdown” style field. The Action API
@@ -816,9 +816,9 @@ export interface ActionPostResponse<T extends ActionType = ActionType> {
 ```
 
 - `transaction` - The value must be a base64-encoded
-  [serialized transaction](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#serialize).
+  [serialized transaction](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#serialize).
   The client must base64-decode the transaction and
-  [deserialize it](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#from).
+  [deserialize it](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#from).
 
 - `message` - The value must be a UTF-8 string that describes the nature of the
   transaction included in the response. The client should display this value to
@@ -839,16 +839,16 @@ export interface ActionPostResponse<T extends ActionType = ActionType> {
 #### POST Response - Transaction
 
 If the transaction
-[`signatures`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#signatures)
+[`signatures`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#signatures)
 are empty or the transaction has NOT been partially signed:
 
 - The client must ignore the
-  [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
+  [`feePayer`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#feePayer)
   in the transaction and set the `feePayer` to the `account` in the request.
 - The client must ignore the
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
+  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#recentBlockhash)
   in the transaction and set the `recentBlockhash` to the
-  [latest blockhash](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getLatestBlockhash).
+  [latest blockhash](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getLatestBlockhash).
 - The client must serialize and deserialize the transaction before signing it.
   This ensures consistent ordering of the account keys, as a workaround for
   [this issue](https://github.com/solana-labs/solana/issues/21722).
@@ -856,9 +856,9 @@ are empty or the transaction has NOT been partially signed:
 If the transaction has been partially signed:
 
 - The client must NOT alter the
-  [`feePayer`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#feePayer)
+  [`feePayer`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#feePayer)
   or
-  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/classes/Transaction.html#recentBlockhash)
+  [`recentBlockhash`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html#recentBlockhash)
   as this would invalidate any existing signatures.
 - The client must verify existing signatures, and if any are invalid, the client
   must reject the transaction as **malformed**.
@@ -971,9 +971,9 @@ clients in one of the following ways:
   UI with the included Action metadata, but will not allow the user to execute
   further actions.
 
-If no `links.next` is not provided, blink clients should assume the current
-action is final action in the chain, presenting their "completed" UI state after
-the transaction is confirmed.
+If `links.next` is not provided, blink clients should assume the current action
+is final action in the chain, presenting their "completed" UI state after the
+transaction is confirmed.
 
 ## actions.json
 
@@ -1070,9 +1070,8 @@ The following table outlines the syntax for path matching patterns:
 
 ### Rules Examples
 
-The following example demonstrates an exact match rule to map requests requests
-to `/buy` from your site's root to the exact path `/api/buy` relative to your
-site's root:
+The following example demonstrates an exact match rule to map requests to `/buy`
+from your site's root to the exact path `/api/buy` relative to your site's root:
 
 ```json filename="actions.json"
 {
@@ -1189,7 +1188,7 @@ string with each separated by a semi-colon.
 No other data should be included with Identifier Message's Memo instruction.
 
 The `identity` and the `reference` should be included as read-only, non-signer
-[keys](https://solana-labs.github.io/solana-web3.js/classes/TransactionInstruction.html#keys)
+[keys](https://solana-labs.github.io/solana-web3.js/v1.x/classes/TransactionInstruction.html#keys)
 in the transaction on an instruction that is NOT the Identifier Message Memo
 instruction.
 
@@ -1210,7 +1209,7 @@ associated with the Action Provider in a multi-step process:
 3. Verify the specific transaction is the first on-chain occurrence of the
    `reference` on-chain:
    - If this transaction is the first occurrence, the transaction is considered
-     verified and can a safely attributed to the Action Provider.
+     verified and can be safely attributed to the Action Provider.
    - If this transaction is NOT the first occurrence, it is considered invalid
      and therefore not attributed to the Action Provider.
 

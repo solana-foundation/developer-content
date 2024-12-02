@@ -1,0 +1,37 @@
+name: Mark Stale Issues and PRs
+
+on:
+  schedule:
+    # Run daily at midnight
+    - cron: "0 0 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          # Issues configuration
+          stale-issue-message:
+            "This issue has been automatically marked as stale because it has
+            not had recent activity. Remove stale label or comment or this will
+            be closed in 5 days."
+          stale-issue-label: "no-issue-activity"
+          days-before-issue-stale: 30 # Mark as stale after 30 days of inactivity
+          days-before-issue-close: 5 # Close 5 days after being marked stale
+
+          # Pull Request configuration
+          stale-pr-message:
+            "This pull request has been automatically marked as stale because it
+            has not had recent activity. Remove stale label or comment or this
+            will be closed in 7 days."
+          stale-pr-label: "no-pr-activity"
+          days-before-pr-stale: 21 # Mark PRs as stale after 21 days
+          days-before-pr-close: 7 # Close PRs 7 days after being marked stale
+
+          # Exempt labels and other configurations
+          exempt-issue-labels: "bug,enhancement,in-progress,not-stale"
+          exempt-pr-labels: "work-in-progress,review-needed,not-stale"
+
+          # Optional: Dry run to test configuration
+          dry-run: true
