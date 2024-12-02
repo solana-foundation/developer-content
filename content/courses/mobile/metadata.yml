@@ -1,0 +1,9 @@
+author: unboxed
+title: Solana Mobile Development
+description:
+  Use Solana features from native mobile apps for both Android and iOS.
+lessons:
+  - intro-to-solana-mobile
+  - mwa-deep-dive
+  - solana-mobile-dapps-with-expo
+priority: 99

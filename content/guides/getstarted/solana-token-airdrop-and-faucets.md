@@ -1,5 +1,5 @@
 ---
-date: Jul 29, 2023
+date: 2023-07-29T00:00:00Z
 difficulty: intro
 title: "How to get Solana devnet SOL (including airdrops and faucets)"
 seoTitle: "Faucets: How to get Solana devnet SOL"
@@ -43,7 +43,7 @@ connection.requestAirdrop();
 ```
 
 See more:
-[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#requestAirdrop)
+[`requestAirdrop()`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#requestAirdrop)
 documentation inside web3.js.
 
 ## 2. Web Faucet
@@ -75,14 +75,10 @@ _Available for Devnet_
 
 RPC Providers can opt in to distributing devnet SOL via their devnet Validators.
 
-<Callout>
+> If you are an RPC Provider and want to distribute SOL please
+> [get in touch here](https://c852ena8x5c.typeform.com/to/cUj1iRhS).
 
-If you are an RPC Provider and want to distribute SOL please
-[get in touch here](https://c852ena8x5c.typeform.com/to/cUj1iRhS).
-
-</Callout>
-
-Currently Supported:
+Currently supported:
 
 1. [Helius](https://www.helius.dev/)
 2. [QuickNode](https://faucet.quicknode.com/solana/devnet)
@@ -90,15 +86,14 @@ Currently Supported:
 
 ### Using the Solana CLI
 
-Specify your [Cluster](https://docs.solana.com/clusters) to be your RPC
-provider's URL.
+Specify your [Cluster](/docs/core/clusters.md) to be your RPC provider's URL:
 
 ```shell
 solana config set --url <your RPC url>
 ```
 
 Then you can request an airdrop like you would in the first option in this
-guide.
+guide:
 
 ```shell
 solana airdrop 2

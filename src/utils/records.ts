@@ -1,11 +1,15 @@
 import type { SimpleRecordGroupName } from "@/types";
 import { DEFAULT_LOCALE_EN } from "./constants";
 import {
-  allSolanaRPCDocs,
-  allSolanaDocs,
-  allDeveloperGuides,
-  allDeveloperResources,
-  allDeveloperWorkshops,
+  allGuideRecords,
+  allResourceRecords,
+  allCookbookRecords,
+  allWorkshopRecords,
+  allCoreDocsRecords,
+  allCoreRPCDocsRecords,
+  allCourseLessonRecords,
+  allCourseRecords,
+  allAuthorRecords,
 } from "contentlayer/generated";
 
 /**
@@ -24,26 +28,42 @@ export function getRecordsForGroup(
   let records = [];
 
   switch (simpleGroupName) {
+    case "authors": {
+      records = allAuthorRecords;
+      break;
+    }
     case "rpc":
     case "docs,rpc": {
       simpleGroupName = "rpc";
-      records = allSolanaRPCDocs;
+      records = allCoreRPCDocsRecords;
       break;
     }
     case "docs": {
-      records = allSolanaDocs;
+      records = allCoreDocsRecords;
       break;
     }
     case "guides": {
-      records = allDeveloperGuides;
+      records = allGuideRecords;
       break;
     }
     case "resources": {
-      records = allDeveloperResources;
+      records = allResourceRecords;
       break;
     }
     case "workshops": {
-      records = allDeveloperWorkshops;
+      records = allWorkshopRecords;
+      break;
+    }
+    case "cookbook": {
+      records = allCookbookRecords;
+      break;
+    }
+    case "lessons": {
+      records = allCourseLessonRecords;
+      break;
+    }
+    case "courses": {
+      records = allCourseRecords;
       break;
     }
   }
@@ -57,12 +77,17 @@ export function getRecordsForGroup(
      * need to manually located and add in the root docs page so it appears in
      * the correct places on the frontend (including in the navigation sidebar)
      */
-    const docsIndex = allSolanaDocs.find(
+    const docsIndex = allCoreDocsRecords.find(
       record => record.locale == options.locale && record.href == "/docs",
     );
     if (docsIndex) {
       records.push(Object.assign(docsIndex, { featuredPriority: 0 }) as any);
     }
+  }
+
+  // default the records to the base language if no records for the provided locale were found
+  if (records.findIndex(record => record.locale == options.locale) < 0) {
+    options.locale = DEFAULT_LOCALE_EN;
   }
 
   return records.filter(record => record.locale == options.locale);

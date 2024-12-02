@@ -1,5 +1,5 @@
 ---
-date: Dec 7, 2023
+date: 2023-12-07T00:00:00Z
 seoTitle: "Token Extensions: Interest-Bearing"
 title: How to use the Interest-Bearing extension
 description:

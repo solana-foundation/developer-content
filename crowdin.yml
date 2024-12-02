@@ -36,6 +36,17 @@ files: [
           "**/*.txt",
         ],
     },
+    # Cookbook files
+    {
+      source: "/content/cookbook/**/*.*",
+      translation: "/i18n/%two_letters_code%/content/cookbook/**/%original_file_name%",
+      ignore: [
+          # ignore certain files
+          "**/readme.md",
+          "**/*.json",
+          "**/*.txt",
+        ],
+    },
     # Workshop files
     {
       source: "/content/workshops/**/*.*",

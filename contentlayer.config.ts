@@ -4,7 +4,16 @@ import {
   makeSource,
   type FieldDefs,
   type ComputedFields,
-} from "contentlayer/source-files";
+} from "contentlayer2/source-files";
+import {
+  computeSlugFromRawDocumentData,
+  getAllContentFiles,
+  throwIfAuthorDoesNotExist,
+  validatedImagePath,
+} from "./src/utils/helpers";
+import path from "path";
+
+const DEFAULT_PRIORITY = 9999;
 
 /**
  * Standard content record fields
@@ -12,13 +21,18 @@ import {
 const basicContentFields: FieldDefs = {
   title: {
     type: "string",
-    description: "The primary title of the post",
+    description: "The primary title of the individual piece of content",
     required: true,
   },
   description: {
     type: "string",
     description:
       "Brief description of the content (also used in the SEO metadata)",
+    required: false,
+  },
+  author: {
+    type: "string",
+    description: "Slug of the author that created this content",
     required: false,
   },
   tags: {
@@ -120,6 +134,20 @@ const basicContentFields: FieldDefs = {
     description: "Force hide the table of contents displayed on page",
     required: false,
   },
+  isSkippedInNav: {
+    type: "boolean",
+    description:
+      "Whether or not to skip this page when generating previous/next page routes on docs",
+    required: false,
+    default: false,
+  },
+  isHiddenInNavSidebar: {
+    type: "boolean",
+    description:
+      "Whether or not to hide this section in the DocNavSidebar (left-hand side) on docs",
+    required: false,
+    default: false,
+  },
 
   /**
    * Custom SEO specific details
@@ -151,6 +179,21 @@ const standardComputedFields: ComputedFields = {
         ? record._id.split(I18N_LOCALE_REGEX)[1]
         : DEFAULT_LOCALE_EN,
   },
+  slug: {
+    description: "Computed slug of the records, based on the file name",
+    type: "string",
+    resolve: record => computeSlugFromRawDocumentData(record._raw),
+  },
+  isExternal: {
+    description: "Is this content just a link to external content?",
+    type: "boolean",
+    resolve: record => {
+      if (!!record.href && record.href.startsWith("http")) {
+        return true;
+      }
+      return false;
+    },
+  },
   href: {
     description: "Computed href for the content",
     type: "string",
@@ -169,7 +212,92 @@ const standardComputedFields: ComputedFields = {
         .toLowerCase();
     },
   },
+  author: {
+    description: "Validated slug of the author that created this content",
+    type: "string",
+    resolve: record => {
+      if (!record?.author) return undefined;
+      throwIfAuthorDoesNotExist(record.author, "Author");
+      return record.author;
+    },
+  },
+  organization: {
+    description: "Validated slug of the organization the author is a member of",
+    type: "string",
+    resolve: record => {
+      if (!record?.organization) return undefined;
+      throwIfAuthorDoesNotExist(record.organization, "Organization");
+      return record.organization;
+    },
+  },
 };
+
+/**
+ * Content record schema for the Author metadata file
+ *
+ * File: `authors/{slug}.yml`
+ */
+export const AuthorRecord = defineDocumentType(() => ({
+  name: "AuthorRecord",
+  filePathPattern:
+    "{content/authors,/content/authors,i18n/**/content/authors}/*.yml",
+  computedFields: {
+    locale: standardComputedFields["locale"],
+    slug: standardComputedFields["slug"],
+    href: standardComputedFields["href"],
+    organization: standardComputedFields["organization"],
+    image: {
+      type: "string",
+      resolve: record => {
+        if (!record?.image) return undefined;
+        return validatedImagePath(record.image, "authors");
+      },
+    },
+    // set the default values to satisfy types
+    metaOnly: {
+      type: "boolean",
+      resolve: () => true,
+    },
+    isExternal: {
+      type: "boolean",
+      resolve: () => false,
+    },
+    featured: {
+      type: "boolean",
+      resolve: () => false,
+    },
+    featuredPriority: {
+      type: "number",
+      resolve: () => DEFAULT_PRIORITY,
+    },
+  },
+  fields: {
+    title: basicContentFields["title"],
+    image: basicContentFields["image"],
+    description: basicContentFields["description"],
+    website: {
+      type: "string",
+      description: "Website for this person",
+      required: false,
+    },
+    organization: {
+      type: "string",
+      description:
+        "Author slug of the organization the author is a member of (note: this is a nested author)",
+      required: false,
+    },
+    github: {
+      type: "string",
+      description: "GitHub username",
+      required: false,
+    },
+    twitter: {
+      type: "string",
+      description: "GitHub username",
+      required: false,
+    },
+  },
+}));
 
 /**
  *
@@ -178,8 +306,8 @@ const standardComputedFields: ComputedFields = {
 /**
  * Content record schema for Developer Resources
  */
-export const DeveloperResource = defineDocumentType(() => ({
-  name: "DeveloperResource",
+export const ResourceRecord = defineDocumentType(() => ({
+  name: "ResourceRecord",
   filePathPattern:
     "{content/resources,/content/resources,i18n/**/content/resources}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
@@ -187,7 +315,7 @@ export const DeveloperResource = defineDocumentType(() => ({
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     repoUrl: {
       type: "string",
       description: "Repository URL for the developer resources",
@@ -205,29 +333,19 @@ export const DeveloperResource = defineDocumentType(() => ({
 /**
  * Content record schema for Developer Guides
  */
-export const DeveloperGuide = defineDocumentType(() => ({
-  name: "DeveloperGuide",
+export const GuideRecord = defineDocumentType(() => ({
+  name: "GuideRecord",
   filePathPattern:
     "{content/guides,/content/guides,i18n/**/content/guides}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
-  fields: {
-    // use the standard content fields
-    ...basicContentFields,
-
-    // define custom fields for this specific content...
-    // category: {
-    //   type: "string",
-    //   description: "",
-    //   required: false,
-    // },
-  },
+  fields: basicContentFields,
 }));
 
 /**
  * Content record schema for Developer Workshops
  */
-export const DeveloperWorkshop = defineDocumentType(() => ({
-  name: "DeveloperWorkshop",
+export const WorkshopRecord = defineDocumentType(() => ({
+  name: "WorkshopRecord",
   filePathPattern:
     "{content/workshops,/content/workshops,i18n/**/content/workshops}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
@@ -235,7 +353,7 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     repoUrl: {
       type: "string",
       description: "Repository URL for this developer workshop",
@@ -266,11 +384,6 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
     /**
      * Author specific details
      */
-    author: {
-      type: "string",
-      description: "The name of the original author of this content",
-      required: false,
-    },
     authorDescription: {
       type: "string",
       description: "Brief description of the original author of this content",
@@ -292,28 +405,101 @@ export const DeveloperWorkshop = defineDocumentType(() => ({
 /**
  * Content record schema for the Course metadata file
  *
- * File: `courses/{course-name}/metadata.json`
+ * File: `courses/{course-name}/metadata.yml`
  */
-export const CourseMetadata = defineDocumentType(() => ({
-  name: "CourseMetadata",
+export const CourseRecord = defineDocumentType(() => ({
+  name: "CourseRecord",
   filePathPattern:
-    "{content/courses,/content/courses,i18n/**/content/courses}/**/metadata.json",
-  computedFields: standardComputedFields,
+    "{content/courses,/content/courses,i18n/**/content/courses}/**/metadata.yml",
+  computedFields: {
+    ...standardComputedFields,
+    // courses get a custom href
+    href: {
+      description: "Computed href for a course",
+      type: "string",
+      resolve: record => {
+        if (!!record.href) {
+          return record.href.toString().toLowerCase();
+        }
+
+        return `/developers/courses/${computeSlugFromRawDocumentData(record._raw)}`;
+      },
+    },
+
+    // validate all lessons listed exist
+    lessons: {
+      description: "List of lesson 'slug's for this course",
+      type: "list",
+      of: { type: "string" },
+      resolve: record => {
+        if (!record?.lessons) return [];
+
+        // get the course slug from the format: `content/courses/{slug}`
+        const courseSlug = record._raw.sourceFileDir.match(
+          /^\/?((content|developers)\/courses)\/(.*)/i,
+        )?.[3];
+
+        if (!courseSlug) throw Error("Unable to parse course slug");
+
+        const lessonsDir = path.join(
+          path.resolve(),
+          "content/courses",
+          courseSlug,
+        );
+
+        const availableLessons: string[] = getAllContentFiles(
+          lessonsDir, // base search directory
+          false, // recursive search the directory
+          ".md", // file extension
+          true, // remove the extension from each returned item in the array
+        );
+
+        for (const lesson of record.lessons) {
+          if (!availableLessons.includes(path.join(lessonsDir, lesson))) {
+            throw Error(
+              `Unable to locate lesson: '${lesson}' from the '${courseSlug}' course`,
+            );
+          }
+        }
+
+        return record.lessons;
+      },
+    },
+  },
   fields: {
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
-    structure: {
+    // define custom fields for this specific content
+    objectives: {
       type: "list",
-      of: { type: "json" },
-      description: "",
+      of: { type: "string" },
+      description: "List of objectives for the course",
+      required: false,
+    },
+    lessons: {
+      type: "list",
+      of: { type: "string" },
+      description: "List of lesson 'slugs' to be included in this course",
       required: false,
     },
 
-    lessons: {
+    // We want to order courses putting the most widely relevant ones first
+    // Like featuredPriority, but doesn't require featuring
+    priority: {
       type: "number",
-      description: "Number of lessons contained within this course",
+      resolve: () => DEFAULT_PRIORITY,
+    },
+
+    // Some of the Unboxed courses are out of date, so they are hidden from the
+    // UI (their URLs remain available to editors and users that know them)
+    // while we get them updated.
+    isHidden: {
+      type: "boolean",
+      description:
+        "Hide this course from the course list (does not affect URL availability)",
+      required: false,
+      default: false,
     },
   },
 }));
@@ -321,16 +507,16 @@ export const CourseMetadata = defineDocumentType(() => ({
 /**
  * Content record schema a single Course Lesson
  */
-export const CourseLesson = defineDocumentType(() => ({
-  name: "CourseLesson",
+export const CourseLessonRecord = defineDocumentType(() => ({
+  name: "CourseLessonRecord",
   filePathPattern:
-    "{content/courses/**/lessons,/content/courses/**/lessons,i18n/**/content/courses/**/lessons}/**/*.{md,mdx}",
+    "{content/courses/**,/content/courses/**,i18n/**/content/courses/**}/**/*.md",
   computedFields: standardComputedFields,
   fields: {
     // use the standard content fields
     ...basicContentFields,
 
-    // define custom fields for this specific content...
+    // define custom fields for this specific content
     objectives: {
       type: "list",
       of: { type: "string" },
@@ -343,32 +529,32 @@ export const CourseLesson = defineDocumentType(() => ({
 /**
  * Content record schema a single Solana documentation record
  */
-export const SolanaDoc = defineDocumentType(() => ({
-  name: "SolanaDoc",
+export const CoreDocsRecord = defineDocumentType(() => ({
+  name: "CoreDocsRecord",
   filePathPattern: "{docs,/docs,i18n/**/docs}/**/*.{md,mdx}",
   computedFields: standardComputedFields,
-  fields: {
-    // use the standard content fields
-    ...basicContentFields,
-
-    /**
-     * Custom fields for this specific content record type
-     */
-    // none
-  },
+  fields: basicContentFields,
 }));
 
 /**
  * Content record schema a single Solana RPC documentation record
  */
-export const SolanaRPCDoc = defineDocumentType(() => ({
-  name: "SolanaRPCDoc",
+export const CoreRPCDocsRecord = defineDocumentType(() => ({
+  name: "CoreRPCDocsRecord",
   filePathPattern: "{docs,/docs,i18n/**/docs}/rpc/**/*.{md,mdx}",
   computedFields: standardComputedFields,
-  fields: {
-    // use the standard content fields
-    ...basicContentFields,
-  },
+  fields: basicContentFields,
+}));
+
+/**
+ * Content record schema a single Solana cookbook record
+ */
+export const CookbookRecord = defineDocumentType(() => ({
+  name: "CookbookRecord",
+  filePathPattern:
+    "{content/cookbook,/content/cookbook,i18n/**/content/cookbook}/**/*.{md,mdx}",
+  computedFields: standardComputedFields,
+  fields: basicContentFields,
 }));
 
 /**
@@ -379,8 +565,8 @@ export const SolanaRPCDoc = defineDocumentType(() => ({
  *  - readme.md
  *  - README.md
  */
-export const IgnoredDoc = defineDocumentType(() => ({
-  name: "IgnoredDoc",
+export const IgnoredRecord = defineDocumentType(() => ({
+  name: "IgnoredRecord",
   filePathPattern: `**/+(README|readme).md`,
 }));
 
@@ -393,10 +579,12 @@ export default makeSource({
   contentDirInclude: [
     "i18n/**",
     "docs/**",
+    "content/authors/**",
     "content/guides/**",
     "content/courses/**",
     "content/resources/**",
     "content/workshops/**",
+    "content/cookbook/**",
   ],
 
   /**
@@ -406,21 +594,25 @@ export default makeSource({
    * the `SimpleRecordGroupName` is updated accordingly
    */
   documentTypes: [
-    IgnoredDoc,
+    IgnoredRecord,
 
-    // solana docs
-    SolanaRPCDoc,
+    AuthorRecord,
+    // core solana docs (including rpc docs)
+    CoreRPCDocsRecord,
     // !note: rpc doc must be before regular docs
-    SolanaDoc,
+    CoreDocsRecord,
 
     // developer specific content
-    DeveloperGuide,
-    DeveloperResource,
-    DeveloperWorkshop,
+    GuideRecord,
+    ResourceRecord,
+    WorkshopRecord,
 
     // course specific content record types
-    CourseMetadata,
-    CourseLesson,
+    CourseRecord,
+    CourseLessonRecord,
+
+    // Cookbook content
+    CookbookRecord,
   ],
 
   // settings to force fail on bad data schema

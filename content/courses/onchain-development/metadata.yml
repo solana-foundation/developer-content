@@ -1,0 +1,12 @@
+author: unboxed
+title: Onchain program development
+description:
+  Build onchain programs (sometimes called 'smart contracts') with Anchor.
+lessons:
+  - intro-to-onchain
+  - local-setup
+  - intro-to-anchor
+  - intro-to-anchor-frontend
+  - anchor-pdas
+  - anchor-cpi
+priority: 15

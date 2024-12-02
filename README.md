@@ -1,65 +1,106 @@
 # Solana Developer Content
 
-This repo is the open source home of content for developers looking to
-[learn and develop](https://solana.com/developers) on the Solana blockchain.
+This repo is the open source home of content for developers looking to learn and
+develop on the Solana blockchain.
 
 These markdown based content posts are gathered from contributors from around
 the Solana ecosystem and displayed on
-[solana.com/developers](solana.com/developers) for all to learn from.
+[solana.com/developers](https://solana.com/developers) for all to learn from.
 
-Currently, there are a few primary types of Solana Developer content within this
-repo:
+## Setup Instructions
 
-- [developer guides](#developer-guides) - tutorials on how to build dApps and
-  programs on the Solana blockchain
-- [developer resources](#developer-resources) - collection of the popular
-  frameworks, sdks, documentation sites, and developer tools from around the
-  ecosystem
+This repository contains only the markdown files for content. The content is
+rendered through a separate UI repository.
+
+1. Clone this repository (developer-content)
+2. Clone the UI repository:
+   [solana-com](https://github.com/solana-foundation/solana-com)
+3. Run both repositories locally to view the rendered content
+
+In the solana-com repo, you must add the following `.env` variable:
+
+```
+NEXT_PUBLIC_DEVELOPER_CONTENT_API_URL="http://localhost:3001"
+```
+
+## Structure
+
+There are a few primary types of Solana Developer content within this repo:
+
+- [`courses`](#cources) - multiple lessons comprehensively covering a given
+  topic, with both a theory section and an interactive lab for each lesson
+- [`docs`](#docs) - the [core documentation](https://solana.com/docs) for the
+  Solana blockchain
+- [`guides`](#developer-guides) - long form tutorials focused on a specific
+  topic related to Solana development, like building dApps and programs
+- [`resources`](#developer-resources) - collection of popular frameworks, SDKs,
+  documentation sites, and developer tools from around the ecosystem
+
+### Courses
+
+### Docs
+
+The core [Solana Documentation](https://solana.com/docs) is housed within this
+repo, including the documentation for the
+[Solana RPC methods](https://solana.com/docs/rpc).
+
+#### Validator Docs
+
+The "core documentation" within this repo is generalized to the Solana protocol
+as a whole and not the specific implementations of any given Validator client.
+
+For specific validator clients, consult their respective documentation:
+
+| Validator Client         | Repo                                                               | Website                                                |
+| ------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------ |
+| Anza's Agave             | [Repo](https://github.com/anza-xyz/agave/blob/master/docs)         | [Website](https://docs.solanalabs.com/)                |
+| Jump Crypto's Firedancer | [Repo](https://github.com/firedancer-io/firedancer/tree/main/book) | [Website](https://firedancer-io.github.io/firedancer/) |
 
 ### Developer Guides
 
 The [Solana Developer guides](https://solana.com/developers/guides) teach new
 and experienced developers how to build on Solana. They teach various
-programming concepts on Solana and often dive into popular sdks and provide code
+programming concepts on Solana and often dive into popular SDKs and provide code
 examples to build dApps.
+
+Each developer guide is typically focused on a specific topic or concept.
+
+If you are interested in submitting a new developer guide, please consult the
+contributing guide section for
+[Submitting a Guide](./CONTRIBUTING.md#submitting-a-guide). .
 
 ### Developer Resources
 
-Explore the top
-[Solana Developer resources](https://solana.com/developers/resources) from
-around the ecosystem. Including the most popular developer frameworks, sdks,
-documentation websites, and general developer tooling.
+The [Solana Developer resources](https://solana.com/developers/resources) within
+this repo are meant to be a public directory of resources. Our goal is to help
+anyone discover the various developer tools, sdks, tooling, and frameworks that
+exist within the Solana ecosystem.
 
-### Developer Courses
+The developer resources within this directory are not normally maintained by the
+same maintainers of this repo.
 
-Soon, tm.
+If you are having issues with a specific resource, content their maintainers. Do
+not open an issue on this repo, unless to update, add, or remove a resource's
+information within our directory.
 
-## Developer Content Repo
+If you are interested in submitting a new developer resource, please consult the
+contributing guide section for
+[Submitting a Resource](./CONTRIBUTING.md#submitting-a-resource).
 
-This repo contains multiple different types of developer "content records". Each
-type grouping of content records aims to sever a specific purpose.
+## Contributing
 
-### Available content types
+We love your input! We want to make contributing to Solana developer content as
+easy and transparent as possible, whether it's:
 
-Below is a table describing each currently active type of content, including the
-corresponding repo path and webpage for viewing on Solana.com.
+- Reporting a bug
+- Discussing the current content
+- Submitting a fix for existing content
+- Proposing new content to be added
 
-| Content Type | Repo Path                                     | Webpage URL                                               |
-| ------------ | --------------------------------------------- | --------------------------------------------------------- |
-| guides       | [`./content/guides`](./content/guides/)       | [View guides](https://solana.com/developers/guides)       |
-| resources    | [`./content/resources`](./content/resources/) | [View resources](https://solana.com/developers/resources) |
-| courses      | [`./content/courses`](./content/courses/)     | soon, tm.                                                 |
+Please read our [CONTRIBUTING](./CONTRIBUTING.md) page to see how you can
+contribute.
 
-### Written in markdown
+## Maintainers
 
-The various types of developer content records within this repo are written in
-standard markdown files, with YAML frontmatter.
-
-Each of the content records use the YAML frontmatter to store specific pieces of
-metadata about the content. The specifically required YAML fields may be
-slightly different between the content records groups (e.g. `guides`,
-`resources`, `courses`, etc).
-
-The specific list of required and optional frontmatter fields are viewable in
-the [`contentlayer.config.ts`](./contentlayer.config.ts) file. And are enforced
-via [Contentlayer](https://www.contentlayer.dev/) and GitHub actions.
+This Solana Developer content is maintained by the
+[Solana Foundation](https://solana.org).

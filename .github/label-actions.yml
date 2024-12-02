@@ -1,0 +1,18 @@
+# Configuration for Label Actions - https://github.com/dessant/label-actions
+
+# The `prettier` label is added
+# prettier:
+#   prs:
+#     # Post a comment
+#     comment: >
+#       Automatically running and applying the local prettier config
+
+# The `solved` label is added to discussions
+solved:
+  discussions:
+    # Close the discussion
+    close: true
+    # Set a close reason
+    close-reason: "resolved"
+    # Lock the discussion
+    lock: true

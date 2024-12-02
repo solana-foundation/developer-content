@@ -9,6 +9,7 @@ keywords:
   - definitions
   - define
   - programming models
+isSkippedInNav: true
 ---
 
 The following terms are used throughout the Solana documentation and development
@@ -34,9 +35,22 @@ The key may be one of:
 The address of the program that owns the account. Only the owning program is
 capable of modifying the account.
 
+See also [authority](#authority).
+
 ## app
 
 A front-end application that interacts with a Solana cluster.
+
+## authority
+
+The address of a user that has some kind of permission over an account.
+
+For example:
+
+- The ability to mint new tokens is given to the account that is the 'mint
+  authority' for the token mint.
+- The ability to upgrade a program is given to the account that is the 'upgrade
+  authority' of a program.
 
 ## bank state
 
@@ -68,7 +82,7 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf)
+[BPF](/docs/core/programs#berkeley-packet-filter-bpf)
 [onchain programs](#onchain-program), allowing the program to interface with the
 runtime.
 
@@ -130,7 +144,7 @@ consensus.
 
 ## drone
 
-An off-chain service that acts as a custodian for a user's private key. It
+An offchain service that acts as a custodian for a user's private key. It
 typically serves to validate and sign transactions.
 
 ## entry
@@ -259,7 +273,7 @@ A type of [client](#client) that can verify it's pointing to a valid
 ## loader
 
 A [program](#program) with the ability to interpret the binary encoding of other
-on-chain programs.
+onchain programs.
 
 ## lockout
 
@@ -273,7 +287,7 @@ header, array of account addresses, recent [blockhash](#blockhash), and an array
 of [instructions](#instruction).
 
 Learn more about the
-[message formatting inside of transactions](/docs/core/transactions.md#message-format)
+[message formatting inside of transactions](/docs/core/transactions.md#message-header)
 here.
 
 ## Nakamoto coefficient
@@ -361,13 +375,14 @@ blockchain. When accounts do not have enough balance to pay rent, they may be
 Garbage Collected.
 
 See also [rent exempt](#rent-exempt) below. Learn more about rent here:
-[What is rent?](/docs/core/rent.md).
+[What is rent?](/docs/intro/rent.md).
 
 ## rent exempt
 
-Accounts that maintain more than 2 years with of rent payments in their account
-are considered "_rent exempt_" and will not incur the
-[collection of rent](/docs/core/rent.md#collecting-rent).
+Accounts that maintain a minimum lamport balance that is proportional to the
+amount of data stored on the account. All newly created accounts are stored
+on-chain permanently until the account is closed. It is not possible to create
+an account that falls below the rent exemption threshold.
 
 ## root
 
@@ -395,10 +410,10 @@ A fraction of a [block](#block); the smallest unit sent between
 
 A 64-byte ed25519 signature of R (32-bytes) and S (32-bytes). With the
 requirement that R is a packed Edwards point not of small order and S is a
-scalar in the range of 0 <= S < L. This requirement ensures no signature
+scalar in the range of `0 <= S < L`. This requirement ensures no signature
 malleability. Each transaction must have at least one signature for
-[fee account](terminology#fee-account). Thus, the first signature in transaction
-can be treated as [transaction id](#transaction-id)
+[fee account](#fee-account). Thus, the first signature in transaction can be
+treated as [transaction id](#transaction-id)
 
 ## skip rate
 
@@ -413,9 +428,8 @@ identifying node misconfigurations at times.
 A past [slot](#slot) that did not produce a [block](#block), because the leader
 was offline or the [fork](#fork) containing the slot was abandoned for a better
 alternative by cluster consensus. A skipped slot will not appear as an ancestor
-for blocks at subsequent slots, nor increment the
-[block height](terminology#block-height), nor expire the oldest
-`recent_blockhash`.
+for blocks at subsequent slots, nor increment the [block height](#block-height),
+nor expire the oldest `recent_blockhash`.
 
 Whether a slot has been skipped can only be determined when it becomes older
 than the latest [rooted](#root) (thus not-skipped) slot.
@@ -433,7 +447,7 @@ non-overlapping, comprising roughly equal real-world time as per
 
 See [onchain program](#onchain-program).
 
-## sol
+## SOL
 
 The [native token](#native-token) of a Solana [cluster](#cluster).
 
@@ -446,6 +460,11 @@ that facilitates tasks such as creating and using tokens.
 
 Tokens forfeit to the [cluster](#cluster) if malicious [validator](#validator)
 behavior can be proven.
+
+## stake-weighted quality of service (SWQoS)
+
+SWQoS allows
+[preferential treatment for transactions that come from staked validators](https://solana.com/developers/guides/advanced/stake-weighted-qos).
 
 ## supermajority
 
@@ -483,6 +502,11 @@ program ID `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb` and includes all the
 same features as the [Token Program](#token-program), but comes with extensions
 such as confidential transfers, custom transfer logic, extended metadata, and
 much more.
+
+## token mint
+
+An account that can produce (or 'mint') tokens. Different tokens are
+distinguished by their unique token mint addresses.
 
 ## Token Program
 

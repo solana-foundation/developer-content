@@ -21,7 +21,7 @@ Returns whether a blockhash is still valid or not
 ### Parameters
 
 <Parameter type={"string"} required={true}>
-  the blockhash of the block to evauluate, as base-58 encoded string
+  the blockhash of the block to evaluate, as base-58 encoded string
 </Parameter>
 
 <Parameter type={"object"} optional={true}>
@@ -52,7 +52,7 @@ Configuration object containing the following fields:
 ### Code sample
 
 ```shell
-curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '
+curl https://api.devnet.solana.com -s -X POST -H "Content-Type: application/json" -d '
   {
     "id":45,
     "jsonrpc":"2.0",

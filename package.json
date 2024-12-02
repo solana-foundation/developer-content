@@ -9,16 +9,21 @@
   },
   "scripts": {
     "runner": "npx ts-node -r tsconfig-paths/register",
-    "contentlayer:build": "npx contentlayer build --clearCache",
-    "dev": "yarn contentlayer:build && next dev -p 3001",
-    "build": "yarn contentlayer:build && next build",
+    "contentlayer:build": "npx contentlayer2 build --clearCache",
+    "code-import": "npx esrun coder.ts",
+    "dev": "pnpm code-import && pnpm contentlayer:build && concurrently -p \"[{name}]\" -n \"code import,next dev\" -c \"bgBlue.bold,bgGreen.bold\" \"pnpm code-import --watch\" \"next dev -p 3001\"",
+    "build": "pnpm code-import && pnpm prettier:i18n && pnpm contentlayer:build && next build",
     "start": "next start -p 3001",
-    "test": "yarn contentlayer:build",
+    "test": "pnpm code-import && pnpm prettier && pnpm contentlayer:build",
     "lint": "next lint",
-    "prettier": "prettier -c \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
+    "prettier:i18n": "prettier -cw \"i18n/**/*.{js,jsx,ts,tsx,md,css,md,mdx}\" --ignore-path \"[]\"",
+    "prettier": "prettier -c \"./**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
     "prettier:fix": "prettier -cw \"**/*.{js,jsx,ts,tsx,md,css,md,mdx}\"",
-    "crowdin:download": "crowdin download",
-    "crowdin:upload": "crowdin upload sources"
+    "crowdin:download": "crowdin download && npm run prettier:i18n",
+    "crowdin:upload": "crowdin upload sources",
+    "browser-sync": "browser-sync start --proxy \"localhost:3000\" --files \"**/*.md\"",
+    "prepare": "husky",
+    "dev:sync": "pnpm dev & (sleep 5 && pnpm browser-sync)"
   },
   "dependencies": {
     "@crowdin/cli": "^3.18.0",
@@ -29,7 +34,7 @@
     "eslint": "8.45.0",
     "eslint-config-next": "14.1.0",
     "next": "14.1.0",
-    "next-contentlayer": "0.3.4",
+    "next-contentlayer2": "^0.4.6",
     "postcss": "8.4.26",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -37,7 +42,25 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
-    "contentlayer": "0.3.4",
-    "prettier": "^3.2.4"
+    "@types/mdast": "^4.0.4",
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2",
+    "contentlayer2": "^0.4.6",
+    "husky": "^9.1.4",
+    "ignore": "^5.3.1",
+    "lint-staged": "^15.2.7",
+    "mdast": "^3.0.0",
+    "prettier": "^3.2.4",
+    "remark": "^15.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
+    "strip-indent": "^4.0.0",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
+    "vfile": "^6.0.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx,json,ts,tsx,md,css,md,mdx,yml,yaml}": "pnpm prettier:fix"
   }
 }

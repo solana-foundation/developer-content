@@ -1,6 +1,10 @@
 ---
+sidebarSortOrder: 4
 title: Address Lookup Tables
-description: ""
+description:
+  Learn how to use Solana Address Lookup Tables (ALTs) to efficiently handle up
+  to 64 addresses per transaction. Create, extend, and utilize lookup tables
+  using web3.js.
 ---
 
 Address Lookup Tables, commonly referred to as "_lookup tables_" or "_ALTs_" for
@@ -11,11 +15,11 @@ Since each transaction on the Solana blockchain requires a listing of every
 address that is interacted with as part of the transaction, this listing would
 effectively be capped at 32 addresses per transaction. With the help of
 [Address Lookup Tables](/docs/advanced/lookup-tables.md), a transaction would
-now be able to raise that limit to 256 addresses per transaction.
+now be able to raise that limit to 64 addresses per transaction.
 
-## Compressing on chain addresses
+## Compressing onchain addresses
 
-After all the desired addresses have been stored on chain in an Address Lookup
+After all the desired addresses have been stored onchain in an Address Lookup
 Table, each address can be referenced inside a transaction by its 1-byte index
 within the table (instead of their full 32-byte address). This lookup method
 effectively "_compresses_" a 32-byte address into a 1-byte index value.
@@ -27,7 +31,7 @@ table for use inside any given transaction.
 
 To utilize an Address Lookup Table inside a transaction, developers must use v0
 transactions that were introduced with the new
-[Versioned Transaction format](/docs/core/transactions/versions.md).
+[Versioned Transaction format](/docs/advanced/versions.md).
 
 ## How to create an address lookup table
 
@@ -35,7 +39,7 @@ Creating a new lookup table with the `@solana/web3.js` library is similar to the
 older `legacy` transactions, but with some differences.
 
 Using the `@solana/web3.js` library, you can use the
-[`createLookupTable`](https://solana-labs.github.io/solana-web3.js/classes/AddressLookupTableProgram.html#createLookupTable)
+[`createLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#createLookupTable)
 function to construct the instruction needed to create a new lookup table, as
 well as determine its address:
 
@@ -58,20 +62,20 @@ const [lookupTableInst, lookupTableAddress] =
 
 console.log("lookup table address:", lookupTableAddress.toBase58());
 
-// To create the Address Lookup Table on chain:
+// To create the Address Lookup Table onchain:
 // send the `lookupTableInst` instruction in a transaction
 ```
 
 > NOTE: Address lookup tables can be **created** with either a `v0` transaction
 > or a `legacy` transaction. But the Solana runtime can only retrieve and handle
 > the additional addresses within a lookup table while using
-> [v0 Versioned Transactions](/docs/core/transactions/versions.md#current-transaction-versions).
+> [v0 Versioned Transactions](/docs/advanced/versions.md#current-transaction-versions).
 
 ## Add addresses to a lookup table
 
 Adding addresses to a lookup table is known as "_extending_". Using the
 `@solana/web3.js` library, you can create a new _extend_ instruction using the
-[`extendLookupTable`](https://solana-labs.github.io/solana-web3.js/classes/AddressLookupTableProgram.html#extendLookupTable)
+[`extendLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#extendLookupTable)
 method:
 
 ```js
@@ -97,15 +101,15 @@ const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
 > transactions to _extend_ any table with more addresses (~20) that can fit
 > within a single transaction's memory limits.
 
-Once these addresses have been inserted into the table, and stored on chain, you
+Once these addresses have been inserted into the table, and stored onchain, you
 will be able to utilize the Address Lookup Table in future transactions.
-Enabling up to 256 addresses in those future transactions.
+Enabling up to 64 addresses in those future transactions.
 
 ## Fetch an Address Lookup Table
 
 Similar to requesting another account (or PDA) from the cluster, you can fetch a
 complete Address Lookup Table with the
-[`getAddressLookupTable`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getAddressLookupTable)
+[`getAddressLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getAddressLookupTable)
 method:
 
 ```js
@@ -138,12 +142,12 @@ for (let i = 0; i < lookupTableAccount.state.addresses.length; i++) {
 
 After you have created your lookup table, and stored your needed address on
 chain (via extending the lookup table), you can create a `v0` transaction to
-utilize the on chain lookup capabilities.
+utilize the onchain lookup capabilities.
 
 Just like older `legacy` transactions, you can create all the
 [instructions](/docs/terminology.md#instruction) your transaction will execute
-on chain. You can then provide an array of these instructions to the
-[Message](/docs/terminology.md#message) used in the `v0 transaction.
+onchain. You can then provide an array of these instructions to the
+[Message](/docs/terminology.md#message) used in the `v0` transaction.
 
 > NOTE: The instructions used inside a `v0` transaction can be constructed using
 > the same methods and functions used to create the instructions in the past.

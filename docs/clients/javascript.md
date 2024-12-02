@@ -2,6 +2,10 @@
 sidebarLabel: JavaScript / TypeScript
 title: JavaScript Client for Solana
 sidebarSortOrder: 2
+description:
+  Learn how to interact with Solana using the JavaScript/TypeScript client
+  library (@solana/web3.js). This guide covers wallet connections, transactions,
+  and custom program interactions with code examples.
 ---
 
 ## What is Solana-Web3.js?
@@ -10,7 +14,7 @@ The Solana-Web3.js library aims to provide complete coverage of Solana. The
 library was built on top of the [Solana JSON RPC API](/docs/rpc).
 
 You can find the full documentation for the `@solana/web3.js` library
-[here](https://solana-labs.github.io/solana-web3.js/).
+[here](https://solana-labs.github.io/solana-web3.js/v1.x/).
 
 ## Common Terminology
 
@@ -30,13 +34,13 @@ For the full list of terms, see
 #### yarn
 
 ```shell
-yarn add @solana/web3.js
+yarn add @solana/web3.js@1
 ```
 
 #### npm
 
 ```shell
-npm install --save @solana/web3.js
+npm install --save @solana/web3.js@1
 ```
 
 #### Bundle
@@ -230,7 +234,7 @@ await connection.confirmTransaction({ signature: airdropSignature });
 
 First, we set up the account Keypair and connection so that we have an account
 to make allocate on the testnet. We also create a payer Keypair and airdrop some
-sol so we can pay for the allocate transaction.
+SOL so we can pay for the allocate transaction.
 
 ```javascript
 let allocateTransaction = new web3.Transaction({

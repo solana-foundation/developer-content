@@ -1,4 +1,17 @@
 /**
+ *
+ */
+export const CONTENT_API_URL =
+  process.env?.NODE_ENV != "development"
+    ? "https://solana-developer-content.vercel.app"
+    : "http://localhost:3001";
+
+/**
+ * Regex for parsing markdown links
+ */
+export const REGEX_MARKDOWN_LINKS = /\[([^\[]+)\]\((.*?)\)/gim;
+
+/**
  * Default language locale to use for the content
  */
 export const DEFAULT_LOCALE_EN: string = "en";
@@ -17,6 +30,13 @@ export const SUPPORTED_LOCALES: string[] = [
   "es",
   "ru",
   "zh",
+  "uk",
+  "fr",
+  "it",
+  "ja",
+  "ko",
+  "pt",
+  "vi",
 ];
 
 /**

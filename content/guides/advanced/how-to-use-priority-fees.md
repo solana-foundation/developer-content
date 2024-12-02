@@ -1,5 +1,5 @@
 ---
-date: Mar 7, 2024
+date: 2024-04-07T00:00:00Z
 difficulty: intermediate
 title: "How to use Priority Fees on Solana"
 description:
@@ -30,8 +30,8 @@ Prioritization Fees are an optional fee, priced in
 [Compute Unit](/docs/terminology#compute-units) (e.g. small amounts of SOL),
 appended to transactions to make them economically compelling for validator
 nodes to include in blocks on the network. This additional fee will be on top of
-the base [Transaction Fee](/docs/core/transactions/fees) already set, which is
-5000 lamports per signature in your transaction.
+the base [Transaction Fee](/docs/core/fees) already set, which is 5000 lamports
+per signature in your transaction.
 
 ## Why Should I Use Priority Fees?
 
@@ -49,7 +49,7 @@ When adding priority fees to a transaction, keep in mind the amount of compute
 units (CU) used for your transaction. The higher the CU required for the
 transaction, the more fees you will pay when adding priority fees.
 
-Using the [Compute Budget Program](/docs/core/runtime#compute-budget), you can
+Using the [Compute Budget Program](/docs/core/fees.md#compute-budget), you can
 change the CU requested for your transaction and add any additional priority fee
 required. Do note that your CU request must be equal to or greater than the CU
 needed for the transaction; otherwise, the transaction will fail.
@@ -127,7 +127,7 @@ analysis should be used before choosing a path forward.
 ## Special Considerations
 
 If you use priority fees with a
-[Durable Nonce](/developers/guides/advanced/introduction-to-durable-nonces)
+[Durable Nonce](/content/guides/advanced/introduction-to-durable-nonces.md)
 Transaction, you must ensure the `AdvanceNonce` instruction is your
 transaction's first instruction. This is critical to ensure your transaction is
 successful; otherwise, it will fail.

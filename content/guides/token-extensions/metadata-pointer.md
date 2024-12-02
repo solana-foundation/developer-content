@@ -1,5 +1,5 @@
 ---
-date: Dec 21, 2023
+date: 2023-12-21T00:00:00Z
 seoTitle: "Token Extensions: Metadata Pointer and Token Metadata"
 title: How to use the Metadata Pointer extension
 description:
@@ -48,9 +48,9 @@ The Token Metadata Interface can be implemented by any program. This allows
 developers the flexibility to create custom Metadata Programs while reducing the
 challenges related to ecosystem integration for their program.
 
-With this common interface, wallets, dApps, and on-chain programs can
-universally access token metadata, and tools for creating or modifying metadata
-become universally compatible.
+With this common interface, wallets, dApps, and onchain programs can universally
+access token metadata, and tools for creating or modifying metadata become
+universally compatible.
 
 ### Metadata Interface Fields
 
@@ -339,11 +339,9 @@ Next, add the instructions to a new transaction and send it to the network. This
 will create a Mint Account with the `MetadataPointer` and `TokenMetadata`
 extensions enabled and store the metadata on the Mint Account.
 
-<Callout>
-Some token extension instructions are required to be atomically ordered before
-initializing the mint. While others must be after. Having these instructions
-"out of order" may result in your transaction failing.
-</Callout>
+> Some token extension instructions are required to be atomically ordered before
+> initializing the mint. While others must be after. Having these instructions
+> "out of order" may result in your transaction failing.
 
 ```javascript
 // Add instructions to new transaction

@@ -1,92 +1,95 @@
 ---
-sidebarLabel: Programs
-sidebarSortOrder: 2
-title: What are Solana Programs?
+title: Programs
+sidebarLabel: Programs on Solana
+sidebarSortOrder: 4
 description:
-  "A Solana Program, aka smart contract, is the executable code that interprets
-  the instructions on the blockchain. There are two types: Native and on chain."
+  Learn about Solana programs (smart contracts) and how to develop them using
+  Rust or the Anchor framework. Understand program deployment, upgrades, and
+  verification on the Solana network.
 ---
 
-Solana Programs, often referred to as "_smart contracts_" on other blockchains,
-are the executable code that interprets the instructions sent inside of each
-transaction on the blockchain. They can be deployed directly into the core of
-the network as [Native Programs](#native-programs), or published by anyone as
-[On Chain Programs](#on-chain-programs). Programs are the core building blocks
-of the network and handle everything from sending tokens between wallets, to
-accepting votes of a DAOs, to tracking ownership of NFTs.
+In the Solana ecosystem, "smart contracts" are called programs. Each
+[program](/docs/core/accounts.md#program-account) is an on-chain account that
+stores executable logic, organized into specific functions referred to as
+[instructions](/docs/core/transactions.md#instruction).
 
-Both types of programs run on top of the
-[Sealevel runtime](https://medium.com/solana-labs/sealevel-parallel-processing-thousands-of-smart-contracts-d814b378192),
-which is Solana's _parallel processing_ model that helps to enable the high
-transactions speeds of the blockchain.
+## Key Points
 
-## Key points
+- Programs are on-chain accounts that contain executable code. This code is
+  organized into distinct functions known as instructions.
 
-- Programs are essentially special type of [Accounts](/docs/core/accounts.md)
-  that is marked as "_executable_"
-- Programs can own other Accounts
-- Programs can only _change the data_ or _debit_ accounts they own
-- Any program can _read_ or _credit_ another account
-- Programs are considered stateless since the primary data stored in a program
-  account is the compiled SBF code
-- Programs can be upgraded by their owner (see more on that below)
+- Programs are stateless but can include instructions to create new accounts,
+  which are used to store and manage program state.
 
-## Types of programs
+- Programs can be updated by an upgrade authority. A program becomes immutable
+  when the upgrade authority is set to null.
 
-The Solana blockchain has two types of programs:
+- Verifiable builds enable users to verify that onchain programs match the
+  publicly available source code.
 
-- Native programs
-- On chain programs
+## Writing Solana Programs
 
-### On chain programs
+Solana programs are predominantly written in the
+[Rust](https://doc.rust-lang.org/book/) programming language, with two common
+approaches for development:
 
-These user written programs, often referred to as "_smart contracts_" on other
-blockchains, are deployed directly to the blockchain for anyone to interact with
-and execute. Hence the name "on chain"!
+- [Anchor](/docs/programs/anchor): A framework designed for Solana program
+  development. It provides a faster and simpler way to write programs, using
+  Rust macros to significantly reduce boilerplate code. For beginners, it is
+  recommended to start with the Anchor framework.
 
-In effect, "on chain programs" are any program that is not baked directly into
-the Solana cluster's core code (like the native programs discussed below).
+- [Native Rust](/content/guides/getstarted/intro-to-native-rust.md): This
+  approach involves writing Solana programs in Rust without leveraging any
+  frameworks. It offers more flexibility but comes with increased complexity.
 
-And even though Solana Labs maintains a small subset of these on chain programs
-(collectively known as the [Solana Program Library](https://spl.solana.com/)),
-anyone can create or publish one. On chain programs can also be updated directly
-on the blockchain by the respective program's Account owner.
+## Updating Solana Programs
 
-### Native programs
+On-chain programs can be
+[directly modified](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L675)
+by an account designated as the "upgrade authority", which is typically the
+account that originally deployed the program.
 
-_Native programs_ are programs that are built directly into the core of the
-Solana blockchain.
+If the
+[upgrade authority](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L865)
+is revoked and set to `None`, the program becomes immutable and can no longer be
+updated.
 
-Similar to other "on chain" programs in Solana, native programs can be called by
-any other program/user. However, they can only be upgraded as part of the core
-blockchain and cluster updates. These native program upgrades are controlled via
-the releases to the [different clusters](/docs/core/clusters.md).
+## Verifiable Programs
 
-#### Examples of native programs include:
+Ensuring the integrity and verifiability of on-chain code is essential. A
+verifiable build ensures that the executable code deployed on-chain can be
+independently verified to match its public source code by any third party. This
+process enhances transparency and trust, making it possible to detect
+discrepancies between the source code and the deployed program.
 
-- [System Program](https://docs.solanalabs.com/runtime/programs#system-program):
-  Create new accounts, transfer tokens, and more
-- [BPF Loader Program](https://docs.solanalabs.com/runtime/programs#bpf-loader):
-  Deploys, upgrades, and executes programs on chain
-- [Vote program](https://docs.solanalabs.com/runtime/programs#vote-program):
-  Create and manage accounts that track validator voting state and rewards.
+The Solana developer community has introduced tools to support verifiable
+builds, enabling both developers and users to verify that onchain programs
+accurately reflect their publicly shared source code.
 
-## Executable
+- **Searching for Verified Programs**: To quickly check for verified programs,
+  users can search for a program address on the [SolanaFM](https://solana.fm/)
+  Explorer and navigate to the "Verification" tab. View an example of a verified
+  program
+  [here](https://solana.fm/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY).
 
-When a Solana program is deployed onto the network, it is marked as "executable"
-by the
-[BPF Loader Program](https://docs.solanalabs.com/runtime/programs#bpf-loader).
-This allows the Solana runtime to efficiently and properly execute the compiled
-program code.
+- **Verification Tools**: The
+  [Solana Verifiable Build CLI](https://github.com/Ellipsis-Labs/solana-verifiable-build)
+  by Ellipsis Labs enables users to independently verify onchain programs
+  against published source code.
 
-## Upgradable
+- **Support for Verifiable Builds in Anchor**: Anchor provides built-in support
+  for verifiable builds. Details can be found in the
+  [Anchor documentation](https://www.anchor-lang.com/docs/verifiable-builds).
 
-Unlike other blockchains, Solana programs can be upgraded after they are
-deployed to the network.
+## Berkeley Packet Filter (BPF)
 
-Native programs can only be upgraded as part of cluster updates when new
-software releases are made.
+Solana leverages the [LLVM compiler infrastructure](https://llvm.org/) to
+compile programs into
+[Executable and Linkable Format (ELF)](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
+files. These files include a modified version of
+[Berkeley Packet Filter (eBPF)](https://en.wikipedia.org/wiki/EBPF) bytecode for
+Solana programs, known as "Solana Bytecode Format" (sBPF).
 
-On chain programs can be upgraded by the account that is marked as the "_Upgrade
-Authority_", which is usually the Solana account/address that deployed the
-program to begin with.
+The use of LLVM enables Solana to potentially support any programming language
+that can compile to LLVM's BPF backend. This significantly enhances the
+flexibility of Solana as a development platform.

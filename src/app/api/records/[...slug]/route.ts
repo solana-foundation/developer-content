@@ -7,6 +7,7 @@ import type { SupportedDocTypes } from "@/types";
 import { simplifyRecords } from "@/utils/parsers";
 import { getRecordsForGroup } from "@/utils/records";
 import { computeDetailsFromSlug } from "@/utils/navItem";
+import { CourseRecord } from "contentlayer/generated";
 
 type RouteProps = {
   params: {
@@ -20,14 +21,39 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
     return notFound();
   }
 
-  const { group, locale } = computeDetailsFromSlug(slug);
+  let { group, locale, appendix } = computeDetailsFromSlug(slug);
 
   if (!group) return notFound();
 
   // retrieve the correct group's records by its simple group name
-  const records = getRecordsForGroup(group, {
+  let records = getRecordsForGroup(group, {
     locale,
   });
+
+  // handle the special case for lessons
+  if (group == "lessons" && appendix) {
+    const course = (
+      getRecordsForGroup("courses", {
+        locale,
+      }) as CourseRecord[]
+    ).find(item => item.slug == appendix);
+
+    if (!course) return notFound();
+    if (!course.lessons) course.lessons = [];
+
+    const unsortedLessons = records.filter(
+      item => item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1] == course.slug,
+    );
+
+    if (unsortedLessons.length !== course.lessons.length) return notFound();
+
+    // presort the lessons in their desired order
+    records = new Array(unsortedLessons.length);
+    unsortedLessons.map(item => {
+      const index = course.lessons!.findIndex(el => el == item.slug);
+      records[index] = item;
+    });
+  }
 
   /**
    * note: we intentionally only return a 404 if there was an error with `records`

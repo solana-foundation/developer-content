@@ -3,7 +3,7 @@ import type {
   SimpleRecordGroupName,
   SupportedDocTypes,
 } from "@/types";
-import { type SolanaDoc } from "contentlayer/generated";
+import { type CoreDocsRecord } from "contentlayer/generated";
 import { ucFirst } from "./helpers";
 import {
   DEFAULT_LOCALE_EN,
@@ -149,6 +149,7 @@ export function computeDetailsFromKey(key: string) {
   return {
     label: ucFirst(key.split(GROUPING_KEY_SEPARATOR).reverse()[0]),
     id: computeRecordPathAndId(key).id,
+    slug: "",
   };
 }
 
@@ -196,7 +197,7 @@ export function sortNavItems(navItems: NavItem[]) {
  */
 export function shouldIgnoreRecord({
   fileName,
-  allowedExtensions = ["md", "mdx"],
+  allowedExtensions = ["md", "mdx", "yml"],
 }: {
   fileName: string;
   allowedExtensions?: Array<string>;
@@ -221,7 +222,7 @@ export function shouldIgnoreRecord({
  * Compute a standard NavItem record for use with site navigation
  */
 export function computeNavItem(
-  doc: SupportedDocTypes & Partial<SolanaDoc>,
+  doc: SupportedDocTypes & Partial<CoreDocsRecord>,
 ): NavItem {
   const computedPathAndId = computeRecordPathAndId(doc._raw.flattenedPath);
 
@@ -229,6 +230,7 @@ export function computeNavItem(
   const navItem: NavItem = {
     /** i18n locale */
     locale: doc.locale,
+    slug: doc.slug,
     /** unique identifier for each record, including any i18n info */
     id: computedPathAndId.id,
     /** full file path, computed by contentlayer, and filtered to remove `i18n` as configured */
@@ -238,6 +240,8 @@ export function computeNavItem(
     sidebarSortOrder: doc?.sidebarSortOrder,
     metaOnly: doc?.metaOnly,
     altRoutes: doc.altRoutes,
+    isSkippedInNav: doc?.isSkippedInNav,
+    isHiddenInNavSidebar: doc?.isHiddenInNavSidebar,
   };
 
   // compute a label based on the doc's file name
@@ -282,6 +286,8 @@ export function computeDetailsFromSlug(slug: string[]) {
     group = slug.shift() as SimpleRecordGroupName;
   }
 
+  let appendix = slug.join("/");
+
   // formatted the `href` value to search for
   let href = slug
     .join("/")
@@ -307,5 +313,6 @@ export function computeDetailsFromSlug(slug: string[]) {
     group,
     slug,
     href,
+    appendix,
   };
 }

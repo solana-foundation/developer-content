@@ -1,7 +1,7 @@
 ---
 featured: true
 featuredPriority: 1
-date: Jan 19, 2024
+date: 2024-01-19T00:00:00Z
 difficulty: beginner
 seoTitle: "Getting Started with Token Extensions"
 title: "Getting Started with Token Extensions"
@@ -41,10 +41,9 @@ You can find a dedicated video tutorial for each Token Extension on this
 ## How do I create a token with token extensions?
 
 To get started creating tokens with token extensions, you can use the
-[Solana Tool Suite](https://solana.com/developers/guides/getstarted/setup-local-development)
-to create tokens with a CLI. Based on the extension you want to create, your
-command flags may be different. Below are the flags to add to create tokens with
-each type of extension.
+[Solana Tool Suite](/docs/intro/installation.md) to create tokens with a CLI.
+Based on the extension you want to create, your command flags may be different.
+Below are the flags to add to create tokens with each type of extension.
 
 | Extension                                                                                          | CLI Flag                                  |
 | -------------------------------------------------------------------------------------------------- | ----------------------------------------- |
@@ -85,10 +84,9 @@ spl-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb \
   create-token --interest-rate 5 --enable-metadata
 ```
 
-<Callout>
-While you can mix and match extensions, most extensions cannot be added
-after the token mint is created. Including non-transferrable, the various "pointer" extensions, and several others.
-</Callout>
+> While you can mix and match extensions, most extensions cannot be added after
+> the token mint is created. Including non-transferrable, the various "pointer"
+> extensions, and several others.
 
 ## What extensions are compatible with each other?
 
@@ -107,7 +105,7 @@ make sense to combine:
 - Confidential transfer + permanent delegate
 
 Other than these, you have the option to customize with any combination of token
-extensions that suit your project’s needs.
+extensions that suit your project's needs.
 
 ## How do I add custom logic to my tokens with token extensions?
 
@@ -127,7 +125,7 @@ It is important to note that while transfer hooks give the capability to insert
 custom logic within a transfer, all accounts from the initial transfer are
 converted to read-only accounts. This means that the signer privileges of the
 sender do not extend to the Transfer Hook program. This is to avoid potential
-unexpected logic executing on someone’s wallet who interacts with a token with
+unexpected logic executing on someone's wallet who interacts with a token with
 transfer hooks, protecting the users.
 
 You can

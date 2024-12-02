@@ -24,7 +24,7 @@ and high TPS. For specific requirements, please see
 
 To run an api node:
 
-1. [Install the Solana command-line tool suite](https://docs.solanalabs.com/cli/install)
+1. [Install the Solana command-line tool suite](/docs/intro/installation.md)
 2. Start the validator with at least the following parameters:
 
 ```shell
@@ -164,8 +164,8 @@ generate a Solana keypair using any of our
 We recommend using a unique deposit account for each of your users.
 
 Solana accounts must be made rent-exempt by containing 2-years worth of
-[rent](/docs/core/accounts.md#rent) in SOL. In order to find the minimum
-rent-exempt balance for your deposit accounts, query the
+[rent](/docs/core/fees.md#rent) in SOL. In order to find the minimum rent-exempt
+balance for your deposit accounts, query the
 [`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
 ```shell
@@ -562,7 +562,7 @@ these cases, it is your responsibility to verify that the transaction succeeded
 and was finalized by the cluster.
 
 **Note:** Each transaction contains a
-[recent blockhash](/docs/core/transactions.md#blockhash-format) to indicate its
+[recent blockhash](/docs/core/transactions.md#recent-blockhash) to indicate its
 liveness. It is **critical** to wait until this blockhash expires before
 retrying a withdrawal transfer that does not appear to have been confirmed or
 finalized by the cluster. Otherwise, you risk a double spend. See more on
@@ -767,15 +767,16 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 
 ## Prioritization Fees and Compute Units
 
-In periods of high demand, it’s possible for a transaction to expire before a
+In periods of high demand, it's possible for a transaction to expire before a
 validator has included such transactions in their block because they chose other
 transactions with higher economic value. Valid Transactions on Solana may be
 delayed or dropped if Prioritization Fees are not implemented properly.
 
-[Prioritization Fees](/docs/terminology#prioritization-fee) are additional fees
-that can be added on top of the
-[base Transaction Fee](/docs/core/transactions/fees) to ensure transaction
-inclusion within blocks and in these situations and help ensure deliverability.
+[Prioritization Fees](/docs/terminology.md#prioritization-fee) are additional
+fees that can be added on top of the
+[base Transaction Fee](/docs/core/fees.md#transaction-fees) to ensure
+transaction inclusion within blocks and in these situations and help ensure
+deliverability.
 
 These priority fees are added to transaction by adding a special Compute Budget
 instruction that sets the desired priority fee to be paid.
@@ -816,7 +817,7 @@ may only return the lowest fee for each block. This will often be zero, which is
 not a fully useful approximation of what Prioritization Fee to use in order to
 avoid being rejected by validator nodes.
 
-The `getRecentPrioritizationFees` API takes accounts’ pubkeys as parameters, and
+The `getRecentPrioritizationFees` API takes accounts' pubkeys as parameters, and
 then returns the highest of the minimum prioritization fees for these accounts.
 When no account is specified, the API will return the lowest fee to land to
 block, which is usually zero (unless the block is full).
@@ -842,13 +843,9 @@ instructions on a given transaction:
 - one to set the compute unit price, and
 - another to set the compute unit limit
 
-<Callout>
-
-Here, you can also find a more detailed developer
-[guide on how to use priority fees](/developers/guides/advanced/how-to-use-priority-fees)
-which includes more information about implementing priority fees.
-
-</Callout>
+> Here, you can also find a more detailed developer
+> [guide on how to use priority fees](/content/guides/advanced/how-to-use-priority-fees.md)
+> which includes more information about implementing priority fees.
 
 Create a `setComputeUnitPrice` instruction to add a Prioritization Fee above the
 Base Transaction Fee (5,000 Lamports).
@@ -922,7 +919,7 @@ instruction MUST be specified FIRST in the instructions list, even when the
 compute budget instructions are used to specify priority fees.
 
 You can find a specific code example
-[using durable nonces and priority fees together](/developers/guides/advanced/how-to-use-priority-fees#special-considerations)
+[using durable nonces and priority fees together](/content/guides/advanced/how-to-use-priority-fees.md#special-considerations)
 in this developer guide.
 
 ## Supporting the SPL Token Standard
@@ -978,11 +975,10 @@ accounts do not:
    deposited. Token accounts can be created explicitly with the
    `spl-token create-account` command, or implicitly by the
    `spl-token transfer --fund-recipient ...` command.
-1. SPL Token accounts must remain
-   [rent-exempt](/docs/core/accounts.md#rent-exemption) for the duration of
-   their existence and therefore require a small amount of native SOL tokens be
-   deposited at account creation. For SPL Token accounts, this amount is
-   0.00203928 SOL (2,039,280 lamports).
+1. SPL Token accounts must remain [rent-exempt](/docs/core/fees.md#rent-exempt)
+   for the duration of their existence and therefore require a small amount of
+   native SOL tokens be deposited at account creation. For SPL Token accounts,
+   this amount is 0.00203928 SOL (2,039,280 lamports).
 
 #### Command Line
 
@@ -1077,7 +1073,7 @@ Signature: 3R6tsog17QM8KfzbcbdP4aoMfwgo6hBggJDVy7dZPVmH2xbCWjEj31JKD53NzMrf25ChF
 
 ### Depositing
 
-Since each `(wallet, mint)` pair requires a separate account on chain. It is
+Since each `(wallet, mint)` pair requires a separate account onchain. It is
 recommended that the addresses for these accounts be derived from SOL deposit
 wallets using the
 [Associated Token Account](https://spl.solana.com/associated-token-account)

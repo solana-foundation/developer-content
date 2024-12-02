@@ -1,7 +1,7 @@
 ---
 featured: true
-date: 10 Dec 2022
-updatedDate: 10 Dec 2023
+date: 2022-12-10T00:00:00Z
+updatedDate: 2022-12-10T00:00:00Z
 title: Ship your first xNFT
 description: Ship your first xNFT with Backpack!
 repoUrl: https://github.com/Solana-Workshops/ship-an-xnft
@@ -16,7 +16,7 @@ tags:
   - Backpack
   - Beginner
 # author details
-author: Valentin Madrid
+# author: Valentin Madrid
 authorDescription: "External Developer Advocate at Solana Foundation"
 authorTwitterHandle: valentinmadrid_
 authorGithubUsername: valentinmadrid
@@ -41,7 +41,7 @@ able to try it out yourself.
 
 To follow along in this workshop, you are going to need:
 
-- Basic knowledge of Javascript and React
+- Basic knowledge of JavaScript and React
 - Node JS
 - NPM/Yarn
 - A web browser, which you probably have if you're reading this. Now that this

@@ -2,21 +2,36 @@
 sidebarLabel: Rust
 title: Rust Client for Solana
 sidebarSortOrder: 1
+description: Learn how to use Solana's Rust crates for development.
 ---
 
-Solana's Rust crates are [published to crates.io][crates.io] and can be found
-[on docs.rs with the "solana-" prefix][docs.rs].
+Solana's Rust crates are
+[published to crates.io](https://crates.io/search?q=solana-) and can be found
+[on docs.rs](https://docs.rs/releases/search?query=solana-) with the `solana-`
+prefix.
 
-[crates.io]: https://crates.io/search?q=solana-
-[docs.rs]: https://docs.rs/releases/search?query=solana-
+<Callout title="Hello World: Get started with Solana development">
 
-Some important crates:
+To quickly get started with Solana development and build your first Rust
+program, take a look at these detailed quick start guides:
+
+- [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
+  No installation needed.
+- [Setup your local environment](/docs/intro/installation) and use the local
+  test validator.
+
+</Callout>
+
+## Rust Crates
+
+The following are the most important and commonly used Rust crates for Solana
+development:
 
 - [`solana-program`] &mdash; Imported by programs running on Solana, compiled to
   SBF. This crate contains many fundamental data types and is re-exported from
   [`solana-sdk`], which cannot be imported from a Solana program.
 
-- [`solana-sdk`] &mdash; The basic off-chain SDK, it re-exports
+- [`solana-sdk`] &mdash; The basic offchain SDK, it re-exports
   [`solana-program`] and adds more APIs on top of that. Most Solana programs
   that do not run on-chain will import this.
 

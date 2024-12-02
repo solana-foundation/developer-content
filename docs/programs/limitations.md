@@ -1,5 +1,6 @@
 ---
 title: "Limitations"
+sidebarSortOrder: 6
 ---
 
 Developing programs on the Solana blockchain have some inherent limitation
@@ -8,13 +9,39 @@ into.
 
 ## Rust libraries
 
-Since Rust based on-chain programs must run be deterministic while running in a
+Since Rust based onchain programs must run be deterministic while running in a
 resource-constrained, single-threaded environment, they have some limitations on
 various libraries.
 
-See
-[Developing with Rust - Restrictions](/docs/programs/lang-rust.md#restrictions)
-for a detailed breakdown these restrictions and limitations.
+On-chain Rust programs support most of Rust's libstd, libcore, and liballoc, as
+well as many 3rd party crates.
+
+There are some limitations since these programs run in a resource-constrained,
+single-threaded environment, as well as being deterministic:
+
+- No access to
+  - `rand`
+  - `std::fs`
+  - `std::net`
+  - `std::future`
+  - `std::process`
+  - `std::sync`
+  - `std::task`
+  - `std::thread`
+  - `std::time`
+- Limited access to:
+  - `std::hash`
+  - `std::os`
+- Bincode is extremely computationally expensive in both cycles and call depth
+  and should be avoided
+- String formatting should be avoided since it is also computationally
+  expensive.
+- No support for `println!`, `print!`, use the
+  [`msg!`](https://github.com/solana-labs/solana/blob/d9b0fc0e3eec67dfe4a97d9298b15969b2804fab/sdk/program/src/log.rs#L33)
+  macro instead.
+- The runtime enforces a limit on the number of instructions a program can
+  execute during the processing of one instruction. See
+  [computation budget](/docs/core/fees.md#compute-budget) for more information.
 
 ## Compute budget
 
@@ -22,8 +49,8 @@ To prevent abuse of the blockchain's computational resources, each transaction
 is allocated a [compute budget](/docs/terminology.md#compute-budget). Exceeding
 this compute budget will result in the transaction failing.
 
-See [computational constraints](/docs/core/runtime.md#compute-budget) in the
-Runtime for more specific details.
+See the [computational constraints](/docs/core/fees.md#compute-budget)
+documentation for more specific details.
 
 ## Call stack depth - `CallDepthExceeded` error
 
@@ -39,8 +66,8 @@ Cross-program invocations allow programs to invoke other programs directly, but
 the depth is constrained currently to `4`.
 
 When a program exceeds the allowed
-[cross-program invocation call depth](/docs/core/cpi.md#call-depth), it will
-receive a `CallDepth` error
+[cross-program invocation call depth](/docs/core/cpi.md), it will receive a
+`CallDepth` error
 
 ## Float Rust types support
 
@@ -82,6 +109,4 @@ added to support writable data.
 
 ## Signed division
 
-The SBF instruction set does not support
-[signed division](https://www.kernel.org/doc/html/latest/bpf/bpf_design_QA.Html#q-why-there-is-no-bpf-sdiv-for-signed-divide-operation).
-Adding a signed division instruction is a consideration.
+The SBF instruction set does not support signed division.

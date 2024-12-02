@@ -1,0 +1,14 @@
+# (optional) organization association
+organization: solana-foundation
+# display name or actual name
+title: Mike MacCana
+# avatar image for this user (inside the `/public/assets/authors` folder)
+image: mikemaccana.jpg
+# github username
+github: mikemaccana
+# twitter / x username
+twitter: mikemaccana
+# website
+website: https://mikemaccana.com
+# brief description of this author (normally < 50 characters)
+description: Developer Education at the Solana Foundation

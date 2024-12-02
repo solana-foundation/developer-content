@@ -1,5 +1,5 @@
 ---
-date: Dec 7, 2023
+date: 2023-12-07T00:00:00Z
 seoTitle: "Token Extensions: Reallocate instruction"
 title: How to use the Reallocate instruction
 description:
@@ -184,7 +184,7 @@ const transaction = new Transaction().add(
   enableRequiredMemoTransfersInstruction,
 );
 
-// Send Transactoin
+// Send Transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,

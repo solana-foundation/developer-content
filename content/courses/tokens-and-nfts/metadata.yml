@@ -1,0 +1,8 @@
+author: unboxed
+title: Tokens and NFTs on Solana
+description: Create tokens and NFTs on Solana.
+lessons:
+  - token-program
+  - token-program-advanced
+  - nfts-with-metaplex
+priority: 10
