@@ -59,7 +59,7 @@ import {
     fromWallet.publicKey,
   );
 
-  //get the token account of the toWallet Solana address, if it does not exist, create it
+  // Get the token account of the toWallet Solana address, if it does not exist, create it
   const toTokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
     fromWallet,
