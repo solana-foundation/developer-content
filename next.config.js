@@ -47,7 +47,7 @@ module.exports = withContentlayer({
       // validator client docs
       ...redirectFormatter(
         "https://docs.anza.xyz/",
-        redirectsJson["solana-client"],
+        redirectsJson["agave-client"],
       ),
     ];
   },
