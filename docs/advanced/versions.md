@@ -187,5 +187,5 @@ console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
   [example of a v0 transaction](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
   on Solana Explorer
 - read the
-  [accepted proposal](https://docs.solanalabs.com/proposals/versioned-transactions)
+  [accepted proposal](https://docs.anza.xyz/proposals/versioned-transactions)
   for Versioned Transaction and Address Lookup Tables

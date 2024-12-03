@@ -49,8 +49,8 @@ from other blockchains.
 Get to know the underlying architecture of how the proof-of-stake blockchain
 works.
 
-- [Validators](https://docs.solanalabs.com/validator/anatomy) - the individual
-  nodes that are the backbone of the network
+- [Validators](https://docs.anza.xyz/validator/anatomy) - the individual nodes
+  that are the backbone of the network
 - [Clusters](/docs/core/clusters) - a collection of validators that work
   together for consensus
 
@@ -58,11 +58,11 @@ works.
 
 Explore what it takes to operate a Solana validator and help secure the network.
 
-- [System Requirements](https://docs.solanalabs.com/operations/requirements) -
+- [System Requirements](https://docs.anza.xyz/operations/requirements) -
   Recommended hardware requirements and expected SOL needed to operate a
   validator
-- [Quick Start](https://docs.solanalabs.com/operations/setup-a-validator) -
-  Setup a validator and get connected to a cluster for the first time
+- [Quick Start](https://docs.anza.xyz/operations/setup-a-validator) - Setup a
+  validator and get connected to a cluster for the first time
 
 ## Why Solana?
 

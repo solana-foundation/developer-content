@@ -187,7 +187,6 @@ console.log(
 
 ## More Resources
 
-- Read the
-  [proposal](https://docs.solanalabs.com/proposals/versioned-transactions) for
-  Address Lookup Tables and Versioned transactions
+- Read the [proposal](https://docs.anza.xyz/proposals/versioned-transactions)
+  for Address Lookup Tables and Versioned transactions
 - [Example Rust program using Address Lookup Tables](https://github.com/TeamRaccoons/address-lookup-table-multi-swap)

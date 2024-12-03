@@ -175,4 +175,4 @@ import {
 
 </Tabs>
 
-[1]: https://docs.solanalabs.com/runtime/programs#system-program
+[1]: https://docs.anza.xyz/runtime/programs#system-program

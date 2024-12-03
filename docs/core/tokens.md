@@ -244,8 +244,8 @@ what this account relationship looks like.
 
 ## Token Examples
 
-The [`spl-token` CLI](https://docs.solanalabs.com/cli) can be used to experiment
-with SPL tokens. In the examples below, we'll use the
+The [`spl-token` CLI](https://docs.anza.xyz/cli) can be used to experiment with
+SPL tokens. In the examples below, we'll use the
 [Solana Playground](https://beta.solpg.io/) terminal to run the CLI commands
 directly in the browser without having to install the CLI locally.
 

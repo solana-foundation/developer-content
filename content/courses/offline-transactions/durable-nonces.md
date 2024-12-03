@@ -171,7 +171,7 @@ the nonce. This ensures that every transaction which is signed using the nonce
 as the recent blockhash will be unique.
 
 It is important to note that durable nonces require
-[unique mechanisms within Solana](https://docs.solanalabs.com/implemented-proposals/durable-tx-nonces)
+[unique mechanisms within Solana](https://docs.anza.xyz/implemented-proposals/durable-tx-nonces)
 to function, thus they have some special rules that don't apply normally. We'll
 see this as we deep dive into the technicals.
 
