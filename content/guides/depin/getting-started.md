@@ -123,8 +123,7 @@ Let's estimate the cost of distributing rewards using both the Merkle tree
 approach and the ZK compression. We'll consider transaction fees, rent costs,
 and storage costs.
 
-Transaction Fees may be higher using ZK compression due to the increased
-computational resources and instructions needed. However, in both approaches,
+In both approaches,
 updating the rewards per claim period requires a single transaction by the
 application, so the cost difference is minimal, as it doesn’t scale per the
 number of users. Both strategies require one transaction per user to claim their
