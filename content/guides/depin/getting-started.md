@@ -41,10 +41,11 @@ oriented to these common on-chain DePIN use cases. Topics covered include:
 
 When minting a token on Solana, there are two token programs to choose from:
 [the Token program](https://spl.solana.com/token) or
-[the Token22 program](https://spl.solana.com/token-2022). There are
-tradeoffs to consider (discussed
+[the Token22 program](https://spl.solana.com/token-2022). There are tradeoffs to
+consider (discussed
 [here](https://solana.stackexchange.com/questions/9205/what-is-the-advantage-of-using-the-token22-token-extensions-program-over-the-old)).
-The recommended selection between the two options ultimately reduces to whether the features in the token extensions program would be of use to the application.
+The recommended selection between the two options ultimately reduces to whether
+the features in the token extensions program would be of use to the application.
 
 ### Token Listing
 
@@ -123,11 +124,10 @@ Let's estimate the cost of distributing rewards using both the Merkle tree
 approach and the ZK compression. We'll consider transaction fees, rent costs,
 and storage costs.
 
-In both approaches,
-updating the rewards per claim period requires a single transaction by the
-application, so the cost difference is minimal, as it doesn’t scale per the
-number of users. Both strategies require one transaction per user to claim their
-rewards.
+In both approaches, updating the rewards per claim period requires a single
+transaction by the application, so the cost difference is minimal, as it doesn’t
+scale per the number of users. Both strategies require one transaction per user
+to claim their rewards.
 
 ZK compression is more cost-effective in storage costs, due to the reduced
 storage requirements of compressed data. Here is a hypothetical cost analysis to
@@ -152,20 +152,19 @@ Storage Costs using a ZK compression distribution strategy:
   reward data
   - Compressed Data Size: Assuming a compression ratio of 50%, the total
     compressed data size would be approximately 500 KB
-  - Total Storage Cost: 500 * 1024 * 0.00000348 SOL/byte (per epoch) = 1.78 SOL
+  - Total Storage Cost: 500 _ 1024 _ 0.00000348 SOL/byte (per epoch) = 1.78 SOL
 - Total Cost (ZK Compression): 0.050005 SOL + 0.00000223 SOL + 1.78 SOL = 1.83
   SOL
-  
+
   We can extrapolate this across different numbers of reward distributions.
 
 | Number of Distributions | Merkle Tree Storage Cost (SOL) | ZK Compression Storage Cost (SOL) |
-|-------------------------|--------------------------------|-----------------------------------|
+| ----------------------- | ------------------------------ | --------------------------------- |
 | 1,000                   | 0.06                           | 0.03                              |
 | 10,000                  | 0.58                           | 0.29                              |
 | 100,000                 | 5.80                           | 2.90                              |
 | 1,000,000               | 58.00                          | 29.00                             |
 | 5,000,000               | 290.00                         | 145.00                            |
-
 
 ## Proof of Contribution
 
@@ -175,7 +174,7 @@ provided the resource in question honestly and consistently.
 
 Reporting the contributions through Solana makes it possible to use the
 blockchain’s inherent security properties to enable the secure validation of the
-contribution. 
+contribution.
 
 While almost all DePIN networks require proof-of-contribution in some form, the
 exact mechanism can vary significantly from protocol to protocol. A number of
