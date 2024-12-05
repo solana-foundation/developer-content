@@ -175,8 +175,7 @@ provided the resource in question honestly and consistently.
 
 Reporting the contributions through Solana makes it possible to use the
 blockchain’s inherent security properties to enable the secure validation of the
-contribution. The public nature of transactions on the blockchain allows for
-transparency that can be used to create a higher level of economic security.
+contribution. 
 
 While almost all DePIN networks require proof-of-contribution in some form, the
 exact mechanism can vary significantly from protocol to protocol. A number of
