@@ -134,8 +134,8 @@ storage requirements of compressed data. Here is a hypothetical cost analysis to
 compare the storage costs.
 
 If we assume a reward distribution to 10,000 users, with an average reward
-amount per user of 100 tokens, and the transaction fee on Solana to be 0.000005
-SOL (5,000 lamports):
+amount per user of 100 tokens, and the transaction fee on Solana to be 0.000007
+SOL (7,000 lamports):
 
 Storage Costs using a Merkle tree distribution strategy:
 
@@ -152,9 +152,20 @@ Storage Costs using a ZK compression distribution strategy:
   reward data
   - Compressed Data Size: Assuming a compression ratio of 50%, the total
     compressed data size would be approximately 500 KB
-  - Total Storage Cost: 500 _ 1024 _ 0.00000348 SOL/byte (per epoch) = 1.78 SOL
+  - Total Storage Cost: 500 * 1024 * 0.00000348 SOL/byte (per epoch) = 1.78 SOL
 - Total Cost (ZK Compression): 0.050005 SOL + 0.00000223 SOL + 1.78 SOL = 1.83
   SOL
+  
+  We can extrapolate this across different numbers of reward distributions.
+
+| Number of Distributions | Merkle Tree Storage Cost (SOL) | ZK Compression Storage Cost (SOL) |
+|-------------------------|--------------------------------|-----------------------------------|
+| 1,000                   | 0.06                           | 0.03                              |
+| 10,000                  | 0.58                           | 0.29                              |
+| 100,000                 | 5.80                           | 2.90                              |
+| 1,000,000               | 58.00                          | 29.00                             |
+| 5,000,000               | 290.00                         | 145.00                            |
+
 
 ## Proof of Contribution
 
