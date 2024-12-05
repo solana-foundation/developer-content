@@ -44,8 +44,7 @@ When minting a token on Solana, there are two token programs to choose from:
 [the Token22 program](https://spl.solana.com/token-2022). There are
 tradeoffs to consider (discussed
 [here](https://solana.stackexchange.com/questions/9205/what-is-the-advantage-of-using-the-token22-token-extensions-program-over-the-old)).
-most DePIN teams have elected to use
-[the Token program](https://spl.solana.com/token) to date.
+The recommended selection between the two options ultimately reduces to whether the features in the token extensions program would be of use to the application.
 
 ### Token Listing
 
