@@ -113,10 +113,26 @@ const web3 = require("@solana/web3.js");
 
 // connect to the cluster and get the minimum rent for rent exempt status
 const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
-let minRent = await connection.getMinimumBalanceForRentExemption(0);
-let blockhash = await connection
-  .getLatestBlockhash()
-  .then(res => res.blockhash);
+
+const getBlockchainInfo = async () => {
+  try {
+    // Fetch the minimum balance for rent exemption
+    const minRent = await connection.getMinimumBalanceForRentExemption(0);
+
+    // Fetch the latest blockhash
+    const { blockhash } = await connection.getLatestBlockhash();
+
+    console.log("Minimum Rent:", minRent);
+    console.log("Latest Blockhash:", blockhash);
+
+    return { minRent, blockhash };
+  } catch (error) {
+    console.error("Error fetching blockchain information:", error);
+  }
+};
+
+// Call the function to get blockchain info
+getBlockchainInfo();
 ```
 
 Create an `array` of all the `instructions` you desire to send in your
@@ -170,8 +186,8 @@ can send it to the cluster and `await` the response:
 
 ```js
 // send our v0 transaction to the cluster
-const txId = await connection.sendTransaction(transaction);
-console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
+const transactionId = await connection.sendTransaction(transaction);
+console.log(`https://explorer.solana.com/tx/${transactionId}?cluster=devnet`);
 ```
 
 > NOTE: Unlike `legacy` transactions, sending a `VersionedTransaction` via
