@@ -153,8 +153,7 @@ Storage Costs using a ZK compression distribution strategy:
   reward data
   - Compressed Data Size: Assuming a compression ratio of 50%, the total
     compressed data size would be approximately 500 KB
-- Total Storage Cost: 500 \* 1024 \* 0.00000348 SOL/byte (per epoch) = 1.78
-    SOL
+- Total Storage Cost: 500 \* 1024 \* 0.00000348 SOL/byte (per epoch) = 1.78 SOL
 - Total Cost (ZK Compression): 0.050005 SOL + 0.00000223 SOL + 1.78 SOL = 1.83
   SOL
 
