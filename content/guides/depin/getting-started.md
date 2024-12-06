@@ -186,7 +186,7 @@ contribution models:
 ## Governance
 
 DePIN protocols tend to follow a path of measured, gradual decentralization that
-shifts decision-making for the protocol to on-chain governance by token holders
+shifts decision-making for the protocol to onchain governance by token holders
 over time. This could take the form of a social framework like a
 [DAO](https://www.realms.today/) or leverage
 [liquid restaking](https://docs.fragmetric.xyz/fragsol/).
