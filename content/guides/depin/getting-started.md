@@ -39,9 +39,9 @@ oriented to these common on-chain DePIN use cases. Topics covered include:
 
 ### Token Minting
 
-When minting a token on Solana, there are two token programs to choose from:
-[the Token program](https://spl.solana.com/token) or
-[the Token22 program](https://spl.solana.com/token-2022). There are tradeoffs to
+When minting a token on Solana, there are two token programs to choose from: the
+[Token program](https://spl.solana.com/token) or the
+[Token22 program](https://spl.solana.com/token-2022). There are tradeoffs to
 consider (discussed
 [here](https://solana.stackexchange.com/questions/9205/what-is-the-advantage-of-using-the-token22-token-extensions-program-over-the-old)).
 The recommended selection between the two options ultimately reduces to whether
