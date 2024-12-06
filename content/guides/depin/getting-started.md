@@ -30,10 +30,10 @@ While each DePIN network has a unique product focus, most DePIN networks utilize
 Solana for a common set of use cases. This guide is meant to help builders get
 oriented to these common on-chain DePIN use cases. Topics covered include:
 
-- Minting and Managing a Token
-- Rewards Distribution
-- Proof of Contribution
-- Governance
+- [Minting and Managing a Token](#minting-and-managing-a-token)
+- [Rewards Distribution](#rewards-distribution)
+- [Proof of Contribution](#proof-of-contribution)
+- [Governance](#governance)
 
 ## Minting and Managing a Token
 
