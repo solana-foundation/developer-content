@@ -13,7 +13,7 @@ using `solana-bankrun`.
 
 There are two ways to test programs on Solana:
 
-1. [solana-test-validator](https://docs.solanalabs.com/cli/examples/test-validator):
+1. [solana-test-validator](https://docs.anza.xyz/cli/examples/test-validator):
    That spins up a local emulator of the Solana Blockchain on your local machine
    which receives the transactions to be processed by the validator.
 2. The various

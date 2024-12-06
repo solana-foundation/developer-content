@@ -115,7 +115,7 @@ provides a local Solana runtime instance which can be used in conjunction with
 outside tests sending transactions.
 
 Finally, a full test cluster can be started with the
-[solana-test-validator](https://docs.solanalabs.com/cli/examples/test-validator),
+[solana-test-validator](https://docs.anza.xyz/cli/examples/test-validator),
 installed along with the Solana CLI. This creates a fully featured test cluster
 on a local machine, which can then deploy programs and run tests.
 

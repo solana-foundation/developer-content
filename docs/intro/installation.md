@@ -613,9 +613,9 @@ Alternatively, you can get devnet SOL using the
 ### Run Local Validator
 
 The Solana CLI comes with the
-[test validator](https://docs.solanalabs.com/cli/examples/test-validator)
-built-in. Running a local validator will allow you to deploy and test your
-programs locally.
+[test validator](https://docs.anza.xyz/cli/examples/test-validator) built-in.
+Running a local validator will allow you to deploy and test your programs
+locally.
 
 In a separate terminal, run the following command to start a local validator:
 

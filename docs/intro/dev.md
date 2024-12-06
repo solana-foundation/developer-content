@@ -83,7 +83,7 @@ developers interact with the Solana network in most popular languages :
 
 You'll also need a connection with an RPC to interact with the network. You can
 either work with a [RPC infrastructure provider](https://solana.com/rpc) or
-[run your own RPC node](https://docs.solanalabs.com/operations/setup-an-rpc-node).
+[run your own RPC node](https://docs.anza.xyz/operations/setup-an-rpc-node).
 
 To quickly get started with a front-end for your application, you can generate a
 customizable Solana scaffold by typing the following into your CLI:
