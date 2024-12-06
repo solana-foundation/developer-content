@@ -82,7 +82,7 @@ transactions on the blockchain by allowing users to claim their rewards based on
 a published Merkle root.
 
 The application constructs a Merkle tree on a regular basis and publishes the
-root on-chain. Each leaf node represents a recipient’s rewards.
+root onchain. Each leaf node represents a recipient’s rewards.
 
 In order for users to claim their rewards, they generate a Merkle proof that
 demonstrates a particular leaf is part of the published Merkle root. Once their
