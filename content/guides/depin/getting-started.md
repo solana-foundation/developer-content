@@ -109,7 +109,8 @@ For networks that anticipate needing to distribute rewards to tens of thousands
 (or more) of nodes, participants, or contributors, a newer approach to rewards
 distribution is to use [ZK compression](https://www.zkcompression.com/). Instead
 of regular accounts, compressed accounts are generated for reward recipients,
-minimizing the state and rent costs associated with account creation.
+minimizing the state and [rent costs](/docs/core/fees.md#rent) associated with
+account creation.
 
 Implementing ZK compression is often cheaper in terms of storage costs. However,
 because it is a relatively new feature, the level of ecosystem support and
