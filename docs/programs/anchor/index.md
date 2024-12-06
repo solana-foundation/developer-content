@@ -61,7 +61,7 @@ name. This command creates a new directory with the specified name and sets up a
 default program and test file.
 
 ```shell filename="Terminal"
-anchor init my-program
+anchor init my-project
 ```
 
 Navigate to the new project directory and open it in your code editor.
@@ -70,7 +70,7 @@ Navigate to the new project directory and open it in your code editor.
 cd my-project
 ```
 
-The default Anchor program is located at `/programs/my-project/src/lib.rs`.
+The default Anchor program is located at `programs/my-project/src/lib.rs`.
 
 <Accordion>
 <AccordionItem title="Default Program">
@@ -137,7 +137,7 @@ If you prefer Rust for testing, initialize your project with the
 `--test-template rust` flag.
 
 ```shell
-anchor init --test-template rust my-program
+anchor init --test-template rust my-project
 ```
 
 The Rust test file will be at `/tests/src/test_initialize.rs`.
