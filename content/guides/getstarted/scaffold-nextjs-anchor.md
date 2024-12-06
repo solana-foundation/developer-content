@@ -288,7 +288,7 @@ airdrop for testnet devnet, making Error messages by Solana more readable and
 [Solana Wallet Names by Portal Payments](https://github.com/portalpayments/solana-wallet-names)
 can help you use Solana wallet names like `.sol`, `.backpack`, `.abc` etc.
 
-[Amman [by Metaplex](https://github.com/metaplex-foundation/amman) is a set of
+Amman [by Metaplex](https://github.com/metaplex-foundation/amman) is a set of
 tools to help test Solana SDK libraries and apps on a locally running validator.
 
 [Solita by Metaplex](https://github.com/metaplex-foundation/solita) Solita
