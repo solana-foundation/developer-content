@@ -224,11 +224,13 @@ The `insecure_withdraw` instruction handler transfers all the tokens in the
 
 <Callout>
 
-Notice that this instruction handler \***\*does\*\*** have a signer check for
+Notice that this instruction handler **does** have a signer check for
 `authority` and an owner check for `vault`. However, nowhere in the account
 validation or instruction handler logic is there code that checks that the
 `authority` account passed into the instruction handler matches the `authority`
-account on the `vault`. </Callout>
+account on the `vault`.
+
+</Callout>
 
 ```rust
 use anchor_lang::prelude::*;
