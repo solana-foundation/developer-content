@@ -392,3 +392,90 @@ it("Fetch Account", async () => {
 Note that if you invoke the `initialize` instruction more than once using the
 same `user` address as a seed, then the transaction will fail. This is because
 an account will already exist at the derived address.
+
+## Error handling for Program Derived Addresses (PDAs)
+
+Below are scenarios, potential issues, and debugging tips to help developers resolve them.
+
+### 1. Mismatched Seeds
+- **Issue**: The seeds provided to derive a PDA do not match the expected seeds in the program logic.
+- **Example**: A PDA is derived using `[b"user", wallet_pubkey]`, but the program expects `[b"account", wallet_pubkey]`.
+- **Error**: `AccountNotFound` or `InvalidAccountData`.
+- **Debugging**:
+  - Ensure consistency in seed values across derivation logic (client-side or program-side).
+  - Use the same hash function (SHA-256) as Solana's libraries for concatenation.
+
+---
+
+### 2. Invalid Bump Value
+- **Issue**: The bump seed used in PDA derivation is incorrect.
+- **Example**: A bump seed is manually provided but does not align with the computed PDA.
+- **Error**: `InvalidSeeds` or `SignatureVerificationFailed`.
+- **Debugging**:
+  - Compute the bump seed dynamically:
+    ```rust
+    let (pda, bump) = Pubkey::find_program_address(&[b"seed1", user.key().as_ref()], &program_id);
+    ```
+  - Log the derived bump seed during testing for verification.
+
+---
+
+### 3. Seed Length Exceeds Limit
+- **Issue**: The combined length of all seeds exceeds Solana's 32-byte limit for seed inputs.
+- **Example**: Using multiple large seed values: `[b"long_seed_string", b"another_long_seed"]`.
+- **Error**: `InvalidSeeds`.
+- **Debugging**:
+  - Compress long inputs with a hash function:
+    ```rust
+    let compressed_seed = hash(b"long_seed_string").to_bytes();
+    ```
+
+---
+
+### 4. PDA Ownership Validation
+- **Issue**: The PDA does not have the expected owner, causing authorization failures.
+- **Example**: A program assumes ownership of the PDA, but the account is controlled by another program.
+- **Error**: `InstructionError: AccountOwnedByWrongProgram`.
+- **Debugging**:
+  - Verify account ownership:
+    ```rust
+    if pda_account.owner != program_id {
+        return Err(ProgramError::IllegalOwner);
+    }
+    ```
+
+---
+
+### 5. Account Not Rent-Exempt
+- **Issue**: A derived PDA account is not rent-exempt, leading to transaction failure.
+- **Error**: `AccountNotRentExempt`.
+- **Debugging**:
+  - Fund the account sufficiently during creation:
+    ```rust
+    let rent = Rent::get()?.minimum_balance(account_size);
+    invoke(
+        &system_instruction::create_account(
+            &payer.key,
+            &pda,
+            rent,
+            account_size,
+            &program_id,
+        ),
+        &[payer.clone(), pda.clone()],
+    )?;
+    ```
+
+---
+
+### 6. Account Already Exists
+- **Issue**: Attempting to create an account at a PDA that already exists.
+- **Error**: `InstructionError: AccountAlreadyExists`.
+- **Debugging**:
+  - Check if the account exists:
+    ```rust
+    let account = AccountInfo::try_from(pda_address).ok();
+    if account.is_some() {
+        // Handle existing account case
+    }
+    ```
+---
