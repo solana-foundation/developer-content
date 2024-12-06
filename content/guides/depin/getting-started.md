@@ -64,7 +64,7 @@ distribution strategies.
 
 ### Token Management
 
-Most teams utilize [Squads](https://squads.so/) for their on-chain treasury
+Most teams utilize [Squads](https://squads.so/) for their onchain treasury
 management, also leveraging their multisig feature.
 
 ## Rewards Distribution
