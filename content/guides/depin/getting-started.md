@@ -26,6 +26,11 @@ leverage tokens to reward participants for contributing to and maintaining the
 infrastructure, creating a decentralized alternative to traditional centralized
 systems. Examples include wireless, content delivery, and mapping networks.
 
+For instance, Helium creates a wireless network more cheaply than traditional
+carriers by enabling individuals to deploy and maintain network hotspots. This
+approach eliminates the need for centralized infrastructure investments and
+operational costs, allowing the network to scale more cost-effectively.
+
 While each DePIN network has a unique product focus, most DePIN networks utilize
 Solana for a common set of use cases. This guide is meant to help builders get
 oriented to these common on-chain DePIN use cases. Topics covered include:
@@ -65,7 +70,7 @@ distribution strategies.
 ### Token Management
 
 Most teams utilize [Squads](https://squads.so/) for their onchain treasury
-management, also leveraging their multisig feature.
+management, and leverage features such as multi-sig and time-based lockups.
 
 ## Rewards Distribution
 
@@ -201,7 +206,7 @@ or
 
 If you are a DePIN builder who has historically only been familiar with building
 on EVM, not to worry! A number of large DePIN teams who began on EVM chains have
-successfully migrated to Solana (see RNDR, Geodnet, and Xnet, amongst others).
+successfully migrated to Solana (see Render, Geodnet, and Xnet, amongst others).
 There are
 [specific resources to help developers make the transition from EVM to SVM](https://solana.com/developers/evm-to-svm).
 Bridge infrastructure like
