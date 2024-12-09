@@ -28,8 +28,9 @@ keywords:
 
 ### Summary
 
-- **Non-Fungible Tokens (NFTs)** are Digital Assets with 0 decimals, and 
-  a maximum supply of 1
+- **Non-Fungible Tokens (NFTs)** are onchain digital assets. They are 
+  indivisible, meaning they cannot be split into fractional parts, and 
+  unique.
 - **Metadata** attaches additional properties to Assets and Collection. 
   Metadata includes the token name and a link to an offchain JSON file. 
   This JSON file contains links to artwork and other media files, any 
@@ -60,19 +61,20 @@ how to create and update them using the `mpl-core` npm module.
 
 #### NFTs on Solana
 
-All NFTs must meet the following characteristics:
+All NFTs characteristics were previously achievable with a combination of 
+the SPL Token Program and the Metaplex Token Metadata Program by setting the
+following boundaries:
 
 1. Have 0 decimals, so it cannot be divided into parts.
 2. Have a supply of 1, so only 1 of these tokens exists.
 3. Not have a mint authority to ensure that the supply never changes.
 4. Have an associated **metadata** to store things like a name, images, etc.
 
-While all this properties were previously achievable with a combination of 
-the SPL Token Program and the Metaplex Token Metadata Program, it came with 
-a big overhead and lots of inefficiencies for a market as big as NFTs and Digital 
-Asset in general.
+This came with a big overhead and lots of inefficiencies for a market as big as 
+NFTs and Digital Asset in general.
 
-This is exaclty why the **Metaplex Core Program** was created!
+Thanks to the **Metaplex Core Program**, all this characteristics are now enshrined 
+at the protocol level!
 
 #### The Metaplex Core program
 
@@ -103,12 +105,12 @@ visit the [Metaplex Developer Docs](https://developers.metaplex.com/core).
 #### Umi
 
 Umi is a framework built by Metaplex for registering JS/TS clients that interact with 
-on-chain programs. While it can create clients for various programs, it's most commonly 
-used with all the Metaplex program.
+on-chain programs. While it can interface with clients from various programs, it's most 
+commonly used with all the Metaplex program.
 
-**Note**: Umi uses different implementations for common web3.js concepts, such as 
-Keypairs, PublicKeys, and Connections. Fortunately, it's easy to convert between 
-web3.js and Umi equivalents.
+**Note**: Umi uses different implementation types for common web3.js functions and 
+concepts, such as Keypairs, PublicKeys, and Connections. Fortunately, it's easy to 
+convert between web3.js and Umi equivalents.
 
 For more deetails, visit the [Metaplex Developer Docs](https://developers.metaplex.com/umi).
 
@@ -172,6 +174,12 @@ In action, uploading an image named `random-image.png` from your computer would 
 3. Uploading file to designated storage provider.
 
 ```typescript
+// Add an uploader to your umi instance. In this case we're going to use Irys
+import { irysUploader } from '@metaplex-foundation/umi-uploader-irys';
+
+// ...create Umi as shown before
+umi.use(irysUploader())
+
 let filePath = "random-image.png";
 
 const buffer = await fs.readFile(filePath);
@@ -218,6 +226,9 @@ const metadata = {
 const uri = await umi.uploader.uploadJson(metadata);
 ```
 
+Now that you know how to create the metadata for your Collections and Assets, remember to 
+modify the values as you see fit and use the response to fill out the `uri` field. 
+
 #### Creating the Collection
 
 Once the metadata is uploaded, you can finally create a Collection to group assets. 
@@ -236,8 +247,8 @@ const { signature, result } = await createCollection(umi, {
 ```
 
 The `sendAndConfirm` method is what takes care of signing our transaction and sending
-it. It also provides other options to set pre-flight checks and our desired commitment 
-for the transaction, which defaults to `confirmed` if not provided.
+it. It also provides available options such as setting pre-flight checks and our desired 
+commitment level for the transaction, which defaults to `confirmed` if not provided.
 
 This method returns an object containing the transaction signature and a result. The 
 result object contains the outcome of our transaction. If successful, the `err` inside 
