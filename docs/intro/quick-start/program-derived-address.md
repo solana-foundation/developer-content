@@ -473,7 +473,7 @@ The `Update` struct defines the accounts required for the `update` instruction.
 ---
 
 Note that the `bump = message_account.bump` constraint uses the bump seed stored
-on the `mesesage_account`, rather than having Anchor recalculate it.
+on the `message_account`, rather than having Anchor recalculate it.
 
 ---
 
