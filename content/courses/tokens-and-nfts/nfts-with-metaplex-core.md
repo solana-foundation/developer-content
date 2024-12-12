@@ -42,12 +42,10 @@ keywords:
 
 ### Lesson
 
-Solana Non-Fungible Tokens (NFTs) used to be represented as SPL tokens 
-
 In this lesson, we'll explore how Core Assets are represented and demonstrate 
-how to create and update them using the mpl-core npm module.
+how to create and update them using the mpl-core SDK.
 
-Solana Non-Fungible Tokens (NFTs) used to be represented as SPL tokens 
+Solana Non-Fungible Tokens (NFTs) were commonly represented as SPL tokens 
 with an additional metadata account associated with each token mint and 
 created using both the Token Program and the Metaplex Token Metadata Program.
 
@@ -57,7 +55,7 @@ and has a flexible plugin system that that enables developers to natively
 modify asset behavior and functionality
 
 In this lesson, we'll explore how Core Assets are represented and demonstrate 
-how to create and update them using the `mpl-core` npm module.
+how to create and update them using the `mpl-core` SDK.
 
 #### NFTs on Solana
 
@@ -65,48 +63,46 @@ All NFTs characteristics were previously achievable with a combination of
 the SPL Token Program and the Metaplex Token Metadata Program by setting the
 following boundaries:
 
-1. Have 0 decimals, so it cannot be divided into parts.
-2. Have a supply of 1, so only 1 of these tokens exists.
-3. Not have a mint authority to ensure that the supply never changes.
-4. Have an associated **metadata** to store things like a name, images, etc.
+1. 0 decimals, so it cannot be divided into parts.
+2. Supply of 1, so only 1 of these tokens exists.
+3. No mint authority to ensure that the supply never changes.
+4. Additional accounts including, Metadata, Master Edition and Token Record to store 
+   addotional information like name, uri, ... and inform that the previous boundaries
+   are enforced.
 
 This came with a big overhead and lots of inefficiencies for a market as big as 
 NFTs and Digital Asset in general.
 
-Thanks to the **Metaplex Core Program**, all this characteristics are now enshrined 
+Thanks to the **Metaplex Core Program**, all this characteristics are now included 
 at the protocol level!
 
 #### The Metaplex Core program
 
-The [Metaplex Core Program](https://developers.metaplex.com/core) is the new 
-standard for NFTs and Digital Assets on Solana
+The [Metaplex Core Program](https://developers.metaplex.com/core) is the newest NFT 
+Digital Asset standard from Metaplex
 
-[image needed (?) ...]
-
-- Differently from the Token Metadata Program, Collection are different accounts,
-  model that requires different data, from the Asset they group together. Collections 
-  store only collection specific metadata such as collection name and collection 
-  image.
+- Unlike the Token Metadata Program, Collections are separate accounts with a 
+  distinct data model from the Assets accounts. They store only collection-specific 
+  metadata, such as the collection name and collection image.
 - Assets are now a single account model and design that don't rely on additional
   accounts such as Associated Token Accounts or Metadata Accounts. Instead, when 
-  a Core Assets is created, the Metaplex Core Program stores ownership metadata 
-  (like the URI pointing to an offchain `.json` that follow a [certain standard](https://developers.metaplex.com/token-metadata/token-standard)), 
+  a Core Assets is created, the Metaplex Core Program stores the ownership and metadata 
   directly on the Asset.
-- Both Assets and Collections can hook into lifecycle events, such as create
-  transfer and burn, allowing custom behaviors via **Plugins**. For example, 
-  thanks to plugin, royalty enforcement or onchain attributes can be added with 
-  a single instruction and no additional code.
+- Both Assets and Collections can integrate with lifecycle events such as creation, transfer, 
+  and burning, enabling custom behaviors through Plugins. For instance, plugins allow features 
+  like royalty enforcement or on-chain attributes to be added with a single instruction, 
+  eliminating the need for extra code.
 
 In the following sections, we'll cover the basics of using the `metaplex-foundation/mpl-core` 
-package with Umi to prepare off-chain metadata, create and update Assets, and add 
+SDK with Umi to prepare off-chain metadata, create and update Assets, and add 
 them into a collection. For more information about `metaplex-foundation/mpl-core` 
 visit the [Metaplex Developer Docs](https://developers.metaplex.com/core).
 
 #### Umi
 
-Umi is a framework built by Metaplex for registering JS/TS clients that interact with 
-on-chain programs. While it can interface with clients from various programs, it's most 
-commonly used with all the Metaplex program.
+Umi is a framework built by Metaplex that can register JS/TS clients built with 
+Kinobi/Codama that interact with on-chain programs. While it can interface with 
+clients from various programs, it's most commonly used with all the Metaplex program.
 
 **Note**: Umi uses different implementation types for common web3.js functions and 
 concepts, such as Keypairs, PublicKeys, and Connections. Fortunately, it's easy to 
@@ -135,10 +131,9 @@ import { mplCore } from "@metaplex-foundation/mpl-core";
 import { keypairIdentity } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { getKeypairFromFile } from "@solana-developers/helpers";
-import { promises as fs } from "fs";
-import { clusterApiUrl } from "@solana/web3.js";
+import { promises as fs } from "fs";;
 
-const umi = createUmi(clusterApiUrl("devnet")).use(mplCore());
+const umi = createUmi("https://api.devnet.solana.com").use(mplCore());
 
 // load keypair from local file system
 // See https://github.com/solana-developers/helpers?tab=readme-ov-file#get-a-keypair-from-a-keypair-file
@@ -154,8 +149,7 @@ umi.use(keypairIdentity(umiKeypair));
 #### Uploading images
 
 Before creating an Asset, you must prepare and upload any assets you plan to associate 
-with it. While this doesn't have to be an image, most Assets have an image associated 
-with them.
+with it such as images, animation files, and off chain metadata.
 
 Preparing and uploading an image involves converting to a buffer first. You can convert
 the file to a [generic file](https://developers.metaplex.com/umi/storage#generic-files) 
@@ -167,7 +161,7 @@ difference of browser files and local file system files i.e. those on your compu
 
 In action, uploading an image named `random-image.png` from your computer would take the following steps:
 
-1. Reading the file using `readFile` into a buffer.
+1. Reading the file using `fs.readFile()` into a buffer.
 
 2. Creating a generic file type with the files MIME Type from the buffer and filePath.
 
@@ -200,8 +194,8 @@ After uploading the image, it's time to upload the offchain JSON metadata using 
 Remember, the offchain portion of the metadata includes things like the image uri we
 just generated as well as additional information like the name and description of the 
 Asset. While you can technically include anything you'd like in this JSON object, in 
-most cases, you should follow the [NFT standard](https://developers.metaplex.com/token-metadata/token-standard#the-non-fungible-standard)
-to ensure compatibility with wallets, programs, and applications.
+most cases, you should follow the [standard JSON schema](https://developers.metaplex.com/core/json-schema)
+for Core to ensure compatibility with wallets, programs, and applications.
 
 To create the metadata, use the `uploadJson()` method provided by the SDK. This method 
 accepts a metadata object and returns a uri that points to the uploaded metadata.
@@ -210,12 +204,12 @@ accepts a metadata object and returns a uri that points to the uploaded metadata
 const metadata = {
   name: 'My NFT',
   description: 'This is an NFT on Solana',
-  image,
+  image, // Uri of the Image
   external_url: 'https://example.com',
   properties: {
     files: [
       {
-        uri: imageUri[0],
+        uri: image,
         type: 'image/jpeg',
       },
     ],
@@ -231,7 +225,8 @@ modify the values as you see fit and use the response to fill out the `uri` fiel
 
 #### Creating the Collection
 
-Once the metadata is uploaded, you can finally create a Collection to group assets. 
+Once you have uploaded the appropiate files to respresent your Core Collection 
+(image, metadata.json) you can finally create the Core Collection itself.
 
 The `createCollection` method allows you to create a collection with the provided data
 
@@ -255,7 +250,7 @@ result object contains the outcome of our transaction. If successful, the `err` 
 this will be set to null otherwise it'll contain the error for the failed transaction.
 
 By default, the SDK sets the `payer` and the `updateAuthority` property respecitvely 
-using the payer and signer identity of the Umi istance we created previously like this:
+using the payer and signer identity of the Umi instance we created previously like this:
 
 ```typescript
 const { signature, result } = await createCollection(umi, {
@@ -280,9 +275,10 @@ const { signature, result } = await create(umi, {
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 ```
 
-For this method there are two additional optional field:
-- the `owner` field that if not supplied gets defaulted to the signer identity of the
-Umi istance like this:
+For this method there are two additional optional fields:
+
+- the `owner` field that if not supplied will default to the signer identity of the
+Umi instance like this:
 
 ```typescript
 const { signature, result } = await create(umi, {
@@ -291,7 +287,7 @@ const { signature, result } = await create(umi, {
 }).sendAndConfirm(umi, { send: { commitment: "finalized" } });
 ```
 
-- the `collection` field that it's needed only when we want to add the asset to a collection
+- the `collection` field is only needed when we want to add the asset to a collection
 
 ```typescript
 const asset = generateSigner(umi)
@@ -369,9 +365,9 @@ const { signature, result } = await update(umi, {
 ### Lab
 
 In this lab, we'll go through the steps to create a Core Asset using the Metaplex Umi framework, 
-add the Asset to the Collection and update its metadata after the fact. By the end, you will 
-have a basic understanding of how to use the Metaplex Umi and the `mpl-core` library to interact 
-with digital assets on Solana.
+add the Asset to the Collection and update its metadata in subsequent transactions. By the end, 
+you will have a basic understanding of how to use the Metaplex Umi and the `mpl-core` SDK to 
+interact with digital assets on Solana.
 
 #### Part 1: Creating an Core collection
 
@@ -455,7 +451,7 @@ inside your working directory:
 
 We will use these images as our collection and asset cover images respectively.
 
-We will use Irys as our storage provider, and since Metaplex conveniently created the 
+We will use Irys as our storage provider that Metaplex conveniently supports through the 
 `umi-uploader-irys` plugin, we can use that to upload our files. The plugin, also takes 
 care of sending the right amount of lamports for storage fees so we don't have to worry 
 about making this on our own.
@@ -546,7 +542,7 @@ Keep the Collection addres since we're going to use it in the next step.
 
 #### 2. Creating a Core Asset and adding it to the Collection
 
-We'll now create a Core Assets that's a member of the Collection we just Created.
+We'll now create a Core Asset that's a member of the Collection we just Created.
 
 Start by creating a new  file called `create-metaplex-core-asset.ts`. The setup for this will 
 look the same as the previous file, with slightly different imports:
@@ -818,7 +814,7 @@ Asset updated with new metadata URI: https://explorer.solana.com/address/BXfRBtg
 
 Inspect the updated NFT on Solana Explorer!
 
-Congratulations! You've successfully learned how to use the Metaplex SDK to create, update, 
+Congratulations! You've successfully learned how to use the Metaplex mpl-core SDK to create, update, 
 and add an Asset to a Collection. That's everything you need to build out your own collection 
 for just about any use case. You could build a new event ticketing platform, revamp a retail 
 business membership program, or even digitize your school's student ID system. The possibilities 
@@ -830,11 +826,8 @@ The steps covered above for creating an NFT would be incredibly tedious to
 execute for thousands of NFTs in one go. Many providers, including Metaplex,
 Magic Eden, and Tensor have so-called 'fair launch' tools that take care of
 minting large quantities of NFTs and ensuring they are sold within the
-parameters set by their creators. Dive into fair launch platforms on the
-[Digital Collectables](https://solana.com/ecosystem/explore?categories=digital%20collectibles)
-page. This hands-on experience will not only reinforce your understanding of the
-tools but also boost your confidence in your ability to use them effectively in
-the future.
+parameters set by their creators. Dive into how Metaplex support fair launches
+through [Candy Machine](https://developers.metaplex.com/core-candy-machine)!
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and
