@@ -575,7 +575,7 @@ pub fn add_movie_review(
                 &[ctx.bumps.mint]
             ]]
         ),
-        10*10^6
+        10 * 10u64.pow(6)
     )?;
 
     msg!("Minted tokens");
@@ -705,7 +705,7 @@ it("Movie review is added`", async () => {
   );
 
   const userAta = await getAccount(provider.connection, tokenAccount);
-  expect(Number(userAta.amount)).to.equal((10 * 10) ^ 6);
+  expect(Number(userAta.amount)).to.equal(10 * Math.pow(10, 6));
 });
 ```
 
