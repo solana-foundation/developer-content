@@ -102,7 +102,7 @@ visit the [Metaplex Developer Docs](https://developers.metaplex.com/core).
 
 Umi is a framework built by Metaplex that can register JS/TS clients built with 
 Kinobi/Codama that interact with on-chain programs. While it can interface with 
-clients from various programs, it's most commonly used with all the Metaplex program.
+clients from various programs, it's most commonly used with all the Metaplex programs.
 
 **Note**: Umi uses different implementation types for common web3.js functions and 
 concepts, such as Keypairs, PublicKeys, and Connections. Fortunately, it's easy to 
