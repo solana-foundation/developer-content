@@ -1,0 +1,14 @@
+{
+  "ignorePatterns": [
+  ],
+  "replacementPatterns": [
+    {
+      "pattern": "^/",
+      "replacement": "https://solana.com/"
+    }
+  ],
+
+  "verbosity": "ERROR",
+  "httpStatusIgnore": [403],
+  "timeout": "15s"
+}
