@@ -645,7 +645,7 @@ pub struct Update<'info> {
 Lastly, within `#[program]`, let's implement an `increment` instruction handler
 to increment the `count` once a `counter` account is initialized by the first
 instruction handler. This instruction handler requires a `Context` of type
-`Update` (implemented in the next step) and takes no additional instruction
+`Update` (implemented in the previous step) and takes no additional instruction
 data. In the instruction logic, we are simply incrementing an existing `counter`
 account's `count` field by `1`.
 
