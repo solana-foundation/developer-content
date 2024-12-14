@@ -11,10 +11,31 @@ Accounts found at Program Derived Addresses (PDAs) can only be created on-chain.
 The accounts have addresses that have an associated off-curve public key, but no
 secret key.
 
-To generate a PDA, use `findProgramAddressSync` with your required seeds.
+## Generating a PDA
+
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+
+To generate a PDA, use `getProgramDerivedAddress` with your required seeds.
 Generating with the same seeds will always generate the same PDA.
 
-## Generating a PDA
+<Tab value="web3.js v2">
+
+```typescript filename="generate-pda.ts"
+import { getProgramDerivedAddress, address } from "@solana/web3.js";
+
+const [pda, bump] = await getProgramDerivedAddress({
+  programAddress: address("G1DCNUQTSGHehwdLCAmRyAG8hf51eCHrLNUqkgGKYASj"),
+  seeds: ["test"],
+});
+console.log(`bump: ${bump}, address: ${pda}`);
+```
+
+</Tab>
+
+<Tab value="web3.js v1">
+
+To generate a PDA, use `findProgramAddressSync` with your required seeds.
+Generating with the same seeds will always generate the same PDA.
 
 ```typescript filename="generate-pda.ts"
 import { PublicKey } from "@solana/web3.js";
@@ -25,14 +46,16 @@ let [pda, bump] = PublicKey.findProgramAddressSync(
   [Buffer.from("test")],
   programId,
 );
-console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
+console.log(`bump: ${bump}, address: ${pda.toBase58()}`);
 // you will find the result is different from `createProgramAddress`.
 // It is expected because the real seed we used to calculate is ["test" + bump]
 ```
 
-## Create an Account at a PDA
+</Tab>
 
-### Program
+</Tabs>
+
+## Create a PDA Account in a Program (via CPI)
 
 ```rust filename="create-pda.rs" {24-37}
 use solana_program::{
@@ -77,7 +100,19 @@ fn process_instruction(
 }
 ```
 
-## Client
+## Create a PDA Account in a Client
+
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+
+<Tab value="web3.js v2">
+
+```typescript filename="create-pda.ts"
+
+```
+
+</Tab>
+
+<Tab value="web3.js v1">
 
 ```typescript filename="create-pda.ts"
 import {
@@ -92,61 +127,61 @@ import {
   SYSVAR_RENT_PUBKEY,
 } from "@solana/web3.js";
 
-(async () => {
-  // program id
-  const programId = new PublicKey(
-    "7ZP42kRwUQ2zgbqXoaXzAFaiQnDyp6swNktTSv8mNQGN",
-  );
+// program id
+const programId = new PublicKey("7ZP42kRwUQ2zgbqXoaXzAFaiQnDyp6swNktTSv8mNQGN");
 
-  // connection
-  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+// connection
+const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
-  // setup fee payer
-  const feePayer = Keypair.generate();
-  const feePayerAirdropSignature = await connection.requestAirdrop(
-    feePayer.publicKey,
-    LAMPORTS_PER_SOL,
-  );
-  await connection.confirmTransaction(feePayerAirdropSignature);
+// setup fee payer
+const feePayer = Keypair.generate();
+const feePayerAirdropSignature = await connection.requestAirdrop(
+  feePayer.publicKey,
+  LAMPORTS_PER_SOL,
+);
+await connection.confirmTransaction(feePayerAirdropSignature);
 
-  // setup pda
-  let [pda, bump] = await PublicKey.findProgramAddress(
-    [feePayer.publicKey.toBuffer()],
-    programId,
-  );
-  console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
+// setup pda
+let [pda, bump] = await PublicKey.findProgramAddress(
+  [feePayer.publicKey.toBuffer()],
+  programId,
+);
+console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
 
-  const data_size = 0;
+const data_size = 0;
 
-  let tx = new Transaction().add(
-    new TransactionInstruction({
-      keys: [
-        {
-          pubkey: feePayer.publicKey,
-          isSigner: true,
-          isWritable: true,
-        },
-        {
-          pubkey: pda,
-          isSigner: false,
-          isWritable: true,
-        },
-        {
-          pubkey: SYSVAR_RENT_PUBKEY,
-          isSigner: false,
-          isWritable: false,
-        },
-        {
-          pubkey: SystemProgram.programId,
-          isSigner: false,
-          isWritable: false,
-        },
-      ],
-      data: Buffer.from(new Uint8Array([data_size, bump])),
-      programId: programId,
-    }),
-  );
+let tx = new Transaction().add(
+  new TransactionInstruction({
+    keys: [
+      {
+        pubkey: feePayer.publicKey,
+        isSigner: true,
+        isWritable: true,
+      },
+      {
+        pubkey: pda,
+        isSigner: false,
+        isWritable: true,
+      },
+      {
+        pubkey: SYSVAR_RENT_PUBKEY,
+        isSigner: false,
+        isWritable: false,
+      },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false,
+      },
+    ],
+    data: Buffer.from(new Uint8Array([data_size, bump])),
+    programId: programId,
+  }),
+);
 
-  console.log(`txhash: ${await connection.sendTransaction(tx, [feePayer])}`);
-})();
+console.log(`txhash: ${await connection.sendTransaction(tx, [feePayer])}`);
 ```
+
+</Tab>
+
+</Tabs>
