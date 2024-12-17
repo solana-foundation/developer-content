@@ -1013,7 +1013,7 @@ pnpm dev
 
 > Note: The developer content API normally runs locally on port `3001`
 
-## Testing
+## Testing Code Snippets
 
 The repository uses Node's native test runner for testing code examples. This
 ensures all code snippets are correct and working as expected.
@@ -1061,8 +1061,8 @@ You can run tests in two ways:
 
 2. Test specific code imports:
    ```shell
-   cd code
    pnpm install
+   cd code
    pnpm turbo test
    ```
 
@@ -1073,6 +1073,6 @@ testing, which uses `describe` and `it` blocks to create readable test
 descriptions. When tests run, they read like natural sentences.
 
 Example:
-[generate-mnemonic.test.ts](https://github.com/solana-foundation/developer-content/blob/master/code/content/cookbook/wallets/tests/generate-mnemonic.test.ts)
+[generate-mnemonic.test.ts](github.com/solana-foundation/developer-content/tree/main/code/content/cookbook/wallets/tests/generate-mnemonic.test.ts)
 
-All tests should handle both success and failure cases appropriately.
+All tests should handle both success and failure (error) cases appropriately.
