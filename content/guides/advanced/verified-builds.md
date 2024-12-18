@@ -23,36 +23,6 @@ verified builds for their programs on Solana. We will cover what verified builds
 are, how to use them, special considerations, and best practices to ensure the
 authenticity of your program onchain.
 
-# How to Verify a Program
-
-## Table of Contents
-
-- [What are verified builds?](#what-are-verified-builds)
-- [Why should I use verified builds?](#why-should-i-use-verified-builds)
-  - [Benefits](#why-should-i-use-verified-builds)
-- [How do I create verified builds?](#how-do-i-create-verified-builds)
-  - [Install Docker and Cargo](#install-docker-and-cargo)
-  - [Install the Solana Verify CLI](#install-the-solana-verify-cli)
-  - [Prepare project](#prepare-project)
-  - [Building Verifiable Programs](#building-verifiable-programs)
-  - [Remote Verification](#remote-verification)
-- [How to verify your program when its controlled by a Multisig](#how-to-verify-your-program-when-its-controlled-by-a-multisig-like-squads)
-  - [Build and Deploy](#1-build-the-verifiable-program)
-  - [Verify Repository](#3-commit-and-verify-against-repository)
-  - [Transfer to Multisig](#4-transfer-program-authority-to-multisig)
-  - [Export and Submit](#5-export-pda-transaction)
-  - [Program Updates](#8-updating-the-program-optional)
-- [Verify from docker image](#verify-from-docker-image)
-- [Example verified build](#example-verified-build)
-- [Some programs that are already verified](#some-programs-that-are-already-verified)
-  - [Phoenix](#phoenix)
-  - [Squads V3](#squads-v3)
-  - [Drift V2](#drift-v2)
-  - [Marginfi V2](#marginfi-v2)
-- [Security + Disclaimer](#security--disclaimer)
-
-[Insert rest of document here...]
-
 # What are verified builds?
 
 Verified builds ensure that the executable program you deploy to Solana’s
@@ -371,7 +341,8 @@ solana-verify remote submit-job --program-id <program-id> --uploader <address>
 Where the uploader is the address that has the authority to write to the PDA.
 That should be program authority in most cases. If your program is controlled by
 a multisig please continue in the
-[multisig guide](#how-to-verify-your-program-when-its-controlled-by-a-multisig-like-squads).
+[multisig verification](#how-to-verify-your-program-when-its-controlled-by-a-multisig-like-squads)
+part of this guide below.
 
 This will submit a job to the OtterSec API and you can then verify the job
 status with:
@@ -380,8 +351,8 @@ status with:
 solana-verify remote get-job-status --job-id <job-id>
 ```
 
-Once the verification is done, which takes a while, and was successful you will
-be able to see your program as verified in the
+Once the verification has completed successfully, which may take awhile, you
+will be able to see your program as verified in the
 [OtterSec API for single programs](https://verify.osec.io/status/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY)
 and in the
 [Solana Explorer](https://explorer.solana.com/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY/verified-build),
@@ -397,7 +368,7 @@ contributing to a more healthy Solana ecosystem.
 
 </Steps>
 
-## How to verify your program when its controlled by a Multisig like squads
+## How to verify your program when its controlled by a Multisig like Squads
 
 For the remote verification to work you need to write the verification data into
 a PDA signed by the program authority. If your program is controlled by a
@@ -425,14 +396,16 @@ solana config set --url "PayedMainnetRPCAddress" // the public endpoint will be 
 solana program deploy target/deploy/verify_squads.so
 ```
 
-Get program id -> 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD
+For the rest of this multisig guide, we will use an example program ID of
+`6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD`.
 
 ### 3. Commit and verify against repository
 
 Once that is done we commit the project to to github. Here is an example:
 https://github.com/solana-developers/verify-squads
 
-Optional: See if you can verify locally first:
+Optional: See if you can verify locally first (this command uses example program
+ID `6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD`):
 
 ```bash
 solana-verify verify-from-repo https://github.com/solana-developers/verify-squads --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD
@@ -454,10 +427,11 @@ Since you can not do that when you are using a multisig you need to export the
 PDA transaction manually and then trigger the transaction through Squads.
 
 ```bash
-solana-verify export-pda-tx https://github.com/solana-developers/verify-squads --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD --uploader 3JG6ULvZVCrkKtSSskKNJGe8RNZGFe8Ruev9KUhxzK5K
+solana-verify export-pda-tx https://github.com/solana-developers/verify-squads --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD --uploader <your program authority> --encoding base58 --compute-unit-price 0
 ```
 
-This will return you a base58 or base64 encoded transaction:
+This will return you a base58 transcation. If you want a base64 encoded
+transaction for use in a transaction inspector, you can use `--encoding base64`.
 
 ```bash
 P6vBfcPaaXb8fZoT3NBAYEcdtEj7tubA1k2gBxmFKZ3UWF5YyrmDMFTvLKALCJoUuRsPAjMckudYruCu3eeWQtuDrFbEMLxLFutnKXac974fnkMivcwUdY66VLjbxQT6ATmcy7F4hBtz1G4P1h6iBJLhb8WtrtgY3i4qq45MUEb7RjuMEfUFXKrNgPdGxkz5xvMHq3dxKRcpmEK5k2DkeW6SUQYBVe19Ga3B9GyhTX8k3CMt9JCEah13WyRnQd8GjoK6sTEvGJym6xDNvmd8yiJYSNcaYwEJsjHEUf4Yh6kAC7ki2KRvVAr3NVe1gjqK9McrwSQjtUatvydTG8Zovcr7PPUEMf3yPMgKXjZLB2QpkH63yTTYdNAnWFuv9E6b6nYRqye5XcNi436yKw5U14fXh65yK34bgYLi9328UT1huJELsJU9BRGnGUmb6GWp6c2WL5BhnzgNTSnt9TXFfEgUMzhvKzpVBxLP44hwqqBdyUhHFysCF37531PnmiESq8x1xou23xJ6FcQbc199754MkqQd7tX9CUznGzAEqHGkzn3VBoJnojsKtgYmiTYbdRsT1CU18MbYEE7WvGAvXyxxbpNzbAcc94HrnM6cqRGmwhEBroPfFghTdmzg9D
@@ -474,7 +448,8 @@ verify program and the computer budget program and nothing else!
 Once the transaction to squads was successful you can submit the remote job:
 
 ```bash
-solana-verify remote submit-job --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD --uploader 3JG6ULvZVCrkKtSSskKNJGe8RNZGFe8Ruev9KUhxzK5K
+solana-verify remote submit-job --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD
+--uploader <your program authority>
 ```
 
 This is it! You have verified your program against a public repository and
@@ -511,6 +486,8 @@ solana-verify export-pda-tx https://github.com/solana-developers/verify-squads -
 
 Submit the transaction through Squads again.
 
+You can see an example transaction here:
+
 https://solana.fm/tx/4zJ1vK2KToAwxuEYzTMLqPkcebjoi9rdeeyxtEEx9L5Q4vWDA8h6Rr4kPRuRxcV7ZLKMr6qx1LTWb6x3ZpUJaFUW?cluster=mainnet-alpha
 
 Then submit for another remote build:
@@ -521,6 +498,7 @@ solana-verify remote submit-job --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1
 
 Should result in something like this:
 
+```shell
 Verification request sent with request id: b63339d2-163e-49ac-b55d-3454c1c2b5b3
 Verification in progress... ⏳ [00:18:02] ✅ Process completed. (Done in 18
 minutes) Program 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD has been verified.
@@ -531,6 +509,7 @@ https://github.com/Woody4618/verify-squads/tree/0fb0a2e30c15c51732c0ad5e837975a6
 Check the verification status at:
 https://verify.osec.io/status/6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD Job
 url: https://verify.osec.io/job/b63339d2-163e-49ac-b55d-3454c1c2b5b3
+```
 
 Congratulations you have verified your program after a multisig upgrade!
 
@@ -600,17 +579,17 @@ a remote build of your program. Once the build is complete, the system verifies
 that the onchain hash of your program matches the hash of the generated build
 artifact from your repository.
 
-## Some programs that are already verified
+## Popular programs that are already verified
 
 ### Phoenix
 
-```
+```shell
 solana-verify verify-from-repo -um --program-id PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY https://github.com/Ellipsis-Labs/phoenix-v1
 ```
 
 Final Output:
 
-```
+```shell
 Executable Program Hash from repo: 6877a5b732b3494b828a324ec846d526d962223959534dbaf4209e0da3b2d6a9
 On-chain Program Hash: 6877a5b732b3494b828a324ec846d526d962223959534dbaf4209e0da3b2d6a9
 Program hash matches ✅
@@ -618,17 +597,17 @@ Program hash matches ✅
 
 ### Squads V3
 
-```
+```shell
 solana-verify verify-from-repo https://github.com/Squads-Protocol/squads-mpl --commit-hash c95b7673d616c377a349ca424261872dfcf8b19d --program-id SMPLecH534NA9acpos4G6x7uf3LWbCAwZQE9e8ZekMu -um --library-name squads_mpl --bpf
 ```
 
-(Note: we needed to specify the `library-name` because the Squads repo includes
-multiple programs. We use the `--bpf` flag because `squads_mpl` was previously
-verified with Anchor.)
+> Notice we needed to specify the `library-name` because the Squads repo
+> includes multiple programs. We use the `--bpf` flag because `squads_mpl` was
+> previously verified with Anchor.
 
 Final Output:
 
-```
+```shell
 Executable Program Hash from repo: 72da599d9ee14b2a03a23ccfa6f06d53eea4a00825ad2191929cbd78fb69205c
 On-chain Program Hash: 72da599d9ee14b2a03a23ccfa6f06d53eea4a00825ad2191929cbd78fb69205c
 Program hash matches ✅
@@ -636,13 +615,13 @@ Program hash matches ✅
 
 ### Drift V2
 
-```
+```shell
 solana-verify verify-from-repo -um --program-id dRiftyHA39MWEi3m9aunc5MzRF1JYuBsbn6VPcn33UH https://github.com/drift-labs/protocol-v2 --commit-hash 110d3ff4f8ba07c178d69f9bfc7b30194fac56d6 --library-name drift
 ```
 
 Final Output:
 
-```
+```shell
 Executable Program Hash from repo: e31d58edeabc3c30bf6f2aa60bfaa5e492b41ec203e9006404b463e5adee5828
 On-chain Program Hash: e31d58edeabc3c30bf6f2aa60bfaa5e492b41ec203e9006404b463e5adee5828
 Program hash matches ✅
@@ -650,13 +629,13 @@ Program hash matches ✅
 
 ### Marginfi V2
 
-```
+```shell
 solana-verify verify-from-repo -um --program-id MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA https://github.com/mrgnlabs/marginfi-v2 --commit-hash d33e649e415c354cc2a1e3c49131725552d69ba0 --library-name marginfi -- --features mainnet-beta
 ```
 
 Final Output:
 
-```
+```shell
 Executable Program Hash from repo: 890d68f48f96991016222b1fcbc2cc81b8ef2dcbf280c44fe378c523c108fad5
 On-chain Program Hash: 890d68f48f96991016222b1fcbc2cc81b8ef2dcbf280c44fe378c523c108fad5
 Program hash matches ✅
