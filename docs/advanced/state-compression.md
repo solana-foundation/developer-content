@@ -226,7 +226,7 @@ per update transaction.
 
 Consider another example, this time with a tree of max depth `3`. If we want to
 apply an action to one of the tree’s leaves—such as updating `R4`—we need to
-provide proofs for `L4` and `R2`. However, we can omit `R1` since it is already
+provide proofs for `L4`, `R2`, and `R1`. However, we can omit `R1` since it is already
 cached/stored onchain due to our canopy depth of `1`, which ensures that all
 nodes at level 1 (`L1` and `R1`) are stored onchain. This results in a total of
 2 required proofs.
