@@ -154,7 +154,7 @@ pub struct Account {
     pub amount: u64,
     /// If `delegate` is `Some` then `delegated_amount` represents
     /// the amount authorized by the delegate
-    pub delegate: COption<Pubkey>,
+    pub delegate: Option<Pubkey>,
     /// The account's state
     pub state: AccountState,
     /// If is_native.is_some, this is a native token, and the value logs the
