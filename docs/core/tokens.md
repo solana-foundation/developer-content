@@ -386,7 +386,7 @@ Signature: 44vqKdfzspT592REDPY4goaRJH3uJ3Ce13G4BCuUHg35dVUbHuGTHvqn4ZjYF9BGe9Qrj
 
 Under the hood, creating an Associated Token Account requires a single
 instruction that invokes the
-[Associated Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src).
+[Token Program](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program).
 Here is a Javascript example on
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
