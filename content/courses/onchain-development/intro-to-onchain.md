@@ -37,7 +37,7 @@ synchronized system:
 - **devnet**: For application development
 - **localnet**: For local testing
 
-The program that run on Solana - the ones that create tokens, swap tokens, art
+The programs that run on Solana - the ones that create tokens, swap tokens, art
 marketplaces, escrows, market makers, DePIN apps, auctions, retail payments
 platforms, etc - are called **Solana apps**.
 
@@ -131,17 +131,17 @@ to store any form of data as required by the program.
      is a `PublicKey`, PDA addresses are not public keys and do not have a
      matching private key.
    - A program's PDAs are unique so, they won't conflict with other programs.
-   - PDAs can also act as signer in an instruction. We'll learn more about this
+   - PDAs can also act as signers in an instruction. We'll learn more about this
      in further lessons.
 
 #### Examples of PDA Usage
 
-| Purpose           | Seeds                      | Resulting PDA                |
-| ----------------- | -------------------------- | ---------------------------- |
-| Exchange Rate     | `"USD"`, `"AUD"`           | Stores USD to AUD rate       |
-| User Relationship | User1 wallet, User2 wallet | Stores relationship data     |
-| Product Review    | User wallet, Product ID    | Stores user's review         |
-| Global Config     | `"config"`                 | Stores program-wide settings |
+| Use Case          | Seeds                          | PDA (Key)       | Value (Data Stored)                        |
+| ----------------- | ------------------------------ | --------------- | ------------------------------------------ |
+| Exchange Rate     | `["USD", "AUD"]`               | Derived address | Current USD to AUD exchange rate           |
+| User Relationship | `[user1_wallet, user2_wallet]` | Derived address | Relationship data (e.g., friends, blocked) |
+| Movie Review      | `[reviewer_wallet, "titanic"]` | Derived address | Review text, rating, timestamp             |
+| Global Config     | `["config"]`                   | Derived address | Program-wide settings                      |
 
 #### Benefits
 

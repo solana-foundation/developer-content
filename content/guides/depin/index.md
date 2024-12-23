@@ -1,4 +1,4 @@
 ---
 metaOnly: true
-title: Solang
+title: DePIN
 ---

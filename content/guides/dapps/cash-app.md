@@ -1494,7 +1494,7 @@ const withdrawInstruction = await program.methods
 **Additional documentation:**
 
 - [Transactions and Instructions](https://solana.com/docs/core/transactions)
-- [Connection Class](https://solana-labs.github.io/solana-web3.js/classes/Connection.html)
+- [Connection Class](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
 - Library for
   [wallets](https://github.com/solana-mobile/mobile-wallet-adapter/tree/main/android/walletlib)
   to provide the Mobile Wallet Adapter transaction signing services to dapps

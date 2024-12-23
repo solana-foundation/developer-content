@@ -49,7 +49,7 @@ For example:
 
 - The ability to mint new tokens is given to the account that is the 'mint
   authority' for the token mint.
-- The ability to upgrade a prigram is given to the account that is the 'upgrade
+- The ability to upgrade a program is given to the account that is the 'upgrade
   authority' of a program.
 
 ## bank state
@@ -82,7 +82,7 @@ a block chain.
 ## BPF loader
 
 The Solana program that owns and loads
-[BPF](/docs/programs/faq.md#berkeley-packet-filter-bpf)
+[BPF](/docs/core/programs#berkeley-packet-filter-bpf)
 [onchain programs](#onchain-program), allowing the program to interface with the
 runtime.
 
@@ -126,7 +126,7 @@ A gossip network connecting all [nodes](#node) of a [cluster](#cluster).
 Some number of [epochs](#epoch) after [stake](#stake) has been deactivated while
 it progressively becomes available for withdrawal. During this period, the stake
 is considered to be "deactivating". More info about:
-[warmup and cooldown](https://docs.solanalabs.com/implemented-proposals/staking-rewards#stake-warmup-cooldown-withdrawal)
+[warmup and cooldown](https://docs.anza.xyz/implemented-proposals/staking-rewards#stake-warmup-cooldown-withdrawal)
 
 ## credit
 
@@ -324,7 +324,7 @@ See [Proof of History](#proof-of-history-poh).
 ## point
 
 A weighted [credit](#credit) in a rewards regime. In the [validator](#validator)
-[rewards regime](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards),
+[rewards regime](https://docs.anza.xyz/consensus/stake-delegation-and-rewards),
 the number of points owed to a [stake](#stake) during redemption is the product
 of the [vote credits](#vote-credit) earned and the number of lamports staked.
 
@@ -472,11 +472,10 @@ SWQoS allows
 
 ## sysvar
 
-A system [account](#account).
-[Sysvars](https://docs.solanalabs.com/runtime/sysvars) provide cluster state
-information such as current tick height, rewards [points](#point) values, etc.
-Programs can access Sysvars via a Sysvar account (pubkey) or by querying via a
-syscall.
+A system [account](#account). [Sysvars](https://docs.anza.xyz/runtime/sysvars)
+provide cluster state information such as current tick height, rewards
+[points](#point) values, etc. Programs can access Sysvars via a Sysvar account
+(pubkey) or by querying via a syscall.
 
 ## thin client
 
@@ -520,7 +519,7 @@ capabilities of transferring, freezing, and minting tokens.
 
 ## tpu
 
-[Transaction processing unit](https://docs.solanalabs.com/validator/tpu).
+[Transaction processing unit](https://docs.anza.xyz/validator/tpu).
 
 ## transaction
 
@@ -545,7 +544,7 @@ A set of [transactions](#transaction) that may be executed in parallel.
 
 ## tvu
 
-[Transaction validation unit](https://docs.solanalabs.com/validator/tvu).
+[Transaction validation unit](https://docs.anza.xyz/validator/tvu).
 
 ## validator
 
@@ -580,4 +579,4 @@ A collection of [keypairs](#keypair) that allows users to manage their funds.
 Some number of [epochs](#epoch) after [stake](#stake) has been delegated while
 it progressively becomes effective. During this period, the stake is considered
 to be "activating". More info about:
-[warmup and cooldown](https://docs.solanalabs.com/consensus/stake-delegation-and-rewards#stake-warmup-cooldown-withdrawal)
+[warmup and cooldown](https://docs.anza.xyz/consensus/stake-delegation-and-rewards#stake-warmup-cooldown-withdrawal)

@@ -3,7 +3,7 @@ title: Deserialize Program Data
 objectives:
   - Explain Program Derived Accounts
   - Derive PDAs given specific seeds
-  - Fetch a program’s accounts
+  - Fetch a program's accounts
   - Use Borsh to deserialize custom data
 description:
   Deserialize instructions in JS/TS clients to send to your native program.
@@ -23,7 +23,7 @@ description:
 ## Lesson
 
 In the last lesson, we serialized program data that was subsequently stored
-onchain by a Solana program. In this lesson, we’ll cover in greater detail how
+onchain by a Solana program. In this lesson, we'll cover in greater detail how
 programs store data on the chain, how to retrieve data, and how to deserialize
 the data they store.
 
@@ -44,15 +44,15 @@ Solana, but the pattern is familiar:
 - You can also consider PDAs as records in a database, with the address being
   the primary key used to look up the values inside.
 
-PDAs combine a program addresss and some developer-chosen seeds to create
+PDAs combine a program address and some developer-chosen seeds to create
 addresses that store individual pieces of data. Since PDAs are addresses that
 lie _off_ the Ed25519 Elliptic curve, PDAs don't have secret keys. Instead, PDAs
 can be signed for by the program address used to create them.
 
 PDAs and the data inside them can be consistently found based on the program
 address, bump, and seeds. To find a PDA, the program ID and seeds of the
-developer’s choice (like a string of text) are passed through the
-[`findProgramAddress()`](https://solana-labs.github.io/solana-web3.js/classes/PublicKey.html#findProgramAddress)
+developer's choice (like a string of text) are passed through the
+[`findProgramAddress()`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/PublicKey.html#findProgramAddress)
 function.
 
 Let's have a look at some examples...
@@ -75,13 +75,14 @@ const [pda, bump] = await findProgramAddress(
 
 ##### Example: program with user-specific data
 
-In programs that store user-specific data, it’s common to use a user’s public
-key as the seed. This separates each user’s data into its own PDA. The
-separation makes it possible for the client to locate each user’s data by
-finding the address using the program ID and the user’s public key.
+In programs that store user-specific data, it's common to use a user's public
+key as the seed. This separates each user's data into its own PDA. The
+separation makes it possible for the client to locate each user's data by
+finding the address using the program ID and the user's public key.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+import { PublicKey } from "@solana/web3.js";
+const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer()],
   programId,
 );
@@ -93,11 +94,11 @@ const [pda, bump] = await web3.PublicKey.findProgramAddress(
 
 When there are multiple data items per user, a program may use more seeds to
 create and identify accounts. For example, in a note-taking app there may be one
-account per note where each PDA is derived with the user’s public key and the
-note’s title.
+account per note where each PDA is derived with the user's public key and the
+note's title.
 
 ```typescript
-const [pda, bump] = await web3.PublicKey.findProgramAddress(
+const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from("Shopping list")],
   programId,
 );
@@ -118,20 +119,28 @@ of the account and an `account` property of type `AccountInfo`. You can use the
 `account` property to get the account data.
 
 ```typescript
-const accounts = connection.getProgramAccounts(programId).then(accounts => {
-  accounts.map(({ pubkey, account }) => {
-    console.log("Account:", pubkey);
-    console.log("Data buffer:", account.data);
-  });
-});
+const fetchProgramAccounts = async () => {
+  try {
+    const accounts = await connection.getProgramAccounts(programId);
+
+    accounts.forEach(({ pubkey, account }) => {
+      console.log("Account:", pubkey.toBase58());
+      console.log("Data buffer:", account.data);
+    });
+  } catch (error) {
+    console.error("Error fetching program accounts:", error);
+  }
+};
+
+fetchProgramAccounts();
 ```
 
 ### Deserializing program data
 
 The `data` property on an `AccountInfo` object is a buffer. To use it
-efficiently, you’ll need to write code that deserializes it into something more
+efficiently, you'll need to write code that deserializes it into something more
 usable. This is similar to the serialization process we covered last lesson.
-Just as before, we’ll use [Borsh](https://borsh.io/) and `@coral-xyz/borsh`. If
+Just as before, we'll use [Borsh](https://borsh.io/) and `@coral-xyz/borsh`. If
 you need a refresher on either of these, have a look at the previous lesson.
 
 Deserializing requires knowledge of the account layout ahead of time. When
@@ -171,23 +180,23 @@ const { playerId, name } = borshAccountSchema.decode(buffer);
 
 ## Lab
 
-Let’s practice this together by continuing to work on the Movie Review app from
-the last lesson. No worries if you’re just jumping into this lesson - it should
+Let's practice this together by continuing to work on the Movie Review app from
+the last lesson. No worries if you're just jumping into this lesson - it should
 be possible to follow either way.
 
 As a refresher, this project uses a Solana program deployed on Devnet which lets
 users review movies. Last lesson, we added functionality to the frontend
 skeleton letting users submit movie reviews but the list of reviews is still
-showing mock data. Let’s fix that by fetching the program’s storage accounts and
+showing mock data. Let's fix that by fetching the program's storage accounts and
 deserializing the data stored there.
 
-![movie review frontend](/public/assets/courses/unboxed/movie-reviews-frontend.png)
+![movie review frontend](/public/assets/courses/movie-review-frontend-dapp.png)
 
 #### 1. Download the starter code
 
-If you didn’t complete the lab from the last lesson or just want to make sure
-that you didn’t miss anything, you can download the
-[starter code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-serialize-instruction-data).
+If you didn't complete the lab from the last lesson or just want to make sure
+that you didn't miss anything, you can download the
+[starter code](https://github.com/solana-developers/movie-review-frontend/tree/solution-serialize-instruction-data).
 
 The project is a fairly simple Next.js application. It includes the
 `WalletContextProvider` we created in the Wallets lesson, a `Card` component for
@@ -196,7 +205,7 @@ list, a `Form` component for submitting a new review, and a `Movie.ts` file that
 contains a class definition for a `Movie` object.
 
 Note that when you run `npm run dev`, the reviews displayed on the page are
-mocks. We’ll be swapping those out for the real deal.
+mocks. We'll be swapping those out for the real deal.
 
 #### 2. Create the buffer layout
 
@@ -217,7 +226,7 @@ PDA's `data`:
 3. `title` as a string representing the title of the reviewed movie.
 4. `description` as a string representing the written portion of the review.
 
-Let’s configure a `borsh` layout in the `Movie` class to represent the movie
+Let's configure a `borsh` layout in the `Movie` class to represent the movie
 account data layout. Start by importing `@coral-xyz/borsh`. Next, create a
 `borshAccountSchema` static property and set it to the appropriate `borsh`
 struct containing the properties listed above.
@@ -246,7 +255,7 @@ structured.
 
 #### 3. Create a method to deserialize data
 
-Now that we have the buffer layout set up, let’s create a static method in
+Now that we have the buffer layout set up, let's create a static method in
 `Movie` called `deserialize` that will take an optional `Buffer` and return a
 `Movie` object or `null`.
 
@@ -273,18 +282,21 @@ export class Movie {
     }
 
     try {
-      const { title, rating, description } = this.borshAccountSchema.decode(buffer)
-      return new Movie(title, rating, description)
-    } catch(error) {
-      console.log('Deserialization error:', error)
-      return null
+      const { title, rating, description } =
+        this.borshAccountSchema.decode(buffer);
+      return new Movie(title, rating, description);
+    } catch (error) {
+      console.error("Deserialization error:", error);
+      console.error("Buffer length:", buffer.length);
+      console.error("Buffer data:", buffer.toString("hex"));
+      return null;
     }
   }
 }
 ```
 
 The method first checks whether or not the buffer exists and returns `null` if
-it doesn’t. Next, it uses the layout we created to decode the buffer, then uses
+it doesn't. Next, it uses the layout we created to decode the buffer, then uses
 the data to construct and return an instance of `Movie`. If the decoding fails,
 the method logs the error and returns `null`.
 
@@ -301,7 +313,7 @@ array of movies and call `setMovies`.
 import { Card } from "./Card";
 import { FC, useEffect, useState } from "react";
 import { Movie } from "../models/Movie";
-import * as web3 from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js"
 import { useConnection } from "@solana/wallet-adapter-react";
 
 const MOVIE_REVIEW_PROGRAM_ID = "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
@@ -311,16 +323,20 @@ export const MovieList: FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
-    connection
-      .getProgramAccounts(new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID))
-      .then(async accounts => {
-        const movies: Movie[] = accounts.map(({ account }) => {
-          return Movie.deserialize(account.data);
-        });
+    const fetchProgramAccounts = async () => {
+      try {
+        const accounts = await connection.getProgramAccounts(new PublicKey(MOVIE_REVIEW_PROGRAM_ID));
+
+        const movies: Movie[] = accounts.map(({ account }) => Movie.deserialize(account.data));
 
         setMovies(movies);
-      });
-  }, []);
+      } catch (error) {
+        console.error("Error fetching program accounts:", error);
+      }
+    };
+    fetchProgramAccounts();
+  }, [connection]);
+
 
   return (
     <div>
@@ -336,27 +352,27 @@ At this point, you should be able to run the app and see the list of movie
 reviews retrieved from the program!
 
 Depending on how many reviews have been submitted, this may take a long time to
-load or may lock up your browser entirely. But don’t worry — next lesson we’ll
+load or may lock up your browser entirely. But don't worry — next lesson we'll
 learn how to page and filter accounts so you can be more surgical with what you
 load.
 
 If you need more time with this project to feel comfortable with these concepts,
 have a look at the
-[solution code](https://github.com/Unboxed-Software/solana-movie-frontend/tree/solution-deserialize-account-data)
+[solution code](https://github.com/solana-developers/movie-review-frontend/tree/solutions-deserialize-account-data)
 before continuing.
 
 ## Challenge
 
-Now it’s your turn to build something independently. Last lesson, you worked on
+Now it's your turn to build something independently. Last lesson, you worked on
 the Student Intros app to serialize instruction data and send a new intro to the
 network. Now, it's time to fetch and deserialize the program's account data.
 Remember, the Solana program that supports this is at
 `HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf`.
 
-![Student Intros frontend](/public/assets/courses/unboxed/student-intros-frontend.png)
+![Student Intros frontend](/public/assets/courses/student-intros-frontend.png)
 
 1. You can build this from scratch or you can
-   [download the starter code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-serialize-instruction-data).
+   [download the starter code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-serialize-instruction-data).
 2. Create the account buffer layout in `StudentIntro.ts`. The account data
    contains:
    1. `initialized` as an unsigned, 8-bit integer representing the instruction
@@ -372,7 +388,7 @@ Remember, the Solana program that supports this is at
    network!
 
 If you get really stumped, feel free to
-[check out the solution code](https://github.com/Unboxed-Software/solana-student-intros-frontend/tree/solution-deserialize-account-data).
+[check out the solution code](https://github.com/solana-developers/solana-student-intro-frontend/tree/solution-deserialize-account-data).
 
 As always, get creative with these challenges and take them beyond the
 instructions if you want!

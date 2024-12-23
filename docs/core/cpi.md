@@ -2,6 +2,10 @@
 title: Cross Program Invocation (CPI)
 sidebarLabel: Cross Program Invocation
 sidebarSortOrder: 6
+description:
+  Learn about Cross Program Invocation (CPI) on Solana - how programs can call
+  instructions on other programs, handle PDA signers, and compose functionality
+  across the Solana network.
 ---
 
 A Cross Program Invocation (CPI) refers to when one program invokes the

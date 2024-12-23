@@ -60,10 +60,10 @@ first will need to create a wallet.**
 ## Supported Wallets
 
 Several browser and mobile app based wallets support Solana. Find some options
-that might be right for you on the
-[Solana Ecosystem](https://solana.com/ecosystem/explore?categories=wallet) page.
+that might be right for you on the [Solana Wallets](https://solana.com/wallets)
+page.
 
 For advanced users or developers, the
-[command-line wallets](https://docs.solanalabs.com/cli/wallets) may be more
+[command-line wallets](https://docs.anza.xyz/cli/wallets) may be more
 appropriate, as new features on the Solana blockchain will always be supported
 on the command line first before being integrated into third-party solutions.

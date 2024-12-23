@@ -1,6 +1,10 @@
 ---
 title: "Transactions and Instructions"
 sidebarSortOrder: 2
+description:
+  Learn about Solana transactions and instructions - the fundamental building
+  blocks for interacting with the Solana blockchain. Understand transaction
+  structure and instruction composition with practical examples.
 ---
 
 On Solana, we send [transactions](/docs/core/transactions#transaction) to
@@ -373,7 +377,7 @@ manually building the instruction.
 ### Manual SOL Transfer
 
 Here is a [Solana Playground](https://beta.solpg.io/656a102efb53fa325bfd0c3f)
-example of how to manually build the a SOL transfer instruction:
+example of how to manually build a SOL transfer instruction:
 
 ```typescript
 // Define the amount to transfer

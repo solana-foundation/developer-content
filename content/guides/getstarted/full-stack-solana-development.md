@@ -489,10 +489,10 @@ pub struct Counter {
 
 Make sure you go over the comments!
 
-The `initialize` instruction instruction does only one this: it creates a new
-account of the `Counter` type. To do this, we need to know who's paying, details
-of the account we're creating like the space and the address, and which program
-to use to create the account.
+The `initialize` instruction does only one thing: it creates a new account of
+the `Counter` type. To do this, we need to know who's paying, details of the
+account we're creating like the space and the address, and which program to use
+to create the account.
 
 Let's go line by line:
 
@@ -1085,7 +1085,7 @@ Throw this command into your terminal to install all the `wallet-adapter` stuff
 we need:
 
 ```shell
-yarn add react @solana/web3.js \
+yarn add react @solana/web3.js@1 \
   @solana/wallet-adapter-base @solana/wallet-adapter-react \
   @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets
 ```

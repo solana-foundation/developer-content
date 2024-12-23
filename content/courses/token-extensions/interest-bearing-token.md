@@ -213,7 +213,7 @@ Next, we'll need to add our dependencies. Run the following to install the
 required packages:
 
 ```bash
-npm i @solana-developers/helpers @solana/spl-token @solana/web3.js esrun dotenv typescript
+npm i @solana-developers/helpers@2 @solana/spl-token @solana/web3.js@1 esrun dotenv typescript
 ```
 
 Create a directory named `src`. In this directory, create a file named
@@ -542,7 +542,7 @@ Now run `npx esrun src/index.ts`. This is expected to fail and log out
 
 **Mint tokens and read interest rate**
 
-So we’ve tested updating the interest rate. How do we check that the accrued
+So we've tested updating the interest rate. How do we check that the accrued
 interest increases when an account mints more tokens? We can use the
 `amountToUiAmount` and `getAccount` helpers from the SPL library to help us
 achieve this.
@@ -690,7 +690,7 @@ try {
 
 This is expected to work and the new interest rate should be 10.
 
-Thats it! We’ve just created an interest bearing token, updated the interest
+Thats it! We've just created an interest bearing token, updated the interest
 rate and logged the updated state of the token!
 
 ## Challenge

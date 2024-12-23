@@ -2,8 +2,11 @@
 sidebarSortOrder: 1
 sidebarLabel: Solana Account Model
 title: Solana Account Model
-altRoutes:
-  - /docs/core
+description:
+  Learn about Solana's account model, including how accounts store data and
+  programs, rent mechanics, account ownership, and the relationship between
+  programs and data accounts. Understand the core concepts of Solana's key-value
+  storage system.
 ---
 
 On Solana, all data is stored in what are referred to as "accounts”. The way
@@ -84,7 +87,7 @@ balance, anyone can increase the balance.
 Solana contains a small handful of native programs that are part of the
 validator implementation and provide various core functionalities for the
 network. You can find the full list of native programs
-[here](https://docs.solanalabs.com/runtime/programs).
+[here](https://docs.anza.xyz/runtime/programs).
 
 When developing custom programs on Solana, you will commonly interact with two
 native programs, the System Program and the BPF Loader.
@@ -125,7 +128,7 @@ executing custom programs.
 Sysvar accounts are special accounts located at predefined addresses that
 provide access to cluster state data. These accounts are dynamically updated
 with data about the network cluster. You can find the full list of Sysvar
-Accounts [here](https://docs.solanalabs.com/runtime/sysvars).
+Accounts [here](https://docs.anza.xyz/runtime/sysvars).
 
 ## Custom Programs
 

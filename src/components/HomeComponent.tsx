@@ -47,14 +47,14 @@ export const HomeViewComponent = () => {
           </p>
         </Link>
         <Link
-          href="https://docs.solanalabs.com/"
+          href="https://docs.anza.xyz/"
           className="card hover:border-gray-500"
         >
-          <h2>Solana Validator Client</h2>
+          <h2>Agave Validator Client</h2>
           <p>
             Read and explore the documentation for the Validator Client
-            originally developed by Solana Labs, including the Solana CLI
-            tool-suite and validator architecture.
+            originally developed by Anza, including the Solana CLI tool-suite
+            and validator architecture.
           </p>
         </Link>
         <Link
@@ -84,8 +84,8 @@ export const HomeViewComponent = () => {
             </Link>
           </li>
           <li className="">
-            <Link href="https://docs.solanalabs.com" className="">
-              docs.solanalabs.com
+            <Link href="https://docs.anza.xyz" className="">
+              docs.anza.xyz
             </Link>
           </li>
         </ul>
@@ -109,24 +109,22 @@ export const HomeViewComponent = () => {
         </p>
 
         <p className="!text-white">
-          The documentation for the original Solana Validator Client developed
-          by Solana Labs can now be found on{" "}
-          <Link href="https://docs.solanalabs.com" className="">
-            docs.solanalabs.com
+          The documentation for the original Agave Validator Client, developed
+          by Anza can now be found on{" "}
+          <Link href="https://docs.anza.xyz" className="">
+            docs.anza.xyz
           </Link>
           , which contains all the information specific to that validator
           client&apos;s implementation and inner workings. Including{" "}
-          <Link href={"https://docs.solanalabs.com/cli/install"}>
+          <Link href={"https://solana.com/docs/intro/installation"}>
             installing the Solana CLI tool-suite
           </Link>
           , this{" "}
-          <Link href={"https://docs.solanalabs.com/architecture"}>
+          <Link href={"https://docs.anza.xyz/architecture"}>
             validator&apos;s architecture
           </Link>
           , and{" "}
-          <Link
-            href={"https://docs.solanalabs.com/operations/setup-a-validator"}
-          >
+          <Link href={"https://docs.anza.xyz/operations/setup-a-validator"}>
             how to operate a validator
           </Link>
           .

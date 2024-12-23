@@ -1,6 +1,10 @@
 ---
 title: "Tokens on Solana"
 sidebarSortOrder: 7
+description:
+  Learn about Solana tokens (SPL Tokens) including fungible and non-fungible
+  tokens, Token Program, Token Extensions Program, mint accounts, token
+  accounts, and practical examples for creating and managing tokens on Solana.
 ---
 
 Tokens are digital assets that represent ownership over diverse categories of
@@ -240,8 +244,8 @@ what this account relationship looks like.
 
 ## Token Examples
 
-The [`spl-token` CLI](https://docs.solanalabs.com/cli) can be used to experiment
-with SPL tokens. In the examples below, we'll use the
+The [`spl-token` CLI](https://docs.anza.xyz/cli) can be used to experiment with
+SPL tokens. In the examples below, we'll use the
 [Solana Playground](https://beta.solpg.io/) terminal to run the CLI commands
 directly in the browser without having to install the CLI locally.
 

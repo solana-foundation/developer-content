@@ -20,11 +20,11 @@ This setup enables you:
 
 Solana nodes demand relatively high computing power to handle our fast blocks
 and high TPS. For specific requirements, please see
-[hardware recommendations](https://docs.solanalabs.com/operations/requirements).
+[hardware recommendations](https://docs.anza.xyz/operations/requirements).
 
 To run an api node:
 
-1. [Install the Solana command-line tool suite](https://docs.solanalabs.com/cli/install)
+1. [Install the Solana command-line tool suite](/docs/intro/installation.md)
 2. Start the validator with at least the following parameters:
 
 ```shell
@@ -46,7 +46,7 @@ to the port you want to expose.
 
 The `--entrypoint` and `--expected-genesis-hash` parameters are all specific to
 the cluster you are joining.
-[Current parameters for Mainnet Beta](https://docs.solanalabs.com/clusters/available#example-solana-validator-command-line-2)
+[Current parameters for Mainnet Beta](https://docs.anza.xyz/clusters/available#example-solana-validator-command-line-2)
 
 The `--limit-ledger-size` parameter allows you to specify how many ledger
 [shreds](/docs/terminology.md#shred) your node retains on disk. If you do not
@@ -60,7 +60,7 @@ selecting a custom limit value is
 
 Specifying one or more `--known-validator` parameters can protect you from
 booting from a malicious snapshot.
-[More on the value of booting with known validators](https://docs.solanalabs.com/operations/guides/validator-start#known-validators)
+[More on the value of booting with known validators](https://docs.anza.xyz/operations/guides/validator-start#known-validators)
 
 Optional parameters to consider:
 
@@ -86,7 +86,7 @@ solana-watchtower --validator-identity <YOUR VALIDATOR IDENTITY>
 ```
 
 > You can find more information about the
-> [best practices for Solana Watchtower](https://docs.solanalabs.com/operations/best-practices/monitoring#solana-watchtower)
+> [best practices for Solana Watchtower](https://docs.anza.xyz/operations/best-practices/monitoring#solana-watchtower)
 > here in the docs.
 
 #### New Software Release Announcements
@@ -159,7 +159,7 @@ validators and only on the _Gossip_, _Repair_ and _ServeR_ ports.
 Solana accounts do not require any on-chain initialization; once they contain
 some SOL, they exist. To set up a deposit account for your exchange, simply
 generate a Solana keypair using any of our
-[wallet tools](https://docs.solanalabs.com/cli/wallets).
+[wallet tools](https://docs.anza.xyz/cli/wallets).
 
 We recommend using a unique deposit account for each of your users.
 
@@ -187,7 +187,7 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 
 You may wish to keep the keys for one or more collection accounts offline for
 greater security. If so, you will need to move SOL to hot accounts using our
-[offline methods](https://docs.solanalabs.com/cli/examples/offline-signing).
+[offline methods](https://docs.anza.xyz/cli/examples/offline-signing).
 
 ## Listening for Deposits
 
@@ -767,7 +767,7 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 
 ## Prioritization Fees and Compute Units
 
-In periods of high demand, it’s possible for a transaction to expire before a
+In periods of high demand, it's possible for a transaction to expire before a
 validator has included such transactions in their block because they chose other
 transactions with higher economic value. Valid Transactions on Solana may be
 delayed or dropped if Prioritization Fees are not implemented properly.
@@ -817,7 +817,7 @@ may only return the lowest fee for each block. This will often be zero, which is
 not a fully useful approximation of what Prioritization Fee to use in order to
 avoid being rejected by validator nodes.
 
-The `getRecentPrioritizationFees` API takes accounts’ pubkeys as parameters, and
+The `getRecentPrioritizationFees` API takes accounts' pubkeys as parameters, and
 then returns the highest of the minimum prioritization fees for these accounts.
 When no account is specified, the API will return the lowest fee to land to
 block, which is usually zero (unless the block is full).

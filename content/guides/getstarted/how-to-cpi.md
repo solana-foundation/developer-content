@@ -13,9 +13,8 @@ keywords:
   - tutorial
 ---
 
-This guide uses the
-[Anchor framework](/content/guides/getstarted/intro-to-anchor.md) to demonstrate
-how to transfer SOL using a [Cross Program Invocation (CPI)](/docs/core/cpi.md).
+This guide uses the [Anchor framework](/docs/programs/anchor) to demonstrate how
+to transfer SOL using a [Cross Program Invocation (CPI)](/docs/core/cpi.md).
 Included below are three different, but functionally equivalent implementations
 that you may come across when reading or writing Solana programs. Here is a
 final reference program on

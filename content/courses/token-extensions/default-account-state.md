@@ -223,7 +223,7 @@ Next, we'll need to add our dependencies. Run the following to install the
 required packages:
 
 ```bash
-npm i @solana-developers/helpers @solana/spl-token @solana/web3.js esrun dotenv typescript
+npm i @solana-developers/helpers@2 @solana/spl-token @solana/web3.js@1 esrun dotenv typescript
 ```
 
 Create a directory named `src`. In this directory, create a file named
@@ -296,7 +296,7 @@ the local RPC URL.
 const connection = new Connection("http://127.0.0.1:8899", "confirmed");
 ```
 
-Alternatively, if you’d like to use testnet or devnet, import the
+Alternatively, if you'd like to use testnet or devnet, import the
 `clusterApiUrl` from `@solana/web3.js` and pass it to the connection as such:
 
 ```typescript
@@ -647,7 +647,7 @@ esrun src/index.ts
 
 #### 7.3 Transferring without thawing the recipient's account
 
-Now that we’ve tested minting, we can test transferring our tokens frozen and
+Now that we've tested minting, we can test transferring our tokens frozen and
 not. First lets test a transfer without thawing the recipient's token account.
 Remember, by default, the `otherTokenAccountKeypair` is frozen due to the
 extension.
@@ -746,7 +746,7 @@ Remember the key takeaways:
   accounts.
 - Frozen account's balance cannot change.
 
-Congratulations! We’ve just created and tested a mint using the default account
+Congratulations! We've just created and tested a mint using the default account
 extension!
 
 ## Challenge

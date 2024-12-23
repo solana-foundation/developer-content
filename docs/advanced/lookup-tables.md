@@ -1,7 +1,10 @@
 ---
 sidebarSortOrder: 4
 title: Address Lookup Tables
-description: ""
+description:
+  Learn how to use Solana Address Lookup Tables (ALTs) to efficiently handle up
+  to 64 addresses per transaction. Create, extend, and utilize lookup tables
+  using web3.js.
 ---
 
 Address Lookup Tables, commonly referred to as "_lookup tables_" or "_ALTs_" for
@@ -36,7 +39,7 @@ Creating a new lookup table with the `@solana/web3.js` library is similar to the
 older `legacy` transactions, but with some differences.
 
 Using the `@solana/web3.js` library, you can use the
-[`createLookupTable`](https://solana-labs.github.io/solana-web3.js/classes/AddressLookupTableProgram.html#createLookupTable)
+[`createLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#createLookupTable)
 function to construct the instruction needed to create a new lookup table, as
 well as determine its address:
 
@@ -72,7 +75,7 @@ console.log("lookup table address:", lookupTableAddress.toBase58());
 
 Adding addresses to a lookup table is known as "_extending_". Using the
 `@solana/web3.js` library, you can create a new _extend_ instruction using the
-[`extendLookupTable`](https://solana-labs.github.io/solana-web3.js/classes/AddressLookupTableProgram.html#extendLookupTable)
+[`extendLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#extendLookupTable)
 method:
 
 ```js
@@ -106,7 +109,7 @@ Enabling up to 64 addresses in those future transactions.
 
 Similar to requesting another account (or PDA) from the cluster, you can fetch a
 complete Address Lookup Table with the
-[`getAddressLookupTable`](https://solana-labs.github.io/solana-web3.js/classes/Connection.html#getAddressLookupTable)
+[`getAddressLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getAddressLookupTable)
 method:
 
 ```js
@@ -144,7 +147,7 @@ utilize the onchain lookup capabilities.
 Just like older `legacy` transactions, you can create all the
 [instructions](/docs/terminology.md#instruction) your transaction will execute
 onchain. You can then provide an array of these instructions to the
-[Message](/docs/terminology.md#message) used in the `v0 transaction.
+[Message](/docs/terminology.md#message) used in the `v0` transaction.
 
 > NOTE: The instructions used inside a `v0` transaction can be constructed using
 > the same methods and functions used to create the instructions in the past.
@@ -184,7 +187,6 @@ console.log(
 
 ## More Resources
 
-- Read the
-  [proposal](https://docs.solanalabs.com/proposals/versioned-transactions) for
-  Address Lookup Tables and Versioned transactions
+- Read the [proposal](https://docs.anza.xyz/proposals/versioned-transactions)
+  for Address Lookup Tables and Versioned transactions
 - [Example Rust program using Address Lookup Tables](https://github.com/TeamRaccoons/address-lookup-table-multi-swap)

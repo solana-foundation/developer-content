@@ -1,5 +1,17 @@
 {
   "common-docs": [
+    {
+      "source": "/install",
+      "destination": "/docs/intro/installation"
+    },
+    {
+      "source": "/cli/install",
+      "destination": "/docs/intro/installation"
+    },
+    {
+      "source": "/cli/install-solana-cli-tools",
+      "destination": "/docs/intro/installation"
+    },
     { "source": "/apps", "destination": "/developers" },
     {
       "source": "/developing/programming-model/overview",
@@ -138,7 +150,7 @@
       "source": "/getstarted/hello-world"
     },
     {
-      "destination": "docs/intro/installation",
+      "destination": "/docs/intro/installation",
       "source": "/getstarted/local"
     },
     {
@@ -181,7 +193,7 @@
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/:path" },
     { "destination": "/docs/intro", "source": "/introduction" }
   ],
-  "solana-client": [
+  "agave-client": [
     {
       "source": "/apps/sysvars",
       "destination": "/developing/runtime-facilities/sysvars"
@@ -206,10 +218,6 @@
     {
       "source": "/implemented-proposals",
       "destination": "/implemented-proposals"
-    },
-    {
-      "source": "/cli/install-solana-cli-tools",
-      "destination": "/cli/install"
     },
     { "source": "/cli/conventions", "destination": "/cli/intro" },
     {
@@ -268,6 +276,10 @@
 
     { "source": "/clusters", "destination": "/clusters" },
     { "source": "/cluster/overview", "destination": "/clusters" },
+    {
+      "source": "/cluster/economics",
+      "destination": "/implemented-proposals/ed_overview"
+    },
     { "source": "/cluster/bench-tps", "destination": "/clusters/benchmark" },
     {
       "source": "/cluster/performance-metrics",
