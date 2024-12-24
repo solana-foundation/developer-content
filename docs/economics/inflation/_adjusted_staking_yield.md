@@ -23,7 +23,7 @@ fraction of staked supply grow as shown below.
 ![Graph of example growth of staked supply](/assets/docs/economics/example_staked_supply_w_range_initial_stake.png)
 
 Due to this relative change in representation, the proportion of stake of any
-token holder will also change as a function of the _Inflation Schedule_ and the
+token holders will also change as a function of the _Inflation Schedule_ and the
 proportion of all tokens that are staked.
 
 Of initial interest, however, is the _dilution of **un-staked** tokens_, or
@@ -165,6 +165,6 @@ relative dilution of un-staked tokens grows dramatically. E.g. with $80\%$ of
 the network tokens staked, an un-staked token holder will experience ~$400\%$
 more dilution than a staked holder.
 
-Again, this represents the change in fractional change in ownership of staked
+Again, this represents the fractional change in ownership of staked
 tokens and illustrates the built-in incentive for token holder to stake their
 tokens to earn _Staked Yield_ and avoid _Un-staked Dilution_.
