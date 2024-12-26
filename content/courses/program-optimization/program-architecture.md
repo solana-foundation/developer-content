@@ -1598,7 +1598,7 @@ This is our last instruction. This instruction lets anyone send the spent
 Again, let's box the rpg accounts and use safe math.
 
 ```rust filename="collect_points.rs"
-// ----------- REDEEM TO TREASUREY ----------
+// ----------- REDEEM TO TREASURY ----------
 
 // Inside src/instructions/collect_points.rs
 use anchor_lang::prelude::*;

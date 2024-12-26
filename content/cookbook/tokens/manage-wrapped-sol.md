@@ -68,7 +68,7 @@ import bs58 from "bs58";
   let amount = 1 * 1e9; /* Wrapped SOL's decimals is 9 */
 
   let tx = new Transaction().add(
-    // trasnfer SOL
+    // transfer SOL
     SystemProgram.transfer({
       fromPubkey: alice.publicKey,
       toPubkey: ata,

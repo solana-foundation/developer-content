@@ -744,7 +744,7 @@ members = [
 anchor-lang = "0.30.1"
 ```
 
-The `[workspace.dependecies]` has _anchor-lang_ as a dependency, which allows us
+The `[workspace.dependencies]` has _anchor-lang_ as a dependency, which allows us
 to define the version of _anchor-lang_ in the root project configuration and
 then inherit that version in all other members of the workspace that depend on
 it, by registering `<dependency-name>.workspace = true`, like the _custom-macro_

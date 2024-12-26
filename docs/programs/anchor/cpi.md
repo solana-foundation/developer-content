@@ -9,7 +9,7 @@ sidebarSortOrder: 5
 
 [Cross Program Invocations (CPI)](/docs/core/cpi.md) refer to the process of one
 program invoking instructions of another program, which enables the
-composibility of programs on Solana.
+composability of programs on Solana.
 
 This section will cover the basics of implementing CPIs in an Anchor program,
 using a simple SOL transfer instruction as a practical example. Once you

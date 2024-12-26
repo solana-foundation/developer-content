@@ -1477,7 +1477,7 @@ the pool, both values representing the amount the user has staked and the total
 amount staked in the pool should increase by the `stake_amount`.
 
 To do this, we will deserialize the `pool_state` and `user_entry` accounts as
-mutable and increase the `pool_state.amount` and `user_enry.balance` fields by
+mutable and increase the `pool_state.amount` and `user_entry.balance` fields by
 the `stake_amount` using `checked_add()`. `CheckedAdd` is a Rust feature that
 allows you to safely perform mathematical operations without worrying about
 buffer overflow. `checked_add()` adds two numbers, checking for overflow. If
@@ -1814,7 +1814,7 @@ let signer = &[&auth_seeds[..]];
 
 Once we have those seeds stored in the `signer` variable, we can easily pass it
 into the `transfer_checked_ctx()` method. At the same time, we'll call the
-`transfer_checked` helper function from the Anchor crate to acually invoke the
+`transfer_checked` helper function from the Anchor crate to actually invoke the
 CPI behind the scenes.
 
 ```rust
