@@ -442,6 +442,8 @@ You should the following output:
 </AccordionItem>
 </Accordion>
 
+### Potential Issues
+
 When running `anchor build`, if you encounter `error: not a directory` similar
 following:
 
@@ -476,6 +478,12 @@ Permission denied (os error 13)
 ```
 No such file or directory (os error 2)
 ```
+
+When running `anchor build`, if you encounter
+`lock file version 4 requires -Znext-lockfile-bump` change the version of the
+lockfile in the `Cargo.toml` file to `3` and run `anchor build` again. See
+[this issue](https://github.com/coral-xyz/anchor/issues/3392) for more
+information.
 
 </Steps>
 
