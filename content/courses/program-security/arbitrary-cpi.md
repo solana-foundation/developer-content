@@ -90,9 +90,9 @@ token program that they created and control.
 
 ### Add Program Checks
 
-It's possible to fix this vulnerability by simply adding a few lines to the `cpi`
-instruction handler to check whether or not `token_program`'s public key is that
-of the SPL Token Program.
+It's possible to fix this vulnerability by simply adding a few lines to the
+`cpi` instruction handler to check whether or not `token_program`'s public key
+is that of the SPL Token Program.
 
 ```rust
 pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {
