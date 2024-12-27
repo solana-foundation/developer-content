@@ -4,7 +4,7 @@ objectives:
   - Learn about the Token Extensions Program
   - Understand that mints that use Token Extensions must be created with the
     Token Extensions Program
-  - Learn about the wide variuety of token extensions
+  - Learn about the wide variety of token extensions
   - Use token extensions from the Solana CLI
 description:
   "Learn what token extensions are, and how to create tokens that use their
@@ -271,7 +271,7 @@ First let's create a new vanilla mint with no additional extensions:
 spl-token create-token --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb
 ```
 
-You should get something simular to this:
+You should get something similar to this:
 
 ```bash
 Creating token FXnaqGm42aQgz1zwjKrwfn4Jk6PJ8cvkkSc8ikMGt6EU under program TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb

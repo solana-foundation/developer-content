@@ -698,7 +698,7 @@ we will follow these steps:
    recipients' addresses.
 2. Call `waitForNewBlock`: Ensure the lookup table is activated by waiting for a
    new block.
-3. Retrieve the Lookup Table: Use `connection.getAddressLookupTabl`e to fetch
+3. Retrieve the Lookup Table: Use `connection.getAddressLookupTable` to fetch
    the lookup table and reference it in the transaction.
 4. Create Transfer Instructions: Generate a transfer instruction for each
    recipient.

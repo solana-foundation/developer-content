@@ -814,7 +814,7 @@ Once the account is created, we initialize the account data by:
 3. Serializing the `CounterAccount` struct into the account's data field,
    effectively storing the `initial_value` on the account.
 
-```rs filename="lib.rs" {35-44} /inital_value/
+```rs filename="lib.rs" {35-44} /initial_value/
 fn process_initialize_counter(
     program_id: &Pubkey,
     accounts: &[AccountInfo],

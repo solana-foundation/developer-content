@@ -454,7 +454,7 @@ Next, update the `AddMovieReview` context type to add the following accounts:
 - `token_program` - we'll be using the Token Program to mint tokens
 - `mint` - the mint account for the tokens that we'll mint to users when they
   add a movie review
-- `token_account` - the associated token account for the afforementioned `mint`
+- `token_account` - the associated token account for the aforementioned `mint`
   and reviewer
 - `associated_token_program` - required because we'll be using the
   `associated_token` constraint on the `token_account`

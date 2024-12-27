@@ -702,7 +702,7 @@ NFT.Storage using the helper functions provided in the starting code.
 
 To upload our offchain metadata, we need to first prepare an image that will
 represent our NFT. We've provided `cat.png`, but feel free to replace it with
-your own. Most image types are supported by most wallets. (Again devenet Irys
+your own. Most image types are supported by most wallets. (Again devnet Irys
 allows up to 100KiB per file)
 
 Next, let's decide on what metadata our NFT will have. The fields we are

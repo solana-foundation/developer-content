@@ -200,7 +200,7 @@ const signature = tokenGroupUpdateGroupMaxSize(
   connection, //connection - Connection to use
   payer, // payer - Payer for the transaction fees
   mint.publicKey, // mint - Group mint
-  updpateAuthority, // account - Update authority of the group
+  updateAuthority, // account - Update authority of the group
   4, // maxSize - new max size of the group
   undefined, // multiSigners — Signing accounts if `authority` is a multisig
   { commitment: "finalized" }, // confirmOptions - Options for confirming thr transaction

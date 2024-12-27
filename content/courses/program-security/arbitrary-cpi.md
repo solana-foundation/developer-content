@@ -17,7 +17,7 @@ description: "How to safely invoke Solana programs from other Solana programs."
   passed into the instruction handler. Your program should check for incorrect
   or unexpected programs.
 - Perform program checks in native programs by simply comparing the public key
-  of the passed-in program to the progam you expected.
+  of the passed-in program to the program you expected.
 - If a program is written in Anchor, then it may have a publicly available CPI
   module. This makes invoking the program from another Anchor program simple and
   secure. The Anchor CPI module automatically checks that the address of the
@@ -90,9 +90,9 @@ token program that they created and control.
 
 ### Add Program Checks
 
-It's possible to fix this vulnerabilty by simply adding a few lines to the `cpi`
-instruction handler to check whether or not `token_program`'s public key is that
-of the SPL Token Program.
+It's possible to fix this vulnerability by simply adding a few lines to the
+`cpi` instruction handler to check whether or not `token_program`'s public key
+is that of the SPL Token Program.
 
 ```rust
 pub fn cpi_secure(ctx: Context<Cpi>, amount: u64) -> ProgramResult {

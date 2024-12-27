@@ -1231,8 +1231,8 @@ Extensions Program, and Solana does not allow
 To illustrate:
 
 ```text
-Token Extensions Program -CPI-> Transfer Hook Program -❌CPI❌-> Token Extensions Progra
-Token Extensions Program -CPI-> Transfer Hook Program -✅CPI✅-> Token Progra
+Token Extensions Program -CPI-> Transfer Hook Program -❌CPI❌-> Token Extensions Program
+Token Extensions Program -CPI-> Transfer Hook Program -✅CPI✅-> Token Program
 ```
 
 So, that's why we're making the crumb SFT a Token Program mint.

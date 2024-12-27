@@ -2,7 +2,7 @@
 title: JS/TS Client
 description:
   Learn how to use Anchor's TypeScript client library to interact with Solana
-  progra
+  program
 sidebarLabel: JS/TS Client
 sidebarSortOrder: 3
 ---
