@@ -442,8 +442,9 @@ You should the following output:
 </AccordionItem>
 </Accordion>
 
-When running `anchor build`, if you encounter `error: not a directory` similar
-following:
+When running `anchor build`, if you encounter similar errors following:
+
+<AccordionItem title="error: not a directory">
 
 ```
 error: not a directory: '.../solana-release/bin/sdk/sbf/dependencies/platform-tools/rust/lib'
@@ -462,6 +463,17 @@ cargo build-sbf --force-tools-install
 ```shell
 rm -rf ~/.cache/solana/*
 ```
+
+</AccordionItem>
+
+<AccordionItem title="lock file version 4 requires `-Znext-lockfile-bump">
+You can fix this by changing the version field of `Cargo.lock` file
+
+```
+version = 3
+```
+
+</AccordionItem>
 
 After applying either solution, attempt to run `anchor build` again.
 
