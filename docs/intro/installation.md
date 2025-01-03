@@ -444,6 +444,7 @@ You should the following output:
 
 When running `anchor build`, if you encounter similar errors following:
 
+<Accordion>
 <AccordionItem title="error: not a directory">
 
 ```
