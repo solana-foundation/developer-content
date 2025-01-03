@@ -664,7 +664,7 @@ can run the test validator with the following command:
 solana-test-validator
 ```
 
-Advantages #
+### Advantages
 
 - Ability to reset the blockchain state at any moment
 - Ability to simulate different network conditions
