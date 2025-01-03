@@ -196,8 +196,8 @@ started, build your program and clients by running:
 
 ```shell
 cd <my-program-name>
-pnpm install
-pnpm generate
+npm install
+npm dev generate
 ```
 
 #### Native Rust Smart Contract Development with Create Solana Program
