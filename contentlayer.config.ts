@@ -168,7 +168,7 @@ const basicContentFields: FieldDefs = {
 /**
  * Standard computed fields for all records
  *
- * note: changing these may warrant an update the the hacky custom `ComputedFieldsTypeHack` type
+ * note: changing these may warrant an update the hacky custom `ComputedFieldsTypeHack` type
  */
 const standardComputedFields: ComputedFields = {
   locale: {
