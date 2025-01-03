@@ -662,7 +662,6 @@ can run the test validator with the following command:
 
 ```shell
 solana-test-validator
-```
 
 ### Advantages
 
