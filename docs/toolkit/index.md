@@ -159,7 +159,7 @@ For more information on the Anchor framework, check out the
 ### General Smart Contract Scaffold - Create Solana Program
 
 ```shell
-pnpm create solana-program
+npx create-solana-program
 ```
 
 This initializes a more complex workspace with everything you need for general
