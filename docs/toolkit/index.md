@@ -398,7 +398,7 @@ replace the generated program with your existing one:
 
 4. Ensure your program’s `Cargo.toml` contains the following metadata:
 
-```
+```toml filename="Cargo.toml"
 [package.metadata.solana]
 program-id = "YOUR_PROGRAM_ADDRESS"
 program-dependencies = []
