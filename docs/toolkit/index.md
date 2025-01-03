@@ -5,7 +5,8 @@ title: The Solana Toolkit
 The Solana Toolkit consists of all open sourced tools for smart contract
 development on the Solana Blockchain.
 
-You can contribute to this book on [GitHub]().
+You can contribute to this book on
+[GitHub](https://github.com/solana-foundation/developer-content/tree/main/docs/toolkit).
 
 ## Installation
 
