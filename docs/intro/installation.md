@@ -474,6 +474,9 @@ You can fix this by changing the version field of `Cargo.lock` file
 version = 3
 ```
 
+See [this issue](https://github.com/coral-xyz/anchor/issues/3392) for more
+information.
+
 </AccordionItem>
 
 </Accordion>
