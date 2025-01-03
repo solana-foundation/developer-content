@@ -549,7 +549,7 @@ View the source code
 ### JavaScript Testing Framework
 
 ```shell
-npm  install solana-bankrun
+npm install solana-bankrun
 ```
 
 [Bankrun](https://github.com/kevinheavey/solana-bankrun) is a fast and
