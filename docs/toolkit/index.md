@@ -406,11 +406,10 @@ program-dependencies = []
 
 5. Build your program and clients.
 
-```
-pnpm install
-pnpm programs:build
-pnpm generate
-```
+```shell
+npm install
+npm run programs:build
+npm run generate
 
 6. If you have a generated Rust client, update the `clients/rust/src/lib.rs`
    file so the `ID` alias points to the correct generated constant.
