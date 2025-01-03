@@ -533,7 +533,7 @@ View the source code [here](https://github.com/Ackee-Blockchain/trident).
 ### Code Coverage Tool
 
 ```shell
-npx solana coverage
+mucho coverage
 ```
 
 This command will run a code coverage test on all of your Rust tests and then
