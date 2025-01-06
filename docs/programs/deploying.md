@@ -13,7 +13,7 @@ users invoke to interact with the program.
 
 ## CLI Commands
 
-The section is intented as a reference for the basic CLI commands for building
+The section is intended as a reference for the basic CLI commands for building
 and deploying Solana programs. For a step-by-step guide on creating your first
 program, start with [Developing Programs in Rust](/docs/programs/rust).
 
@@ -75,7 +75,7 @@ solana program deploy ./target/deploy/your_program.so --with-compute-unit-price 
 - Get a
   [stake-weighted](https://solana.com/developers/guides/advanced/stake-weighted-qos)
   RPC connection from [Helius](https://www.helius.dev/) or
-  [Trition](https://triton.one/) to use with the `--use-rpc` flag. The
+  [Triton](https://triton.one/) to use with the `--use-rpc` flag. The
   `--use-rpc` flag should only be used with a stake-weighted RPC connection.
 
 To update your default RPC URL with a custom RPC endpoint, use the
@@ -85,8 +85,8 @@ To update your default RPC URL with a custom RPC endpoint, use the
 solana config set --url <RPC_URL>
 ```
 
-You can view the list of programs you've deployed using the
-`solana program show --programs` command.
+You can view the list of programs you've deployed using the `program show`
+subcommand:
 
 ```shell
 solana program show --programs
@@ -111,8 +111,8 @@ To update an existing Solana program:
 - Run `solana program deploy ./target/deploy/your_program.so` to deploy the
   updated `.so` file
 
-The update authority can be changed using the
-`solana program set-upgrade-authority` command.
+The update authority can be changed using the `set-upgrade-authority` subcommand
+as follows:
 
 ```shell
 solana program set-upgrade-authority <PROGRAM_ADDRESS> --new-upgrade-authority <NEW_UPGRADE_AUTHORITY>
@@ -138,7 +138,7 @@ solana program deploy ./target/deploy/your_program.so --final
 
 You can close your Solana program to reclaim the SOL allocated to the account.
 Closing a program is irreversible, so it should be done with caution. To close a
-program, use the `solana program close <PROGRAM_ID>` command. For example:
+program, use the `program close` subcommand. For example:
 
 ```shell filename="Terminal"
 solana program close 4Ujf5fXfLx2PAwRqcECCLtgDxHKPznoJpa43jUBxFfMz
@@ -183,8 +183,8 @@ However, if the deployment fails, the buffer account remains and you can either:
 - Continue the deployment using the existing buffer account
 - Close the buffer account to reclaim the allocated SOL (rent)
 
-You can check if you have any open buffer accounts by using the
-`solana program show --buffers` command.
+You can check if you have any open buffer accounts by using the `program show`
+subcommand as follows:
 
 ```shell
 solana program show --buffers
@@ -197,10 +197,8 @@ Buffer Address                               | Authority                        
 5TRm1DxYcXLbSEbbxWcQbEUCce7L4tVgaC6e2V4G82pM | 4kh6HxYZiAebF8HWLsUWod2EaQQ6iWHpHYCz8UcmFbM1 | 0.57821592 SOL
 ```
 
-You can continue to the deployment using
-`solana program deploy --buffer <BUFFER_ADDRESS>`.
-
-For example:
+You can continue to the deployment using the `program deploy` subcommand as
+follows:
 
 ```shell
 solana program deploy --buffer 5TRm1DxYcXLbSEbbxWcQbEUCce7L4tVgaC6e2V4G82pM
@@ -214,7 +212,7 @@ Program Id: 2w3sK6CW7Hy1Ljnz2uqPrQsg4KjNZxD4bDerXDkSX3Q1
 Signature: 3fsttJFskUmvbdL5F9y8g43rgNea5tYZeVXbimfx2Up5viJnYehWe3yx45rQJc8Kjkr6nY8D4DP4V2eiSPqvWRNL
 ```
 
-To close buffer accounts, use the `solana program close --buffers` command.
+To close buffer accounts, use the `program close` subcommand as follows:
 
 ```shell
 solana program close --buffers

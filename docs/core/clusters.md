@@ -10,7 +10,7 @@ description:
 
 The Solana blockchain has several different groups of validators, known as
 [Clusters](/docs/core/clusters.md). Each serving different purposes within the
-overall ecosystem and containing dedicated api nodes to fulfill
+overall ecosystem and containing dedicated API nodes to fulfill
 [JSON-RPC](/docs/rpc/index.mdx) requests for their respective Cluster.
 
 The individual nodes within a Cluster are owned and operated by third parties,
@@ -72,7 +72,7 @@ drive, as a user, token holder, app developer, or validator.
 
 ### Devnet endpoint
 
-- `https://api.devnet.solana.com` - single Solana Labs hosted api node;
+- `https://api.devnet.solana.com` - single Solana Labs hosted API node;
   rate-limited
 
 #### Example `solana` command-line configuration
@@ -106,7 +106,7 @@ stability and validator behavior.
 
 ### Testnet endpoint
 
-- `https://api.testnet.solana.com` - single Solana Labs api node; rate-limited
+- `https://api.testnet.solana.com` - single Solana Labs API node; rate-limited
 
 #### Example `solana` command-line configuration
 
@@ -134,7 +134,7 @@ token holders.
 
 ### Mainnet beta endpoint
 
-- `https://api.mainnet-beta.solana.com` - Solana Labs hosted api node cluster,
+- `https://api.mainnet-beta.solana.com` - Solana Labs hosted API node cluster,
   backed by a load balancer; rate-limited
 
 #### Example `solana` command-line configuration
@@ -151,7 +151,7 @@ solana config set --url https://api.mainnet-beta.solana.com
 - Maximum number of requests per 10 seconds per IP for a single RPC: 40
 - Maximum concurrent connections per IP: 40
 - Maximum connection rate per 10 seconds per IP: 40
-- Maximum amount of data per 30 second: 100 MB
+- Maximum amount of data per 30 seconds: 100 MB
 
 > The public RPC endpoints are not intended for production applications. Please
 > use dedicated/private RPC servers when you launch your application, drop NFTs,

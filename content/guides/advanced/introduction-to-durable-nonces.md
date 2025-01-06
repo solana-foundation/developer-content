@@ -619,5 +619,5 @@ change will happen on-chain, and the winner can be decided.
 ## References
 
 - [Neodyme Blog: Nonce Upon a Time, or a Total Loss of Funds](https://neodyme.io/blog/nonce-upon-a-time/)
-- [Solana Durable Nonces CLI](https://docs.solanalabs.com/cli/examples/durable-nonce)
-- [Solana Durable Transaction Nonces Proposal](https://docs.solanalabs.com/implemented-proposals/durable-tx-nonces)
+- [Solana Durable Nonces CLI](https://docs.anza.xyz/cli/examples/durable-nonce)
+- [Solana Durable Transaction Nonces Proposal](https://docs.anza.xyz/implemented-proposals/durable-tx-nonces)

@@ -72,8 +72,8 @@ The same is true on Solana. Specifically:
   (destroyed), with the remaining going to the current
   [leader](/docs/terminology.md#leader) processing the transaction.
 - A scheduled global inflation rate provides a source for
-  [rewards](https://docs.solanalabs.com/implemented-proposals/staking-rewards)
-  distributed to [Solana Validators](https://docs.solanalabs.com/operations).
+  [rewards](https://docs.anza.xyz/implemented-proposals/staking-rewards)
+  distributed to [Solana Validators](https://docs.anza.xyz/operations).
 
 ### Fee collection
 
@@ -197,11 +197,11 @@ syscalls, etc), each may consume a
 of compute units.
 
 > A program can log details about its compute usage, including how much remains
-> in its alloted compute budget. You can also find more information in this
+> in its allotted compute budget. You can also find more information in this
 > guide for
 > [optimizing your compute usage](/content/guides/advanced/how-to-optimize-compute.md).
 
-Each transaction is alloted a [compute unit limit](#compute-unit-limit), either
+Each transaction is allotted a [compute unit limit](#compute-unit-limit), either
 with the default limit set by the runtime or by explicitly requesting a higher
 limit. After a transaction exceeds its compute unit limit, its processing is
 halted resulting in a transaction failure.
@@ -413,7 +413,7 @@ The Solana rent rate is set on a network wide basis, primarily based on a
 runtime set
 "[lamports _per_ byte _per_ year](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/rent.rs#L27-L34)".
 Currently, the rent rate is a static amount and stored in the
-[Rent sysvar](https://docs.solanalabs.com/runtime/sysvars#rent).
+[Rent sysvar](https://docs.anza.xyz/runtime/sysvars#rent).
 
 This rent rate is used to calculate the exact amount of rent required to be
 withheld inside an account for the space allocated to the account (i.e. the
@@ -451,7 +451,7 @@ recommended to use the
 RPC endpoint to calculate the specific balance for a given account size.
 
 The required rent deposit amount can also be estimated via the
-[`solana rent` CLI subcommand](https://docs.solanalabs.com/cli/usage#solana-rent):
+[`solana rent` CLI subcommand](https://docs.anza.xyz/cli/usage#solana-rent):
 
 ```shell
 solana rent 15000
@@ -492,5 +492,5 @@ an "account not found" type of message, you may still be able to view
 transaction history associated with that account.
 
 You can read the validator
-[implemented proposal](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage#garbage-collection)
+[implemented proposal](https://docs.anza.xyz/implemented-proposals/persistent-account-storage#garbage-collection)
 for garbage collection to learn more.

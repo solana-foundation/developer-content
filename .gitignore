@@ -108,6 +108,7 @@ i18n
 
 
 # code-import
+.turbo
 code/node_modules  
 code/package-lock.json  
 code/yarn.lock  

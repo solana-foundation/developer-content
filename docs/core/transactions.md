@@ -377,7 +377,7 @@ manually building the instruction.
 ### Manual SOL Transfer
 
 Here is a [Solana Playground](https://beta.solpg.io/656a102efb53fa325bfd0c3f)
-example of how to manually build the a SOL transfer instruction:
+example of how to manually build a SOL transfer instruction:
 
 ```typescript
 // Define the amount to transfer

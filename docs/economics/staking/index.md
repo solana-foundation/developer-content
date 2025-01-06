@@ -8,7 +8,7 @@ terms with regards to balance of SOL. This document makes no suggestion as to
 the monetary value of SOL at any time._
 
 By staking your SOL tokens, you help secure the network and
-[earn rewards](https://docs.solanalabs.com/implemented-proposals/staking-rewards)
+[earn rewards](https://docs.anza.xyz/implemented-proposals/staking-rewards)
 while doing so.
 
 You can stake by delegating your tokens to validators who process transactions
@@ -41,7 +41,7 @@ participants.
 
 There is no in protocol implementation of slashing currently. For more
 information on slashing see the
-[slashing roadmap](https://docs.solanalabs.com/proposals/optimistic-confirmation-and-slashing#slashing-roadmap).
+[slashing roadmap](https://docs.anza.xyz/proposals/optimistic-confirmation-and-slashing#slashing-roadmap).
 
 ## How do I stake my SOL tokens?
 
@@ -58,7 +58,7 @@ your favorite wallet's maintainers regarding status
 - Solana command line tools can perform all stake operations in conjunction with
   a CLI-generated keypair file wallet, a paper wallet, or with a connected
   Ledger Nano.
-  [Staking commands using the Solana Command Line Tools](https://docs.solanalabs.com/cli/examples/delegate-stake).
+  [Staking commands using the Solana Command Line Tools](https://docs.anza.xyz/cli/examples/delegate-stake).
 
 #### Create a Stake Account
 

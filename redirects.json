@@ -193,7 +193,7 @@
     { "destination": "/docs/intro/wallets", "source": "/wallet-guide/:path" },
     { "destination": "/docs/intro", "source": "/introduction" }
   ],
-  "solana-client": [
+  "agave-client": [
     {
       "source": "/apps/sysvars",
       "destination": "/developing/runtime-facilities/sysvars"
@@ -276,6 +276,10 @@
 
     { "source": "/clusters", "destination": "/clusters" },
     { "source": "/cluster/overview", "destination": "/clusters" },
+    {
+      "source": "/cluster/economics",
+      "destination": "/implemented-proposals/ed_overview"
+    },
     { "source": "/cluster/bench-tps", "destination": "/clusters/benchmark" },
     {
       "source": "/cluster/performance-metrics",

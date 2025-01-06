@@ -442,8 +442,10 @@ You should the following output:
 </AccordionItem>
 </Accordion>
 
-When running `anchor build`, if you encounter `error: not a directory` similar
-following:
+When running `anchor build`, if you encounter similar errors following:
+
+<Accordion>
+<AccordionItem title="error: not a directory">
 
 ```
 error: not a directory: '.../solana-release/bin/sdk/sbf/dependencies/platform-tools/rust/lib'
@@ -462,6 +464,22 @@ cargo build-sbf --force-tools-install
 ```shell
 rm -rf ~/.cache/solana/*
 ```
+
+</AccordionItem>
+
+<AccordionItem title="lock file version 4 requires `-Znext-lockfile-bump">
+You can fix this by changing the version field of `Cargo.lock` file
+
+```
+version = 3
+```
+
+See [this issue](https://github.com/coral-xyz/anchor/issues/3392) for more
+information.
+
+</AccordionItem>
+
+</Accordion>
 
 After applying either solution, attempt to run `anchor build` again.
 
@@ -613,9 +631,9 @@ Alternatively, you can get devnet SOL using the
 ### Run Local Validator
 
 The Solana CLI comes with the
-[test validator](https://docs.solanalabs.com/cli/examples/test-validator)
-built-in. Running a local validator will allow you to deploy and test your
-programs locally.
+[test validator](https://docs.anza.xyz/cli/examples/test-validator) built-in.
+Running a local validator will allow you to deploy and test your programs
+locally.
 
 In a separate terminal, run the following command to start a local validator:
 
