@@ -86,3 +86,40 @@ solana logs
 
 For a more information, read this
 [Solana Test Validator Guide](https://solana.com/developers/guides/getstarted/solana-test-validator).
+
+### Account Management
+
+View the pubkey of your configured CLI keypair:
+
+```shell
+solana address
+```
+
+View the current balance of your keypair:
+
+```shell
+solana balance
+```
+
+To add SOL to your CLI keypair, request an airdrop:
+
+```shell
+solana airdrop 10
+```
+
+To retrieve details about any account, such as its balance and owner:
+
+```shell
+solana account <ACCOUNT_ADDRESS>
+```
+
+You must first add SOL to an account for it to exist. This airdrop command
+requests 2 SOL to the specified account address:
+
+```shell
+solana airdrop 2 <ACCOUNT_ADDRESS>
+```
+
+Aside from "wallet accounts" that only hold SOL, accounts are normally created
+by smart contracts (aka programs) so they can store the `data` desired by that
+program.

@@ -9,7 +9,7 @@ testnet or mainnet. If you have the Solana CLI tool suite already installed, you
 can run the test validator with the following command:
 
 ```shell
-solana-test-validator
+mucho test-validator
 ```
 
 ### Advantages
@@ -23,55 +23,16 @@ solana-test-validator
 - Ability to load accounts from files
 - Configurable transaction history retention
 - Configurable epoch length
-- Installation #
-
-Since the `solana-test-validator` is part of the Solana CLI tool suite, ensure
-you have Solana's command-line tools installed. You can install the entire
-Solana toolkit (which includes the Solana CLI) using the following command:
-
-```shell
-npx solana install
-```
-
-Or install just the Solana CLI with:
-
-```shell
-sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
-```
-
-You can replace `stable` with the release tag matching the software version of
-your desired release (i.e. `v1.18.12`), or use one of the three symbolic channel
-names: `stable`, `beta`, or `edge`.
 
 ### Starting the Test Validator
 
 To start your local validator, simply run:
 
 ```shell
-solana-test-validator
+mucho test-validator
 ```
 
 This command initializes a new ledger and starts the validator.
-
-### Interacting with a Running Test Validator
-
-Once you have the `solana-test-validator` up and running, you can interact with
-it using various Solana CLI commands. These commands let you deploy programs,
-manage accounts, send transactions, and much more. Below is a detailed guide on
-the key commands you will use.
-
-Check your current CLI configuration to see which network you are selected too:
-
-```shell
-solana config get
-```
-
-If needed update your Solana configuration to connect to your test validator
-running on localhost:
-
-```shell
-solana config set --url localhost
-```
 
 ### Checking the Status of the Test Validator
 
@@ -84,43 +45,6 @@ solana ping
 
 This command pings the local test validator and returns the current blockhash
 and latency, verifying that it is active.
-
-### Account Management
-
-View the pubkey of your configured CLI keypair:
-
-```shell
-solana address
-```
-
-View the current balance of your keypair:
-
-```shell
-solana balance
-```
-
-To add SOL to your CLI keypair, request an airdrop:
-
-```shell
-solana airdrop 10
-```
-
-To retrieve details about any account, such as its balance and owner:
-
-```shell
-solana account <ACCOUNT_ADDRESS>
-```
-
-You must first add SOL to an account for it to exist. This airdrop command
-requests 2 SOL to the specified account address:
-
-```shell
-solana airdrop 2 <ACCOUNT_ADDRESS>
-```
-
-Aside from "wallet accounts" that only hold SOL, accounts are normally created
-by smart contracts (aka programs) so they can store the `data` desired by that
-program.
 
 ### Deploying and Managing Programs
 
