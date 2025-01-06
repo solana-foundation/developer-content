@@ -66,7 +66,8 @@ is `Initialized`.
 
 ### Adding default account state
 
-Initializing a mint with the default account state extension involves three instructions:
+Initializing a mint with the default account state extension involves three
+instructions:
 
 - `SystemProgram.createAccount`
 - `createInitializeDefaultAccountStateInstruction`

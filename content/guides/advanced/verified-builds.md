@@ -271,7 +271,7 @@ solana-verify get-program-hash -u $NETWORK_URL $PROGRAM_ID
 ```
 
 > You may have different versions deployed on different
-> [Solana clusters](/docs/core//clusters.md) (i.e. devnet, testnet, mainnet).
+> [Solana clusters](/docs/core/clusters.md) (i.e. devnet, testnet, mainnet).
 > Ensure you use the correct network URL for the desired Solana cluster you want
 > to verify a program against. Remote verification will only work on mainnet.
 
