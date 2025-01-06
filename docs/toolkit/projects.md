@@ -1,5 +1,5 @@
 ---
-title: Creating A Project on Solana 
+title: Creating A Project on Solana
 ---
 
 To start a new project with the Solana toolkit, pick which scaffold you want to
