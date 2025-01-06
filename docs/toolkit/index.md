@@ -1,5 +1,7 @@
 ---
 title: The Solana Toolkit
+sidebarSortOrder:
+sidebarLabel:
 ---
 
 > This is a beta version of The Solana Toolkit, and is still a WIP. Please post
@@ -23,29 +25,29 @@ This toolkit includes tool CLIs:
 
 ## Sections
 
-### [Getting Started](getting-started.md)
+### Getting Started
 
 To get started with The Solana Toolkit, install the toolkit, configure your
 Solana CLI, fund your local keypair.
 
-### [Creating a Project](projects.md)
+### Creating a Project
 
 Set up your project with one of the open source scaffolds and templates
 available. Each scaffold/template has a different purpose, so be sure to review
 all the options explained in this section to pick the most optimal one for your
 project.
 
-### [Smart Contract Best Practices](best-practices.md)
+### Best Practices
 
 Make sure you're developing Solana smart contracts with best practices like
 optimizing compute units, saving bumps, the payer-authority pattern, etc.
 
-### [Test Suite](test-suite.md)
+### Test Suite
 
 Use the Solana Test Suite with the `mucho` CLI to have access to tools like a
 fuzz tester, code coverage tool, security vulnerability scanner, etc.
 
-### [Running a Local Network](local-testing.md)
+### Running a Local Network
 
 Run a local network to be able to build and test with a private and controlled
 environment for Solana programs without the need to connect to a public testnet

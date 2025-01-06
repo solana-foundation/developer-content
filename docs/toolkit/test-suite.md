@@ -1,5 +1,7 @@
 ---
 title: Test Suite
+sidebarSortOrder: 4
+sidebarLabel: Test Suite
 ---
 
 Within the Solana toolkit, there are several resources for testing Solana Smart

@@ -1,13 +1,20 @@
 ---
 title: Getting Started
+sidebarSortOrder: 1
+sidebarLabel: Getting Started
 ---
+
+The Solana Program development toolkit is publish as the
+[mucho npm package](https://www.npmjs.com/package/mucho). The `mucho` command
+will be used to run all the solana program development tools - _mucho tools, one
+cli_.
 
 ## Installation
 
 To get started, install The Solana toolkit:
 
 ```shell
-npx solana install
+npx mucho install
 ```
 
 This will install the latest versions of the following:
@@ -25,7 +32,7 @@ This will install the latest versions of the following:
 - [Code Coverage Tool](https://github.com/LimeChain/zest?tab=readme-ov-file): A
   code coverage CLI tool for Solana programs.
 
-## Keypair generation
+### Generate a keypair
 
 For a fresh installation of the [Solana CLI](https://docs.anza.xyz/cli/), you're
 required to generate a new keypair.
@@ -34,39 +41,30 @@ required to generate a new keypair.
 solana-keygen new
 ```
 
-The above command will both:
+_This will store the your new keypair at the Solana CLI's default path
+(`~/.config/solana/id.json`) and print the pubkey that was generated._
 
-- print the pubkey generated
-- store the your new keypair at the Solana CLI's default path
-  (`~/.config/solana/id.json`) unless you already have a keypair saved there
-
-Get the pubkey of your machine's newly generated keypair:
+### Query your keypair's public key
 
 ```shell
 solana address
 ```
 
-## Fund the CLI keypair
+### Fund your keypair
 
 ```shell
-solana airdrop 10
+solana airdrop 10 --url localhost
 ```
 
-## Network Configuration
+### Set your network configuration
 
-Check your current configuration:
+Check your current config:
 
 ```shell
 solana config get
 ```
 
-You can configure your RPC to connect to either mainnet, testnet, devnet, or
-your localhost.
-
-When using this toolkit, most of the time you'll want to be connected to a local
-node.
-
-Update your Solana configuration to connect to localhost:
+To use this toolkit, update your config to connect to localhost:
 
 ```shell
 solana config set --url localhost
@@ -75,51 +73,8 @@ solana config set --url localhost
 To test locally, you must also spin up a local node to run on your localhost:
 
 ```shell
-solana-test-validator
+mucho validator
 ```
 
-To log the network run:
-
-```shell
-solana logs
-```
-
-For a more information, read this
+For a more information, read the
 [Solana Test Validator Guide](https://solana.com/developers/guides/getstarted/solana-test-validator).
-
-### Account Management
-
-View the pubkey of your configured CLI keypair:
-
-```shell
-solana address
-```
-
-View the current balance of your keypair:
-
-```shell
-solana balance
-```
-
-To add SOL to your CLI keypair, request an airdrop:
-
-```shell
-solana airdrop 10
-```
-
-To retrieve details about any account, such as its balance and owner:
-
-```shell
-solana account <ACCOUNT_ADDRESS>
-```
-
-You must first add SOL to an account for it to exist. This airdrop command
-requests 2 SOL to the specified account address:
-
-```shell
-solana airdrop 2 <ACCOUNT_ADDRESS>
-```
-
-Aside from "wallet accounts" that only hold SOL, accounts are normally created
-by smart contracts (aka programs) so they can store the `data` desired by that
-program.
