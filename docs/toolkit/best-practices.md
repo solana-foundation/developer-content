@@ -31,7 +31,7 @@ error. Resulting in a failed transaction and no state changes (aside from the
 transaction fee being
 [collected](https://solana.com/docs/core/fees#fee-collection)).
 
-### Solana Developer Guides
+### Additional References
 
 - [How to Optimize Compute](https://solana.com/developers/guides/advanced/how-to-optimize-compute).
 - [How to Request Optimal Compute](https://solana.com/developers/guides/advanced/how-to-request-optimal-compute)
@@ -42,6 +42,77 @@ Saving the bump to your Solana smart contract account state enables
 deterministic address generation, efficiency in address reconstruction, reduced
 transaction failure, and consistency across invocations.
 
-### Solana Developer Guides
+### Additional References
 
 - [Bump Seed Canonicalization Lesson](https://solana.com/developers/courses/program-security/bump-seed-canonicalization#challenge)
+- [PDA Bumps Core Concepts](https://solana.com/docs/core/pda#canonical-bump)
+
+## Payer-Authority Pattern
+
+The Payer-Authority pattern is an elegant way to handle situations where the
+account’s funder (payer) differs from the account’s owner or manager
+(authority). By requiring separate signers and validating them in your on-chain
+logic, you can maintain clear, robust, and flexible ownership semantics in your
+progra
+
+### Shank Example
+
+```rust
+// Create a new account.
+#[account(0, writable, signer, name="account", desc = "The address of the new account")]
+#[account(1, writable, signer, name="payer", desc = "The account paying for the storage fees")]
+#[account(2, optional, signer, name="authority", desc = "The authority signing for the account creation")]
+#[account(3, name="system_program", desc = "The system program")]
+CreateAccountV1(CreateAccountV1Args),
+```
+
+### Anchor Example
+
+```rust
+#[derive(Accounts)]
+pub struct CreateAccount<'info> {
+    /// The address of the new account
+    #[account(init, payer = payer_one, space = 8 + NewAccount::MAXIMUM_SIZE)]
+    pub account: Account<'info, NewAccount>,
+
+    /// The account paying for the storage fees
+    #[account(mut)]
+    pub payer: Signer<'info>,
+
+    /// The authority signing for the account creation
+    pub authority: Option<Signer<'info>>,
+
+    // The system program
+    pub system_program: Program<'info, System>
+}
+```
+
+### Additional References
+
+- [Metaplex Guide on Payer-Authority Pattern](https://developers.metaplex.com/guides/general/payer-authority-pattern)
+- [Helium Program Library using the Payer-Authority Pattern](https://github.com/helium/helium-program-library/blob/master/programs/data-credits/src/instructions/change_delegated_sub_dao_v0.rs#L18)
+
+## Invariants
+
+Implement invariants, which are functions that you can call at the end of your
+instruction to assert specific properties because they help ensure the
+correctness and reliability of programs.
+
+```rust
+require!(amount > 0, ErrorCode::InvalidAmount);
+```
+
+### Additional References
+
+- [Complete Project Code Example](https://github.com/solana-developers/developer-bootcamp-2024/blob/main/project-9-token-lottery/programs/token-lottery/src/lib.rs#L291)
+
+## Optimize Indexing
+
+You can make indexing easier by placing static size fields at the beginning and
+variable size fields at the end of your on-chain structures.
+
+## Account Constraints
+
+## Noop/Self CPI
+
+## Safe Math

@@ -4,6 +4,10 @@ sidebarSortOrder: 5
 sidebarLabel: Local Testing
 ---
 
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
 The Solana test validator is a local emulator for the Solana blockchain,
 designed to provide developers with a private and controlled environment for
 building and testing Solana programs without the need to connect to a public

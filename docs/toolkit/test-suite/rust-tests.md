@@ -57,3 +57,5 @@ assert_eq!(to_account.unwrap().lamports, 64);
 ## Additional Resources
 
 - [Source Code](https://github.com/LiteSVM/litesvm)
+- [Complete Project Example](https://github.com/cavemanloverboy/nawnce/blob/main/src/lib.rs)
+- [More Complex Project Example](https://github.com/pyth-network/per)
