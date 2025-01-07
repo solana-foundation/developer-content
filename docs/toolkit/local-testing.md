@@ -1,5 +1,7 @@
 ---
 title: Running a Local Network
+sidebarSortOrder: 5
+sidebarLabel: Local Testing
 ---
 
 The Solana test validator is a local emulator for the Solana blockchain,

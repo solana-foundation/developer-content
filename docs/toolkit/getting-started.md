@@ -76,5 +76,4 @@ To test locally, you must also spin up a local node to run on your localhost:
 mucho validator
 ```
 
-For a more information, read the
-[Solana Test Validator Guide](https://solana.com/developers/guides/getstarted/solana-test-validator).
+For a more information, read the [Local Testing Guide](local-testing.md).
