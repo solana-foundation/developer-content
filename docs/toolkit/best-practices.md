@@ -4,6 +4,10 @@ sidebarSortOrder: 3
 sidebarLabel: Best Practices
 ---
 
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
 ## Optimize Compute Usage
 
 To prevent abuse of computational resources, each transaction is allocated a

@@ -4,12 +4,19 @@ sidebarSortOrder: 4
 sidebarLabel: Rust Tests
 ---
 
-> This is a dev dependency, you must `cd` into the directory you want to create
-> Rust tests in before running the below command.
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
+## Add Dependency
+
+Navigate to your smart contract directory and run:
 
 ```shell
 cargo add --dev litesvm
 ```
+
+## Overview
 
 [LiteSVM](https://github.com/LiteSVM/litesvm) is a fast and lightweight library
 for testing Solana programs. It works by creating an in-process Solana VM
@@ -18,7 +25,7 @@ than alternatives like solana-program-test and solana-test-validator. In a
 further break from tradition, it has an ergonomic API with sane defaults and
 extensive configurability for those who want it.
 
-Here is a minimal example:
+## Minimal Example
 
 ```rust
 use litesvm::LiteSVM;
@@ -46,3 +53,7 @@ assert_eq!(from_account.unwrap().lamports, 4936);
 assert_eq!(to_account.unwrap().lamports, 64);
 
 ```
+
+## Additional Resources
+
+- [Source Code](https://github.com/LiteSVM/litesvm)

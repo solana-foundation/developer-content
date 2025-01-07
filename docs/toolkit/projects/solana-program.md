@@ -1,17 +1,23 @@
 ---
-title: Advanced Native Smart Contracts
-sidebarSortOrder: 4
-sidebarLabel: Advanced Native
+title: Solana Program Scaffold
+sidebarSortOrder: 3
+sidebarLabel: Solana Programs
 ---
+
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
 
 ```shell
 npx create-solana-program
 ```
 
 [Create solana program](https://github.com/solana-program/create-solana-program)
-initializes a more complex workspace with everything you need for general Solana
+initializes an in-depth workspace with everything you need for general Solana
 smart contract development. This Scaffold allows you to write either native rust
 smart contracts or anchor smart contracts.
+
+## Program Frameworks
 
 After running this command, you'll have the option to choose between Shank and
 Anchor for the program framework:
@@ -25,9 +31,22 @@ Anchor for the program framework:
   information on the Anchor framework, read the
   [Anchor book](https://www.anchor-lang.com/).
 
-To use `create-solana-program` for native rust development, make sure you chose
-Shank when asked which program framework to use. This will create a basic
-counter program with the following project structure for your program:
+For **anchor rust development**, chose Anchor when asked which program framework
+to use. This will create a basic anchor counter program with the following
+project structure for your program:
+
+```shell
+├── program.rs
+│   ├── src.rs
+│   │   ├── lib.rs
+│   ├── Cargo.toml
+│   ├── keypair.json
+│   ├── README.md
+```
+
+For **native rust development**, make sure you chose Shank when asked which
+program framework to use. This will create a basic counter program with the
+following project structure for your program:
 
 ```shell
 ├── program.rs
@@ -45,6 +64,8 @@ counter program with the following project structure for your program:
 │   ├── README.md
 ```
 
+## Generated Clients
+
 Next, you'll have the option to choose between a JavaScript client, a Rust
 Client, or both.
 
@@ -58,11 +79,21 @@ For further workspace customization and additional information, check out the
 `create-solana-program`
 [README](https://github.com/solana-program/create-solana-program/tree/main).
 
-After answering the above questions, the workspace will be generated. To get
+## Build
+
+After answering the above prompts, the workspace will be generated. To get
 started, build your program and clients by running:
 
 ```shell
 cd <my-program-name>
-npm install
-npm dev generate
+pnpm install
+pnpm generate
 ```
+
+To update an existing anchor project to have this scaffold, read this
+[guide](existing-projects.md).
+
+## Additional Resources
+
+- [Rust Programs](../../programs/rust/index.md)
+- [Program Examples](https://github.com/solana-developers/program-examples)

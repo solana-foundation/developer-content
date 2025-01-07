@@ -48,7 +48,7 @@ solana ping
 This command pings the local test validator and returns the current blockhash
 and latency, verifying that it is active.
 
-### Deploying and Managing Programs
+### Deploying and Managing Programs Locally
 
 To deploy a compiled program (BPF) to the test validator:
 
@@ -130,7 +130,7 @@ solana genesis-hash
 View all the configuration options available for the Solana test validator:
 
 ```shell
-solana-test-validator --help
+mucho validator --help
 ```
 
 ### Local Ledger
@@ -144,7 +144,7 @@ When starting the test validator, you can specify a different directory for the
 ledger data using the `--ledger` option:
 
 ```shell
-solana-test-validator --ledger /path/to/custom/ledger
+mucho validator --ledger /path/to/custom/ledger
 ```
 
 ### Resetting the Ledger
@@ -154,7 +154,7 @@ reset the ledger, you can either manually delete the ledger directory or restart
 the validator with the `--reset` flag:
 
 ```shell
-solana-test-validator --reset
+mucho validator --reset
 ```
 
 If the ledger exists, this command will reset the ledger to genesis, which
@@ -169,13 +169,13 @@ programs that already exist on any other cluster.
 To clone an account from another cluster:
 
 ```shell
-solana-test-validator --clone PROGRAM_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO
+mucho validator--clone PROGRAM_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO
 ```
 
 To clone an upgradeable program and its executable data from another cluster:
 
 ```shell
-solana-test-validator --clone-upgradeable-program PROGRAM_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO
+mucho validator --clone-upgradeable-program PROGRAM_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO
 ```
 
 > If a ledger already exists in your working directory, you must reset the
@@ -189,7 +189,7 @@ account with a new ledger from any other network cluster.
 To clone an account from the cluster when a ledger already exists:
 
 ```shell
-solana-test-validator --clone ACCOUNT_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO --reset
+mucho validator --clone ACCOUNT_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO --reset
 ```
 
 ### Reset to Specific Account Data
@@ -206,7 +206,7 @@ solana account ACCOUNT_ADDRESS --output json > account_state.json
 Then load this state each time you reset the validator:
 
 ```shell
-solana-test-validator --reset --account ACCOUNT_ADDRESS account_state.json
+mucho validator --reset --account ACCOUNT_ADDRESS account_state.json
 ```
 
 ### Runtime Features
@@ -239,7 +239,7 @@ solana feature activate <FEATURE_KEYPAIR> <CLUSTER>
 To deactivate specific features in genesis:
 
 ```shell
-solana-test-validator --deactivate-feature <FEATURE_PUBKEY> --reset
+mucho validator --deactivate-feature <FEATURE_PUBKEY> --reset
 ```
 
 This must be done on a fresh ledger, so if a ledger already exists in your
@@ -250,7 +250,7 @@ working directory you must add the `--reset` flag to reset to genesis.
 To check your current `solana-test-validator` version:
 
 ```shell
-solana-test-validator --version
+mucho validator --version
 ```
 
 Your test validator runs on the same version as the Solana CLI installed and

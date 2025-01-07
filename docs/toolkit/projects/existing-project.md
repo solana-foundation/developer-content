@@ -1,8 +1,12 @@
 ---
 title: Update an Existing Project
 sidebarSortOrder: 7
-sidebarLabel: Existing Project
+sidebarLabel: Existing Projects
 ---
+
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
 
 If you have an existing anchor program and want to use the
 [Create solana program](https://github.com/solana-program/create-solana-program)

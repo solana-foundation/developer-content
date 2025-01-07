@@ -4,6 +4,10 @@ sidebarSortOrder: 8
 sidebarLabel: Project layout
 ---
 
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
 Typically Solana smart contracts (aka [programs](/docs/core/programs.md))
 workspaces will be have the following file structure:
 

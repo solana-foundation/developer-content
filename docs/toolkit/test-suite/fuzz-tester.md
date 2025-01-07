@@ -1,60 +1,76 @@
 ---
 title: Solana Fuzz Tester
-sidebarSortOrder: 1
+sidebarSortOrder: 2
 sidebarLabel: Fuzz Tester
 ---
 
-Generate fuzz tests:
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
+> The Fuzz tester is still a WIP. It currently is only anchor compatible and
+> needs some manual work to complete tests
+
+## Initialize Fuzz Tests
+
+Navigate to an Anchor based workspace and run:
 
 ```shell
-npx solana fuzz
+trident init
 ```
 
-This command will initialize a Trident workspace and generate a new Fuzz Test
-Template:
+This command does the following:
+
+- Builds the Anchor-based project.
+- Reads the generated IDL.
+- Based on the IDL creates the fuzzing template.
+
+## Define Fuzz Accounts
+
+Define `AccountsStorage` type for each `Account` you would like to use
+
+```rust
+#[doc = r" Use AccountsStorage<T> where T can be one of:"]
+#[doc = r" Keypair, PdaStore, TokenStore, MintStore, ProgramStore"]
+#[derive(Default)]
+pub struct FuzzAccounts {
+    author: AccountsStorage<Keypair>,
+    hello_world_account: AccountsStorage<PdaStore>,
+    // No need to fuzz system_program
+    // system_program: AccountsStorage<todo!()>,
+}
+```
+
+## Implement Fuzz Instructions
+
+Each Instruction in the Fuzz Test has to have defined the following functions:
+
+- `get_program_id()` specifies to which program the Instruction belongs. This
+  function is automatically defined and should not need any updates. The
+  importance is such that if you have multiple programs in your workspace,
+  Trident can generate Instruction Sequences of Instruction corresponding to
+  different programs.
+- `get_data()` specifies what Instruction inputs are send to the Program
+  Instructions.
+- `get_accounts()` specifies what Accounts are send to the Program Instructions.
+
+## Execute Fuzz Tests
 
 ```shell
-project-root
-├── trident-tests
-│   ├── fuzz_tests # fuzz tests folder
-│   │   ├── fuzz_0 # particular fuzz test
-│   │   │   ├── test_fuzz.rs # the binary target of your fuzz test
-│   │   │   └── fuzz_instructions.rs # the definition of your fuzz test
-│   │   ├── fuzz_1
-│   │   ├── fuzz_X # possible multiple fuzz tests
-│   │   ├── fuzzing # compilations and crashes folder
-│   │   └── Cargo.toml
-├── Trident.toml
-└── ...
+# Replace <TARGET_NAME> with the name of the
+# fuzz test (for example: "fuzz_0")
+trident fuzz run-hfuzz <TARGET_NAME>
 ```
 
-Run fuzz tests:
+## Debug Fuzz Tests
 
 ```shell
-npx solana fuzz run
+# fuzzer will run the <TARGET_NAME> with the specified <CRASH_FILE_PATH>
+trident fuzz debug-hfuzz <TARGET_NAME> <CRASH_FILE_PATH>
 ```
 
-The output of the fuzz tests is as follows:
+For additional documentation go [here](https://ackee.xyz/trident/docs/latest/).
 
-1. Number of Fuzzing Iterations.
-2. Feedback Driven Mode = Honggfuzz generates data based on the feedback (i.e.
-   feedback based on Coverage progress).
-3. Average Iterations per second.
-4. Number of crashes it found (panics or failed invariant checks).
+## Additional Resources
 
-```shell
-------------------------[  0 days 00 hrs 00 mins 01 secs ]----------------------
-  Iterations : 688 (out of: 1000 [68%]) # -- 1. --
-  Mode [3/3] : Feedback Driven Mode # -- 2. --
-      Target : trident-tests/fuzz_tests/fuzzing.....wn-linux-gnu/release/fuzz_0
-     Threads : 16, CPUs: 32, CPU%: 1262% [39%/CPU]
-       Speed : 680/sec [avg: 688] # -- 3. --
-     Crashes : 1 [unique: 1, blocklist: 0, verified: 0] # -- 4. --
-    Timeouts : 0 [10 sec]
- Corpus Size : 98, max: 1048576 bytes, init: 0 files
-  Cov Update : 0 days 00 hrs 00 mins 00 secs ago
-    Coverage : edge: 10345/882951 [1%] pc: 163 cmp: 622547
----------------------------------- [ LOGS ] ------------------/ honggfuzz 2.6 /-
-```
-
-View the source code [here](https://github.com/Ackee-Blockchain/trident).
+- [Fuzz Tester Source Code](https://github.com/Ackee-Blockchain/trident).

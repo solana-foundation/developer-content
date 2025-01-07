@@ -3,6 +3,10 @@ title: Test Suite Overview
 sidebarSortOrder: 4
 ---
 
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
 Within the Solana toolkit, there are several resources for testing Solana Smart
 Contracts, including:
 

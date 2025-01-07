@@ -4,6 +4,10 @@ sidebarSortOrder: 1
 sidebarLabel: Getting Started
 ---
 
+> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
+> all feedback as a github issue
+> [here](https://github.com/solana-foundation/developer-content/issues).
+
 The Solana Program development toolkit is publish as the
 [mucho npm package](https://www.npmjs.com/package/mucho). The `mucho` command
 will be used to run all the solana program development tools - _mucho tools, one
@@ -73,7 +77,11 @@ solana config set --url localhost
 To test locally, you must also spin up a local node to run on your localhost:
 
 ```shell
-mucho validator
+npx mucho validator
 ```
 
 For a more information, read the [Local Testing Guide](local-testing.md).
+
+### Next Steps
+
+Now let's [Create a Solana Project](projects/overview.md)!
