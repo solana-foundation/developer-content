@@ -9,7 +9,7 @@ A token account is required for a user to hold tokens.
 
 A user will have at least one token account for every type of token they own.
 
-Associated Token Accounts are deterministicly created accounts for every
+Associated Token Accounts are deterministically created accounts for every
 keypair. ATAs are the recommended method of managing token accounts.
 
 ```typescript filename="ata.ts"

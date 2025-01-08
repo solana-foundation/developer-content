@@ -8,7 +8,9 @@ The primary function of a keypair is to sign messages, transactions and enable
 verification of the signature. Verification of a signature allows the recipient
 to be sure that the data was signed by the owner of a specific private key.
 
-<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}> <Tab value="web3.js v2">
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+
+<Tab value="web3.js v2">
 
 ```typescript
 import {

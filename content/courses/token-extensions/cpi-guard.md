@@ -4,7 +4,7 @@ objectives:
   - Explain what the CPI Guard protects against
   - Write code to test the CPI Guard
 description:
-  "Create tokens that don't allow certain accounts to be invoked from toher
+  "Create tokens that don't allow certain accounts to be invoked from other
   programs."
 ---
 
@@ -23,10 +23,10 @@ CPI Guard is an extension that prohibits certain actions inside cross-program
 invocations, protecting users from implicitly signing for actions they can't
 see, such as those hidden in programs that aren't the System or Token programs.
 
-A specific example of this is when the CPI gaurd is enabled, no CPI can approve
+A specific example of this is when the CPI guard is enabled, no CPI can approve
 a delegate over a token account. This is handy, because if a malicious CPI calls
 `set_delegate` no immediate balance change will be apparent, however the
-attacker now has transfer and burn authority over the token account. CPI gaurd
+attacker now has transfer and burn authority over the token account. CPI guard
 makes this impossible.
 
 Users may choose to enable or disable the CPI Guard extension on their token
@@ -628,7 +628,7 @@ pub struct ApproveAccount<'info> {
         token::authority = authority
     )]
     pub token_account: InterfaceAccount<'info, token_interface::TokenAccount>,
-    /// CHECK: delegat to approve
+    /// CHECK: delegate to approve
     #[account(mut)]
     pub delegate: AccountInfo<'info>,
     pub token_program: Interface<'info, token_interface::TokenInterface>,
@@ -892,7 +892,7 @@ Moving on to the `prohibited_set_authority` instruction, the CPI Guard protects
 against a CPI setting the `CloseAccount` authority.
 
 ```rust
-pub fn prohibted_set_authority(ctx: Context<SetAuthorityAccount>) -> Result<()> {
+pub fn prohibited_set_authority(ctx: Context<SetAuthorityAccount>) -> Result<()> {
     msg!("Invoked ProhibitedSetAuthority");
 
     msg!(
@@ -924,7 +924,7 @@ pub struct SetAuthorityAccount<'info> {
         token::authority = authority
     )]
     pub token_account: InterfaceAccount<'info, token_interface::TokenAccount>,
-    /// CHECK: delegat to approve
+    /// CHECK: delegate to approve
     #[account(mut)]
     pub new_authority: AccountInfo<'info>,
     pub token_program: Interface<'info, token_interface::TokenInterface>,
@@ -964,7 +964,7 @@ it("sets authority when CPI guard in enabled", async () => {
 
   try {
     const tx = await program.methods
-      .prohibtedSetAuthority()
+      .prohibitedSetAuthority()
       .accounts({
         authority: payer.publicKey,
         tokenAccount: userTokenAccount.publicKey,
@@ -1003,7 +1003,7 @@ it("Set Authority Example", async () => {
   );
 
   await program.methods
-    .prohibtedSetAuthority()
+    .prohibitedSetAuthority()
     .accounts({
       authority: payer.publicKey,
       tokenAccount: userTokenAccount.publicKey,
@@ -1238,7 +1238,7 @@ pub struct SetOwnerAccounts<'info> {
         token::authority = authority
     )]
     pub token_account: InterfaceAccount<'info, token_interface::TokenAccount>,
-    /// CHECK: delegat to approve
+    /// CHECK: delegate to approve
     #[account(mut)]
     pub new_owner: AccountInfo<'info>,
     pub token_program: Interface<'info, token_interface::TokenInterface>,

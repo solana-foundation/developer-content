@@ -430,7 +430,7 @@ PDA transaction manually and then trigger the transaction through Squads.
 solana-verify export-pda-tx https://github.com/solana-developers/verify-squads --program-id 6XBGfP17P3KQAKoJb2s5M5fR4aFTXzPeuC1af2GYkvhD --uploader <your program authority> --encoding base58 --compute-unit-price 0
 ```
 
-This will return you a base58 transcation. If you want a base64 encoded
+This will return you a base58 transaction. If you want a base64 encoded
 transaction for use in a transaction inspector, you can use `--encoding base64`.
 
 ```bash

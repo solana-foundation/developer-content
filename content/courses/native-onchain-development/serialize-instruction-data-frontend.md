@@ -45,7 +45,7 @@ create transactions with instructions for common Solana programs.
 
 This lessons shows how to create instructions for our own native Solana
 programs, which we will develop in a few lessons. Specifically, we're going to
-learn about serialization and deserialization, which is requiredfor native
+learn about serialization and deserialization, which is required for native
 (non-Anchor) program development.
 
 #### Transaction Contents

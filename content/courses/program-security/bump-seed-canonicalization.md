@@ -313,7 +313,7 @@ be occasionally and unpredictably exceeded.
 
 On the other hand, if you only need to verify the address of a PDA passed in
 without initializing an account, you'll be forced to either let Anchor derive
-the canonical bump or expose your program to unecessary risks. In that case,
+the canonical bump or expose your program to unnecessary risks. In that case,
 please use the canonical bump despite the slight mark against performance.
 
 ## Lab
