@@ -1,155 +1,116 @@
 ---
 sidebarSortOrder: 1
-sidebarLabel: "Confirmation & Expiration"
-title: "Transaction Confirmation & Expiration"
-seoTitle: "Transaction Confirmation & Expiration"
+sidebarLabel: "Підтвердження та закінчення строку дії"
+title: "Підтвердження транзакції та закінчення строку дії"
+seoTitle: "Підтвердження транзакції та закінчення строку дії"
 description:
-  "Understand how Solana transaction confirmation and when a transaction expires
-  (including recent blockhash checks)."
+  "Дізнайтеся, як працює підтвердження транзакцій у Solana і коли транзакція завершує дію
+  (включаючи перевірку останніх blockhash)."
 altRoutes:
   - /docs/advanced
   - /docs/core/transactions/confirmation
 ---
 
-Problems relating to
-[transaction confirmation](/docs/terminology.md#transaction-confirmations) are
-common with many newer developers while building applications. This article aims
-to boost the overall understanding of the confirmation mechanism used on the
-Solana blockchain, including some recommended best practices.
+Проблеми, пов'язані з 
+[підтвердженням транзакції](/docs/terminology.md#transaction-confirmations), 
+є поширеними серед нових розробників під час створення застосунків. Ця стаття має на меті підвищити загальне розуміння механізму підтвердження, який використовується в блокчейні Solana, включаючи деякі рекомендовані найкращі практики.
 
-## Brief background on transactions
+## Короткий вступ до транзакцій
 
-Before diving into how Solana transaction confirmation and expiration works,
-let's briefly set the base understanding of a few things:
+Перед тим як розглянути, як працює підтвердження та закінчення строку дії транзакцій у Solana, давайте коротко розглянемо кілька основ:
 
-- what a transaction is
-- the lifecycle of a transaction
-- what a blockhash is
-- and a brief understanding of Proof of History (PoH) and how it relates to
-  blockhashes
+- що таке транзакція,
+- життєвий цикл транзакції,
+- що таке blockhash,
+- і коротке ознайомлення з Proof of History (PoH) і тим, як це стосується blockhash.
 
-### What is a transaction?
+### Що таке транзакція?
 
-Transactions consist of two components: a
-[message](/docs/terminology.md#message) and a
-[list of signatures](/docs/terminology.md#signature). The transaction message is
-where the magic happens and at a high level it consists of four components:
+Транзакції складаються з двох компонентів: 
+[повідомлення](/docs/terminology.md#message) 
+і 
+[списку підписів](/docs/terminology.md#signature). 
+Повідомлення транзакції містить основну інформацію та складається з чотирьох компонентів:
 
-- a **header** with metadata about the transaction,
-- a **list of instructions** to invoke,
-- a **list of accounts** to load, and
-- a **“recent blockhash.”**
+- **заголовок** з метаданими про транзакцію,
+- **список інструкцій** для виконання,
+- **список акаунтів**, які потрібно завантажити,
+- та **“недавній blockhash”**.
 
-In this article, we're going to be focusing a lot on a transaction's
-[recent blockhash](/docs/terminology.md#blockhash) because it plays a big role
-in transaction confirmation.
+У цій статті ми зосередимося на 
+[недавньому blockhash](/docs/terminology.md#blockhash), 
+оскільки він відіграє важливу роль у підтвердженні транзакції.
 
-### Transaction lifecycle refresher
+### Життєвий цикл транзакції
 
-Below is a high level view of the lifecycle of a transaction. This article will
-touch on everything except steps 1 and 4.
+Нижче наведено основні етапи життєвого циклу транзакції. У цій статті розглядаються всі етапи, крім 1 і 4.
 
-1. Create a header and a list of instructions along with the list of accounts
-   that instructions need to read and write
-2. Fetch a recent blockhash and use it to prepare a transaction message
-3. Simulate the transaction to ensure it behaves as expected
-4. Prompt user to sign the prepared transaction message with their private key
-5. Send the transaction to an RPC node which attempts to forward it to the
-   current block producer
-6. Hope that a block producer validates and commits the transaction into their
-   produced block
-7. Confirm the transaction has either been included in a block or detect when it
-   has expired
+1. Створення заголовка та списку інструкцій разом із переліком акаунтів, які потрібно прочитати або записати.
+2. Отримання недавнього blockhash та його використання для підготовки повідомлення транзакції.
+3. Симуляція транзакції, щоб переконатися, що вона поводиться очікувано.
+4. Запит користувача на підписання підготовленого повідомлення транзакції за допомогою його приватного ключа.
+5. Відправка транзакції до RPC-вузла, який намагається передати її поточному виробнику блоків.
+6. Очікування, що виробник блоку перевірить і додасть транзакцію до свого блоку.
+7. Підтвердження того, що транзакція або була включена в блок, або закінчився її термін дії.
 
-### What is a Blockhash?
+### Що таке Blockhash?
 
-A [“blockhash”](/docs/terminology.md#blockhash) refers to the last Proof of
-History (PoH) hash for a [“slot”](/docs/terminology.md#slot) (description
-below). Since Solana uses PoH as a trusted clock, a transaction's recent
-blockhash can be thought of as a **timestamp**.
+[“Blockhash”](/docs/terminology.md#blockhash) 
+означає останній Proof of History (PoH) хеш для 
+[“слота”](/docs/terminology.md#slot) 
+(опис нижче). Оскільки Solana використовує PoH як довірений годинник, недавній blockhash транзакції можна розглядати як **мітку часу**.
 
-### Proof of History refresher
+### Коротке нагадування про Proof of History
 
-Solana's Proof of History mechanism uses a very long chain of recursive SHA-256
-hashes to build a trusted clock. The “history” part of the name comes from the
-fact that block producers hash transaction id's into the stream to record which
-transactions were processed in their block.
+Механізм Proof of History у Solana використовує довгий ланцюг рекурсивних хешів SHA-256 для створення довіреного годинника. Назва “історія” походить від того, що виробники блоків додають хеш ідентифікаторів транзакцій у потік, щоб зафіксувати, які транзакції були оброблені в їхньому блоці.
 
-[PoH hash calculation](https://github.com/anza-xyz/agave/blob/aa0922d6845e119ba466f88497e8209d1c82febc/entry/src/poh.rs#L79):
-`next_hash = hash(prev_hash, hash(transaction_ids))`
+[Обчислення PoH-хешу](https://github.com/anza-xyz/agave/blob/aa0922d6845e119ba466f88497e8209d1c82febc/entry/src/poh.rs#L79): 
+`next_hash = hash(prev_hash, hash(transaction_ids))`.
 
-PoH can be used as a trusted clock because each hash must be produced
-sequentially. Each produced block contains a blockhash and a list of hash
-checkpoints called “ticks” so that validators can verify the full chain of
-hashes in parallel and prove that some amount of time has actually passed.
+PoH може використовуватися як довірений годинник, оскільки кожен хеш має бути створений послідовно. Кожен згенерований блок містить blockhash і список контрольних точок хешів, званих “ticks,” які дозволяють валідаторам перевіряти весь ланцюг хешів паралельно та доводити, що певний час дійсно минув.
 
-## Transaction Expiration
+## Закінчення строку дії транзакції
 
-By default, all Solana transactions will expire if not committed to a block in a
-certain amount of time. The **vast majority** of transaction confirmation issues
-are related to how RPC nodes and validators detect and handle **expired**
-transactions. A solid understanding of how transaction expiration works should
-help you diagnose the bulk of your transaction confirmation issues.
+За замовчуванням усі транзакції Solana закінчують строк дії, якщо їх не включено в блок протягом певного періоду часу. **Переважна більшість** проблем із підтвердженням транзакцій пов'язана з тим, як RPC-вузли та валідатори виявляють і обробляють **прострочені** транзакції. Чітке розуміння механізму закінчення строку дії транзакції допоможе вам діагностувати більшість проблем із підтвердженням транзакцій.
 
-### How does transaction expiration work?
+### Як працює закінчення строку дії транзакції?
 
-Each transaction includes a “recent blockhash” which is used as a PoH clock
-timestamp and expires when that blockhash is no longer “recent enough”.
+Кожна транзакція містить “недавній blockhash,” який використовується як часовий штамп PoH і закінчується, коли цей blockhash більше не вважається “достатньо недавнім.”
 
-As each block is finalized (i.e. the maximum tick height
-[is reached](https://github.com/anza-xyz/agave/blob/0588ecc6121ba026c65600d117066dbdfaf63444/runtime/src/bank.rs#L3269-L3271),
-reaching the "block boundary"), the final hash of the block is added to the
-`BlockhashQueue` which stores a maximum of the
-[300 most recent blockhashes](https://github.com/anza-xyz/agave/blob/e0b0bcc80380da34bb63364cc393801af1e1057f/sdk/program/src/clock.rs#L123-L126).
-During transaction processing, Solana Validators will check if each
-transaction's recent blockhash is recorded within the most recent 151 stored
-hashes (aka "max processing age"). If the transaction's recent blockhash is
-[older than this](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/runtime/src/bank.rs#L3570-L3571)
-max processing age, the transaction is not processed.
+Коли кожен блок завершується (тобто досягається максимальна висота тиків, 
+[визначена](https://github.com/anza-xyz/agave/blob/0588ecc6121ba026c65600d117066dbdfaf63444/runtime/src/bank.rs#L3269-L3271), 
+до "кордону блоку"), фінальний хеш блоку додається до `BlockhashQueue`, яка зберігає максимум 
+[300 найновіших blockhash](https://github.com/anza-xyz/agave/blob/e0b0bcc80380da34bb63364cc393801af1e1057f/sdk/program/src/clock.rs#L123-L126). 
+Під час обробки транзакцій валідатори Solana перевіряють, чи зберігається недавній blockhash транзакції серед останніх 151 записаних хешів (так званий "максимальний вік обробки"). Якщо недавній blockhash транзакції 
+[старший за цей вік](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/runtime/src/bank.rs#L3570-L3571), 
+транзакція не обробляється.
 
-> Due to the current
-> [max processing age of 150](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L129-L131)
-> and the "age" of a blockhash in the queue being
-> [0-indexed](https://github.com/anza-xyz/agave/blob/992a398fe8ea29ec4f04d081ceef7664960206f4/accounts-db/src/blockhash_queue.rs#L248-L274),
-> there are actually 151 blockhashes that are considered "recent enough" and
-> valid for processing.
+> Завдяки поточному 
+> [максимальному віку обробки, що становить 150](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L129-L131) 
+> і тому, що "вік" blockhash у черзі є 
+> [нульовим індексом](https://github.com/anza-xyz/agave/blob/992a398fe8ea29ec4f04d081ceef7664960206f4/accounts-db/src/blockhash_queue.rs#L248-L274), 
+> фактично є 151 blockhash, які вважаються "достатньо недавніми" і дійсними для обробки.
 
-Since [slots](/docs/terminology.md#slot) (aka the time period a validator can
-produce a block) are configured to last about
-[400ms](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L107-L109),
-but may fluctuate between 400ms and 600ms, a given blockhash can only be used by
-transactions for about 60 to 90 seconds before it will be considered expired by
-the runtime.
+Оскільки [слоти](/docs/terminology.md#slot) (тобто періоди часу, протягом яких валідатор може створити блок) налаштовані на тривалість близько 
+[400 мс](https://github.com/anza-xyz/agave/blob/cb2fd2b632f16a43eff0c27af7458e4e97512e31/sdk/program/src/clock.rs#L107-L109), 
+але можуть коливатися між 400 мс і 600 мс, певний blockhash можна використовувати в транзакціях приблизно протягом 60–90 секунд, перш ніж він вважатиметься простроченим у середовищі виконання.
 
-### Example of transaction expiration
+### Приклад закінчення строку дії транзакції
 
-Let's walk through a quick example:
+Розгляньмо швидкий приклад:
 
-1. A validator is actively producing a new block for the current slot
-2. The validator receives a transaction from a user with the recent blockhash
-   `abcd...`
-3. The validator checks this blockhash `abcd...` against the list of recent
-   blockhashes in the `BlockhashQueue` and discovers that it was created 151
-   blocks ago
-4. Since it is exactly 151 blockhashes old, the transaction has not expired yet
-   and can still be processed!
-5. But wait: before actually processing the transaction, the validator finished
-   creating the next block and added it to the `BlockhashQueue`. The validator
-   then starts producing the block for the next slot (validators get to produce
-   blocks for 4 consecutive slots)
-6. The validator checks that same transaction again and finds it is now 152
-   blockhashes old and rejects it because it's too old :(
+1. Валідатор активно створює новий блок для поточного слота.
+2. Валідатор отримує транзакцію від користувача з недавнім blockhash `abcd...`.
+3. Валідатор перевіряє цей blockhash `abcd...` у списку недавніх blockhash у `BlockhashQueue` і виявляє, що він був створений 151 блок тому.
+4. Оскільки йому рівно 151 блок, транзакція ще не прострочена та може бути оброблена.
+5. Але зачекайте: перед обробкою транзакції валідатор завершує створення наступного блоку та додає його до `BlockhashQueue`. Потім валідатор починає створювати блок для наступного слота (валідатори можуть створювати блоки протягом 4 послідовних слотів).
+6. Валідатор перевіряє ту ж транзакцію ще раз і виявляє, що їй тепер 152 блоки. Вона відхиляється, оскільки занадто стара. :(
 
-## Why do transactions expire?
+## Чому транзакції закінчують строк дії?
 
-There's a very good reason for this actually, it's to help validators avoid
-processing the same transaction twice.
+Це робиться для того, щоб валідатори могли уникнути повторної обробки тієї ж транзакції.
 
-A naive brute force approach to prevent double processing could be to check
-every new transaction against the blockchain's entire transaction history. But
-by having transactions expire after a short amount of time, validators only need
-to check if a new transaction is in a relatively small set of _recently_
-processed transactions.
+Наївний підхід для запобігання повторній обробці полягав би в перевірці кожної нової транзакції з усією історією транзакцій блокчейна. Але завдяки тому, що транзакції закінчують строк дії за короткий період часу, валідаторам потрібно перевіряти лише відносно невеликий набір **недавніх** транзакцій.
 
 ### Other blockchains
 
@@ -163,240 +124,126 @@ Ethereum transactions got stuck in a _pending_ state for a long time and all the
 later transactions, which used higher nonce values, were blocked from
 processing.
 
-### Advantages on Solana
+### Інші блокчейни
 
-There are a few advantages to Solana's approach:
+Підхід Solana до запобігання повторній обробці транзакцій значно відрізняється від інших блокчейнів. Наприклад, Ethereum використовує лічильник (nonce) для кожного відправника транзакцій і обробляє лише транзакції, які використовують наступний дійсний nonce.
 
-1. A single fee payer can submit multiple transactions at the same time that are
-   allowed to be processed in any order. This might happen if you're using
-   multiple applications at the same time.
-2. If a transaction doesn't get committed to a block and expires, users can try
-   again knowing that their previous transaction will NOT ever be processed.
+Підхід Ethereum є простим для реалізації валідаторами, але може викликати проблеми для користувачів. Багато хто стикався із ситуаціями, коли їхні транзакції Ethereum залишалися в стані **очікування** протягом тривалого часу, а всі подальші транзакції з більшими значеннями nonce блокувалися.
 
-By not using counters, the Solana wallet experience may be easier for users to
-understand because they can get to success, failure, or expiration states
-quickly and avoid annoying pending states.
+### Переваги на Solana
 
-### Disadvantages on Solana
+Solana має кілька переваг у цьому підході:
 
-Of course there are some disadvantages too:
+1. Один платник комісії може надсилати кілька транзакцій одночасно, які можуть оброблятися в будь-якому порядку. Це може статися, якщо ви використовуєте кілька додатків одночасно.
+2. Якщо транзакція не була додана до блоку та закінчила строк дії, користувачі можуть спробувати знову, знаючи, що їхня попередня транзакція **ніколи** не буде оброблена.
 
-1. Validators have to actively track a set of all processed transaction id's to
-   prevent double processing.
-2. If the expiration time period is too short, users might not be able to submit
-   their transaction before it expires.
+Відсутність використання лічильників робить досвід роботи з Solana більш зрозумілим для користувачів, оскільки вони швидше отримують результат — успіх, невдачу або закінчення строку дії — та уникають тривалого стану очікування.
 
-These disadvantages highlight a tradeoff in how transaction expiration is
-configured. If the expiration time of a transaction is increased, validators
-need to use more memory to track more transactions. If expiration time is
-decreased, users don't have enough time to submit their transaction.
+### Недоліки на Solana
 
-Currently, Solana clusters require that transactions use blockhashes that are no
-more than 151 blocks old.
+Звісно, є й недоліки:
 
-> This [Github issue](https://github.com/solana-labs/solana/issues/23582)
-> contains some calculations that estimate that mainnet-beta validators need
-> about 150MB of memory to track transactions. This could be slimmed down in the
-> future if necessary without decreasing expiration time as are detailed in that
-> issue.
+1. Валідатори повинні активно відстежувати набір усіх оброблених ідентифікаторів транзакцій, щоб запобігти їх повторній обробці.
+2. Якщо час закінчення строку дії надто короткий, користувачі можуть не встигнути надіслати свої транзакції до того, як вони стануть недійсними.
 
-## Transaction confirmation tips
+Ці недоліки показують компроміс у тому, як налаштовано строк дії транзакцій. Якщо збільшити час закінчення строку дії, валідаторам доведеться використовувати більше пам’яті для відстеження транзакцій. Якщо ж скоротити строк дії, користувачам буде важче встигнути надіслати свої транзакції.
 
-As mentioned before, blockhashes expire after a time period of only 151 blocks
-which can pass as quickly as **one minute** when slots are processed within the
-target time of 400ms.
+Наразі кластери Solana вимагають, щоб транзакції використовували blockhash, який не старший за 151 блок.
 
-One minute is not a lot of time considering that a client needs to fetch a
-recent blockhash, wait for the user to sign, and finally hope that the
-broadcasted transaction reaches a leader that is willing to accept it. Let's go
-through some tips to help avoid confirmation failures due to transaction
-expiration!
+> У цьому [питанні GitHub](https://github.com/solana-labs/solana/issues/23582) надані розрахунки, які оцінюють, що валідаторам mainnet-beta потрібно близько 150 МБ пам’яті для відстеження транзакцій. У майбутньому це можна оптимізувати, не скорочуючи строк дії транзакцій, як зазначено в цьому обговоренні.
 
-### Fetch blockhashes with the appropriate commitment level
+## Поради щодо підтвердження транзакцій
 
-Given the short expiration time frame, it's imperative that clients and
-applications help users create transactions with a blockhash that is as recent
-as possible.
+Як зазначалося раніше, blockhash закінчують строк дії через період, який може тривати всього **одну хвилину**, коли слоти обробляються з цільовим часом 400 мс.
 
-When fetching blockhashes, the current recommended RPC API is called
-[`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx). By default, this
-API uses the `finalized` commitment level to return the most recently finalized
-block's blockhash. However, you can override this behavior by
-[setting the `commitment` parameter](/docs/rpc/index.mdx#configuring-state-commitment)
-to a different commitment level.
+Одна хвилина — це не багато, враховуючи, що клієнту потрібно отримати недавній blockhash, дочекатися підписання транзакції користувачем, а потім сподіватися, що надіслана транзакція досягне лідера, який погодиться її обробити. Розглянемо кілька порад, які допоможуть уникнути невдач підтвердження через закінчення строку дії транзакцій.
 
-**Recommendation**
+### Отримуйте blockhash із відповідним рівнем підтвердження
 
-The `confirmed` commitment level should almost always be used for RPC requests
-because it's usually only a few slots behind the `processed` commitment and has
-a very low chance of belonging to a dropped
-[fork](https://docs.anza.xyz/consensus/fork-generation).
+З огляду на короткий період закінчення строку дії, клієнти та додатки повинні допомагати користувачам створювати транзакції з blockhash, який є максимально недавнім.
 
-But feel free to consider the other options:
+Коли ви отримуєте blockhash, рекомендованим RPC API є [`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx). За замовчуванням цей API використовує рівень підтвердження `finalized`, щоб повернути blockhash останнього фіналізованого блоку. Проте ви можете змінити цю поведінку, встановивши параметр `commitment` на інший рівень підтвердження.
 
-- Choosing `processed` will let you fetch the most recent blockhash compared to
-  other commitment levels and therefore gives you the most time to prepare and
-  process a transaction. But due to the prevalence of forking in the Solana
-  blockchain, roughly 5% of blocks don't end up being finalized by the cluster
-  so there's a real chance that your transaction uses a blockhash that belongs
-  to a dropped fork. Transactions that use blockhashes for abandoned blocks
-  won't ever be considered recent by any blocks that are in the finalized
-  blockchain.
-- Using the [default commitment](/docs/rpc#default-commitment) level `finalized`
-  will eliminate any risk that the blockhash you choose will belong to a dropped
-  fork. The tradeoff is that there is typically at least a 32 slot difference
-  between the most recent confirmed block and the most recent finalized block.
-  This tradeoff is pretty severe and effectively reduces the expiration of your
-  transactions by about 13 seconds but this could be even more during unstable
-  cluster conditions.
+**Рекомендація**
 
-### Use an appropriate preflight commitment level
+Рівень підтвердження `confirmed` майже завжди слід використовувати для запитів RPC, оскільки він зазвичай лише на кілька слотів відстає від рівня `processed` і має дуже низьку ймовірність належати до відхиленого [форку](https://docs.anza.xyz/consensus/fork-generation).
 
-If your transaction uses a blockhash that was fetched from one RPC node then you
-send, or simulate, that transaction with a different RPC node, you could run
-into issues due to one node lagging behind the other.
+Але ви також можете розглянути інші варіанти:
 
-When RPC nodes receive a `sendTransaction` request, they will attempt to
-determine the expiration block of your transaction using the most recent
-finalized block or with the block selected by the `preflightCommitment`
-parameter. A **VERY** common issue is that a received transaction's blockhash
-was produced after the block used to calculate the expiration for that
-transaction. If an RPC node can't determine when your transaction expires, it
-will only forward your transaction **one time** and afterwards will then
-**drop** the transaction.
+- Вибір `processed` дозволяє отримати найбільш недавній blockhash порівняно з іншими рівнями підтвердження, що дає більше часу на підготовку і обробку транзакції. Однак через поширеність форків у блокчейні Solana близько 5% блоків не потрапляють у фіналізований кластер, що створює ризик того, що ваша транзакція використовує blockhash, що належить до відкинутого форку. Транзакції з такими blockhash ніколи не будуть вважатися недавніми у фіналізованому блокчейні.
+- Використання [рівня підтвердження за замовчуванням](/docs/rpc#default-commitment) `finalized` виключає ризик того, що вибраний blockhash належатиме до відкинутого форку. Однак це має компроміс: зазвичай є щонайменше 32 слоти різниці між найбільш недавнім підтвердженим блоком і найбільш недавнім фіналізованим блоком. Це значно зменшує строк дії ваших транзакцій приблизно на 13 секунд, що може бути ще більш суттєвим за нестабільних умов кластеру.
 
-Similarly, when RPC nodes receive a `simulateTransaction` request, they will
-simulate your transaction using the most recent finalized block or with the
-block selected by the `preflightCommitment` parameter. If the block chosen for
-simulation is older than the block used for your transaction's blockhash, the
-simulation will fail with the dreaded “blockhash not found” error.
+### Використовуйте відповідний рівень підтвердження для preflight
 
-**Recommendation**
+Якщо ваша транзакція використовує blockhash, отриманий з одного RPC-вузла, але надсилається або симулюється на іншому, можуть виникнути проблеми через затримку одного з вузлів.
 
-Even if you use `skipPreflight`, **ALWAYS** set the `preflightCommitment`
-parameter to the same commitment level used to fetch your transaction's
-blockhash for both `sendTransaction` and `simulateTransaction` requests.
+Коли RPC-вузли отримують запит `sendTransaction`, вони намагаються визначити строк дії транзакції, використовуючи найбільш недавній фіналізований блок або блок, вибраний параметром `preflightCommitment`. **Дуже поширена проблема** виникає, якщо blockhash транзакції створений після блоку, який використовується для обчислення строку дії. У такому випадку RPC-вузол лише один раз пересилає транзакцію, а потім **видаляє** її.
 
-### Be wary of lagging RPC nodes when sending transactions
+Аналогічно, при отриманні запиту `simulateTransaction` RPC-вузли симулюють транзакцію, використовуючи найбільш недавній фіналізований блок або блок, вибраний параметром `preflightCommitment`. Якщо вибраний блок для симуляції старіший за blockhash транзакції, симуляція завершиться помилкою “blockhash not found”.
 
-When your application uses an RPC pool service or when the RPC endpoint differs
-between creating a transaction and sending a transaction, you need to be wary of
-situations where one RPC node is lagging behind the other. For example, if you
-fetch a transaction blockhash from one RPC node then you send that transaction
-to a second RPC node for forwarding or simulation, the second RPC node might be
-lagging behind the first.
+**Рекомендація**
 
-**Recommendation**
+Навіть якщо ви використовуєте `skipPreflight`, **завжди** встановлюйте параметр `preflightCommitment` на той самий рівень підтвердження, який використовувався для отримання blockhash транзакції, як для запитів `sendTransaction`, так і `simulateTransaction`.
 
-For `sendTransaction` requests, clients should keep resending a transaction to a
-RPC node on a frequent interval so that if an RPC node is slightly lagging
-behind the cluster, it will eventually catch up and detect your transaction's
-expiration properly.
+### Уникайте відставання RPC-вузлів під час надсилання транзакцій
 
-For `simulateTransaction` requests, clients should use the
-[`replaceRecentBlockhash`](/docs/rpc/http/simulateTransaction.mdx) parameter to
-tell the RPC node to replace the simulated transaction's blockhash with a
-blockhash that will always be valid for simulation.
+Якщо ваш додаток використовує сервіс пулу RPC або якщо кінцева точка RPC відрізняється між створенням транзакції та її надсиланням, будьте обережні зі сценаріями, коли один RPC-вузол відстає від іншого. Наприклад, якщо blockhash транзакції отримано з одного RPC-вузла, а транзакція надсилається на інший для обробки або симуляції, другий RPC-вузол може відставати.
 
-### Avoid reusing stale blockhashes
+**Рекомендація**
 
-Even if your application has fetched a very recent blockhash, be sure that
-you're not reusing that blockhash in transactions for too long. The ideal
-scenario is that a recent blockhash is fetched right before a user signs their
-transaction.
+Для запитів `sendTransaction` клієнти повинні повторно надсилати транзакцію до RPC-вузла на частих інтервалах, щоб у випадку, якщо RPC-вузол трохи відстає від кластеру, він врешті-решт виявив транзакцію та її строк дії.
 
-**Recommendation for applications**
+Для запитів `simulateTransaction` клієнти повинні використовувати параметр 
+[`replaceRecentBlockhash`](/docs/rpc/http/simulateTransaction.mdx), щоб інструктувати RPC-вузол замінювати blockhash симульованої транзакції на blockhash, який завжди буде дійсним для симуляції.
 
-Poll for new recent blockhashes on a frequent basis to ensure that whenever a
-user triggers an action that creates a transaction, your application already has
-a fresh blockhash that's ready to go.
+### Уникайте повторного використання застарілих blockhash
 
-**Recommendation for wallets**
+Навіть якщо ваш додаток отримав дуже недавній blockhash, переконайтеся, що ви не використовуєте його надто довго. Ідеальний сценарій — отримати свіжий blockhash безпосередньо перед підписанням транзакції.
 
-Poll for new recent blockhashes on a frequent basis and replace a transaction's
-recent blockhash right before they sign the transaction to ensure the blockhash
-is as fresh as possible.
+**Рекомендація для додатків**
 
-### Use healthy RPC nodes when fetching blockhashes
+Часто запитуйте нові blockhash, щоб забезпечити готовність вашого додатка до створення транзакції, коли користувач виконує дію.
 
-By fetching the latest blockhash with the `confirmed` commitment level from an
-RPC node, it's going to respond with the blockhash for the latest confirmed
-block that it's aware of. Solana's block propagation protocol prioritizes
-sending blocks to staked nodes so RPC nodes naturally lag about a block behind
-the rest of the cluster. They also have to do more work to handle application
-requests and can lag a lot more under heavy user traffic.
+**Рекомендація для гаманців**
 
-Lagging RPC nodes can therefore respond to
-[`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx) requests with
-blockhashes that were confirmed by the cluster quite awhile ago. By default, a
-lagging RPC node detects that it is more than 150 slots behind the cluster will
-stop responding to requests, but just before hitting that threshold they can
-still return a blockhash that is just about to expire.
+Часто запитуйте нові blockhash та оновлюйте blockhash транзакції перед підписанням, щоб забезпечити її актуальність.
 
-**Recommendation**
+### Використовуйте надійні RPC-вузли для отримання blockhash
 
-Monitor the health of your RPC nodes to ensure that they have an up-to-date view
-of the cluster state with one of the following methods:
+RPC-вузли можуть відставати від кластеру через навантаження або інші причини, повертаючи blockhash, який майже вичерпав строк дії.
 
-1. Fetch your RPC node's highest processed slot by using the
-   [`getSlot`](/docs/rpc/http/getSlot.mdx) RPC API with the `processed`
-   commitment level and then call the
-   [`getMaxShredInsertSlot`](/docs/rpc/http/getMaxShredInsertSlot.mdx) RPC API
-   to get the highest slot that your RPC node has received a “shred” of a block
-   for. If the difference between these responses is very large, the cluster is
-   producing blocks far ahead of what the RPC node has processed.
-2. Call the `getLatestBlockhash` RPC API with the `confirmed` commitment level
-   on a few different RPC API nodes and use the blockhash from the node that
-   returns the highest slot for its
-   [context slot](/docs/rpc/index.mdx#rpcresponse-structure).
+**Рекомендація**
 
-### Wait long enough for expiration
+Моніторте стан RPC-вузлів, використовуючи такі методи:
 
-**Recommendation**
+1. Викликайте API 
+   [`getSlot`](/docs/rpc/http/getSlot.mdx) з рівнем підтвердження `processed` для отримання останнього обробленого слота вузла та порівняйте його з 
+   [`getMaxShredInsertSlot`](/docs/rpc/http/getMaxShredInsertSlot.mdx), щоб оцінити відставання вузла.
+2. Використовуйте RPC API `getLatestBlockhash` з рівнем підтвердження `confirmed` на кількох різних RPC-вузлах та обирайте blockhash від вузла, який повертає найвищий слот для свого [контекстного слоту](/docs/rpc/index.mdx#rpcresponse-structure).
 
-When calling the [`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx)
-RPC API to get a recent blockhash for your transaction, take note of the
-`lastValidBlockHeight` in the response.
+### Зачекайте достатньо довго перед закінченням терміну дії
 
-Then, poll the [`getBlockHeight`](/docs/rpc/http/getBlockHeight.mdx) RPC API
-with the `confirmed` commitment level until it returns a block height greater
-than the previously returned last valid block height.
+**Рекомендація**
 
-### Consider using “durable” transactions
+При виклику RPC API [`getLatestBlockhash`](/docs/rpc/http/getLatestBlockhash.mdx) для отримання останнього blockhash вашої транзакції зверніть увагу на `lastValidBlockHeight` у відповіді.
 
-Sometimes transaction expiration issues are really hard to avoid (e.g. offline
-signing, cluster instability). If the previous tips are still not sufficient for
-your use-case, you can switch to using durable transactions (they just require a
-bit of setup).
+Потім викликайте RPC API [`getBlockHeight`](/docs/rpc/http/getBlockHeight.mdx) з рівнем підтвердження `confirmed`, поки він не поверне висоту блоку, більшу за попередньо отриманий `lastValidBlockHeight`.
 
-To start using durable transactions, a user first needs to submit a transaction
-that
-[invokes instructions that create a special on-chain “nonce” account](https://docs.rs/solana-program/latest/solana_program/system_instruction/fn.create_nonce_account.html)
-and stores a “durable blockhash” inside of it. At any point in the future (as
-long as the nonce account hasn't been used yet), the user can create a durable
-transaction by following these 2 rules:
+### Розгляньте використання "довготривалих" транзакцій
 
-1. The instruction list must start with an
-   [“advance nonce” system instruction](https://docs.rs/solana-program/latest/solana_program/system_instruction/fn.advance_nonce_account.html)
-   which loads their on-chain nonce account
-2. The transaction's blockhash must be equal to the durable blockhash stored by
-   the on-chain nonce account
+Іноді уникнути проблем із закінченням терміну дії транзакції дуже важко (наприклад, при офлайн-підписанні або нестабільності кластера). Якщо попередні поради не підходять для вашого випадку використання, ви можете перейти на використання довготривалих транзакцій (вони вимагають трохи налаштувань).
 
-Here's how these durable transactions are processed by the Solana runtime:
+Щоб почати використовувати довготривалі транзакції, користувач спочатку повинен подати транзакцію, яка
+[викликає інструкції для створення спеціального "nonce" облікового запису на блокчейні](https://docs.rs/solana-program/latest/solana_program/system_instruction/fn.create_nonce_account.html) і зберігає в ньому "довготривалий blockhash". У будь-який момент у майбутньому (доки nonce-аккаунт ще не використаний) користувач може створити довготривалу транзакцію, дотримуючись двох правил:
 
-1. If the transaction's blockhash is no longer “recent”, the runtime checks if
-   the transaction's instruction list begins with an “advance nonce” system
-   instruction
-2. If so, it then loads the nonce account specified by the “advance nonce”
-   instruction
-3. Then it checks that the stored durable blockhash matches the transaction's
-   blockhash
-4. Lastly it makes sure to advance the nonce account's stored blockhash to the
-   latest recent blockhash to ensure that the same transaction can never be
-   processed again
+1. Список інструкцій повинен починатися з [системної інструкції "advance nonce"](https://docs.rs/solana-program/latest/solana_program/system_instruction/fn.advance_nonce_account.html), яка завантажує їх nonce-аккаунт.
+2. Blockhash транзакції повинен дорівнювати довготривалому blockhash, збереженому nonce-аккаунтом на блокчейні.
 
-For more details about how these durable transactions work, you can read the
-[original proposal](https://docs.anza.xyz/implemented-proposals/durable-tx-nonces)
-and
-[check out an example](/content/guides/advanced/introduction-to-durable-nonces.md)
-in the Solana docs.
+Ось як Solana обробляє ці довготривалі транзакції:
+
+1. Якщо blockhash транзакції більше не є "недавнім", система перевіряє, чи починається список інструкцій транзакції з інструкції "advance nonce".
+2. Якщо так, система завантажує nonce-аккаунт, вказаний у цій інструкції.
+3. Потім перевіряє, чи збережений довготривалий blockhash відповідає blockhash транзакції.
+4. Нарешті, система оновлює blockhash nonce-аккаунту до останнього недавнього blockhash, щоб гарантувати, що ця ж транзакція не може бути оброблена повторно.
+
+Детальніше про роботу цих довготривалих транзакцій ви можете дізнатися з [оригінальної пропозиції](https://docs.anza.xyz/implemented-proposals/durable-tx-nonces) та [ознайомитися з прикладом](/content/guides/advanced/introduction-to-durable-nonces.md) у документації Solana.
