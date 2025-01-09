@@ -8,16 +8,24 @@ sidebarSortOrder: 2
 > still a WIP. Please post all feedback as a GitHub issue
 > [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
+## Installation
+
+Install the Solana Toolkit by running the following command:
+
+```shell
+npx mucho install
+```
+
 ## Build
 
 ```shell
-npx mucho build
+mucho build
 ```
 
 ## Start Localnet
 
 ```shell
-npx mucho validator
+mucho validator
 ```
 
 ## Run Tests
@@ -37,7 +45,7 @@ cargo test
 ## Deploy
 
 ```shell
-npx solana deploy
+mucho deploy
 ```
 
 For more information on local validator customization and commands, read the

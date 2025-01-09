@@ -1,5 +1,5 @@
 ---
 title: Test Suite
-sidebarSortOrder: 4
+sidebarSortOrder: 5
 metaOnly: true
 ---

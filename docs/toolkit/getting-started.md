@@ -26,6 +26,9 @@ This will install the latest versions of the following:
 - [Solana CLI / Agave Tool Suite](https://docs.anza.xyz/cli/): A command line
   tool that allows developers to interact with the Solana blockchain, manage
   accounts, send transactions, and deploy programs.
+- [Mucho CLI](https://github.com/solana-developers/mucho) - a superset of
+  popular developer tools within the Solana ecosystem used to simplify the
+  development and testing of Solana blockchain programs.
 - [Rust](https://doc.rust-lang.org/book/): The programming language that Solana
   Smart Contracts are written in.
 - [Anchor](https://www.anchor-lang.com/): A framework for writing Solana
@@ -77,7 +80,7 @@ solana config set --url localhost
 To test locally, you must also spin up a local node to run on your localhost:
 
 ```shell
-npx mucho validator
+mucho validator
 ```
 
 For a more information, read the

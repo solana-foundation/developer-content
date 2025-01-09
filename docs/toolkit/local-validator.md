@@ -1,6 +1,6 @@
 ---
 title: Running a Local Solana Validator Network
-sidebarSortOrder: 5
+sidebarSortOrder: 4
 sidebarLabel: Local Validator
 ---
 
@@ -18,8 +18,15 @@ If you have the Solana CLI tool suite already installed, you can run the test
 validator with the following command:
 
 ```shell
-npx mucho validator --help
+mucho validator --help
 ```
+
+> Install the [Solana Toolkit](/docs/toolkit/getting-started#installation) by
+> running the following command:
+>
+> ```shell
+> npx mucho install
+> ```
 
 ## Advantages
 
@@ -39,7 +46,7 @@ npx mucho validator --help
 To start your local validator, simply run:
 
 ```shell
-npx mucho validator
+mucho validator
 ```
 
 This command initializes a new ledger and starts the local validator running at
@@ -143,7 +150,7 @@ This streams log messages from the validator.
 View all the configuration options available for the Solana test validator:
 
 ```shell
-npx mucho validator --help
+mucho validator --help
 ```
 
 ## Local Ledger
@@ -157,7 +164,7 @@ When starting the test validator, you can specify a different directory for the
 ledger data using the `--ledger` option:
 
 ```shell
-npx mucho validator --ledger /path/to/custom/ledger
+mucho validator --ledger /path/to/custom/ledger
 ```
 
 ## Resetting the Ledger
@@ -167,7 +174,7 @@ reset the ledger, you can either manually delete the ledger directory or restart
 the validator with the `--reset` flag:
 
 ```shell
-npx mucho validator --reset
+mucho validator --reset
 ```
 
 If the ledger exists, this command will reset the ledger to genesis, which
@@ -182,7 +189,7 @@ programs that already exist on any other cluster.
 To clone an account from another cluster:
 
 ```shell
-npx mucho validator --reset \
+mucho validator --reset \
   --url CLUSTER_PROGRAM_IS_DEPLOYED_TO \
   --clone PROGRAM_ADDRESS
 ```
@@ -190,7 +197,7 @@ npx mucho validator --reset \
 To clone an upgradeable program and its executable data from another cluster:
 
 ```shell
-npx mucho validator --reset \
+mucho validator --reset \
   --url CLUSTER_PROGRAM_IS_DEPLOYED_TO \
   --clone-upgradeable-program PROGRAM_ADDRESS
 ```
@@ -206,7 +213,7 @@ account with a new ledger from any other network cluster.
 To clone an account from the cluster when a ledger already exists:
 
 ```shell
-npx mucho validator --reset \
+mucho validator --reset \
   --url CLUSTER_PROGRAM_IS_DEPLOYED_TO \
   --clone ACCOUNT_ADDRESS
 ```
@@ -225,7 +232,7 @@ solana account ACCOUNT_ADDRESS --output json --output-file account_state.json
 Then load this state each time you reset the validator:
 
 ```shell
-npx mucho validator --reset \
+mucho validator --reset \
   --account ACCOUNT_ADDRESS account_state.json
 ```
 
@@ -253,14 +260,14 @@ To deactivate specific features in genesis:
 > working directory you must add the `--reset` flag to reset to genesis.
 
 ```shell
-npx mucho validator --reset \
+mucho validator --reset \
   --deactivate-feature <FEATURE_PUBKEY>
 ```
 
 To deactivate multiple features in genesis:
 
 ```shell
-npx mucho validator --reset \
+mucho validator --reset \
   --deactivate-feature <FEATURE_PUBKEY_1> <FEATURE_PUBKEY_2>
 ```
 
@@ -269,7 +276,7 @@ npx mucho validator --reset \
 To check your current `solana-test-validator` version:
 
 ```shell
-npx mucho validator --version
+mucho validator --version
 ```
 
 Your test validator runs on the same version as the Solana CLI installed and

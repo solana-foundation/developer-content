@@ -9,7 +9,7 @@ sidebarLabel: Code Coverage
 > [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 ```shell
-npx mucho coverage
+mucho coverage
 ```
 
 ## Overview
