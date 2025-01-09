@@ -18,7 +18,7 @@ toolkit - _mucho tools, one cli_.
 To get started, install The Solana Toolkit:
 
 ```shell
-npx mucho install
+npx mucho@latest install
 ```
 
 This will install the latest versions of the following:
