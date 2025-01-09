@@ -4,9 +4,9 @@ sidebarSortOrder: 3
 sidebarLabel: Best Practices
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 ## Optimize Compute Usage
 
@@ -38,22 +38,29 @@ transaction fee being
 
 ## Saving Bumps
 
-Saving the bump to your Solana smart contract account state enables
+> Program Derived Address (PDAs) are addresses that PDAs are addresses that are
+> deterministically derived and look like standard public keys, but have no
+> associated private keys. These PDAs are derived using a numerical value,
+> called a "bump", to guarantee that the PDA is off-curve and cannot have an
+> associated private key. It "bumps" the address off the cryptographic curve.
+
+Saving the bump to your Solana smart contract account state ensures
 deterministic address generation, efficiency in address reconstruction, reduced
 transaction failure, and consistency across invocations.
 
 ### Additional References
 
-- [Bump Seed Canonicalization Lesson](https://solana.com/developers/courses/program-security/bump-seed-canonicalization#challenge)
-- [PDA Bumps Core Concepts](https://solana.com/docs/core/pda#canonical-bump)
+- [How to derive a PDA](/docs/core/pda.md#how-to-derive-a-pda)
+- [PDA Bumps Core Concepts](/docs/core/pda.md#canonical-bump)
+- [Bump Seed Canonicalization Lesson](https://solana.com/developers/courses/program-security/bump-seed-canonicalization)
 
 ## Payer-Authority Pattern
 
 The Payer-Authority pattern is an elegant way to handle situations where the
 account’s funder (payer) differs from the account’s owner or manager
-(authority). By requiring separate signers and validating them in your on-chain
+(authority). By requiring separate signers and validating them in your onchain
 logic, you can maintain clear, robust, and flexible ownership semantics in your
-progra
+program.
 
 ### Shank Example
 
@@ -109,10 +116,4 @@ require!(amount > 0, ErrorCode::InvalidAmount);
 ## Optimize Indexing
 
 You can make indexing easier by placing static size fields at the beginning and
-variable size fields at the end of your on-chain structures.
-
-## Account Constraints
-
-## Noop/Self CPI
-
-## Safe Math
+variable size fields at the end of your onchain structures.

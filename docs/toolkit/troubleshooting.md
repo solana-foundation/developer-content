@@ -4,6 +4,13 @@ sidebarSortOrder: 6
 sidebarLabel: Troubleshooting
 ---
 
+When diagnosing problems with Solana development, you can easily gather loads of
+troubleshooting information with the following command:
+
+```shell
+npx mucho info
+```
+
 ## Solana Stack Exchange
 
 The [Solana stack exchange](https://solana.stackexchange.com/) is the best place

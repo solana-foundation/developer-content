@@ -4,18 +4,18 @@ sidebarSortOrder: 3
 sidebarLabel: Solana Programs
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 ```shell
 npx create-solana-program
 ```
 
-[Create solana program](https://github.com/solana-program/create-solana-program)
+[`create-solana-program`](https://github.com/solana-program/create-solana-program)
 initializes an in-depth workspace with everything you need for general Solana
-smart contract development. This Scaffold allows you to write either native rust
-smart contracts or anchor smart contracts.
+smart contract development. This scaffold allows you to write either native rust
+smart contracts or Anchor smart contracts.
 
 ## Program Frameworks
 
@@ -23,7 +23,7 @@ After running this command, you'll have the option to choose between Shank and
 Anchor for the program framework:
 
 - **Shank** creates a vanilla Solana smart contract with Shank macros to
-  generate IDLs. For more information on Shank, read the
+  generate IDLs. For more information on Shank, read its
   [README](https://github.com/metaplex-foundation/shank).
 
 - **Anchor** creates a smart contract using the Anchor framework, which
@@ -31,8 +31,10 @@ Anchor for the program framework:
   information on the Anchor framework, read the
   [Anchor book](https://www.anchor-lang.com/).
 
-For **anchor rust development**, chose Anchor when asked which program framework
-to use. This will create a basic anchor counter program with the following
+### Anchor framework
+
+For **Anchor rust development**, chose Anchor when asked which program framework
+to use. This will create a basic Anchor counter program with the following
 project structure for your program:
 
 ```shell
@@ -43,6 +45,8 @@ project structure for your program:
 │   ├── keypair.json
 │   ├── README.md
 ```
+
+### Native rust
 
 For **native rust development**, make sure you chose Shank when asked which
 program framework to use. This will create a basic counter program with the
@@ -77,7 +81,7 @@ Client, or both.
 
 For further workspace customization and additional information, check out the
 `create-solana-program`
-[README](https://github.com/solana-program/create-solana-program/tree/main).
+[README](https://github.com/solana-program/create-solana-program?tab=readme-ov-file).
 
 ## Build
 
@@ -86,14 +90,14 @@ started, build your program and clients by running:
 
 ```shell
 cd <my-program-name>
-pnpm install
-pnpm generate
+npm install
+npm run generate
 ```
 
-To update an existing anchor project to have this scaffold, read this
-[guide](existing-projects.md).
+To update an existing Anchor project to have this scaffold, read this
+[guide](/docs/toolkit/projects/existing-project.md).
 
 ## Additional Resources
 
-- [Rust Programs](../../programs/rust/index.md)
+- [Developing Rust Programs](/docs/programs/rust/index.md)
 - [Program Examples](https://github.com/solana-developers/program-examples)

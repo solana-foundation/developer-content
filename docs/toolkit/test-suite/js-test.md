@@ -1,12 +1,12 @@
 ---
-title: JavaScript Testing Framework
-sidebarSortOrder: 3
-sidebarLabel: JS Tests
+title: JavaScript Testing Framework for Solana
+sidebarSortOrder: 6
+sidebarLabel: JavaScript Tests
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 ## Add Dependency
 
@@ -16,12 +16,13 @@ Navigate to your smart contract directory and run:
 npm install solana-bankrun
 ```
 
-## Overview
+## Bankrun Overview
 
 [Bankrun](https://github.com/kevinheavey/solana-bankrun) is a fast and
-lightweight framework for testing solana programs in NodeJS.
+lightweight framework for testing Solana programs in NodeJS.
 
-It uses [solana-program-test](https://crates.io/crates/solana-program-test)
+It uses the
+[`solana-program-test`](https://crates.io/crates/solana-program-test) crate
 under the hood and allows you to do things that are not possible with
 `solana-test-validator`, such as jumping back and forth in time or dynamically
 setting account data.
@@ -63,5 +64,7 @@ test("one transfer", async () => {
 
 ## Additional Resources
 
-- [Source Code]()
+- [Bankrun Docs](https://kevinheavey.github.io/solana-bankrun/)
+- [Bankrun Source Code](https://github.com/kevinheavey/solana-bankrun)
+- [Official Bankrun Tutorials](https://kevinheavey.github.io/solana-bankrun/tutorial/)
 - [Complete Project Example](https://github.com/solana-developers/developer-bootcamp-2024/tree/main/project-2-voting/anchor/tests)

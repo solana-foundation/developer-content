@@ -1,46 +1,62 @@
 ---
-title: Running a Local Network
+title: Running a Local Solana Validator Network
 sidebarSortOrder: 5
-sidebarLabel: Local Testing
+sidebarLabel: Local Validator
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 The Solana test validator is a local emulator for the Solana blockchain,
 designed to provide developers with a private and controlled environment for
 building and testing Solana programs without the need to connect to a public
-testnet or mainnet. If you have the Solana CLI tool suite already installed, you
-can run the test validator with the following command:
+testnet or mainnet. It also includes full support of the standard
+[Solana RPC standard](/docs/rpc/http/index.mdx).
+
+If you have the Solana CLI tool suite already installed, you can run the test
+validator with the following command:
 
 ```shell
-mucho test-validator
+npx mucho validator --help
 ```
 
-### Advantages
+## Advantages
 
 - Ability to reset the blockchain state at any moment
 - Ability to simulate different network conditions
 - No RPC rate-limits
 - No airdrop limits
-- Direct on-chain program deployment
-- Ability to clone accounts from a public cluster
-- Ability to load accounts from files
+- Direct onchain program deployment
+- Ability to clone accounts and programs from a public cluster (i.e. devnet,
+  mainnet, etc)
+- Ability to load accounts and programs from files
 - Configurable transaction history retention
 - Configurable epoch length
 
-### Starting the Test Validator
+## Starting the Test Validator
 
 To start your local validator, simply run:
 
 ```shell
-mucho test-validator
+npx mucho validator
 ```
 
-This command initializes a new ledger and starts the validator.
+This command initializes a new ledger and starts the local validator running at
+`http://localhost:8899`, which can be used as your Solana RPC connection url.
 
-### Checking the Status of the Test Validator
+## Connecting to the Test Validator
+
+To connect to the local test validator with the Solana CLI:
+
+```shell
+solana config set --url localhost
+```
+
+This will ensure all your Solana CLI commands will be directed to your local
+test validator.
+
+## Checking the Status of the Test Validator
 
 Before interacting with the test validator, it's useful to confirm its status
 and ensure it is running correctly.
@@ -52,7 +68,7 @@ solana ping
 This command pings the local test validator and returns the current blockhash
 and latency, verifying that it is active.
 
-### Deploying and Managing Programs Locally
+## Deploying and Managing Programs Locally
 
 To deploy a compiled program (BPF) to the test validator:
 
@@ -68,7 +84,7 @@ To check the details of a deployed program:
 solana program show <ACCOUNT_ADDRESS>
 ```
 
-### Sending Transactions
+## Sending Transactions
 
 To transfer SOL from one account to another:
 
@@ -78,13 +94,14 @@ solana transfer --from /path/to/keypair.json <RECIPIENT_ADDRESS> <AMOUNT>
 
 This sends `AMOUNT` of SOL from the source account to the `RECIPIENT_ADDRESS`.
 
-### Simulating and Confirming Transactions
+## Simulating and Confirming Transactions
 
 Before actually sending a transaction, you can simulate it to see if it would
 likely succeed:
 
 ```shell
-solana transfer --from /path/to/keypair.json --simulate <RECIPIENT_ADDRESS> <AMOUNT>
+solana transfer --from /path/to/keypair.json \
+  --simulate <RECIPIENT_ADDRESS> <AMOUNT>
 ```
 
 To confirm the details and status of a transaction:
@@ -93,7 +110,7 @@ To confirm the details and status of a transaction:
 solana confirm <TRANSACTION_SIGNATURE>
 ```
 
-### Viewing Recent Block Production
+## Viewing Recent Block Production
 
 To see information about recent block production, which can be useful for
 debugging performance issues:
@@ -102,9 +119,7 @@ debugging performance issues:
 solana block-production
 ```
 
-### Creating Token Accounts
-
-### Adjusting Logs
+## Validator Logs
 
 For debugging, you might want more detailed logs:
 
@@ -123,21 +138,15 @@ This streams log messages from the validator.
 - Adjust the number of CPU cores used by the validator with the `--gossip-host`
   option to simulate network conditions more realistically.
 
-### Configuration
-
-Check CLI Tool Suite configuration:
-
-```shell
-solana genesis-hash
-```
+## Configuration
 
 View all the configuration options available for the Solana test validator:
 
 ```shell
-mucho validator --help
+npx mucho validator --help
 ```
 
-### Local Ledger
+## Local Ledger
 
 By default, the ledger data is stored in a directory named `test-ledger` in your
 current working directory.
@@ -148,23 +157,23 @@ When starting the test validator, you can specify a different directory for the
 ledger data using the `--ledger` option:
 
 ```shell
-mucho validator --ledger /path/to/custom/ledger
+npx mucho validator --ledger /path/to/custom/ledger
 ```
 
-### Resetting the Ledger
+## Resetting the Ledger
 
 By default the validator will resume an existing ledger, if one is found. To
 reset the ledger, you can either manually delete the ledger directory or restart
 the validator with the `--reset` flag:
 
 ```shell
-mucho validator --reset
+npx mucho validator --reset
 ```
 
 If the ledger exists, this command will reset the ledger to genesis, which
-resets the state by deleting all existing accounts and starting fresh.
+resets the state by deleting all existing accounts/programs and starting fresh.
 
-### Cloning Programs
+## Cloning Programs
 
 To add existing onchain programs to your local environment, you can clone the
 program with a new ledger. This is useful for testing interactions with other
@@ -173,19 +182,23 @@ programs that already exist on any other cluster.
 To clone an account from another cluster:
 
 ```shell
-mucho validator--clone PROGRAM_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO
+npx mucho validator --reset \
+  --url CLUSTER_PROGRAM_IS_DEPLOYED_TO \
+  --clone PROGRAM_ADDRESS
 ```
 
 To clone an upgradeable program and its executable data from another cluster:
 
 ```shell
-mucho validator --clone-upgradeable-program PROGRAM_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO
+npx mucho validator --reset \
+  --url CLUSTER_PROGRAM_IS_DEPLOYED_TO \
+  --clone-upgradeable-program PROGRAM_ADDRESS
 ```
 
 > If a ledger already exists in your working directory, you must reset the
-> ledger to be able to clone a program.
+> ledger to be able to clone a program or account.
 
-### Cloning Accounts
+## Cloning Accounts
 
 To add existing onchain accounts to your local environment, you can clone the
 account with a new ledger from any other network cluster.
@@ -193,10 +206,12 @@ account with a new ledger from any other network cluster.
 To clone an account from the cluster when a ledger already exists:
 
 ```shell
-mucho validator --clone ACCOUNT_ADDRESS --url CLUSTER_PROGRAM_IS_DEPLOYED_TO --reset
+npx mucho validator --reset \
+  --url CLUSTER_PROGRAM_IS_DEPLOYED_TO \
+  --clone ACCOUNT_ADDRESS
 ```
 
-### Reset to Specific Account Data
+## Reset to Specific Account Data
 
 To reset the state of specific accounts every time you start the validator, you
 can use a combination of account snapshots and the `--account` flag.
@@ -204,16 +219,17 @@ can use a combination of account snapshots and the `--account` flag.
 First, save the desired state of an account as a JSON file:
 
 ```shell
-solana account ACCOUNT_ADDRESS --output json > account_state.json
+solana account ACCOUNT_ADDRESS --output json --output-file account_state.json
 ```
 
 Then load this state each time you reset the validator:
 
 ```shell
-mucho validator --reset --account ACCOUNT_ADDRESS account_state.json
+npx mucho validator --reset \
+  --account ACCOUNT_ADDRESS account_state.json
 ```
 
-### Runtime Features
+## Runtime Features
 
 Solana has a feature set mechanism that allows you to enable or disable certain
 blockchain features when running the test validator. By default, the test
@@ -231,30 +247,29 @@ To query a specific runtime feature's status:
 solana feature status <ADDRESS>
 ```
 
-To activate a specific feature:
-
-```shell
-solana feature activate <FEATURE_KEYPAIR> <CLUSTER>
-```
-
-- `FEATURE_KEYPAIR` is the signer for the feature to activate
-- `CLUSTER` is the cluster to activate the feature on
-
 To deactivate specific features in genesis:
 
+> This must be done on a fresh ledger, so if a ledger already exists in your
+> working directory you must add the `--reset` flag to reset to genesis.
+
 ```shell
-mucho validator --deactivate-feature <FEATURE_PUBKEY> --reset
+npx mucho validator --reset \
+  --deactivate-feature <FEATURE_PUBKEY>
 ```
 
-This must be done on a fresh ledger, so if a ledger already exists in your
-working directory you must add the `--reset` flag to reset to genesis.
+To deactivate multiple features in genesis:
 
-### Changing Versions
+```shell
+npx mucho validator --reset \
+  --deactivate-feature <FEATURE_PUBKEY_1> <FEATURE_PUBKEY_2>
+```
+
+## Changing Versions
 
 To check your current `solana-test-validator` version:
 
 ```shell
-mucho validator --version
+npx mucho validator --version
 ```
 
 Your test validator runs on the same version as the Solana CLI installed and

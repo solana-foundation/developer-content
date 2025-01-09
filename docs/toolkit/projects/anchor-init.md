@@ -4,9 +4,9 @@ sidebarSortOrder: 2
 sidebarLabel: Basic Anchor
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 ```shell
 anchor init <project_name>
@@ -40,19 +40,19 @@ anchor build
 anchor test
 ```
 
-To start writing your own anchor smart contract, navigate to
+To start writing your own Anchor smart contract, navigate to
 `programs/src/lib.rs`.
 
 ## File Structure Template
 
-For more complex programs, using a more structured project template would be
+For more complex programs, using a more structured project template would be the
 best practice. This can be generated with:
 
 ```shell
 anchor init --template multiple
 ```
 
-which creates the following layout inside of `programs/src`:
+Which creates the following layout inside of `programs/src`:
 
 ```shell
 ├── constants.rs
@@ -65,10 +65,11 @@ which creates the following layout inside of `programs/src`:
     └── mod.rs
 ```
 
-For file structure best practices, review this [document](project-layout.md)
+For project file structure best practices, review this
+[document](/docs/toolkit/projects/project-layout.md).
 
 ## Additional Resources
 
 - [Anchor book](https://www.anchor-lang.com/)
-- [Getting Started with Anchor](../../programs/anchor/index.md)
+- [Getting Started with Anchor](/docs/programs/anchor/index.md)
 - [Program Examples](https://github.com/solana-developers/program-examples)

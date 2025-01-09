@@ -4,14 +4,14 @@ sidebarSortOrder: 5
 sidebarLabel: Security Scanner
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
-## Static Analysis tools
+## Static Analysis Tools
 
 [Radar](https://github.com/Auditware/radar?tab=readme-ov-file) is static
-analysis tool for anchor rust programs. It allows you to write, share, and
+analysis tool for Anchor rust programs. It allows you to write, share, and
 utilize templates to identify security issues in rust-based smart contracts
 using a powerful python based rule engine that enables automating detection of
 vulnerable code patterns through logical expressions.

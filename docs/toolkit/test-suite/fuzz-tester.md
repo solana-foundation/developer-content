@@ -1,15 +1,15 @@
 ---
 title: Solana Fuzz Tester
-sidebarSortOrder: 2
+sidebarSortOrder: 4
 sidebarLabel: Fuzz Tester
 ---
 
-> This is a beta version of The Solana Toolkit, and is still a WIP. Please post
-> all feedback as a github issue
-> [here](https://github.com/solana-foundation/developer-content/issues).
+> This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
+> still a WIP. Please post all feedback as a GitHub issue
+> [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
-> The Fuzz tester is still a WIP. It currently is only anchor compatible and
-> needs some manual work to complete tests
+> The Trident fuzz tester is still a WIP and currently only Anchor compatible
+> may require some manual work to complete tests.
 
 ## Initialize Fuzz Tests
 
@@ -27,7 +27,7 @@ This command does the following:
 
 ## Define Fuzz Accounts
 
-Define `AccountsStorage` type for each `Account` you would like to use
+Define `AccountsStorage` type for each `Account` you would like to use:
 
 ```rust
 #[doc = r" Use AccountsStorage<T> where T can be one of:"]
@@ -43,16 +43,16 @@ pub struct FuzzAccounts {
 
 ## Implement Fuzz Instructions
 
-Each Instruction in the Fuzz Test has to have defined the following functions:
+Each Instruction in the fuzz test has to have defined the following functions:
 
-- `get_program_id()` specifies to which program the Instruction belongs. This
-  function is automatically defined and should not need any updates. The
-  importance is such that if you have multiple programs in your workspace,
-  Trident can generate Instruction Sequences of Instruction corresponding to
-  different programs.
-- `get_data()` specifies what Instruction inputs are send to the Program
-  Instructions.
-- `get_accounts()` specifies what Accounts are send to the Program Instructions.
+- `get_program_id()` specifies which program the instruction belongs to. This
+  function is automatically defined and should not need any updates. Its
+  important to use especially if you have multiple programs in your workspace,
+  allowing Trident to generate instruction sequences corresponding to different
+  programs.
+- `get_data()` specifies what instruction inputs are sent to the program
+  instructions.
+- `get_accounts()` specifies what accounts are sent to the program instructions.
 
 ## Execute Fuzz Tests
 
