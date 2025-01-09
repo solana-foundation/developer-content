@@ -1,150 +1,81 @@
 ---
 sidebarSortOrder: 4
-title: State Compression
+title: Стиснення стану (State Compression)
 description:
-  'State Compression is the method of cheaply and securely storing
-  "fingerprints" of offchain data in the Solana leger, instead of expensive
-  accounts.'
+  'Стиснення стану - це метод дешевого та безпечного збереження
+  "відбитків" даних поза мережею в реєстрі Solana замість дорогих облікових записів.'
 ---
 
-On Solana, [State Compression](/docs/advanced/state-compression.md) is the
-method of creating a "fingerprint" (or hash) of offchain data and storing this
-fingerprint on-chain for secure verification. Effectively using the security of
-the Solana ledger to securely validate offchain data, verifying it has not been
-tampered with.
+У Solana [стиснення стану](/docs/advanced/state-compression.md) є методом створення "відбитку" (або гешу) даних поза мережею та збереження цього відбитку в мережі для безпечної перевірки. Цей процес використовує безпеку реєстру Solana для гарантування цілісності даних поза мережею, забезпечуючи їх незмінність.
 
-This method of "compression" allows Solana programs and dApps to use cheap
-blockchain [ledger](/docs/terminology.md#ledger) space, instead of the more
-expensive [account](/docs/terminology.md#account) space, to securely store data.
+Цей метод "стиснення" дозволяє програмам та децентралізованим додаткам (dApps) використовувати дешевий простір у [реєстрі](/docs/terminology.md#ledger) блокчейну, замість більш дорогого простору [облікових записів](/docs/terminology.md#account), для безпечного зберігання даних.
 
-This is accomplished by using a special binary tree structure, known as a
-[concurrent merkle tree](#what-is-a-concurrent-merkle-tree), to create a hash of
-each piece of data (called a `leaf`), hashing those together, and only storing
-this final hash on-chain.
+Це досягається за допомогою спеціальної структури двійкового дерева, відомого як 
+[конкурентне мерклеве дерево](#what-is-a-concurrent-merkle-tree), яке створює геш кожного фрагмента даних (названого `листком`), об'єднує ці геші і зберігає тільки фінальний геш у мережі.
 
-## What is State Compression?
+## Що таке стиснення стану?
 
-In simple terms, state compression uses "**_tree_**" structures to
-cryptographically hash offchain data together, in a deterministic way, to
-compute a single final hash that gets stored on-chain.
+Простіше кажучи, стиснення стану використовує структури "**_дерев_**" для криптографічного хешування даних поза мережею детермінованим способом, щоб обчислити один кінцевий геш, який зберігається у мережі.
 
-These _trees_ are created in this "_deterministic_" process by:
+Ці _дерева_ створюються таким "_детермінованим_" процесом:
 
-- taking any piece of data
-- creating a hash of this data
-- storing this hash as a `leaf` at the bottom of the tree
-- each `leaf` pair is then hashed together, creating a `branch`
-- each `branch` is then hashed together
-- continually climbing the tree and hashing adjacent branches together
-- once at the top of the tree, a final `root hash` is produced
+- Береться будь-який фрагмент даних.
+- Створюється геш цих даних.
+- Цей геш зберігається як `листок` на нижньому рівні дерева.
+- Кожна пара `листків` об'єднується в геш, створюючи `гілку`.
+- Кожна `гілка` також хешується разом.
+- Процес повторюється, поки не буде обчислено фінальний `кореневий геш`.
 
-This `root hash` is then stored onchain, as a verifiable **_proof_** of all of
-the data within every leaf. Allowing anyone to cryptographically verify all the
-offchain data within the tree, while only actually storing a **minimal** amount
-of data on-chain. Therefore, significantly reducing the cost to store/prove
-large amounts of data due to this "state compression".
+Цей `кореневий геш` зберігається в мережі як верифіковане **_підтвердження_** для всіх даних у кожному листку. Це дозволяє криптографічно перевіряти всі дані поза мережею, використовуючи мінімальну кількість даних у мережі. Таким чином, значно знижуються витрати на зберігання/перевірку великих обсягів даних завдяки "стисненню стану".
 
-## Merkle trees and concurrent merkle trees
+## Мерклеві дерева та конкурентні мерклеві дерева
 
-Solana's state compression used a special type of
-[merkle tree](#what-is-a-merkle-tree) that allows for multiple changes to any
-given tree to happen, while still maintaining the integrity and validity of the
-tree.
+Стиснення стану у Solana використовує спеціальний тип 
+[мерклевого дерева](#what-is-a-merkle-tree), який дозволяє виконувати кілька змін у дереві, зберігаючи його цілісність і валідність.
 
-This special tree, known as a
-"[concurrent merkle tree](#what-is-a-concurrent-merkle-tree)", effectively
-retains a "changelog" of the tree on-chain. Allowing for multiple rapid changes
-to the same tree (i.e. all in the same block), before a proof is invalidated.
+Це спеціальне дерево, відоме як 
+"[конкурентне мерклеве дерево](#what-is-a-concurrent-merkle-tree)", зберігає "журнал змін" дерева в мережі. Це дозволяє виконувати кілька змін до дерева (наприклад, у межах одного блоку), не порушуючи підтвердження.
 
-### What is a merkle tree?
+### Що таке мерклеве дерево?
 
-A [merkle tree](https://en.wikipedia.org/wiki/merkle_tree), sometimes called a
-"hash tree", is a hash based binary tree structure where each `leaf` node is
-represented as a cryptographic hash of its inner data. And every node that is
-**not** a leaf, called a `branch`, is represented as a hash of its child leaf
-hashes.
+[Мерклеве дерево](https://uk.wikipedia.org/wiki/Мерклеве_дерево), або "дерево гешів", — це двійкова структура, у якій кожен `листок` є криптографічним гешем даних. Всі вузли, які **не** є листками, називаються `гілками` і є гешами їхніх дочірніх листків.
 
-Each branch is then also hashed together, climbing the tree, until eventually
-only a single hash remains. This final hash, called the `root hash` or "root",
-can then be used in combination with a "proof path" to verify any piece of data
-stored within a leaf node.
+Кожна гілка також хешується разом, поступово піднімаючись вгору, поки не залишиться один геш. Цей фінальний геш, званий `кореневим гешем`, можна використовувати разом із "шляхом підтвердження" для перевірки будь-яких даних, збережених у листковому вузлі.
 
-Once a final `root hash` has been computed, any piece of data stored within a
-`leaf` node can be verified by rehashing the specific leaf's data and the hash
-label of each adjacent branch climbing the tree (known as the `proof` or "proof
-path"). Comparing this "rehash" to the `root hash` is the verification of the
-underlying leaf data. If they match, the data is verified accurate. If they do
-not match, the leaf data was changed.
+### Що таке Конкурентне Мерклеве дерево?
 
-Whenever desired, the original leaf data can be changed by simply hashing the
-**new leaf** data and recomputing the root hash in the same manner of the
-original root. This **new root hash** is then used to verify any of the data,
-and effectively invalidates the previous root hash and previous proof.
-Therefore, each change to these _traditional merkle trees_ are required to be
-performed in series.
+У високопродуктивних застосунках, таких як [середовище виконання Solana](/docs/core/fees.md), запити на зміну ончейн _традиційного мерклевого дерева_ можуть надходити до валідаторів досить швидко (наприклад, у межах одного слота). У таких випадках кожна зміна даних у листках повинна виконуватися послідовно. Це призводить до невдачі наступних запитів на зміну, оскільки кореневий геш і підтвердження стають недійсними після попередньої зміни в слоті.
 
-> This process of changing leaf data, and computing a new root hash can be a
-> **very common** thing when using merkle trees! While it is one of the design
-> points of the tree, it can result in one of the most notable drawbacks: rapid
-> changes.
+Рішенням цієї проблеми є Конкурентні Мерклеві дерева.
 
-### What is a Concurrent merkle tree?
+**Конкурентне Мерклеве дерево** зберігає **захищений журнал змін**, який містить останні зміни, їх кореневий геш і підтвердження для його обчислення. Цей буфер змін ("changelog buffer") зберігається ончейн у спеціальному акаунті для кожного дерева, з обмеженням на максимальну кількість записів у журналі змін (`maxBufferSize`).
 
-In high throughput applications, like within the
-[Solana runtime](/docs/core/fees.md), requests to change an on-chain
-_traditional merkle tree_ could be received by validators in relatively rapid
-succession (e.g. within the same slot). Each leaf data change would still be
-required to be performed in series. Resulting in each subsequent request for
-change to fail, due to the root hash and proof being invalidated by the previous
-change request in the slot.
+Коли валідатори отримують кілька запитів на зміну даних у листках у межах одного слота, ончейн _конкурентне мерклеве дерево_ може використовувати цей буфер змін як джерело правдивої інформації для більш прийнятних підтверджень. Це дозволяє виконувати до `maxBufferSize` змін для одного дерева в межах одного слота, що значно підвищує пропускну здатність.
 
-Enter, Concurrent merkle trees.
+## Розмір Конкурентного Мерклевого дерева
 
-A **Concurrent merkle tree** stores a **secure changelog** of the most recent
-changes, their root hash, and the proof to derive it. This changelog "buffer" is
-stored on-chain in an account specific to each tree, with a maximum number of
-changelog "records" (aka `maxBufferSize`).
+При створенні такого ончейн дерева існує 3 параметри, які визначають розмір дерева, вартість його створення і кількість одночасних змін:
 
-When multiple leaf data change requests are received by validators in the same
-slot, the on-chain _concurrent merkle tree_ can use this "changelog buffer" as a
-source of truth for more acceptable proofs. Effectively allowing for up to
-`maxBufferSize` changes to the same tree in the same slot. Significantly
-boosting throughput.
+1. Максимальна глибина (max depth)
+2. Розмір буфера змін (max buffer size)
+3. Глибина крони дерева (canopy depth)
 
-## Sizing a concurrent merkle tree
+### Максимальна глибина
 
-When creating one of these on-chain trees, there are 3 values that will
-determine the size of your tree, the cost to create your tree, and the number of
-concurrent changes to your tree:
+"Максимальна глибина" дерева — це **максимальна кількість** переходів від будь-якого `листка` даних до `кореня` дерева.
 
-1. max depth
-2. max buffer size
-3. canopy depth
+Оскільки мерклеві дерева є двійковими, кожен листок з'єднаний лише з **одним** іншим листком; вони утворюють `пару листків`.
 
-### Max depth
-
-The "max depth" of a tree is the **maximum number** of hops to get from any data
-`leaf` to the `root` of the tree.
-
-Since merkle trees are binary trees, every leaf is connected to **only one**
-other leaf; existing as a `leaf pair`.
-
-Therefore, the `maxDepth` of a tree is used to determine the maximum number of
-nodes (aka pieces of data or `leafs`) to store within the tree using a simple
-calculation:
+Таким чином, `maxDepth` дерева використовується для визначення максимальної кількості вузлів (тобто елементів даних або `листків`), які можна зберігати у дереві, за допомогою простої формули:
 
 ```text
 nodes_count = 2 ^ maxDepth
 ```
+Оскільки глибину дерева потрібно встановити під час його створення, ви повинні визначити, скільки елементів даних ви хочете зберігати у своєму дереві. Потім, використовуючи просту формулу вище, ви можете визначити найменше значення `maxDepth`, яке дозволить зберігати ваші дані.
 
-Since a trees depth must be set at tree creation, you must decide how many
-pieces of data you want your tree to store. Then using the simple calculation
-above, you can determine the lowest `maxDepth` to store your data.
+#### Приклад 1: Мінтинг 100 NFT
 
-#### Example 1: minting 100 nfts
-
-If you wanted to create a tree to store 100 compressed nfts, we will need a
-minimum of "100 leafs" or "100 nodes".
+Якщо ви хочете створити дерево для зберігання 100 стиснутих NFT, вам знадобиться щонайменше "100 листків" або "100 вузлів".
 
 ```text
 // maxDepth=6 -> 64 nodes
@@ -153,13 +84,11 @@ minimum of "100 leafs" or "100 nodes".
 // maxDepth=7 -> 128 nodes
 2^7 = 128
 ```
+Ми повинні використовувати значення `maxDepth` рівне `7`, щоб забезпечити можливість зберігати всі наші дані.
 
-We must use a `maxDepth` of `7` to ensure we can store all of our data.
+#### Приклад 2: Мінтинг 15000 NFT
 
-#### Example 2: minting 15000 nfts
-
-If you wanted to create a tree to store 15000 compressed nfts, we will need a
-minimum of "15000 leafs" or "15000 nodes".
+Якщо ви хочете створити дерево для зберігання 15000 стиснутих NFT, вам знадобиться щонайменше "15000 листків" або "15000 вузлів".
 
 ```text
 // maxDepth=13 -> 8192 nodes
@@ -168,123 +97,71 @@ minimum of "15000 leafs" or "15000 nodes".
 // maxDepth=14 -> 16384 nodes
 2^14 = 16384
 ```
+Ми повинні використовувати `maxDepth` рівне `14`, щоб забезпечити можливість зберігати всі наші дані.
 
-We must use a `maxDepth` of `14` to ensure we can store all of our data.
+#### Чим більша максимальна глибина, тим вища вартість
 
-#### The higher the max depth, the higher the cost
+Значення `maxDepth` є одним із основних чинників вартості під час створення дерева, оскільки ви оплачуєте цю вартість наперед при створенні дерева. Чим більша глибина дерева, тим більше даних (відбитків або хешів) можна зберігати, але тим вища вартість.
 
-The `maxDepth` value will be one of the primary drivers of cost when creating a
-tree since you will pay this cost upfront at tree creation. The higher the max
-tree depth, the more data fingerprints (aka hashes) you can store, the higher
-the cost.
+---
 
-### Max buffer size
+### Максимальний розмір буфера (maxBufferSize)
 
-The "max buffer size" is effectively the maximum number of changes that can
-occur on a tree, with the `root hash` still being valid.
+"Максимальний розмір буфера" — це максимальна кількість змін, які можуть бути внесені до дерева, доки кореневий хеш (`root hash`) залишається дійсним.
 
-Due to the root hash effectively being a single hash of all leaf data, changing
-any single leaf would invalidate the proof needed for all subsequent attempts to
-change any leaf of a regular tree.
+Оскільки кореневий хеш є єдиним хешем для всіх даних листків, зміна будь-якого окремого листка інвалідовує proof, потрібний для всіх наступних спроб змінити будь-який інший листок у звичайному дереві.
 
-But with a [concurrent tree](#what-is-a-concurrent-merkle-tree), there is
-effectively a changelog of updates for these proofs. This changelog buffer is
-sized and set at tree creation via this `maxBufferSize` value.
+У випадку [Concurrent Tree](#що-таке-concurrent-merkle-tree), існує журнал змін для цих proof, який задається під час створення дерева через параметр `maxBufferSize`.
 
-### Canopy depth
+---
 
-The "canopy depth," also known as the canopy size, refers to the number of proof
-node levels that are cached or stored onchain for a given proof path.
+### Глибина козирка (canopyDepth)
 
-When performing an update action on a `leaf`, like transferring ownership (e.g.
-selling a compressed NFT), the **complete** proof path must be used to verify
-original ownership of the leaf and therefore allow for the update action. This
-verification is performed using the **complete** proof path to correctly compute
-the current `root hash` (or any cached `root hash` via the onchain "concurrent
-buffer").
+"Глибина козирка" або "розмір козирка" визначає кількість рівнів proof, які кешуються або зберігаються on-chain для даного proof-шляху.
 
-The larger a tree's max depth is, the more proof nodes are required to perform
-this verification. For example, if your max depth is `14`, there are `14` total
-proof nodes required to be used to verify. As a tree gets larger, the complete
-proof path gets larger.
+Коли виконується дія оновлення для `leaf` (наприклад, передача права власності), **повний** proof-шлях повинен бути використаний для верифікації початкового права власності на листок. Це здійснюється шляхом обчислення поточного `root hash`.
 
-Normally, each of these proof nodes would be required to be included within each
-tree update transaction. Since each proof node value takes up `32 bytes` in a
-transaction (similar to providing a Public Key), larger trees would very quickly
-exceed the maximum transaction size limit.
+Для великих дерев потрібно більше proof-вузлів, щоб виконати цю перевірку. Наприклад, якщо `maxDepth` дорівнює `14`, потрібно `14` proof-вузлів. З використанням козирка частина цих вузлів зберігається on-chain, зменшуючи кількість proof-вузлів, які потрібно включити в транзакції.
 
-Enter the canopy. The canopy enables storing a set number of proof nodes on
-chain (for any given proof path). Allowing for less proof nodes to be included
-within each update transactions, therefore keeping the overall transaction size
-below the limit.
+Наприклад, дерево з `maxDepth` рівне `14` із козирком розміром `10` потребуватиме лише `4` proof-вузли на транзакцію.
 
-For example, a tree with a max depth of `14` would require `14` total proof
-nodes. With a canopy of `10`, only `4` proof nodes are required to be submitted
-per update transaction.
+![Глибина козирка 1 для Concurrent Merkle Tree з максимальною глибиною 3](/assets/docs/compression/canopy-depth-1.png)
 
-![Canopy depth of 1 for a Concurrent Merkle Tree of max depth of 3](/assets/docs/compression/canopy-depth-1.png)
+---
 
-Consider another example, this time with a tree of max depth `3`. If we want to
-apply an action to one of the tree’s leaves—such as updating `R4`—we need to
-provide proofs for `L4` and `R2`. However, we can omit `R1` since it is already
-cached/stored onchain due to our canopy depth of `1`, which ensures that all
-nodes at level 1 (`L1` and `R1`) are stored onchain. This results in a total of
-2 required proofs.
+#### Чим більша глибина козирка, тим вища вартість
 
-Therefore, the number of proofs required to update a leaf is equal to the max
-depth minus the canopy depth. In this example, `3 - 1 = 2`.
+Значення `canopyDepth` також є одним із основних чинників вартості створення дерева. Чим більше proof-вузлів зберігається on-chain, тим вища вартість.
 
-#### The larger the canopy depth value, the higher the cost
+#### Низький козирок обмежує композитність
 
-The `canopyDepth` value is also a primary factor of cost when creating a tree
-since you will pay this cost upfront at tree creation. The higher the canopy
-depth, the more data proof nodes are stored onchain, the higher the cost.
+Низьке значення `canopyDepth` вимагає більше proof-вузлів у кожній транзакції оновлення. Це обмежує можливості для інтеграції вашого дерева з іншими Solana-програмами або dApps.
 
-#### Smaller canopy limits composability
+Наприклад, дерево, яке використовується для стиснутих NFT з низьким `canopyDepth`, може дозволяти лише базові дії, як-от передача, але не підтримувати розширені функції, такі як система ставок.
 
-While a tree's creation costs are higher with a higher canopy, having a lower
-`canopyDepth` will require more proof nodes to be included within each update
-transaction. The more nodes required to be submitted, the larger the transaction
-size, and therefore the easier it is to exceed the transaction size limits.
+---
 
-This will also be the case for any other Solana program or dApp that attempts to
-interact with your tree/leafs. If your tree requires too many proof nodes
-(because of a low canopy depth), then any other additional actions another
-on-chain program **could** offer will be **limited** by their specific
-instruction size plus your proof node list size. Limiting composability, and
-potential additional utility for your specific tree.
+## Вартість створення дерева
 
-For example, if your tree is being used for compressed NFTs and has a very low
-canopy depth, an NFT marketplace may only be able to support simple NFTs
-transfers. And not be able to support an on-chain bidding system.
+Вартість створення Concurrent Merkle Tree залежить від його параметрів: `maxDepth`, `maxBufferSize`, і `canopyDepth`. Ці параметри визначають необхідний простір (у байтах) для дерева.
 
-## Cost of creating a tree
+Використовуючи метод
+[`getMinimumBalanceForRentExemption`](/docs/rpc/http/getminimumbalanceforrentexemption),
+можна дізнатися вартість (у лампортах) для виділення цього простору on-chain.
 
-The cost of creating a concurrent merkle tree is based on the tree's size
-parameters: `maxDepth`, `maxBufferSize`, and `canopyDepth`. These values are all
-used to calculate the on-chain storage (in bytes) required for a tree to exist
-onchain.
+---
 
-Once the required space (in bytes) has been calculated, and using the
-[`getMinimumBalanceForRentExemption`](/docs/rpc/http/getminimumbalanceforrentexemption)
-RPC method, request the cost (in lamports) to allocate this amount of bytes
-on-chain.
+### Розрахунок вартості дерева у JavaScript
 
-### Calculate tree cost in JavaScript
-
-Within the
+У пакеті
 [`@solana/spl-account-compression`](https://www.npmjs.com/package/@solana/spl-account-compression)
-package, developers can use the
+можна використовувати функцію
 [`getConcurrentMerkleTreeAccountSize`](https://solana-labs.github.io/solana-program-library/account-compression/sdk/docs/modules/index.html#getConcurrentMerkleTreeAccountSize)
-function to calculate the required space for a given tree size parameters.
+для розрахунку необхідного простору для дерева з заданими параметрами.
 
-Then using the
-[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getMinimumBalanceForRentExemption)
-function to get the final cost (in lamports) to allocate the required space for
-the tree on-chain.
-
-Then determine the cost in lamports to make an account of this size rent exempt,
-similar to any other account creation.
+Далі, за допомогою функції
+[`getMinimumBalanceForRentExemption`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getMinimumBalanceForRentExemption),
+можна визначити остаточну вартість (у лампортах) для створення дерева, подібно до будь-якого іншого акаунта.
 
 ```ts
 // calculate the space required for the tree
@@ -299,41 +176,39 @@ const storageCost =
   await connection.getMinimumBalanceForRentExemption(requiredSpace);
 ```
 
-### Example costs
+### Приклади вартості
 
-Listed below are several example costs, for different tree sizes, including how
-many leaf nodes are possible for each:
+Нижче наведено кілька прикладів вартості для дерев різного розміру, включаючи кількість можливих листків:
 
-**Example #1: 16,384 nodes costing 0.222 SOL**
+**Приклад №1: 16,384 вузлів, вартість 0.222 SOL**
 
-- max depth of `14` and max buffer size of `64`
-- maximum number of leaf nodes: `16,384`
-- canopy depth of `0` costs approximately `0.222 SOL` to create
+- максимальна глибина: `14`, максимальний розмір буфера: `64`
+- максимальна кількість листків: `16,384`
+- глибина козирка: `0`, вартість створення приблизно `0.222 SOL`
 
-**Example #2: 16,384 nodes costing 1.134 SOL**
+**Приклад №2: 16,384 вузлів, вартість 1.134 SOL**
 
-- max depth of `14` and max buffer size of `64`
-- maximum number of leaf nodes: `16,384`
-- canopy depth of `11` costs approximately `1.134 SOL` to create
+- максимальна глибина: `14`, максимальний розмір буфера: `64`
+- максимальна кількість листків: `16,384`
+- глибина козирка: `11`, вартість створення приблизно `1.134 SOL`
 
-**Example #3: 1,048,576 nodes costing 1.673 SOL**
+**Приклад №3: 1,048,576 вузлів, вартість 1.673 SOL**
 
-- max depth of `20` and max buffer size of `256`
-- maximum number of leaf nodes: `1,048,576`
-- canopy depth of `10` costs approximately `1.673 SOL` to create
+- максимальна глибина: `20`, максимальний розмір буфера: `256`
+- максимальна кількість листків: `1,048,576`
+- глибина козирка: `10`, вартість створення приблизно `1.673 SOL`
 
-**Example #4: 1,048,576 nodes costing 15.814 SOL**
+**Приклад №4: 1,048,576 вузлів, вартість 15.814 SOL**
 
-- max depth of `20` and max buffer size of `256`
-- maximum number of leaf nodes: `1,048,576`
-- canopy depth of `15` costs approximately `15.814 SOL` to create
+- максимальна глибина: `20`, максимальний розмір буфера: `256`
+- максимальна кількість листків: `1,048,576`
+- глибина козирка: `15`, вартість створення приблизно `15.814 SOL`
 
-## Compressed NFTs
+---
 
-Compressed NFTs are one of the most popular use cases for State Compression on
-Solana. With compression, a one million NFT collection could be minted for
-`~50 SOL`, vice `~12,000 SOL` for its uncompressed equivalent collection.
+## Стиснуті NFT
 
-If you are interested in creating compressed NFTs yourself, read our developer
-guide for
-[minting and transferring compressed NFTs](/content/guides/javascript/compressed-nfts.md).
+Стиснуті NFT є одним із найпопулярніших варіантів використання стиснення стану на Solana. Завдяки стисненню колекцію з одного мільйона NFT можна створити за `~50 SOL`, у порівнянні з `~12,000 SOL` для її нестиснутої еквівалентної колекції.
+
+Якщо ви зацікавлені в створенні стиснутих NFT, ознайомтеся з нашим посібником для розробників:
+[створення та передача стиснутих NFT](/content/guides/javascript/compressed-nfts.md).

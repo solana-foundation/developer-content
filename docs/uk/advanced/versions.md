@@ -1,70 +1,60 @@
 ---
 sidebarSortOrder: 3
-title: Versioned Transactions
+title: "Версійні Транзакції"
 description:
-  "Explore the core Solana concepts: transactions, versioned transactions,
-  enabling additional functionality in the Solana runtime, address lookup
-  tables, and more."
+  "Дослідіть основні концепції Solana: транзакції, версійні транзакції, розширення функціональності в Solana Runtime, таблиці пошуку адрес та інше."
 altRoutes:
   - /docs/core/transactions/versions
 ---
 
-Versioned Transactions are the new transaction format that allow for additional
-functionality in the Solana runtime, including
-[Address Lookup Tables](/docs/advanced/lookup-tables.md).
+Версійні Транзакції - це новий формат транзакцій, який дозволяє додаткову функціональність у Solana Runtime, включаючи
+[Таблиці пошуку адрес](/docs/advanced/lookup-tables.md).
 
-While changes to onchain programs are **NOT** required to support the new
-functionality of versioned transactions (or for backwards compatibility),
-developers **WILL** need update their client side code to prevent
-[errors due to different transaction versions](#max-supported-transaction-version).
+Хоча зміни в ончейн-програмах **НЕ** потрібні для підтримки нової функціональності версійних транзакцій (або для зворотної сумісності), розробники **ПОВИННІ** оновити клієнтський код, щоб уникнути
+[помилок через різні версії транзакцій](#max-supported-transaction-version).
 
-## Current Transaction Versions
+## Поточні версії транзакцій
 
-The Solana runtime supports two transaction versions:
+Solana Runtime підтримує дві версії транзакцій:
 
-- `legacy` - older transaction format with no additional benefit
-- `0` - added support for
-  [Address Lookup Tables](/docs/advanced/lookup-tables.md)
+- `legacy` - старий формат транзакцій без додаткових переваг
+- `0` - додає підтримку
+  [Таблиць пошуку адрес](/docs/advanced/lookup-tables.md)
 
-## Max supported transaction version
+## Максимально підтримувана версія транзакцій
 
-All RPC requests that return a transaction **_should_** specify the highest
-version of transactions they will support in their application using the
-`maxSupportedTransactionVersion` option, including
-[`getBlock`](/docs/rpc/http/getBlock.mdx) and
+Усі RPC-запити, які повертають транзакцію, **_повинні_** вказувати найвищу версію транзакцій, яку вони підтримують у своїй програмі, використовуючи параметр
+`maxSupportedTransactionVersion`, включаючи
+[`getBlock`](/docs/rpc/http/getBlock.mdx) та
 [`getTransaction`](/docs/rpc/http/getTransaction.mdx).
 
-An RPC request will fail if a Versioned Transaction is returned that is higher
-than the set `maxSupportedTransactionVersion`. (i.e. if a version `0`
-transaction is returned when `legacy` is selected)
+RPC-запит завершиться невдачею, якщо буде повернута версійна транзакція, яка має версію вище встановленої `maxSupportedTransactionVersion`. (наприклад, якщо повертається транзакція версії `0`, а встановлено `legacy`)
 
-> WARNING: If no `maxSupportedTransactionVersion` value is set, then only
-> `legacy` transactions will be allowed in the RPC response. Therefore, your RPC
-> requests **WILL** fail if any version `0` transactions are returned.
+> УВАГА: Якщо значення `maxSupportedTransactionVersion` не встановлено, тоді лише транзакції `legacy` будуть дозволені у відповіді RPC. Таким чином, ваші RPC-запити **ПРИЗВЕДУТЬ ДО ПОМИЛКИ**, якщо буде повернута будь-яка транзакція версії `0`.
 
-## How to set max supported version
+## Як встановити максимально підтримувану версію
 
-You can set the `maxSupportedTransactionVersion` using both the
-[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) library
-and JSON formatted requests directly to an RPC endpoint.
+Ви можете встановити `maxSupportedTransactionVersion`, використовуючи бібліотеку
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/)
+або шляхом прямого надсилання JSON-запитів до RPC-ендпоінту.
 
-### Using web3.js
+### Використання web3.js
 
-Using the
-[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) library,
-you can retrieve the most recent block or get a specific transaction:
+Використовуючи бібліотеку
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/),
+ви можете отримати останній блок або конкретну транзакцію:
 
 ```js
-// connect to the `devnet` cluster and get the current `slot`
+// підключення до кластера `devnet` та отримання поточного `slot`
 const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 const slot = await connection.getSlot();
 
-// get the latest block (allowing for v0 transactions)
+// отримання останнього блоку (дозволяючи транзакції версії v0)
 const block = await connection.getBlock(slot, {
   maxSupportedTransactionVersion: 0,
 });
 
-// get a specific transaction (allowing for v0 transactions)
+// отримання конкретної транзакції (дозволяючи транзакції версії v0)
 const getTx = await connection.getTransaction(
   "3jpoANiFeVGisWRY5UP648xRXs3iQasCHABPWRWnoEjeA93nc79WrnGgpgazjq4K9m8g2NJoyKoWBV1Kx5VmtwHQ",
   {
@@ -73,10 +63,10 @@ const getTx = await connection.getTransaction(
 );
 ```
 
-### JSON requests to the RPC
+### JSON-запити до RPC
 
-Using a standard JSON formatted POST request, you can set the
-`maxSupportedTransactionVersion` when retrieving a specific block:
+Використовуючи стандартний JSON-запит POST, ви можете встановити
+`maxSupportedTransactionVersion` при отриманні конкретного блоку:
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d \
@@ -88,30 +78,26 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 }]}'
 ```
 
-## How to create a Versioned Transaction
+## Як створити версійну транзакцію
 
-Versioned transactions can be created similar to the older method of creating
-transactions. There are differences in using certain libraries that should be
-noted.
+Версійні транзакції можна створити подібно до старого методу створення транзакцій. Є відмінності у використанні певних бібліотек, які слід враховувати.
 
-Below is an example of how to create a Versioned Transaction, using the
-`@solana/web3.js` library, to send perform a SOL transfer between two accounts.
+Нижче наведено приклад створення версійної транзакції з використанням бібліотеки
+`@solana/web3.js` для передачі SOL між двома рахунками.
 
-#### Notes:
+#### Примітки:
 
-- `payer` is a valid `Keypair` wallet, funded with SOL
-- `toAccount` a valid `Keypair`
+- `payer` - це дійсний гаманець `Keypair`, наповнений SOL
+- `toAccount` - дійсний `Keypair`
 
-Firstly, import the web3.js library and create a `connection` to your desired
-cluster.
+Спочатку імпортуйте бібліотеку web3.js та створіть `connection` до бажаного кластера.
 
-We then define the recent `blockhash` and `minRent` we will need for our
-transaction and the account:
+Далі визначте останній `blockhash` і `minRent`, які будуть потрібні для вашої транзакції та рахунку:
 
 ```js
 const web3 = require("@solana/web3.js");
 
-// connect to the cluster and get the minimum rent for rent exempt status
+// підключення до кластера та отримання мінімальної орендної плати для статусу rent exempt
 const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 let minRent = await connection.getMinimumBalanceForRentExemption(0);
 let blockhash = await connection
@@ -119,12 +105,10 @@ let blockhash = await connection
   .then(res => res.blockhash);
 ```
 
-Create an `array` of all the `instructions` you desire to send in your
-transaction. In this example below, we are creating a simple SOL transfer
-instruction:
+Створіть `array` усіх `instructions`, які ви хочете відправити у вашій транзакції. У прикладі нижче ми створюємо просту інструкцію передачі SOL:
 
 ```js
-// create an array with your desired `instructions`
+// створення масиву з вашими інструкціями
 const instructions = [
   web3.SystemProgram.transfer({
     fromPubkey: payer.publicKey,
@@ -134,11 +118,10 @@ const instructions = [
 ];
 ```
 
-Next, construct a `MessageV0` formatted transaction message with your desired
-`instructions`:
+Далі створіть повідомлення у форматі `MessageV0` для вашої транзакції:
 
 ```js
-// create v0 compatible message
+// створення повідомлення, сумісного з v0
 const messageV0 = new web3.TransactionMessage({
   payerKey: payer.publicKey,
   recentBlockhash: blockhash,
@@ -146,46 +129,34 @@ const messageV0 = new web3.TransactionMessage({
 }).compileToV0Message();
 ```
 
-Then, create a new `VersionedTransaction`, passing in our v0 compatible message:
+Потім створіть нову `VersionedTransaction`, передаючи ваше повідомлення v0:
 
 ```js
 const transaction = new web3.VersionedTransaction(messageV0);
 
-// sign your transaction with the required `Signers`
+// підпишіть вашу транзакцію потрібними підписами
 transaction.sign([payer]);
 ```
 
-You can sign the transaction by either:
-
-- passing an array of `signatures` into the `VersionedTransaction` method, or
-- call the `transaction.sign()` method, passing an array of the required
-  `Signers`
-
-> NOTE: After calling the `transaction.sign()` method, all the previous
-> transaction `signatures` will be fully replaced by new signatures created from
-> the provided in `Signers`.
-
-After your `VersionedTransaction` has been signed by all required accounts, you
-can send it to the cluster and `await` the response:
+Після того, як ваша `VersionedTransaction` підписана всіма необхідними рахунками, ви можете відправити її до кластера та отримати відповідь:
 
 ```js
-// send our v0 transaction to the cluster
+// відправка нашої транзакції v0 до кластера
 const txId = await connection.sendTransaction(transaction);
 console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
 ```
 
-> NOTE: Unlike `legacy` transactions, sending a `VersionedTransaction` via
-> `sendTransaction` does **NOT** support transaction signing via passing in an
-> array of `Signers` as the second parameter. You will need to sign the
-> transaction before calling `connection.sendTransaction()`.
+> УВАГА: На відміну від `legacy` транзакцій, відправка `VersionedTransaction` через
+> `sendTransaction` **НЕ** підтримує підпис транзакцій через передачу масиву `Signers` як другого параметра. Ви повинні підписати транзакцію перед викликом `connection.sendTransaction()`.
 
-## More Resources
+## Додаткові ресурси
 
-- using
-  [Versioned Transactions for Address Lookup Tables](/docs/advanced/lookup-tables.md#how-to-create-an-address-lookup-table)
-- view an
-  [example of a v0 transaction](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
-  on Solana Explorer
-- read the
-  [accepted proposal](https://docs.anza.xyz/proposals/versioned-transactions)
-  for Versioned Transaction and Address Lookup Tables
+- Використання
+  [версійних транзакцій для таблиць пошуку адрес](/docs/advanced/lookup-tables.md#how-to-create-an-address-lookup-table)
+- Перегляд
+  [прикладу транзакції v0](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
+  на Solana Explorer
+- Читання
+  [ухваленої пропозиції](https://docs.anza.xyz/proposals/versioned-transactions)
+  для версійних транзакцій та таблиць пошуку адрес
+

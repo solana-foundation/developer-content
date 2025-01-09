@@ -1,228 +1,59 @@
 ---
 sidebarSortOrder: 2
-title: Retrying Transactions
+title: Повторна відправка транзакцій
 altRoutes:
   - /docs/core/transactions/retry
 description:
-  Learn how to handle dropped transactions and implement custom retry logic on
-  Solana. This guide covers transaction rebroadcasting, preflight checks, and
-  best practices for managing transaction retries to ensure reliable transaction
-  processing on the Solana blockchain.
+  Дізнайтеся, як обробляти втрачені транзакції та впроваджувати користувацьку
+  логіку повторної відправки у Solana. Цей посібник охоплює повторне
+  передавання транзакцій, перевірки перед виконанням (preflight) і найкращі
+  практики для забезпечення надійної обробки транзакцій у блокчейні Solana.
 ---
 
-# Retrying Transactions
+# Повторна відправка транзакцій
 
-On some occasions, a seemingly valid transaction may be dropped before it is
-included in a block. This most often occurs during periods of network
-congestion, when an RPC node fails to rebroadcast the transaction to the
-[leader](/docs/terminology.md#leader). To an end-user, it may appear as if their
-transaction disappears entirely. While RPC nodes are equipped with a generic
-rebroadcasting algorithm, application developers are also capable of developing
-their own custom rebroadcasting logic.
+Іноді здається, що дійсна транзакція може бути втрачена до її включення в блок. Це зазвичай трапляється під час завантаженості мережі, коли RPC-вузол не може повторно передати транзакцію до [лідера](/docs/terminology.md#leader). Для кінцевого користувача це може виглядати так, ніби транзакція повністю зникає. Хоча RPC-вузли мають універсальний алгоритм повторного передавання, розробники додатків також можуть створювати власну логіку повторної передачі.
 
-## TLDR;
+## Коротко:
 
-- RPC nodes will attempt to rebroadcast transactions using a generic algorithm
-- Application developers can implement their own custom rebroadcasting logic
-- Developers should take advantage of the `maxRetries` parameter on the
-  `sendTransaction` JSON-RPC method
-- Developers should enable preflight checks to raise errors before transactions
-  are submitted
-- Before re-signing any transaction, it is **very important** to ensure that the
-  initial transaction's blockhash has expired
+- RPC-вузли намагатимуться повторно передати транзакції за допомогою універсального алгоритму.
+- Розробники додатків можуть впроваджувати власну логіку повторного передавання.
+- Розробникам слід використовувати параметр `maxRetries` у методі JSON-RPC `sendTransaction`.
+- Розробникам слід вмикати перевірки перед виконанням (preflight), щоб виявляти помилки до відправки транзакцій.
+- Перед повторним підписанням будь-якої транзакції важливо переконатися, що термін дії blockhash вихідної транзакції минув.
 
-## The Journey of a Transaction
+## Шлях транзакції
 
-### How Clients Submit Transactions
+### Як клієнти відправляють транзакції
 
-In Solana, there is no concept of a mempool. All transactions, whether they are
-initiated programmatically or by an end-user, are efficiently routed to leaders
-so that they can be processed into a block. There are two main ways in which a
-transaction can be sent to leaders:
+У Solana немає концепції мемпулу. Усі транзакції, незалежно від того, чи ініційовані вони програмно або користувачем, ефективно маршрутизуються до лідерів для обробки в блоках. Є два основні способи надсилання транзакцій до лідерів:
 
-1. By proxy via an RPC server and the
-   [sendTransaction](/docs/rpc/http/sendTransaction.mdx) JSON-RPC method
-2. Directly to leaders via a
-   [TPU Client](https://docs.rs/solana-client/latest/solana_client/tpu_client/index.html)
+1. Через RPC-сервер за допомогою методу JSON-RPC [sendTransaction](/docs/rpc/http/sendTransaction.mdx).
+2. Безпосередньо до лідерів через [TPU Client](https://docs.rs/solana-client/latest/solana_client/tpu_client/index.html).
 
-The vast majority of end-users will submit transactions via an RPC server. When
-a client submits a transaction, the receiving RPC node will in turn attempt to
-broadcast the transaction to both the current and next leaders. Until the
-transaction is processed by a leader, there is no record of the transaction
-outside of what the client and the relaying RPC nodes are aware of. In the case
-of a TPU client, rebroadcast and leader forwarding is handled entirely by the
-client software.
+Більшість користувачів відправляють транзакції через RPC-сервер. Коли клієнт надсилає транзакцію, RPC-вузол намагається передати її поточному та наступному лідерам. Поки транзакція не буде оброблена лідером, вона існує лише у вигляді запису в клієнта або проміжних RPC-вузлів. У випадку використання TPU клієнтом, передавання та маршрутизація обробляються програмним забезпеченням клієнта.
 
-![Overview of a transactions journey, from client to leader](/assets/docs/rt-tx-journey.png)
+![Огляд шляху транзакції, від клієнта до лідера](/assets/docs/rt-tx-journey.png)
 
-### How RPC Nodes Broadcast Transactions
+### Як RPC-вузли передають транзакції
 
-After an RPC node receives a transaction via `sendTransaction`, it will convert
-the transaction into a
-[UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) packet before
-forwarding it to the relevant leaders. UDP allows validators to quickly
-communicate with one another, but does not provide any guarantees regarding
-transaction delivery.
+Після отримання транзакції через `sendTransaction`, RPC-вузол перетворює транзакцію в [UDP](https://uk.wikipedia.org/wiki/UDP) пакет і передає його відповідним лідерам. UDP дозволяє вузлам швидко обмінюватися даними, але не гарантує доставки пакетів.
 
-Because Solana's leader schedule is known in advance of every
-[epoch](/docs/terminology.md#epoch) (~2 days), an RPC node will broadcast its
-transaction directly to the current and next leaders. This is in contrast to
-other gossip protocols such as Ethereum that propagate transactions randomly and
-broadly across the entire network. By default, RPC nodes will try to forward
-transactions to leaders every two seconds until either the transaction is
-finalized or the transaction's blockhash expires (150 blocks or ~1 minute 19
-seconds as of the time of this writing). If the outstanding rebroadcast queue
-size is greater than
-[10,000 transactions](https://github.com/solana-labs/solana/blob/bfbbc53dac93b3a5c6be9b4b65f679fdb13e41d9/send-transaction-service/src/send_transaction_service.rs#L20),
-newly submitted transactions are dropped. There are command-line
-[arguments](https://github.com/solana-labs/solana/blob/bfbbc53dac93b3a5c6be9b4b65f679fdb13e41d9/validator/src/main.rs#L1172)
-that RPC operators can adjust to change the default behavior of this retry
-logic.
+Оскільки розклад лідерів Solana відомий заздалегідь для кожного [епоха](/docs/terminology.md#epoch) (~2 дні), RPC-вузол передає транзакції безпосередньо до поточного та наступного лідерів. За замовчуванням RPC-вузли намагаються повторно передавати транзакції кожні дві секунди, доки транзакція не буде завершена або доки термін дії її blockhash не закінчиться (~1 хвилина 19 секунд). Якщо черга для повторної передачі перевищує [10,000 транзакцій](https://github.com/solana-labs/solana/blob/bfbbc53dac93b3a5c6be9b4b65f679fdb13e41d9/send-transaction-service/src/send_transaction_service.rs#L20), нові транзакції скидаються. 
 
-When an RPC node broadcasts a transaction, it will attempt to forward the
-transaction to a leader's
-[Transaction Processing Unit (TPU)](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/validator.rs#L867).
-The TPU processes transactions in five distinct phases:
+![Процес обробки транзакцій TPU](/assets/docs/rt-tpu-jito-labs.png)
 
-- [Fetch Stage](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/fetch_stage.rs#L21)
-- [SigVerify Stage](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/tpu.rs#L91)
-- [Banking Stage](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/banking_stage.rs#L249)
-- [Proof of History Service](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/poh/src/poh_service.rs)
-- [Broadcast Stage](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/core/src/tpu.rs#L136)
+## Як транзакції скидаються
 
-![Overview of the Transaction Processing Unit (TPU)](/assets/docs/rt-tpu-jito-labs.png)
+Транзакції можуть бути скинуті через кілька причин, таких як перевантаження мережі, втрати пакетів UDP або конфлікти через різні статуси вузлів у пулі RPC.
 
-Of these five phases, the Fetch Stage is responsible for receiving transactions.
-Within the Fetch Stage, validators will categorize incoming transactions
-according to three ports:
+## Обробка скинутих транзакцій
 
-- [tpu](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/gossip/src/contact_info.rs#L27)
-  handles regular transactions such as token transfers, NFT mints, and program
-  instructions
-- [tpu_vote](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/gossip/src/contact_info.rs#L31)
-  focuses exclusively on voting transactions
-- [tpu_forwards](https://github.com/solana-labs/solana/blob/cd6f931223181d5a1d47cba64e857785a175a760/gossip/src/contact_info.rs#L29)
-  forwards unprocessed packets to the next leader if the current leader is
-  unable to process all transactions
+Розробники можуть використовувати параметр `maxRetries` методу `sendTransaction` для створення власної логіки повторного передавання, зокрема перевірки `lastValidBlockHeight` і опитування стану мережі.
 
-For more information on the TPU, please refer to
-[this excellent writeup by Jito Labs](https://jito-labs.medium.com/solana-validator-101-transaction-processing-90bcdc271143).
+## Налаштування власної логіки
 
-## How Transactions Get Dropped
-
-Throughout a transaction's journey, there are a few scenarios in which the
-transaction can be unintentionally dropped from the network.
-
-### Before a transaction is processed
-
-If the network drops a transaction, it will most likely do so before the
-transaction is processed by a leader. UDP
-[packet loss](https://en.wikipedia.org/wiki/Packet_loss) is the simplest reason
-why this might occur. During times of intense network load, it's also possible
-for validators to become overwhelmed by the sheer number of transactions
-required for processing. While validators are equipped to forward surplus
-transactions via `tpu_forwards`, there is a limit to the amount of data that can
-be
-[forwarded](https://github.com/solana-labs/solana/blob/master/core/src/banking_stage.rs#L389).
-Furthermore, each forward is limited to a single hop between validators. That
-is, transactions received on the `tpu_forwards` port are not forwarded on to
-other validators.
-
-There are also two lesser known reasons why a transaction may be dropped before
-it is processed. The first scenario involves transactions that are submitted via
-an RPC pool. Occasionally, part of the RPC pool can be sufficiently ahead of the
-rest of the pool. This can cause issues when nodes within the pool are required
-to work together. In this example, the transaction's
-[recentBlockhash](/docs/core/transactions.md#recent-blockhash) is queried from
-the advanced part of the pool (Backend A). When the transaction is submitted to
-the lagging part of the pool (Backend B), the nodes will not recognize the
-advanced blockhash and will drop the transaction. This can be detected upon
-transaction submission if developers enable
-[preflight checks](/docs/rpc/http/sendTransaction.mdx) on `sendTransaction`.
-
-![Transaction dropped via an RPC Pool](/assets/docs/rt-dropped-via-rpc-pool.png)
-
-Temporary network forks can also result in dropped transactions. If a validator
-is slow to replay its blocks within the Banking Stage, it may end up creating a
-minority fork. When a client builds a transaction, it's possible for the
-transaction to reference a `recentBlockhash` that only exists on the minority
-fork. After the transaction is submitted, the cluster can then switch away from
-its minority fork before the transaction is processed. In this scenario, the
-transaction is dropped due to the blockhash not being found.
-
-![Transaction dropped due to minority fork (before processed)](/assets/docs/rt-dropped-minority-fork-pre-process.png)
-
-### After a transaction is processed and before it is finalized
-
-In the event a transaction references a `recentBlockhash` from a minority fork,
-it's still possible for the transaction to be processed. In this case, however,
-it would be processed by the leader on the minority fork. When this leader
-attempts to share its processed transactions with the rest of the network, it
-would fail to reach consensus with the majority of validators that do not
-recognize the minority fork. At this time, the transaction would be dropped
-before it could be finalized.
-
-![Transaction dropped due to minority fork (after processed)](/assets/docs/rt-dropped-minority-fork-post-process.png)
-
-## Handling Dropped Transactions
-
-While RPC nodes will attempt to rebroadcast transactions, the algorithm they
-employ is generic and often ill-suited for the needs of specific applications.
-To prepare for times of network congestion, application developers should
-customize their own rebroadcasting logic.
-
-### An In-Depth Look at sendTransaction
-
-When it comes to submitting transactions, the `sendTransaction` RPC method is
-the primary tool available to developers. `sendTransaction` is only responsible
-for relaying a transaction from a client to an RPC node. If the node receives
-the transaction, `sendTransaction` will return the transaction id that can be
-used to track the transaction. A successful response does not indicate whether
-the transaction will be processed or finalized by the cluster.
-
-### Request Parameters
-
-- `transaction`: `string` - fully-signed Transaction, as encoded string
-- (optional) `configuration object`: `object`
-  - `skipPreflight`: `boolean` - if true, skip the preflight transaction checks
-    (default: false)
-  - (optional) `preflightCommitment`: `string` -
-    [Commitment](/docs/rpc/index.mdx#configuring-state-commitment) level to use
-    for preflight simulations against the bank slot (default: "finalized").
-  - (optional) `encoding`: `string` - Encoding used for the transaction data.
-    Either "base58" (slow), or "base64". (default: "base58").
-  - (optional) `maxRetries`: `usize` - Maximum number of times for the RPC node
-    to retry sending the transaction to the leader. If this parameter is not
-    provided, the RPC node will retry the transaction until it is finalized or
-    until the blockhash expires.
-
-**Response:**
-
-- `transaction id`: `string` - First transaction signature embedded in the
-  transaction, as base-58 encoded string. This transaction id can be used with
-  [`getSignatureStatuses`](/docs/rpc/http/getSignatureStatuses.mdx) to poll for
-  status updates.
-
-## Customizing Rebroadcast Logic
-
-In order to develop their own rebroadcasting logic, developers should take
-advantage of `sendTransaction`'s `maxRetries` parameter. If provided,
-`maxRetries` will override an RPC node's default retry logic, allowing
-developers to manually control the retry process
-[within reasonable bounds](https://github.com/solana-labs/solana/blob/98707baec2385a4f7114d2167ef6dfb1406f954f/validator/src/main.rs#L1258-L1274).
-
-A common pattern for manually retrying transactions involves temporarily storing
-the `lastValidBlockHeight` that comes from
-[getLatestBlockhash](/docs/rpc/http/getLatestBlockhash.mdx). Once stashed, an
-application can then
-[poll the cluster's blockheight](/docs/rpc/http/getBlockHeight.mdx) and manually
-retry the transaction at an appropriate interval. In times of network
-congestion, it's advantageous to set `maxRetries` to 0 and manually rebroadcast
-via a custom algorithm. While some applications may employ an
-[exponential backoff](https://en.wikipedia.org/wiki/Exponential_backoff)
-algorithm, others such as [Mango](https://www.mango.markets/) opt to
-[continuously resubmit](https://github.com/blockworks-foundation/mango-ui/blob/b6abfc6c13b71fc17ebbe766f50b8215fa1ec54f/src/utils/send.tsx#L713)
-transactions at a constant interval until some timeout has occurred.
+Впровадження алгоритмів, таких як [експоненціальне збільшення інтервалів](https://uk.wikipedia.org/wiki/Експоненційне_зростання), або постійне повторне передавання, як у [Mango](https://github.com/blockworks-foundation/mango-ui/blob/b6abfc6c13b71fc17ebbe766f50b8215fa1ec54f/src/utils/send.tsx#L713), може допомогти впоратися із завантаженістю мережі.
 
 ```ts
 import {
@@ -281,49 +112,26 @@ const sleep = async (ms: number) => {
 })();
 ```
 
-When polling via `getLatestBlockhash`, applications should specify their
-intended [commitment](/docs/rpc/index.mdx#configuring-state-commitment) level.
-By setting its commitment to `confirmed` (voted on) or `finalized` (~30 blocks
-after `confirmed`), an application can avoid polling a blockhash from a minority
-fork.
+При опитуванні через `getLatestBlockhash` додатки повинні вказувати бажаний рівень [зобов'язань (commitment)](/docs/rpc/index.mdx#configuring-state-commitment). Встановлюючи зобов'язання на рівень `confirmed` (підтверджений) або `finalized` (~30 блоків після `confirmed`), додаток може уникнути опитування blockhash із меншості вузлів.
 
-If an application has access to RPC nodes behind a load balancer, it can also
-choose to divide its workload amongst specific nodes. RPC nodes that serve
-data-intensive requests such as
-[getProgramAccounts](/content/guides/javascript/get-program-accounts.md) may be
-prone to falling behind and can be ill-suited for also forwarding transactions.
-For applications that handle time-sensitive transactions, it may be prudent to
-have dedicated nodes that only handle `sendTransaction`.
+Якщо додаток має доступ до RPC-вузлів за балансувальником навантаження, він також може розподіляти своє навантаження між конкретними вузлами. RPC-вузли, які обслуговують ресурсоємні запити, такі як 
+[getProgramAccounts](/content/guides/javascript/get-program-accounts.md), можуть відставати і бути менш ефективними для пересилання транзакцій. Для додатків, що обробляють транзакції в реальному часі, може бути розумним використовувати спеціалізовані вузли, які обслуговують лише `sendTransaction`.
 
-### The Cost of Skipping Preflight
+### Вартість пропуску перевірки перед виконанням
 
-By default, `sendTransaction` will perform three preflight checks prior to
-submitting a transaction. Specifically, `sendTransaction` will:
+За замовчуванням `sendTransaction` виконує три перевірки перед відправкою транзакції. Зокрема, `sendTransaction`:
 
-- Verify that all signatures are valid
-- Check that the referenced blockhash is within the last 150 blocks
-- Simulate the transaction against the bank slot specified by the
-  `preflightCommitment`
+- Перевіряє, що всі підписи є дійсними.
+- Перевіряє, що вказаний blockhash знаходиться в межах останніх 150 блоків.
+- Симулює транзакцію на основі слоту банку, зазначеного у `preflightCommitment`.
 
-In the event that any of these three preflight checks fail, `sendTransaction`
-will raise an error prior to submitting the transaction. Preflight checks can
-often be the difference between losing a transaction and allowing a client to
-gracefully handle an error. To ensure that these common errors are accounted
-for, it is recommended that developers keep `skipPreflight` set to `false`.
+У разі, якщо одна з цих перевірок не пройде, `sendTransaction` видасть помилку до відправки транзакції. Перевірки перед виконанням можуть стати вирішальним фактором між втратою транзакції та можливістю клієнта обробити помилку. Щоб гарантувати врахування цих поширених помилок, рекомендується залишати `skipPreflight` встановленим у значення `false`.
 
-### When to Re-Sign Transactions
+### Коли потрібно повторно підписувати транзакції
 
-Despite all attempts to rebroadcast, there may be times in which a client is
-required to re-sign a transaction. Before re-signing any transaction, it is
-**very important** to ensure that the initial transaction's blockhash has
-expired. If the initial blockhash is still valid, it is possible for both
-transactions to be accepted by the network. To an end-user, this would appear as
-if they unintentionally sent the same transaction twice.
+Попри всі спроби повторного передавання, іноді клієнт може бути змушений повторно підписати транзакцію. Перед повторним підписанням будь-якої транзакції **дуже важливо** переконатися, що термін дії blockhash вихідної транзакції закінчився. Якщо початковий blockhash все ще дійсний, обидві транзакції можуть бути прийняті мережею. Для кінцевого користувача це виглядатиме як ненавмисне повторне відправлення однієї і тієї ж транзакції.
 
-In Solana, a dropped transaction can be safely discarded once the blockhash it
-references is older than the `lastValidBlockHeight` received from
-`getLatestBlockhash`. Developers should keep track of this
-`lastValidBlockHeight` by querying
-[`getEpochInfo`](/docs/rpc/http/getEpochInfo.mdx) and comparing with
-`blockHeight` in the response. Once a blockhash is invalidated, clients may
-re-sign with a newly-queried blockhash.
+У Solana втрачену транзакцію можна безпечно відхилити, якщо blockhash, на який вона посилається, старший за `lastValidBlockHeight`, отриманий із 
+`getLatestBlockhash`. Розробникам слід відстежувати цей `lastValidBlockHeight`, опитуючи 
+[`getEpochInfo`](/docs/rpc/http/getEpochInfo.mdx) і порівнюючи з `blockHeight` у відповіді. Після того, як blockhash стане недійсним, клієнти можуть повторно підписати транзакцію з новозапитаним blockhash.
+
