@@ -1,47 +1,29 @@
 ---
 sidebarSortOrder: 4
-title: Address Lookup Tables
+title: Таблиці пошуку адрес
 description:
-  Learn how to use Solana Address Lookup Tables (ALTs) to efficiently handle up
-  to 64 addresses per transaction. Create, extend, and utilize lookup tables
-  using web3.js.
+  Дізнайтеся, як використовувати таблиці пошуку адрес Solana (ALTs) для ефективної обробки до 64 адрес у кожній транзакції. Створюйте, розширюйте та використовуйте таблиці пошуку за допомогою web3.js.
 ---
 
-Address Lookup Tables, commonly referred to as "_lookup tables_" or "_ALTs_" for
-short, allow developers to create a collection of related addresses to
-efficiently load more addresses in a single transaction.
+Таблиці пошуку адрес, зазвичай відомі як "_lookup tables_" або скорочено "_ALTs_", дозволяють розробникам створювати колекції пов’язаних адрес для ефективного завантаження більшої кількості адрес в одній транзакції.
 
-Since each transaction on the Solana blockchain requires a listing of every
-address that is interacted with as part of the transaction, this listing would
-effectively be capped at 32 addresses per transaction. With the help of
-[Address Lookup Tables](/docs/advanced/lookup-tables.md), a transaction would
-now be able to raise that limit to 64 addresses per transaction.
+Оскільки кожна транзакція в блокчейні Solana вимагає переліку всіх адрес, з якими вона взаємодіє, цей перелік фактично обмежується 32 адресами на транзакцію. Завдяки [Таблицям пошуку адрес](/docs/advanced/lookup-tables.md) це обмеження можна збільшити до 64 адрес у кожній транзакції.
 
-## Compressing onchain addresses
+## Стиснення адрес на блокчейні
 
-After all the desired addresses have been stored onchain in an Address Lookup
-Table, each address can be referenced inside a transaction by its 1-byte index
-within the table (instead of their full 32-byte address). This lookup method
-effectively "_compresses_" a 32-byte address into a 1-byte index value.
+Після того, як усі необхідні адреси були збережені на блокчейні у Таблиці пошуку адрес, кожну адресу можна посилатися в транзакції за її 1-байтовим індексом у таблиці (замість повної 32-байтової адреси). Цей метод пошуку ефективно "_стискає_" 32-байтову адресу до 1-байтового значення індексу.
 
-This "_compression_" enables storing up to 256 addresses in a single lookup
-table for use inside any given transaction.
+Таке "_стиснення_" дозволяє зберігати до 256 адрес у одній таблиці пошуку для використання у будь-якій транзакції.
 
-## Versioned Transactions
+## Версійні транзакції
 
-To utilize an Address Lookup Table inside a transaction, developers must use v0
-transactions that were introduced with the new
-[Versioned Transaction format](/docs/advanced/versions.md).
+Щоб використовувати Таблицю пошуку адрес у транзакції, розробники повинні застосовувати транзакції версії v0, які були запроваджені з новим форматом [Версійних транзакцій](/docs/advanced/versions.md).
 
-## How to create an address lookup table
+## Як створити таблицю пошуку адрес
 
-Creating a new lookup table with the `@solana/web3.js` library is similar to the
-older `legacy` transactions, but with some differences.
+Створення нової таблиці пошуку за допомогою бібліотеки `@solana/web3.js` подібне до старішого формату `legacy` транзакцій, але має певні відмінності.
 
-Using the `@solana/web3.js` library, you can use the
-[`createLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#createLookupTable)
-function to construct the instruction needed to create a new lookup table, as
-well as determine its address:
+Використовуючи бібліотеку `@solana/web3.js`, ви можете скористатися функцією [`createLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#createLookupTable) для створення інструкції, необхідної для створення нової таблиці пошуку, а також для визначення її адреси.
 
 ```js
 const web3 = require("@solana/web3.js");
@@ -66,17 +48,11 @@ console.log("lookup table address:", lookupTableAddress.toBase58());
 // send the `lookupTableInst` instruction in a transaction
 ```
 
-> NOTE: Address lookup tables can be **created** with either a `v0` transaction
-> or a `legacy` transaction. But the Solana runtime can only retrieve and handle
-> the additional addresses within a lookup table while using
-> [v0 Versioned Transactions](/docs/advanced/versions.md#current-transaction-versions).
+> ПРИМІТКА: Таблиці пошуку адрес можуть бути **створені** за допомогою як транзакцій `v0`, так і `legacy`. Але виконуюче середовище Solana може отримувати та обробляти додаткові адреси в таблиці пошуку лише під час використання [Версійних транзакцій v0](/docs/advanced/versions.md#current-transaction-versions).
 
-## Add addresses to a lookup table
+## Додавання адрес до таблиці пошуку
 
-Adding addresses to a lookup table is known as "_extending_". Using the
-`@solana/web3.js` library, you can create a new _extend_ instruction using the
-[`extendLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#extendLookupTable)
-method:
+Додавання адрес до таблиці пошуку відоме як "_розширення_" ("_extending_"). Використовуючи бібліотеку `@solana/web3.js`, ви можете створити нову інструкцію для _розширення_ за допомогою методу [`extendLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/AddressLookupTableProgram.html#extendLookupTable):
 
 ```js
 // add addresses to the `lookupTableAddress` table via an `extend` instruction
@@ -95,22 +71,13 @@ const extendInstruction = web3.AddressLookupTableProgram.extendLookupTable({
 // to insert the listing of `addresses` into your lookup table with address `lookupTableAddress`
 ```
 
-> NOTE: Due to the same memory limits of `legacy` transactions, any transaction
-> used to _extend_ an Address Lookup Table is also limited in how many addresses
-> can be added at a time. Because of this, you will need to use multiple
-> transactions to _extend_ any table with more addresses (~20) that can fit
-> within a single transaction's memory limits.
+> ПРИМІТКА: Через ті самі обмеження пам'яті транзакцій `legacy`, будь-яка транзакція, яка використовується для _розширення_ таблиці пошуку адрес, також обмежена в кількості адрес, які можна додати одночасно. Через це вам потрібно буде використовувати кілька транзакцій, щоб _розширити_ будь-яку таблицю більшою кількістю адрес (приблизно 20), ніж це дозволяють обмеження пам'яті однієї транзакції.
 
-Once these addresses have been inserted into the table, and stored onchain, you
-will be able to utilize the Address Lookup Table in future transactions.
-Enabling up to 64 addresses in those future transactions.
+Після того як ці адреси були вставлені в таблицю та збережені в блокчейні, ви зможете використовувати таблицю пошуку адрес у майбутніх транзакціях. Це дозволяє включити до 64 адрес у цих транзакціях.
 
-## Fetch an Address Lookup Table
+## Отримання таблиці пошуку адрес
 
-Similar to requesting another account (or PDA) from the cluster, you can fetch a
-complete Address Lookup Table with the
-[`getAddressLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getAddressLookupTable)
-method:
+Аналогічно запиту іншого облікового запису (або PDA) з кластера, ви можете отримати повну таблицю пошуку адрес за допомогою методу [`getAddressLookupTable`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html#getAddressLookupTable):
 
 ```js
 // define the `PublicKey` of the lookup table to fetch
@@ -126,9 +93,7 @@ const lookupTableAccount = (
 console.log("Table address from cluster:", lookupTableAccount.key.toBase58());
 ```
 
-Our `lookupTableAccount` variable will now be a `AddressLookupTableAccount`
-object which we can parse to read the listing of all the addresses stored on
-chain in the lookup table:
+Змінна `lookupTableAccount` тепер буде об'єктом типу `AddressLookupTableAccount`, який можна проаналізувати для читання списку всіх адрес, збережених у таблиці пошуку в блокчейні:
 
 ```js
 // loop through and parse all the addresses stored in the table
@@ -137,22 +102,16 @@ for (let i = 0; i < lookupTableAccount.state.addresses.length; i++) {
   console.log(i, address.toBase58());
 }
 ```
+## Як використовувати таблицю пошуку адрес у транзакції
 
-## How to use an address lookup table in a transaction
+Після того як ви створили таблицю пошуку і зберегли необхідні адреси в блокчейні (через розширення таблиці пошуку), ви можете створити транзакцію `v0`, щоб скористатися можливостями пошуку адрес в блокчейні.
 
-After you have created your lookup table, and stored your needed address on
-chain (via extending the lookup table), you can create a `v0` transaction to
-utilize the onchain lookup capabilities.
+Так само, як і для старих транзакцій `legacy`, ви можете створити всі 
+[інструкції](/docs/terminology.md#instruction), які ваша транзакція виконуватиме в блокчейні. Потім ви можете передати масив цих інструкцій у 
+[Message](/docs/terminology.md#message), що використовується в транзакції `v0`.
 
-Just like older `legacy` transactions, you can create all the
-[instructions](/docs/terminology.md#instruction) your transaction will execute
-onchain. You can then provide an array of these instructions to the
-[Message](/docs/terminology.md#message) used in the `v0` transaction.
-
-> NOTE: The instructions used inside a `v0` transaction can be constructed using
-> the same methods and functions used to create the instructions in the past.
-> There is no required change to the instructions used involving an Address
-> Lookup Table.
+> **Примітка:** Інструкції, що використовуються в транзакції `v0`, можна створювати за допомогою тих самих методів і функцій, які використовувалися раніше для створення інструкцій. 
+> Немає необхідності змінювати інструкції, пов'язані з використанням таблиці пошуку адрес.
 
 ```js
 // Assumptions:
@@ -181,12 +140,10 @@ console.log(
 );
 ```
 
-> NOTE: When sending a `VersionedTransaction` to the cluster, it must be signed
-> BEFORE calling the `sendAndConfirmTransaction` method. If you pass an array of
-> `Signer` (like with `legacy` transactions) the method will trigger an error!
+> **Примітка:** Під час відправлення `VersionedTransaction` до кластеру, вона має бути підписана **ДО** виклику методу `sendAndConfirmTransaction`. Якщо передати масив `Signer` (як у транзакціях `legacy`), метод викличе помилку!
 
-## More Resources
+## Додаткові ресурси
 
-- Read the [proposal](https://docs.anza.xyz/proposals/versioned-transactions)
-  for Address Lookup Tables and Versioned transactions
-- [Example Rust program using Address Lookup Tables](https://github.com/TeamRaccoons/address-lookup-table-multi-swap)
+- Ознайомтеся з [пропозицією](https://docs.anza.xyz/proposals/versioned-transactions) щодо таблиць пошуку адрес і версійованих транзакцій
+- [Приклад програми на Rust, яка використовує таблиці пошуку адрес](https://github.com/TeamRaccoons/address-lookup-table-multi-swap)
+

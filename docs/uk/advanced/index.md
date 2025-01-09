@@ -1,5 +1,5 @@
 ---
 metaOnly: true
-title: Advanced Topics
+title: Додаткові теми
 sidebarSortOrder: 3
 ---
