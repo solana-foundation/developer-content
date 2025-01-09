@@ -236,7 +236,7 @@ pub struct Initialize<'info> {
 
 ### Account Validation
 
-To prevent security vulnerabiliies, it's important to verify that accounts
+To prevent security vulnerabilities, it's important to verify that accounts
 provided to an instruction are the expected accounts. Accounts are validated in
 Anchor programs in two ways that are generally used together:
 

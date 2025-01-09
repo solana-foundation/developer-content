@@ -155,7 +155,7 @@ specifies the privileges of accounts included in the transaction's account
 address array. It is comprised of three bytes, each containing a u8 integer,
 which collectively specify:
 
-1. The number of required signatures for the transaction.
+1. The number of required signatures for the transaction and message version number.
 2. The number of read-only account addresses that require signatures.
 3. The number of read-only account addresses that do not require signatures.
 
