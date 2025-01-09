@@ -13,7 +13,7 @@ sidebarSortOrder: 2
 Install the Solana Toolkit by running the following command:
 
 ```shell
-npx mucho@latest install
+npx -y mucho@latest install
 ```
 
 ## Build

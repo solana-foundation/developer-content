@@ -25,7 +25,7 @@ mucho validator --help
 > running the following command:
 >
 > ```shell
-> npx mucho@latest install
+> npx -y mucho@latest install
 > ```
 
 ## Advantages
