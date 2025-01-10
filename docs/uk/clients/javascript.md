@@ -1,35 +1,34 @@
 ---
 sidebarLabel: JavaScript / TypeScript
-title: JavaScript Client for Solana
+title: JavaScript Клієнт для Solana
 sidebarSortOrder: 2
 description:
-  Learn how to interact with Solana using the JavaScript/TypeScript client
-  library (@solana/web3.js). This guide covers wallet connections, transactions,
-  and custom program interactions with code examples.
+  Дізнайтеся, як взаємодіяти з Solana за допомогою клієнтської бібліотеки
+  JavaScript/TypeScript (@solana/web3.js). У цьому посібнику розглядаються підключення гаманця, транзакції та взаємодія з власними програмами з прикладами коду.
 ---
 
-## What is Solana-Web3.js?
+## Що таке Solana-Web3.js?
 
-The Solana-Web3.js library aims to provide complete coverage of Solana. The
-library was built on top of the [Solana JSON RPC API](/docs/rpc).
+Бібліотека Solana-Web3.js створена для забезпечення повного охоплення Solana. Ця
+бібліотека побудована на основі [Solana JSON RPC API](/docs/rpc).
 
-You can find the full documentation for the `@solana/web3.js` library
-[here](https://solana-labs.github.io/solana-web3.js/v1.x/).
+Повну документацію для бібліотеки `@solana/web3.js` можна знайти
+[тут](https://solana-labs.github.io/solana-web3.js/v1.x/).
 
-## Common Terminology
+## Загальна термінологія
 
-| Term        | Definition                                                                                                                                                               |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Program     | Stateless executable code written to interpret instructions. Programs are capable of performing actions based on the instructions provided.                              |
-| Instruction | The smallest unit of a program that a client can include in a transaction. Within its processing code, an instruction may contain one or more cross-program invocations. |
-| Transaction | One or more instructions signed by the client using one or more Keypairs and executed atomically with only two possible outcomes: success or failure.                    |
+| Термін       | Визначення                                                                                                                                                              |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Програма     | Безстанова виконувана програма, написана для інтерпретації інструкцій. Програми можуть виконувати дії на основі наданих інструкцій.                                      |
+| Інструкція   | Найменша одиниця програми, яку клієнт може включити в транзакцію. Під час виконання коду інструкція може містити одну або кілька міжпрограмних викликів.                |
+| Транзакція   | Одна або кілька інструкцій, підписаних клієнтом за допомогою одного або кількох Keypair, і виконуються атомарно з двома можливими результатами: успіх або невдача.      |
 
-For the full list of terms, see
-[Solana terminology](/docs/terminology.md#cross-program-invocation-cpi)
+Для повного списку термінів дивіться
+[Термінологія Solana](/docs/terminology.md#cross-program-invocation-cpi)
 
-## Getting Started
+## Початок роботи
 
-### Installation
+### Встановлення
 
 #### yarn
 
@@ -43,17 +42,17 @@ yarn add @solana/web3.js@1
 npm install --save @solana/web3.js@1
 ```
 
-#### Bundle
+#### Пакет
 
 ```html
-<!-- Development (un-minified) -->
+<!-- Розробка (не мініфікований) -->
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 
-<!-- Production (minified) -->
+<!-- Продукція (мініфікований) -->
 <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
 ```
 
-### Usage
+### Використання
 
 #### Javascript
 
@@ -69,27 +68,25 @@ import * as solanaWeb3 from "@solana/web3.js";
 console.log(solanaWeb3);
 ```
 
-#### Browser Bundle
+#### Пакет для браузера
 
 ```javascript
-// solanaWeb3 is provided in the global namespace by the bundle script
+// solanaWeb3 надається в глобальному просторі імен за допомогою скрипта пакета
 console.log(solanaWeb3);
 ```
 
-## Quickstart
+## Швидкий старт
 
-### Connecting to a Wallet
+### Підключення до гаманця
 
-To allow users to use your dApp or application on Solana, they will need to get
-access to their Keypair. A Keypair is a private key with a matching public key,
-used to sign transactions.
+Щоб користувачі могли використовувати ваш dApp або додаток у Solana, їм потрібно отримати доступ до свого Keypair. Keypair - це приватний ключ з відповідним відкритим ключем, який використовується для підпису транзакцій.
 
-There are two ways to obtain a Keypair:
+Є два способи отримати Keypair:
 
-1. Generate a new Keypair
-2. Obtain a Keypair using the secret key
+1. Генерація нового Keypair
+2. Отримання Keypair за допомогою секретного ключа
 
-You can obtain a new Keypair with the following:
+Ви можете отримати новий Keypair наступним чином:
 
 ```javascript
 const { Keypair } = require("@solana/web3.js");
@@ -97,11 +94,9 @@ const { Keypair } = require("@solana/web3.js");
 let keypair = Keypair.generate();
 ```
 
-This will generate a brand new Keypair for a user to fund and use within your
-application.
+Це згенерує новий Keypair для користувача, який можна використовувати у вашому додатку.
 
-You can allow entry of the secretKey using a textbox, and obtain the Keypair
-with `Keypair.fromSecretKey(secretKey)`.
+Ви можете дозволити введення secretKey через текстове поле та отримати Keypair за допомогою `Keypair.fromSecretKey(secretKey)`.
 
 ```javascript
 const { Keypair } = require("@solana/web3.js");
@@ -116,25 +111,16 @@ let secretKey = Uint8Array.from([
 let keypair = Keypair.fromSecretKey(secretKey);
 ```
 
-Many wallets today allow users to bring their Keypair using a variety of
-extensions or web wallets. The general recommendation is to use wallets, not
-Keypairs, to sign transactions. The wallet creates a layer of separation between
-the dApp and the Keypair, ensuring that the dApp never has access to the secret
-key. You can find ways to connect to external wallets with the
-[wallet-adapter](https://github.com/solana-labs/wallet-adapter) library.
+Багато гаманців сьогодні дозволяють користувачам імпортувати свій Keypair за допомогою різних розширень або веб-гаманців. Загальна рекомендація - використовувати гаманці, а не Keypair, для підпису транзакцій. Гаманець створює шар розділення між dApp та Keypair, забезпечуючи, що dApp ніколи не має доступу до секретного ключа. Ви можете знайти способи підключення до зовнішніх гаманців за допомогою бібліотеки [wallet-adapter](https://github.com/solana-labs/wallet-adapter).
 
-### Creating and Sending Transactions
+### Створення та відправка транзакцій
 
-To interact with programs on Solana, you create, sign, and send transactions to
-the network. Transactions are collections of instructions with signatures. The
-order that instructions exist in a transaction determines the order they are
-executed.
+Щоб взаємодіяти з програмами на Solana, ви створюєте, підписуєте та відправляєте транзакції до мережі. Транзакції - це колекції інструкцій з підписами. Порядок, в якому інструкції існують у транзакції, визначає порядок їх виконання.
 
-A transaction in Solana-Web3.js is created using the
-[`Transaction`](/docs/clients/javascript.md#Transaction) object and adding
-desired messages, addresses, or instructions.
+Транзакція в Solana-Web3.js створюється за допомогою
+об'єкта [`Transaction`](/docs/clients/javascript.md#Transaction) і додавання бажаних повідомлень, адрес або інструкцій.
 
-Take the example of a transfer transaction:
+Приклад транзакції передачі:
 
 ```javascript
 const {
@@ -157,16 +143,9 @@ transaction.add(
 );
 ```
 
-The above code achieves creating a transaction ready to be signed and
-broadcasted to the network. The `SystemProgram.transfer` instruction was added
-to the transaction, containing the amount of lamports to send, and the `to` and
-`from` public keys.
+Вищенаведений код створює транзакцію, готову до підпису та передачі в мережу. Інструкція `SystemProgram.transfer` була додана до транзакції, що містить суму lamports для відправки, а також публічні ключі `to` і `from`.
 
-All that is left is to sign the transaction with keypair and send it over the
-network. You can accomplish sending a transaction by using
-`sendAndConfirmTransaction` if you wish to alert the user or do something after
-a transaction is finished, or use `sendTransaction` if you don't need to wait
-for the transaction to be confirmed.
+Все, що залишилося зробити - підписати транзакцію за допомогою Keypair і відправити її через мережу. Ви можете виконати відправку транзакції за допомогою `sendAndConfirmTransaction`, якщо хочете сповістити користувача або зробити щось після завершення транзакції, або використовувати `sendTransaction`, якщо не потрібно чекати підтвердження транзакції.
 
 ```javascript
 const {
@@ -181,20 +160,13 @@ let connection = new Connection(clusterApiUrl("testnet"));
 sendAndConfirmTransaction(connection, transaction, [keypair]);
 ```
 
-The above code takes in a `TransactionInstruction` using `SystemProgram`,
-creates a `Transaction`, and sends it over the network. You use `Connection` in
-order to define which Solana network you are connecting to, namely
-`mainnet-beta`, `testnet`, or `devnet`.
+Вищенаведений код приймає `TransactionInstruction` за допомогою `SystemProgram`, створює `Transaction` і відправляє її через мережу. Ви використовуєте `Connection`, щоб визначити, до якої мережі Solana ви підключаєтесь, а саме `mainnet-beta`, `testnet` або `devnet`.
 
-### Interacting with Custom Programs
+### Взаємодія з власними програмами
 
-The previous section visits sending basic transactions. In Solana everything you
-do interacts with different programs, including the previous section's transfer
-transaction. At the time of writing programs on Solana are either written in
-Rust or C.
+Попередній розділ розглядає відправлення базових транзакцій. У Solana все, що ви робите, взаємодіє з різними програмами, включаючи транзакцію передачі в попередньому розділі. На момент написання програми на Solana пишуться на Rust або C.
 
-Let's look at the `SystemProgram`. The method signature for allocating space in
-your account on Solana in Rust looks like this:
+Розглянемо `SystemProgram`. Сигнатура методу для виділення простору в вашому обліковому записі в Solana на Rust виглядає так:
 
 ```rust
 pub fn allocate(
@@ -203,21 +175,13 @@ pub fn allocate(
 ) -> Instruction
 ```
 
-In Solana when you want to interact with a program you must first know all the
-accounts you will be interacting with.
+У Solana, коли ви хочете взаємодіяти з програмою, ви повинні спочатку знати всі облікові записи, з якими програма буде взаємодіяти.
 
-You must always provide every account that the program will be interacting
-within the instruction. Not only that, but you must provide whether or not the
-account is `isSigner` or `isWritable`.
+Ви завжди повинні надавати кожен обліковий запис, з яким програма буде взаємодіяти в інструкції. Крім того, ви повинні вказати, чи є обліковий запис `isSigner` або `isWritable`.
 
-In the `allocate` method above, a single account `pubkey` is required, as well
-as an amount of `space` for allocation. We know that the `allocate` method
-writes to the account by allocating space within it, making the `pubkey`
-required to be `isWritable`. `isSigner` is required when you are designating the
-account that is running the instruction. In this case, the signer is the account
-calling to allocate space within itself.
+У методі `allocate` вище потрібен один обліковий запис `pubkey`, а також кількість `space` для виділення. Ми знаємо, що метод `allocate` записує в обліковий запис, виділяючи в ньому простір, роблячи `pubkey` обов'язковим `isWritable`. `isSigner` потрібен, коли ви вказуєте обліковий запис, який виконує інструкцію. У цьому випадку підписувач - це обліковий запис, який викликає виділення простору в собі.
 
-Let's look at how to call this instruction using solana-web3.js:
+Давайте подивимося, як викликати цю інструкцію за допомогою solana-web3.js:
 
 ```javascript
 let keypair = web3.Keypair.generate();
@@ -232,9 +196,7 @@ let airdropSignature = await connection.requestAirdrop(
 await connection.confirmTransaction({ signature: airdropSignature });
 ```
 
-First, we set up the account Keypair and connection so that we have an account
-to make allocate on the testnet. We also create a payer Keypair and airdrop some
-SOL so we can pay for the allocate transaction.
+Спочатку ми налаштовуємо Keypair і підключення, щоб у нас був обліковий запис для виділення на тестовій мережі. Ми також створюємо Keypair для платника і додаємо трохи SOL, щоб оплатити транзакцію виділення.
 
 ```javascript
 let allocateTransaction = new web3.Transaction({
@@ -244,12 +206,7 @@ let keys = [{ pubkey: keypair.publicKey, isSigner: true, isWritable: true }];
 let params = { space: 100 };
 ```
 
-We create the transaction `allocateTransaction`, keys, and params objects.
-`feePayer` is an optional field when creating a transaction that specifies who
-is paying for the transaction, defaulting to the pubkey of the first signer in
-the transaction. `keys` represents all accounts that the program's `allocate`
-function will interact with. Since the `allocate` function also required space,
-we created `params` to be used later when invoking the `allocate` function.
+Ми створюємо транзакцію `allocateTransaction`, об'єкти keys та params. Поле `feePayer` є необов'язковим при створенні транзакції, воно вказує, хто оплачує транзакцію, за замовчуванням використовується pubkey першого підписувача в транзакції. `keys` представляє всі облікові записи, з якими функція програми `allocate` буде взаємодіяти. Оскільки функція `allocate` також вимагає простору, ми створили `params`, щоб його використати пізніше при виклику функції `allocate`.
 
 ```javascript
 let allocateStruct = {
@@ -258,13 +215,9 @@ let allocateStruct = {
 };
 ```
 
-The above is created using `u32` and `ns64` from `@solana/buffer-layout` to
-facilitate the payload creation. The `allocate` function takes in the parameter
-`space`. To interact with the function we must provide the data as a Buffer
-format. The `buffer-layout` library helps with allocating the buffer and
-encoding it correctly for Rust programs on Solana to interpret.
+Це створено за допомогою `u32` і `ns64` з `@solana/buffer-layout` для створення payload. Функція `allocate` приймає параметр `space`. Щоб взаємодіяти з функцією, ми повинні надати дані у форматі Buffer. Бібліотека `buffer-layout` допомагає з виділенням буфера та його правильним кодуванням для інтерпретації програмами на Rust в Solana.
 
-Let's break down this struct.
+Давайте розглянемо цю структуру детальніше.
 
 ```javascript
 {
@@ -276,8 +229,7 @@ Let's break down this struct.
 }
 ```
 
-`index` is set to 8 because the function `allocate` is in the 8th position in
-the instruction enum for `SystemProgram`.
+`index` встановлений у 8, тому що функція `allocate` знаходиться на 8-й позиції у enum інструкцій для `SystemProgram`.
 
 ```rust
 /* https://github.com/solana-labs/solana/blob/21bc43ed58c63c827ba4db30426965ef3e807180/sdk/program/src/system_instruction.rs#L142-L305 */
@@ -298,7 +250,7 @@ pub enum SystemInstruction {
 }
 ```
 
-Next up is `u32('instruction')`.
+Далі `u32('instruction')`.
 
 ```javascript
 {
@@ -310,8 +262,8 @@ Next up is `u32('instruction')`.
 }
 ```
 
-The `layout` in the allocate struct must always have `u32('instruction')` first
-when you are using it to call an instruction.
+`layout` у структурі allocate завжди має мати `u32('instruction')` першим
+при використанні для виклику інструкції.
 
 ```javascript
 {
@@ -323,12 +275,7 @@ when you are using it to call an instruction.
 }
 ```
 
-`ns64('space')` is the argument for the `allocate` function. You can see in the
-original `allocate` function in Rust that space was of the type `u64`. `u64` is
-an unsigned 64bit integer. Javascript by default only provides up to 53bit
-integers. `ns64` comes from `@solana/buffer-layout` to help with type
-conversions between Rust and Javascript. You can find more type conversions
-between Rust and Javascript at
+`ns64('space')` - це аргумент для функції `allocate`. Ви можете бачити, що в оригінальній функції `allocate` на Rust, space мав тип `u64`. `u64` є 64-бітовим unsigned integer. У Javascript за замовчуванням підтримуються тільки 53-бітові числа. `ns64` з `@solana/buffer-layout` допомагає з конвертацією типів між Rust і Javascript. Ви можете знайти більше конвертацій типів між Rust і Javascript на
 [solana-labs/buffer-layout](https://github.com/solana-labs/buffer-layout).
 
 ```javascript
@@ -337,10 +284,7 @@ let layoutFields = Object.assign({ instruction: allocateStruct.index }, params);
 allocateStruct.layout.encode(layoutFields, data);
 ```
 
-Using the previously created bufferLayout, we can allocate a data buffer. We
-then assign our params `{ space: 100 }` so that it maps correctly to the layout,
-and encode it to the data buffer. Now the data is ready to be sent to the
-program.
+Використовуючи створений раніше bufferLayout, ми можемо виділити буфер даних. Потім ми присвоюємо наші params `{ space: 100 }`, щоб вони правильно відповідали макету, і кодуємо їх у буфер даних. Тепер дані готові для відправлення до програми.
 
 ```javascript
 allocateTransaction.add(
@@ -357,10 +301,9 @@ await web3.sendAndConfirmTransaction(connection, allocateTransaction, [
 ]);
 ```
 
-Finally, we add the transaction instruction with all the account keys, payer,
-data, and programId and broadcast the transaction to the network.
+Нарешті, ми додаємо інструкцію транзакції з усіма ключами облікових записів, платником, даними та programId і передаємо транзакцію до мережі.
 
-The full code can be found below.
+Повний код можна знайти нижче.
 
 ```javascript
 const { struct, u32, ns64 } = require("@solana/buffer-layout");

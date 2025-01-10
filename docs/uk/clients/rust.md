@@ -1,49 +1,44 @@
 ---
 sidebarLabel: Rust
-title: Rust Client for Solana
+title: Rust Клієнт для Solana
 sidebarSortOrder: 1
-description: Learn how to use Solana's Rust crates for development.
+description: Дізнайтеся, як використовувати Rust пакети для розробки в Solana.
 ---
 
-Solana's Rust crates are
-[published to crates.io](https://crates.io/search?q=solana-) and can be found
-[on docs.rs](https://docs.rs/releases/search?query=solana-) with the `solana-`
-prefix.
+Rust пакети для Solana
+[опубліковані на crates.io](https://crates.io/search?q=solana-) і доступні на
+[docs.rs](https://docs.rs/releases/search?query=solana-) з префіксом `solana-`.
 
-<Callout title="Hello World: Get started with Solana development">
+<Callout title="Hello World: Початок роботи з розробкою Solana">
 
-To quickly get started with Solana development and build your first Rust
-program, take a look at these detailed quick start guides:
+Щоб швидко почати розробку в Solana і створити вашу першу програму на Rust,
+ознайомтеся з цими детальними посібниками для швидкого старту:
 
-- [Build and deploy your first Solana program using only your browser](/content/guides/getstarted/hello-world-in-your-browser.md).
-  No installation needed.
-- [Setup your local environment](/docs/intro/installation) and use the local
-  test validator.
+- [Створіть і розгорніть вашу першу програму Solana, використовуючи тільки ваш браузер](/content/guides/getstarted/hello-world-in-your-browser.md).
+  Інсталяція не потрібна.
+- [Налаштуйте ваше локальне середовище](/docs/intro/installation) і використовуйте локальний тестовий валідатор.
 
 </Callout>
 
-## Rust Crates
+## Rust Пакети
 
-The following are the most important and commonly used Rust crates for Solana
-development:
+Нижче наведено найважливіші та найчастіше використовувані Rust пакети для розробки в Solana:
 
-- [`solana-program`] &mdash; Imported by programs running on Solana, compiled to
-  SBF. This crate contains many fundamental data types and is re-exported from
-  [`solana-sdk`], which cannot be imported from a Solana program.
+- [`solana-program`] &mdash; Імпортується програмами, що працюють у Solana, і компілюється до
+  SBF. Цей пакет містить багато фундаментальних типів даних і реекспортується з
+  [`solana-sdk`], який не можна імпортувати у програму Solana.
 
-- [`solana-sdk`] &mdash; The basic offchain SDK, it re-exports
-  [`solana-program`] and adds more APIs on top of that. Most Solana programs
-  that do not run on-chain will import this.
+- [`solana-sdk`] &mdash; Базовий SDK для роботи поза мережею, реекспортує
+  [`solana-program`] і додає більше API на додаток до цього. Більшість програм Solana,
+  що не працюють у мережі, імпортують цей пакет.
 
-- [`solana-client`] &mdash; For interacting with a Solana node via the
+- [`solana-client`] &mdash; Для взаємодії з вузлом Solana через
   [JSON RPC API](/docs/rpc).
 
-- [`solana-cli-config`] &mdash; Loading and saving the Solana CLI configuration
-  file.
+- [`solana-cli-config`] &mdash; Завантаження та збереження конфігураційного файлу Solana CLI.
 
-- [`solana-clap-utils`] &mdash; Routines for setting up a CLI, using [`clap`],
-  as used by the main Solana CLI. Includes functions for loading all types of
-  signers supported by the CLI.
+- [`solana-clap-utils`] &mdash; Рутини для налаштування CLI, використовуючи [`clap`], як у
+  основному CLI Solana. Включає функції для завантаження всіх типів підписантів, підтримуваних CLI.
 
 [`solana-program`]: https://docs.rs/solana-program
 [`solana-sdk`]: https://docs.rs/solana-sdk

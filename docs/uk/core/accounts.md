@@ -1,197 +1,184 @@
 ---
 sidebarSortOrder: 1
-sidebarLabel: Solana Account Model
-title: Solana Account Model
+sidebarLabel: Модель облікових записів Solana
+title: Модель облікових записів Solana
 description:
-  Learn about Solana's account model, including how accounts store data and
-  programs, rent mechanics, account ownership, and the relationship between
-  programs and data accounts. Understand the core concepts of Solana's key-value
-  storage system.
+  Дізнайтеся про модель облікових записів Solana, включаючи те, як облікові записи зберігають дані
+  і програми, механіку оренди, власність облікових записів і взаємозв'язок між
+  програмами та обліковими записами даних. Зрозумійте основні концепції системи
+  зберігання ключ-значення Solana.
 ---
 
-On Solana, all data is stored in what are referred to as "accounts”. The way
-data is organized on Solana resembles a
-[key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),
-where each entry in the database is called an "account".
+У Solana всі дані зберігаються в так званих "облікових записах". Спосіб
+організації даних у Solana нагадує
+[сховище ключ-значення](https://uk.wikipedia.org/wiki/%D0%91%D0%B0%D0%B7%D0%B0_%D0%B4%D0%B0%D0%BD%D0%B8%D1%85_%C2%AB%D0%BA%D0%BB%D1%8E%D1%87%E2%80%94%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%BD%D1%8F%C2%BB),
+де кожен запис у базі даних називається "обліковим записом".
 
-![Accounts](/assets/docs/core/accounts/accounts.svg)
+![Облікові записи](/assets/docs/core/accounts/accounts.svg)
 
-## Key Points
+## Основні моменти
 
-- Accounts can store up to 10MB of data, which can consist of either executable
-  program code or program state.
+- Облікові записи можуть зберігати до 10 МБ даних, які можуть складатися з виконуваного
+  коду програми або стану програми.
 
-- Accounts require a rent deposit in SOL, proportional to the amount of data
-  stored, which is fully refundable when the account is closed.
+- Облікові записи потребують застави в SOL, пропорційної обсягу збережених даних,
+  яка повністю повертається при закритті облікового запису.
 
-- Every account has a program "owner". Only the program that owns an account can
-  modify its data or deduct its lamport balance. However, anyone can increase
-  the balance.
+- Кожен обліковий запис має "власника" програми. Тільки програма, яка володіє обліковим записом, може
+  змінювати його дані або знімати баланс лампортів. Однак будь-хто може
+  збільшити баланс.
 
-- Programs (smart contracts) are stateless accounts that store executable code.
+- Програми (смартконтракти) є безстанними обліковими записами, які зберігають виконуваний код.
 
-- Data accounts are created by programs to store and manage program state.
+- Облікові записи даних створюються програмами для зберігання і керування станом програми.
 
-- Native programs are built-in programs included with the Solana runtime.
+- Вбудовані програми - це вбудовані програми, які включені у середовище виконання Solana.
 
-- Sysvar accounts are special accounts that store network cluster state.
+- Системні облікові записи - це спеціальні облікові записи, які зберігають стан кластера мережі.
 
-## Account
+## Обліковий запис
 
-Each account is identifiable by its unique address, represented as 32 bytes in
-the format of an [Ed25519](https://ed25519.cr.yp.to/) `PublicKey`. You can think
-of the address as the unique identifier for the account.
+Кожен обліковий запис ідентифікується його унікальною адресою, представленою у форматі 32 байт
+як [Ed25519](https://ed25519.cr.yp.to/) `PublicKey`. Ви можете вважати
+адресу унікальним ідентифікатором облікового запису.
 
-![Account Address](/assets/docs/core/accounts/account-address.svg)
+![Адреса облікового запису](/assets/docs/core/accounts/account-address.svg)
 
-This relationship between the account and its address can be thought of as a
-key-value pair, where the address serves as the key to locate the corresponding
-on-chain data of the account.
+Цей зв'язок між обліковим записом та його адресою можна розглядати як
+пару ключ-значення, де адреса є ключем для пошуку відповідних
+даних облікового запису в ланцюжку.
 
 ### AccountInfo
 
-Accounts have a
-[max size of 10MB](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L85)
-(10 Mega Bytes) and the data stored on every account on Solana has the following
-structure known as the
+Облікові записи мають
+[максимальний розмір у 10 МБ](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L85)
+(10 мегабайт), а дані, що зберігаються в кожному обліковому записі Solana, мають наступну
+структуру, відому як
 [AccountInfo](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L19).
 
 ![AccountInfo](/assets/docs/core/accounts/accountinfo.svg)
 
-The `AccountInfo` for each account includes the following fields:
+`AccountInfo` для кожного облікового запису включає наступні поля:
 
-- `data`: A byte array that stores the state of an account. If the account is a
-  program (smart contract), this stores executable program code. This field is
-  often referred to as the "account data".
-- `executable`: A boolean flag that indicates if the account is a program.
-- `lamports`: A numeric representation of the account's balance in
-  [lamports](/docs/terminology.md#lamport), the smallest unit of SOL (1 SOL = 1
-  billion lamports).
-- `owner`: Specifies the public key (program ID) of the program that owns the
-  account.
+- `data`: Масив байтів, який зберігає стан облікового запису. Якщо обліковий запис є
+  програмою (смартконтрактом), це поле зберігає виконуваний код програми. Це поле часто
+  називають "даними облікового запису".
+- `executable`: Булевий прапорець, який вказує, чи є обліковий запис програмою.
+- `lamports`: Числове представлення балансу облікового запису в
+  [лампортах](/docs/terminology.md#lamport), найменшій одиниці SOL (1 SOL = 1
+  мільярд лампортів).
+- `owner`: Вказує публічний ключ (Program ID) програми, яка володіє обліковим записом.
 
-As a key part of the Solana Account Model, every account on Solana has a
-designated "owner", specifically a program. Only the program designated as the
-owner of an account can modify the data stored on the account or deduct the
-lamport balance. It's important to note that while only the owner may deduct the
-balance, anyone can increase the balance.
+Як ключова частина моделі облікових записів Solana, кожен обліковий запис у Solana має
+визначеного "власника", а саме програму. Тільки програма, зазначена як власник облікового запису, може
+змінювати дані, що зберігаються в обліковому записі, або знімати баланс лампортів. Важливо зазначити, що, хоча тільки власник може знімати баланс, будь-хто може збільшити баланс.
 
-> To store data on-chain, a certain amount of SOL must be transferred to an
-> account. The amount transferred is proportional to the size of the data stored
-> on the account. This concept is commonly referred to as “rent”. However, you
-> can think of "rent" more like a "deposit" because the SOL allocated to an
-> account can be fully recovered when the account is closed.
+> Для зберігання даних у ланцюжку потрібно передати певну кількість SOL до
+> облікового запису. Кількість, що передається, пропорційна розміру даних, що зберігаються в обліковому записі. Ця концепція зазвичай називається "орендою". Однак, ви можете розглядати "оренду" швидше як "депозит", оскільки SOL, виділені для облікового запису, можуть бути повністю відновлені при закритті облікового запису.
 
-## Native Programs
+## Вбудовані програми
 
-Solana contains a small handful of native programs that are part of the
-validator implementation and provide various core functionalities for the
-network. You can find the full list of native programs
-[here](https://docs.anza.xyz/runtime/programs).
+Solana містить невелику кількість вбудованих програм, які є частиною
+реалізації валідатора і забезпечують різні основні функціональності для
+мережі. Ви можете знайти повний список вбудованих програм
+[тут](https://docs.anza.xyz/runtime/programs).
 
-When developing custom programs on Solana, you will commonly interact with two
-native programs, the System Program and the BPF Loader.
+При розробці користувацьких програм на Solana ви часто будете взаємодіяти з двома
+вбудованими програмами: Системною Програмою і Завантажувачем BPF.
 
-### System Program
+### Системна Програма
 
-By default, all new accounts are owned by the
-[System Program](https://github.com/solana-labs/solana/tree/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src).
-The System Program performs several key tasks such as:
+За замовчуванням усі нові облікові записи належать
+[Системній Програмі](https://github.com/solana-labs/solana/tree/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src).
+Системна Програма виконує кілька ключових завдань, таких як:
 
-- [New Account Creation](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L145):
-  Only the System Program can create new accounts.
-- [Space Allocation](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L70):
-  Sets the byte capacity for the data field of each account.
-- [Assign Program Ownership](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L112):
-  Once the System Program creates an account, it can reassign the designated
-  program owner to a different program account. This is how custom programs take
-  ownership of new accounts created by the System Program.
+- [Створення нового облікового запису](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L145):
+  Тільки Системна Програма може створювати нові облікові записи.
+- [Виділення простору](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L70):
+  Встановлює обсяг пам'яті для поля даних кожного облікового запису.
+- [Призначення власника програми](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/system/src/system_processor.rs#L112):
+  Після створення облікового запису Системною Програмою вона може перепризначити власника
+  програми іншому обліковому запису програми. Це спосіб, за яким користувацькі програми беруть
+  у власність нові облікові записи, створені Системною Програмою.
 
-On Solana, a "wallet" is simply an account owned by the System Program. The
-lamport balance of the wallet is the amount of SOL owned by the account.
+У Solana "гаманець" просто є обліковим записом, який належить Системній Програмі. Баланс лампортів у гаманці є кількістю SOL, що належать обліковому запису.
 
-![System Account](/assets/docs/core/accounts/system-account.svg)
+![Системний Обліковий Запис](/assets/docs/core/accounts/system-account.svg)
 
-> Only accounts owned by the System Program can be used as transaction fee
-> payers.
+> Тільки облікові записи, що належать Системній Програмі, можуть використовуватися як платники комісій за транзакції.
 
-### BPFLoader Program
+### Завантажувач BPF
 
-The
-[BPF Loader](https://github.com/solana-labs/solana/tree/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src)
-is the program designated as the "owner" of all other programs on the network,
-excluding Native Programs. It is responsible for deploying, upgrading, and
-executing custom programs.
+[Завантажувач BPF](https://github.com/solana-labs/solana/tree/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src)
+є програмою, яка призначена як "власник" усіх інших програм у мережі,
+крім Вбудованих Програм. Він відповідає за розгортання, оновлення та виконання користувацьких програм.
 
-## Sysvar Accounts
+## Системні Облікові Записи
 
-Sysvar accounts are special accounts located at predefined addresses that
-provide access to cluster state data. These accounts are dynamically updated
-with data about the network cluster. You can find the full list of Sysvar
-Accounts [here](https://docs.anza.xyz/runtime/sysvars).
+Системні облікові записи - це спеціальні облікові записи, розташовані за попередньо визначеними адресами, які
+надають доступ до даних про стан кластера мережі. Ці облікові записи динамічно оновлюються
+даними про кластер мережі. Ви можете знайти повний список Системних Облікових Записів
+[тут](https://docs.anza.xyz/runtime/sysvars).
 
-## Custom Programs
+## Користувацькі Програми
 
-On Solana, “smart contracts” are referred to as
-[programs](/docs/core/programs.md). A program is an account that contains
-executable code and is indicated by an “executable” flag that is set to true.
+У Solana "смартконтракти" називаються
+[програмами](/docs/core/programs.md). Програма є обліковим записом, який містить
+виконуваний код, і позначається прапорцем "виконуваний", який встановлено в значення "true".
 
-For a more detailed explanation of the program deployment process, refer to the
-[Deploying Programs](/docs/programs/deploying.md) page of this documentation.
+Для детального пояснення процесу розгортання програми, зверніться до сторінки
+[Розгортання Програм](/docs/programs/deploying.md) цієї документації.
 
-### Program Account
+### Обліковий Запис Програми
 
-When new programs are
-[deployed](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L498)
-on Solana, technically three separate accounts are created:
+Коли нові програми
+[розгортаються](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L498)
+на Solana, технічно створюються три окремі облікові записи:
 
-- **Program Account**: The main account representing an on-chain program. This
-  account stores the address of an executable data account (which stores the
-  compiled program code) and the update authority for the program (address
-  authorized to make changes to the program).
-- **Program Executable Data Account**: An account that contains the executable
-  byte code of the program.
-- **Buffer Account**: A temporary account that stores byte code while a program
-  is being actively deployed or upgraded. Once the process is complete, the data
-  is transferred to the Program Executable Data Account and the buffer account
-  is closed.
+- **Обліковий Запис Програми**: Основний обліковий запис, який представляє програму в ланцюжку. Цей
+  обліковий запис зберігає адресу виконуваного облікового запису даних (який зберігає
+  зкомпільований код програми) і право на оновлення програми (адреса, яка
+  має дозвіл на внесення змін до програми).
+- **Виконуваний Обліковий Запис Програми**: Обліковий запис, який містить виконуваний
+  байт-код програми.
+- **Буферний Обліковий Запис**: Тимчасовий обліковий запис, який зберігає байт-код під час
+  активного розгортання або оновлення програми. Після завершення процесу дані
+  передаються до Виконуваного Облікового Запису Програми, а буферний обліковий запис
+  закривається.
 
-For example, here are links to the Solana Explorer for the Token Extensions
-[Program Account](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
-and its corresponding
-[Program Executable Data Account](https://explorer.solana.com/address/DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY).
+Наприклад, ось посилання на Solana Explorer для Програмного Розширення Токенів
+[Обліковий Запис Програми](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
+і його відповідний
+[Виконуваний Обліковий Запис Програми](https://explorer.solana.com/address/DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY).
 
-![Program and Executable Data Accounts](/assets/docs/core/accounts/program-account-expanded.svg)
+![Облікові Записи Програми та Виконуваних Даних](/assets/docs/core/accounts/program-account-expanded.svg)
 
-For simplicity, you can think of the "Program Account" as the program itself.
+Для простоти ви можете вважати "Обліковий Запис Програми" як саму програму.
 
-![Program Account](/assets/docs/core/accounts/program-account-simple.svg)
+![Обліковий Запис Програми](/assets/docs/core/accounts/program-account-simple.svg)
 
-> The address of the "Program Account" is commonly referred to as the “Program
-> ID”, which is used to invoke the program.
+> Адреса "Облікового Запису Програми" зазвичай називається "ID Програми", який використовується для виклику програми.
 
-### Data Account
+### Обліковий Запис Даних
 
-Solana programs are "stateless", meaning that program accounts only contain the
-program's executable byte code. To store and modify additional data, new
-accounts must be created. These accounts are commonly referred to as “data
-accounts”.
+Програми Solana є "безстанними", тобто облікові записи програм містять лише
+виконуваний байт-код програми. Для зберігання та модифікації додаткових даних необхідно створювати нові
+облікові записи. Ці облікові записи зазвичай називаються "обліковими записами даних".
 
-Data accounts can store any arbitrary data as defined in the owner program's
-code.
+Облікові записи даних можуть зберігати будь-які довільні дані, визначені в коді програми-власника.
 
-![Data Account](/assets/docs/core/accounts/data-account.svg)
+![Обліковий Запис Даних](/assets/docs/core/accounts/data-account.svg)
 
-Note that only the [System Program](/docs/core/accounts.md#system-program) can
-create new accounts. Once the System Program creates an account, it can then
-transfer ownership of the new account to another program.
+Зверніть увагу, що тільки [Системна Програма](/docs/core/accounts.md#system-program) може
+створювати нові облікові записи. Після створення облікового запису Системною Програмою вона може потім
+передати власність нового облікового запису іншій програмі.
 
-In other words, creating a data account for a custom program requires two steps:
+Іншими словами, створення облікового запису даних для користувацької програми вимагає двох кроків:
 
-1. Invoke the System Program to create an account, which then transfers
-   ownership to a custom program
-2. Invoke the custom program, which now owns the account, to then initialize the
-   account data as defined in the program code
+1. Виклик Системної Програми для створення облікового запису, яка потім передає
+   власність користувацькій програмі
+2. Виклик користувацької програми, яка тепер володіє обліковим записом, для
+   ініціалізації даних облікового запису, як це визначено в коді програми
 
-This data account creation process is often abstracted as a single step, but
-it's helpful to understand the underlying process.
+Цей процес створення облікового запису даних часто абстрагується як єдиний крок, але
+корисно розуміти підлеглий процес.

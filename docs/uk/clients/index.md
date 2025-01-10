@@ -1,5 +1,5 @@
 ---
 metaOnly: true
-title: Solana Clients
+title: Solana клієнти
 sidebarSortOrder: 4
 ---

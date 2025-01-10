@@ -1,32 +1,29 @@
 ---
-title: Web3.js API Examples
+title: Web3.js API Приклади
 description:
-  Learn how to interact with the Solana blockchain using the @solana/web3.js
-  library through practical code samples and explanations.
+  Дізнайтеся, як взаємодіяти з блокчейном Solana за допомогою бібліотеки @solana/web3.js
+  через практичні приклади коду та пояснення.
 ---
 
-## Web3 API Reference Guide
+## Довідник по Web3 API
 
-The `@solana/web3.js` library is a package that has coverage over the
+Бібліотека `@solana/web3.js` забезпечує покриття
 [Solana JSON RPC API](/docs/rpc).
 
-You can find the full documentation for the `@solana/web3.js` library
-[here](https://solana-labs.github.io/solana-web3.js/v1.x/).
+Повну документацію до бібліотеки `@solana/web3.js` можна знайти
+[тут](https://solana-labs.github.io/solana-web3.js/v1.x/).
 
-## General
+## Загальні
 
-### Connection
+### Підключення
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
+[Документація](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
 
-Connection is used to interact with the [Solana JSON RPC](/docs/rpc). You can
-use Connection to confirm transactions, get account info, and more.
+Об'єкт `Connection` використовується для взаємодії з [Solana JSON RPC](/docs/rpc). Ви можете використовувати Connection для підтвердження транзакцій, отримання інформації про облікові записи тощо.
 
-You create a connection by defining the JSON RPC cluster endpoint and the
-desired commitment. Once this is complete, you can use this connection object to
-interact with any of the Solana JSON RPC API.
+Створення підключення здійснюється шляхом вказання URL-адреси RPC-кластера та бажаного рівня зобов'язань. Після цього ви можете використовувати цей об'єкт підключення для взаємодії з будь-яким із API JSON RPC Solana.
 
-#### Example Usage
+#### Приклад використання
 
 ```javascript
 const web3 = require("@solana/web3.js");
@@ -61,28 +58,22 @@ console.log(slotLeader);
 //49AqLYbpJYc2DrzGUAH1fhWJy62yxBxpLEkfJwjKy2jr
 ```
 
-The above example shows only a few of the methods on Connection. Please see the
-[source generated docs](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
-for the full list.
+Наведений вище приклад показує лише кілька методів класу Connection. Повний список можна знайти у
+[генерованій документації](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html).
 
-### Transaction
+### Транзакція
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html)
+[Документація](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Transaction.html)
 
-A transaction is used to interact with programs on the Solana blockchain. These
-transactions are constructed with TransactionInstructions, containing all the
-accounts possible to interact with, as well as any needed data or program
-addresses. Each TransactionInstruction consists of keys, data, and a programId.
-You can do multiple instructions in a single transaction, interacting with
-multiple programs at once.
+Транзакція використовується для взаємодії з програмами на блокчейні Solana. Ці транзакції створюються за допомогою TransactionInstructions, які містять усі можливі облікові записи для взаємодії, а також необхідні дані або адреси програм. Кожна TransactionInstruction складається з ключів, даних і programId. Ви можете виконувати кілька інструкцій в одній транзакції, взаємодіючи з кількома програмами одночасно.
 
-#### Example Usage
+#### Приклад використання
 
 ```javascript
 const web3 = require("@solana/web3.js");
 const nacl = require("tweetnacl");
 
-// Airdrop SOL for paying transactions
+// Запит airdrop SOL для оплати транзакцій
 let payer = web3.Keypair.generate();
 let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
@@ -95,10 +86,10 @@ await connection.confirmTransaction({ signature: airdropSignature });
 
 let toAccount = web3.Keypair.generate();
 
-// Create Simple Transaction
+// Створення простої транзакції
 let transaction = new web3.Transaction();
 
-// Add an instruction to execute
+// Додати інструкцію для виконання
 transaction.add(
   web3.SystemProgram.transfer({
     fromPubkey: payer.publicKey,
@@ -107,11 +98,11 @@ transaction.add(
   }),
 );
 
-// Send and confirm transaction
-// Note: feePayer is by default the first signer, or payer, if the parameter is not set
+// Відправка та підтвердження транзакції
+// За замовчуванням feePayer - це перший підписант
 await web3.sendAndConfirmTransaction(connection, transaction, [payer]);
 
-// Alternatively, manually construct the transaction
+// Альтернативно, створення транзакції вручну
 let recentBlockhash = await connection.getLatestBlockhash();
 let manualTransaction = new web3.Transaction({
   recentBlockhash: recentBlockhash.blockhash,
@@ -142,13 +133,11 @@ await web3.sendAndConfirmRawTransaction(connection, rawTransaction);
 
 ### Keypair
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Keypair.html)
+[Документація](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Keypair.html)
 
-The keypair is used to create an account with a public key and secret key within
-Solana. You can either generate, generate from a seed, or create from a secret
-key.
+Keypair використовується для створення облікового запису з публічним і секретним ключами в Solana. Ви можете згенерувати Keypair, створити його з seed або секретного ключа.
 
-#### Example Usage
+#### Приклад використання
 
 ```javascript
 const { Keypair } = require("@solana/web3.js");
@@ -159,18 +148,10 @@ console.log(account.publicKey.toBase58());
 console.log(account.secretKey);
 
 // 2DVaHtcdTf7cm18Zm9VV8rKK4oSnjmTkKE6MiXe18Qsb
-// Uint8Array(64) [
-//   152,  43, 116, 211, 207,  41, 220,  33, 193, 168, 118,
-//    24, 176,  83, 206, 132,  47, 194,   2, 203, 186, 131,
-//   197, 228, 156, 170, 154,  41,  56,  76, 159, 124,  18,
-//    14, 247,  32, 210,  51, 102,  41,  43,  21,  12, 170,
-//   166, 210, 195, 188,  60, 220, 210,  96, 136, 158,   6,
-//   205, 189, 165, 112,  32, 200, 116, 164, 234
-// ]
+// Uint8Array(64) [...]
 
 let seed = Uint8Array.from([
-  70, 60, 102, 100, 70, 60, 102, 100, 70, 60, 102, 100, 70, 60, 102, 100, 70,
-  60, 102, 100, 70, 60, 102, 100, 70, 60, 102, 100, 70, 60, 102, 100,
+  70, 60, 102, 100, 70, 60, 102, 100, 70, 60, 102, 100, 70, 60, 102, 100,
 ]);
 let accountFromSeed = Keypair.fromSeed(seed);
 
@@ -178,14 +159,7 @@ console.log(accountFromSeed.publicKey.toBase58());
 console.log(accountFromSeed.secretKey);
 
 // 3LDverZtSC9Duw2wyGC1C38atMG49toPNW9jtGJiw9Ar
-// Uint8Array(64) [
-//    70,  60, 102, 100,  70,  60, 102, 100,  70,  60, 102,
-//   100,  70,  60, 102, 100,  70,  60, 102, 100,  70,  60,
-//   102, 100,  70,  60, 102, 100,  70,  60, 102, 100,  34,
-//   164,   6,  12,   9, 193, 196,  30, 148, 122, 175,  11,
-//    28, 243, 209,  82, 240, 184,  30,  31,  56, 223, 236,
-//   227,  60,  72, 215,  47, 208, 209, 162,  59
-// ]
+// Uint8Array(64) [...]
 
 let accountFromSecret = Keypair.fromSecretKey(account.secretKey);
 
@@ -193,44 +167,32 @@ console.log(accountFromSecret.publicKey.toBase58());
 console.log(accountFromSecret.secretKey);
 
 // 2DVaHtcdTf7cm18Zm9VV8rKK4oSnjmTkKE6MiXe18Qsb
-// Uint8Array(64) [
-//   152,  43, 116, 211, 207,  41, 220,  33, 193, 168, 118,
-//    24, 176,  83, 206, 132,  47, 194,   2, 203, 186, 131,
-//   197, 228, 156, 170, 154,  41,  56,  76, 159, 124,  18,
-//    14, 247,  32, 210,  51, 102,  41,  43,  21,  12, 170,
-//   166, 210, 195, 188,  60, 220, 210,  96, 136, 158,   6,
-//   205, 189, 165, 112,  32, 200, 116, 164, 234
-// ]
+// Uint8Array(64) [...]
 ```
 
-Using `generate` generates a random Keypair for use as an account on Solana.
-Using `fromSeed`, you can generate a Keypair using a deterministic constructor.
-`fromSecret` creates a Keypair from a secret Uint8array. You can see that the
-publicKey for the `generate` Keypair and `fromSecret` Keypair are the same
-because the secret from the `generate` Keypair is used in `fromSecret`.
+Використання `generate` генерує випадкову Keypair для облікового запису на Solana. Використання `fromSeed` дозволяє створити Keypair з детермінованим конструктором. `fromSecret` створює Keypair із секретного масиву Uint8Array. Ви можете побачити, що publicKey для Keypair, створеної за допомогою `generate`, і `fromSecret` однакові, оскільки секретний ключ однаковий.
+### Використання `generate` створює випадкову пару ключів для використання як обліковий запис у Solana.
+Використання `fromSeed` дозволяє створити пару ключів за допомогою детермінованого конструктора.
+`fromSecret` створює пару ключів із секретного масиву Uint8Array. Ви можете побачити, що publicKey для пари ключів `generate` і `fromSecret` є однаковими, оскільки секрет від пари ключів `generate` використовується в `fromSecret`.
 
-**Warning**: Do not use `fromSeed` unless you are creating a seed with high
-entropy. Do not share your seed. Treat the seed like you would a private key.
+**Попередження**: Не використовуйте `fromSeed`, якщо ви не створюєте seed із високою ентропією. Не розголошуйте ваш seed. Ставтеся до seed так само, як до приватного ключа.
 
 ### PublicKey
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/PublicKey.html)
+[Джерело документації](https://solana-labs.github.io/solana-web3.js/v1.x/classes/PublicKey.html)
 
-PublicKey is used throughout `@solana/web3.js` in transactions, keypairs, and
-programs. You require publickey when listing each account in a transaction and
-as a general identifier on Solana.
+`PublicKey` використовується в `@solana/web3.js` для транзакцій, пар ключів і програм. Вам потрібен publicKey при зазначенні кожного облікового запису в транзакції, а також як загальний ідентифікатор у Solana.
 
-A PublicKey can be created with a base58 encoded string, buffer, Uint8Array,
-number, and an array of numbers.
+`PublicKey` можна створити за допомогою base58-строки, буфера, Uint8Array, числа або масиву чисел.
 
-#### Example Usage
+#### Приклад використання
 
 ```javascript
 const { Buffer } = require("buffer");
 const web3 = require("@solana/web3.js");
 const crypto = require("crypto");
 
-// Create a PublicKey with a base58 encoded string
+// Створення PublicKey з base58-строки
 let base58publicKey = new web3.PublicKey(
   "5xot9PVkphiX2adznghwrAuxGs2zeWisNSxMW6hU6Hkj",
 );
@@ -238,41 +200,38 @@ console.log(base58publicKey.toBase58());
 
 // 5xot9PVkphiX2adznghwrAuxGs2zeWisNSxMW6hU6Hkj
 
-// Create a Program Address
+// Створення програмної адреси
 let highEntropyBuffer = crypto.randomBytes(31);
 let programAddressFromKey = await web3.PublicKey.createProgramAddress(
   [highEntropyBuffer.slice(0, 31)],
   base58publicKey,
 );
-console.log(`Generated Program Address: ${programAddressFromKey.toBase58()}`);
+console.log(`Згенерована програмна адреса: ${programAddressFromKey.toBase58()}`);
 
-// Generated Program Address: 3thxPEEz4EDWHNxo1LpEpsAxZryPAHyvNVXJEJWgBgwJ
+// Згенерована програмна адреса: 3thxPEEz4EDWHNxo1LpEpsAxZryPAHyvNVXJEJWgBgwJ
 
-// Find Program address given a PublicKey
+// Знаходження програмної адреси за PublicKey
 let validProgramAddress = await web3.PublicKey.findProgramAddress(
   [Buffer.from("", "utf8")],
   programAddressFromKey,
 );
-console.log(`Valid Program Address: ${validProgramAddress}`);
+console.log(`Дійсна програмна адреса: ${validProgramAddress}`);
 
-// Valid Program Address: C14Gs3oyeXbASzwUpqSymCKpEyccfEuSe8VRar9vJQRE,253
+// Дійсна програмна адреса: C14Gs3oyeXbASzwUpqSymCKpEyccfEuSe8VRar9vJQRE,253
 ```
 
 ### SystemProgram
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/SystemProgram.html)
+[Джерело документації](https://solana-labs.github.io/solana-web3.js/v1.x/classes/SystemProgram.html)
 
-The SystemProgram grants the ability to create accounts, allocate account data,
-assign an account to programs, work with nonce accounts, and transfer lamports.
-You can use the SystemInstruction class to help with decoding and reading
-individual instructions
+`SystemProgram` дозволяє створювати облікові записи, виділяти дані облікових записів, призначати облікові записи програмам, працювати з nonce-обліковими записами та переводити лампорти. Ви можете використовувати клас `SystemInstruction` для декодування та читання окремих інструкцій.
 
-#### Example Usage
+#### Приклад використання
 
 ```javascript
 const web3 = require("@solana/web3.js");
 
-// Airdrop SOL for paying transactions
+// Запит SOL для оплати транзакцій
 let payer = web3.Keypair.generate();
 let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
@@ -283,7 +242,7 @@ let airdropSignature = await connection.requestAirdrop(
 
 await connection.confirmTransaction({ signature: airdropSignature });
 
-// Allocate Account Data
+// Виділення даних облікового запису
 let allocatedAccount = web3.Keypair.generate();
 let allocateInstruction = web3.SystemProgram.allocate({
   accountPubkey: allocatedAccount.publicKey,
@@ -296,7 +255,7 @@ await web3.sendAndConfirmTransaction(connection, transaction, [
   allocatedAccount,
 ]);
 
-// Create Nonce Account
+// Створення nonce-облікового запису
 let nonceAccount = web3.Keypair.generate();
 let minimumAmountForNonceAccount =
   await connection.getMinimumBalanceForRentExemption(web3.NONCE_ACCOUNT_LENGTH);
@@ -315,7 +274,7 @@ await web3.sendAndConfirmTransaction(
   [payer, nonceAccount],
 );
 
-// Advance nonce - Used to create transactions as an account custodian
+// Переведення nonce - використовується для створення транзакцій як зберігач облікового запису
 let advanceNonceTransaction = new web3.Transaction().add(
   web3.SystemProgram.nonceAdvance({
     noncePubkey: nonceAccount.publicKey,
@@ -327,7 +286,7 @@ await web3.sendAndConfirmTransaction(connection, advanceNonceTransaction, [
   payer,
 ]);
 
-// Transfer lamports between accounts
+// Переведення лампортів між обліковими записами
 let toAccount = web3.Keypair.generate();
 
 let transferTransaction = new web3.Transaction().add(
@@ -339,7 +298,7 @@ let transferTransaction = new web3.Transaction().add(
 );
 await web3.sendAndConfirmTransaction(connection, transferTransaction, [payer]);
 
-// Assign a new account to a program
+// Призначення нового облікового запису програмі
 let programId = web3.Keypair.generate();
 let assignedAccount = web3.Keypair.generate();
 
@@ -354,23 +313,22 @@ await web3.sendAndConfirmTransaction(connection, assignTransaction, [
   payer,
   assignedAccount,
 ]);
-```
 
+```
 ### Secp256k1Program
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Secp256k1Program.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Secp256k1Program.html)
 
-The Secp256k1Program is used to verify Secp256k1 signatures, which are used by
-both Bitcoin and Ethereum.
+`Secp256k1Program` використовується для перевірки підписів `Secp256k1`, які використовуються як у Bitcoin, так і в Ethereum.
 
-#### Example Usage
+#### Приклад Використання
 
 ```javascript
 const { keccak_256 } = require("js-sha3");
 const web3 = require("@solana/web3.js");
 const secp256k1 = require("secp256k1");
 
-// Create a Ethereum Address from secp256k1
+// Створення Ethereum адреси з secp256k1
 let secp256k1PrivateKey;
 do {
   secp256k1PrivateKey = web3.Keypair.generate().secretKey.slice(0, 32);
@@ -386,7 +344,7 @@ console.log(`Ethereum Address: 0x${ethAddress.toString("hex")}`);
 
 // Ethereum Address: 0xadbf43eec40694eacf36e34bb5337fba6a2aa8ee
 
-// Fund a keypair to create instructions
+// Фінансування облікового запису для створення інструкцій
 let fromPublicKey = web3.Keypair.generate();
 let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
@@ -397,7 +355,7 @@ let airdropSignature = await connection.requestAirdrop(
 
 await connection.confirmTransaction({ signature: airdropSignature });
 
-// Sign Message with Ethereum Key
+// Підписування повідомлення з ключем Ethereum
 let plaintext = Buffer.from("string address");
 let plaintextHash = Buffer.from(keccak_256.update(plaintext).digest());
 let { signature, recid: recoveryId } = secp256k1.ecdsaSign(
@@ -405,7 +363,7 @@ let { signature, recid: recoveryId } = secp256k1.ecdsaSign(
   secp256k1PrivateKey,
 );
 
-// Create transaction to verify the signature
+// Створення транзакції для перевірки підпису
 let transaction = new Transaction().add(
   web3.Secp256k1Program.createInstructionWithEthAddress({
     ethAddress: ethAddress.toString("hex"),
@@ -415,21 +373,17 @@ let transaction = new Transaction().add(
   }),
 );
 
-// Transaction will succeed if the message is verified to be signed by the address
+// Транзакція буде успішною, якщо повідомлення підтверджено, що його підписано цією адресою
 await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 ```
 
 ### Message
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Message.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Message.html)
 
-Message is used as another way to construct transactions. You can construct a
-message using the accounts, header, instructions, and recentBlockhash that are a
-part of a transaction. A [Transaction](/docs/clients/javascript.md#Transaction)
-is a Message plus the list of required signatures required to execute the
-transaction.
+`Message` використовується як альтернативний спосіб створення транзакцій. Ви можете створити повідомлення за допомогою облікових записів, заголовка, інструкцій та недавнього блочного хеша, які є частиною транзакції. [Transaction](/docs/clients/javascript.md#Transaction) є `Message` плюс список необхідних підписів для виконання транзакції.
 
-#### Example Usage
+#### Приклад Використання
 
 ```javascript
 const { Buffer } = require("buffer");
@@ -487,14 +441,13 @@ await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 
 ### Struct
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Struct.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Struct.html)
 
-The struct class is used to create Rust compatible structs in javascript. This
-class is only compatible with Borsh encoded Rust structs.
+Клас `Struct` використовується для створення структур, сумісних із Rust, у JavaScript. Цей клас сумісний лише з Rust-структурами, закодованими за допомогою Borsh.
 
-#### Example Usage
+#### Приклад Використання
 
-Struct in Rust:
+Структура в Rust:
 
 ```rust
 pub struct Fee {
@@ -503,7 +456,7 @@ pub struct Fee {
 }
 ```
 
-Using web3:
+Використання з web3:
 
 ```javascript
 import BN from "bn.js";
@@ -517,15 +470,11 @@ export class Fee extends Struct {
 
 ### Enum
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Enum.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Enum.html)
 
-The Enum class is used to represent a Rust compatible Enum in javascript. The
-enum will just be a string representation if logged but can be properly
-encoded/decoded when used in conjunction with
-[Struct](/docs/clients/javascript.md#Struct). This class is only compatible with
-Borsh encoded Rust enumerations.
+Клас `Enum` використовується для представлення сумісного з Rust енумератора у JavaScript. Енумератор буде представлений як строка при логуванні, але може бути правильно закодований/декодований при використанні разом з [Struct](/docs/clients/javascript.md#Struct). Цей клас сумісний лише з Rust-енумераторами, закодованими за допомогою Borsh.
 
-#### Example Usage
+#### Приклад Використання
 
 Rust:
 
@@ -547,29 +496,25 @@ export class AccountType extends Enum {}
 
 ### NonceAccount
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/NonceAccount.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/NonceAccount.html)
 
-Normally a transaction is rejected if a transaction's `recentBlockhash` field is
-too old. To provide for certain custodial services, Nonce Accounts are used.
-Transactions which use a `recentBlockhash` captured on-chain by a Nonce Account
-do not expire as long at the Nonce Account is not advanced.
+Зазвичай транзакція відхиляється, якщо поле `recentBlockhash` транзакції є застарілим. Для забезпечення певних кастодіальних послуг використовуються облікові записи `NonceAccount`. Транзакції, які використовують `recentBlockhash`, зафіксовані на блокчейні обліковим записом `NonceAccount`, не старіють доти, доки цей обліковий запис не буде оновлено.
 
-You can create a nonce account by first creating a normal account, then using
-`SystemProgram` to make the account a Nonce Account.
+Ви можете створити `NonceAccount`, спочатку створивши звичайний обліковий запис, а потім використовуючи `SystemProgram`, щоб зробити цей обліковий запис `NonceAccount`.
 
-#### Example Usage
+#### Приклад Використання
 
 ```javascript
 const web3 = require("@solana/web3.js");
 
-// Create connection
+// Створення з'єднання
 let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
-// Generate accounts
+// Генерація облікових записів
 let account = web3.Keypair.generate();
 let nonceAccount = web3.Keypair.generate();
 
-// Fund account
+// Фінансування облікового запису
 let airdropSignature = await connection.requestAirdrop(
   account.publicKey,
   web3.LAMPORTS_PER_SOL,
@@ -577,12 +522,12 @@ let airdropSignature = await connection.requestAirdrop(
 
 await connection.confirmTransaction({ signature: airdropSignature });
 
-// Get Minimum amount for rent exemption
+// Отримання мінімальної суми для звільнення від оренди
 let minimumAmount = await connection.getMinimumBalanceForRentExemption(
   web3.NONCE_ACCOUNT_LENGTH,
 );
 
-// Form CreateNonceAccount transaction
+// Формування транзакції CreateNonceAccount
 let transaction = new web3.Transaction().add(
   web3.SystemProgram.createNonceAccount({
     fromPubkey: account.publicKey,
@@ -591,7 +536,7 @@ let transaction = new web3.Transaction().add(
     lamports: minimumAmount,
   }),
 );
-// Create Nonce Account
+// Створення Nonce Account
 await web3.sendAndConfirmTransaction(connection, transaction, [
   account,
   nonceAccount,
@@ -630,19 +575,15 @@ console.log(nonceAccountFromInfo);
 // }
 ```
 
-The above example shows both how to create a `NonceAccount` using
-`SystemProgram.createNonceAccount`, as well as how to retrieve the
-`NonceAccount` from accountInfo. Using the nonce, you can create transactions
-offline with the nonce in place of the `recentBlockhash`.
+Наведений вище приклад показує як створити `NonceAccount` за допомогою `SystemProgram.createNonceAccount`, а також як отримати `NonceAccount` з accountInfo. Використовуючи nonce, ви можете створювати транзакції офлайн з nonce замість `recentBlockhash`.
 
 ### VoteAccount
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/VoteAccount.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/VoteAccount.html)
 
-Vote account is an object that grants the capability of decoding vote accounts
-from the native vote account program on the network.
+`VoteAccount` — це об'єкт, який дозволяє декодувати облікові записи для голосування з використанням нативної програми голосування в мережі.
 
-#### Example Usage
+#### Приклад Використання
 
 ```javascript
 const web3 = require("@solana/web3.js");
@@ -685,7 +626,6 @@ VoteAccount {
       [Object], [Object], [Object],
       [Object], [Object], [Object],
       [Object], [Object], [Object],
-      [Object], [Object], [Object],
       [Object], [Object]
    ],
   epochCredits: [
@@ -711,20 +651,16 @@ VoteAccount {
 
 ### StakeProgram
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/StakeProgram.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/StakeProgram.html)
 
-The StakeProgram facilitates staking SOL and delegating them to any validators
-on the network. You can use StakeProgram to create a stake account, stake some
-SOL, authorize accounts for withdrawal of your stake, deactivate your stake, and
-withdraw your funds. The StakeInstruction class is used to decode and read more
-instructions from transactions calling the StakeProgram
+`StakeProgram` полегшує процес стейкінгу SOL і делегування їх будь-яким валідаторам у мережі. Ви можете використовувати `StakeProgram`, щоб створити стейк-обліковий запис, застейкати SOL, авторизувати облікові записи для виведення стейка, деактивувати стейк і вивести кошти. Клас `StakeInstruction` використовується для декодування та читання додаткових інструкцій з транзакцій, що викликають `StakeProgram`.
 
-#### Example Usage
+#### Приклад Використання
 
 ```javascript
 const web3 = require("@solana/web3.js");
 
-// Fund a key to create transactions
+// Фінансування ключа для створення транзакцій
 let fromPublicKey = web3.Keypair.generate();
 let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
@@ -734,11 +670,11 @@ let airdropSignature = await connection.requestAirdrop(
 );
 await connection.confirmTransaction({ signature: airdropSignature });
 
-// Create Account
+// Створення облікового запису
 let stakeAccount = web3.Keypair.generate();
 let authorizedAccount = web3.Keypair.generate();
-/* Note: This is the minimum amount for a stake account -- Add additional Lamports for staking
-    For example, we add 50 lamports as part of the stake */
+/* Примітка: Це мінімальна сума для стейк-облікового запису — Додайте додаткові лампорти для стейкінгу
+    Наприклад, ми додаємо 50 лампорт як частину стейка */
 let lamportsForStakeAccount =
   (await connection.getMinimumBalanceForRentExemption(
     web3.StakeProgram.space,
@@ -759,22 +695,22 @@ await web3.sendAndConfirmTransaction(connection, createAccountTransaction, [
   stakeAccount,
 ]);
 
-// Check that stake is available
+// Перевірка доступності стейка
 let stakeBalance = await connection.getBalance(stakeAccount.publicKey);
 console.log(`Stake balance: ${stakeBalance}`);
 // Stake balance: 2282930
 
-// We can verify the state of our stake. This may take some time to become active
+// Ми можемо перевірити стан нашого стейка. Це може зайняти деякий час, щоб активуватись
 let stakeState = await connection.getStakeActivation(stakeAccount.publicKey);
 console.log(`Stake state: ${stakeState.state}`);
 // Stake state: inactive
 
-// To delegate our stake, we get the current vote accounts and choose the first
+// Щоб делегувати наш стейк, ми отримуємо поточні облікові записи голосування та вибираємо перший
 let voteAccounts = await connection.getVoteAccounts();
 let voteAccount = voteAccounts.current.concat(voteAccounts.delinquent)[0];
 let votePubkey = new web3.PublicKey(voteAccount.votePubkey);
 
-// We can then delegate our stake to the voteAccount
+// Тепер ми можемо делегувати наш стейк до облікового запису голосування
 let delegateTransaction = web3.StakeProgram.delegate({
   stakePubkey: stakeAccount.publicKey,
   authorizedPubkey: authorizedAccount.publicKey,
@@ -785,7 +721,7 @@ await web3.sendAndConfirmTransaction(connection, delegateTransaction, [
   authorizedAccount,
 ]);
 
-// To withdraw our funds, we first have to deactivate the stake
+// Щоб вивести наші кошти, ми спочатку повинні деактивувати стейк
 let deactivateTransaction = web3.StakeProgram.deactivate({
   stakePubkey: stakeAccount.publicKey,
   authorizedPubkey: authorizedAccount.publicKey,
@@ -795,7 +731,7 @@ await web3.sendAndConfirmTransaction(connection, deactivateTransaction, [
   authorizedAccount,
 ]);
 
-// Once deactivated, we can withdraw our funds
+// Після деактивації ми можемо вивести наші кошти
 let withdrawTransaction = web3.StakeProgram.withdraw({
   stakePubkey: stakeAccount.publicKey,
   authorizedPubkey: authorizedAccount.publicKey,
@@ -811,26 +747,19 @@ await web3.sendAndConfirmTransaction(connection, withdrawTransaction, [
 
 ### Authorized
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Authorized.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Authorized.html)
 
-Authorized is an object used when creating an authorized account for staking
-within Solana. You can designate a `staker` and `withdrawer` separately,
-allowing for a different account to withdraw other than the staker.
+`Authorized` — це об'єкт, який використовується під час створення авторизованого облікового запису для стейкінгу в Solana. Ви можете окремо призначити `staker` і `withdrawer`, що дозволяє іншому обліковому запису виводити кошти, ніж той, що виконує стейкінг.
 
-You can find more usage of the `Authorized` object under
-[`StakeProgram`](/docs/clients/javascript.md#StakeProgram)
+Більше прикладів використання об'єкта `Authorized` ви можете знайти в розділі [`StakeProgram`](/docs/clients/javascript.md#StakeProgram).
 
 ### Lockup
 
-[Source Documentation](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Lockup.html)
+[Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Lockup.html)
 
-Lockup is used in conjunction with the
-[StakeProgram](/docs/clients/javascript.md#StakeProgram) to create an account.
-The Lockup is used to determine how long the stake will be locked, or unable to
-be retrieved. If the Lockup is set to 0 for both epoch and the Unix timestamp,
-the lockup will be disabled for the stake account.
+`Lockup` використовується разом із [StakeProgram](/docs/clients/javascript.md#StakeProgram) для створення облікового запису. `Lockup` визначає, як довго стейк буде заблокований або недоступний для вилучення. Якщо `Lockup` встановлений на 0 як для епохи, так і для мітки часу Unix, блокування для облікового запису буде відключено.
 
-#### Example Usage
+#### Приклад Використання
 
 ```javascript
 const {
@@ -854,8 +783,7 @@ let createStakeAccountInstruction = StakeProgram.createAccount({
 });
 ```
 
-The above code creates a `createStakeAccountInstruction` to be used when
-creating an account with the `StakeProgram`. The Lockup is set to 0 for both the
-epoch and Unix timestamp, disabling lockup for the account.
+Наведений вище код створює `createStakeAccountInstruction`, який використовується для створення облікового запису за допомогою `StakeProgram`. Блокування встановлено на 0 як для епохи, так і для мітки часу Unix, що відключає блокування для облікового запису.
 
-See [StakeProgram](/docs/clients/javascript.md#StakeProgram) for more.
+Детальніше див. у розділі [StakeProgram](/docs/clients/javascript.md#StakeProgram).
+
