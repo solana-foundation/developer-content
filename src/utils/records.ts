@@ -1,5 +1,6 @@
 import type { SimpleRecordGroupName } from "@/types";
 import { DEFAULT_LOCALE_EN } from "./constants";
+import type { Record } from "contentlayer/generated";
 import {
   allGuideRecords,
   allResourceRecords,
@@ -12,6 +13,20 @@ import {
   allAuthorRecords,
 } from "contentlayer/generated";
 
+interface PaginationMetadata {
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalRecords: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+interface PaginatedResponse {
+  records: Record[];
+  pagination: PaginationMetadata;
+}
+
 /**
  * Get a listing of all the records for the given group
  */
@@ -19,13 +34,18 @@ export function getRecordsForGroup(
   simpleGroupName: SimpleRecordGroupName,
   options: {
     locale: string;
+    page?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortDirection?: 'asc' | 'desc';
   } = {
     locale: DEFAULT_LOCALE_EN,
-    // todo: add pagination support here
-    // todo: add the ability to auto sort based on a given field
+    page: 1,
+    pageSize: 10,
   },
 ) {
   let records = [];
+  const { page = 1, pageSize = 10, sortField, sortDirection = 'asc' } = options;
 
   switch (simpleGroupName) {
     case "authors": {
@@ -90,5 +110,35 @@ export function getRecordsForGroup(
     options.locale = DEFAULT_LOCALE_EN;
   }
 
-  return records.filter(record => record.locale == options.locale);
+  // Filter by locale
+  records = records.filter((record: Record) => record.locale == options.locale);
+
+  // Sort if sortField is provided
+  if (sortField && records.length > 0 && sortField in records[0]) {
+    records.sort((a: Record, b: Record) => {
+      const aValue = a[sortField as keyof Record];
+      const bValue = b[sortField as keyof Record];
+      const compareResult = aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+      return sortDirection === 'asc' ? compareResult : -compareResult;
+    });
+  }
+
+  // Calculate pagination
+  const totalRecords = records.length;
+  const totalPages = Math.ceil(totalRecords / pageSize);
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  // Return paginated results with metadata
+  return {
+    records: records.slice(startIndex, endIndex),
+    pagination: {
+      page,
+      pageSize,
+      totalPages,
+      totalRecords,
+      hasNextPage: page < totalPages,
+      hasPreviousPage: page > 1,
+    }
+  };
 }
