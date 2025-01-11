@@ -1,95 +1,92 @@
 ---
-title: Programs
-sidebarLabel: Programs on Solana
+title: Програми
+sidebarLabel: Програми на Solana
 sidebarSortOrder: 4
 description:
-  Learn about Solana programs (smart contracts) and how to develop them using
-  Rust or the Anchor framework. Understand program deployment, upgrades, and
-  verification on the Solana network.
+  Дізнайтеся про програми Solana (смарт-контракти) та як розробляти їх за
+  допомогою Rust або фреймворку Anchor. Зрозумійте процес розгортання, оновлення
+  та перевірки програм у мережі Solana.
 ---
 
-In the Solana ecosystem, "smart contracts" are called programs. Each
-[program](/docs/core/accounts.md#program-account) is an on-chain account that
-stores executable logic, organized into specific functions referred to as
-[instructions](/docs/core/transactions.md#instruction).
+У екосистемі Solana "смарт-контракти" називаються програмами. Кожна 
+[програма](/docs/core/accounts.md#program-account) є обліковим записом у блокчейні, 
+який зберігає виконувану логіку, організовану у вигляді конкретних функцій, які 
+називаються [інструкціями](/docs/core/transactions.md#instruction).
 
-## Key Points
+## Основні моменти
 
-- Programs are on-chain accounts that contain executable code. This code is
-  organized into distinct functions known as instructions.
+- Програми — це облікові записи у блокчейні, які містять виконуваний код. Цей код 
+  організований у вигляді окремих функцій, відомих як інструкції.
 
-- Programs are stateless but can include instructions to create new accounts,
-  which are used to store and manage program state.
+- Програми не зберігають стану, але можуть включати інструкції для створення нових 
+  облікових записів, які використовуються для зберігання та управління станом програми.
 
-- Programs can be updated by an upgrade authority. A program becomes immutable
-  when the upgrade authority is set to null.
+- Програми можуть оновлюватися за допомогою "авторитету оновлення". Програма стає 
+  незмінною, коли авторитет оновлення встановлюється у значення null.
 
-- Verifiable builds enable users to verify that onchain programs match the
-  publicly available source code.
+- Перевірювані збірки дозволяють користувачам переконатися, що програми у блокчейні 
+  відповідають доступному публічно вихідному коду.
 
-## Writing Solana Programs
+## Написання програм Solana
 
-Solana programs are predominantly written in the
-[Rust](https://doc.rust-lang.org/book/) programming language, with two common
-approaches for development:
+Програми Solana зазвичай пишуться мовою програмування 
+[Rust](https://doc.rust-lang.org/book/) з використанням двох підходів:
 
-- [Anchor](/docs/programs/anchor): A framework designed for Solana program
-  development. It provides a faster and simpler way to write programs, using
-  Rust macros to significantly reduce boilerplate code. For beginners, it is
-  recommended to start with the Anchor framework.
+- [Anchor](/docs/programs/anchor): Фреймворк, створений для розробки програм Solana. 
+  Він забезпечує швидший і простіший спосіб написання програм, використовуючи макроси 
+  Rust для значного зменшення обсягу шаблонного коду. Для початківців рекомендується 
+  починати з фреймворку Anchor.
 
-- [Native Rust](/content/guides/getstarted/intro-to-native-rust.md): This
-  approach involves writing Solana programs in Rust without leveraging any
-  frameworks. It offers more flexibility but comes with increased complexity.
+- [Нативний Rust](/content/guides/getstarted/intro-to-native-rust.md): Цей підхід 
+  передбачає написання програм Solana на Rust без використання фреймворків. Він 
+  надає більше гнучкості, але супроводжується підвищеною складністю.
 
-## Updating Solana Programs
+## Оновлення програм Solana
 
-On-chain programs can be
-[directly modified](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L675)
-by an account designated as the "upgrade authority", which is typically the
-account that originally deployed the program.
+Програми у блокчейні можуть бути 
+[безпосередньо змінені](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L675) 
+обліковим записом, призначеним як "авторитет оновлення", зазвичай це обліковий 
+запис, який початково розгорнув програму.
 
-If the
-[upgrade authority](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L865)
-is revoked and set to `None`, the program becomes immutable and can no longer be
-updated.
+Якщо 
+[авторитет оновлення](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/programs/bpf_loader/src/lib.rs#L865) 
+скасований і встановлений у `None`, програма стає незмінною і більше не може бути оновлена.
 
-## Verifiable Programs
+## Перевірювані програми
 
-Ensuring the integrity and verifiability of on-chain code is essential. A
-verifiable build ensures that the executable code deployed on-chain can be
-independently verified to match its public source code by any third party. This
-process enhances transparency and trust, making it possible to detect
-discrepancies between the source code and the deployed program.
+Забезпечення цілісності та перевірюваності коду у блокчейні є важливим. 
+Перевірювана збірка гарантує, що виконуваний код, розгорнутий у блокчейні, може 
+бути незалежно перевірений на відповідність його публічному вихідному коду 
+будь-якою третьою стороною. Цей процес підвищує прозорість і довіру, дозволяючи 
+виявляти розбіжності між вихідним кодом і розгорнутою програмою.
 
-The Solana developer community has introduced tools to support verifiable
-builds, enabling both developers and users to verify that onchain programs
-accurately reflect their publicly shared source code.
+Спільнота розробників Solana створила інструменти для підтримки перевірюваних 
+збірок, які дозволяють як розробникам, так і користувачам переконатися, що 
+програми у блокчейні точно відображають їхній публічний вихідний код.
 
-- **Searching for Verified Programs**: To quickly check for verified programs,
-  users can search for a program address on the [SolanaFM](https://solana.fm/)
-  Explorer and navigate to the "Verification" tab. View an example of a verified
-  program
-  [here](https://solana.fm/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY).
+- **Пошук перевірених програм**: Для швидкої перевірки програм користувачі можуть 
+  знайти адресу програми у [SolanaFM](https://solana.fm/) Explorer і перейти на 
+  вкладку "Verification". Приклад перевіреної програми можна побачити 
+  [тут](https://solana.fm/address/PhoeNiXZ8ByJGLkxNfZRnkUfjvmuYqLR89jjFHGqdXY).
 
-- **Verification Tools**: The
-  [Solana Verifiable Build CLI](https://github.com/Ellipsis-Labs/solana-verifiable-build)
-  by Ellipsis Labs enables users to independently verify onchain programs
-  against published source code.
+- **Інструменти перевірки**: CLI 
+  [Solana Verifiable Build](https://github.com/Ellipsis-Labs/solana-verifiable-build) 
+  від Ellipsis Labs дозволяє незалежно перевірити програми у блокчейні на відповідність 
+  опублікованому вихідному коду.
 
-- **Support for Verifiable Builds in Anchor**: Anchor provides built-in support
-  for verifiable builds. Details can be found in the
-  [Anchor documentation](https://www.anchor-lang.com/docs/verifiable-builds).
+- **Підтримка перевірюваних збірок в Anchor**: Anchor має вбудовану підтримку 
+  перевірюваних збірок. Деталі можна знайти у 
+  [документації Anchor](https://www.anchor-lang.com/docs/verifiable-builds).
 
 ## Berkeley Packet Filter (BPF)
 
-Solana leverages the [LLVM compiler infrastructure](https://llvm.org/) to
-compile programs into
-[Executable and Linkable Format (ELF)](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
-files. These files include a modified version of
-[Berkeley Packet Filter (eBPF)](https://en.wikipedia.org/wiki/EBPF) bytecode for
-Solana programs, known as "Solana Bytecode Format" (sBPF).
+Solana використовує [інфраструктуру компілятора LLVM](https://llvm.org/) для 
+компіляції програм у файли формату 
+[Executable and Linkable Format (ELF)](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format). 
+Ці файли включають модифіковану версію байт-коду 
+[Berkeley Packet Filter (eBPF)](https://en.wikipedia.org/wiki/EBPF) для програм Solana, 
+відомого як "Solana Bytecode Format" (sBPF).
 
-The use of LLVM enables Solana to potentially support any programming language
-that can compile to LLVM's BPF backend. This significantly enhances the
-flexibility of Solana as a development platform.
+Використання LLVM дозволяє Solana підтримувати будь-яку мову програмування, яка 
+може компілюватися у BPF-бекенд LLVM. Це значно підвищує гнучкість Solana як платформи 
+для розробки.

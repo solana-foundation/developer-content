@@ -1,37 +1,38 @@
 ---
-sidebarLabel: Clusters & Endpoints
-title: Clusters and Public RPC Endpoints
+sidebarLabel: Кластери та точки доступу RPC
+title: Кластери та публічні точки доступу RPC
 sidebarSortOrder: 8
 description:
-  Learn about Solana's network clusters (Devnet, Testnet, and Mainnet Beta),
-  their public RPC endpoints, rate limits, and use cases. Learn how to connect
-  to different Solana networks for development, testing, and production.
+  Дізнайтеся про кластери мережі Solana (Devnet, Testnet і Mainnet Beta), їхні
+  публічні точки доступу RPC, обмеження швидкості та випадки використання.
+  Дізнайтеся, як підключатися до різних мереж Solana для розробки, тестування
+  та виробничого середовища.
 ---
 
-The Solana blockchain has several different groups of validators, known as
-[Clusters](/docs/core/clusters.md). Each serving different purposes within the
-overall ecosystem and containing dedicated API nodes to fulfill
-[JSON-RPC](/docs/rpc/index.mdx) requests for their respective Cluster.
+Блокчейн Solana має кілька різних груп валідаторів, відомих як
+[Кластери](/docs/core/clusters.md). Кожен з них обслуговує різні цілі в межах
+загальної екосистеми та містить виділені вузли API для виконання
+[JSON-RPC](/docs/rpc/index.mdx) запитів для своїх відповідних кластерів.
 
-The individual nodes within a Cluster are owned and operated by third parties,
-with a public endpoint available for each.
+Індивідуальні вузли в межах кластера належать та управляються третіми сторонами,
+з публічною точкою доступу, доступною для кожного.
 
-## Solana public RPC endpoints
+## Публічні точки доступу RPC Solana
 
-The Solana Labs organization operates a public RPC endpoint for each Cluster.
-Each of these public endpoints are subject to rate limits, but are available for
-users and developers to interact with the Solana blockchain.
+Організація Solana Labs керує публічною точкою доступу RPC для кожного кластера.
+Кожна з цих публічних точок доступу має обмеження швидкості, але доступна для
+користувачів та розробників для взаємодії з блокчейном Solana.
 
-> Public endpoint rate limits are subject to change. The specific rate limits
-> listed on this document are not guaranteed to be the most up-to-date.
+> Обмеження швидкості публічних точок доступу можуть змінюватися. Зазначені
+> обмеження швидкості в цьому документі можуть бути не найактуальнішими.
 
-### Using explorers with different Clusters
+### Використання експлорерів з різними кластерами
 
-Many of the popular Solana blockchain explorers support selecting any of the
-Clusters, often allowing advanced users to add a custom/private RPC endpoint as
-well.
+Багато популярних експлорерів блокчейну Solana підтримують вибір будь-якого
+кластера, часто дозволяючи досвідченим користувачам додавати користувацьку/
+приватну точку доступу RPC.
 
-An example of some of these Solana blockchain explorers include:
+Прикладами таких експлорерів є:
 
 - [http://explorer.solana.com/](https://explorer.solana.com/).
 - [http://solana.fm/](https://solana.fm/).
@@ -39,131 +40,132 @@ An example of some of these Solana blockchain explorers include:
 - [http://solanabeach.io/](http://solanabeach.io/).
 - [http://validators.app/](http://validators.app/).
 
-## On a high level
+## Основні відомості
 
-- Mainnet: Live production environment for deployed applications.
-- Devnet: Testing with public accessibility for developers experimenting with
-  their applications.
-- Testnet: Stress-testing for network upgrades and validator performance.
+- Mainnet: Живе виробниче середовище для розгорнутих додатків.
+- Devnet: Тестування з публічним доступом для розробників, які експериментують зі
+  своїми додатками.
+- Testnet: Стрес-тестування для оновлень мережі та продуктивності валідаторів.
 
-**Example use cases**: You may want to debug a new program on Devnet or verify
-performance metrics on Testnet before Mainnet deployment.
+**Приклади використання**: Можливо, ви захочете налагодити нову програму на Devnet
+або перевірити метрики продуктивності на Testnet перед розгортанням на Mainnet.
 
-| **Cluster** | **Endpoint**                          | **Purpose**                    | **Notes**                      |
-| ----------- | ------------------------------------- | ------------------------------ | ------------------------------ |
-| Mainnet     | `https://api.mainnet-beta.solana.com` | Live production environment    | Requires SOL for transactions  |
-| Devnet      | `https://api.devnet.solana.com`       | Public testing and development | Free SOL airdrop for testing   |
-| Testnet     | `https://api.testnet.solana.com`      | Validator and stress testing   | May have intermittent downtime |
+| **Кластер** | **Точка доступу**                        | **Призначення**                 | **Примітки**                   |
+| ----------- | ---------------------------------------- | ------------------------------- | ------------------------------ |
+| Mainnet     | `https://api.mainnet-beta.solana.com`    | Живе виробниче середовище       | Потребує SOL для транзакцій    |
+| Devnet      | `https://api.devnet.solana.com`          | Публічне тестування та розробка | Безкоштовний SOL для тестування|
+| Testnet     | `https://api.testnet.solana.com`         | Тестування валідаторів          | Може мати періодичні простої   |
 
 ## Devnet
 
-Devnet serves as a playground for anyone who wants to take Solana for a test
-drive, as a user, token holder, app developer, or validator.
+Devnet слугує тестовим майданчиком для будь-кого, хто хоче ознайомитися з Solana
+як користувач, власник токенів, розробник додатків або валідатор.
 
-- Application developers should target Devnet.
-- Potential validators should first target Devnet.
-- Key differences between Devnet and Mainnet Beta:
-  - Devnet tokens are **not real**
-  - Devnet includes a token faucet for airdrops for application testing
-  - Devnet may be subject to ledger resets
-  - Devnet typically runs the same software release branch version as Mainnet
-    Beta, but may run a newer minor release version than Mainnet Beta.
-- Gossip entrypoint for Devnet: `entrypoint.devnet.solana.com:8001`
+- Розробники додатків повинні орієнтуватися на Devnet.
+- Потенційні валідатори повинні спочатку орієнтуватися на Devnet.
+- Основні відмінності між Devnet і Mainnet Beta:
+  - Токени Devnet **не реальні**.
+  - Devnet включає крани для отримання токенів для тестування додатків.
+  - Devnet може піддаватися скиданням журналу.
+  - Devnet зазвичай працює на тій самій гілці випуску програмного забезпечення,
+    що й Mainnet Beta, але може працювати на новішій мінорній версії.
+- Точка доступу Gossip для Devnet: `entrypoint.devnet.solana.com:8001`
 
-### Devnet endpoint
+### Точка доступу Devnet
 
-- `https://api.devnet.solana.com` - single Solana Labs hosted API node;
-  rate-limited
+- `https://api.devnet.solana.com` - єдиний вузол API, розміщений Solana Labs;
+  з обмеженнями швидкості
 
-#### Example `solana` command-line configuration
+#### Приклад конфігурації командного рядка `solana`
 
-To connect to the `devnet` Cluster using the Solana CLI:
+Щоб підключитися до кластеру `devnet` за допомогою CLI Solana:
 
 ```shell
 solana config set --url https://api.devnet.solana.com
 ```
 
-### Devnet rate limits
+### Обмеження швидкості Devnet
 
-- Maximum number of requests per 10 seconds per IP: 100
-- Maximum number of requests per 10 seconds per IP for a single RPC: 40
-- Maximum concurrent connections per IP: 40
-- Maximum connection rate per 10 seconds per IP: 40
-- Maximum amount of data per 30 second: 100 MB
+- Максимальна кількість запитів на 10 секунд на IP: 100
+- Максимальна кількість запитів на 10 секунд на IP для одного RPC: 40
+- Максимальна кількість одночасних з'єднань на IP: 40
+- Максимальна швидкість з'єднань на 10 секунд на IP: 40
+- Максимальна кількість даних на 30 секунд: 100 МБ
 
 ## Testnet
 
-Testnet is where the Solana core contributors stress test recent release
-features on a live cluster, particularly focused on network performance,
-stability and validator behavior.
+Testnet - це місце, де основні учасники Solana стрес-тестують функції останніх
+випусків у живому кластері, особливо зосереджуючись на продуктивності мережі,
+стабільності та поведінці валідаторів.
 
-- Testnet tokens are **not real**
-- Testnet may be subject to ledger resets.
-- Testnet includes a token faucet for airdrops for application testing
-- Testnet typically runs a newer software release branch than both Devnet and
-  Mainnet Beta
-- Gossip entrypoint for Testnet: `entrypoint.testnet.solana.com:8001`
+- Токени Testnet **не реальні**.
+- Testnet може піддаватися скиданням журналу.
+- Testnet включає крани для отримання токенів для тестування додатків.
+- Testnet зазвичай працює на новішій гілці випуску програмного забезпечення,
+  ніж Devnet і Mainnet Beta.
+- Точка доступу Gossip для Testnet: `entrypoint.testnet.solana.com:8001`
 
-### Testnet endpoint
+### Точка доступу Testnet
 
-- `https://api.testnet.solana.com` - single Solana Labs API node; rate-limited
+- `https://api.testnet.solana.com` - єдиний вузол API, розміщений Solana Labs;
+  з обмеженнями швидкості
 
-#### Example `solana` command-line configuration
+#### Приклад конфігурації командного рядка `solana`
 
-To connect to the `testnet` Cluster using the Solana CLI:
+Щоб підключитися до кластеру `testnet` за допомогою CLI Solana:
 
 ```shell
 solana config set --url https://api.testnet.solana.com
 ```
 
-### Testnet rate limits
+### Обмеження швидкості Testnet
 
-- Maximum number of requests per 10 seconds per IP: 100
-- Maximum number of requests per 10 seconds per IP for a single RPC: 40
-- Maximum concurrent connections per IP: 40
-- Maximum connection rate per 10 seconds per IP: 40
-- Maximum amount of data per 30 second: 100 MB
+- Максимальна кількість запитів на 10 секунд на IP: 100
+- Максимальна кількість запитів на 10 секунд на IP для одного RPC: 40
+- Максимальна кількість одночасних з'єднань на IP: 40
+- Максимальна швидкість з'єднань на 10 секунд на IP: 40
+- Максимальна кількість даних на 30 секунд: 100 МБ
 
 ## Mainnet beta
 
-A permissionless, persistent cluster for Solana users, builders, validators and
-token holders.
+Безперешкодний, постійний кластер для користувачів Solana, розробників,
+валідаторів та власників токенів.
 
-- Tokens that are issued on Mainnet Beta are **real** SOL
-- Gossip entrypoint for Mainnet Beta: `entrypoint.mainnet-beta.solana.com:8001`
+- Токени, випущені на Mainnet Beta, є **реальними** SOL.
+- Точка доступу Gossip для Mainnet Beta: `entrypoint.mainnet-beta.solana.com:8001`
 
-### Mainnet beta endpoint
+### Точка доступу Mainnet beta
 
-- `https://api.mainnet-beta.solana.com` - Solana Labs hosted API node cluster,
-  backed by a load balancer; rate-limited
+- `https://api.mainnet-beta.solana.com` - кластер вузлів API, розміщених Solana
+  Labs, із підтримкою балансувальника навантаження; з обмеженнями швидкості
 
-#### Example `solana` command-line configuration
+#### Приклад конфігурації командного рядка `solana`
 
-To connect to the `mainnet-beta` Cluster using the Solana CLI:
+Щоб підключитися до кластеру `mainnet-beta` за допомогою CLI Solana:
 
 ```shell
 solana config set --url https://api.mainnet-beta.solana.com
 ```
 
-### Mainnet beta rate limits
+### Обмеження швидкості Mainnet beta
 
-- Maximum number of requests per 10 seconds per IP: 100
-- Maximum number of requests per 10 seconds per IP for a single RPC: 40
-- Maximum concurrent connections per IP: 40
-- Maximum connection rate per 10 seconds per IP: 40
-- Maximum amount of data per 30 seconds: 100 MB
+- Максимальна кількість запитів на 10 секунд на IP: 100
+- Максимальна кількість запитів на 10 секунд на IP для одного RPC: 40
+- Максимальна кількість одночасних з'єднань на IP: 40
+- Максимальна швидкість з'єднань на 10 секунд на IP: 40
+- Максимальна кількість даних на 30 секунд: 100 МБ
 
-> The public RPC endpoints are not intended for production applications. Please
-> use dedicated/private RPC servers when you launch your application, drop NFTs,
-> etc. The public services are subject to abuse and rate limits may change
-> without prior notice. Likewise, high-traffic websites may be blocked without
-> prior notice.
+> Публічні точки доступу RPC не призначені для виробничих додатків. Будь ласка,
+> використовуйте виділені/приватні сервери RPC під час запуску додатка, випуску
+> NFT тощо. Публічні сервіси піддаються зловживанням, і обмеження швидкості
+> можуть змінюватися без попередження. Також, вебсайти з високим трафіком можуть
+> бути заблоковані без попередження.
 
-## Common HTTP Error Codes
+## Загальні HTTP-коди помилок
 
-- 403 -- Your IP address or website has been blocked. It is time to run your own
-  RPC server(s) or find a private service.
-- 429 -- Your IP address is exceeding the rate limits. Slow down! Use the
+- 403 -- Ваша IP-адреса або вебсайт було заблоковано. Настав час запустити власні
+  сервери RPC або знайти приватний сервіс.
+- 429 -- Ваша IP-адреса перевищує обмеження швидкості. Зменшіть швидкість! Використовуйте
   [Retry-After](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After)
-  HTTP response header to determine how long to wait before making another
-  request.
+  HTTP-заголовок відповіді, щоб визначити, як довго потрібно чекати перед
+  повторною спробою.

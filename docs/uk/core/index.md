@@ -1,117 +1,79 @@
 ---
-title: Core Concepts
+title: Основні концепції
 sidebarSortOrder: 2
 description:
-  Learn essential Solana blockchain concepts including accounts, transactions,
-  programs, program derived addresses, cross program invocations, and how tokens
-  work on Solana.
+  Дізнайтеся про основні концепції блокчейну Solana, включаючи облікові записи, транзакції, програми, адреси, отримані від програм, міжпрограмні виклики та як працюють токени на Solana.
 ---
 
-Build a strong understanding of the core concepts that make Solana different
-from other blockchains. Understanding the "Solana programming model" through
-these core concepts is very important to maximize your success as a Solana
-blockchain developer.
+Розвивайте глибоке розуміння основних концепцій, які роблять Solana унікальним серед інших блокчейнів. Розуміння "моделі програмування Solana" через ці ключові концепції дуже важливе для максимального успіху як розробника блокчейну Solana.
 
-## Solana Account Model
+## Модель облікових записів Solana
 
-On Solana, all data is stored in what are referred to as "accounts”. The way
-data is organized on the Solana blockchain resembles a
-[key-value store](https://en.wikipedia.org/wiki/Key%E2%80%93value_database),
-where each entry in the database is called an "account".
+У Solana всі дані зберігаються в тому, що називається "обліковими записами". Організація даних у блокчейні Solana нагадує [сховище ключів і значень](https://uk.wikipedia.org/wiki/Key%E2%80%93value_%D0%B1%D0%B0%D0%B7%D0%B0_%D0%B4%D0%B0%D0%BD%D0%B8%D1%85), де кожен запис у базі даних називається "обліковим записом".
 
-Learn more about [Accounts](/docs/core/accounts.md) here.
+Дізнайтеся більше про [Облікові записи](/docs/core/accounts.md) тут.
 
-## Transactions and Instructions
+## Транзакції та інструкції
 
-On Solana, we send [transactions](/docs/core/transactions#transaction) to
-interact with the network. Transactions include one or more
-[instructions](/docs/core/transactions#instruction), each representing a
-specific operation to be processed. The execution logic for instructions is
-stored on [programs](/docs/core/programs) deployed to the Solana network, where
-each program stores its own set of instructions.
+У Solana ми надсилаємо [транзакції](/docs/core/transactions#transaction), щоб взаємодіяти з мережею. Транзакції включають одну або більше [інструкцій](/docs/core/transactions#instruction), кожна з яких представляє конкретну операцію для обробки. Логіка виконання інструкцій зберігається в [програмах](/docs/core/programs), розгорнутих у мережі Solana, де кожна програма має свій власний набір інструкцій.
 
-Learn more about [Transactions](/docs/core/transactions.md) and
-[Instructions](/docs/core/transactions.md#instruction) here.
+Дізнайтеся більше про [Транзакції](/docs/core/transactions.md) та [Інструкції](/docs/core/transactions.md#instruction) тут.
 
-## Fees on Solana
+## Плата на Solana
 
-The Solana blockchain has a few different types of fees and costs that are
-incurred to use the permissionless network. These can be segmented into a few
-specific types:
+Блокчейн Solana має кілька типів зборів та витрат, які виникають при використанні мережі без дозволу. Вони поділяються на кілька основних типів:
 
-- [Transaction Fees](/docs/core/fees.md#transaction-fees) - A fee to have
-  validators process transactions/instructions
-- [Prioritization Fees](/docs/core/fees.md#prioritization-fees) - An optional
-  fee to boost transactions processing order
-- [Rent](/docs/core/fees.md#rent) - A withheld balance to keep data stored
-  on-chain
+- [Транзакційні збори](/docs/core/fees.md#transaction-fees) — плата за обробку транзакцій/інструкцій валідаторами.
+- [Пріоритизаційні збори](/docs/core/fees.md#prioritization-fees) — опціональна плата для підвищення порядку обробки транзакцій.
+- [Оренда](/docs/core/fees.md#rent) — утримуваний баланс для збереження даних в ончейні.
 
-Learn more about [Fees on Solana](/docs/core/fees.md) here.
+Дізнайтеся більше про [Плату на Solana](/docs/core/fees.md) тут.
 
-## Programs on Solana
+## Програми на Solana
 
-In the Solana ecosystem, "smart contracts" are called programs. Each program is
-an on-chain account that stores executable logic, organized into specific
-functions referred to as _instructions_ and called via _instruction handler_
-functions within the respective deployed program.
+У екосистемі Solana "смарт-контракти" називаються програмами. Кожна програма є ончейн-обліковим записом, що зберігає виконувану логіку, організовану у функції, що називаються _інструкціями_, і викликаються через функції обробників інструкцій у відповідній розгорнутій програмі.
 
-Learn more about [Programs on Solana](/docs/core/programs.md) here.
+Дізнайтеся більше про [Програми на Solana](/docs/core/programs.md) тут.
 
-## Program Derived Address
+## Адреси, отримані від програм
 
-Program Derived Addresses (PDAs) provide developers on Solana with two main use
-cases:
+Адреси, отримані від програм (Program Derived Addresses, PDAs), надають розробникам Solana дві основні можливості:
 
-- **Deterministic Account Addresses**: PDAs provide a mechanism to
-  deterministically derive an address using a combination of optional "seeds"
-  (predefined inputs) and a specific program ID.
-- **Enable Program Signing**: The Solana runtime enables programs to "sign" for
-  PDAs which are derived from its program ID.
+- **Детерміновані адреси облікових записів**: PDAs забезпечують механізм детермінованого отримання адреси за допомогою комбінації опціональних "насіння" (заданих вхідних даних) і конкретного ідентифікатора програми.
+- **Дозволити підписання програмою**: Час виконання Solana дозволяє програмам "підписувати" PDAs, які отримані від їх ідентифікатора програми.
 
-You can think of PDAs as a way to create hashmap-like structures on-chain from a
-predefined set of inputs (e.g. strings, numbers, and other account addresses).
+Можна уявити PDAs як спосіб створення ончейн-структур, схожих на хеш-таблиці, з набору заданих вхідних даних (наприклад, рядків, чисел та інших адрес облікових записів).
 
-Learn more about [Program Derived Address](/docs/core/pda.md) here.
+Дізнайтеся більше про [Адреси, отримані від програм](/docs/core/pda.md) тут.
 
-## Cross Program Invocation
+## Міжпрограмні виклики
 
-A Cross Program Invocation (CPI) refers to when one program invokes the
-instructions of another program. This mechanism allows for the composability of
-Solana programs.
+Міжпрограмний виклик (Cross Program Invocation, CPI) означає, що одна програма викликає інструкції іншої програми. Цей механізм дозволяє програмам Solana бути композитивними.
 
-You can think of instructions as API endpoints that a program exposes to the
-network and a CPI as one API internally invoking another API.
+Можна уявити інструкції як API-ендпоінти, які програма надає мережі, а CPI як один API, що викликає інший API внутрішньо.
 
-Learn more about [Cross Program Invocation](/docs/core/cpi.md) here.
+Дізнайтеся більше про [Міжпрограмні виклики](/docs/core/cpi.md) тут.
 
-## Tokens on Solana
+## Токени на Solana
 
-Tokens are digital assets that represent ownership over diverse categories of
-assets. Tokenization enables the digitalization of property rights, serving as a
-fundamental component for managing both fungible and non-fungible assets.
+Токени — це цифрові активи, які представляють право власності на різні категорії активів. Токенізація дозволяє оцифровувати права власності, виступаючи фундаментальним компонентом для управління як взаємозамінними, так і невзаємозамінними активами.
 
-- Fungible Tokens represent interchangeable and divisible assets of the same
-  type and value (ex. USDC).
-- Non-fungible Tokens (NFT) represent ownership of indivisible assets (e.g.
-  artwork).
+- Взаємозамінні токени представляють взаємозамінні та подільні активи одного типу і вартості (наприклад, USDC).
+- Невзаємозамінні токени (NFT) представляють право власності на неподільні активи (наприклад, твори мистецтва).
 
-Learn more about [Tokens on Solana](/docs/core/tokens.md) here.
+Дізнайтеся більше про [Токени на Solana](/docs/core/tokens.md) тут.
 
-## Clusters and Endpoints
+## Кластери та кінцеві точки
 
-The Solana blockchain has several different groups of validators, known as
-[Clusters](/docs/core/clusters.md). Each serving different purposes within the
-overall ecosystem and containing dedicated api nodes to fulfill
-[JSON-RPC](/docs/rpc/index.mdx) requests for their respective Cluster.
+Блокчейн Solana має кілька різних груп валідаторів, відомих як [Кластери](/docs/core/clusters.md). Кожна з них виконує різні завдання в екосистемі та має спеціалізовані вузли API для виконання запитів [JSON-RPC](/docs/rpc/index.mdx) для свого кластеру.
 
-The individual nodes within a Cluster are owned and operated by third parties,
-with a public endpoint available for each.
+Індивідуальні вузли в кластері належать і управляються третіми сторонами, причому для кожного з них доступна публічна кінцева точка.
 
-There are three primary clusters on the Solana network, each with a different
-public endpoint:
+Є три основні кластери в мережі Solana, кожен з яких має свою публічну кінцеву точку:
 
 - Mainnet - `https://api.mainnet-beta.solana.com`
 - Devnet - `https://api.devnet.solana.com`
 - Testnet - `https://api.testnet.solana.com`
 
-Learn more about [Clusters and Endpoints](/docs/core/clusters.md) here.
+Дізнайтеся більше про [Кластери та кінцеві точки](/docs/core/clusters.md) тут.
+

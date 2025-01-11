@@ -1,123 +1,124 @@
 ---
-title: Program Derived Address (PDA)
-sidebarLabel: Program Derived Address
+title: Програмно Виведені Адреси (PDA)
+sidebarLabel: Програмно Виведені Адреси
 sidebarSortOrder: 5
 description:
-  Learn about Program Derived Addresses (PDAs) on Solana - deterministic account
-  addresses that enable secure program signing. Understand PDA derivation,
-  canonical bumps, and how to create PDA accounts.
+  Дізнайтеся про Програмно Виведені Адреси (PDA) в Solana — детерміновані
+  адреси облікових записів, які забезпечують безпечне підписання програмами.
+  Розберіться у виведенні PDA, канонічних бампах і створенні облікових записів PDA.
 ---
 
-Program Derived Addresses (PDAs) provide developers on Solana with two main use
-cases:
+Програмно Виведені Адреси (PDA) надають розробникам у Solana два основних варіанти використання:
 
-- **Deterministic Account Addresses**: PDAs provide a mechanism to
-  deterministically derive an address using a combination of optional "seeds"
-  (predefined inputs) and a specific program ID.
-- **Enable Program Signing**: The Solana runtime enables programs to "sign" for
-  PDAs which are derived from its program ID.
+- **Детерміновані адреси облікових записів**: PDA надають механізм для
+  детермінованого виведення адреси за допомогою комбінації необов’язкових
+  "сідів" (заздалегідь визначених вхідних даних) та певного ідентифікатора програми.
+- **Забезпечення підписання програмами**: Рантайм Solana дозволяє програмам
+  "підписуватися" від імені PDA, які виведені з їхнього ідентифікатора програми.
 
-You can think of PDAs as a way to create hashmap-like structures on-chain from a
-predefined set of inputs (e.g. strings, numbers, and other account addresses).
+Можна уявити PDA як спосіб створення структур, схожих на хешмапи, у блокчейні з
+використанням заздалегідь визначених вхідних даних (наприклад, рядків, чисел і
+інших адрес облікових записів).
 
-The benefit of this approach is that it eliminates the need to keep track of an
-exact address. Instead, you simply need to recall the specific inputs used for
-its derivation.
+Перевага цього підходу полягає в тому, що він усуває потребу в точному
+відстеженні адреси. Натомість вам потрібно лише згадати конкретні вхідні дані,
+які використовувались для її виведення.
 
-![Program Derived Address](/assets/docs/core/pda/pda.svg)
+![Програмно Виведена Адреса](/assets/docs/core/pda/pda.svg)
 
-It's important to understand that simply deriving a Program Derived Address
-(PDA) does not automatically create an on-chain account at that address.
-Accounts with a PDA as the on-chain address must be explicitly created through
-the program used to derive the address. You can think of deriving a PDA as
-finding an address on a map. Just having an address does not mean there is
-anything built at that location.
+Важливо розуміти, що просте виведення Програмно Виведеної Адреси (PDA) не
+автоматично створює обліковий запис у блокчейні за цією адресою. Облікові
+записи з PDA як адресою в блокчейні повинні бути явно створені через програму,
+яка використовувалась для виведення адреси. Можна уявити виведення PDA як
+пошук адреси на карті. Мати адресу — це ще не означає, що за цією адресою
+щось побудовано.
 
-> This section will cover the details of deriving PDAs. The details on how
-> programs use PDAs for signing will be addressed in the section on
-> [Cross Program Invocations (CPIs)](/docs/core/cpi.md) as it requires context
-> for both concepts.
+> У цьому розділі буде розглянуто деталі виведення PDA. Деталі того, як
+> програми використовують PDA для підписання, будуть розглянуті в розділі
+> [Взаємодія між програмами (CPI)](/docs/core/cpi.md), оскільки це потребує
+> контексту для обох концепцій.
 
-## Key Points
+## Основні моменти
 
-- PDAs are addresses derived deterministically using a combination of
-  user-defined seeds, a bump seed, and a program's ID.
+- PDA — це адреси, які виводяться детерміновано з використанням комбінації
+  визначених користувачем сідів, бамп сіда та ідентифікатора програми.
 
-- PDAs are addresses that fall off the Ed25519 curve and have no corresponding
-  private key.
+- PDA — це адреси, які виходять за межі кривої Ed25519 і не мають відповідного
+  приватного ключа.
 
-- Solana programs can programmatically "sign" on behalf of PDAs that are derived
-  using its program ID.
+- Програми Solana можуть програмно "підписуватися" від імені PDA, які виведені
+  за допомогою їхнього ідентифікатора програми.
 
-- Deriving a PDA does not automatically create an on-chain account.
+- Виведення PDA не створює автоматично обліковий запис у блокчейні.
 
-- An account using a PDA as its address must be explicitly created through a
-  dedicated instruction within a Solana program.
+- Обліковий запис з PDA як адресою повинен бути явно створений через спеціальну
+  інструкцію в програмі Solana.
 
-## What is a PDA
+## Що таке PDA
 
-PDAs are addresses that are deterministically derived and look like standard
-public keys, but have no associated private keys. This means that no external
-user can generate a valid signature for the address. However, the Solana runtime
-enables programs to programmatically "sign" for PDAs without needing a private
-key.
+PDA — це адреси, які виводяться детерміновано та виглядають як стандартні
+публічні ключі, але не мають асоційованих приватних ключів. Це означає, що жоден
+зовнішній користувач не може згенерувати дійсний підпис для цієї адреси.
+Однак, рантайм Solana дозволяє програмам програмно "підписуватися" від імені
+PDA без необхідності у приватному ключі.
 
-For context, Solana
-[Keypairs](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/signer/keypair.rs#L25)
-are points on the Ed25519 curve (elliptic-curve cryptography) which have a
-public key and corresponding private key. We often use public keys as the unique
-IDs for new on-chain accounts and private keys for signing.
+Для контексту, [Keypairs](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/signer/keypair.rs#L25)
+у Solana є точками на кривій Ed25519 (еліптична криптографія), які мають
+публічний ключ і відповідний приватний ключ. Ми часто використовуємо публічні
+ключі як унікальні ідентифікатори для нових облікових записів у блокчейні, а
+приватні ключі для підписання.
 
-![On Curve Address](/assets/docs/core/pda/address-on-curve.svg)
+![Адреса на кривій](/assets/docs/core/pda/address-on-curve.svg)
 
-A PDA is a point that is intentionally derived to fall off the Ed25519 curve
-using a predefined set of inputs. A point that is not on the Ed25519 curve does
-not have a valid corresponding private key and cannot be used for cryptographic
-operations (signing).
+PDA — це точка, яка навмисно виводиться за межі кривої Ed25519 з використанням
+заздалегідь визначених вхідних даних. Точка, яка не знаходиться на кривій
+Ed25519, не має дійсного відповідного приватного ключа і не може бути
+використана для криптографічних операцій (підписання).
 
-A PDA can then be used as the address (unique identifier) for an on-chain
-account, providing a method to easily store, map, and fetch program state.
+PDA може бути використана як адреса (унікальний ідентифікатор) для облікового
+запису в блокчейні, забезпечуючи спосіб зручного зберігання, мапування та
+отримання стану програми.
 
-![Off Curve Address](/assets/docs/core/pda/address-off-curve.svg)
+![Адреса поза кривою](/assets/docs/core/pda/address-off-curve.svg)
 
-## How to derive a PDA
+## Як вивести PDA
 
-The derivation of a PDA requires 3 inputs.
+Виведення PDA вимагає 3 вхідних даних.
 
-- **Optional seeds**: Predefined inputs (e.g. string, number, other account
-  addresses) used to derive a PDA. These inputs are converted to a buffer of
-  bytes.
-- **Bump seed**: An additional input (with a value between 255-0) that is used
-  to guarantee that a valid PDA (off curve) is generated. This bump seed
-  (starting with 255) is appended to the optional seeds when generating a PDA to
-  "bump" the point off the Ed25519 curve. The bump seed is sometimes referred to
-  as a "nonce".
-- **Program ID**: The address of the program the PDA is derived from. This is
-  also the program that can "sign" on behalf of the PDA
+- **Необов’язкові сіди**: Заздалегідь визначені вхідні дані (наприклад, рядок,
+  число, інші адреси облікових записів), які використовуються для виведення
+  PDA. Ці вхідні дані конвертуються в буфер байтів.
+- **Бамп сід**: Додатковий вхідний параметр (зі значенням між 255-0), який
+  використовується для забезпечення того, що згенерований PDA знаходиться поза
+  кривою Ed25519. Цей бамп сід (починаючи з 255) додається до необов’язкових
+  сідів під час генерації PDA, щоб "виштовхнути" точку за межі кривої
+  Ed25519. Бамп сід іноді називають "нонсом".
+- **Ідентифікатор програми**: Адреса програми, з якої виведений PDA. Ця ж
+  програма може "підписуватися" від імені PDA.
 
-![PDA Derivation](/assets/docs/core/pda/pda-derivation.svg)
+![Виведення PDA](/assets/docs/core/pda/pda-derivation.svg)
 
-The examples below include links to Solana Playground, where you can run the
-examples in an in-browser editor.
+Приклади нижче включають посилання на Solana Playground, де ви можете запустити
+приклади в редакторі прямо у веббраузері.
 
 ### FindProgramAddress
 
-To derive a PDA, we can use the
+Щоб вивести PDA, ми можемо використовувати метод
 [`findProgramAddressSync`](https://github.com/solana-labs/solana-web3.js/blob/ca9da583a39cdf8fd874a2e03fccdc849e29de34/packages/library-legacy/src/publickey.ts#L212)
-method from [`@solana/web3.js`](https://www.npmjs.com/package/@solana/web3.js).
-There are equivalents of this function in other programming languages (e.g.
+з пакета [`@solana/web3.js`](https://www.npmjs.com/package/@solana/web3.js).
+Існують еквіваленти цієї функції на інших мовах програмування (наприклад,
 [Rust](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/pubkey.rs#L484)),
-but in this section, we will walk through examples using Javascript.
+але в цьому розділі ми розглянемо приклади з використанням Javascript.
 
-When using the `findProgramAddressSync` method, we pass in:
+Під час використання методу `findProgramAddressSync` ми передаємо:
 
-- the predefined optional seeds converted to a buffer of bytes, and
-- the program ID (address) used to derive the PDA
+- заздалегідь визначені необов’язкові сіди, перетворені в буфер байтів, та
+- ідентифікатор програми (адресу), використаний для виведення PDA.
 
-Once a valid PDA is found, `findProgramAddressSync` returns both the address
-(PDA) and bump seed used to derive the PDA.
+Після знаходження дійсного PDA, `findProgramAddressSync` повертає як адресу
+(PDA), так і бамп сід, який використовувався для виведення PDA.
 
-The example below derives a PDA without providing any optional seeds.
+Нижче наведено приклад виведення PDA без надання необов’язкових сідів.
 
 ```ts /[]/
 import { PublicKey } from "@solana/web3.js";
@@ -129,17 +130,15 @@ const [PDA, bump] = PublicKey.findProgramAddressSync([], programId);
 console.log(`PDA: ${PDA}`);
 console.log(`Bump: ${bump}`);
 ```
-
-You can run this example on
-[Solana Playground](https://beta.solpg.io/66031e5acffcf4b13384cfef). The PDA and
-bump seed output will always be the same:
+Ви можете запустити цей приклад на
+[Solana Playground](https://beta.solpg.io/66031e5acffcf4b13384cfef). Виведення PDA та
+бамп сіда завжди буде однаковим:
 
 ```
 PDA: Cu7NwqCXSmsR5vgGA3Vw9uYVViPi3kQvkbKByVQ8nPY9
 Bump: 255
 ```
-
-The next example below adds an optional seed "helloWorld".
+У наступному прикладі додається необов’язковий сід "helloWorld".
 
 ```ts /string/
 import { PublicKey } from "@solana/web3.js";
@@ -155,37 +154,36 @@ const [PDA, bump] = PublicKey.findProgramAddressSync(
 console.log(`PDA: ${PDA}`);
 console.log(`Bump: ${bump}`);
 ```
-
-You can also run this example on
-[Solana Playground](https://beta.solpg.io/66031ee5cffcf4b13384cff0). The PDA and
-bump seed output will always be the same:
+Ви також можете запустити цей приклад на
+[Solana Playground](https://beta.solpg.io/66031ee5cffcf4b13384cff0). Виведення PDA та
+бамп сіда завжди буде однаковим:
 
 ```
 PDA: 46GZzzetjCURsdFPb7rcnspbEMnCBXe9kpjrsZAkKb6X
 Bump: 254
 ```
 
-Note that the bump seed is 254. This means that 255 derived a point on the
-Ed25519 curve, and is not a valid PDA.
+Зверніть увагу, що бамп сід дорівнює 254. Це означає, що 255 вивів точку на
+кривій Ed25519 і не є дійсним PDA.
 
-The bump seed returned by `findProgramAddressSync` is the first value (between
-255-0) for the given combination of optional seeds and program ID that derives a
-valid PDA.
+Бамп сід, який повертається функцією `findProgramAddressSync`, — це перше
+значення (у діапазоні від 255 до 0) для заданої комбінації необов’язкових сідів
+та ідентифікатора програми, яке виводить дійсний PDA.
 
-> This first valid bump seed is referred to as the "canonical bump". For program
-> security, it is recommended to only use the canonical bump when working with
-> PDAs.
+> Це перше дійсне значення бамп сіда називається "канонічним бампом". З метою
+> безпеки програм рекомендовано використовувати лише канонічний бамп при роботі
+> з PDA.
 
 ### CreateProgramAddress
 
-Under the hood, `findProgramAddressSync` will iteratively append an additional
-bump seed (nonce) to the seeds buffer and call the
-[`createProgramAddressSync`](https://github.com/solana-labs/solana-web3.js/blob/ca9da583a39cdf8fd874a2e03fccdc849e29de34/packages/library-legacy/src/publickey.ts#L168)
-method. The bump seed starts with a value of 255 and is decreased by 1 until a
-valid PDA (off curve) is found.
+У своїй основі, `findProgramAddressSync` ітеративно додає додатковий бамп сід
+(нонс) до буфера сідів і викликає метод
+[`createProgramAddressSync`](https://github.com/solana-labs/solana-web3.js/blob/ca9da583a39cdf8fd874a2e03fccdc849e29de34/packages/library-legacy/src/publickey.ts#L168).
+Значення бамп сіда починається з 255 і зменшується на 1, доки не буде знайдено
+дійсний PDA (поза кривою).
 
-You can replicate the previous example by using `createProgramAddressSync` and
-explicitly passing in the bump seed of 254.
+Ви можете відтворити попередній приклад, використовуючи `createProgramAddressSync`
+та явно передавши бамп сід зі значенням 254.
 
 ```ts /bump/
 import { PublicKey } from "@solana/web3.js";
@@ -201,23 +199,23 @@ const PDA = PublicKey.createProgramAddressSync(
 
 console.log(`PDA: ${PDA}`);
 ```
-
-Run this example above on
-[Solana Playground](https://beta.solpg.io/66031f8ecffcf4b13384cff1). Given the
-same seeds and program ID, the PDA output will match the previous one:
+Запустіть цей приклад вище на
+[Solana Playground](https://beta.solpg.io/66031f8ecffcf4b13384cff1). За
+однакових сідів та ідентифікатора програми, виведення PDA буде відповідати
+попередньому прикладу:
 
 ```
 PDA: 46GZzzetjCURsdFPb7rcnspbEMnCBXe9kpjrsZAkKb6X
 ```
 
-### Canonical Bump
+### Канонічний бамп
 
-The "canonical bump" refers to the first bump seed (starting from 255 and
-decrementing by 1) that derives a valid PDA. For program security, it is
-recommended to only use PDAs derived from a canonical bump.
+"Канонічний бамп" відноситься до першого значення бамп сіда (починаючи з 255 і
+зменшуючи на 1), яке виводить дійсний PDA. З метою безпеки програм
+рекомендовано використовувати лише PDA, виведені з канонічного бампа.
 
-Using the previous example as a reference, the example below attempts to derive
-a PDA using every bump seed from 255-0.
+Використовуючи попередній приклад як орієнтир, приклад нижче намагається
+вивести PDA, використовуючи всі значення бамп сіда від 255 до 0.
 
 ```ts
 import { PublicKey } from "@solana/web3.js";
@@ -238,10 +236,9 @@ for (let bump = 255; bump >= 0; bump--) {
   }
 }
 ```
-
-Run the example on
-[Solana Playground](https://beta.solpg.io/66032009cffcf4b13384cff2) and you
-should see the following output:
+Запустіть приклад на 
+[Solana Playground](https://beta.solpg.io/66032009cffcf4b13384cff2), і ви
+повинні побачити наступний результат:
 
 ```
 bump 255: Error: Invalid seeds, address must fall off the curve
@@ -253,32 +250,31 @@ bump 250: Error: Invalid seeds, address must fall off the curve
 ...
 // remaining bump outputs
 ```
+Як і очікувалось, бамп сід 255 викликає помилку, а перший бамп сід, який виводить
+дійсний PDA, дорівнює 254.
 
-As expected, the bump seed 255 throws an error and the first bump seed to derive
-a valid PDA is 254.
-
-However, note that bump seeds 253-251 all derive valid PDAs with different
-addresses. This means that given the same optional seeds and `programId`, a bump
-seed with a different value can still derive a valid PDA.
+Однак зверніть увагу, що бамп сіди 253-251 також виводять дійсні PDA з різними
+адресами. Це означає, що для заданих необов’язкових сідів та `programId` бамп сід
+з іншим значенням все ще може вивести дійсний PDA.
 
 <Callout type="warning">
-  When building Solana programs, it is recommended to include security checks that
-  validate a PDA passed to the program is derived using the canonical bump.
-  Failing to do so may introduce vulnerabilities that allow for unexpected
-  accounts to be provided to a program.
+  При створенні програм на Solana рекомендовано додавати перевірки безпеки,
+  які підтверджують, що PDA, переданий до програми, виведений з використанням
+  канонічного бампа. Невиконання цього може призвести до вразливостей, які
+  дозволять несподіваним обліковим записам передаватися до програми.
 </Callout>
 
-## Create PDA Accounts
+## Створення облікових записів PDA
 
-This example program on
+Ця програмна демонстрація на
 [Solana Playground](https://beta.solpg.io/github.com/ZYJLiu/doc-examples/tree/main/pda-account)
-demonstrates how to create an account using a PDA as the address of the new
-account. The example program is written using the Anchor framework.
+показує, як створити обліковий запис, використовуючи PDA як адресу нового
+облікового запису. Програма написана з використанням фреймворку Anchor.
 
-In the `lib.rs` file, you will find the following program which includes a
-single instruction to create a new account using a PDA as the address of the
-account. The new account stores the address of the `user` and the `bump` seed
-used to derive the PDA.
+У файлі `lib.rs` ви знайдете наступну програму, яка включає єдину інструкцію
+для створення нового облікового запису з використанням PDA як адреси
+облікового запису. Новий обліковий запис зберігає адресу `user` та `bump` сід,
+який використовувався для виведення PDA.
 
 ```rust filename="lib.rs" {11-14,26-29}
 use anchor_lang::prelude::*;
@@ -325,10 +321,9 @@ pub struct DataAccount {
     pub bump: u8,
 }
 ```
-
-The seeds used to derive the PDA include the hardcoded string `data` and the
-address of the `user` account provided in the instruction. The Anchor framework
-automatically derives the canonical `bump` seed.
+Сіди, які використовуються для виведення PDA, включають зафіксований рядок `data` 
+та адресу облікового запису `user`, передану в інструкції. Фреймворк Anchor 
+автоматично виводить канонічний `bump` сід.
 
 ```rust /data/ /user.key()/ /bump/
 #[account(
@@ -340,10 +335,9 @@ automatically derives the canonical `bump` seed.
 )]
 pub pda_account: Account<'info, DataAccount>,
 ```
-
-The `init` constraint instructs Anchor to invoke the System Program to create a
-new account using the PDA as the address. Under the hood, this is done through a
-[CPI](/docs/core/cpi.md).
+Обмеження `init` вказує Anchor викликати Системну Програму для створення нового 
+облікового запису з використанням PDA як адреси. Це виконується за допомогою 
+[Взаємодії між програмами (CPI)](/docs/core/cpi.md).
 
 ```rust /init/
 #[account(
@@ -355,9 +349,10 @@ new account using the PDA as the address. Under the hood, this is done through a
 )]
 pub pda_account: Account<'info, DataAccount>,
 ```
+У тестовому файлі (`pda-account.test.ts`), розташованому за посиланням на 
+Solana Playground, наданим вище, ви знайдете еквівалентний код на Javascript 
+для виведення PDA.
 
-In the test file (`pda-account.test.ts`) located within the Solana Playground
-link provided above, you will find the Javascript equivalent to derive the PDA.
 
 ```ts /data/ /user.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
@@ -365,10 +360,10 @@ const [PDA] = PublicKey.findProgramAddressSync(
   program.programId,
 );
 ```
-
-A transaction is then sent to invoke the `initialize` instruction to create a
-new on-chain account using the PDA as the address. Once the transaction is sent,
-the PDA is used to fetch the on-chain account that was created at the address.
+Далі надсилається транзакція для виклику інструкції `initialize`, щоб створити 
+новий обліковий запис у блокчейні з використанням PDA як адреси. Після надсилання 
+транзакції PDA використовується для отримання облікового запису в блокчейні, 
+який був створений за цією адресою.
 
 ```ts /initialize()/ /PDA/  {14}
 it("Is initialized!", async () => {
@@ -388,7 +383,6 @@ it("Fetch Account", async () => {
   console.log(JSON.stringify(pdaAccount, null, 2));
 });
 ```
-
-Note that if you invoke the `initialize` instruction more than once using the
-same `user` address as a seed, then the transaction will fail. This is because
-an account will already exist at the derived address.
+Зверніть увагу, що якщо ви викликаєте інструкцію `initialize` більше одного разу, 
+використовуючи ту саму адресу `user` як сід, транзакція завершиться помилкою. 
+Це відбувається тому, що обліковий запис вже існує за виведеною адресою.

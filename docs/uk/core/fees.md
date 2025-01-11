@@ -1,17 +1,17 @@
 ---
-title: Fees on Solana
+title: Плата на Solana
 sidebarSortOrder: 3
 description:
-  Learn about Solana's fee structure including transaction fees, prioritization
-  fees, and rent costs. Understand how fees are calculated, collected and
-  distributed across the network.
+  Дізнайтеся про структуру плати на Solana, включаючи транзакційні збори,
+  пріоритизаційні збори та витрати на оренду. Зрозумійте, як обчислюється,
+  збирається та розподіляється плата в мережі.
 keywords:
-  - instruction fee
-  - processing fee
-  - storage fee
-  - rent
-  - gas
-  - gwei
+  - плата за інструкцію
+  - плата за обробку
+  - плата за збереження
+  - оренда
+  - газ
+  - гвей
 altRoutes:
   - /docs/core/rent
   - /docs/intro/rent
@@ -20,312 +20,172 @@ altRoutes:
   - /docs/core/runtime
 ---
 
-The Solana blockchain has a few different types of fees and costs that are
-incurred to use the permissionless network. These can be segmented into a few
-specific types:
+Блокчейн Solana має кілька типів плати та витрат, які виникають під час використання мережі без дозволу. Вони поділяються на кілька специфічних типів:
 
-- Transaction Fees - A fee to have validators process transactions/instructions
-- Prioritization Fees - An optional fee to boost transactions processing order
-- Rent - A withheld balance to keep data stored on-chain
+- **Транзакційні збори** — плата за обробку транзакцій/інструкцій валідаторами.
+- **Пріоритизаційні збори** — додаткова плата для підвищення порядку обробки транзакцій.
+- **Оренда** — утримуваний баланс для збереження даних в ончейні.
 
-## Transaction Fees
+## Транзакційні збори
 
-The small fee paid to process logic (instruction) within an on-chain program on
-the Solana blockchain is known as a "_transaction fee_".
+Мала плата, яка сплачується за обробку логіки (інструкції) у програмі в ончейні на блокчейні Solana, називається "_транзакційною платою_".
 
-As each [transaction](/docs/core/transactions.md#transaction) (which contains
-one or more [instructions](/docs/core/transactions.md#instruction)) is sent
-through the network, it gets processed by the current validator leader. Once
-confirmed as a global state transaction, this _transaction fee_ is paid to the
-network to help support the economic design of the Solana blockchain.
+Кожна [транзакція](/docs/core/transactions.md#transaction), яка містить одну або більше [інструкцій](/docs/core/transactions.md#instruction), надсилається через мережу, де її обробляє поточний лідер-валідатор. Після підтвердження як глобальної транзакції ця "транзакційна плата" сплачується мережі для підтримки економічної моделі блокчейна Solana.
 
-> Transaction fees are different from account data storage deposit fee of
-> [rent](#rent). While transaction fees are paid to process instructions on the
-> Solana network, a rent deposit is withheld in an account to store its data on
-> the blockchain and reclaimable.
+> Транзакційні збори відрізняються від плати за збереження даних в обліковому записі, відомої як [оренда](#rent). Транзакційні збори сплачуються за обробку інструкцій у мережі Solana, а депозит оренди утримується в обліковому записі для збереження даних в блокчейні та може бути повернутий.
 
-Currently, the base Solana transaction fee is set at a static value of 5k
-lamports per signature. On top of this base fee, any additional
-[prioritization fees](#prioritization-fee) can be added.
+На даний момент базова транзакційна плата в Solana встановлена на рівні 5000 лампортів за підпис. На додаток до цієї базової плати, можуть бути додані додаткові [пріоритизаційні збори](#prioritization-fee).
 
-### Why pay transaction fees?
+### Навіщо сплачувати транзакційні збори?
 
-Transaction fees offer many benefits in the Solana
-[economic design](#basic-economic-design), mainly they:
+Транзакційні збори пропонують багато переваг у економічній моделі Solana, зокрема вони:
 
-- provide compensation to the validator network for the expended CPU/GPU compute
-  resources necessary to process transactions
-- reduce network spam by introducing a real cost to transactions
-- provide long-term economic stability to the network through a
-  protocol-captured minimum fee amount per transaction
+- Забезпечують компенсацію мережі валідаторів за витрачені ресурси CPU/GPU для обробки транзакцій.
+- Зменшують спам у мережі, запроваджуючи реальну вартість транзакцій.
+- Забезпечують довгострокову економічну стабільність мережі через протокольно захоплену мінімальну плату за транзакцію.
 
-### Basic economic design
+### Основи економічної моделі
 
-Many blockchain networks (including Bitcoin and Ethereum), rely on inflationary
-_protocol-based rewards_ to secure the network in the short-term. Over the
-long-term, these networks will increasingly rely on _transaction fees_ to
-sustain security.
+Багато блокчейн-мереж (включаючи Bitcoin та Ethereum) покладаються на інфляційні "протокольні нагороди" для короткострокової підтримки безпеки мережі. У довгостроковій перспективі ці мережі все більше покладаються на "транзакційні збори" для підтримки безпеки.
 
-The same is true on Solana. Specifically:
+Те саме стосується Solana. Зокрема:
 
-- A fixed proportion (initially 50%) of each transaction fee is _burned_
-  (destroyed), with the remaining going to the current
-  [leader](/docs/terminology.md#leader) processing the transaction.
-- A scheduled global inflation rate provides a source for
-  [rewards](https://docs.anza.xyz/implemented-proposals/staking-rewards)
-  distributed to [Solana Validators](https://docs.anza.xyz/operations).
+- Фіксована частка (спочатку 50%) кожної транзакційної плати "спалюється" (знищується), решта надходить до поточного [лідера](/docs/terminology.md#leader), який обробляє транзакцію.
+- Запланована глобальна інфляційна ставка забезпечує джерело [нагород](https://docs.anza.xyz/implemented-proposals/staking-rewards), які розподіляються серед [валідаторів Solana](https://docs.anza.xyz/operations).
 
-### Fee collection
+### Збір плати
 
-Transactions are required to have at least one account which has signed the
-transaction and is writable. These _writable signer accounts_ are serialized
-first in the list of accounts and the first of these is always used as the "_fee
-payer_".
+Транзакції повинні мати щонайменше один обліковий запис, який підписав транзакцію та може бути змінений. Ці "записувані підписуючі облікові записи" серіалізуються першими у списку облікових записів, і перший з них завжди використовується як "платник плати".
 
-Before any transaction instructions are processed, the fee payer account
-[balance will be deducted](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/runtime/src/bank.rs#L4045-L4064)
-to pay for transaction fees. If the fee payer balance is not sufficient to cover
-transaction fees, the transaction processing will halt and result in a failed
-transaction.
+Перед обробкою будь-яких інструкцій транзакції баланс облікового запису платника плати [вираховується](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/runtime/src/bank.rs#L4045-L4064) для оплати транзакційних зборів. Якщо баланс платника плати недостатній для покриття зборів, обробка транзакції припиняється і вона визнається невдалою.
 
-If the balance was sufficient, the fees will be deducted and the transaction's
-instructions will begin execution. Should any of the instructions result in an
-error, transaction processing will halt and ultimately be recorded as a failed
-transaction in the Solana ledger. The fee is still collected by the runtime for
-these failed transactions.
+Якщо баланс був достатнім, плата буде вирахувана, і виконання інструкцій транзакції почнеться. Якщо будь-яка з інструкцій призведе до помилки, обробка транзакції буде припинена, і зрештою вона буде записана як невдала транзакція в книзі Solana. Плата все одно буде зібрана за ці невдалі транзакції.
 
-Should any of the instructions return an error or violate runtime restrictions,
-all account changes **_except_** the transaction fee deduction will be rolled
-back. This is because the validator network has already expended computational
-resources to collect transactions and begin the initial processing.
+Якщо будь-яка з інструкцій повертає помилку або порушує обмеження часу виконання, всі зміни облікових записів **_крім_** вирахування транзакційної плати будуть скасовані. Це тому, що мережа валідаторів вже витратила обчислювальні ресурси для збору транзакцій та початку їх обробки.
 
-### Fee distribution
+### Розподіл плати
 
-Transaction fees are
-[partially burned](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/runtime/src/bank/fee_distribution.rs#L55-L64)
-and the remaining fees are collected by the validator that produced the block
-that the corresponding transactions were included in. Specifically,
-[50% are burned](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/fee_calculator.rs#L79)
-and
-[50% percent are distributed](https://github.com/anza-xyz/agave/blob/e621336acad4f5d6e5b860eaa1b074b01c99253c/runtime/src/bank/fee_distribution.rs#L58-L62)
-to the validator that produced the block.
+Транзакційні збори [частково спалюються](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/runtime/src/bank/fee_distribution.rs#L55-L64), а решта зборів збираються валідатором, який створив блок, у якому включені відповідні транзакції. Зокрема, [50% спалюються](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/fee_calculator.rs#L79), а [50% розподіляються](https://github.com/anza-xyz/agave/blob/e621336acad4f5d6e5b860eaa1b074b01c99253c/runtime/src/bank/fee_distribution.rs#L58-L62) валідатору, який створив блок.
 
-### Why burn some fees?
+### Чому спалюються частина зборів?
 
-As mentioned above, a fixed proportion of each transaction fee is _burned_
-(destroyed). This is intended to cement the economic value of SOL and thus
-sustain the network's security. Unlike a scheme where transactions fees are
-completely burned, leaders are still incentivized to include as many
-transactions as possible in their slots (opportunity to create a block).
+Як згадано вище, фіксована частка кожної транзакційної плати "спалюється" (знищується). Це зроблено для зміцнення економічної цінності SOL і підтримки безпеки мережі. На відміну від системи, де всі транзакційні збори повністю спалюються, лідери все ще мають стимул включати якомога більше транзакцій у свої слоти (можливість створити блок).
 
-Burnt fees can also help prevent malicious validators from censoring
-transactions by being considered in [fork](/docs/terminology.md#fork) selection.
+Спалені збори також можуть допомогти запобігти зловмисним валідаторам у цензуруванні транзакцій через врахування в [виборі форку](/docs/terminology.md#fork).
 
-#### Example of an attack:
+#### Приклад атаки:
 
-In the case of a
-[Proof of History (PoH)](/docs/terminology.md#proof-of-history-poh) fork with a
-malicious or censoring leader:
+У випадку [форку Proof of History (PoH)](/docs/terminology.md#proof-of-history-poh) з лідером, що займається цензурою або зловживанням:
 
-- due to the fees lost from censoring, we would expect the total fees burned to
-  be **_less than_** a comparable honest fork
-- if the censoring leader is to compensate for these lost protocol fees, they
-  would have to replace the burnt fees on their fork themselves
-- thus potentially reducing the incentive to censor in the first place
+- через втрати зборів, що виникають через цензуру, очікується, що загальні збори, які будуть спалені, будуть **_меншими_**, ніж у порівнянному чесному форку;
+- якщо лідер, який займається цензурою, хоче компенсувати ці втрачені протокольні збори, він повинен буде самостійно замінити спалені збори на своєму форку;
+- таким чином, потенційно зменшуючи стимул до цензури в першу чергу.
 
-### Calculating transaction fees
+### Обчислення транзакційних зборів
 
-The complete fee for a given transaction is calculated based on two main parts:
+Повна плата за конкретну транзакцію розраховується на основі двох основних частин:
 
-- a statically set base fee per signature, and
-- the computational resources used during the transaction, measured in
-  "[_compute units_](/docs/terminology.md#compute-units)"
+- Статично встановлена базова плата за підпис, і
+- Обчислювальні ресурси, використані під час транзакції, виміряні у "[обчислювальних одиницях](/docs/terminology.md#compute-units)".
 
-Since each transaction may require a different amount of computational
-resources, each is allotted a maximum number of _compute units_ per transaction
-as part of the _compute budget_.
+Оскільки кожна транзакція може вимагати різної кількості обчислювальних ресурсів, кожній транзакції виділяється максимальна кількість _обчислювальних одиниць_ у рамках "обчислювального бюджету".
 
-## Compute Budget
+## Обчислювальний бюджет
 
-To prevent abuse of computational resources, each transaction is allocated a
-"_compute budget_". This budget specifies details about
-[compute units](#compute-units) and includes:
+Щоб запобігти зловживанню обчислювальними ресурсами, кожній транзакції виділяється "обчислювальний бюджет". Цей бюджет визначає:
 
-- the compute costs associated with different types of operations the
-  transaction may perform (compute units consumed per operation),
-- the maximum number of compute units that a transaction can consume (compute
-  unit limit),
-- and the operational bounds the transaction must adhere to (like account data
-  size limits)
+- обчислювальні витрати, пов'язані з різними типами операцій, які може виконувати транзакція (обчислювальні одиниці, спожиті на операцію),
+- максимальну кількість обчислювальних одиниць, які може спожити транзакція (ліміт обчислювальних одиниць),
+- та операційні межі, яких має дотримуватися транзакція (наприклад, ліміти розміру даних облікового запису).
 
-When the transaction consumes its entire compute budget (compute budget
-exhaustion), or exceeds a bound such as attempting to exceed the
-[max call stack depth](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget.rs#L138)
-or [max loaded account](#accounts-data-size-limit) data size limit, the runtime
-halts the transaction processing and returns an error. Resulting in a failed
-transaction and no state changes (aside from the transaction fee being
-[collected](#fee-collection)).
+Коли транзакція вичерпує свій обчислювальний бюджет (вичерпання обчислювального бюджету) або перевищує межі, наприклад, намагається перевищити [максимальну глибину стеку викликів](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget.rs#L138) або [максимальний розмір завантажених даних облікового запису](#accounts-data-size-limit), виконання транзакції припиняється, і повертається помилка. Це призводить до невдалої транзакції та жодних змін стану (окрім збору плати за транзакцію).
 
-### Accounts data size limit
+### Ліміт розміру даних облікового запису
 
-A transaction may specify the maximum bytes of account data it is allowed to
-load by including a `SetLoadedAccountsDataSizeLimit` instruction (not to exceed
-the runtime's absolute max). If no `SetLoadedAccountsDataSizeLimit` is provided,
-the transaction defaults to use the runtime's
-[`MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L137-L139)
-value.
+Транзакція може встановлювати максимальну кількість байтів даних облікового запису, які їй дозволено завантажувати, включивши інструкцію `SetLoadedAccountsDataSizeLimit` (не перевищуючи абсолютний максимум часу виконання). Якщо `SetLoadedAccountsDataSizeLimit` не надано, транзакція за замовчуванням використовує значення часу виконання [`MAX_LOADED_ACCOUNTS_DATA_SIZE_BYTES`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L137-L139).
 
-The `ComputeBudgetInstruction::set_loaded_accounts_data_size_limit` function can
-be used to create this instruction:
+Функцію `ComputeBudgetInstruction::set_loaded_accounts_data_size_limit` можна використовувати для створення цієї інструкції.
 
 ```rust
 let instruction = ComputeBudgetInstruction::set_loaded_accounts_data_size_limit(100_000);
 ```
 
-### Compute units
+### Обчислювальні одиниці
 
-All the operations performed on-chain within a transaction require different
-amounts of computation resources be expended by validators when processing
-(compute cost). The smallest unit of measure for the consumption of these
-resources is called a _"compute unit"_.
+Усі операції, виконані ончейн у рамках транзакції, вимагають різного обсягу обчислювальних ресурсів, які витрачаються валідаторами під час обробки (обчислювальна вартість). Найменшою одиницею виміру цих ресурсів є _"обчислювальна одиниця"_.
 
-As a transaction is processed, compute units are incrementally consumed by each
-of its instructions being executed on-chain (consuming the budget). Since each
-instruction is executing different logic (writing to accounts, cpi, performing
-syscalls, etc), each may consume a
-[different amount](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget.rs#L133-L178)
-of compute units.
+Під час обробки транзакції обчислювальні одиниці поступово споживаються кожною з її інструкцій, виконуваних ончейн (вичерпуючи бюджет). Оскільки кожна інструкція виконує різну логіку (запис у облікові записи, CPI, виконання системних викликів тощо), кожна може споживати [різну кількість](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget.rs#L133-L178) обчислювальних одиниць.
 
-> A program can log details about its compute usage, including how much remains
-> in its allotted compute budget. You can also find more information in this
-> guide for
-> [optimizing your compute usage](/content/guides/advanced/how-to-optimize-compute.md).
+> Програма може записувати деталі про використання своїх обчислювальних ресурсів, включаючи залишок у виділеному обчислювальному бюджеті. Більше інформації ви можете знайти в цьому посібнику з [оптимізації використання обчислювальних ресурсів](/content/guides/advanced/how-to-optimize-compute.md).
 
-Each transaction is allotted a [compute unit limit](#compute-unit-limit), either
-with the default limit set by the runtime or by explicitly requesting a higher
-limit. After a transaction exceeds its compute unit limit, its processing is
-halted resulting in a transaction failure.
+Кожній транзакції виділяється [ліміт обчислювальних одиниць](#compute-unit-limit), або за замовчуванням встановлений часом виконання, або шляхом явного запиту на вищий ліміт. Якщо транзакція перевищує свій ліміт обчислювальних одиниць, її обробка зупиняється, що призводить до невдалої транзакції.
 
-The following are some common operations that incur a compute cost:
+Нижче наведено кілька поширених операцій, які мають обчислювальну вартість:
 
-- executing instructions
-- passing data between programs
-- performing syscalls
-- using sysvars
-- logging with the `msg!` macro
-- logging pubkeys
-- creating program addresses (PDAs)
-- cross-program invocations (CPI)
-- cryptographic operations
+- виконання інструкцій
+- передача даних між програмами
+- виконання системних викликів
+- використання системних змінних (sysvars)
+- логування за допомогою макросу `msg!`
+- логування відкритих ключів
+- створення програмних адрес (PDAs)
+- міжпрограмні виклики (CPI)
+- криптографічні операції
 
-> For [cross-program invocations](/docs/core/cpi.md), the instruction invoked
-> inherits the compute budget and limits of their parent. If an invoked
-> instruction consumes the transaction's remaining budget, or exceeds a bound,
-> the entire invocation chain and the top level transaction processing are
-> halted.
+> Для [міжпрограмних викликів](/docs/core/cpi.md) викликана інструкція успадковує обчислювальний бюджет і ліміти свого батька. Якщо викликана інструкція споживає залишок бюджету транзакції або перевищує ліміт, весь ланцюжок викликів і обробка транзакції верхнього рівня зупиняються.
 
-You can find more details about all the operations that consume compute units
-within the Solana runtime's
-[`ComputeBudget`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget.rs#L19-L123).
+Детальнішу інформацію про всі операції, які споживають обчислювальні одиниці, ви можете знайти в [ComputeBudget](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget.rs#L19-L123) в часі виконання Solana.
 
-### Compute unit limit
+### Ліміт обчислювальних одиниць
 
-Each transaction has a maximum number of compute units (CU) it can consume
-called the _"compute unit limit"_. Per transaction, the Solana runtime has an
-absolute max compute unit limit of
-[1.4 million CU](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L19)
-and sets a default requested max limit of
-[200k CU per instruction](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L18).
+Кожна транзакція має максимальну кількість обчислювальних одиниць (CU), які вона може спожити, що називається _"лімітом обчислювальних одиниць"_. У часі виконання Solana встановлено абсолютний максимальний ліміт [1,4 мільйона CU](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L19) на транзакцію та за замовчуванням [200 тисяч CU на інструкцію](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L18).
 
-A transaction can request a more specific and optimal compute unit limit by
-including a single `SetComputeUnitLimit` instruction. Either a higher or lower
-limit. But it may never request higher than the absolute max limit per
-transaction.
+Транзакція може запитувати більш конкретний і оптимальний ліміт обчислювальних одиниць, включивши одну інструкцію `SetComputeUnitLimit`. Це може бути як вищий, так і нижчий ліміт. Але він ніколи не може перевищувати абсолютний максимальний ліміт на транзакцію.
 
-While a transaction's default compute unit limit will work in most cases for
-simple transactions, they are often less than optimal (both for the runtime and
-the user). For more complex transactions, like invoking programs that perform
-multiple CPIs, you may need to request a higher compute unit limit for the
-transaction.
+Хоча ліміт обчислювальних одиниць за замовчуванням підходить для простих транзакцій, він часто є менш оптимальним (як для часу виконання, так і для користувача). Для складніших транзакцій, наприклад, виклику програм, що виконують декілька CPI, може знадобитися запит вищого ліміту обчислювальних одиниць для транзакції.
 
-Requesting the optimal compute unit limits for your transaction is essential to
-help you pay less for your transaction and to help schedule your transaction
-better on the network. Wallets, dApps, and other services should ensure their
-compute unit requests are optimal to provide the best experience possible for
-their users.
+Запит оптимальних лімітів обчислювальних одиниць для вашої транзакції є важливим для зменшення витрат на транзакцію та кращого планування вашої транзакції в мережі. Гаманці, dApps та інші сервіси повинні переконатися, що їхні запити на обчислювальні одиниці є оптимальними, щоб забезпечити найкращий досвід для своїх користувачів.
 
-> For more details and best practices, read this guide on
-> [requesting optimal compute limits](/content/guides/advanced/how-to-request-optimal-compute.md).
+> Для отримання додаткової інформації та найкращих практик прочитайте цей посібник про [запит оптимальних лімітів обчислювальних ресурсів](/content/guides/advanced/how-to-request-optimal-compute.md).
 
-### Compute unit price
+### Ціна обчислювальної одиниці
 
-When a transaction desires to pay a higher fee to boost its processing
-prioritization, it can set a _"compute unit price"_. This price, used in
-combination with [compute unit limit](#compute-unit-limit), will be used to
-determine a transaction's prioritization fee.
+Якщо транзакція бажає сплатити вищу плату, щоб підвищити пріоритетність її обробки, вона може встановити _"ціну обчислювальної одиниці"_. Ця ціна, у поєднанні з [лімітом обчислювальних одиниць](#compute-unit-limit), буде використовуватися для визначення плати за пріоритизацію транзакції.
 
-By default, there is
-[no compute unit price set](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L38)
-resulting in no additional prioritization fee.
+За замовчуванням [ціна обчислювальної одиниці не встановлена](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/program-runtime/src/compute_budget_processor.rs#L38), що призводить до відсутності додаткової плати за пріоритизацію.
 
-## Prioritization Fees
+## Пріоритизаційні збори
 
-As part of the [Compute Budget](#compute-budget), the runtime supports
-transactions paying an **optional** fee known as a _"prioritization fee"_.
-Paying this additional fee helps boost how a transaction is prioritized against
-others when processing, resulting in faster execution times.
+Як частина [Compute Budget](#compute-budget), час виконання підтримує транзакції, що сплачують **опціональну** плату, відому як _"плата за пріоритизацію"_. Сплата цієї додаткової плати допомагає підвищити пріоритетність транзакції у порівнянні з іншими під час обробки, що призводить до швидшого виконання.
 
-### How the prioritization fee is calculated
+### Як розраховується плата за пріоритизацію
 
-A transaction's prioritization fee is calculated by multiplying its **_compute
-unit limit_** by the **_compute unit price_** (measured in _micro-lamports_).
-These values can be set once per transaction by including the following Compute
-Budget instructions:
+Плата за пріоритизацію транзакції розраховується шляхом множення її **_ліміту обчислювальних одиниць_** на **_ціну обчислювальної одиниці_** (вимірюється в _мікролампортах_). Ці значення можна встановити один раз на транзакцію, включивши такі інструкції Compute Budget:
 
-- [`SetComputeUnitLimit`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/src/compute_budget.rs#L47-L50) -
-  setting the maximum number of compute units the transaction can consume
-- [`SetComputeUnitPrice`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/src/compute_budget.rs#L52-L55) -
-  setting the desired additional fee the transaction is willing to pay to boost
-  its prioritization
+- [`SetComputeUnitLimit`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/src/compute_budget.rs#L47-L50) — встановлення максимальної кількості обчислювальних одиниць, які може спожити транзакція.
+- [`SetComputeUnitPrice`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/src/compute_budget.rs#L52-L55) — встановлення бажаної додаткової плати, яку транзакція готова сплатити для підвищення пріоритетності.
 
-If no `SetComputeUnitLimit` instruction is provided, the
-[default compute unit limit](#compute-unit-limit) will be used.
+Якщо інструкція `SetComputeUnitLimit` не надана, буде використовуватися [ліміт обчислювальних одиниць за замовчуванням](#compute-unit-limit).
 
-If no `SetComputeUnitPrice` instruction is provided, the transaction will
-default to no additional elevated fee and the lowest priority (i.e. no
-prioritization fee).
+Якщо інструкція `SetComputeUnitPrice` не надана, транзакція за замовчуванням матиме найнижчий пріоритет (тобто відсутність пріоритизаційної плати).
 
-### How to set the prioritization fee
+### Як встановити плату за пріоритизацію
 
-A transaction's prioritization fee is set by including a `SetComputeUnitPrice`
-instruction, and optionally a `SetComputeUnitLimit` instruction. The runtime
-will use these values to calculate the prioritization fee, which will be used to
-prioritize the given transaction within the block.
+Плата за пріоритизацію транзакції встановлюється шляхом включення інструкції `SetComputeUnitPrice` та, за бажанням, інструкції `SetComputeUnitLimit`. Час виконання використовуватиме ці значення для розрахунку плати за пріоритизацію, яка буде використовуватися для пріоритизації даної транзакції у блоці.
 
-You can craft each of these instructions via their Rust or `@solana/web3.js`
-functions. Each instruction can then be included in the transaction and sent to
-the cluster like normal. See also the
-[best practices](#prioritization-fee-best-practices) below.
+Ви можете створити кожну з цих інструкцій за допомогою функцій Rust або `@solana/web3.js`. Потім кожну інструкцію можна включити в транзакцію та надіслати до кластера як звичайно. Дивіться також [найкращі практики](#prioritization-fee-best-practices) нижче.
 
-Unlike other instructions inside a Solana transaction, Compute Budget
-instructions do **NOT** require any accounts. A transaction with multiple of
-either of the instructions will fail.
+На відміну від інших інструкцій усередині транзакції Solana, інструкції Compute Budget **НЕ** вимагають жодних облікових записів. Транзакція з кількома інструкціями одного типу завершиться невдачею.
 
 <Callout type="caution">
 
-Transactions can only contain **one of each type** of compute budget
-instruction. Duplicate instruction types will result in an
-[`TransactionError::DuplicateInstruction`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/src/transaction/error.rs#L143-L145)
-error, and ultimately transaction failure.
+Транзакції можуть містити лише **одну інструкцію кожного типу** інструкцій обчислювального бюджету. Дублікати інструкцій призведуть до помилки [`TransactionError::DuplicateInstruction`](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/src/transaction/error.rs#L143-L145) і, зрештою, до невдачі транзакції.
 
 </Callout>
 
 #### Rust
 
-The rust `solana-sdk` crate includes functions within
-[`ComputeBudgetInstruction`](https://docs.rs/solana-sdk/latest/solana_sdk/compute_budget/enum.ComputeBudgetInstruction.html)
-to craft instructions for setting the _compute unit limit_ and _compute unit
-price_:
+Бібліотека `solana-sdk` включає функції в рамках [`ComputeBudgetInstruction`](https://docs.rs/solana-sdk/latest/solana_sdk/compute_budget/enum.ComputeBudgetInstruction.html) для створення інструкцій для встановлення _ліміту обчислювальних одиниць_ та _ціни обчислювальної одиниці_.
 
 ```rust
 let instruction = ComputeBudgetInstruction::set_compute_unit_limit(300_000);
@@ -334,13 +194,9 @@ let instruction = ComputeBudgetInstruction::set_compute_unit_limit(300_000);
 ```rust
 let instruction = ComputeBudgetInstruction::set_compute_unit_price(1);
 ```
-
 #### Javascript
 
-The `@solana/web3.js` library includes functions within the
-[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/ComputeBudgetProgram.html)
-class to craft instructions for setting the _compute unit limit_ and _compute
-unit price_:
+Бібліотека `@solana/web3.js` включає функції в класі [`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/ComputeBudgetProgram.html) для створення інструкцій для встановлення _ліміту обчислювальних одиниць_ та _ціни обчислювальної одиниці_.
 
 ```js
 const instruction = ComputeBudgetProgram.setComputeUnitLimit({
@@ -354,104 +210,56 @@ const instruction = ComputeBudgetProgram.setComputeUnitPrice({
 });
 ```
 
-### Prioritization fee best practices
+### Найкращі практики для плати за пріоритизацію
 
-Below you can find general information on the best practices for prioritization
-fees. You can also find more detailed information in this guide on
-[how to request optimal compute](/content/guides/advanced/how-to-request-optimal-compute.md),
-including how to simulate a transaction to determine its approximate compute
-usage.
+Нижче наведено загальну інформацію про найкращі практики для пріоритизаційних зборів. Більш детальну інформацію можна знайти в цьому посібнику про [запит оптимального використання обчислювальних ресурсів](/content/guides/advanced/how-to-request-optimal-compute.md), включаючи симуляцію транзакції для визначення її приблизного використання обчислювальних ресурсів.
 
-#### Request the minimum compute units
+#### Запитуйте мінімальну кількість обчислювальних одиниць
 
-Transactions should request the minimum amount of compute units required for
-execution to minimize fees. Also note that fees are not adjusted when the number
-of requested compute units exceeds the number of compute units actually consumed
-by an executed transaction.
+Транзакції повинні запитувати мінімальну кількість обчислювальних одиниць, необхідну для виконання, щоб мінімізувати збори. Також зауважте, що збори не коригуються, якщо кількість запитаних обчислювальних одиниць перевищує фактично спожиту кількість у виконаній транзакції.
 
-#### Get recent prioritization fees
+#### Отримуйте останні пріоритизаційні збори
 
-Prior to sending a transaction to the cluster, you can use the
-[`getRecentPrioritizationFees`](/docs/rpc/http/getRecentPrioritizationFees.mdx)
-RPC method to get a list of the recent paid prioritization fees within the
-recent blocks processed by the node.
+Перед надсиланням транзакції до кластеру ви можете скористатися методом RPC [`getRecentPrioritizationFees`](/docs/rpc/http/getRecentPrioritizationFees.mdx), щоб отримати список останніх сплачених пріоритизаційних зборів у нещодавно оброблених блоках вузла.
 
-You could then use this data to estimate an appropriate prioritization fee for
-your transaction to both (a) better ensure it gets processed by the cluster and
-(b) minimize the fees paid.
+Ви можете використовувати ці дані для оцінки відповідної плати за пріоритизацію для вашої транзакції, щоб:
 
-## Rent
+(a) підвищити ймовірність її обробки кластером та
+(b) мінімізувати сплачені збори.
 
-The fee deposited into every [Solana Account](/docs/core/accounts.md) to keep
-its associated data available on-chain is called "_rent_". This fee is withheld
-in the normal lamport balance on every account and reclaimable when the account
-is closed.
+## Оренда
 
-> Rent is different from [transaction fees](#transaction-fees). Rent is "paid"
-> (withheld in an Account) to keep data stored on the Solana blockchain and can
-> be reclaimed. Whereas transaction fees are paid to process
-> [instructions](/docs/core/transactions.md#instructions) on the network.
+Плата, що депонується на кожен [Обліковий запис Solana](/docs/core/accounts.md) для збереження його пов'язаних даних в ончейні, називається "_орендою_". Ця плата утримується у звичайному балансі лампортів на кожному обліковому записі та може бути повернута під час закриття облікового запису.
 
-All accounts are required to maintain a high enough lamport balance (relative to
-its allocated space) to become [rent exempt](#rent-exempt) and remain on the
-Solana blockchain. Any transaction that attempts to reduce an account's balance
-below its respective minimum balance for rent exemption will fail (unless the
-balance is reduced to exactly zero).
+> Оренда відрізняється від [транзакційних зборів](#transaction-fees). Оренда "сплачується" (утримується в Обліковому записі) для збереження даних на блокчейні Solana та може бути повернута. У той час як транзакційні збори сплачуються за обробку [інструкцій](/docs/core/transactions.md#instructions) у мережі.
 
-When an account's owner no longer desires to keep this data on-chain and
-available in the global state, the owner can close the account and reclaim the
-rent deposit.
+Усі облікові записи повинні підтримувати достатньо високий баланс лампортів (відносно їх виділеного простору), щоб стати [звільненими від оренди](#rent-exempt) і залишатися на блокчейні Solana. Будь-яка транзакція, що намагається зменшити баланс облікового запису нижче його відповідного мінімального балансу для звільнення від оренди, завершиться невдачею (якщо тільки баланс не зменшується до нуля).
 
-This is accomplished by withdrawing (transferring) the account's entire lamport
-balance to another account (i.e. your wallet). By reducing the account's balance
-to exactly `0`, the runtime will remove the account and its associated data from
-the network in the process of _"[garbage collection](#garbage-collection)"_.
+Коли власник облікового запису більше не бажає зберігати ці дані в ончейні та доступними в глобальному стані, він може закрити обліковий запис і повернути орендний депозит.
 
-### Rent rate
+Це здійснюється шляхом виведення (переказу) усього балансу лампортів облікового запису на інший обліковий запис (наприклад, ваш гаманець). Зменшивши баланс облікового запису до рівно `0`, час виконання видалить обліковий запис і його пов'язані дані з мережі в процесі _"[збирання сміття](#garbage-collection)"_.
 
-The Solana rent rate is set on a network wide basis, primarily based on a
-runtime set
-"[lamports _per_ byte _per_ year](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/rent.rs#L27-L34)".
-Currently, the rent rate is a static amount and stored in the
-[Rent sysvar](https://docs.anza.xyz/runtime/sysvars#rent).
+### Ставка оренди
 
-This rent rate is used to calculate the exact amount of rent required to be
-withheld inside an account for the space allocated to the account (i.e. the
-amount of data that can be stored in the account). The more space an account
-allocates, the higher the withheld rent deposit will be.
+Ставка оренди Solana встановлюється на рівні всієї мережі, головним чином базуючись на часі виконання
+"[лампорти _за_ байт _за_ рік](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/rent.rs#L27-L34)". Наразі ставка оренди є статичною величиною та зберігається в
+[системній змінній Rent](https://docs.anza.xyz/runtime/sysvars#rent).
 
-### Rent exempt
+Ця ставка оренди використовується для розрахунку точної суми оренди, яка повинна бути утримана в обліковому записі для виділеного простору облікового запису (тобто кількість даних, які можуть бути збережені в обліковому записі). Чим більше простору виділяє обліковий запис, тим вищим буде утриманий орендний депозит.
 
-Accounts must maintain a lamport balance greater than the minimum required to
-store its respective data on-chain. This is called "_rent exempt_" and that
-balance is called the "_minimum balance for rent exemption_".
+### Звільнення від оренди
 
-> New accounts (and programs) on Solana are **REQUIRED** to be initialized with
-> enough lamports to become _rent exempt_. This was not always the case.
-> Previously, the runtime would periodically and automatically collect a fee
-> from each account below its _minimum balance for rent exemption_. Eventually
-> reducing those accounts to a balance of zero and garbage collecting them from
-> the global state (unless manually topped up).
+Облікові записи повинні підтримувати баланс лампортів, що перевищує мінімум, необхідний для зберігання відповідних даних в ончейні. Це називається "_звільненням від оренди_", а цей баланс називається "_мінімальним балансом для звільнення від оренди_".
 
-In the process of creating a new account, you must ensure you deposit enough
-lamports to be above this minimum balance. Anything lower that this minimum
-threshold will result in a failed transaction.
+> Нові облікові записи (та програми) на Solana **ЗОБОВ'ЯЗАНІ** бути ініціалізовані з достатньою кількістю лампортів, щоб стати _звільненими від оренди_. Так було не завжди. Раніше час виконання періодично та автоматично стягував плату з кожного облікового запису, що мав баланс нижче мінімуму для звільнення від оренди. Зрештою, такі облікові записи знижувалися до нульового балансу та видалялися з глобального стану (якщо їх не поповнювали вручну).
 
-Every time an account's balance is reduced, the runtime performs a check to see
-if the account will still be above this minimum balance for rent exemption.
-Unless they reduce the final balance to exactly `0` (closing the account),
-transactions that would cause an account's balance to drop below the rent exempt
-threshold will fail.
+У процесі створення нового облікового запису необхідно переконатися, що ви депонуєте достатньо лампортів, щоб перевищити цей мінімальний баланс. Все, що нижче цього мінімального порогу, призведе до невдачі транзакції.
 
-The specific minimum balance for an account to become rent exempt is dependant
-on the blockchain's current [rent rate](#rent-rate) and the desired amount of
-storage space an account wants to allocate (account size). Therefore, it is
-recommended to use the
-[`getMinimumBalanceForRentExemption`](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx)
-RPC endpoint to calculate the specific balance for a given account size.
+Кожного разу, коли баланс облікового запису зменшується, час виконання перевіряє, чи залишиться баланс цього облікового запису вище мінімального балансу для звільнення від оренди. Якщо тільки баланс не знижується до рівно `0` (закриття облікового запису), транзакції, які спричиняють падіння балансу облікового запису нижче порогу звільнення від оренди, завершаться невдачею.
 
-The required rent deposit amount can also be estimated via the
-[`solana rent` CLI subcommand](https://docs.anza.xyz/cli/usage#solana-rent):
+Специфічний мінімальний баланс для облікового запису, щоб стати звільненим від оренди, залежить від поточної [ставки оренди](#rent-rate) блокчейну та бажаного обсягу простору, який обліковий запис хоче виділити (розмір облікового запису). Тому рекомендується використовувати RPC-метод [`getMinimumBalanceForRentExemption`](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx) для розрахунку конкретного балансу для заданого розміру облікового запису.
+
+Суму необхідного орендного депозиту також можна оцінити за допомогою підкоманди CLI [`solana rent`](https://docs.anza.xyz/cli/usage#solana-rent).
 
 ```shell
 solana rent 15000
@@ -461,36 +269,16 @@ Rent per byte-year: 0.00000348 SOL
 Rent per epoch: 0.000288276 SOL
 Rent-exempt minimum: 0.10529088 SOL
 ```
+### Збирання сміття
 
-### Garbage collection
+Облікові записи, які не підтримують баланс лампортів більше нуля, видаляються з мережі в процесі, відомому як _збирання сміття_. Цей процес виконується, щоб зменшити загальну кількість збережених у мережі даних, які більше не використовуються або не підтримуються.
 
-Accounts that do not maintain a lamport balance greater than zero are removed
-from the network in a process known as _garbage collection_. This process is
-done to help reduce the network wide storage of no longer used/maintained data.
-
-After a transaction successfully reduces an accounts balance to exactly `0`,
-garbage collection happens automatically by the runtime. Any transaction that
-attempts to reduce an accounts balance lower that its minimum balance for rent
-exemption (that is not exactly zero) will fail.
+Після успішного зменшення балансу облікового запису до рівно `0` транзакцією, збирання сміття виконується автоматично часом виконання. Будь-яка транзакція, яка намагається зменшити баланс облікового запису нижче його мінімального балансу для звільнення від оренди (що не дорівнює нулю), завершиться невдачею.
 
 <Callout type="warning">
-
-It's important to note that garbage collection happens **after** the transaction
-execution is completed. If there is an instruction to "close" an account by
-reducing the account balance to zero, the account can be "reopened" within the
-same transaction via a later instruction. If the account state was not cleared
-in the "close" instruction, the later "reopen" instruction will have the same
-account state. It's a security concern, so it's good to know the exact timing
-garbage collection takes effect.
-
+Важливо зазначити, що збирання сміття відбувається **після** завершення виконання транзакції. Якщо є інструкція "закрити" обліковий запис, зменшивши баланс облікового запису до нуля, обліковий запис може бути "повторно відкритий" у тій самій транзакції за допомогою наступної інструкції. Якщо стан облікового запису не було очищено в інструкції "закрити", наступна інструкція "повторного відкриття" матиме той самий стан облікового запису. Це є проблемою безпеки, тому важливо знати точний момент, коли збирання сміття набирає чинності.
 </Callout>
 
-Even after an account has been removed from the network (via garbage
-collection), it may still have transactions associated with it's address (either
-past history or in the future). Even though a Solana block explorer may display
-an "account not found" type of message, you may still be able to view
-transaction history associated with that account.
+Навіть після того, як обліковий запис було видалено з мережі (через збирання сміття), він все ще може мати транзакції, пов'язані з його адресою (або в історії, або в майбутньому). Незважаючи на те, що блокчейн-експлорер Solana може відображати повідомлення типу "обліковий запис не знайдено", ви все одно можете переглядати історію транзакцій, пов'язаних із цим обліковим записом.
 
-You can read the validator
-[implemented proposal](https://docs.anza.xyz/implemented-proposals/persistent-account-storage#garbage-collection)
-for garbage collection to learn more.
+Ви можете прочитати [запропоновану реалізацію](https://docs.anza.xyz/implemented-proposals/persistent-account-storage#garbage-collection) для збирання сміття, щоб дізнатися більше.
