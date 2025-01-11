@@ -1,88 +1,42 @@
 ---
-sidebarLabel: Proposed Inflation Schedule
-title: Proposed Inflation Schedule
+sidebarLabel: Запропонований Графік Інфляції
+title: Запропонований Графік Інфляції
 altRoutes:
   - /docs/economics/inflation/inflation_schedule
   - /docs/intro/economics
 ---
 
-As mentioned above, the network's _Inflation Schedule_ is uniquely described by
-three parameters: _Initial Inflation Rate_, _Disinflation Rate_ and _Long-term
-Inflation Rate_. When considering these numbers, there are many factors to take
-into account:
+Як було зазначено вище, _Графік Інфляції_ мережі унікально описується трьома параметрами: _Початкова Ставка Інфляції_, _Ставка Дезінфляції_ та _Довгострокова Ставка Інфляції_. При розгляді цих значень слід враховувати багато факторів:
 
-- A large portion of the SOL issued via inflation will be distributed to
-  stake-holders in proportion to the SOL they have staked. We want to ensure
-  that the _Inflation Schedule_ design results in reasonable _Staking Yields_
-  for token holders who delegate SOL and for validation service providers (via
-  commissions taken from _Staking Yields_).
-- The primary driver of _Staked Yield_ is the amount of SOL staked divided by
-  the total amount of SOL (% of total SOL staked). Therefore the distribution
-  and delegation of tokens across validators are important factors to understand
-  when determining initial inflation parameters.
-- Yield throttling is a current area of research that would impact
-  _staking-yields_. This is not taken into consideration in the discussion here
-  or the modeling below.
-- Overall token issuance - i.e. what do we expect the Current Total Supply to be
-  in 10 years, or 20 years?
-- Long-term, steady-state inflation is an important consideration not only for
-  sustainable support for the validator ecosystem and the Solana Foundation
-  grant programs, but also should be tuned in consideration with expected token
-  losses and burning over time.
-- The rate at which we expect network usage to grow, as a consideration to the
-  disinflationary rate. Over time, we plan for inflation to drop and expect that
-  usage will grow.
+- Значна частина SOL, випущених через інфляцію, буде розподілена між власниками стейкінгу пропорційно до кількості стейкінгованих SOL. Ми хочемо переконатися, що дизайн _Графіку Інфляції_ забезпечує розумну _Дохідність Стейкінгу_ для власників токенів, які делегують SOL, та провайдерів послуг валідації (через комісії, які беруться з _Дохідності Стейкінгу_).
+- Основний драйвер _Дохідності Стейкінгу_ — це кількість SOL у стейкінгу, поділена на загальну кількість SOL (% від загальної кількості SOL у стейкінгу). Таким чином, розподіл і делегування токенів серед валідаторів є важливими факторами при визначенні початкових параметрів інфляції.
+- Обмеження дохідності — це поточна область досліджень, яка може вплинути на _Дохідність Стейкінгу_. Це не враховано у цій дискусії чи в моделюванні нижче.
+- Загальний випуск токенів — тобто якою ми очікуємо _Поточну Загальну Пропозицію_ через 10 чи 20 років?
+- Довгострокова, стабільна інфляція є важливим фактором не тільки для сталого підтримання екосистеми валідаторів і грантових програм Фонду Solana, але також має бути налаштована з урахуванням очікуваних втрат і спалювання токенів з часом.
+- Темпи очікуваного зростання використання мережі як фактор для розгляду ставки дезінфляції. З часом ми плануємо зниження інфляції та очікуємо зростання використання.
 
-Based on these considerations and the community discussions following the
-initial design, the Solana Foundation proposes the following Inflation Schedule
-parameters:
+Виходячи з цих міркувань і обговорень у спільноті після початкового дизайну, Фонд Solana пропонує наступні параметри _Графіку Інфляції_:
 
-- Initial Inflation Rate: 8%
-- Disinflation Rate: -15%
-- Long-term Inflation Rate: 1.5%
+- Початкова Ставка Інфляції: 8%
+- Ставка Дезінфляції: -15%
+- Довгострокова Ставка Інфляції: 1.5%
 
-These parameters define the proposed _Inflation Schedule_. Below we show
-implications of these parameters. These plots only show the impact of inflation
-issuances given the Inflation Schedule as parameterized above. They _do not
-account_ for other factors that may impact the Total Supply such as fee/rent
-burning, slashing or other unforeseen future token destruction events.
-Therefore, what is presented here is an **upper limit** on the amount of SOL
-issued via inflation.
+Ці параметри визначають запропонований _Графік Інфляції_. Нижче показано наслідки цих параметрів. Ці графіки лише показують вплив інфляційного випуску, заданого _Графіком Інфляції_, як параметризовано вище. Вони _не враховують_ інші фактори, які можуть вплинути на _Загальну Пропозицію_, такі як спалювання комісій/рент, штрафи чи інші непередбачувані події знищення токенів у майбутньому. Тому тут представлено **верхню межу** кількості SOL, випущених через інфляцію.
 
-![Example proposed inflation schedule graph](/assets/docs/economics/proposed_inflation_schedule.png)
+![Графік прикладу запропонованого графіку інфляції](/assets/docs/economics/proposed_inflation_schedule.png)
 
-In the above graph we see the annual inflation rate percentage over time, given
-the inflation parameters proposed above.
+На графіку вище показано відсоток річної ставки інфляції з часом, виходячи з запропонованих параметрів інфляції.
 
-![Example proposed total supply graph](/assets/docs/economics/proposed_total_supply.png)
+![Графік прикладу загальної пропозиції](/assets/docs/economics/proposed_total_supply.png)
 
-Similarly, here we see the _Total Current Supply_ of SOL [MM] over time,
-assuming an initial _Total Current Supply_ of `488,587,349 SOL` (i.e. for this
-example, taking the _Total Current Supply_ as of `2020-01-25` and simulating
-inflation starting from that day).
+Подібним чином, тут показано _Поточну Загальну Пропозицію_ SOL [млн] з часом, за умови початкової _Поточна Загальна Пропозиція_ `488,587,349 SOL` (тобто, у цьому прикладі, взято _Поточну Загальну Пропозицію_ станом на `2020-01-25` і моделюється інфляція, починаючи з цього дня).
 
-Setting aside validator uptime and commissions, the expected Staking Yield and
-Adjusted Staking Yield metrics are then primarily a function of the % of total
-SOL staked on the network. Therefore we can model _Staking Yield_, if we
-introduce an additional parameter _% of Staked SOL_:
+Відставляючи осторонь доступність валідаторів і комісії, очікувані показники _Дохідності Стейкінгу_ та _Скоригованої Дохідності Стейкінгу_ є в першу чергу функцією % від загального SOL у стейкінгу. Тому ми можемо моделювати _Дохідність Стейкінгу_, якщо введемо додатковий параметр _% Стейкінгованих SOL_:
 
-<!-- $$
-\%~\text{SOL Staked} = \frac{\text{Total SOL Staked}}{\text{Total Current Supply}}
-$$ -->
+<!-- $$ \%~\text{SOL у стейкінгу} = \frac{\text{Загальний SOL у стейкінгу}}{\text{Поточна Загальна Пропозиція}} $$ -->
 
-This parameter must be estimated because it is a dynamic property of the token
-holders and staking incentives. The values of _% of Staked SOL_ presented here
-range from 60% - 90%, which we feel covers the likely range we expect to
-observe, based on feedback from the investor and validator communities as well
-as what is observed on comparable Proof-of-Stake protocols.
+Цей параметр має бути оцінений, оскільки це динамічна властивість власників токенів і стимулів стейкінгу. Значення _% Стейкінгованих SOL_, представлені тут, варіюються від 60% до 90%, що, на нашу думку, охоплює ймовірний діапазон, який ми очікуємо, базуючись на зворотному зв’язку від спільнот інвесторів і валідаторів, а також спостереженнях на порівнянних протоколах Proof-of-Stake.
 
-![Example staked yields graph](/assets/docs/economics/example_staked_yields.png)
+![Графік прикладу дохідності стейкінгу](/assets/docs/economics/example_staked_yields.png)
 
-Again, the above shows an example _Staked Yield_ that a staker might expect over
-time on the Solana network with the _Inflation Schedule_ as specified. This is
-an idealized _Staked Yield_ as it neglects validator uptime impact on rewards,
-validator commissions, potential yield throttling and potential slashing
-incidents. It additionally ignores that _% of Staked SOL_ is dynamic by design -
-the economic incentives set up by this _Inflation Schedule_ are more clearly
-seen when _Token Dilution_ is taken into account (see the **Adjusted Staking
-Yield** section below).
+На графіку вище показано приклад _Дохідності Стейкінгу_, яку може очікувати учасник стейкінгу з часом у мережі Solana з вказаним _Графіком Інфляції_. Це ідеалізована _Дохідність Стейкінгу_, оскільки вона не враховує вплив доступності валідаторів на винагороди, комісії валідаторів, можливе обмеження дохідності та можливі інциденти зі штрафами. Вона також ігнорує, що _% Стейкінгованих SOL_ є динамічним за своєю суттю — економічні стимули, створені цим _Графіком Інфляції_, стають більш зрозумілими, коли враховується _Дилюція Токенів_ (див. розділ **Скоригована Дохідність Стейкінгу** нижче).

@@ -1,112 +1,46 @@
 ---
-sidebarLabel: Inflation Terminology
-title: Inflation Related Terminology
+sidebarLabel: Терміни, Пов’язані з Інфляцією
+title: Терміни, Пов’язані з Інфляцією
 ---
 
-Many terms are thrown around when discussing inflation and the related
-components (e.g. rewards/yield/interest), we try to define and clarify some
-commonly used concept here:
+При обговоренні інфляції та пов’язаних компонентів (наприклад, винагород/дохідності/відсотків) використовується багато термінів. Тут ми намагаємося визначити та уточнити деякі загальновживані поняття:
 
-### Total Current Supply [SOL]
+### Поточна Загальна Пропозиція [SOL]
 
-The total amount of tokens (locked or unlocked) that have been generated (via
-genesis block or protocol inflation) minus any tokens that have been burnt (via
-transaction fees or other mechanism) or slashed. At network launch, 500,000,000
-SOL were instantiated in the genesis block. Since then the Total Current Supply
-has been reduced by the burning of transaction fees and a planned token
-reduction event. Solana's _Total Current Supply_ can be found at
-https://explorer.solana.com/supply
+Загальна кількість токенів (заблокованих або незаблокованих), які були створені (через генезисний блок або інфляцію протоколу) мінус будь-які токени, які були спалені (через комісії за транзакції або інші механізми) чи списані. Під час запуску мережі було створено 500,000,000 SOL у генезисному блоці. З того часу Поточна Загальна Пропозиція зменшилася через спалювання комісій за транзакції та заплановану подію зменшення кількості токенів. _Поточну Загальну Пропозицію_ Solana можна знайти за адресою: https://explorer.solana.com/supply
 
-### Inflation Rate [%]
+### Ставка Інфляції [%]
 
-The Solana protocol will automatically create new tokens on a predetermined
-inflation schedule (discussed below). The _Inflation Rate [%]_ is the annualized
-growth rate of the _Total Current Supply_ at any point in time.
+Протокол Solana автоматично створює нові токени за заздалегідь визначеним графіком інфляції (обговорено нижче). _Ставка Інфляції [%]_ — це річний темп зростання _Поточна Загальна Пропозиція_ на будь-який момент часу.
 
-### Inflation Schedule
+### Графік Інфляції
 
-A deterministic description of token issuance over time. The Solana Foundation
-is proposing a disinflationary _Inflation Schedule_. I.e. Inflation starts at
-its highest value, the rate reduces over time until stabilizing at a
-predetermined long-term inflation rate (see discussion below). This schedule is
-completely and uniquely parameterized by three numbers:
+Детерміноване описання випуску токенів з часом. Фонд Solana пропонує дезінфляційний _Графік Інфляції_. Тобто інфляція починається з найвищого значення, а її темп зменшується з часом, доки не стабілізується на заздалегідь визначеному довгостроковому рівні (див. обговорення нижче). Цей графік повністю та унікально параметризується трьома числами:
 
-- **Initial Inflation Rate [%]**: The starting _Inflation Rate_ for when
-  inflation is first enabled. Token issuance rate can only decrease from this
-  point.
-- **Disinflation Rate [%]**: The rate at which the _Inflation Rate_ is reduced.
-- **Long-term Inflation Rate [%]**: The stable, long-term _Inflation Rate_ to be
-  expected.
+- **Початкова Ставка Інфляції [%]**: Початкова _Ставка Інфляції_ для моменту активації інфляції. Темп випуску токенів може тільки знижуватися з цього моменту.
+- **Ставка Дезінфляції [%]**: Темп, з яким зменшується _Ставка Інфляції_.
+- **Довгострокова Ставка Інфляції [%]**: Стабільна, довгострокова _Ставка Інфляції_.
 
-### Effective Inflation Rate [%]
+### Ефективна Ставка Інфляції [%]
 
-The inflation rate actually observed on the Solana network after accounting for
-other factors that might decrease the _Total Current Supply_. Note that it is
-not possible for tokens to be created outside of what is described by the
-_Inflation Schedule_.
+Фактична ставка інфляції, що спостерігається в мережі Solana, після врахування інших факторів, які можуть зменшити _Поточну Загальну Пропозицію_. Зазначимо, що створення токенів поза описаним _Графіком Інфляції_ неможливе.
 
-- While the _Inflation Schedule_ determines how the protocol issues SOL, this
-  neglects the concurrent elimination of tokens in the ecosystem due to various
-  factors. The primary token burning mechanism is the burning of a portion of
-  each transaction fee. 50% of each transaction fee is burned, with the
-  remaining fee retained by the validator that processes the transaction.
-- Additional factors such as loss of private keys and slashing events should
-  also be considered in a holistic analysis of the _Effective Inflation Rate_.
-  For example, it's estimated that 10-20% of all BTC have been lost and are
-  unrecoverable and that networks may experience similar yearly losses at the
-  rate of 1-2%.
+- Хоча _Графік Інфляції_ визначає, як протокол випускає SOL, він не враховує одночасного знищення токенів через різні фактори. Основний механізм спалювання токенів — це спалювання частини кожної комісії за транзакцію. 50% кожної комісії за транзакцію спалюється, решта залишається валідатору, який обробив транзакцію.
+- Додаткові фактори, такі як втрата приватних ключів і списання токенів, також слід враховувати в комплексному аналізі _Ефективної Ставки Інфляції_. Наприклад, оцінюється, що 10–20% всіх BTC втрачені та недоступні, і мережі можуть зазнавати подібних щорічних втрат на рівні 1–2%.
 
-### Staking Yield [%]
+### Дохідність Стейкінгу [%]
 
-The rate of return (aka _interest_) earned on SOL staked on the network. It is
-often quoted as an annualized rate (e.g. "the network _staking yield_ is
-currently 10% per year").
+Темп повернення (також відомий як _відсоток_), який отримується за SOL, поставлені на стейкінг у мережі. Зазвичай він зазначається як річний темп (наприклад, "дохідність стейкінгу в мережі наразі становить 10% на рік").
 
-- _Staking yield_ is of great interest to validators and token holders who wish
-  to delegate their tokens to avoid token dilution due to inflation (the extent
-  of which is discussed below).
-- 100% of inflationary issuances are to be distributed to staked token-holders
-  in proportion to their staked SOL and to validators who charge a commission on
-  the rewards earned by their delegated SOL.
-  - There may be future consideration for an additional split of inflation
-    issuance with the introduction of _Archivers_ into the economy. _Archivers_
-    are network participants who provide a decentralized storage service and
-    should also be incentivized with token distribution from inflation issuances
-    for this service. - Similarly, early designs specified a fixed percentage of
-    inflationary issuance to be delivered to the Foundation treasury for
-    operational expenses and future grants. However, inflation will be launching
-    without any portion allocated to the Foundation.
-- _Staking yield_ can be calculated from the _Inflation Schedule_ along with the
-  fraction of the _Total Current Supply_ that is staked at any given time. The
-  explicit relationship is given by:
+- _Дохідність стейкінгу_ дуже цікавить валідаторів і власників токенів, які бажають делегувати свої токени, щоб уникнути розмивання токенів через інфляцію (масштаб якої обговорено нижче).
+- 100% інфляційних випусків розподіляються між власниками стейкінгованих токенів пропорційно до їхнього стейкінгованого SOL, а також валідаторами, які стягують комісію з винагороди, отриманої за делегований SOL.
+  - Може бути враховано майбутнє розділення інфляційних випусків із введенням _Архіваторів_ у економіку. _Архіватори_ — це учасники мережі, які надають децентралізовані послуги зберігання, і їх також слід стимулювати розподілом токенів з інфляційних випусків за цю послугу.
+- _Дохідність Стейкінгу_ можна розрахувати за _Графіком Інфляції_ разом із часткою _Поточна Загальна Пропозиція_, що перебуває в стейкінгу.
 
-<!-- $$
-\begin{aligned}
-\text{Staking Yield} =~&\text{Inflation Rate}\times\text{Validator Uptime}~\times \\
-&\left( 1 - \text{Validator Fee} \right) \times \left( \frac{1}{\%~\text{SOL Staked}} \right) \\
-\text{where:}\\
-\%~\text{SOL Staked} &= \frac{\text{Total SOL Staked}}{\text{Total Current Supply}}
-\end{aligned}
-$$ -->
+### Дилюція Токенів [%]
 
-### Token Dilution [%]
+Розмивання визначається тут як зміна пропорційного представлення набору токенів у більшому наборі через введення нових токенів. У практичному сенсі ми обговорюємо розмивання стейкінгованих або нестейкінгованих токенів через введення та розподіл інфляційних випусків по мережі.
 
-Dilution is defined here as the change in proportional representation of a set
-of tokens within a larger set due to the introduction of new tokens. In
-practical terms, we discuss the dilution of staked or un-staked tokens due to
-the introduction and distribution of inflation issuance across the network. As
-will be shown below, while dilution impacts every token holder, the _relative_
-dilution between staked and un-staked tokens should be the primary concern to
-un-staked token holders. Staking tokens, which will receive their proportional
-distribution of inflation issuance, should assuage any dilution concerns for
-staked token holders. I.e. dilution from 'inflation' is offset by the
-distribution of new tokens to staked token holders, nullifying the 'dilutive'
-effects of the inflation for that group.
+### Скоригована Дохідність Стейкінгу [%]
 
-### Adjusted Staking Yield [%]
-
-A complete appraisal of earning potential from staking tokens should take into
-account staked _Token Dilution_ and its impact on the _Staking Yield_. For this,
-we define the _Adjusted Staking Yield_ as the change in fractional token supply
-ownership of staked tokens due to the distribution of inflation issuance. I.e.
-the positive dilutive effects of inflation.
+Повна оцінка потенціалу заробітку від стейкінгу токенів повинна враховувати стейкінговану _Дилюцію Токенів_ та її вплив на _Дохідність Стейкінгу_. Для цього ми визначаємо _Скориговану Дохідність Стейкінгу_ як зміну фракційної власності токенів у стейкінгу через розподіл інфляційних випусків.

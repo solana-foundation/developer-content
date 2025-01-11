@@ -1,28 +1,15 @@
 ---
-title: Stake Programming
+title: Програмування Стейкінгу
 ---
 
-To maximize stake distribution, decentralization, and censorship resistance on
-the Solana network, staking can be performed programmatically. The team and
-community have developed several on-chain and offchain programs to make stakes
-easier to manage.
+Для максимізації розподілу стейку, децентралізації та стійкості до цензури в мережі Solana, стейкінг може виконуватись програмно. Команда та спільнота розробили кілька програм для роботи як на ланцюгу, так і поза ним, щоб зробити управління стейками простішим.
 
-#### Stake-o-matic aka Auto-delegation Bots
+#### Stake-o-matic, також відомий як боти автоделегування
 
-This offchain program manages a large population of validators staked by a
-central authority. The Solana Foundation uses an auto-delegation bot to
-regularly delegate its stake to "non-delinquent" validators that meet specified
-performance requirements.
+Ця позаланцюгова програма управляє великою кількістю валідаторів, яким делегує стейк центральний орган. Фонд Solana використовує бота автоделегування для регулярного делегування свого стейку "неспійманим" валідаторам, які відповідають визначеним вимогам продуктивності.
 
 #### Stake Pools
 
-This on-chain program pools together SOL to be staked by a manager, allowing SOL
-holders to stake and earn rewards without managing stakes. Users deposit SOL in
-exchange for SPL tokens (staking derivatives) that represent their ownership in
-the stake pool. The pool manager stakes deposited SOL according to their
-strategy, perhaps using a variant of an auto-delegation bot as described above.
-As stakes earn rewards, the pool and pool tokens grow proportionally in value.
-Finally, pool token holders can send SPL tokens back to the stake pool to redeem
-SOL, thereby participating in decentralization with much less work required.
-More information can be found at the
-[SPL stake pool documentation](https://spl.solana.com/stake-pool).
+Ця програма на ланцюгу об'єднує SOL для стейкінгу, яким управляє менеджер, дозволяючи власникам SOL здійснювати стейкінг та отримувати винагороди без необхідності управляти стейками. Користувачі депонують SOL в обмін на SPL-токени (похідні стейкінгу), які представляють їхню частку в пулі стейкінгу. Менеджер пулу здійснює стейкінг внесених SOL відповідно до своєї стратегії, можливо, використовуючи варіант бота автоделегування, описаного вище. Коли стейки отримують винагороди, вартість пулу та токенів пулу пропорційно зростає. Нарешті, власники токенів пулу можуть повернути SPL-токени назад у пул стейкінгу для викупу SOL, тим самим беручи участь у децентралізації з мінімальними зусиллями.
+
+Детальнішу інформацію можна знайти в [документації SPL Stake Pool](https://spl.solana.com/stake-pool).

@@ -1,52 +1,21 @@
 ---
-sidebarLabel: Economics
-title: Solana Economics Overview
+sidebarLabel: Економіка
+title: Огляд Економіки Solana
 altRoutes:
   - /docs/intro/economics
 sidebarSortOrder: 5
 ---
 
-**Subject to change.**
+**Може бути змінено.**
 
-Solana's crypto-economic system is designed to promote a healthy, long term
-self-sustaining economy with participant incentives aligned to the security and
-decentralization of the network. The main participants in this economy are
-validation-clients. Their contributions to the network, state validation, and
-their requisite incentive mechanisms are discussed below.
+Криптоекономічна система Solana розроблена для сприяння здоровій, довгостроковій самопідтримуваній економіці, в якій стимули учасників узгоджуються із забезпеченням безпеки та децентралізації мережі. Основними учасниками цієї економіки є валідаційні клієнти. Їхній внесок у мережу, перевірка стану та відповідні механізми стимулювання розглядаються нижче.
 
-The main channels of participant remittances are referred to as protocol-based
-rewards and transaction fees. Protocol-based rewards are generated from
-inflationary issuances from a protocol-defined inflation schedule. These rewards
-will constitute the total protocol-based reward delivered to validation clients,
-the remaining sourced from transaction fees. In the early days of the network,
-it is likely that protocol-based rewards, deployed based on predefined issuance
-schedule, will drive the majority of participant incentives to participate in
-the network.
+Основними каналами винагород для учасників є винагороди, засновані на протоколі, та транзакційні комісії. Винагороди, засновані на протоколі, генеруються за рахунок інфляційного випуску згідно з визначеним протоколом графіком інфляції. Ці винагороди становитимуть загальну винагороду на основі протоколу, яка буде надаватися валідаційним клієнтам, решта забезпечується за рахунок транзакційних комісій. У перші дні роботи мережі ймовірно, що винагороди, засновані на протоколі, розподілені згідно з попередньо визначеним графіком випуску, стануть основним стимулом для учасників мережі.
 
-These protocol-based rewards are calculated per epoch and distributed across the
-active delegated stake and validator set (per validator commission). As
-discussed further below, the per annum inflation rate is based on a
-pre-determined disinflationary schedule. This provides the network with supply
-predictability which supports long term economic stability and security.
+Ці винагороди розраховуються за кожну епоху і розподіляються серед активного делегованого стейку та набору валідаторів (з урахуванням комісії валідаторів). Як описано нижче, річний рівень інфляції ґрунтується на визначеному дисінфляційному графіку. Це забезпечує мережі передбачуваність поставок, що підтримує довгострокову економічну стабільність та безпеку.
 
-Transaction fees are participant-to-participant transfers, attached to network
-interactions as a motivation and compensation for the inclusion and execution of
-a proposed transaction. A mechanism for long-term economic stability and forking
-protection through partial burning of each transaction fee is also discussed
-below.
+Транзакційні комісії є переказами між учасниками, що додаються до взаємодії з мережею як стимул та компенсація за включення і виконання запропонованої транзакції. Також обговорюється механізм довгострокової економічної стабільності та захисту від розгалужень через часткове спалювання кожної транзакційної комісії.
 
-First, an overview of the inflation design is presented. This section starts
-with defining and clarifying
-[Terminology](/docs/economics/inflation/terminology.md) commonly used
-subsequently in the discussion of inflation and the related components.
-Following that, we outline Solana's proposed
-[Inflation Schedule](/docs/economics/inflation/inflation_schedule.md), i.e. the
-specific parameters that uniquely parameterize the protocol-driven inflationary
-issuance over time. Next is a brief section on
-[Adjusted Staking Yield](/docs/economics/inflation/_adjusted_staking_yield.md),
-and how token dilution might influence staking behavior.
+Спочатку подано огляд дизайну інфляції. Цей розділ починається з визначення та уточнення [Термінології](/docs/economics/inflation/terminology.md), що часто використовується у подальшому обговоренні інфляції та пов'язаних компонентів. Далі ми окреслюємо запропонований [Графік Інфляції](/docs/economics/inflation/inflation_schedule.md) Solana, тобто конкретні параметри, які унікально визначають інфляційний випуск, керований протоколом, з плином часу. Наступним є короткий розділ про [Скориговану Доходність Стейкінгу](/docs/economics/inflation/_adjusted_staking_yield.md) і те, як розбавлення токенів може вплинути на поведінку стейкінгу.
 
-An overview of [Transaction Fees](/docs/core/fees.md#transaction-fees) on Solana
-is followed by a discussion of [Storage Rent Economics](/docs/core/fees.md#rent)
-in which we describe an implementation of storage rent to account for the
-externality costs of maintaining the active state of the ledger.
+Огляд [Транзакційних Комісій](/docs/core/fees.md#transaction-fees) у Solana супроводжується обговоренням [Економіки Оренди для Зберігання](/docs/core/fees.md#rent), у якому описується реалізація орендної плати за зберігання для обліку зовнішніх витрат на підтримання активного стану реєстру.

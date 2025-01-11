@@ -1,267 +1,214 @@
 ---
-title: "Transactions and Instructions"
+title: "Транзакції та Інструкції"
 sidebarSortOrder: 2
 description:
-  Learn about Solana transactions and instructions - the fundamental building
-  blocks for interacting with the Solana blockchain. Understand transaction
-  structure and instruction composition with practical examples.
+  Дізнайтеся про транзакції та інструкції Solana — основні будівельні блоки для
+  взаємодії з блокчейном Solana. Зрозумійте структуру транзакцій і створення
+  інструкцій із практичними прикладами.
 ---
 
-On Solana, we send [transactions](/docs/core/transactions#transaction) to
-interact with the network. Transactions include one or more
-[instructions](/docs/core/transactions#instruction), each representing a
-specific operation to be processed. The execution logic for instructions is
-stored on [programs](/docs/core/programs) deployed to the Solana network, where
-each program stores its own set of instructions.
+У Solana ми надсилаємо [транзакції](/docs/core/transactions#transaction), щоб
+взаємодіяти з мережею. Транзакції включають одну або більше
+[інструкцій](/docs/core/transactions#instruction), кожна з яких представляє
+конкретну операцію, що має бути оброблена. Логіка виконання інструкцій зберігається
+в [програмах](/docs/core/programs), розгорнутих у мережі Solana, і кожна програма
+зберігає свій набір інструкцій.
 
-Below are key details about how transactions are executed:
+Нижче наведено основні деталі щодо виконання транзакцій:
 
-- Execution Order: If a transaction includes multiple instructions, the
-  instructions are processed in the order they are added to the transaction.
-- Atomicity: A transaction is atomic, meaning it either fully completes with all
-  instructions successfully processed, or fails altogether. If any instruction
-  within the transaction fails, none of the instructions are executed.
+- Порядок виконання: Якщо транзакція містить декілька інструкцій, вони
+  обробляються у порядку, в якому були додані до транзакції.
+- Атомарність: Транзакція є атомарною, тобто вона або повністю виконується з
+  успішною обробкою всіх інструкцій, або повністю провалюється. Якщо будь-яка
+  інструкція у транзакції не вдається, жодна з інструкцій не буде виконана.
 
-For simplicity, a transaction can be thought of as a request to process one or
-multiple instructions.
+Для простоти можна уявити транзакцію як запит на обробку однієї або кількох
+інструкцій.
 
-![Transaction Simplified](/assets/docs/core/transactions/transaction-simple.svg)
+![Спрощена транзакція](/assets/docs/core/transactions/transaction-simple.svg)
 
-You can imagine a transaction as an envelope, where each instruction is a
-document that you fill out and place inside the envelope. We then mail out the
-envelope to process the documents, just like sending a transaction on the
-network to process our instructions.
+Уявіть транзакцію як конверт, де кожна інструкція — це документ, який ви
+заповнюєте та кладете у конверт. Потім ми відправляємо конверт для обробки
+документів, так само, як відправляємо транзакцію в мережу для обробки наших
+інструкцій.
 
-## Key Points
+## Основні моменти
 
-- Solana transactions consist of instructions that interact with various
-  programs on the network, where each instruction represents a specific
-  operation.
+- Транзакції Solana складаються з інструкцій, які взаємодіють із різними
+  програмами в мережі, де кожна інструкція представляє конкретну операцію.
 
-- Each instruction specifies the program to execute the instruction, the
-  accounts required by the instruction, and the data required for the
-  instruction's execution.
+- Кожна інструкція вказує програму для виконання інструкції, облікові записи,
+  необхідні для інструкції, та дані, потрібні для виконання інструкції.
 
-- Instructions within a transaction are processed in the order they are listed.
+- Інструкції в транзакції обробляються в порядку, в якому вони вказані.
 
-- Transactions are atomic, meaning either all instructions process successfully,
-  or the entire transaction fails.
+- Транзакції є атомарними, тобто або всі інструкції успішно обробляються, або
+  вся транзакція провалюється.
 
-- The maximum size of a transaction is 1232 bytes.
+- Максимальний розмір транзакції становить 1232 байти.
 
-## Basic Example
+## Простий приклад
 
-Below is a diagram representing a transaction with a single instruction to
-transfer SOL from a sender to a receiver.
+Нижче наведено діаграму, яка представляє транзакцію з однією інструкцією для
+переказу SOL від відправника до отримувача.
 
-Individual "wallets" on Solana are accounts owned by the
-[System Program](/docs/core/accounts#system-program). As part of the
-[Solana Account Model](/docs/core/accounts), only the program that owns an
-account is allowed to modify the data on the account.
+Індивідуальні "гаманці" у Solana є обліковими записами, якими володіє
+[Системна програма](/docs/core/accounts#system-program). Як частина
+[моделі облікових записів Solana](/docs/core/accounts), лише програма, якій
+належить обліковий запис, може змінювати дані цього облікового запису.
 
-Therefore, transferring SOL from a "wallet" account requires sending a
-transaction to invoke the transfer instruction on the System Program.
+Тому для переказу SOL із облікового запису "гаманця" необхідно надіслати
+транзакцію для виклику інструкції переказу у Системній програмі.
 
-![SOL Transfer](/assets/docs/core/transactions/sol-transfer.svg)
+![Переказ SOL](/assets/docs/core/transactions/sol-transfer.svg)
 
-The sender account must be included as a signer (`is_signer`) on the transaction
-to approve the deduction of their lamport balance. Both the sender and recipient
-accounts must be mutable (`is_writable`) because the instruction modifies the
-lamport balance for both accounts.
+Обліковий запис відправника має бути доданий як підписант (`is_signer`) до
+транзакції, щоб схвалити списання балансу лампортів. Обидва облікові записи,
+відправник і отримувач, мають бути змінюваними (`is_writable`), оскільки
+інструкція змінює баланс лампортів для обох облікових записів.
 
-Once the transaction is sent, the System Program is invoked to process the
-transfer instruction. The System Program then updates the lamport balances of
-both the sender and recipient accounts accordingly.
+Після відправлення транзакції викликається Системна програма для обробки
+інструкції переказу. Потім Системна програма оновлює баланс лампортів для обох
+облікових записів відповідно.
 
-![SOL Transfer Process](/assets/docs/core/transactions/sol-transfer-process.svg)
+![Процес переказу SOL](/assets/docs/core/transactions/sol-transfer-process.svg)
 
-### Simple SOL Transfer
+### Простий переказ SOL
 
-Here is a [Solana Playground](https://beta.solpg.io/656a0ea7fb53fa325bfd0c3e)
-example of how to build a SOL transfer instruction using the
-`SystemProgram.transfer` method:
+Ось приклад із [Solana Playground](https://beta.solpg.io/656a0ea7fb53fa325bfd0c3e),
+який демонструє, як створити інструкцію переказу SOL за допомогою методу
+`SystemProgram.transfer`:
 
 ```typescript
-// Define the amount to transfer
+// Визначення суми переказу
 const transferAmount = 0.01; // 0.01 SOL
 
-// Create a transfer instruction for transferring SOL from wallet_1 to wallet_2
+// Створення інструкції для переказу SOL з wallet_1 до wallet_2
 const transferInstruction = SystemProgram.transfer({
   fromPubkey: sender.publicKey,
   toPubkey: receiver.publicKey,
-  lamports: transferAmount * LAMPORTS_PER_SOL, // Convert transferAmount to lamports
+  lamports: transferAmount * LAMPORTS_PER_SOL, // Конвертація transferAmount у лампорти
 });
 
-// Add the transfer instruction to a new transaction
+// Додавання інструкції переказу до нової транзакції
 const transaction = new Transaction().add(transferInstruction);
 ```
+Запустіть скрипт і перевірте деталі транзакції, що виводяться в консоль. У наступних розділах ми розглянемо, що відбувається "під капотом".
 
-Run the script and inspect the transaction details logged to the console. In the
-sections below, we'll walk through the details of what's happening under the
-hood.
+## Транзакція
 
-## Transaction
-
-A Solana
+Транзакція Solana 
 [transaction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/transaction/mod.rs#L173)
-consists of:
+складається з:
 
-1. [Signatures](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/signature.rs#L27):
-   An array of signatures included on the transaction.
-2. [Message](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L110):
-   List of instructions to be processed atomically.
+1. [Підписів](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/signature.rs#L27):
+   Масиву підписів, включених у транзакцію.
+2. [Повідомлення](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L110):
+   Переліку інструкцій, які будуть оброблятися атомарно.
 
-![Transaction Format](/assets/docs/core/transactions/tx_format.png)
+![Формат транзакції](/assets/docs/core/transactions/tx_format.png)
 
-The structure of a transaction message comprises of:
+Структура повідомлення транзакції складається з:
 
-- [Message Header](/docs/core/transactions#message-header): Specifies the number
-  of signer and read-only account.
-- [Account Addresses](/docs/core/transactions#array-of-account-addresses): An
-  array of account addresses required by the instructions on the transaction.
-- [Recent Blockhash](/docs/core/transactions#recent-blockhash): Acts as a
-  timestamp for the transaction.
-- [Instructions](/docs/core/transactions#array-of-instructions): An array of
-  instructions to be executed.
+- [Заголовка повідомлення](/docs/core/transactions#message-header): Вказує кількість підписантів та облікових записів тільки для читання.
+- [Масиву адрес облікових записів](/docs/core/transactions#array-of-account-addresses): Масив адрес облікових записів, необхідних для інструкцій у транзакції.
+- [Недавнього блоку хешу](/docs/core/transactions#recent-blockhash): Використовується як мітка часу для транзакції.
+- [Масиву інструкцій](/docs/core/transactions#array-of-instructions): Масив інструкцій, які слід виконати.
 
-![Transaction Message](/assets/docs/core/transactions/legacy_message.png)
+![Повідомлення транзакції](/assets/docs/core/transactions/legacy_message.png)
 
-### Transaction Size
+### Розмір транзакції
 
-The Solana network adheres to a maximum transmission unit (MTU) size of 1280
-bytes, consistent with the [IPv6 MTU](https://en.wikipedia.org/wiki/IPv6_packet)
-size constraints to ensure fast and reliable transmission of cluster information
-over UDP. After accounting for the necessary headers (40 bytes for IPv6 and 8
-bytes for the fragment header),
-[1232 bytes remain available for packet data](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/packet.rs#L16-L21),
-such as serialized transactions.
+Мережа Solana дотримується максимального розміру пакета (MTU) у 1280 байт, що відповідає 
+[MTU IPv6](https://en.wikipedia.org/wiki/IPv6_packet). Це забезпечує швидку та надійну передачу інформації у кластері через UDP. Після врахування необхідних заголовків (40 байт для IPv6 та 8 байт для заголовка фрагмента), 
+[1232 байти залишаються для даних пакета](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/src/packet.rs#L16-L21), таких як серіалізовані транзакції.
 
-This means that the total size of a Solana transaction is limited to 1232 bytes.
-The combination of the signatures and the message cannot exceed this limit.
+Це означає, що загальний розмір транзакції Solana обмежений 1232 байтами. Підписи та повідомлення у комбінації не можуть перевищувати цей ліміт.
 
-- Signatures: Each signature requires 64 bytes. The number of signatures can
-  vary, depending on the transaction's requirements.
-- Message: The message includes instructions, accounts, and additional metadata,
-  with each account requiring 32 bytes. The combined size of the accounts plus
-  metadata can vary, depending on the instructions included in the transaction.
+- Підписи: Кожен підпис займає 64 байти. Кількість підписів може варіювати залежно від вимог транзакції.
+- Повідомлення: Повідомлення включає інструкції, облікові записи та додаткові метадані. Кожен обліковий запис займає 32 байти. Загальний розмір облікових записів плюс метадані може варіювати залежно від інструкцій у транзакції.
 
-![Transaction Format](/assets/docs/core/transactions/issues_with_legacy_txs.png)
+![Формат транзакції](/assets/docs/core/transactions/issues_with_legacy_txs.png)
 
-### Message Header
+### Заголовок повідомлення
 
-The
-[message header](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/mod.rs#L96)
-specifies the privileges of accounts included in the transaction's account
-address array. It is comprised of three bytes, each containing a u8 integer,
-which collectively specify:
+[Заголовок повідомлення](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/mod.rs#L96)
+вказує на привілеї облікових записів, включених у масив адрес транзакції. Він складається з трьох байтів, кожен з яких містить ціле число типу u8, що колективно вказує:
 
-1. The number of required signatures for the transaction.
-2. The number of read-only account addresses that require signatures.
-3. The number of read-only account addresses that do not require signatures.
+1. Кількість необхідних підписів для транзакції.
+2. Кількість облікових записів тільки для читання, які потребують підписів.
+3. Кількість облікових записів тільки для читання, які не потребують підписів.
 
-![Message Header](/assets/docs/core/transactions/message_header.png)
+![Заголовок повідомлення](/assets/docs/core/transactions/message_header.png)
 
-### Compact-Array Format
+### Формат компактного масиву
 
-A compact array in the context of a transaction message refers to an array
-serialized in the following format:
+Компактний масив у контексті повідомлення транзакції посилається на масив, серіалізований у наступному форматі:
 
-1. The length of the array, encoded as
+1. Довжина масиву, закодована як
    [compact-u16](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/short_vec.rs).
-2. The individual items of the array listed sequentially after the encoded
-   length.
+2. Окремі елементи масиву, перераховані послідовно після закодованої довжини.
 
-![Compact array format](/assets/docs/core/transactions/compact_array_format.png)
+![Формат компактного масиву](/assets/docs/core/transactions/compact_array_format.png)
 
-This encoding method is used to specify the lengths of both the
-[Account Addresses](/docs/core/transactions#array-of-account-addresses) and
-[Instructions](/docs/core/transactions#array-of-instructions) arrays within a
-transaction message.
+Цей метод кодування використовується для вказівки довжин як 
+[масиву адрес облікових записів](/docs/core/transactions#array-of-account-addresses), так і 
+[масиву інструкцій](/docs/core/transactions#array-of-instructions) у повідомленні транзакції.
 
-### Array of Account Addresses
+### Масив адрес облікових записів
 
-A transaction message includes an array containing all the
-[account addresses](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L119)
-needed for the instructions within the transaction.
+Повідомлення транзакції включає масив, що містить усі 
+[адреси облікових записів](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L119),
+необхідні для інструкцій у транзакції.
 
-This array starts with a
-[compact-u16](/docs/core/transactions#compact-array-format) encoding of the
-number of account addresses, followed by the addresses ordered by the privileges
-for the accounts. The metadata in the message header is used to determine the
-number of accounts in each section.
+Цей масив починається з кодування 
+[compact-u16](/docs/core/transactions#compact-array-format) довжини масиву, після чого йдуть адреси, впорядковані за привілеями облікових записів. Метадані в заголовку повідомлення використовуються для визначення кількості облікових записів у кожному розділі.
 
-- Accounts that are writable and signers
-- Accounts that are read-only and signers
-- Accounts that are writable and not signers
-- Accounts that are read-only and not signers
+- Облікові записи, що є змінюваними та підписантами.
+- Облікові записи тільки для читання, що є підписантами.
+- Облікові записи, що є змінюваними, але не підписантами.
+- Облікові записи тільки для читання, що не є підписантами.
 
-![Compact array of account addresses](/assets/docs/core/transactions/compat_array_of_account_addresses.png)
+![Компактний масив адрес облікових записів](/assets/docs/core/transactions/compat_array_of_account_addresses.png)
 
-### Recent Blockhash
+### Недавній блок-хеш
 
-All transactions include a
-[recent blockhash](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L122)
-to act as a timestamp for the transaction. The blockhash is used to prevent
-duplications and eliminate stale transactions.
+Усі транзакції включають 
+[недавній блок-хеш](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L122),
+який використовується як мітка часу для транзакції. Блок-хеш запобігає дублюванню транзакцій і виключає застарілі транзакції.
 
-The maximum age of a transaction's blockhash is 150 blocks (~1 minute assuming
-400ms block times). If a transaction's blockhash is 150 blocks older than the
-latest blockhash, it is considered expired. This means that transactions not
-processed within a specific timeframe will never be executed.
+Максимальний вік блок-хеша для транзакції становить 150 блоків (~1 хвилина, якщо час блоку складає 400 мс). Якщо блок-хеш транзакції старіший за 150 блоків від останнього блок-хеша, вона вважається протермінованою. Це означає, що транзакції, які не були оброблені вчасно, ніколи не будуть виконані.
 
-You can use the [`getLatestBlockhash`](/docs/rpc/http/getlatestblockhash) RPC
-method to get the current blockhash and last block height at which the blockhash
-will be valid. Here is an example on
+Ви можете скористатися RPC-методом 
+[`getLatestBlockhash`](/docs/rpc/http/getlatestblockhash), 
+щоб отримати поточний блок-хеш і останню висоту блоку, на якій блок-хеш залишатиметься дійсним. Ось приклад у 
 [Solana Playground](https://beta.solpg.io/661a06e1cffcf4b13384d046).
+### Масив інструкцій
 
-### Array of Instructions
-
-A transaction message includes an array of all
-[instructions](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L128)
-requesting to be processed. Instructions within a transaction message are in the
-format of
+Повідомлення транзакції включає масив усіх 
+[інструкцій](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/message/legacy.rs#L128),
+які запитуються для обробки. Інструкції у повідомленні транзакції мають формат
 [CompiledInstruction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/instruction.rs#L633).
 
-Much like the array of account addresses, this compact array starts with a
-[compact-u16](/docs/core/transactions#compact-array-format) encoding of the
-number of instructions, followed by an array of instructions. Each instruction
-in the array specifies the following information:
+Подібно до масиву адрес облікових записів, цей компактний масив починається з кодування 
+[compact-u16](/docs/core/transactions#compact-array-format) кількості інструкцій, після чого йде масив інструкцій. Кожна інструкція в масиві вказує наступну інформацію:
 
-1. **Program ID**: Identifies an on-chain program that will process the
-   instruction. This is represented as an u8 index pointing to an account
-   address within the account addresses array.
-2. **Compact array of account address indexes**: Array of u8 indexes pointing to
-   the account addresses array for each account required by the instruction.
-3. **Compact array of opaque u8 data**: A u8 byte array specific to the program
-   invoked. This data specifies the instruction to invoke on the program along
-   with any additional data that the instruction requires (such as function
-   arguments).
+1. **Program ID**: Ідентифікатор програми в мережі, яка оброблятиме інструкцію. Це представлено у вигляді індексу типу u8, що вказує на адресу програми у масиві адрес облікових записів.
+2. **Компактний масив індексів адрес облікових записів**: Масив індексів типу u8, що вказує на масив адрес облікових записів для кожного облікового запису, потрібного для інструкції.
+3. **Компактний масив байтів даних**: Масив байтів типу u8, специфічний для викликаної програми. Ці дані вказують, яку інструкцію викликати у програмі, разом із будь-якими додатковими даними, потрібними для виконання інструкції (наприклад, аргументами функції).
 
-![Compact array of Instructions](/assets/docs/core/transactions/compact_array_of_ixs.png)
+![Компактний масив інструкцій](/assets/docs/core/transactions/compact_array_of_ixs.png)
 
-### Example Transaction Structure
+### Приклад структури транзакції
 
-Below is an example of the structure of a transaction including a single
-[SOL transfer](/docs/core/transactions#basic-example) instruction. It shows the
-message details including the header, account keys, blockhash, and the
-instructions, along with the signature for the transaction.
+Нижче наведено приклад структури транзакції, яка включає одну інструкцію для 
+[передачі SOL](/docs/core/transactions#basic-example). Тут показано деталі повідомлення, включаючи заголовок, ключі облікових записів, блок-хеш та інструкції, разом із підписом для транзакції.
 
-- `header`: Includes data used to specify the read/write and signer privileges
-  in the `accountKeys` array.
-
-- `accountKeys`: Array including account addresses for all instructions on the
-  transaction.
-
-- `recentBlockhash`: The blockhash included on the transaction when the
-  transaction was created.
-
-- `instructions`: Array including all the instructions on the transaction. Each
-  `account` and `programIdIndex` in an instruction references the `accountKeys`
-  array by index.
-
-- `signatures`: Array including signatures for all accounts required as signers
-  by the instructions on the transaction. A signature is created by signing the
-  transaction message using the corresponding private key for an account.
+- `header`: Містить дані, які використовуються для вказання привілеїв читання/запису та підписання у масиві `accountKeys`.
+- `accountKeys`: Масив, що включає адреси облікових записів для всіх інструкцій у транзакції.
+- `recentBlockhash`: Блок-хеш, включений у транзакцію під час її створення.
+- `instructions`: Масив, що включає всі інструкції у транзакції. Кожен `account` та `programIdIndex` в інструкції посилаються на масив `accountKeys` за індексом.
+- `signatures`: Масив, що включає підписи для всіх облікових записів, потрібних як підписанти для інструкцій у транзакції. Підпис створюється шляхом підписання повідомлення транзакції за допомогою відповідного приватного ключа для облікового запису.
 
 ```json
 "transaction": {
@@ -295,59 +242,46 @@ instructions, along with the signature for the transaction.
     ]
   }
 ```
+## Інструкція
 
-## Instruction
+[Інструкція](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/instruction.rs#L329)
+— це запит на виконання конкретної дії в мережі. Це найменша неподільна одиниця логіки виконання у 
+[програмі](/docs/core/accounts#program-account).
 
-An
-[instruction](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/instruction.rs#L329)
-is a request to process a specific action on-chain and is the smallest
-contiguous unit of execution logic in a
-[program](/docs/core/accounts#program-account).
+При створенні інструкції для додавання до транзакції кожна інструкція повинна включати наступну інформацію:
 
-When building an instruction to add to a transaction, each instruction must
-include the following information:
+- **Адреса програми**: Вказує програму, яку буде викликано.
+- **Облікові записи**: Перелік кожного облікового запису, з якого інструкція читає або до якого пише, включаючи інші програми, за допомогою структури `AccountMeta`.
+- **Дані інструкції**: Масив байтів, що вказує, який 
+  [обробник інструкцій](/docs/terminology#instruction-handler) викликати у програмі, а також будь-які додаткові дані, необхідні обробнику інструкцій (аргументи функції).
 
-- **Program address**: Specifies the program being invoked.
-- **Accounts**: Lists every account the instruction reads from or writes to,
-  including other programs, using the `AccountMeta` struct.
-- **Instruction Data**: A byte array that specifies which
-  [instruction handler](/docs/terminology#instruction-handler) on the program to
-  invoke, plus any additional data required by the instruction handler (function
-  arguments).
-
-![Transaction Instruction](/assets/docs/core/transactions/instruction.svg)
+![Інструкція транзакції](/assets/docs/core/transactions/instruction.svg)
 
 ### AccountMeta
 
-For every account required by an instruction, the following info must be
-specified:
+Для кожного облікового запису, необхідного для інструкції, потрібно вказати наступну інформацію:
 
-- `pubkey`: The on-chain address of an account
-- `is_signer`: Specify if the account is required as a signer on the transaction
-- `is_writable`: Specify if the account data will be modified
+- `pubkey`: Адреса облікового запису в мережі.
+- `is_signer`: Вказує, чи є обліковий запис підписантом у транзакції.
+- `is_writable`: Вказує, чи будуть змінені дані облікового запису.
 
-This information is referred to as the
+Ця інформація називається 
 [AccountMeta](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/instruction.rs#L539).
 
 ![AccountMeta](/assets/docs/core/transactions/accountmeta.svg)
 
-By specifying all accounts required by an instruction, and whether each account
-is writable, transactions can be processed in parallel.
+Завдяки вказанню всіх облікових записів, необхідних для інструкції, і зазначенню, які з них можуть бути змінені, транзакції можуть виконуватися паралельно.
 
-For example, two transactions that do not include any accounts that write to the
-same state can be executed at the same time.
+Наприклад, дві транзакції, які не включають жодних облікових записів, що записують в той самий стан, можуть виконуватися одночасно.
 
-### Example Instruction Structure
+### Приклад структури інструкції
 
-Below is an example of the structure of a
-[SOL transfer](/docs/core/transactions#basic-examples) instruction which details
-the account keys, program ID, and data required by the instruction.
+Нижче наведено приклад структури інструкції для 
+[передачі SOL](/docs/core/transactions#basic-examples), яка деталізує ключі облікових записів, ідентифікатор програми та дані, необхідні для інструкції.
 
-- `keys`: Includes the `AccountMeta` for each account required by an
-  instruction.
-- `programId`: The address of the program which contains the execution logic for
-  the instruction invoked.
-- `data`: The instruction data for the instruction as a buffer of bytes
+- `keys`: Містить `AccountMeta` для кожного облікового запису, необхідного для інструкції.
+- `programId`: Адреса програми, яка містить логіку виконання для викликаної інструкції.
+- `data`: Дані інструкції у вигляді буфера байтів.
 
 ```
 {
@@ -367,17 +301,13 @@ the account keys, program ID, and data required by the instruction.
   "data": [2,0,0,0,128,150,152,0,0,0,0,0]
 }
 ```
+## Розширений приклад
 
-## Expanded Example
+Деталі створення програмних інструкцій часто приховуються клієнтськими бібліотеками. Проте, якщо такої бібліотеки немає, завжди можна вручну створити інструкцію.
 
-The details for building program instructions are often abstracted away by
-client libraries. However, if one is not available, you can always fall back to
-manually building the instruction.
+### Ручна передача SOL
 
-### Manual SOL Transfer
-
-Here is a [Solana Playground](https://beta.solpg.io/656a102efb53fa325bfd0c3f)
-example of how to manually build a SOL transfer instruction:
+Ось приклад на [Solana Playground](https://beta.solpg.io/656a102efb53fa325bfd0c3f), який демонструє, як вручну створити інструкцію для передачі SOL:
 
 ```typescript
 // Define the amount to transfer
@@ -406,10 +336,5 @@ const transferInstruction = new TransactionInstruction({
 // Add the transfer instruction to a new transaction
 const transaction = new Transaction().add(transferInstruction);
 ```
+Під капотом [простий приклад](/docs/core/transactions#simple-sol-transfer) з використанням методу `SystemProgram.transfer` функціонально еквівалентний більш детальному прикладу вище. Метод `SystemProgram.transfer` просто приховує деталі створення буфера даних інструкції та `AccountMeta` для кожного облікового запису, необхідного для інструкції.
 
-Under the hood, the
-[simple example](/docs/core/transactions#simple-sol-transfer) using the
-`SystemProgram.transfer` method is functionally equivalent to the more verbose
-example above. The `SystemProgram.transfer` method simply abstracts away the
-details of creating the instruction data buffer and `AccountMeta` for each
-account required by the instruction.
