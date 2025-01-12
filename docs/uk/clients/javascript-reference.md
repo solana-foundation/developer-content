@@ -8,7 +8,7 @@ description:
 ## Довідник по Web3 API
 
 Бібліотека `@solana/web3.js` забезпечує покриття
-[Solana JSON RPC API](/docs/rpc).
+[Solana JSON RPC API](/docs/uk/rpc).
 
 Повну документацію до бібліотеки `@solana/web3.js` можна знайти
 [тут](https://solana-labs.github.io/solana-web3.js/v1.x/).
@@ -19,7 +19,7 @@ description:
 
 [Документація](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Connection.html)
 
-Об'єкт `Connection` використовується для взаємодії з [Solana JSON RPC](/docs/rpc). Ви можете використовувати Connection для підтвердження транзакцій, отримання інформації про облікові записи тощо.
+Об'єкт `Connection` використовується для взаємодії з [Solana JSON RPC](/docs/uk/rpc). Ви можете використовувати Connection для підтвердження транзакцій, отримання інформації про облікові записи тощо.
 
 Створення підключення здійснюється шляхом вказання URL-адреси RPC-кластера та бажаного рівня зобов'язань. Після цього ви можете використовувати цей об'єкт підключення для взаємодії з будь-яким із API JSON RPC Solana.
 
@@ -381,7 +381,7 @@ await web3.sendAndConfirmTransaction(connection, transaction, [fromPublicKey]);
 
 [Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Message.html)
 
-`Message` використовується як альтернативний спосіб створення транзакцій. Ви можете створити повідомлення за допомогою облікових записів, заголовка, інструкцій та недавнього блочного хеша, які є частиною транзакції. [Transaction](/docs/clients/javascript.md#Transaction) є `Message` плюс список необхідних підписів для виконання транзакції.
+`Message` використовується як альтернативний спосіб створення транзакцій. Ви можете створити повідомлення за допомогою облікових записів, заголовка, інструкцій та недавнього блочного хеша, які є частиною транзакції. [Transaction](/docs/uk/clients/javascript.md#Transaction) є `Message` плюс список необхідних підписів для виконання транзакції.
 
 #### Приклад Використання
 
@@ -472,7 +472,7 @@ export class Fee extends Struct {
 
 [Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Enum.html)
 
-Клас `Enum` використовується для представлення сумісного з Rust енумератора у JavaScript. Енумератор буде представлений як строка при логуванні, але може бути правильно закодований/декодований при використанні разом з [Struct](/docs/clients/javascript.md#Struct). Цей клас сумісний лише з Rust-енумераторами, закодованими за допомогою Borsh.
+Клас `Enum` використовується для представлення сумісного з Rust енумератора у JavaScript. Енумератор буде представлений як строка при логуванні, але може бути правильно закодований/декодований при використанні разом з [Struct](/docs/uk/clients/javascript.md#Struct). Цей клас сумісний лише з Rust-енумераторами, закодованими за допомогою Borsh.
 
 #### Приклад Використання
 
@@ -751,13 +751,13 @@ await web3.sendAndConfirmTransaction(connection, withdrawTransaction, [
 
 `Authorized` — це об'єкт, який використовується під час створення авторизованого облікового запису для стейкінгу в Solana. Ви можете окремо призначити `staker` і `withdrawer`, що дозволяє іншому обліковому запису виводити кошти, ніж той, що виконує стейкінг.
 
-Більше прикладів використання об'єкта `Authorized` ви можете знайти в розділі [`StakeProgram`](/docs/clients/javascript.md#StakeProgram).
+Більше прикладів використання об'єкта `Authorized` ви можете знайти в розділі [`StakeProgram`](/docs/uk/clients/javascript.md#StakeProgram).
 
 ### Lockup
 
 [Документація Джерела](https://solana-labs.github.io/solana-web3.js/v1.x/classes/Lockup.html)
 
-`Lockup` використовується разом із [StakeProgram](/docs/clients/javascript.md#StakeProgram) для створення облікового запису. `Lockup` визначає, як довго стейк буде заблокований або недоступний для вилучення. Якщо `Lockup` встановлений на 0 як для епохи, так і для мітки часу Unix, блокування для облікового запису буде відключено.
+`Lockup` використовується разом із [StakeProgram](/docs/uk/clients/javascript.md#StakeProgram) для створення облікового запису. `Lockup` визначає, як довго стейк буде заблокований або недоступний для вилучення. Якщо `Lockup` встановлений на 0 як для епохи, так і для мітки часу Unix, блокування для облікового запису буде відключено.
 
 #### Приклад Використання
 
@@ -785,5 +785,5 @@ let createStakeAccountInstruction = StakeProgram.createAccount({
 
 Наведений вище код створює `createStakeAccountInstruction`, який використовується для створення облікового запису за допомогою `StakeProgram`. Блокування встановлено на 0 як для епохи, так і для мітки часу Unix, що відключає блокування для облікового запису.
 
-Детальніше див. у розділі [StakeProgram](/docs/clients/javascript.md#StakeProgram).
+Детальніше див. у розділі [StakeProgram](/docs/uk/clients/javascript.md#StakeProgram).
 

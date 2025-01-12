@@ -1,35 +1,35 @@
 ---
-sidebarLabel: Cross Program Invocation
-title: Cross Program Invocation
+sidebarLabel: Крос-програмні виклики
+title: Крос-програмні виклики
 sidebarSortOrder: 5
 description:
-  Learn how to implement Cross Program Invocations (CPIs) in Solana programs
-  using the Anchor framework. This tutorial demonstrates how to transfer SOL
-  between accounts, interact with the System Program, and handle Program Derived
-  Addresses (PDAs) in CPIs. Perfect for developers looking to build composable
-  Solana programs.
+  Дізнайтеся, як реалізувати крос-програмні виклики (CPIs) у програмах Solana
+  за допомогою фреймворку Anchor. У цьому підручнику демонструється, як
+  здійснювати переказ SOL між акаунтами, взаємодіяти з Системною програмою та
+  працювати з адресами, отриманими від програми (PDAs), у CPIs. Ідеально
+  підходить для розробників, які хочуть створювати інтегровані програми Solana.
 ---
 
-In this section, we'll update the CRUD program from the previous PDA section to
-include Cross Program Invocations (CPIs). We'll modify the program to transfer
-SOL between accounts in the `update` and `delete` instructions, demonstrating
-how to interact with other programs (in this case, the System Program) from
-within our program.
+У цьому розділі ми оновимо програму CRUD з попереднього розділу про PDA, щоб
+додати крос-програмні виклики (CPIs). Ми модифікуємо програму, щоб
+забезпечити переказ SOL між акаунтами в інструкціях `update` та `delete`,
+демонструючи, як взаємодіяти з іншими програмами (у цьому випадку з
+Системною програмою) зсередини нашої програми.
 
-The purpose of this section is to walk through the process of implementing CPIs
-in a Solana program using the Anchor framework, building upon the PDA concepts
-we explored in the previous section. For more details, refer to the
-[Cross Program Invocation](/docs/core/cpi) page.
+Метою цього розділу є покрокове пояснення процесу реалізації CPIs у програмі
+Solana за допомогою фреймворку Anchor, спираючись на концепції PDA, які ми
+розглядали в попередньому розділі. Для отримання додаткової інформації
+перейдіть на сторінку [Крос-програмні виклики](/docs/uk/core/cpi).
 
 <Steps>
 
-### Modify Update Instruction
+### Модифікація інструкції Update
 
-First, we'll implement a simple "pay-to-update" mechanism by modifying the
-`Update` struct and `update` function.
+Спочатку ми реалізуємо простий механізм "оплати за оновлення" шляхом
+модифікації структури `Update` та функції `update`.
 
-Begin by updating the `lib.rs` file to bring into scope items from the
-`system_program` module.
+Розпочнемо з оновлення файлу `lib.rs`, щоб включити до області видимості
+елементи з модуля `system_program`.
 
 ```rs filename="lib.rs"
 use anchor_lang::system_program::{transfer, Transfer};
@@ -46,9 +46,7 @@ use anchor_lang::system_program::{transfer, Transfer};
 </AccordionItem>
 </Accordion>
 
-Next, update the `Update` struct to include an additional account called
-`vault_account`. This account, controlled by our program, will receive SOL from
-a user when they update their message account.
+Далі оновіть структуру Update, щоб включити додатковий акаунт під назвою `vault_account`. Цей акаунт, який контролюється нашою програмою, отримуватиме SOL від користувача, коли той оновлює свій акаунт повідомлень.
 
 ```rs filename="lib.rs"
 #[account(
@@ -90,38 +88,38 @@ pub struct Update<'info> {
 
 </AccordionItem>
 <AccordionItem title="Explanation">
+Ми додаємо новий акаунт під назвою `vault_account` до нашої структури `Update`. Цей акаунт служить програмно-контрольованим "сейфом", який буде отримувати SOL від користувачів, коли вони оновлюють свої повідомлення.
 
-We're adding a new account called `vault_account` to our `Update` struct. This
-account serves as a program-controlled "vault" that will receive SOL from users
-when they update their messages.
-
-By using a PDA for the vault, we create a program-controlled account unique to
-each user, enabling us to manage user funds within our program's logic.
+Використовуючи PDA (Program Derived Address) для сейфа, ми створюємо програмно-контрольований акаунт, унікальний для кожного користувача, що дозволяє нам управляти коштами користувачів у межах логіки нашої програми.
 
 ---
 
-Key aspects of the `vault_account`:
+Основні аспекти `vault_account`:
 
-- The address of the account is a PDA derived using seeds
+- **Адреса акаунта**:  
+  Адреса акаунта є PDA, що отримується за допомогою сідів:  
   `[b"vault", user.key().as_ref()]`
-- As a PDA, it has no private key, so only our program can "sign" for the
-  address when performing CPIs
-- As a `SystemAccount` type, it's owned by the System Program like regular
-  wallet accounts
+- **Відсутність приватного ключа**:  
+  Оскільки це PDA, він не має приватного ключа, тому лише наша програма може "підписуватися" за цю адресу під час виконання CPIs.
+- **Тип акаунта**:  
+  Це акаунт типу `SystemAccount`, який належить до Системної програми, як і звичайні гаманці.
 
-This setup allows our program to:
+---
 
-- Generate unique, deterministic addresses for each user's "vault"
-- Control funds without needing a private key to sign for transactions.
+Ця структура дозволяє нашій програмі:
 
-In the `delete` instruction, we'll demonstrate how our program can "sign" for
-this PDA in a CPI.
+- Генерувати унікальні, детерміновані адреси для кожного "сейфа" користувача.
+- Контролювати кошти без необхідності використання приватного ключа для підписання транзакцій.
 
-</AccordionItem>
-</Accordion>
+---
 
-Next, implement the CPI logic in the `update` instruction to transfer 0.001 SOL
-from the user's account to the vault account.
+У інструкції `delete` ми покажемо, як наша програма може "підписуватися" за цей PDA під час CPI.
+
+---
+
+Далі: реалізуйте логіку CPI в інструкції `update`
+
+Реалізуйте логіку CPI для переказу **0.001 SOL** з акаунта користувача на акаунт сейфа.
 
 ```rs filename="lib.rs"
 let transfer_accounts = Transfer {
@@ -160,16 +158,12 @@ transfer(cpi_context, 1_000_000)?;
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-In the `update` instruction, we implement a Cross Program Invocation (CPI) to
-invoke the System Program's `transfer` instruction. This demonstrates how to
-perform a CPI from within our program, enabling the composability of Solana
-programs.
+В інструкції `update` ми реалізуємо виклик між програмами (CPI), щоб викликати інструкцію `transfer` Системної програми. Це демонструє, як виконати CPI у межах нашої програми, забезпечуючи композиційність програм у Solana.
 
-The `Transfer` struct specifies the required accounts for the System Program's
-transfer instruction:
+Структура `Transfer` визначає необхідні акаунти для інструкції `transfer` Системної програми:
 
-- `from` - The user's account (source of funds)
-- `to` - The vault account (destination of funds)
+- `from` - Акаунт користувача (джерело коштів)
+- `to` - Акаунт сейфа (ціль для переказу коштів)
 
   ```rs filename="lib.rs"
   let transfer_accounts = Transfer {
@@ -177,11 +171,10 @@ transfer instruction:
       to: ctx.accounts.vault_account.to_account_info(),
   };
   ```
+`CpiContext` визначає:
 
-The `CpiContext` specifies:
-
-- The program to be invoked (System Program)
-- The accounts required in the CPI (defined in the `Transfer` struct)
+- Програму, яку потрібно викликати (Системна програма)
+- Акаунти, необхідні для CPI (визначені у структурі `Transfer`)
 
   ```rs filename="lib.rs"
   let cpi_context = CpiContext::new(
@@ -190,40 +183,32 @@ The `CpiContext` specifies:
   );
   ```
 
-The `transfer` function then invokes the transfer instruction on the System
-Program, passing in the:
+Функція `transfer` викликає інструкцію переказу у Системній програмі, передаючи:
 
-- The `cpi_context` (program and accounts)
-- The `amount` to transfer (1,000,000 lamports, equivalent to 0.001 SOL)
+- `cpi_context` (програму та акаунти)
+- Суму для переказу (1,000,000 лампортів, що еквівалентно 0.001 SOL)
+
 
   ```rs filename="lib.rs"
   transfer(cpi_context, 1_000_000)?;
   ```
 
 ---
-
-The setup for a CPI matches how client-side instructions are built, where we
-specify the program, accounts, and instruction data for a particular instruction
-to invoke. When our program's `update` instruction is invoked, it internally
-invokes the System Program's transfer instruction.
+Налаштування для CPI відповідає тому, як створюються інструкції на стороні клієнта, де ми вказуємо програму, акаунти та дані інструкції для виклику конкретної інструкції. Коли викликається інструкція `update` нашої програми, вона внутрішньо викликає інструкцію переказу Системної програми.
 
 </AccordionItem>
 </Accordion>
 
-Rebuild the program.
+Перекомпілюйте програму.
 
 ```shell filename="Terminal"
 build
 ```
+### Змініть Інструкцію Delete
 
-### Modify Delete Instruction
+Ми реалізуємо механізм "повернення коштів при видаленні", змінивши структуру `Delete` та функцію `delete`.
 
-We'll now implement a "refund on delete" mechanism by modifying the `Delete`
-struct and `delete` function.
-
-First, update the `Delete` struct to include the `vault_account`. This allows us
-to transfer any SOL in the vault back to the user when they close their message
-account.
+Спершу оновіть структуру `Delete`, додавши до неї `vault_account`. Це дозволить нам переказати всі SOL із сейфа назад користувачеві, коли він закриває свій акаунт повідомлення.
 
 ```rs filename="lib.rs"
 #[account(
@@ -234,8 +219,7 @@ account.
 pub vault_account: SystemAccount<'info>,
 ```
 
-Also add the `system_program` as the CPI for the transfer requires invoking the
-System Program.
+Також додайте `system_program`, оскільки CPI для переказу вимагає виклику Системної програми.
 
 ```rs filename="lib.rs"
 pub system_program: Program<'info, System>,
@@ -270,17 +254,14 @@ pub struct Delete<'info> {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The `vault_account` uses the same PDA derivation as in the Update struct.
+Акаунт `vault_account` використовує той самий PDA, що і в структурі `Update`.
 
-Add the `vault_account` to the Delete struct enables our program to access the
-user's vault account during the delete instruction to transfer any accumulated
-SOL back to the user.
+Додавання `vault_account` до структури `Delete` дозволяє нашій програмі отримати доступ до сейфа користувача під час виконання інструкції видалення, щоб переказати накопичені SOL назад користувачеві.
 
 </AccordionItem>
 </Accordion>
 
-Next, implement the CPI logic in the `delete` instruction to transfer SOL from
-the vault account back to the user's account.
+Далі реалізуйте логіку CPI в інструкції `delete`, щоб переказати SOL із сейфа назад на акаунт користувача.
 
 ```rs filename="lib.rs"
 let user_key = ctx.accounts.user.key();
@@ -298,8 +279,7 @@ let cpi_context = CpiContext::new(
 transfer(cpi_context, ctx.accounts.vault_account.lamports())?;
 ```
 
-Note that we updated `_ctx: Context<Delete>` to `ctx: Context<Delete>` as we'll
-be using the context in the body of the function.
+Зверніть увагу, що ми оновили `_ctx: Context<Delete>` до `ctx: Context<Delete>`, оскільки будемо використовувати контекст у тілі функції.
 
 <Accordion>
 <AccordionItem title="Diff">
@@ -329,24 +309,20 @@ be using the context in the body of the function.
 
 </AccordionItem>
 <AccordionItem title="Explanation">
+В інструкції `delete` ми реалізуємо ще один виклик між програмами (CPI), щоб викликати інструкцію переказу Системної програми. Цей CPI демонструє, як здійснити переказ, який потребує підписувача на основі Program Derived Address (PDA).
 
-In the delete instruction, we implement another Cross Program Invocation (CPI)
-to invoke the System Program's transfer instruction. This CPI demonstrates how
-to make a transfer that requires a Program Derived Address (PDA) signer.
-
-First, we define the signer seeds for the vault PDA:
+Спершу ми визначаємо сіди для підпису PDA сейфа:
 
 ```rs filename="lib.rs"
 let user_key = ctx.accounts.user.key();
 let signer_seeds: &[&[&[u8]]] =
     &[&[b"vault", user_key.as_ref(), &[ctx.bumps.vault_account]]];
 ```
+Структура `Transfer` визначає необхідні акаунти для інструкції переказу Системної програми:
 
-The `Transfer` struct specifies the required accounts for the System Program's
-transfer instruction:
+- `from`: Акаунт сейфа (джерело коштів)
+- `to`: Акаунт користувача (ціль для переказу коштів)
 
-- from: The vault account (source of funds)
-- to: The user's account (destination of funds)
 
   ```rs filename="lib.rs"
   let transfer_accounts = Transfer {
@@ -354,12 +330,11 @@ transfer instruction:
       to: ctx.accounts.user.to_account_info(),
   };
   ```
+`CpiContext` визначає:
 
-The `CpiContext` specifies:
-
-- The program to be invoked (System Program)
-- The accounts involved in the transfer (defined in the Transfer struct)
-- The signer seeds for the PDA
+- Програму, яку потрібно викликати (Системна програма)
+- Акаунти, задіяні у переказі (визначені у структурі `Transfer`)
+- Сіди для підпису PDA
 
   ```rs filename="lib.rs"
   let cpi_context = CpiContext::new(
@@ -367,36 +342,28 @@ The `CpiContext` specifies:
       transfer_accounts,
   ).with_signer(signer_seeds);
   ```
+Функція `transfer` викликає інструкцію переказу в Системній програмі, передаючи:
 
-The transfer function then invokes the transfer instruction on the System
-Program, passing:
-
-- The `cpi_context` (program, accounts, and PDA signer)
-- The amount to transfer (the entire balance of the vault account)
+- `cpi_context` (програму, акаунти та підписувач на основі PDA)
+- Суму для переказу (весь баланс акаунта сейфа)
 
   ```rs filename="lib.rs"
   transfer(cpi_context, ctx.accounts.vault_account.lamports())?;
   ```
-
-This CPI implementation demonstrates how programs can utilize PDAs to manage
-funds. When our program's delete instruction is invoked, it internally calls the
-System Program's transfer instruction, signing for the PDA to authorize the
-transfer of all funds from the vault back to the user.
+Ця реалізація CPI демонструє, як програми можуть використовувати PDA для управління коштами. Коли викликається інструкція `delete` нашої програми, вона внутрішньо викликає інструкцію переказу Системної програми, підписуючи за PDA, щоб авторизувати переказ усіх коштів із сейфа назад користувачеві.
 
 </AccordionItem>
 </Accordion>
 
-Rebuild the program.
+Перекомпілюйте програму.
 
 ```shell filename="Terminal"
 build
 ```
 
-### Redeploy Program
+### Розгортання Програми
 
-After making these changes, we need to redeploy our updated program. This
-ensures that our modified program is available for testing. On Solana, updating
-a program simply requires deploying the compiled program at the same program ID.
+Після внесення цих змін нам потрібно повторно розгорнути оновлену програму. Це забезпечує доступність модифікованої програми для тестування. У Solana оновлення програми вимагає лише розгортання скомпільованої програми за тим самим ідентифікатором програми (program ID).
 
 ```shell filename="Terminal"
 deploy
@@ -414,26 +381,21 @@ Deployment successful. Completed in 17s.
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-Only the upgrade authority of the program can update it. The upgrade authority
-is set when the program is deployed, and it's the only account with permission
-to modify or close the program. If the upgrade authority is revoked, then the
-program becomes immutable and can never be closed or upgraded.
+Лише орган влади оновлення (upgrade authority) програми може її оновити. Орган влади оновлення встановлюється під час розгортання програми, і це єдиний акаунт, який має дозвіл модифікувати або закривати програму. Якщо орган влади оновлення відкликається, програма стає незмінною і її ніколи не можна буде закрити або оновити.
 
-When deploying programs on Solana Playground, your Playground wallet is the
-upgrade authority for all your programs.
+Під час розгортання програм у Solana Playground гаманцем Playground є орган влади оновлення для всіх ваших програм.
 
 </AccordionItem>
 </Accordion>
 
-### Update Test File
+### Оновлення Файлу Тестів
 
-Next, we'll update our `anchor.test.ts` file to include the new vault account in
-our instructions. This requires deriving the vault PDA and including it in our
-update and delete instruction calls.
+Далі ми оновимо наш файл `anchor.test.ts`, щоб включити новий акаунт сейфа у наші інструкції. Це вимагає отримання PDA сейфа та його включення до викликів інструкцій `update` і `delete`.
 
-#### Derive Vault PDA
+#### Отримання PDA Сейфа
 
-First, add the vault PDA derivation:
+Спершу додайте код для отримання PDA сейфа:
+
 
 ```ts filename="anchor.test.ts"
 const [vaultPda, vaultBump] = PublicKey.findProgramAddressSync(
@@ -466,10 +428,9 @@ describe("pda", () => {
 
 </AccordionItem>
 </Accordion>
+#### Зміна Тесту Update
 
-#### Modify Update Test
-
-Then, update the update instruction to include the `vaultAccount`.
+Далі оновіть інструкцію `update`, щоб включити `vaultAccount`.
 
 ```ts filename="anchor.test.ts"  {5}
 const transactionSignature = await program.methods
@@ -497,9 +458,9 @@ const transactionSignature = await program.methods
 </AccordionItem>
 </Accordion>
 
-#### Modify Delete Test
+#### Зміна Тесту Delete
 
-Then, update the delete instruction to include the `vaultAccount`.
+Далі оновіть інструкцію `delete`, щоб включити `vaultAccount`.
 
 ```ts filename="anchor.test.ts"  {5}
 const transactionSignature = await program.methods
@@ -526,11 +487,9 @@ const transactionSignature = await program.methods
 
 </AccordionItem>
 </Accordion>
+### Перезапуск Тестів
 
-### Rerun Test
-
-After making these changes, run the tests to ensure everything is working as
-expected:
+Після внесення цих змін запустіть тести, щоб переконатися, що все працює, як очікувалося:
 
 ```shell filename="Terminal"
 test
@@ -566,43 +525,28 @@ Running tests...
 
 </AccordionItem>
 </Accordion>
-
-You can then inspect the SolanFM links to view the transaction details, where
-you'll find the CPIs for the transfer instructions within the update and delete
-instructions.
+Після цього ви можете переглянути посилання SolanFM, щоб побачити деталі транзакції, де ви знайдете CPI для інструкцій переказу в межах інструкцій `update` і `delete`.
 
 ![Update CPI](/assets/docs/intro/quickstart/cpi-update.png)
 
 ![Delete CPI](/assets/docs/intro/quickstart/cpi-delete.png)
 
-If you encounter any errors, you can reference the
-[final code](https://beta.solpg.io/668304cfcffcf4b13384d20a).
+Якщо ви зіткнулися з помилками, ви можете переглянути [фінальний код](https://beta.solpg.io/668304cfcffcf4b13384d20a).
 
 </Steps>
 
-## Next Steps
+## Наступні Кроки
 
-You've completed the Solana Quickstart guide! You've learned about accounts,
-transactions, PDAs, CPIs, and deployed your own programs.
+Ви завершили посібник з швидкого старту Solana! Ви дізналися про акаунти, транзакції, PDA, CPI та розгорнули власні програми.
 
-Visit the [Core Concepts](/docs/core/accounts) pages for more comprehensive
-explanations of the topics covered in this guide.
+Відвідайте сторінки [Основні Концепції](/docs/uk/core/accounts) для більш детального пояснення тем, розглянутих у цьому посібнику.
 
-Additional learning resources can be found on the
-[Developer Resources](/developers) page.
+Додаткові навчальні матеріали доступні на сторінці [Ресурси для Розробників](/developers).
 
-### Explore More Examples
+### Досліджуйте Більше Прикладів
 
-If you prefer learning by example, check out the
-[Program Examples Repository](https://github.com/solana-developers/program-examples)
-for a variety of example programs.
+Якщо ви віддаєте перевагу навчанню через приклади, перегляньте [Репозиторій з Прикладами Програм](https://github.com/solana-developers/program-examples) для різноманітних прикладів програм.
 
-Solana Playground offers a convenient feature allowing you to import or view
-projects using their GitHub links. For example, open this
-[Solana Playground link](https://beta.solpg.io/https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/anchor)
-to view the Anchor project from this
-[Github repo](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/anchor).
+Solana Playground пропонує зручну функцію, яка дозволяє імпортувати або переглядати проєкти за їх посиланнями на GitHub. Наприклад, відкрийте це [посилання Solana Playground](https://beta.solpg.io/https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/anchor), щоб переглянути Anchor-проєкт із цього [репозиторію GitHub](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/anchor).
 
-Click the `Import` button and enter a project name to add it to your list of
-projects in Solana Playground. Once a project is imported, all changes are
-automatically saved and persisted within the Playground environment.
+Натисніть кнопку `Import` і введіть ім'я проєкту, щоб додати його до свого списку проєктів у Solana Playground. Після імпорту проєкту всі зміни автоматично зберігаються та залишаються у середовищі Playground.

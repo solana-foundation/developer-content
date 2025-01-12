@@ -1,74 +1,46 @@
 ---
-sidebarLabel: Intro to Development
-title: "Getting Started with Solana Development"
-description: "Learn how to get started building on Solana"
+sidebarLabel: Вступ до Розробки
+title: "Початок Розробки на Solana"
+description: "Дізнайтеся, як почати розробляти на Solana"
 sidebarSortOrder: 2
 keywords:
-  - solana basics
-  - tutorial
-  - intro to solana development
-  - blockchain developer
-  - web3 developer
+  - основи solana
+  - посібник
+  - вступ до розробки solana
+  - розробник блокчейну
+  - розробник web3
 ---
 
-Welcome to the Solana developer docs!
+Ласкаво просимо до документації для розробників Solana!
 
-This page has everything you need to know to get started with Solana
-development, including basic requirements, how Solana development works, and the
-tools you'll need to get started.
+На цій сторінці зібрано все, що вам потрібно знати для початку розробки на Solana, включаючи основні вимоги, принципи роботи та інструменти, необхідні для старту.
 
-## High Level Developer Overview
+## Огляд Розробки на Високому Рівні
 
-Development on Solana can be broken down into two main parts:
+Розробку на Solana можна розділити на дві основні частини:
 
-1. **Onchain Program Development**: This is where you create and deploy custom
-   programs directly to the blockchain. Once deployed, anyone who knows how to
-   communicate with them can use them. You can write these programs in Rust, C,
-   or C++. Rust has the most support for onchain program development today.
-2. **Client Development**: This is where you write software (called
-   decentralized applications, or dApps) that communicates with onchain
-   programs. Your apps can submit transactions to perform actions onchain.
-   Client development can be written in any programming language.
+1. **Розробка Програм на Блокчейні**: Тут ви створюєте та розгортаєте користувацькі програми безпосередньо у блокчейні. Після розгортання будь-хто, хто знає, як із ними працювати, може їх використовувати. Ці програми можна писати на Rust, C або C++. Rust наразі має найбільшу підтримку для розробки програм на блокчейні.
+2. **Клієнтська Розробка**: Це створення програмного забезпечення (децентралізованих додатків або dApps), яке взаємодіє з програмами на блокчейні. Ваші додатки можуть надсилати транзакції для виконання дій у блокчейні. Клієнтську розробку можна виконувати на будь-якій мові програмування.
 
-The "glue" between the client side and the onchain side is the
-[Solana JSON RPC API](https://solana.com/docs/rpc). The client-side sends RPC
-requests to the Solana network to interact with onchain programs. This is very
-similar to normal development between a frontend and backend. The major
-difference with working on Solana is that the backend is a global permissionless
-blockchain. This means that anyone can interact with your onchain program
-without the need of issuing API keys or any other form of permission.
+"Зв'язок" між клієнтською та блокчейн-частиною забезпечується [Solana JSON RPC API](https://solana.com/docs/rpc). Клієнтська частина надсилає запити RPC до мережі Solana для взаємодії з програмами на блокчейні. Це дуже схоже на звичайний процес розробки між frontend і backend. Головна відмінність у роботі з Solana — це те, що backend є глобальним блокчейном без дозволів. Це означає, що будь-хто може взаємодіяти з вашою програмою на блокчейні без необхідності видачі API-ключів або будь-яких інших форм дозволів.
 
-![How clients work with the Solana blockchain](/assets/docs/intro/developer_flow.png)
+![Як клієнти працюють із блокчейном Solana](/assets/docs/intro/developer_flow.png)
 
-Solana development is a bit different from other blockchains because of its
-highly composable onchain programs. This means you can build on top of any
-program already deployed, and often you can do so without needing to do any
-custom onchain program development. For example, if you wanted to work with
-tokens, you could use the [Token Program](/docs/core/tokens.md) that is already
-deployed on the network. All development on your application would be
-client-side in your language of choice.
+Розробка на Solana відрізняється від інших блокчейнів завдяки своїм високо-композитним програмам на блокчейні. Це означає, що ви можете будувати на базі вже існуючих програм, часто без необхідності створення власних. Наприклад, якщо ви хочете працювати з токенами, ви можете використовувати [Token Program](/docs/uk/core/tokens.md), який вже розгорнутий у мережі. Уся розробка вашого додатка буде клієнтською, на обраній вами мові програмування.
 
-Developers looking to build on Solana will find that the development stack is
-very similar to any other development stack. The main difference is that you'll
-be working with a blockchain and have to think about how users potentially
-interact with your application onchain instead of just on the frontend.
-Developing on Solana still has CI/CD pipelines, testing, debugging tools, a
-frontend and backend, and anything you'd find in a normal development flow.
+Розробники, які хочуть будувати на Solana, знайдуть, що стек розробки дуже схожий на інші. Основна відмінність у тому, що ви працюєте з блокчейном і повинні враховувати, як користувачі взаємодіють із вашим додатком на блокчейні, а не тільки у frontend. Розробка на Solana все ще включає CI/CD, тестування, інструменти для налагодження, frontend і backend, як і будь-який звичайний процес розробки.
 
-## What You'll Need to Get Started
+## Що Вам Потрібно для Початку
 
-To get started with Solana development, you'll need different tools based on
-whether you are developing for client-side, onchain programs, or both.
+Для початку розробки на Solana вам знадобляться різні інструменти залежно від того, чи ви розробляєте клієнтські додатки, програми на блокчейні або обидва.
 
-### Client-side Development
+### Клієнтська Розробка
 
-If you're developing onchain apps, you should know Rust.
+Якщо ви розробляєте програми на блокчейні, вам потрібно знати Rust.
 
-If you're developing on the client-side, you can work with any programming
-language you're comfortable with. Solana has community-contributed SDKs to help
-developers interact with the Solana network in most popular languages :
+Якщо ж ви розробляєте клієнтські додатки, ви можете працювати на будь-якій мові програмування, з якою вам зручно. Solana має SDK, створені спільнотою, щоб допомогти розробникам взаємодіяти з мережею Solana на більшості популярних мов:
 
-| Language   | SDK                                                                                                      |
+| Мова       | SDK                                                                                                      |
 | ---------- | -------------------------------------------------------------------------------------------------------- |
 | RUST       | [solana_sdk](https://docs.rs/solana-sdk/latest/solana_sdk/)                                              |
 | Typescript | [@solana/web3.js](https://github.com/solana-labs/solana-web3.js)                                         |
@@ -81,115 +53,71 @@ developers interact with the Solana network in most popular languages :
 | C#         | [solnet](https://github.com/bmresearch/Solnet)                                                           |
 | GdScript   | [godot](https://github.com/Virus-Axel/godot-solana-sdk/)                                                 |
 
-You'll also need a connection with an RPC to interact with the network. You can
-either work with a [RPC infrastructure provider](https://solana.com/rpc) or
-[run your own RPC node](https://docs.anza.xyz/operations/setup-an-rpc-node).
+Вам також знадобиться підключення до RPC для взаємодії з мережею. Ви можете скористатися [провайдером RPC](https://solana.com/rpc) або [запустити власний RPC-вузол](https://docs.anza.xyz/operations/setup-an-rpc-node).
 
-To quickly get started with a front-end for your application, you can generate a
-customizable Solana scaffold by typing the following into your CLI:
+Щоб швидко розпочати роботу з фронтендом для вашого додатка, ви можете згенерувати налаштовуваний каркас Solana, ввівши наступну команду у ваш CLI:
 
 ```bash
 npx create-solana-dapp <project-name>
 ```
 
-This will create a new project with all the necessary files and basic
-configuration to get started building on Solana. The scaffold will include both
-an example frontend and an onchain program template (if you selected one). You
-can read the
-[`create-solana-dapp` docs](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp)
-to learn more.
+Ця команда створить новий проєкт із усіма необхідними файлами та базовою конфігурацією для початку розробки на Solana. Каркас включатиме як приклад фронтенда, так і шаблон програми на блокчейні (якщо ви його обрали). Ви можете ознайомитися з [документацією `create-solana-dapp`](https://github.com/solana-developers/create-solana-dapp?tab=readme-ov-file#create-solana-dapp), щоб дізнатися більше.
 
-### Onchain Program Development
+### Розробка Програм на Блокчейні
 
-Onchain program development consists of either writing programs in Rust, C, or
-C++. First you'll need to make sure you have Rust installed on your machine. You
-can do this with the following command:
+Розробка програм на блокчейні включає написання програм на Rust, C або C++. Спочатку переконайтеся, що у вас встановлений Rust. Ви можете зробити це за допомогою наступної команди:
 
 ```bash
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-You'll then need to have the [Solana CLI installed](/docs/intro/installation.md)
-to compile and deploy your programs. You can install the Solana CLI by running
-the following command:
+Вам також потрібно встановити [Solana CLI](/docs/uk/intro/installation.md), щоб компілювати та розгортати ваші програми. Ви можете встановити Solana CLI, виконавши наступну команду:
+
 
 ```bash
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
-Using the Solana CLI, it is recommended to run a local validator for testing
-your program. To run a local validator after installing the Solana CLI, run the
-following command:
+Використовуючи Solana CLI, рекомендується запускати локальний валідатор для тестування вашої програми. Щоб запустити локальний валідатор після встановлення Solana CLI, виконайте наступну команду:
+
 
 ```bash
 solana-test-validator
 ```
 
-This will start a local validator on your machine that you can use to test your
-programs. You can
-[read more about local development in this guide](/docs/intro/installation.md).
+Це запустить локальний валідатор на вашій машині, який ви можете використовувати для тестування ваших програм. Ви можете [докладніше прочитати про локальну розробку в цьому посібнику](/docs/uk/intro/installation.md).
 
-When building onchain programs, you have a choice to either build with native
-Rust (ie, without a framework) or use the Anchor framework. Anchor is a
-framework that makes it easier to build on Solana by providing a higher-level
-API for developers. Think of Anchor like building with React for your websites
-instead of raw Javascript and HTML. While Javascript and HTML give you more
-control over your website, React accelerates your development and makes
-developing easy. You can read more about [Anchor](https://www.anchor-lang.com/)
-on their website.
+Під час розробки програм на блокчейні ви можете вибрати між написанням програм на чистому Rust (без фреймворку) або використанням фреймворку Anchor. Anchor спрощує розробку на Solana, надаючи високорівневий API для розробників. Подумайте про Anchor як про використання React для створення вебсайтів замість чистого Javascript і HTML. Хоча Javascript і HTML дають вам більше контролю, React прискорює розробку та робить її простішою. Докладніше про [Anchor](https://www.anchor-lang.com/) можна дізнатися на їхньому сайті.
 
-You'll need a way to test your program. There are a few different ways to test
-your program based on your language preference:
+Вам знадобиться спосіб тестування вашої програми. Ось кілька способів тестування залежно від ваших уподобань щодо мови програмування:
 
-- [solana-program-test](https://docs.rs/solana-program-test/latest/solana_program_test/) -
-  Testing framework built in Rust
-- [solana-bankrun](https://kevinheavey.github.io/solana-bankrun/) - Testing
-  framework built for writing Typescript tests
-- [bankrun](https://kevinheavey.github.io/solders/tutorials/bankrun.html) -
-  Testing framework built for writing Python tests
+- [solana-program-test](https://docs.rs/solana-program-test/latest/solana_program_test/) — фреймворк для тестування, написаний на Rust.
+- [solana-bankrun](https://kevinheavey.github.io/solana-bankrun/) — фреймворк для тестування, написаний для тестів на Typescript.
+- [bankrun](https://kevinheavey.github.io/solders/tutorials/bankrun.html) — фреймворк для тестування, написаний для тестів на Python.
 
-If you do not want to develop your programs locally, there's also the
-[online IDE Solana Playground](https://beta.solpg.io). Solana Playground allows
-you to write, test, and deploy programs on Solana. You can get started with
-Solana Playground by [following our quick start guide](/docs/intro/quick-start).
+Якщо ви не хочете розробляти програми локально, існує також [онлайн IDE Solana Playground](https://beta.solpg.io). Solana Playground дозволяє писати, тестувати та розгортати програми на Solana. Ви можете розпочати роботу з Solana Playground, [слідувавши нашому посібнику швидкого старту](/docs/uk/intro/quick-start).
 
-### Developer Environments
+### Середовища Розробки
 
-Choosing the right environment based on your work is very important. On Solana,
-there are a few different network environments (called clusters) to facilitate
-mature testing and CI/CD practices:
+Вибір правильного середовища залежно від вашої роботи дуже важливий. У Solana є кілька середовищ (кластерів) для забезпечення якісного тестування та CI/CD практик:
 
-- **Mainnet Beta**: The production network where all the action happens.
-  Transactions cost real money here.
-- **Devnet**: The quality assurance network where you deploy your programs to
-  test before deploying to production. Think "staging environment".
-- **Local**: The local network that you run on your machine using
-  `solana-test-validator` to test your programs. This should be your first
-  choice when developing programs.
+- **Mainnet Beta**: Продуктивна мережа, де відбувається вся дія. Транзакції тут коштують реальних грошей.
+- **Devnet**: Мережа для забезпечення якості, де ви розгортаєте ваші програми для тестування перед розгортанням у продуктивне середовище. Це як "середовище для постановки".
+- **Local**: Локальна мережа, яку ви запускаєте на своїй машині за допомогою `solana-test-validator` для тестування ваших програм. Це має бути вашим першим вибором під час розробки.
 
-## Build by Example
+## Побудова на Основі Прикладів
 
-While you get started building on Solana, there's a few more resources available
-to help accelerate your journey:
+Під час початку розробки на Solana є кілька ресурсів, які допоможуть прискорити ваш шлях:
 
-- [Solana Cookbook](https://solana.com/developers/cookbook): A collection of
-  references and code snippets to help you build on Solana.
-- [Solana Program Examples](https://github.com/solana-developers/program-examples):
-  A repository of example programs providing building blocks for different
-  actions on your programs.
-- [Guides](https://solana.com/developers/guides): Tutorials and guides to walk
-  you through building on Solana.
+- [Solana Cookbook](https://solana.com/developers/cookbook): Збірка довідників і фрагментів коду для допомоги у розробці на Solana.
+- [Приклади Програм Solana](https://github.com/solana-developers/program-examples): Репозиторій прикладів програм, що надають будівельні блоки для різних дій у ваших програмах.
+- [Посібники](https://solana.com/developers/guides): Посібники та інструкції, які проведуть вас через процес розробки на Solana.
 
-## Getting Support
+## Отримання Підтримки
 
-The best support you can find is on
-[Solana StackExchange](https://solana.stackexchange.com/). Search for your
-question there first - there's a good chance there will already be a question
-asked by someone else, with an answer. If it's not there, add a new question!
-Remember to include as much detail as you can in your question, and please use
-text (not screenshots) to show error messages, so other people with the same
-problem can find your question!
+Найкращу підтримку ви можете знайти на [Solana StackExchange](https://solana.stackexchange.com/). Спочатку пошукайте своє питання там — є велика ймовірність, що вже існує схоже питання з відповіддю. Якщо його там немає, додайте нове питання! Не забудьте включити якомога більше деталей у ваше питання, і, будь ласка, використовуйте текст (а не скріншоти) для відображення повідомлень про помилки, щоб інші люди з такою ж проблемою могли знайти ваше питання!
 
-## Next steps
+## Наступні кроки
 
-[You're now ready to get started building on Solana!](/docs/intro/quick-start)
+[Тепер ви готові почати створювати на Solana!](/docs/uk/intro/quick-start)
+

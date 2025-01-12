@@ -4,11 +4,11 @@ title: "Версійні Транзакції"
 description:
   "Дослідіть основні концепції Solana: транзакції, версійні транзакції, розширення функціональності в Solana Runtime, таблиці пошуку адрес та інше."
 altRoutes:
-  - /docs/core/transactions/versions
+  - /docs/uk/core/transactions/versions
 ---
 
 Версійні Транзакції - це новий формат транзакцій, який дозволяє додаткову функціональність у Solana Runtime, включаючи
-[Таблиці пошуку адрес](/docs/advanced/lookup-tables.md).
+[Таблиці пошуку адрес](/docs/uk/advanced/lookup-tables.md).
 
 Хоча зміни в ончейн-програмах **НЕ** потрібні для підтримки нової функціональності версійних транзакцій (або для зворотної сумісності), розробники **ПОВИННІ** оновити клієнтський код, щоб уникнути
 [помилок через різні версії транзакцій](#max-supported-transaction-version).
@@ -19,14 +19,14 @@ Solana Runtime підтримує дві версії транзакцій:
 
 - `legacy` - старий формат транзакцій без додаткових переваг
 - `0` - додає підтримку
-  [Таблиць пошуку адрес](/docs/advanced/lookup-tables.md)
+  [Таблиць пошуку адрес](/docs/uk/advanced/lookup-tables.md)
 
 ## Максимально підтримувана версія транзакцій
 
 Усі RPC-запити, які повертають транзакцію, **_повинні_** вказувати найвищу версію транзакцій, яку вони підтримують у своїй програмі, використовуючи параметр
 `maxSupportedTransactionVersion`, включаючи
-[`getBlock`](/docs/rpc/http/getBlock.mdx) та
-[`getTransaction`](/docs/rpc/http/getTransaction.mdx).
+[`getBlock`](/docs/uk/rpc/http/getBlock.mdx) та
+[`getTransaction`](/docs/uk/rpc/http/getTransaction.mdx).
 
 RPC-запит завершиться невдачею, якщо буде повернута версійна транзакція, яка має версію вище встановленої `maxSupportedTransactionVersion`. (наприклад, якщо повертається транзакція версії `0`, а встановлено `legacy`)
 
@@ -152,7 +152,7 @@ console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
 ## Додаткові ресурси
 
 - Використання
-  [версійних транзакцій для таблиць пошуку адрес](/docs/advanced/lookup-tables.md#how-to-create-an-address-lookup-table)
+  [версійних транзакцій для таблиць пошуку адрес](/docs/uk/advanced/lookup-tables.md#how-to-create-an-address-lookup-table)
 - Перегляд
   [прикладу транзакції v0](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
   на Solana Explorer

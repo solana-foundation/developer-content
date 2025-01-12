@@ -16,7 +16,7 @@ Rust пакети для Solana
 
 - [Створіть і розгорніть вашу першу програму Solana, використовуючи тільки ваш браузер](/content/guides/getstarted/hello-world-in-your-browser.md).
   Інсталяція не потрібна.
-- [Налаштуйте ваше локальне середовище](/docs/intro/installation) і використовуйте локальний тестовий валідатор.
+- [Налаштуйте ваше локальне середовище](/docs/uk/intro/installation) і використовуйте локальний тестовий валідатор.
 
 </Callout>
 
@@ -33,7 +33,7 @@ Rust пакети для Solana
   що не працюють у мережі, імпортують цей пакет.
 
 - [`solana-client`] &mdash; Для взаємодії з вузлом Solana через
-  [JSON RPC API](/docs/rpc).
+  [JSON RPC API](/docs/uk/rpc).
 
 - [`solana-cli-config`] &mdash; Завантаження та збереження конфігураційного файлу Solana CLI.
 

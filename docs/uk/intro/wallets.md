@@ -1,69 +1,35 @@
 ---
-sidebarLabel: Wallets
-title: Solana Wallet Guide
+sidebarLabel: Гаманці
+title: Посібник із Гаманців Solana
 sidebarSortOrder: 3
 ---
 
-This document describes the different wallet options that are available to users
-of Solana who want to be able to send, receive and interact with SOL tokens on
-the Solana blockchain.
+Цей документ описує різні варіанти гаманців, доступних користувачам Solana, які хочуть надсилати, отримувати та взаємодіяти з токенами SOL у блокчейні Solana.
 
-## What is a Wallet?
+## Що таке Гаманець?
 
-A crypto wallet is a device or application that stores a collection of keys and
-can be used to send, receive, and track ownership of cryptocurrencies. Wallets
-can take many forms. A wallet might be a directory or file in your computer's
-file system, a piece of paper, or a specialized device called a _hardware
-wallet_. There are also various smartphone apps and computer programs that
-provide a user-friendly way to create and manage wallets.
+Криптогаманець — це пристрій або програма, яка зберігає набір ключів і може використовуватися для надсилання, отримання та відстеження володіння криптовалютами. Гаманці можуть мати різні форми. Гаманець може бути каталогом або файлом у файловій системі вашого комп’ютера, аркушем паперу або спеціалізованим пристроєм, який називається _апаратний гаманець_. Також існують різні програми для смартфонів і комп’ютерів, які надають зручний спосіб створення та управління гаманцями.
 
 ### Keypair
 
-A [_keypair_](/docs/terminology.md#keypair) is a securely generated
-[_secret key_](#secret-key) and its cryptographically-derived
-[_public key_](#public-key). A secret key and its corresponding public key are
-together known as a _keypair_. A wallet contains a collection of one or more
-keypairs and provides some means to interact with them.
+[_Keypair_](/docs/uk/terminology.md#keypair) — це безпечно згенерований [_секретний ключ_](#secret-key) і його криптографічно виведений [_публічний ключ_](#public-key). Секретний ключ та його відповідний публічний ключ разом називаються _ключовою парою_. Гаманець містить колекцію однієї або кількох ключових пар і надає засоби для взаємодії з ними.
 
-### Public key
+### Публічний ключ
 
-The [_public key_](/docs/terminology.md#public-key-pubkey) (commonly shortened
-to _pubkey_) is known as the wallet's _receiving address_ or simply its
-_address_. The wallet address **may be shared and displayed freely**. When
-another party is going to send some amount of cryptocurrency to a wallet, they
-need to know the wallet's receiving address. Depending on a blockchain's
-implementation, the address can also be used to view certain information about a
-wallet, such as viewing the balance, but has no ability to change anything about
-the wallet or withdraw any tokens.
+[_Публічний ключ_](/docs/uk/terminology.md#public-key-pubkey) (часто скорочується до _pubkey_) відомий як _адреса для отримання_ гаманця або просто його _адреса_. Адресу гаманця **можна вільно передавати та показувати**. Коли інша сторона збирається надіслати певну кількість криптовалюти на гаманець, їй потрібно знати адресу для отримання. Залежно від реалізації блокчейну, адреса також може використовуватися для перегляду певної інформації про гаманець, наприклад, балансу, але вона не дозволяє змінювати гаманець або знімати з нього токени.
 
-### Secret key
+### Секретний ключ
 
-The [_secret key_](/docs/terminology.md#private-key) (also referred to as
-_private key_) is required to digitally sign any transactions to send
-cryptocurrencies to another address or to make any changes to the wallet. The
-secret key **must never be shared**. If someone gains access to the secret key
-to a wallet, they can withdraw all the tokens it contains. If the secret key for
-a wallet is lost, any tokens that have been sent to that wallet's address are
-**permanently lost**.
+[_Секретний ключ_](/docs/uk/terminology.md#private-key) (також називається _приватним ключем_) потрібен для цифрового підпису будь-яких транзакцій для відправлення криптовалюти на іншу адресу або внесення змін до гаманця. Секретний ключ **ніколи не повинен бути переданий іншим**. Якщо хтось отримає доступ до секретного ключа гаманця, він може зняти всі токени, які він містить. Якщо секретний ключ гаманця втрачено, будь-які токени, відправлені на адресу цього гаманця, **назавжди втрачені**.
 
-## Security
+## Безпека
 
-Different wallet solutions offer different approaches to keypair security,
-interacting with the keypair, and signing transactions to use/spend the tokens.
-Some are easier to use than others. Some store and back up secret keys more
-securely. Solana supports multiple types of wallets so you can choose the right
-balance of security and convenience.
+Різні рішення для гаманців пропонують різні підходи до безпеки ключової пари, взаємодії з нею та підписання транзакцій для використання/витрачання токенів. Деякі є простішими у використанні, ніж інші. Деякі забезпечують більш безпечне зберігання та резервне копіювання секретних ключів. Solana підтримує кілька типів гаманців, тому ви можете обрати правильний баланс між безпекою та зручністю.
 
-**If you want to be able to receive SOL tokens on the Solana blockchain, you
-first will need to create a wallet.**
+**Якщо ви хочете отримувати токени SOL у блокчейні Solana, вам спочатку потрібно створити гаманець.**
 
-## Supported Wallets
+## Підтримувані Гаманці
 
-Several browser and mobile app based wallets support Solana. Find some options
-that might be right for you on the [Solana Wallets](https://solana.com/wallets)
-page.
+Кілька гаманців на основі браузера та мобільних додатків підтримують Solana. Знайдіть варіанти, які можуть підійти вам, на сторінці [Solana Wallets](https://solana.com/wallets).
 
-For advanced users or developers, the
-[command-line wallets](https://docs.anza.xyz/cli/wallets) may be more
-appropriate, as new features on the Solana blockchain will always be supported
-on the command line first before being integrated into third-party solutions.
+Для досвідчених користувачів або розробників більше підходять [гаманці командного рядка](https://docs.anza.xyz/cli/wallets), оскільки нові функції в блокчейні Solana завжди спочатку підтримуються в командному рядку, перш ніж бути інтегрованими у сторонні рішення.

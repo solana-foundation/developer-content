@@ -64,7 +64,7 @@ description:
 [Програма Токенів](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program) 
 містить всю логіку інструкцій для взаємодії з токенами в мережі (як
 взаємозамінними, так і невзаємозамінними). Усі токени на Solana фактично є 
-[даними облікових записів](/docs/core/accounts.md#data-account), якими володіє Програма Токенів.
+[даними облікових записів](/docs/uk/core/accounts.md#data-account), якими володіє Програма Токенів.
 
 Повний список інструкцій Програми Токенів можна знайти 
 [тут](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/instruction.rs).
@@ -174,7 +174,7 @@ pub struct Account {
 > Зверніть увагу, що дані кожного Токен-облікового запису містять поле `owner`, яке
 > використовується для визначення того, хто має авторитет над цим Токен-обліковим записом. 
 > Це окремо від власника програми, зазначеного у
-> [AccountInfo](/docs/core/accounts.md#accountinfo), яким є Програма Токенів для всіх 
+> [AccountInfo](/docs/uk/core/accounts.md#accountinfo), яким є Програма Токенів для всіх 
 > Токен-облікових записів.
 
 ### Асоційований токен-обліковий запис
@@ -193,7 +193,7 @@ pub struct Account {
 ![Асоційований токен-обліковий запис](/assets/docs/core/tokens/associated-token-account.svg)
 
 Це вводить ключове поняття в розробці Solana:
-[Програмно Виведена Адреса (PDA)](/docs/core/pda.md). Концептуально PDA надає
+[Програмно Виведена Адреса (PDA)](/docs/uk/core/pda.md). Концептуально PDA надає
 детермінований спосіб генерації адреси з використанням заздалегідь визначених
 вхідних даних. Це дозволяє нам легко знайти адресу облікового запису в майбутньому.
 
@@ -374,7 +374,7 @@ Signature: 44vqKdfzspT592REDPY4goaRJH3uJ3Ce13G4BCuUHg35dVUbHuGTHvqn4ZjYF9BGe9Qrj
 [Solana Playground](https://beta.solpg.io/660ce868cffcf4b13384d011).
 
 Програма Асоційованих Токенів використовує 
-[Перехресні Виклики Програм (CPI)](/docs/core/cpi.md) для виконання наступного:
+[Перехресні Виклики Програм (CPI)](/docs/uk/core/cpi.md) для виконання наступного:
 
 - [Виклик Системної Програми](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/associated-token-account/program/src/tools/account.rs#L19)
   для створення нового облікового запису, використовуючи надану PDA як адресу

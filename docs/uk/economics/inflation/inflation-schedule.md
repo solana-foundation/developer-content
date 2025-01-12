@@ -2,8 +2,8 @@
 sidebarLabel: Запропонований Графік Інфляції
 title: Запропонований Графік Інфляції
 altRoutes:
-  - /docs/economics/inflation/inflation_schedule
-  - /docs/intro/economics
+  - /docs/uk/economics/inflation/inflation_schedule
+  - /docs/uk/intro/economics
 ---
 
 Як було зазначено вище, _Графік Інфляції_ мережі унікально описується трьома параметрами: _Початкова Ставка Інфляції_, _Ставка Дезінфляції_ та _Довгострокова Ставка Інфляції_. При розгляді цих значень слід враховувати багато факторів:

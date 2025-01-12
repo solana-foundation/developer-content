@@ -1,118 +1,92 @@
 ---
-sidebarLabel: Quick Start
-title: Solana Quick Start Guide
+sidebarLabel: Швидкий Старт
+title: Посібник з Швидкого Старту Solana
 sidebarSortOrder: 0
 description:
-  Learn Solana development basics. Create your first program, understand
-  accounts, send transactions, and explore PDAs and CPIs using Solana Playground
-  - no installation required.
+  Вивчіть основи розробки на Solana. Створіть свою першу програму, дізнайтеся
+  про акаунти, надсилайте транзакції та досліджуйте PDA та CPI за допомогою
+  Solana Playground – без необхідності встановлення.
 ---
 
-Welcome to the Solana Quick Start Guide! This hands-on guide will introduce you
-to the core concepts for building on Solana, regardless of your prior
-experience. By the end of this tutorial, you'll have a basic foundation in
-Solana development and be ready to explore more advanced topics.
+Ласкаво просимо до посібника з швидкого старту Solana! Цей практичний посібник ознайомить вас із ключовими концепціями створення програм на Solana, незалежно від вашого попереднього досвіду. Після завершення цього уроку у вас буде базове розуміння розробки на Solana, і ви зможете досліджувати більш складні теми.
 
-## What You'll Learn
+## Чого Ви Навчитеся
 
-In this tutorial, you'll learn about:
+У цьому уроці ви дізнаєтеся про:
 
-- Understanding Accounts: Explore how data is stored on the Solana network.
-- Sending Transactions: Learn to interact with the Solana network by sending
-  transactions.
-- Building and Deploying Programs: Create your first Solana program and deploy
-  it to the network.
-- Program Derived Addresses (PDAs): Learn how to use PDAs to create
-  deterministic addresses for accounts.
-- Cross-Program Invocations (CPIs): Learn how to make your programs interact
-  with other programs on Solana.
+- **Розуміння акаунтів**: Дослідження зберігання даних у мережі Solana.
+- **Надсилання транзакцій**: Взаємодія з мережею Solana шляхом надсилання транзакцій.
+- **Створення та розгортання програм**: Створіть свою першу програму Solana та розгорніть її в мережі.
+- **Program Derived Addresses (PDA)**: Як використовувати PDA для створення детермінованих адрес акаунтів.
+- **Cross-Program Invocations (CPI)**: Як зробити так, щоб ваші програми взаємодіяли з іншими програмами на Solana.
 
-The best part? You don't need to install anything! We'll be using Solana
-Playground, a browser-based development environment, for all our examples. This
-means you can follow along, copy and paste code, and see results immediately,
-all from your web browser. Basic programming knowledge is helpful but not
-required.
+Найкраще те, що вам нічого не потрібно встановлювати! Ми будемо використовувати Solana Playground, браузерне середовище розробки, для всіх наших прикладів. Це означає, що ви можете слідувати урокам, копіювати та вставляти код і одразу бачити результати прямо у вашому браузері. Базові знання програмування бажані, але не обов’язкові.
 
-Let's dive in and start building on Solana!
+Давайте почнемо будувати на Solana!
 
 ## Solana Playground
 
-Solana Playground (Solpg) is a browser-based development environment that allows
-you to quickly develop, deploy, and test Solana programs!
+Solana Playground (Solpg) – це браузерне середовище розробки, яке дозволяє швидко розробляти, розгортати та тестувати програми Solana!
 
-Open a new tab in your web browser and navigate to https://beta.solpg.io/.
+Відкрийте нову вкладку у своєму браузері та перейдіть на [https://beta.solpg.io/](https://beta.solpg.io/).
 
 <Steps>
 
-### Create Playground Wallet
+### Створення Гаманця Playground
 
-If you're new to Solana Playground, the first step is to create your Playground
-Wallet. This wallet will allow you to interact with the Solana network right
-from your browser.
+Якщо ви новачок у Solana Playground, першим кроком буде створення гаманця Playground. Цей гаманець дозволить вам взаємодіяти з мережею Solana безпосередньо з вашого браузера.
 
-#### Step 1. Connect to Playground
+#### Крок 1. Підключіться до Playground
 
-Click the "Not connected" button at the bottom left of the screen.
+Натисніть кнопку "Not connected" у нижньому лівому куті екрана.
 
 ![Not Connected](/assets/docs/intro/quickstart/pg-not-connected.png)
 
-#### Step 2. Create Your Wallet
+#### Крок 2. Створіть Свій Гаманець
 
-You'll see an option to save your wallet's keypair. Optionally, save your
-wallet's keypair for backup and then click "Continue".
+Вам буде запропоновано зберегти ключову пару вашого гаманця. За бажанням збережіть ключову пару для резервної копії, а потім натисніть "Continue".
 
 ![Create Playground Wallet](/assets/docs/intro/quickstart/pg-create-wallet.png)
 
-You should now see your wallet's address, SOL balance, and connected cluster
-(devnet by default) at the bottom of the window.
+Тепер ви повинні побачити адресу вашого гаманця, баланс SOL і підключений кластер (за замовчуванням devnet) у нижній частині вікна.
 
 ![Connected](/assets/docs/intro/quickstart/pg-connected.png)
 
 <Callout>
-  Your Playground Wallet will be saved in your browser's local storage. Clearing
-  your browser cache will remove your saved wallet.
+  Ваш гаманець Playground зберігається у локальному сховищі вашого браузера. Очистка кешу браузера видалить ваш збережений гаманець.
 </Callout>
 
-Some definitions you may find helpful:
+Декілька корисних визначень:
 
-- _wallet address_: a unique identifier for a digital wallet, used to send or
-  receive crypto assets on a blockchain. Each wallet address is a string of
-  alphanumeric characters that represents a specific destination on the network.
-  Think of it like an email address or bank account number—if someone wants to
-  send you cryptocurrency, they need your wallet address to direct the funds.
-- _connected cluster_: a set of network nodes that work together to maintain a
-  synchronized copy of the blockchain. These clusters are essential for
-  providing a decentralized, distributed ledger and powering the Solana network
-  by validating transactions, securing the chain, and executing programs (smart
-  contracts).
+- **_адреса гаманця_**: Унікальний ідентифікатор цифрового гаманця, який використовується для надсилання або отримання криптоактивів у блокчейні. Це схоже на електронну адресу чи номер банківського рахунку – щоб хтось надіслав вам криптовалюту, йому потрібна ваша адреса гаманця.
+- **_підключений кластер_**: Набір вузлів мережі, які працюють разом, щоб підтримувати синхронізовану копію блокчейна. Кластери важливі для надання децентралізованого розподіленого реєстру, перевірки транзакцій, забезпечення безпеки ланцюга та виконання програм (смарт-контрактів).
 
-### Get Devnet SOL
+### Отримання Devnet SOL
 
-Before we start building, we first need some devnet SOL.
+Перед тим як почати розробку, нам потрібен devnet SOL.
 
-From a developer's perspective, SOL is required for two main use cases:
+З точки зору розробника, SOL потрібен для двох основних цілей:
 
-- To create accounts where we can store data or deploy programs
-- To pay for transaction fees when we interact with the network
+- Для створення акаунтів, де можна зберігати дані або розгортати програми
+- Для сплати комісій за транзакції під час взаємодії з мережею
 
-Below are two methods to fund your wallet with devnet SOL:
+Нижче наведено два способи поповнити ваш гаманець devnet SOL:
 
-#### Option 1: Using the Playground Terminal
+#### Варіант 1: Використання Терміналу Playground
 
-To fund your Playground wallet with devnet SOL. In the Playground terminal, run:
+Щоб поповнити ваш гаманець Playground devnet SOL, виконайте у терміналі Playground команду: 
+
 
 ```shell filename="Terminal"
 solana airdrop 5
 ```
 
-#### Option 2: Using the Devnet Faucet
+#### Варіант 2: Використання Devnet Faucet
 
-If the airdrop command doesn't work (due to rate limits or errors), you can use
-the [Web Faucet](https://faucet.solana.com/).
+Якщо команда airdrop не працює (через обмеження або помилки), скористайтеся [Web Faucet](https://faucet.solana.com/).
 
-- Enter your wallet address (found at the bottom of the Playground screen) and
-  select an amount
-- Click "Confirm Airdrop" to receive your devnet SOL
+- Введіть адресу свого гаманця (знаходиться в нижній частині екрана Playground) і виберіть суму
+- Натисніть "Confirm Airdrop", щоб отримати ваш devnet SOL
 
 ![Faucet Airdrop](/assets/docs/intro/quickstart/faucet-airdrop.gif)
 

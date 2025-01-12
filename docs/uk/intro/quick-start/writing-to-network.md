@@ -1,34 +1,26 @@
 ---
-sidebarLabel: Writing to Network
-title: Writing to Network
+sidebarLabel: Запис у Мережу
+title: Запис у Мережу
 sidebarSortOrder: 2
 description:
-  Learn how to interact with the Solana network by sending transactions and
-  instructions. Follow step-by-step examples to transfer SOL tokens and create
-  new tokens using the System Program and Token Extensions Program.
+  Дізнайтеся, як взаємодіяти з мережею Solana шляхом надсилання транзакцій та
+  інструкцій. Слідуйте покроковим прикладам для переказу токенів SOL та створення
+  нових токенів за допомогою System Program та Token Extensions Program.
 ---
 
-Now that we've explored reading from the Solana network, let's learn how to
-write data to it. On Solana, we interact with the network by sending
-transactions made up of instructions. These instructions are defined by
-programs, which contain the business logic for how accounts should be updated.
+Тепер, коли ми розглянули зчитування даних із мережі Solana, давайте навчимося записувати дані до неї. У Solana взаємодія з мережею здійснюється шляхом надсилання транзакцій, що складаються з інструкцій. Ці інструкції визначаються програмами, які містять бізнес-логіку про те, як мають оновлюватися акаунти.
 
-Let's walk through two common operations, transferring SOL and creating a token,
-to demonstrate how to build and send transactions. For more details, refer to
-the [Transactions and Instructions](/docs/core/transactions) and
-[Fees on Solana](/docs/core/fees) pages.
+Розглянемо два поширені операції, переказ SOL і створення токена, щоб продемонструвати, як створювати і надсилати транзакції. Для отримання додаткової інформації відвідайте сторінки [Транзакції та Інструкції](/docs/uk/core/transactions) і [Комісії у Solana](/docs/uk/core/fees).
 
-## Transfer SOL
+## Переказ SOL
 
-We'll start with a simple SOL transfer from your wallet to another account. This
-requires invoking the transfer instruction on the System Program.
+Почнемо із простої операції переказу SOL з вашого гаманця на інший акаунт. Це вимагає виклику інструкції переказу у System Program.
 
 <Steps>
 
-### Open Example 1
+### Відкриття Прикладу 1
 
-Click this [link](https://beta.solpg.io/6671d85ecffcf4b13384d19e) to open the
-example in Solana Playground. You'll see this code:
+Натисніть це [посилання](https://beta.solpg.io/6671d85ecffcf4b13384d19e), щоб відкрити приклад у Solana Playground. Ви побачите такий код:
 
 ```ts filename="client.ts"
 import {
@@ -65,21 +57,21 @@ console.log(
 <Accordion>
 <AccordionItem title="Explanation">
 
-This script does the following:
+Цей скрипт виконує наступні дії:
 
-- Set your Playground wallet as the sender
+- Встановлює ваш гаманець Playground як відправника:
 
   ```ts
   const sender = pg.wallet.keypair;
   ```
 
-- Creates a new keypair as the receiver
+- Створює нову ключову пару як отримувача:
 
   ```ts
   const receiver = new Keypair();
   ```
 
-- Constructs a transfer instruction to transfer 0.01 SOL
+- Створює інструкцію переказу для переказу 0.01 SOL:
 
   ```ts
   const transferInstruction = SystemProgram.transfer({
@@ -89,13 +81,13 @@ This script does the following:
   });
   ```
 
-- Builds a transaction including the transfer instruction
+- Формує транзакцію, включаючи інструкцію переказу:
 
   ```ts
   const transaction = new Transaction().add(transferInstruction);
   ```
 
-- Sends and confirms the transaction
+- Відправляє та підтверджує транзакцію:
 
   ```ts
   const transactionSignature = await sendAndConfirmTransaction(
@@ -105,8 +97,7 @@ This script does the following:
   );
   ```
 
-- Prints out a link to the SolanaFM explorer in the Playground terminal to view
-  the transaction details
+- Виводить посилання на SolanaFM у термінал Playground для перегляду деталей транзакції.
 
   ```ts
   console.log(
@@ -118,16 +109,16 @@ This script does the following:
 </AccordionItem>
 </Accordion>
 
-### Run Example 1
+### Запуск Прикладу 1
 
-Run the code using the `run` command.
+Запустіть код, виконавши команду `run`.
+
 
 ```shell filename="Terminal"
 run
 ```
 
-Click on the output link to view the transaction details on the SolanaFM
-explorer.
+Натисніть на посилання у виведених даних, щоб переглянути деталі транзакції у SolanaFM Explorer.
 
 <Accordion>
 <AccordionItem title="Output">
@@ -143,26 +134,22 @@ Running client...
 
 ![Transfer SOL](/assets/docs/intro/quickstart/transfer-sol.png)
 
-You've just sent your first transaction on Solana! Notice how we created an
-instruction, added it to a transaction, and then sent that transaction to the
-network. This is the basic process for building any transaction.
+Ви щойно надіслали свою першу транзакцію у Solana! Зверніть увагу, як ми створили інструкцію, додали її до транзакції, а потім відправили цю транзакцію до мережі. Це базовий процес для створення будь-якої транзакції.
 
 </Steps>
 
-## Create a Token
+## Створення Токена
 
-Now, let's create a new token by creating and initializing a Mint account. This
-requires two instructions:
+Тепер створимо новий токен шляхом створення та ініціалізації акаунта Mint. Для цього потрібні дві інструкції:
 
-- Invoke the System Program to create a new account
-- Invoke the Token Extensions Program to initialize the account data
+- Виклик System Program для створення нового акаунта.
+- Виклик Token Extensions Program для ініціалізації даних акаунта.
 
 <Steps>
 
-### Open Example 2
+### Відкриття Прикладу 2
 
-Click this [link](https://beta.solpg.io/6671da4dcffcf4b13384d19f) to open the
-example in Solana Playground. You'll see the following code:
+Натисніть це [посилання](https://beta.solpg.io/6671da4dcffcf4b13384d19f), щоб відкрити приклад у Solana Playground. Ви побачите наступний код:
 
 ```ts filename="client.ts"
 import {
@@ -236,30 +223,27 @@ console.log(
 <Accordion>
 <AccordionItem title="Explanation">
 
-This script performs the following steps:
+Цей скрипт виконує наступні кроки:
 
-- Sets up your Playground wallet and a connection to the Solana devnet
-
+- Налаштовує ваш гаманець Playground і з'єднання з devnet Solana:
   ```ts
   const wallet = pg.wallet;
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   ```
 
-- Generates a new keypair for the mint account
+- Генерує нову ключову пару для акаунта mint:
 
   ```ts
   const mint = new Keypair();
   ```
 
-- Calculates the minimum lamports needed for a Mint account
+- Розраховує мінімальну кількість лампортів, необхідну для акаунта Mint:
 
   ```ts
   const rentLamports = await getMinimumBalanceForRentExemptMint(connection);
   ```
 
-- Creates an instruction to create a new account for the mint, specifying the
-  Token Extensions program (`TOKEN_2022_PROGRAM_ID`) as the owner of the new
-  account
+- Створює інструкцію для створення нового акаунта mint, вказуючи програму Token Extensions (TOKEN_2022_PROGRAM_ID) як власника нового акаунта:
 
   ```ts
   const createAccountInstruction = SystemProgram.createAccount({
@@ -271,7 +255,7 @@ This script performs the following steps:
   });
   ```
 
-- Creates an instruction to initialize the mint account data
+- Створює інструкцію для ініціалізації даних акаунта mint:
 
   ```ts
   const initializeMintInstruction = createInitializeMint2Instruction(
@@ -283,7 +267,7 @@ This script performs the following steps:
   );
   ```
 
-- Adds both instructions to a single transaction
+- Додає обидві інструкції до однієї транзакції:
 
   ```ts
   const transaction = new Transaction().add(
@@ -292,10 +276,7 @@ This script performs the following steps:
   );
   ```
 
-- Sends and confirms the transaction. Both the wallet and mint keypair are
-  passed in as signers on the transaction. The wallet is required to pay for the
-  creation of the new account. The mint keypair is required because we are using
-  its publickey as the address of the new account.
+- Відправляє та підтверджує транзакцію. Гаманець і ключова пара mint передаються як підписувачі транзакції. Гаманець потрібен для оплати створення нового акаунта, а ключова пара mint потрібна, оскільки її публічний ключ використовується як адреса нового акаунта:
 
   ```ts
   const transactionSignature = await sendAndConfirmTransaction(
@@ -305,7 +286,7 @@ This script performs the following steps:
   );
   ```
 
-- Prints out links to view the transaction and mint account details on SolanaFM
+- Виводить посилання для перегляду транзакції та деталей акаунта mint на SolanaFM:
 
   ```ts
   console.log(
@@ -322,21 +303,20 @@ This script performs the following steps:
 </AccordionItem>
 </Accordion>
 
-### Run Example 2
+### Запуск Прикладу 2
 
-Run the code using the `run` command.
+Запустіть код, виконавши команду `run`.
 
 ```shell filename="Terminal"
 run
 ```
 
-You'll see two links printed to the Playground terminal:
+Ви побачите два посилання, виведених у термінал Playground:
 
-- One for the transaction details
-- One for the newly created mint account
+- Одне для деталей транзакції
+- Інше для новоствореного акаунта mint
 
-Click the links to inspect the transaction details and the newly created mint
-account on SolanaFM.
+Натисніть на посилання, щоб переглянути деталі транзакції та новостворений акаунт mint у SolanaFM.
 
 <Accordion>
 <AccordionItem title="Output">
@@ -357,9 +337,6 @@ Mint Account: https://solana.fm/address/CoZ3Nz488rmATDhy1hPk5fvwSZaipCngvf8rYBYV
 
 ![Mint Account](/assets/docs/intro/quickstart/mint-account.png)
 
-Notice how we built a transaction with multiple instructions this time. We first
-created a new account and then initialized its data as a mint. This is how you
-build more complex transactions that involve instructions from multiple
-programs.
+Зверніть увагу, як цього разу ми створили транзакцію з кількома інструкціями. Спочатку ми створили новий акаунт, а потім ініціалізували його дані як mint. Таким чином створюються складніші транзакції, які включають інструкції з кількох програм.
 
 </Steps>

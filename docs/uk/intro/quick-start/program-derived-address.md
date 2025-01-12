@@ -1,41 +1,31 @@
 ---
 sidebarLabel: Program Derived Address
-title: Program Derived Address
+title: Програма Derived Address
 sidebarSortOrder: 4
 description:
-  Learn how to build a CRUD (Create, Read, Update, Delete) Solana program using
-  Program Derived Addresses (PDAs) and the Anchor framework. This step-by-step
-  guide demonstrates how to create, update, and delete on-chain message accounts
-  using PDAs, implement account validation, and write tests. Perfect for
-  developers looking to understand how to use PDAs in Solana programs.
+  Дізнайтеся, як створити CRUD (Create, Read, Update, Delete) програму Solana,
+  використовуючи Program Derived Addresses (PDAs) і фреймворк Anchor. Цей
+  покроковий посібник демонструє, як створювати, оновлювати та видаляти акаунти
+  повідомлень у блокчейні за допомогою PDAs, реалізувати валідацію акаунтів і
+  писати тести. Ідеально для розробників, які хочуть зрозуміти, як
+  використовувати PDAs у програмах Solana.
 ---
 
-In this section, we'll walk through how to build a basic CRUD (Create, Read,
-Update, Delete) program. The program will store a user's message using a Program
-Derived Address (PDA) as the account's address.
+У цьому розділі ми розглянемо, як створити базову CRUD (Create, Read, Update, Delete) програму. Програма зберігатиме повідомлення користувача, використовуючи Program Derived Address (PDA) як адресу акаунта.
 
-The purpose of this section is to guide you through the steps for building and
-testing a Solana program using the Anchor framework and demonstrating how to use
-PDAs within a program. For more details, refer to the
-[Programs Derived Address](/docs/core/pda) page.
+Мета цього розділу – провести вас через етапи створення і тестування програми Solana, використовуючи фреймворк Anchor, і показати, як використовувати PDA у програмі. Для отримання додаткової інформації відвідайте сторінку [Programs Derived Address](/docs/uk/core/pda).
 
-For reference, here is the
-[final code](https://beta.solpg.io/668304cfcffcf4b13384d20a) after completing
-both the PDA and CPI sections.
+Для довідки ось [фінальний код](https://beta.solpg.io/668304cfcffcf4b13384d20a), завершений після розгляду розділів PDA і CPI.
 
 <Steps>
 
-### Starter Code
+### Стартовий Код
 
-Begin by opening this
-[Solana Playground link](https://beta.solpg.io/66734b7bcffcf4b13384d1ad) with
-the starter code. Then click the "Import" button, which will add the program to
-your list of projects on Solana Playground.
+Почніть, відкривши це [посилання на Solana Playground](https://beta.solpg.io/66734b7bcffcf4b13384d1ad) зі стартовим кодом. Потім натисніть кнопку "Import", щоб додати програму до вашого списку проєктів у Solana Playground.
 
 ![Import](/assets/docs/intro/quickstart/pg-import.png)
 
-In the `lib.rs` file, you'll find a program scaffolded with the `create`,
-`update`, and `delete` instructions we'll implement in the following steps.
+У файлі `lib.rs` ви знайдете шаблон програми з інструкціями `create`, `update` і `delete`, які ми реалізуємо на наступних етапах.
 
 ```rs filename="lib.rs"
 use anchor_lang::prelude::*;
@@ -71,9 +61,7 @@ pub struct Delete {}
 #[account]
 pub struct MessageAccount {}
 ```
-
-Before we begin, run `build` in the Playground terminal to check the starter
-program builds successfully.
+Перед початком виконайте команду `build` у терміналі Playground, щоб переконатися, що стартова програма успішно компілюється.
 
 ```shell filename="Terminal"
 build
@@ -91,12 +79,11 @@ Build successful. Completed in 3.50s.
 </AccordionItem>
 </Accordion>
 
-### Define Message Account Type
+### Визначення Типу Акаунта Повідомлення
 
-First, let's define the structure for the message account that our program will
-create. This is the data that we'll store in the account created by the program.
+Спочатку визначимо структуру акаунта повідомлення, який створюватиме наша програма. Це дані, які ми зберігатимемо в акаунті, створеному програмою.
 
-In `lib.rs`, update the `MessageAccount` struct with the following:
+У файлі `lib.rs` оновіть структуру `MessageAccount` наступним кодом:
 
 ```rs filename="lib.rs"
 #[account]
@@ -125,43 +112,33 @@ pub struct MessageAccount {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The `#[account]` macro in an Anchor program is used to annotate structs that
-represent account data (data type to store in the AccountInfo's data field).
+Макрос `#[account]` у програмі Anchor використовується для позначення структур, які представляють дані акаунта (тип даних, що зберігається у полі даних `AccountInfo`).
 
-In this example, we're defining a `MessageAccount` struct to store a message
-created by users that contains three fields:
+У цьому прикладі ми визначаємо структуру `MessageAccount` для зберігання повідомлення, створеного користувачами, яка містить три поля:
 
-- `user` - A Pubkey representing the user who created the message account.
-- `message` - A String containing the user's message.
-- `bump` - A u8 storing the ["bump" seed](/docs/core/pda#canonical-bump) used in
-  deriving the program derived address (PDA). Storing this value saves compute
-  by eliminating the need to rederive it for each use in subsequent
-  instructions. When an account is created, the `MessageAccount` data will be
-  serialized and stored in the new account's data field.
+- `user` — `Pubkey`, який представляє користувача, що створив акаунт повідомлення.
+- `message` — `String`, який містить повідомлення користувача.
+- `bump` — `u8`, що зберігає ["bump" seed](/docs/uk/core/pda#canonical-bump), використаний для отримання адреси, створеної програмою (PDA). Зберігання цього значення економить обчислювальні ресурси, оскільки усуває необхідність повторного обчислення для кожного використання в наступних інструкціях.
 
-Later, when reading from the account, this data can be deserialized back into
-the `MessageAccount` data type. The process of creating and reading the account
-data will be demonstrated in the testing section.
+Коли акаунт створюється, дані `MessageAccount` будуть серіалізовані та збережені у полі даних нового акаунта.
+
+Пізніше, під час читання з акаунта, ці дані можна буде десеріалізувати назад у тип даних `MessageAccount`. Процес створення та читання даних акаунта буде продемонстровано у розділі тестування.
 
 </AccordionItem>
 </Accordion>
 
-Build the program again by running `build` in the terminal.
+Скомпілюйте програму знову, виконавши команду `build` у терміналі.
 
 ```shell filename="Terminal"
 build
 ```
+Ми визначили, як виглядатиме наш акаунт повідомлення. Далі ми реалізуємо інструкції програми.
 
-We've defined what our message account will look like. Next, we'll implement the
-program instructions.
+### Реалізація Інструкції Create
 
-### Implement Create Instruction
+Тепер реалізуємо інструкцію `create` для створення та ініціалізації `MessageAccount`.
 
-Now, let's implement the `create` instruction to create and initialize the
-`MessageAccount`.
-
-Start by defining the accounts required for the instruction by updating the
-`Create` struct with the following:
+Почніть із визначення акаунтів, необхідних для цієї інструкції, оновивши структуру `Create` наступним кодом:
 
 ```rs filename="lib.rs"
 #[derive(Accounts)]
@@ -209,81 +186,62 @@ pub struct Create<'info> {
 
 </AccordionItem>
 <AccordionItem title="Explanation">
+Макрос `#[derive(Accounts)]` у програмі Anchor використовується для позначення структур, які представляють список акаунтів, необхідних для інструкції, де кожне поле в структурі є акаунтом.
 
-The `#[derive(Accounts)]` macro in an Anchor program is used to annotate structs
-that represent a list of accounts required by an instruction where each field in
-the struct is an account.
+Кожен акаунт (поле) у структурі позначається типом акаунта (наприклад, `Signer<'info>`) і може бути додатково позначений обмеженнями (наприклад, `#[account(mut)]`). Тип акаунта разом із обмеженнями акаунта використовуються для виконання перевірок безпеки акаунтів, переданих до інструкції.
 
-Each account (field) in the struct is annotated with an account type (ex.
-`Signer<'info>`) and can be further annotated with constraints (ex.
-`#[account(mut)]`). The account type along with account constraints are used to
-perform security checks on the accounts passed to the instruction.
-
-The naming of each field is only for our understanding and has no effect on
-account validation, however, it is recommended to use descriptive account names.
+Назви кожного поля використовуються лише для нашого розуміння і не впливають на валідацію акаунтів, однак рекомендується використовувати описові імена акаунтів.
 
 ---
 
-The `Create` struct defines the accounts required for the `create` instruction.
+Структура `Create` визначає акаунти, необхідні для інструкції `create`.
 
 1. `user: Signer<'info>`
 
-   - Represents the user creating the message account
-   - Marked as mutable (`#[account(mut)]`) as it pays for the new account
-   - Must be a signer to approve the transaction, as lamports are deducted from
-     the account
+   - Представляє користувача, який створює акаунт повідомлення.
+   - Позначений як змінний (`#[account(mut)]`), оскільки оплачує створення нового акаунта.
+   - Повинен бути підписувачем, щоб підтвердити транзакцію, оскільки лампорти будуть списані з акаунта.
 
 2. `message_account: Account<'info, MessageAccount>`
 
-   - The new account created to store the user's message
-   - `init` constraint indicates the account will be created in the instruction
-   - `seeds` and `bump` constraints indicate the address of the account is a
-     Program Derived Address (PDA)
-   - `payer = user` specifies the account paying for the creation of the new
-     account
-   - `space` specifies the number of bytes allocated to the new account's data
-     field
+   - Новий акаунт, створений для зберігання повідомлення користувача.
+   - Обмеження `init` вказує, що акаунт буде створено в інструкції.
+   - Обмеження `seeds` і `bump` вказують, що адреса акаунта є Program Derived Address (PDA).
+   - `payer = user` вказує акаунт, який оплачує створення нового акаунта.
+   - `space` вказує кількість байтів, виділених для поля даних нового акаунта.
 
 3. `system_program: Program<'info, System>`
 
-   - Required for creating new accounts
-   - Under the hood, the `init` constraint invokes the System Program to create
-     a new account allocated with the specified `space` and reassigns the
-     program owner to the current program.
+   - Необхідна для створення нових акаунтів.
+   - На рівні механіки обмеження `init` викликає Системну програму для створення нового акаунта з виділенням вказаного `space` та переназначає власника програми на поточну програму.
 
 ---
 
-The `#[instruction(message: String)]` annotation enables the `Create` struct to
-access the `message` parameter from the `create` instruction.
+Анотація `#[instruction(message: String)]` дозволяє структурі `Create` отримувати доступ до параметра `message` з інструкції `create`.
 
 ---
 
-The `seeds` and `bump` constraints are used together to specify that an
-account's address is a Program Derived Address (PDA).
+Обмеження `seeds` і `bump` використовуються разом для вказівки, що адреса акаунта є Program Derived Address (PDA).
 
 ```rs filename="lib.rs"
 seeds = [b"message", user.key().as_ref()],
 bump,
 ```
+Обмеження `seeds` визначає необов’язкові вхідні значення, які використовуються для отримання PDA:
 
-The `seeds` constraint defines the optional inputs used to derive the PDA.
+- `b"message"` — Жорстко закодований рядок як перше значення seed.
+- `user.key().as_ref()` — Публічний ключ акаунта `user` як друге значення seed.
 
-- `b"message"` - A hardcoded string as the first seed.
-- `user.key().as_ref()` - The public key of the `user` account as the second
-  seed.
-
-The `bump` constraint tells Anchor to automatically find and use the correct
-bump seed. Anchor will use the `seeds` and `bump` to derive the PDA.
+Обмеження `bump` вказує Anchor автоматично знайти та використовувати правильний bump seed. Anchor використовує `seeds` і `bump` для отримання PDA.
 
 ---
 
-The `space` calculation (8 + 32 + 4 + message.len() + 1) allocates space for
-`MessageAccount` data type:
+Розрахунок `space` (8 + 32 + 4 + message.len() + 1) виділяє простір для даних типу `MessageAccount`:
 
-- Anchor Account discriminator (identifier): 8 bytes
-- User Address (Pubkey): 32 bytes
-- User Message (String): 4 bytes for length + variable message length
-- PDA Bump seed (u8): 1 byte
+- Дискримінатор акаунта Anchor (ідентифікатор): 8 байтів
+- Адреса користувача (Pubkey): 32 байти
+- Повідомлення користувача (String): 4 байти для довжини + змінна довжина повідомлення
+- Bump seed для PDA (u8): 1 байт
 
 ```rs filename="lib.rs"
 #[account]
@@ -293,19 +251,14 @@ pub struct MessageAccount {
     pub bump: u8,
 }
 ```
+Усі акаунти, створені за допомогою програми Anchor, вимагають 8 байтів для дискримінатора акаунта, який є ідентифікатором типу акаунта і генерується автоматично під час створення акаунта.
 
-All accounts created through an Anchor program require 8 bytes for an account
-discriminator, which is an identifier for the account type that is automatically
-generated when the account is created.
-
-A `String` type requires 4 bytes to store the length of the string, and the
-remaining length is the actual data.
+Тип `String` вимагає 4 байти для зберігання довжини рядка, а решта — це фактичні дані.
 
 </AccordionItem>
 </Accordion>
 
-Next, implement the business logic for the `create` instruction by updating the
-`create` function with the following:
+Далі реалізуйте бізнес-логіку для інструкції `create`, оновивши функцію `create` наступним кодом:
 
 ```rs filename="lib.rs"
 pub fn create(ctx: Context<Create>, message: String) -> Result<()> {
@@ -339,43 +292,37 @@ pub fn create(ctx: Context<Create>, message: String) -> Result<()> {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The `create` function implements the logic for initializing a new message
-account's data. It takes two parameters:
+Функція `create` реалізує логіку для ініціалізації даних нового акаунта повідомлення. Вона приймає два параметри:
 
-1. `ctx: Context<Create>` - Provides access to the accounts specified in the
-   `Create` struct.
-2. `message: String` - The user's message to be stored.
+1. `ctx: Context<Create>` — Надає доступ до акаунтів, зазначених у структурі `Create`.
+2. `message: String` — Повідомлення користувача, яке буде збережено.
 
-The body of the function then performs the following logic:
+Тіло функції виконує наступну логіку:
 
-1. Print a message to program logs using the `msg!()` macro.
+1. Виводить повідомлення у журнали програми за допомогою макроса `msg!()`.
 
    ```rs
    msg!("Create Message: {}", message);
    ```
+2. Ініціалізація Даних Акаунта:
 
-2. Initializing Account Data:
-
-   - Accesses the `message_account` from the context.
-
+   - Отримує доступ до `message_account` з контексту.
+   
    ```rs
    let account_data = &mut ctx.accounts.message_account;
    ```
-
-   - Sets the `user` field to the public key of the `user` account.
-
+   - Встановлює поле `user` як публічний ключ акаунта `user`.
+   
    ```rs
    account_data.user = ctx.accounts.user.key();
    ```
 
-   - Sets the `message` field to the `message` from the function argument.
+   - Встановлює поле `message` значенням аргумента `message` функції.
 
    ```rs
    account_data.message = message;
    ```
-
-   - Sets the `bump` value used to derive the PDA, retrieved from
-     `ctx.bumps.message_account`.
+   - Встановлює значення `bump`, використане для отримання PDA, отримане з `ctx.bumps.message_account`.
 
    ```rs
    account_data.bump = ctx.bumps.message_account;
@@ -384,21 +331,18 @@ The body of the function then performs the following logic:
 </AccordionItem>
 </Accordion>
 
-Rebuild the program.
+Перекомпілюйте програму.
 
 ```shell filename="Terminal"
 build
 ```
+### Реалізація Інструкції Update
 
-### Implement Update Instruction
+Далі реалізуйте інструкцію `update` для оновлення `MessageAccount` новим повідомленням.
 
-Next, implement the `update` instruction to update the `MessageAccount` with a
-new message.
+Як і раніше, першим кроком є визначення акаунтів, необхідних для інструкції `update`.
 
-Just as before, the first step is to specify the accounts required by the
-`update` instruction.
-
-Update the `Update` struct with the following:
+Оновіть структуру `Update` наступним кодом:
 
 ```rs filename="lib.rs"
 #[derive(Accounts)]
@@ -448,42 +392,38 @@ pub struct Update<'info> {
 
 </AccordionItem>
 <AccordionItem title="Explanation">
-
-The `Update` struct defines the accounts required for the `update` instruction.
+Структура `Update` визначає акаунти, необхідні для інструкції `update`.
 
 1. `user: Signer<'info>`
 
-   - Represents the user updating the message account
-   - Marked as mutable (`#[account(mut)]`) as it may pay for additional space
-     for the `message_account` if needed
-   - Must be a signer to approve the transaction
+   - Представляє користувача, який оновлює акаунт повідомлення.
+   - Позначений як змінний (`#[account(mut)]`), оскільки може оплачувати додатковий простір для `message_account`, якщо це необхідно.
+   - Повинен бути підписувачем для підтвердження транзакції.
 
 2. `message_account: Account<'info, MessageAccount>`
 
-   - The existing account storing the user's message that will be updated
-   - `mut` constraint indicates this account's data will be modified
-   - `realloc` constraint allows for resizing the account's data
-   - `seeds` and `bump` constraints ensure the account is the correct PDA
+   - Існуючий акаунт, який зберігає повідомлення користувача і буде оновлений.
+   - Обмеження `mut` вказує, що дані цього акаунта будуть змінені.
+   - Обмеження `realloc` дозволяє змінювати розмір даних акаунта.
+   - Обмеження `seeds` і `bump` гарантують, що акаунт є правильним PDA.
 
 3. `system_program: Program<'info, System>`
-   - Required for potential reallocation of account space
-   - The `realloc` constraint invokes the System Program to adjust the account's
-     data size
+
+   - Необхідна для можливої зміни розміру простору акаунта.
+   - Обмеження `realloc` викликає Системну програму для налаштування розміру даних акаунта.
 
 ---
 
-Note that the `bump = message_account.bump` constraint uses the bump seed stored
-on the `message_account`, rather than having Anchor recalculate it.
+Зверніть увагу, що обмеження `bump = message_account.bump` використовує bump seed, який зберігається в `message_account`, замість того, щоб Anchor обчислював його знову.
 
 ---
 
-`#[instruction(message: String)]` annotation enables the `Update` struct to
-access the `message` parameter from the `update` instruction.
+Анотація `#[instruction(message: String)]` дозволяє структурі `Update` отримувати доступ до параметра `message` з інструкції `update`.
 
 </AccordionItem>
 </Accordion>
 
-Next, implement the logic for the `update` instruction.
+Далі реалізуйте логіку для інструкції `update`.
 
 ```rs filename="lib.rs"
 pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
@@ -512,36 +452,32 @@ pub fn update(ctx: Context<Update>, message: String) -> Result<()> {
 
 </AccordionItem>
 <AccordionItem title="Explanation">
+Функція `update` реалізує логіку для модифікації існуючого акаунта повідомлення. Вона приймає два параметри:
 
-The `update` function implements the logic for modifying an existing message
-account. It takes two parameters:
+1. `ctx: Context<Update>` — Надає доступ до акаунтів, зазначених у структурі `Update`.
+2. `message: String` — Нове повідомлення, яке замінить існуюче.
 
-1. `ctx: Context<Update>` - Provides access to the accounts specified in the
-   `Update` struct.
-2. `message: String` - The new message to replace the existing one.
+Тіло функції виконує такі дії:
 
-The body of the function then:
+1. Виводить повідомлення у журнали програми за допомогою макроса `msg!()`.
 
-1. Print a message to program logs using the `msg!()` macro.
-
-2. Updates Account Data:
-   - Accesses the `message_account` from the context.
-   - Sets the `message` field to the new `message` from the function argument.
+2. Оновлює Дані Акаунта:
+   - Отримує доступ до `message_account` з контексту.
+   - Встановлює поле `message` як нове значення `message` із аргумента функції.
 
 </AccordionItem>
 </Accordion>
 
-Rebuild the program
+Перекомпілюйте програму.
 
 ```shell filename="Terminal"
 build
 ```
+### Реалізація Інструкції Delete
 
-### Implement Delete Instruction
+Далі реалізуйте інструкцію `delete` для закриття `MessageAccount`.
 
-Next, implement the `delete` instruction to close the `MessageAccount`.
-
-Update the `Delete` struct with the following:
+Оновіть структуру `Delete` наступним кодом:
 
 ```rs filename="lib.rs"
 #[derive(Accounts)]
@@ -584,28 +520,25 @@ pub struct Delete<'info> {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The `Delete` struct defines the accounts required for the `delete` instruction:
+Структура `Delete` визначає акаунти, необхідні для інструкції `delete`:
 
 1. `user: Signer<'info>`
 
-   - Represents the user closing the message account
-   - Marked as mutable (`#[account(mut)]`) as it will receive the lamports from
-     the closed account
-   - Must be a signer to ensure only the correct user can close their message
-     account
+   - Представляє користувача, який закриває акаунт повідомлення.
+   - Позначений як змінний (`#[account(mut)]`), оскільки він отримуватиме лампорти з закритого акаунта.
+   - Повинен бути підписувачем, щоб гарантувати, що тільки відповідний користувач може закрити свій акаунт повідомлення.
 
 2. `message_account: Account<'info, MessageAccount>`
 
-   - The account being closed
-   - `mut` constraint indicates this account will be modified
-   - `seeds` and `bump` constraints ensure the account is the correct PDA
-   - `close = user` constraint specifies that this account will be closed and
-     its lamports transferred to the `user` account
+   - Акаунт, який буде закритий.
+   - Обмеження `mut` вказує, що цей акаунт буде змінено.
+   - Обмеження `seeds` і `bump` гарантують, що акаунт є правильним PDA.
+   - Обмеження `close = user` вказує, що цей акаунт буде закритий, а його лампорти передані в акаунт `user`.
 
 </AccordionItem>
 </Accordion>
 
-Next, implement the logic for the `delete` instruction.
+Далі реалізуйте логіку для інструкції `delete`.
 
 ```rs filename="lib.rs"
 pub fn delete(_ctx: Context<Delete>) -> Result<()> {
@@ -631,30 +564,24 @@ pub fn delete(_ctx: Context<Delete>) -> Result<()> {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The `delete` function takes one parameter:
+Функція `delete` приймає один параметр:
 
-1. `_ctx: Context<Delete>` - Provides access to the accounts specified in the
-   `Delete` struct. The `_ctx` syntax indicates we won't be using the Context in
-   the body of the function.
+1. `_ctx: Context<Delete>` — Надає доступ до акаунтів, зазначених у структурі `Delete`. Використання `_ctx` вказує, що контекст не буде використовуватися в тілі функції.
 
-The body of the function only prints a message to program logs using the
-`msg!()` macro. The function does not require any additional logic because the
-actual closing of the account is handled by the `close` constraint in the
-`Delete` struct.
+Тіло функції лише виводить повідомлення у журнали програми за допомогою макроса `msg!()`. Додаткова логіка не потрібна, оскільки фактичне закриття акаунта виконується за допомогою обмеження `close` у структурі `Delete`.
 
 </AccordionItem>
 </Accordion>
 
-Rebuild the program.
+Перекомпілюйте програму.
 
 ```shell filename="Terminal"
 build
 ```
 
-### Deploy Program
+### Розгортання Програми
 
-The basic CRUD program is now complete. Deploy the program by running `deploy`
-in the Playground terminal.
+Базова CRUD-програма завершена. Розгорніть програму, виконавши команду `deploy` у терміналі Playground.
 
 ```shell filename="Terminal"
 deploy
@@ -672,9 +599,9 @@ Deployment successful. Completed in 17s.
 </AccordionItem>
 </Accordion>
 
-### Set Up Test File
+### Налаштування Тестового Файлу
 
-Included with the starter code is also a test file in `anchor.test.ts`.
+Разом зі стартовим кодом також включений тестовий файл у `anchor.test.ts`.
 
 ```ts filename="anchor.test.ts"
 import { PublicKey } from "@solana/web3.js";
@@ -687,8 +614,7 @@ describe("pda", () => {
   it("Delete Message Account", async () => {});
 });
 ```
-
-Add the code below inside `describe`, but before the `it` sections.
+Додайте наведений нижче код всередину блоку `describe`, але перед секціями `it`.
 
 ```ts filename="anchor.test.ts"
 const program = pg.program;
@@ -726,19 +652,17 @@ const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-In this section, we are simply setting up the test file.
+У цьому розділі ми просто налаштовуємо тестовий файл.
 
-Solana Playground removes some boilerplate setup where `pg.program` allows us to
-access the client library for interacting with the program, while `pg.wallet` is
-your playground wallet.
+Solana Playground спрощує початкову підготовку: `pg.program` дозволяє отримати доступ до клієнтської бібліотеки для взаємодії з програмою, а `pg.wallet` представляє ваш гаманець у Playground.
 
 ```ts filename="anchor.test.ts"
 const program = pg.program;
 const wallet = pg.wallet;
 ```
 
-As part of the setup, we derive the message account PDA. This demonstrates how
-to derive the PDA in Javascript using the seeds specified in the program.
+У рамках налаштування ми отримуємо PDA акаунта повідомлення. Це демонструє, як отримати PDA у Javascript, використовуючи сіди, визначені у програмі.
+
 
 ```ts filename="anchor.test.ts"
 const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
@@ -750,8 +674,8 @@ const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
 </AccordionItem>
 </Accordion>
 
-Run the test file by running `test` in the Playground terminal to check the file
-runs as expected. We will implement the tests in the following steps.
+Запустіть тестовий файл, виконавши команду `test` у терміналі Playground, щоб переконатися, що файл працює, як очікувалося. Ми реалізуємо тести на наступних етапах.
+
 
 ```shell filename="Terminal"
 test
@@ -774,9 +698,10 @@ Running tests...
 </AccordionItem>
 </Accordion>
 
-### Invoke Create Instruction
+### Виклик Інструкції Create
 
-Update the first test with the following:
+Оновіть перший тест наступним кодом:
+
 
 ```ts filename="anchor.test.ts"
 it("Create Message Account", async () => {
@@ -832,8 +757,8 @@ it("Create Message Account", async () => {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-First, we send a transaction that invokes the `create` instruction, passing in
-"Hello, World!" as the message.
+Спочатку ми надсилаємо транзакцію, яка викликає інструкцію `create`, передаючи "Hello, World!" як повідомлення.
+
 
 ```ts filename="anchor.test.ts"
 const message = "Hello, World!";
@@ -845,8 +770,8 @@ const transactionSignature = await program.methods
   .rpc({ commitment: "confirmed" });
 ```
 
-Once the transaction is sent and the account is created, we then fetch the
-account using its address (`messagePda`).
+Після надсилання транзакції та створення акаунта ми отримуємо акаунт за його адресою (`messagePda`).
+
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetch(
@@ -855,7 +780,8 @@ const messageAccount = await program.account.messageAccount.fetch(
 );
 ```
 
-Lastly, we log the account data and a link to view the transaction details.
+Нарешті, ми виводимо у журнал дані акаунта та посилання для перегляду деталей транзакції.
+
 
 ```ts filename="anchor.test.ts"
 console.log(JSON.stringify(messageAccount, null, 2));
@@ -868,9 +794,10 @@ console.log(
 </AccordionItem>
 </Accordion>
 
-### Invoke Update Instruction
+### Виклик Інструкції Update
 
-Update the second test with the following:
+Оновіть другий тест наступним кодом:
+
 
 ```ts filename="anchor.test.ts"
 it("Update Message Account", async () => {
@@ -926,8 +853,8 @@ it("Update Message Account", async () => {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-First, we send a transaction that invokes the `update` instruction, passing in
-"Hello, Solana!" as the new message.
+Спочатку ми надсилаємо транзакцію, яка викликає інструкцію `update`, передаючи "Hello, Solana!" як нове повідомлення.
+
 
 ```ts filename="anchor.test.ts"
 const message = "Hello, Solana!";
@@ -939,8 +866,7 @@ const transactionSignature = await program.methods
   .rpc({ commitment: "confirmed" });
 ```
 
-Once the transaction is sent and the account is updated, we then fetch the
-account using its address (`messagePda`).
+Після надсилання транзакції та оновлення акаунта ми отримуємо акаунт за його адресою (`messagePda`).
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetch(
@@ -949,7 +875,8 @@ const messageAccount = await program.account.messageAccount.fetch(
 );
 ```
 
-Lastly, we log the account data and a link to view the transaction details.
+Нарешті, ми виводимо у журнал дані акаунта та посилання для перегляду деталей транзакції.
+
 
 ```ts filename="anchor.test.ts"
 console.log(JSON.stringify(messageAccount, null, 2));
@@ -962,9 +889,10 @@ console.log(
 </AccordionItem>
 </Accordion>
 
-### Invoke Delete Instruction
+### Виклик Інструкції Delete
 
-Update the third test with the following:
+Оновіть третій тест наступним кодом:
+
 
 ```ts filename="anchor.test.ts"
 it("Delete Message Account", async () => {
@@ -1018,8 +946,8 @@ it("Delete Message Account", async () => {
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-First, we send a transaction that invokes the `delete` instruction to close the
-message account.
+Спочатку ми надсилаємо транзакцію, яка викликає інструкцію `delete` для закриття акаунта повідомлення.
+
 
 ```ts filename="anchor.test.ts"
 const transactionSignature = await program.methods
@@ -1030,9 +958,8 @@ const transactionSignature = await program.methods
   .rpc({ commitment: "confirmed" });
 ```
 
-Once the transaction is sent and the account is closed, we attempt to fetch the
-account using its address (`messagePda`) using `fetchNullable` since we expect
-the return value to be null because the account is closed.
+Після надсилання транзакції та закриття акаунта ми намагаємося отримати акаунт за його адресою (`messagePda`), використовуючи `fetchNullable`, оскільки ми очікуємо, що результат буде `null`, тому що акаунт закритий.
+
 
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetchNullable(
@@ -1041,8 +968,8 @@ const messageAccount = await program.account.messageAccount.fetchNullable(
 );
 ```
 
-Lastly, we log the account data and a link to view the transaction details where
-the account data should be logged as null.
+Нарешті, ми виводимо у журнал дані акаунта та посилання для перегляду деталей транзакції, де дані акаунта повинні бути відображені як `null`.
+
 
 ```ts filename="anchor.test.ts"
 console.log(JSON.stringify(messageAccount, null, 2));
@@ -1055,10 +982,10 @@ console.log(
 </AccordionItem>
 </Accordion>
 
-### Run Test
+### Запуск Тестів
 
-Once the tests are set up, run the test file by running `test` in the Playground
-terminal.
+Після налаштування тестів запустіть тестовий файл, виконавши команду `test` у терміналі Playground.
+
 
 ```shell filename="Terminal"
 test

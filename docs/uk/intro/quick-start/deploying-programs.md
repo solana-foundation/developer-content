@@ -1,36 +1,30 @@
 ---
-sidebarLabel: Deploying Programs
-title: Deploying Your First Solana Program
+sidebarLabel: Розгортання Програм
+title: Розгортання Вашої Першої Програми Solana
 sidebarSortOrder: 3
 description:
-  Learn how to build, deploy, and test your first Solana program using the
-  Anchor framework and Solana Playground. This beginner-friendly guide walks
-  through creating a simple program, deploying it to devnet, running tests, and
-  closing the program.
+  Дізнайтеся, як створити, розгорнути та протестувати вашу першу програму Solana за допомогою 
+  фреймворку Anchor та Solana Playground. Цей посібник для початківців демонструє, як створити просту програму, 
+  розгорнути її на devnet, виконати тести та закрити програму.
 ---
 
-In this section, we'll build, deploy, and test a simple Solana program using the
-Anchor framework. By the end, you'll have deployed your first program to the
-Solana blockchain!
+У цьому розділі ми створимо, розгорнемо та протестуємо просту програму Solana за допомогою фреймворку Anchor. Наприкінці ви розгорнете свою першу програму у блокчейні Solana!
 
-The purpose of this section is to familiarize you with the Solana Playground.
-We'll walk through a more detailed example in the PDA and CPI sections. For more
-details, refer to the [Programs on Solana](/docs/core/programs) page.
+Мета цього розділу — ознайомити вас із Solana Playground. Ми розглянемо більш детальний приклад у розділах про PDA та CPI. Для отримання додаткової інформації відвідайте сторінку [Програми на Solana](/docs/core/programs).
 
 <Steps>
 
-### Create Anchor Project
+### Створення Проєкту Anchor
 
-First, open https://beta.solpg.io in a new browser tab.
+Спочатку відкрийте https://beta.solpg.io у новій вкладці браузера.
 
-- Click the "Create a new project" button on the left-side panel.
+- Натисніть кнопку "Create a new project" у лівій панелі.
 
-- Enter a project name, select Anchor as the framework, then click the "Create"
-  button.
+- Введіть назву проєкту, виберіть Anchor як фреймворк, потім натисніть кнопку "Create".
 
-![New Project](/assets/docs/intro/quickstart/pg-new-project.gif)
+![Новий Проєкт](/assets/docs/intro/quickstart/pg-new-project.gif)
 
-You'll see a new project created with the program code in the `src/lib.rs` file.
+Ви побачите створений проєкт із кодом програми у файлі `src/lib.rs`.
 
 ```rust filename="lib.rs"
 use anchor_lang::prelude::*;
@@ -70,18 +64,14 @@ pub struct NewAccount {
 
 <Accordion>
 <AccordionItem title="Explanation">
+На даний момент ми розглянемо лише загальний огляд коду програми:
 
-For now, we'll only cover the high-level overview of the program code:
-
-- The `declare_id!` macro specifies the on-chain address of your program. It
-  will be automatically updated when we build the program in the next step.
+- Макрос `declare_id!` визначає адресy вашої програми у блокчейні. Ця адреса буде автоматично оновлена, коли ми скомпілюємо програму на наступному етапі.
 
   ```rs
   declare_id!("11111111111111111111111111111111");
   ```
-
-- The `#[program]` macro annotates a module containing functions that represent
-  the program's instructions.
+- Макрос `#[program]` позначає модуль, який містить функції, що представляють інструкції програми.
 
   ```rs
   #[program]
@@ -94,24 +84,16 @@ For now, we'll only cover the high-level overview of the program code:
       }
   }
   ```
+У цьому прикладі інструкція `initialize` приймає два параметри:
 
-  In this example, the `initialize` instruction takes two parameters:
+1. `ctx: Context<Initialize>` — надає доступ до акаунтів, необхідних для цієї інструкції, як це зазначено у структурі `Initialize`.
+2. `data: u64` — параметр інструкції, який передається під час виклику інструкції.
 
-  1. `ctx: Context<Initialize>` - Provides access to the accounts required for
-     this instruction, as specified in the `Initialize` struct.
-  2. `data: u64` - An instruction parameter that will be passed in when the
-     instruction is invoked.
+Тіло функції встановлює значення поля `data` для `new_account` відповідно до переданого аргументу `data`, а потім виводить повідомлення до журналу програми.
 
-  The function body sets the `data` field of `new_account` to the provided
-  `data` argument and then prints a message to the program logs.
+- Макрос `#[derive(Accounts)]` використовується для визначення структури, яка задає акаунти, необхідні для певної інструкції, де кожне поле представляє окремий акаунт.
 
-- The `#[derive(Accounts)]` macro is used to define a struct that specifies the
-  accounts required for a particular instruction, where each field represents a
-  separate account.
-
-  The field types (ex. `Signer<'info>`) and constraints (ex. `#[account(mut)]`)
-  are used by Anchor to automatically handle common security checks related to
-  account validation.
+Типи полів (наприклад, `Signer<'info>`) і обмеження (наприклад, `#[account(mut)]`) використовуються Anchor для автоматичного виконання стандартних перевірок безпеки, пов'язаних із валідацією акаунтів.
 
   ```rs
   #[derive(Accounts)]
@@ -123,9 +105,7 @@ For now, we'll only cover the high-level overview of the program code:
       pub system_program: Program<'info, System>,
   }
   ```
-
-- The `#[account]` macro is used to define a struct that represents the data
-  structure of an account created and owned by the program.
+- Макрос `#[account]` використовується для визначення структури, яка представляє структуру даних акаунта, створеного та керованого програмою.
 
   ```rs
   #[account]
@@ -137,16 +117,14 @@ For now, we'll only cover the high-level overview of the program code:
 </AccordionItem>
 </Accordion>
 
-### Build and Deploy Program
+### Скомпілюйте та Розгорніть Програму
 
-To build the program, simply run `build` in the terminal.
+Щоб скомпілювати програму, просто виконайте команду `build` у терміналі.
 
 ```shell filename="Terminal"
 build
 ```
-
-Notice that the address in `declare_id!()` has been updated. This is your
-program's on-chain address.
+Зверніть увагу, що адреса у `declare_id!()` була оновлена. Це адреса вашої програми у блокчейні.
 
 <Accordion>
 <AccordionItem title="Output">
@@ -159,14 +137,9 @@ Build successful. Completed in 1.46s.
 
 </AccordionItem>
 </Accordion>
+Після компіляції програми виконайте команду `deploy` у терміналі, щоб розгорнути програму в мережі (за замовчуванням devnet). Для розгортання програми необхідно виділити SOL для акаунта у блокчейні, який зберігатиме програму.
 
-Once the program is built, run `deploy` in the terminal to deploy the program to
-the network (devnet by default). To deploy a program, SOL must be allocated to
-the on-chain account that stores the program.
-
-Before deployment, ensure you have enough SOL. You can get devnet SOL by either
-running `solana airdrop 5` in the Playground terminal or using the
-[Web Faucet](https://faucet.solana.com/).
+Перед розгортанням переконайтеся, що у вас достатньо SOL. Ви можете отримати devnet SOL, виконавши команду `solana airdrop 5` у терміналі Playground або скориставшись [веб-фонтаном](https://faucet.solana.com/).
 
 ```shell filename="Terminal"
 deploy
@@ -185,18 +158,15 @@ Deployment successful. Completed in 19s.
 </AccordionItem>
 </Accordion>
 
-Alternatively, you can also use the `Build` and `Deploy` buttons on the
-left-side panel.
+Альтернативно, ви також можете скористатися кнопками `Build` і `Deploy` на лівій панелі.
 
 ![Build and Deploy](/assets/docs/intro/quickstart/pg-build-deploy.png)
 
-Once the program is deployed, you can now invoke its instructions.
+Після розгортання програми ви можете викликати її інструкції.
 
-### Test Program
+### Тестування Програми
 
-Included with the starter code is a test file found in `tests/anchor.test.ts`.
-This file demonstrates how to invoke the `initialize` instruction on the starter
-program from the client.
+Разом із стартовим кодом включений тестовий файл, який знаходиться у `tests/anchor.test.ts`. У цьому файлі показано, як викликати інструкцію `initialize` у стартовій програмі з клієнта.
 
 ```ts filename="anchor.test.ts"
 // No imports needed: web3, anchor, pg and more are globally available
@@ -234,14 +204,12 @@ describe("Test", () => {
   });
 });
 ```
-
-To run the test file once the program is deployed, run `test` in the terminal.
+Щоб запустити тестовий файл після розгортання програми, виконайте команду `test` у терміналі.
 
 ```shell filename="Terminal"
 test
 ```
-
-You should see an output indicating that the test passed successfully.
+Ви повинні побачити результат, який вказує, що тест пройшов успішно.
 
 <Accordion>
 <AccordionItem title="Output">
@@ -259,19 +227,17 @@ Running tests...
 
 </AccordionItem>
 </Accordion>
-
-You can also use the `Test` button on the left-side panel.
+Ви також можете скористатися кнопкою `Test` на лівій панелі.
 
 ![Run Test](/assets/docs/intro/quickstart/pg-test.png)
 
-You can then view the transaction logs by running the `solana confirm -v`
-command and specifying the transaction hash (signature) from the test output:
+Потім ви можете переглянути журнали транзакцій, виконавши команду `solana confirm -v` та вказавши хеш транзакції (підпис) із результатів тесту:
 
 ```shell filename="Terminal"
 solana confirm -v [TxHash]
 ```
 
-For example:
+Наприклад:
 
 ```shell filename="Terminal"
 solana confirm -v 3TewJtiUz1EgtT88pLJHvKFzqrzDNuHVi8CfD2mWmHEBAaMfC5NAaHdmr19qQYfTiBace6XUmADvR4Qrhe8gH5uc
@@ -323,29 +289,23 @@ Confirmed
 </AccordionItem>
 </Accordion>
 
-Alternatively, you can view the transaction details on
-[SolanaFM](https://solana.fm/) or
-[Solana Explorer](https://explorer.solana.com/?cluster=devnet) by searching for
-the transaction signature (hash).
+Альтернативно, ви можете переглянути деталі транзакції на [SolanaFM](https://solana.fm/) або [Solana Explorer](https://explorer.solana.com/?cluster=devnet), здійснивши пошук за підписом (хешем) транзакції.
 
 <Callout>
-  Reminder to update the cluster (network) connection on the Explorer you are
-  using to match Solana Playground. Solana Playground's default cluster is devnet.
+  Нагадуємо, що потрібно оновити підключення до кластеру (мережі) у вибраному Explorer, щоб воно відповідало кластеру Solana Playground. За замовчуванням у Solana Playground використовується кластер devnet.
 </Callout>
 
-### Close Program
+### Закриття Програми
 
-Lastly, the SOL allocated to the on-chain program can be fully recovered by
-closing the program.
+Нарешті, SOL, виділений для програми у блокчейні, може бути повністю повернутий шляхом закриття програми.
 
-You can close a program by running the following command and specifying the
-program address found in `declare_id!()`:
+Ви можете закрити програму, виконавши наступну команду та вказавши адресу програми, яка знаходиться у `declare_id!()`:
 
 ```shell filename="Terminal"
 solana program close [ProgramID]
 ```
 
-For example:
+Наприклад:
 
 ```shell filename="Terminal"
 solana program close 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r
@@ -362,18 +322,14 @@ Closed Program Id 2VvQ11q8xrn5tkPNyeraRsPaATdiPx8weLAD8aD4dn2r, 2.79511512 SOL r
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-Only the upgrade authority of the program can close it. The upgrade authority is
-set when the program is deployed, and it's the only account with permission to
-modify or close the program. If the upgrade authority is revoked, then the
-program becomes immutable and can never be closed or upgraded.
+Тільки орган влади оновлення програми може її закрити. Орган влади оновлення встановлюється під час розгортання програми, і це єдиний акаунт, який має дозвіл модифікувати або закривати програму. Якщо орган влади оновлення відкликається, програма стає незмінною і її ніколи не можна буде закрити або оновити.
 
-When deploying programs on Solana Playground, your Playground wallet is the
-upgrade authority for all your programs.
+Під час розгортання програм у Solana Playground гаманцем Playground є орган влади оновлення для всіх ваших програм.
 
 </AccordionItem>
 </Accordion>
 
-Congratulations! You've just built and deployed your first Solana program using
-the Anchor framework!
+Вітаємо! Ви щойно створили та розгорнули свою першу програму Solana за допомогою фреймворку Anchor!
 
 </Steps>
+

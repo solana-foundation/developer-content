@@ -1,50 +1,36 @@
 ---
-sidebarLabel: Reading from Network
-title: Reading from Network
+sidebarLabel: Читання з Мережі
+title: Читання з Мережі
 sidebarSortOrder: 1
 description:
-  Learn how to read data from the Solana blockchain network. This guide covers
-  fetching wallet accounts, program accounts, and token mint accounts using
-  JavaScript/TypeScript, with practical examples using the Solana web3.js
-  library.
+  Дізнайтеся, як зчитувати дані з блокчейн-мережі Solana. Цей посібник охоплює
+  отримання акаунтів гаманців, програмних акаунтів і акаунтів випуску токенів
+  за допомогою JavaScript/TypeScript із практичними прикладами на основі
+  бібліотеки Solana web3.js.
 ---
 
-Now, let's explore how to read data from the Solana network. We'll fetch a few
-different accounts to understand the structure of a Solana account.
+Давайте розглянемо, як зчитувати дані з мережі Solana. Ми отримаємо кілька різних акаунтів, щоб зрозуміти структуру акаунта Solana.
 
-On Solana, all data is contained in what we call "accounts". You can think of
-data on Solana as a public database with a single "Accounts" table, where each
-entry in this table is an individual account.
+У Solana всі дані містяться у так званих "акаунтах". Ви можете думати про дані в Solana як про загальнодоступну базу даних із єдиною таблицею "Accounts", де кожен запис у цій таблиці є окремим акаунтом.
 
-Accounts on Solana can store "state" or "executable" programs, all of which can
-be thought of as entries in the same "Accounts" table. Each account has an
-"address" (public key) that serves as its unique ID used to locate its
-corresponding on-chain data.
+Акаунти Solana можуть містити "стан" або виконувані програми, які можна розглядати як записи в одній таблиці "Accounts". Кожен акаунт має "адресу" (публічний ключ), яка є унікальним ідентифікатором для доступу до відповідних даних у блокчейні.
 
-Solana accounts contain either:
+Акаунти Solana можуть містити:
 
-- State: This is data that's meant to be read from and persisted. It could be
-  information about tokens, user data, or any other type of data defined within
-  a program.
-- Executable Programs: These are accounts that contain the actual code of Solana
-  programs. They contain the instructions that can be executed on the network.
+- **Стан**: Дані, які призначені для зчитування і зберігання. Це може бути інформація про токени, дані користувачів або будь-які інші дані, визначені у програмі.
+- **Виконувані програми**: Акаунти, які містять фактичний код програм Solana. Вони включають інструкції, які можна виконувати у мережі.
 
-This separation of program code and program state is a key feature of Solana's
-Account Model. For more details, refer to the
-[Solana Account Model](/docs/core/accounts) page.
+Цей поділ програмного коду та стану програми є ключовою особливістю Моделі Акаунтів Solana. Для отримання додаткової інформації відвідайте сторінку [Модель Акаунтів Solana](/docs/uk/core/accounts).
 
-## Fetch Playground Wallet
+## Отримання Гаманця Playground
 
-Let's start by looking at a familiar account - your own Playground Wallet! We'll
-fetch this account and examine its structure to understand what a basic Solana
-account looks like.
+Почнемо з розгляду знайомого акаунта — вашого власного гаманця Playground! Ми отримаємо цей акаунт і розглянемо його структуру, щоб зрозуміти, як виглядає базовий акаунт Solana.
 
 <Steps>
 
-### Open Example 1
+### Відкриття Прикладу 1
 
-Click this [link](https://beta.solpg.io/6671c5e5cffcf4b13384d198) to open the
-example in Solana Playground. You'll see this code:
+Натисніть це [посилання](https://beta.solpg.io/6671c5e5cffcf4b13384d198), щоб відкрити приклад у Solana Playground. Ви побачите такий код:
 
 ```ts filename="client.ts"
 const address = pg.wallet.publicKey;
@@ -56,21 +42,21 @@ console.log(JSON.stringify(accountInfo, null, 2));
 <Accordion>
 <AccordionItem title="Explanation">
 
-This code does three simple things:
+Цей код виконує три прості дії:
 
-- Gets your Playground wallet's address
+- Отримує адресу вашого гаманця Playground:
 
   ```ts
   const address = pg.wallet.publicKey;
   ```
 
-- Fetches the `AccountInfo` for the account at that address
+- Отримує `AccountInfo` для акаунта за цією адресою:
 
   ```ts
   const accountInfo = await pg.connection.getAccountInfo(address);
   ```
 
-- Prints out the `AccountInfo` to the Playground terminal
+- Виводить `AccountInfo` у термінал Playground:
 
   ```ts
   console.log(JSON.stringify(accountInfo, null, 2));
@@ -79,16 +65,15 @@ This code does three simple things:
 </AccordionItem>
 </Accordion>
 
-### Run Example 1
+### Запуск Прикладу 1
 
-In the Playground terminal, type the `run` command and hit enter:
+У терміналі Playground введіть команду `run` і натисніть Enter:
 
 ```shell filename="Terminal"
 run
 ```
 
-You should see details about your wallet account, including its balance in
-lamports, with output similar to the following:
+Ви повинні побачити деталі вашого акаунта гаманця, включаючи його баланс у лампортах, із результатом, схожим на наступний:
 
 <Accordion>
 <AccordionItem title="Output">
@@ -113,55 +98,38 @@ Running client...
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-Your wallet is actually just an account owned by the System Program, where the
-main purpose of the wallet account is to store your SOL balance (amount in the
-`lamports` field).
+Ваш гаманець насправді є лише акаунтом, яким керує Системна програма. Основна мета акаунта гаманця — зберігати баланс SOL (значення у полі `lamports`).
 
 ---
 
-At its core, all Solana accounts are represented in a standard format called the
-`AccountInfo`. The
-[AccountInfo](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L19-L36)
-data type is the base data structure for all Solana Accounts.
+В основі всі акаунти Solana представлені у стандартному форматі, який називається `AccountInfo`. Тип даних [AccountInfo](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/account_info.rs#L19-L36) є базовою структурою даних для всіх акаунтів Solana.
 
-Let's break down the fields in the output:
+Розберемо поля у виведених даних:
 
-- `data` - This field contains what we generally refer to as the account "data".
-  For a wallet, it's empty (0 bytes), but other accounts use this field to store
-  any arbitrary data as a serialized buffer of bytes.
+- `data` — Це поле містить те, що ми зазвичай називаємо "даними" акаунта. Для гаманця воно порожнє (0 байтів), але інші акаунти використовують це поле для зберігання будь-яких довільних даних у вигляді серіалізованого буфера байтів.
 
-> When data is "buffered" in this way, it maintains its integrity and can be
-> later deserialized back into its original form for use in applications. This
-> process is widely used in blockchain for efficient data handling.
+> Коли дані "буферизуються" таким чином, вони зберігають свою цілісність і можуть пізніше бути десеріалізовані назад у свій початковий вигляд для використання у програмах. Цей процес широко використовується в блокчейні для ефективної обробки даних.
 
-- `executable` - A flag that indicates whether the account is an executable
-  program. For wallets and any accounts that store state, this is `false`.
-- `owner` - This field shows which program controls the account. For wallets,
-  it's always the System Program, with the address
-  `11111111111111111111111111111111`.
-- `lamports` - The account's balance in lamports (1 SOL = 1,000,000,000
-  lamports).
-- `rentEpoch` - A legacy field related to Solana's deprecated rent collection
-  mechanism (currently not in use).
-- `space` - Indicates byte capacity (length) of the `data` field, but is not a
-  field in the `AccountInfo` type
+- `executable` — Прапорець, який вказує, чи є акаунт виконуваною програмою. Для гаманців та будь-яких акаунтів, які зберігають стан, значення `false`.
+- `owner` — Це поле показує, яка програма контролює акаунт. Для гаманців це завжди Системна програма з адресою `11111111111111111111111111111111`.
+- `lamports` — Баланс акаунта у лампортах (1 SOL = 1,000,000,000 лампортів).
+- `rentEpoch` — Поле, пов’язане зі старим механізмом збору оренди Solana (наразі не використовується).
+- `space` — Вказує ємність (довжину) поля `data`, але не є полем типу `AccountInfo`.
 
 </AccordionItem>
 </Accordion>
 
 </Steps>
 
-## Fetch Token Program
+## Отримання Програми Token Program
 
-Next, we'll examine the Token Extensions program, an executable program for
-interacting with tokens on Solana.
+Далі ми розглянемо програму Token Extensions, яка є виконуваною програмою для взаємодії з токенами на Solana.
 
 <Steps>
 
-### Open Example 2
+### Відкриття Прикладу 2
 
-Click this [link](https://beta.solpg.io/6671c6e7cffcf4b13384d199) to open the
-example in Solana Playground. You'll see this code:
+Натисніть це [посилання](https://beta.solpg.io/6671c6e7cffcf4b13384d199), щоб відкрити приклад у Solana Playground. Ви побачите такий код:
 
 ```ts filename="client.ts" {3}
 import { PublicKey } from "@solana/web3.js";
@@ -171,20 +139,17 @@ const accountInfo = await pg.connection.getAccountInfo(address);
 
 console.log(JSON.stringify(accountInfo, null, 2));
 ```
+Замість отримання вашого гаманця Playground, тут ми отримуємо адресу акаунта програми Token Extensions.
 
-Instead of fetching your Playground wallet, here we fetch the address of the
-Token Extensions Program account.
+### Запуск Прикладу 2
 
-### Run Example 2
+Запустіть код, виконавши команду `run` у терміналі.
 
-Run the code using the `run` command in the terminal.
 
 ```shell filename="Terminal"
 run
 ```
-
-Examine the output and how this program account differs from your wallet
-account.
+Ознайомтеся з виведеними даними та тим, чим цей акаунт програми відрізняється від вашого акаунта гаманця.
 
 <Accordion>
 <AccordionItem title="Output">
@@ -215,47 +180,39 @@ Running client...
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The Token Extensions program is an executable program account, but note that it
-has the same `AccountInfo` structure.
+Програма Token Extensions є виконуваним акаунтом програми, але має таку ж структуру `AccountInfo`.
 
-Key differences in the `AccountInfo`:
+Основні відмінності в `AccountInfo`:
 
-- `executable` - Set to `true`, indicating this account represents an executable
-  program.
-- `data` - Contains serialized data (unlike the empty data in a wallet account).
-  The data for a program account stores the address of another account (Program
-  Executable Data Account) that contains the program's bytecode.
-- `owner` - The account is owned by the Upgradable BPF Loader
-  (`BPFLoaderUpgradeab1e11111111111111111111111`), a special program that
-  manages executable accounts.
+- **`executable`** — Встановлено у `true`, що вказує на те, що цей акаунт є виконуваною програмою.
+- **`data`** — Містить серіалізовані дані (на відміну від порожніх даних у акаунті гаманця). Дані для акаунта програми зберігають адресу іншого акаунта (Program Executable Data Account), який містить байт-код програми.
+- **`owner`** — Акаунт належить завантажувачу Upgradable BPF Loader (`BPFLoaderUpgradeab1e11111111111111111111111`), спеціальній програмі, яка управляє виконуваними акаунтами.
 
 ---
 
-You can inspect the Solana Explorer for the
-[Token Extensions Program Account](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
-and its corresponding
+Ви можете перевірити Solana Explorer для
+[акаунта програми Token Extensions](https://explorer.solana.com/address/TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb)
+та його відповідного
 [Program Executable Data Account](https://explorer.solana.com/address/DoU57AYuPFu2QU514RktNPG22QhApEjnKxnBcu4BHDTY).
 
-The Program Executable Data Account contains the compiled bytecode for the Token
-Extensions Program
-[source code](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program-2022/src).
+Program Executable Data Account містить скомпільований байт-код програми Token Extensions 
+[вихідний код](https://github.com/solana-labs/solana-program-library/tree/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program-2022/src).
 
 </AccordionItem>
 </Accordion>
 
 </Steps>
 
-## Fetch Mint Account
+## Отримання Акаунта Mint
 
-In this step, we'll examine a Mint account, which represents a unique token on
-the Solana network.
+На цьому етапі ми розглянемо акаунт Mint, який представляє унікальний токен у мережі Solana.
 
 <Steps>
 
-### Open Example 3
+### Відкриття Прикладу 3
 
-Click this [link](https://beta.solpg.io/6671c9aecffcf4b13384d19a) to open the
-example in Solana Playground. You'll see this code:
+Натисніть це [посилання](https://beta.solpg.io/6671c9aecffcf4b13384d19a), щоб відкрити приклад у Solana Playground. Ви побачите такий код:
+
 
 ```ts filename="client.ts" {3}
 import { PublicKey } from "@solana/web3.js";
@@ -265,12 +222,12 @@ const accountInfo = await pg.connection.getAccountInfo(address);
 
 console.log(JSON.stringify(accountInfo, null, 2));
 ```
+У цьому прикладі ми отримаємо адресу існуючого акаунта Mint у devnet.
 
-In this example, we'll fetch the address of an existing Mint account on devnet.
+### Запуск Прикладу 3
 
-### Run Example 3
+Запустіть код, виконавши команду `run`.
 
-Run the code using the `run` command.
 
 ```shell filename="Terminal"
 run
@@ -305,34 +262,22 @@ Running client...
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-Key differences in the `AccountInfo`:
+Основні відмінності в `AccountInfo`:
 
-- `owner` - The mint account is owned by the Token Extensions program
-  (`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`).
-- `executable` - Set to `false`, as this account stores state rather than
-  executable code.
-- `data`: Contains serialized data about the token (mint authority, supply,
-  decimals, etc.).
+- **`owner`** — Акаунт mint належить програмі Token Extensions (`TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`).
+- **`executable`** — Встановлено у `false`, оскільки цей акаунт зберігає стан, а не виконуваний код.
+- **`data`** — Містить серіалізовані дані про токен (авторитет випуску, загальну кількість, кількість знаків після коми тощо).
 
 </AccordionItem>
 </Accordion>
 
-### Deserialize Mint Account Data
+### Десеріалізація Даних Акаунта Mint
 
-To read the `data` field from any account, you need to deserialize the data
-buffer into the expected data type. This is often done using helper functions
-from client libraries for a particular program.
+Щоб зчитати поле `data` з будь-якого акаунта, потрібно десеріалізувати буфер даних у очікуваний тип даних. Це часто виконується за допомогою допоміжних функцій клієнтських бібліотек для конкретної програми.
 
-**Deserialization** is the process of converting data from a stored format (like
-raw bytes or JSON) back into a usable, structured format in a program. In
-blockchain, it involves taking raw, encoded data from the network and
-transforming it back into objects, classes, or readable structures so developers
-can access and manipulate specific information within a program. Deserialization
-is essential for interpreting account or transaction data received from a
-network in a form that a program can process and display meaningfully.
+**Десеріалізація** — це процес перетворення даних зі збереженого формату (наприклад, необроблених байтів або JSON) назад у використовуваний структурований формат у програмі. У блокчейні це включає взяття необроблених, закодованих даних із мережі та їх перетворення назад в об'єкти, класи або читабельні структури, щоб розробники могли отримати доступ до конкретної інформації та маніпулювати нею у програмі. Десеріалізація є важливою для інтерпретації даних акаунтів або транзакцій, отриманих із мережі, у формі, яку програма може обробляти і відображати осмислено.
 
-Open this next [example](https://beta.solpg.io/6671cd8acffcf4b13384d19b) in
-Solana Playground. You'll see this code:
+Відкрийте цей [приклад](https://beta.solpg.io/6671cd8acffcf4b13384d19b) у Solana Playground. Ви побачите такий код:
 
 ```ts filename="client.ts"
 import { PublicKey } from "@solana/web3.js";
@@ -349,16 +294,14 @@ const mintData = await getMint(
 console.log(mintData);
 ```
 
-This example uses the `getMint` helper function to automatically deserialize the
-data field of the Mint account.
+Цей приклад використовує функцію `getMint`, яка автоматично десеріалізує поле `data` акаунта Mint.
 
-Run the code using the `run` command.
+Запустіть код, виконавши команду `run`.
 
 ```shell filename="Terminal"
 run
 ```
-
-You should see the following deserialized Mint account data.
+Ви повинні побачити наступні десеріалізовані дані акаунта Mint.
 
 <Accordion>
 <AccordionItem title="Output">
@@ -378,24 +321,20 @@ Running client...
 </AccordionItem>
 <AccordionItem title="Explanation">
 
-The `getMint` function deserializes the account data into the
-[Mint](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L18-L32)
-data type defined in the Token Extensions program source code.
+Функція `getMint` десеріалізує дані акаунта у тип даних [Mint](https://github.com/solana-labs/solana-program-library/blob/b1c44c171bc95e6ee74af12365cb9cbab68be76c/token/program/src/state.rs#L18-L32), визначений у вихідному коді програми Token Extensions.
 
-- `address` - The Mint account's address
-- `mintAuthority` - The authority allowed to mint new tokens
-- `supply` - The total supply of tokens
-- `decimals` - The number of decimal places for the token
-- `isInitialized` - Whether the Mint data has been initialized
-- `freezeAuthority` - The authority allowed to freeze token accounts
-- `tlvData` - Additional data for Token Extensions (requires further
-  deserialization)
+- **`address`** — Адреса акаунта Mint.
+- **`mintAuthority`** — Авторитет, який може випускати нові токени.
+- **`supply`** — Загальна кількість токенів в обігу.
+- **`decimals`** — Кількість десяткових знаків для токена.
+- **`isInitialized`** — Чи були дані Mint ініціалізовані.
+- **`freezeAuthority`** — Авторитет, який має право заморожувати акаунти токенів.
+- **`tlvData`** — Додаткові дані для Token Extensions (вимагають подальшої десеріалізації).
 
-You can view the fully deserialized
-[Mint Account](https://explorer.solana.com/address/C33qt1dZGZSsqTrHdtLKXPZNoxs6U1ZBfyDkzmj6mXeR?cluster=devnet)
-data, including enabled Token Extensions, on the Solana Explorer.
+Ви можете переглянути повністю десеріалізовані [дані акаунта Mint](https://explorer.solana.com/address/C33qt1dZGZSsqTrHdtLKXPZNoxs6U1ZBfyDkzmj6mXeR?cluster=devnet), включаючи активовані Token Extensions, у Solana Explorer.
 
 </AccordionItem>
 </Accordion>
 
 </Steps>
+
