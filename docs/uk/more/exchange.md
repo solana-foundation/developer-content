@@ -1,31 +1,25 @@
 ---
-title: Add Solana to Your Exchange
+title: Додати Solana на Вашу Біржу
 ---
 
-This guide describes how to add Solana's native token SOL to your cryptocurrency
-exchange.
+Цей посібник описує, як додати нативний токен Solana (SOL) до вашої криптовалютної біржі.
 
-## Node Setup
+## Налаштування Ноди
 
-We highly recommend setting up at least two nodes on high-grade computers/cloud
-instances, upgrading to newer versions promptly, and keeping an eye on service
-operations with a bundled monitoring tool.
+Ми наполегливо рекомендуємо налаштувати щонайменше дві ноди на високопродуктивних комп’ютерах або хмарних інстанціях, своєчасно оновлювати їх до нових версій і відстежувати роботу сервісу за допомогою вбудованих інструментів моніторингу.
 
-This setup enables you:
+Це налаштування дозволяє вам:
 
-- to have a self-administered gateway to the Solana mainnet-beta cluster to get
-  data and submit withdrawal transactions
-- to have full control over how much historical block data is retained
-- to maintain your service availability even if one node fails
+- мати самостійно керований шлюз до кластеру Solana mainnet-beta для отримання даних і надсилання транзакцій на виведення
+- мати повний контроль над тим, скільки історичних даних блоків зберігається
+- забезпечувати доступність вашого сервісу навіть у разі відмови однієї з нод
 
-Solana nodes demand relatively high computing power to handle our fast blocks
-and high TPS. For specific requirements, please see
-[hardware recommendations](https://docs.anza.xyz/operations/requirements).
+Ноди Solana вимагають відносно високої обчислювальної потужності для обробки швидких блоків і високої пропускної здатності (TPS). Для конкретних вимог дивіться [рекомендації щодо апаратного забезпечення](https://docs.anza.xyz/operations/requirements).
 
-To run an api node:
+Щоб запустити ноду API:
 
-1. [Install the Solana command-line tool suite](/docs/intro/installation.md)
-2. Start the validator with at least the following parameters:
+1. [Встановіть набір інструментів командного рядка Solana](/docs/uk/intro/installation.md)
+2. Запустіть валідатор щонайменше з наступними параметрами:
 
 ```shell
 solana-validator \
@@ -41,132 +35,70 @@ solana-validator \
   --only-known-rpc
 ```
 
-Customize `--ledger` to your desired ledger storage location, and `--rpc-port`
-to the port you want to expose.
+Налаштуйте параметр `--ledger` для бажаного розташування зберігання леджера та параметр `--rpc-port` для порту, який ви хочете зробити доступним.
 
-The `--entrypoint` and `--expected-genesis-hash` parameters are all specific to
-the cluster you are joining.
-[Current parameters for Mainnet Beta](https://docs.anza.xyz/clusters/available#example-solana-validator-command-line-2)
+Параметри `--entrypoint` та `--expected-genesis-hash` є специфічними для кластера, до якого ви приєднуєтеся. 
+[Поточні параметри для Mainnet Beta](https://docs.anza.xyz/clusters/available#example-solana-validator-command-line-2)
 
-The `--limit-ledger-size` parameter allows you to specify how many ledger
-[shreds](/docs/terminology.md#shred) your node retains on disk. If you do not
-include this parameter, the validator will keep the entire ledger until it runs
-out of disk space. The default value attempts to keep the ledger disk usage
-under 500GB. More or less disk usage may be requested by adding an argument to
-`--limit-ledger-size` if desired. Check `solana-validator --help` for the
-default limit value used by `--limit-ledger-size`. More information about
-selecting a custom limit value is
-[available here](https://github.com/solana-labs/solana/blob/583cec922b6107e0f85c7e14cb5e642bc7dfb340/core/src/ledger_cleanup_service.rs#L15-L26).
+Параметр `--limit-ledger-size` дозволяє вказати, скільки [шредів](/docs/uk/terminology.md#shred) леджера ваша нода зберігатиме на диску. Якщо цей параметр не вказано, валідатор зберігатиме весь леджер, доки не закінчиться місце на диску. Значення за замовчуванням намагається обмежити використання місця на диску леджером до 500 ГБ. За потреби можна змінити це значення, додавши аргумент до параметра `--limit-ledger-size`. Для перегляду значення за замовчуванням, яке використовується параметром `--limit-ledger-size`, виконайте команду `solana-validator --help`. Більше інформації про вибір власного значення обмеження можна знайти [тут](https://github.com/solana-labs/solana/blob/583cec922b6107e0f85c7e14cb5e642bc7dfb340/core/src/ledger_cleanup_service.rs#L15-L26).
 
-Specifying one or more `--known-validator` parameters can protect you from
-booting from a malicious snapshot.
-[More on the value of booting with known validators](https://docs.anza.xyz/operations/guides/validator-start#known-validators)
+Вказівка одного або кількох параметрів `--known-validator` може захистити вас від запуску з підробленого знімку. 
+[Більше про цінність запуску з відомими валідаторами](https://docs.anza.xyz/operations/guides/validator-start#known-validators)
 
-Optional parameters to consider:
+Додаткові параметри, які варто розглянути:
 
-- `--private-rpc` prevents your RPC port from being published for use by other
-  nodes
-- `--rpc-bind-address` allows you to specify a different IP address to bind the
-  RPC port
+- `--private-rpc` забороняє публікацію вашого RPC-порту для використання іншими нодами
+- `--rpc-bind-address` дозволяє вказати іншу IP-адресу для прив’язки RPC-порту
 
-### Automatic Restarts and Monitoring
+### Автоматичний Перезапуск та Моніторинг
 
-We recommend configuring each of your nodes to restart automatically on exit, to
-ensure you miss as little data as possible. Running the solana software as a
-systemd service is one great option.
+Ми рекомендуємо налаштувати кожну з ваших нод на автоматичний перезапуск після завершення роботи, щоб мінімізувати втрату даних. Запуск програмного забезпечення Solana як служби systemd є одним із чудових варіантів.
 
-For monitoring, we provide
-[`solana-watchtower`](https://github.com/solana-labs/solana/blob/master/watchtower/README.md),
-which can monitor your validator and detect with the `solana-validator` process
-is unhealthy. It can directly be configured to alert you via Slack, Telegram,
-Discord, or Twillio. For details, run `solana-watchtower --help`.
+Для моніторингу ми надаємо інструмент 
+[`solana-watchtower`](https://github.com/solana-labs/solana/blob/master/watchtower/README.md), 
+який може моніторити ваш валідатор і визначати, чи є процес `solana-validator` несправним. Він може бути налаштований для сповіщень через Slack, Telegram, Discord або Twilio. Для деталей виконайте команду `solana-watchtower --help`.
 
 ```shell
 solana-watchtower --validator-identity <YOUR VALIDATOR IDENTITY>
 ```
+> Додаткову інформацію про [найкращі практики для Solana Watchtower](https://docs.anza.xyz/operations/best-practices/monitoring#solana-watchtower) можна знайти у документації.
 
-> You can find more information about the
-> [best practices for Solana Watchtower](https://docs.anza.xyz/operations/best-practices/monitoring#solana-watchtower)
-> here in the docs.
+#### Оголошення про Нові Релізи ПЗ
 
-#### New Software Release Announcements
+Ми випускаємо нове програмне забезпечення часто (приблизно один реліз на тиждень). Іноді нові версії містять несумісні протокольні зміни, які вимагають своєчасного оновлення ПЗ, щоб уникнути помилок при обробці блоків.
 
-We release new software frequently (around 1 release / week). Sometimes newer
-versions include incompatible protocol changes, which necessitate timely
-software update to avoid errors in processing blocks.
+Наші офіційні оголошення про всі види релізів (звичайні та пов’язані з безпекою) публікуються в [каналі Discord](https://solana.com/discord) під назвою `#mb-announcement` (`mb` означає `mainnet-beta`).
 
-Our official release announcements for all kinds of releases (normal and
-security) are communicated via a [discord](https://solana.com/discord) channel
-called `#mb-announcement` (`mb` stands for `mainnet-beta`).
+Як і для валідаторів зі ставками, ми очікуємо, що валідатори, які обслуговуються біржами, будуть оновлюватися протягом одного-двох робочих днів після оголошення про звичайний реліз. Для релізів, пов’язаних із безпекою, може знадобитися більш термінове реагування.
 
-Like staked validators, we expect any exchange-operated validators to be updated
-at your earliest convenience within a business day or two after a normal release
-announcement. For security-related releases, more urgent action may be needed.
+### Цілісність Леджера
 
-### Ledger Continuity
+За замовчуванням кожна з ваших нод завантажується зі знімку, наданого одним із ваших відомих валідаторів. Цей знімок відображає поточний стан ланцюга, але не містить повного історичного леджера. Якщо одна з ваших нод зупиняється та завантажується з нового знімка, у леджері цієї ноди може з’явитися прогалина. Щоб уникнути цієї проблеми, додайте параметр `--no-snapshot-fetch` до команди `solana-validator`, щоб отримувати історичні дані леджера замість знімка.
 
-By default, each of your nodes will boot from a snapshot provided by one of your
-known validators. This snapshot reflects the current state of the chain, but
-does not contain the complete historical ledger. If one of your node exits and
-boots from a new snapshot, there may be a gap in the ledger on that node. In
-order to prevent this issue, add the `--no-snapshot-fetch` parameter to your
-`solana-validator` command to receive historical ledger data instead of a
-snapshot.
+Не додавайте параметр `--no-snapshot-fetch` під час початкового завантаження, оскільки неможливо завантажити ноду від самого генезис-блоку. Спочатку завантажтеся зі знімка, а потім додайте параметр `--no-snapshot-fetch` для наступних перезавантажень.
 
-Do not pass the `--no-snapshot-fetch` parameter on your initial boot as it's not
-possible to boot the node all the way from the genesis block. Instead boot from
-a snapshot first and then add the `--no-snapshot-fetch` parameter for reboots.
+Варто зазначити, що обсяг доступного історичного леджера від інших нод у мережі обмежений. Якщо ваші валідатори зазнають значних простоїв, вони можуть не змогти синхронізуватися з мережею і будуть змушені завантажити новий знімок від відомого валідатора, що створить прогалину в історичному леджері, яку неможливо заповнити.
 
-It is important to note that the amount of historical ledger available to your
-nodes from the rest of the network is limited at any point in time. Once
-operational if your validators experience significant downtime they may not be
-able to catch up to the network and will need to download a new snapshot from a
-known validator. In doing so your validators will now have a gap in its
-historical ledger data that cannot be filled.
+### Мінімізація Доступу до Портів Валідатора
 
-### Minimizing Validator Port Exposure
+Валідатору необхідно, щоб різні UDP- і TCP-порти були відкриті для вхідного трафіку від усіх інших валідаторів Solana. Хоча це найефективніший режим роботи і настійно рекомендується, можливо обмежити валідатор лише для вхідного трафіку від одного іншого валідатора Solana.
 
-The validator requires that various UDP and TCP ports be open for inbound
-traffic from all other Solana validators. While this is the most efficient mode
-of operation, and is strongly recommended, it is possible to restrict the
-validator to only require inbound traffic from one other Solana validator.
+Спочатку додайте аргумент `--restricted-repair-only-mode`. Це призведе до роботи валідатора в обмеженому режимі, в якому він не отримуватиме push-повідомлення від інших валідаторів і замість цього постійно опитуватиме інші валідатори для отримання блоків. Валідатор буде передавати UDP-пакети іншим валідаторам лише через порти _Gossip_ та _ServeR_ ("serve repair") і отримуватиме UDP-пакети лише через порти _Gossip_ та _Repair_.
 
-First add the `--restricted-repair-only-mode` argument. This will cause the
-validator to operate in a restricted mode where it will not receive pushes from
-the rest of the validators, and instead will need to continually poll other
-validators for blocks. The validator will only transmit UDP packets to other
-validators using the _Gossip_ and _ServeR_ ("serve repair") ports, and only
-receive UDP packets on its _Gossip_ and _Repair_ ports.
+Порт _Gossip_ є двостороннім і дозволяє вашому валідатору підтримувати зв’язок із рештою кластеру. Ваш валідатор передаватиме запити на ремонт через порт _ServeR_, щоб отримувати нові блоки від решти мережі, оскільки Turbine тепер відключено. Ваш валідатор отримуватиме відповіді на запити ремонту через порт _Repair_ від інших валідаторів.
 
-The _Gossip_ port is bi-directional and allows your validator to remain in
-contact with the rest of the cluster. Your validator transmits on the _ServeR_
-to make repair requests to obtaining new blocks from the rest of the network,
-since Turbine is now disabled. Your validator will then receive repair responses
-on the _Repair_ port from other validators.
+Щоб додатково обмежити валідатор для запитів блоків лише від одного або кількох валідаторів, спочатку визначте публічний ключ (pubkey) цього валідатора та додайте аргументи `--gossip-pull-validator PUBKEY --repair-validator PUBKEY` для кожного PUBKEY. Це створить навантаження на кожен валідатор, який ви додаєте, тому робіть це обережно і лише після консультації з цільовим валідатором.
 
-To further restrict the validator to only requesting blocks from one or more
-validators, first determine the identity pubkey for that validator and add the
-`--gossip-pull-validator PUBKEY --repair-validator PUBKEY` arguments for each
-PUBKEY. This will cause your validator to be a resource drain on each validator
-that you add, so please do this sparingly and only after consulting with the
-target validator.
+Ваш валідатор тепер повинен спілкуватися лише з чітко вказаними валідаторами і лише через порти _Gossip_, _Repair_ та _ServeR_.
 
-Your validator should now only be communicating with the explicitly listed
-validators and only on the _Gossip_, _Repair_ and _ServeR_ ports.
+## Налаштування Депозитних Акаунтів
 
-## Setting up Deposit Accounts
+Акаунти Solana не потребують жодної ініціалізації в мережі; як тільки вони містять деяку кількість SOL, вони існують. Щоб налаштувати депозитний акаунт для вашої біржі, просто створіть ключову пару Solana за допомогою будь-якого з наших [інструментів для гаманців](https://docs.anza.xyz/cli/wallets).
 
-Solana accounts do not require any on-chain initialization; once they contain
-some SOL, they exist. To set up a deposit account for your exchange, simply
-generate a Solana keypair using any of our
-[wallet tools](https://docs.anza.xyz/cli/wallets).
+Рекомендуємо використовувати унікальний депозитний акаунт для кожного з ваших користувачів.
 
-We recommend using a unique deposit account for each of your users.
+Акаунти Solana мають бути звільнені від оренди, містячи еквівалент 2-річної [оренди](/docs/uk/core/fees.md#rent) у SOL. Щоб визначити мінімальний баланс для звільнення від оренди для ваших депозитних акаунтів, виконайте запит до [ендпоінту `getMinimumBalanceForRentExemption`](/docs/uk/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
-Solana accounts must be made rent-exempt by containing 2-years worth of
-[rent](/docs/core/fees.md#rent) in SOL. In order to find the minimum rent-exempt
-balance for your deposit accounts, query the
-[`getMinimumBalanceForRentExemption` endpoint](/docs/rpc/http/getMinimumBalanceForRentExemption.mdx):
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -183,57 +115,35 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 { "jsonrpc": "2.0", "result": 890880, "id": 1 }
 ```
 
-### Offline Accounts
+### Офлайн Акаунти
 
-You may wish to keep the keys for one or more collection accounts offline for
-greater security. If so, you will need to move SOL to hot accounts using our
-[offline methods](https://docs.anza.xyz/cli/examples/offline-signing).
+Ви можете залишити ключі для одного або декількох акаунтів колекції офлайн для підвищення безпеки. У цьому випадку вам потрібно буде переміщати SOL до "гарячих" акаунтів за допомогою наших [офлайн-методів](https://docs.anza.xyz/cli/examples/offline-signing).
 
-## Listening for Deposits
+## Відстеження Депозитів
 
-When a user wants to deposit SOL into your exchange, instruct them to send a
-transfer to the appropriate deposit address.
+Коли користувач хоче внести SOL на вашу біржу, інструктуйте його виконати переказ на відповідну депозитну адресу.
 
-### Versioned Transaction Migration
+### Міграція Транзакцій із Версіями
 
-When the Mainnet Beta network starts processing versioned transactions,
-exchanges **MUST** make changes. If no changes are made, deposit detection will
-no longer work properly because fetching a versioned transaction or a block
-containing versioned transactions will return an error.
+Коли мережа Mainnet Beta почне обробляти транзакції із версіями, біржі **ЗОБОВ'ЯЗАНІ** внести зміни. Якщо не внести змін, виявлення депозитів працюватиме неправильно, оскільки отримання транзакції з версією або блоку, що містить такі транзакції, призведе до помилки.
 
 - `{"maxSupportedTransactionVersion": 0}`
 
-  The `maxSupportedTransactionVersion` parameter must be added to `getBlock` and
-  `getTransaction` requests to avoid disruption to deposit detection. The latest
-  transaction version is `0` and should be specified as the max supported
-  transaction version value.
+  Параметр `maxSupportedTransactionVersion` потрібно додати до запитів `getBlock` і `getTransaction`, щоб уникнути порушення роботи виявлення депозитів. Остання версія транзакції — `0`, і саме її слід зазначати як максимальну підтримувану версію транзакції.
 
-It's important to understand that versioned transactions allow users to create
-transactions that use another set of account keys loaded from on-chain address
-lookup tables.
+Важливо розуміти, що транзакції з версіями дозволяють користувачам створювати транзакції, які використовують інший набір ключів акаунтів, завантажених з ончейн таблиць пошуку адрес.
 
 - `{"encoding": "jsonParsed"}`
 
-  When fetching blocks and transactions, it's now recommended to use the
-  `"jsonParsed"` encoding because it includes all transaction account keys
-  (including those from lookup tables) in the message `"accountKeys"` list. This
-  makes it straightforward to resolve balance changes detailed in `preBalances`
-  / `postBalances` and `preTokenBalances` / `postTokenBalances`.
+  При отриманні блоків і транзакцій тепер рекомендується використовувати кодування `"jsonParsed"`, оскільки воно включає всі ключі акаунтів транзакції (включаючи ті, що з таблиць пошуку) у список `"accountKeys"` повідомлення. Це спрощує розв'язання змін балансу, описаних у `preBalances` / `postBalances` і `preTokenBalances` / `postTokenBalances`.
 
-  If the `"json"` encoding is used instead, entries in `preBalances` /
-  `postBalances` and `preTokenBalances` / `postTokenBalances` may refer to
-  account keys that are **NOT** in the `"accountKeys"` list and need to be
-  resolved using `"loadedAddresses"` entries in the transaction metadata.
+  Якщо використовується кодування `"json"`, записи у `preBalances` / `postBalances` і `preTokenBalances` / `postTokenBalances` можуть посилатися на ключі акаунтів, які **НЕ** входять до списку `"accountKeys"` і потребують розв'язання за допомогою записів `"loadedAddresses"` у метаданих транзакції.
 
-### Poll for Blocks
+### Опитування Блоків
 
-To track all the deposit accounts for your exchange, poll for each confirmed
-block and inspect for addresses of interest, using the JSON-RPC service of your
-Solana API node.
+Для відстеження всіх депозитних акаунтів вашої біржі регулярно опитуйте кожен підтверджений блок і перевіряйте адреси, що вас цікавлять, використовуючи JSON-RPC сервіс вашої ноди API Solana.
 
-- To identify which blocks are available, send a
-  [`getBlocks`](/docs/rpc/http/getBlocks.mdx) request, passing the last block
-  you have already processed as the start-slot parameter:
+- Щоб визначити, які блоки доступні, надішліть запит [`getBlocks`](/docs/uk/rpc/http/getBlocks.mdx), передавши останній блок, який ви вже обробили, як параметр start-slot:
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -255,26 +165,19 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
   "id": 1
 }
 ```
+Не кожен слот створює блок, тому в послідовності чисел можуть бути прогалини.
 
-Not every slot produces a block, so there may be gaps in the sequence of
-integers.
+- Для кожного блоку запитуйте його вміст за допомогою запиту [`getBlock`](/docs/uk/rpc/http/getBlock.mdx):
 
-- For each block, request its contents with a
-  [`getBlock`](/docs/rpc/http/getBlock.mdx) request:
-
-### Block Fetching Tips
+### Поради для Отримання Блоків
 
 - `{"rewards": false}`
 
-By default, fetched blocks will return information about validator fees on each
-block and staking rewards on epoch boundaries. If you don't need this
-information, disable it with the "rewards" parameter.
+За замовчуванням отримані блоки містять інформацію про комісії валідаторів за кожен блок і нагороди за стейкінг на межах епох. Якщо ця інформація вам не потрібна, вимкніть її за допомогою параметра `"rewards"`.
 
 - `{"transactionDetails": "accounts"}`
 
-By default, fetched blocks will return a lot of transaction info and metadata
-that isn't necessary for tracking account balances. Set the "transactionDetails"
-parameter to speed up block fetching.
+За замовчуванням отримані блоки містять багато інформації про транзакції та метадані, які не потрібні для відстеження балансів акаунтів. Встановіть параметр `"transactionDetails"` для прискорення отримання блоків.
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -d '{
@@ -360,28 +263,15 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
 }
 ```
 
-The `preBalances` and `postBalances` fields allow you to track the balance
-changes in every account without having to parse the entire transaction. They
-list the starting and ending balances of each account in
-[lamports](/docs/terminology.md#lamport), indexed to the `accountKeys` list. For
-example, if the deposit address of interest is
-`G1wZ113tiUHdSpQEBcid8n1x8BAvcWZoZgxPKxgE5B7o`, this transaction represents a
-transfer of 1040000000 - 1030000000 = 10,000,000 lamports = 0.01 SOL
+Поля `preBalances` і `postBalances` дозволяють відстежувати зміни балансу кожного акаунта без необхідності аналізувати всю транзакцію. Вони містять початкові та кінцеві баланси кожного акаунта у [лампортах](/docs/uk/terminology.md#lamport), проіндексовані до списку `accountKeys`. Наприклад, якщо депозитна адреса, яка вас цікавить, — це `G1wZ113tiUHdSpQEBcid8n1x8BAvcWZoZgxPKxgE5B7o`, то ця транзакція представляє переказ 1040000000 - 1030000000 = 10,000,000 лампортів = 0.01 SOL.
 
-If you need more information about the transaction type or other specifics, you
-can request the block from RPC in binary format, and parse it using either our
-[Rust SDK](https://github.com/solana-labs/solana) or
-[Javascript SDK](https://github.com/solana-labs/solana-web3.js).
+Якщо вам потрібна додаткова інформація про тип транзакції або інші специфічні дані, ви можете запросити блок із RPC у бінарному форматі та проаналізувати його за допомогою нашого [Rust SDK](https://github.com/solana-labs/solana) або [JavaScript SDK](https://github.com/solana-labs/solana-web3.js).
 
-### Address History
+### Історія Адрес
 
-You can also query the transaction history of a specific address. This is
-generally _not_ a viable method for tracking all your deposit addresses over all
-slots, but may be useful for examining a few accounts for a specific period of
-time.
+Ви також можете запитати історію транзакцій для певної адреси. Це, як правило, _не_ є життєздатним методом для відстеження всіх ваших депозитних адрес за всіма слотами, але може бути корисним для аналізу кількох акаунтів за певний період часу.
 
-- Send a [`getSignaturesForAddress`](/docs/rpc/http/getSignaturesForAddress.mdx)
-  request to the api node:
+- Надішліть запит [`getSignaturesForAddress`](/docs/uk/rpc/http/getSignaturesForAddress.mdx) до API-ноди:
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -431,9 +321,7 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
   "id": 1
 }
 ```
-
-- For each signature returned, get the transaction details by sending a
-  [`getTransaction`](/docs/rpc/http/getTransaction.mdx) request:
+- Для кожного отриманого підпису отримайте деталі транзакції, надіславши запит [`getTransaction`](/docs/uk/rpc/http/getTransaction.mdx):
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -d '{
@@ -530,71 +418,46 @@ curl https://api.devnet.solana.com -X POST -H 'Content-Type: application/json' -
 }
 ```
 
-## Sending Withdrawals
+## Відправлення Виведення
 
-To accommodate a user's request to withdraw SOL, you must generate a Solana
-transfer transaction, and send it to the api node to be forwarded to your
-cluster.
+Щоб виконати запит користувача на виведення SOL, ви повинні створити транзакцію переказу Solana та надіслати її на API-ноду для передачі в кластер.
 
-### Synchronous
+### Синхронний Переказ
 
-Sending a synchronous transfer to the Solana cluster allows you to easily ensure
-that a transfer is successful and finalized by the cluster.
+Відправлення синхронного переказу до кластера Solana дозволяє легко переконатися, що переказ успішно завершено та підтверджено кластером.
 
-Solana's command-line tool offers a simple command, `solana transfer`, to
-generate, submit, and confirm transfer transactions. By default, this method
-will wait and track progress on stderr until the transaction has been finalized
-by the cluster. If the transaction fails, it will report any transaction errors.
+Інструмент командного рядка Solana пропонує просту команду `solana transfer` для створення, подання та підтвердження транзакцій переказу. За замовчуванням цей метод чекатиме та відстежуватиме прогрес через stderr, доки транзакція не буде підтверджена кластером. У разі невдачі транзакції буде повідомлено про будь-які помилки.
+
 
 ```shell
 solana transfer <USER_ADDRESS> <AMOUNT> --allow-unfunded-recipient --keypair <KEYPAIR> --url http://localhost:8899
 ```
 
-The [Solana Javascript SDK](https://github.com/solana-labs/solana-web3.js)
-offers a similar approach for the JS ecosystem. Use the `SystemProgram` to build
-a transfer transaction, and submit it using the `sendAndConfirmTransaction`
-method.
+[Solana Javascript SDK](https://github.com/solana-labs/solana-web3.js) пропонує схожий підхід для екосистеми JS. Використовуйте `SystemProgram` для створення транзакції переказу та надсилайте її за допомогою методу `sendAndConfirmTransaction`.
 
-### Asynchronous
+### Асинхронний Переказ
 
-For greater flexibility, you can submit withdrawal transfers asynchronously. In
-these cases, it is your responsibility to verify that the transaction succeeded
-and was finalized by the cluster.
+Для більшої гнучкості ви можете надсилати перекази на виведення асинхронно. У цьому випадку саме ви несете відповідальність за перевірку успішності транзакції та її підтвердження кластером.
 
-**Note:** Each transaction contains a
-[recent blockhash](/docs/core/transactions.md#recent-blockhash) to indicate its
-liveness. It is **critical** to wait until this blockhash expires before
-retrying a withdrawal transfer that does not appear to have been confirmed or
-finalized by the cluster. Otherwise, you risk a double spend. See more on
-[blockhash expiration](#blockhash-expiration) below.
+**Примітка:** Кожна транзакція містить [recent blockhash](/docs/uk/core/transactions.md#recent-blockhash), що вказує на її актуальність. Важливо **дочекатися**, поки цей blockhash не стане недійсним, перш ніж повторювати спробу переказу, який, схоже, не було підтверджено або завершено кластером. Інакше ви ризикуєте створити подвійний витрату. Дивіться більше про [термін дії blockhash](#blockhash-expiration) нижче.
 
-First, get a recent blockhash using the
-[`getFees`](/docs/rpc/deprecated/getFees.mdx) endpoint or the CLI command:
+Спочатку отримайте недавній blockhash за допомогою ендпоінту [`getFees`](/docs/uk/rpc/deprecated/getFees.mdx) або команди CLI:
 
 ```shell
 solana fees --url http://localhost:8899
 ```
+У командному рядку передайте аргумент `--no-wait`, щоб відправити переказ асинхронно, і додайте ваш недавній blockhash за допомогою аргументу `--blockhash`:
 
-In the command-line tool, pass the `--no-wait` argument to send a transfer
-asynchronously, and include your recent blockhash with the `--blockhash`
-argument:
 
 ```shell
 solana transfer <USER_ADDRESS> <AMOUNT> --no-wait --allow-unfunded-recipient --blockhash <RECENT_BLOCKHASH> --keypair <KEYPAIR> --url http://localhost:8899
 ```
 
-You can also build, sign, and serialize the transaction manually, and fire it
-off to the cluster using the JSON-RPC
-[`sendTransaction`](/docs/rpc/http/sendTransaction.mdx) endpoint.
+Ви також можете створити, підписати та серіалізувати транзакцію вручну, а потім надіслати її до кластера за допомогою ендпоінта JSON-RPC [`sendTransaction`](/docs/uk/rpc/http/sendTransaction.mdx).
 
-#### Transaction Confirmations & Finality
+#### Підтвердження Транзакцій та Фінальність
 
-Get the status of a batch of transactions using the
-[`getSignatureStatuses`](/docs/rpc/http/getSignatureStatuses.mdx) JSON-RPC
-endpoint. The `confirmations` field reports how many
-[confirmed blocks](/docs/terminology.md#confirmed-block) have elapsed since the
-transaction was processed. If `confirmations: null`, it is
-[finalized](/docs/terminology.md#finality).
+Отримайте статус групи транзакцій за допомогою ендпоінта JSON-RPC [`getSignatureStatuses`](/docs/uk/rpc/http/getSignatureStatuses.mdx). Поле `confirmations` вказує, скільки [підтверджених блоків](/docs/uk/terminology.md#confirmed-block) минуло з моменту обробки транзакції. Якщо `confirmations: null`, це означає, що транзакція є [фіналізованою](/docs/uk/terminology.md#finality).
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -642,54 +505,37 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 }
 ```
 
-#### Blockhash Expiration
+#### Термін Дії Blockhash
 
-You can check whether a particular blockhash is still valid by sending a
-[`getFeeCalculatorForBlockhash`](/docs/rpc/deprecated/getFeeCalculatorForBlockhash.mdx)
-request with the blockhash as a parameter. If the response value is `null`, the
-blockhash is expired, and the withdrawal transaction using that blockhash should
-never succeed.
+Ви можете перевірити, чи є конкретний blockhash ще дійсним, надіславши запит [`getFeeCalculatorForBlockhash`](/docs/uk/rpc/deprecated/getFeeCalculatorForBlockhash.mdx) з blockhash як параметром. Якщо значення у відповіді `null`, blockhash недійсний, і транзакція на виведення, яка використовує цей blockhash, не має шансів на успіх.
 
-### Validating User-supplied Account Addresses for Withdrawals
+### Перевірка Адрес Акаунтів, Наданих Користувачами, для Виведення
 
-As withdrawals are irreversible, it may be a good practice to validate a
-user-supplied account address before authorizing a withdrawal in order to
-prevent accidental loss of user funds.
+Оскільки транзакції на виведення є незворотними, хорошою практикою може бути перевірка адреси акаунта, наданої користувачем, перед авторизацією виведення, щоб запобігти випадковій втраті коштів користувача.
 
-#### Basic verification
+#### Основна Перевірка
 
-Solana addresses a 32-byte array, encoded with the bitcoin base58 alphabet. This
-results in an ASCII text string matching the following regular expression:
+Адреси Solana — це 32-байтовий масив, закодований за допомогою алфавіту base58 від Bitcoin. Це призводить до отримання ASCII-рядка, що відповідає наступному регулярному виразу:
 
 ```text
 [1-9A-HJ-NP-Za-km-z]{32,44}
 ```
 
-This check is insufficient on its own as Solana addresses are not checksummed,
-so typos cannot be detected. To further validate the user's input, the string
-can be decoded and the resulting byte array's length confirmed to be 32.
-However, there are some addresses that can decode to 32 bytes despite a typo
-such as a single missing character, reversed characters and ignored case
+Ця перевірка сама по собі є недостатньою, оскільки адреси Solana не мають контрольної суми, тому помилки друку не можуть бути виявлені. Для додаткової перевірки введення користувачем можна декодувати рядок і підтвердити, що довжина отриманого байтового масиву дорівнює 32. Однак існують адреси, які можуть декодуватися у 32 байти, незважаючи на помилки, наприклад, пропущений символ, перестановка символів або ігнорування регістру.
 
-#### Advanced verification
+#### Розширена Перевірка
 
-Due to the vulnerability to typos described above, it is recommended that the
-balance be queried for candidate withdraw addresses and the user prompted to
-confirm their intentions if a non-zero balance is discovered.
+Через вразливість до помилок друку, описану вище, рекомендується запитувати баланс для можливих адрес виведення та запитувати у користувача підтвердження, якщо буде виявлено ненульовий баланс.
 
-#### Valid ed25519 pubkey check
+#### Перевірка Валідного ed25519 Публічного Ключа
 
-The address of a normal account in Solana is a Base58-encoded string of a
-256-bit ed25519 public key. Not all bit patterns are valid public keys for the
-ed25519 curve, so it is possible to ensure user-supplied account addresses are
-at least correct ed25519 public keys.
+Адреса звичайного акаунта в Solana — це Base58-кодований рядок 256-бітного публічного ключа ed25519. Не всі бітові патерни є валідними публічними ключами для кривої ed25519, тому можна забезпечити, що адреси акаунтів, надані користувачем, принаймні є правильними публічними ключами ed25519.
 
 #### Java
 
-Here is a Java example of validating a user-supplied address as a valid ed25519
-public key:
+Ось приклад на Java для перевірки адреси, наданої користувачем, як валідного публічного ключа ed25519:
 
-The following code sample assumes you're using the Maven.
+Наступний приклад коду передбачає використання Maven.
 
 `pom.xml`:
 
@@ -742,13 +588,12 @@ public class PubkeyValidator
 }
 ```
 
-## Minimum Deposit & Withdrawal Amounts
+## Мінімальні Суми Депозиту та Виведення
 
-Every deposit and withdrawal of SOL must be greater or equal to the minimum
-rent-exempt balance for the account at the wallet address (a basic SOL account
-holding no data), currently: 0.000890880 SOL
+Кожен депозит та виведення SOL повинні бути більшими або дорівнювати мінімальному балансу, звільненому від оренди, для акаунта за адресою гаманця (базовий акаунт SOL, який не містить даних), який наразі складає: **0.000890880 SOL**.
 
-Similarly, every deposit account must contain at least this balance.
+Аналогічно, кожен депозитний акаунт повинен містити принаймні цей баланс.
+
 
 ```shell
 curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -d '{
@@ -765,123 +610,66 @@ curl https://api.devnet.solana.com -X POST -H "Content-Type: application/json" -
 { "jsonrpc": "2.0", "result": 890880, "id": 1 }
 ```
 
-## Prioritization Fees and Compute Units
+## Пріоритетні Комісії та Обчислювальні Одиниці
 
-In periods of high demand, it's possible for a transaction to expire before a
-validator has included such transactions in their block because they chose other
-transactions with higher economic value. Valid Transactions on Solana may be
-delayed or dropped if Prioritization Fees are not implemented properly.
+У періоди високого попиту транзакція може стати недійсною до того, як валідатор включить її до блоку, оскільки були обрані інші транзакції з вищою економічною цінністю. Валідні транзакції в Solana можуть бути затримані або скасовані, якщо Пріоритетні Комісії не впроваджені належним чином.
 
-[Prioritization Fees](/docs/terminology.md#prioritization-fee) are additional
-fees that can be added on top of the
-[base Transaction Fee](/docs/core/fees.md#transaction-fees) to ensure
-transaction inclusion within blocks and in these situations and help ensure
-deliverability.
+[Пріоритетні Комісії](/docs/uk/terminology.md#prioritization-fee) — це додаткові комісії, які можна додати до [базової комісії за транзакцію](/docs/uk/core/fees.md#transaction-fees), щоб забезпечити включення транзакцій у блоки і їх доставку.
 
-These priority fees are added to transaction by adding a special Compute Budget
-instruction that sets the desired priority fee to be paid.
+Ці пріоритетні комісії додаються до транзакції шляхом додавання спеціальної інструкції `Compute Budget`, яка встановлює бажану суму комісії.
 
-<Callout type="caution" title="Important Note">
+<Callout type="caution" title="Важлива Примітка">
 
-Failure to implement these instructions may result in network disruptions and
-dropped transactions. It is strongly recommended that every exchange supporting
-Solana make use of priority fees to avoid disruption.
+Якщо ці інструкції не впровадити, це може призвести до збоїв у роботі мережі та скасування транзакцій. Наполегливо рекомендується кожній біржі, що підтримує Solana, використовувати пріоритетні комісії для уникнення збоїв.
 
 </Callout>
 
-### What is a Prioritization Fee?
+### Що таке Пріоритетна Комісія?
 
-Prioritization Fees are priced in micro-lamports per Compute Unit (e.g. small
-amounts of SOL) prepended to transactions to make them economically compelling
-for validator nodes to include within blocks on the network.
+Пріоритетні комісії виражаються у мікролампортах за обчислювальну одиницю (наприклад, невеликі суми SOL) і додаються до транзакцій, щоб зробити їх економічно привабливими для валідаторів і забезпечити їх включення до блоків у мережі.
 
-### How much should the Prioritization Fee be?
+### Якою має бути Пріоритетна Комісія?
 
-The method for setting your prioritization fee should involve querying recent
-prioritization fees to set a fee which is likely to be compelling for the
-network. Using the
-[`getRecentPrioritizationFees`](/docs/rpc/http/getrecentprioritizationfees) RPC
-method, you can query for the prioritization fees required to land a transaction
-in a recent block.
+Метод встановлення пріоритетної комісії має включати запити до недавніх значень пріоритетних комісій, щоб встановити розмір комісії, яка буде привабливою для мережі. Використовуючи метод RPC [`getRecentPrioritizationFees`](/docs/uk/rpc/http/getrecentprioritizationfees), можна отримати дані про пріоритетні комісії, необхідні для підтвердження транзакції в недавньому блоці.
 
-Pricing strategy for these priority fees will vary based on your use case. There
-is no canonical way to do so. One strategy for setting your Prioritization Fees
-might be to calculate your transaction success rate and then increase your
-Prioritization Fee against a query to the recent transaction fees API and adjust
-accordingly. Pricing for Prioritization Fees will be dynamic based on the
-activity on the network and bids placed by other participants, only knowable
-after the fact.
+Стратегія ціноутворення пріоритетних комісій залежить від ваших потреб. Універсального підходу не існує. Однією зі стратегій може бути розрахунок рівня успішності ваших транзакцій і коригування пріоритетної комісії відповідно до даних з API про комісії. Ціноутворення на пріоритетні комісії є динамічним і залежить від активності в мережі та ставок інших учасників.
 
-One challenge with using the `getRecentPrioritizationFees` API call is that it
-may only return the lowest fee for each block. This will often be zero, which is
-not a fully useful approximation of what Prioritization Fee to use in order to
-avoid being rejected by validator nodes.
+### Як Впровадити Пріоритетні Комісії
 
-The `getRecentPrioritizationFees` API takes accounts' pubkeys as parameters, and
-then returns the highest of the minimum prioritization fees for these accounts.
-When no account is specified, the API will return the lowest fee to land to
-block, which is usually zero (unless the block is full).
+Додавання пріоритетних комісій до транзакції включає додавання двох інструкцій Compute Budget:
 
-Exchanges and applications should query the RPC endpoint with the accounts that
-a transaction is going to write-lock. The RPC endpoint will return the
-`max(account_1_min_fee, account_2_min_fee, ... account_n_min_fee)`, which should
-be the base point for the user to set the prioritization fee for that
-transaction.
+- для встановлення ціни за обчислювальну одиницю
+- для встановлення ліміту обчислювальних одиниць
 
-There are different approaches to setting Prioritization Fees and some
-[third-party APIs](https://docs.helius.dev/solana-rpc-nodes/alpha-priority-fee-api)
-are available to determine the best fee to apply. Given the dynamic nature of
-the network, there will not be a “perfect” way to go about pricing your
-Prioritization fees and careful analysis should be applied before choosing a
-path forward.
+> Детальний [посібник для розробників про використання пріоритетних комісій](/content/guides/advanced/how-to-use-priority-fees.md) доступний для додаткової інформації.
 
-### How to Implement Prioritization Fees
-
-Adding priority fees on a transaction consists of prepending two Compute Budget
-instructions on a given transaction:
-
-- one to set the compute unit price, and
-- another to set the compute unit limit
-
-> Here, you can also find a more detailed developer
-> [guide on how to use priority fees](/content/guides/advanced/how-to-use-priority-fees.md)
-> which includes more information about implementing priority fees.
-
-Create a `setComputeUnitPrice` instruction to add a Prioritization Fee above the
-Base Transaction Fee (5,000 Lamports).
+Створіть інструкцію `setComputeUnitPrice`, щоб додати Пріоритетну Комісію понад Базову Комісію за Транзакцію (5,000 лампортів).
 
 ```typescript
 // import { ComputeBudgetProgram } from "@solana/web3.js"
 ComputeBudgetProgram.setComputeUnitPrice({ microLamports: number });
 ```
 
-The value provided in micro-lamports will be multiplied by the Compute Unit (CU)
-budget to determine the Prioritization Fee in Lamports. For example, if your CU
-budget is 1M CU, and you add `1 microLamport/CU`, the Prioritization Fee will be
-1 lamport (1M \* 0. 000001). The total fee will then be 5001 lamports.
+Значення, надане в мікролампортах, буде множитися на обчислювальний бюджет (Compute Unit, CU), щоб визначити Пріоритетну Комісію в лампортах. Наприклад, якщо ваш бюджет CU становить 1M CU, і ви додаєте `1 мікролампорта/CU`, Пріоритетна Комісія становитиме 1 лампорт (1M \* 0.000001). Загальна комісія складе 5001 лампорт.
 
-To set a new compute unit budget for the transaction, create a
-`setComputeUnitLimit` instruction
+Щоб встановити новий обчислювальний бюджет для транзакції, створіть інструкцію `setComputeUnitLimit`.
+
 
 ```typescript
 // import { ComputeBudgetProgram } from "@solana/web3.js"
 ComputeBudgetProgram.setComputeUnitLimit({ units: number });
 ```
 
-The `units` value provided will replace the Solana runtime's default compute
-budget value.
+Значення `units`, яке ви надаєте, замінить стандартне значення обчислювального бюджету (Compute Budget) в середовищі виконання Solana.
 
-<Callout type="caution" title="Set the lowest CU required for the transaction">
+<Callout type="caution" title="Встановіть мінімальну кількість CU, необхідну для транзакції">
 
-Transactions should request the minimum amount of compute units (CU) required
-for execution to maximize throughput and minimize overall fees.
+Транзакції повинні запитувати мінімальну кількість обчислювальних одиниць (CU), необхідну для виконання, щоб максимізувати пропускну здатність і мінімізувати загальні комісії.
 
-You can get the CU consumed by a transaction by sending the transaction on a
-different Solana cluster, like devnet. For example, a
-[simple token transfer](https://explorer.solana.com/tx/5scDyuiiEbLxjLUww3APE9X7i8LE3H63unzonUwMG7s2htpoAGG17sgRsNAhR1zVs6NQAnZeRVemVbkAct5myi17)
-takes 300 CU.
+Ви можете дізнатися, скільки CU споживає транзакція, надіславши її в інший кластер Solana, наприклад, devnet. Наприклад, [простий переказ токенів](https://explorer.solana.com/tx/5scDyuiiEbLxjLUww3APE9X7i8LE3H63unzonUwMG7s2htpoAGG17sgRsNAhR1zVs6NQAnZeRVemVbkAct5myi17) займає 300 CU.
 
 </Callout>
+
 
 ```typescript
 // import { ... } from "@solana/web3.js"
@@ -907,104 +695,76 @@ const transaction = new Transaction()
   );
 ```
 
-### Prioritization Fees And Durable Nonces
+### Пріоритетні Комісії та Транзакції з Durable Nonces
 
-If your setup uses Durable Nonce Transactions, it is important to properly
-implement Prioritization Fees in combination with Durable Transaction Nonces to
-ensure successful transactions. Failure to do so will cause intended Durable
-Nonce transactions not to be detected as such.
+Якщо у вашій системі використовуються транзакції з Durable Nonces, важливо правильно впровадити Пріоритетні Комісії разом із Durable Transaction Nonces, щоб забезпечити успішне виконання транзакцій. Якщо цього не зробити, заплановані Durable Nonce транзакції не будуть розпізнані належним чином.
 
-If you ARE using Durable Transaction Nonces, the `AdvanceNonceAccount`
-instruction MUST be specified FIRST in the instructions list, even when the
-compute budget instructions are used to specify priority fees.
+Якщо ви ВИКОРИСТОВУЄТЕ Durable Transaction Nonces, інструкція `AdvanceNonceAccount` МАЄ бути зазначена ПЕРШОЮ у списку інструкцій, навіть якщо використовуються інструкції обчислювального бюджету для встановлення пріоритетних комісій.
 
-You can find a specific code example
-[using durable nonces and priority fees together](/content/guides/advanced/how-to-use-priority-fees.md#special-considerations)
-in this developer guide.
+Специфічний приклад коду, що демонструє використання durable nonces і пріоритетних комісій разом, можна знайти у [керівництві для розробників](/content/guides/advanced/how-to-use-priority-fees.md#special-considerations).
 
-## Supporting the SPL Token Standard
+## Підтримка Стандарту SPL Token
 
-[SPL Token](https://spl.solana.com/token) is the standard for wrapped/synthetic
-token creation and exchange on the Solana blockchain.
+[SPL Token](https://spl.solana.com/token) є стандартом для створення і обміну обгорнутих/синтетичних токенів у блокчейні Solana.
 
-The SPL Token workflow is similar to that of native SOL tokens, but there are a
-few differences which will be discussed in this section.
+Робочий процес SPL Token схожий на той, що використовується для нативних SOL токенів, але є кілька відмінностей, які будуть розглянуті в цьому розділі.
 
-### Token Mints
+### Токен Mints
 
-Each _type_ of SPL Token is declared by creating a _mint_ account. This account
-stores metadata describing token features like the supply, number of decimals,
-and various authorities with control over the mint. Each SPL Token account
-references its associated mint and may only interact with SPL Tokens of that
-type.
+Кожен _тип_ SPL Token декларується шляхом створення акаунта _mint_. Цей акаунт зберігає метадані, які описують характеристики токена, такі як пропозиція, кількість десяткових знаків і різні повноваження з контролю за mint. Кожен акаунт SPL Token посилається на відповідний mint і може взаємодіяти лише з SPL Token цього типу.
 
-### Installing the `spl-token` CLI Tool
+### Встановлення CLI Інструменту `spl-token`
 
-SPL Token accounts are queried and modified using the `spl-token` command line
-utility. The examples provided in this section depend upon having it installed
-on the local system.
+Акаунти SPL Token можна запитувати та змінювати за допомогою утиліти командного рядка `spl-token`. Приклади, наведені в цьому розділі, залежать від того, що вона встановлена на вашій локальній системі.
 
-`spl-token` is distributed from Rust
-[crates.io](https://crates.io/crates/spl-token) via the Rust `cargo` command
-line utility. The latest version of `cargo` can be installed using a handy
-one-liner for your platform at [rustup.rs](https://rustup.rs). Once `cargo` is
-installed, `spl-token` can be obtained with the following command:
+`spl-token` розповсюджується з Rust [crates.io](https://crates.io/crates/spl-token) через утиліту командного рядка Rust `cargo`. Останню версію `cargo` можна встановити за допомогою простого скрипта для вашої платформи на [rustup.rs](https://rustup.rs). Після встановлення `cargo`, утиліту `spl-token` можна отримати за допомогою такої команди:
 
 ```shell
 cargo install spl-token-cli
 ```
 
-You can then check the installed version to verify
+Після цього ви можете перевірити встановлену версію, щоб переконатися у правильності встановлення:
 
 ```shell
 spl-token --version
 ```
 
-Which should result in something like
+Результат має виглядати приблизно так:
 
 ```text
 spl-token-cli 2.0.1
 ```
+### Створення Акаунтів
 
-### Account Creation
+Акаунти SPL Token мають додаткові вимоги, яких не мають нативні акаунти System Program:
 
-SPL Token accounts carry additional requirements that native System Program
-accounts do not:
+1. Акаунти SPL Token мають бути створені до того, як у них можна буде внести токени. Акаунти токенів можна створити явно за допомогою команди `spl-token create-account` або неявно за допомогою команди `spl-token transfer --fund-recipient ...`.
+2. Акаунти SPL Token повинні залишатися [звільненими від оренди](/docs/uk/core/fees.md#rent-exempt) протягом усього періоду їх існування, а отже, вимагають внесення невеликої кількості нативних SOL токенів під час створення акаунта. Для акаунтів SPL Token ця сума становить 0.00203928 SOL (2,039,280 лампортів).
 
-1. SPL Token accounts must be created before an amount of tokens can be
-   deposited. Token accounts can be created explicitly with the
-   `spl-token create-account` command, or implicitly by the
-   `spl-token transfer --fund-recipient ...` command.
-1. SPL Token accounts must remain [rent-exempt](/docs/core/fees.md#rent-exempt)
-   for the duration of their existence and therefore require a small amount of
-   native SOL tokens be deposited at account creation. For SPL Token accounts,
-   this amount is 0.00203928 SOL (2,039,280 lamports).
+#### Командний Рядок
 
-#### Command Line
+Щоб створити акаунт SPL Token з такими властивостями:
 
-To create an SPL Token account with the following properties:
-
-1. Associated with the given mint
-1. Owned by the funding account's keypair
+1. Асоційований із зазначеним mint
+2. Належить ключовій парі фінансуючого акаунта
 
 ```shell
 spl-token create-account <TOKEN_MINT_ADDRESS>
 ```
 
-#### Example
+#### Приклад
 
 ```shell
 spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir
 ```
 
-Giving an output similar to:
+Результат:
 
 ```
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5XxyJwS73Vi5WsZL88D7
 ```
-
-Or to create an SPL Token account with a specific keypair:
+Або щоб створити акаунт SPL Token з конкретною ключовою парою:
 
 ```shell
 solana-keygen new -o token-account.json
@@ -1012,56 +772,54 @@ solana-keygen new -o token-account.json
 spl-token create-account AkUFCWTXb3w9nY2n6SFJvBV6VwvFUCe4KBMCcgLsa2ir token-account.json
 ```
 
-Giving an output similar to:
+Результат:
 
 ```shell
 Creating account 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 Signature: 4JsqZEPra2eDTHtHpB4FMWSfk3UgcCVmkKkP7zESZeMrKmFFkDkNd91pKP3vPVVZZPiu5XxyJwS73Vi5WsZL88D7
 ```
+### Перевірка Балансу Акаунта
 
-### Checking an Account's Balance
+#### Командний Рядок
 
-#### Command Line
+Щоб перевірити баланс акаунта SPL Token, використовуйте наступну команду:
 
 ```shell
 spl-token balance <TOKEN_ACCOUNT_ADDRESS>
 ```
 
-#### Example
+#### Приклад
 
 ```shell
 solana balance 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
 ```
 
-Giving an output similar to:
+Результат:
 
 ```
 0
 ```
+### Переказ Токенів
 
-### Token Transfers
+Вихідним акаунтом для переказу є фактичний акаунт токенів, який містить необхідну суму.
 
-The source account for a transfer is the actual token account that contains the
-amount.
+Однак адресою отримувача може бути звичайний гаманець. Якщо асоційований токен акаунт для вказаного mint ще не існує для цього гаманця, переказ створить його, якщо буде вказаний аргумент `--fund-recipient`.
 
-The recipient address however can be a normal wallet account. If an associated
-token account for the given mint does not yet exist for that wallet, the
-transfer will create it provided that the `--fund-recipient` argument as
-provided.
+#### Командний Рядок
 
-#### Command Line
+Щоб виконати переказ токенів, використовуйте наступну команду:
 
 ```shell
 spl-token transfer <SENDER_ACCOUNT_ADDRESS> <AMOUNT> <RECIPIENT_WALLET_ADDRESS> --fund-recipient
 ```
 
-#### Example
+#### Приклад
 
 ```shell
 spl-token transfer 6B199xxzw3PkAm25hGJpjj3Wj3WNYNHzDAnt1tEqg5BN 1
 ```
 
-Giving an output similar to:
+Результат:
 
 ```shell
 6VzWGL51jLebvnDifvcuEDec17sK6Wupi4gYhm5RzfkV
@@ -1071,224 +829,148 @@ Transfer 1 tokens
 Signature: 3R6tsog17QM8KfzbcbdP4aoMfwgo6hBggJDVy7dZPVmH2xbCWjEj31JKD53NzMrf25ChFjY7Uv2dfCDq4mGFFyAj
 ```
 
-### Depositing
+### Депозити
 
-Since each `(wallet, mint)` pair requires a separate account onchain. It is
-recommended that the addresses for these accounts be derived from SOL deposit
-wallets using the
-[Associated Token Account](https://spl.solana.com/associated-token-account)
-(ATA) scheme and that _only_ deposits from ATA addresses be accepted.
+Оскільки кожна пара `(гаманець, mint)` потребує окремого акаунта в ончейні, рекомендується, щоб адреси для цих акаунтів були отримані з гаманців для депозиту SOL за допомогою схеми [Associated Token Account (ATA)](https://spl.solana.com/associated-token-account), і приймалися _лише_ депозити з ATA адрес.
 
-Monitoring for deposit transactions should follow the
-[block polling](#poll-for-blocks) method described above. Each new block should
-be scanned for successful transactions referencing user token-account derived
-addresses. The `preTokenBalance` and `postTokenBalance` fields from the
-transaction's metadata must then be used to determine the effective balance
-change. These fields will identify the token mint and account owner (main wallet
-address) of the affected account.
+Відстеження транзакцій депозиту має використовувати метод [опитування блоків](#poll-for-blocks), описаний вище. Кожен новий блок слід сканувати на наявність успішних транзакцій, що посилаються на адреси акаунтів, отриманих для користувачів. Поля `preTokenBalance` і `postTokenBalance` з метаданих транзакцій необхідно використовувати для визначення ефективної зміни балансу. Ці поля ідентифікують mint токена та власника акаунта (основну адресу гаманця) відповідного акаунта.
 
-Note that if a receiving account is created during the transaction, it will have
-no `preTokenBalance` entry as there is no existing account state. In this case,
-the initial balance can be assumed to be zero.
+Зауважте, що якщо акаунт для отримання створюється під час транзакції, у нього не буде запису `preTokenBalance`, оскільки стан акаунта раніше не існував. У цьому випадку початковий баланс можна вважати нульовим.
 
-### Withdrawing
+### Виведення
 
-The withdrawal address a user provides must be that of their SOL wallet.
+Адреса для виведення, надана користувачем, має бути адресою їх SOL гаманця.
 
-Before executing a withdrawal [transfer](#token-transfers), the exchange should
-check the address as
-[described above](#validating-user-supplied-account-addresses-for-withdrawals).
-Additionally this address must be owned by the System Program and have no
-account data. If the address has no SOL balance, user confirmation should be
-obtained before proceeding with the withdrawal. All other withdrawal addresses
-must be rejected.
+Перед виконанням [переказу](#token-transfers) для виведення біржа повинна перевірити адресу, як це [описано вище](#validating-user-supplied-account-addresses-for-withdrawals). Крім того, ця адреса має належати System Program і не мати даних акаунта. Якщо на цій адресі відсутній баланс SOL, перед виконанням виведення слід отримати підтвердження користувача. Усі інші адреси для виведення повинні бути відхилені.
 
-From the withdrawal address, the
-[Associated Token Account](https://spl.solana.com/associated-token-account)
-(ATA) for the correct mint is derived and the transfer issued to that account
-via a
-[TransferChecked](https://github.com/solana-labs/solana-program-library/blob/fc0d6a2db79bd6499f04b9be7ead0c400283845e/token/program/src/instruction.rs#L268)
-instruction. Note that it is possible that the ATA address does not yet exist,
-at which point the exchange should fund the account on behalf of the user. For
-SPL Token accounts, funding the withdrawal account will require 0.00203928 SOL
-(2,039,280 lamports).
+З адреси для виведення [Associated Token Account (ATA)](https://spl.solana.com/associated-token-account) для відповідного mint отримується, і переказ виконується на цей акаунт за допомогою інструкції [TransferChecked](https://github.com/solana-labs/solana-program-library/blob/fc0d6a2db79bd6499f04b9be7ead0c400283845e/token/program/src/instruction.rs#L268). Зауважте, що ATA адреса може ще не існувати, у цьому випадку біржа повинна профінансувати акаунт від імені користувача. Для акаунтів SPL Token фінансування акаунта для виведення потребує 0.00203928 SOL (2,039,280 лампортів).
 
-Template `spl-token transfer` command for a withdrawal:
+Шаблон команди `spl-token transfer` для виведення:
 
 ```shell
 spl-token transfer --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
-### Other Considerations
+### Інші Міркування
 
-#### Freeze Authority
+#### Freeze Authority (Замороження Акаунтів)
 
-For regulatory compliance reasons, an SPL Token issuing entity may optionally
-choose to hold "Freeze Authority" over all accounts created in association with
-its mint. This allows them to
-[freeze](https://spl.solana.com/token#freezing-accounts) the assets in a given
-account at will, rendering the account unusable until thawed. If this feature is
-in use, the freeze authority's pubkey will be registered in the SPL Token's mint
-account.
+Для дотримання регуляторних вимог емітент токенів SPL може опціонально мати "Freeze Authority" (повноваження замороження) для всіх акаунтів, створених у зв'язку з його mint. Це дозволяє йому [заморожувати](https://spl.solana.com/token#freezing-accounts) активи в певному акаунті за бажанням, роблячи акаунт недоступним до моменту його розморожування. Якщо ця функція використовується, публічний ключ freeze authority буде зареєстрований у акаунті mint токену SPL.
 
-### Basic Support for the SPL Token-2022 (Token-Extensions) Standard
+### Основна Підтримка Стандарту SPL Token-2022 (Token-Extensions)
 
-[SPL Token-2022](https://spl.solana.com/token-2022) is the newest standard for
-wrapped/synthetic token creation and exchange on the Solana blockchain.
+[SPL Token-2022](https://spl.solana.com/token-2022) є новим стандартом для створення й обміну обгорнутих/синтетичних токенів у блокчейні Solana.
 
-Also known as "Token Extensions", the standard contains many new features that
-token creators and account holders may optionally enable. These features include
-confidential transfers, fees on transfer, closing mints, metadata, permanent
-delegates, immutable ownership, and much more. Please see the
-[extension guide](https://spl.solana.com/token-2022/extensions) for more
-information.
+Відомий також як "Token Extensions", цей стандарт включає багато нових функцій, які можуть бути опціонально увімкнені творцями токенів та власниками акаунтів. До таких функцій належать конфіденційні перекази, комісії за переказ, закриття mint, метадані, постійні делегати, незмінна власність тощо. Більше інформації дивіться в [керівництві з розширень](https://spl.solana.com/token-2022/extensions).
 
-If your exchange supports SPL Token, there isn't a lot more work required to
-support SPL Token-2022:
+Якщо ваша біржа підтримує SPL Token, багато додаткових зусиль для підтримки SPL Token-2022 не знадобиться:
 
-- the CLI tool works seamlessly with both programs starting with version 3.0.0.
-- `preTokenBalances` and `postTokenBalances` include SPL Token-2022 balances
-- RPC indexes SPL Token-2022 accounts, but they must be queried separately with
-  program id `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`
+- CLI інструмент безпроблемно працює з обома програмами, починаючи з версії 3.0.0.
+- Поля `preTokenBalances` та `postTokenBalances` включають баланси SPL Token-2022.
+- RPC індексує акаунти SPL Token-2022, але їх потрібно запитувати окремо за програмним ідентифікатором `TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb`.
 
-The Associated Token Account works the same way, and properly calculates the
-required deposit amount of SOL for the new account.
+Програма Associated Token Account працює так само, і правильно розраховує необхідну суму депозиту SOL для нового акаунта.
 
-Because of extensions, however, accounts may be larger than 165 bytes, so they
-may require more than 0.00203928 SOL to fund.
+Однак через розширення акаунти можуть бути більшими за 165 байтів, тому вони можуть потребувати більше ніж 0.00203928 SOL для фінансування.
 
-For example, the Associated Token Account program always includes the "immutable
-owner" extension, so accounts take a minimum of 170 bytes, which requires
-0.00207408 SOL.
+Наприклад, програма Associated Token Account завжди включає розширення "immutable owner", тому акаунти займають мінімум 170 байтів, що вимагає 0.00207408 SOL.
 
-### Extension-Specific Considerations
+### Міркування Щодо Розширень
 
-The previous section outlines the most basic support for SPL Token-2022. Since
-the extensions modify the behavior of tokens, exchanges may need to change how
-they handle tokens.
+Попередній розділ описує базову підтримку SPL Token-2022. Оскільки розширення змінюють поведінку токенів, біржам, можливо, доведеться змінити, як вони обробляють токени.
 
-It is possible to see all extensions on a mint or token account:
+Можливо побачити всі розширення на mint або токен акаунті за допомогою наступної команди:
 
 ```shell
 spl-token display <account address>
 ```
 
-#### Transfer Fee
+#### Комісія за Переказ
 
-A token may be configured with a transfer fee, where a portion of transferred
-tokens are withheld at the destination for future collection.
+Токен може бути налаштований з комісією за переказ, при якій частина переданих токенів утримується на адресі отримувача для подальшого стягнення.
 
-If your exchange transfers these tokens, beware that they may not all arrive at
-the destination due to the withheld amount.
+Якщо ваша біржа здійснює переказ цих токенів, зверніть увагу, що не всі токени можуть надійти на адресу отримувача через утриману суму.
 
-It is possible to specify the expected fee during a transfer to avoid any
-surprises:
+Під час переказу можна вказати очікувану комісію, щоб уникнути несподіванок:
 
 ```shell
 spl-token transfer --expected-fee <fee amount> --fund-recipient <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
-#### Mint Close Authority
+#### Повноваження Закриття Mint
 
-With this extension, a token creator may close a mint, provided the supply of
-tokens is zero.
+З цим розширенням творець токена може закрити mint, якщо пропозиція токенів дорівнює нулю.
 
-When a mint is closed, there may still be empty token accounts in existence, and
-they will no longer be associated to a valid mint.
+Коли mint закривається, можуть залишатися порожні токен акаунти, які більше не будуть асоційовані з дійсним mint.
 
-It is safe to simply close these token accounts:
+Ці токен акаунти можна безпечно закрити за допомогою наступної команди:
 
 ```shell
 spl-token close --address <account address>
 ```
 
-#### Confidential Transfer
+#### Конфіденційні Перекази
 
-Mints may be configured for confidential transfers, so that token amounts are
-encrypted, but the account owners are still public.
+Mint може бути налаштований для конфіденційних переказів, при яких суми токенів шифруються, але власники акаунтів залишаються публічними.
 
-Exchanges may configure token accounts to send and receive confidential
-transfers, to hide user amounts. It is not required to enable confidential
-transfers on token accounts, so exchanges can force users to send tokens
-non-confidentially.
+Біржі можуть налаштувати токен акаунти для відправлення та отримання конфіденційних переказів, щоб приховати суми користувачів. Увімкнення конфіденційних переказів для токен акаунтів не є обов’язковим, тому біржі можуть змусити користувачів надсилати токени неконфіденційно.
 
-To enable confidential transfers, the account must be configured for it:
+Щоб увімкнути конфіденційні перекази, акаунт має бути налаштований відповідним чином:
 
 ```shell
 spl-token configure-confidential-transfer-account --address <account address>
 ```
 
-And to transfer:
+Для переказу:
 
 ```shell
 spl-token transfer --confidential <exchange token account> <withdrawal amount> <withdrawal address>
 ```
 
-During a confidential transfer, the `preTokenBalance` and `postTokenBalance`
-fields will show no change. In order to sweep deposit accounts, you must decrypt
-the new balance to withdraw the tokens:
+Під час конфіденційного переказу поля `preTokenBalance` та `postTokenBalance` не показуватимуть змін. Щоб виконати операцію з депозитними акаунтами, необхідно розшифрувати новий баланс, щоб вивести токени:
 
 ```shell
 spl-token apply-pending-balance --address <account address>
 spl-token withdraw-confidential-tokens --address <account address> <amount or ALL>
 ```
 
-#### Default Account State
+#### Стандартний Стан Акаунтів
 
-Mints may be configured with a default account state, such that all new token
-accounts are frozen by default. These token creators may require users to go
-through a separate process to thaw the account.
+Mint може бути налаштований із стандартним станом акаунтів, коли всі нові токен акаунти за замовчуванням заморожені. Творці токенів можуть вимагати від користувачів проходження окремого процесу для розморожування акаунта.
 
-#### Non-Transferable
+#### Непередавані Токени
 
-Some tokens are non-transferable, but they may still be burned and the account
-can be closed.
+Деякі токени є непередаваними, але їх все ще можна спалити, а акаунт закрити.
 
-#### Permanent Delegate
+#### Постійний Делегат
 
-Token creators may designate a permanent delegate for all of their tokens. The
-permanent delegate may transfer or burn tokens from any account, potentially
-stealing funds.
+Творці токенів можуть призначити постійного делегата для всіх своїх токенів. Постійний делегат може передавати або спалювати токени з будь-якого акаунта, потенційно викрадаючи кошти.
 
-This is a legal requirement for stablecoins in certain jurisdictions, or could
-be used for token repossession schemes.
+Це може бути юридичною вимогою для стейблкоїнів у певних юрисдикціях або використовуватися для схем повернення токенів.
 
-Beware that these tokens may be transferred without your exchange's knowledge.
+Будьте уважні, оскільки ці токени можуть бути передані без відома вашої біржі.
 
-#### Transfer Hook
+#### Перехоплювач Переказів (Transfer Hook)
 
-Tokens may be configured with an additional program that must be called during
-transfers, in order to validate the transfer or perform any other logic.
+Токени можуть бути налаштовані з додатковою програмою, яку необхідно викликати під час переказів для перевірки транзакції або виконання іншої логіки.
 
-Since the Solana runtime requires all accounts to be explicitly passed to a
-program, and transfer hooks require additional accounts, the exchange needs to
-create transfer instructions differently for these tokens.
+Оскільки середовище виконання Solana вимагає, щоб усі акаунти були явно передані до програми, а перехоплювачі переказів вимагають додаткових акаунтів, біржа повинна створювати інструкції для переказу цих токенів по-іншому.
 
-The CLI and instruction creators such as
-`createTransferCheckedWithTransferHookInstruction` add the extra accounts
-automatically, but the additional accounts may also be specified explicitly:
+CLI та творці інструкцій, такі як `createTransferCheckedWithTransferHookInstruction`, додають додаткові акаунти автоматично, але також можна вказати додаткові акаунти явно:
 
 ```shell
 spl-token transfer --transfer-hook-account <pubkey:role> --transfer-hook-account <pubkey:role> ...
 ```
+#### Обов'язкова Нотатка (Memo) при Переказі
 
-#### Required Memo on Transfer
+Користувачі можуть налаштувати свої токен акаунти так, щоб перекази вимагали нотатку (memo).
 
-Users may configure their token accounts to require a memo on transfer.
-
-Exchanges may need to prepend a memo instruction before transferring tokens back
-to users, or they may require users to prepend a memo instruction before sending
-to the exchange:
+Біржі можуть додавати інструкцію нотатки перед тим, як переказати токени користувачам, або вимагати, щоб користувачі додавали нотатку перед відправкою токенів на біржу:
 
 ```shell
 spl-token transfer --with-memo <memo text> <exchange token account> <withdrawal amount> <withdrawal address>
 ```
+## Тестування Інтеграції
 
-## Testing the Integration
+Обов'язково протестуйте весь свій робочий процес у кластерах Solana devnet та testnet [clusters](/docs/uk/core/clusters.md) перед переходом до продакшну на mainnet-beta. Devnet є найбільш відкритим і гнучким, і ідеально підходить для початкової розробки, тоді як testnet пропонує більш реалістичну конфігурацію кластера. Обидва кластери devnet та testnet підтримують faucet. Використовуйте команду `solana airdrop 1`, щоб отримати трохи SOL для devnet або testnet для розробки та тестування.
 
-Be sure to test your complete workflow on Solana devnet and testnet
-[clusters](/docs/core/clusters.md) before moving to production on mainnet-beta.
-Devnet is the most open and flexible, and ideal for initial development, while
-testnet offers more realistic cluster configuration. Both devnet and testnet
-support a faucet, run `solana airdrop 1` to obtain some devnet or testnet SOL
-for development and testing.

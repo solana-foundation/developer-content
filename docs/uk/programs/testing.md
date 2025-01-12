@@ -1,87 +1,42 @@
----
-title: "Testing with NodeJS"
-description: "Testing native solana programs written with rust using NodeJS"
-sidebarSortOrder: 5
----
+## Тестування з NodeJS
 
-When developing programs on Solana, ensuring their correctness and reliability
-is crucial. Until now devs have been using `solana-test-validator` for testing.
-This document covers testing your Solana program with Node.js  
-using `solana-bankrun`.
+Коли ви розробляєте програми на Solana, важливо забезпечити їхню правильність і надійність. До цього часу розробники використовували `solana-test-validator` для тестування. Цей документ описує тестування вашої програми Solana за допомогою Node.js і бібліотеки `solana-bankrun`.
 
-## Overview
+## Огляд
 
-There are two ways to test programs on Solana:
+Є два способи тестування програм на Solana:
 
-1. [solana-test-validator](https://docs.anza.xyz/cli/examples/test-validator):
-   That spins up a local emulator of the Solana Blockchain on your local machine
-   which receives the transactions to be processed by the validator.
-2. The various
-   [BanksClient-based](https://docs.rs/solana-banks-client/latest/solana_banks_client/)
-   test frameworks for SBF (Solana Bytecode Format) programs: Bankrun is a
-   framework that simulates a Solana bank's operations, enabling developers to
-   deploy, interact with, and assess the behavior of programs under test
-   conditions that mimic the mainnet. It helps set up the test environment and
-   offers tools for detailed transaction insights, enhancing debugging and
-   verification. With the client, we can load programs, and simulate and process
-   transactions seamlessly.
-   [solana-program-test](https://docs.rs/solana-program-test) (Rust),
-   [solana-bankrun](https://github.com/kevinheavey/solana-bankrun) (Rust,
-   JavaScript), [anchor-bankrun](https://www.npmjs.com/package/anchor-bankrun)
-   (Anchor, JavaScript),
-   [solders.bankrun](https://kevinheavey.github.io/solders/api_reference/bankrun.html)
-   (Python) are examples of the BanksClient-based testing framework.
+1. [solana-test-validator](https://docs.anza.xyz/cli/examples/test-validator): Локальний емулятор блокчейна Solana, який обробляє транзакції, що надсилаються на валідацію.
+2. Різні фреймворки для тестування програм SBF (Solana Bytecode Format) на базі BanksClient:  
+   - `Bankrun` — це фреймворк, що імітує роботу Solana bank, дозволяючи розробникам розгортати програми, взаємодіяти з ними та оцінювати їх поведінку у тестових умовах, що нагадують mainnet.  
+   - Підтримуються фреймворки як [solana-program-test](https://docs.rs/solana-program-test) (Rust), [solana-bankrun](https://github.com/kevinheavey/solana-bankrun) (Rust, JavaScript), [anchor-bankrun](https://www.npmjs.com/package/anchor-bankrun) (Anchor, JavaScript), [solders.bankrun](https://kevinheavey.github.io/solders/api_reference/bankrun.html) (Python).
 
-> [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program)
-> can help you generate JS and Rust clients including tests. Anchor is not yet
-> supported.
+> [`pnpm create solana-program`](https://github.com/solana-program/create-solana-program)  
+> може допомогти створити клієнти для JS і Rust, включаючи тести. Anchor ще не підтримується.
 
-In this guide, we are using Solana Bankrun. `Bankrun` is a superfast, powerful,
-and lightweight framework for testing Solana programs in Node.js.
+У цьому керівництві ми використовуємо `Solana Bankrun`.  
+`Bankrun` — це дуже швидкий, потужний та легкий фреймворк для тестування програм Solana у Node.js.
 
-- The biggest advantage of using Solana Bankrun is that you don't have to set
-  up  
-  an environment to test programs like you'd have to do while using the  
-  `solana-test-validator`. Instead, you can do that with a piece of code,
-  inside  
-  the tests.
-- It also dynamically sets time and account data, which isn't possible with  
-  `solana-test-validator`
+- Основна перевага використання `Solana Bankrun` полягає в тому, що вам не потрібно налаштовувати середовище для тестування програм, як це потрібно при використанні `solana-test-validator`. Це можна зробити за допомогою коду всередині тестів.
+- `Bankrun` динамічно встановлює час та дані акаунтів, що неможливо при використанні `solana-test-validator`.
 
-## Installation
+## Інсталяція
 
-Add `solana-bankrun` as a dev dependency to your node project. If your Solana
-program is not a node project yet, you can initialize it using `npm init`.
+Додайте `solana-bankrun` як dev-залежність до вашого Node.js проекту. Якщо ваша Solana програма ще не є Node.js проектом, ви можете ініціалізувати її за допомогою команди `npm init`:
 
 ```bash
 npm i -D solana-bankrun
 ```
+## Використання
 
-## Usage
+### Директорія для Програми
 
-### Program Directory
+Перш за все, `.so` файл вашої програми повинен бути присутнім в одній із наступних директорій:
 
-Firstly, the program's `.so` file must be present in one of the following
-directories:
-
-- `./tests/fixtures` (just create this directory if it doesn't exist already).
-- Your current working directory.
-- A directory you define in the `BPF_OUT_DIR` or `SBF_OUT_DIR` environment
-  variables. `export BPF_OUT_DIR='/path/to/binary'`
-- Build your program specifying the correct directory so that library can pick
-  the file up from directory just from the name.
-  `cargo build-sbf --manifest-path=./program/Cargo.toml --sbf-out-dir=./tests/fixtures`
-
-### Testing Framework
-
-solana-bankrun is used in JavaScript or TypeScript with testing frameworks like
-[ts-mocha](https://www.npmjs.com/package/ts-mocha),
-[ava](https://github.com/avajs/ava), [Jest](https://jestjs.io/),  
-etc. Make sure to get started with any of the above.
-
-Add an [npm script](https://docs.npmjs.com/cli/v9/using-npm/scripts) to test
-your program and create your `test.ts` file inside `tests` folder.
-
+- `./tests/fixtures` (створіть цю директорію, якщо її ще не існує).
+- Ваша поточна робоча директорія.
+- Директорія, яку ви визначите в змінних середовища `BPF_OUT_DIR` або `SBF_OUT_DIR`.  
+  Наприклад: 
 ```json
 {
   "scripts": {
@@ -89,11 +44,11 @@ your program and create your `test.ts` file inside `tests` folder.
   }
 }
 ```
+### Початок Роботи
 
-### Start
+Функція `start` з бібліотеки `solana-bankrun` запускає `BanksServer` і `BanksClient`, розгортає програми та додає акаунти відповідно до ваших інструкцій.
 
-`start` function from `solana-bankrun` spins up a BanksServer and a BanksClient,
-deploy programs and add accounts as instructed.
+Приклад використання:
 
 ```typescript
 import { start } from "solana-bankrun";
@@ -108,22 +63,12 @@ test("testing program instruction", async () => {
   // write tests
 });
 ```
+### `context` у Bankrun
 
-### Bankrun `context`
-
-- We get access to the Bankrun `context` from the `start` function. Context
-  contains a BanksClient, a recent blockhash and a funded payer keypair.
-- `context` has a `payer`, which is a funded keypair that can be used to sign
-  transactions.
-- `context` also has `context.lastBlockhash` or `context.getLatestBlockhash` to
-  make fetching [Blockhash](https://solana.com/docs/terminology#blockhash)
-  convenient during tests.
-- `context.banksClient` is used to send transactions and query account data from
-  the ledger state. For example, sometimes
-  [Rent](https://solana.com/docs/terminology#rent) (in lamports) is  
-  required to build a transaction to be submitted, for example, when using the
-  SystemProgram's  
-  createAccount() instruction. You can do that using BanksClient:
+- Ми отримуємо доступ до `context` з функції `start`. `context` містить `BanksClient`, останній blockhash та профінансовану keypair для підпису транзакцій.
+- У `context` є `payer`, який є профінансованою парою ключів і може використовуватися для підпису транзакцій.
+- `context` також містить `context.lastBlockhash` або `context.getLatestBlockhash`, що спрощує отримання [Blockhash](https://solana.com/docs/terminology#blockhash) під час тестів.
+- `context.banksClient` використовується для надсилання транзакцій і отримання даних акаунтів зі стану реєстру. Наприклад, іноді потрібна [оренда (Rent)](https://solana.com/docs/terminology#rent) (в лампортах) для створення транзакції, наприклад, при використанні інструкції `createAccount()` з `SystemProgram`. Це можна зробити за допомогою `BanksClient`:
 
   ```typescript
   const rent = await client.getRent();
@@ -134,26 +79,24 @@ test("testing program instruction", async () => {
     //....
   });
   ```
+- Ви можете зчитувати дані акаунта з `BanksClient`, використовуючи функцію `getAccount`.
 
-- You can read account data from BanksClient using `getAccount` function
   ```typescript
   AccountInfo = await client.getAccount(counter);
   ```
 
-### Process Transaction
+### Обробка Транзакції
 
-The `processTransaction()` function executes the transaction with the loaded
-programs  
-and accounts from the start function and will return a transaction.
+Функція `processTransaction()` виконує транзакцію з використанням завантажених програм і акаунтів, отриманих із функції `start`. Вона повертає результат виконаної транзакції.
 
 ```typescript
 let transaction = await client.processTransaction(tx);
 ```
+## Приклад
 
-## Example
+Ось приклад тесту для програми  
+[hello world](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/native):
 
-Here's an example to write test for
-a [hello world program](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/native) :
 
 ```typescript
 import {
@@ -209,9 +152,8 @@ describe("hello-solana", async () => {
   });
 });
 ```
-
-This is how the output looks like after running the tests for
-[hello world program](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/native).
+Ось як виглядає результат після запуску тестів для  
+[hello world програми](https://github.com/solana-developers/program-examples/tree/main/basics/hello-solana/native):
 
 ```text
 [2024-06-04T12:57:36.188822000Z INFO  solana_program_test] "hello_solana_program" SBF program from tests/fixtures/hello_solana_program.so, modified 3 seconds, 20 ms, 687 µs and 246 ns ago
