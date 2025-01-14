@@ -1,7 +1,14 @@
 ---
-title: Mobile App with a Smart Contract Connection
+title: Mobile App with a Solana Program Connection
 sidebarSortOrder: 6
 sidebarLabel: Mobile App
+description:
+  "How to create a mobile app on the solana blockchain"
+keywords:
+  - solana mobile 
+  - mobile development 
+  - how to create a solana mobile app
+  - intro to solana mobile
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

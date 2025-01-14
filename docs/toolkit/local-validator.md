@@ -2,6 +2,16 @@
 title: Running a Local Solana Validator Network
 sidebarSortOrder: 4
 sidebarLabel: Local Validator
+description:
+  "How to run the solana local validator for solana local testing"
+keywords:
+  - solana testing
+  - solana localnet  
+  - solana local validator 
+  - local testing 
+  - local program testing 
+  - solana program tests 
+  - solana program development
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

@@ -2,6 +2,12 @@
 title: Solana Fuzz Tester
 sidebarSortOrder: 4
 sidebarLabel: Fuzz Tester
+description:
+  "How to create fuzz tests for solana programs"
+keywords:
+  - solana fuzz testing 
+  - solana fuzzer
+  - fuzz tests
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

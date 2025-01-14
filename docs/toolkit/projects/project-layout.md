@@ -1,7 +1,13 @@
 ---
-title: Smart Contract Repo File Structure
+title: Program File Structure
 sidebarSortOrder: 8
 sidebarLabel: Project layout
+description:
+  "Best practices for Solana program file structure when developing Solana programs"
+keywords:
+  - solana program development
+  - program file structure
+  - best practices
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -21,7 +27,7 @@ workspaces will be have the following file structure:
 └── tests
 ```
 
-The main smart contract is the `lib.rs` file, which lives insides the `programs`
+The main program is the `lib.rs` file, which lives insides the `programs`
 directory, as shown below:
 
 ```shell
@@ -36,7 +42,7 @@ directory, as shown below:
 └── tests
 ```
 
-As the smart contract gets more cumbersome, you'll typically want to separate
+As the program gets more cumbersome, you'll typically want to separate
 the logic into multiple files, as shown below:
 
 ```shell
@@ -53,7 +59,7 @@ the logic into multiple files, as shown below:
         ├── mod.rs
 ```
 
-For [native rust smart contract development](/docs/programs/rust/index.md), you
+For [native rust program development](/docs/programs/rust/index.md), you
 need to explicitly write out the entrypoint and processor for the program, so
 you'll need a few more files:
 

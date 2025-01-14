@@ -2,6 +2,16 @@
 title: Troubleshooting Solana Programs
 sidebarSortOrder: 6
 sidebarLabel: Troubleshooting
+description:
+  "How to troubleshoot solana programs"
+keywords:
+  - solana testing
+  - solana troubleshooting 
+  - solana programs
+  - solana program development
+  - solana toolkit 
+  - smart contract development 
+  - program development 
 ---
 
 When diagnosing problems with Solana development, you can easily gather loads of
