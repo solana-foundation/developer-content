@@ -3,8 +3,8 @@ title: Program File Structure
 sidebarSortOrder: 8
 sidebarLabel: Project layout
 description:
-  "Best practices for Solana program file structure when developing Solana
-  programs"
+  "Best practices for Solana program repo and file structure when developing
+  Solana programs"
 keywords:
   - solana program development
   - program file structure

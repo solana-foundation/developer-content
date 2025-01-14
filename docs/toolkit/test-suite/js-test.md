@@ -3,7 +3,8 @@ title: JavaScript Testing Framework for Solana
 sidebarSortOrder: 6
 sidebarLabel: JavaScript Tests
 description:
-  "How to write tests for solana programs in javascript with solana bankrun"
+  "How to write fast tests for Solana programs in JavaScript and NodeJS using
+  Solana bankrun"
 keywords:
   - solana javascript tests
   - solana testing

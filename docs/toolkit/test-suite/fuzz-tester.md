@@ -2,7 +2,7 @@
 title: Solana Fuzz Tester
 sidebarSortOrder: 4
 sidebarLabel: Fuzz Tester
-description: "How to create fuzz tests for solana programs"
+description: "How to create fuzz tests for Solana programs in Rust"
 keywords:
   - solana fuzz testing
   - solana fuzzer

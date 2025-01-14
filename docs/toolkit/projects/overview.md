@@ -5,8 +5,7 @@ sidebarLabel: Overview
 altRoutes:
   - /docs/toolkit/projects
 description:
-  "How to set up create a new project for solana program development for
-  beginners"
+  "How to create a new project for Solana program development for beginners."
 keywords:
   - anchor
   - anchor init

@@ -2,7 +2,7 @@
 title: Security Vulnerability Scanner
 sidebarSortOrder: 5
 sidebarLabel: Security Scanner
-description: "How to check for security vulnerabilities in solana programs"
+description: "How to check for security vulnerabilities in Solana programs"
 keywords:
   - solana security
   - solana programs

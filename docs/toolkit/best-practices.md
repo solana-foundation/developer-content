@@ -2,7 +2,7 @@
 title: Solana Program Best Practices
 sidebarSortOrder: 3
 sidebarLabel: Best Practices
-description: "What are best practices for solana program development"
+description: "What are best practices for Solana program development"
 keywords:
   - solana best practices
   - program best practices

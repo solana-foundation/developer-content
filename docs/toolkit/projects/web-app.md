@@ -3,8 +3,8 @@ title: Web App with a Program Connection
 sidebarSortOrder: 5
 sidebarLabel: Web App
 description:
-  "How to set up create a web app for solana program development with create
-  solana dapp"
+  "How to create a web app for Solana program development with the "create
+  solana dapp" tool"
 keywords:
   - solana web app development
   - create solana dapp

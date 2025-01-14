@@ -3,8 +3,8 @@ title: Basic Anchor Programs
 sidebarSortOrder: 2
 sidebarLabel: Basic Anchor
 description:
-  "How to set up a new anchor workspace for solana program development for
-  beginners"
+  "How to set up a new Anchor workspace for Solana program development for
+  beginners."
 keywords:
   - anchor
   - anchor init

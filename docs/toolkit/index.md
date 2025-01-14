@@ -2,9 +2,9 @@
 title: The Solana Toolkit
 sidebarSortOrder: 3
 description:
-  "This is an overview of the solana toolkit and mucho cli. It includes how to
-  write tests for solana programs, how to create a new project on solana, and
-  what the best practices are for writing solana programs"
+  "This is an overview of the Solana Toolkit and mucho CLI. It includes how to
+  write tests for Solana programs, how to create a new project on Solana, and
+  what the best practices are for writing Solana programs"
 keywords:
   - solana testing
   - solana fuzz tester

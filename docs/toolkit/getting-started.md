@@ -2,7 +2,7 @@
 sidebarSortOrder: 1
 sidebarLabel: Getting Started
 title: Getting Started with the Solana Toolkit
-description: "How to set up the Solana Tool kit and CLI"
+description: "How to set up the Solana Toolkit and install the Solana CLI"
 keywords:
   - solana toolkit
   - smart contract development
