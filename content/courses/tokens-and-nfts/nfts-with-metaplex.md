@@ -76,9 +76,10 @@ information on `metaplex-foundation/token-metadata` see the
 [developer docs for Token Metadata](https://developers.metaplex.com/token-metadata).
 
 <Callout type="note">
-[Metaplex Core](https://developers.metaplex.com/core), is an NFT standard from Metaplex where asset details such as the owner, name, uri e.t.c are stored on a single account. However, the most common style of NFT is still by making a Solana
-SPL token with some Metadata attached via the Metaplex Metadata program, so
-that's what we'll be using in this tutorial. </Callout>
+[Metaplex Core](https://developers.metaplex.com/core), is the Digital Asset NFT 
+standard from Metaplex where asset details such as the owner, name, uri e.t.c are 
+stored on a single account. You can read a more detailed guide [here](/content/courses/tokens-and-nfts/nfts-with-metaplex-core.md)
+</Callout>
 
 #### UMI instance
 
