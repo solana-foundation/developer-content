@@ -17,7 +17,7 @@ keywords:
 
 ## Installation
 
-Install the Solana Toolkit by running the following command:
+Install the Solana Toolkit and mucho CLI by running the following command:
 
 ```shell
 npx -y mucho@latest install
