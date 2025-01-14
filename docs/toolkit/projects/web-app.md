@@ -1,7 +1,18 @@
 ---
-title: Web App with a Smart Contract Connection
+title: Web App with a Program Connection
 sidebarSortOrder: 5
 sidebarLabel: Web App
+seoTitle: "How to create a Solana web app"
+description:
+  "How to create a web app for Solana program development with the 'create
+  solana dapp' tool"
+keywords:
+  - solana web app development
+  - create solana dapp
+  - intro to solana development
+  - projects on solana
+  - solana program development
+  - create a solana project
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -12,7 +23,7 @@ sidebarLabel: Web App
 npx create-solana-dapp
 ```
 
-This command generates a new project that connects a Solana smart contract to a
+This command generates a new project that connects a Solana program to a
 frontend with a wallet connector. It has options for multiple popular frontend
 stacks and UI libraries, including: NextJS, React, Tailwind, and more.
 

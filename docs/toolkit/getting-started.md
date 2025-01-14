@@ -2,6 +2,16 @@
 sidebarSortOrder: 1
 sidebarLabel: Getting Started
 title: Getting Started with the Solana Toolkit
+description: "How to set up the Solana Toolkit and install the Solana CLI"
+seoTitle: "How to set up the Solana Toolkit and install the Solana CLI"
+keywords:
+  - solana toolkit
+  - smart contract development
+  - program development
+  - program tools
+  - solana tools
+  - smart contract tools
+  - solana foundry
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

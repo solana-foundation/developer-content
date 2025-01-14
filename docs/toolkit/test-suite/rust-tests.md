@@ -2,6 +2,16 @@
 title: Rust Testing Framework for Solana
 sidebarSortOrder: 7
 sidebarLabel: Rust Tests
+seoTitle: "How to test Solana Programs with Rust"
+description: "How to write tests for Solana programs in Rust with litesvm"
+keywords:
+  - solana rust tests
+  - solana litesvm
+  - litesvm tests
+  - rust testing
+  - litesvm
+  - litesvm examples
+  - solana test examples
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -10,7 +20,7 @@ sidebarLabel: Rust Tests
 
 ## Add Dependency
 
-Navigate to your smart contract directory and run:
+Navigate to your program directory and run:
 
 ```shell
 cargo add --dev litesvm

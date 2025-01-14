@@ -2,6 +2,17 @@
 title: Update an Existing Project
 sidebarSortOrder: 7
 sidebarLabel: Existing Projects
+seoTitle: "How to add Solana into an existing app or project"
+description:
+  "How to add an existing project to Solana project scaffold using the
+  'create-solana-program' tool."
+keywords:
+  - solana program development
+  - create solana program
+  - solana anchor development
+  - program scaffold
+  - anchor framework
+  - solana workspace set up
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

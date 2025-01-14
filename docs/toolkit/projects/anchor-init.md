@@ -1,7 +1,18 @@
 ---
-title: Basic Anchor Smart Contracts
+title: Basic Anchor Programs
 sidebarSortOrder: 2
 sidebarLabel: Basic Anchor
+seoTitle: "How to create a Solana program with Anchor"
+description:
+  "How to set up a new Anchor workspace for Solana program development for
+  beginners."
+keywords:
+  - anchor
+  - anchor init
+  - solana anchor development
+  - intro to anchor
+  - anchor framework
+  - anchor workspace set up
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -14,8 +25,8 @@ anchor init <project_name>
 
 ## Overview
 
-This initializes a simplistic workspace set up for Anchor smart contract
-development, with the following structure:
+This initializes a simplistic workspace set up for Anchor program development,
+with the following structure:
 
 - `Anchor.toml`: Anchor configuration file.
 - `Cargo.toml`: Rust workspace configuration file.
@@ -40,8 +51,7 @@ anchor build
 anchor test
 ```
 
-To start writing your own Anchor smart contract, navigate to
-`programs/src/lib.rs`.
+To start writing your own Anchor program, navigate to `programs/src/lib.rs`.
 
 ## File Structure Template
 

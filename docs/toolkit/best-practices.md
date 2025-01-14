@@ -1,7 +1,19 @@
 ---
-title: Solana Smart Contract Best Practices
+title: Solana Program Best Practices
 sidebarSortOrder: 3
 sidebarLabel: Best Practices
+description:
+  "The best practices for Solana program development, including: optimize
+  compute, fuzzing, repo structure, indexing, and more."
+seoTitle: "What are best practices for Solana program development?"
+keywords:
+  - solana best practices
+  - program best practices
+  - program development
+  - program security
+  - development best practices
+  - smart contract best practices
+  - solana smart contracts
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

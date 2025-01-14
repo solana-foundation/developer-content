@@ -2,6 +2,17 @@
 title: Solana Program Scaffold
 sidebarSortOrder: 3
 sidebarLabel: Solana Programs
+seoTitle: "How to create a Solana program (native or Anchor)"
+description:
+  "How to create a new Solana project scaffold for program development with the
+  'create solana program' tool."
+keywords:
+  - solana development
+  - create solana program
+  - intro to solana development
+  - projects on solana
+  - solana program development
+  - create a solana project
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -9,13 +20,13 @@ sidebarLabel: Solana Programs
 > [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
 ```shell
-npx create-solana-program
+pnpm create solana-program
 ```
 
 [`create-solana-program`](https://github.com/solana-program/create-solana-program)
 initializes an in-depth workspace with everything you need for general Solana
-smart contract development. This scaffold allows you to write either native rust
-smart contracts or Anchor smart contracts.
+program development. This scaffold allows you to write either native rust
+programs or Anchor programs.
 
 ## Program Frameworks
 
@@ -77,7 +88,7 @@ Client, or both.
   [web3.js](https://solana-labs.github.io/solana-web3.js/).
 
 - **Rust Client** creates a rust crate allowing consumers to interact with the
-  smart contract.
+  program.
 
 For further workspace customization and additional information, check out the
 `create-solana-program`

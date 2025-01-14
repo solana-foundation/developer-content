@@ -2,6 +2,13 @@
 sidebarLabel: Testing Basics
 title: Solana Testing Basics
 sidebarSortOrder: 2
+seoTitle: "How to test Solana programs"
+description: "How to run tests for Solana program development"
+keywords:
+  - solana development
+  - solana testing
+  - test basics
+  - how to test programs
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

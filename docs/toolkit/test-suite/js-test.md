@@ -2,6 +2,17 @@
 title: JavaScript Testing Framework for Solana
 sidebarSortOrder: 6
 sidebarLabel: JavaScript Tests
+seoTitle: "How to test Solana Programs with JavaScript/TypeScript"
+description:
+  "How to write fast tests for Solana programs in JavaScript and NodeJS using
+  Solana bankrun"
+keywords:
+  - solana javascript tests
+  - solana testing
+  - solana bankrun
+  - bankrun tests
+  - bankrun examples
+  - solana test examples
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -10,7 +21,7 @@ sidebarLabel: JavaScript Tests
 
 ## Add Dependency
 
-Navigate to your smart contract directory and run:
+Navigate to your program directory and run:
 
 ```shell
 npm install solana-bankrun

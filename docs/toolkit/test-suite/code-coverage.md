@@ -2,6 +2,14 @@
 title: Solana Code Coverage Tool
 sidebarSortOrder: 3
 sidebarLabel: Code Coverage
+seoTitle: "How to run code coverage for Solana programs"
+description: "How to check the code coverage for Solana programs when testing"
+keywords:
+  - solana testing
+  - solana code coverage
+  - code coverage tool
+  - testing with code coverage
+  - how to check code coverage
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
