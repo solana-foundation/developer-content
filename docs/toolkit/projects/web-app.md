@@ -4,8 +4,8 @@ sidebarSortOrder: 5
 sidebarLabel: Web App
 seoTitle: "How to create a Solana web app"
 description:
-  "How to create a web app for Solana program development with the "create
-  solana dapp" tool"
+  "How to create a web app for Solana program development with the 'create
+  solana dapp' tool"
 keywords:
   - solana web app development
   - create solana dapp
