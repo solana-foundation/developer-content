@@ -2,6 +2,7 @@
 title: JavaScript Testing Framework for Solana
 sidebarSortOrder: 6
 sidebarLabel: JavaScript Tests
+seoTitle: "How to test Solana Programs with JavaScript/TypeScript"
 description:
   "How to write fast tests for Solana programs in JavaScript and NodeJS using
   Solana bankrun"

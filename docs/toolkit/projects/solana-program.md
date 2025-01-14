@@ -2,6 +2,7 @@
 title: Solana Program Scaffold
 sidebarSortOrder: 3
 sidebarLabel: Solana Programs
+seoTitle: "How to create a Solana program (native or Anchor)"
 description:
   "How to create a new Solana project scaffold for program development with the
   'create solana program' tool."

@@ -2,6 +2,7 @@
 title: Update an Existing Project
 sidebarSortOrder: 7
 sidebarLabel: Existing Projects
+seoTitle: "How to add Solana into an existing app or project"
 description:
   "How to add an existing project to Solana project scaffold using the
   'create-solana-program' tool."

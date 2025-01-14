@@ -2,6 +2,7 @@
 title: Solana Code Coverage Tool
 sidebarSortOrder: 3
 sidebarLabel: Code Coverage
+seoTitle: "How to run code coverage for Solana programs"
 description: "How to check the code coverage for Solana programs when testing"
 keywords:
   - solana testing

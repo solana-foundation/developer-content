@@ -2,7 +2,8 @@
 title: Rust Testing Framework for Solana
 sidebarSortOrder: 7
 sidebarLabel: Rust Tests
-description: "How to write tests for solana programs in rust with litesvm"
+seoTitle: "How to test Solana Programs with Rust"
+description: "How to write tests for Solana programs in Rust with litesvm"
 keywords:
   - solana rust tests
   - solana litesvm

@@ -3,6 +3,7 @@ title: Troubleshooting Solana Programs
 sidebarSortOrder: 6
 sidebarLabel: Troubleshooting
 description: "How to troubleshoot Solana programs"
+seoTitle: "How to troubleshoot Solana programs"
 keywords:
   - solana testing
   - solana troubleshooting

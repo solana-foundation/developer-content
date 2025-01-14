@@ -2,6 +2,7 @@
 title: Basic Anchor Programs
 sidebarSortOrder: 2
 sidebarLabel: Basic Anchor
+seoTitle: "How to create a Solana program with Anchor"
 description:
   "How to set up a new Anchor workspace for Solana program development for
   beginners."

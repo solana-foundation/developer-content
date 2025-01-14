@@ -2,6 +2,7 @@
 title: Web App with a Program Connection
 sidebarSortOrder: 5
 sidebarLabel: Web App
+seoTitle: "How to create a Solana web app"
 description:
   "How to create a web app for Solana program development with the "create
   solana dapp" tool"

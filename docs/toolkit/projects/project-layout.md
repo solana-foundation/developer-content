@@ -2,6 +2,7 @@
 title: Program File Structure
 sidebarSortOrder: 8
 sidebarLabel: Project layout
+seoTitle: "How to structure a Solana program and repo"
 description:
   "Best practices for Solana program repo and file structure when developing
   Solana programs"
