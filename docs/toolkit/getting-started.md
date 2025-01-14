@@ -29,6 +29,7 @@ To get started, install The Solana Toolkit:
 
 ```shell
 npx -y mucho@latest install
+mucho --version
 ```
 
 This will install the latest versions of the following:
@@ -48,6 +49,12 @@ This will install the latest versions of the following:
   framework for Solana programs to help you ship secure code.
 - [Code Coverage Tool](https://github.com/LimeChain/zest?tab=readme-ov-file): A
   code coverage CLI tool for Solana programs.
+
+After installation, all `mucho` commands can be run as follows:
+
+```shell
+mucho --help
+```
 
 ## Generate a keypair
 

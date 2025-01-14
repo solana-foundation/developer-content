@@ -35,8 +35,16 @@ one cli_.
 
 ## Install
 
+Install the Solana Toolkit and `mucho` CLI with the following command:
+
 ```shell
 npx -y mucho@latest install
+```
+
+Verify mucho was installed via:
+
+```shell
+mucho --version
 ```
 
 For more information, go to [Getting Started](/docs/toolkit/getting-started.md).
