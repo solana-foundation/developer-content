@@ -43,7 +43,86 @@ Using the `@solana/web3.js` library, you can use the
 function to construct the instruction needed to create a new lookup table, as
 well as determine its address:
 
-```js
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+
+<Tab value="web3.js v2">
+
+> NOTE: This example requires the `@solana-program/address-lookup-table`
+> package.
+
+```typescript filename=create-alt.ts
+import {
+  findAddressLookupTablePda,
+  getCreateLookupTableInstructionAsync,
+} from "@solana-program/address-lookup-table";
+import {
+  appendTransactionMessageInstruction,
+  createKeyPairSignerFromBytes,
+  createSolanaRpc,
+  pipe,
+  createTransactionMessage,
+  setTransactionMessageFeePayerSigner,
+  setTransactionMessageLifetimeUsingBlockhash,
+  getSignatureFromTransaction,
+  signTransactionMessageWithSigners,
+  sendAndConfirmTransactionFactory,
+  createSolanaRpcSubscriptions,
+} from "@solana/web3.js";
+
+export async function createAlt(client: any, authority: any) {
+  const recentSlot = await client.rpc
+    .getSlot({ commitment: "finalized" })
+    .send();
+
+  const [alt] = await findAddressLookupTablePda({
+    authority: authority.address,
+    recentSlot,
+  });
+
+  const createAltIx = await getCreateLookupTableInstructionAsync({
+    authority,
+    recentSlot,
+  });
+
+  const { value: latestBlockhash } = await client.rpc
+    .getLatestBlockhash()
+    .send();
+
+  const tx = pipe(
+    createTransactionMessage({ version: 0 }),
+    tx => setTransactionMessageFeePayerSigner(authority, tx),
+    tx => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
+    tx => appendTransactionMessageInstruction(createAltIx, tx),
+  );
+
+  const signedTransaction = await signTransactionMessageWithSigners(tx);
+  const signature = getSignatureFromTransaction(signedTransaction);
+  await sendAndConfirmTransactionFactory(client)(signedTransaction, {
+    commitment: "confirmed",
+    skipPreflight: false,
+  });
+  return { alt, signature };
+}
+
+const main = async () => {
+  const rpc = createSolanaRpc("https://api.devnet.solana.com");
+  const wss = createSolanaRpcSubscriptions("wss://api.devnet.solana.com");
+  const client = { rpc, rpcSubscriptions: wss };
+
+  const keypairBytes = new Uint8Array(walletSecret);
+  const authority = await createKeyPairSignerFromBytes(keypairBytes);
+
+  const result = await createAlt(client, authority);
+  console.log("Successfully created:", result);
+};
+main();
+```
+
+</Tab>
+
+<Tab value="web3.js v1">
+
+```typescript filename=create-alt.ts
 const web3 = require("@solana/web3.js");
 
 // connect to a cluster and get the current `slot`
@@ -65,6 +144,10 @@ console.log("lookup table address:", lookupTableAddress.toBase58());
 // To create the Address Lookup Table onchain:
 // send the `lookupTableInst` instruction in a transaction
 ```
+
+</Tab>
+
+</Tabs>
 
 > NOTE: Address lookup tables can be **created** with either a `v0` transaction
 > or a `legacy` transaction. But the Solana runtime can only retrieve and handle
