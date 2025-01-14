@@ -14,50 +14,64 @@ altRoutes:
   - /setup
 ---
 
-Цей розділ охоплює етапи налаштування локального середовища для розробки на Solana.
+Цей розділ охоплює етапи налаштування локального середовища для розробки на
+Solana.
 
 ## Встановлення Залежностей
 
-- Користувачі Windows повинні спочатку встановити WSL (Windows Subsystem for Linux), а потім встановити залежності, зазначені в розділі Linux нижче.
-- Користувачі Linux повинні спочатку встановити залежності, зазначені в розділі Linux нижче.
+- Користувачі Windows повинні спочатку встановити WSL (Windows Subsystem for
+  Linux), а потім встановити залежності, зазначені в розділі Linux нижче.
+- Користувачі Linux повинні спочатку встановити залежності, зазначені в розділі
+  Linux нижче.
 - Користувачі Mac повинні почати з інструкцій з установки Rust нижче.
 
 <Accordion>
 <AccordionItem title="Windows Subsystem for Linux (WSL)">
 
 Для розробки програм Solana на Windows **необхідно використовувати
-[WSL](https://learn.microsoft.com/en-us/windows/wsl/install)** (Windows Subsystem for Linux). Усі додаткові залежності необхідно встановлювати через термінал Linux.
+[WSL](https://learn.microsoft.com/en-us/windows/wsl/install)** (Windows
+Subsystem for Linux). Усі додаткові залежності необхідно встановлювати через
+термінал Linux.
 
-Після встановлення WSL встановіть залежності, зазначені в розділі Linux нижче, перш ніж переходити до установки Rust, Solana CLI та Anchor CLI.
+Після встановлення WSL встановіть залежності, зазначені в розділі Linux нижче,
+перш ніж переходити до установки Rust, Solana CLI та Anchor CLI.
 
 Щоб встановити WSL, виконайте наступну команду у Windows PowerShell:
-
 
 ```shell
 wsl --install
 ```
 
-Процес встановлення запропонує вам створити обліковий запис користувача за замовчуванням.
+Процес встановлення запропонує вам створити обліковий запис користувача за
+замовчуванням.
 
 ![WSL Install](/assets/docs/intro/installation/wsl-install.png)
 
-За замовчуванням WSL встановлює Ubuntu. Ви можете відкрити термінал Linux, ввівши "Ubuntu" у пошуковому рядку.
+За замовчуванням WSL встановлює Ubuntu. Ви можете відкрити термінал Linux,
+ввівши "Ubuntu" у пошуковому рядку.
 
 ![WSL Ubuntu](/assets/docs/intro/installation/wsl-ubuntu-search.png)
 
-Якщо ваш термінал Ubuntu виглядає так, як на зображенні нижче, ви можете зіткнутися з проблемою, коли комбінація `ctrl + v` (вставити) не працює у терміналі.
+Якщо ваш термінал Ubuntu виглядає так, як на зображенні нижче, ви можете
+зіткнутися з проблемою, коли комбінація `ctrl + v` (вставити) не працює у
+терміналі.
 
 ![Ubuntu Terminal](/assets/docs/intro/installation/wsl-ubuntu-terminal-1.png)
 
-Якщо виникла ця проблема, відкрийте Windows Terminal, ввівши "Terminal" у пошуковому рядку.
+Якщо виникла ця проблема, відкрийте Windows Terminal, ввівши "Terminal" у
+пошуковому рядку.
 
 ![Windows Terminal](/assets/docs/intro/installation/wsl-windows-terminal.png)
 
-Далі закрийте Windows Terminal і знову відкрийте термінал Linux, ввівши "Ubuntu" у пошуку. Тепер термінал має виглядати так, як на зображенні нижче, і комбінація `ctrl + v` (вставити) має працювати.
+Далі закрийте Windows Terminal і знову відкрийте термінал Linux, ввівши "Ubuntu"
+у пошуку. Тепер термінал має виглядати так, як на зображенні нижче, і комбінація
+`ctrl + v` (вставити) має працювати.
 
 ![Ubuntu Terminal](/assets/docs/intro/installation/wsl-ubuntu-terminal-2.png)
 
-Якщо ви використовуєте VS Code, розширення [WSL extension](https://code.visualstudio.com/docs/remote/wsl-tutorial) дозволяє використовувати WSL та VS Code разом.
+Якщо ви використовуєте VS Code, розширення
+[WSL extension](https://code.visualstudio.com/docs/remote/wsl-tutorial) дозволяє
+використовувати WSL та VS Code разом.
 
 ![WSL Setup in VS Code](/assets/docs/intro/installation/wsl-vscode.png)
 
@@ -65,7 +79,9 @@ wsl --install
 
 ![WSL: Ubuntu](/assets/docs/intro/installation/wsl-vscode-ubuntu.png)
 
-Після налаштування WSL всі додаткові залежності потрібно встановлювати через термінал Linux. Встановіть залежності, зазначені в розділі Linux нижче, перш ніж переходити до встановлення Rust, Solana CLI та Anchor CLI.
+Після налаштування WSL всі додаткові залежності потрібно встановлювати через
+термінал Linux. Встановіть залежності, зазначені в розділі Linux нижче, перш ніж
+переходити до встановлення Rust, Solana CLI та Anchor CLI.
 
 </AccordionItem>
 <AccordionItem title="Linux">
@@ -77,8 +93,8 @@ wsl --install
 ```shell
 sudo apt-get update
 ```
-Далі встановіть наступні залежності:
 
+Далі встановіть наступні залежності:
 
 ```shell
 sudo apt-get install -y \
@@ -87,7 +103,9 @@ sudo apt-get install -y \
     libudev-dev llvm libclang-dev \
     protobuf-compiler libssl-dev
 ```
-Якщо під час встановлення `protobuf-compiler` ви зіткнетеся з такою помилкою, спочатку переконайтеся, що виконали команду `sudo apt-get update`:
+
+Якщо під час встановлення `protobuf-compiler` ви зіткнетеся з такою помилкою,
+спочатку переконайтеся, що виконали команду `sudo apt-get update`:
 
 ```
 Package protobuf-compiler is not available, but is referred to by another package.
@@ -102,9 +120,11 @@ is only available from another source
 
 ### Встановлення Rust
 
-Програми Solana пишуться на [мові програмування Rust](https://www.rust-lang.org/).
+Програми Solana пишуться на
+[мові програмування Rust](https://www.rust-lang.org/).
 
-Рекомендований метод встановлення Rust — це [rustup](https://www.rust-lang.org/tools/install).
+Рекомендований метод встановлення Rust — це
+[rustup](https://www.rust-lang.org/tools/install).
 
 Виконайте наступну команду для встановлення Rust:
 
@@ -135,7 +155,8 @@ source "$HOME/.cargo/env.fish"  # For fish
 </AccordionItem>
 </Accordion>
 
-Виконайте наступну команду, щоб оновити змінну середовища PATH і включити директорію `bin` Cargo:
+Виконайте наступну команду, щоб оновити змінну середовища PATH і включити
+директорію `bin` Cargo:
 
 ```shell
 . "$HOME/.cargo/env"
@@ -155,17 +176,22 @@ rustc 1.80.1 (3f5fd8dd4 2024-08-06)
 
 ### Встановлення Solana CLI
 
-Solana CLI надає всі необхідні інструменти для створення та розгортання програм Solana.
+Solana CLI надає всі необхідні інструменти для створення та розгортання програм
+Solana.
 
-Встановіть набір інструментів Solana CLI за допомогою офіційної команди встановлення:
+Встановіть набір інструментів Solana CLI за допомогою офіційної команди
+встановлення:
 
 ```shell
 sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
 ```
 
-Ви можете замінити `stable` на тег релізу, який відповідає версії програмного забезпечення потрібного релізу (наприклад, `v2.0.3`), або використовувати один із трьох символічних назв каналів: `stable`, `beta` або `edge`.
+Ви можете замінити `stable` на тег релізу, який відповідає версії програмного
+забезпечення потрібного релізу (наприклад, `v2.0.3`), або використовувати один
+із трьох символічних назв каналів: `stable`, `beta` або `edge`.
 
-Якщо ви встановлюєте Solana CLI вперше, ви можете побачити таке повідомлення із запитом на додавання змінної середовища PATH:
+Якщо ви встановлюєте Solana CLI вперше, ви можете побачити таке повідомлення із
+запитом на додавання змінної середовища PATH:
 
 ```
 Close and reopen your terminal to apply the PATH changes or run the following in your existing shell:
@@ -176,7 +202,9 @@ export PATH="/Users/test/.local/share/solana/install/active_release/bin:$PATH"
 <Tabs groupId="language" items="Linux, Mac">
 <Tab value="Linux">
 
-Якщо ви використовуєте термінал Linux або WSL, ви можете додати змінну середовища PATH у файл конфігурації вашої оболонки, виконавши команду, зазначену під час встановлення, або перезапустивши термінал.
+Якщо ви використовуєте термінал Linux або WSL, ви можете додати змінну
+середовища PATH у файл конфігурації вашої оболонки, виконавши команду, зазначену
+під час встановлення, або перезапустивши термінал.
 
 ```shell
 export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
@@ -185,16 +213,19 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 </Tab>
 <Tab value="Mac">
 
-Якщо ви використовуєте Mac із оболонкою `zsh`, виконання стандартної команди `export PATH`, зазначеної під час встановлення, не зберігається після закриття термінала.
+Якщо ви використовуєте Mac із оболонкою `zsh`, виконання стандартної команди
+`export PATH`, зазначеної під час встановлення, не зберігається після закриття
+термінала.
 
-Замість цього ви можете додати PATH у файл конфігурації оболонки, виконавши наступну команду:
+Замість цього ви можете додати PATH у файл конфігурації оболонки, виконавши
+наступну команду:
 
 ```shell
 echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' >> ~/.zshrc
 ```
 
-Далі виконайте наступну команду, щоб оновити сесію термінала, або перезапустіть термінал.
-
+Далі виконайте наступну команду, щоб оновити сесію термінала, або перезапустіть
+термінал.
 
 ```shell
 source ~/.zshrc
@@ -205,27 +236,28 @@ source ~/.zshrc
 
 Щоб перевірити, чи встановлення було успішним, перевірте версію Solana CLI:
 
-
 ```shell
 solana --version
 ```
-Ви повинні побачити результат, схожий на наступний:
 
+Ви повинні побачити результат, схожий на наступний:
 
 ```
 solana-cli 1.18.22 (src:9efdd74b; feat:4215500110, client:Agave)
 ```
 
-Ви можете переглянути всі доступні версії у [репозиторії Agave на Github](https://github.com/anza-xyz/agave/releases).
+Ви можете переглянути всі доступні версії у
+[репозиторії Agave на Github](https://github.com/anza-xyz/agave/releases).
 
 <Callout>
 
-Agave — це клієнт валідатора від [Anza](https://www.anza.xyz/), раніше відомий як клієнт валідатора Solana Labs.
+Agave — це клієнт валідатора від [Anza](https://www.anza.xyz/), раніше відомий
+як клієнт валідатора Solana Labs.
 
 </Callout>
 
-Щоб оновити Solana CLI до останньої версії, ви можете використати наступну команду:
-
+Щоб оновити Solana CLI до останньої версії, ви можете використати наступну
+команду:
 
 ```shell
 agave-install update
@@ -233,38 +265,43 @@ agave-install update
 
 ### Встановлення Anchor CLI
 
-[Anchor](https://www.anchor-lang.com/) — це фреймворк для розробки програм на Solana. Anchor використовує макроси Rust, щоб спростити процес написання програм на Solana.
+[Anchor](https://www.anchor-lang.com/) — це фреймворк для розробки програм на
+Solana. Anchor використовує макроси Rust, щоб спростити процес написання програм
+на Solana.
 
 Існує два способи встановлення Anchor CLI та інструментів:
 
-1. За допомогою Anchor Version Manager (AVM) — **рекомендований спосіб встановлення**, оскільки він спрощує оновлення версій Anchor у майбутньому.
-2. Без AVM — вимагає більш ручного процесу для оновлення версій Anchor у майбутньому.
+1. За допомогою Anchor Version Manager (AVM) — **рекомендований спосіб
+   встановлення**, оскільки він спрощує оновлення версій Anchor у майбутньому.
+2. Без AVM — вимагає більш ручного процесу для оновлення версій Anchor у
+   майбутньому.
 
 <Tabs groupId="anchor" items="AVM, Without AVM">
 <Tab value="AVM">
 
-Менеджер версій Anchor (AVM) дозволяє встановлювати та керувати різними версіями Anchor на вашій системі, включаючи зручне оновлення версій у майбутньому.
+Менеджер версій Anchor (AVM) дозволяє встановлювати та керувати різними версіями
+Anchor на вашій системі, включаючи зручне оновлення версій у майбутньому.
 
 Встановіть AVM за допомогою наступної команди:
 
 ```shell
 cargo install --git https://github.com/coral-xyz/anchor avm --force
 ```
-Перевірте, щоб переконатися, що AVM було встановлено та він доступний:
 
+Перевірте, щоб переконатися, що AVM було встановлено та він доступний:
 
 ```shell
 avm --version
 ```
-Встановіть останню версію Anchor CLI за допомогою AVM:
 
+Встановіть останню версію Anchor CLI за допомогою AVM:
 
 ```shell
 avm install latest
 avm use latest
 ```
-Або встановіть конкретну версію Anchor CLI, вказавши бажану версію:
 
+Або встановіть конкретну версію Anchor CLI, вказавши бажану версію:
 
 ```shell
 avm install 0.30.1
@@ -290,7 +327,8 @@ cargo install --git https://github.com/coral-xyz/anchor --tag v0.30.1 anchor-cli
 </Tab>
 </Tabs>
 
-Під час встановлення ви можете побачити таке попередження. Однак це не впливає на процес встановлення.
+Під час встановлення ви можете побачити таке попередження. Однак це не впливає
+на процес встановлення.
 
 <Accordion>
 <AccordionItem title="warning: unexpected `cfg` condition name: `nightly`">
@@ -329,7 +367,8 @@ anchor --version
 anchor-cli 0.30.1
 ```
 
-Під час встановлення Anchor CLI на Linux або WSL ви можете зіткнутися з такою помилкою:
+Під час встановлення Anchor CLI на Linux або WSL ви можете зіткнутися з такою
+помилкою:
 
 ```
 error: could not exec the linker cc = note: Permission denied (os error 13)
@@ -342,12 +381,15 @@ error: could not exec the linker cc = note: Permission denied (os error 13)
 
 #### Node.js та Yarn
 
-Node.js та Yarn необхідні для запуску тестового файлу (TypeScript), створеного за допомогою команди `anchor init`. (Шаблон тестів на Rust також доступний за допомогою `anchor init --test-template rust`)
+Node.js та Yarn необхідні для запуску тестового файлу (TypeScript), створеного
+за допомогою команди `anchor init`. (Шаблон тестів на Rust також доступний за
+допомогою `anchor init --test-template rust`)
 
 <Accordion>
 <AccordionItem title="Встановлення Node">
 
-Рекомендований спосіб встановлення Node — використання [Node Version Manager (nvm)](https://github.com/nvm-sh/nvm).
+Рекомендований спосіб встановлення Node — використання
+[Node Version Manager (nvm)](https://github.com/nvm-sh/nvm).
 
 Встановіть nvm за допомогою наступної команди:
 
@@ -387,11 +429,13 @@ v22.7.0
 ```shell
 npm install --global yarn
 ```
+
 Щоб перевірити, чи встановлення було успішним, перевірте версію Yarn:
 
 ```
 yarn --version
 ```
+
 Ви повинні побачити наступний результат:
 
 ```
@@ -409,6 +453,7 @@ yarn --version
 ```
 error: not a directory: '.../solana-release/bin/sdk/sbf/dependencies/platform-tools/rust/lib'
 ```
+
 Спробуйте ці рішення:
 
 1. Примусове встановлення за допомогою наступної команди:
@@ -433,16 +478,19 @@ rm -rf ~/.cache/solana/*
 version = 3
 ```
 
-Дивіться [це обговорення](https://github.com/coral-xyz/anchor/issues/3392) для отримання додаткової інформації.
-
+Дивіться [це обговорення](https://github.com/coral-xyz/anchor/issues/3392) для
+отримання додаткової інформації.
 
 </AccordionItem>
 
 </Accordion>
 
-Після застосування будь-якого з рішень спробуйте знову виконати команду `anchor build`.
+Після застосування будь-якого з рішень спробуйте знову виконати команду
+`anchor build`.
 
-Якщо ви використовуєте Linux або WSL і стикаєтеся з такими помилками під час виконання команди `anchor test` після створення нового проєкту Anchor, це може бути через відсутність Node.js або Yarn:
+Якщо ви використовуєте Linux або WSL і стикаєтеся з такими помилками під час
+виконання команди `anchor test` після створення нового проєкту Anchor, це може
+бути через відсутність Node.js або Yarn:
 
 ```
 Permission denied (os error 13)
@@ -456,14 +504,14 @@ No such file or directory (os error 2)
 
 ## Основи Solana CLI
 
-Цей розділ ознайомить вас із деякими поширеними командами Solana CLI для початку роботи.
+Цей розділ ознайомить вас із деякими поширеними командами Solana CLI для початку
+роботи.
 
 <Steps>
 
 ### Конфігурація Solana
 
 Щоб переглянути вашу поточну конфігурацію:
-
 
 ```shell
 solana config get
@@ -479,7 +527,8 @@ Keypair Path: /Users/test/.config/solana/id.json
 Commitment: confirmed
 ```
 
-RPC URL та Websocket URL вказують кластер Solana, до якого CLI надсилатиме запити. За замовчуванням це буде mainnet-beta.
+RPC URL та Websocket URL вказують кластер Solana, до якого CLI надсилатиме
+запити. За замовчуванням це буде mainnet-beta.
 
 Ви можете оновити кластер Solana CLI за допомогою наступних команд:
 
@@ -489,6 +538,7 @@ solana config set --url devnet
 solana config set --url localhost
 solana config set --url testnet
 ```
+
 Ви також можете використовувати наступні скорочені опції:
 
 ```
@@ -498,14 +548,19 @@ solana config set -ul    # For localhost
 solana config set -ut    # For testnet
 ```
 
-Шлях до ключової пари (Keypair Path) вказує розташування гаманця за замовчуванням, який використовується Solana CLI (для оплати комісій за транзакції та розгортання програм). Шлях за замовчуванням: `~/.config/solana/id.json`. У наступному кроці описано, як створити ключову пару за цим шляхом.
+Шлях до ключової пари (Keypair Path) вказує розташування гаманця за
+замовчуванням, який використовується Solana CLI (для оплати комісій за
+транзакції та розгортання програм). Шлях за замовчуванням:
+`~/.config/solana/id.json`. У наступному кроці описано, як створити ключову пару
+за цим шляхом.
 
 ### Створення Гаманця
 
-Для взаємодії з мережею Solana за допомогою Solana CLI вам потрібен гаманець Solana, поповнений SOL.
+Для взаємодії з мережею Solana за допомогою Solana CLI вам потрібен гаманець
+Solana, поповнений SOL.
 
-Щоб створити ключову пару за замовчуванням у Keypair Path, виконайте наступну команду:
-
+Щоб створити ключову пару за замовчуванням у Keypair Path, виконайте наступну
+команду:
 
 ```shell
 solana-keygen new
@@ -534,11 +589,14 @@ cream bleak tortoise ocean nasty game gift forget fancy salon mimic amazing
 
 <Callout type="note">
 
-Якщо у вас вже є гаманець у файловій системі, збережений у місці за замовчуванням, ця команда **НЕ** перезапише його, якщо ви явно не використаєте прапорець `--force`.
+Якщо у вас вже є гаманець у файловій системі, збережений у місці за
+замовчуванням, ця команда **НЕ** перезапише його, якщо ви явно не використаєте
+прапорець `--force`.
 
 </Callout>
 
-Після створення ключової пари ви можете отримати адресу (публічний ключ) цієї пари за допомогою наступної команди:
+Після створення ключової пари ви можете отримати адресу (публічний ключ) цієї
+пари за допомогою наступної команди:
 
 ```shell
 solana address
@@ -546,10 +604,11 @@ solana address
 
 ### Airdrop SOL
 
-Після налаштування локального гаманця запросіть airdrop SOL для поповнення вашого гаманця. SOL потрібні для оплати комісій за транзакції та розгортання програм.
+Після налаштування локального гаманця запросіть airdrop SOL для поповнення
+вашого гаманця. SOL потрібні для оплати комісій за транзакції та розгортання
+програм.
 
 Встановіть ваш кластер на devnet:
-
 
 ```shell
 solana config set -ud
@@ -557,13 +616,11 @@ solana config set -ud
 
 Далі запросіть airdrop SOL у devnet:
 
-
 ```shell
 solana airdrop 2
 ```
 
 Щоб перевірити баланс SOL вашого гаманця, виконайте наступну команду:
-
 
 ```shell
 solana balance
@@ -571,18 +628,23 @@ solana balance
 
 <Callout>
 
-Команда `solana airdrop` наразі обмежена 5 SOL за запит у devnet. Помилки можуть виникати через обмеження частоти запитів.
+Команда `solana airdrop` наразі обмежена 5 SOL за запит у devnet. Помилки можуть
+виникати через обмеження частоти запитів.
 
-Як альтернативу, ви можете отримати SOL у devnet за допомогою [Solana Web Faucet](https://faucet.solana.com).
+Як альтернативу, ви можете отримати SOL у devnet за допомогою
+[Solana Web Faucet](https://faucet.solana.com).
 
 </Callout>
 
 ### Запуск Локального Валідатора
 
-Solana CLI постачається з вбудованим [тестовим валідатором](https://docs.anza.xyz/cli/examples/test-validator). Запуск локального валідатора дозволить вам розгортати та тестувати програми локально.
+Solana CLI постачається з вбудованим
+[тестовим валідатором](https://docs.anza.xyz/cli/examples/test-validator).
+Запуск локального валідатора дозволить вам розгортати та тестувати програми
+локально.
 
-У окремому терміналі виконайте наступну команду, щоб запустити локальний валідатор:
-
+У окремому терміналі виконайте наступну команду, щоб запустити локальний
+валідатор:
 
 ```shell
 solana-test-validator
@@ -590,8 +652,8 @@ solana-test-validator
 
 <Callout>
 
-У WSL вам може знадобитися спочатку перейти до папки, де у вас є права запису за замовчуванням:
-
+У WSL вам може знадобитися спочатку перейти до папки, де у вас є права запису за
+замовчуванням:
 
 ```shell
 cd ~
@@ -602,7 +664,8 @@ solana-test-validator
 
 </Callout>
 
-Переконайтеся, що оновили конфігурацію Solana CLI до `localhost` перед виконанням команд:
+Переконайтеся, що оновили конфігурацію Solana CLI до `localhost` перед
+виконанням команд:
 
 ```shell
 solana config set -ul

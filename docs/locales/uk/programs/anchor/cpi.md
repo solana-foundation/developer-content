@@ -1,29 +1,30 @@
 ---
 title: CPIs з Anchor
 description:
-  Дізнайтеся, як реалізувати Cross Program Invocations (CPI) в програмах на Anchor,
-  що дозволяє взаємодіяти між різними програмами на Solana
+  Дізнайтеся, як реалізувати Cross Program Invocations (CPI) в програмах на
+  Anchor, що дозволяє взаємодіяти між різними програмами на Solana
 sidebarLabel: CPIs з Anchor
 sidebarSortOrder: 5
 ---
 
 [Cross Program Invocations (CPI)](/docs/core/cpi.md) означають процес, коли одна
-програма викликає інструкції іншої програми, що дозволяє здійснювати композицію програм на Solana.
+програма викликає інструкції іншої програми, що дозволяє здійснювати композицію
+програм на Solana.
 
-Цей розділ охоплює основи реалізації CPIs в програмі Anchor,
-використовуючи інструкцію простого переказу SOL як практичний приклад. Після того, як ви
-зрозумієте основи реалізації CPI, ви зможете застосувати ці ж концепції
-для будь-якої інструкції.
+Цей розділ охоплює основи реалізації CPIs в програмі Anchor, використовуючи
+інструкцію простого переказу SOL як практичний приклад. Після того, як ви
+зрозумієте основи реалізації CPI, ви зможете застосувати ці ж концепції для
+будь-якої інструкції.
 
 ## Cross Program Invocations
 
-Розглянемо програму, яка реалізує CPI для інструкції переказу в System Program. Ось приклад програми на
+Розглянемо програму, яка реалізує CPI для інструкції переказу в System Program.
+Ось приклад програми на
 [Solana Playground](https://beta.solpg.io/66df2751cffcf4b13384d35a).
 
 Файл `lib.rs` містить одну інструкцію `sol_transfer`. Коли інструкція
-`sol_transfer` в програмі Anchor викликається, програма
-внутрішньо викликає інструкцію переказу з System Program.
-
+`sol_transfer` в програмі Anchor викликається, програма внутрішньо викликає
+інструкцію переказу з System Program.
 
 ```rs filename="lib.rs" /sol_transfer/ /transfer/ {23}
 use anchor_lang::prelude::*;
@@ -63,8 +64,8 @@ pub struct SolTransfer<'info> {
 }
 ```
 
-Файл `cpi.test.ts` показує, як викликати інструкцію `sol_transfer` програми Anchor і реєструє посилання на деталі транзакції на SolanaFM.
-
+Файл `cpi.test.ts` показує, як викликати інструкцію `sol_transfer` програми
+Anchor і реєструє посилання на деталі транзакції на SolanaFM.
 
 ```ts filename="cpi.test.ts"
 it("SOL Transfer Anchor", async () => {
@@ -83,29 +84,30 @@ it("SOL Transfer Anchor", async () => {
 });
 ```
 
-Ви можете побудувати, розгорнути та запустити тест для цього прикладу на Playground, щоб переглянути
-деталі транзакції на [SolanaFM explorer](https://solana.fm/).
+Ви можете побудувати, розгорнути та запустити тест для цього прикладу на
+Playground, щоб переглянути деталі транзакції на
+[SolanaFM explorer](https://solana.fm/).
 
 Деталі транзакції покажуть, що спочатку була викликана програма Anchor
-(інструкція 1), яка потім викликає System Program (інструкція 1.1),
-що призводить до успішного переказу SOL.
+(інструкція 1), яка потім викликає System Program (інструкція 1.1), що
+призводить до успішного переказу SOL.
 
 ![Деталі транзакції](/assets/docs/core/cpi/transaction-details.png)
 
 ### Пояснення прикладу 1
 
-Реалізація CPI слідує такому ж шаблону, як і створення інструкції для додавання в
-транзакцію. Коли реалізуємо CPI, потрібно вказати ID програми,
-рахунки та дані інструкції для викликаної інструкції.
+Реалізація CPI слідує такому ж шаблону, як і створення інструкції для додавання
+в транзакцію. Коли реалізуємо CPI, потрібно вказати ID програми, рахунки та дані
+інструкції для викликаної інструкції.
 
 Інструкція переказу в System Program вимагає два рахунки:
 
 - `from`: Рахунок, що надсилає SOL.
 - `to`: Рахунок, що отримує SOL.
 
-У прикладній програмі структура `SolTransfer` вказує рахунки, необхідні
-для інструкції переказу. System Program також включена, оскільки CPI
-викликає System Program.
+У прикладній програмі структура `SolTransfer` вказує рахунки, необхідні для
+інструкції переказу. System Program також включена, оскільки CPI викликає System
+Program.
 
 ```rust /sender/ /recipient/ /system_program/
 #[derive(Accounts)]
@@ -127,13 +129,13 @@ CPI.
 <Tabs groupId="language" items={['1', '2', '3']}>
 <Tab value="1">
 
-Інструкція `sol_transfer`, включена в прикладний код, показує типовий
-підхід до побудови CPIs за допомогою фреймворку Anchor.
+Інструкція `sol_transfer`, включена в прикладний код, показує типовий підхід до
+побудови CPIs за допомогою фреймворку Anchor.
 
 Цей підхід передбачає створення
 [`CpiContext`](https://docs.rs/anchor-lang/latest/anchor_lang/context/struct.CpiContext.html),
-який містить `program_id` та рахунки, необхідні для викликаної інструкції, а також допоміжну функцію (`transfer`) для виклику конкретної
-інструкції.
+який містить `program_id` та рахунки, необхідні для викликаної інструкції, а
+також допоміжну функцію (`transfer`) для виклику конкретної інструкції.
 
 ```rust
 use anchor_lang::system_program::{transfer, Transfer};
@@ -158,8 +160,8 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 }
 ```
 
-Змінна `cpi_context` вказує ID програми (System Program) та
-рахунки (відправник і отримувач), необхідні для інструкції переказу.
+Змінна `cpi_context` вказує ID програми (System Program) та рахунки (відправник
+і отримувач), необхідні для інструкції переказу.
 
 ```rust /program_id/ /from_pubkey/ /to_pubkey/
 let cpi_context = CpiContext::new(
@@ -171,8 +173,8 @@ let cpi_context = CpiContext::new(
 );
 ```
 
-Змінні `cpi_context` та `amount` передаються в функцію `transfer` для
-виконання CPI, що викликає інструкцію переказу з System Program.
+Змінні `cpi_context` та `amount` передаються в функцію `transfer` для виконання
+CPI, що викликає інструкцію переказу з System Program.
 
 ```rust
 transfer(cpi_context, amount)?;
@@ -181,12 +183,13 @@ transfer(cpi_context, amount)?;
 </Tab>
 <Tab value="2">
 
-Цей приклад показує інший підхід до реалізації CPI за допомогою функції `invoke` та
+Цей приклад показує інший підхід до реалізації CPI за допомогою функції `invoke`
+та
 [`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881),
 що зазвичай використовується в рідних програмах на Rust.
 
-Під капотом попередній приклад є абстракцією цієї реалізації.
-Нижче наведений приклад є функціонально еквівалентним попередньому.
+Під капотом попередній приклад є абстракцією цієї реалізації. Нижче наведений
+приклад є функціонально еквівалентним попередньому.
 
 ```rust
 use anchor_lang::solana_program::{program::invoke, system_instruction};
@@ -209,11 +212,13 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 </Tab>
 <Tab value="3">
 
-Ви також можете вручну створити інструкцію для передачі в функцію `invoke()`.
-Це корисно, коли немає доступної бібліотеки, що допомагає побудувати
-інструкцію, яку ви хочете викликати. Цей підхід вимагає вказати `AccountMeta` для інструкції та правильно створити буфер даних інструкції.
+Ви також можете вручну створити інструкцію для передачі в функцію `invoke()`. Це
+корисно, коли немає доступної бібліотеки, що допомагає побудувати інструкцію,
+яку ви хочете викликати. Цей підхід вимагає вказати `AccountMeta` для інструкції
+та правильно створити буфер даних інструкції.
 
-Інструкція `sol_transfer` нижче є вручну реалізованим CPI для інструкції переказу в System Program.
+Інструкція `sol_transfer` нижче є вручну реалізованим CPI для інструкції
+переказу в System Program.
 
 ```rust /instruction/10,13 {28}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
@@ -249,12 +254,12 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
 ```
 
 Інструкція `sol_transfer` вище повторює цей
-[приклад](/docs/core/transactions.md#manual-sol-transfer) вручну побудованої інструкції переказу SOL. Вона слідує тому ж шаблону, що і створення
+[приклад](/docs/core/transactions.md#manual-sol-transfer) вручну побудованої
+інструкції переказу SOL. Вона слідує тому ж шаблону, що і створення
 [інструкції](/docs/core/transactions.md#instruction) для додавання в транзакцію.
 
 При створенні інструкції на Rust використовуйте наступний синтаксис для вказівки
 `AccountMeta` для кожного рахунку:
-
 
 ```rust
 AccountMeta::new(account1_pubkey, true),           // writable, signer
@@ -272,11 +277,12 @@ AccountMeta::new_readonly(account4_pubkey, true),  // writable, signer
 
 ## Cross Program Invocations з PDA підписами
 
-Далі розглянемо програму, яка реалізує CPI для інструкції переказу в System Program, де відправником є Програма Походження Адреси (PDA), для якої програма повинна "підписати" транзакцію. Ось приклад програми на
+Далі розглянемо програму, яка реалізує CPI для інструкції переказу в System
+Program, де відправником є Програма Походження Адреси (PDA), для якої програма
+повинна "підписати" транзакцію. Ось приклад програми на
 [Solana Playground](https://beta.solpg.io/66df2bd2cffcf4b13384d35b).
 
 Файл `lib.rs` містить наступну програму з єдиною інструкцією `sol_transfer`.
-
 
 ```rust filename="lib.rs"
 use anchor_lang::prelude::*;
@@ -325,10 +331,10 @@ pub struct SolTransfer<'info> {
 }
 ```
 
-Файл `cpi.test.ts` показує, як викликати інструкцію `sol_transfer` програми Anchor і реєструє посилання на деталі транзакції на SolanaFM.
+Файл `cpi.test.ts` показує, як викликати інструкцію `sol_transfer` програми
+Anchor і реєструє посилання на деталі транзакції на SolanaFM.
 
 Він показує, як отримати PDA за допомогою насіння, вказаного в програмі:
-
 
 ```ts /pda/ /wallet.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
@@ -337,8 +343,8 @@ const [PDA] = PublicKey.findProgramAddressSync(
 );
 ```
 
-Першим кроком у цьому прикладі є фінансування рахунку PDA за допомогою простого переказу SOL з гаманця Playground.
-
+Першим кроком у цьому прикладі є фінансування рахунку PDA за допомогою простого
+переказу SOL з гаманця Playground.
 
 ```ts filename="cpi.test.ts"
 it("Fund PDA with SOL", async () => {
@@ -364,8 +370,8 @@ it("Fund PDA with SOL", async () => {
 ```
 
 Коли PDA буде фінансовано SOL, викликається інструкція `sol_transfer`. Ця
-інструкція переказує SOL з рахунку PDA назад на рахунок `wallet` через
-CPI до System Program, що "підписується" програмою.
+інструкція переказує SOL з рахунку PDA назад на рахунок `wallet` через CPI до
+System Program, що "підписується" програмою.
 
 ```ts
 it("SOL Transfer with PDA signer", async () => {
@@ -383,12 +389,12 @@ it("SOL Transfer with PDA signer", async () => {
 });
 ```
 
-Ви можете побудувати, розгорнути та запустити тест, щоб переглянути деталі транзакції на
-[SolanaFM explorer](https://solana.fm/).
+Ви можете побудувати, розгорнути та запустити тест, щоб переглянути деталі
+транзакції на [SolanaFM explorer](https://solana.fm/).
 
 Деталі транзакції покажуть, що спочатку була викликана користувацька програма
-(інструкція 1), яка потім викликає System Program (інструкція 1.1),
-що призводить до успішного переказу SOL.
+(інструкція 1), яка потім викликає System Program (інструкція 1.1), що
+призводить до успішного переказу SOL.
 
 ![Деталі транзакції](/assets/docs/core/cpi/transaction-details-pda.png)
 
@@ -397,10 +403,10 @@ it("SOL Transfer with PDA signer", async () => {
 У прикладному коді структура `SolTransfer` вказує рахунки, необхідні для
 інструкції переказу.
 
-Відправником є PDA, для якого програма повинна підписати транзакцію. `seeds`, які використовуються для отримання
-адреси для `pda_account`, включають зашитий рядок "pda" та адресу
-рахунку `recipient`. Це означає, що адреса для `pda_account` є
-унікальною для кожного `recipient`.
+Відправником є PDA, для якого програма повинна підписати транзакцію. `seeds`,
+які використовуються для отримання адреси для `pda_account`, включають зашитий
+рядок "pda" та адресу рахунку `recipient`. Це означає, що адреса для
+`pda_account` є унікальною для кожного `recipient`.
 
 ```rust /pda_account/ /recipient/2 /system_program/
 #[derive(Accounts)]
@@ -425,6 +431,7 @@ const [PDA] = PublicKey.findProgramAddressSync(
   program.programId,
 );
 ```
+
 Наступні вкладки представляють два підходи до реалізації Cross Program
 Invocations (CPI), кожен з яких має різний рівень абстракції. Обидва приклади є
 функціонально еквівалентними. Основною метою є ілюстрація деталей реалізації
@@ -434,13 +441,13 @@ CPI.
 <Tabs groupId="language" items={['1', '2']}>
 <Tab value="1">
 
-Інструкція `sol_transfer`, включена в прикладний код, показує типовий
-підхід до побудови CPIs за допомогою фреймворку Anchor.
+Інструкція `sol_transfer`, включена в прикладний код, показує типовий підхід до
+побудови CPIs за допомогою фреймворку Anchor.
 
 Цей підхід передбачає створення
 [`CpiContext`](https://docs.rs/anchor-lang/latest/anchor_lang/context/struct.CpiContext.html),
-який містить `program_id` та рахунки, необхідні для викликаної інструкції, а також допоміжну функцію (`transfer`) для виклику конкретної
-інструкції.
+який містить `program_id` та рахунки, необхідні для викликаної інструкції, а
+також допоміжну функцію (`transfer`) для виклику конкретної інструкції.
 
 ```rust /cpi_context/ {19}
 pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
@@ -485,9 +492,8 @@ let cpi_context = CpiContext::new(
 .with_signer(signer_seeds);
 ```
 
-Змінні `cpi_context` та `amount` передаються в функцію `transfer` для
-виконання CPI.
-
+Змінні `cpi_context` та `amount` передаються в функцію `transfer` для виконання
+CPI.
 
 ```rust
 transfer(cpi_context, amount)?;
@@ -495,19 +501,19 @@ transfer(cpi_context, amount)?;
 
 Коли обробляється CPI, середовище виконання Solana перевіряє, чи правильно
 наведені насіння та ID програми викликача для отримання дійсного PDA. Потім PDA
-додається як підписант під час виклику. Цей механізм дозволяє програмам підписувати PDA,
-які отримані з їхнього ID програми.
+додається як підписант під час виклику. Цей механізм дозволяє програмам
+підписувати PDA, які отримані з їхнього ID програми.
 
 </Tab>
 <Tab value="2">
 
-Під капотом попередній приклад є обгорткою для функції `invoke_signed()`,
-яка використовує
+Під капотом попередній приклад є обгорткою для функції `invoke_signed()`, яка
+використовує
 [`system_instruction::transfer`](https://github.com/solana-labs/solana/blob/27eff8408b7223bb3c4ab70523f8a8dca3ca6645/sdk/program/src/system_instruction.rs#L881)
 для побудови інструкції.
 
-Цей приклад показує, як використовувати функцію `invoke_signed()`, щоб зробити CPI
-підписаним PDA.
+Цей приклад показує, як використовувати функцію `invoke_signed()`, щоб зробити
+CPI підписаним PDA.
 
 ```rust
 use anchor_lang::solana_program::{program::invoke_signed, system_instruction};
@@ -530,8 +536,9 @@ pub fn sol_transfer(ctx: Context<SolTransfer>, amount: u64) -> Result<()> {
     Ok(())
 }
 ```
-Ця реалізація функціонально еквівалентна попередньому прикладу. 
-`signer_seeds` передаються в функцію `invoke_signed`.
+
+Ця реалізація функціонально еквівалентна попередньому прикладу. `signer_seeds`
+передаються в функцію `invoke_signed`.
 
 </Tab>
 </Tabs>
