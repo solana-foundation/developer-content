@@ -3,12 +3,13 @@ title: Solana Program Scaffold
 sidebarSortOrder: 3
 sidebarLabel: Solana Programs
 description:
-  "How to set up create a new project for solana program development with create solana program"
+  "How to set up create a new project for solana program development with create
+  solana program"
 keywords:
   - solana development
   - create solana program
   - intro to solana development
-  - projects on solana 
+  - projects on solana
   - solana program development
   - create a solana project
 ---

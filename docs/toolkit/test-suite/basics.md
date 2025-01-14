@@ -2,8 +2,7 @@
 sidebarLabel: Testing Basics
 title: Solana Testing Basics
 sidebarSortOrder: 2
-description:
-  "How to run tests for solana program development"
+description: "How to run tests for solana program development"
 keywords:
   - solana development
   - solana testing

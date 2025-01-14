@@ -2,15 +2,14 @@
 title: Solana Program Best Practices
 sidebarSortOrder: 3
 sidebarLabel: Best Practices
-description:
-  "What are best practices for solana program development"
+description: "What are best practices for solana program development"
 keywords:
-  - solana best practices 
+  - solana best practices
   - program best practices
-  - program development 
-  - program security 
+  - program development
+  - program security
   - development best practices
-  - smart contract best practices 
+  - smart contract best practices
   - solana smart contracts
 ---
 

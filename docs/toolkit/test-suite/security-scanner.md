@@ -2,16 +2,15 @@
 title: Security Vulnerability Scanner
 sidebarSortOrder: 5
 sidebarLabel: Security Scanner
-description:
-  "How to check for security vulnerabilities in solana programs"
+description: "How to check for security vulnerabilities in solana programs"
 keywords:
   - solana security
-  - solana programs  
-  - program development 
-  - program security 
-  - security vulnerabilities  
+  - solana programs
+  - program development
+  - program security
+  - security vulnerabilities
   - solana vulnerabilities
-  - solana security best practices 
+  - solana security best practices
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is
@@ -22,8 +21,8 @@ keywords:
 
 [Radar](https://github.com/Auditware/radar?tab=readme-ov-file) is static
 analysis tool for Anchor rust programs. It allows you to write, share, and
-utilize templates to identify security issues in rust-based programs
-using a powerful python based rule engine that enables automating detection of
+utilize templates to identify security issues in rust-based programs using a
+powerful python based rule engine that enables automating detection of
 vulnerable code patterns through logical expressions.
 
 [Xray](https://github.com/sec3-product/x-ray) is an open-source, cross-platform

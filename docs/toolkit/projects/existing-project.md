@@ -3,14 +3,14 @@ title: Update an Existing Project
 sidebarSortOrder: 7
 sidebarLabel: Existing Projects
 description:
-  "How to add an existing project to a create solana program scaffold" 
+  "How to add an existing project to a create solana program scaffold"
 keywords:
-  - solana program development 
+  - solana program development
   - create solana program
   - solana anchor development
-  - program scaffold 
-  - anchor framework 
-  - solana workspace set up 
+  - program scaffold
+  - anchor framework
+  - solana workspace set up
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

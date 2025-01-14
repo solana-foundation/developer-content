@@ -6,11 +6,11 @@ description:
   "How to write tests for solana programs in javascript with solana bankrun"
 keywords:
   - solana javascript tests
-  - solana testing 
-  - solana bankrun 
+  - solana testing
+  - solana bankrun
   - bankrun tests
   - bankrun examples
-  - solana test examples 
+  - solana test examples
 ---
 
 > This is a beta version of the [Solana Toolkit](/docs/toolkit/index.md), and is

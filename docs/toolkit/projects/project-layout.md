@@ -3,7 +3,8 @@ title: Program File Structure
 sidebarSortOrder: 8
 sidebarLabel: Project layout
 description:
-  "Best practices for Solana program file structure when developing Solana programs"
+  "Best practices for Solana program file structure when developing Solana
+  programs"
 keywords:
   - solana program development
   - program file structure
@@ -42,8 +43,8 @@ directory, as shown below:
 └── tests
 ```
 
-As the program gets more cumbersome, you'll typically want to separate
-the logic into multiple files, as shown below:
+As the program gets more cumbersome, you'll typically want to separate the logic
+into multiple files, as shown below:
 
 ```shell
 ├── programs
@@ -59,9 +60,9 @@ the logic into multiple files, as shown below:
         ├── mod.rs
 ```
 
-For [native rust program development](/docs/programs/rust/index.md), you
-need to explicitly write out the entrypoint and processor for the program, so
-you'll need a few more files:
+For [native rust program development](/docs/programs/rust/index.md), you need to
+explicitly write out the entrypoint and processor for the program, so you'll
+need a few more files:
 
 ```shell
 ├── program.rs

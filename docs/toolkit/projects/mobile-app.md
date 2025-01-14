@@ -2,11 +2,10 @@
 title: Mobile App with a Solana Program Connection
 sidebarSortOrder: 6
 sidebarLabel: Mobile App
-description:
-  "How to create a mobile app on the solana blockchain"
+description: "How to create a mobile app on the solana blockchain"
 keywords:
-  - solana mobile 
-  - mobile development 
+  - solana mobile
+  - mobile development
   - how to create a solana mobile app
   - intro to solana mobile
 ---
