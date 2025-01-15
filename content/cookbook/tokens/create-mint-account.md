@@ -48,7 +48,7 @@ import bs58 from "bs58";
 
   // 1) use build-in function
   let mintPubkey = await createMint(
-    connection, // conneciton
+    connection, // connection
     feePayer, // fee payer
     alice.publicKey, // mint authority
     alice.publicKey, // freeze authority (you can use `null` to disable it. when you disable it, you can't turn it on again)

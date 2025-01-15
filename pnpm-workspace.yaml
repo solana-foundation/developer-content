@@ -1,3 +1,5 @@
 packages:
   - "."
   - "code"
+  - "code/content/v1"
+  - "code/content/v2"

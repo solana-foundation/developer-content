@@ -46,8 +46,8 @@ module.exports = withContentlayer({
       ...redirectFormatter("https://solana.com/", redirectsJson["common-docs"]),
       // validator client docs
       ...redirectFormatter(
-        "https://docs.solanalabs.com/",
-        redirectsJson["solana-client"],
+        "https://docs.anza.xyz/",
+        redirectsJson["agave-client"],
       ),
     ];
   },

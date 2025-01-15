@@ -11,29 +11,58 @@ have a private key associated with them. You can check this by looking to see if
 the public key lies on the ed25519 curve. Only public keys that lie on the curve
 can be controlled by users with wallets.
 
-```typescript file=/code/content/cookbook/wallets/check-publickey.ts#L1-L24
-import { PublicKey, Keypair } from "@solana/web3.js";
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}> <Tab value="web3.js v2">
+```typescript file=/code/content/web3jsv2/cookbook/wallets/check-publickey.ts#L1-L19
+import { isAddress, isProgramDerivedAddress } from "@solana/web3.js";
 
-// Note that Keypair.generate() will always give a public key that is valid for users
+    // Note that generateKeyPair() will always give a public key that is valid for users
 
-// Valid public key
-const key = new PublicKey("5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY");
-// Lies on the ed25519 curve and is suitable for users
-console.log(PublicKey.isOnCurve(key.toBytes()));
+    // Valid public key
+    const key = "5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY";
 
-// Valid public key
-const offCurveAddress = new PublicKey(
-  "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e",
-);
+    // Lies on the ed25519 curve and is suitable for users
+    console.log("Valid Address: ", isAddress(key));
 
-// Not on the ed25519 curve, therefore not suitable for users
-console.log(PublicKey.isOnCurve(offCurveAddress.toBytes()));
+    // Valid public key
+    const offCurveAddress = "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e";
 
-let errorPubkey;
-try {
-  // Not a valid public key
-  errorPubkey = new PublicKey("testPubkey");
-} catch (err) {
-  // Error will be caught here
-}
-```
+    // Not on the ed25519 curve, therefore not suitable for users, but suitable for programs
+    console.log(
+      "Valid Off Curve Address: ",
+      isProgramDerivedAddress(offCurveAddress),
+    );
+
+    ```
+
+  </Tab>
+
+  <Tab value="web3.js v1">
+    ```typescript file=/code/content/web3jsv1/cookbook/wallets/check-publickey.ts#L1-L24
+    import { PublicKey, Keypair } from "@solana/web3.js";
+
+    // Note that Keypair.generate() will always give a public key that is valid for users
+
+    // Valid public key
+    const key = new PublicKey("5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY");
+    // Lies on the ed25519 curve and is suitable for users
+    console.log(PublicKey.isOnCurve(key.toBytes()));
+
+    // Valid public key
+    const offCurveAddress = new PublicKey(
+      "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e",
+    );
+
+    // Not on the ed25519 curve, therefore not suitable for users
+    console.log(PublicKey.isOnCurve(offCurveAddress.toBytes()));
+
+    let errorPubkey;
+    try {
+      // Not a valid public key
+      errorPubkey = new PublicKey("testPubkey");
+    } catch (err) {
+      // Error will be caught here
+    }
+    ```
+
+  </Tab>
+</Tabs>

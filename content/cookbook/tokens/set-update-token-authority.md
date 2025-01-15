@@ -83,7 +83,7 @@ import bs58 from "bs58";
   {
     let tx = new Transaction().add(
       createSetAuthorityInstruction(
-        mintPubkey, // mint acocunt || token account
+        mintPubkey, // mint account || token account
         alice.publicKey, // current auth
         AuthorityType.MintTokens, // authority type
         feePayer.publicKey, // new auth (you can pass `null` to close it)

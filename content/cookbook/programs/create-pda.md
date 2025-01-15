@@ -128,7 +128,7 @@ const PAYER_KEYPAIR = Keypair.generate();
     "6eW5nnSosr2LpkUGCdznsjRGDhVb26tLmiM1P8RV1QQp",
   );
 
-  // Airdop to Payer
+  // Airdrop to Payer
   await connection.confirmTransaction(
     {
       blockhash: latestBlockHash.blockhash,

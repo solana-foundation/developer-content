@@ -255,7 +255,7 @@ supports shared layouts, nested routing, loading states, and error handling.
 The `solana-provider.tsx` already has all the wallet features you need, It
 handles auto connects of Solana wallet easily, and you can move to multiple
 components of your web application with the wallet states managed. This NextJS
-app is using `[@tanstack/react-query](`https://tanstack.com/query/latest)` to
+app is using [`@tanstack/react-query`](https://tanstack.com/query/latest) to
 fetch, cache, synchronize, and update server state in your web applications
 easily. React-Query here is used for all the data fetching needs, like a hook
 for `useGetBalance` to get the balance of your wallet, `useTransferSol` to
@@ -288,7 +288,7 @@ airdrop for testnet devnet, making Error messages by Solana more readable and
 [Solana Wallet Names by Portal Payments](https://github.com/portalpayments/solana-wallet-names)
 can help you use Solana wallet names like `.sol`, `.backpack`, `.abc` etc.
 
-[Amman [by Metaplex](https://github.com/metaplex-foundation/amman) is a set of
+Amman [by Metaplex](https://github.com/metaplex-foundation/amman) is a set of
 tools to help test Solana SDK libraries and apps on a locally running validator.
 
 [Solita by Metaplex](https://github.com/metaplex-foundation/solita) Solita

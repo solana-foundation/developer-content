@@ -62,7 +62,7 @@ import bs58 from "bs58";
       tokenAccountPubkey, // token account
       randomGuy.publicKey, // delegate
       alice, // owner of token account
-      1e8, // amount, if your deciamls is 8, 10^8 for 1 token
+      1e8, // amount, if your decimals is 8, 10^8 for 1 token
       8, // decimals
     );
     console.log(`txhash: ${txhash}`);
@@ -77,7 +77,7 @@ import bs58 from "bs58";
         mintPubkey, // mint
         randomGuy.publicKey, // delegate
         alice.publicKey, // owner of token account
-        1e8, // amount, if your deciamls is 8, 10^8 for 1 token
+        1e8, // amount, if your decimals is 8, 10^8 for 1 token
         8, // decimals
       ),
     );

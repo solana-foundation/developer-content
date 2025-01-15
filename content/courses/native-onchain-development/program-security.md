@@ -372,9 +372,8 @@ let account_len: usize = 1000;
 ```
 
 The [realloc](https://docs.rs/solana-sdk/latest/solana_sdk/account_info/struct.AccountInfo.html#method.realloc) method
-was just recently enabled by Solana Labs which allows you to dynamically change
-the size of your accounts. We will not be using this method for this lab, but
-it's something to be aware of.
+allows you to dynamically change the size of your accounts. We will not be using
+this method for this lab, but it's something to be aware of.
 
 Finally, we've also implemented some additional functionality for our
 `MovieAccountState` struct in `state.rs` using the `impl` keyword.

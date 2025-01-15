@@ -3,8 +3,10 @@ title: Installation
 seoTitle: Install the Solana CLI and Anchor
 sidebarSortOrder: 1
 description:
-  "Easily setup your local development environment for Solana development on
-  Linux, Mac or Windows. Including installing Rust, the Solana CLI, and Anchor."
+  A comprehensive guide to setting up your local Solana development environment.
+  Learn how to install Rust, the Solana CLI, and Anchor Framework on Windows
+  (WSL), Linux, and Mac. Includes step-by-step instructions for creating
+  wallets, requesting airdrops, and running a local validator.
 altRoutes:
   - /developers/guides/getstarted/setup-local-development
   - /docs/install
@@ -502,7 +504,7 @@ Keypair Path: /Users/test/.config/solana/id.json
 Commitment: confirmed
 ```
 
-The RPC URL and Websocket URL specific the Solana cluster the CLI will make
+The RPC URL and Websocket URL specify the Solana cluster the CLI will make
 requests to. By default this will be mainnet-beta.
 
 You can update the Solana CLI cluster using the following commands:
@@ -611,9 +613,9 @@ Alternatively, you can get devnet SOL using the
 ### Run Local Validator
 
 The Solana CLI comes with the
-[test validator](https://docs.solanalabs.com/cli/examples/test-validator)
-built-in. Running a local validator will allow you to deploy and test your
-programs locally.
+[test validator](https://docs.anza.xyz/cli/examples/test-validator) built-in.
+Running a local validator will allow you to deploy and test your programs
+locally.
 
 In a separate terminal, run the following command to start a local validator:
 

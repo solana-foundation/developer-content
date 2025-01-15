@@ -5,6 +5,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import remarkFrontmatter from "remark-frontmatter";
+import remarkMdx from "remark-mdx";
 import { visit } from "unist-util-visit";
 import ignore, { type Ignore } from "ignore";
 import importCode from "./src/utils/code-import";
@@ -113,10 +114,10 @@ const processContent = async (
         removeRedundantIndentations: true,
         rootDir: process.cwd(),
       })
+      .use(remarkMdx)
       .use(remarkStringify, {
         bullet: "-",
         emphasis: "*",
-        fences: true,
         listItemIndent: "one",
         rule: "-",
         ruleSpaces: false,

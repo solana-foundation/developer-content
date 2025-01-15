@@ -21,7 +21,7 @@ description: "Create your first Solana onchain program in Anchor."
 ## Lesson
 
 Before we begin, make sure you have Anchor installed. You can follow this lesson
-on [local-setup](/content/onchain-development/local-setup.md).
+on [local-setup](/developers/courses/onchain-development/local-setup.md).
 
 Solana's capacity to execute arbitrary code is a key part of its power. Solana
 programs, (sometimes called "smart contracts"), are the very foundation of the
@@ -157,7 +157,7 @@ Through this context argument the instruction can then access:
   a vector that contains all accounts that were passed into the instruction
   handler but are not declared in the `Accounts` struct.
 - The bumps for any PDA accounts in the `Accounts` struct (`ctx.bumps`)
-- The seeds for any PDA accounts in tha `Accounts` struct (`ctx.seeds`)
+- The seeds for any PDA accounts in the `Accounts` struct (`ctx.seeds`)
 
 > The design of Contexts can be different across different programs to serve
 > their purpose; and the name of the context could be anything (not limited to
@@ -305,7 +305,7 @@ account_info.key == expected_program
 account_info.executable == true
 ```
 
-### Add constraints with `#[account(..)]`
+### Add constraints with Account
 
 The `#[account(..)]` attribute macro is used to apply constraints to accounts.
 We'll go over a few constraint examples in this and future lessons, but at some
@@ -354,7 +354,7 @@ pub user: Signer<'info>,
 Note that the `init` constraint placed on `account_name` automatically includes
 a `mut` constraint so that both `account_name` and `user` are mutable accounts.
 
-### `#[account]`
+### Account
 
 The `#[account]` attribute is applied to structs representing the data structure
 of a Solana account. It implements the following traits:

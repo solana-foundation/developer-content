@@ -199,7 +199,7 @@ Lastly, the `callback` field is where you define the callback instruction the
 Switchboard program should invoke once the randomness result has be verified.
 
 The `callback` field is of type
-`[CallbackZC](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L25)`.
+[`CallbackZC`](https://github.com/switchboard-xyz/solana-sdk/blob/9dc3df8a5abe261e23d46d14f9e80a7032bb346c/rust/switchboard-solana/src/oracle_program/accounts/ecvrf.rs#L25).
 
 ```rust
 #[zero_copy(unsafe)]
@@ -485,8 +485,8 @@ in our `Cargo.toml` file.
 
 ```typescript
 [dependencies]
-anchor-lang = "0.28.0"
-anchor-spl = "0.28.0"
+anchor-lang = "0.30.1"
+anchor-spl = "0.30.1"
 switchboard-v2 = "0.4.0"
 ```
 
@@ -535,7 +535,7 @@ mod burry_escrow {
         init_vrf_client_handler(ctx)
     }
 
-		pub fn get_out_of_jail(ctx: Context<RequestRandomness>, params: RequestRandomnessParams) -> Result<()>{
+    pub fn get_out_of_jail(ctx: Context<RequestRandomness>, params: RequestRandomnessParams) -> Result<()>{
         get_out_of_jail_handler(ctx, params)
     }
 
@@ -592,7 +592,7 @@ about `zero_copy`, take a look at our
 pub struct VrfClientState {
     pub bump: u8,
     pub result_buffer: [u8; 32],
-		pub dice_type: u8, // 6 sided
+    pub dice_type: u8, // 6 sided
     pub die_result_1: u8,
     pub die_result_2: u8,
     pub timestamp: i64,
@@ -638,10 +638,10 @@ pub struct VrfClientState {
 }
 ```
 
-#### 5. Errors.rs
+#### 5. Error.rs
 
 Next, let's take a quick pit stop and add one last error
-`InvalidVrfAuthorityError` to `errors.rs`. We'll use this when the VRF authority
+`InvalidVrfAuthorityError` to `error.rs`. We'll use this when the VRF authority
 is incorrect.
 
 ```rust
@@ -758,7 +758,7 @@ pub struct InitVrfClient<'info> {
     #[account(
         init,
         seeds = [
-						VRF_STATE_SEED,
+            VRF_STATE_SEED,
             user.key.as_ref(),
             escrow_account.key().as_ref(),
             vrf.key().as_ref(),
@@ -939,7 +939,7 @@ pub struct RequestRandomnessParams {
 
 Now, we can work on the logic of this instruction. The logic should gather all
 of the accounts needed and pass them to
-`[VrfRequestRandomness](https://github.com/switchboard-xyz/solana-sdk/blob/fbef37e4a78cbd8b8b6346fcb96af1e20204b861/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs#L8)`,
+[VrfRequestRandomness](https://github.com/switchboard-xyz/solana-sdk/blob/fbef37e4a78cbd8b8b6346fcb96af1e20204b861/rust/switchboard-solana/src/oracle_program/instructions/vrf_request_randomness.rs#L8),
 which is a really nice struct from Switchboard. Then we'll sign the request and
 send it on it's way.
 
@@ -971,7 +971,7 @@ pub fn get_out_of_jail_handler(ctx: Context<RequestRandomness>, params: RequestR
     let escrow_key = ctx.accounts.escrow_account.key();
     let user_key = ctx.accounts.user.key();
     let state_seeds: &[&[&[u8]]] = &[&[
-				&VRF_STATE_SEED,
+        &VRF_STATE_SEED,
         user_key.as_ref(),
         escrow_key.as_ref(),
         vrf_key.as_ref(),
@@ -1048,7 +1048,7 @@ the randomness in the account.
 ```rust
 // inside consume_randomness.rs
 
-pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()> {
+pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result<()> {
     msg!("Consuming randomness...");
 
     let vrf = ctx.accounts.vrf.load()?;
@@ -1070,7 +1070,7 @@ randomness and dice rolls within it. We also want to check that the
 randomness is stale.
 
 ```rust
-pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result <()> {
+pub fn consume_randomness_handler(ctx: Context<ConsumeRandomness>) -> Result<()> {
     msg!("Successfully consumed randomness.");
 
     let vrf = ctx.accounts.vrf.load()?;

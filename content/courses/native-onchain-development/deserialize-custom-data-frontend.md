@@ -44,7 +44,7 @@ Solana, but the pattern is familiar:
 - You can also consider PDAs as records in a database, with the address being
   the primary key used to look up the values inside.
 
-PDAs combine a program addresss and some developer-chosen seeds to create
+PDAs combine a program address and some developer-chosen seeds to create
 addresses that store individual pieces of data. Since PDAs are addresses that
 lie _off_ the Ed25519 Elliptic curve, PDAs don't have secret keys. Instead, PDAs
 can be signed for by the program address used to create them.
@@ -52,7 +52,7 @@ can be signed for by the program address used to create them.
 PDAs and the data inside them can be consistently found based on the program
 address, bump, and seeds. To find a PDA, the program ID and seeds of the
 developer's choice (like a string of text) are passed through the
-[`findProgramAddress()`](https://solana-labs.github.io/solana-web3.js/classes/PublicKey.html#findProgramAddress)
+[`findProgramAddress()`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/PublicKey.html#findProgramAddress)
 function.
 
 Let's have a look at some examples...

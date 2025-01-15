@@ -1013,6 +1013,10 @@ pnpm dev
 
 > Note: The developer content API normally runs locally on port `3001`
 
+4. Installing other packages, since the repo is a pnpm workspace.
+
+`pnpm i -D remark-mdx -w solana-developer-content-api` `remarkmdx`
+
 ## Testing Code Snippets
 
 The repository uses Node's native test runner for testing code examples. This

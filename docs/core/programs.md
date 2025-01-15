@@ -2,6 +2,10 @@
 title: Programs
 sidebarLabel: Programs on Solana
 sidebarSortOrder: 4
+description:
+  Learn about Solana programs (smart contracts) and how to develop them using
+  Rust or the Anchor framework. Understand program deployment, upgrades, and
+  verification on the Solana network.
 ---
 
 In the Solana ecosystem, "smart contracts" are called programs. Each

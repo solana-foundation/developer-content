@@ -57,9 +57,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ## Run your localhost validator
 
 The Solana CLI comes with the
-[test validator](https://docs.solanalabs.com/cli/examples/test-validator) built
-in. This command line tool will allow you to run a full blockchain cluster on
-your machine.
+[test validator](https://docs.anza.xyz/cli/examples/test-validator) built in.
+This command line tool will allow you to run a full blockchain cluster on your
+machine.
 
 ```shell
 solana-test-validator
@@ -201,8 +201,8 @@ solana program deploy ./target/deploy/hello_world.so
 ```
 
 Once your Solana program has been deployed (and the transaction
-[finalized](https://docs.solanalabs.com/consensus/commitments)), the above
-command will output your program's public address (aka its "program id").
+[finalized](https://docs.anza.xyz/consensus/commitments)), the above command
+will output your program's public address (aka its "program id").
 
 ```shell
 # example output
@@ -251,7 +251,7 @@ For macOS you can
 Install the Solana web3.js library and the Solana helpers library:
 
 ```shell
-npm install @solana/web3.js @solana-developers/helpers
+npm install @solana/web3.js@1 @solana-developers/helpers@2
 ```
 
 Create a new file called `client.mjs` and add the following code:

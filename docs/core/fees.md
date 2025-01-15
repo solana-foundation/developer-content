@@ -2,9 +2,9 @@
 title: Fees on Solana
 sidebarSortOrder: 3
 description:
-  "Your guide to transaction fees on Solana -- small fees paid to process
-  instructions on the network, based on computation and an optional
-  prioritization fee."
+  Learn about Solana's fee structure including transaction fees, prioritization
+  fees, and rent costs. Understand how fees are calculated, collected and
+  distributed across the network.
 keywords:
   - instruction fee
   - processing fee
@@ -72,8 +72,8 @@ The same is true on Solana. Specifically:
   (destroyed), with the remaining going to the current
   [leader](/docs/terminology.md#leader) processing the transaction.
 - A scheduled global inflation rate provides a source for
-  [rewards](https://docs.solanalabs.com/implemented-proposals/staking-rewards)
-  distributed to [Solana Validators](https://docs.solanalabs.com/operations).
+  [rewards](https://docs.anza.xyz/implemented-proposals/staking-rewards)
+  distributed to [Solana Validators](https://docs.anza.xyz/operations).
 
 ### Fee collection
 
@@ -338,7 +338,7 @@ let instruction = ComputeBudgetInstruction::set_compute_unit_price(1);
 #### Javascript
 
 The `@solana/web3.js` library includes functions within the
-[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/classes/ComputeBudgetProgram.html)
+[`ComputeBudgetProgram`](https://solana-labs.github.io/solana-web3.js/v1.x/classes/ComputeBudgetProgram.html)
 class to craft instructions for setting the _compute unit limit_ and _compute
 unit price_:
 
@@ -413,7 +413,7 @@ The Solana rent rate is set on a network wide basis, primarily based on a
 runtime set
 "[lamports _per_ byte _per_ year](https://github.com/anza-xyz/agave/blob/b7bbe36918f23d98e2e73502e3c4cba78d395ba9/sdk/program/src/rent.rs#L27-L34)".
 Currently, the rent rate is a static amount and stored in the
-[Rent sysvar](https://docs.solanalabs.com/runtime/sysvars#rent).
+[Rent sysvar](https://docs.anza.xyz/runtime/sysvars#rent).
 
 This rent rate is used to calculate the exact amount of rent required to be
 withheld inside an account for the space allocated to the account (i.e. the
@@ -451,7 +451,7 @@ recommended to use the
 RPC endpoint to calculate the specific balance for a given account size.
 
 The required rent deposit amount can also be estimated via the
-[`solana rent` CLI subcommand](https://docs.solanalabs.com/cli/usage#solana-rent):
+[`solana rent` CLI subcommand](https://docs.anza.xyz/cli/usage#solana-rent):
 
 ```shell
 solana rent 15000
@@ -492,5 +492,5 @@ an "account not found" type of message, you may still be able to view
 transaction history associated with that account.
 
 You can read the validator
-[implemented proposal](https://docs.solanalabs.com/implemented-proposals/persistent-account-storage#garbage-collection)
+[implemented proposal](https://docs.anza.xyz/implemented-proposals/persistent-account-storage#garbage-collection)
 for garbage collection to learn more.

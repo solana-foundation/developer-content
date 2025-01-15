@@ -45,13 +45,14 @@ transaction is returned when `legacy` is selected)
 ## How to set max supported version
 
 You can set the `maxSupportedTransactionVersion` using both the
-[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/) library and
-JSON formatted requests directly to an RPC endpoint.
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) library
+and JSON formatted requests directly to an RPC endpoint.
 
 ### Using web3.js
 
-Using the [`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/)
-library, you can retrieve the most recent block or get a specific transaction:
+Using the
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) library,
+you can retrieve the most recent block or get a specific transaction:
 
 ```js
 // connect to the `devnet` cluster and get the current `slot`
@@ -186,5 +187,5 @@ console.log(`https://explorer.solana.com/tx/${txId}?cluster=devnet`);
   [example of a v0 transaction](https://explorer.solana.com/tx/h9WQsqSUYhFvrbJWKFPaXximJpLf6Z568NW1j6PBn3f7GPzQXe9PYMYbmWSUFHwgnUmycDNbEX9cr6WjUWkUFKx/?cluster=devnet)
   on Solana Explorer
 - read the
-  [accepted proposal](https://docs.solanalabs.com/proposals/versioned-transactions)
+  [accepted proposal](https://docs.anza.xyz/proposals/versioned-transactions)
   for Versioned Transaction and Address Lookup Tables

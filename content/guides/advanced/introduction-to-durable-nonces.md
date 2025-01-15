@@ -477,7 +477,7 @@ as we discussed before. This is done to avoid using the same nonce again.
 
 Voila, we've gone through a very real-life use case of Durable Nonces. Now let's
 see how to use them in transactions using JavaScript and the
-[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/) package.
+[`@solana/web3.js`](https://solana-labs.github.io/solana-web3.js/v1.x/) package.
 
 ## Durable Nonces with Solana Web3.js
 
@@ -619,5 +619,5 @@ change will happen on-chain, and the winner can be decided.
 ## References
 
 - [Neodyme Blog: Nonce Upon a Time, or a Total Loss of Funds](https://neodyme.io/blog/nonce-upon-a-time/)
-- [Solana Durable Nonces CLI](https://docs.solanalabs.com/cli/examples/durable-nonce)
-- [Solana Durable Transaction Nonces Proposal](https://docs.solanalabs.com/implemented-proposals/durable-tx-nonces)
+- [Solana Durable Nonces CLI](https://docs.anza.xyz/cli/examples/durable-nonce)
+- [Solana Durable Transaction Nonces Proposal](https://docs.anza.xyz/implemented-proposals/durable-tx-nonces)

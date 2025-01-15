@@ -345,10 +345,11 @@ Solana.
 To begin, make a new folder and install the relevant dependencies:
 
 ```bash
-npm i @solana/web3.js npm i @solana/web3.js npm i @solana-developers/helpers npm i @metaplex-foundation/mpl-token-metadata npm i @metaplex-foundation/umi-bundle-defaults npm i @metaplex-foundation/umi-uploader-irys npm i --save-dev esrun
+npm i @solana/web3.js@1 @solana-developers/helpers@2 @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-uploader-irys esrun
 ```
 
-Then create a file called `create-metaplex-collection.ts`, and add our imports:
+Then create a file called `create-metaplex-nft-collection.ts`, and add our
+imports:
 
 ```typescript
 import {
@@ -698,7 +699,7 @@ await airdropIfRequired(
 
 const umi = createUmi(connection);
 
-// Substitute in your collection NFT address from create-metaplex-collection.ts
+// Substitute in your collection NFT address from create-metaplex-nft-collection.ts
 const collectionAddress = UMIPublicKey("");
 
 // Substitute in your NFT address from create-metaplex-nft.ts
@@ -898,13 +899,12 @@ endless!
 
 The steps covered above for creating an NFT would be incredibly tedious to
 execute for thousands of NFTs in one go. Many providers, including Metaplex,
-Magic Eden, and Tensor have so-called 'fair launch' tools that take care of
+MagicEden, and Tensor have so-called 'fair launch' tools that take care of
 minting large quantities of NFTs and ensuring they are sold within the
-parameters set by their creators. Dive into fair launch platforms on the
-[Digital Collectables](https://solana.com/ecosystem/explore?categories=digital%20collectibles)
-page. This hands-on experience will not only reinforce your understanding of the
-tools but also boost your confidence in your ability to use them effectively in
-the future.
+parameters set by their creators. Dive into one of these fair launch platforms
+and create an NFT. This hands-on experience will not only reinforce your
+understanding of the tools but also boost your confidence in your ability to use
+them effectively in the future.
 
 <Callout type="success" title="Completed the lab?">
 Push your code to GitHub and

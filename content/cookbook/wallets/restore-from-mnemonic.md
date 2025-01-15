@@ -9,14 +9,14 @@ convert the mnemonic to Keypairs for local testing.
 
 ## Restoring BIP39 format mnemonics
 
-```typescript filename="restore-bip39-mnemonic.ts" file=/code/content/cookbook/wallets/restore-bip39-mnemonic.ts#L1-#L13
+```typescript filename="restore-bip39-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip39-mnemonic.ts#L1-#L13
 import { Keypair } from "@solana/web3.js";
 // output: 5ZWj7a1f8tWkjBESHKgrLmXshuXxqeY9SYcfbshpAqPG
 ```
 
 ## Restoring BIP44 formant mnemonics
 
-```typescript filename="restore-bip44-mnemonic.ts" file=/code/content/cookbook/wallets/restore-bip44-mnemonic.ts#L1-L3,#L11-L27
+```typescript filename="restore-bip44-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip44-mnemonic.ts#L1-L3,#L11-L27
 import { Keypair } from "@solana/web3.js";
 import { HDKey } from "micro-key-producer/slip10.js";
 import * as bip39 from "bip39";
