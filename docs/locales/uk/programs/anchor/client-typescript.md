@@ -1,15 +1,16 @@
 ---
 title: JS/TS Client
 description:
-  Дізнайтеся, як використовувати клієнтську бібліотеку TypeScript для взаємодії з Solana
+  Дізнайтеся, як використовувати клієнтську бібліотеку TypeScript для взаємодії
+  з Solana
 sidebarLabel: JS/TS Client
 sidebarSortOrder: 3
 ---
 
 Anchor надає бібліотеку клієнта TypeScript
 ([@coral-xyz/anchor](https://github.com/coral-xyz/anchor/tree/v0.30.1/ts/packages/anchor))
-Це спрощує процес взаємодії з програмами Solana від клієнта
-у JavaScript або TypeScript.
+Це спрощує процес взаємодії з програмами Solana від клієнта у JavaScript або
+TypeScript.
 
 ## Клієнтська програма
 
@@ -22,15 +23,15 @@ Anchor надає бібліотеку клієнта TypeScript
 `AnchorProvider` - це абстракція, яка поєднує дві речі:
 
 - `Підключення ' - з'єднання з [кластером Solana] (/docs/core/clusters.md)
-(тобто localhost, devnet, mainnet)
-- `Wallet` - (необов’язково) Гаманець за замовчуванням, який використовується для оплати та підписання транзакцій
-<!-- prettier-ignore -->
-<Tabs items={['Frontend/Node', 'Test File']}>
-<Tab value="Frontend/Node">
+  (тобто localhost, devnet, mainnet)
+- `Wallet` - (необов’язково) Гаманець за замовчуванням, який використовується
+  для оплати та підписання транзакцій
+    <!-- prettier-ignore -->
+  <Tabs items={['Frontend/Node', 'Test File']}> <Tab value="Frontend/Node">
 
-При інтеграції з фронтендом за допомогою
-[Адаптер гаманця] (https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
-Вам потрібно буде налаштувати  `AnchorProvider` та `Program`.
+При інтеграції з фронтендом за допомогою [Адаптер гаманця]
+(https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
+Вам потрібно буде налаштувати `AnchorProvider` та `Program`.
 
 ```ts {9-10, 12-14}
 import { Program, AnchorProvider, setProvider } from "@coral-xyz/anchor";
@@ -52,13 +53,13 @@ export const program = new Program(idl as HelloAnchor, {
 У фрагменті коду вище:
 
 - `idl.json` - це файл IDL, створений якір, знайдено на
-`/target/idl/<mance-name> .json` в якорі.
+  `/target/idl/<mance-name> .json` в якорі.
 - `idltype.ts` - це тип IDL (для використання з TS), знайдено в
-`/target/type/<mange-name> .ts` в якорі.
+  `/target/type/<mange-name> .ts` в якорі.
 
-Крім того, ви можете створити екземпляр, використовуючи лише IDL
-і підключення до кластеру солани.Це означає, що немає за замовчуванням
-`Wallet`, але дозволяє використовувати` Програму 'для отримання облікових записів або побудувати
+Крім того, ви можете створити екземпляр, використовуючи лише IDL і підключення
+до кластеру солани.Це означає, що немає за замовчуванням `Wallet`, але дозволяє
+використовувати` Програму 'для отримання облікових записів або побудувати
 Інструкції без підключеного гаманця.
 
 ```ts {8-10}
@@ -77,9 +78,10 @@ export const program = new Program(idl as HelloAnchor, {
 </Tab>
 <Tab value="Test File">
 
-Якір автоматично налаштовує екземпляр `Program` у тестовому файлі за замовчуванням
-нові проекти.Однак ця установка відрізняється від того, як ви ініціалізуєте програму 
-Поза робочою областю якоря, наприклад, у програмах React або Node.js.
+Якір автоматично налаштовує екземпляр `Program` у тестовому файлі за
+замовчуванням нові проекти.Однак ця установка відрізняється від того, як ви
+ініціалізуєте програму Поза робочою областю якоря, наприклад, у програмах React
+або Node.js.
 
 ```typescript
 import * as anchor from "@coral-xyz/anchor";
@@ -105,20 +107,23 @@ describe("hello_anchor", () => {
 
 ## Виклик інструкцій
 
-Після того як `Program` налаштовано за допомогою програмного IDL, ви можете використовувати якір
+Після того як `Program` налаштовано за допомогою програмного IDL, ви можете
+використовувати якір
 [`MethodsBuilder`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L155)
 для:
+
 - Створіть окремі інструкції
 - Будуйте транзакції
 - Будуйте та надсилайте транзакції
 
 Основний формат виглядає як наступне:
+
 <!-- prettier-ignore -->
 <Tabs items={['methods', 'instruction', 'accounts', `signers`]}>
 <Tab value="methods">
 
-`program.methods` - Це API Builder для створення інструкційних дзвінків з
-IDL програми
+`program.methods` - Це API Builder для створення інструкційних дзвінків з IDL
+програми
 
 ```ts /methods/ {1}
 await program.methods
@@ -131,7 +136,8 @@ await program.methods
 </Tab>
 <Tab value="instruction">
 
-У розділі `.methods` вказуйте назву інструкції з IDL програми, передаючи будь-які необхідні аргументи як значення, розділені комами.
+У розділі `.methods` вказуйте назву інструкції з IDL програми, передаючи
+будь-які необхідні аргументи як значення, розділені комами.
 
 ```ts /instructionName/ /instructionData1/ /instructionData2/ {2}
 await program.methods
@@ -144,7 +150,8 @@ await program.methods
 </Tab>
 <Tab value="accounts">
 
-`.accounts` - Вказуйте адресу облікових записів, необхідних для інструкції, як це зазначено в IDL.
+`.accounts` - Вказуйте адресу облікових записів, необхідних для інструкції, як
+це зазначено в IDL.
 
 ```ts /accounts/ {3}
 await program.methods
@@ -153,7 +160,9 @@ await program.methods
   .signers([])
   .rpc();
 ```
-Зверніть увагу, що деякі адреси облікових записів не потрібно вказувати явно, оскільки клієнт Anchor може автоматично їх визначити. Це зазвичай стосується:
+
+Зверніть увагу, що деякі адреси облікових записів не потрібно вказувати явно,
+оскільки клієнт Anchor може автоматично їх визначити. Це зазвичай стосується:
 
 - Загальних облікових записів (наприклад, Програма Системи)
 - Облікових записів, де адреса є PDA (Програма-Походження Адреси)
@@ -161,7 +170,10 @@ await program.methods
 </Tab>
 <Tab value="signers">
 
-`.signers` - Необов'язково передайте масив ключових пар, які потрібні як додаткові підписанти для інструкції. Це зазвичай використовується при створенні нових облікових записів, де адреса облікового запису є публічним ключем нещодавно згенерованої ключової пари.
+`.signers` - Необов'язково передайте масив ключових пар, які потрібні як
+додаткові підписанти для інструкції. Це зазвичай використовується при створенні
+нових облікових записів, де адреса облікового запису є публічним ключем
+нещодавно згенерованої ключової пари.
 
 ```ts /signers/ {4}
 await program.methods
@@ -171,7 +183,9 @@ await program.methods
   .rpc();
 ```
 
-Зверніть увагу, що `.signers` слід використовувати тільки при використанні `.rpc()`. Коли ви використовуєте `.transaction()` або `.instruction()`, підписанти повинні бути додані до транзакції перед її відправкою.
+Зверніть увагу, що `.signers` слід використовувати тільки при використанні
+`.rpc()`. Коли ви використовуєте `.transaction()` або `.instruction()`,
+підписанти повинні бути додані до транзакції перед її відправкою.
 
 </Tab>
 </Tabs>
@@ -182,11 +196,13 @@ Anchor надає кілька методів для створення інст
 <Tabs items={['.rpc', '.transaction', '.instruction']}>
 <Tab value=".rpc">
 
-Метод [`rpc()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L283)
+Метод
+[`rpc()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L283)
 [відправляє підписану транзакцію](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/rpc.ts#L29)
 з вказаною інструкцією та повертає `TransactionSignature`.
 
-При використанні `.rpc` гаманець з `Provider` автоматично додається як підписант.
+При використанні `.rpc` гаманець з `Provider` автоматично додається як
+підписант.
 
 ```ts {13}
 // Generate keypair for the new account
@@ -207,7 +223,8 @@ const transactionSignature = await program.methods
 </Tab>
 <Tab value=".transaction">
 
-Метод [`transaction()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L382)
+Метод
+[`transaction()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L382)
 [створює `Transaction`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/transaction.ts#L18-L26)
 з вказаною інструкцією без відправки транзакції.
 
@@ -234,9 +251,11 @@ const transactionSignature = await connection.sendTransaction(transaction, [
 </Tab>
 <Tab value=".instruction">
 
-Метод [`instruction()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L348)
+Метод
+[`instruction()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/methods.ts#L348)
 [створює `TransactionInstruction`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/instruction.ts#L57-L61)
-з вказаною інструкцією. Це корисно, якщо ви хочете вручну додати інструкцію до транзакції та поєднати її з іншими інструкціями.
+з вказаною інструкцією. Це корисно, якщо ви хочете вручну додати інструкцію до
+транзакції та поєднати її з іншими інструкціями.
 
 ```ts {12} /instruction()/
 // Generate keypair for the new account
@@ -265,16 +284,20 @@ const transactionSignature = await connection.sendTransaction(transaction, [
 
 ## Отримання облікових записів
 
-Клієнт `Program` спрощує процес отримання та десеріалізації облікових записів, створених вашою програмою Anchor.
+Клієнт `Program` спрощує процес отримання та десеріалізації облікових записів,
+створених вашою програмою Anchor.
 
-Використовуйте `program.account`, за яким слідує назва типу облікового запису, визначеного в IDL. Anchor надає кілька методів для отримання облікових записів.
+Використовуйте `program.account`, за яким слідує назва типу облікового запису,
+визначеного в IDL. Anchor надає кілька методів для отримання облікових записів.
 
 <!-- prettier-ignore -->
 <Tabs items={['all', 'memcmp', 'fetch', 'fetchMultiple']}>
 <Tab value="all">
 
-Використовуйте [`all()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/account.ts#L251)
-для отримання всіх існуючих облікових записів для конкретного типу облікового запису.
+Використовуйте
+[`all()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/account.ts#L251)
+для отримання всіх існуючих облікових записів для конкретного типу облікового
+запису.
 
 ```ts /all/
 const accounts = await program.account.newAccount.all();
@@ -283,9 +306,13 @@ const accounts = await program.account.newAccount.all();
 </Tab>
 <Tab value="memcmp">
 
-Використовуйте `memcmp` (порівняння пам'яті) для фільтрації облікових записів, дані яких відповідають конкретному значенню на вказаному зсуві. Для використання `memcmp` необхідно розуміти байтову структуру поля даних для типу облікового запису, який ви отримуєте.
+Використовуйте `memcmp` (порівняння пам'яті) для фільтрації облікових записів,
+дані яких відповідають конкретному значенню на вказаному зсуві. Для використання
+`memcmp` необхідно розуміти байтову структуру поля даних для типу облікового
+запису, який ви отримуєте.
 
-При обчисленні зсуву пам'ятайте, що перші 8 байтів у облікових записах, створених програмою Anchor, зарезервовані для дискримінатора облікового запису.
+При обчисленні зсуву пам'ятайте, що перші 8 байтів у облікових записах,
+створених програмою Anchor, зарезервовані для дискримінатора облікового запису.
 
 ```ts /memcmp/
 const accounts = await program.account.newAccount.all([
@@ -301,7 +328,8 @@ const accounts = await program.account.newAccount.all([
 </Tab>
 <Tab value="fetch">
 
-Використовуйте [`fetch()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/account.ts#L165)
+Використовуйте
+[`fetch()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/account.ts#L165)
 для отримання даних облікового запису для одного облікового запису.
 
 ```ts /fetch/
@@ -311,8 +339,10 @@ const account = await program.account.newAccount.fetch(ACCOUNT_ADDRESS);
 </Tab>
 <Tab value="fetchMultiple">
 
-Використовуйте [`fetchMultiple()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/account.ts#L200)
-для отримання даних облікових записів для кількох облікових записів, передавши масив адрес облікових записів.
+Використовуйте
+[`fetchMultiple()`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/program/namespace/account.ts#L200)
+для отримання даних облікових записів для кількох облікових записів, передавши
+масив адрес облікових записів.
 
 ```ts /fetchMultiple/
 const accounts = await program.account.newAccount.fetchMultiple([
