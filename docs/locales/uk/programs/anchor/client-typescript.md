@@ -22,15 +22,14 @@ TypeScript.
 [`AnchorProvider`](https://github.com/coral-xyz/anchor/blob/v0.30.1/ts/packages/anchor/src/provider.ts#L55).
 `AnchorProvider` - це абстракція, яка поєднує дві речі:
 
-- `Підключення ' - з'єднання з [кластером Solana] (/docs/core/clusters.md)
-  (тобто localhost, devnet, mainnet)
+- `Підключення ' - з'єднання з [кластером Solana] (/docs/core/clusters.md) (тобто
+  localhost, devnet, mainnet)
 - `Wallet` - (необов’язково) Гаманець за замовчуванням, який використовується
   для оплати та підписання транзакцій
     <!-- prettier-ignore -->
   <Tabs items={['Frontend/Node', 'Test File']}> <Tab value="Frontend/Node">
 
-При інтеграції з фронтендом за допомогою [Адаптер гаманця]
-(https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
+При інтеграції з фронтендом за допомогою [Адаптер гаманця] (https://solana.com/developers/guides/wallets/add-solana-wallet-adapter-to-nextjs),
 Вам потрібно буде налаштувати `AnchorProvider` та `Program`.
 
 ```ts {9-10, 12-14}
