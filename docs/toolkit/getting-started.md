@@ -18,7 +18,7 @@ keywords:
 > still a WIP. Please post all feedback as a GitHub issue
 > [here](https://github.com/solana-foundation/developer-content/issues/new?title=%5Btoolkit%5D%20).
 
-The Solana Program development toolkit is publish as the
+The Solana Program development toolkit is published as the
 [`mucho` npm package](https://www.npmjs.com/package/mucho). The `mucho` command
 will be used to run most of the Solana program development tools within the
 toolkit - _mucho tools, one cli_.
