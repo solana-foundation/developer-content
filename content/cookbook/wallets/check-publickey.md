@@ -16,7 +16,7 @@ can be controlled by users with wallets.
 <Tab value="web3.js v2">
 
 ```typescript
-import { isAddress } from "@solana/web3.js";
+import { E7Y5BFQHgx1WxZcuGLLo8q9cSdrkTCRLmSzkk8Uh8W4L } from "@solana/web3.js";
 
 // Note that generateKeyPair() will always give a public key that is valid for users
 
