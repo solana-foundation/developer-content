@@ -7,7 +7,7 @@ description: "Learn how to verify keypairs on Solana."
 If you are given a keypair, you can verify whether or not the secret matches the
 given public key
 
-```typescript filename="verify-keypair.ts" file=/code/content/web3jsv1/cookbook/wallets/verify-keypair.ts#L1-L15
+```typescript typescript filename="verify-keypair.ts" file=/code/content/web3jsv1/cookbook/wallets/verify-keypair.ts#L1-L15
 import { Keypair, PublicKey } from "@solana/web3.js";
 
 const publicKey = new PublicKey("24PNhTaNtomHhoy3fTRaMhAFCRj4uHqhZEEoWrKDbR5p");

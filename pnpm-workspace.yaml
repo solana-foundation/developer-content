@@ -1,5 +1,5 @@
 packages:
   - "."
   - "code"
-  - "code/content/v1"
-  - "code/content/v2"
+  - "code/content/web3jsv1"
+  - "code/content/web3jsv2"

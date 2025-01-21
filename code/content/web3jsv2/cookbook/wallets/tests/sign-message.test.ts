@@ -20,8 +20,8 @@ describe("signMessage", async () => {
     assert.ok(result.signature, "Should produce a signature");
     assert.equal(
       result.decodedSignature.length,
-      64,
-      "Decoded signature should be 64 bytes",
+      88,
+      "Decoded signature should be 88 bytes",
     );
     assert.ok(result.verified, "Signature should be verified");
   });

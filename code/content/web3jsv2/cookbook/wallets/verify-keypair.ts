@@ -1,7 +1,7 @@
 import {
   isAddress,
   isKeyPairSigner,
-  createKeyPairFromBytes,
+  createKeyPairSignerFromBytes,
   Address,
 } from "@solana/web3.js";
 
@@ -16,14 +16,11 @@ export async function verifyKeypair() {
     121, 35, 172, 247, 68, 251, 226, 218, 48, 63, 176, 109, 168, 89, 238, 135,
   ]);
 
-  const signer = await createKeyPairFromBytes(keypairBytes);
+  const signer = await createKeyPairSignerFromBytes(keypairBytes);
 
   return {
-    hasMatchingPublicKey: signer.publicKey.toString() === publicKey,
-    isValidAddress: isAddress(publicKey),
-    isValidSigner: isKeyPairSigner({
-      ...signer,
-      address: signer.publicKey.toString() as Address<string>,
-    }),
+    hasMatchingPublicKey: signer.address === publicKey,
+    isValidAddress: isAddress(signer.address),
+    isValidSigner: isKeyPairSigner(signer),
   };
 }

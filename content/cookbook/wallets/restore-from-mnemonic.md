@@ -9,17 +9,23 @@ convert the mnemonic to Keypairs for local testing.
 
 ## Restoring BIP39 format mnemonics
 
-```typescript filename="restore-bip39-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip39-mnemonic.ts#L1-#L13
+```typescript filename="restore-bip39-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip39-mnemonic.ts#L1-L11
 import { Keypair } from "@solana/web3.js";
-// output: 5ZWj7a1f8tWkjBESHKgrLmXshuXxqeY9SYcfbshpAqPG
+import * as bip39 from "bip39";
+
+const mnemonic =
+  "pill tomorrow foster begin walnut borrow virtual kick shift mutual shoe scatter";
+
+// arguments: (mnemonic, password)
+const seed = bip39.mnemonicToSeedSync(mnemonic, "");
+const keypair = Keypair.fromSeed(seed.slice(0, 32));
+
+console.log(`${keypair.publicKey.toBase58()}`);
 ```
 
 ## Restoring BIP44 formant mnemonics
 
 ```typescript filename="restore-bip44-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip44-mnemonic.ts#L1-L3,#L11-L27
-import { Keypair } from "@solana/web3.js";
-import { HDKey } from "micro-key-producer/slip10.js";
-import * as bip39 from "bip39";
 const mnemonic =
   "neither lonely flavor argue grass remind eye tag avocado spot unusual intact";
 

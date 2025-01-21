@@ -8,16 +8,32 @@ The primary function of a keypair is to sign messages, transactions and enable
 verification of the signature. Verification of a signature allows the recipient
 to be sure that the data was signed by the owner of a specific private key.
 
-<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}> <Tab value="web3.js v2">
-```typescript filename="sign-message.ts" file=/code/content/web3jsv2/cookbook/wallets/sign-message.ts#L1-L13
-import { signBytes, verifySignature, getUtf8Encoder, getBase58Decoder, Address, }
-from "@solana/web3.js";
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+<Tab value="web3.js v2"> ```typescript filename="sign-message.ts"
+file=/code/content/web3jsv2/cookbook/wallets/sign-message.ts#L1-L28 import {
+signBytes, verifySignature, getUtf8Encoder, getBase58Decoder, Address, } from
+"@solana/web3.js";
 
     export async function signMessage(
       keys: CryptoKeyPair,
-      message: string = "Hello, World!"
+      message: string = "Hello, World!",
     ) {
       const encodedMessage = getUtf8Encoder().encode(message);
+      const signedBytes = await signBytes(keys.privateKey, encodedMessage);
+
+      const decoded = getBase58Decoder().decode(signedBytes);
+      const verified = await verifySignature(
+        keys.publicKey,
+        signedBytes,
+        encodedMessage,
+      );
+
+      return {
+        signature: signedBytes,
+        decodedSignature: decoded,
+        verified,
+      };
+    }
     ```
 
   </Tab>

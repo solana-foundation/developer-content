@@ -9,25 +9,28 @@ secret to test out your dApp.
 
 ## From Bytes
 
-<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}> <Tab value="web3.js v2">
-```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L11
-import { createKeyPairFromBytes } from "@solana/web3.js";
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+<Tab value="web3.js v2"> ```typescript filename="restore-keypair-from-bytes.ts"
+file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L13 import {
+createKeyPairSignerFromBytes } from "@solana/web3.js";
 
     export async function restoreKeypair() {
-        const keypairBytes = new Uint8Array([
-            174, 47, 154, 16, 202, 193, 206, 113, 199, 190, 53, 133, 169, 175, 31, 56,
-            222, 53, 138, 189, 224, 216, 117, 173, 10, 149, 53, 45, 73, 251, 237, 246,
-            15, 185, 186, 82, 177, 240, 148, 69, 241, 227, 167, 80, 141, 89, 240, 121,
-            121, 35, 172, 247, 68, 251, 226, 218, 48, 63, 176, 109, 168, 89, 238, 135,
-        ]);
+      const keypairBytes = new Uint8Array([
+        174, 47, 154, 16, 202, 193, 206, 113, 199, 190, 53, 133, 169, 175, 31, 56,
+        222, 53, 138, 189, 224, 216, 117, 173, 10, 149, 53, 45, 73, 251, 237, 246,
+        15, 185, 186, 82, 177, 240, 148, 69, 241, 227, 167, 80, 141, 89, 240, 121,
+        121, 35, 172, 247, 68, 251, 226, 218, 48, 63, 176, 109, 168, 89, 238, 135,
+      ]);
 
-        return await createKeyPairFromBytes(keypairBytes, true);
+      // create a signer keypair from the bytes
+      return await createKeyPairSignerFromBytes(keypairBytes, true);
+    }
     ```
 
   </Tab>
 
   <Tab value="web3.js v1">
-    ```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-keypair-from-bytes.ts#L1-L8
+    ```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-keypair-from-bytes.ts#L1-L12
     import { Keypair } from "@solana/web3.js";
 
     const keypair = Keypair.fromSecretKey(
@@ -36,6 +39,10 @@ import { createKeyPairFromBytes } from "@solana/web3.js";
         222, 53, 138, 189, 224, 216, 117, 173, 10, 149, 53, 45, 73, 251, 237, 246,
         15, 185, 186, 82, 177, 240, 148, 69, 241, 227, 167, 80, 141, 89, 240, 121,
         121, 35, 172, 247, 68, 251, 226, 218, 48, 63, 176, 109, 168, 89, 238, 135,
+      ]),
+    );
+
+    export { keypair as bytesKeypair };
     ```
 
   </Tab>
@@ -43,13 +50,14 @@ import { createKeyPairFromBytes } from "@solana/web3.js";
 
 ## From Base58 String
 
-<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}> <Tab value="web3.js v2">
-```typescript import { createKeyPairFromBytes, getBase58Codec } from "@solana/web3.js";
+<Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+<Tab value="web3.js v2"> ```typescript import { createKeyPairFromBytes,
+getBase58Codec } from "@solana/web3.js";
 
-    const keypairBase58 =
-      "5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG";
-    const keypairBytes = getBase58Codec().decode(keypairBase58);
-    const keypair = await createKeyPairFromBytes(keypairBytes);
+        const keypairBase58 =
+          "5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG";
+        const keypairBytes = getBase58Codec().decode(keypairBase58);
+        const keypair = await createKeyPairFromBytes(keypairBytes);
     ```
 
   </Tab>

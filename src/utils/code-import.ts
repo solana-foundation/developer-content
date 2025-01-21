@@ -1,7 +1,4 @@
-// remark-code-import
-// code-import.ts
-// https://github.com/kevin940726/remark-code-import
-import { readFile, stat } from "node:fs/promises";
+import fs from "node:fs";
 import path from "node:path";
 import { EOL } from "node:os";
 import { visit } from "unist-util-visit";
@@ -17,95 +14,73 @@ interface CodeImportOptions {
   allowImportingFromOutside?: boolean;
 }
 
-interface LineRange {
-  from: number;
-  to: number;
-}
-
-function parseLineRanges(rangeString: string): LineRange[] {
-  const rangeRegex = /#L(\d+)(?:-L?(\d+))?/g;
-  const ranges: LineRange[] = [];
-  let match;
-
-  while ((match = rangeRegex.exec(rangeString)) !== null) {
-    const [, from, to] = match;
-    const fromLine = parseInt(from, 10);
-    const toLine = to ? parseInt(to, 10) : fromLine;
-
-    if (fromLine === 0 || toLine === 0) {
-      throw new Error(
-        `Invalid line number: Line numbers must be positive integers`,
-      );
-    }
-
-    if (fromLine > toLine) {
-      throw new Error(
-        `Invalid range: L${fromLine}-L${toLine}. 'from' should be less than or equal to 'to'`,
-      );
-    }
-
-    ranges.push({ from: fromLine, to: toLine });
-  }
-
-  // Sort ranges and check for overlaps
-  ranges.sort((a, b) => a.from - b.from);
-  for (let i = 1; i < ranges.length; i++) {
-    if (ranges[i].from <= ranges[i - 1].to) {
-      throw new Error(`Overlapping or out-of-order ranges are not allowed`);
-    }
-  }
-
-  return ranges;
-}
-
 function extractLines(
   content: string,
-  ranges: LineRange[],
+  fromLine: number | undefined,
+  hasDash: boolean,
+  toLine: number | undefined,
   preserveTrailingNewline = false,
-): string {
+) {
   const lines = content.split(EOL);
-  let result: string[] = [];
-
-  if (
-    ranges.length === 1 &&
-    ranges[0].from === 1 &&
-    ranges[0].to === Infinity
-  ) {
-    result = result.concat(lines);
+  const start = fromLine || 1;
+  let end: number;
+  if (!hasDash) {
+    end = start;
+  } else if (toLine) {
+    end = toLine;
+  } else if (lines[lines.length - 1] === "" && !preserveTrailingNewline) {
+    end = lines.length - 1;
   } else {
-    for (const range of ranges) {
-      if (range.to > lines.length) {
-        throw new Error(
-          `Line range exceeds file length of ${lines.length} lines`,
-        );
-      }
-      result = result.concat(lines.slice(range.from - 1, range.to));
-    }
+    end = lines.length;
   }
-
-  let finalResult = result.join("\n");
-  if (
-    preserveTrailingNewline &&
-    content.endsWith("\n") &&
-    !finalResult.endsWith("\n")
-  ) {
-    finalResult += "\n";
-  }
-
-  return finalResult;
+  return lines.slice(start - 1, end).join("\n");
 }
 
-function importCode(options: CodeImportOptions = {}) {
+function parseFileMeta(meta: string): {
+  filePath: string;
+  fromLine?: number;
+  toLine?: number;
+} {
+  // First, extract just the file path part before any line numbers
+  const filePathMatch = meta.match(/file=([^#]+)/);
+  if (!filePathMatch) {
+    throw new Error(`Unable to parse file path from ${meta}`);
+  }
+  const filePath = filePathMatch[1];
+
+  // Then extract line numbers if they exist
+  const lineMatch = meta.match(/#L(\d+)(?:-L(\d+))?$/);
+  const fromLine = lineMatch ? parseInt(lineMatch[1], 10) : undefined;
+  const toLine = lineMatch?.[2] ? parseInt(lineMatch[2], 10) : undefined;
+
+  return { filePath, fromLine, toLine };
+}
+
+function getMDXParent(node: any): any {
+  let current = node;
+  while (current.parent) {
+    if (current.type === "mdxJsxFlowElement") {
+      return current;
+    }
+    current = current.parent;
+  }
+  return null;
+}
+
+function codeImport(options: CodeImportOptions = {}) {
   const rootDir = options.rootDir || process.cwd();
 
   if (!path.isAbsolute(rootDir)) {
     throw new Error(`"rootDir" has to be an absolute path`);
   }
 
-  return async function transform(tree: Root, file: VFile) {
+  return function transformer(tree: Root, file: VFile) {
     const codes: [Code, number | null, Parent][] = [];
+    const promises: Promise<void>[] = [];
 
+    // First pass: collect all code nodes and set up parent references
     visit(tree, "code", (node, index, parent) => {
+      (node as any).parent = parent;
       codes.push([node as Code, index as null | number, parent as Parent]);
     });
 
@@ -118,26 +93,18 @@ function importCode(options: CodeImportOptions = {}) {
         continue;
       }
 
-      const res = /^file=(["'])?(\/.+?)\1?(#.+)?$/.exec(fileMeta);
-
-      if (!res) {
-        throw new Error(
-          `Unable to parse file path ${fileMeta}. File path must start with a forward slash (/)`,
-        );
-      }
-
-      const [, , filePath, rangeString = ""] = res;
-
-      // Resolve the path relative to rootDir
-      const normalizedFilePath = path.join(rootDir, filePath.slice(1));
-      const fileAbsPath = path.resolve(normalizedFilePath);
-
       try {
-        // Check if the path is a directory
-        const stats = await stat(fileAbsPath);
-        if (stats.isDirectory()) {
-          throw new Error(`Path is a directory, not a file`);
+        const { filePath, fromLine, toLine } = parseFileMeta(fileMeta);
+        const hasDash = toLine !== undefined;
+
+        // Ensure the file path starts with a '/'
+        if (!filePath.startsWith("/")) {
+          throw new Error(`File path must start with '/': ${filePath}`);
         }
+
+        // Remove the leading '/' and resolve the path relative to rootDir
+        const normalizedFilePath = path.join(rootDir, filePath.slice(1));
+        const fileAbsPath = path.resolve(normalizedFilePath);
 
         if (!options.allowImportingFromOutside) {
           const relativePathFromRootDir = path.relative(rootDir, fileAbsPath);
@@ -151,27 +118,71 @@ function importCode(options: CodeImportOptions = {}) {
           }
         }
 
-        const ranges = rangeString
-          ? parseLineRanges(rangeString)
-          : [{ from: 1, to: Infinity }];
+        const processFileContent = (fileContent: string) => {
+          let processedContent = extractLines(
+            fileContent,
+            fromLine,
+            hasDash,
+            toLine,
+            options.preserveTrailingNewline,
+          );
 
-        const fileContent = await readFile(fileAbsPath, "utf8");
-        node.value = extractLines(
-          fileContent,
-          ranges,
-          options.preserveTrailingNewline,
-        );
-        if (options.removeRedundantIndentations) {
-          node.value = stripIndent(node.value);
+          if (options.removeRedundantIndentations) {
+            processedContent = stripIndent(processedContent);
+          }
+
+          // Handle MDX-specific formatting
+          const mdxParent = getMDXParent(node);
+          if (mdxParent) {
+            // Preserve original formatting for MDX components
+            node.lang = node.lang || "";
+            node.meta = node.meta || "";
+          }
+
+          node.value = processedContent;
+        };
+
+        if (options.async) {
+          promises.push(
+            new Promise<void>((resolve, reject) => {
+              fs.readFile(fileAbsPath, "utf8", (err, fileContent) => {
+                if (err) {
+                  reject(
+                    new Error(
+                      `Error reading file ${fileAbsPath}: ${err.message}`,
+                    ),
+                  );
+                  return;
+                }
+
+                try {
+                  processFileContent(fileContent);
+                  resolve();
+                } catch (error) {
+                  reject(error);
+                }
+              });
+            }),
+          );
+        } else {
+          const fileContent = fs.readFileSync(fileAbsPath, "utf8");
+          processFileContent(fileContent);
         }
       } catch (error) {
-        throw new Error(
-          `Error processing ${fileAbsPath}: ${(error as Error).message}`,
+        // Enhance error message with file path information
+        const enhancedError = new Error(
+          `Error processing file import: ${(error as Error).message}`,
         );
+        (enhancedError as any).originalError = error;
+        throw enhancedError;
       }
+    }
+
+    if (promises.length) {
+      return Promise.all(promises);
     }
   };
 }
 
-export { importCode };
-export default importCode;
+export { codeImport };
+export default codeImport;
