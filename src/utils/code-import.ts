@@ -14,46 +14,104 @@ interface CodeImportOptions {
   allowImportingFromOutside?: boolean;
 }
 
+interface LineRange {
+  fromLine: number;
+  toLine: number;
+}
+
+function validateLineRange(range: LineRange): void {
+  if (range.fromLine > range.toLine) {
+    throw new Error(
+      `Invalid line range: starting line (L${range.fromLine}) cannot be greater than ending line (L${range.toLine})`,
+    );
+  }
+  if (range.fromLine < 1) {
+    throw new Error(`Invalid line number: L${range.fromLine} (must be >= 1)`);
+  }
+}
+
 function extractLines(
   content: string,
-  fromLine: number | undefined,
-  hasDash: boolean,
-  toLine: number | undefined,
+  ranges: LineRange[] | null,
   preserveTrailingNewline = false,
-) {
+): string {
   const lines = content.split(EOL);
-  const start = fromLine || 1;
-  let end: number;
-  if (!hasDash) {
-    end = start;
-  } else if (toLine) {
-    end = toLine;
-  } else if (lines[lines.length - 1] === "" && !preserveTrailingNewline) {
-    end = lines.length - 1;
-  } else {
-    end = lines.length;
+
+  // If no ranges specified, return the entire file
+  if (!ranges) {
+    if (!preserveTrailingNewline && lines[lines.length - 1] === "") {
+      lines.pop();
+    }
+    return lines.join("\n");
   }
-  return lines.slice(start - 1, end).join("\n");
+
+  // For specified ranges, collect the lines
+  const resultLines: string[] = [];
+  const seenLines = new Set<number>();
+
+  ranges.forEach(range => {
+    const end = Math.min(range.toLine, lines.length);
+    for (let i = range.fromLine; i <= end; i++) {
+      const lineIndex = i - 1;
+      if (!seenLines.has(lineIndex)) {
+        seenLines.add(lineIndex);
+        resultLines.push(lines[lineIndex]);
+      }
+    }
+  });
+
+  // Handle trailing newline
+  if (!preserveTrailingNewline && resultLines[resultLines.length - 1] === "") {
+    resultLines.pop();
+  }
+
+  return resultLines.join("\n");
+}
+
+function parseLineRanges(lineSpec: string): LineRange[] {
+  // Split by comma for multiple ranges
+  const rangeStrings = lineSpec.split(",").filter(s => s.trim());
+  const ranges: LineRange[] = [];
+
+  for (const range of rangeStrings) {
+    const match = range.match(/L(\d+)(?:-L(\d+))?/);
+    if (!match) {
+      throw new Error(`Invalid line range format: ${range}`);
+    }
+
+    const fromLine = parseInt(match[1], 10);
+    const toLine = match[2] ? parseInt(match[2], 10) : fromLine;
+
+    const lineRange = { fromLine, toLine };
+    validateLineRange(lineRange);
+    ranges.push(lineRange);
+  }
+
+  return ranges;
 }
 
 function parseFileMeta(meta: string): {
   filePath: string;
-  fromLine?: number;
-  toLine?: number;
+  ranges: LineRange[] | null;
 } {
-  // First, extract just the file path part before any line numbers
-  const filePathMatch = meta.match(/file=([^#]+)/);
-  if (!filePathMatch) {
-    throw new Error(`Unable to parse file path from ${meta}`);
+  // Extract file path (everything before the first #)
+  const [filePathPart, lineRangesPart] = meta.split("#");
+  const filePath = filePathPart.replace(/^file=/, "");
+
+  if (!filePath) {
+    throw new Error("File path is required");
   }
-  const filePath = filePathMatch[1];
 
-  // Then extract line numbers if they exist
-  const lineMatch = meta.match(/#L(\d+)(?:-L(\d+))?$/);
-  const fromLine = lineMatch ? parseInt(lineMatch[1], 10) : undefined;
-  const toLine = lineMatch?.[2] ? parseInt(lineMatch[2], 10) : undefined;
+  // If no line ranges specified, return null for ranges
+  if (!lineRangesPart) {
+    return {
+      filePath,
+      ranges: null,
+    };
+  }
 
-  return { filePath, fromLine, toLine };
+  const ranges = parseLineRanges(lineRangesPart);
+  return { filePath, ranges };
 }
 
 function getMDXParent(node: any): any {
@@ -78,7 +136,6 @@ function codeImport(options: CodeImportOptions = {}) {
     const codes: [Code, number | null, Parent][] = [];
     const promises: Promise<void>[] = [];
 
-    // First pass: collect all code nodes and set up parent references
     visit(tree, "code", (node, index, parent) => {
       (node as any).parent = parent;
       codes.push([node as Code, index as null | number, parent as Parent]);
@@ -94,8 +151,7 @@ function codeImport(options: CodeImportOptions = {}) {
       }
 
       try {
-        const { filePath, fromLine, toLine } = parseFileMeta(fileMeta);
-        const hasDash = toLine !== undefined;
+        const { filePath, ranges } = parseFileMeta(fileMeta);
 
         // Ensure the file path starts with a '/'
         if (!filePath.startsWith("/")) {
@@ -121,9 +177,7 @@ function codeImport(options: CodeImportOptions = {}) {
         const processFileContent = (fileContent: string) => {
           let processedContent = extractLines(
             fileContent,
-            fromLine,
-            hasDash,
-            toLine,
+            ranges,
             options.preserveTrailingNewline,
           );
 
@@ -134,7 +188,6 @@ function codeImport(options: CodeImportOptions = {}) {
           // Handle MDX-specific formatting
           const mdxParent = getMDXParent(node);
           if (mdxParent) {
-            // Preserve original formatting for MDX components
             node.lang = node.lang || "";
             node.meta = node.meta || "";
           }
@@ -169,7 +222,6 @@ function codeImport(options: CodeImportOptions = {}) {
           processFileContent(fileContent);
         }
       } catch (error) {
-        // Enhance error message with file path information
         const enhancedError = new Error(
           `Error processing file import: ${(error as Error).message}`,
         );

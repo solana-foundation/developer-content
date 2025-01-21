@@ -24,7 +24,7 @@ generateKeyPair, generateKeyPairSigner } from "@solana/web3.js";
       const keypair = await generateKeyPair();
 
       return { address: keypair.publicKey.toString() };
-    }
+    };
 
     export const createKeypairSigner = async (): Promise<{ address: string }> => {
       // The Signer instance just wraps the KeyPair instance and uses it for signing using the native Crypto API when required.
@@ -35,7 +35,7 @@ generateKeyPair, generateKeyPairSigner } from "@solana/web3.js";
       const signer = await generateKeyPairSigner();
 
       return { address: signer.address };
-    }
+    };
 
     ```
 

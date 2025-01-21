@@ -21,6 +21,5 @@ export async function restoreKeypairBase58() {
     "5MaiiCavjCmn9Hs1o3eznqDEhRwxo7pXiAYez7keQUviUkauRiTMD8DrESdrNjN8zd9mTmVhRvBJeg5vhyvgrAhG";
   const keypairBytes = getBase58Codec().encode(keypairBase58);
 
-  // create a signer keypair from the bytes
   return await createKeyPairFromBytes(keypairBytes);
 }

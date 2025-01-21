@@ -25,7 +25,10 @@ console.log(`${keypair.publicKey.toBase58()}`);
 
 ## Restoring BIP44 formant mnemonics
 
-```typescript filename="restore-bip44-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip44-mnemonic.ts#L1-L3,#L11-L27
+```typescript filename="restore-bip44-mnemonic.ts" file=/code/content/web3jsv1/cookbook/wallets/restore-bip44-mnemonic.ts#L1-L3,L11-L27
+import { Keypair } from "@solana/web3.js";
+import { HDKey } from "micro-key-producer/slip10.js";
+import * as bip39 from "bip39";
 const mnemonic =
   "neither lonely flavor argue grass remind eye tag avocado spot unusual intact";
 
