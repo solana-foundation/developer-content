@@ -84,7 +84,7 @@ the immutable owner extension.
 const initializeImmutableOwnerInstruction =
   createInitializeImmutableOwnerInstruction(
     tokenAccount,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -96,7 +96,7 @@ const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccount,
   mint,
   owner.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -107,7 +107,7 @@ blockchain.
 const transaction = new Transaction().add(
   createTokenAccountInstruction,
   initializeImmutableOwnerInstruction,
-  initializeAccountInstruction,
+  initializeAccountInstruction
 );
 
 transaction.feePayer = payer.publicKey;
@@ -223,7 +223,7 @@ const mint = await createMint(
   2,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -267,7 +267,7 @@ export async function createTokenAccountWithImmutableOwner(
   mint: PublicKey,
   payer: Keypair,
   owner: Keypair,
-  tokenAccountKeypair: Keypair,
+  tokenAccountKeypair: Keypair
 ): Promise<string> {
   // Create account instruction
 
@@ -318,7 +318,7 @@ function is used to generate this instruction.
 const initializeImmutableOwnerInstruction =
   createInitializeImmutableOwnerInstruction(
     tokenAccount,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -333,7 +333,7 @@ const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccount,
   mint,
   owner.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -345,7 +345,7 @@ with an immutable owner.
 const transaction = new Transaction().add(
   createTokenAccountInstruction,
   initializeImmutableOwnerInstruction,
-  initializeAccountInstruction,
+  initializeAccountInstruction
 );
 
 transaction.feePayer = payer.publicKey;
@@ -423,13 +423,13 @@ try {
     otherOwner.publicKey,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   console.error("You should not be able to change the owner of the account.");
 } catch (error) {
   console.log(
-    `✅ - We expected this to fail because the account is immutable, and cannot change owner.`,
+    `✅ - We expected this to fail because the account is immutable, and cannot change owner.`
   );
 }
 ```
@@ -459,13 +459,13 @@ try {
     otherOwner.publicKey,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   console.error("You should not be able to change the owner of the account.");
 } catch (error) {
   console.log(
-    `✅ - We expected this to fail because the associated token account is immutable, and cannot change owner.`,
+    `✅ - We expected this to fail because the associated token account is immutable, and cannot change owner.`
   );
 }
 ```

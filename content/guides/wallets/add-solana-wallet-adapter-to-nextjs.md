@@ -221,7 +221,7 @@ export default function AppWalletProvider({
       // manually add any legacy wallet adapters here
       // new UnsafeBurnerWalletAdapter(),
     ],
-    [network],
+    [network]
   );
 
   return (
@@ -384,7 +384,7 @@ const getAirdropOnClick = async () => {
     ]);
     const sigResult = await connection.confirmTransaction(
       { signature, ...latestBlockhash },
-      "confirmed",
+      "confirmed"
     );
     if (sigResult) {
       alert("Airdrop was confirmed!");

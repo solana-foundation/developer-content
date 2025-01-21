@@ -29,7 +29,7 @@ describe("restoreKeypair", async () => {
     const verified = await verifySignature(
       keypair.publicKey,
       signedBytes,
-      message,
+      message
     );
 
     const decoded = getBase58Decoder().decode(signedBytes);

@@ -18,11 +18,11 @@ describe("verifyKeypair", async () => {
 
     assert.ok(
       isAddress(validAddress),
-      "Should validate correct address format",
+      "Should validate correct address format"
     );
     assert.ok(
       !isAddress(invalidAddress),
-      "Should reject invalid address format",
+      "Should reject invalid address format"
     );
   });
 });

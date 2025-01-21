@@ -124,7 +124,7 @@ const PAYER_KEYPAIR = Keypair.generate();
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const latestBlockHash = await connection.getLatestBlockhash();
   const programId = new PublicKey(
-    "6eW5nnSosr2LpkUGCdznsjRGDhVb26tLmiM1P8RV1QQp",
+    "6eW5nnSosr2LpkUGCdznsjRGDhVb26tLmiM1P8RV1QQp"
   );
 
   // Airdrop to Payer
@@ -134,15 +134,15 @@ const PAYER_KEYPAIR = Keypair.generate();
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: await connection.requestAirdrop(
         PAYER_KEYPAIR.publicKey,
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_SOL
       ),
     },
-    "confirmed",
+    "confirmed"
   );
 
   const [pda, bump] = await PublicKey.findProgramAddress(
     [Buffer.from("customaddress"), PAYER_KEYPAIR.publicKey.toBuffer()],
-    programId,
+    programId
   );
 
   console.log(`PDA Pubkey: ${pda.toString()}`);

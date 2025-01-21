@@ -86,7 +86,7 @@ import {
 
 (async () => {
   const programId = new PublicKey(
-    "77ezihTV6mTh2Uf3ggwbYF2NyGJJ5HHah1GrdowWJVD3",
+    "77ezihTV6mTh2Uf3ggwbYF2NyGJJ5HHah1GrdowWJVD3"
   );
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -100,10 +100,10 @@ import {
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: await connection.requestAirdrop(
         feePayer.publicKey,
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_SOL
       ),
     },
-    "confirmed",
+    "confirmed"
   );
 
   // Hello state account
@@ -227,7 +227,7 @@ import {
 
 (async () => {
   const programId = new PublicKey(
-    "4ZEdbCtb5UyCSiAMHV5eSHfyjq3QwbG3yXb6oHD7RYjk",
+    "4ZEdbCtb5UyCSiAMHV5eSHfyjq3QwbG3yXb6oHD7RYjk"
   );
 
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
@@ -241,10 +241,10 @@ import {
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: await connection.requestAirdrop(
         feePayer.publicKey,
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_SOL
       ),
     },
-    "confirmed",
+    "confirmed"
   );
 
   // Hello state account

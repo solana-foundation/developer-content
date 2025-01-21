@@ -69,7 +69,7 @@ const getTx = await connection.getTransaction(
   "3jpoANiFeVGisWRY5UP648xRXs3iQasCHABPWRWnoEjeA93nc79WrnGgpgazjq4K9m8g2NJoyKoWBV1Kx5VmtwHQ",
   {
     maxSupportedTransactionVersion: 0,
-  },
+  }
 );
 ```
 
@@ -116,7 +116,7 @@ const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
 let minRent = await connection.getMinimumBalanceForRentExemption(0);
 let blockhash = await connection
   .getLatestBlockhash()
-  .then(res => res.blockhash);
+  .then((res) => res.blockhash);
 ```
 
 Create an `array` of all the `instructions` you desire to send in your

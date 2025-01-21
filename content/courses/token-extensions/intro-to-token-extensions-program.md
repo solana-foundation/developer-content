@@ -90,8 +90,10 @@ accounts, and 12 on the Mint accounts:
   Accounts (ATAs). To avoid these issues, we can use this extension which makes
   it impossible to reassign account ownership.
 
-<Callout type="note">All Token Extension Program ATAs have the immutable
-ownership extension baked in. </Callout>
+<Callout type="note">
+  All Token Extension Program ATAs have the immutable ownership extension baked
+  in.{" "}
+</Callout>
 
 - **Default account state** Mint creators can use this extension which forces
   all new token accounts to be frozen. This way, users must eventually interact
@@ -113,8 +115,10 @@ ownership extension baked in. </Callout>
   However, the introduction of the close authority extension now allows for the
   closure of mint accounts as well.
 
-<Callout type="note">To close a mint account, the supply has to be 0. So all
-tokens minted must be burned. </Callout>
+<Callout type="note">
+  To close a mint account, the supply has to be 0. So all tokens minted must be
+  burned.{" "}
+</Callout>
 
 - **Interest-bearing tokens** Tokens which have constantly fluctuating values,
   showing the updated values in clients requires proxies that require regular
@@ -173,8 +177,10 @@ tokens minted must be burned. </Callout>
 - **Confidential transfers** This extension enhances privacy of the transactions
   without revealing key details of the transaction such as the amount.
 
-<Callout type="note">These extensions can be mixes and matched to make a
-plethora of highly functional tokens. </Callout>
+<Callout type="note">
+  These extensions can be mixes and matched to make a plethora of highly
+  functional tokens.{" "}
+</Callout>
 
 We'll dig deeper into each extension in separate lessons.
 
@@ -201,9 +207,11 @@ installation, verify it by running the following command:
 spl-token --version
 ```
 
-<Callout type="note">Make sure you follow each step in the
-[guide above](https://spl.solana.com/token#setup) as it also describes how to
-initialize a local wallet and airdrop SOL. </Callout>
+<Callout type="note">
+  Make sure you follow each step in the [guide
+  above](https://spl.solana.com/token#setup) as it also describes how to
+  initialize a local wallet and airdrop SOL.{" "}
+</Callout>
 
 #### 2. Creating a mint with close authority
 
@@ -253,8 +261,10 @@ Now that we have a mint, we can close it with the following where
 spl-token close-mint <TOKEN_MINT_ADDRESS>
 ```
 
-<Callout type="note">By closing the account, we reclaim the rent lamports on the
-mint account. Remember, the supply on the mint must be zero.</Callout>
+<Callout type="note">
+  By closing the account, we reclaim the rent lamports on the mint account.
+  Remember, the supply on the mint must be zero.
+</Callout>
 
 As a challenge, repeat this process, but before closing the mint account, mint
 some tokens and then try to close it - see what happens. (Spoiler, it'll fail)

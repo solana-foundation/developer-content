@@ -40,6 +40,7 @@ to be sure that the data was signed by the owner of a specific private key.
       };
     }
     ```
+
   </Tab>
 
   <Tab value="web3.js v1">
@@ -73,5 +74,6 @@ to be sure that the data was signed by the owner of a specific private key.
     // Verify using noble-ed25519
     const result = ed.verify(signature, messageBytes, keypair.publicKey.toBytes());
     ```
+
   </Tab>
 </Tabs>

@@ -158,7 +158,7 @@ the Mint Account.
 const initializeNonTransferableMintInstruction =
   createInitializeNonTransferableMintInstruction(
     mint, // Mint Account address
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -172,7 +172,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals, // Decimals of Mint
   mintAuthority, // Designated Mint Authority
   null, // Optional Freeze Authority
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -187,19 +187,19 @@ enabled.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeNonTransferableMintInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair], // Signers
+  [payer, mintKeypair] // Signers
 );
 
 console.log(
   "\nCreate Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -222,7 +222,7 @@ const sourceTokenAccount = await createAccount(
   payer.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -240,7 +240,7 @@ const destinationTokenAccount = await createAccount(
   randomKeypair.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -258,12 +258,12 @@ transactionSignature = await mintTo(
   100, // Amount
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nMint Tokens:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -285,7 +285,7 @@ try {
     100, // Amount
     undefined, // Additional signers
     undefined, // Confirmation options
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 } catch (error) {
   console.log("\nExpect Error:", error);
@@ -320,12 +320,12 @@ transactionSignature = await burn(
   100, // Amount
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nBurn Tokens:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -342,12 +342,12 @@ transactionSignature = await closeAccount(
   payer.publicKey, // Owner of Token Account
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nClose Token Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 

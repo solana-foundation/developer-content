@@ -124,7 +124,7 @@ const mint = await createMint(
   decimals, // Decimals of Mint
   undefined, // Optional keypair
   undefined, // Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -185,7 +185,7 @@ const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccount, // Token Account Address
   mint, // Mint Account
   payer.publicKey, // Token Account Owner
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -199,7 +199,7 @@ const enableRequiredMemoTransfersInstruction =
     tokenAccount, // Token Account address
     payer.publicKey, // Token Account Owner
     undefined, // Additional signers
-    TOKEN_2022_PROGRAM_ID, // Token Program ID
+    TOKEN_2022_PROGRAM_ID // Token Program ID
   );
 ```
 
@@ -214,19 +214,19 @@ enabled.
 transaction = new Transaction().add(
   createAccountInstruction,
   initializeAccountInstruction,
-  enableRequiredMemoTransfersInstruction,
+  enableRequiredMemoTransfersInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, tokenAccountKeypair], // Signers
+  [payer, tokenAccountKeypair] // Signers
 );
 
 console.log(
   "\nCreate Token Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -249,7 +249,7 @@ const sourceTokenAccount = await createAccount(
   payer.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -266,12 +266,12 @@ transactionSignature = await mintTo(
   200, // Amount
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nMint Tokens:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -290,7 +290,7 @@ const transferInstruction = createTransferInstruction(
   payer.publicKey, // Source Token Account owner
   100, // Amount
   undefined, // Additional signers
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -332,7 +332,7 @@ try {
   await sendAndConfirmTransaction(
     connection,
     transaction,
-    [payer], // Signers
+    [payer] // Signers
   );
 } catch (error) {
   console.log("\nExpect Error:", error);
@@ -365,12 +365,12 @@ transaction = new Transaction().add(memoInstruction, transferInstruction);
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer], // Signers
+  [payer] // Signers
 );
 
 console.log(
   "\nTransfer with Memo:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -394,12 +394,12 @@ transactionSignature = await enableRequiredMemoTransfers(
   payer.publicKey, // Owner of Token Account
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nEnable Required Memo Transfers:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -415,12 +415,12 @@ transactionSignature = await disableRequiredMemoTransfers(
   payer.publicKey, // Owner of Token Account
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nDisable Required Memo Transfers:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -435,12 +435,12 @@ transaction = new Transaction().add(transferInstruction);
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer], // Signers
+  [payer] // Signers
 );
 
 console.log(
   "\nTransfer without Memo:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 

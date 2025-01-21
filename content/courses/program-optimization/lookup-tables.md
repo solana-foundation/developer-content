@@ -156,15 +156,15 @@ generated using the `authority` and `recentSlot` as seeds.
 ```typescript
 const [lookupTableAddress, bumpSeed] = PublicKey.findProgramAddressSync(
   [params.authority.toBuffer(), toBufferLE(BigInt(params.recentSlot), 8)],
-  this.programId,
+  this.programId
 );
 ```
 
 <Callout>
-Using the most recent slot sometimes results in errors when submitting the
-transaction. To avoid this, it’s recommended to use a slot that is one slot
-before the most recent one (`recentSlot: currentSlot - 1`). If you still
-encounter errors when sending the transaction, try resubmitting it.
+  Using the most recent slot sometimes results in errors when submitting the
+  transaction. To avoid this, it’s recommended to use a slot that is one slot
+  before the most recent one (`recentSlot: currentSlot - 1`). If you still
+  encounter errors when sending the transaction, try resubmitting it.
 </Callout>
 
 ```
@@ -406,19 +406,19 @@ async function main() {
   const payer = await initializeKeypair(connection);
 
   // Generate 22 recipient keypairs using makeKeypairs
-  const recipients = makeKeypairs(22).map(keypair => keypair.publicKey);
+  const recipients = makeKeypairs(22).map((keypair) => keypair.publicKey);
 
   // Create a legacy transaction
   const transaction = new Transaction();
 
   // Add 22 transfer instructions to the transaction
-  recipients.forEach(recipient => {
+  recipients.forEach((recipient) => {
     transaction.add(
       SystemProgram.transfer({
         fromPubkey: payer.publicKey,
         toPubkey: recipient,
         lamports: LAMPORTS_PER_SOL * 0.01, // Transfer 0.01 SOL to each recipient
-      }),
+      })
     );
   });
 
@@ -428,7 +428,7 @@ async function main() {
       payer,
     ]);
     console.log(
-      `Transaction successful with signature: ${getExplorerLink("tx", signature, "devnet")}`,
+      `Transaction successful with signature: ${getExplorerLink("tx", signature, "devnet")}`
     );
   } catch (error) {
     console.error("Transaction failed:", error);
@@ -496,7 +496,7 @@ async function main() {
   const payer = await initializeKeypair(connection);
 
   // Generate 22 recipient keypairs using makeKeypairs
-  const recipients = makeKeypairs(22).map(keypair => keypair.publicKey);
+  const recipients = makeKeypairs(22).map((keypair) => keypair.publicKey);
 }
 ```
 
@@ -531,7 +531,7 @@ async function sendV0Transaction(
   connection: Connection,
   user: Keypair,
   instructions: TransactionInstruction[],
-  lookupTableAccounts?: AddressLookupTableAccount[],
+  lookupTableAccounts?: AddressLookupTableAccount[]
 ) {
   // Get the latest blockhash and last valid block height
   const { blockhash, lastValidBlockHeight } =
@@ -554,13 +554,13 @@ async function sendV0Transaction(
     [user],
     {
       commitment: "finalized", // Ensures the transaction is confirmed at the highest level
-    },
+    }
   );
 
   // Log the transaction URL on the Solana Explorer using the helper
   const explorerLink = getExplorerLink("tx", txid, "devnet");
   console.log(
-    `Transaction successful! View it on Solana Explorer: ${explorerLink}`,
+    `Transaction successful! View it on Solana Explorer: ${explorerLink}`
   );
 }
 ```
@@ -587,7 +587,7 @@ This function will:
 ```typescript filename="use-lookup-tables.ts"
 async function waitForNewBlock(
   connection: Connection,
-  targetHeight: number,
+  targetHeight: number
 ): Promise<void> {
   console.log(`Waiting for ${targetHeight} new blocks...`);
 
@@ -595,7 +595,7 @@ async function waitForNewBlock(
   const { lastValidBlockHeight: initialBlockHeight } =
     await connection.getLatestBlockhash();
 
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const SECOND = 1000;
     const checkInterval = 1 * SECOND; // Interval to check for new blocks (1000ms)
 
@@ -654,7 +654,7 @@ by staying within Solana’s transaction size limits.
 async function initializeLookupTable(
   user: Keypair,
   connection: Connection,
-  addresses: PublicKey[],
+  addresses: PublicKey[]
 ): Promise<PublicKey> {
   // Get the current slot using a helper function from @solana/web3.js
   const slot = await getSlot(connection);
@@ -714,12 +714,12 @@ async function main() {
   const payer = await initializeKeypair(connection);
 
   // Generate 22 recipient keypairs using makeKeypairs
-  const recipients = makeKeypairs(22).map(keypair => keypair.publicKey);
+  const recipients = makeKeypairs(22).map((keypair) => keypair.publicKey);
   // Initialize the lookup table with the generated recipients
   const lookupTableAddress = await initializeLookupTable(
     user,
     connection,
-    recipients,
+    recipients
   );
 
   // Wait for a new block before using the lookup table
@@ -736,12 +736,12 @@ async function main() {
   }
 
   // Create transfer instructions for each recipient
-  const transferInstructions = recipients.map(recipient =>
+  const transferInstructions = recipients.map((recipient) =>
     SystemProgram.transfer({
       fromPubkey: user.publicKey, // The payer
       toPubkey: recipient, // The recipient
       lamports: LAMPORTS_PER_SOL * 0.01, // Amount to transfer
-    }),
+    })
   );
 
   // Send the versioned transaction including the lookup table
@@ -749,7 +749,7 @@ async function main() {
     connection,
     user,
     transferInstructions,
-    [lookupTableAccount],
+    [lookupTableAccount]
   );
 
   // Log the transaction link for easy access
@@ -805,7 +805,7 @@ All we need to do is go into `initializeLookupTable` and do two things:
 async function initializeLookupTable(
   user: Keypair,
   connection: Connection,
-  addresses: PublicKey[],
+  addresses: PublicKey[]
 ): Promise<PublicKey> {
   // Get the current slot
   const slot = await connection.getSlot();
@@ -874,6 +874,6 @@ and waiting for the lookup table to activate/deactivate. Feel free to reference
 this [solution code](https://github.com/Unboxed-Software/versioned-transaction/tree/challenge).
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=b58fdd00-2b23-4e0d-be55-e62677d351ef)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=b58fdd00-2b23-4e0d-be55-e62677d351ef)!
 </Callout>

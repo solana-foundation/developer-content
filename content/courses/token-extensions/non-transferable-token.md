@@ -75,7 +75,7 @@ initializes the non-transferable extension.
 const initializeNonTransferableMintInstruction =
   createInitializeNonTransferableMintInstruction(
     mintKeypair.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -87,7 +87,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   null, // Confirmation Config
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -97,14 +97,14 @@ Lastly, add all of the instructions to a transaction and send to Solana.
 const mintTransaction = new Transaction().add(
   createAccountInstruction,
   initializeNonTransferableMintInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 await sendAndConfirmTransaction(
   connection,
   mintTransaction,
   [payer, mintKeypair],
-  { commitment: "finalized" },
+  { commitment: "finalized" }
 );
 ```
 
@@ -245,7 +245,7 @@ export async function createNonTransferableMint(
   connection: Connection,
   payer: Keypair,
   mintKeypair: Keypair,
-  decimals: number,
+  decimals: number
 ): Promise<TransactionSignature> {
   const extensions = [ExtensionType.NonTransferable];
   const mintLength = getMintLen(extensions);
@@ -264,22 +264,22 @@ export async function createNonTransferableMint(
     }),
     createInitializeNonTransferableMintInstruction(
       mintKeypair.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       mintKeypair.publicKey,
       decimals,
       payer.publicKey,
       null,
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   const signature = await sendAndConfirmTransaction(
     connection,
     mintTransaction,
     [payer, mintKeypair],
-    { commitment: "finalized" },
+    { commitment: "finalized" }
   );
 
   return signature;
@@ -333,7 +333,7 @@ const ata = (
     undefined,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   )
 ).address;
 
@@ -349,12 +349,12 @@ await mintTo(
   amount,
   [payer],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 const tokenBalance = await connection.getTokenAccountBalance(ata, "finalized");
 
 console.log(
-  `Account ${ata.toBase58()} now has ${tokenBalance.value.uiAmount} token.`,
+  `Account ${ata.toBase58()} now has ${tokenBalance.value.uiAmount} token.`
 );
 ```
 
@@ -393,7 +393,7 @@ const destinationAccount = await createAccount(
   destinationKeypair.publicKey,
   undefined,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -414,13 +414,13 @@ try {
     decimals,
     [destinationKeypair],
     { commitment: "finalized" },
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 } catch (e) {
   console.log(
     "This transfer is failing because the mint is non-transferable. Check out the program logs: ",
     (e as any).logs,
-    "\n\n",
+    "\n\n"
   );
 }
 ```

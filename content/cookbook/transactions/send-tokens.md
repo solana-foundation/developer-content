@@ -34,7 +34,7 @@ import {
   const fromWallet = Keypair.generate();
   const fromAirdropSignature = await connection.requestAirdrop(
     fromWallet.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
   // Wait for airdrop confirmation
   await connection.confirmTransaction(fromAirdropSignature);
@@ -48,7 +48,7 @@ import {
     fromWallet,
     fromWallet.publicKey,
     null,
-    9,
+    9
   );
 
   // Get the token account of the fromWallet Solana address, if it does not exist, create it
@@ -56,7 +56,7 @@ import {
     connection,
     fromWallet,
     mint,
-    fromWallet.publicKey,
+    fromWallet.publicKey
   );
 
   //get the token account of the toWallet Solana address, if it does not exist, create it
@@ -64,7 +64,7 @@ import {
     connection,
     fromWallet,
     mint,
-    toWallet.publicKey,
+    toWallet.publicKey
   );
 
   // Minting 1 new token to the "fromTokenAccount" account we just returned/created
@@ -75,7 +75,7 @@ import {
     fromTokenAccount.address,
     fromWallet.publicKey,
     1000000000, // it's 1 token, but in lamports
-    [],
+    []
   );
 
   // Add token transfer instructions to transaction
@@ -84,8 +84,8 @@ import {
       fromTokenAccount.address,
       toTokenAccount.address,
       fromWallet.publicKey,
-      1,
-    ),
+      1
+    )
   );
 
   // Sign transaction, broadcast, and confirm

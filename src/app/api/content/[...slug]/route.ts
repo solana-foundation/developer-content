@@ -43,7 +43,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
 
   // create a flat listing of all the nav items in order to locate the next, current, and prev records
   let flatNavItems = generateFlatNavItemListing(
-    generateNavItemListing(baseLocalRecords),
+    generateNavItemListing(baseLocalRecords)
   );
 
   if (!flatNavItems || flatNavItems.length <= 0) return notFound();
@@ -59,7 +59,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
       flatNavItems[i].href != href &&
       flatNavItems[i].href != `/${href}` &&
       !flatNavItems[i]?.altRoutes?.filter(
-        route => route.toLocaleLowerCase() == href,
+        (route) => route.toLocaleLowerCase() == href
       ).length
     ) {
       continue;
@@ -106,33 +106,33 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
         getRecordsForGroup("courses", {
           locale: DEFAULT_LOCALE_EN,
         }) as CourseRecord[]
-      ).find(item => item.slug == courseSlug);
+      ).find((item) => item.slug == courseSlug);
 
       if (!course) throw `Course '${courseSlug}' not found`;
 
       if (!course.lessons) course.lessons = [];
 
       const lessonIndex = course.lessons.findIndex(
-        item => item == current!.slug,
+        (item) => item == current!.slug
       );
 
       next =
         course.lessons.length > lessonIndex
-          ? flatNavItems.find(item =>
-              item.path?.endsWith(course!.lessons![lessonIndex + 1]),
+          ? flatNavItems.find((item) =>
+              item.path?.endsWith(course!.lessons![lessonIndex + 1])
             ) || null
           : null;
 
       prev =
         lessonIndex > 0
-          ? flatNavItems.find(item =>
-              item.path?.endsWith(course!.lessons![lessonIndex - 1]),
+          ? flatNavItems.find((item) =>
+              item.path?.endsWith(course!.lessons![lessonIndex - 1])
             ) || null
           : null;
     } catch (err) {
       console.warn(
         "[api content]",
-        "an error occurred while getting the course details for a lesson",
+        "an error occurred while getting the course details for a lesson"
       );
       console.warn(err);
       return notFound();
@@ -142,7 +142,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
   // locate full content record for the base locale
   let record = baseLocalRecords.find(
     (item: SupportedDocTypes) =>
-      item.href.toLowerCase() == current?.href?.toLowerCase(),
+      item.href.toLowerCase() == current?.href?.toLowerCase()
   );
 
   if (!record) return notFound();
@@ -158,19 +158,19 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
 
     const localRecord = localeRecords.find(
       (item: SupportedDocTypes) =>
-        item.href.toLowerCase() == current?.href?.toLowerCase(),
+        item.href.toLowerCase() == current?.href?.toLowerCase()
     );
     if (localRecord) {
       record = localRecord;
     }
 
     flatNavItems = generateFlatNavItemListing(
-      generateNavItemListing(localeRecords),
+      generateNavItemListing(localeRecords)
     );
 
     // get the locale specific next/prev info
-    if (!!next) next = flatNavItems.find(item => item.id == next!.id) || next;
-    if (!!prev) prev = flatNavItems.find(item => item.id == prev!.id) || prev;
+    if (!!next) next = flatNavItems.find((item) => item.id == next!.id) || next;
+    if (!!prev) prev = flatNavItems.find((item) => item.id == prev!.id) || prev;
   }
 
   if (!record) return notFound();
@@ -179,7 +179,7 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
   let parentId = current.id.substring(0, current.id.lastIndexOf("-"));
 
   for (let i = 0; i <= parentId.split("-").length + 2; i++) {
-    const item = flatNavItems.find(item => item.id == parentId);
+    const item = flatNavItems.find((item) => item.id == parentId);
 
     if (item) {
       breadcrumbs.unshift({
@@ -220,14 +220,14 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
     }) as AuthorRecord[];
 
     // @ts-ignore
-    author = allAuthors.find(node => node.slug == record.author);
+    author = allAuthors.find((node) => node.slug == record.author);
     // @ts-expect-error
     delete author._raw;
 
     if (!!author?.organization) {
       // @ts-expect-error - we are forcing in the organization's record on purpose
       author.organization = allAuthors.find(
-        node => node.slug == author!.organization,
+        (node) => node.slug == author!.organization
       );
       // @ts-expect-error
       delete author.organization._raw;
@@ -238,6 +238,6 @@ export function GET(req: Request, { params: { slug } }: RouteProps) {
 
   // finally, return the json formatted listing of NavItems (with the next and prev records)
   return Response.json(
-    Object.assign(current, record, { breadcrumbs, next, prev, author }),
+    Object.assign(current, record, { breadcrumbs, next, prev, author })
   );
 }

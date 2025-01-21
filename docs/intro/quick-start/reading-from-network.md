@@ -343,7 +343,7 @@ const mintData = await getMint(
   pg.connection,
   address,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(mintData);

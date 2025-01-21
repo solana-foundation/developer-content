@@ -119,7 +119,7 @@ const initializeGroupPointerInstruction =
     mintKeypair.publicKey,
     payer.publicKey,
     mintKeypair.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -131,7 +131,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -157,14 +157,14 @@ const mintTransaction = new Transaction().add(
   createAccountInstruction,
   initializeGroupPointerInstruction,
   initializeMintInstruction,
-  initializeGroupInstruction,
+  initializeGroupInstruction
 );
 
 const signature = await sendAndConfirmTransaction(
   connection,
   mintTransaction,
   [payer, mintKeypair],
-  { commitment: "finalized" },
+  { commitment: "finalized" }
 );
 ```
 
@@ -184,7 +184,7 @@ const signature = await tokenGroupUpdateGroupAuthority(
   newAuthority, // account - Public key of the new update authority
   undefined, // multiSigners - Signing accounts if `authority` is a multisig
   { commitment: "finalized" }, // confirmOptions - Options for confirming thr transaction
-  TOKEN_2022_PROGRAM_ID, // programId - SPL Token program account
+  TOKEN_2022_PROGRAM_ID // programId - SPL Token program account
 );
 ```
 
@@ -204,7 +204,7 @@ const signature = tokenGroupUpdateGroupMaxSize(
   4, // maxSize - new max size of the group
   undefined, // multiSigners — Signing accounts if `authority` is a multisig
   { commitment: "finalized" }, // confirmOptions - Options for confirming thr transaction
-  TOKEN_2022_PROGRAM_ID, // programId - SPL Token program account
+  TOKEN_2022_PROGRAM_ID // programId - SPL Token program account
 );
 ```
 
@@ -279,7 +279,7 @@ const initializeGroupMemberPointerInstruction =
     mintKeypair.publicKey,
     payer.publicKey,
     mintKeypair.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -291,7 +291,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -319,14 +319,14 @@ const mintTransaction = new Transaction().add(
   createAccountInstruction,
   initializeGroupMemberPointerInstruction,
   initializeMintInstruction,
-  initializeMemberInstruction,
+  initializeMemberInstruction
 );
 
 const signature = await sendAndConfirmTransaction(
   connection,
   mintTransaction,
   [payer, mintKeypair],
-  { commitment: "finalized" },
+  { commitment: "finalized" }
 );
 ```
 
@@ -355,7 +355,7 @@ const groupMint = await getMint(
   connection,
   mint,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const groupPointerData: GroupPointer = getGroupPointerState(groupMint);
@@ -387,7 +387,7 @@ const groupMint = await getMint(
   connection,
   mint,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const groupData: TokenGroup = getTokenGroupState(groupMint);
@@ -416,7 +416,7 @@ const memberMint = await getMint(
   connection,
   mint,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const memberPointerData = getGroupMemberPointerState(memberMint);
@@ -446,7 +446,7 @@ const memberMint = await getMint(
   connection,
   mint,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 const memberData = getTokenGroupMemberState(memberMint);
 ```
@@ -548,7 +548,7 @@ const collectionTokenMetadata: TokenMetadata = {
   uri: groupMetadata.tokenUri,
   updateAuthority: payer.publicKey,
   additionalMetadata: Object.entries(
-    groupMetadata.tokenAdditionalMetadata || [],
+    groupMetadata.tokenAdditionalMetadata || []
   ).map(([trait_type, value]) => [trait_type, value]),
 };
 ```
@@ -582,7 +582,7 @@ export async function createTokenGroup(
   mintKeypair: Keypair,
   decimals: number,
   maxMembers: number,
-  metadata: TokenMetadata,
+  metadata: TokenMetadata
 ): Promise<TransactionSignature>;
 ```
 
@@ -639,7 +639,7 @@ export async function createTokenGroup(
   mintKeypair: Keypair,
   decimals: number,
   maxMembers: number,
-  metadata: TokenMetadata,
+  metadata: TokenMetadata
 ): Promise<TransactionSignature> {
   const extensions: ExtensionType[] = [
     ExtensionType.GroupPointer,
@@ -665,20 +665,20 @@ export async function createTokenGroup(
       mintKeypair.publicKey,
       payer.publicKey,
       mintKeypair.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMetadataPointerInstruction(
       mintKeypair.publicKey,
       payer.publicKey,
       mintKeypair.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       mintKeypair.publicKey,
       decimals,
       payer.publicKey,
       payer.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeGroupInstruction({
       group: mintKeypair.publicKey,
@@ -697,13 +697,13 @@ export async function createTokenGroup(
       symbol: metadata.symbol,
       updateAuthority: payer.publicKey,
       uri: metadata.uri,
-    }),
+    })
   );
 
   const signature = await sendAndConfirmTransaction(
     connection,
     mintTransaction,
-    [payer, mintKeypair],
+    [payer, mintKeypair]
   );
 
   return signature;
@@ -720,11 +720,11 @@ const signature = await createTokenGroup(
   groupMintKeypair,
   decimals,
   maxMembers,
-  collectionTokenMetadata,
+  collectionTokenMetadata
 );
 
 console.log(
-  `Created collection mint with metadata:\n${getExplorerLink("tx", signature, "localnet")}\n`,
+  `Created collection mint with metadata:\n${getExplorerLink("tx", signature, "localnet")}\n`
 );
 ```
 
@@ -737,11 +737,11 @@ const groupMint = await getMint(
   connection,
   groupMintKeypair.publicKey,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 const fetchedGroupMetadata = await getTokenMetadata(
   connection,
-  groupMintKeypair.publicKey,
+  groupMintKeypair.publicKey
 );
 const metadataPointerState = getMetadataPointerState(groupMint);
 const groupData = getGroupPointerState(groupMint);
@@ -750,7 +750,7 @@ console.log("\n---------- GROUP DATA -------------\n");
 console.log("Group Mint: ", groupMint.address.toBase58());
 console.log(
   "Metadata Pointer Account: ",
-  metadataPointerState?.metadataAddress?.toBase58(),
+  metadataPointerState?.metadataAddress?.toBase58()
 );
 console.log("Group Pointer Account: ", groupData?.groupAddress?.toBase58());
 console.log("\n--- METADATA ---\n");
@@ -838,7 +838,7 @@ member NFTs.
 ```ts
 // Format token metadata
 const memberTokenMetadata: { mintKeypair: Keypair; metadata: TokenMetadata }[] =
-  membersMetadata.map(member => ({
+  membersMetadata.map((member) => ({
     mintKeypair: member.mint,
     metadata: {
       name: member.tokenName,
@@ -847,7 +847,7 @@ const memberTokenMetadata: { mintKeypair: Keypair; metadata: TokenMetadata }[] =
       uri: member.tokenUri,
       updateAuthority: payer.publicKey,
       additionalMetadata: Object.entries(
-        member.tokenAdditionalMetadata || [],
+        member.tokenAdditionalMetadata || []
       ).map(([trait_type, value]) => [trait_type, value]),
     } as TokenMetadata,
   }));
@@ -877,7 +877,7 @@ export async function createTokenMember(
   mintKeypair: Keypair,
   decimals: number,
   metadata: TokenMetadata,
-  groupAddress: PublicKey,
+  groupAddress: PublicKey
 ): Promise<TransactionSignature>;
 ```
 
@@ -932,7 +932,7 @@ export async function createTokenMember(
   mintKeypair: Keypair,
   decimals: number,
   metadata: TokenMetadata,
-  groupAddress: PublicKey,
+  groupAddress: PublicKey
 ): Promise<TransactionSignature> {
   const extensions: ExtensionType[] = [
     ExtensionType.GroupMemberPointer,
@@ -958,20 +958,20 @@ export async function createTokenMember(
       mintKeypair.publicKey,
       payer.publicKey,
       mintKeypair.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMetadataPointerInstruction(
       mintKeypair.publicKey,
       payer.publicKey,
       mintKeypair.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       mintKeypair.publicKey,
       decimals,
       payer.publicKey,
       payer.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMemberInstruction({
       group: groupAddress,
@@ -990,13 +990,13 @@ export async function createTokenMember(
       symbol: metadata.symbol,
       updateAuthority: payer.publicKey,
       uri: metadata.uri,
-    }),
+    })
   );
 
   const signature = await sendAndConfirmTransaction(
     connection,
     mintTransaction,
-    [payer, mintKeypair],
+    [payer, mintKeypair]
   );
 
   return signature;
@@ -1014,11 +1014,11 @@ for (const memberMetadata of memberTokenMetadata) {
     memberMetadata.mintKeypair,
     decimals,
     memberMetadata.metadata,
-    groupMintKeypair.publicKey,
+    groupMintKeypair.publicKey
   );
 
   console.log(
-    `Created ${memberMetadata.metadata.name} NFT:\n${getExplorerLink("tx", signature, "localnet")}\n`,
+    `Created ${memberMetadata.metadata.name} NFT:\n${getExplorerLink("tx", signature, "localnet")}\n`
   );
 }
 ```
@@ -1031,11 +1031,11 @@ for (const member of membersMetadata) {
     connection,
     member.mint.publicKey,
     "confirmed",
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   const memberMetadata = await getTokenMetadata(
     connection,
-    member.mint.publicKey,
+    member.mint.publicKey
   );
   const metadataPointerState = getMetadataPointerState(memberMint);
   const memberPointerData = getGroupMemberPointerState(memberMint);
@@ -1045,12 +1045,12 @@ for (const member of membersMetadata) {
   console.log("Member Mint: ", memberMint.address.toBase58());
   console.log(
     "Metadata Pointer Account: ",
-    metadataPointerState?.metadataAddress?.toBase58(),
+    metadataPointerState?.metadataAddress?.toBase58()
   );
   console.log("Group Account: ", memberData?.group?.toBase58());
   console.log(
     "Member Pointer Account: ",
-    memberPointerData?.memberAddress?.toBase58(),
+    memberPointerData?.memberAddress?.toBase58()
   );
   console.log("Member Number: ", memberData?.memberNumber);
   console.log("\n--- METADATA ---\n");

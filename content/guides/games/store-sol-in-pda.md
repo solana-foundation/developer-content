@@ -597,14 +597,14 @@ const [globalLevel1GameDataAccount, bump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("level1", "utf8")],
     //[pg.wallet.publicKey.toBuffer()], <- You could also add the player wallet as a seed, then you would have one instance per player. Need to also change the seed in the rust part
-    pg.program.programId,
+    pg.program.programId
   );
 
 // This is where the program will save the SOL reward for the chests and from which the reward will be payed out again
 const [chestVaultAccount, chestBump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("chestVault", "utf8")],
-    pg.program.programId,
+    pg.program.programId
   );
 ```
 
@@ -629,7 +629,7 @@ await pg.connection.confirmTransaction(txHash);
 
 let balance = await pg.connection.getBalance(pg.wallet.publicKey);
 console.log(
-  `My balance before spawning a chest: ${balance / web3.LAMPORTS_PER_SOL} SOL`,
+  `My balance before spawning a chest: ${balance / web3.LAMPORTS_PER_SOL} SOL`
 );
 ```
 
@@ -679,7 +679,7 @@ for (let i = 0; i < 3; i++) {
   console.log(`My balance: ${balance / web3.LAMPORTS_PER_SOL} SOL`);
 
   let gameDateAccount = await pg.program.account.gameDataAccount.fetch(
-    globalLevel1GameDataAccount,
+    globalLevel1GameDataAccount
   );
 
   console.log("Player position is:", gameDateAccount.playerPosition.toString());

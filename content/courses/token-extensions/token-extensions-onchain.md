@@ -936,9 +936,11 @@ this associated token account.
 pub user_stake_token_account: InterfaceAccount<'info, token_interface::TokenAccount>,
 ```
 
-<Callout type="note">We are using the `InterfaceAccount` and
-`token_interface::TokenAccount` types here. The `token_interface::TokenAccount`
-type can only be used in conjunction with `InterfaceAccount`.</Callout>
+<Callout type="note">
+  We are using the `InterfaceAccount` and `token_interface::TokenAccount` types
+  here. The `token_interface::TokenAccount` type can only be used in conjunction
+  with `InterfaceAccount`.
+</Callout>
 
 Next, we add the `staking_token_mint` account. Notice we are using our first
 custom error here. This constraint verifies that the pubkey on the
@@ -1145,9 +1147,11 @@ transferred, so their signature is a requirement for the transfer to take place.
 pub user: Signer<'info>,
 ```
 
-<Callout type="note">We also verify that the given user is the same pubkey
-stored in the given `user_stake_entry` account. If it is not, our program will
-throw the `InvalidUser` custom error. </Callout>
+<Callout type="note">
+  We also verify that the given user is the same pubkey stored in the given
+  `user_stake_entry` account. If it is not, our program will throw the
+  `InvalidUser` custom error.{" "}
+</Callout>
 
 The `user_token_account` is the token account where the tokens being transferred
 to be staked should be currently held. The mint of this token account must match

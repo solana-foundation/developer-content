@@ -418,14 +418,14 @@ const PAYER_KEYPAIR = Keypair.generate();
 const GENERAL_STATE_KEYPAIR = Keypair.generate();
 
 const ACCOUNT_SPACE_BUFFER = Buffer.from(
-  Uint8Array.of(...new BN(100).toArray("le", 8)),
+  Uint8Array.of(...new BN(100).toArray("le", 8))
 );
 
 (async () => {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const latestBlockHash = await connection.getLatestBlockhash();
   const programId = new PublicKey(
-    "DkuQ5wsndkzXfgqDB6Lgf4sDjBi4gkLSak1dM5Mn2RuQ",
+    "DkuQ5wsndkzXfgqDB6Lgf4sDjBi4gkLSak1dM5Mn2RuQ"
   );
 
   // Airdropping 1 SOL
@@ -436,10 +436,10 @@ const ACCOUNT_SPACE_BUFFER = Buffer.from(
       lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
       signature: await connection.requestAirdrop(
         feePayer.publicKey,
-        LAMPORTS_PER_SOL,
+        LAMPORTS_PER_SOL
       ),
     },
-    "confirmed",
+    "confirmed"
   );
 
   // Our program's CPI instruction (create_account)

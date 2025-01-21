@@ -22,7 +22,7 @@ interface LineRange {
 function validateLineRange(range: LineRange): void {
   if (range.fromLine > range.toLine) {
     throw new Error(
-      `Invalid line range: starting line (L${range.fromLine}) cannot be greater than ending line (L${range.toLine})`,
+      `Invalid line range: starting line (L${range.fromLine}) cannot be greater than ending line (L${range.toLine})`
     );
   }
   if (range.fromLine < 1) {
@@ -33,7 +33,7 @@ function validateLineRange(range: LineRange): void {
 function extractLines(
   content: string,
   ranges: LineRange[] | null,
-  preserveTrailingNewline = false,
+  preserveTrailingNewline = false
 ): string {
   const lines = content.split(EOL);
 
@@ -49,7 +49,7 @@ function extractLines(
   const resultLines: string[] = [];
   const seenLines = new Set<number>();
 
-  ranges.forEach(range => {
+  ranges.forEach((range) => {
     const end = Math.min(range.toLine, lines.length);
     for (let i = range.fromLine; i <= end; i++) {
       const lineIndex = i - 1;
@@ -70,7 +70,7 @@ function extractLines(
 
 function parseLineRanges(lineSpec: string): LineRange[] {
   // Split by comma for multiple ranges
-  const rangeStrings = lineSpec.split(",").filter(s => s.trim());
+  const rangeStrings = lineSpec.split(",").filter((s) => s.trim());
   const ranges: LineRange[] = [];
 
   for (const range of rangeStrings) {
@@ -144,7 +144,7 @@ function codeImport(options: CodeImportOptions = {}) {
     for (const [node] of codes) {
       const fileMeta = (node.meta || "")
         .split(/(?<!\\) /g)
-        .find(meta => meta.startsWith("file="));
+        .find((meta) => meta.startsWith("file="));
 
       if (!fileMeta) {
         continue;
@@ -169,7 +169,7 @@ function codeImport(options: CodeImportOptions = {}) {
             path.isAbsolute(relativePathFromRootDir)
           ) {
             throw new Error(
-              `Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`,
+              `Attempted to import code from "${fileAbsPath}", which is outside from the rootDir "${rootDir}"`
             );
           }
         }
@@ -178,7 +178,7 @@ function codeImport(options: CodeImportOptions = {}) {
           let processedContent = extractLines(
             fileContent,
             ranges,
-            options.preserveTrailingNewline,
+            options.preserveTrailingNewline
           );
 
           if (options.removeRedundantIndentations) {
@@ -202,8 +202,8 @@ function codeImport(options: CodeImportOptions = {}) {
                 if (err) {
                   reject(
                     new Error(
-                      `Error reading file ${fileAbsPath}: ${err.message}`,
-                    ),
+                      `Error reading file ${fileAbsPath}: ${err.message}`
+                    )
                   );
                   return;
                 }
@@ -215,7 +215,7 @@ function codeImport(options: CodeImportOptions = {}) {
                   reject(error);
                 }
               });
-            }),
+            })
           );
         } else {
           const fileContent = fs.readFileSync(fileAbsPath, "utf8");
@@ -223,7 +223,7 @@ function codeImport(options: CodeImportOptions = {}) {
         }
       } catch (error) {
         const enhancedError = new Error(
-          `Error processing file import: ${(error as Error).message}`,
+          `Error processing file import: ${(error as Error).message}`
         );
         (enhancedError as any).originalError = error;
         throw enhancedError;

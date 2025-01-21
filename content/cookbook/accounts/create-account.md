@@ -38,7 +38,7 @@ import {
 
 const rpc = createSolanaRpc("https://api.devnet.solana.com");
 const rpcSubscriptions = createSolanaRpcSubscriptions(
-  "wss://api.devnet.solana.com",
+  "wss://api.devnet.solana.com"
 );
 
 const sendAndConfirmTransaction = sendAndConfirmTransactionFactory({
@@ -61,9 +61,9 @@ const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
 
 const transactionMessage = pipe(
   createTransactionMessage({ version: "legacy" }),
-  tx => setTransactionMessageFeePayerSigner(signer, tx),
-  tx => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
-  tx =>
+  (tx) => setTransactionMessageFeePayerSigner(signer, tx),
+  (tx) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, tx),
+  (tx) =>
     appendTransactionMessageInstructions(
       [
         // add a priority fee
@@ -80,8 +80,8 @@ const transactionMessage = pipe(
           programAddress: SYSTEM_PROGRAM_ADDRESS,
         }),
       ],
-      tx,
-    ),
+      tx
+    )
 );
 
 const signedTransaction =
@@ -115,7 +115,7 @@ const fromPubkey = Keypair.generate();
 // Airdrop SOL for transferring lamports to the created account
 const airdropSignature = await connection.requestAirdrop(
   fromPubkey.publicKey,
-  LAMPORTS_PER_SOL,
+  LAMPORTS_PER_SOL
 );
 await connection.confirmTransaction(airdropSignature);
 
@@ -136,7 +136,7 @@ const createAccountParams = {
 };
 
 const createAccountTransaction = new Transaction().add(
-  SystemProgram.createAccount(createAccountParams),
+  SystemProgram.createAccount(createAccountParams)
 );
 
 await sendAndConfirmTransaction(connection, createAccountTransaction, [

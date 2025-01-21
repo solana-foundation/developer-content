@@ -66,7 +66,7 @@ the program ID and this same seed.
 ```typescript
 const [pda, bump] = await findProgramAddress(
   Buffer.from("GLOBAL_STATE"),
-  programId,
+  programId
 );
 ```
 
@@ -83,7 +83,7 @@ finding the address using the program ID and the user's public key.
 import { PublicKey } from "@solana/web3.js";
 const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer()],
-  programId,
+  programId
 );
 ```
 
@@ -99,7 +99,7 @@ note's title.
 ```typescript
 const [pda, bump] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from("Shopping list")],
-  programId,
+  programId
 );
 ```
 
@@ -393,6 +393,6 @@ As always, get creative with these challenges and take them beyond the
 instructions if you want!
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9cb89e09-2c97-4185-93b0-c89f7aca7677)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9cb89e09-2c97-4185-93b0-c89f7aca7677)!
 </Callout>

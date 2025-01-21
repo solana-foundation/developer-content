@@ -94,7 +94,7 @@ It shows how to derive the PDA using the seeds specified in the program:
 ```ts /pda/ /wallet.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("pda"), wallet.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 
@@ -114,12 +114,12 @@ it("Fund PDA with SOL", async () => {
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
     transaction,
-    [wallet.payer], // signer
+    [wallet.payer] // signer
   );
 
   console.log(
     `\nTransaction Signature:` +
-      `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+      `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 });
 ```
@@ -139,7 +139,7 @@ it("SOL Transfer with PDA signer", async () => {
     .rpc();
 
   console.log(
-    `\nTransaction Signature: https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `\nTransaction Signature: https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 });
 ```
@@ -182,7 +182,7 @@ The Javascript equivalent to derive the PDA is included in the test file.
 ```ts /pda/ /wallet.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("pda"), wallet.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 

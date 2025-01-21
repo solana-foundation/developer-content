@@ -38,6 +38,7 @@ generated for signing transactions.
     };
 
     ```
+
   </Tab>
 
   <Tab value="web3.js v1">
@@ -49,5 +50,6 @@ generated for signing transactions.
     export { keypair };
 
     ```
+
   </Tab>
 </Tabs>

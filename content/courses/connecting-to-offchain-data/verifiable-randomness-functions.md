@@ -151,7 +151,7 @@ now, we'll simply set them at `VRFAUTH`.
 [vrfAuthorityKey, vrfAuthoritySecret] =
   anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("VRFAUTH")],
-    program.programId,
+    program.programId
   );
 ```
 
@@ -1242,11 +1242,11 @@ import { NodeOracle } from "@switchboard-xyz/oracle";
 import { assert } from "chai";
 
 export const solUsedSwitchboardFeed = new anchor.web3.PublicKey(
-  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 );
 
 function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 describe("burry-escrow-vrf", () => {
@@ -1261,17 +1261,17 @@ describe("burry-escrow-vrf", () => {
     const switchboardProgram = await SwitchboardProgram.load(
       "devnet",
       new anchor.web3.Connection("https://api.devnet.solana.com"),
-      payer,
+      payer
     );
     const aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      solUsedSwitchboardFeed,
+      solUsedSwitchboardFeed
     );
 
     // derive escrow state account
     const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
+      program.programId
     );
     console.log("Escrow Account: ", escrowState.toBase58());
 
@@ -1303,7 +1303,7 @@ describe("burry-escrow-vrf", () => {
 
       const escrowBalance = await provider.connection.getBalance(
         escrowState,
-        "confirmed",
+        "confirmed"
       );
       console.log("Onchain unlock price:", newAccount.unlockPrice);
       console.log("Amount in escrow:", escrowBalance);
@@ -1323,7 +1323,7 @@ describe("burry-escrow-vrf", () => {
     // derive escrow address
     const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
       [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-      program.programId,
+      program.programId
     );
 
     // send tx
@@ -1346,9 +1346,9 @@ describe("burry-escrow-vrf", () => {
 
       assert(
         error.message.includes(
-          "Current SOL price is not above Escrow unlock price.",
+          "Current SOL price is not above Escrow unlock price."
         ),
-        "Unexpected error message: " + error.message,
+        "Unexpected error message: " + error.message
       );
     }
 
@@ -1448,7 +1448,7 @@ it("Roll till you can withdraw", async () => {
   // derive escrow address
   const [escrowState] = await anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("MICHAEL BURRY"), payer.publicKey.toBuffer()],
-    program.programId,
+    program.programId
   );
 
   const vrfSecret = anchor.web3.Keypair.generate();
@@ -1459,7 +1459,7 @@ it("Roll till you can withdraw", async () => {
       escrowState.toBytes(),
       vrfSecret.publicKey.toBytes(),
     ],
-    program.programId,
+    program.programId
   );
   console.log(`VRF Client: ${vrfClientKey}`);
 
@@ -1496,13 +1496,13 @@ it("Roll till you can withdraw", async () => {
     switchboard.program,
     queue.authority,
     switchboard.queue.publicKey,
-    vrfAccount.publicKey,
+    vrfAccount.publicKey
   );
 
   const [payerTokenWallet] =
     await switchboard.program.mint.getOrCreateWrappedUser(
       switchboard.program.walletPubkey,
-      { fundUpTo: 1.0 },
+      { fundUpTo: 1.0 }
     );
 
   // initialize vrf client
@@ -1573,7 +1573,7 @@ it("Roll till you can withdraw", async () => {
         "Roll results - Die 1:",
         vrfState.dieResult1,
         "Die 2:",
-        vrfState.dieResult2,
+        vrfState.dieResult2
       );
       if (vrfState.dieResult1 == vrfState.dieResult2) {
         rolledDoubles = true;
@@ -1611,7 +1611,7 @@ nice function to create and fund a test wallet.
 const [payerTokenWallet] =
   await switchboard.program.mint.getOrCreateWrappedUser(
     switchboard.program.walletPubkey,
-    { fundUpTo: 1.0 },
+    { fundUpTo: 1.0 }
   );
 ```
 
@@ -1636,6 +1636,6 @@ If you get stuck, we have the solution in the
 [`vrf-challenge-solution` branch](https://github.com/solana-developers/burry-escrow/tree/vrf-challenge-solution).
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5af49eda-f3e7-407d-8cd7-78d0653ee17c)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5af49eda-f3e7-407d-8cd7-78d0653ee17c)!
 </Callout>

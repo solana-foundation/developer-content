@@ -18,7 +18,7 @@ describe("Sign and Verify Message", async () => {
   test("keypair should have valid secretKey format and length", () => {
     assert(
       keypair.secretKey instanceof Uint8Array,
-      "secretKey should be Uint8Array",
+      "secretKey should be Uint8Array"
     );
     assert.equal(keypair.secretKey.length, 64, "secretKey should be 64 bytes");
   });
@@ -26,12 +26,12 @@ describe("Sign and Verify Message", async () => {
   test("keypair should have valid publicKey format and length", () => {
     assert(
       keypair.publicKey.toBytes() instanceof Uint8Array,
-      "publicKey should convert to Uint8Array",
+      "publicKey should convert to Uint8Array"
     );
     assert.equal(
       keypair.publicKey.toBytes().length,
       32,
-      "publicKey should be 32 bytes",
+      "publicKey should be 32 bytes"
     );
   });
 
@@ -40,7 +40,7 @@ describe("Sign and Verify Message", async () => {
     assert.deepStrictEqual(
       messageBytes,
       testMessageBytes,
-      "messageBytes should match expected conversion",
+      "messageBytes should match expected conversion"
     );
   });
 
@@ -53,12 +53,12 @@ describe("Sign and Verify Message", async () => {
     const verificationResult = ed.verify(
       signature,
       messageBytes,
-      keypair.publicKey.toBytes(),
+      keypair.publicKey.toBytes()
     );
     assert.strictEqual(
       verificationResult,
       true,
-      "signature should verify successfully",
+      "signature should verify successfully"
     );
     assert.strictEqual(result, true, "exported result should be true");
   });
@@ -68,7 +68,7 @@ describe("Sign and Verify Message", async () => {
     assert.strictEqual(
       ed.verify(signature, wrongMessage, keypair.publicKey.toBytes()),
       false,
-      "should fail with wrong message",
+      "should fail with wrong message"
     );
   });
 
@@ -77,7 +77,7 @@ describe("Sign and Verify Message", async () => {
     assert.strictEqual(
       ed.verify(signature, messageBytes, wrongPubkey),
       false,
-      "should fail with wrong public key",
+      "should fail with wrong public key"
     );
   });
 
@@ -86,7 +86,7 @@ describe("Sign and Verify Message", async () => {
     assert.strictEqual(
       ed.verify(wrongSignature, messageBytes, keypair.publicKey.toBytes()),
       false,
-      "should fail with wrong signature",
+      "should fail with wrong signature"
     );
   });
 
@@ -95,7 +95,7 @@ describe("Sign and Verify Message", async () => {
     assert.deepStrictEqual(
       signature,
       newSignature,
-      "regenerated signature should match original",
+      "regenerated signature should match original"
     );
   });
 
@@ -105,10 +105,10 @@ describe("Sign and Verify Message", async () => {
         ed.verify(
           new Uint8Array(63),
           messageBytes,
-          keypair.publicKey.toBytes(),
+          keypair.publicKey.toBytes()
         ),
       /Uint8Array/i,
-      "should throw on invalid signature length",
+      "should throw on invalid signature length"
     );
   });
 
@@ -116,7 +116,7 @@ describe("Sign and Verify Message", async () => {
     assert.throws(
       () => ed.sign(null as any, keypair.secretKey.slice(0, 32)),
       /expected/i,
-      "should throw on invalid message format",
+      "should throw on invalid message format"
     );
   });
 });

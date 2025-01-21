@@ -300,10 +300,10 @@ retrieved in the rest of your Solana codebase, you can continue using
 connection.getAccount. Choose the method that best fits your specific use case.
 
 ```js
-await client.getAccount(playerPDA).then(info => {
+await client.getAccount(playerPDA).then((info) => {
   const decoded = program.coder.accounts.decode(
     "playerData",
-    Buffer.from(info.data),
+    Buffer.from(info.data)
   );
   console.log("Player account info", JSON.stringify(decoded));
   expect(decoded).toBeDefined();
@@ -351,7 +351,7 @@ bank. You can then use the `client` to interact with the bank.
 ```js
 const context = await start(
   [{ name: "counter_solana_native", programId: PROGRAM_ID }],
-  [],
+  []
 );
 const client = context.banksClient;
 ```

@@ -39,7 +39,7 @@ get started.
 
 ## Video Walkthrough
 
-<Embed url="https://www.youtube.com/embed/_vQ3bSs3svs"/>
+<Embed url="https://www.youtube.com/embed/_vQ3bSs3svs" />
 
 ## Getting Started
 
@@ -392,7 +392,7 @@ First, let's derive the PDA for the `GameDataAccount` using the
 const [globalLevel1GameDataAccount, bump] =
   await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("level1", "utf8")],
-    pg.program.programId,
+    pg.program.programId
   );
 ```
 
@@ -408,7 +408,7 @@ let gameDateAccount;
 
 try {
   gameDateAccount = await pg.program.account.gameDataAccount.fetch(
-    globalLevel1GameDataAccount,
+    globalLevel1GameDataAccount
   );
 } catch {
   // Check if the account is already initialized, other wise initialize it
@@ -452,7 +452,7 @@ console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
 await pg.connection.confirmTransaction(txHash);
 
 gameDateAccount = await pg.program.account.gameDataAccount.fetch(
-  globalLevel1GameDataAccount,
+  globalLevel1GameDataAccount
 );
 
 console.log("Player position is:", gameDateAccount.playerPosition.toString());

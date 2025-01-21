@@ -20,7 +20,7 @@ const debug = (...args: any[]) => {
 };
 
 const hasCodeComponentWithFileMeta = async (
-  filePath: string,
+  filePath: string
 ): Promise<boolean> => {
   try {
     const content = await fs.readFile(filePath, "utf8");
@@ -32,7 +32,7 @@ const hasCodeComponentWithFileMeta = async (
       .use(remarkFrontmatter)
       .parse(content);
 
-    visit(tree, "code", node => {
+    visit(tree, "code", (node) => {
       if (node.meta?.includes("file=")) {
         hasMatch = true;
         return false; // Stop visiting
@@ -52,7 +52,7 @@ const getIgnore = async (directory: string): Promise<Ignore> => {
   try {
     const gitignoreContent = await fs.readFile(
       path.join(directory, ".gitignore"),
-      "utf8",
+      "utf8"
     );
     ig.add(gitignoreContent);
     // ignore all dotfiles
@@ -75,7 +75,7 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
   const walkDir = async (dir: string): Promise<string[]> => {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     const files = await Promise.all(
-      entries.map(async entry => {
+      entries.map(async (entry) => {
         const res = path.resolve(dir, entry.name);
         const relativePath = path.relative(directory, res);
 
@@ -97,13 +97,13 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
             return res;
           } else {
             debug(
-              `Skipping file (no code component with file meta): ${relativePath}`,
+              `Skipping file (no code component with file meta): ${relativePath}`
             );
           }
         }
 
         return [];
-      }),
+      })
     );
     return files.flat();
   };
@@ -113,7 +113,7 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
 
 const processContent = async (
   content: string,
-  filePath: string,
+  filePath: string
 ): Promise<string> => {
   try {
     const file = await unified()
@@ -142,7 +142,7 @@ const processContent = async (
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
       const filePath = (error as NodeJS.ErrnoException).path;
       throw new Error(
-        `File not found: ${filePath}\nMake sure the file exists and the path is correct relative to the project root.`,
+        `File not found: ${filePath}\nMake sure the file exists and the path is correct relative to the project root.`
       );
     }
     throw error;
@@ -172,7 +172,7 @@ const processFile = async (filePath: string): Promise<void> => {
 const processInChunks = async <T>(
   items: T[],
   processItem: (item: T) => Promise<void>,
-  chunkSize: number,
+  chunkSize: number
 ): Promise<void> => {
   for (let i = 0; i < items.length; i += chunkSize) {
     const chunk = items.slice(i, i + chunkSize);
@@ -195,9 +195,11 @@ const watchFiles = async (directory: string): Promise<void> => {
   console.log("Watch mode started. Waiting for file changes...");
 
   watcher
-    .on("add", filePath => processFile(path.join(directory, filePath)))
-    .on("change", filePath => processFile(path.join(directory, filePath)))
-    .on("unlink", filePath => console.log(`File ${filePath} has been removed`));
+    .on("add", (filePath) => processFile(path.join(directory, filePath)))
+    .on("change", (filePath) => processFile(path.join(directory, filePath)))
+    .on("unlink", (filePath) =>
+      console.log(`File ${filePath} has been removed`)
+    );
 };
 
 const main = async (): Promise<void> => {

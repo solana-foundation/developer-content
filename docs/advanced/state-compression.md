@@ -290,7 +290,7 @@ similar to any other account creation.
 const requiredSpace = getConcurrentMerkleTreeAccountSize(
   maxDepth,
   maxBufferSize,
-  canopyDepth,
+  canopyDepth
 );
 
 // get the cost (in lamports) to store the tree on-chain

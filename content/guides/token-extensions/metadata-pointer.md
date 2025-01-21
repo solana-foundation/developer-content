@@ -230,7 +230,7 @@ const mintLen = getMintLen([ExtensionType.MetadataPointer]);
 
 // Minimum lamports required for Mint Account
 const lamports = await connection.getMinimumBalanceForRentExemption(
-  mintLen + metadataExtension + metadataLen,
+  mintLen + metadataExtension + metadataLen
 );
 ```
 
@@ -273,7 +273,7 @@ const initializeMetadataPointerInstruction =
     mint, // Mint Account address
     updateAuthority, // Authority that can set the metadata address
     mint, // Account address that holds the metadata
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -287,7 +287,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals, // Decimals of Mint
   mintAuthority, // Designated Mint Authority
   null, // Optional Freeze Authority
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -351,19 +351,19 @@ transaction = new Transaction().add(
   // note: the above instructions are required before initializing the mint
   initializeMintInstruction,
   initializeMetadataInstruction,
-  updateFieldInstruction,
+  updateFieldInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair], // Signers
+  [payer, mintKeypair] // Signers
 );
 
 console.log(
   "\nCreate Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -380,7 +380,7 @@ const mintInfo = await getMint(
   connection,
   mint,
   "confirmed",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // Retrieve and log the metadata pointer state
@@ -394,7 +394,7 @@ Next, read the Metadata portion of the account data:
 // Retrieve and log the metadata state
 const metadata = await getTokenMetadata(
   connection,
-  mint, // Mint Account address
+  mint // Mint Account address
 );
 console.log("\nMetadata:", JSON.stringify(metadata, null, 2));
 ```
@@ -455,24 +455,24 @@ transaction = new Transaction().add(removeKeyInstruction);
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer],
+  [payer]
 );
 
 console.log(
   "\nRemove Additional Metadata Field:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 
 // Retrieve and log the metadata state
 const updatedMetadata = await getTokenMetadata(
   connection,
-  mint, // Mint Account address
+  mint // Mint Account address
 );
 console.log("\nUpdated Metadata:", JSON.stringify(updatedMetadata, null, 2));
 
 console.log(
   "\nMint Account:",
-  `https://solana.fm/address/${mint}?cluster=devnet-solana`,
+  `https://solana.fm/address/${mint}?cluster=devnet-solana`
 );
 ```
 

@@ -379,7 +379,7 @@ const createEntry = useMutation<string, Error, CreateEntryArgs>({
   mutationFn: async ({ title, message, owner }) => {
     const [journalEntryAddress] = await PublicKey.findProgramAddress(
       [Buffer.from(title), owner.toBuffer()],
-      programId,
+      programId
     );
 
     return program.methods
@@ -389,11 +389,11 @@ const createEntry = useMutation<string, Error, CreateEntryArgs>({
       })
       .rpc();
   },
-  onSuccess: signature => {
+  onSuccess: (signature) => {
     transactionToast(signature);
     accounts.refetch();
   },
-  onError: error => {
+  onError: (error) => {
     toast.error(`Failed to create journal entry: ${error.message}`);
   },
 });
@@ -408,7 +408,7 @@ const updateEntry = useMutation<string, Error, CreateEntryArgs>({
   mutationFn: async ({ title, message, owner }) => {
     const [journalEntryAddress] = await PublicKey.findProgramAddress(
       [Buffer.from(title), owner.toBuffer()],
-      programId,
+      programId
     );
 
     return program.methods
@@ -418,11 +418,11 @@ const updateEntry = useMutation<string, Error, CreateEntryArgs>({
       })
       .rpc();
   },
-  onSuccess: signature => {
+  onSuccess: (signature) => {
     transactionToast(signature);
     accounts.refetch();
   },
-  onError: error => {
+  onError: (error) => {
     toast.error(`Failed to update journal entry: ${error.message}`);
   },
 });
@@ -434,7 +434,7 @@ const deleteEntry = useMutation({
       .deleteJournalEntry(title)
       .accounts({ journalEntry: account })
       .rpc(),
-  onSuccess: tx => {
+  onSuccess: (tx) => {
     transactionToast(tx);
     return accounts.refetch();
   },
@@ -469,13 +469,13 @@ export function JournalCreate() {
         type="text"
         placeholder="Title"
         value={title}
-        onChange={e => setTitle(e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
         className="input input-bordered w-full max-w-xs"
       />
       <textarea
         placeholder="Message"
         value={message}
-        onChange={e => setMessage(e.target.value)}
+        onChange={(e) => setMessage(e.target.value)}
         className="textarea textarea-bordered w-full max-w-xs"
       />
       <br></br>
@@ -533,7 +533,7 @@ function JournalCard({ account }: { account: PublicKey }) {
             <textarea
               placeholder="Update message here"
               value={message}
-              onChange={e => setMessage(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
               className="textarea textarea-bordered w-full max-w-xs"
             />
             <button
@@ -556,7 +556,7 @@ function JournalCard({ account }: { account: PublicKey }) {
               onClick={() => {
                 if (
                   !window.confirm(
-                    "Are you sure you want to close this account?",
+                    "Are you sure you want to close this account?"
                   )
                 ) {
                   return;

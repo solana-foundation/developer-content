@@ -9,7 +9,7 @@ console.log(PublicKey.isOnCurve(key.toBytes()));
 
 // Valid public key
 const offCurveAddress = new PublicKey(
-  "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e",
+  "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e"
 );
 
 // Not on the ed25519 curve, therefore not suitable for users

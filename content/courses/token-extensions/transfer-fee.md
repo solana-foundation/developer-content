@@ -118,7 +118,7 @@ const initializeTransferFeeConfigInstruction =
     payer.publicKey,
     feeBasisPoints,
     maxFee,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -130,7 +130,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   null,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -141,14 +141,14 @@ off the the blockchain.
 const mintTransaction = new Transaction().add(
   createAccountInstruction,
   initializeTransferFeeConfigInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 const signature = await sendAndConfirmTransaction(
   connection,
   mintTransaction,
   [payer, mintKeypair],
-  { commitment: "finalized" },
+  { commitment: "finalized" }
 );
 ```
 
@@ -220,7 +220,7 @@ const secondTransferSignature = await transferChecked(
   decimals, // Can also be gotten by getting the mint account details with `getMint(...)`
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -288,7 +288,7 @@ for (const accountInfo of accounts) {
   const unpackedAccount = unpackAccount(
     accountInfo.pubkey,
     accountInfo.account,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   // If there is withheld tokens add it to our list
@@ -325,7 +325,7 @@ await withdrawWithheldTokensFromAccounts(
   [],
   accountsToWithdrawFrom,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -363,7 +363,7 @@ await harvestWithheldTokensToMint(
   mint,
   accountsToHarvestFrom,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 /**
@@ -388,7 +388,7 @@ await withdrawWithheldTokensFromMint(
   authority,
   [],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -438,7 +438,7 @@ await setAuthority(
   newAuthority,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -591,7 +591,7 @@ export async function createMintWithTransferFee(
   mintKeypair: Keypair,
   decimals: number,
   feeBasisPoints: number,
-  maxFee: bigint,
+  maxFee: bigint
 ): Promise<TransactionSignature> {
   const extensions = [ExtensionType.TransferFeeConfig];
   const mintLength = getMintLen(extensions);
@@ -614,15 +614,15 @@ export async function createMintWithTransferFee(
       payer.publicKey,
       feeBasisPoints,
       maxFee,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       mintKeypair.publicKey,
       decimals,
       payer.publicKey,
       null,
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   console.log("Sending transaction...");
@@ -630,7 +630,7 @@ export async function createMintWithTransferFee(
     connection,
     mintTransaction,
     [payer, mintKeypair],
-    { commitment: "finalized" },
+    { commitment: "finalized" }
   );
   console.log("Transaction sent");
 
@@ -654,7 +654,7 @@ await createMintWithTransferFee(
   mintKeypair,
   decimals,
   feeBasisPoints,
-  maxFee,
+  maxFee
 );
 ```
 
@@ -682,7 +682,7 @@ const feeVaultAccount = await createAssociatedTokenAccount(
   mintKeypair.publicKey,
   payer.publicKey,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const initialBalance = (
@@ -719,7 +719,7 @@ const sourceAccount = await createAccount(
   sourceKeypair.publicKey,
   undefined,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log("Creating destination account...");
@@ -732,7 +732,7 @@ const destinationAccount = await createAccount(
   destinationKeypair.publicKey,
   undefined,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log("Minting 10 tokens to source...\n\n");
@@ -748,7 +748,7 @@ await mintTo(
   amountToMint,
   [payer],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -814,33 +814,33 @@ const transferSignature = await transferCheckedWithFee(
   fee,
   [sourceKeypair],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const sourceAccountAfterTransfer = await getAccount(
   connection,
   sourceAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const destinationAccountAfterTransfer = await getAccount(
   connection,
   destinationAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const withheldAmountAfterTransfer = getTransferFeeAmount(
-  destinationAccountAfterTransfer,
+  destinationAccountAfterTransfer
 );
 
 console.log(`Source Token Balance: ${sourceAccountAfterTransfer.amount}`);
 console.log(
-  `Destination Token Balance: ${destinationAccountAfterTransfer.amount}`,
+  `Destination Token Balance: ${destinationAccountAfterTransfer.amount}`
 );
 console.log(
-  `Withheld Transfer Fees: ${withheldAmountAfterTransfer?.withheldAmount}\n`,
+  `Withheld Transfer Fees: ${withheldAmountAfterTransfer?.withheldAmount}\n`
 );
 ```
 
@@ -876,12 +876,12 @@ const mintAccount = await getMint(
   connection,
   mint,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 const transferFeeAmount = getTransferFeeConfig(mintAccount);
 const fee = calculateFee(
   transferFeeAmount?.newerTransferFee!,
-  secondTransferAmount,
+  secondTransferAmount
 );
 ```
 
@@ -931,32 +931,32 @@ await withdrawWithheldTokensFromAccounts(
   [],
   [destinationAccount],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const withheldAccountAfterWithdraw = await getAccount(
   connection,
   destinationAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const withheldAmountAfterWithdraw = getTransferFeeAmount(
-  withheldAccountAfterWithdraw,
+  withheldAccountAfterWithdraw
 );
 
 const feeVaultAfterWithdraw = await getAccount(
   connection,
   feeVaultAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(
-  `Withheld amount after withdraw: ${withheldAmountAfterWithdraw?.withheldAmount}`,
+  `Withheld amount after withdraw: ${withheldAmountAfterWithdraw?.withheldAmount}`
 );
 console.log(
-  `Fee vault balance after withdraw: ${feeVaultAfterWithdraw.amount}\n`,
+  `Fee vault balance after withdraw: ${feeVaultAfterWithdraw.amount}\n`
 );
 ```
 
@@ -995,7 +995,7 @@ for (const accountInfo of accounts) {
   const unpackedAccount = unpackAccount(
     accountInfo.pubkey,
     accountInfo.account,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const transferFeeAmount = getTransferFeeAmount(unpackedAccount);
@@ -1016,7 +1016,7 @@ await withdrawWithheldTokensFromAccounts(
   [],
   accountsToWithdrawFrom,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -1057,33 +1057,33 @@ const secondTransferSignature = await transferChecked(
   decimals, // Can also be gotten by getting the mint account details with `getMint(...)`
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const sourceAccountAfterSecondTransfer = await getAccount(
   connection,
   sourceAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const destinationAccountAfterSecondTransfer = await getAccount(
   connection,
   destinationAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const withheldAmountAfterSecondTransfer = getTransferFeeAmount(
-  destinationAccountAfterTransfer,
+  destinationAccountAfterTransfer
 );
 
 console.log(`Source Token Balance: ${sourceAccountAfterSecondTransfer.amount}`);
 console.log(
-  `Destination Token Balance: ${destinationAccountAfterSecondTransfer.amount}`,
+  `Destination Token Balance: ${destinationAccountAfterSecondTransfer.amount}`
 );
 console.log(
-  `Withheld Transfer Fees: ${withheldAmountAfterSecondTransfer?.withheldAmount}\n`,
+  `Withheld Transfer Fees: ${withheldAmountAfterSecondTransfer?.withheldAmount}\n`
 );
 ```
 
@@ -1111,36 +1111,36 @@ await harvestWithheldTokensToMint(
   mint,
   [destinationAccount],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const withheldAccountAfterHarvest = await getAccount(
   connection,
   destinationAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const withheldAmountAfterHarvest = getTransferFeeAmount(
-  withheldAccountAfterHarvest,
+  withheldAccountAfterHarvest
 );
 
 const mintAccountAfterHarvest = await getMint(
   connection,
   mint,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const mintTransferFeeConfigAfterHarvest = getTransferFeeConfig(
-  mintAccountAfterHarvest,
+  mintAccountAfterHarvest
 );
 
 console.log(
-  `Withheld amount after harvest: ${withheldAmountAfterHarvest?.withheldAmount}`,
+  `Withheld amount after harvest: ${withheldAmountAfterHarvest?.withheldAmount}`
 );
 console.log(
-  `Mint withheld amount after harvest: ${mintTransferFeeConfigAfterHarvest?.withheldAmount}\n`,
+  `Mint withheld amount after harvest: ${mintTransferFeeConfigAfterHarvest?.withheldAmount}\n`
 );
 ```
 
@@ -1169,32 +1169,32 @@ await withdrawWithheldTokensFromMint(
   payer,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const mintAccountAfterSecondWithdraw = await getMint(
   connection,
   mint,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const mintTransferFeeConfigAfterSecondWithdraw = getTransferFeeConfig(
-  mintAccountAfterSecondWithdraw,
+  mintAccountAfterSecondWithdraw
 );
 
 const feeVaultAfterSecondWithdraw = await getAccount(
   connection,
   feeVaultAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(
-  `Mint withheld balance after second withdraw: ${mintTransferFeeConfigAfterSecondWithdraw?.withheldAmount}`,
+  `Mint withheld balance after second withdraw: ${mintTransferFeeConfigAfterSecondWithdraw?.withheldAmount}`
 );
 console.log(
-  `Fee Vault balance after second withdraw: ${feeVaultAfterSecondWithdraw.amount}`,
+  `Fee Vault balance after second withdraw: ${feeVaultAfterSecondWithdraw.amount}`
 );
 ```
 

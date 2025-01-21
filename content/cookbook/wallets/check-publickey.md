@@ -64,6 +64,7 @@ can be controlled by users with wallets.
         },
         invalidAddress: {
     ```
+
   </Tab>
 
   <Tab value="web3.js v1">
@@ -93,5 +94,6 @@ can be controlled by users with wallets.
       // Error will be caught here
     }
     ```
+
   </Tab>
 </Tabs>

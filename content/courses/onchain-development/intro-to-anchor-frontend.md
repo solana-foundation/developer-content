@@ -336,7 +336,7 @@ export interface WalletContextState {
   sendTransaction(
     transaction: Transaction,
     connection: Connection,
-    options?: SendTransactionOptions,
+    options?: SendTransactionOptions
   ): Promise<TransactionSignature>;
   signTransaction: SignerWalletAdapterProps["signTransaction"] | undefined;
   signAllTransactions:
@@ -620,7 +620,7 @@ const initialize = useMutation({
       .signers([keypair])
       .rpc(),
 
-  onSuccess: signature => {
+  onSuccess: (signature) => {
     transactionToast(signature);
     return accounts.refetch();
   },
@@ -683,7 +683,7 @@ const incrementMutation = useMutation({
   mutationFn: () =>
     program.methods.increment().accounts({ counter: account }).rpc(),
 
-  onSuccess: tx => {
+  onSuccess: (tx) => {
     transactionToast(tx);
     return accountQuery.refetch();
   },
@@ -749,6 +749,6 @@ reference
 the [solution code](https://github.com/solana-developers/anchor-ping-frontend/tree/solution-decrement).
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=774a4023-646d-4394-af6d-19724a6db3db)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=774a4023-646d-4394-af6d-19724a6db3db)!
 </Callout>

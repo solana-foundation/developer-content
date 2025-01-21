@@ -17,7 +17,7 @@ import { getMint } from "@solana/spl-token";
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   const mintAccountPublicKey = new PublicKey(
-    "8mAKLjGGmjKTnmcXeyr3pr7iX13xXVjJJiL6RujDbSPV",
+    "8mAKLjGGmjKTnmcXeyr3pr7iX13xXVjJJiL6RujDbSPV"
   );
 
   let mintAccount = await getMint(connection, mintAccountPublicKey);

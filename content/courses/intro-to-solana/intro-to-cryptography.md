@@ -230,7 +230,7 @@ import { getKeypairFromEnvironment } from "@solana-developers/helpers";
 const keypair = getKeypairFromEnvironment("SECRET_KEY");
 
 console.log(
-  `✅ Finished! We've loaded our secret key securely, using an env file!`,
+  `✅ Finished! We've loaded our secret key securely, using an env file!`
 );
 ```
 
@@ -248,4 +248,5 @@ Solana. In the next chapter, we'll use them!
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ee06a213-5d74-4954-846e-cba883bc6db1)!
+
 </Callout>

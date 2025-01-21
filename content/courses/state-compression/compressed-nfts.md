@@ -491,7 +491,7 @@ You might need to update your RPC connection endpoint in the Umi instantiation
 
 ```typescript
 const umi = createUmi(
-  "https://devnet.helius-rpc.com/?api-key=YOUR-HELIUS-API-KEY",
+  "https://devnet.helius-rpc.com/?api-key=YOUR-HELIUS-API-KEY"
 );
 ```
 
@@ -793,7 +793,8 @@ a new collection for this lesson, check out the code
 [on this repo](https://github.com/solana-developers/professional-education/blob/main/labs/metaplex-umi/create-collection.ts)
 
 <Callout>
-Find the code to create a Metaplex Collection NFT in our [NFTs with Metaplex lesson](https://solana.com/developers/courses/tokens-and-nfts/nfts-with-metaplex#add-the-nft-to-a-collection).
+  Find the code to create a Metaplex Collection NFT in our [NFTs with Metaplex
+  lesson](https://solana.com/developers/courses/tokens-and-nfts/nfts-with-metaplex#add-the-nft-to-a-collection).
 </Callout>
 
 To mint a compressed NFT to a collection we will need
@@ -836,10 +837,10 @@ Putting it all into code, we will have
 const merkleTree = UMIPublicKey("ZwzNxXw83PUmWSypXmqRH669gD3hF9rEjHWPpVghr5h");
 
 const collectionMint = UMIPublicKey(
-  "D2zi1QQmtZR5fk7wpA1Fmf6hTY2xy8xVMyNgfq6LsKy1",
+  "D2zi1QQmtZR5fk7wpA1Fmf6hTY2xy8xVMyNgfq6LsKy1"
 );
 
-const uintSig = await(
+const uintSig = await (
   await mintToCollectionV1(umi, {
     leafOwner: umi.identity.publicKey,
     merkleTree,
@@ -857,7 +858,7 @@ const uintSig = await(
         },
       ],
     },
-  }).sendAndConfirm(umi),
+  }).sendAndConfirm(umi)
 ).signature;
 
 const b64Sig = base58.deserialize(uintSig);
@@ -873,7 +874,7 @@ derive the asset ID.
 ```typescript filename="mint-compressed-nft-to-collection.ts"
 const leaf: LeafSchema = await parseLeafFromMintToCollectionV1Transaction(
   umi,
-  uintSig,
+  uintSig
 );
 const assetId = findLeafAssetIdPda(umi, {
   merkleTree,
@@ -931,7 +932,7 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { getKeypairFromFile } from "@solana-developers/helpers";
 
 const umi = createUmi(
-  "https://devnet.helius-rpc.com/?api-key=YOUR-HELIUS-API-KEY",
+  "https://devnet.helius-rpc.com/?api-key=YOUR-HELIUS-API-KEY"
 );
 
 // load keypair from local file system
@@ -1088,12 +1089,12 @@ const assetId = UMIPublicKey("D4A8TYkKE5NzkqBQ4mPybgFbAUDN53fwJ64b8HwEEuUS");
 //@ts-ignore
 const assetWithProof = await getAssetWithProof(umi, assetId);
 
-let uintSig = await(
+let uintSig = await (
   await transfer(umi, {
     ...assetWithProof,
     leafOwner: umi.identity.publicKey,
     newLeafOwner: UMIPublicKey("J63YroB8AwjDVjKuxjcYFKypVM3aBeQrfrVmNBxfmThB"),
-  }).sendAndConfirm(umi),
+  }).sendAndConfirm(umi)
 ).signature;
 
 const b64sig = base58.deserialize(uintSig);
@@ -1137,6 +1138,6 @@ be overly prescriptive at this point, but here are some ideas:
    program, i.e. write a program that can mint cNFTs
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=db156789-2400-4972-904f-40375582384a)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=db156789-2400-4972-904f-40375582384a)!
 </Callout>

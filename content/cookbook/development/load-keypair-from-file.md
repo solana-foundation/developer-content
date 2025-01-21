@@ -41,12 +41,12 @@ export async function loadDefaultKeypair(): Promise<KeyPairSigner<string>> {
 }
 
 export async function loadDefaultKeypairWithAirdrop(
-  cluster: string,
+  cluster: string
 ): Promise<KeyPairSigner<string>> {
   const keypair = await loadDefaultKeypair();
   const rpc = createSolanaRpc(devnet(`https://api.${cluster}.solana.com`));
   const rpcSubscriptions = createSolanaRpcSubscriptions(
-    devnet(`wss://api.${cluster}.solana.com`),
+    devnet(`wss://api.${cluster}.solana.com`)
   );
   try {
     const result = await rpc.getBalance(keypair.address).send();
@@ -68,14 +68,14 @@ export async function loadDefaultKeypairWithAirdrop(
 }
 
 export async function loadKeypairFromFile(
-  filePath: string,
+  filePath: string
 ): Promise<KeyPairSigner<string>> {
   // This is here so you can also load the default keypair from the file system.
   const resolvedPath = path.resolve(
-    filePath.startsWith("~") ? filePath.replace("~", os.homedir()) : filePath,
+    filePath.startsWith("~") ? filePath.replace("~", os.homedir()) : filePath
   );
   const loadedKeyBytes = Uint8Array.from(
-    JSON.parse(fs.readFileSync(resolvedPath, "utf8")),
+    JSON.parse(fs.readFileSync(resolvedPath, "utf8"))
   );
   // Here you can also set the second parameter to true in case you need to extract your private key.
   const keypairSigner = await createKeyPairSignerFromBytes(loadedKeyBytes);

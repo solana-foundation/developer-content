@@ -23,7 +23,7 @@ export function getRecordsForGroup(
     locale: DEFAULT_LOCALE_EN,
     // todo: add pagination support here
     // todo: add the ability to auto sort based on a given field
-  },
+  }
 ) {
   let records = [];
 
@@ -78,7 +78,7 @@ export function getRecordsForGroup(
      * the correct places on the frontend (including in the navigation sidebar)
      */
     const docsIndex = allCoreDocsRecords.find(
-      record => record.locale == options.locale && record.href == "/docs",
+      (record) => record.locale == options.locale && record.href == "/docs"
     );
     if (docsIndex) {
       records.push(Object.assign(docsIndex, { featuredPriority: 0 }) as any);
@@ -86,9 +86,9 @@ export function getRecordsForGroup(
   }
 
   // default the records to the base language if no records for the provided locale were found
-  if (records.findIndex(record => record.locale == options.locale) < 0) {
+  if (records.findIndex((record) => record.locale == options.locale) < 0) {
     options.locale = DEFAULT_LOCALE_EN;
   }
 
-  return records.filter(record => record.locale == options.locale);
+  return records.filter((record) => record.locale == options.locale);
 }

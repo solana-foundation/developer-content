@@ -235,7 +235,7 @@ import {
 import * as nacl from "tweetnacl";
 
 const sleep = async (ms: number) => {
-  return new Promise(r => setTimeout(r, ms));
+  return new Promise((r) => setTimeout(r, ms));
 };
 
 (async () => {
@@ -246,7 +246,7 @@ const sleep = async (ms: number) => {
 
   const airdropSignature = await connection.requestAirdrop(
     payer.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
 
   await connection.confirmTransaction({ signature: airdropSignature });
@@ -263,7 +263,7 @@ const sleep = async (ms: number) => {
       fromPubkey: payer.publicKey,
       toPubkey: toAccount,
       lamports: 1000000,
-    }),
+    })
   );
   const message = transaction.serializeMessage();
   const signature = nacl.sign.detached(message, payer.secretKey);

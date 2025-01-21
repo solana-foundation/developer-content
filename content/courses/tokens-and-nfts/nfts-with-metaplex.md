@@ -76,9 +76,12 @@ information on `metaplex-foundation/token-metadata` see the
 [developer docs for Token Metadata](https://developers.metaplex.com/token-metadata).
 
 <Callout type="note">
-[Metaplex Core](https://developers.metaplex.com/core), is an NFT standard from Metaplex where asset details such as the owner, name, uri e.t.c are stored on a single account. However, the most common style of NFT is still by making a Solana
-SPL token with some Metadata attached via the Metaplex Metadata program, so
-that's what we'll be using in this tutorial. </Callout>
+  [Metaplex Core](https://developers.metaplex.com/core), is an NFT standard from
+  Metaplex where asset details such as the owner, name, uri e.t.c are stored on
+  a single account. However, the most common style of NFT is still by making a
+  Solana SPL token with some Metadata attached via the Metaplex Metadata
+  program, so that's what we'll be using in this tutorial.{" "}
+</Callout>
 
 #### UMI instance
 
@@ -388,7 +391,7 @@ await airdropIfRequired(
   connection,
   user.publicKey,
   1 * LAMPORTS_PER_SOL,
-  0.1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL
 );
 
 console.log("Loaded user:", user.publicKey.toBase58());
@@ -472,7 +475,7 @@ await createNft(umi, {
 let explorerLink = getExplorerLink(
   "address",
   collectionMint.publicKey,
-  "devnet",
+  "devnet"
 );
 console.log(`Collection NFT:  ${explorerLink}`);
 console.log(`Collection NFT address is:`, collectionMint.publicKey);
@@ -555,7 +558,7 @@ await airdropIfRequired(
   connection,
   user.publicKey,
   1 * LAMPORTS_PER_SOL,
-  0.1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL
 );
 
 const umi = createUmi(connection);
@@ -694,7 +697,7 @@ await airdropIfRequired(
   connection,
   user.publicKey,
   1 * LAMPORTS_PER_SOL,
-  0.1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL
 );
 
 const umi = createUmi(connection);
@@ -791,7 +794,7 @@ await airdropIfRequired(
   connection,
   user.publicKey,
   1 * LAMPORTS_PER_SOL,
-  0.1 * LAMPORTS_PER_SOL,
+  0.1 * LAMPORTS_PER_SOL
 );
 
 const umi = createUmi(connection);
@@ -907,6 +910,6 @@ understanding of the tools but also boost your confidence in your ability to use
 them effectively in the future.
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=296745ac-503c-4b14-b3a6-b51c5004c165)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=296745ac-503c-4b14-b3a6-b51c5004c165)!
 </Callout>

@@ -139,7 +139,7 @@ import "dotenv/config";
     const umi = createUmi(clusterApiUrl("devnet"));
 
     const keypair = umi.eddsa.createKeypairFromSecretKey(
-      new Uint8Array(privateKey),
+      new Uint8Array(privateKey)
     );
 
     // Use keypairIdentity to set the keypair as the signer

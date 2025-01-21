@@ -7,7 +7,7 @@ describe("Create Keypair", async () => {
   test("should be a valid Keypair instance", () => {
     assert.ok(
       keypair instanceof Keypair,
-      "keypair should be instance of Keypair",
+      "keypair should be instance of Keypair"
     );
   });
 
@@ -19,14 +19,14 @@ describe("Create Keypair", async () => {
     assert.equal(
       keypair.publicKey.toBytes().length,
       32,
-      "publicKey should be 32 bytes",
+      "publicKey should be 32 bytes"
     );
   });
 
   test("should have valid public key instance", () => {
     assert.ok(
       keypair.publicKey instanceof PublicKey,
-      "publicKey should be instance of PublicKey",
+      "publicKey should be instance of PublicKey"
     );
   });
 
@@ -34,7 +34,7 @@ describe("Create Keypair", async () => {
     const derivedKeypair = Keypair.fromSecretKey(keypair.secretKey);
     assert.ok(
       keypair.publicKey.equals(derivedKeypair.publicKey),
-      "public key should match derived public key",
+      "public key should match derived public key"
     );
   });
 
@@ -42,14 +42,14 @@ describe("Create Keypair", async () => {
     const pubkeyStr = keypair.publicKey.toBase58();
     assert.ok(
       pubkeyStr.length === 44 || pubkeyStr.length === 43,
-      "public key string should be 43 or 44 characters",
+      "public key string should be 43 or 44 characters"
     );
   });
 
   test("should have valid secret key format", () => {
     assert.ok(
       keypair.secretKey instanceof Uint8Array,
-      "secretKey should be Uint8Array",
+      "secretKey should be Uint8Array"
     );
   });
 
@@ -58,7 +58,7 @@ describe("Create Keypair", async () => {
     assert.deepEqual(
       pubkeyFromSecret,
       keypair.publicKey.toBytes(),
-      "last 32 bytes of secret key should match public key",
+      "last 32 bytes of secret key should match public key"
     );
   });
 
@@ -66,13 +66,13 @@ describe("Create Keypair", async () => {
     const anotherKeypair = Keypair.generate();
     assert.ok(
       !keypair.publicKey.equals(anotherKeypair.publicKey),
-      "different keypairs should have different public keys",
+      "different keypairs should have different public keys"
     );
     assert.ok(
       !Buffer.from(keypair.secretKey).equals(
-        Buffer.from(anotherKeypair.secretKey),
+        Buffer.from(anotherKeypair.secretKey)
       ),
-      "different keypairs should have different secret keys",
+      "different keypairs should have different secret keys"
     );
   });
 
@@ -82,12 +82,12 @@ describe("Create Keypair", async () => {
 
     assert.ok(
       keypair.publicKey.equals(restoredKeypair.publicKey),
-      "restored keypair should have same public key",
+      "restored keypair should have same public key"
     );
     assert.deepEqual(
       keypair.secretKey,
       restoredKeypair.secretKey,
-      "restored keypair should have same secret key",
+      "restored keypair should have same secret key"
     );
   });
 
@@ -97,7 +97,7 @@ describe("Create Keypair", async () => {
 
     assert.ok(
       keypair.publicKey.equals(decodedPubkey),
-      "public key should maintain equality after base58 encoding/decoding",
+      "public key should maintain equality after base58 encoding/decoding"
     );
   });
 });

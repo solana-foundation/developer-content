@@ -331,25 +331,25 @@ it("attacker  can close + refund lottery acct + claim multiple rewards", async (
           mintAuth: mintAuth,
           tokenProgram: TOKEN_PROGRAM_ID,
         })
-        .instruction(),
+        .instruction()
     );
 
     // user adds instruction to refund dataAccount lamports
     const rentExemptLamports =
       await provider.connection.getMinimumBalanceForRentExemption(
         82,
-        "confirmed",
+        "confirmed"
       );
     tx.add(
       SystemProgram.transfer({
         fromPubkey: attacker.publicKey,
         toPubkey: attackerLotteryEntry,
         lamports: rentExemptLamports,
-      }),
+      })
     );
     // send tx
     await sendAndConfirmTransaction(provider.connection, tx, [attacker]);
-    await new Promise(x => setTimeout(x, 5000));
+    await new Promise((x) => setTimeout(x, 5000));
   }
 
   const ata = await getAccount(provider.connection, attackerAta);
@@ -357,7 +357,7 @@ it("attacker  can close + refund lottery acct + claim multiple rewards", async (
     await program.account.lotteryAccount.fetch(attackerLotteryEntry);
 
   expect(Number(ata.amount)).to.equal(
-    lotteryEntry.timestamp.toNumber() * 10 * 2,
+    lotteryEntry.timestamp.toNumber() * 10 * 2
   );
 });
 ```
@@ -488,21 +488,21 @@ it("attacker cannot claim multiple rewards with secure claim", async () => {
         mintAuth: mintAuth,
         tokenProgram: TOKEN_PROGRAM_ID,
       })
-      .instruction(),
+      .instruction()
   );
 
   // user adds instruction to refund dataAccount lamports
   const rentExemptLamports =
     await provider.connection.getMinimumBalanceForRentExemption(
       82,
-      "confirmed",
+      "confirmed"
     );
   tx.add(
     SystemProgram.transfer({
       fromPubkey: attacker.publicKey,
       toPubkey: attackerLotteryEntry,
       lamports: rentExemptLamports,
-    }),
+    })
   );
   // send tx
   await sendAndConfirmTransaction(provider.connection, tx, [attacker]);
@@ -563,6 +563,6 @@ Remember, if you find a bug or exploit in somebody else's program, please alert
 them! If you find one in your own program, be sure to patch it right away.
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e6b99d4b-35ed-4fb2-b9cd-73eefc875a0f)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=e6b99d4b-35ed-4fb2-b9cd-73eefc875a0f)!
 </Callout>

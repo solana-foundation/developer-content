@@ -105,7 +105,7 @@ const initializeDefaultAccountStateInstruction =
   createInitializeDefaultAccountStateInstruction(
     mintKeypair.publicKey, // Mint
     defaultState, // Default State
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -117,7 +117,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -128,7 +128,7 @@ blockchain.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeDefaultAccountStateInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 return await sendAndConfirmTransaction(connection, transaction, [
@@ -165,7 +165,7 @@ export async function updateDefaultAccountState(
   freezeAuthority: Signer | PublicKey,
   multiSigners: Signer[] = [],
   confirmOptions?: ConfirmOptions,
-  programId = TOKEN_2022_PROGRAM_ID,
+  programId = TOKEN_2022_PROGRAM_ID
 ): Promise<TransactionSignature>;
 ```
 
@@ -202,7 +202,7 @@ await setAuthority(
   newAuthority,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -375,7 +375,7 @@ const initializeDefaultAccountStateInstruction =
   createInitializeDefaultAccountStateInstruction(
     mintKeypair.publicKey,
     defaultState,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -390,7 +390,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey, // Designated Mint Authority
   payer.publicKey, //  Designated Freeze Authority
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -401,7 +401,7 @@ blockchain:
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeDefaultAccountStateInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 return await sendAndConfirmTransaction(connection, transaction, [
@@ -444,7 +444,7 @@ export async function createTokenExtensionMintWithDefaultState(
   payer: Keypair,
   mintKeypair: Keypair,
   decimals: number = 2,
-  defaultState: AccountState,
+  defaultState: AccountState
 ): Promise<string> {
   const mintLen = getMintLen([ExtensionType.DefaultAccountState]);
   // Minimum lamports required for Mint Account
@@ -462,7 +462,7 @@ export async function createTokenExtensionMintWithDefaultState(
     createInitializeDefaultAccountStateInstruction(
       mintKeypair.publicKey,
       defaultState,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
   const initializeMintInstruction = createInitializeMintInstruction(
@@ -470,13 +470,13 @@ export async function createTokenExtensionMintWithDefaultState(
     decimals,
     payer.publicKey, // Designated Mint Authority
     payer.publicKey, //  Designated Freeze Authority
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const transaction = new Transaction().add(
     createAccountInstruction,
     initializeDefaultAccountStateInstruction,
-    initializeMintInstruction,
+    initializeMintInstruction
   );
 
   return await sendAndConfirmTransaction(connection, transaction, [
@@ -504,7 +504,7 @@ await createTokenExtensionMintWithDefaultState(
   payer,
   mintKeypair,
   decimals,
-  defaultState,
+  defaultState
 );
 ```
 
@@ -525,7 +525,7 @@ await createAccount(
   payer.publicKey,
   ourTokenAccountKeypair,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 // Transferring to account
 await createAccount(
@@ -535,7 +535,7 @@ await createAccount(
   payer.publicKey,
   otherTokenAccountKeypair,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -573,13 +573,13 @@ try {
     amountToMint,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   console.error("Should not have minted...");
 } catch (error) {
   console.log(
-    "✅ - We expected this to fail because the account is still frozen.",
+    "✅ - We expected this to fail because the account is still frozen."
   );
 }
 ```
@@ -612,7 +612,7 @@ await thawAccount(
   payer.publicKey,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 // Mint tokens to tokenAccount
 await mintTo(
@@ -624,18 +624,18 @@ await mintTo(
   amountToMint,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const ourTokenAccountWithTokens = await getAccount(
   connection,
   ourTokenAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(
-  `✅ - The new account balance is ${Number(ourTokenAccountWithTokens.amount)} after thawing and minting.`,
+  `✅ - The new account balance is ${Number(ourTokenAccountWithTokens.amount)} after thawing and minting.`
 );
 ```
 
@@ -669,13 +669,13 @@ try {
     amountToTransfer,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   console.error("Should not have minted...");
 } catch (error) {
   console.log(
-    "✅ - We expected this to fail because the account is still frozen.",
+    "✅ - We expected this to fail because the account is still frozen."
   );
 }
 ```
@@ -705,7 +705,7 @@ await thawAccount(
   payer.publicKey,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 await transfer(
@@ -717,20 +717,20 @@ await transfer(
   amountToTransfer,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const otherTokenAccountWithTokens = await getAccount(
   connection,
   otherTokenAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(
   `✅ - The new account balance is ${Number(
-    otherTokenAccountWithTokens.amount,
-  )} after thawing and transferring.`,
+    otherTokenAccountWithTokens.amount
+  )} after thawing and transferring.`
 );
 ```
 
@@ -766,7 +766,7 @@ await freezeAccount(
   payer.publicKey,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 await burn(
@@ -778,6 +778,6 @@ await burn(
   1,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```

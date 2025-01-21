@@ -438,7 +438,7 @@ First, add the vault PDA derivation:
 ```ts filename="anchor.test.ts"
 const [vaultPda, vaultBump] = PublicKey.findProgramAddressSync(
   [Buffer.from("vault"), wallet.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 

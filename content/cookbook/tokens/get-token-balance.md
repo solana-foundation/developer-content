@@ -16,7 +16,7 @@ import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   const tokenAccount = new PublicKey(
-    "FWZedVtyKQtP4CXhT7XDnLidRADrJknmZGA2qNjpTPg8",
+    "FWZedVtyKQtP4CXhT7XDnLidRADrJknmZGA2qNjpTPg8"
   );
 
   let tokenAmount = await connection.getTokenAccountBalance(tokenAccount);
@@ -45,5 +45,6 @@ fn main() {
 ```
 
 <Callout type="info">
-  A token account can only hold one kind of mint. When you specify a token account, you also specific a mint too.
+  A token account can only hold one kind of mint. When you specify a token
+  account, you also specific a mint too.
 </Callout>

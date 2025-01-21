@@ -47,7 +47,7 @@ const transactionSignature = await burn(
   account,
   mint,
   owner,
-  amount,
+  amount
 );
 ```
 
@@ -73,10 +73,10 @@ async function buildBurnTransaction(
   account: PublicKey,
   mint: PublicKey,
   owner: PublicKey,
-  amount: number,
+  amount: number
 ): Promise<Transaction> {
   const transaction = new Transaction().add(
-    createBurnInstruction(account, mint, owner, amount),
+    createBurnInstruction(account, mint, owner, amount)
   );
 
   return transaction;
@@ -102,7 +102,7 @@ const transactionSignature = await approve(
   account,
   delegate,
   owner,
-  amount,
+  amount
 );
 ```
 
@@ -129,10 +129,10 @@ async function buildApproveTransaction(
   account: PublicKey,
   delegate: PublicKey,
   owner: PublicKey,
-  amount: number,
+  amount: number
 ): Promise<web3.Transaction> {
   const transaction = new Transaction().add(
-    createApproveInstruction(account, delegate, owner, amount),
+    createApproveInstruction(account, delegate, owner, amount)
   );
 
   return transaction;
@@ -175,10 +175,10 @@ import { createRevokeInstruction } from "@solana/spl-token";
 
 async function buildRevokeTransaction(
   account: PublicKey,
-  owner: PublicKey,
+  owner: PublicKey
 ): Promise<web3.Transaction> {
   const transaction = new Transaction().add(
-    createRevokeInstruction(account, owner),
+    createRevokeInstruction(account, owner)
   );
 
   return transaction;
@@ -243,7 +243,7 @@ try {
     connection,
     user,
     tokenMintAddress,
-    user.publicKey,
+    user.publicKey
   );
 
   // Approve the delegate
@@ -253,19 +253,19 @@ try {
     userTokenAccount.address,
     delegatePublicKey,
     user.publicKey,
-    DELEGATE_AMOUNT * MINOR_UNITS_PER_MAJOR_UNITS,
+    DELEGATE_AMOUNT * MINOR_UNITS_PER_MAJOR_UNITS
   );
 
   const explorerLink = getExplorerLink(
     "transaction",
     approveTransactionSignature,
-    "devnet",
+    "devnet"
   );
 
   console.log(`✅ Delegate approved. Transaction: ${explorerLink}`);
 } catch (error) {
   console.error(
-    `Error: ${error instanceof Error ? error.message : String(error)}`,
+    `Error: ${error instanceof Error ? error.message : String(error)}`
   );
 }
 ```
@@ -319,26 +319,26 @@ try {
     connection,
     user,
     tokenMintAddress,
-    user.publicKey,
+    user.publicKey
   );
 
   const revokeTransactionSignature = await revoke(
     connection,
     user,
     userTokenAccount.address,
-    user.publicKey,
+    user.publicKey
   );
 
   const explorerLink = getExplorerLink(
     "transaction",
     revokeTransactionSignature,
-    "devnet",
+    "devnet"
   );
 
   console.log(`✅ Revoke Delegate Transaction: ${explorerLink}`);
 } catch (error) {
   console.error(
-    `Error: ${error instanceof Error ? error.message : String(error)}`,
+    `Error: ${error instanceof Error ? error.message : String(error)}`
   );
 }
 ```
@@ -394,7 +394,7 @@ try {
     connection,
     user,
     tokenMintAccount,
-    user.publicKey,
+    user.publicKey
   );
 
   const burnAmount = BURN_AMOUNT * 10 ** TOKEN_DECIMALS;
@@ -405,19 +405,19 @@ try {
     userTokenAccount.address,
     tokenMintAccount,
     user,
-    burnAmount,
+    burnAmount
   );
 
   const explorerLink = getExplorerLink(
     "transaction",
     transactionSignature,
-    "devnet",
+    "devnet"
   );
 
   console.log(`✅ Burn Transaction: ${explorerLink}`);
 } catch (error) {
   console.error(
-    `Error: ${error instanceof Error ? error.message : String(error)}`,
+    `Error: ${error instanceof Error ? error.message : String(error)}`
   );
 }
 ```
@@ -443,4 +443,5 @@ Well done! You've now completed the lab.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!
+
 </Callout>

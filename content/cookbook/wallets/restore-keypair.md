@@ -26,6 +26,7 @@ secret to test out your dApp.
         121, 35, 172, 247, 68, 251, 226, 218, 48, 63, 176, 109, 168, 89, 238, 135,
       ]);
     ```
+
   </Tab>
 
   <Tab value="web3.js v1">
@@ -43,6 +44,7 @@ secret to test out your dApp.
 
     export { keypair as bytesKeypair };
     ```
+
   </Tab>
 </Tabs>
 
@@ -65,6 +67,7 @@ secret to test out your dApp.
       return await createKeyPairFromBytes(keypairBytes);
     }
     ```
+
   </Tab>
 
   <Tab value="web3.js v1">
@@ -80,5 +83,6 @@ secret to test out your dApp.
 
     export { keypair as bs58Keypair };
     ```
+
   </Tab>
 </Tabs>

@@ -33,12 +33,13 @@ description: How to deserialize data fetched from Solana accounts.
 
 ### Transactions
 
-<Callout type="note">This course requires completing
-[Introduction to Solana](/content/courses/intro-to-solana) or equivalent
-knowledge. It's also aimed at advanced developers that prefer more control over
-the ease of use and safe defaults Anchor provides. If you're new to developing
-onchain programs you may prefer
-[Anchor](/content/courses/onchain-development)</Callout>
+<Callout type="note">
+  This course requires completing [Introduction to
+  Solana](/content/courses/intro-to-solana) or equivalent knowledge. It's also
+  aimed at advanced developers that prefer more control over the ease of use and
+  safe defaults Anchor provides. If you're new to developing onchain programs
+  you may prefer [Anchor](/content/courses/onchain-development)
+</Callout>
 
 In [Introduction to Solana](/content/courses/intro-to-solana) we learned how to
 create transactions with instructions for common Solana programs.
@@ -192,7 +193,7 @@ const equipPlayerSchema = borsh.struct([
 const buffer = Buffer.alloc(1000);
 equipPlayerSchema.encode(
   { variant: 2, playerId: 1435, itemId: 737498 },
-  buffer,
+  buffer
 );
 
 const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
@@ -229,7 +230,7 @@ const equipPlayerSchema = borsh.struct([
 const buffer = Buffer.alloc(1000);
 equipPlayerSchema.encode(
   { variant: 2, playerId: 1435, itemId: 737498 },
-  buffer,
+  buffer
 );
 
 const instructionBuffer = buffer.subarray(0, equipPlayerSchema.getSpan(buffer));
@@ -266,7 +267,7 @@ try {
   const transactionId = await sendAndConfirmTransaction(
     connection,
     transaction,
-    [player],
+    [player]
   );
   const explorerLink = getExplorerLink("transaction", transactionId, "devnet");
   console.log(`Transaction submitted: ${explorerLink}`);
@@ -393,7 +394,7 @@ export class Movie {
     }
     if (description.length > DESCRIPTION_SIZE) {
       throw new Error(
-        `Description cannot exceed ${DESCRIPTION_SIZE} characters.`,
+        `Description cannot exceed ${DESCRIPTION_SIZE} characters.`
       );
     }
 
@@ -535,7 +536,7 @@ stored:
 ```typescript
 const [pda] = await PublicKey.findProgramAddressSync(
   [publicKey.toBuffer(), Buffer.from(movie.title)],
-  new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+  new PublicKey(MOVIE_REVIEW_PROGRAM_ID)
 );
 ```
 
@@ -557,7 +558,7 @@ const handleTransactionSubmit = async (movie: Movie) => {
 
   const [pda] = await PublicKey.findProgramAddressSync(
     [publicKey.toBuffer(), new TextEncoder().encode(movie.title)],
-    new PublicKey(MOVIE_REVIEW_PROGRAM_ID),
+    new PublicKey(MOVIE_REVIEW_PROGRAM_ID)
   );
 
   const instruction = new TransactionInstruction({
@@ -589,7 +590,7 @@ const handleTransactionSubmit = async (movie: Movie) => {
     const explorerLink = getExplorerLink(
       "transaction",
       transactionId,
-      "devnet",
+      "devnet"
     );
     console.log(`Transaction submitted: ${explorerLink}`);
   } catch (error) {
@@ -640,6 +641,6 @@ Feel free to get creative with these challenges and take them even further. The
 instructions aren't here to hold you back!
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=6cb40094-3def-4b66-8a72-dd5f00298f61)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=6cb40094-3def-4b66-8a72-dd5f00298f61)!
 </Callout>

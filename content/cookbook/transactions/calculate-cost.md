@@ -51,7 +51,7 @@ async function calculateCost(message: string) {
   const CLUSTER = "devnet";
   const rpc = createSolanaRpc(devnet(`https://api.${CLUSTER}.solana.com`));
   const rpcSubscriptions = createSolanaRpcSubscriptions(
-    devnet(`wss://api.${CLUSTER}.solana.com`),
+    devnet(`wss://api.${CLUSTER}.solana.com`)
   );
 
   // Create a utility that estimates a transaction message's compute consumption.
@@ -83,16 +83,16 @@ async function calculateCost(message: string) {
   const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
   const transactionMessage = pipe(
     createTransactionMessage({ version: "legacy" }),
-    m => setTransactionMessageFeePayerSigner(signer, m),
-    m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
-    m =>
+    (m) => setTransactionMessageFeePayerSigner(signer, m),
+    (m) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    (m) =>
       appendTransactionMessageInstructions(
         [
           getSetComputeUnitPriceInstruction({ microLamports: 5000n }),
           getAddMemoInstruction({ memo: message }),
         ],
-        m,
-      ),
+        m
+      )
   );
 
   // Figure out how many compute units to budget for this transaction
@@ -102,12 +102,12 @@ async function calculateCost(message: string) {
   const estimatedComputeUnits =
     await getComputeUnitEstimate(transactionMessage);
   console.log(
-    `Transaction is estimated to consume ${estimatedComputeUnits} compute units`,
+    `Transaction is estimated to consume ${estimatedComputeUnits} compute units`
   );
 
   const budgetedTransactionMessage = prependTransactionMessageInstructions(
     [getSetComputeUnitLimitInstruction({ units: estimatedComputeUnits })],
-    transactionMessage,
+    transactionMessage
   );
 
   const base64EncodedMessage = pipe(
@@ -121,7 +121,7 @@ async function calculateCost(message: string) {
     getCompiledTransactionMessageEncoder().encode,
 
     // Encode that byte array as a base64 string.
-    getBase64Decoder().decode,
+    getBase64Decoder().decode
   ) as TransactionMessageBytesBase64;
 
   const transactionCost = await rpc
@@ -129,20 +129,20 @@ async function calculateCost(message: string) {
     .send();
 
   console.log(
-    "Transaction is estimated to cost " + transactionCost.value + " lamports",
+    "Transaction is estimated to cost " + transactionCost.value + " lamports"
   );
 
   // Sign and send the transaction.
   console.log("Signing and sending the transaction");
   const signedTx = await signTransactionMessageWithSigners(
-    budgetedTransactionMessage,
+    budgetedTransactionMessage
   );
   const signature = getSignatureFromTransaction(signedTx);
   console.log(
     "Sending transaction https://explorer.solana.com/tx/" +
       signature +
       "/?cluster=" +
-      CLUSTER,
+      CLUSTER
   );
   await sendAndConfirmTransaction(signedTx, { commitment: "confirmed" });
   console.log("Transaction confirmed");

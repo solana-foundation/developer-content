@@ -79,6 +79,7 @@ refunded the rent if you close the account. Previously, rent was paid in
 intervals, similar to traditional rent, but now there's an enforced minimum
 balance for rent exemption. You can read more about it in
 [the Solana documentation](https://solana.com/docs/core/fees#rent-exempt).
+
 </Callout>
 
 Putting data on the blockchain can be expensive, which is why NFT attributes and
@@ -258,7 +259,7 @@ const ix = anchor.web3.SystemProgram.createAccount({
   newAccountPubkey: someReallyBigData.publicKey,
   lamports:
     await program.provider.connection.getMinimumBalanceForRentExemption(
-      accountSize,
+      accountSize
     ),
   space: accountSize,
   programId: program.programId,
@@ -662,7 +663,7 @@ The best example of this is good ‘ol Associated Token Accounts (ATAs)!
 ```typescript
 function findAssociatedTokenAddress(
   walletAddress: PublicKey,
-  tokenMintAddress: PublicKey,
+  tokenMintAddress: PublicKey
 ): PublicKey {
   return PublicKey.findProgramAddressSync(
     [
@@ -670,7 +671,7 @@ function findAssociatedTokenAddress(
       TOKEN_PROGRAM_ID.toBuffer(),
       tokenMintAddress.toBuffer(),
     ],
-    SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
+    SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID
   )[0];
 }
 ```
@@ -1841,7 +1842,7 @@ const findProgramAddress = (seeds: Buffer[]): [PublicKey, number] =>
 
 const confirmTransaction = async (
   signature: TransactionSignature,
-  provider: anchor.Provider,
+  provider: anchor.Provider
 ) => {
   const latestBlockhash = await provider.connection.getLatestBlockhash();
   const confirmationStrategy: TransactionConfirmationStrategy = {
@@ -1855,7 +1856,7 @@ const confirmTransaction = async (
       await provider.connection.confirmTransaction(confirmationStrategy);
     if (confirmation.value.err) {
       throw new Error(
-        `Transaction failed: ${confirmation.value.err.toString()}`,
+        `Transaction failed: ${confirmation.value.err.toString()}`
       );
     }
   } catch (error) {
@@ -1875,7 +1876,7 @@ const createPlayerAddress = (gameAddress: PublicKey) =>
 
 const createMonsterAddress = (
   gameAddress: PublicKey,
-  monsterIndex: anchor.BN,
+  monsterIndex: anchor.BN
 ) =>
   findProgramAddress([
     Buffer.from(MONSTER_SEED),
@@ -1969,7 +1970,7 @@ it("spawns a monster", async () => {
     const playerAccount = await program.account.player.fetch(playerAddress);
     const [monsterAddress] = createMonsterAddress(
       gameAddress,
-      playerAccount.nextMonsterIndex,
+      playerAccount.nextMonsterIndex
     );
 
     const spawnMonsterSignature = await program.methods
@@ -1997,7 +1998,7 @@ it("attacks a monster", async () => {
     const playerAccount = await program.account.player.fetch(playerAddress);
     const [monsterAddress] = createMonsterAddress(
       gameAddress,
-      playerAccount.nextMonsterIndex.subn(1),
+      playerAccount.nextMonsterIndex.subn(1)
     );
 
     const attackMonsterSignature = await program.methods
@@ -2015,7 +2016,7 @@ it("attacks a monster", async () => {
     const monsterAccount = await program.account.monster.fetch(monsterAddress);
     assert(
       monsterAccount.hitpoints.eqn(INITIAL_MONSTER_HITPOINTS - 1),
-      "Monster hitpoints should decrease by 1 after attack",
+      "Monster hitpoints should decrease by 1 after attack"
     );
   } catch (error) {
     throw new Error(`Failed to attack monster: ${error.message}`);
@@ -2052,7 +2053,7 @@ it("deposits action points", async () => {
     const clockworkProvider = new anchor.AnchorProvider(
       program.provider.connection,
       new NodeWallet(clockworkWallet),
-      anchor.AnchorProvider.defaultOptions(),
+      anchor.AnchorProvider.defaultOptions()
     );
 
     // Have to give the accounts some lamports else the tx will fail
@@ -2061,14 +2062,14 @@ it("deposits action points", async () => {
     const clockworkAirdropTx =
       await clockworkProvider.connection.requestAirdrop(
         clockworkWallet.publicKey,
-        amountToInitialize,
+        amountToInitialize
       );
 
     await confirmTransaction(clockworkAirdropTx, clockworkProvider);
 
     const treasuryAirdropTx = await clockworkProvider.connection.requestAirdrop(
       treasury.publicKey,
-      amountToInitialize,
+      amountToInitialize
     );
 
     await confirmTransaction(treasuryAirdropTx, clockworkProvider);
@@ -2090,27 +2091,27 @@ it("deposits action points", async () => {
       SPAWN_MONSTER_ACTION_POINTS +
       ATTACK_MONSTER_ACTION_POINTS;
     const treasuryBalance = await provider.connection.getBalance(
-      treasury.publicKey,
+      treasury.publicKey
     );
     assert(
       treasuryBalance === AIRDROP_AMOUNT + expectedActionPoints,
-      "Treasury balance should match expected action points",
+      "Treasury balance should match expected action points"
     );
 
     const gameAccount = await program.account.game.fetch(gameAddress);
     assert(
       gameAccount.actionPointsCollected.eqn(expectedActionPoints),
-      "Game action points collected should match expected",
+      "Game action points collected should match expected"
     );
 
     const playerAccount = await program.account.player.fetch(playerAddress);
     assert(
       playerAccount.actionPointsSpent.eqn(expectedActionPoints),
-      "Player action points spent should match expected",
+      "Player action points spent should match expected"
     );
     assert(
       playerAccount.actionPointsToBeCollected.eqn(0),
-      "Player should have no action points to be collected",
+      "Player should have no action points to be collected"
     );
   } catch (error) {
     throw new Error(`Failed to deposit action points: ${error.message}`);
@@ -2154,4 +2155,5 @@ can make to improve memory management, storage size, and/or concurrency.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=4a628916-91f5-46a9-8eb0-6ba453aa6ca6)!
+
 </Callout>

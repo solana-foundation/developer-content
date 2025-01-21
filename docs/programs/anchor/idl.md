@@ -168,7 +168,7 @@ describe("hello_anchor", () => {
 
     // Fetch the created account
     const newAccount = await program.account.newAccount.fetch(
-      newAccountKp.publicKey,
+      newAccountKp.publicKey
     );
 
     console.log("Transaction signature: ", transactionSignature);
@@ -326,7 +326,7 @@ describe("hello_anchor", () => {
 
     // Fetch the created account
     const newAccount = await program.account.newAccount.fetch(
-      newAccountKp.publicKey,
+      newAccountKp.publicKey
     );
 
     console.log("Transaction signature: ", transactionSignature);

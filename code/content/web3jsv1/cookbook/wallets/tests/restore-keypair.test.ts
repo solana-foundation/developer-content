@@ -8,7 +8,7 @@ describe("Restore Keypair", async () => {
   it("should correctly generate keypairs from both byte array and base58", () => {
     // Expected values
     const expectedPublicKey = new PublicKey(
-      "24PNhTaNtomHhoy3fTRaMhAFCRj4uHqhZEEoWrKDbR5p",
+      "24PNhTaNtomHhoy3fTRaMhAFCRj4uHqhZEEoWrKDbR5p"
     );
     const expectedSecretKeyLength = 64;
 
@@ -16,13 +16,13 @@ describe("Restore Keypair", async () => {
     assert.equal(
       bytesKeypair.publicKey.toBase58(),
       expectedPublicKey.toBase58(),
-      "Byte array keypair should have correct public key",
+      "Byte array keypair should have correct public key"
     );
 
     assert.equal(
       bytesKeypair.secretKey.length,
       expectedSecretKeyLength,
-      "Byte array keypair secret key should be 64 bytes",
+      "Byte array keypair secret key should be 64 bytes"
     );
 
     // Verify byte array matches original
@@ -35,34 +35,34 @@ describe("Restore Keypair", async () => {
     assert.deepEqual(
       Array.from(bytesKeypair.secretKey),
       originalBytes,
-      "Byte array keypair should match original bytes",
+      "Byte array keypair should match original bytes"
     );
 
     // Test base58 keypair
     assert.equal(
       bs58Keypair.publicKey.toBase58(),
       expectedPublicKey.toBase58(),
-      "Base58 keypair should have correct public key",
+      "Base58 keypair should have correct public key"
     );
 
     assert.equal(
       bs58Keypair.secretKey.length,
       expectedSecretKeyLength,
-      "Base58 keypair secret key should be 64 bytes",
+      "Base58 keypair secret key should be 64 bytes"
     );
 
     // Verify both keypairs generate the same key
     assert.equal(
       bytesKeypair.publicKey.toBase58(),
       bs58Keypair.publicKey.toBase58(),
-      "Both keypairs should generate identical public keys",
+      "Both keypairs should generate identical public keys"
     );
 
     // Verify secret keys match
     assert.deepEqual(
       bytesKeypair.secretKey,
       bs58Keypair.secretKey,
-      "Both keypairs should have identical secret keys",
+      "Both keypairs should have identical secret keys"
     );
   });
 });

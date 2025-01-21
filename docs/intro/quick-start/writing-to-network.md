@@ -53,12 +53,12 @@ const transaction = new Transaction().add(transferInstruction);
 const transactionSignature = await sendAndConfirmTransaction(
   pg.connection,
   transaction,
-  [sender],
+  [sender]
 );
 
 console.log(
   "Transaction Signature:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -101,7 +101,7 @@ This script does the following:
   const transactionSignature = await sendAndConfirmTransaction(
     pg.connection,
     transaction,
-    [sender],
+    [sender]
   );
   ```
 
@@ -111,7 +111,7 @@ This script does the following:
   ```ts
   console.log(
     "Transaction Signature:",
-    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
   ```
 
@@ -204,13 +204,13 @@ const initializeMintInstruction = createInitializeMint2Instruction(
   2, // decimals
   wallet.publicKey, // mint authority
   wallet.publicKey, // freeze authority
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // Build transaction with instructions to create new account and initialize mint account
 const transaction = new Transaction().add(
   createAccountInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 const transactionSignature = await sendAndConfirmTransaction(
@@ -219,17 +219,17 @@ const transactionSignature = await sendAndConfirmTransaction(
   [
     wallet.keypair, // payer
     mint, // mint address keypair
-  ],
+  ]
 );
 
 console.log(
   "\nTransaction Signature:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 
 console.log(
   "\nMint Account:",
-  `https://solana.fm/address/${mint.publicKey}?cluster=devnet-solana`,
+  `https://solana.fm/address/${mint.publicKey}?cluster=devnet-solana`
 );
 ```
 
@@ -279,7 +279,7 @@ This script performs the following steps:
     2,
     wallet.publicKey,
     wallet.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   ```
 
@@ -288,7 +288,7 @@ This script performs the following steps:
   ```ts
   const transaction = new Transaction().add(
     createAccountInstruction,
-    initializeMintInstruction,
+    initializeMintInstruction
   );
   ```
 
@@ -301,7 +301,7 @@ This script performs the following steps:
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
     transaction,
-    [wallet.keypair, mint],
+    [wallet.keypair, mint]
   );
   ```
 
@@ -310,12 +310,12 @@ This script performs the following steps:
   ```ts
   console.log(
     "\nTransaction Signature:",
-    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 
   console.log(
     "\nMint Account:",
-    `https://solana.fm/address/${mint.publicKey}?cluster=devnet-solana`,
+    `https://solana.fm/address/${mint.publicKey}?cluster=devnet-solana`
   );
   ```
 

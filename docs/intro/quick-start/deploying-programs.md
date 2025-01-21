@@ -224,7 +224,7 @@ describe("Test", () => {
 
     // Fetch the created account
     const newAccount = await pg.program.account.newAccount.fetch(
-      newAccountKp.publicKey,
+      newAccountKp.publicKey
     );
 
     console.log("On-chain data is:", newAccount.data.toString());
@@ -330,7 +330,8 @@ the transaction signature (hash).
 
 <Callout>
   Reminder to update the cluster (network) connection on the Explorer you are
-  using to match Solana Playground. Solana Playground's default cluster is devnet.
+  using to match Solana Playground. Solana Playground's default cluster is
+  devnet.
 </Callout>
 
 ### Close Program

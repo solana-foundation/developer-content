@@ -21,7 +21,7 @@ describe("signMessage", async () => {
     assert.equal(
       result.decodedSignature.length,
       88,
-      "Decoded signature should be 88 bytes",
+      "Decoded signature should be 88 bytes"
     );
     assert.ok(result.verified, "Signature should be verified");
   });
@@ -45,7 +45,7 @@ describe("signMessage", async () => {
     assert.ok(result.signature, "Should sign message with special characters");
     assert.ok(
       result.verified,
-      "Should verify signature with special characters",
+      "Should verify signature with special characters"
     );
   });
 });

@@ -21,10 +21,10 @@ import { Connection, PublicKey } from "@solana/web3.js";
   const tokenMint = "9ARngHhVaCtH5JFieRdSS5Y8cdZk2TMF4tfGSWFB9iSK";
 
   const largestAccounts = await connection.getTokenLargestAccounts(
-    new PublicKey(tokenMint),
+    new PublicKey(tokenMint)
   );
   const largestAccountInfo = await connection.getParsedAccountInfo(
-    largestAccounts.value[0].address,
+    largestAccounts.value[0].address
   );
   console.log(largestAccountInfo?.value?.data);
 

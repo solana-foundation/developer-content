@@ -345,14 +345,14 @@ function MWAApp() {
 
   const handleSessionEvent = useCallback(
     (sessionEvent: MWASessionEvent) => {},
-    [],
+    []
   );
 
   useMobileWalletAdapterSession(
     "React Native Fake Wallet",
     config,
     handleRequest,
-    handleSessionEvent,
+    handleSessionEvent
   );
 
   return <Text>I'm a wallet!</Text>;
@@ -384,7 +384,7 @@ resolve function:
 ```ts
 export function resolve(
   request: SignAndSendTransactionsRequest,
-  response: SignAndSendTransactionsResponse,
+  response: SignAndSendTransactionsResponse
 ): void;
 ```
 
@@ -668,7 +668,7 @@ export function WalletProvider(props: WalletProviderProps) {
         keyPair = Keypair.generate();
         await AsyncStorage.setItem(
           ASYNC_STORAGE_KEY,
-          JSON.stringify(encodeKeypair(keyPair)),
+          JSON.stringify(encodeKeypair(keyPair))
         );
       }
       setKeyPair(keyPair);
@@ -683,7 +683,7 @@ export function WalletProvider(props: WalletProviderProps) {
 
   const connection = useMemo(
     () => new Connection(rpcUrl ?? "https://api.devnet.solana.com"),
-    [rpcUrl],
+    [rpcUrl]
   );
 
   const value = {
@@ -750,7 +750,7 @@ function MainScreen() {
       try {
         const signature = await connection.requestAirdrop(
           wallet.publicKey,
-          LAMPORTS_PER_SOL,
+          LAMPORTS_PER_SOL
         );
         await connection.confirmTransaction(signature, "max");
         await updateBalance();
@@ -928,14 +928,14 @@ const handleRequest = useCallback((request: MWARequest) => {}, []);
 
 const handleSessionEvent = useCallback(
   (sessionEvent: MWASessionEvent) => {},
-  [],
+  []
 );
 
 useMobileWalletAdapterSession(
   "React Native Fake Wallet",
   config,
   handleRequest,
-  handleSessionEvent,
+  handleSessionEvent
 );
 ```
 
@@ -979,14 +979,14 @@ function MWAApp() {
 
   const handleSessionEvent = useCallback(
     (sessionEvent: MWASessionEvent) => {},
-    [],
+    []
   );
 
   useMobileWalletAdapterSession(
     "React Native Fake Wallet",
     config,
     handleRequest,
-    handleSessionEvent,
+    handleSessionEvent
   );
 
   return (
@@ -1099,7 +1099,7 @@ const styles = StyleSheet.create({
 function MWAApp() {
   const [currentRequest, setCurrentRequest] = useState<MWARequest | null>(null);
   const [currentSession, setCurrentSession] = useState<MWASessionEvent | null>(
-    null,
+    null
   );
   // ------------------- FUNCTIONS --------------------
 
@@ -1138,7 +1138,7 @@ function MWAApp() {
           }
         }
         return true; // Prevents default back button behavior
-      },
+      }
     );
     return () => backHandler.remove();
   }, [currentRequest]);
@@ -1177,7 +1177,7 @@ function MWAApp() {
     "React Native Fake Wallet",
     config,
     handleRequest,
-    handleSessionEvent,
+    handleSessionEvent
   );
 
   // ------------------- RENDER --------------------
@@ -1351,7 +1351,7 @@ will fulfill the `SignAndSendTransactionsRequest` and
 ```ts
 export function resolve(
   request: SignAndSendTransactionsRequest,
-  response: SignAndSendTransactionsResponse,
+  response: SignAndSendTransactionsResponse
 ): void;
 ```
 
@@ -1424,9 +1424,9 @@ import { decode } from "bs58";
 export async function sendSignedTransactions(
   signedTransactions: Array<Uint8Array>,
   minContextSlot: number | undefined,
-  connection: Connection,
+  connection: Connection
 ): Promise<[boolean[], Uint8Array[]]> {
-  const valid = signedTransactions.map(_ => true);
+  const valid = signedTransactions.map((_) => true);
   const signatures: (Uint8Array | null)[] = await Promise.all(
     signedTransactions.map(async (byteArray, index) => {
       try {
@@ -1442,7 +1442,7 @@ export async function sendSignedTransactions(
 
         const response = await connection.confirmTransaction(
           signature,
-          "confirmed",
+          "confirmed"
         );
 
         return decode(signature);
@@ -1451,7 +1451,7 @@ export async function sendSignedTransactions(
         valid[index] = false;
         return null;
       }
-    }),
+    })
   );
 
   return [valid, signatures as Uint8Array[]];
@@ -1459,9 +1459,9 @@ export async function sendSignedTransactions(
 
 export function signTransactionPayloads(
   wallet: Keypair,
-  payloads: Uint8Array[],
+  payloads: Uint8Array[]
 ): [boolean[], Uint8Array[]] {
-  const valid = payloads.map(_ => true);
+  const valid = payloads.map((_) => true);
 
   const signedPayloads = payloads.map((payload, index) => {
     try {
@@ -1490,7 +1490,7 @@ export interface SignAndSendTransactionScreenProps {
 }
 
 function SignAndSendTransactionScreen(
-  props: SignAndSendTransactionScreenProps,
+  props: SignAndSendTransactionScreenProps
 ) {
   const { request } = props;
   const { wallet, connection } = useWallet();
@@ -1503,11 +1503,11 @@ function SignAndSendTransactionScreen(
   const signAndSendTransaction = async (
     wallet: Keypair,
     connection: Connection,
-    request: SignAndSendTransactionsRequest,
+    request: SignAndSendTransactionsRequest
   ) => {
     const [validSignatures, signedTransactions] = signTransactionPayloads(
       wallet,
-      request.payloads,
+      request.payloads
     );
 
     if (validSignatures.includes(false)) {
@@ -1522,7 +1522,7 @@ function SignAndSendTransactionScreen(
       await sendSignedTransactions(
         signedTransactions,
         request.minContextSlot ? request.minContextSlot : undefined,
-        connection,
+        connection
       );
 
     if (validTransactions.includes(false)) {
@@ -1627,6 +1627,6 @@ out the
 [solution code on the repo](https://github.com/solana-developers/react-native-fake-solana-wallet).
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5a3d0f62-c5fc-4e03-b8a3-323c2c7b8f4f)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5a3d0f62-c5fc-4e03-b8a3-323c2c7b8f4f)!
 </Callout>

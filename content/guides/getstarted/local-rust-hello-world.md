@@ -66,9 +66,9 @@ solana-test-validator
 ```
 
 <Callout title="PRO TIP">
-Run the Solana test validator in a new/separate terminal window
-that will remain open. This command line program must remain running for your
-localhost validator to remain online and ready for action.
+  Run the Solana test validator in a new/separate terminal window that will
+  remain open. This command line program must remain running for your localhost
+  validator to remain online and ready for action.
 </Callout>
 
 Configure your Solana CLI to use your localhost validator for all your future
@@ -215,8 +215,10 @@ You have successfully setup, built, and deployed a Solana program using the Rust
 language.
 
 <Callout type="success" title="Look at your program!">
-You can use the [Solana Explorer](https://explorer.solana.com/) to look at your newly deployed program. 
-The explorer also works on localnet, you can open the [Solana Explorer on localnet](https://explorer.solana.com/?cluster=custom) and just paste your programId in the search bar. 
+  You can use the [Solana Explorer](https://explorer.solana.com/) to look at
+  your newly deployed program. The explorer also works on localnet, you can open
+  the [Solana Explorer on localnet](https://explorer.solana.com/?cluster=custom)
+  and just paste your programId in the search bar.
 </Callout>
 
 ## Let's call the Hello World program
@@ -288,7 +290,7 @@ tx.add(
     programId: programId,
     keys: [],
     data: Buffer.from([]),
-  }),
+  })
 );
 
 // Sign the transaction with your previously created keypair
@@ -307,7 +309,7 @@ await connection.confirmTransaction({
 
 console.log(
   `Congratulations! Look at your ‘Hello World' transaction in the Solana Explorer:
-  https://explorer.solana.com/tx/${txHash}?cluster=custom`,
+  https://explorer.solana.com/tx/${txHash}?cluster=custom`
 );
 ```
 
@@ -330,7 +332,8 @@ Congratulations! Look at your ‘Hello World' transaction in the Solana Explorer
 ```
 
 <Callout type="success" title="Congrats">
-If you follow the link you should be able to see your 'Hello World' transaction on the Solana explorer.
+  If you follow the link you should be able to see your 'Hello World'
+  transaction on the Solana explorer.
 </Callout>
 
 ## Deploy to Solana devnet

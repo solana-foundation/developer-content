@@ -161,7 +161,7 @@ const initializeDefaultAccountStateInstruction =
   createInitializeDefaultAccountStateInstruction(
     mint, // Mint Account address
     defaultState, // Default AccountState
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -175,7 +175,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals, // Decimals of Mint
   mintAuthority, // Designated Mint Authority
   freezeAuthority, //  Designated Freeze Authority
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -190,19 +190,19 @@ extension enabled.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeDefaultAccountStateInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair], // Signers
+  [payer, mintKeypair] // Signers
 );
 
 console.log(
   "\nCreate Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -223,7 +223,7 @@ const tokenAccount = await createAccount(
   payer.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -244,7 +244,7 @@ try {
     100, // Amount to mint
     undefined, // Additional signers
     undefined, // Confirmation options
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 } catch (error) {
   console.log("\nExpect Error:", error);
@@ -279,12 +279,12 @@ transactionSignature = await thawAccount(
   freezeAuthority, // Freeze Authority
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nThaw Token Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -308,12 +308,12 @@ transactionSignature = await updateDefaultAccountState(
   freezeAuthority, // Freeze authority
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nUpdate Default Mint Account State:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 

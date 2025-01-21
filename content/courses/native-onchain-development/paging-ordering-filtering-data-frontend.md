@@ -57,7 +57,7 @@ const accountsWithoutData = await connection.getProgramAccounts(programId, {
   dataSlice: { offset: 0, length: 0 },
 });
 
-const accountKeys = accountsWithoutData.map(account => account.pubkey);
+const accountKeys = accountsWithoutData.map((account) => account.pubkey);
 ```
 
 With this list of keys, you can then fetch account data in “pages” using the
@@ -66,7 +66,7 @@ With this list of keys, you can then fetch account data in “pages” using the
 ```tsx
 const paginatedKeys = accountKeys.slice(0, 10);
 const accountInfos = await connection.getMultipleAccountsInfo(paginatedKeys);
-const deserializedObjects = accountInfos.map(accountInfo => {
+const deserializedObjects = accountInfos.map((accountInfo) => {
   // put logic to deserialize accountInfo.data here
 });
 ```
@@ -144,11 +144,11 @@ accounts.sort((a, b) => {
 
     const dataA = a.account.data.subarray(
       STRING_LENGTH_SPACE,
-      STRING_LENGTH_SPACE + lengthA,
+      STRING_LENGTH_SPACE + lengthA
     );
     const dataB = b.account.data.subarray(
       STRING_LENGTH_SPACE,
-      STRING_LENGTH_SPACE + lengthB,
+      STRING_LENGTH_SPACE + lengthB
     );
 
     return dataA.compare(dataB);
@@ -158,7 +158,7 @@ accounts.sort((a, b) => {
   }
 });
 
-const accountKeys = accounts.map(account => account.pubkey);
+const accountKeys = accounts.map((account) => account.pubkey);
 ```
 
 Note that in the snippet above we don't compare the data as given. This is
@@ -200,7 +200,7 @@ const DATA_LENGTH = 18; // Retrieve 18 bytes of data, including the part of the 
 
 async function fetchMatchingContactAccounts(
   connection: Connection,
-  search: string,
+  search: string
 ): Promise<Array<AccountInfo<Buffer> | null>> {
   let filters: Array<{ memcmp: { offset: number; bytes: string } }> = [];
 
@@ -221,13 +221,13 @@ async function fetchMatchingContactAccounts(
     {
       dataSlice: { offset: DATA_OFFSET, length: DATA_LENGTH }, // Only retrieve the portion of data relevant to the search.
       filters,
-    },
+    }
   );
 
   // Make a mutable copy of the readonly array
   const accounts: Array<ProgramAccount> = Array.from(readonlyAccounts);
 
-  return accounts.map(account => account.account); // Return the account data.
+  return accounts.map((account) => account.account); // Return the account data.
 }
 ```
 
@@ -301,7 +301,7 @@ export class MovieCoordinator {
   static async fetchPage(
     connection: Connection,
     page: number,
-    perPage: number,
+    perPage: number
   ): Promise<Array<Movie>> {}
 }
 ```
@@ -645,7 +645,7 @@ useEffect(() => {
         page,
         5,
         search,
-        search !== "",
+        search !== ""
       );
       setMovies(movies);
     } catch (error) {
@@ -665,7 +665,7 @@ return (
     <input
       id="search"
       className="w-[300px] p-2 mb-4 bg-gray-700 border border-gray-600 rounded text-gray-400"
-      onChange={e => setSearch(e.target.value)}
+      onChange={(e) => setSearch(e.target.value)}
       placeholder="Search"
     />
     ...
@@ -702,6 +702,6 @@ As always, get creative with these challenges and take them beyond the
 instructions if you want!
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9342ad0a-1741-41a5-9f68-662642c8ec93)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=9342ad0a-1741-41a5-9f68-662642c8ec93)!
 </Callout>

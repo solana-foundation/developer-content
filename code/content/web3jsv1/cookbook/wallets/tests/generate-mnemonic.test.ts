@@ -7,7 +7,7 @@ describe("Mnemonic Generation", async () => {
   it("should generate a valid mnemonic phrase", () => {
     assert.ok(
       bip39.validateMnemonic(mnemonic),
-      "Generated mnemonic should be valid",
+      "Generated mnemonic should be valid"
     );
   });
 
@@ -20,10 +20,10 @@ describe("Mnemonic Generation", async () => {
     const wordList = bip39.wordlists.english;
     const mnemonicWords = mnemonic.split(" ");
 
-    mnemonicWords.forEach(word => {
+    mnemonicWords.forEach((word) => {
       assert.ok(
         wordList.includes(word),
-        `Word "${word}" should be in the BIP39 wordlist`,
+        `Word "${word}" should be in the BIP39 wordlist`
       );
     });
   });
@@ -33,7 +33,7 @@ describe("Mnemonic Generation", async () => {
     assert.notEqual(
       mnemonic,
       anotherMnemonic,
-      "Generated mnemonics should be unique",
+      "Generated mnemonics should be unique"
     );
   });
 
@@ -43,7 +43,7 @@ describe("Mnemonic Generation", async () => {
     assert.equal(
       entropy.length,
       32, // 128 bits = 32 hex characters
-      "Mnemonic should be generated from 128 bits of entropy",
+      "Mnemonic should be generated from 128 bits of entropy"
     );
   });
 });

@@ -173,7 +173,7 @@ const initializeInterestBearingMintInstruction =
     mint, // Mint Account address
     rateAuthority.publicKey, // Designated Rate Authority
     rate, // Interest rate basis points
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -187,7 +187,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals, // Decimals of Mint
   mintAuthority, // Designated Mint Authority
   null, // Optional Freeze Authority
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -202,19 +202,19 @@ extension enabled.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeInterestBearingMintInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair], // Signers
+  [payer, mintKeypair] // Signers
 );
 
 console.log(
   "\nCreate Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -238,12 +238,12 @@ transactionSignature = await updateRateInterestBearingMint(
   updateRate, // New interest rate
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nUpdate Rate:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -257,17 +257,17 @@ const mintAccount = await getMint(
   connection,
   mint, // Mint Account Address
   undefined, // Optional commitment
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 // Get Interest Config for Mint Account
 const interestBearingMintConfig = await getInterestBearingMintConfigState(
-  mintAccount, // Mint Account data
+  mintAccount // Mint Account data
 );
 
 console.log(
   "\nMint Config:",
-  JSON.stringify(interestBearingMintConfig, null, 2),
+  JSON.stringify(interestBearingMintConfig, null, 2)
 );
 ```
 
@@ -289,7 +289,7 @@ const uiAmount = await amountToUiAmount(
   payer, // Account that will transfer lamports for the transaction
   mint, // Address of the Mint account
   amount, // Amount to be converted
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log("\nAmount with Accrued Interest:", uiAmount);

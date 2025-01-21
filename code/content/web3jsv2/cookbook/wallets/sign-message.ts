@@ -8,7 +8,7 @@ import {
 
 export async function signMessage(
   keys: CryptoKeyPair,
-  message: string = "Hello, World!",
+  message: string = "Hello, World!"
 ) {
   const encodedMessage = getUtf8Encoder().encode(message);
   const signedBytes = await signBytes(keys.privateKey, encodedMessage);
@@ -17,7 +17,7 @@ export async function signMessage(
   const verified = await verifySignature(
     keys.publicKey,
     signedBytes,
-    encodedMessage,
+    encodedMessage
   );
 
   return {

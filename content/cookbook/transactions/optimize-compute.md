@@ -20,7 +20,7 @@ async function buildOptimalTransaction(
   connection: Connection,
   instructions: Array<TransactionInstruction>,
   signer: Signer,
-  lookupTables: Array<AddressLookupTableAccount>,
+  lookupTables: Array<AddressLookupTableAccount>
 ) {
   const [microLamports, units, recentBlockhash] = await Promise.all([
     100 /* Get optimal priority fees - https://solana.com/developers/guides/advanced/how-to-use-priority-fees*/,
@@ -28,13 +28,13 @@ async function buildOptimalTransaction(
       connection,
       instructions,
       signer.publicKey,
-      lookupTables,
+      lookupTables
     ),
     connection.getLatestBlockhash(),
   ]);
 
   instructions.unshift(
-    ComputeBudgetProgram.setComputeUnitPrice({ microLamports }),
+    ComputeBudgetProgram.setComputeUnitPrice({ microLamports })
   );
   if (units) {
     // probably should add some margin of error to units
@@ -46,7 +46,7 @@ async function buildOptimalTransaction(
         instructions,
         recentBlockhash: recentBlockhash.blockhash,
         payerKey: signer.publicKey,
-      }).compileToV0Message(lookupTables),
+      }).compileToV0Message(lookupTables)
     ),
     recentBlockhash,
   };
