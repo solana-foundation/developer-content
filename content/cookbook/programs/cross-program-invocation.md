@@ -391,7 +391,7 @@ pub fn process_instruction(
         system_program.clone(),
     ];
 
-    // Passing the TransactionInstruction to send (with the issused program_id)
+    // Passing the TransactionInstruction to send (with the issued program_id)
     invoke(&create_account_instruction, &required_accounts_for_create)?;
 
     msg!("Transfer successful");

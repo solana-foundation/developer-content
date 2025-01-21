@@ -377,7 +377,7 @@ attacker to drain an entire rewards pool.
 ### 3. Create a `redeem_rewards_secure` instruction
 
 To prevent this from happening we're going to create a new instruction that
-closes the lottery account seucrely using the Anchor `close` constraint. Feel
+closes the lottery account securely using the Anchor `close` constraint. Feel
 free to try this out on your own if you'd like.
 
 The new account validation struct called `RedeemWinningsSecure` should look like
@@ -470,7 +470,7 @@ struct, the attacker shouldn't be able to call this instruction multiple times.
 
 ### 4. Test the Program
 
-To test our new secure instruction, let's create a new test that trys to call
+To test our new secure instruction, let's create a new test that tries to call
 `redeemingWinningsSecure` twice. We expect the second call to throw an error.
 
 ```typescript

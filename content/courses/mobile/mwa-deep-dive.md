@@ -15,7 +15,7 @@ description: "Initiate transactions on mobile wallets in your native mobile apps
   key management
 - Mobile and Web dApps handle their wallet-app connection differently
 - MWA handles all of its wallet interaction by wrapping all the wallet's
-  functionalities within the `transact` function for easier intergration.
+  functionalities within the `transact` function for easier integration.
 - Solana Mobile's `walletlib` does the heavy lifting for surfacing wallet
   requests to wallet apps
 

@@ -65,10 +65,11 @@ is `Initialized`.
 
 ### Adding default account state
 
-Initializing a mint with transfer fee involves three instructions:
+Initializing a mint with the default account state extension involves three
+instructions:
 
 - `SystemProgram.createAccount`
-- `createInitializeTransferFeeConfigInstruction`
+- `createInitializeDefaultAccountStateInstruction`
 - `createInitializeMintInstruction`
 
 The first instruction `SystemProgram.createAccount` allocates space on the

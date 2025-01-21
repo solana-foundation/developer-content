@@ -914,7 +914,7 @@ To embed a Whimsical diagram:
   [Edwards curves](https://en.wikipedia.org/wiki/Edwards_curve). This is
   [what the curve Ed25519 uses looks like](https://www.wolframalpha.com/input?i=x%5E2+%2B+y%5E2+%3D+1+-+%28121665%2F121666%29*x%5E2*y%5E2).
   Solana public keys are the Y values on this curve (we can omit the X value
-  because the curve is symmatrical). Ed25519 is symmetrical, and looks like a
+  because the curve is symmetrical). Ed25519 is symmetrical, and looks like a
   slightly deflated beach ball. **Do not draw a snake or some other kind or
   curve!**
 

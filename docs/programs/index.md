@@ -1,5 +1,5 @@
 ---
 title: Developing Programs
-sidebarSortOrder: 2
+sidebarSortOrder: 4
 metaOnly: true
 ---
