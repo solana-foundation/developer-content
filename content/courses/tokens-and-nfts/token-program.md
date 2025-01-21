@@ -73,7 +73,7 @@ const tokenMint = await createMint(
   payer,
   mintAuthority,
   freezeAuthority,
-  decimal,
+  decimal
 );
 ```
 
@@ -111,7 +111,7 @@ import * as token from "@solana/spl-token";
 async function buildCreateMintTransaction(
   connection: web3.Connection,
   payer: web3.PublicKey,
-  decimals: number,
+  decimals: number
 ): Promise<web3.Transaction> {
   const lamports = await token.getMinimumBalanceForRentExemptMint(connection);
   const accountKeypair = web3.Keypair.generate();
@@ -130,8 +130,8 @@ async function buildCreateMintTransaction(
       decimals,
       payer,
       payer,
-      programId,
-    ),
+      programId
+    )
   );
 
   return transaction;
@@ -185,7 +185,7 @@ const tokenAccount = await createAccount(
   payer,
   mint,
   owner,
-  keypair,
+  keypair
 );
 ```
 
@@ -230,7 +230,7 @@ import * as token from "@solana/spl-token";
 async function buildCreateTokenAccountTransaction(
   connection: web3.Connection,
   payer: web3.PublicKey,
-  mint: web3.PublicKey,
+  mint: web3.PublicKey
 ): Promise<web3.Transaction> {
   const mintState = await token.getMint(connection, mint);
   const accountKeypair = await web3.Keypair.generate();
@@ -250,8 +250,8 @@ async function buildCreateTokenAccountTransaction(
       accountKeypair.publicKey,
       mint,
       payer,
-      programId,
-    ),
+      programId
+    )
   );
 
   return transaction;
@@ -287,7 +287,7 @@ const associatedTokenAccount = await createAssociatedTokenAccount(
   connection,
   payer,
   mint,
-  owner,
+  owner
 );
 ```
 
@@ -318,12 +318,12 @@ import * as token from "@solana/spl-token";
 
 async function buildCreateAssociatedTokenAccountTransaction(
   payer: web3.PublicKey,
-  mint: web3.PublicKey,
+  mint: web3.PublicKey
 ): Promise<web3.Transaction> {
   const associatedTokenAddress = await token.getAssociatedTokenAddress(
     mint,
     payer,
-    false,
+    false
   );
 
   const transaction = new web3.Transaction().add(
@@ -331,8 +331,8 @@ async function buildCreateAssociatedTokenAccountTransaction(
       payer,
       associatedTokenAddress,
       payer,
-      mint,
-    ),
+      mint
+    )
   );
 
   return transaction;
@@ -355,7 +355,7 @@ const transactionSignature = await mintTo(
   mint,
   destination,
   authority,
-  amount,
+  amount
 );
 ```
 
@@ -388,10 +388,10 @@ async function buildMintToTransaction(
   authority: web3.PublicKey,
   mint: web3.PublicKey,
   amount: number,
-  destination: web3.PublicKey,
+  destination: web3.PublicKey
 ): Promise<web3.Transaction> {
   const transaction = new web3.Transaction().add(
-    token.createMintToInstruction(mint, destination, authority, amount),
+    token.createMintToInstruction(mint, destination, authority, amount)
   );
 
   return transaction;
@@ -420,7 +420,7 @@ const transactionSignature = await transfer(
   source,
   destination,
   owner,
-  amount,
+  amount
 );
 ```
 
@@ -445,10 +445,10 @@ async function buildTransferTransaction(
   source: web3.PublicKey,
   destination: web3.PublicKey,
   owner: web3.PublicKey,
-  amount: number,
+  amount: number
 ): Promise<web3.Transaction> {
   const transaction = new web3.Transaction().add(
-    token.createTransferInstruction(source, destination, owner, amount),
+    token.createTransferInstruction(source, destination, owner, amount)
   );
 
   return transaction;
@@ -490,7 +490,7 @@ const connection = new Connection(clusterApiUrl("devnet"));
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
 console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`
 );
 
 // This is a shortcut that runs:
@@ -551,11 +551,11 @@ const user = getKeypairFromEnvironment("SECRET_KEY");
 const connection = new Connection(clusterApiUrl("devnet"));
 
 console.log(
-  `🔑 We've loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+  `🔑 We've loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`
 );
 
 const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
-  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
 // Substitute in your token mint account
@@ -578,7 +578,7 @@ const metadataPDAAndBump = PublicKey.findProgramAddressSync(
     TOKEN_METADATA_PROGRAM_ID.toBuffer(),
     tokenMintAccount.toBuffer(),
   ],
-  TOKEN_METADATA_PROGRAM_ID,
+  TOKEN_METADATA_PROGRAM_ID
 );
 
 const metadataPDA = metadataPDAAndBump[0];
@@ -600,7 +600,7 @@ const createMetadataAccountInstruction =
         data: metadataData,
         isMutable: true,
       },
-    },
+    }
   );
 
 transaction.add(createMetadataAccountInstruction);
@@ -608,13 +608,13 @@ transaction.add(createMetadataAccountInstruction);
 const transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [user],
+  [user]
 );
 
 const transactionLink = getExplorerLink(
   "transaction",
   transactionSignature,
-  "devnet",
+  "devnet"
 );
 
 console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
@@ -622,7 +622,7 @@ console.log(`✅ Transaction confirmed, explorer link is: ${transactionLink}`);
 const tokenMintLink = getExplorerLink(
   "address",
   tokenMintAccount.toString(),
-  "devnet",
+  "devnet"
 );
 
 console.log(`✅ Look at the token mint again: ${tokenMintLink}`);
@@ -671,7 +671,7 @@ const connection = new Connection(clusterApiUrl("devnet"));
 const user = getKeypairFromEnvironment("SECRET_KEY");
 
 console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`,
+  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${user.publicKey.toBase58()}`
 );
 
 // Substitute in your token mint account from create-token-mint.ts
@@ -686,7 +686,7 @@ const tokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   user,
   tokenMintAccount,
-  recipient,
+  recipient
 );
 
 console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
@@ -694,7 +694,7 @@ console.log(`Token Account: ${tokenAccount.address.toBase58()}`);
 const link = getExplorerLink(
   "address",
   tokenAccount.address.toBase58(),
-  "devnet",
+  "devnet"
 );
 
 console.log(`✅ Created token Account: ${link}`);
@@ -742,7 +742,7 @@ const tokenMintAccount = new PublicKey("YOUR_TOKEN_MINT_ACCOUNT");
 
 // Substitute in your own, or a friend's token account address, based on the previous step.
 const recipientAssociatedTokenAccount = new PublicKey(
-  "RECIPIENT_TOKEN_ACCOUNT",
+  "RECIPIENT_TOKEN_ACCOUNT"
 );
 
 const transactionSignature = await mintTo(
@@ -751,7 +751,7 @@ const transactionSignature = await mintTo(
   tokenMintAccount,
   recipientAssociatedTokenAccount,
   user,
-  10 * MINOR_UNITS_PER_MAJOR_UNITS,
+  10 * MINOR_UNITS_PER_MAJOR_UNITS
 );
 
 const link = getExplorerLink("transaction", transactionSignature, "devnet");
@@ -799,7 +799,7 @@ const connection = new Connection(clusterApiUrl("devnet"));
 const sender = getKeypairFromEnvironment("SECRET_KEY");
 
 console.log(
-  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${sender.publicKey.toBase58()}`,
+  `🔑 Loaded our keypair securely, using an env file! Our public key is: ${sender.publicKey.toBase58()}`
 );
 
 // Add the recipient public key here.
@@ -818,7 +818,7 @@ const sourceTokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   sender,
   tokenMintAccount,
-  sender.publicKey,
+  sender.publicKey
 );
 
 // Get or create the destination token account to store this token
@@ -826,7 +826,7 @@ const destinationTokenAccount = await getOrCreateAssociatedTokenAccount(
   connection,
   sender,
   tokenMintAccount,
-  recipient,
+  recipient
 );
 
 // Transfer the tokens
@@ -836,7 +836,7 @@ const signature = await transfer(
   sourceTokenAccount.address,
   destinationTokenAccount.address,
   sender,
-  1 * MINOR_UNITS_PER_MAJOR_UNITS,
+  1 * MINOR_UNITS_PER_MAJOR_UNITS
 );
 
 const explorerLink = getExplorerLink("transaction", signature, "devnet");
@@ -895,4 +895,5 @@ And remember, get creative with these challenges and make them your own!
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=72cab3b8-984b-4b09-a341-86800167cfc7)!
+
 </Callout>

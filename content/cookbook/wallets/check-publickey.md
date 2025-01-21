@@ -12,56 +12,88 @@ the public key lies on the ed25519 curve. Only public keys that lie on the curve
 can be controlled by users with wallets.
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
+  <Tab value="web3.js v2">
+    ```typescript file=/code/content/web3jsv2/cookbook/wallets/check-publickey.ts#L1-L49
+    import {
+      isAddress,
+      isProgramDerivedAddress,
+      Address,
+      createAddressWithSeed,
+    } from "@solana/web3.js";
 
-<Tab value="web3.js v2">
+    export type AddressValidationResult = {
+      onCurveAddress: {
+        address: string;
+        isValid: boolean;
+      };
+      offCurveAddress: {
+        address: string;
+        isPDA: boolean;
+        seed: string;
+      };
+      invalidAddress: {
+        address: string;
+        isValid: boolean;
+      };
+    };
 
-```typescript
-import { isAddress } from "@solana/web3.js";
+    export async function validateAddresses(): Promise<AddressValidationResult> {
+      // Valid public key that lies on the ed25519 curve (suitable for users)
+      const key = "5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY" as Address<string>;
 
-// Note that generateKeyPair() will always give a public key that is valid for users
+      // Valid public key that's off curve (suitable for programs)
+      const seed = "21";
+      const offCurveAddress = await createAddressWithSeed({
+        baseAddress: key,
+        programAddress: "11111111111111111111111111111111" as Address,
+        seed,
+      });
 
-// Valid public key
-const key = "5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY";
+      // Invalid public key for testing
+      const errorPubkey = "testPubkey";
 
-// Lies on the ed25519 curve and is suitable for users
-console.log("Valid Address: ", isAddress(key));
+      return {
+        onCurveAddress: {
+          address: key,
+          isValid: isAddress(key),
+        },
+        offCurveAddress: {
+          address: offCurveAddress,
+          isPDA: isProgramDerivedAddress([offCurveAddress, 21]),
+          seed,
+        },
+        invalidAddress: {
+    ```
 
-// // Valid public key
-const offCurveAddress = "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e";
+  </Tab>
 
-// // Not on the ed25519 curve, therefore not suitable for users
-console.log("Valid Off Curve Address: ", isAddress(offCurveAddress));
+  <Tab value="web3.js v1">
+    ```typescript file=/code/content/web3jsv1/cookbook/wallets/check-publickey.ts#L1-L24
+    import { PublicKey, Keypair } from "@solana/web3.js";
 
-// // Not a valid public key
-const errorPubkey = "testPubkey";
-console.log("Invalid Address: ", isAddress(errorPubkey));
-```
+    // Note that Keypair.generate() will always give a public key that is valid for users
 
-</Tab>
-<Tab value="web3.js v1">
+    // Valid public key
+    const key = new PublicKey("5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY");
+    // Lies on the ed25519 curve and is suitable for users
+    console.log(PublicKey.isOnCurve(key.toBytes()));
 
-```typescript
-import { PublicKey } from "@solana/web3.js";
+    // Valid public key
+    const offCurveAddress = new PublicKey(
+      "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e",
+    );
 
-// Note that Keypair.generate() will always give a public key that is valid for users
+    // Not on the ed25519 curve, therefore not suitable for users
+    console.log(PublicKey.isOnCurve(offCurveAddress.toBytes()));
 
-// Valid public key
-const key = new PublicKey("5oNDL3swdJJF1g9DzJiZ4ynHXgszjAEpUkxVYejchzrY");
-// Lies on the ed25519 curve and is suitable for users
-console.log(PublicKey.isOnCurve(key.toBytes()));
+    let errorPubkey;
+    try {
+      // Not a valid public key
+      errorPubkey = new PublicKey("testPubkey");
+    } catch (err) {
+      // Error will be caught here
+    }
+    ```
 
-// Valid public key
-const offCurveAddress = new PublicKey(
-  "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e",
-);
-
-// Not on the ed25519 curve, therefore not suitable for users
-console.log(PublicKey.isOnCurve(offCurveAddress.toBytes()));
-
-// Not a valid public key
-const errorPubkey = new PublicKey("testPubkey");
-console.log(PublicKey.isOnCurve(errorPubkey.toBytes()));
-```
-
-</Tab>
+  </Tab>
 </Tabs>

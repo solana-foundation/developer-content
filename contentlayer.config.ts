@@ -174,7 +174,7 @@ const standardComputedFields: ComputedFields = {
   locale: {
     description: "Locale for the content",
     type: "string",
-    resolve: record =>
+    resolve: (record) =>
       I18N_LOCALE_REGEX.test(record._id)
         ? record._id.split(I18N_LOCALE_REGEX)[1]
         : DEFAULT_LOCALE_EN,
@@ -182,12 +182,12 @@ const standardComputedFields: ComputedFields = {
   slug: {
     description: "Computed slug of the records, based on the file name",
     type: "string",
-    resolve: record => computeSlugFromRawDocumentData(record._raw),
+    resolve: (record) => computeSlugFromRawDocumentData(record._raw),
   },
   isExternal: {
     description: "Is this content just a link to external content?",
     type: "boolean",
-    resolve: record => {
+    resolve: (record) => {
       if (!!record.href && record.href.startsWith("http")) {
         return true;
       }
@@ -197,7 +197,7 @@ const standardComputedFields: ComputedFields = {
   href: {
     description: "Computed href for the content",
     type: "string",
-    resolve: record => {
+    resolve: (record) => {
       if (!!record.href) {
         return record.href.toString().toLowerCase();
       }
@@ -207,7 +207,7 @@ const standardComputedFields: ComputedFields = {
         .replace(
           /^(content\/?)?(developers\/?)?/gm,
           // prepend the non-docs content
-          hrefBase.startsWith("docs") ? "/" : "/developers/",
+          hrefBase.startsWith("docs") ? "/" : "/developers/"
         )
         .toLowerCase();
     },
@@ -215,7 +215,7 @@ const standardComputedFields: ComputedFields = {
   author: {
     description: "Validated slug of the author that created this content",
     type: "string",
-    resolve: record => {
+    resolve: (record) => {
       if (!record?.author) return undefined;
       throwIfAuthorDoesNotExist(record.author, "Author");
       return record.author;
@@ -224,7 +224,7 @@ const standardComputedFields: ComputedFields = {
   organization: {
     description: "Validated slug of the organization the author is a member of",
     type: "string",
-    resolve: record => {
+    resolve: (record) => {
       if (!record?.organization) return undefined;
       throwIfAuthorDoesNotExist(record.organization, "Organization");
       return record.organization;
@@ -248,7 +248,7 @@ export const AuthorRecord = defineDocumentType(() => ({
     organization: standardComputedFields["organization"],
     image: {
       type: "string",
-      resolve: record => {
+      resolve: (record) => {
         if (!record?.image) return undefined;
         return validatedImagePath(record.image, "authors");
       },
@@ -417,7 +417,7 @@ export const CourseRecord = defineDocumentType(() => ({
     href: {
       description: "Computed href for a course",
       type: "string",
-      resolve: record => {
+      resolve: (record) => {
         if (!!record.href) {
           return record.href.toString().toLowerCase();
         }
@@ -431,12 +431,12 @@ export const CourseRecord = defineDocumentType(() => ({
       description: "List of lesson 'slug's for this course",
       type: "list",
       of: { type: "string" },
-      resolve: record => {
+      resolve: (record) => {
         if (!record?.lessons) return [];
 
         // get the course slug from the format: `content/courses/{slug}`
         const courseSlug = record._raw.sourceFileDir.match(
-          /^\/?((content|developers)\/courses)\/(.*)/i,
+          /^\/?((content|developers)\/courses)\/(.*)/i
         )?.[3];
 
         if (!courseSlug) throw Error("Unable to parse course slug");
@@ -444,20 +444,20 @@ export const CourseRecord = defineDocumentType(() => ({
         const lessonsDir = path.join(
           path.resolve(),
           "content/courses",
-          courseSlug,
+          courseSlug
         );
 
         const availableLessons: string[] = getAllContentFiles(
           lessonsDir, // base search directory
           false, // recursive search the directory
           ".md", // file extension
-          true, // remove the extension from each returned item in the array
+          true // remove the extension from each returned item in the array
         );
 
         for (const lesson of record.lessons) {
           if (!availableLessons.includes(path.join(lessonsDir, lesson))) {
             throw Error(
-              `Unable to locate lesson: '${lesson}' from the '${courseSlug}' course`,
+              `Unable to locate lesson: '${lesson}' from the '${courseSlug}' course`
             );
           }
         }

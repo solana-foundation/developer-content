@@ -32,10 +32,10 @@ This is a very powerful feature, and its implications have to be clearly stated
 for both users and app developers.
 
 <Callout type="warning">
-The Permanent Delegate is effectively a global owner of all Token Accounts for
-the mint. Due to the unlimited powers of the Permanent Delegate, if the
-delegate's keys are compromised, an attacker will have complete control over all
-Token Accounts for that mint.
+  The Permanent Delegate is effectively a global owner of all Token Accounts for
+  the mint. Due to the unlimited powers of the Permanent Delegate, if the
+  delegate's keys are compromised, an attacker will have complete control over
+  all Token Accounts for that mint.
 </Callout>
 
 ## Getting Started
@@ -172,7 +172,7 @@ const initializePermanentDelegateInstruction =
   createInitializePermanentDelegateInstruction(
     mint, // Mint Account address
     permanentDelegate, // Designated Permanent Delegate
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -186,7 +186,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals, // Decimals of Mint
   mintAuthority, // Designated Mint Authority
   null, // Optional Freeze Authority
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -200,19 +200,19 @@ will create a Mint Account with the `PermanentDelegate` extension enabled.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializePermanentDelegateInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair], // Signers
+  [payer, mintKeypair] // Signers
 );
 
 console.log(
   "\nCreate Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -238,7 +238,7 @@ const sourceTokenAccount = await createAccount(
   randomKeypair.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -253,7 +253,7 @@ const destinationTokenAccount = await createAccount(
   payer.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -270,12 +270,12 @@ transactionSignature = await mintTo(
   200, // Amount
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nMint Tokens:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -302,12 +302,12 @@ transactionSignature = await transferChecked(
   decimals, // Mint Account decimals
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nTransfer Tokens:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -330,12 +330,12 @@ transactionSignature = await burnChecked(
   decimals, // Mint Account decimals
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nBurn Tokens:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -343,8 +343,8 @@ Run the script by clicking the `Run` button. You can then inspect the
 transactions on the SolanaFM.
 
 <Callout type="success">
-Note that both the transfer and burn transactions complete successfully,
-even though the transactions are not signed by the owner of the Token Account.
+  Note that both the transfer and burn transactions complete successfully, even
+  though the transactions are not signed by the owner of the Token Account.
 </Callout>
 
 ## Conclusion

@@ -1191,7 +1191,7 @@ import { assert } from "chai";
 import { confirmTransaction } from "@solana-developers/helpers";
 
 const SOL_USD_SWITCHBOARD_FEED = new PublicKey(
-  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR",
+  "GvDMxPzN1sCj7L26YDK2HnMRXEQmQ2aemov8YBtPS7vR"
 );
 
 const ESCROW_SEED = "MICHAEL BURRY";
@@ -1215,18 +1215,18 @@ describe("burry-escrow", () => {
   before(async () => {
     switchboardProgram = await SwitchboardProgram.load(
       new Connection(DEVNET_RPC_URL),
-      payer,
+      payer
     );
     aggregatorAccount = new AggregatorAccount(
       switchboardProgram,
-      SOL_USD_SWITCHBOARD_FEED,
+      SOL_USD_SWITCHBOARD_FEED
     );
   });
 
   const createAndVerifyEscrow = async (unlockPrice: number) => {
     const [escrow] = PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_SEED), payer.publicKey.toBuffer()],
-      program.programId,
+      program.programId
     );
 
     try {
@@ -1243,13 +1243,13 @@ describe("burry-escrow", () => {
       await confirmTransaction(
         provider.connection,
         transaction,
-        CONFIRMATION_COMMITMENT,
+        CONFIRMATION_COMMITMENT
       );
 
       const escrowAccount = await program.account.escrow.fetch(escrow);
       const escrowBalance = await provider.connection.getBalance(
         escrow,
-        CONFIRMATION_COMMITMENT,
+        CONFIRMATION_COMMITMENT
       );
 
       console.log("Onchain unlock price:", escrowAccount.unlockPrice);
@@ -1277,11 +1277,11 @@ describe("burry-escrow", () => {
   it("withdraws from escrow", async () => {
     const [escrow] = PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_SEED), payer.publicKey.toBuffer()],
-      program.programId,
+      program.programId
     );
 
     const userBalanceBefore = await provider.connection.getBalance(
-      payer.publicKey,
+      payer.publicKey
     );
 
     try {
@@ -1299,7 +1299,7 @@ describe("burry-escrow", () => {
       await confirmTransaction(
         provider.connection,
         transaction,
-        CONFIRMATION_COMMITMENT,
+        CONFIRMATION_COMMITMENT
       );
 
       // Verify escrow account is closed
@@ -1310,17 +1310,17 @@ describe("burry-escrow", () => {
         console.log(error.message);
         assert(
           error.message.includes("Account does not exist"),
-          "Unexpected error: " + error.message,
+          "Unexpected error: " + error.message
         );
       }
 
       // Verify user balance increased
       const userBalanceAfter = await provider.connection.getBalance(
-        payer.publicKey,
+        payer.publicKey
       );
       assert(
         userBalanceAfter > userBalanceBefore,
-        "User balance should have increased",
+        "User balance should have increased"
       );
     } catch (error) {
       throw new Error(`Failed to withdraw from escrow: ${error.message}`);
@@ -1340,7 +1340,7 @@ describe("burry-escrow", () => {
   it("fails to withdraw while price is below UnlockPrice", async () => {
     const [escrow] = PublicKey.findProgramAddressSync(
       [Buffer.from(ESCROW_SEED), payer.publicKey.toBuffer()],
-      program.programId,
+      program.programId
     );
 
     try {
@@ -1409,4 +1409,5 @@ A potential solution to this challenge can be found
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=1a5d266c-f4c1-4c45-b986-2afd4be59991)!
+
 </Callout>

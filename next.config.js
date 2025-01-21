@@ -16,7 +16,7 @@ module.exports = withContentlayer({
   },
   swcMinify: true,
   // webpack5: true,
-  webpack: config => {
+  webpack: (config) => {
     config.resolve.fallback = { fs: false, path: false };
 
     return config;
@@ -47,7 +47,7 @@ module.exports = withContentlayer({
       // validator client docs
       ...redirectFormatter(
         "https://docs.anza.xyz/",
-        redirectsJson["agave-client"],
+        redirectsJson["agave-client"]
       ),
     ];
   },
@@ -57,7 +57,7 @@ module.exports = withContentlayer({
  * Format the NextJS redirects
  */
 function redirectFormatter(basePath, redirects, permanent = true) {
-  return redirects.map(item => {
+  return redirects.map((item) => {
     item.basePath = false;
     item.permanent = item.permanent ?? permanent;
     item.destination = `${basePath}${item.destination}`;

@@ -157,7 +157,7 @@ const initializeMintCloseAuthorityInstruction =
   createInitializeMintCloseAuthorityInstruction(
     mint, // Mint Account address
     closeAuthority, // Designated Close Authority
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -171,7 +171,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals, // Decimals of Mint
   mintAuthority, // Designated Mint Authority
   null, // Optional Freeze Authority
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -186,19 +186,19 @@ enabled.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeMintCloseAuthorityInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mintKeypair], // Signers
+  [payer, mintKeypair] // Signers
 );
 
 console.log(
   "\nCreate Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -220,12 +220,12 @@ transactionSignature = await closeAccount(
   closeAuthority, // Close Authority for Mint Account
   undefined, // Additional signers
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 
 console.log(
   "\nClose Mint Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 

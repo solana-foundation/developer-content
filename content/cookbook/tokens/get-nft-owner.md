@@ -1,8 +1,7 @@
 ---
 title: How to get the owner of an NFT
 sidebarSortOrder: 17
-description:
-  "Learn how to get the owner of a non-fungible token (NFT) on Solana."
+description: "Learn how to get the owner of a non-fungible token (NFT) on Solana."
 ---
 
 If you have the mint key of an NFT, you can find its current owner by
@@ -22,10 +21,10 @@ import { Connection, PublicKey } from "@solana/web3.js";
   const tokenMint = "9ARngHhVaCtH5JFieRdSS5Y8cdZk2TMF4tfGSWFB9iSK";
 
   const largestAccounts = await connection.getTokenLargestAccounts(
-    new PublicKey(tokenMint),
+    new PublicKey(tokenMint)
   );
   const largestAccountInfo = await connection.getParsedAccountInfo(
-    largestAccounts.value[0].address,
+    largestAccounts.value[0].address
   );
   console.log(largestAccountInfo?.value?.data);
 

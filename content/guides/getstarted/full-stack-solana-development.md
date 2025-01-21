@@ -389,7 +389,8 @@ pub struct Counter {
 
 The layout of this program is:
 
-- import necessary Rust libraries
+- import necessary Rust librarie
+  s
 - declare the program's address
 - define program instruction handlers (functional logic)
 - define structs for the instruction handlers (the data format that will be
@@ -571,7 +572,7 @@ describe("counter", () => {
 
     // Fetch the counter account data
     const accountData = await program.account.counter.fetch(
-      counterAccount.publicKey,
+      counterAccount.publicKey
     );
 
     console.log(`Transaction Signature: ${transactionSignature}`);
@@ -589,7 +590,7 @@ describe("counter", () => {
 
     // Fetch the counter account data
     const accountData = await program.account.counter.fetch(
-      counterAccount.publicKey,
+      counterAccount.publicKey
     );
 
     console.log(`Transaction Signature: ${transactionSignature}`);
@@ -668,7 +669,7 @@ for reference):
 // new method
 const [counterPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("counter")], // This is the seed -- just the string "counter"
-  program.programId, // If we're interacting with the program, we know its ID
+  program.programId // If we're interacting with the program, we know its ID
 );
 
 // vs old method
@@ -800,7 +801,7 @@ describe("counter", () => {
 
   const [counterPDA] = PublicKey.findProgramAddressSync(
     [Buffer.from("counter")],
-    program.programId,
+    program.programId
   );
 
   it("Is initialized!", async () => {
@@ -1121,7 +1122,7 @@ function App() {
       // if desired, manually define specific/custom wallets here (normally not required)
       // otherwise, the wallet-adapter will auto detect the wallets a user's browser has available
     ],
-    [network],
+    [network]
   );
 
   return (
@@ -1193,7 +1194,7 @@ export const program = new Program<Counter>(IDL, programId, {
 
 export const [counterPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("counter")],
-  program.programId,
+  program.programId
 );
 
 // This is just a TypeScript type for the Counter data structure based on the IDL
@@ -1244,17 +1245,17 @@ export default function CounterState() {
       // The address of the account we want to watch
       counterPDA,
       // Callback for when the account changes
-      accountInfo => {
+      (accountInfo) => {
         try {
           const decodedData = program.coder.accounts.decode(
             "counter",
-            accountInfo.data,
+            accountInfo.data
           );
           setCounterData(decodedData);
         } catch (error) {
           console.error("Error decoding account data:", error);
         }
-      },
+      }
     );
 
     return () => {
@@ -1292,7 +1293,7 @@ function App() {
       // if desired, manually define specific/custom wallets here (normally not required)
       // otherwise, the wallet-adapter will auto detect the wallets a user's browser has available
     ],
-    [network],
+    [network]
   );
 
   return (
@@ -1350,11 +1351,11 @@ export default function IncrementButton() {
 
       const transactionSignature = await sendTransaction(
         transaction,
-        connection,
+        connection
       );
 
       console.log(
-        `View on explorer: https://solana.fm/tx/${transactionSignature}?cluster=devnet-alpha`,
+        `View on explorer: https://solana.fm/tx/${transactionSignature}?cluster=devnet-alpha`
       );
     } catch (error) {
       console.log(error);
@@ -1392,7 +1393,7 @@ function App() {
       // if desired, manually define specific/custom wallets here (normally not required)
       // otherwise, the wallet-adapter will auto detect the wallets a user's browser has available
     ],
-    [network],
+    [network]
   );
 
   return (

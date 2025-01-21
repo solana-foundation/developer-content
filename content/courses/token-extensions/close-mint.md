@@ -84,7 +84,7 @@ const initializeMintCloseAuthorityInstruction =
   createInitializeMintCloseAuthorityInstruction(
     mint,
     authority,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -96,7 +96,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   null,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -107,14 +107,14 @@ network.
 const mintTransaction = new Transaction().add(
   createAccountInstruction,
   initializeMintCloseAuthorityInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 const signature = await sendAndConfirmTransaction(
   connection,
   mintTransaction,
   [payer, mintKeypair],
-  { commitment: "finalized" },
+  { commitment: "finalized" }
 );
 ```
 
@@ -130,8 +130,9 @@ Remember, that to close the mint account, the total supply has to be 0. So if
 any tokens exist, they have to be burned first. You can do this with the `burn`
 function.
 
-<Callout type="note">The `closeAccount` function works for mints and token
-accounts alike. </Callout>
+<Callout type="note">
+  The `closeAccount` function works for mints and token accounts alike.{" "}
+</Callout>
 
 ```ts
 // burn tokens to 0
@@ -144,7 +145,7 @@ const burnSignature = await burn(
   sourceAccountInfo.amount, // amount -  Amount to burn
   [], // multiSigners - Signing accounts if `owner` is a multisig
   { commitment: "finalized" }, // confirmOptions - Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // programId - SPL Token program account
+  TOKEN_2022_PROGRAM_ID // programId - SPL Token program account
 );
 
 // account can be closed as total supply is now 0
@@ -156,7 +157,7 @@ await closeAccount(
   payer, // authority - Authority which is allowed to close the account
   [], // multiSigners - Signing accounts if `authority` is a multisig
   { commitment: "finalized" }, // confirmOptions - Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // programIdSPL Token program account
+  TOKEN_2022_PROGRAM_ID // programIdSPL Token program account
 );
 ```
 
@@ -192,7 +193,7 @@ await setAuthority(
   newAuthority,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -363,7 +364,7 @@ export async function createClosableMint(
   connection: Connection,
   payer: Keypair,
   mintKeypair: Keypair,
-  decimals: number,
+  decimals: number
 ): Promise<TransactionSignature> {
   const extensions = [ExtensionType.MintCloseAuthority];
   const mintLength = getMintLen(extensions);
@@ -383,15 +384,15 @@ export async function createClosableMint(
     createInitializeMintCloseAuthorityInstruction(
       mintKeypair.publicKey,
       payer.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       mintKeypair.publicKey,
       decimals,
       payer.publicKey,
       null,
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   console.log("Sending transaction...");
@@ -399,7 +400,7 @@ export async function createClosableMint(
     connection,
     mintTransaction,
     [payer, mintKeypair],
-    { commitment: "finalized" },
+    { commitment: "finalized" }
   );
 
   return signature;
@@ -458,7 +459,7 @@ const sourceAccount = await createAccount(
   sourceKeypair.publicKey,
   undefined,
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log("Minting 1 token...\n\n");
@@ -472,7 +473,7 @@ await mintTo(
   amount,
   [payer],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -488,7 +489,7 @@ let mintInfo = await getMint(
   connection,
   mintKeypair.publicKey,
   "finalized",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 console.log("Initial supply: ", mintInfo.supply);
 ```
@@ -528,13 +529,13 @@ try {
     payer,
     [],
     { commitment: "finalized" },
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 } catch (e) {
   console.log(
     "Close account fails here because the supply is not zero. Check the program logs:",
     (e as any).logs,
-    "\n\n",
+    "\n\n"
   );
 }
 ```
@@ -563,7 +564,7 @@ const sourceAccountInfo = await getAccount(
   connection,
   sourceAccount,
   "finalized",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log("Burning the supply...");
@@ -576,7 +577,7 @@ const burnSignature = await burn(
   sourceAccountInfo.amount,
   [],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -609,14 +610,14 @@ mintInfo = await getMint(
   connection,
   mintKeypair.publicKey,
   "finalized",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log("After burn supply: ", mintInfo.supply);
 
 const accountInfoBeforeClose = await connection.getAccountInfo(
   mintKeypair.publicKey,
-  "finalized",
+  "finalized"
 );
 
 console.log("Account closed? ", accountInfoBeforeClose === null);
@@ -630,12 +631,12 @@ const closeSignature = await closeAccount(
   payer,
   [],
   { commitment: "finalized" },
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const accountInfoAfterClose = await connection.getAccountInfo(
   mintKeypair.publicKey,
-  "finalized",
+  "finalized"
 );
 
 console.log("Account closed? ", accountInfoAfterClose === null);

@@ -153,7 +153,7 @@ transaction.add(
     fromPubkey: fromKeypair.publicKey,
     toPubkey: toKeypair.publicKey,
     lamports: LAMPORTS_PER_SOL,
-  }),
+  })
 );
 ```
 
@@ -226,7 +226,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("testnet"));
 
 let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
@@ -348,7 +348,7 @@ allocateTransaction.add(
     keys,
     programId: web3.SystemProgram.programId,
     data,
-  }),
+  })
 );
 
 await web3.sendAndConfirmTransaction(connection, allocateTransaction, [
@@ -374,7 +374,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("testnet"));
 
 let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
@@ -399,7 +399,7 @@ allocateTransaction.add(
     keys,
     programId: web3.SystemProgram.programId,
     data,
-  }),
+  })
 );
 
 await web3.sendAndConfirmTransaction(connection, allocateTransaction, [

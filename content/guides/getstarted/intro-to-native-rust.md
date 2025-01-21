@@ -380,20 +380,20 @@ describe("Test", () => {
     const txHash = await web3.sendAndConfirmTransaction(
       pg.connection,
       transaction,
-      [pg.wallet.keypair, newAccountKp],
+      [pg.wallet.keypair, newAccountKp]
     );
     console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
 
     // Fetch Account
     const newAccount = await pg.connection.getAccountInfo(
-      newAccountKp.publicKey,
+      newAccountKp.publicKey
     );
 
     // Deserialize Account Data
     const deserializedAccountData = borsh.deserialize(
       AccountDataSchema,
       AccountData,
-      newAccount.data,
+      newAccount.data
     );
 
     console.log(Number(deserializedAccountData.data));
@@ -520,7 +520,7 @@ const transaction = new web3.Transaction().add(instruction);
 const txHash = await web3.sendAndConfirmTransaction(
   pg.connection,
   transaction,
-  [pg.wallet.keypair, newAccountKp],
+  [pg.wallet.keypair, newAccountKp]
 );
 console.log(`Use 'solana confirm -v ${txHash}' to see the logs`);
 ```
@@ -558,7 +558,7 @@ schema.
 const deserializedAccountData = borsh.deserialize(
   AccountDataSchema,
   AccountData,
-  newAccount.data,
+  newAccount.data
 );
 
 console.log(Number(deserializedAccountData.data));

@@ -88,7 +88,7 @@ instruction on a Transfer Hook program. However, the Program Derived Address
 ```typescript
 const [pda] = PublicKey.findProgramAddressSync(
   [Buffer.from("extra-account-metas"), mint.publicKey.toBuffer()],
-  program.programId, // transfer hook program ID
+  program.programId // transfer hook program ID
 );
 ```
 
@@ -651,7 +651,7 @@ const initializeExtraAccountMetaListInstruction = await program.methods
   .instruction();
 
 const transaction = new Transaction().add(
-  initializeExtraAccountMetaListInstruction,
+  initializeExtraAccountMetaListInstruction
 );
 ```
 
@@ -677,7 +677,7 @@ const transferInstruction =
     0, // Decimals
     [],
     "confirmed",
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -713,7 +713,7 @@ export async function createTransferCheckedWithTransferHookInstruction(
   decimals: number,
   multiSigners: (Signer | PublicKey)[] = [],
   commitment?: Commitment,
-  programId = TOKEN_PROGRAM_ID,
+  programId = TOKEN_PROGRAM_ID
 ) {
   const instruction = createTransferCheckedInstruction(
     source,
@@ -723,7 +723,7 @@ export async function createTransferCheckedWithTransferHookInstruction(
     amount,
     decimals,
     multiSigners,
-    programId,
+    programId
   );
 
   const mintInfo = await getMint(connection, mint, commitment, programId);
@@ -739,7 +739,7 @@ export async function createTransferCheckedWithTransferHookInstruction(
       destination,
       owner,
       amount,
-      commitment,
+      commitment
     );
   }
 
@@ -1428,7 +1428,7 @@ it("Creates a Cookie NFT with Transfer Hook and Metadata", async () => {
   const mintLen = getMintLen(extensions);
   const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(cookieMetadata).length;
   const lamports = await connection.getMinimumBalanceForRentExemption(
-    mintLen + metadataLen,
+    mintLen + metadataLen
   );
 
   const transaction = new Transaction().add(
@@ -1443,20 +1443,20 @@ it("Creates a Cookie NFT with Transfer Hook and Metadata", async () => {
       cookieMint.publicKey, //mint
       payerWallet.publicKey, //authority
       cookieMint.publicKey, //metadata address
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeTransferHookInstruction(
       cookieMint.publicKey, // mint
       payerWallet.publicKey, // authority
       program.programId, // Transfer Hook Program ID
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       cookieMint.publicKey, // mint
       decimals, // decimals
       payerWallet.publicKey, // mint authority
       null, // freeze authority
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeInstruction({
       programId: TOKEN_2022_PROGRAM_ID,
@@ -1473,7 +1473,7 @@ it("Creates a Cookie NFT with Transfer Hook and Metadata", async () => {
       sourceCookieAccount, // associated token account
       payerWallet.publicKey, // owner
       cookieMint.publicKey, // mint
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createMintToInstruction(
       cookieMint.publicKey, // mint
@@ -1481,7 +1481,7 @@ it("Creates a Cookie NFT with Transfer Hook and Metadata", async () => {
       payerWallet.publicKey, // authority
       1, // amount - NFTs there will only be one
       [], // multi signers
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createSetAuthorityInstruction(
       // revoke mint authority
@@ -1490,8 +1490,8 @@ it("Creates a Cookie NFT with Transfer Hook and Metadata", async () => {
       AuthorityType.MintTokens, // authority type
       null, // new authority
       [], // multi signers
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   const txSig = await sendAndConfirmTransaction(connection, transaction, [
@@ -1550,7 +1550,7 @@ it("Create Crumb Mint", async () => {
   const lamports = await connection.getMinimumBalanceForRentExemption(size);
 
   const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
-    "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+    "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
   );
 
   const metadataData: DataV2 = {
@@ -1567,7 +1567,7 @@ it("Create Crumb Mint", async () => {
       TOKEN_METADATA_PROGRAM_ID.toBuffer(),
       crumbMint.publicKey.toBuffer(),
     ],
-    TOKEN_METADATA_PROGRAM_ID,
+    TOKEN_METADATA_PROGRAM_ID
   );
 
   const metadataPDA = metadataPDAAndBump[0];
@@ -1585,7 +1585,7 @@ it("Create Crumb Mint", async () => {
       decimals, // decimals
       payerWallet.publicKey, // mint authority
       null, // freeze authority
-      TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID
     ),
     createCreateMetadataAccountV3Instruction(
       {
@@ -1601,7 +1601,7 @@ it("Create Crumb Mint", async () => {
           data: metadataData,
           isMutable: true,
         },
-      },
+      }
     ),
     createSetAuthorityInstruction(
       // set authority to transfer hook PDA
@@ -1610,15 +1610,15 @@ it("Create Crumb Mint", async () => {
       AuthorityType.MintTokens, // authority type
       crumbMintAuthority, // new authority
       [], // multi signers
-      TOKEN_PROGRAM_ID,
-    ),
+      TOKEN_PROGRAM_ID
+    )
   );
 
   const txSig = await sendAndConfirmTransaction(
     provider.connection,
     transaction,
     [payerWallet.payer, crumbMint],
-    { skipPreflight: true },
+    { skipPreflight: true }
   );
 
   console.log(getExplorerLink("transaction", txSig, "localnet"));
@@ -1655,7 +1655,7 @@ it("Initializes ExtraAccountMetaList Account", async () => {
     .instruction();
 
   const transaction = new Transaction().add(
-    initializeExtraAccountMetaListInstruction,
+    initializeExtraAccountMetaListInstruction
   );
 
   const txSig = await sendAndConfirmTransaction(
@@ -1665,7 +1665,7 @@ it("Initializes ExtraAccountMetaList Account", async () => {
     {
       skipPreflight: true,
       commitment: "confirmed",
-    },
+    }
   );
 
   console.log(getExplorerLink("transaction", txSig, "localnet"));
@@ -1737,7 +1737,7 @@ it("Transfer and Transfer Back", async () => {
       false,
       undefined,
       { commitment: "confirmed" },
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     )
   ).address;
 
@@ -1750,7 +1750,7 @@ it("Transfer and Transfer Back", async () => {
       false,
       undefined,
       { commitment: "confirmed" },
-      TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID
     )
   ).address;
 
@@ -1763,7 +1763,7 @@ it("Transfer and Transfer Back", async () => {
       false,
       undefined,
       { commitment: "confirmed" },
-      TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID
     )
   ).address;
 
@@ -1779,7 +1779,7 @@ it("Transfer and Transfer Back", async () => {
       decimals, // Decimals
       [],
       "confirmed",
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
   const transferBackInstruction =
@@ -1793,12 +1793,12 @@ it("Transfer and Transfer Back", async () => {
       decimals, // Decimals
       [],
       "confirmed",
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
   const transaction = new Transaction().add(
     transferInstruction,
-    transferBackInstruction,
+    transferBackInstruction
   );
   const txSig = await sendAndConfirmTransaction(
     connection,
@@ -1806,7 +1806,7 @@ it("Transfer and Transfer Back", async () => {
     [payerWallet.payer, recipient],
     {
       skipPreflight: true,
-    },
+    }
   );
 
   console.log(getExplorerLink("transaction", txSig, "localnet"));
@@ -1815,21 +1815,21 @@ it("Transfer and Transfer Back", async () => {
     connection,
     crumbMint.publicKey,
     "processed",
-    TOKEN_PROGRAM_ID,
+    TOKEN_PROGRAM_ID
   );
 
   const sourceCrumbAccountInfo = await getAccount(
     connection,
     sourceCrumbAccount,
     "processed",
-    TOKEN_PROGRAM_ID,
+    TOKEN_PROGRAM_ID
   );
 
   const destinationCrumbAccountInfo = await getAccount(
     connection,
     destinationCrumbAccount,
     "processed",
-    TOKEN_PROGRAM_ID,
+    TOKEN_PROGRAM_ID
   );
 
   expect(Number(mintInfo.supply)).to.equal(2);
@@ -1840,7 +1840,7 @@ it("Transfer and Transfer Back", async () => {
   console.log("Source Crumb Amount:", Number(sourceCrumbAccountInfo.amount));
   console.log(
     "Destination Crumb Amount\n",
-    Number(destinationCrumbAccountInfo.amount),
+    Number(destinationCrumbAccountInfo.amount)
   );
 });
 ```

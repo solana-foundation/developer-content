@@ -46,8 +46,9 @@ Metadata extensions fix this by introducing two extensions:
   [Token-Metadata Interface](https://github.com/solana-labs/solana-program-library/tree/master/token-metadata/)
   which allows us to store the metadata in the mint itself.
 
-<Callout type="note">The `metadata` extension must be used in conjunction with
-the `metadata-pointer` extension which points back to the mint itself.
+<Callout type="note">
+  The `metadata` extension must be used in conjunction with the
+  `metadata-pointer` extension which points back to the mint itself.
 </Callout>
 
 ### Metadata-Pointer extension:
@@ -88,7 +89,7 @@ function createInitializeMetadataPointerInstruction(
   mint: PublicKey,
   authority: PublicKey | null,
   metadataAddress: PublicKey | null,
-  programId: PublicKey,
+  programId: PublicKey
 );
 ```
 
@@ -111,7 +112,7 @@ function createUpdateMetadataPointerInstruction(
   authority: PublicKey,
   metadataAddress: PublicKey | null,
   multiSigners: (Signer | PublicKey)[] = [],
-  programId: PublicKey = TOKEN_2022_PROGRAM_ID,
+  programId: PublicKey = TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -175,7 +176,7 @@ const initMetadataPointerInstructions =
     mint.publicKey,
     payer.publicKey,
     metadataAccount,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
 const initMintInstructions = createInitializeMintInstruction(
@@ -183,7 +184,7 @@ const initMintInstructions = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -194,7 +195,7 @@ Solana network:
 const transaction = new Transaction().add(
   createMintAccountInstructions,
   initMetadataPointerInstructions,
-  initMintInstructions,
+  initMintInstructions
 );
 const sig = await sendAndConfirmTransaction(connection, transaction, [
   payer,
@@ -209,10 +210,11 @@ Program. This extension allows us to store the metadata directly _in_ the mint
 itself! This eliminates the need for a separate account, greatly simplifying the
 handling of metadata.
 
-<Callout type="note">The `metadata` extension works directly with the
-`metadata-pointer` extension. During the mint creation, you should also add the
-`metadata-pointer` extension, pointed at the mint itself. Check out the
-[Solana Token Extensions Program docs](https://spl.solana.com/token-2022/extensions#metadata)
+<Callout type="note">
+  The `metadata` extension works directly with the `metadata-pointer` extension.
+  During the mint creation, you should also add the `metadata-pointer`
+  extension, pointed at the mint itself. Check out the [Solana Token Extensions
+  Program docs](https://spl.solana.com/token-2022/extensions#metadata)
 </Callout>
 
 The added fields and functions in the metadata extension follow the
@@ -291,7 +293,7 @@ export interface InitializeInstructionArgs {
 }
 
 export function createInitializeInstruction(
-  args: InitializeInstructionArgs,
+  args: InitializeInstructionArgs
 ): TransactionInstruction;
 ```
 
@@ -324,17 +326,18 @@ export interface UpdateFieldInstruction {
 }
 
 export function createUpdateFieldInstruction(
-  args: UpdateFieldInstruction,
+  args: UpdateFieldInstruction
 ): TransactionInstruction;
 ```
 
-<Callout type="note">If the metadata you are updating requires more space than
-the initial allocated space, you'll have to pair it with a `system.transfer` to
-have enough rent for the `createUpdateFieldInstruction` to realloc with. You can
-get the extra space needed with `getAdditionalRentForUpdatedMetadata`. Or if
-you're calling this update as a standalone, you can use the
-`tokenMetadataUpdateFieldWithRentTransfer` helper to do all of this at
-once.</Callout>
+<Callout type="note">
+  If the metadata you are updating requires more space than the initial
+  allocated space, you'll have to pair it with a `system.transfer` to have
+  enough rent for the `createUpdateFieldInstruction` to realloc with. You can
+  get the extra space needed with `getAdditionalRentForUpdatedMetadata`. Or if
+  you're calling this update as a standalone, you can use the
+  `tokenMetadataUpdateFieldWithRentTransfer` helper to do all of this at once.
+</Callout>
 
 The function `createRemoveKeyInstruction` returns the instruction that removes
 the `additional_metadata` field from a token-metadata account.
@@ -358,7 +361,7 @@ export interface RemoveKeyInstructionArgs {
 }
 
 export function createRemoveKeyInstruction(
-  args: RemoveKeyInstructionArgs,
+  args: RemoveKeyInstructionArgs
 ): TransactionInstruction;
 ```
 
@@ -382,7 +385,7 @@ export interface UpdateAuthorityInstructionArgs {
 }
 
 export function createUpdateAuthorityInstruction(
-  args: UpdateAuthorityInstructionArgs,
+  args: UpdateAuthorityInstructionArgs
 ): TransactionInstruction;
 ```
 
@@ -410,7 +413,7 @@ export interface EmitInstructionArgs {
 }
 
 export function createEmitInstruction(
-  args: EmitInstructionArgs,
+  args: EmitInstructionArgs
 ): TransactionInstruction;
 ```
 
@@ -455,7 +458,7 @@ export async function getTokenMetadata(
   connection: Connection,
   address: PublicKey,
   commitment?: Commitment,
-  programId = TOKEN_2022_PROGRAM_ID,
+  programId = TOKEN_2022_PROGRAM_ID
 ): Promise<TokenMetadata | null>;
 ```
 
@@ -542,7 +545,7 @@ const initMetadataPointerInstructions =
     mint.publicKey,
     payer.publicKey,
     mint.publicKey, // we will point to the mint it self as the metadata account
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
 const initMintInstructions = createInitializeMintInstruction(
@@ -550,7 +553,7 @@ const initMintInstructions = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const initMetadataInstruction = createInitializeInstruction({
@@ -581,7 +584,7 @@ const transaction = new Transaction().add(
   initMetadataPointerInstructions,
   initMintInstructions,
   initMetadataInstruction,
-  updateMetadataFieldInstructions, // if you want to add any custom field
+  updateMetadataFieldInstructions // if you want to add any custom field
 );
 const signature = await sendAndConfirmTransaction(connection, transaction, [
   payer,
@@ -637,8 +640,9 @@ dependencies, two other files have been provided in the `src/` directory.
 **`cat.png`** is the image we'll use for the NFT. Feel free to replace it with
 your own image.
 
-<Callout type="note">we are using Irys on devnet to upload files, this is capped
-at 100 KiB. </Callout>
+<Callout type="note">
+  we are using Irys on devnet to upload files, this is capped at 100 KiB.{" "}
+</Callout>
 
 **`helpers.ts`** file provides us with a useful helper function
 `uploadOffChainMetadata`.
@@ -754,7 +758,7 @@ const tokenUri = await uploadOffChainMetadata(
     tokenExternalUrl,
     tokenAdditionalMetadata,
   },
-  payer,
+  payer
 );
 
 // You can log the URI here and run the code to test it
@@ -828,7 +832,7 @@ import {
 } from "@solana/spl-token";
 
 export default async function createNFTWithEmbeddedMetadata(
-  inputs: CreateNFTInputs,
+  inputs: CreateNFTInputs
 ) {
   const {
     payer,
@@ -878,7 +882,7 @@ const metadata: TokenMetadata = {
   uri: tokenUri,
   // additionalMetadata: [['customField', 'customValue']],
   additionalMetadata: Object.entries(tokenAdditionalMetadata || []).map(
-    ([key, value]) => [key, value],
+    ([key, value]) => [key, value]
   ),
 };
 ```
@@ -902,7 +906,7 @@ get our first instruction:
 const mintLen = getMintLen([ExtensionType.MetadataPointer]);
 const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length;
 const lamports = await connection.getMinimumBalanceForRentExemption(
-  mintLen + metadataLen,
+  mintLen + metadataLen
 );
 
 const createMintAccountInstruction = SystemProgram.createAccount({
@@ -914,8 +918,9 @@ const createMintAccountInstruction = SystemProgram.createAccount({
 });
 ```
 
-<Callout type="note">The more information in the metadata, the more it
-costs.</Callout>
+<Callout type="note">
+  The more information in the metadata, the more it costs.
+</Callout>
 
 Step 3 has us initializing the `metadata pointer` extension. Let's do that by
 calling the `createInitializeMetadataPointerInstruction` function with the
@@ -928,7 +933,7 @@ const initMetadataPointerInstruction =
     mint.publicKey,
     payer.publicKey,
     mint.publicKey, // Metadata account - points to itself
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -942,7 +947,7 @@ const initMintInstruction = createInitializeMintInstruction(
   decimals,
   payer.publicKey,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -981,7 +986,7 @@ for (const attributes of Object.entries(tokenAdditionalMetadata || [])) {
       field: attributes[0],
       value: attributes[1],
       programId: TOKEN_2022_PROGRAM_ID,
-    }),
+    })
   );
 }
 ```
@@ -1000,14 +1005,14 @@ const ata = await getAssociatedTokenAddress(
   mint.publicKey,
   payer.publicKey,
   false,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 const createATAInstruction = createAssociatedTokenAccountInstruction(
   payer.publicKey,
   ata,
   payer.publicKey,
   mint.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const mintInstruction = createMintToCheckedInstruction(
@@ -1017,7 +1022,7 @@ const mintInstruction = createMintToCheckedInstruction(
   supply, // NFTs should have a supply of one
   decimals,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // NFTs should have no mint authority so no one can mint any more of the same NFT
@@ -1027,7 +1032,7 @@ const setMintTokenAuthorityInstruction = createSetAuthorityInstruction(
   AuthorityType.MintTokens,
   null,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -1044,12 +1049,12 @@ const transaction = new Transaction().add(
   ...setExtraMetadataInstructions,
   createATAInstruction,
   mintInstruction,
-  setMintTokenAuthorityInstruction,
+  setMintTokenAuthorityInstruction
 );
 const transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, mint],
+  [payer, mint]
 );
 ```
 
@@ -1063,7 +1068,7 @@ const accountDetails = await getAccount(
   connection,
   ata,
   "finalized",
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 console.log("Associate Token Account =====>", accountDetails);
 
@@ -1072,7 +1077,7 @@ const mintDetails = await getMint(
   connection,
   mint.publicKey,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 console.log("Mint =====>", mintDetails);
 
@@ -1129,7 +1134,7 @@ import {
 } from "@solana/spl-token";
 
 export default async function createNFTWithEmbeddedMetadata(
-  inputs: CreateNFTInputs,
+  inputs: CreateNFTInputs
 ) {
   const {
     payer,
@@ -1153,7 +1158,7 @@ export default async function createNFTWithEmbeddedMetadata(
     uri: tokenUri,
     // additionalMetadata: [['customField', 'customValue']],
     additionalMetadata: Object.entries(tokenAdditionalMetadata || []).map(
-      ([key, value]) => [key, value],
+      ([key, value]) => [key, value]
     ),
   };
 
@@ -1161,7 +1166,7 @@ export default async function createNFTWithEmbeddedMetadata(
   const mintLen = getMintLen([ExtensionType.MetadataPointer]);
   const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length;
   const lamports = await connection.getMinimumBalanceForRentExemption(
-    mintLen + metadataLen,
+    mintLen + metadataLen
   );
 
   const createMintAccountInstruction = SystemProgram.createAccount({
@@ -1178,7 +1183,7 @@ export default async function createNFTWithEmbeddedMetadata(
       mint.publicKey,
       payer.publicKey,
       mint.publicKey, // Metadata account - points to itself
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
   // 4. Initialize the mint
@@ -1187,7 +1192,7 @@ export default async function createNFTWithEmbeddedMetadata(
     decimals,
     payer.publicKey,
     payer.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   // 5. Initialize the metadata inside the mint
@@ -1212,7 +1217,7 @@ export default async function createNFTWithEmbeddedMetadata(
         field: attributes[0],
         value: attributes[1],
         programId: TOKEN_2022_PROGRAM_ID,
-      }),
+      })
     );
   }
 
@@ -1221,14 +1226,14 @@ export default async function createNFTWithEmbeddedMetadata(
     mint.publicKey,
     payer.publicKey,
     false,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   const createATAInstruction = createAssociatedTokenAccountInstruction(
     payer.publicKey,
     ata,
     payer.publicKey,
     mint.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const mintInstruction = createMintToCheckedInstruction(
@@ -1238,7 +1243,7 @@ export default async function createNFTWithEmbeddedMetadata(
     supply, // NFTs should have a supply of one
     decimals,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   // NFTs should have no mint authority so no one can mint any more of the same NFT
@@ -1248,7 +1253,7 @@ export default async function createNFTWithEmbeddedMetadata(
     AuthorityType.MintTokens,
     null,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   // 8. Put all of that in one transaction and send it to the network.
@@ -1260,12 +1265,12 @@ export default async function createNFTWithEmbeddedMetadata(
     ...setExtraMetadataInstructions, // Destructuring extra metadata fields
     createATAInstruction,
     mintInstruction,
-    setMintTokenAuthorityInstruction,
+    setMintTokenAuthorityInstruction
   );
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
     transaction,
-    [payer, mint],
+    [payer, mint]
   );
 
   // 9. fetch and print the token account, the mint account, an the metadata to make sure that it is working correctly.
@@ -1274,7 +1279,7 @@ export default async function createNFTWithEmbeddedMetadata(
     connection,
     ata,
     "finalized",
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   console.log("Associate Token Account =====>", accountDetails);
 
@@ -1283,7 +1288,7 @@ export default async function createNFTWithEmbeddedMetadata(
     connection,
     mint.publicKey,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   console.log("Mint =====>", mintDetails);
 

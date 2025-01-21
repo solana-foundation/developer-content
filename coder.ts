@@ -5,35 +5,45 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
 import remarkFrontmatter from "remark-frontmatter";
+import remarkMDX from "remark-mdx";
 import { visit } from "unist-util-visit";
 import ignore, { type Ignore } from "ignore";
-import importCode from "./src/utils/code-import";
+import codeImport from "./src/utils/code-import";
 import chokidar from "chokidar";
 
 let debugMode = false;
 
-const debug = (...args: string[]) => {
+const debug = (...args: any[]) => {
   if (debugMode) {
     console.log("[DEBUG]", ...args);
   }
 };
 
 const hasCodeComponentWithFileMeta = async (
-  filePath: string,
+  filePath: string
 ): Promise<boolean> => {
-  const content = await fs.readFile(filePath, "utf8");
-  let hasMatch = false;
+  try {
+    const content = await fs.readFile(filePath, "utf8");
+    let hasMatch = false;
 
-  const tree = unified().use(remarkParse).use(remarkFrontmatter).parse(content);
+    const tree = unified()
+      .use(remarkParse)
+      .use(remarkMDX)
+      .use(remarkFrontmatter)
+      .parse(content);
 
-  visit(tree, "code", node => {
-    if (node.meta?.includes("file=")) {
-      hasMatch = true;
-      return false; // Stop visiting
-    }
-  });
+    visit(tree, "code", (node) => {
+      if (node.meta?.includes("file=")) {
+        hasMatch = true;
+        return false; // Stop visiting
+      }
+    });
 
-  return hasMatch;
+    return hasMatch;
+  } catch (error) {
+    debug(`Error checking file ${filePath}:`, error);
+    return false;
+  }
 };
 
 const getIgnore = async (directory: string): Promise<Ignore> => {
@@ -42,7 +52,7 @@ const getIgnore = async (directory: string): Promise<Ignore> => {
   try {
     const gitignoreContent = await fs.readFile(
       path.join(directory, ".gitignore"),
-      "utf8",
+      "utf8"
     );
     ig.add(gitignoreContent);
     // ignore all dotfiles
@@ -65,7 +75,7 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
   const walkDir = async (dir: string): Promise<string[]> => {
     const entries = await fs.readdir(dir, { withFileTypes: true });
     const files = await Promise.all(
-      entries.map(async entry => {
+      entries.map(async (entry) => {
         const res = path.resolve(dir, entry.name);
         const relativePath = path.relative(directory, res);
 
@@ -85,14 +95,15 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
           if (await hasCodeComponentWithFileMeta(res)) {
             debug(`Found file with code component: ${relativePath}`);
             return res;
+          } else {
+            debug(
+              `Skipping file (no code component with file meta): ${relativePath}`
+            );
           }
-          debug(
-            `Skipping file (no code component with file meta): ${relativePath}`,
-          );
         }
 
         return [];
-      }),
+      })
     );
     return files.flat();
   };
@@ -102,14 +113,16 @@ const getMarkdownAndMDXFiles = async (directory: string): Promise<string[]> => {
 
 const processContent = async (
   content: string,
-  filePath: string,
+  filePath: string
 ): Promise<string> => {
   try {
     const file = await unified()
       .use(remarkParse)
+      .use(remarkMDX)
       .use(remarkFrontmatter)
-      .use(importCode, {
-        preserveTrailingNewline: false,
+      // @ts-expect-error
+      .use(codeImport, {
+        preserveTrailingNewline: true,
         removeRedundantIndentations: true,
         rootDir: process.cwd(),
       })
@@ -127,8 +140,9 @@ const processContent = async (
     return String(file);
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      const filePath = (error as NodeJS.ErrnoException).path;
       throw new Error(
-        `File not found: ${(error as NodeJS.ErrnoException).path}`,
+        `File not found: ${filePath}\nMake sure the file exists and the path is correct relative to the project root.`
       );
     }
     throw error;
@@ -158,7 +172,7 @@ const processFile = async (filePath: string): Promise<void> => {
 const processInChunks = async <T>(
   items: T[],
   processItem: (item: T) => Promise<void>,
-  chunkSize: number,
+  chunkSize: number
 ): Promise<void> => {
   for (let i = 0; i < items.length; i += chunkSize) {
     const chunk = items.slice(i, i + chunkSize);
@@ -169,12 +183,11 @@ const processInChunks = async <T>(
 const watchFiles = async (directory: string): Promise<void> => {
   const watcher = chokidar.watch(["**/*.md", "**/*.mdx"], {
     ignored: [
-      "**.**",
       /(^|[\/\\])\../,
       "**/node_modules/**",
       "**/.git/**",
       ".gitignore",
-    ], // ignore dotfiles, node_modules, .git, and .gitignore
+    ],
     persistent: true,
     cwd: directory,
   });
@@ -182,9 +195,11 @@ const watchFiles = async (directory: string): Promise<void> => {
   console.log("Watch mode started. Waiting for file changes...");
 
   watcher
-    .on("add", filePath => processFile(path.join(directory, filePath)))
-    .on("change", filePath => processFile(path.join(directory, filePath)))
-    .on("unlink", filePath => console.log(`File ${filePath} has been removed`));
+    .on("add", (filePath) => processFile(path.join(directory, filePath)))
+    .on("change", (filePath) => processFile(path.join(directory, filePath)))
+    .on("unlink", (filePath) =>
+      console.log(`File ${filePath} has been removed`)
+    );
 };
 
 const main = async (): Promise<void> => {
@@ -197,7 +212,7 @@ const main = async (): Promise<void> => {
     console.log("Debug mode enabled");
   }
 
-  if (filePath && !watchMode && !debugMode) {
+  if (filePath && !watchMode) {
     // Process single file
     const absolutePath = path.resolve(process.cwd(), filePath);
     console.log(`Processing single file: ${absolutePath}`);

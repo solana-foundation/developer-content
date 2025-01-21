@@ -188,6 +188,7 @@ impl<'info> Cpi<'info> {
 Like the example above, Anchor has created a few
 [wrappers for popular native programs](https://github.com/coral-xyz/anchor/tree/master/spl/src)
 that allow you to issue CPIs into them as if they were Anchor programs.
+
 </Callout>
 
 Additionally and depending on the program you're making the CPI to, you may be
@@ -286,13 +287,13 @@ it("Insecure instructions allow attacker to win every time successfully", async 
     const [playerOneMetadataKey] = getMetadataKey(
       playerOne.publicKey,
       gameplayProgram.programId,
-      metadataProgram.programId,
+      metadataProgram.programId
     );
 
     const [attackerMetadataKey] = getMetadataKey(
       attacker.publicKey,
       gameplayProgram.programId,
-      fakeMetadataProgram.programId,
+      fakeMetadataProgram.programId
     );
 
     const playerOneMetadata =
@@ -471,4 +472,5 @@ them! If you find one in your own program, be sure to patch it right away.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5bcaf062-c356-4b58-80a0-12cca99c29b0)!
+
 </Callout>

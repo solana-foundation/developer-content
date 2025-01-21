@@ -214,7 +214,7 @@ import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 const associatedTokenAccountAddress = getAssociatedTokenAddressSync(
   USDC_MINT_ADDRESS,
-  OWNER_ADDRESS,
+  OWNER_ADDRESS
 );
 ```
 
@@ -232,7 +232,7 @@ const [PDA, bump] = PublicKey.findProgramAddressSync(
     TOKEN_PROGRAM_ID.toBuffer(),
     USDC_MINT_ADDRESS.toBuffer(),
   ],
-  ASSOCIATED_TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID
 );
 ```
 
@@ -519,9 +519,8 @@ The Token Extensions Program enables additional customizable metadata (such as
 name, symbol, link to image) to be stored directly on the Mint Account.
 
 <Callout>
-   To use the Token Extensions CLI flags, ensure you have a local installation of the CLI, version 3.4.0 or later:
-   
-   `cargo install --version 3.4.0 spl-token-cli`
+  To use the Token Extensions CLI flags, ensure you have a local installation of
+  the CLI, version 3.4.0 or later: `cargo install --version 3.4.0 spl-token-cli`
 </Callout>
 
 To create a new token with the metadata extension enabled, using the following

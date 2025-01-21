@@ -1,0 +1,52 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": ["**/.env.*local"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "contentlayer:build": {
+      "dependsOn": ["code-import"],
+      "inputs": [
+        "content/**/*.md",
+        "content/**/*.mdx",
+        "content/**/*.yaml",
+        "content/**/*.yml",
+        "docs/**/*.md",
+        "docs/**/*.mdx",
+        "docs/**/*.yaml",
+        "docs/**/*.yml",
+        "i8n/**/*.md",
+        "i8n/**/*.mdx",
+        "i8n/**/*.yaml",
+        "i8n/**/*.yml",
+        "src/**/**",
+        "contentlayer.config.ts"
+      ],
+      "outputs": [".contentlayer/**"],
+      "cache": true
+    },
+    "lint": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "inputs": ["code/**/*.test.ts"]
+    },
+    "code-import": {
+      "inputs": ["code/**/*"],
+      "outputs": [
+        "content/**/*.md",
+        "content/**/*.mdx",
+        "docs/**/*.md",
+        "docs/**/*.mdx",
+        "i8n/**/*.md",
+        "i8n/**/*.mdx"
+      ]
+    }
+  },
+  "extends": ["//"]
+}

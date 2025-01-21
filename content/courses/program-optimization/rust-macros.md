@@ -1121,6 +1121,6 @@ out! Since this is still practice, it's okay if it doesn't work out how you want
 or expect. Just jump in and experiment!
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=eb892157-3014-4635-beac-f562af600bf8)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=eb892157-3014-4635-beac-f562af600bf8)!
 </Callout>

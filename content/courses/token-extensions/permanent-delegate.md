@@ -91,7 +91,7 @@ createInitializeMintInstruction(
   decimals,
   mintAuthority.publicKey,
   null,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -134,7 +134,7 @@ await transferChecked(
   decimals,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -172,7 +172,7 @@ await burnChecked(
   decimals,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -215,7 +215,7 @@ await approveChecked(
   decimals,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // Newly assigned delegate can now transfer from an account
@@ -230,7 +230,7 @@ await transferChecked(
   decimals,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -406,7 +406,7 @@ const initializePermanentDelegateInstruction =
   createInitializePermanentDelegateInstruction(
     mint,
     permanentDelegate.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -421,7 +421,7 @@ const initializeMintInstruction = createInitializeMintInstruction(
   decimals,
   mintAuthority.publicKey, // Designated Mint Authority
   null, // No Freeze Authority
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -432,7 +432,7 @@ blockchain:
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializePermanentDelegateInstruction,
-  initializeMintInstruction,
+  initializeMintInstruction
 );
 
 return await sendAndConfirmTransaction(connection, transaction, [
@@ -474,7 +474,7 @@ export async function createTokenExtensionMintWithPermanentDelegate(
   payer: Keypair,
   mintKeypair: Keypair,
   decimals: number = 2,
-  permanentDelegate: Keypair,
+  permanentDelegate: Keypair
 ): Promise<string> {
   const mintAuthority = payer;
   const mint = mintKeypair.publicKey;
@@ -495,7 +495,7 @@ export async function createTokenExtensionMintWithPermanentDelegate(
     createInitializePermanentDelegateInstruction(
       mint,
       permanentDelegate.publicKey,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
   const initializeMintInstruction = createInitializeMintInstruction(
@@ -503,13 +503,13 @@ export async function createTokenExtensionMintWithPermanentDelegate(
     decimals,
     mintAuthority.publicKey, // Designated Mint Authority
     null, // No Freeze Authority
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const transaction = new Transaction().add(
     createAccountInstruction,
     initializePermanentDelegateInstruction,
-    initializeMintInstruction,
+    initializeMintInstruction
   );
 
   return await sendAndConfirmTransaction(connection, transaction, [
@@ -532,7 +532,7 @@ function:
 async function printBalances(
   connection: Connection,
   tokenAccounts: PublicKey[],
-  names: string[],
+  names: string[]
 ) {
   if (tokenAccounts.length !== names.length)
     throw new Error("Names needs to be one to one with accounts");
@@ -542,7 +542,7 @@ async function printBalances(
       connection,
       tokenAccounts[i],
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
     console.log(`${names[i]}: ${tokenInfo.amount}`);
@@ -568,7 +568,7 @@ await createTokenExtensionMintWithPermanentDelegate(
   payer, // Also known as alice
   mintKeypair,
   decimals,
-  defaultState,
+  defaultState
 );
 ```
 
@@ -589,7 +589,7 @@ const aliceAccount = await createAccount(
   alice.publicKey,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const bobAccount = await createAccount(
@@ -599,7 +599,7 @@ const bobAccount = await createAccount(
   bob.publicKey,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const carolAccount = await createAccount(
@@ -609,7 +609,7 @@ const carolAccount = await createAccount(
   carol.publicKey,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -638,7 +638,7 @@ for (const holder of tokenAccounts) {
     amountToMint,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 }
 
@@ -730,10 +730,10 @@ out the balances of our accounts:
       decimals,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
     console.log(
-      "✅ Since Alice is the permanent delegate, she has control over all token accounts of this mint",
+      "✅ Since Alice is the permanent delegate, she has control over all token accounts of this mint"
     );
     await printBalances(connection, tokenAccounts, names);
   } catch (error) {
@@ -776,12 +776,12 @@ Similar to the previous test we can create this test by calling
       decimals,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
     console.log("Bob should not be able to transfer tokens");
   } catch (error) {
     console.log(
-      "✅ We expect this to fail because Bob does not have authority over Alice's funds",
+      "✅ We expect this to fail because Bob does not have authority over Alice's funds"
     );
     await printBalances(connection, tokenAccounts, names);
   }
@@ -821,10 +821,10 @@ the balances:
       decimals,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
     console.log(
-      "✅ Since Alice is the permanent delegate, she has control and can transfer Bob's tokens to Carol",
+      "✅ Since Alice is the permanent delegate, she has control and can transfer Bob's tokens to Carol"
     );
     await printBalances(connection, tokenAccounts, names);
   } catch (error) {
@@ -863,10 +863,10 @@ We'll do this by calling `burnChecked` and then printing out the balances:
       decimals,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
     console.log(
-      "✅ Since Alice is the permanent delegate, she has control and can burn Bob's tokens",
+      "✅ Since Alice is the permanent delegate, she has control and can burn Bob's tokens"
     );
     await printBalances(connection, tokenAccounts, names);
   } catch (error) {
@@ -903,13 +903,13 @@ expected to fail as `bob` doesn't have any control over the token accounts.
       decimals,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
     await printBalances(connection, tokenAccounts, names);
     console.error("Bob should not be able to burn the tokens");
   } catch (error) {
     console.log(
-      "✅ We expect this to fail since Bob is not the permanent delegate and has no control over the tokens",
+      "✅ We expect this to fail since Bob is not the permanent delegate and has no control over the tokens"
     );
   }
 }
@@ -949,7 +949,7 @@ Add the following test:
     decimals,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await transferChecked(
@@ -963,11 +963,11 @@ Add the following test:
     decimals,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   console.log(
-    "✅ Since Alice is the permanent delegate, she can allow Carol to transfer Bob's tokens to Carol",
+    "✅ Since Alice is the permanent delegate, she can allow Carol to transfer Bob's tokens to Carol"
   );
   await printBalances(connection, tokenAccounts, names);
 }
@@ -1000,11 +1000,11 @@ tokens to herself. This is expected to fail.
       decimals,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
   } catch (e) {
     console.log(
-      `✅ We expect this to fail since Carol already transferred ${amountToTransfer} tokens and has no more allotted`,
+      `✅ We expect this to fail since Carol already transferred ${amountToTransfer} tokens and has no more allotted`
     );
   }
 }

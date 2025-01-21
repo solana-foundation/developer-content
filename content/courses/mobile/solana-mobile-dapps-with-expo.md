@@ -287,12 +287,16 @@ or physical device.
 There are also more details about this setup in the
 [Introduction to Solana Mobile lesson](/content/courses/mobile/intro-to-solana-mobile.md#0-prerequisites)
 
-<Callout type="note">Even though we are using Expo, you'll need to follow the
-React Native CLI guide for initial setup.</Callout>
+<Callout type="note">
+  Even though we are using Expo, you'll need to follow the React Native CLI
+  guide for initial setup.
+</Callout>
 
-<Callout type="note">If you are running an emulator, it is highly recommend to
-use a newer phone version to emulate along with providing several GB of RAM for
-it to run. We use 5GB of ram on our side.</Callout>
+<Callout type="note">
+  If you are running an emulator, it is highly recommend to use a newer phone
+  version to emulate along with providing several GB of RAM for it to run. We
+  use 5GB of ram on our side.
+</Callout>
 
 #### 1. Sign up for Expo EAS CLI
 
@@ -669,7 +673,7 @@ export const UmiProvider = ({
     .use(mplCandyMachine());
   if (selectedAccount === null) {
     const noopSigner = createNoopSigner(
-      publicKey("11111111111111111111111111111111"),
+      publicKey("11111111111111111111111111111111")
     );
     umi.use(signerIdentity(noopSigner));
   } else {
@@ -684,7 +688,7 @@ export function useUmi(): Umi {
   if (!umi) {
     throw new Error(
       "Umi context was not initialized. " +
-        "Did you forget to wrap your app with <UmiProvider />?",
+        "Did you forget to wrap your app with <UmiProvider />?"
     );
   }
   return umi;
@@ -971,7 +975,7 @@ through the code for each of them and then show you the entire file at the end:
      if (isLoading) return;
 
      setIsLoading(true);
-     transact(async wallet => {
+     transact(async (wallet) => {
        const auth = await authorizeSession(wallet);
        setAccount(auth);
      }).finally(() => {
@@ -1033,7 +1037,7 @@ async function uploadImageFromURI(fileUri: string) {
 
     const response = await fetch(
       "https://api.pinata.cloud/pinning/pinFileToIPFS",
-      options,
+      options
     );
     const responseJson = await response.json();
     return responseJson;
@@ -1047,7 +1051,7 @@ async function uploadImageFromURI(fileUri: string) {
 async function uploadMetadataJson(
   name: string,
   description: string,
-  imageCID: string,
+  imageCID: string
 ) {
   const randomFileName = `metadata_${Date.now()}_${Math.floor(Math.random() * 10000)}.json`;
   const data = JSON.stringify({
@@ -1070,7 +1074,7 @@ async function uploadMetadataJson(
         Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
       },
       body: data,
-    },
+    }
   );
   const responseBody = await response.json();
 
@@ -1086,16 +1090,16 @@ const uploadMetadata = useCallback(
   async (
     name: string,
     description: string,
-    imageCID: string,
+    imageCID: string
   ): Promise<string> => {
     const uploadResponse = await uploadMetadataJson(
       name,
       description,
-      imageCID,
+      imageCID
     );
     return uploadResponse.IpfsHash;
   },
-  [],
+  []
 );
 ```
 
@@ -1128,7 +1132,7 @@ const createNFT = useCallback(
       setIsLoading(false);
     }
   },
-  [umi, account, isLoading, uploadImage, uploadMetadata],
+  [umi, account, isLoading, uploadImage, uploadMetadata]
 );
 ```
 
@@ -1198,7 +1202,7 @@ export function NFTProvider(props: NFTProviderProps) {
     if (isLoading) return;
 
     setIsLoading(true);
-    transact(async wallet => {
+    transact(async (wallet) => {
       const auth = await authorizeSession(wallet);
       setAccount(auth);
     }).finally(() => {
@@ -1230,7 +1234,7 @@ export function NFTProvider(props: NFTProviderProps) {
 
       const response = await fetch(
         "https://api.pinata.cloud/pinning/pinFileToIPFS",
-        options,
+        options
       );
       const responseJson = await response.json();
       console.log(responseJson.IpfsHash);
@@ -1246,7 +1250,7 @@ export function NFTProvider(props: NFTProviderProps) {
   async function uploadMetadataJson(
     name = "Solanify",
     description = "A truly sweet NFT of your day.",
-    imageCID = "bafkreih5aznjvttude6c3wbvqeebb6rlx5wkbzyppv7garjiubll2ceym4",
+    imageCID = "bafkreih5aznjvttude6c3wbvqeebb6rlx5wkbzyppv7garjiubll2ceym4"
   ) {
     const randomFileName = `metadata_${Date.now()}_${Math.floor(Math.random() * 10000)}.json`;
     const data = JSON.stringify({
@@ -1269,7 +1273,7 @@ export function NFTProvider(props: NFTProviderProps) {
           Authorization: `Bearer ${process.env.EXPO_PUBLIC_NFT_PINATA_JWT}`,
         },
         body: data,
-      },
+      }
     );
     const responseBody = await response.json();
 
@@ -1299,16 +1303,16 @@ export function NFTProvider(props: NFTProviderProps) {
     async (
       name: string,
       description: string,
-      imageCID: string,
+      imageCID: string
     ): Promise<string> => {
       const uploadResponse = await uploadMetadataJson(
         name,
         description,
-        imageCID,
+        imageCID
       );
       return uploadResponse.IpfsHash;
     },
-    [],
+    []
   );
 
   const createNFT = useCallback(
@@ -1335,7 +1339,7 @@ export function NFTProvider(props: NFTProviderProps) {
         setIsLoading(false);
       }
     },
-    [umi, account, isLoading, uploadImage, uploadMetadata],
+    [umi, account, isLoading, uploadImage, uploadMetadata]
   );
 
   const publicKey = useMemo(
@@ -1343,7 +1347,7 @@ export function NFTProvider(props: NFTProviderProps) {
       account?.publicKey
         ? fromWeb3JsPublicKey(account.publicKey as solanaPublicKey)
         : null,
-    [account],
+    [account]
   );
 
   const state: NFTContextState = {
@@ -1406,7 +1410,7 @@ const mintNFT = async () => {
     createNFT(
       formatDate(todaysDate),
       `${todaysDate.getTime()}`,
-      result.assets[0].uri,
+      result.assets[0].uri
     );
   }
 };
@@ -1518,7 +1522,7 @@ export function MainScreen() {
 
     const loadSnapshots = async () => {
       const loadedSnapshots = await Promise.all(
-        loadedNFTs.map(async loadedNft => {
+        loadedNFTs.map(async (loadedNft) => {
           if (!loadedNft.metadata.name) return null;
           if (!loadedNft.metadata.uri) return null;
 
@@ -1535,12 +1539,12 @@ export function MainScreen() {
             uri: ipfsPrefix + imageCID,
             date: new Date(unixTime),
           } as NFTSnapshot;
-        }),
+        })
       );
 
       // Filter out null values
       const cleanedSnapshots = loadedSnapshots.filter(
-        (snapshot): snapshot is NFTSnapshot => snapshot !== null,
+        (snapshot): snapshot is NFTSnapshot => snapshot !== null
       );
 
       // Sort by date
@@ -1597,7 +1601,7 @@ export function MainScreen() {
       createNFT(
         formatDate(todaysDate),
         `${todaysDate.getTime()}`,
-        result.assets[0].uri,
+        result.assets[0].uri
       );
     }
   };
@@ -1682,6 +1686,6 @@ welcome to choose your own, or you can select from the following ideas:
   from `expo-sensors`
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=19cf8d3a-89a0-465e-95da-908cf8f45409)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=19cf8d3a-89a0-465e-95da-908cf8f45409)!
 </Callout>

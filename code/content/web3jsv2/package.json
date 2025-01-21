@@ -1,0 +1,16 @@
+{
+  "name": "web3jsv2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --import tsx --test '**/*.test.ts' --trace-deprecation",
+    "test:coverage": "node --import tsx --experimental-test-coverage --test '**/*.test.ts'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "2"
+  }
+}

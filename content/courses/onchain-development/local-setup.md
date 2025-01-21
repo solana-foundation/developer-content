@@ -4,8 +4,7 @@ objectives:
   - Set up a local environment for Solana program development, with Solana CLI
     tools, Rust, and Anchor.
   - Ensure Anchor works out of the box with no errors or warnings.
-description:
-  "Setup a local development environment for building onchain programs."
+description: "Setup a local development environment for building onchain programs."
 ---
 
 ## Summary
@@ -208,4 +207,5 @@ before continuing.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=aa0b56d6-02a9-4b36-95c0-a817e2c5b19d)!
+
 </Callout>

@@ -36,21 +36,21 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
       getRecordsForGroup("courses", {
         locale,
       }) as CourseRecord[]
-    ).find(item => item.slug == appendix);
+    ).find((item) => item.slug == appendix);
 
     if (!course) return notFound();
     if (!course.lessons) course.lessons = [];
 
     const unsortedLessons = records.filter(
-      item => item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1] == course.slug,
+      (item) => item._raw.sourceFileDir.match(/.*\/(.*)/)?.[1] == course.slug
     );
 
     if (unsortedLessons.length !== course.lessons.length) return notFound();
 
     // presort the lessons in their desired order
     records = new Array(unsortedLessons.length);
-    unsortedLessons.map(item => {
-      const index = course.lessons!.findIndex(el => el == item.slug);
+    unsortedLessons.map((item) => {
+      const index = course.lessons!.findIndex((el) => el == item.slug);
       records[index] = item;
     });
   }

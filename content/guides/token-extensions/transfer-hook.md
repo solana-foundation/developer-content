@@ -82,7 +82,7 @@ the following seeds:
 ```js
 const [pda] = PublicKey.findProgramAddressSync(
   [Buffer.from("extra-account-metas"), mint.publicKey.toBuffer()],
-  program.programId, // transfer hook program ID
+  program.programId // transfer hook program ID
 );
 ```
 
@@ -300,7 +300,7 @@ let transferInstructionWithHelper =
     decimals,
     [],
     "confirmed",
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -1197,7 +1197,7 @@ const sourceTokenAccount = getAssociatedTokenAddressSync(
   wallet.publicKey,
   false,
   TOKEN_2022_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID
 );
 
 // Recipient token account address
@@ -1207,7 +1207,7 @@ const destinationTokenAccount = getAssociatedTokenAddressSync(
   recipient.publicKey,
   false,
   TOKEN_2022_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID
 );
 ```
 
@@ -1220,7 +1220,7 @@ instruction.
 // Store extra accounts required by the custom transfer hook instruction
 const [extraAccountMetaListPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("extra-account-metas"), mint.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 
@@ -1233,7 +1233,7 @@ instruction.
 // PDA delegate to transfer wSOL tokens from sender
 const [delegatePDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("delegate")],
-  program.programId,
+  program.programId
 );
 ```
 
@@ -1247,14 +1247,14 @@ example, all wSOL fees are sent to this account.
 // Sender wSOL token account address
 const senderWSolTokenAccount = getAssociatedTokenAddressSync(
   NATIVE_MINT, // mint
-  wallet.publicKey, // owner
+  wallet.publicKey // owner
 );
 
 // Delegate PDA wSOL token account address, to receive wSOL tokens from sender
 const delegateWSolTokenAccount = getAssociatedTokenAddressSync(
   NATIVE_MINT, // mint
   delegatePDA, // owner
-  true, // allowOwnerOffCurve
+  true // allowOwnerOffCurve
 );
 ```
 
@@ -1268,7 +1268,7 @@ before(async () => {
     connection,
     wallet.payer,
     NATIVE_MINT,
-    wallet.publicKey,
+    wallet.publicKey
   );
 
   // WSol Token Account for delegate PDA
@@ -1277,7 +1277,7 @@ before(async () => {
     wallet.payer,
     NATIVE_MINT,
     delegatePDA,
-    true,
+    true
   );
 });
 ```
@@ -1318,21 +1318,21 @@ it("Create Mint Account with Transfer Hook Extension", async () => {
       mint.publicKey,
       wallet.publicKey,
       program.programId, // Transfer Hook Program ID
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     ),
     createInitializeMintInstruction(
       mint.publicKey,
       decimals,
       wallet.publicKey,
       null,
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   const txSig = await sendAndConfirmTransaction(
     provider.connection,
     transaction,
-    [wallet.payer, mint],
+    [wallet.payer, mint]
   );
   console.log(`Transaction Signature: ${txSig}`);
 });
@@ -1365,7 +1365,7 @@ it("Create Token Accounts and Mint Tokens", async () => {
       wallet.publicKey,
       mint.publicKey,
       TOKEN_2022_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
     ),
     createAssociatedTokenAccountInstruction(
       wallet.publicKey,
@@ -1373,7 +1373,7 @@ it("Create Token Accounts and Mint Tokens", async () => {
       recipient.publicKey,
       mint.publicKey,
       TOKEN_2022_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
     ),
     createMintToInstruction(
       mint.publicKey,
@@ -1381,15 +1381,15 @@ it("Create Token Accounts and Mint Tokens", async () => {
       wallet.publicKey,
       amount,
       [],
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   const txSig = await sendAndConfirmTransaction(
     connection,
     transaction,
     [wallet.payer],
-    { skipPreflight: true },
+    { skipPreflight: true }
   );
 
   console.log(`Transaction Signature: ${txSig}`);
@@ -1427,14 +1427,14 @@ it("Create ExtraAccountMetaList Account", async () => {
     .instruction();
 
   const transaction = new Transaction().add(
-    initializeExtraAccountMetaListInstruction,
+    initializeExtraAccountMetaListInstruction
   );
 
   const txSig = await sendAndConfirmTransaction(
     provider.connection,
     transaction,
     [wallet.payer],
-    { skipPreflight: true },
+    { skipPreflight: true }
   );
   console.log("Transaction Signature:", txSig);
 });
@@ -1479,12 +1479,12 @@ it("Transfer Hook with Extra Account Meta", async () => {
     wallet.publicKey,
     amount,
     [],
-    TOKEN_PROGRAM_ID,
+    TOKEN_PROGRAM_ID
   );
 
   // Sync sender WSol token account
   const syncWrappedSolInstruction = createSyncNativeInstruction(
-    senderWSolTokenAccount,
+    senderWSolTokenAccount
   );
 
   // This helper function will automatically derive all the additional accounts that were defined in the ExtraAccountMetas account
@@ -1499,21 +1499,21 @@ it("Transfer Hook with Extra Account Meta", async () => {
       decimals,
       [],
       "confirmed",
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
   const transaction = new Transaction().add(
     solTransferInstruction,
     syncWrappedSolInstruction,
     approveInstruction,
-    transferInstruction,
+    transferInstruction
   );
 
   const txSig = await sendAndConfirmTransaction(
     connection,
     transaction,
     [wallet.payer],
-    { skipPreflight: true },
+    { skipPreflight: true }
   );
   console.log("Transfer Signature:", txSig);
 });
@@ -1696,7 +1696,7 @@ like this:
 ```js
 const [counterPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("counter"), wallet.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 

@@ -325,6 +325,7 @@ mutable.
 
 To see this in action, view this
 [transaction in the explorer](https://explorer.solana.com/tx/ExB9YQJiSzTZDBqx4itPaa4TpT8VK4Adk7GU5pSoGEzNz9fa7PPZsUxssHGrBbJRnCvhoKgLCWnAycFB7VYDbBg?cluster=devnet).
+
 </Callout>
 
 ### Why CPIs matter?
@@ -847,6 +848,7 @@ After receiving the airdrop, attempt the deployment again.
 
 Ensure your Solana CLI is configured for the correct network (`Localnet`,
 `devnet`, `testnet`, or `mainnet-beta`) before deploying or requesting airdrops.
+
 </Callout>
 
 If you encounter the following error during program deployment, it indicates
@@ -927,7 +929,7 @@ import {
 } from "@solana-developers/helpers";
 
 const PROGRAM_ID = new PublicKey(
-  "AzKatnACpNwQxWRs2YyPovsGhgsYVBiTmC3TL4t72eJW",
+  "AzKatnACpNwQxWRs2YyPovsGhgsYVBiTmC3TL4t72eJW"
 );
 
 const LOCALHOST_RPC_URL = "http://localhost:8899";
@@ -941,17 +943,17 @@ await airdropIfRequired(
   connection,
   userKeypair.publicKey,
   AIRDROP_AMOUNT,
-  MINIMUM_BALANCE_FOR_RENT_EXEMPTION,
+  MINIMUM_BALANCE_FOR_RENT_EXEMPTION
 );
 
 const [tokenMintPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("token_mint")],
-  PROGRAM_ID,
+  PROGRAM_ID
 );
 
 const [tokenAuthPDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("token_auth")],
-  PROGRAM_ID,
+  PROGRAM_ID
 );
 
 const INITIALIZE_MINT_INSTRUCTION = 3;
@@ -975,7 +977,7 @@ try {
   const transactionSignature = await sendAndConfirmTransaction(
     connection,
     transaction,
-    [userKeypair],
+    [userKeypair]
   );
   const explorerLink = getExplorerLink("transaction", transactionSignature);
 
@@ -983,7 +985,7 @@ try {
 } catch (error) {
   if (error instanceof Error) {
     throw new Error(
-      `Failed to initialize program token mint: ${error.message}`,
+      `Failed to initialize program token mint: ${error.message}`
     );
   } else {
     throw new Error("An unknown error occurred");
@@ -1033,4 +1035,5 @@ something like it on your own!
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=ade5d386-809f-42c2-80eb-a6c04c471f53)!
+
 </Callout>

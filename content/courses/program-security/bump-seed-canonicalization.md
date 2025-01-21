@@ -366,7 +366,7 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
       connection,
       attacker.publicKey,
       1 * LAMPORTS_PER_SOL,
-      0.5 * LAMPORTS_PER_SOL,
+      0.5 * LAMPORTS_PER_SOL
     );
     const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
 
@@ -376,7 +376,7 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
       try {
         const pda = anchor.web3.PublicKey.createProgramAddressSync(
           [attacker.publicKey.toBuffer(), Buffer.from([i])],
-          program.programId,
+          program.programId
         );
         await program.methods
           .createUserInsecure(i)
@@ -407,7 +407,7 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
         if (
           error instanceof Error &&
           !error.message.includes(
-            "Invalid seeds, address must fall off the curve",
+            "Invalid seeds, address must fall off the curve"
           )
         ) {
           console.error(error);
@@ -419,8 +419,8 @@ it("allows attacker to claim more than reward limit with insecure instruction ha
 
     console.log(
       `Attacker claimed ${successfulClaimCount} times and got ${Number(
-        ata.amount,
-      )} tokens`,
+        ata.amount
+      )} tokens`
     );
 
     expect(successfulClaimCount).to.be.greaterThan(1);
@@ -580,12 +580,12 @@ it("allows attacker to claim only once with secure instruction handlers", async 
       connection,
       attacker.publicKey,
       1 * LAMPORTS_PER_SOL,
-      0.5 * LAMPORTS_PER_SOL,
+      0.5 * LAMPORTS_PER_SOL
     );
     const ataKey = await getAssociatedTokenAddress(mint, attacker.publicKey);
     const [userPDA] = anchor.web3.PublicKey.findProgramAddressSync(
       [attacker.publicKey.toBuffer()],
-      program.programId,
+      program.programId
     );
 
     await program.methods
@@ -620,7 +620,7 @@ it("allows attacker to claim only once with secure instruction handlers", async 
       try {
         const pda = anchor.web3.PublicKey.createProgramAddressSync(
           [attacker.publicKey.toBuffer(), Buffer.from([i])],
-          program.programId,
+          program.programId
         );
         await program.methods
           .createUserSecure()
@@ -654,7 +654,7 @@ it("allows attacker to claim only once with secure instruction handlers", async 
           error instanceof Error &&
           !error.message.includes("Error Number: 2006") &&
           !error.message.includes(
-            "Invalid seeds, address must fall off the curve",
+            "Invalid seeds, address must fall off the curve"
           )
         ) {
           // Comment console error logs to see the test outputs properly
@@ -667,8 +667,8 @@ it("allows attacker to claim only once with secure instruction handlers", async 
 
     console.log(
       `Attacker claimed ${successfulClaimCount} times and got ${Number(
-        ata.amount,
-      )} tokens`,
+        ata.amount
+      )} tokens`
     );
 
     expect(Number(ata.amount)).to.equal(10);
@@ -709,4 +709,5 @@ them! If you find one in your own program, be sure to patch it right away.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=d3f6ca7a-11c8-421f-b7a3-d6c08ef1aa8b)!
+
 </Callout>

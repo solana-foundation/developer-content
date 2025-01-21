@@ -156,13 +156,13 @@ client with expo, the emulator will automatically update every time you save
 your code.
 
 <Callout title="Reminder">
-You must have
-[fake wallet](https://github.com/solana-mobile/mobile-wallet-adapter/tree/main/android/fakewallet)
-running on the same Android emulator to be able to test out transactions, as
-explained in the
-[Solana mobile development set up docs](https://docs.solanamobile.com/getting-started/development-setup)
-or you must have a real wallet app, like Phantom or Solflare, installed and set
-up on your emulator.
+  You must have [fake
+  wallet](https://github.com/solana-mobile/mobile-wallet-adapter/tree/main/android/fakewallet)
+  running on the same Android emulator to be able to test out transactions, as
+  explained in the [Solana mobile development set up
+  docs](https://docs.solanamobile.com/getting-started/development-setup) or you
+  must have a real wallet app, like Phantom or Solflare, installed and set up on
+  your emulator.
 </Callout>
 
 ## Writing a Solana Program with Cash App Functionalities
@@ -906,23 +906,23 @@ it("A to B user flow", async () => {
 
   const [myAccount] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("cash-account"), myWallet.publicKey.toBuffer()],
-    program.programId,
+    program.programId
   );
 
   const [yourAccount] = await anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from("cash-account"), yourWallet.publicKey.toBuffer()],
-    program.programId,
+    program.programId
   );
 
   console.log("requesting airdrop");
   const airdropTx = await provider.connection.requestAirdrop(
     yourWallet.publicKey,
-    5 * anchor.web3.LAMPORTS_PER_SOL,
+    5 * anchor.web3.LAMPORTS_PER_SOL
   );
   await provider.connection.confirmTransaction(airdropTx);
 
   let yourBalance = await program.provider.connection.getBalance(
-    yourWallet.publicKey,
+    yourWallet.publicKey
   );
   console.log("Your wallet balance:", yourBalance);
 });
@@ -1024,7 +1024,7 @@ export function UseCashAppProgramAccount(user: PublicKey) {
   const cashAppProgramId = new PublicKey("11111111111111111111111111111111");
 
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com"),
+    () => new Connection("https://api.devnet.solana.com")
   );
 
   const [cashAppPDA] = useMemo(() => {
@@ -1036,7 +1036,7 @@ export function UseCashAppProgramAccount(user: PublicKey) {
     return new Program<CashAppProgram>(
       idl as CashAppProgram,
       cashAppProgramId,
-      { connection },
+      { connection }
     );
   }, [cashAppProgramId]);
 
@@ -1046,7 +1046,7 @@ export function UseCashAppProgramAccount(user: PublicKey) {
       cashAppProgramId: cashAppProgramId,
       cashAppPDA: cashAppPDA,
     }),
-    [cashAppProgram, cashAppProgramId, cashAppPDA],
+    [cashAppProgram, cashAppProgramId, cashAppPDA]
   );
 
   return value;
@@ -1088,10 +1088,10 @@ parameter.
 export function UsePendingRequestAccount(
   user: PublicKey,
   count: number,
-  cashAppProgramId: PublicKey,
+  cashAppProgramId: PublicKey
 ) {
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com"),
+    () => new Connection("https://api.devnet.solana.com")
   );
 
   bigNumber = new BN(count);
@@ -1103,7 +1103,7 @@ export function UsePendingRequestAccount(
     ];
     return PublicKey.findProgramAddressSync(
       pendingRequestSeed,
-      cashAppProgramId,
+      cashAppProgramId
     );
   }, [cashAppProgramId]);
 
@@ -1111,7 +1111,7 @@ export function UsePendingRequestAccount(
     () => ({
       pendingRequestPDA: pendingRequestPDA,
     }),
-    [pendingRequestPDA],
+    [pendingRequestPDA]
   );
 
   return value;
@@ -1404,7 +1404,7 @@ accounts.
 
 ```tsx
 const [connection] = useState(
-  () => new Connection("https://api.devnet.solana.com"),
+  () => new Connection("https://api.devnet.solana.com")
 );
 
 const depositFunds = useCallback(
@@ -1434,19 +1434,19 @@ const depositFunds = useCallback(
         });
 
         return signedTransactions[0];
-      },
+      }
     );
 
     let txSignature = await connection.sendRawTransaction(
       signedTransactions.serialize(),
       {
         skipPreflight: true,
-      },
+      }
     );
 
     const confirmationResult = await connection.confirmTransaction(
       txSignature,
-      "confirmed",
+      "confirmed"
     );
 
     if (confirmationResult.value.err) {
@@ -1455,7 +1455,7 @@ const depositFunds = useCallback(
       console.log("Transaction successfully submitted!");
     }
   },
-  [authorizeSession, connection, cashAppPDA],
+  [authorizeSession, connection, cashAppPDA]
 );
 ```
 
@@ -1529,7 +1529,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
   const { cashAppProgram } = UseCashAppProgram(address);
 
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com"),
+    () => new Connection("https://api.devnet.solana.com")
   );
 
   const DepositModal = () => (
@@ -1569,7 +1569,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
               try {
                 if (!cashAppProgram || !selectedAccount) {
                   console.warn(
-                    "Program/wallet is not initialized yet. Try connecting a wallet first.",
+                    "Program/wallet is not initialized yet. Try connecting a wallet first."
                   );
                   return;
                 }
@@ -1577,7 +1577,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
 
                 alertAndLog(
                   "Funds deposited into cash account ",
-                  "See console for logged transaction.",
+                  "See console for logged transaction."
                 );
                 console.log(deposit);
               } finally {
@@ -1635,7 +1635,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
               try {
                 if (!cashAppProgram || !selectedAccount) {
                   console.warn(
-                    "Program/wallet is not initialized yet. Try connecting a wallet first.",
+                    "Program/wallet is not initialized yet. Try connecting a wallet first."
                   );
                   return;
                 }
@@ -1643,7 +1643,7 @@ export function AccountButtonGroup({ address }: { address: PublicKey }) {
 
                 alertAndLog(
                   "Funds withdrawn from cash account ",
-                  "See console for logged transaction.",
+                  "See console for logged transaction."
                 );
                 console.log(deposit);
               } finally {
@@ -1722,7 +1722,7 @@ const [pendingRequestPDA] = useMemo(() => {
   ];
   return PublicKey.findProgramAddressSync(
     [pendingRequestSeed],
-    cashAppProgramId,
+    cashAppProgramId
   );
 }, [cashAppProgramId]);
 
@@ -1874,17 +1874,17 @@ const App: React.FC<Props> = ({ navigation }) => {
       </View>
       <View style={styles.keypad}>
         <View style={styles.row}>
-          {[1, 2, 3].map(number => (
+          {[1, 2, 3].map((number) => (
             <NumberButton key={number} number={number.toString()} />
           ))}
         </View>
         <View style={styles.row}>
-          {[4, 5, 6].map(number => (
+          {[4, 5, 6].map((number) => (
             <NumberButton key={number} number={number.toString()} />
           ))}
         </View>
         <View style={styles.row}>
-          {[7, 8, 9].map(number => (
+          {[7, 8, 9].map((number) => (
             <NumberButton key={number} number={number.toString()} />
           ))}
         </View>
@@ -1935,7 +1935,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
   const newAmount = new anchor.BN(inputValue);
 
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com"),
+    () => new Connection("https://api.devnet.solana.com")
   );
   const { authorizeSession, selectedAccount } = useAuthorization();
   const user = selectedAccount.publicKey;
@@ -1972,19 +1972,19 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
           });
 
           return signedTransactions[0];
-        },
+        }
       );
 
       let txSignature = await connection.sendRawTransaction(
         signedTransactions.serialize(),
         {
           skipPreflight: true,
-        },
+        }
       );
 
       const confirmationResult = await connection.confirmTransaction(
         txSignature,
-        "confirmed",
+        "confirmed"
       );
 
       if (confirmationResult.value.err) {
@@ -1993,7 +1993,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
         console.log("Transaction successfully submitted!");
       }
     },
-    [authorizeSession, connection, cashAppPDA],
+    [authorizeSession, connection, cashAppPDA]
   );
 
   return (
@@ -2013,7 +2013,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
             try {
               if (!cashAppProgram || !selectedAccount) {
                 console.warn(
-                  "Program/wallet is not initialized yet. Try connecting a wallet first.",
+                  "Program/wallet is not initialized yet. Try connecting a wallet first."
                 );
                 return;
               }
@@ -2021,7 +2021,7 @@ const PayScreen: React.FC<Props> = ({ route, navigation }) => {
 
               alertAndLog(
                 "Funds deposited into cash account ",
-                "See console for logged transaction.",
+                "See console for logged transaction."
               );
               console.log(deposit);
             } finally {
@@ -2087,7 +2087,7 @@ export function AddFriend({ address }: { address: PublicKey }) {
   const [pubkey, setPubkey] = useState("");
   const [signingInProgress, setSigningInProgress] = useState(false);
   const [connection] = useState(
-    () => new Connection("https://api.devnet.solana.com"),
+    () => new Connection("https://api.devnet.solana.com")
   );
   const { authorizeSession, selectedAccount } = useAuthorization();
   const { cashAppProgram, cashAppPDA, friends } = UseCashAppProgram(address);
@@ -2120,19 +2120,19 @@ export function AddFriend({ address }: { address: PublicKey }) {
           });
 
           return signedTransactions[0];
-        },
+        }
       );
 
       let txSignature = await connection.sendRawTransaction(
         signedTransactions.serialize(),
         {
           skipPreflight: true,
-        },
+        }
       );
 
       const confirmationResult = await connection.confirmTransaction(
         txSignature,
-        "confirmed",
+        "confirmed"
       );
 
       if (confirmationResult.value.err) {
@@ -2141,7 +2141,7 @@ export function AddFriend({ address }: { address: PublicKey }) {
         console.log("Transaction successfully submitted!");
       }
     },
-    [authorizeSession, connection, cashAppPDA],
+    [authorizeSession, connection, cashAppPDA]
   );
 
   return (
@@ -2196,13 +2196,13 @@ export function AddFriend({ address }: { address: PublicKey }) {
               const signedTransaction = await addFriend(cashAppProgram);
               alertAndLog(
                 "Transaction signed",
-                "View recent transactions for more information.",
+                "View recent transactions for more information."
               );
               console.log(signedTransaction);
             } catch (err: any) {
               alertAndLog(
                 "Error during signing",
-                err instanceof Error ? err.message : err,
+                err instanceof Error ? err.message : err
               );
             } finally {
               setSigningInProgress(false);
@@ -2456,7 +2456,7 @@ const transferFunds = useCallback(
           const recipientSeed = pubkey.toBuffer();
           return PublicKey.findProgramAddressSync(
             [recipientSeed],
-            cashAppProgramId,
+            cashAppProgramId
           );
         }, [cashAppProgramId]);
 
@@ -2479,19 +2479,19 @@ const transferFunds = useCallback(
         });
 
         return signedTransactions[0];
-      },
+      }
     );
 
     let txSignature = await connection.sendRawTransaction(
       signedTransactions.serialize(),
       {
         skipPreflight: true,
-      },
+      }
     );
 
     const confirmationResult = await connection.confirmTransaction(
       txSignature,
-      "confirmed",
+      "confirmed"
     );
 
     if (confirmationResult.value.err) {
@@ -2500,7 +2500,7 @@ const transferFunds = useCallback(
       console.log("Transaction successfully submitted!");
     }
   },
-  [authorizeSession, connection, cashAppPDA],
+  [authorizeSession, connection, cashAppPDA]
 );
 ```
 

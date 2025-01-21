@@ -23,7 +23,7 @@ const programId = new PublicKey("G1DCNUQTSGHehwdLCAmRyAG8hf51eCHrLNUqkgGKYASj");
 
 let [pda, bump] = PublicKey.findProgramAddressSync(
   [Buffer.from("test")],
-  programId,
+  programId
 );
 console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
 // you will find the result is different from `createProgramAddress`.
@@ -95,7 +95,7 @@ import {
 (async () => {
   // program id
   const programId = new PublicKey(
-    "7ZP42kRwUQ2zgbqXoaXzAFaiQnDyp6swNktTSv8mNQGN",
+    "7ZP42kRwUQ2zgbqXoaXzAFaiQnDyp6swNktTSv8mNQGN"
   );
 
   // connection
@@ -105,14 +105,14 @@ import {
   const feePayer = Keypair.generate();
   const feePayerAirdropSignature = await connection.requestAirdrop(
     feePayer.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
   await connection.confirmTransaction(feePayerAirdropSignature);
 
   // setup pda
   let [pda, bump] = await PublicKey.findProgramAddress(
     [feePayer.publicKey.toBuffer()],
-    programId,
+    programId
   );
   console.log(`bump: ${bump}, pubkey: ${pda.toBase58()}`);
 
@@ -144,7 +144,7 @@ import {
       ],
       data: Buffer.from(new Uint8Array([data_size, bump])),
       programId: programId,
-    }),
+    })
   );
 
   console.log(`txhash: ${await connection.sendTransaction(tx, [feePayer])}`);

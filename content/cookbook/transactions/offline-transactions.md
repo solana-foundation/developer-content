@@ -36,11 +36,11 @@ import * as bs58 from "bs58";
   // alice and feePayer are signer in this tx
   const feePayer = Keypair.generate();
   await connection.confirmTransaction(
-    await connection.requestAirdrop(feePayer.publicKey, LAMPORTS_PER_SOL),
+    await connection.requestAirdrop(feePayer.publicKey, LAMPORTS_PER_SOL)
   );
   const alice = Keypair.generate();
   await connection.confirmTransaction(
-    await connection.requestAirdrop(alice.publicKey, LAMPORTS_PER_SOL),
+    await connection.requestAirdrop(alice.publicKey, LAMPORTS_PER_SOL)
   );
   const bob = Keypair.generate();
 
@@ -50,7 +50,7 @@ import * as bs58 from "bs58";
       fromPubkey: alice.publicKey,
       toPubkey: bob.publicKey,
       lamports: 0.1 * LAMPORTS_PER_SOL,
-    }),
+    })
   );
   tx.recentBlockhash = (await connection.getRecentBlockhash()).blockhash;
   tx.feePayer = feePayer.publicKey;
@@ -61,7 +61,7 @@ import * as bs58 from "bs58";
   // the return signature should be 64 bytes.
   let feePayerSignature = nacl.sign.detached(
     realDataNeedToSign,
-    feePayer.secretKey,
+    feePayer.secretKey
   );
   let aliceSignature = nacl.sign.detached(realDataNeedToSign, alice.secretKey);
 
@@ -71,14 +71,14 @@ import * as bs58 from "bs58";
   let verifyFeePayerSignatureResult = nacl.sign.detached.verify(
     realDataNeedToSign,
     feePayerSignature,
-    feePayer.publicKey.toBytes(), // you should use the raw pubkey (32 bytes) to verify
+    feePayer.publicKey.toBytes() // you should use the raw pubkey (32 bytes) to verify
   );
   console.log(`verify feePayer signature: ${verifyFeePayerSignatureResult}`);
 
   let verifyAliceSignatureResult = nacl.sign.detached.verify(
     realDataNeedToSign,
     aliceSignature,
-    alice.publicKey.toBytes(),
+    alice.publicKey.toBytes()
   );
   console.log(`verify alice signature: ${verifyAliceSignatureResult}`);
 
@@ -91,7 +91,7 @@ import * as bs58 from "bs58";
 
     // 4. Send transaction
     console.log(
-      `txhash: ${await connection.sendRawTransaction(recoverTx.serialize())}`,
+      `txhash: ${await connection.sendRawTransaction(recoverTx.serialize())}`
     );
   }
 
@@ -106,7 +106,7 @@ import * as bs58 from "bs58";
 
     // 4. Send transaction
     console.log(
-      `txhash: ${await connection.sendRawTransaction(recoverTx.serialize())}`,
+      `txhash: ${await connection.sendRawTransaction(recoverTx.serialize())}`
     );
   }
 
@@ -156,19 +156,19 @@ import base58 from "bs58";
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   const alicePublicKey = new PublicKey(
-    "5YNmS1R9nNSCDzb5a7mMJ1dwK9uHeAAF4CmPEwKgVWr8",
+    "5YNmS1R9nNSCDzb5a7mMJ1dwK9uHeAAF4CmPEwKgVWr8"
   );
   const bobKeypair = Keypair.fromSecretKey(
     base58.decode(
-      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp",
-    ),
+      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp"
+    )
   );
   const tokenAddress = new PublicKey(
-    "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr",
+    "Gh9ZwEmdLJ8DscKNTkTqPbNwLNNBjuSzaG9Vp2KGtKJr"
   );
   const bobTokenAddress = await getAssociatedTokenAddress(
     tokenAddress,
-    bobKeypair.publicKey,
+    bobKeypair.publicKey
   );
 
   // Alice may not have a token account, so Bob creates one if not
@@ -176,7 +176,7 @@ import base58 from "bs58";
     connection,
     bobKeypair, // Bob pays the fee to create it
     tokenAddress, // which token the account is for
-    alicePublicKey, // who the token account is for
+    alicePublicKey // who the token account is for
   );
 
   // Get the details about the token mint
@@ -197,7 +197,7 @@ import base58 from "bs58";
       fromPubkey: alicePublicKey,
       toPubkey: bobKeypair.publicKey,
       lamports: 0.01 * LAMPORTS_PER_SOL,
-    }),
+    })
   );
 
   // Transfer 1 token from Bob -> Alice
@@ -208,8 +208,8 @@ import base58 from "bs58";
       aliceTokenAccount.address, // destination
       bobKeypair.publicKey, // owner of source account
       1 * 10 ** tokenMint.decimals, // amount to transfer
-      tokenMint.decimals, // decimals of token
-    ),
+      tokenMint.decimals // decimals of token
+    )
   );
 
   // Partial sign as Bob
@@ -225,7 +225,7 @@ import base58 from "bs58";
 
   // The caller of this can convert it back to a transaction object:
   const recoveredTransaction = Transaction.from(
-    Buffer.from(transactionBase64, "base64"),
+    Buffer.from(transactionBase64, "base64")
   );
 })();
 ```
@@ -262,7 +262,7 @@ import {
   // Fund our wallet with 1 SOL
   const airdropSignature = await connection.requestAirdrop(
     feePayer.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
   await connection.confirmTransaction(airdropSignature);
 
@@ -280,7 +280,7 @@ import {
       newAccountPubkey: nonceAccount.publicKey,
       lamports:
         await connection.getMinimumBalanceForRentExemption(
-          NONCE_ACCOUNT_LENGTH,
+          NONCE_ACCOUNT_LENGTH
         ),
       space: NONCE_ACCOUNT_LENGTH,
       programId: SystemProgram.programId,
@@ -289,11 +289,11 @@ import {
     SystemProgram.nonceInitialize({
       noncePubkey: nonceAccount.publicKey, // nonce account pubkey
       authorizedPubkey: nonceAccountAuth.publicKey, // nonce account authority (for advance and close)
-    }),
+    })
   );
 
   console.log(
-    `txhash: ${await sendAndConfirmTransaction(connection, tx, [feePayer, nonceAccount])}`,
+    `txhash: ${await sendAndConfirmTransaction(connection, tx, [feePayer, nonceAccount])}`
   );
 })();
 ```
@@ -313,7 +313,7 @@ import {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
   const nonceAccountPubkey = new PublicKey(
-    "7H18z3v3rZEoKiwY3kh8DLn9eFT6nFCQ2m4kiC7RZ3a4",
+    "7H18z3v3rZEoKiwY3kh8DLn9eFT6nFCQ2m4kiC7RZ3a4"
   );
 
   let accountInfo = await connection.getAccountInfo(nonceAccountPubkey);
@@ -348,7 +348,7 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
   // Fund our wallet with 1 SOL
   const airdropSignature = await connection.requestAirdrop(
     feePayer.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
   await connection.confirmTransaction(airdropSignature);
 
@@ -358,7 +358,7 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
   const nonceAccountAuth = await getKeypairFromFile();
 
   const nonceAccountPubkey = new PublicKey(
-    "7H18z3v3rZEoKiwY3kh8DLn9eFT6nFCQ2m4kiC7RZ3a4",
+    "7H18z3v3rZEoKiwY3kh8DLn9eFT6nFCQ2m4kiC7RZ3a4"
   );
   let nonceAccountInfo = await connection.getAccountInfo(nonceAccountPubkey);
   let nonceAccount = NonceAccount.fromAccountData(nonceAccountInfo.data);
@@ -374,14 +374,14 @@ import { getKeypairFromFile } from "@solana-developers/helpers";
       fromPubkey: feePayer.publicKey,
       toPubkey: nonceAccountAuth.publicKey,
       lamports: 1,
-    }),
+    })
   );
   // assign `nonce` as recentBlockhash
   tx.recentBlockhash = nonceAccount.nonce;
   tx.feePayer = feePayer.publicKey;
   tx.sign(
     feePayer,
-    nonceAccountAuth,
+    nonceAccountAuth
   ); /* fee payer + nonce account authority + ... */
 
   console.log(`txhash: ${await connection.sendRawTransaction(tx.serialize())}`);

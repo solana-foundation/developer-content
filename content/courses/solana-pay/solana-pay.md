@@ -6,8 +6,7 @@ objectives:
   - Use the `@solana/pay` library to create Solana Pay transaction requests
   - Partially sign transactions and implement transaction gating based on
     specific conditions
-description:
-  "How to create Solana Pay payment requests using links and QR codes."
+description: "How to create Solana Pay payment requests using links and QR codes."
 ---
 
 ## Summary
@@ -141,7 +140,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   request: NextApiRequest,
-  response: NextApiResponse,
+  response: NextApiResponse
 ) {
   // Handle the request
 }
@@ -163,7 +162,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   request: NextApiRequest,
-  response: NextApiResponse,
+  response: NextApiResponse
 ) {
   if (request.method === "GET") {
     return get(response);
@@ -204,7 +203,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   request: NextApiRequest,
-  response: NextApiResponse,
+  response: NextApiResponse
 ) {
   if (request.method === "GET") {
     return get(response);
@@ -494,7 +493,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   request: NextApiRequest,
-  response: NextApiResponse,
+  response: NextApiResponse
 ) {
   if (request.method === "GET") {
     return get(response);
@@ -639,7 +638,7 @@ Using the empty helper functions and the new imports, we can fill in the
 async function buildTransaction(
   account: PublicKey,
   reference: PublicKey,
-  id: string,
+  id: string
 ): Promise<string> {
   const userState = await fetchUserState(account);
 
@@ -667,7 +666,7 @@ async function buildTransaction(
   }
 
   transaction.add(
-    await createCheckInInstruction(account, reference, currentLocation),
+    await createCheckInInstruction(account, reference, currentLocation)
   );
 
   transaction.partialSign(eventOrganizer);
@@ -693,13 +692,13 @@ async function fetchUserState(account: PublicKey): Promise<UserState | null> {
 
 function verifyCorrectLocation(
   userState: UserState | null,
-  currentLocation: Location,
+  currentLocation: Location
 ): boolean {
   return false;
 }
 
 async function createInitUserInstruction(
-  account: PublicKey,
+  account: PublicKey
 ): Promise<TransactionInstruction> {
   throw "";
 }
@@ -707,7 +706,7 @@ async function createInitUserInstruction(
 async function createCheckInInstruction(
   account: PublicKey,
   reference: PublicKey,
-  location: Location,
+  location: Location
 ): Promise<TransactionInstruction> {
   throw "";
 }
@@ -724,7 +723,7 @@ fetches that account, returning null if it doesn't exist.
 async function fetchUserState(account: PublicKey): Promise<UserState | null> {
   const userStatePDA = PublicKey.findProgramAddressSync(
     [gameId.toBuffer(), account.toBuffer()],
-    program.programId,
+    program.programId
   )[0];
 
   try {
@@ -751,14 +750,14 @@ it'll return false.
 ```typescript
 function verifyCorrectLocation(
   userState: UserState | null,
-  currentLocation: Location,
+  currentLocation: Location
 ): boolean {
   if (!userState) {
     return currentLocation.index === 1;
   }
 
   const lastLocation = locations.find(
-    location => location.key.toString() === userState.lastLocation.toString(),
+    (location) => location.key.toString() === userState.lastLocation.toString()
   );
 
   if (!lastLocation || currentLocation.index !== lastLocation.index + 1) {
@@ -777,7 +776,7 @@ needs to add `reference` to the instructions list of keys.
 
 ```typescript
 async function createInitUserInstruction(
-  account: PublicKey,
+  account: PublicKey
 ): Promise<TransactionInstruction> {
   const initializeInstruction = await program.methods
     .initialize(gameId)
@@ -790,7 +789,7 @@ async function createInitUserInstruction(
 async function createCheckInInstruction(
   account: PublicKey,
   reference: PublicKey,
-  location: Location,
+  location: Location
 ): Promise<TransactionInstruction> {
   const checkInInstruction = await program.methods
     .checkIn(gameId, location.key)
@@ -846,6 +845,6 @@ Get creative with this! The Solana pay spec opens up a lot of doors for unique
 use cases.
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=3c7e5796-c433-4575-93e1-1429f718aa10)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=3c7e5796-c433-4575-93e1-1429f718aa10)!
 </Callout>

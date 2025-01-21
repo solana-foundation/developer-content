@@ -114,7 +114,7 @@ const mint = await createMint(
   decimals, // Decimals of Mint
   undefined, // Optional keypair
   undefined, // Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -129,7 +129,7 @@ const tokenAccount = await createAccount(
   payer.publicKey, // Token Account owner
   undefined, // Optional keypair, default to Associated Token Account
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -153,7 +153,7 @@ const reallocateInstruction = createReallocateInstruction(
   extensions, // Extensions to reallocate for
   payer.publicKey, // Token Account owner
   undefined, // Additional signers
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -167,7 +167,7 @@ const enableRequiredMemoTransfersInstruction =
     tokenAccount, // Token Account address
     payer.publicKey, // Token Account Owner
     undefined, // Additional signers
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -181,19 +181,19 @@ enabled.
 // Add instructions to new transaction
 const transaction = new Transaction().add(
   reallocateInstruction,
-  enableRequiredMemoTransfersInstruction,
+  enableRequiredMemoTransfersInstruction
 );
 
 // Send Transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer],
+  [payer]
 );
 
 console.log(
   "\nReallocate:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 

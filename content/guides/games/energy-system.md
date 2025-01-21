@@ -172,7 +172,7 @@ case, devnet):
 ```js
 export const connection = new Connection(
   "https://api.devnet.solana.com",
-  "confirmed",
+  "confirmed"
 );
 ```
 
@@ -193,7 +193,7 @@ account.
 ```js
 const [pda] = PublicKey.findProgramAddressSync(
   [Buffer.from("player", "utf8"), publicKey.toBuffer()],
-  new PublicKey(LUMBERJACK_PROGRAM_ID),
+  new PublicKey(LUMBERJACK_PROGRAM_ID)
 );
 
 const transaction = program.methods

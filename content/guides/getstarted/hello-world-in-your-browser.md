@@ -227,7 +227,7 @@ transaction.add(
   new web3.TransactionInstruction({
     keys: [],
     programId: new web3.PublicKey(pg.PROGRAM_ID),
-  }),
+  })
 );
 ```
 
@@ -243,7 +243,7 @@ console.log("Sending transaction...");
 const txHash = await web3.sendAndConfirmTransaction(
   pg.connection,
   transaction,
-  [pg.wallet.keypair],
+  [pg.wallet.keypair]
 );
 console.log("Transaction sent with hash:", txHash);
 ```

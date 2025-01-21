@@ -1,0 +1,84 @@
+name: Code Snippets testing
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "code/**/*.test.ts" # Only trigger on test file changes
+  schedule:
+    - cron: "0 0 * * *" # Run daily at midnight UTC
+
+jobs:
+  snippets-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed test files
+        id: changed-files
+        uses: tj-actions/changed-files@v39
+        with:
+          files: |
+            code/**/*.test.ts
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Change Directory
+        run: cd code
+
+      - name: Run tests on changed files
+        if: github.event_name == 'pull_request'
+        run: |
+          CHANGED_FILES="${{ steps.changed-files.outputs.all_changed_files }}"
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No test files were changed"
+            exit 0
+          fi
+
+          # Create array for test files
+          declare -a test_files=()
+
+          # Collect only .test.ts files
+          for file in $CHANGED_FILES; do
+            if [[ $file == *.test.ts ]]; then
+              test_files+=("$file")
+              echo "Added test file: $file"
+            fi
+          done
+
+          # If we found test files, run them together
+          if [ ${#test_files[@]} -gt 0 ]; then
+            echo "Running tests for the following files:"
+            printf '%s\n' "${test_files[@]}"
+            
+            # Run all test files in a single command
+            node --import tsx --test "${test_files[@]}" || exit 1
+          else
+            echo "No test files to run"
+          fi
+
+      - name: Run all tests
+        if: github.event_name == 'schedule'
+        run: |
+          echo "Running all tests in code directory"
+          pnpm turbo test

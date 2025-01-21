@@ -5,8 +5,7 @@ objectives:
     client applications
   - Become proficient in utilizing the SPL TypeScript library for comprehensive
     token operations
-description:
-  "Use mints with Token Extensions program from TS in web and mobile apps."
+description: "Use mints with Token Extensions program from TS in web and mobile apps."
 ---
 
 ## Summary
@@ -62,10 +61,12 @@ both the `TOKEN_PROGRAM_ID` and `TOKEN_2022_PROGRAM_ID` constants, along with
 all of its helper functions for creating and minting tokens that take a program
 ID as input.
 
-<Callout type="note">`spl-token` defaults to using the `TOKEN_PROGRAM_ID` unless
-otherwise specified. Make sure to explicitly pass the `TOKEN_2022_PROGRAM_ID`
-for all function calls related to the Token Extensions Program. Otherwise, you
-will get the following error: `TokenInvalidAccountOwnerError`. </Callout>
+<Callout type="note">
+  `spl-token` defaults to using the `TOKEN_PROGRAM_ID` unless otherwise
+  specified. Make sure to explicitly pass the `TOKEN_2022_PROGRAM_ID` for all
+  function calls related to the Token Extensions Program. Otherwise, you will
+  get the following error: `TokenInvalidAccountOwnerError`.{" "}
+</Callout>
 
 ### Considerations when working with both Token and Extension Tokens
 
@@ -101,7 +102,7 @@ const tokenAccount = await getOrCreateAssociatedTokenAccount(
   true,
   "finalized",
   { commitment: "finalized" },
-  tokenProgramId, // TOKEN_PROGRAM_ID for Token Program tokens and TOKEN_2022_PROGRAM_ID for Token Extensions Program tokens
+  tokenProgramId // TOKEN_PROGRAM_ID for Token Program tokens and TOKEN_2022_PROGRAM_ID for Token Extensions Program tokens
 );
 ```
 
@@ -111,7 +112,7 @@ To re-create the ATA's address from scratch, we can use the
 ```ts
 function findAssociatedTokenAddress(
   walletAddress: PublicKey,
-  tokenMintAddress: PublicKey,
+  tokenMintAddress: PublicKey
 ): PublicKey {
   return PublicKey.findProgramAddressSync(
     [
@@ -119,7 +120,7 @@ function findAssociatedTokenAddress(
       TOKEN_PROGRAM_ID.toBuffer(), // replace TOKEN_PROGRAM_ID with TOKEN_2022_PROGRAM_ID for Token22 tokens
       tokenMintAddress.toBuffer(),
     ],
-    ASSOCIATED_TOKEN_PROGRAM_ID,
+    ASSOCIATED_TOKEN_PROGRAM_ID
   )[0];
 }
 ```
@@ -134,7 +135,7 @@ tokens. All we have to do is provide the correct token program:
 ```ts
 const tokenAccounts = await connection.getTokenAccountsByOwner(
   walletPublicKey,
-  { programId: TOKEN_PROGRAM_ID }, // or TOKEN_2022_PROGRAM_ID
+  { programId: TOKEN_PROGRAM_ID } // or TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -146,18 +147,20 @@ function like `getTokenAccountsByOwner`, and then call it twice, once with
 const allOwnedTokens = [];
 const tokenAccounts = await connection.getTokenAccountsByOwner(
   wallet.publicKey,
-  { programId: TOKEN_PROGRAM_ID },
+  { programId: TOKEN_PROGRAM_ID }
 );
 const tokenExtensionAccounts = await connection.getTokenAccountsByOwner(
   wallet.publicKey,
-  { programId: TOKEN_2022_PROGRAM_ID },
+  { programId: TOKEN_2022_PROGRAM_ID }
 );
 
 allOwnedTokens.push(...tokenAccounts, ...tokenExtensionAccounts);
 ```
 
-<Callout type="note">It's likely you'll want to store and associate the token
-program with the token upon fetching.</Callout>
+<Callout type="note">
+  It's likely you'll want to store and associate the token program with the
+  token upon fetching.
+</Callout>
 
 #### Check owning program
 
@@ -176,13 +179,14 @@ const programId = accountInfo.value.owner; // will return TOKEN_PROGRAM_ID for T
 //we now use the programId to fetch the tokens
 const tokenAccounts = await connection.getTokenAccountsByOwner(
   wallet.publicKey,
-  { programId },
+  { programId }
 );
 ```
 
-<Callout type="note">After you fetch the owning program, it may be a good idea
-to save that owner and associate it with the mints/tokens you are
-handling.</Callout>
+<Callout type="note">
+  After you fetch the owning program, it may be a good idea to save that owner
+  and associate it with the mints/tokens you are handling.
+</Callout>
 
 ## Lab - Add Extension Token support to a script
 
@@ -305,7 +309,7 @@ export async function createAndMintToken(
   tokenProgramId: PublicKey,
   payer: Keypair,
   decimals: number,
-  mintAmount: number,
+  mintAmount: number
 ): Promise<PublicKey> {
   console.log("\\nCreating a new mint...");
   const mint = await createMint(
@@ -318,7 +322,7 @@ export async function createAndMintToken(
     {
       commitment: "finalized", // confirmOptions argument
     },
-    tokenProgramId,
+    tokenProgramId
   );
 
   console.log("\\nFetching mint info...");
@@ -336,7 +340,7 @@ export async function createAndMintToken(
     true,
     "finalized",
     { commitment: "finalized" },
-    tokenProgramId,
+    tokenProgramId
   );
 
   console.log(`Associated token account: ${tokenAccount.address.toBase58()}`);
@@ -351,7 +355,7 @@ export async function createAndMintToken(
     mintAmount,
     [payer],
     { commitment: "finalized" },
-    tokenProgramId,
+    tokenProgramId
   );
 
   return mint;
@@ -385,14 +389,14 @@ const tokenProgramMint = await createAndMintToken(
   TOKEN_PROGRAM_ID,
   payer,
   0,
-  1000,
+  1000
 );
 const tokenExtensionProgramMint = await createAndMintToken(
   connection,
   TOKEN_2022_PROGRAM_ID,
   payer,
   0,
-  1000,
+  1000
 );
 ```
 
@@ -454,7 +458,7 @@ export async function fetchTokenInfo(
   connection: Connection,
   owner: PublicKey,
   programId: PublicKey,
-  type: TokenTypeForDisplay,
+  type: TokenTypeForDisplay
 ): Promise<TokenInfoForDisplay[]> {
   const tokenAccounts = await connection.getTokenAccountsByOwner(owner, {
     programId,
@@ -469,7 +473,7 @@ export async function fetchTokenInfo(
       connection,
       accountData.mint,
       "finalized",
-      programId,
+      programId
     );
 
     ownedTokens.push({
@@ -500,14 +504,14 @@ myTokens.push(
     connection,
     payer.publicKey,
     TOKEN_PROGRAM_ID,
-    "Token Program",
+    "Token Program"
   )),
   ...(await fetchTokenInfo(
     connection,
     payer.publicKey,
     TOKEN_2022_PROGRAM_ID,
-    "Token Extensions Program",
-  )),
+    "Token Extensions Program"
+  ))
 );
 
 printTableData(myTokens);
@@ -539,7 +543,7 @@ The final function will look like this:
 
 export async function fetchTokenProgramFromAccount(
   connection: Connection,
-  mint: PublicKey,
+  mint: PublicKey
 ) {
   // Find the program ID from the mint
   const accountInfo = await connection.getParsedAccountInfo(mint);
@@ -564,11 +568,11 @@ import {
 // previous code
 const tokenProgramTokenProgram = await fetchTokenProgramFromAccount(
   connection,
-  tokenProgramMint,
+  tokenProgramMint
 );
 const tokenExtensionProgramTokenProgram = await fetchTokenProgramFromAccount(
   connection,
-  tokenExtensionProgramMint,
+  tokenExtensionProgramMint
 );
 
 if (!tokenProgramTokenProgram.equals(TOKEN_PROGRAM_ID))

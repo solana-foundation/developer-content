@@ -761,7 +761,7 @@ import { getMint, getAssociatedTokenAddressSync } from "@solana/spl-token";
 
 // metaplex token metadata program ID
 const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
-  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
 // metaplex setup
@@ -777,13 +777,13 @@ const metadata = {
 // reward token mint PDA
 const [rewardTokenMintPda] = anchor.web3.PublicKey.findProgramAddressSync(
   [Buffer.from("reward")],
-  pg.PROGRAM_ID,
+  pg.PROGRAM_ID
 );
 
 // player data account PDA
 const [playerPDA] = anchor.web3.PublicKey.findProgramAddressSync(
   [Buffer.from("player"), pg.wallet.publicKey.toBuffer()],
-  pg.PROGRAM_ID,
+  pg.PROGRAM_ID
 );
 
 // reward token mint metadata account address
@@ -795,7 +795,7 @@ const rewardTokenMintMetadataPDA = await metaplex
 // player token account address
 const playerTokenAccount = getAssociatedTokenAddressSync(
   rewardTokenMintPda,
-  pg.wallet.publicKey,
+  pg.wallet.publicKey
 );
 ```
 

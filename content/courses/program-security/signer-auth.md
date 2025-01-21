@@ -191,8 +191,8 @@ pub struct Vault {
 ```
 
 <Callout>
-When you use the `Signer` type, no other ownership or type checks are
-performed.
+  When you use the `Signer` type, no other ownership or type checks are
+  performed.
 </Callout>
 
 ### Using Anchor's `#[account(signer)]` Constraint
@@ -605,4 +605,5 @@ specific vulnerability discussed in each lesson.
 
 After completing the challenge, push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=26b3f41e-8241-416b-9cfa-05c5ab519d80)!
+
 </Callout>

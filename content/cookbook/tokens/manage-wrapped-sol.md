@@ -48,21 +48,21 @@ import bs58 from "bs58";
   // 5YNmS1R9nNSCDzb5a7mMJ1dwK9uHeAAF4CmPEwKgVWr8
   const feePayer = Keypair.fromSecretKey(
     bs58.decode(
-      "588FU4PktJWfGfxtzpAAXywSNt74AvtroVzGfKkVN1LwRuvHwKGr851uH8czM5qm4iqLbs1kKoMKtMJG4ATR7Ld2",
-    ),
+      "588FU4PktJWfGfxtzpAAXywSNt74AvtroVzGfKkVN1LwRuvHwKGr851uH8czM5qm4iqLbs1kKoMKtMJG4ATR7Ld2"
+    )
   );
 
   // G2FAbFQPFa5qKXCetoFZQEvF9BVvCKbvUZvodpVidnoY
   const alice = Keypair.fromSecretKey(
     bs58.decode(
-      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp",
-    ),
+      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp"
+    )
   );
 
   // remember to create ATA first
   let ata = await getAssociatedTokenAddress(
     NATIVE_MINT, // mint
-    alice.publicKey, // owner
+    alice.publicKey // owner
   );
 
   let amount = 1 * 1e9; /* Wrapped SOL's decimals is 9 */
@@ -75,10 +75,10 @@ import bs58 from "bs58";
       lamports: amount,
     }),
     // sync wrapped SOL balance
-    createSyncNativeInstruction(ata),
+    createSyncNativeInstruction(ata)
   );
   console.log(
-    `txhash: ${await sendAndConfirmTransaction(connection, tx, [feePayer, alice])}`,
+    `txhash: ${await sendAndConfirmTransaction(connection, tx, [feePayer, alice])}`
   );
 })();
 ```
@@ -113,21 +113,21 @@ import bs58 from "bs58";
   // 5YNmS1R9nNSCDzb5a7mMJ1dwK9uHeAAF4CmPEwKgVWr8
   const feePayer = Keypair.fromSecretKey(
     bs58.decode(
-      "588FU4PktJWfGfxtzpAAXywSNt74AvtroVzGfKkVN1LwRuvHwKGr851uH8czM5qm4iqLbs1kKoMKtMJG4ATR7Ld2",
-    ),
+      "588FU4PktJWfGfxtzpAAXywSNt74AvtroVzGfKkVN1LwRuvHwKGr851uH8czM5qm4iqLbs1kKoMKtMJG4ATR7Ld2"
+    )
   );
 
   // G2FAbFQPFa5qKXCetoFZQEvF9BVvCKbvUZvodpVidnoY
   const alice = Keypair.fromSecretKey(
     bs58.decode(
-      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp",
-    ),
+      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp"
+    )
   );
 
   // remember to create ATA first
   let ata = await getAssociatedTokenAddress(
     NATIVE_MINT, // mint
-    alice.publicKey, // owner
+    alice.publicKey // owner
   );
 
   let auxAccount = Keypair.generate();
@@ -147,21 +147,21 @@ import bs58 from "bs58";
     createInitializeAccountInstruction(
       auxAccount.publicKey,
       NATIVE_MINT,
-      alice.publicKey,
+      alice.publicKey
     ),
     // transfer WSOL
     createTransferInstruction(
       auxAccount.publicKey,
       ata,
       alice.publicKey,
-      amount,
+      amount
     ),
     // close aux account
     createCloseAccountInstruction(
       auxAccount.publicKey,
       alice.publicKey,
-      alice.publicKey,
-    ),
+      alice.publicKey
+    )
   );
 
   console.log(
@@ -169,7 +169,7 @@ import bs58 from "bs58";
       feePayer,
       auxAccount,
       alice,
-    ])}`,
+    ])}`
   );
 })();
 ```

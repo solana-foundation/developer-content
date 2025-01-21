@@ -44,7 +44,7 @@ async function transferSol() {
   const CLUSTER = "devnet";
   const rpc = createSolanaRpc(devnet(`https://api.${CLUSTER}.solana.com`));
   const rpcSubscriptions = createSolanaRpcSubscriptions(
-    devnet(`wss://api.${CLUSTER}.solana.com`),
+    devnet(`wss://api.${CLUSTER}.solana.com`)
   );
 
   // Create an airdrop function.
@@ -76,9 +76,9 @@ async function transferSol() {
   const { value: latestBlockhash } = await rpc.getLatestBlockhash().send();
   const transactionMessage = pipe(
     createTransactionMessage({ version: "legacy" }),
-    m => setTransactionMessageFeePayerSigner(keypairSigner, m),
-    m => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
-    m =>
+    (m) => setTransactionMessageFeePayerSigner(keypairSigner, m),
+    (m) => setTransactionMessageLifetimeUsingBlockhash(latestBlockhash, m),
+    (m) =>
       appendTransactionMessageInstructions(
         [
           getSetComputeUnitPriceInstruction({ microLamports: 5000n }),
@@ -88,8 +88,8 @@ async function transferSol() {
             amount: lamports(1_000_000n),
           }),
         ],
-        m,
-      ),
+        m
+      )
   );
 
   // Figure out how many compute units to budget for this transaction
@@ -99,24 +99,24 @@ async function transferSol() {
   const estimatedComputeUnits =
     await getComputeUnitEstimate(transactionMessage);
   console.log(
-    `Transaction is estimated to consume ${estimatedComputeUnits} compute units`,
+    `Transaction is estimated to consume ${estimatedComputeUnits} compute units`
   );
   const budgetedTransactionMessage = prependTransactionMessageInstructions(
     [getSetComputeUnitLimitInstruction({ units: estimatedComputeUnits })],
-    transactionMessage,
+    transactionMessage
   );
 
   // Sign and send the transaction.
   console.log("Signing and sending the transaction");
   const signedTx = await signTransactionMessageWithSigners(
-    budgetedTransactionMessage,
+    budgetedTransactionMessage
   );
   const signature = getSignatureFromTransaction(signedTx);
   console.log(
     "Sending transaction https://explorer.solana.com/tx/" +
       signature +
       "/?cluster=" +
-      CLUSTER,
+      CLUSTER
   );
   await sendAndConfirmTransaction(signedTx, { commitment: "confirmed" });
   console.log("Transaction confirmed");
@@ -145,12 +145,12 @@ import {
 
   const connection = new Connection(
     "https://api.devnet.solana.com",
-    "confirmed",
+    "confirmed"
   );
 
   const airdropSignature = await connection.requestAirdrop(
     fromKeypair.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
 
   await connection.confirmTransaction(airdropSignature);
@@ -162,7 +162,7 @@ import {
       fromPubkey: fromKeypair.publicKey,
       toPubkey: toKeypair.publicKey,
       lamports: lamportsToSend,
-    }),
+    })
   );
 
   await sendAndConfirmTransaction(connection, transferTransaction, [

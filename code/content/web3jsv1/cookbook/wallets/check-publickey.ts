@@ -1,4 +1,4 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Keypair } from "@solana/web3.js";
 
 // Note that Keypair.generate() will always give a public key that is valid for users
 
@@ -9,11 +9,20 @@ console.log(PublicKey.isOnCurve(key.toBytes()));
 
 // Valid public key
 const offCurveAddress = new PublicKey(
-  "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e",
+  "4BJXYkfvg37zEmBbsacZjeQDpTNx91KppxFJxRqrz48e"
 );
 
 // Not on the ed25519 curve, therefore not suitable for users
 console.log(PublicKey.isOnCurve(offCurveAddress.toBytes()));
 
-// Not a valid public key
-const errorPubkey = new PublicKey("testPubkey");
+let errorPubkey;
+try {
+  // Not a valid public key
+  errorPubkey = new PublicKey("testPubkey");
+} catch (err) {
+  // Error will be caught here
+}
+
+const onCurve = PublicKey.isOnCurve(key.toBytes());
+
+export { key, onCurve, offCurveAddress, errorPubkey };

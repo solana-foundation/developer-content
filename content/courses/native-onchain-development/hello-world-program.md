@@ -7,8 +7,7 @@ objectives:
   - Explain the entry point to a Solana program
   - Build and deploy a basic Solana program
   - Submit a transaction to invoke our “Hello, world!” program
-description:
-  "Create an onchain program for Solana using native Rust, without Anchor."
+description: "Create an onchain program for Solana using native Rust, without Anchor."
 ---
 
 ## Summary
@@ -24,6 +23,7 @@ description:
 The following guide assumes you are familiar with Solana program basics. If not,
 check out
 [Introduction to Onchain Programming](/content/courses/onchain-development/intro-to-onchain.md).
+
 </Callout>
 
 This lesson will introduce you to writing and deploying a Solana program using
@@ -387,4 +387,5 @@ basic instructions if you want — most importantly, have fun!
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5b56c69c-1490-46e4-850f-a7e37bbd79c2)!
+
 </Callout>

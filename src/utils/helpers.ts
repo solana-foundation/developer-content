@@ -17,11 +17,11 @@ export function getAllContentFiles(
   recursive: boolean = true,
   // todo: support a regex
   extension: string = ".md",
-  removeExtensions: boolean = false,
+  removeExtensions: boolean = false
 ): string[] {
   let files: string[] = [];
 
-  readdirSync(dir).forEach(file => {
+  readdirSync(dir).forEach((file) => {
     const filePath = join(dir, file);
     const stats = statSync(filePath);
 
@@ -31,7 +31,7 @@ export function getAllContentFiles(
       files.push(
         removeExtensions
           ? filePath.substring(0, filePath.lastIndexOf(extension))
-          : filePath,
+          : filePath
       );
     }
   });
@@ -44,7 +44,7 @@ export function getAllContentFiles(
  */
 export function throwIfAuthorDoesNotExist(
   author: string = "",
-  type: "Author" | "Organization",
+  type: "Author" | "Organization"
 ) {
   try {
     const filePath = join(resolve(), "content/authors", `${author}.yml`);

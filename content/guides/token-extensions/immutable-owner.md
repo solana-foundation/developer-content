@@ -133,7 +133,7 @@ const mint = await createMint(
   decimals, // Decimals of Mint
   undefined, // Optional keypair
   undefined, // Options for confirming the transaction
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -154,7 +154,7 @@ const associatedTokenAccount = await createAssociatedTokenAccount(
   mint, // Mint Account address
   payer.publicKey, // Token Account owner
   undefined, // Confirmation options
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -173,7 +173,7 @@ try {
     new Keypair().publicKey, // New Account Owner
     undefined, // Additional signers
     undefined, // Confirmation options
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 } catch (error) {
   console.log("\nExpect Error:", error);
@@ -250,7 +250,7 @@ Token Account.
 const initializeImmutableOwnerInstruction =
   createInitializeImmutableOwnerInstruction(
     tokenAccount, // Token Account address
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 ```
 
@@ -262,7 +262,7 @@ const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccount, // Token Account Address
   mint, // Mint Account
   payer.publicKey, // Token Account Owner
-  TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+  TOKEN_2022_PROGRAM_ID // Token Extension Program ID
 );
 ```
 
@@ -277,19 +277,19 @@ enabled.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeImmutableOwnerInstruction,
-  initializeAccountInstruction,
+  initializeAccountInstruction
 );
 
 // Send transaction
 transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, tokenAccountKeypair], // Signers
+  [payer, tokenAccountKeypair] // Signers
 );
 
 console.log(
   "\nCreate Token Account:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -311,7 +311,7 @@ try {
     new Keypair().publicKey, // New Account Owner
     undefined, // Additional signers
     undefined, // Confirmation options
-    TOKEN_2022_PROGRAM_ID, // Token Extension Program ID
+    TOKEN_2022_PROGRAM_ID // Token Extension Program ID
   );
 } catch (error) {
   console.log("\nExpect Error:", error);

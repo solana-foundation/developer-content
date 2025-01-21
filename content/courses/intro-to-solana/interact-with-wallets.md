@@ -90,10 +90,10 @@ npm install @solana/wallet-adapter-base \
 ```
 
 <Callout type="note">
-We're learning doing this manually to learn about Wallet
-Adapter, but you can also use
-[create-solana-dapp](https://github.com/solana-developers/create-solana-dapp) to
-create a brand new React or NextJS app that supports Solana wallets. 
+  We're learning doing this manually to learn about Wallet Adapter, but you can
+  also use
+  [create-solana-dapp](https://github.com/solana-developers/create-solana-dapp)
+  to create a brand new React or NextJS app that supports Solana wallets.
 </Callout>
 
 ### Connect To Wallets
@@ -121,7 +121,7 @@ import {
 import { clusterApiUrl } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
 
-export const Home: NextPage = props => {
+export const Home: NextPage = (props) => {
   const endpoint = clusterApiUrl("devnet");
   const wallets = useMemo(() => [], []);
 
@@ -176,7 +176,7 @@ import {
 } from "@solana/web3.js";
 import "@solana/wallet-adapter-react-ui/styles.css";
 
-const Home: NextPage = props => {
+const Home: NextPage = (props) => {
   const endpoint = clusterApiUrl("devnet");
   const wallets = useMemo(() => [], []);
 
@@ -244,10 +244,10 @@ export const BalanceDisplay: FC = () => {
       try {
         connection.onAccountChange(
           publicKey,
-          updatedAccountInfo => {
+          (updatedAccountInfo) => {
             setBalance(updatedAccountInfo.lamports / LAMPORTS_PER_SOL);
           },
-          "confirmed",
+          "confirmed"
         );
 
         const accountInfo = await connection.getAccountInfo(publicKey);
@@ -285,7 +285,7 @@ to submit transactions for approval.
 const { publicKey, sendTransaction } = useWallet();
 const { connection } = useConnection();
 
-const sendSol = async event => {
+const sendSol = async (event) => {
   event.preventDefault();
 
   if (!publicKey) {
@@ -473,7 +473,7 @@ import { AppBar } from "../components/AppBar";
 import Head from "next/head";
 import { PingButton } from "../components/PingButton";
 
-const Home: NextPage = props => {
+const Home: NextPage = (props) => {
   return (
     <div className={styles.App}>
       <Head>
@@ -672,6 +672,6 @@ If you get really stumped, feel free to
 [check out the solution code](https://github.com/Unboxed-Software/solana-send-sol-frontend/tree/main).
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and
-[tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=69c5aac6-8a9f-4e23-a7f5-28ae2845dfe1)!
+  Push your code to GitHub and [tell us what you thought of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=69c5aac6-8a9f-4e23-a7f5-28ae2845dfe1)!
 </Callout>

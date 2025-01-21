@@ -521,7 +521,7 @@ tx.add(
   SystemProgram.nonceInitialize({
     noncePubkey: nonceKeypair.publicKey,
     authorizedPubkey: nonceAuthKP.publicKey,
-  }),
+  })
 );
 
 // sign the transaction with both the nonce keypair and the authority keypair
@@ -530,7 +530,7 @@ tx.sign(nonceKeypair, nonceAuthKP);
 // send the transaction
 const sig = await sendAndConfirmRawTransaction(
   connection,
-  tx.serialize({ requireAllSignatures: false }),
+  tx.serialize({ requireAllSignatures: false })
 );
 console.log("Nonce initiated: ", sig);
 ```
@@ -578,7 +578,7 @@ const signedTx = await signTransaction(tx);
 // in a database, or send it to another device. You can submit it
 // at a later point, without the tx having a mortality
 const serialisedTx = bs58.encode(
-  signedTx.serialize({ requireAllSignatures: false }),
+  signedTx.serialize({ requireAllSignatures: false })
 );
 console.log("Signed Durable Transaction: ", serialisedTx);
 ```

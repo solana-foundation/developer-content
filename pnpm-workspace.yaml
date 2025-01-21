@@ -1,0 +1,5 @@
+packages:
+  - "."
+  - "code"
+  - "code/content/web3jsv1"
+  - "code/content/web3jsv2"

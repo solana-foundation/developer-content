@@ -44,11 +44,11 @@ export function extractFeaturedRecords({
 }: ExtractFeaturedRecordsProps) {
   // filter for the records marked as features, with sort by priority
   let featuredRecords = records
-    .filter(item => item?.featured == true)
+    .filter((item) => item?.featured == true)
     .sort(
       (a, b) =>
         new Date(a.featuredPriority || 999).getTime() -
-        new Date(b.featuredPriority || 999).getTime(),
+        new Date(b.featuredPriority || 999).getTime()
     );
 
   // attempt to enforce the goal `limit` using filler records (when desired)
@@ -74,11 +74,11 @@ export function extractFeaturedRecords({
  */
 export function simplifyRecords(
   records: Array<SupportedDocTypes>,
-  attributesToDelete = ["_id", "_raw", "body", "type"],
+  attributesToDelete = ["_id", "_raw", "body", "type"]
 ) {
   const listing: Array<SupportedDocTypes> = [];
 
-  records.map(record => {
+  records.map((record) => {
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
     // @ts-ignore
@@ -95,7 +95,7 @@ export function simplifyRecords(
 
     // remove the undesired attributes from the response
     // @ts-ignore
-    attributesToDelete.concat(attrList).forEach(e => delete record[e]);
+    attributesToDelete.concat(attrList).forEach((e) => delete record[e]);
 
     listing.push(record);
   });
@@ -167,7 +167,7 @@ export function processMarkdownLinks(content: string): string {
       }
 
       return `[${label}](${url})`;
-    },
+    }
   );
 }
 

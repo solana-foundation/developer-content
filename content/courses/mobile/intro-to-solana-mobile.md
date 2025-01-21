@@ -5,8 +5,7 @@ objectives:
   - Explain the high-level Mobile Wallet Adapter (MWA) flow
   - Explain the high-level differences between React and React Native
   - Create a simple Android Solana App using React Native
-description:
-  "Learn how to build native mobile apps using blockchain functionality"
+description: "Learn how to build native mobile apps using blockchain functionality"
 ---
 
 ## Summary
@@ -137,7 +136,11 @@ points to note:
   and an emulator or physical device for testing.
 
 <Callout type="info">
-**NOTE:** There is a learning curve, but if you know React you're not nearly as far from being able to develop mobile apps as you think! It may feel jarring to start, but after a few hours of React Native development, you will start to feel much more comfortable. We have included a [Lab](#lab) section below to help you.
+  **NOTE:** There is a learning curve, but if you know React you're not nearly
+  as far from being able to develop mobile apps as you think! It may feel
+  jarring to start, but after a few hours of React Native development, you will
+  start to feel much more comfortable. We have included a [Lab](#lab) section
+  below to help you.
 </Callout>
 
 ## Creating a React Native App on Solana
@@ -524,7 +527,7 @@ export interface ConnectionContextState {
 }
 
 const ConnectionContext = createContext<ConnectionContextState>(
-  {} as ConnectionContextState,
+  {} as ConnectionContextState
 );
 
 export function ConnectionProvider({
@@ -534,7 +537,7 @@ export function ConnectionProvider({
 }: ConnectionProviderProps) {
   const connection = useMemo(
     () => new Connection(endpoint, config),
-    [config, endpoint],
+    [config, endpoint]
   );
 
   return (
@@ -604,19 +607,19 @@ import React from "react";
 const AuthUtils = {
   getAuthorizationFromAuthResult: (
     authResult: AuthorizationResult,
-    previousAccount?: Account,
+    previousAccount?: Account
   ): Authorization => {
     const selectedAccount =
       previousAccount === undefined ||
       !authResult.accounts.some(
-        ({ address }) => address === previousAccount.address,
+        ({ address }) => address === previousAccount.address
       )
         ? AuthUtils.getAccountFromAuthorizedAccount(authResult.accounts[0])
         : previousAccount;
 
     return {
       accounts: authResult.accounts.map(
-        AuthUtils.getAccountFromAuthorizedAccount,
+        AuthUtils.getAccountFromAuthorizedAccount
       ),
       authToken: authResult.auth_token,
       selectedAccount,
@@ -624,7 +627,7 @@ const AuthUtils = {
   },
 
   getAccountFromAuthorizedAccount: (
-    authAccount: AuthorizedAccount,
+    authAccount: AuthorizedAccount
   ): Account => ({
     ...authAccount,
     publicKey: new PublicKey(toUint8Array(authAccount.address)),
@@ -676,19 +679,19 @@ type AuthProviderProps = {
 
 function AuthorizationProvider({ children, cluster }: AuthProviderProps) {
   const [authorization, setAuthorization] = useState<Authorization | null>(
-    null,
+    null
   );
 
   const handleAuthorizationResult = useCallback(
     async (authResult: AuthorizationResult): Promise<Authorization> => {
       const nextAuthorization = AuthUtils.getAuthorizationFromAuthResult(
         authResult,
-        authorization?.selectedAccount,
+        authorization?.selectedAccount
       );
       setAuthorization(nextAuthorization);
       return nextAuthorization;
     },
-    [authorization],
+    [authorization]
   );
 
   const authorizeSession = useCallback(
@@ -702,7 +705,7 @@ function AuthorizationProvider({ children, cluster }: AuthProviderProps) {
       return (await handleAuthorizationResult(authorizationResult))
         .selectedAccount;
     },
-    [authorization, cluster, handleAuthorizationResult],
+    [authorization, cluster, handleAuthorizationResult]
   );
 
   const deauthorizeSession = useCallback(
@@ -712,14 +715,14 @@ function AuthorizationProvider({ children, cluster }: AuthProviderProps) {
         setAuthorization(null);
       }
     },
-    [authorization],
+    [authorization]
   );
 
   const onChangeAccount = useCallback((nextAccount: Account) => {
-    setAuthorization(currentAuthorization => {
+    setAuthorization((currentAuthorization) => {
       if (
         currentAuthorization?.accounts.some(
-          ({ address }) => address === nextAccount.address,
+          ({ address }) => address === nextAccount.address
         )
       ) {
         return { ...currentAuthorization, selectedAccount: nextAccount };
@@ -736,7 +739,7 @@ function AuthorizationProvider({ children, cluster }: AuthProviderProps) {
       onChangeAccount,
       selectedAccount: authorization?.selectedAccount ?? null,
     }),
-    [authorization, authorizeSession, deauthorizeSession, onChangeAccount],
+    [authorization, authorizeSession, deauthorizeSession, onChangeAccount]
   );
 
   return (
@@ -813,7 +816,7 @@ export function ProgramProvider({ children }: ProgramProviderProps) {
 
   const setup = useCallback(async () => {
     const programId = new PublicKey(
-      "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU",
+      "ALeaCzuJpZpoCgTxMjJbNjREVqSwuvYFRZUfc151AKHU"
     );
 
     // MockWallet is a placeholder wallet used for initializing the AnchorProvider.
@@ -833,12 +836,12 @@ export function ProgramProvider({ children }: ProgramProviderProps) {
     const programInstance = new Program<AnchorCounter>(
       IDL,
       programId,
-      provider,
+      provider
     );
 
     const [counterProgramAddress] = PublicKey.findProgramAddressSync(
       [Buffer.from("counter")],
-      programId,
+      programId
     );
 
     setProgram(programInstance);
@@ -854,7 +857,7 @@ export function ProgramProvider({ children }: ProgramProviderProps) {
       program,
       counterAddress,
     }),
-    [program, counterAddress],
+    [program, counterAddress]
   );
 
   return (
@@ -1011,13 +1014,13 @@ export function CounterView() {
         try {
           const data = program.coder.accounts.decode(
             "counter",
-            accountInfo.data,
+            accountInfo.data
           );
           setCounter(data);
         } catch (e) {
           console.log("account decoding error: " + e);
         }
-      },
+      }
     );
 
     return () => {
@@ -1049,10 +1052,11 @@ button will do the following in a new function `incrementCounter`:
 - Call `signAndSendTransactions` to have the wallet sign and send the
   transaction
 
-<Callout type="note">The fake Solana wallet we use generates a new keypair every
-time you restart the fake wallet app, requiring that we want to check for funds
-and airdrop every time. This is for demo purposes only, you can't do this in
-production.</Callout>
+<Callout type="note">
+  The fake Solana wallet we use generates a new keypair every time you restart
+  the fake wallet app, requiring that we want to check for funds and airdrop
+  every time. This is for demo purposes only, you can't do this in production.
+</Callout>
 
 Create the file `CounterButton.tsx` and paste in the following:
 
@@ -1126,7 +1130,7 @@ export function CounterButton() {
         const balance = await connection.getBalance(authResult.publicKey);
 
         console.log(
-          `Wallet ${authResult.publicKey} has a balance of ${balance}`,
+          `Wallet ${authResult.publicKey} has a balance of ${balance}`
         );
 
         // When on Devnet you may want to transfer SOL manually per session, due to Devnet's airdrop rate limit
@@ -1134,7 +1138,7 @@ export function CounterButton() {
 
         if (balance < minBalance) {
           console.log(
-            `requesting airdrop for ${authResult.publicKey} on ${connection.rpcEndpoint}`,
+            `requesting airdrop for ${authResult.publicKey} on ${connection.rpcEndpoint}`
           );
           await connection.requestAirdrop(authResult.publicKey, minBalance * 2);
         }
@@ -1149,7 +1153,7 @@ export function CounterButton() {
 
         showToastOrAlert(`Transaction successful! ${signature}`);
       })
-        .catch(e => {
+        .catch((e) => {
           console.log(e);
           showToastOrAlert(`Error: ${JSON.stringify(e)}`);
         })
@@ -1219,6 +1223,7 @@ code available on the
 [solution branch](https://github.com/solana-developers/react-native-counter).
 
 <Callout type="success" title="Good Job!">
-If you’ve successfully completed the lab, push your code to GitHub and share
-your feedback on this lesson through this [form](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)
+  If you’ve successfully completed the lab, push your code to GitHub and share
+  your feedback on this lesson through this
+  [form](https://form.typeform.com/to/IPH0UGz7#answers-lesson=c15928ce-8302-4437-9b1b-9aa1d65af864)
 </Callout>

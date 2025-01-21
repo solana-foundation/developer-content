@@ -251,7 +251,7 @@ const tx = new Transaction().add(
   SystemProgram.nonceInitialize({
     noncePubkey: nonceKeypair.publicKey,
     authorizedPubkey: nonceAuthority.publicKey,
-  }),
+  })
 );
 
 // Send the transaction
@@ -376,7 +376,7 @@ durableTx.add(
   SystemProgram.nonceAdvance({
     authorizedPubkey: nonceAuthority.publicKey,
     noncePubkey: nonceKeypair.publicKey,
-  }),
+  })
 );
 
 // Add any instructions you want to the transaction in this case we are just doing a transfer
@@ -385,7 +385,7 @@ durableTx.add(
     fromPubkey: payer.publicKey,
     toPubkey: recipient.publicKey,
     lamports: 0.1 * LAMPORTS_PER_SOL,
-  }),
+  })
 );
 
 // sign the tx with the nonce authority's keypair
@@ -394,7 +394,7 @@ durableTx.sign(payer, nonceAuthority);
 // once you have the signed tx, you can serialize it and store it in a database, or send it to another device.
 // You can submit it at a later point.
 const serializedTx = base58.encode(
-  durableTx.serialize({ requireAllSignatures: false }),
+  durableTx.serialize({ requireAllSignatures: false })
 );
 ```
 
@@ -502,7 +502,7 @@ async function createNonceAccount(
   connection: Connection,
   payer: Keypair,
   nonceKeypair: Keypair,
-  authority: PublicKey,
+  authority: PublicKey
 ) {
   const rentExemptBalance =
     await connection.getMinimumBalanceForRentExemption(NONCE_ACCOUNT_LENGTH);
@@ -520,7 +520,7 @@ async function createNonceAccount(
     SystemProgram.nonceInitialize({
       noncePubkey: nonceKeypair.publicKey,
       authorizedPubkey: authority,
-    }),
+    })
   );
 
   const sig = await sendAndConfirmTransaction(connection, tx, [
@@ -574,7 +574,7 @@ it("Creates a durable transaction and submits it", async () => {
     connection,
     payer,
     nonceKeypair,
-    payer.publicKey,
+    payer.publicKey
   );
 
   // Step 1.3: Create a new transaction
@@ -589,7 +589,7 @@ it("Creates a durable transaction and submits it", async () => {
     SystemProgram.nonceAdvance({
       authorizedPubkey: payer.publicKey,
       noncePubkey: nonceKeypair.publicKey,
-    }),
+    })
   );
 
   // Step 1.6: Add the transfer instruction
@@ -598,7 +598,7 @@ it("Creates a durable transaction and submits it", async () => {
       fromPubkey: payer.publicKey,
       toPubkey: recipient.publicKey,
       lamports: TRANSFER_AMOUNT,
-    }),
+    })
   );
 
   // Step 1.7: Sign the transaction with the payer's keypair
@@ -657,7 +657,7 @@ it("Fails if the nonce has advanced", async () => {
       connection,
       payer,
       nonceKeypair,
-      nonceAuthority.publicKey,
+      nonceAuthority.publicKey
     );
 
     const durableTransaction = new Transaction();
@@ -669,7 +669,7 @@ it("Fails if the nonce has advanced", async () => {
       SystemProgram.nonceAdvance({
         authorizedPubkey: nonceAuthority.publicKey,
         noncePubkey: nonceKeypair.publicKey,
-      }),
+      })
     );
 
     // Add a transfer instruction
@@ -678,7 +678,7 @@ it("Fails if the nonce has advanced", async () => {
         fromPubkey: payer.publicKey,
         toPubkey: recipient.publicKey,
         lamports: TRANSFER_AMOUNT,
-      }),
+      })
     );
 
     // Sign the transaction with both the payer and nonce authority's keypairs
@@ -696,26 +696,26 @@ it("Fails if the nonce has advanced", async () => {
         SystemProgram.nonceAdvance({
           noncePubkey: nonceKeypair.publicKey,
           authorizedPubkey: nonceAuthority.publicKey,
-        }),
+        })
       ),
-      [payer, nonceAuthority],
+      [payer, nonceAuthority]
     );
 
     // Using getExplorerLink from solana-helpers
     console.log(
       "Nonce Advance Signature:",
-      getExplorerLink("tx", nonceAdvanceSignature, "localnet"),
+      getExplorerLink("tx", nonceAdvanceSignature, "localnet")
     );
 
     // Deserialize the transaction
     const deserializedTransaction = Buffer.from(
       serializedTransaction,
-      "base64",
+      "base64"
     );
 
     // Step 3: Try to submit the transaction, expecting it to fail due to nonce advancement
     await assert.rejects(
-      sendAndConfirmRawTransaction(connection, deserializedTransaction),
+      sendAndConfirmRawTransaction(connection, deserializedTransaction)
     );
   } catch (error) {
     console.error("Test failed:", error);
@@ -753,7 +753,7 @@ it("Advances the nonce account even if the transaction fails", async () => {
     connection,
     payer,
     nonceKeypair,
-    nonceAuthority.publicKey,
+    nonceAuthority.publicKey
   );
   const nonceBeforeAdvancing = nonceAccount.nonce;
 
@@ -765,7 +765,7 @@ it("Advances the nonce account even if the transaction fails", async () => {
   // Ensure the balance is less than the transfer amount (50 SOL)
   assert(
     balance < TRANSFER_AMOUNT * LAMPORTS_PER_SOL,
-    `Balance too high! Adjust 'TRANSFER_AMOUNT' to be higher than the current balance of ${balance / LAMPORTS_PER_SOL} SOL.`,
+    `Balance too high! Adjust 'TRANSFER_AMOUNT' to be higher than the current balance of ${balance / LAMPORTS_PER_SOL} SOL.`
   );
 
   // Step 3: Create a durable transaction that will fail
@@ -780,7 +780,7 @@ it("Advances the nonce account even if the transaction fails", async () => {
     SystemProgram.nonceAdvance({
       authorizedPubkey: nonceAuthority.publicKey,
       noncePubkey: nonceKeypair.publicKey,
-    }),
+    })
   );
 
   // Step 5: Add a transfer instruction that will fail (since the payer has insufficient funds)
@@ -789,7 +789,7 @@ it("Advances the nonce account even if the transaction fails", async () => {
       fromPubkey: payer.publicKey,
       toPubkey: recipient.publicKey,
       lamports: TRANSFER_AMOUNT * LAMPORTS_PER_SOL,
-    }),
+    })
   );
 
   // Step 6: Sign the transaction with both the payer and nonce authority
@@ -797,7 +797,7 @@ it("Advances the nonce account even if the transaction fails", async () => {
 
   // Serialize the transaction and store or send it (if needed)
   const serializedTx = base58.encode(
-    durableTx.serialize({ requireAllSignatures: false }),
+    durableTx.serialize({ requireAllSignatures: false })
   );
 
   const tx = base58.decode(serializedTx);
@@ -806,15 +806,15 @@ it("Advances the nonce account even if the transaction fails", async () => {
   await assert.rejects(
     sendAndConfirmRawTransaction(connection, tx as Buffer, {
       skipPreflight: true, // Ensure the transaction reaches the network despite the expected failure
-    }),
+    })
   );
 
   // Step 8: Fetch the nonce account again after the failed transaction
   const nonceAccountAfterAdvancing = await connection.getAccountInfo(
-    nonceKeypair.publicKey,
+    nonceKeypair.publicKey
   );
   const nonceAfterAdvancing = NonceAccount.fromAccountData(
-    nonceAccountAfterAdvancing!.data,
+    nonceAccountAfterAdvancing!.data
   ).nonce;
 
   // Step 9: Verify that the nonce has advanced even though the transaction failed
@@ -858,7 +858,7 @@ it("The nonce account will not advance if the transaction fails because the nonc
     connection,
     payer,
     nonceKeypair,
-    nonceAuthority.publicKey,
+    nonceAuthority.publicKey
   );
   const nonceBeforeAdvancing = nonceAccount.nonce;
 
@@ -876,7 +876,7 @@ it("The nonce account will not advance if the transaction fails because the nonc
     SystemProgram.nonceAdvance({
       authorizedPubkey: nonceAuthority.publicKey,
       noncePubkey: nonceKeypair.publicKey,
-    }),
+    })
   );
 
   // Add transfer instruction
@@ -885,7 +885,7 @@ it("The nonce account will not advance if the transaction fails because the nonc
       fromPubkey: payer.publicKey,
       toPubkey: recipient.publicKey,
       lamports: 0.1 * LAMPORTS_PER_SOL,
-    }),
+    })
   );
 
   // Sign the transaction only with the payer, omitting nonce authority signature (this will cause the failure)
@@ -893,7 +893,7 @@ it("The nonce account will not advance if the transaction fails because the nonc
 
   // Step 5: Serialize the transaction
   const serializedTx = base58.encode(
-    durableTx.serialize({ requireAllSignatures: false }),
+    durableTx.serialize({ requireAllSignatures: false })
   );
 
   // Decode the serialized transaction
@@ -903,15 +903,15 @@ it("The nonce account will not advance if the transaction fails because the nonc
   await assert.rejects(
     sendAndConfirmRawTransaction(connection, tx as Buffer, {
       skipPreflight: true, // Ensure the transaction reaches the network despite the expected failure
-    }),
+    })
   );
 
   // Step 7: Fetch the nonce account again after the failed transaction
   const nonceAccountAfterAdvancing = await connection.getAccountInfo(
-    nonceKeypair.publicKey,
+    nonceKeypair.publicKey
   );
   const nonceAfterAdvancing = NonceAccount.fromAccountData(
-    nonceAccountAfterAdvancing!.data,
+    nonceAccountAfterAdvancing!.data
   ).nonce;
 
   // Step 8: Verify that the nonce has not advanced, as the failure was due to the nonce advance instruction
@@ -942,7 +942,7 @@ it("Submits after changing the nonce authority to an already signed address", as
       connection,
       payer,
       nonceKeypair,
-      nonceAuthority.publicKey,
+      nonceAuthority.publicKey
     );
     const nonceBeforeAdvancing = nonceAccount.nonce;
 
@@ -960,7 +960,7 @@ it("Submits after changing the nonce authority to an already signed address", as
       SystemProgram.nonceAdvance({
         authorizedPubkey: payer.publicKey, // should be nonce authority, will fail
         noncePubkey: nonceKeypair.publicKey,
-      }),
+      })
     );
 
     // Add a transfer instruction
@@ -969,7 +969,7 @@ it("Submits after changing the nonce authority to an already signed address", as
         fromPubkey: payer.publicKey,
         toPubkey: recipient.publicKey,
         lamports: TRANSACTION_LAMPORTS,
-      }),
+      })
     );
 
     // Sign the transaction with the payer
@@ -977,7 +977,7 @@ it("Submits after changing the nonce authority to an already signed address", as
 
     // Step 5: Serialize and store the transaction
     const serializedTransaction = base58.encode(
-      durableTransaction.serialize({ requireAllSignatures: false }),
+      durableTransaction.serialize({ requireAllSignatures: false })
     );
 
     const deserializedTx = base58.decode(serializedTransaction);
@@ -986,15 +986,15 @@ it("Submits after changing the nonce authority to an already signed address", as
     await assert.rejects(
       sendAndConfirmRawTransaction(connection, deserializedTx as Buffer, {
         skipPreflight: true, // Ensures the transaction hits the network despite failure
-      }),
+      })
     );
 
     // Step 7: Verify that the nonce did not advance after the failed transaction
     const nonceAccountAfterAdvancing = await connection.getAccountInfo(
-      nonceKeypair.publicKey,
+      nonceKeypair.publicKey
     );
     const nonceAfterAdvancing = NonceAccount.fromAccountData(
-      nonceAccountAfterAdvancing!.data,
+      nonceAccountAfterAdvancing!.data
     ).nonce;
     assert.equal(nonceBeforeAdvancing, nonceAfterAdvancing);
 
@@ -1006,14 +1006,14 @@ it("Submits after changing the nonce authority to an already signed address", as
           noncePubkey: nonceKeypair.publicKey,
           authorizedPubkey: nonceAuthority.publicKey,
           newAuthorizedPubkey: payer.publicKey, // changing authority to payer
-        }),
+        })
       ),
-      [payer, nonceAuthority],
+      [payer, nonceAuthority]
     );
 
     console.log(
       "Nonce Auth Signature:",
-      getExplorerLink("tx", nonceAuthSignature, "localnet"),
+      getExplorerLink("tx", nonceAuthSignature, "localnet")
     );
 
     // Step 9: Submit the transaction again, which should now succeed
@@ -1022,12 +1022,12 @@ it("Submits after changing the nonce authority to an already signed address", as
       deserializedTx as Buffer,
       {
         skipPreflight: true, // Ensures submission without preflight checks
-      },
+      }
     );
 
     console.log(
       "Transaction Signature:",
-      getExplorerLink("tx", transactionSignature, "localnet"),
+      getExplorerLink("tx", transactionSignature, "localnet")
     );
   } catch (error) {
     console.error("Test failed:", error);

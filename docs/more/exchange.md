@@ -903,7 +903,7 @@ const transaction = new Transaction()
       fromPubkey: payer.publicKey,
       toPubkey: toAccount,
       lamports: 10000000,
-    }),
+    })
   );
 ```
 

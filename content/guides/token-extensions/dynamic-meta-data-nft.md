@@ -276,7 +276,7 @@ Calling mint NFT from the client is very easy:
 ```js name="Client"
 const nftAuthority = PublicKey.findProgramAddressSync(
   [Buffer.from("nft_authority")],
-  program.programId,
+  program.programId
 );
 
 const mint = new Keypair();
@@ -285,7 +285,7 @@ const destinationTokenAccount = getAssociatedTokenAddressSync(
   mint.publicKey,
   publicKey,
   false,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const transaction = await program.methods

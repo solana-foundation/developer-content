@@ -80,7 +80,7 @@ it("SOL Transfer Anchor", async () => {
 
   console.log(
     `\nTransaction Signature:` +
-      `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+      `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 });
 ```

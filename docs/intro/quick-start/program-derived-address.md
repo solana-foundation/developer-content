@@ -696,7 +696,7 @@ const wallet = pg.wallet;
 
 const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
   [Buffer.from("message"), wallet.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 
@@ -743,7 +743,7 @@ to derive the PDA in Javascript using the seeds specified in the program.
 ```ts filename="anchor.test.ts"
 const [messagePda, messageBump] = PublicKey.findProgramAddressSync(
   [Buffer.from("message"), wallet.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 
@@ -790,13 +790,13 @@ it("Create Message Account", async () => {
 
   const messageAccount = await program.account.messageAccount.fetch(
     messagePda,
-    "confirmed",
+    "confirmed"
   );
 
   console.log(JSON.stringify(messageAccount, null, 2));
   console.log(
     "Transaction Signature:",
-    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 });
 ```
@@ -851,7 +851,7 @@ account using its address (`messagePda`).
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetch(
   messagePda,
-  "confirmed",
+  "confirmed"
 );
 ```
 
@@ -861,7 +861,7 @@ Lastly, we log the account data and a link to view the transaction details.
 console.log(JSON.stringify(messageAccount, null, 2));
 console.log(
   "Transaction Signature:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -884,13 +884,13 @@ it("Update Message Account", async () => {
 
   const messageAccount = await program.account.messageAccount.fetch(
     messagePda,
-    "confirmed",
+    "confirmed"
   );
 
   console.log(JSON.stringify(messageAccount, null, 2));
   console.log(
     "Transaction Signature:",
-    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 });
 ```
@@ -945,7 +945,7 @@ account using its address (`messagePda`).
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetch(
   messagePda,
-  "confirmed",
+  "confirmed"
 );
 ```
 
@@ -955,7 +955,7 @@ Lastly, we log the account data and a link to view the transaction details.
 console.log(JSON.stringify(messageAccount, null, 2));
 console.log(
   "Transaction Signature:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 
@@ -977,13 +977,13 @@ it("Delete Message Account", async () => {
 
   const messageAccount = await program.account.messageAccount.fetchNullable(
     messagePda,
-    "confirmed",
+    "confirmed"
   );
 
   console.log("Expect Null:", JSON.stringify(messageAccount, null, 2));
   console.log(
     "Transaction Signature:",
-    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+    `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
   );
 });
 ```
@@ -1037,7 +1037,7 @@ the return value to be null because the account is closed.
 ```ts filename="anchor.test.ts"
 const messageAccount = await program.account.messageAccount.fetchNullable(
   messagePda,
-  "confirmed",
+  "confirmed"
 );
 ```
 
@@ -1048,7 +1048,7 @@ the account data should be logged as null.
 console.log(JSON.stringify(messageAccount, null, 2));
 console.log(
   "Transaction Signature:",
-  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`,
+  `https://solana.fm/tx/${transactionSignature}?cluster=devnet-solana`
 );
 ```
 

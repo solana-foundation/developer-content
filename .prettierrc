@@ -1,10 +1,39 @@
 {
+  "printWidth": 80,
   "tabWidth": 2,
   "useTabs": false,
+  "semi": true,
   "singleQuote": false,
-  "printWidth": 80,
-  "trailingComma": "all",
-  "arrowParens": "avoid",
-  "endOfLine": "auto",
-  "proseWrap": "always"
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "proseWrap": "preserve",
+  "endOfLine": "lf",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": false,
+  "overrides": [
+    {
+      "files": ["*.md", "*.mdx"],
+      "options": {
+        "parser": "mdx",
+        "printWidth": 80,
+        "proseWrap": "preserve",
+        "singleQuote": false,
+        "jsxSingleQuote": false,
+        "bracketSameLine": false,
+        "singleAttributePerLine": false
+      }
+    },
+    {
+      "files": ["*.{ts,tsx,js,jsx}"],
+      "options": {
+        "printWidth": 80,
+        "semi": true,
+        "singleQuote": false,
+        "trailingComma": "es5",
+        "bracketSpacing": true,
+        "bracketSameLine": false
+      }
+    }
+  ]
 }

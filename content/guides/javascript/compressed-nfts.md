@@ -264,7 +264,7 @@ Account with authority that is owned by the Bubblegum program (i.e. PDA):
 // derive the tree's authority (PDA), owned by Bubblegum
 const [treeAuthority, _bump] = PublicKey.findProgramAddressSync(
   [treeKeypair.publicKey.toBuffer()],
-  BUBBLEGUM_PROGRAM_ID,
+  BUBBLEGUM_PROGRAM_ID
 );
 ```
 
@@ -287,7 +287,7 @@ const allocTreeIx = await createAllocTreeIx(
   treeKeypair.publicKey,
   payer.publicKey,
   maxDepthSizePair,
-  canopyDepth,
+  canopyDepth
 );
 ```
 
@@ -313,7 +313,7 @@ const createTreeIx = createCreateTreeInstruction(
     maxDepth: maxDepthSizePair.maxDepth,
     public: false,
   },
-  BUBBLEGUM_PROGRAM_ID,
+  BUBBLEGUM_PROGRAM_ID
 );
 ```
 
@@ -337,7 +337,7 @@ const txSignature = await sendAndConfirmTransaction(
   {
     commitment: "confirmed",
     skipPreflight: true,
-  },
+  }
 );
 ```
 
@@ -412,7 +412,7 @@ Below, we derive this PDA using the **required** hard coded seed string of
 const [bubblegumSigner, _bump2] = PublicKey.findProgramAddressSync(
   // `collection_cpi` is a custom prefix required by the Bubblegum program
   [Buffer.from("collection_cpi", "utf8")],
-  BUBBLEGUM_PROGRAM_ID,
+  BUBBLEGUM_PROGRAM_ID
 );
 ```
 
@@ -470,7 +470,7 @@ const compressedMintIx = createMintToCollectionV1Instruction(
     metadataArgs: Object.assign(compressedNFTMetadata, {
       collection: { key: collectionMint, verified: false },
     }),
-  },
+  }
 );
 ```
 
@@ -721,7 +721,7 @@ class, from the `@solana/spl-account-compression` SDK:
 // retrieve the merkle tree's account from the blockchain
 const treeAccount = await ConcurrentMerkleTreeAccount.fromAccountAddress(
   connection,
-  treeAddress,
+  treeAddress
 );
 
 // extract the needed values for our transfer instruction
@@ -797,7 +797,7 @@ const transferIx = createTransferInstruction(
     nonce: asset.compression.leaf_id,
     index: asset.compression.leaf_id,
   },
-  BUBBLEGUM_PROGRAM_ID,
+  BUBBLEGUM_PROGRAM_ID
 );
 ```
 

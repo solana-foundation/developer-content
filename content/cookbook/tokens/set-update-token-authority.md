@@ -36,22 +36,22 @@ import bs58 from "bs58";
   // 5YNmS1R9nNSCDzb5a7mMJ1dwK9uHeAAF4CmPEwKgVWr8
   const feePayer = Keypair.fromSecretKey(
     bs58.decode(
-      "588FU4PktJWfGfxtzpAAXywSNt74AvtroVzGfKkVN1LwRuvHwKGr851uH8czM5qm4iqLbs1kKoMKtMJG4ATR7Ld2",
-    ),
+      "588FU4PktJWfGfxtzpAAXywSNt74AvtroVzGfKkVN1LwRuvHwKGr851uH8czM5qm4iqLbs1kKoMKtMJG4ATR7Ld2"
+    )
   );
 
   // G2FAbFQPFa5qKXCetoFZQEvF9BVvCKbvUZvodpVidnoY
   const alice = Keypair.fromSecretKey(
     bs58.decode(
-      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp",
-    ),
+      "4NMwxzmYj2uvHuq8xoqhY8RXg63KSVJM1DXkpbmkUY7YQWuoyQgFnnzn6yo3CMnqZasnNPNuAT2TLwQsCaKkUddp"
+    )
   );
 
   const randomGuy = Keypair.generate();
   console.log(`random guy: ${randomGuy.publicKey.toBase58()}`);
 
   const mintPubkey = new PublicKey(
-    "8mAKLjGGmjKTnmcXeyr3pr7iX13xXVjJJiL6RujDbSPV",
+    "8mAKLjGGmjKTnmcXeyr3pr7iX13xXVjJJiL6RujDbSPV"
   );
 
   // authority type
@@ -72,7 +72,7 @@ import bs58 from "bs58";
       mintPubkey, // mint account || token account
       alice, // current authority
       AuthorityType.MintTokens, // authority type
-      randomGuy.publicKey, // new authority (you can pass `null` to close it)
+      randomGuy.publicKey // new authority (you can pass `null` to close it)
     );
     console.log(`txhash: ${txhash}`);
   }
@@ -86,14 +86,14 @@ import bs58 from "bs58";
         mintPubkey, // mint account || token account
         alice.publicKey, // current auth
         AuthorityType.MintTokens, // authority type
-        feePayer.publicKey, // new auth (you can pass `null` to close it)
-      ),
+        feePayer.publicKey // new auth (you can pass `null` to close it)
+      )
     );
     console.log(
       `txhash: ${await sendAndConfirmTransaction(connection, tx, [
         feePayer,
         alice /* fee payer + origin auth */,
-      ])}`,
+      ])}`
     );
   }
 })();

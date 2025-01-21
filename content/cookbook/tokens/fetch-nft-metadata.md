@@ -1,8 +1,7 @@
 ---
 title: How to Fetch the NFT Metadata
 sidebarSortOrder: 16
-description:
-  "Learn how to fetch the metadata of a non-fungible token (NFT) on Solana."
+description: "Learn how to fetch the metadata of a non-fungible token (NFT) on Solana."
 ---
 
 ```typescript filename="get-nft-metadata.ts"
@@ -32,7 +31,7 @@ import { PublicKey } from "@metaplex-foundation/js";
 
     // The mint address of the NFT you want to fetch
     const mintAddress = new PublicKey(
-      "Ay1U9DWphDgc7hq58Yj1yHabt91zTzvV2YJbAWkPNbaK",
+      "Ay1U9DWphDgc7hq58Yj1yHabt91zTzvV2YJbAWkPNbaK"
     );
 
     console.log("Fetching NFT metadata...");

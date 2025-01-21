@@ -1,8 +1,7 @@
 ---
 title: How to get all NFTs from a wallet?
 sidebarSortOrder: 18
-description:
-  "Learn how to fetch all non-fungible tokens (NFTs) from a wallet on Solana."
+description: "Learn how to fetch all non-fungible tokens (NFTs) from a wallet on Solana."
 ---
 
 ```typescript filename="get-nfts-by-wallet.ts"
@@ -22,13 +21,13 @@ BigInt.prototype.toJSON = function () {
 
     // The owner's public key
     const ownerPublicKey = publicKey(
-      "2R4bHmSBHkHAskerTHE6GE1Fxbn31kaD5gHqpsPySVd7",
+      "2R4bHmSBHkHAskerTHE6GE1Fxbn31kaD5gHqpsPySVd7"
     );
 
     console.log("Fetching NFTs...");
     const allNFTs = await fetchAllDigitalAssetWithTokenByOwner(
       umi,
-      ownerPublicKey,
+      ownerPublicKey
     );
 
     console.log(`Found ${allNFTs.length} NFTs for the owner:`);

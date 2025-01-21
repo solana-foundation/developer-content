@@ -171,19 +171,19 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
           },
         },
       ],
-    },
+    }
   );
 
   console.log(
-    `Found ${accounts.length} token account(s) for wallet ${MY_WALLET_ADDRESS}: `,
+    `Found ${accounts.length} token account(s) for wallet ${MY_WALLET_ADDRESS}: `
   );
   accounts.forEach((account, i) => {
     console.log(
-      `-- Token Account Address ${i + 1}: ${account.pubkey.toString()} --`,
+      `-- Token Account Address ${i + 1}: ${account.pubkey.toString()} --`
     );
     console.log(`Mint: ${account.account.data["parsed"]["info"]["mint"]}`);
     console.log(
-      `Amount: ${account.account.data["parsed"]["info"]["tokenAmount"]["uiAmount"]}`,
+      `Amount: ${account.account.data["parsed"]["info"]["tokenAmount"]["uiAmount"]}`
     );
   });
 })();
@@ -245,10 +245,10 @@ import { clusterApiUrl, Connection } from "@solana/web3.js";
           },
         },
       ],
-    },
+    }
   );
   console.log(
-    `Found ${accounts.length} token account(s) for mint ${MY_TOKEN_MINT_ADDRESS}`,
+    `Found ${accounts.length} token account(s) for mint ${MY_TOKEN_MINT_ADDRESS}`
   );
   console.log(accounts);
 })();

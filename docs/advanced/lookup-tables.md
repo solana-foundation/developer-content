@@ -177,7 +177,7 @@ transactionV0.sign([payer]);
 const txid = await web3.sendAndConfirmTransaction(connection, transactionV0);
 
 console.log(
-  `Transaction: https://explorer.solana.com/tx/${txid}?cluster=devnet`,
+  `Transaction: https://explorer.solana.com/tx/${txid}?cluster=devnet`
 );
 ```
 

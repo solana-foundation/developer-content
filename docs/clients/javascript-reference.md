@@ -88,7 +88,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
 let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
@@ -104,7 +104,7 @@ transaction.add(
     fromPubkey: payer.publicKey,
     toPubkey: toAccount.publicKey,
     lamports: 1000,
-  }),
+  })
 );
 
 // Send and confirm transaction
@@ -122,7 +122,7 @@ manualTransaction.add(
     fromPubkey: payer.publicKey,
     toPubkey: toAccount.publicKey,
     lamports: 1000,
-  }),
+  })
 );
 
 let transactionBuffer = manualTransaction.serializeMessage();
@@ -232,7 +232,7 @@ const crypto = require("crypto");
 
 // Create a PublicKey with a base58 encoded string
 let base58publicKey = new web3.PublicKey(
-  "5xot9PVkphiX2adznghwrAuxGs2zeWisNSxMW6hU6Hkj",
+  "5xot9PVkphiX2adznghwrAuxGs2zeWisNSxMW6hU6Hkj"
 );
 console.log(base58publicKey.toBase58());
 
@@ -242,7 +242,7 @@ console.log(base58publicKey.toBase58());
 let highEntropyBuffer = crypto.randomBytes(31);
 let programAddressFromKey = await web3.PublicKey.createProgramAddress(
   [highEntropyBuffer.slice(0, 31)],
-  base58publicKey,
+  base58publicKey
 );
 console.log(`Generated Program Address: ${programAddressFromKey.toBase58()}`);
 
@@ -251,7 +251,7 @@ console.log(`Generated Program Address: ${programAddressFromKey.toBase58()}`);
 // Find Program address given a PublicKey
 let validProgramAddress = await web3.PublicKey.findProgramAddress(
   [Buffer.from("", "utf8")],
-  programAddressFromKey,
+  programAddressFromKey
 );
 console.log(`Valid Program Address: ${validProgramAddress}`);
 
@@ -278,7 +278,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
 let airdropSignature = await connection.requestAirdrop(
   payer.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
@@ -306,13 +306,13 @@ let createNonceAccountTransaction = new web3.Transaction().add(
     noncePubkey: nonceAccount.publicKey,
     authorizedPubkey: payer.publicKey,
     lamports: minimumAmountForNonceAccount,
-  }),
+  })
 );
 
 await web3.sendAndConfirmTransaction(
   connection,
   createNonceAccountTransaction,
-  [payer, nonceAccount],
+  [payer, nonceAccount]
 );
 
 // Advance nonce - Used to create transactions as an account custodian
@@ -320,7 +320,7 @@ let advanceNonceTransaction = new web3.Transaction().add(
   web3.SystemProgram.nonceAdvance({
     noncePubkey: nonceAccount.publicKey,
     authorizedPubkey: payer.publicKey,
-  }),
+  })
 );
 
 await web3.sendAndConfirmTransaction(connection, advanceNonceTransaction, [
@@ -335,7 +335,7 @@ let transferTransaction = new web3.Transaction().add(
     fromPubkey: payer.publicKey,
     toPubkey: toAccount.publicKey,
     lamports: 1000,
-  }),
+  })
 );
 await web3.sendAndConfirmTransaction(connection, transferTransaction, [payer]);
 
@@ -347,7 +347,7 @@ let assignTransaction = new web3.Transaction().add(
   web3.SystemProgram.assign({
     accountPubkey: assignedAccount.publicKey,
     programId: programId.publicKey,
-  }),
+  })
 );
 
 await web3.sendAndConfirmTransaction(connection, assignTransaction, [
@@ -392,7 +392,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
 let airdropSignature = await connection.requestAirdrop(
   fromPublicKey.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
@@ -402,7 +402,7 @@ let plaintext = Buffer.from("string address");
 let plaintextHash = Buffer.from(keccak_256.update(plaintext).digest());
 let { signature, recid: recoveryId } = secp256k1.ecdsaSign(
   plaintextHash,
-  secp256k1PrivateKey,
+  secp256k1PrivateKey
 );
 
 // Create transaction to verify the signature
@@ -412,7 +412,7 @@ let transaction = new Transaction().add(
     plaintext,
     signature,
     recoveryId,
-  }),
+  })
 );
 
 // Transaction will succeed if the message is verified to be signed by the address
@@ -443,7 +443,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
 let airdropSignature = await connection.requestAirdrop(
   fromPublicKey.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
@@ -572,14 +572,14 @@ let nonceAccount = web3.Keypair.generate();
 // Fund account
 let airdropSignature = await connection.requestAirdrop(
   account.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 
 await connection.confirmTransaction({ signature: airdropSignature });
 
 // Get Minimum amount for rent exemption
 let minimumAmount = await connection.getMinimumBalanceForRentExemption(
-  web3.NONCE_ACCOUNT_LENGTH,
+  web3.NONCE_ACCOUNT_LENGTH
 );
 
 // Form CreateNonceAccount transaction
@@ -589,7 +589,7 @@ let transaction = new web3.Transaction().add(
     noncePubkey: nonceAccount.publicKey,
     authorizedPubkey: account.publicKey,
     lamports: minimumAmount,
-  }),
+  })
 );
 // Create Nonce Account
 await web3.sendAndConfirmTransaction(connection, transaction, [
@@ -599,7 +599,7 @@ await web3.sendAndConfirmTransaction(connection, transaction, [
 
 let nonceAccountData = await connection.getNonce(
   nonceAccount.publicKey,
-  "confirmed",
+  "confirmed"
 );
 
 console.log(nonceAccountData);
@@ -613,11 +613,11 @@ console.log(nonceAccountData);
 
 let nonceAccountInfo = await connection.getAccountInfo(
   nonceAccount.publicKey,
-  "confirmed",
+  "confirmed"
 );
 
 let nonceAccountFromInfo = web3.NonceAccount.fromAccountData(
-  nonceAccountInfo.data,
+  nonceAccountInfo.data
 );
 
 console.log(nonceAccountFromInfo);
@@ -649,7 +649,7 @@ const web3 = require("@solana/web3.js");
 
 let voteAccountInfo = await connection.getProgramAccounts(web3.VOTE_PROGRAM_ID);
 let voteAccountFromData = web3.VoteAccount.fromAccountData(
-  voteAccountInfo[0].account.data,
+  voteAccountInfo[0].account.data
 );
 console.log(voteAccountFromData);
 /*
@@ -730,7 +730,7 @@ let connection = new web3.Connection(web3.clusterApiUrl("devnet"), "confirmed");
 
 let airdropSignature = await connection.requestAirdrop(
   fromPublicKey.publicKey,
-  web3.LAMPORTS_PER_SOL,
+  web3.LAMPORTS_PER_SOL
 );
 await connection.confirmTransaction({ signature: airdropSignature });
 
@@ -741,14 +741,14 @@ let authorizedAccount = web3.Keypair.generate();
     For example, we add 50 lamports as part of the stake */
 let lamportsForStakeAccount =
   (await connection.getMinimumBalanceForRentExemption(
-    web3.StakeProgram.space,
+    web3.StakeProgram.space
   )) + 50;
 
 let createAccountTransaction = web3.StakeProgram.createAccount({
   fromPubkey: fromPublicKey.publicKey,
   authorized: new web3.Authorized(
     authorizedAccount.publicKey,
-    authorizedAccount.publicKey,
+    authorizedAccount.publicKey
   ),
   lamports: lamportsForStakeAccount,
   lockup: new web3.Lockup(0, 0, fromPublicKey.publicKey),

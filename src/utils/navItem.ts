@@ -19,7 +19,7 @@ const GROUPING_KEY_SEPARATOR = "-";
  * array of document `records`
  */
 export function generateNavItemListing(
-  records: Array<SupportedDocTypes>,
+  records: Array<SupportedDocTypes>
 ): Array<NavItem> {
   // init a generic group tracker object
   const grouping: any = {};
@@ -28,11 +28,11 @@ export function generateNavItemListing(
    * format each of the `records` as a NavItem, grouping each of them inside
    * their file system directory for later generating the category based NavItem[]
    */
-  records.forEach(record => {
+  records.forEach((record) => {
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
     const { id: computedKey } = computeRecordPathAndId(
-      record._raw.sourceFileDir,
+      record._raw.sourceFileDir
     );
 
     // init the dir based category
@@ -48,7 +48,7 @@ export function generateNavItemListing(
       grouping[computedKey] = Object.assign(
         grouping[computedKey],
         // @ts-ignore
-        computeNavItem(record),
+        computeNavItem(record)
       );
     } else {
       // @ts-ignore
@@ -68,7 +68,7 @@ export function generateNavItemListing(
     const parentKey = key.slice(
       0,
       currentItem?.path?.lastIndexOf("/") ||
-        key.lastIndexOf(GROUPING_KEY_SEPARATOR),
+        key.lastIndexOf(GROUPING_KEY_SEPARATOR)
     );
 
     if (
@@ -82,7 +82,9 @@ export function generateNavItemListing(
         const parentItems: NavItem[] =
           (grouping[parentKey] as NavItem)?.items || [];
 
-        const siblingIndex = parentItems.findIndex(s => s.id == currentItem.id);
+        const siblingIndex = parentItems.findIndex(
+          (s) => s.id == currentItem.id
+        );
 
         // update an existing sibling category if it already exists
         if (siblingIndex >= 0) {
@@ -130,13 +132,13 @@ export function generateNavItemListing(
  * note: normally, the provided `navItems` should be preprocessed by `generateNavItemListing`
  */
 export function generateFlatNavItemListing(
-  navItems: Array<NavItem>,
+  navItems: Array<NavItem>
 ): Array<NavItem> {
   return navItems.flatMap(({ items, ...node }: NavItem) => {
     if (typeof items !== "undefined") {
       return [node as NavItem]
         .concat(items)
-        .flatMap(children => generateFlatNavItemListing([children]));
+        .flatMap((children) => generateFlatNavItemListing([children]));
     }
     return node;
   });
@@ -178,7 +180,7 @@ export function computeRecordPathAndId(path: string) {
  */
 export function sortNavItems(navItems: NavItem[]) {
   return navItems
-    .map(record => {
+    .map((record) => {
       // sort the child items
       if (Array.isArray(record.items)) {
         record.items = sortNavItems(record.items);
@@ -188,7 +190,7 @@ export function sortNavItems(navItems: NavItem[]) {
     .sort(
       (a, b) =>
         (typeof a?.sidebarSortOrder == "undefined" ? 999 : a.sidebarSortOrder) -
-        (typeof b?.sidebarSortOrder == "undefined" ? 999 : b.sidebarSortOrder),
+        (typeof b?.sidebarSortOrder == "undefined" ? 999 : b.sidebarSortOrder)
     );
 }
 
@@ -209,7 +211,7 @@ export function shouldIgnoreRecord({
   if (
     !allowedExtensions.includes(
       fileName.substring(fileName.lastIndexOf(".")).replace(/\./g, "") ??
-        "[err]",
+        "[err]"
     )
   )
     return true;
@@ -222,7 +224,7 @@ export function shouldIgnoreRecord({
  * Compute a standard NavItem record for use with site navigation
  */
 export function computeNavItem(
-  doc: SupportedDocTypes & Partial<CoreDocsRecord>,
+  doc: SupportedDocTypes & Partial<CoreDocsRecord>
 ): NavItem {
   const computedPathAndId = computeRecordPathAndId(doc._raw.flattenedPath);
 

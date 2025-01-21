@@ -298,7 +298,7 @@ describe("Initialization", () => {
     try {
       const rentExemptionAmount =
         await provider.connection.getMinimumBalanceForRentExemption(
-          ACCOUNT_SPACE,
+          ACCOUNT_SPACE
         );
 
       const createAccountInstruction = SystemProgram.createAccount({
@@ -314,14 +314,14 @@ describe("Initialization", () => {
       await anchor.web3.sendAndConfirmTransaction(
         provider.connection,
         transaction,
-        [walletAuthority.payer, insecureUserAccount],
+        [walletAuthority.payer, insecureUserAccount]
       );
 
       await airdropIfRequired(
         provider.connection,
         secondWallet.publicKey,
         AIRDROP_AMOUNT,
-        MINIMUM_BALANCE_FOR_RENT_EXEMPTION,
+        MINIMUM_BALANCE_FOR_RENT_EXEMPTION
       );
     } catch (error) {
       console.error("Setup failed:", error);
@@ -359,7 +359,7 @@ describe("Initialization", () => {
       await anchor.web3.sendAndConfirmTransaction(
         provider.connection,
         transaction,
-        [secondWallet],
+        [secondWallet]
       );
     } catch (error) {
       console.error("Re-invocation of insecure initialization failed:", error);
@@ -521,4 +521,5 @@ find one in your own program, patch it immediately.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=652c68aa-18d9-464c-9522-e531fd8738d5)!
+
 </Callout>

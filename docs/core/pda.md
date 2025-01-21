@@ -149,7 +149,7 @@ const string = "helloWorld";
 
 const [PDA, bump] = PublicKey.findProgramAddressSync(
   [Buffer.from(string)],
-  programId,
+  programId
 );
 
 console.log(`PDA: ${PDA}`);
@@ -196,7 +196,7 @@ const bump = 254;
 
 const PDA = PublicKey.createProgramAddressSync(
   [Buffer.from(string), Buffer.from([bump])],
-  programId,
+  programId
 );
 
 console.log(`PDA: ${PDA}`);
@@ -230,7 +230,7 @@ for (let bump = 255; bump >= 0; bump--) {
   try {
     const PDA = PublicKey.createProgramAddressSync(
       [Buffer.from(string), Buffer.from([bump])],
-      programId,
+      programId
     );
     console.log("bump " + bump + ": " + PDA);
   } catch (error) {
@@ -262,8 +262,8 @@ addresses. This means that given the same optional seeds and `programId`, a bump
 seed with a different value can still derive a valid PDA.
 
 <Callout type="warning">
-  When building Solana programs, it is recommended to include security checks that
-  validate a PDA passed to the program is derived using the canonical bump.
+  When building Solana programs, it is recommended to include security checks
+  that validate a PDA passed to the program is derived using the canonical bump.
   Failing to do so may introduce vulnerabilities that allow for unexpected
   accounts to be provided to a program.
 </Callout>
@@ -362,7 +362,7 @@ link provided above, you will find the Javascript equivalent to derive the PDA.
 ```ts /data/ /user.publicKey/
 const [PDA] = PublicKey.findProgramAddressSync(
   [Buffer.from("data"), user.publicKey.toBuffer()],
-  program.programId,
+  program.programId
 );
 ```
 

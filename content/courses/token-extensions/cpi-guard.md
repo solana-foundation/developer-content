@@ -154,21 +154,21 @@ const enableCpiGuardInstruction = createEnableCpiGuardInstruction(
   tokenAccount,
   owner.publicKey,
   [],
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccount,
   mint,
   owner.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // construct transaction with these instructions
 const transaction = new Transaction().add(
   createTokenAccountInstruction,
   initializeAccountInstruction,
-  enableCpiGuardInstruction,
+  enableCpiGuardInstruction
 );
 
 transaction.feePayer = payer.publicKey;
@@ -194,7 +194,7 @@ await enableCpiGuard(
   payer, // payer
   userTokenAccount.publicKey, // account
   payer, // owner
-  [], // multiSigners
+  [] // multiSigners
 );
 
 // disable CPI Guard
@@ -203,7 +203,7 @@ await disableCpiGuard(
   payer, // payer
   userTokenAccount.publicKey, // account
   payer, // owner
-  [], // multiSigners
+  [] // multiSigners
 );
 ```
 
@@ -531,7 +531,7 @@ export async function createTokenAccountWithCPIGuard(
   payer: Keypair,
   owner: Keypair,
   tokenAccountKeypair: Keypair,
-  mint: PublicKey,
+  mint: PublicKey
 ): Promise<string> {
   const tokenAccount = tokenAccountKeypair.publicKey;
 
@@ -553,20 +553,20 @@ export async function createTokenAccountWithCPIGuard(
     tokenAccount,
     mint,
     owner.publicKey,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const enableCpiGuardInstruction = createEnableCpiGuardInstruction(
     tokenAccount,
     owner.publicKey,
     [],
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const transaction = new Transaction().add(
     createTokenAccountInstruction,
     initializeAccountInstruction,
-    enableCpiGuardInstruction,
+    enableCpiGuardInstruction
   );
 
   transaction.feePayer = payer.publicKey;
@@ -664,14 +664,14 @@ it("stops 'Approve Delegate' when CPI guard is enabled", async () => {
     6,
     testTokenMint,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   await createTokenAccountWithCPIGuard(
     provider.connection,
     payer,
     payer,
     userTokenAccount,
-    testTokenMint.publicKey,
+    testTokenMint.publicKey
   );
 });
 ```
@@ -697,10 +697,10 @@ try {
 } catch (e) {
   assert(
     e.message ==
-      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2d",
+      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2d"
   );
   console.log(
-    "CPI Guard is enabled, and a program attempted to approve a delegate",
+    "CPI Guard is enabled, and a program attempted to approve a delegate"
   );
 }
 ```
@@ -723,7 +723,7 @@ it("allows 'Approve Delegate' when CPI guard is disabled", async () => {
     payer,
     [],
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await program.methods
@@ -815,14 +815,14 @@ it("stops 'Close Account' when CPI guard in enabled", async () => {
     6,
     testTokenMint,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   await createTokenAccountWithCPIGuard(
     provider.connection,
     payer,
     payer,
     userTokenAccount,
-    testTokenMint.publicKey,
+    testTokenMint.publicKey
   );
 });
 ```
@@ -849,10 +849,10 @@ try {
 } catch (e) {
   assert(
     e.message ==
-      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2c",
+      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2c"
   );
   console.log(
-    "CPI Guard is enabled, and a program attempted to close an account without returning lamports to owner",
+    "CPI Guard is enabled, and a program attempted to close an account without returning lamports to owner"
   );
 }
 ```
@@ -870,7 +870,7 @@ it("Close Account without CPI Guard", async () => {
     payer,
     [],
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await program.methods
@@ -952,14 +952,14 @@ it("sets authority when CPI guard in enabled", async () => {
     6,
     testTokenMint,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   await createTokenAccountWithCPIGuard(
     provider.connection,
     payer,
     payer,
     userTokenAccount,
-    testTokenMint.publicKey,
+    testTokenMint.publicKey
   );
 
   try {
@@ -978,10 +978,10 @@ it("sets authority when CPI guard in enabled", async () => {
   } catch (e) {
     assert(
       e.message ==
-        "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2e",
+        "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2e"
     );
     console.log(
-      "CPI Guard is enabled, and a program attempted to add or change an authority",
+      "CPI Guard is enabled, and a program attempted to add or change an authority"
     );
   }
 });
@@ -999,7 +999,7 @@ it("Set Authority Example", async () => {
     payer,
     [],
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await program.methods
@@ -1084,7 +1084,7 @@ it("stops 'Burn' without a delegate signature", async () => {
     6,
     testTokenMint,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await createTokenAccountWithCPIGuard(
@@ -1092,7 +1092,7 @@ it("stops 'Burn' without a delegate signature", async () => {
     payer,
     payer,
     userTokenAccount,
-    testTokenMint.publicKey,
+    testTokenMint.publicKey
   );
 });
 ```
@@ -1110,7 +1110,7 @@ const mintToTx = await mintTo(
   1000,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -1130,7 +1130,7 @@ const approveTx = await approve(
   500,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -1159,10 +1159,10 @@ try {
 } catch (e) {
   assert(
     e.message ==
-      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2b",
+      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2b"
   );
   console.log(
-    "CPI Guard is enabled, and a program attempted to burn user funds without using a delegate.",
+    "CPI Guard is enabled, and a program attempted to burn user funds without using a delegate."
   );
 }
 ```
@@ -1179,7 +1179,7 @@ it("Burn without Delegate Signature Example", async () => {
     payer,
     [],
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const tx = await program.methods
@@ -1266,7 +1266,7 @@ it("stops 'Set Authority' without CPI on a CPI-guarded account", async () => {
     6,
     testTokenMint,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await createTokenAccountWithCPIGuard(
@@ -1274,7 +1274,7 @@ it("stops 'Set Authority' without CPI on a CPI-guarded account", async () => {
     payer,
     payer,
     userTokenAccount,
-    testTokenMint.publicKey,
+    testTokenMint.publicKey
   );
 });
 ```
@@ -1295,15 +1295,15 @@ try {
     newOwner.publicKey,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 } catch (e) {
   assert(
     e.message ==
-      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2f",
+      "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2f"
   );
   console.log(
-    "Account ownership cannot be changed while CPI Guard is enabled.",
+    "Account ownership cannot be changed while CPI Guard is enabled."
   );
 }
 ```
@@ -1323,7 +1323,7 @@ it("Set Authority without CPI on Non-CPI Guarded Account", async () => {
     payer.publicKey,
     firstNonCPIGuardAccount,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await setAuthority(
@@ -1335,7 +1335,7 @@ it("Set Authority without CPI on Non-CPI Guarded Account", async () => {
     newOwner.publicKey,
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 });
 ```
@@ -1361,10 +1361,10 @@ it("[CPI Guard] Set Authority via CPI on CPI Guarded Account", async () => {
   } catch (e) {
     assert(
       e.message ==
-        "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2e",
+        "failed to send transaction: Transaction simulation failed: Error processing Instruction 0: custom program error: 0x2e"
     );
     console.log(
-      "CPI Guard is enabled, and a program attempted to add or change an authority.",
+      "CPI Guard is enabled, and a program attempted to add or change an authority."
     );
   }
 });
@@ -1382,7 +1382,7 @@ it("Set Authority via CPI on Non-CPI Guarded Account", async () => {
     payer.publicKey,
     secondNonCPIGuardAccount,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await program.methods

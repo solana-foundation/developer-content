@@ -295,7 +295,7 @@ it("allows insecure initialization with incorrect vault", async () => {
       tokenMint,
       insecureVault.address,
       wallet.payer,
-      INITIAL_MINT_AMOUNT,
+      INITIAL_MINT_AMOUNT
     );
 
     const vaultAccount = await getAccount(connection, insecureVault.address);
@@ -441,7 +441,7 @@ it("performs secure pool initialization and withdrawal correctly", async () => {
   try {
     const initialWithdrawBalance = await getAccount(
       connection,
-      withdrawDestination,
+      withdrawDestination
     );
 
     await program.methods
@@ -454,7 +454,7 @@ it("performs secure pool initialization and withdrawal correctly", async () => {
       .signers([recommendedVault])
       .rpc();
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     await mintTo(
       connection,
@@ -462,7 +462,7 @@ it("performs secure pool initialization and withdrawal correctly", async () => {
       tokenMint,
       recommendedVault.publicKey,
       wallet.payer,
-      INITIAL_MINT_AMOUNT,
+      INITIAL_MINT_AMOUNT
     );
 
     await program.methods
@@ -475,12 +475,12 @@ it("performs secure pool initialization and withdrawal correctly", async () => {
 
     const finalWithdrawBalance = await getAccount(
       connection,
-      withdrawDestination,
+      withdrawDestination
     );
 
     expect(
       Number(finalWithdrawBalance.amount) -
-        Number(initialWithdrawBalance.amount),
+        Number(initialWithdrawBalance.amount)
     ).to.equal(INITIAL_MINT_AMOUNT);
   } catch (error) {
     throw new Error(`Test failed: ${error.message}`);
@@ -581,4 +581,5 @@ them! If you find one in your own program, be sure to patch it right away.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=5744079f-9473-4485-9a14-9be4d31b40d1)!
+
 </Callout>

@@ -691,7 +691,7 @@ program to illustrate the process:
 ```typescript
 export async function getMessageLog(
   connection: Connection,
-  txSignature: string,
+  txSignature: string
 ) {
   // Confirm the transaction, otherwise the getTransaction sometimes returns null
   const latestBlockHash = await connection.getLatestBlockhash();
@@ -712,10 +712,10 @@ export async function getMessageLog(
 
   // Get the inner instructions that match the SPL_NOOP_PROGRAM_ID
   const noopInnerIx = innerIx.filter(
-    instruction =>
+    (instruction) =>
       txInfo?.transaction.message.staticAccountKeys[
         instruction.programIdIndex
-      ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58(),
+      ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58()
   );
 
   let messageLog: MessageLog;
@@ -723,7 +723,7 @@ export async function getMessageLog(
     try {
       // Try to decode and deserialize the instruction data
       const applicationDataEvent = deserializeApplicationDataEvent(
-        Buffer.from(bs58.decode(noopInnerIx[i]?.data!)),
+        Buffer.from(bs58.decode(noopInnerIx[i]?.data!))
       );
 
       // Get the application data
@@ -733,7 +733,7 @@ export async function getMessageLog(
       messageLog = deserialize(
         MessageLogBorshSchema,
         MessageLog,
-        Buffer.from(applicationData),
+        Buffer.from(applicationData)
       );
 
       if (messageLog !== undefined) {
@@ -755,7 +755,9 @@ streamlined. If you discover solutions that enhance your development experience,
 please don’t hesitate to share them with the community!
 
 <Callout type="info" title="Testing">
-Remember to write comprehensive tests for your state compression implementation. This ensures your program behaves correctly and helps catch potential issues early in the development process.
+  Remember to write comprehensive tests for your state compression
+  implementation. This ensures your program behaves correctly and helps catch
+  potential issues early in the development process.
 </Callout>
 
 ## Lab: Building a Note-Taking App with Generalized State Compression
@@ -1335,7 +1337,7 @@ export function getHash(note: string, owner: PublicKey) {
   const concatenatedUint8Array = new Uint8Array(
     concatenatedBuffer.buffer,
     concatenatedBuffer.byteOffset,
-    concatenatedBuffer.byteLength,
+    concatenatedBuffer.byteLength
   );
   return keccak256(concatenatedUint8Array);
 }
@@ -1360,10 +1362,10 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
 
   // Get the inner instructions that match the SPL_NOOP_PROGRAM_ID
   const noopInnerIx = innerIx.filter(
-    instruction =>
+    (instruction) =>
       txInfo?.transaction.message.staticAccountKeys[
         instruction.programIdIndex
-      ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58(),
+      ].toBase58() === SPL_NOOP_PROGRAM_ID.toBase58()
   );
 
   let noteLog: NoteLog;
@@ -1371,7 +1373,7 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
     try {
       // Try to decode and deserialize the instruction data
       const applicationDataEvent = deserializeApplicationDataEvent(
-        Buffer.from(bs58.decode(noopInnerIx[i]?.data!)),
+        Buffer.from(bs58.decode(noopInnerIx[i]?.data!))
       );
 
       // Get the application data
@@ -1381,7 +1383,7 @@ export async function getNoteLog(connection: Connection, txSignature: string) {
       noteLog = deserialize(
         NoteLogBorshSchema,
         NoteLog,
-        Buffer.from(applicationData),
+        Buffer.from(applicationData)
       );
 
       if (noteLog !== undefined) {
@@ -1466,7 +1468,7 @@ describe("compressed-notes", () => {
   anchor.setProvider(provider);
   const connection = new Connection(
     provider.connection.rpcEndpoint,
-    "confirmed",
+    "confirmed"
   );
 
   const wallet = provider.wallet as anchor.Wallet;
@@ -1478,7 +1480,7 @@ describe("compressed-notes", () => {
   // Derive the PDA to use as the tree authority for the Merkle tree account
   const [treeAuthority] = PublicKey.findProgramAddressSync(
     [merkleTree.publicKey.toBuffer()],
-    program.programId,
+    program.programId
   );
 
   const firstNote = "hello world";
@@ -1515,7 +1517,7 @@ it("creates a new note tree", async () => {
     merkleTree.publicKey,
     wallet.publicKey,
     maxDepthSizePair,
-    canopyDepth,
+    canopyDepth
   );
 
   // Instruction to initialize the tree through the Note program
@@ -1537,7 +1539,7 @@ it("creates a new note tree", async () => {
   const merkleTreeAccount =
     await ConcurrentMerkleTreeAccount.fromAccountAddress(
       connection,
-      merkleTree.publicKey,
+      merkleTree.publicKey
     );
   assert(merkleTreeAccount, "Merkle tree should be initialized");
 });
@@ -1559,7 +1561,7 @@ it("adds a note to the Merkle tree", async () => {
 
   assert(
     hash === Buffer.from(noteLog.leafNode).toString("hex"),
-    "Leaf node hash should match",
+    "Leaf node hash should match"
   );
   assert(firstNote === noteLog.note, "Note should match the appended note");
 });
@@ -1581,11 +1583,11 @@ it("adds max size note to the Merkle tree", async () => {
 
   assert(
     hash === Buffer.from(noteLog.leafNode).toString("hex"),
-    "Leaf node hash should match",
+    "Leaf node hash should match"
   );
   assert(
     secondNote === noteLog.note,
-    "Note should match the appended max size note",
+    "Note should match the appended max size note"
   );
 });
 
@@ -1593,7 +1595,7 @@ it("updates the first note in the Merkle tree", async () => {
   const merkleTreeAccount =
     await ConcurrentMerkleTreeAccount.fromAccountAddress(
       connection,
-      merkleTree.publicKey,
+      merkleTree.publicKey
     );
   const root = merkleTreeAccount.getCurrentRoot();
 
@@ -1613,11 +1615,11 @@ it("updates the first note in the Merkle tree", async () => {
 
   assert(
     hash === Buffer.from(noteLog.leafNode).toString("hex"),
-    "Leaf node hash should match after update",
+    "Leaf node hash should match after update"
   );
   assert(
     updatedNote === noteLog.note,
-    "Updated note should match the logged note",
+    "Updated note should match the logged note"
   );
 });
 ```
@@ -1644,6 +1646,7 @@ the
 [`main` branch on GitHub](https://github.com/Unboxed-Software/anchor-compressed-notes/tree/main).
 
 <Callout type="success" title="Completed the lab?">
-Push your code to GitHub and [let us know what you think of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
+  Push your code to GitHub and [let us know what you think of this
+  lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=60f6b072-eaeb-469c-b32e-5fea4b72d1d1)!
 </Callout>
 ```

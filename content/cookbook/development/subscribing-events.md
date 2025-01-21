@@ -38,7 +38,7 @@ import { clusterApiUrl, Connection, Keypair } from "@solana/web3.js";
     wallet.publicKey,
     (updatedAccountInfo, context) =>
       console.log("Updated account info: ", updatedAccountInfo),
-    "confirmed",
+    "confirmed"
   );
 })();
 ```

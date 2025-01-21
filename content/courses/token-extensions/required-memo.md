@@ -68,7 +68,7 @@ const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccountKeypair.publicKey,
   mint,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -81,7 +81,7 @@ const enableRequiredMemoTransfersInstruction =
     tokenAccountKeypair.publicKey,
     payer.publicKey,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -92,13 +92,13 @@ is created with the required memo extension.
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeAccountInstruction,
-  enableRequiredMemoTransfersInstruction,
+  enableRequiredMemoTransfersInstruction
 );
 
 const transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, tokenAccountKeypair], // Signers
+  [payer, tokenAccountKeypair] // Signers
 );
 ```
 
@@ -124,8 +124,8 @@ const transaction = new Transaction().add(
     payer.publicKey,
     amountToTransfer,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
-  ),
+    TOKEN_2022_PROGRAM_ID
+  )
 );
 await sendAndConfirmTransaction(connection, transaction, [payer]);
 ```
@@ -157,7 +157,7 @@ await disableRequiredMemoTransfers(
   payer,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -278,7 +278,7 @@ const mint = await createMint(
   mintDecimals,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -316,7 +316,7 @@ export async function createTokenWithMemoExtension(
   connection: Connection,
   payer: Keypair,
   tokenAccountKeypair: Keypair,
-  mint: PublicKey,
+  mint: PublicKey
 ): Promise<string> {
   // CREATE ACCOUNT INSTRUCTION
 
@@ -360,7 +360,7 @@ const initializeAccountInstruction = createInitializeAccountInstruction(
   tokenAccountKeypair.publicKey,
   mint,
   payer.publicKey,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -376,7 +376,7 @@ const enableRequiredMemoTransfersInstruction =
     tokenAccountKeypair.publicKey,
     payer.publicKey,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 ```
 
@@ -388,13 +388,13 @@ blockchain and return the signature
 const transaction = new Transaction().add(
   createAccountInstruction,
   initializeAccountInstruction,
-  enableRequiredMemoTransfersInstruction,
+  enableRequiredMemoTransfersInstruction
 );
 
 const transactionSignature = await sendAndConfirmTransaction(
   connection,
   transaction,
-  [payer, tokenAccountKeypair], // Signers
+  [payer, tokenAccountKeypair] // Signers
 );
 
 return transactionSignature;
@@ -410,14 +410,14 @@ await createTokenWithMemoExtension(
   connection,
   payer,
   ourTokenAccountKeypair,
-  mint,
+  mint
 );
 
 await createTokenWithMemoExtension(
   connection,
   payer,
   otherTokenAccountKeypair,
-  mint,
+  mint
 );
 ```
 
@@ -435,7 +435,7 @@ await mintTo(
   amountToMint,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -469,8 +469,8 @@ try {
       payer.publicKey,
       amountToTransfer,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
-    ),
+      TOKEN_2022_PROGRAM_ID
+    )
   );
 
   await sendAndConfirmTransaction(connection, transaction, [payer]);
@@ -478,7 +478,7 @@ try {
   console.error("You should not be able to transfer without a memo.");
 } catch (error) {
   console.log(
-    `✅ - We expected this to fail because you need to send a memo with the transfer.`,
+    `✅ - We expected this to fail because you need to send a memo with the transfer.`
   );
 }
 ```
@@ -514,8 +514,8 @@ const transaction = new Transaction().add(
     payer.publicKey,
     amountToTransfer,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
-  ),
+    TOKEN_2022_PROGRAM_ID
+  )
 );
 await sendAndConfirmTransaction(connection, transaction, [payer]);
 
@@ -523,11 +523,11 @@ const accountAfterMemoTransfer = await getAccount(
   connection,
   otherTokenAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(
-  `✅ - We have transferred ${accountAfterMemoTransfer.amount} tokens to ${otherTokenAccount} with the memo: ${message}`,
+  `✅ - We have transferred ${accountAfterMemoTransfer.amount} tokens to ${otherTokenAccount} with the memo: ${message}`
 );
 ```
 
@@ -552,7 +552,7 @@ await disableRequiredMemoTransfers(
   payer,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // Transfer tokens to otherTokenAccount
@@ -563,8 +563,8 @@ const transfer = new Transaction().add(
     payer.publicKey,
     amountToTransfer,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
-  ),
+    TOKEN_2022_PROGRAM_ID
+  )
 );
 
 await sendAndConfirmTransaction(connection, transfer, [payer]);
@@ -573,7 +573,7 @@ const accountAfterDisable = await getAccount(
   connection,
   otherTokenAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // Re-enable memo transfers to show it exists
@@ -584,11 +584,11 @@ await enableRequiredMemoTransfers(
   payer,
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log(
-  `✅ - We have transferred ${accountAfterDisable.amount} tokens to ${otherTokenAccount} without a memo.`,
+  `✅ - We have transferred ${accountAfterDisable.amount} tokens to ${otherTokenAccount} without a memo.`
 );
 ```
 

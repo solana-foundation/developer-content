@@ -8,8 +8,7 @@ objectives:
     which features are or are not enabled
   - Create an admin-only instruction to set up a program account that can be
     used to store program configuration values
-description:
-  "Create distinct environments, feature flags and admin-only instructions."
+description: "Create distinct environments, feature flags and admin-only instructions."
 ---
 
 ## Summary
@@ -990,10 +989,10 @@ it("initializes program config account", async () => {
     const configAccount =
       await program.account.programConfig.fetch(programConfig);
     expect(configAccount.feeBasisPoints.toNumber()).to.equal(
-      INITIAL_FEE_BASIS_POINTS,
+      INITIAL_FEE_BASIS_POINTS
     );
     expect(configAccount.admin.toString()).to.equal(
-      walletAuthority.publicKey.toString(),
+      walletAuthority.publicKey.toString()
     );
   } catch (error) {
     console.error("Program config initialization failed:", error);
@@ -1031,10 +1030,10 @@ it("completes payment successfully", async () => {
 
     expect(Number(senderBalance.amount)).to.equal(0);
     expect(Number(feeDestinationBalance.amount)).to.equal(
-      (PAYMENT_AMOUNT * INITIAL_FEE_BASIS_POINTS) / 10000,
+      (PAYMENT_AMOUNT * INITIAL_FEE_BASIS_POINTS) / 10000
     );
     expect(Number(receiverBalance.amount)).to.equal(
-      (PAYMENT_AMOUNT * (10000 - INITIAL_FEE_BASIS_POINTS)) / 10000,
+      (PAYMENT_AMOUNT * (10000 - INITIAL_FEE_BASIS_POINTS)) / 10000
     );
   } catch (error) {
     console.error("Payment failed:", error);
@@ -1062,7 +1061,7 @@ it("updates program config account", async () => {
     const configAccount =
       await program.account.programConfig.fetch(programConfig);
     expect(configAccount.feeBasisPoints.toNumber()).to.equal(
-      UPDATED_FEE_BASIS_POINTS,
+      UPDATED_FEE_BASIS_POINTS
     );
   } catch (error) {
     console.error("Program config update failed:", error);
@@ -1151,4 +1150,5 @@ to see one possible solution.
 
 Push your code to GitHub and
 [tell us what you thought of this lesson](https://form.typeform.com/to/IPH0UGz7#answers-lesson=02a7dab7-d9c1-495b-928c-a4412006ec20)!
+
 </Callout>

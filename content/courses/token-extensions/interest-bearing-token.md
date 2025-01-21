@@ -88,7 +88,7 @@ createInitializeMintInstruction(
   decimals,
   mintAuthority.publicKey,
   null,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -112,7 +112,7 @@ const tokenInfo = await getAccount(
   connection,
   payerTokenAccount,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 /**
@@ -131,7 +131,7 @@ const uiAmount = await amountToUiAmount(
   payer,
   mint,
   tokenInfo.amount,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 console.log("UI Amount: ", uiAmount);
@@ -182,7 +182,7 @@ await setAuthority(
   otherAccount.publicKey, // new rate authority,
   [],
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 await updateRateInterestBearingMint(
@@ -193,7 +193,7 @@ await updateRateInterestBearingMint(
   10, // updated rate
   undefined,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -324,7 +324,7 @@ export async function createTokenWithInterestRateExtension(
   mintLen: number,
   rateAuthority: Keypair,
   rate: number,
-  mintKeypair: Keypair,
+  mintKeypair: Keypair
 ) {
   const mintAuthority = payer;
   const decimals = 9;
@@ -366,22 +366,22 @@ const mintTransaction = new Transaction().add(
     mint,
     rateAuthority.publicKey,
     rate,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   ),
   createInitializeMintInstruction(
     mint,
     decimals,
     mintAuthority.publicKey,
     null,
-    TOKEN_2022_PROGRAM_ID,
-  ),
+    TOKEN_2022_PROGRAM_ID
+  )
 );
 
 await sendAndConfirmTransaction(
   connection,
   mintTransaction,
   [payer, mintKeypair],
-  undefined,
+  undefined
 );
 ```
 
@@ -408,7 +408,7 @@ await createTokenWithInterestRateExtension(
   mint,
   rateAuthority,
   rate,
-  mintKeypair,
+  mintKeypair
 );
 
 // Create associated token account
@@ -418,7 +418,7 @@ const payerTokenAccount = await createAssociatedTokenAccount(
   mint,
   payer.publicKey,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 ```
 
@@ -456,7 +456,7 @@ async function getInterestBearingMint(inputs: GetInterestBearingMint) {
     connection,
     mint,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   // retrieves the interest state of mint
@@ -491,12 +491,12 @@ try {
     0, // updated rate
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   const newRate = await getInterestBearingMint({ connection, mint });
 
   console.log(
-    `✅ - We expected this to pass because the rate has been updated. Old rate: ${initialRate}. New rate: ${newRate}`,
+    `✅ - We expected this to pass because the rate has been updated. Old rate: ${initialRate}. New rate: ${newRate}`
   );
 } catch (error) {
   console.error("You should be able to update the interest.");
@@ -527,12 +527,12 @@ try {
     0, // updated rate
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
   console.log("You should be able to update the interest.");
 } catch (error) {
   console.error(
-    `✅ - We expected this to fail because the owner is incorrect.`,
+    `✅ - We expected this to fail because the owner is incorrect.`
   );
 }
 ```
@@ -565,14 +565,14 @@ the new accrued interest:
       100,
       undefined,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
     const tokenInfo = await getAccount(
       connection,
       payerTokenAccount,
       undefined,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
     // Convert amount to UI amount with accrued interest
@@ -581,11 +581,11 @@ the new accrued interest:
       payer,
       mint,
       tokenInfo.amount,
-      TOKEN_2022_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID
     );
 
     console.log(
-      `Amount with accrued interest at ${rate}: ${tokenInfo.amount} tokens = ${uiAmount}`,
+      `Amount with accrued interest at ${rate}: ${tokenInfo.amount} tokens = ${uiAmount}`
     );
   }
 }
@@ -615,7 +615,7 @@ const mintAccount = await getMint(
   connection,
   mint,
   undefined,
-  TOKEN_2022_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID
 );
 
 // Get Interest Config for Mint Account
@@ -624,7 +624,7 @@ const interestBearingMintConfig =
 
 console.log(
   "\nMint Config:",
-  JSON.stringify(interestBearingMintConfig, null, 2),
+  JSON.stringify(interestBearingMintConfig, null, 2)
 );
 ```
 
@@ -662,7 +662,7 @@ try {
     otherAccount.publicKey, // new rate authority,
     [],
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   await updateRateInterestBearingMint(
@@ -673,17 +673,17 @@ try {
     10, // updated rate
     undefined,
     undefined,
-    TOKEN_2022_PROGRAM_ID,
+    TOKEN_2022_PROGRAM_ID
   );
 
   const newRate = await getInterestBearingMint({ connection, mint });
 
   console.log(
-    `✅ - We expected this to pass because the rate can be updated with the new authority. New rate: ${newRate}`,
+    `✅ - We expected this to pass because the rate can be updated with the new authority. New rate: ${newRate}`
   );
 } catch (error) {
   console.error(
-    `You should be able to update the interest with new rate authority.`,
+    `You should be able to update the interest with new rate authority.`
   );
 }
 ```

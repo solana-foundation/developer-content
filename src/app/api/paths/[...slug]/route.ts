@@ -44,7 +44,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
    */
 
   // compute the path data to return
-  records.map(record => {
+  records.map((record) => {
     if (shouldIgnoreRecord({ fileName: record._raw.sourceFileName })) return;
 
     // @ts-ignore
@@ -71,7 +71,7 @@ export function GET(_req: Request, { params: { slug } }: RouteProps) {
   // remove the /docs/rpc from the `docs` grouping since it should be handled by the `rpc` grouping
   if (group == "docs") {
     listing = listing.filter(
-      item => item.href != "/docs/rpc" && item.href != "/docs/rpc/",
+      (item) => item.href != "/docs/rpc" && item.href != "/docs/rpc/"
     );
   }
 

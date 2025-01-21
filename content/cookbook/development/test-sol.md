@@ -17,7 +17,7 @@ import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
 
   const signature = await connection.requestAirdrop(
     keypair.publicKey,
-    LAMPORTS_PER_SOL,
+    LAMPORTS_PER_SOL
   );
   const { blockhash, lastValidBlockHeight } =
     await connection.getLatestBlockhash();
