@@ -3,8 +3,7 @@ featured: true
 date: 2023-01-04T00:00:00Z
 updatedDate: 2023-01-04T00:00:00Z
 title: Solana 101
-description:
-  Introduction to building on & interacting with the Solana blockchain
+description: Introduction to building on & interacting with the Solana blockchain
 repoUrl: https://github.com/Solana-Workshops/solana-101
 duration: "2 hours"
 objectives:

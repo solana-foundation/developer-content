@@ -1,8 +1,7 @@
 ---
 title: How to Create a Token Account
 sidebarSortOrder: 3
-description:
-  "Learn to create Solana token accounts, which hold tokens for users."
+description: "Learn to create Solana token accounts, which hold tokens for users."
 ---
 
 A token account is required for a user to hold tokens.

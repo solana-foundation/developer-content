@@ -5,8 +5,7 @@ objectives:
   - Explain the high-level Mobile Wallet Adapter (MWA) flow
   - Explain the high-level differences between React and React Native
   - Create a simple Android Solana App using React Native
-description:
-  "Learn how to build native mobile apps using blockchain functionality"
+description: "Learn how to build native mobile apps using blockchain functionality"
 ---
 
 ## Summary

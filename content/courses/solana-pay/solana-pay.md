@@ -6,8 +6,7 @@ objectives:
   - Use the `@solana/pay` library to create Solana Pay transaction requests
   - Partially sign transactions and implement transaction gating based on
     specific conditions
-description:
-  "How to create Solana Pay payment requests using links and QR codes."
+description: "How to create Solana Pay payment requests using links and QR codes."
 ---
 
 ## Summary

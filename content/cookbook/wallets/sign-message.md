@@ -9,15 +9,15 @@ verification of the signature. Verification of a signature allows the recipient
 to be sure that the data was signed by the owner of a specific private key.
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
-<Tab value="web3.js v2">
-```typescript filename="sign-message.ts" file=/code/content/web3jsv2/cookbook/wallets/sign-message.ts#L1-L28
-import {
-signBytes,
-verifySignature,
-getUtf8Encoder,
-getBase58Decoder,
-Address,
-} from "@solana/web3.js";
+  <Tab value="web3.js v2">
+    ```typescript filename="sign-message.ts" file=/code/content/web3jsv2/cookbook/wallets/sign-message.ts#L1-L28
+    import {
+      signBytes,
+      verifySignature,
+      getUtf8Encoder,
+      getBase58Decoder,
+      Address,
+    } from "@solana/web3.js";
 
     export async function signMessage(
       keys: CryptoKeyPair,
@@ -40,7 +40,6 @@ Address,
       };
     }
     ```
-
   </Tab>
 
   <Tab value="web3.js v1">
@@ -74,6 +73,5 @@ Address,
     // Verify using noble-ed25519
     const result = ed.verify(signature, messageBytes, keypair.publicKey.toBytes());
     ```
-
   </Tab>
 </Tabs>

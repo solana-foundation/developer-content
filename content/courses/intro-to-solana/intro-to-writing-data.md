@@ -6,8 +6,7 @@ objectives:
   - Use `@solana/web3.js` to send SOL
   - Use `@solana/web3.js` to sign transactions
   - Use Solana Explorer to view transactions
-description:
-  "Make your first transactions on DevNet, using the System and memo programs!"
+description: "Make your first transactions on DevNet, using the System and memo programs!"
 ---
 
 ## Summary

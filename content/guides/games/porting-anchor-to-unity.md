@@ -2,8 +2,7 @@
 date: 2024-04-25T00:00:00Z
 difficulty: beginner
 title: Port Anchor to Unity
-description:
-  Using Anchor IDL you can interact with your program directly from unity
+description: Using Anchor IDL you can interact with your program directly from unity
 tags:
   - games
   - anchor

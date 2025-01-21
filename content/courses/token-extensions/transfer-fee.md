@@ -4,8 +4,7 @@ objectives:
   - Create transfer fee configured mint
   - Transfer tokens of that mint
   - Collect fees for the transfer
-description:
-  "Create a token that allows a fee to be charged each time the token is traded."
+description: "Create a token that allows a fee to be charged each time the token is traded."
 ---
 
 ## Summary

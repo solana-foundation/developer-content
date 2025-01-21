@@ -1,8 +1,7 @@
 ---
 title: How to Fetch the NFT Metadata
 sidebarSortOrder: 16
-description:
-  "Learn how to fetch the metadata of a non-fungible token (NFT) on Solana."
+description: "Learn how to fetch the metadata of a non-fungible token (NFT) on Solana."
 ---
 
 ```typescript filename="get-nft-metadata.ts"

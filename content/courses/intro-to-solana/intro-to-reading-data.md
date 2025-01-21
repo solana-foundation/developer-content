@@ -4,8 +4,7 @@ objectives:
   - Understand accounts and their addresses
   - Understand SOL and lamports
   - Use web3.js to connect to Solana and read an account balance
-description:
-  "Connect to Solana DevNet from TypeScript and read data from the blockchain!"
+description: "Connect to Solana DevNet from TypeScript and read data from the blockchain!"
 ---
 
 ## Summary

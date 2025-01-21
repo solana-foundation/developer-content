@@ -1,8 +1,7 @@
 ---
 title: How to get all NFTs from a wallet?
 sidebarSortOrder: 18
-description:
-  "Learn how to fetch all non-fungible tokens (NFTs) from a wallet on Solana."
+description: "Learn how to fetch all non-fungible tokens (NFTs) from a wallet on Solana."
 ---
 
 ```typescript filename="get-nfts-by-wallet.ts"

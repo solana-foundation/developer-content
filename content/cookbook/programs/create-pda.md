@@ -1,8 +1,7 @@
 ---
 title: How to create a Program Derived Address
 sidebarSortOrder: 5
-description:
-  "Learn how to create a Program Derived Address (PDA) in a Solana program."
+description: "Learn how to create a Program Derived Address (PDA) in a Solana program."
 ---
 
 A Program Derived Address is simply an account owned by the program, but has

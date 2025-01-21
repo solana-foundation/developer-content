@@ -4,8 +4,7 @@ objectives:
   - Explain the security risks associated with missing data validation checks
   - Implement data validation checks using long-form Rust
   - Implement data validation checks using Anchor constraints
-description:
-  "How to check your program's data accounts in both Anchor and Native Rust."
+description: "How to check your program's data accounts in both Anchor and Native Rust."
 ---
 
 ## Summary

@@ -4,8 +4,7 @@ objectives:
   - Create mint account with default account state of frozen
   - Explain the use cases of default account state
   - Experiment with the rules of the extension
-description:
-  "Create token that requires interaction with a specific service to use."
+description: "Create token that requires interaction with a specific service to use."
 ---
 
 ## Summary

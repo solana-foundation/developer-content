@@ -1,8 +1,7 @@
 ---
 title: How to get the owner of an NFT
 sidebarSortOrder: 17
-description:
-  "Learn how to get the owner of a non-fungible token (NFT) on Solana."
+description: "Learn how to get the owner of a non-fungible token (NFT) on Solana."
 ---
 
 If you have the mint key of an NFT, you can find its current owner by

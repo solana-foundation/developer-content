@@ -5,8 +5,7 @@ objectives:
   - Derive PDAs given specific seeds
   - Fetch a program's accounts
   - Use Borsh to deserialize custom data
-description:
-  Deserialize instructions in JS/TS clients to send to your native program.
+description: Deserialize instructions in JS/TS clients to send to your native program.
 ---
 
 ## Summary

@@ -4,8 +4,7 @@ objectives:
   - Create token accounts with an immutable owner
   - Explain the use cases of the immutable owner extension
   - Experiment with the rules of the extension
-description:
-  "Make a token that ensures the account storing the tokens cannot change owner."
+description: "Make a token that ensures the account storing the tokens cannot change owner."
 ---
 
 ## Summary

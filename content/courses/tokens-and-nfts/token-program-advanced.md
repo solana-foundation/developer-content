@@ -4,8 +4,7 @@ objectives:
   - Understand why and how to burn tokens
   - Allow a token holder to allocate a limited amount of tokens to another
     account to spend or burn using token delegation.
-description:
-  "How to burn tokens, and approve/revoke token delegations on Solana."
+description: "How to burn tokens, and approve/revoke token delegations on Solana."
 ---
 
 ### Summary

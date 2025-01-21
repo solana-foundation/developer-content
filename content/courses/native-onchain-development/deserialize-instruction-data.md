@@ -8,8 +8,7 @@ objectives:
   - Deserialize instruction data into native Rust data types
   - Execute different program logic for different types of instructions
   - Explain the structure of a smart contract on Solana
-description:
-  "Learn how native programs distinguish instructions for different functions."
+description: "Learn how native programs distinguish instructions for different functions."
 ---
 
 ## Summary

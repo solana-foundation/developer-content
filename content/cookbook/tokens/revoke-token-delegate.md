@@ -1,8 +1,7 @@
 ---
 title: How to Revoke a Token Delegate
 sidebarSortOrder: 12
-description:
-  "Learn how to revoke a token delegate on Solana, resetting delegate
+description: "Learn how to revoke a token delegate on Solana, resetting delegate
   permissions and amounts."
 ---
 

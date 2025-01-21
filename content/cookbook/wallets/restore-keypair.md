@@ -10,13 +10,13 @@ secret to test out your dApp.
 ## From Bytes
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
-<Tab value="web3.js v2">
-```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L13
-import {
-createKeyPairFromBytes,
-createKeyPairSignerFromBytes,
-getBase58Codec,
-} from "@solana/web3.js";
+  <Tab value="web3.js v2">
+    ```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L13
+    import {
+      createKeyPairFromBytes,
+      createKeyPairSignerFromBytes,
+      getBase58Codec,
+    } from "@solana/web3.js";
 
     export async function restoreKeypairBytes() {
       const keypairBytes = new Uint8Array([
@@ -26,7 +26,6 @@ getBase58Codec,
         121, 35, 172, 247, 68, 251, 226, 218, 48, 63, 176, 109, 168, 89, 238, 135,
       ]);
     ```
-
   </Tab>
 
   <Tab value="web3.js v1">
@@ -44,20 +43,19 @@ getBase58Codec,
 
     export { keypair as bytesKeypair };
     ```
-
   </Tab>
 </Tabs>
 
 ## From Base58 String
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
-<Tab value="web3.js v2">
-```typescript filename="restore-keypair-from-base58.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L6,L19-L25
-import {
-createKeyPairFromBytes,
-createKeyPairSignerFromBytes,
-getBase58Codec,
-} from "@solana/web3.js";
+  <Tab value="web3.js v2">
+    ```typescript filename="restore-keypair-from-base58.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L6,L19-L25
+    import {
+      createKeyPairFromBytes,
+      createKeyPairSignerFromBytes,
+      getBase58Codec,
+    } from "@solana/web3.js";
 
     export async function restoreKeypairBase58() {
       const keypairBase58 =
@@ -67,7 +65,6 @@ getBase58Codec,
       return await createKeyPairFromBytes(keypairBytes);
     }
     ```
-
   </Tab>
 
   <Tab value="web3.js v1">
@@ -83,6 +80,5 @@ getBase58Codec,
 
     export { keypair as bs58Keypair };
     ```
-
   </Tab>
 </Tabs>

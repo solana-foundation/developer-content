@@ -1,8 +1,7 @@
 ---
 sidebarSortOrder: 4
 title: State Compression
-description:
-  'State Compression is the method of cheaply and securely storing
+description: 'State Compression is the method of cheaply and securely storing
   "fingerprints" of offchain data in the Solana leger, instead of expensive
   accounts.'
 ---

@@ -6,8 +6,7 @@ objectives:
   - Close program accounts safely and securely using native Rust
   - Close program accounts safely and securely using the Anchor `close`
     constraint
-description:
-  "How to close program accounts safely and securely in Anchor and native Rust."
+description: "How to close program accounts safely and securely in Anchor and native Rust."
 ---
 
 ## Summary

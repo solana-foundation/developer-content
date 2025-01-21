@@ -6,8 +6,7 @@ objectives:
   - Connect to and sign transactions from a mobile wallet
   - Create a simple mobile wallet
   - Explain at a high level the interaction between `walletlib` and wallet apps
-description:
-  "Initiate transactions on mobile wallets in your native mobile apps."
+description: "Initiate transactions on mobile wallets in your native mobile apps."
 ---
 
 ## Summary

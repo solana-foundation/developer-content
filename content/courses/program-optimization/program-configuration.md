@@ -8,8 +8,7 @@ objectives:
     which features are or are not enabled
   - Create an admin-only instruction to set up a program account that can be
     used to store program configuration values
-description:
-  "Create distinct environments, feature flags and admin-only instructions."
+description: "Create distinct environments, feature flags and admin-only instructions."
 ---
 
 ## Summary

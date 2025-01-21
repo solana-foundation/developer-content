@@ -5,8 +5,7 @@ objectives:
     client applications
   - Become proficient in utilizing the SPL TypeScript library for comprehensive
     token operations
-description:
-  "Use mints with Token Extensions program from TS in web and mobile apps."
+description: "Use mints with Token Extensions program from TS in web and mobile apps."
 ---
 
 ## Summary

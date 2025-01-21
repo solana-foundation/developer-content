@@ -7,8 +7,7 @@ objectives:
   - Use the Anchor `MethodsBuilder` to build instructions and transactions
   - Use Anchor to fetch accounts
   - Set up a frontend to invoke instructions using Anchor and an IDL
-description:
-  "Use Anchor's automatic JS/TS clients to send instructions to your program."
+description: "Use Anchor's automatic JS/TS clients to send instructions to your program."
 ---
 
 ## Summary
