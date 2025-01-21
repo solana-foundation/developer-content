@@ -390,7 +390,6 @@ pub struct Counter {
 The layout of this program is:
 
 - import necessary Rust librarie
-
   s
 - declare the program's address
 - define program instruction handlers (functional logic)
