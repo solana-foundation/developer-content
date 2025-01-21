@@ -10,10 +10,13 @@ secret to test out your dApp.
 ## From Bytes
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
-<Tab value="web3.js v2"> ```typescript filename="restore-keypair-from-bytes.ts"
-file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L13 import {
-createKeyPairFromBytes, createKeyPairSignerFromBytes, getBase58Codec, } from
-"@solana/web3.js";
+<Tab value="web3.js v2">
+```typescript filename="restore-keypair-from-bytes.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L13
+import {
+createKeyPairFromBytes,
+createKeyPairSignerFromBytes,
+getBase58Codec,
+} from "@solana/web3.js";
 
     export async function restoreKeypairBytes() {
       const keypairBytes = new Uint8Array([
@@ -48,10 +51,13 @@ createKeyPairFromBytes, createKeyPairSignerFromBytes, getBase58Codec, } from
 ## From Base58 String
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
-<Tab value="web3.js v2"> ```typescript filename="restore-keypair-from-base58.ts"
-file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L6,L19-L25,
-import { createKeyPairFromBytes, createKeyPairSignerFromBytes, getBase58Codec, }
-from "@solana/web3.js";
+<Tab value="web3.js v2">
+```typescript filename="restore-keypair-from-base58.ts" file=/code/content/web3jsv2/cookbook/wallets/restore-keypair.ts#L1-L6,L19-L25
+import {
+createKeyPairFromBytes,
+createKeyPairSignerFromBytes,
+getBase58Codec,
+} from "@solana/web3.js";
 
     export async function restoreKeypairBase58() {
       const keypairBase58 =

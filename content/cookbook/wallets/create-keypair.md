@@ -12,9 +12,9 @@ you do not need to worry about the keypair. Otherwise a keypair must be
 generated for signing transactions.
 
 <Tabs groupId="language" items={['web3.js v2', 'web3.js v1']}>
-<Tab value="web3.js v2"> ```typescript
-file=/code/content/web3jsv2/cookbook/wallets/create-keypair.ts#L1-L28 import {
-generateKeyPair, generateKeyPairSigner } from "@solana/web3.js";
+<Tab value="web3.js v2">
+```typescript file=/code/content/web3jsv2/cookbook/wallets/create-keypair.ts#L1-L28
+import { generateKeyPair, generateKeyPairSigner } from "@solana/web3.js";
 
     // Secret key is never exported or exposed.
 
@@ -42,12 +42,13 @@ generateKeyPair, generateKeyPairSigner } from "@solana/web3.js";
   </Tab>
 
   <Tab value="web3.js v1">
-    ```typescript file=/code/content/web3jsv1/cookbook/wallets/create-keypair.ts#L1-L5
+    ```typescript file=/code/content/web3jsv1/cookbook/wallets/create-keypair.ts
     import { Keypair } from "@solana/web3.js";
 
     const keypair = Keypair.generate();
 
     export { keypair };
+
     ```
 
   </Tab>

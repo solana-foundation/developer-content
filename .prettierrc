@@ -4,7 +4,5 @@
   "singleQuote": false,
   "printWidth": 80,
   "trailingComma": "all",
-  "arrowParens": "avoid",
-  "endOfLine": "auto",
-  "proseWrap": "always"
+  "arrowParens": "avoid"
 }
