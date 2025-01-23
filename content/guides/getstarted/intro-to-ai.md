@@ -345,13 +345,14 @@ git clone https://github.com/elizaOS/eliza.git
 
 ### Set up the environment
 
-Make sure you have `node` version `23.x.x` installed using
-[nvm](https://github.com/nvm-sh/nvm):
-
-```bash
-node --version
-nvm use 23
-```
+<Callout type="warning">
+  This guide requires Node.js version `23.x.x`. Install it using [nvm](https://github.com/nvm-sh/nvm):
+  ```bash
+  node --version  # Check current version
+  nvm install 23  # Install Node.js 23 if needed
+  nvm use 23      # Switch to Node.js 23
+  ```
+</Callout>
 
 Then install the dependencies:
 
@@ -442,6 +443,8 @@ Here you can see the
 [character in action](https://x.com/solanadevhelper/status/1882222232656847143).
 
 You can also interact with the character locally using the following command:
+You may need to free your port 3000 and start your character with the `--host`
+flag.
 
 ```bash
 pnpm start:client
