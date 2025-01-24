@@ -108,10 +108,8 @@ Several frameworks are available for building AI agents on Solana:
 - [GitHub Repository](https://github.com/0xPlaygrounds/rig)
 - [Listen.rs Repository](https://github.com/piotrostr/listen)
 
-5.
-
-- If you are building an AI framework feel free to open a PR to add your
-  framework to the list
+If you are building an AI framework feel free to open a PR to add your framework
+to the list
 
 ## Getting Started with SendAI
 
@@ -122,12 +120,38 @@ can perform actions on the Solana blockchain and that we can chat with:
 
 ### Install dependencies
 
+A modern IDE is recommended for this guide. We will use
+[Cursor](https://www.cursor.com/) for this example which has integrated AI
+features and can help you with any errors you may encounter. which has
+integrated AI features and can help you with any errors you may encounter.
+
 You will need to have [node](https://nodejs.org/en/download/) with version
 `23.x.x` installed. Open an empty folder using vscode or cursor and run the
 following command in the terminal:
 
+<Callout type="warning">
+  This guide requires Node.js version `23.x.x` 
+</Callout>
+
 ```bash
 pnpm install solana-agent-kit
+pnpm add @langchain/core @langchain/openai @langchain/langgraph dotenv bs58
+```
+
+Your IDE should setup the `package.json` file for you. If not, this is how it
+should look like:
+
+```json filename=package.json
+{
+  "dependencies": {
+    "@langchain/core": "^0.3.33",
+    "@langchain/langgraph": "^0.2.41",
+    "@langchain/openai": "^0.3.17",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "solana-agent-kit": "^1.4.3"
+  }
+}
 ```
 
 ### Configure environment
@@ -294,19 +318,32 @@ end up with something like this
 
 </Steps>
 
-You can now for example import the private key into your browser extension
-wallet to see the NFT. Or you can ask the agent to show you all your NFTs. The
-default action uses the Helius Asset api to request assets so for that you would
-need to add a [Helius API key](https://www.helius.dev/) to your `.env` file and
-pass it into the agent or you can now start writing your own actions following
-the
-[Contribution guide](https://github.com/sendaifun/solana-agent-kit/blob/main/CONTRIBUTING.md)
+Where to go from here?
+
+- You can now for example import the private key into your browser extension
+  wallet to see the NFT.
+- You can ask the agent to show you all your NFTs. You will notice you will get
+  an error for this action. This is because the default action to request assets
+  uses the Helius Asset api to request assets so for that you would need to add
+  a [Helius API key](https://www.helius.dev/) to your `.env` file and pass it
+  into the agent. pass it into the agent.
+
+```ts filename=agent.ts
+const solanaKit = new SolanaAgentKit(privateKeyBase58, process.env.RPC_URL!, {
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
+  HELIUS_API_KEY: process.env.HELIUS_API_KEY!,
+});
+```
+
+- You can now start writing your own actions following the
+  [Contribution guide](https://github.com/sendaifun/solana-agent-kit/blob/main/CONTRIBUTING.md)
 
 There is also an
 [example of a web chat](https://github.com/sendaifun/solana-agent-kit/tree/main/examples/agent-kit-nextjs-langchain)
-for your agent using React that can for example deploy to Vercel.
+for your agent using React that you can for example deploy to Vercel.
 
-Not all actions are working 100% yet but you can see the progress in the
+Not all actions are working 100% yet, like the request balance for example
+sometimes fails, but you can see the progress in the
 [Solana agent kit repo](https://github.com/sendaifun/solana-agent-kit) and also
 contribute your own actions to be used by everyone.
 
@@ -406,11 +443,15 @@ npx tsx encode58.ts
 
 ### Create character configuration
 
-To create a new character I would recommend using the composer feature in Cursor
-and tell it what kind of character you want to create. Give it one of the other
+To create a new character we need to create a character.json file. You can find
+the preset characters in the characters folder of the Eliza project. To create a
+new character you can copy and change one of the already existing characters or
+you can use the
+[composer feature in Cursor](https://docs.cursor.com/composer/overview) and tell
+it what kind of character you want to create. Give it one of the other
 characters as input and describe what kind of character you want to create.
 
-```json filename=character.json
+```json filename=characters/sol.character.json
 {
     "name": "Sol",
     "clients": ["twitter"],
@@ -447,8 +488,12 @@ You may need to free your port 3000 and start your character with the `--host`
 flag.
 
 ```bash
+pnpm start --character="characters/sol.character.json" --host
 pnpm start:client
 ```
+
+If your client does not connect make sure you run your agent with the `--host`
+flag and that your port 3000 is not in use when you start the client.
 
 For more information follow the
 [official eliza documentation](https://elizaos.github.io/eliza/docs/quickstart/)
@@ -469,10 +514,10 @@ chains.
 
 ## On chain program agent integration
 
-If you want to use an agents reply with a solana program you need to use an
+If you want to use an agents reply within a solana program you need to use an
 oracle that writes the reply data into an account that your program can read.
-You can find an example of an LLM which will transfer tokens after got questions
-answered correctly to the user.
+You can find an example of an LLM which will transfer tokens to any user that
+answers questions correctly here:
 
 [On chain program LLM interaction](https://github.com/GabrielePicco/super-smart-contracts)
 
@@ -494,16 +539,21 @@ oracle to create an interactive token-dispensing agent named "Mar1o".
 
 ## Example Usage
 
-```rust
+Here is how this program works in pseudo code:
+
 // Initialize the AI agent with personality
-const AGENT_DESC: &str = "You are an AI agent called Mar1o which can dispense MAR1O tokens...";
+
+```rust
+const AGENT_DESC: &str = "You are an
+AI agent called Mar1o which can dispense MAR1O tokens..."`;
+```
 
 // User interaction flow:
+
 1. User sends message to agent
 2. Oracle processes with LLM
 3. Agent responds with JSON: {"reply": "...", "amount": 1000}
 4. If amount > 0, tokens are minted to user
-```
 
 This demonstrates how to combine AI capabilities with on-chain token mechanics
 to create interactive blockchain experiences. Here is a
@@ -526,7 +576,7 @@ example.
 - Know that your agent has a private key and thus can access the funds in your
   wallet. If someone can chat with your agent and it has a transfer action for
   example users can probably get it to transfer them your funds.
-- Use efficient [RPC endpoints](https://solana.com/rpc). The public endpoints
+- Use a payed [RPC endpoints](https://solana.com/rpc). The public endpoints
   usually get rate limited
 - Monitor agent activities and make sure they are not doing anything malicious
   or get tricked into it by users interacting with them
