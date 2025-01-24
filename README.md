@@ -1,3 +1,15 @@
+# Content Moved to [solana-com Repo](https://github.com/solana-foundation/solana-com/tree/main/content)
+
+> [!WARNING]
+> Contributions moving forward should be made to the solana-com repo.
+> 
+> The developer docs content for solana.com is located in the
+> [`/content`](https://github.com/solana-foundation/solana-com/tree/main/content)
+> directory on the solana-com repo which contains the pages for `/docs`,
+> `/developers/cookbook`, `/developers/guides`, `/developers/courses` in the
+> respective subdirectories.
+
+
 # Solana Developer Content
 
 This repo is the open source home of content for developers looking to learn and
